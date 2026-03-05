@@ -1,6 +1,6 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -16,6 +16,8 @@ const MenuItem = createComponent(MenuItemClass);
 function App() {
   const menuSubsRef = useRef(null);
   const delayMenuRef = useRef(null);
+  const [menuSubsOpen, setMenuSubsOpen] = useState(false);
+  const [delayMenuOpen, setDelayMenuOpen] = useState(false);
 
   const addItemsDynamically = useCallback((menu) => {
     setTimeout(() => {
@@ -28,18 +30,6 @@ function App() {
       menu.append(oneNode, twoNode);
       menu.focus();
     }, 1000);
-  }, []);
-
-  const handleBtnAddOpenerDelayClick = useCallback(() => {
-    if (delayMenuRef.current) {
-      delayMenuRef.current!.open = !delayMenuRef.current!.open;
-    }
-  }, []);
-
-  const handleBtnOpenBasicClick = useCallback(() => {
-    if (menuSubsRef.current) {
-      menuSubsRef.current!.open = !menuSubsRef.current!.open;
-    }
   }, []);
 
   const handleDelaymenuUi5BeforeOpen = useCallback(() => {
@@ -58,16 +48,16 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={handleBtnOpenBasicClick}>Open Menu</Button>
-      <Button id="btnAddOpenerDelay" onClick={handleBtnAddOpenerDelayClick}>Delayed</Button> <br />
+      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={() => setMenuSubsOpen(!menuSubsOpen)}>Open Menu</Button>
+      <Button id="btnAddOpenerDelay" onClick={() => setDelayMenuOpen(!delayMenuOpen)}>Delayed</Button> <br />
 
-      <Menu ref={menuSubsRef} id="menuSubs" opener="btnOpenBasic" onBeforeOpen={handleMenuSubsUi5BeforeOpen}>
+      <Menu ref={menuSubsRef} open={menuSubsOpen} id="menuSubs" opener="btnOpenBasic" onBeforeOpen={handleMenuSubsUi5BeforeOpen} onClose={() => setMenuSubsOpen(false)}>
         <MenuItem text="New File" icon="add-document" />
         <MenuItem text="New Folder" icon="add-folder" disabled={true} />
         <MenuItem text="Open" icon="open-folder" loadingDelay={100} loading={true} />
       </Menu>
 
-      <Menu ref={delayMenuRef} id="delaymenu" loadingDelay={100} loading={true} opener="btnAddOpenerDelay" onBeforeOpen={handleDelaymenuUi5BeforeOpen} />
+      <Menu ref={delayMenuRef} open={delayMenuOpen} id="delaymenu" loadingDelay={100} loading={true} opener="btnAddOpenerDelay" onBeforeOpen={handleDelaymenuUi5BeforeOpen} onClose={() => setDelayMenuOpen(false)} />
     </>
   );
 }

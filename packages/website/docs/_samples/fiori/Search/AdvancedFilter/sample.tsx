@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
@@ -10,18 +10,14 @@ const Button = createComponent(ButtonClass);
 const Toast = createComponent(ToastClass);
 
 function App() {
-  const toastRef = useRef(null);
-
-  const handleAdvancedButtonClick = () => {
-    toastRef.current!.open = true;
-  };
+  const [toastOpen, setToastOpen] = useState(false);
 
   return (
     <>
       <Search id="advancedFiltering" placeholder="Start typing ...">
-    		<Button id="advancedButton" slot="filterButton" icon="filter" onClick={handleAdvancedButtonClick} />
+    		<Button id="advancedButton" slot="filterButton" icon="filter" onClick={() => setToastOpen(true)} />
     	</Search>
-    	<Toast ref={toastRef} id="advancedFilterToast" placement="BottomCenter">Search refined using advanced filters</Toast>
+    	<Toast open={toastOpen} id="advancedFilterToast" placement="BottomCenter" onClose={() => setToastOpen(false)}>Search refined using advanced filters</Toast>
     </>
   );
 }

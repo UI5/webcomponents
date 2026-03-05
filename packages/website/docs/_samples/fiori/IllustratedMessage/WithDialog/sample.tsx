@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -11,23 +11,15 @@ const Button = createComponent(ButtonClass);
 const Dialog = createComponent(DialogClass);
 
 function App() {
-  const dialogRef = useRef(null);
-
-  const handleOpenDialogButtonClick = () => {
-    dialogRef.current!.open = true;
-  };
-
-  const handleCloseDialogButtonClick = () => {
-    dialogRef.current!.open = false;
-  };
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <>
-      <Button id="openDialogButton" onClick={handleOpenDialogButtonClick}>Open Dialog</Button>
-        <Dialog ref={dialogRef} id="hello-dialog" headerText="Error">
+      <Button id="openDialogButton" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+        <Dialog open={dialogOpen} id="hello-dialog" headerText="Error" onClose={() => setDialogOpen(false)}>
             <IllustratedMessage name="UnableToLoad" />
             <Bar design="Footer" slot="footer">
-                <Button id="closeDialogButton" design="Emphasized" slot="endContent" onClick={handleCloseDialogButtonClick}>Close</Button>
+                <Button id="closeDialogButton" design="Emphasized" slot="endContent" onClick={() => setDialogOpen(false)}>Close</Button>
             </Bar>
         </Dialog>
     </>

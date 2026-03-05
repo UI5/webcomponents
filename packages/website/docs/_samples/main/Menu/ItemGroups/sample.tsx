@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -22,17 +22,12 @@ const MenuSeparator = createComponent(MenuSeparatorClass);
 const MenuItemGroup = createComponent(MenuItemGroupClass);
 
 function App() {
-  const menuGroupsRef = useRef(null);
-
-  const handleBtnOpenGroupsClick = () => {
-    menuGroupsRef.current!.opener = btnOpenGroups;
-	menuGroupsRef.current!.open = !menuGroupsRef.current!.open;
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <Button id="btnOpenGroups" onClick={handleBtnOpenGroupsClick}>Open Menu</Button>
-    	<Menu ref={menuGroupsRef} id="menuGroups" headerText="My ui5-menu">
+      <Button id="btnOpenGroups" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button>
+    	<Menu open={menuOpen} opener="btnOpenGroups" id="menuGroups" headerText="My ui5-menu" onClose={() => setMenuOpen(false)}>
     		<MenuItem text="New Paragraph" icon="add-document" />
     		<MenuItem text="New Text" />
 

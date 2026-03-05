@@ -32,7 +32,7 @@ const Switch = createComponent(SwitchClass);
 const Title = createComponent(TitleClass);
 
 function App() {
-  const dialogRef = useRef<any>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const wizardRef = useRef<any>(null);
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(true);
@@ -55,7 +55,7 @@ function App() {
   };
 
   const handleButtonClick = () => {
-    dialogRef.current.open = true;
+    setDialogOpen(true);
     const wiz = wizardRef.current;
     const index = wiz.getSelectedStepIndex();
     updateButtons(index, wiz.children.length);
@@ -88,18 +88,14 @@ function App() {
     updateButtons(index - 1, wiz.children.length);
   };
 
-  const handleCancelClick = () => {
-    dialogRef.current.open = false;
-  };
-
   const handleFinalizeClick = () => {
     alert("Finalize");
-    dialogRef.current.open = false;
+    setDialogOpen(false);
   };
 
   return (
     <>
-      <Dialog ref={dialogRef} id="dialog" stretch={true} headerHeading="Wizard">
+      <Dialog open={dialogOpen} id="dialog" stretch={true} headerHeading="Wizard" onClose={() => setDialogOpen(false)}>
             <Wizard ref={wizardRef} id="wiz" contentLayout="SingleStep" onStepChange={handleStepChange}>
                 <WizardStep icon="product" titleText="Product type" selected={true}>
                     <div style={{ display: "flex", minHeight: "200px", flexDirection: "column" }}>
@@ -189,7 +185,7 @@ function App() {
                 {showPrev && <Button design="Emphasized" slot="endContent" onClick={handlePrevButtonClick}>Previous Step</Button>}
                 {showNext && <Button design="Emphasized" slot="endContent" onClick={handleNextButtonClick}>Next step</Button>}
                 {showFinalize && <Button design="Emphasized" slot="endContent" onClick={handleFinalizeClick}>Finalize</Button>}
-                <Button design="Transparent" slot="endContent" onClick={handleCancelClick}>Cancel</Button>
+                <Button design="Transparent" slot="endContent" onClick={() => setDialogOpen(false)}>Cancel</Button>
             </Bar>
         </Dialog>
         <Button onClick={handleButtonClick}>Open dialog</Button>

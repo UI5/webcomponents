@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -11,25 +11,17 @@ const Label = createComponent(LabelClass);
 const ResponsivePopover = createComponent(ResponsivePopoverClass);
 
 function App() {
-  const respPopover1Ref = useRef(null);
-  const respPopover2Ref = useRef(null);
-
-  const handleBtn1Click = () => {
-    respPopover1Ref.current!.open = !respPopover1Ref.current!.open;
-  };
-
-  const handleBtn2Click = () => {
-    respPopover2Ref.current!.open = !respPopover2Ref.current!.open;
-  };
+  const [popover1Open, setPopover1Open] = useState(false);
+  const [popover2Open, setPopover2Open] = useState(false);
 
   return (
     <>
       <div className="center">
-            <Button id="btn1" onClick={handleBtn1Click}>Open ResponsivePopover to Bottom</Button>
-            <Button id="btn2" onClick={handleBtn2Click}>Open ResponsivePopover to Left</Button>
+            <Button id="btn1" onClick={() => setPopover1Open(!popover1Open)}>Open ResponsivePopover to Bottom</Button>
+            <Button id="btn2" onClick={() => setPopover2Open(!popover2Open)}>Open ResponsivePopover to Left</Button>
         </div>
-   
-        <ResponsivePopover ref={respPopover1Ref} id="respPopover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom">
+
+        <ResponsivePopover open={popover1Open} id="respPopover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom" onClose={() => setPopover1Open(false)}>
             <div className="popover-content">
                 <Label for="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
@@ -41,7 +33,7 @@ function App() {
             </div>
         </ResponsivePopover>
 
-        <ResponsivePopover ref={respPopover2Ref} id="respPopover2" opener="btn2" headerText="Newsletter subscription" placement="Start">
+        <ResponsivePopover open={popover2Open} id="respPopover2" opener="btn2" headerText="Newsletter subscription" placement="Start" onClose={() => setPopover2Open(false)}>
             <div className="popover-content">
                 <Label for="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />

@@ -1,6 +1,6 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useRef } from "react";
+import { useState } from "react";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -51,26 +51,14 @@ const Title = createComponent(TitleClass);
 const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
-  const quickActionDialogRef = useRef(null);
-  const respPopoverRef = useRef(null);
-
-  const handleMenuBtnClick = () => {
-    respPopoverRef.current!.open = !respPopoverRef.current!.open;
-  };
+  const [navOpen, setNavOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSideNavigationSelectionChange = (e: UI5CustomEvent<SideNavigationClass, "selection-change">) => {
     if (e.detail.item.getAttribute("target")) {
-		respPopoverRef.current!.open=false;
+		setNavOpen(false);
 		return;
     }
-  };
-
-  const handleQuickActionClick = () => {
-    quickActionDialogRef.current!.open = true;
-  };
-
-  const handleQuickActionCloseBtnClick = () => {
-    quickActionDialogRef.current!.open = false;
   };
 
   return (
@@ -106,7 +94,7 @@ function App() {
       `}</style>
       <Page style={{ height: "500px" }}>
     		<ShellBar notificationsCount={72} showNotifications={true}>
-                <Button icon="menu2" slot="startButton" id="menuBtn" onClick={handleMenuBtnClick} />
+                <Button icon="menu2" slot="startButton" id="menuBtn" onClick={() => setNavOpen(!navOpen)} />
                 <ShellBarBranding slot="branding">
                     Product Identifier
                     <img slot="logo" src="/images/sap-logo-svg.svg" />
@@ -119,7 +107,7 @@ function App() {
                     <img src="/images/avatars/man_avatar_3.png"/>
                 </Avatar>
             </ShellBar>
-    		<ResponsivePopover ref={respPopoverRef} id="respPopover" opener="menuBtn" placement="Bottom" accessibleName="Main Navigation">
+    		<ResponsivePopover open={navOpen} id="respPopover" opener="menuBtn" placement="Bottom" accessibleName="Main Navigation" onClose={() => setNavOpen(false)}>
     			<SideNavigation id="sideNavigation" onSelectionChange={handleSideNavigationSelectionChange}>
     				{/* Items */}
     				<SideNavigationItem text="Home" href="#contHome" icon="home" selected={true} />
@@ -138,7 +126,7 @@ function App() {
     					</SideNavigationItem>
     				</SideNavigationGroup>
     				{/* Fixed Items */}
-    				<SideNavigationItem slot="fixedItems" id="quickAction" text="Create" design="Action" unselectable={true} icon="write-new" onClick={handleQuickActionClick} />
+    				<SideNavigationItem slot="fixedItems" id="quickAction" text="Create" design="Action" unselectable={true} icon="write-new" onClick={() => setDialogOpen(true)} />
     				<SideNavigationItem slot="fixedItems" text="App Finder" href="https://openui5.hana.ondemand.com/demoapps" target="_blank" icon="widgets" />
     				<SideNavigationItem slot="fixedItems" text="Legal" href="https://www.sap.com/about/legal/impressum.html" target="_blank" icon="compare" />
     			</SideNavigation>
@@ -209,11 +197,11 @@ function App() {
     			</div>
     		</div>
 
-    		<Dialog headerText="Create New Item" draggable={true} resizable={true} ref={quickActionDialogRef} id="quickActionDialog">
+    		<Dialog open={dialogOpen} headerText="Create New Item" draggable={true} resizable={true} id="quickActionDialog" onClose={() => setDialogOpen(false)}>
     			<Text>Create new item...</Text>
     			<Bar slot="footer" design="Footer">
     				<Button slot="endContent" design="Emphasized">Create</Button>
-    				<Button slot="endContent" id="quickActionCloseBtn" onClick={handleQuickActionCloseBtnClick}>Close</Button>
+    				<Button slot="endContent" id="quickActionCloseBtn" onClick={() => setDialogOpen(false)}>Close</Button>
     			</Bar>
     		</Dialog>
     	</Page>

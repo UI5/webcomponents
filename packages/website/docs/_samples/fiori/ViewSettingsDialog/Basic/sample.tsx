@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
 import SortItemClass from "@ui5/webcomponents-fiori/dist/SortItem.js";
@@ -15,12 +15,12 @@ const Button = createComponent(ButtonClass);
 const ListItemGroup = createComponent(ListItemGroupClass);
 
 function App() {
-  const vsd1Ref = useRef(null);
+  const [vsdOpen, setVsdOpen] = useState(false);
   const vsdResultsRef = useRef(null);
 
   const handleBtnOpenDialog1Click = () => {
     vsdResultsRef.current!.innerHTML = "";
-    vsd1Ref.current!.open = true;
+    setVsdOpen(true);
   };
 
   const handleVsd1Confirm = (evt) => {
@@ -31,7 +31,7 @@ function App() {
     <>
       <Button id="btnOpenDialog1" onClick={handleBtnOpenDialog1Click}>Open ViewSettingsDialog</Button>
 
-        <ViewSettingsDialog ref={vsd1Ref} id="vsd1" sortDescending={true} onConfirm={handleVsd1Confirm}>
+        <ViewSettingsDialog open={vsdOpen} id="vsd1" sortDescending={true} onConfirm={handleVsd1Confirm} onClose={() => setVsdOpen(false)}>
             <SortItem slot="sortItems" text="Name" selected={true} />
             <SortItem slot="sortItems" text="Position" />
             <SortItem slot="sortItems" text="Company" />

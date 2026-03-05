@@ -284,14 +284,14 @@ const COMPONENTS = [
 ];
 
 // Base class definitions - these are parsed once and reused
-const baseClassProps = new Map();
+const baseClassCache = new Map();
 
 /**
- * Parse a base class .d.ts file and cache its properties
+ * Parse a base class .d.ts file and cache its properties and events
  */
 function parseBaseClass(baseClassName, packagesDir) {
-  if (baseClassProps.has(baseClassName)) {
-    return baseClassProps.get(baseClassName);
+  if (baseClassCache.has(baseClassName)) {
+    return baseClassCache.get(baseClassName);
   }
 
   // Search paths for base classes
@@ -307,13 +307,13 @@ function parseBaseClass(baseClassName, packagesDir) {
     if (fs.existsSync(basePath)) {
       const content = fs.readFileSync(basePath, "utf-8");
       const result = parseDeclarationFile(content, baseClassName, packagesDir, true);
-      baseClassProps.set(baseClassName, result.properties);
-      return result.properties;
+      baseClassCache.set(baseClassName, result);
+      return result;
     }
   }
 
-  baseClassProps.set(baseClassName, []);
-  return [];
+  baseClassCache.set(baseClassName, { properties: [], events: [] });
+  return { properties: [], events: [] };
 }
 
 /**
@@ -338,9 +338,12 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
   if (includeInherited && baseClassName && packagesDir) {
     // Skip UI5Element as it's too generic
     if (baseClassName !== "UI5Element" && baseClassName !== "HTMLElement") {
-      const inheritedProps = parseBaseClass(baseClassName, packagesDir);
-      for (const prop of inheritedProps) {
+      const inherited = parseBaseClass(baseClassName, packagesDir);
+      for (const prop of inherited.properties) {
         properties.push({ ...prop, inherited: true });
+      }
+      for (const evt of inherited.events) {
+        events.push({ ...evt, inherited: true });
       }
     }
   }
@@ -382,7 +385,13 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
         if (detailTypeName !== "void" && detailTypes.has(detailTypeName)) {
           detailFields = detailTypes.get(detailTypeName);
         }
-        events.push({ name: eventName, detailTypeName: detailTypeName, detailFields });
+        // Override inherited event with same name if present
+        const existingIndex = events.findIndex(e => e.name === eventName);
+        if (existingIndex >= 0) {
+          events[existingIndex] = { name: eventName, detailTypeName: detailTypeName, detailFields };
+        } else {
+          events.push({ name: eventName, detailTypeName: detailTypeName, detailFields });
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -15,15 +15,7 @@ const Toolbar = createComponent(ToolbarClass);
 const ToolbarButton = createComponent(ToolbarButtonClass);
 
 function App() {
-  const dialogRef = useRef(null);
-
-  const handleDialogOpenerClick = () => {
-    dialogRef.current!.open = true;
-  };
-
-  const handleBtnClick = () => {
-    dialogRef.current!.open = false;
-  };
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <>
@@ -48,9 +40,9 @@ function App() {
             }
         }
       `}</style>
-      <Button id="dialogOpener" onClick={handleDialogOpenerClick}>Open Dialog</Button>
+      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
 
-        <Dialog ref={dialogRef} id="dialog" headerText="Register Form">
+        <Dialog open={dialogOpen} id="dialog" headerText="Register Form" onClose={() => setDialogOpen(false)}>
             <section className="login-form">
                 <div>
                     <Label for="username" required={true} showColon={true}>Username</Label>
@@ -72,7 +64,7 @@ function App() {
             <Toolbar slot="footer">
                 <ToolbarButton class="dialogCloser" design="Emphasized" text="Submit"
                  />
-                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel" onClick={handleBtnClick}
+                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel" onClick={() => setDialogOpen(false)}
                  />
             </Toolbar>
         </Dialog>

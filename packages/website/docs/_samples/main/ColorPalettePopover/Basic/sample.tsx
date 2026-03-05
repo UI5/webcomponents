@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 import ColorPalettePopoverClass from "@ui5/webcomponents/dist/ColorPalettePopover.js";
@@ -9,16 +9,12 @@ const ColorPaletteItem = createComponent(ColorPaletteItemClass);
 const ColorPalettePopover = createComponent(ColorPalettePopoverClass);
 
 function App() {
-  const colorPalettePopoverRef = useRef(null);
-
-  const handleColorPaletteBtnClick = () => {
-    colorPalettePopoverRef.current!.open = !colorPalettePopoverRef.current!.open;
-  };
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button id="colorPaletteBtn" onClick={handleColorPaletteBtnClick}>Open ColorPalettePopover</Button>
-        <ColorPalettePopover ref={colorPalettePopoverRef} id="colorPalettePopover" opener="colorPaletteBtn">
+      <Button id="colorPaletteBtn" onClick={() => setOpen(!open)}>Open ColorPalettePopover</Button>
+        <ColorPalettePopover open={open} id="colorPalettePopover" opener="colorPaletteBtn" onClose={() => setOpen(false)}>
             <ColorPaletteItem value="lightsalmon" />
             <ColorPaletteItem value="lightpink" />
             <ColorPaletteItem value="rgb(216,124,172)" />

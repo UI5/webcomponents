@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -11,17 +11,13 @@ const Label = createComponent(LabelClass);
 const Popover = createComponent(PopoverClass);
 
 function App() {
-  const popoverRef = useRef(null);
-
-  const handleBtnClick = () => {
-    popoverRef.current!.open = !popoverRef.current!.open;
-  };
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button id="btn" onClick={handleBtnClick}>Open Popover</Button>
+      <Button id="btn" onClick={() => setOpen(!open)}>Open Popover</Button>
 
-        <Popover ref={popoverRef} opener="btn" headerText="Newsletter subscription">
+        <Popover open={open} opener="btn" headerText="Newsletter subscription" onClose={() => setOpen(false)}>
 
             <div className="popover-content">
                 <Label for="emailInput" required={true} showColon={true}>Email</Label>

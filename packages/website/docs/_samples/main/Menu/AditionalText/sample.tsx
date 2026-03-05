@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -17,17 +17,13 @@ const MenuItem = createComponent(MenuItemClass);
 const MenuSeparator = createComponent(MenuSeparatorClass);
 
 function App() {
-  const menuAdditionalTextRef = useRef(null);
-
-  const handleBtnOpenAdditionalTextClick = () => {
-    menuAdditionalTextRef.current!.open = !menuAdditionalTextRef.current!.open;
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <Button id="btnOpenAdditionalText" endIcon="slim-arrow-down" onClick={handleBtnOpenAdditionalTextClick}>Open Menu</Button> <br />
+      <Button id="btnOpenAdditionalText" endIcon="slim-arrow-down" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button> <br />
 
-        <Menu ref={menuAdditionalTextRef} id="menuAdditionalText" opener="btnOpenAdditionalText">
+        <Menu open={menuOpen} id="menuAdditionalText" opener="btnOpenAdditionalText" onClose={() => setMenuOpen(false)}>
             <MenuItem text="New File" icon="add-document" additionalText="Ctrl+N" />
             <MenuItem text="New Folder" icon="add-folder" additionalText="Ctrl+F" disabled={true} />
             <MenuSeparator />
