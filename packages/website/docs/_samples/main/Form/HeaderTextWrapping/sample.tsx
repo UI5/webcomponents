@@ -1,5 +1,4 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -11,16 +10,9 @@ const Label = createComponent(LabelClass);
 const Text = createComponent(TextClass);
 
 function App() {
-  const containerRef = useRef(null);
-
-  const handleSliderUi5Input = () => {
-    const width = (slider.value / 100 * 1500);
-	containerRef.current!.style.width = `${width}px`;
-  };
-
   return (
     <>
-      <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "300px", overflowX: "auto" }}>
+      <div id="container" style={{ maxWidth: "1500px", width: "300px", overflowX: "auto" }}>
             <Form class="addressForm" headerText="A very long header title for the form and more">
                 <FormItem>
                     <Label slot="labelContent">Name:</Label>

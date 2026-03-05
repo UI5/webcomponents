@@ -53,11 +53,6 @@
   -webkit-font-smoothing: auto;
 }
 
-/* Ensure slotted content inside web components inherits SAP theme fonts */
-.preview :global(*) {
-  font-family: inherit;
-}
-
 
 .editorContainer {
   border-top: 1px solid var(--ifm-color-emphasis-200);

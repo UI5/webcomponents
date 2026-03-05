@@ -35,10 +35,10 @@ function App() {
       />
 
       <div style={{ marginTop: "20px" }}>
-        <label htmlFor="selectedValue">Selected Value:</label>
+        <Label for="selectedValue">Selected Value:</label>
         <input id="selectedValue" type="text" readOnly style={{ width: "300px" }} value={selectedValue} />
 
-        <label htmlFor="convertedDates" style={{ marginLeft: "20px" }}>Converted Dates:</label>
+        <Label for="convertedDates" style={{ marginLeft: "20px" }}>Converted Dates:</label>
         <input id="convertedDates" type="text" readOnly style={{ width: "300px" }} value={convertedDates} />
       </div>
     </>

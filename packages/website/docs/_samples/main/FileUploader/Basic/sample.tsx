@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <div style={{ height: "100px" }}>
-            <Label htmlFor="single-file-uploader">Upload a single file:</Label>
+            <Label for="single-file-uploader">Upload a single file:</Label>
             <FileUploader id="single-file-uploader" />
          </div>
     </>

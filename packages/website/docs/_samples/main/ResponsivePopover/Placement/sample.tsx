@@ -31,7 +31,7 @@ function App() {
    
         <ResponsivePopover ref={respPopover1Ref} id="respPopover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
+                <Label for="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>
@@ -43,7 +43,7 @@ function App() {
 
         <ResponsivePopover ref={respPopover2Ref} id="respPopover2" opener="btn2" headerText="Newsletter subscription" placement="Start">
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
+                <Label for="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>

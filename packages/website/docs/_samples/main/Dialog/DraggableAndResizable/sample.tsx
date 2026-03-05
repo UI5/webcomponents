@@ -30,7 +30,7 @@ function App() {
             <div>Resize this dialog by dragging it by its resize handle.</div>
             <div>These features are available only on Desktop.</div>
             <Toolbar slot="footer">
-                <ToolbarButton class="dialogCloser" design="Emphasized" text="OK" />
+                <ToolbarButton class="dialogCloser" design="Emphasized" text="OK" onClick={handleBtnClick} />
             </Toolbar>
         </Dialog>
     </>

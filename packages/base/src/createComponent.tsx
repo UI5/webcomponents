@@ -114,6 +114,12 @@ export function createComponent<T extends UI5Element>(
 			const propValue = (restProps as Record<string, unknown>)[propName];
 			if (propName.startsWith("on") && typeof propValue === "function") { return; }
 			if (typeof propValue === "boolean") { return; } // handled in useEffect
+			// className → class for React compatibility
+			if (propName === "className") {
+				// eslint-disable-next-line dot-notation
+				domProps["class"] = propValue;
+				return;
+			}
 			// Convert camelCase to kebab-case for HTML attributes
 			const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
 			domProps[attrName] = propValue;

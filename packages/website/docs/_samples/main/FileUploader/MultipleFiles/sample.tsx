@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <div style={{ height: "100px" }}>
-            <Label htmlFor="multiple-files-uploader">Choose files:</Label>
+            <Label for="multiple-files-uploader">Choose files:</Label>
             <FileUploader id="multiple-files-uploader" multiple={true} />
         </div>
     </>

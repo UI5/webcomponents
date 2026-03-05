@@ -29,7 +29,7 @@ function App() {
             <p>Resize this popover by dragging its resize handle.</p>
             <p>This feature is available only on desktop devices.</p>
             <Toolbar slot="footer">
-                <ToolbarButton class="popoverCloser" design="Emphasized" text="OK" />
+                <ToolbarButton class="popoverCloser" design="Emphasized" text="OK" onClick={handleBtnClick} />
             </Toolbar>
         </Popover>
     </>

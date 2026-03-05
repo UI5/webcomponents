@@ -66,7 +66,7 @@ function App() {
         }
       `}</style>
       <div className="container">
-            <MediaGallery interactiveDisplayArea={true}>
+            <MediaGallery interactiveDisplayArea={true} onOverflowClick={handleMediaGalleryOverflowClick} onDisplayAreaClick={handleMediaGalleryDisplayAreaClick}>
                 <MediaGalleryItem>
                     <img src="/images/HT-1000.jpg" />
                 </MediaGalleryItem>

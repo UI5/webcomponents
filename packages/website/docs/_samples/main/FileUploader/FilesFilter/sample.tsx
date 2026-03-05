@@ -28,7 +28,7 @@ function App() {
   return (
     <>
       <div style={{ height: "100px" }}>
-            <Label htmlFor="image-uploader">Upload images:</Label>
+            <Label for="image-uploader">Upload images:</Label>
             <FileUploader id="image-uploader" accept="image/*" multiple={true} onChange={handleFileUploaderChange} />
         </div>
 

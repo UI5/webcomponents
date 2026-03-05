@@ -49,7 +49,7 @@ function App() {
           {editable ? (
             <>
               <FormItem>
-                <Label htmlFor="nameInp" slot="labelContent">Name:</Label>
+                <Label for="nameInp" slot="labelContent">Name:</Label>
                 <Input value="Red Point Stores" id="nameInp" />
               </FormItem>
 
@@ -69,7 +69,7 @@ function App() {
               </FormItem>
 
               <FormItem>
-                <Label htmlFor="wsInp" slot="labelContent">WebSite:</Label>
+                <Label for="wsInp" slot="labelContent">WebSite:</Label>
                 <Input value="sap.com" id="wsInp" />
               </FormItem>
 
@@ -80,7 +80,7 @@ function App() {
               </FormItem>
 
               <FormItem>
-                <Label htmlFor="delInp" slot="labelContent">Delivery address:</Label>
+                <Label for="delInp" slot="labelContent">Delivery address:</Label>
                 <Input value="Newtown" id="delInp" />
               </FormItem>
             </>
@@ -102,7 +102,7 @@ function App() {
               </FormItem>
 
               <FormItem>
-                <Label htmlFor="wsInp" slot="labelContent">WebSite:</Label>
+                <Label for="wsInp" slot="labelContent">WebSite:</Label>
                 <Link href="sap.com">sap.com</Link>
               </FormItem>
 
@@ -112,7 +112,7 @@ function App() {
               </FormItem>
 
               <FormItem>
-                <Label htmlFor="delInp" slot="labelContent">Delivery address:</Label>
+                <Label for="delInp" slot="labelContent">Delivery address:</Label>
                 <Text>Newtown</Text>
               </FormItem>
             </>

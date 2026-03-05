@@ -28,7 +28,7 @@ function App() {
   return (
     <>
       <div style={{ height: "300px" }}>
-            <Label htmlFor="max-file-size-uploader">Upload files up to 2 MB:</Label>
+            <Label for="max-file-size-uploader">Upload files up to 2 MB:</Label>
             <FileUploader maxFileSize={2} id="max-file-size-uploader" multiple={true} valueState={valueState} onFileSizeExceed={handleFileSizeExceed} onChange={handleChange}>
                 {valueStateMessage && <div slot="valueStateMessage">{valueStateMessage}</div>}
             </FileUploader>

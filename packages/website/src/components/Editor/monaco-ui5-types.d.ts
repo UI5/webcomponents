@@ -101,6 +101,7 @@ declare namespace JSX {
 // Base props shared by all UI5 components
 interface UI5BaseProps {
   id?: string;
+  class?: string;
   className?: string;
   style?: React.CSSProperties | string;
   slot?: string;

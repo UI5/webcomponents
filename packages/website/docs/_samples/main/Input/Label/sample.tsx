@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <Label htmlFor="input" required={true} showColon={true}>Secret Code</Label>
+      <Label for="input" required={true} showColon={true}>Secret Code</Label>
         <Input id="input" placeholder="Enter your Secret Code" required={true} type="Password" />
     </>
   );

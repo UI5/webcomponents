@@ -37,7 +37,7 @@ function App() {
         <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
             <Form id="testForm2" headerText="Labels on top" layout="S1 M2 L2 XL3" labelSpan="S12 M12 L12 XL12">
                 <FormItem>
-                    <Label htmlFor="nameInp" slot="labelContent">Name:</Label>
+                    <Label for="nameInp" slot="labelContent">Name:</Label>
                     <Input value="Red Point Stores" id="nameInp" />
                 </FormItem>
     
@@ -63,12 +63,12 @@ function App() {
                 </FormItem>
     
                 <FormItem>
-                    <Label htmlFor="wsInp" slot="labelContent">WebSite:</Label>
+                    <Label for="wsInp" slot="labelContent">WebSite:</Label>
                     <Input value="sap.com" id="wsInp" />
                 </FormItem>
     
                 <FormItem>
-                    <Label htmlFor="delInp" slot="labelContent">Delivery address:</Label>
+                    <Label for="delInp" slot="labelContent">Delivery address:</Label>
                     <Input value="Newtown" id="delInp" />
                 </FormItem>
         </Form>

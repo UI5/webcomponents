@@ -30,7 +30,7 @@ function App() {
         <Dialog ref={dialogRef} id="dialog" state="Negative" headerText="State :: Negative">
             <Text>Dialog with state</Text>
             <Toolbar slot="footer">
-                <ToolbarButton class="dialogCloser" text="Close" />
+                <ToolbarButton class="dialogCloser" text="Close" onClick={handleBtnClick} />
             </Toolbar>
         </Dialog>
     </>

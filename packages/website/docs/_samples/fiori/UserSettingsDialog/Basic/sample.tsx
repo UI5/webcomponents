@@ -294,7 +294,7 @@ function App() {
         <UserSettingsItem icon="user-settings" text="User Account" tooltip="User Account" headerText="User Account" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsAccountView id="account" showManageAccount="true" onEditAccountsClick={handleAccountEditAccountsClick} onManageAccountClick={handleAccountManageAccountClick}>
             <UserMenuAccount slot="account" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" />
-            <Label htmlFor="reset-all-button">Personalization</Label><br />
+            <Label for="reset-all-button">Personalization</Label><br />
             <Button id="reset-all-button" onClick={handleResetAllButtonClick}>Reset All Personalization</Button>
             <Panel fixed={true} class="ua-panel">
               <Text>

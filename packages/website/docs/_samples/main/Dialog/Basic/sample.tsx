@@ -53,26 +53,26 @@ function App() {
         <Dialog ref={dialogRef} id="dialog" headerText="Register Form">
             <section className="login-form">
                 <div>
-                    <Label htmlFor="username" required={true} showColon={true}>Username</Label>
+                    <Label for="username" required={true} showColon={true}>Username</Label>
                     <Input id="username" />
                 </div>
                 <div>
-                    <Label htmlFor="password" required={true} showColon={true}>Password</Label>
+                    <Label for="password" required={true} showColon={true}>Password</Label>
                     <Input id="password" type="Password" valueState="Negative" />
                 </div>
                 <div>
-                    <Label htmlFor="email" type="Email" required={true} showColon={true}>Email</Label>
-                    <Input id="email" />
+                    <Label for="email" required={true} showColon={true}>Email</Label>
+                    <Input id="email" type="Email" />
                 </div>
                 <div>
-                    <Label htmlFor="address" showColon={true}>Address</Label>
+                    <Label for="address" showColon={true}>Address</Label>
                     <Input id="address" />
                 </div>
             </section>
             <Toolbar slot="footer">
                 <ToolbarButton class="dialogCloser" design="Emphasized" text="Submit"
                  />
-                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel"
+                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel" onClick={handleBtnClick}
                  />
             </Toolbar>
         </Dialog>

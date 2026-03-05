@@ -24,7 +24,7 @@ function App() {
         <Popover ref={popoverRef} opener="btn" headerText="Newsletter subscription">
 
             <div className="popover-content">
-                <Label htmlFor="emailInput" required={true} showColon={true}>Email</Label>
+                <Label for="emailInput" required={true} showColon={true}>Email</Label>
                 <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
                 <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
             </div>

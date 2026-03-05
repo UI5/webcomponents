@@ -24,10 +24,6 @@ function App() {
     { id: "7", text: "Code review", icon: "accept" },
   ]);
 
-  const getSelectedCount = (items, selectedIds) => {
-    return items.filter((item) => selectedIds.has(item.id)).length;
-  };
-
   const [selected1, setSelected1] = useState(new Set());
   const [selected2, setSelected2] = useState(new Set());
 

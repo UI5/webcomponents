@@ -64,6 +64,7 @@ function createComponent(ComponentClass: any): any {
       const propValue = restProps[propName];
       if (propName.startsWith("on") && typeof propValue === "function") return;
       if (typeof propValue === "boolean") return; // handled in useEffect
+      if (propName === "className") { domProps["class"] = propValue; return; }
       const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
       domProps[attrName] = propValue;
     });

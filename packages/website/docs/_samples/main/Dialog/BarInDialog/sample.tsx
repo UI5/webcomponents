@@ -55,11 +55,11 @@ function App() {
         <Dialog ref={dialogRef} id="dialog">
             <Bar slot="header" design="Header">
                 <Title level="H5" slot="startContent">Bar used in Header and Footer</Title>
-                <Button class="dialogCloser" design="Transparent" slot="endContent" icon="decline" />
+                <Button class="dialogCloser" design="Transparent" slot="endContent" icon="decline" onClick={handleBtnClick} />
             </Bar>
             <div>Custom styles are applied to remove the default Dialog's paddings when ui5-bar is placed in the header or footer of a dialog.</div>
             <Bar slot="footer" design="Footer">
-                <Button style={{ minWidth: "4rem" }} class="dialogCloser" design="Emphasized" slot="endContent">OK</Button>
+                <Button style={{ minWidth: "4rem" }} class="dialogCloser" design="Emphasized" slot="endContent" onClick={handleBtnClick}>OK</Button>
             </Bar>
         </Dialog>
 

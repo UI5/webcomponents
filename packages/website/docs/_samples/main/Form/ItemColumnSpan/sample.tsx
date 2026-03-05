@@ -44,7 +44,7 @@ function App() {
                 </FormItem>
 
                 <FormItem>
-                    <Label htmlFor="addressInp" slot="labelContent">Address:</Label>
+                    <Label for="addressInp" slot="labelContent">Address:</Label>
                     <Input id="addressInp" />
                 </FormItem>
 
@@ -58,7 +58,7 @@ function App() {
                 </FormItem>
 
                 <FormItem columnSpan={2}>
-                    <Label htmlFor="additionalCommentsInp" slot="labelContent">Additional Comments:</Label>
+                    <Label for="additionalCommentsInp" slot="labelContent">Additional Comments:</Label>
                     <TextArea id="additionalCommentsInp" placeholder="Write your message here" showExceededText={true} maxLength={10} />
                 </FormItem>
             </Form>

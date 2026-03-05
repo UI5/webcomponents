@@ -37,7 +37,7 @@ function App() {
                 </Bar>
 
                 <FormItem>
-                    <Label htmlFor="nameInp" slot="labelContent">Name:</Label>
+                    <Label for="nameInp" slot="labelContent">Name:</Label>
                     <Input value="Red Point Stores" id="nameInp" />
                 </FormItem>
             
@@ -57,7 +57,7 @@ function App() {
                 </FormItem>
         
                 <FormItem>
-                    <Label htmlFor="wsInp" slot="labelContent">WebSite:</Label>
+                    <Label for="wsInp" slot="labelContent">WebSite:</Label>
                     <Input value="sap.com" id="wsInp" />
                 </FormItem>
     
@@ -68,7 +68,7 @@ function App() {
                 </FormItem>
     
                 <FormItem>
-                    <Label htmlFor="delInp" slot="labelContent">Delivery address:</Label>
+                    <Label for="delInp" slot="labelContent">Delivery address:</Label>
                     <Input value="Newtown" id="delInp" />
                 </FormItem>
         </Form>
