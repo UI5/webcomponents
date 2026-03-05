@@ -106,6 +106,38 @@
 		<ui5-switch style="width: 100%; border: 1px solid red;"></ui5-switch>
 	</div>
 
+	<br><br>
+	<ui5-title>Font-size based scaling (standalone checkboxes only)</ui5-title>
+	<ui5-checkbox style="font-size: 12px;"></ui5-checkbox>
+	<ui5-checkbox style="font-size: 12px;" checked></ui5-checkbox>
+	<ui5-checkbox style="font-size: 12px;" checked indeterminate></ui5-checkbox>
+	<ui5-checkbox style="font-size: 24px;"></ui5-checkbox>
+	<ui5-checkbox style="font-size: 24px;" checked></ui5-checkbox>
+	<ui5-checkbox style="font-size: 24px;" checked indeterminate></ui5-checkbox>
+	<ui5-checkbox style="font-size: 48px;"></ui5-checkbox>
+	<ui5-checkbox style="font-size: 48px;" checked></ui5-checkbox>
+	<ui5-checkbox style="font-size: 48px;" checked indeterminate></ui5-checkbox>
+
+	<br><br>
+	<ui5-title>Font-size scaling with display-only</ui5-title>
+	<ui5-checkbox style="font-size: 12px;" display-only></ui5-checkbox>
+	<ui5-checkbox style="font-size: 12px;" display-only checked></ui5-checkbox>
+	<ui5-checkbox style="font-size: 24px;" display-only></ui5-checkbox>
+	<ui5-checkbox style="font-size: 24px;" display-only checked></ui5-checkbox>
+	<ui5-checkbox style="font-size: 48px;" display-only></ui5-checkbox>
+	<ui5-checkbox style="font-size: 48px;" display-only checked></ui5-checkbox>
+
+	<br><br>
+	<ui5-title>Font-size scaling with padding: 0</ui5-title>
+	<div style="margin-top: 1rem;">
+		<ui5-checkbox style="font-size: 12px; padding: 0;"></ui5-checkbox>
+		<ui5-checkbox style="font-size: 12px; padding: 0;" checked></ui5-checkbox>
+		<ui5-checkbox style="font-size: 24px; padding: 0;"></ui5-checkbox>
+		<ui5-checkbox style="font-size: 24px; padding: 0;" checked></ui5-checkbox>
+		<ui5-checkbox style="font-size: 48px; padding: 0;"></ui5-checkbox>
+		<ui5-checkbox style="font-size: 48px; padding: 0;" checked></ui5-checkbox>
+	</div>
+
 	<script>
 		var hcb = false;
 		var cbForm = document.querySelector("#cbForm");

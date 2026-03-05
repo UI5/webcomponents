@@ -8,7 +8,7 @@
 
 :host(:not([text])) {
 	font-size: 1.375rem;
-	padding: 0.6875rem;
+	padding: var(--_ui5_checkbox_wrapper_padding);
 	width: fit-content;
 	height: fit-content;
 	overflow: visible;
@@ -166,8 +166,9 @@
 
 :host(:not([text])[desktop]) .ui5-checkbox-root:focus::before,
 :host(:not([text])) .ui5-checkbox-root:focus-visible::before {
-	inset-inline: -0.425rem;
-	inset-block: -0.425rem;
+	/* Fixed focus outline gap (proportional to text checkbox focus position): -0.425rem / 0.3125rem ≈ -1.36 */
+	inset-inline: calc(var(--_ui5_checkbox_focus_position) * -1.36);
+	inset-block: calc(var(--_ui5_checkbox_focus_position) * -1.36);
 }
 
 :host([text]) .ui5-checkbox-root {
