@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+
+### Features
+
+* **ui5-shellbar:** add application-level overflow sample ([#13115](https://github.com/UI5/webcomponents/issues/13115)) ([570513f](https://github.com/UI5/webcomponents/commit/570513f27ac258a8d592c8d0b908501d24143b01))
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** resolve visual issues after refactor ([#13148](https://github.com/UI5/webcomponents/issues/13148)) ([8661177](https://github.com/UI5/webcomponents/commit/86611774c04657d6cfb461c2b240512fbcf0b361)), closes [#13141](https://github.com/UI5/webcomponents/issues/13141)
+
+
+### Features
+
+* **ui5-multi-combobox:** introduce selectedValues property ([#12987](https://github.com/UI5/webcomponents/issues/12987)) ([bbe792b](https://github.com/UI5/webcomponents/commit/bbe792bc3dad9b21fdca9cb7a588a473e2ebdfff))
+
+
+
+
+
 # [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
 
 

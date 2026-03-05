@@ -523,7 +523,7 @@ describe("Toolbar Item Closing Events - closeOverflowSet functionality", () => {
 });
 
 /**
- * Custom component that implements IOverflowToolbarItem with overflowCloseEvents
+ * Custom component that implements IToolbarItemContent with overflowCloseEvents
  * This simulates a component that defines its own custom closing events
  */
 class CustomOverflowComponent extends HTMLElement {
@@ -535,7 +535,7 @@ class CustomOverflowComponent extends HTMLElement {
 		`;
 	}
 
-	// Implements IOverflowToolbarItem.overflowCloseEvents
+	// Implements IToolbarItemContent.overflowCloseEvents
 	get overflowCloseEvents(): string[] {
 		return ["custom-action", "custom-change"];
 	}
@@ -555,7 +555,7 @@ if (!customElements.get("custom-overflow-component")) {
 }
 
 /**
- * Custom component that implements IOverflowToolbarItem with additional custom events
+ * Custom component that implements IToolbarItemContent with additional custom events
  * Used to test combining predefined closeOverflowSet events with component's overflowCloseEvents
  */
 class CustomButtonWithExtraEvents extends HTMLElement {
@@ -582,7 +582,7 @@ if (!customElements.get("custom-button-extra")) {
 // @ts-ignore - Custom element JSX type
 const CustomOverflowComponentRenderer = (props: { id: string }) => <custom-overflow-component id={props.id} />;
 
-describe("Toolbar Item Closing Events - overflowCloseEvents functionality (IOverflowToolbarItem)", () => {
+describe("Toolbar Item Closing Events - overflowCloseEvents functionality (IToolbarItemContent)", () => {
 	it("Should close overflow popover when custom component fires 'custom-action' event from overflowCloseEvents", () => {
 		cy.viewport(300, 600);
 
