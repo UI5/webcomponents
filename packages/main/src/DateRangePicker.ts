@@ -258,12 +258,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
 		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
 	}
-	
-	/**
-	 * @override
-	 */
-	get _headerTitleText() {
-		return DateRangePicker.i18nBundle.getText(CALENDAR_HEADER_TITLE);
+
+	get _submitDisabled() {
+		return !this._calendarSelectedDates || !this._calendarSelectedDates.length;
 	}
 
 	get _cancelButtonText() {
@@ -272,6 +269,22 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 
 	get _okButtonText() {
 		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	/**
+	 * Handles clicking on the `submit` button, within the picker`s footer.
+	 */
+	_submitClick() {
+		//TODO ADD ACTION
+		this._togglePicker();
+	}
+
+	/**
+	 * Handles clicking on the `cancel` button, within the picker`s footer,
+	 * that would disregard the user selection.
+	 */
+	_cancelClick() {
+		this._togglePicker();
 	}
 
 	/**

@@ -6,11 +6,6 @@
 	}
 }
 
-.ui5-date-picker-popover:has([months-to-show="2"]) {
-	width: fit-content;
-	max-width: none;
-}
-
 .ui5-date-picker-popover .ui5-responsive-popover-header .row {
 	justify-content: flex-start;
 	font-family: var(--sapFontHeaderFamily);

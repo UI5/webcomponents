@@ -2,10 +2,6 @@
     display: inline-block;
 }
 
-:host([months-to-show="2"]) {
-    width: auto;
-}
-
 .ui5-cal-root .ui5-calheader {
     display: block;
     height: var(--_ui5_calendar_header_height);
