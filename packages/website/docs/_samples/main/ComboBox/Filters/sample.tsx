@@ -6,16 +6,15 @@ const ComboBox = createComponent(ComboBoxClass);
 const ComboBoxItem = createComponent(ComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <ComboBox placeholder="Contains Filtering" filter="Contains">
-            <ComboBoxItem text="Austria" />
-            <ComboBoxItem text="Bulgaria" />
-            <ComboBoxItem text="Germany" />
-            <ComboBoxItem text="Kazakhstan" />
-            <ComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland" />
-        </ComboBox>
+        <ComboBoxItem text="Austria" />
+        <ComboBoxItem text="Bulgaria" />
+        <ComboBoxItem text="Germany" />
+        <ComboBoxItem text="Kazakhstan" />
+        <ComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland" />
+      </ComboBox>
     </>
   );
 }

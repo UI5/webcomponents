@@ -11,26 +11,34 @@ const Avatar = createComponent(AvatarClass);
 const AvatarBadge = createComponent(AvatarBadgeClass);
 
 function App() {
-
   return (
     <>
       <Avatar mode="Interactive" size="M" initials="JD" colorScheme="Accent5">
-    		<AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
-    	</Avatar>
+        <AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" icon="employee" colorScheme="Accent10">
-    		<AvatarBadge icon="alert" state="Critical" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar
+        mode="Interactive"
+        size="M"
+        icon="employee"
+        colorScheme="Accent10"
+      >
+        <AvatarBadge icon="alert" state="Critical" slot="badge"></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M">
-    		<img src="/images/avatars/man_avatar_1.png" alt="Man Avatar 1" />
-    		<AvatarBadge icon="sys-enter-2" state="Positive" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M">
+        <img src="/images/avatars/man_avatar_1.png" alt="Man Avatar 1" />
+        <AvatarBadge
+          icon="sys-enter-2"
+          state="Positive"
+          slot="badge"
+        ></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" shape="Square">
-    		<img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
-    		<AvatarBadge icon="error" state="Negative" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M" shape="Square">
+        <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+        <AvatarBadge icon="error" state="Negative" slot="badge"></AvatarBadge>
+      </Avatar>
     </>
   );
 }

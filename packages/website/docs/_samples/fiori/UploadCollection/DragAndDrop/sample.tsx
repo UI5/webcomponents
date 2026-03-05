@@ -31,52 +31,71 @@ function App() {
         id: fileIdCounter.current++,
         file: file,
         fileName: file.name,
-        description: "Last modified: " + file.lastModifiedDate + ", size: " + file.size,
+        description:
+          "Last modified: " + file.lastModifiedDate + ", size: " + file.size,
         uploadState: "Ready",
       });
     }
-    setItems(prev => [...prev, ...newItems]);
+    setItems((prev) => [...prev, ...newItems]);
   }, []);
 
-  const handleFileUploaderChange = useCallback((e: UI5CustomEvent<FileUploaderClass, "change">) => {
-    addFiles(e.detail.files);
-  }, [addFiles]);
+  const handleFileUploaderChange = useCallback(
+    (e: UI5CustomEvent<FileUploaderClass, "change">) => {
+      addFiles(e.detail.files);
+    },
+    [addFiles],
+  );
 
   const handleStartUploadingClick = useCallback(() => {
-    setItems(prev => prev.map(item => {
-      if (item.uploadState === "Ready" && item.file) {
-        const updatedItem = { ...item, uploadState: "Uploading" };
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.uploadState === "Ready" && item.file) {
+          const updatedItem = { ...item, uploadState: "Uploading" };
 
-        fetch("/upload", {
-          method: "POST",
-          body: item.file
-        }).then(res => {
-          setItems(prevItems => prevItems.map(i =>
-            i.id === item.id
-              ? { ...i, uploadState: res.status === 200 ? "Complete" : "Error" }
-              : i
-          ));
-        });
+          fetch("/upload", {
+            method: "POST",
+            body: item.file,
+          }).then((res) => {
+            setItems((prevItems) =>
+              prevItems.map((i) =>
+                i.id === item.id
+                  ? {
+                      ...i,
+                      uploadState: res.status === 200 ? "Complete" : "Error",
+                    }
+                  : i,
+              ),
+            );
+          });
 
-        return updatedItem;
-      }
-      return item;
-    }));
+          return updatedItem;
+        }
+        return item;
+      }),
+    );
   }, []);
 
-  const handleDrop = useCallback((e: DragEvent) => {
-    e.preventDefault();
-    addFiles(e.dataTransfer.files);
-  }, [addFiles]);
+  const handleDrop = useCallback(
+    (e: DragEvent) => {
+      e.preventDefault();
+      addFiles(e.dataTransfer.files);
+    },
+    [addFiles],
+  );
 
   const handleDragOver = useCallback((e: DragEvent) => {
     e.preventDefault();
   }, []);
 
-  const handleItemDelete = useCallback((e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
-    const deletedItem = e.detail.item;
-    setItems(prev => prev.filter(item => item.fileName !== deletedItem.fileName));
-  }, []);
+  const handleItemDelete = useCallback(
+    (e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
+      const deletedItem = e.detail.item;
+      setItems((prev) =>
+        prev.filter((item) => item.fileName !== deletedItem.fileName),
+      );
+    },
+    [],
+  );
 
   return (
     <>
@@ -101,10 +120,16 @@ function App() {
       >
         <div slot="header" className="header">
           <Title>Attachments</Title>
-          <Label showColon={true}>Add new files and press to start uploading pending files</Label>
+          <Label showColon={true}>
+            Add new files and press to start uploading pending files
+          </Label>
           <Button onClick={handleStartUploadingClick}>Start</Button>
           <div className="spacer"></div>
-          <FileUploader hideInput={true} multiple={true} onChange={handleFileUploaderChange}>
+          <FileUploader
+            hideInput={true}
+            multiple={true}
+            onChange={handleFileUploaderChange}
+          >
             <Button icon="add" design="Transparent" />
           </FileUploader>
         </div>

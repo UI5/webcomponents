@@ -49,7 +49,9 @@ function App() {
           <Avatar size="M" initials="AB" colorScheme="Accent1" />
           <div className="variant-description">
             <div className="variant-title">Non-interactive Avatar</div>
-            <div className="variant-note">Decorative with initials - no interaction</div>
+            <div className="variant-note">
+              Decorative with initials - no interaction
+            </div>
           </div>
         </div>
 
@@ -59,28 +61,48 @@ function App() {
             <img src="/images/avatars/woman_avatar_1.png" alt="Woman Avatar" />
           </Avatar>
           <div className="variant-description">
-            <div className="variant-title">Non-interactive Avatar with Image</div>
-            <div className="variant-note">Image-based avatar - no interaction</div>
+            <div className="variant-title">
+              Non-interactive Avatar with Image
+            </div>
+            <div className="variant-note">
+              Image-based avatar - no interaction
+            </div>
           </div>
         </div>
 
         {/* Interactive Avatar */}
         <div className="variant-group">
-          <Avatar id="interactive-avt" size="M" mode="Interactive" initials="CD" colorScheme="Accent3" onClick={handleInteractiveAvtClick} />
+          <Avatar
+            id="interactive-avt"
+            size="M"
+            mode="Interactive"
+            initials="CD"
+            colorScheme="Accent3"
+            onClick={handleInteractiveAvtClick}
+          />
           <div className="variant-description">
             <div className="variant-title">Interactive Avatar</div>
-            <div className="variant-note">Clickable - supports user interaction and callbacks</div>
+            <div className="variant-note">
+              Clickable - supports user interaction and callbacks
+            </div>
           </div>
         </div>
 
         {/* Interactive Avatar with Badge */}
         <div className="variant-group">
-          <Avatar size="M" mode="Interactive" initials="EF" colorScheme="Accent5">
+          <Avatar
+            size="M"
+            mode="Interactive"
+            initials="EF"
+            colorScheme="Accent5"
+          >
             <AvatarBadge icon="edit" state="None" slot="badge" />
           </Avatar>
           <div className="variant-description">
             <div className="variant-title">Interactive Avatar with Badge</div>
-            <div className="variant-note">Badge recommended on interactive avatars</div>
+            <div className="variant-note">
+              Badge recommended on interactive avatars
+            </div>
           </div>
         </div>
 
@@ -97,8 +119,12 @@ function App() {
             onClick={handlePopupAvtClick}
           />
           <div className="variant-description">
-            <div className="variant-title">Interactive Avatar with Popup Menu</div>
-            <div className="variant-note">Indicates menu availability via aria-haspopup</div>
+            <div className="variant-title">
+              Interactive Avatar with Popup Menu
+            </div>
+            <div className="variant-note">
+              Indicates menu availability via aria-haspopup
+            </div>
           </div>
         </div>
 
@@ -107,7 +133,9 @@ function App() {
           <Avatar size="M" initials="IJ" role="presentation" />
           <div className="variant-description">
             <div className="variant-title">Decorative Avatar</div>
-            <div className="variant-note">Purely visual - hidden from screen readers</div>
+            <div className="variant-note">
+              Purely visual - hidden from screen readers
+            </div>
           </div>
         </div>
       </div>

@@ -13,15 +13,22 @@ function App() {
   const calRef = useRef(null);
 
   const handleSelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
-    calRef.current!.calendarWeekNumbering = e.detail.selectedOption.getAttribute("data-calendar-week-numbering");
+    calRef.current!.calendarWeekNumbering =
+      e.detail.selectedOption.getAttribute("data-calendar-week-numbering");
   };
 
   return (
     <>
       <Select style={{ width: "300px" }} id="sel" onChange={handleSelectChange}>
-        <Option data-calendar-week-numbering="ISO_8601" selected={true}>ISO_8601</Option>
-        <Option data-calendar-week-numbering="MiddleEastern">MiddleEastern</Option>
-        <Option data-calendar-week-numbering="WesternTraditional">WesternTraditional</Option>
+        <Option data-calendar-week-numbering="ISO_8601" selected={true}>
+          ISO_8601
+        </Option>
+        <Option data-calendar-week-numbering="MiddleEastern">
+          MiddleEastern
+        </Option>
+        <Option data-calendar-week-numbering="WesternTraditional">
+          WesternTraditional
+        </Option>
       </Select>
       <Calendar ref={calRef} id="cal" />
     </>

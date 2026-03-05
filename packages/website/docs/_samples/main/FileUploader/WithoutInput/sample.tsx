@@ -9,13 +9,14 @@ const FileUploader = createComponent(FileUploaderClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
       <Label for="button-only-uploader">Choose file:</Label>
-        <FileUploader id="button-only-uploader" hideInput={true}>
-            <Button icon="upload" tabIndex="-1">Upload</Button>
-        </FileUploader>
+      <FileUploader id="button-only-uploader" hideInput={true}>
+        <Button icon="upload" tabIndex="-1">
+          Upload
+        </Button>
+      </FileUploader>
     </>
   );
 }

@@ -8,17 +8,17 @@ const Panel = createComponent(PanelClass);
 const Title = createComponent(TitleClass);
 
 function App() {
-
   return (
     <>
       <Panel headerText="Panel">
-            <Title level="H5">Heading!</Title>
-    	    <Label>
-                Aute ullamco officia fugiat culpa do tempor tempor aute excepteur magna.
-    		    Quis velit adipisicing excepteur do eu duis elit. Sunt ea pariatur nulla est laborum proident sunt labore
-    		    commodo Lorem laboris nisi Lorem.
-    	    </Label>
-        </Panel>
+        <Title level="H5">Heading!</Title>
+        <Label>
+          Aute ullamco officia fugiat culpa do tempor tempor aute excepteur
+          magna. Quis velit adipisicing excepteur do eu duis elit. Sunt ea
+          pariatur nulla est laborum proident sunt labore commodo Lorem laboris
+          nisi Lorem.
+        </Label>
+      </Panel>
     </>
   );
 }

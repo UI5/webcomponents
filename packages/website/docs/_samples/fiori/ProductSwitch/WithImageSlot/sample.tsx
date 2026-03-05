@@ -12,20 +12,44 @@ const ProductSwitchItem = createComponent(ProductSwitchItemClass);
 const Avatar = createComponent(AvatarClass);
 
 function App() {
-
   return (
     <>
       <ProductSwitch>
-            <ProductSwitchItem titleText="SVG" subtitleText="SVG">
-    			<Avatar slot="image" shape="Square" colorScheme="Transparent" fallbackIcon="employee" size="S">
-    				<img alt="Woman" src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg.adapt.svg/1493030643828.svg" />
-    			</Avatar>
-    		</ProductSwitchItem>
-            <ProductSwitchItem titleText="Home" subtitleText="Central Home" icon="home" />
-            <ProductSwitchItem titleText="Analytics Cloud" subtitleText="Analytics Cloud" icon="business-objects-experience" />
-            <ProductSwitchItem titleText="Catalog" subtitleText="Ariba" icon="contacts" />
-            <ProductSwitchItem titleText="Travel &amp; Expense" subtitleText="Concur" icon="flight" />
-        </ProductSwitch>
+        <ProductSwitchItem titleText="SVG" subtitleText="SVG">
+          <Avatar
+            slot="image"
+            shape="Square"
+            colorScheme="Transparent"
+            fallbackIcon="employee"
+            size="S"
+          >
+            <img
+              alt="Woman"
+              src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg.adapt.svg/1493030643828.svg"
+            />
+          </Avatar>
+        </ProductSwitchItem>
+        <ProductSwitchItem
+          titleText="Home"
+          subtitleText="Central Home"
+          icon="home"
+        />
+        <ProductSwitchItem
+          titleText="Analytics Cloud"
+          subtitleText="Analytics Cloud"
+          icon="business-objects-experience"
+        />
+        <ProductSwitchItem
+          titleText="Catalog"
+          subtitleText="Ariba"
+          icon="contacts"
+        />
+        <ProductSwitchItem
+          titleText="Travel &amp; Expense"
+          subtitleText="Concur"
+          icon="flight"
+        />
+      </ProductSwitch>
     </>
   );
 }

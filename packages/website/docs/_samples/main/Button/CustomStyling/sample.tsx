@@ -4,7 +4,6 @@ import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -19,7 +18,7 @@ function App() {
                 background-color: #dad4f7;
             }
         `}</style>
-        <Button>Custom Button</Button>
+      <Button>Custom Button</Button>
     </>
   );
 }

@@ -31,7 +31,9 @@ function App() {
   const [expanded, setExpanded] = useState(false);
   const [group1Items, setGroup1Items] = useState(allItems);
 
-  const displayedItems = expanded ? group1Items : group1Items.slice(0, visibleCount);
+  const displayedItems = expanded
+    ? group1Items
+    : group1Items.slice(0, visibleCount);
   const hiddenCount = expanded ? 0 : group1Items.length - visibleCount;
 
   const handleShowMoreClick = () => {
@@ -39,28 +41,45 @@ function App() {
   };
 
   const handleItemDelete = (index) => {
-    setGroup1Items(prev => prev.filter((_, i) => i !== index));
+    setGroup1Items((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <>
       <Label>Search with Grouped Suggestions and Show More (N) Item</Label>
-        <Search id="searchShowMore" showClearIcon={true} placeholder="Placeholder">
-            <SearchMessageArea slot="messageArea" description="You can try the following" text="Oh, there are no results" />
-            <SearchItemGroup id="group1" headerText="Group Header">
-              {displayedItems.map((item, index) => (
-                <SearchItem key={item.text + index} text={item.text} icon={item.icon} deletable={true} onDelete={() => handleItemDelete(index)} />
-              ))}
-              {!expanded && hiddenCount > 0 && (
-                <SearchItemShowMore itemsToShowCount={hiddenCount} onClick={handleShowMoreClick} />
-              )}
-            </SearchItemGroup>
-    		<SearchItemGroup id="group2" headerText="Group Header">
-    			<SearchItem text="List Item" icon="history" />
-    			<SearchItem text="List Item" icon="history" />
-    			<SearchItem text="List Item" icon="globe" />
-            </SearchItemGroup>
-        </Search>
+      <Search
+        id="searchShowMore"
+        showClearIcon={true}
+        placeholder="Placeholder"
+      >
+        <SearchMessageArea
+          slot="messageArea"
+          description="You can try the following"
+          text="Oh, there are no results"
+        />
+        <SearchItemGroup id="group1" headerText="Group Header">
+          {displayedItems.map((item, index) => (
+            <SearchItem
+              key={item.text + index}
+              text={item.text}
+              icon={item.icon}
+              deletable={true}
+              onDelete={() => handleItemDelete(index)}
+            />
+          ))}
+          {!expanded && hiddenCount > 0 && (
+            <SearchItemShowMore
+              itemsToShowCount={hiddenCount}
+              onClick={handleShowMoreClick}
+            />
+          )}
+        </SearchItemGroup>
+        <SearchItemGroup id="group2" headerText="Group Header">
+          <SearchItem text="List Item" icon="history" />
+          <SearchItem text="List Item" icon="history" />
+          <SearchItem text="List Item" icon="globe" />
+        </SearchItemGroup>
+      </Search>
     </>
   );
 }

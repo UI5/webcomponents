@@ -24,7 +24,6 @@ const ToolbarItem = createComponent(ToolbarItemClass);
 const MultiComboBoxItem = createComponent(MultiComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -38,55 +37,63 @@ function App() {
       <Toolbar>
         {/* ToolbarItem wrapping Radio Buttons - displays in column when overflowed */}
         <ToolbarItem>
-            <div role="radiogroup" aria-label="Options" className="toolbar-item-group">
-                <RadioButton name="group1" text="Option 1" checked={true} />
-                <RadioButton name="group1" text="Option 2" />
-                <RadioButton name="group1" text="Option 3" />
-            </div>
+          <div
+            role="radiogroup"
+            aria-label="Options"
+            className="toolbar-item-group"
+          >
+            <RadioButton name="group1" text="Option 1" checked={true} />
+            <RadioButton name="group1" text="Option 2" />
+            <RadioButton name="group1" text="Option 3" />
+          </div>
         </ToolbarItem>
 
         {/* ToolbarItem wrapping Checkboxes - displays in column when overflowed */}
         <ToolbarItem>
-            <div role="group" aria-label="Checkboxes" className="toolbar-item-group">
-                <CheckBox text="Checkbox 1" />
-                <CheckBox text="Checkbox 2" checked={true} />
-                <CheckBox text="Checkbox 3" />
-            </div>
+          <div
+            role="group"
+            aria-label="Checkboxes"
+            className="toolbar-item-group"
+          >
+            <CheckBox text="Checkbox 1" />
+            <CheckBox text="Checkbox 2" checked={true} />
+            <CheckBox text="Checkbox 3" />
+          </div>
         </ToolbarItem>
 
         {/* ToolbarItem wrapping an Input Field */}
         <ToolbarItem>
-            <Input placeholder="Enter text" />
+          <Input placeholder="Enter text" />
         </ToolbarItem>
 
         {/* ToolbarItem wrapping a ComboBox */}
         <ToolbarItem>
-            <ComboBox placeholder="Select an option">
-                <ComboBoxItem text="Option 1" />
-                <ComboBoxItem text="Option 2" />
-                <ComboBoxItem text="Option 3" />
-            </ComboBox>
+          <ComboBox placeholder="Select an option">
+            <ComboBoxItem text="Option 1" />
+            <ComboBoxItem text="Option 2" />
+            <ComboBoxItem text="Option 3" />
+          </ComboBox>
         </ToolbarItem>
 
         {/* ToolbarItem wrapping a MultiComboBox */}
         <ToolbarItem>
-            <MultiComboBox placeholder="Select options">
-                <MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
-                <MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
-                <MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
-            </MultiComboBox>
+          <MultiComboBox placeholder="Select options">
+            <MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+            <MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+            <MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+          </MultiComboBox>
         </ToolbarItem>
 
         {/* ToolbarItem wrapping a Switch */}
         <ToolbarItem>
-            <Switch textOn="On" textOff="Off" />
+          <Switch textOn="On" textOff="Off" />
         </ToolbarItem>
 
         {/* ToolbarItem wrapping a DatePicker */}
         <ToolbarItem>
-            <DatePicker placeholder="Select a date" />
+          <DatePicker placeholder="Select a date" />
         </ToolbarItem>
-    </Toolbar>
+      </Toolbar>
     </>
   );
 }

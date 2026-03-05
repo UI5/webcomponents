@@ -39,25 +39,59 @@ function App() {
     }
   }, [addItemsDynamically]);
 
-  const handleMenuSubsUi5BeforeOpen = useCallback((e: UI5CustomEvent<MenuClass, "before-open">) => {
-    const item = e.detail.item;
-    if (item && !item.children.length) {
-      addItemsDynamically(item);
-    }
-  }, [addItemsDynamically]);
+  const handleMenuSubsUi5BeforeOpen = useCallback(
+    (e: UI5CustomEvent<MenuClass, "before-open">) => {
+      const item = e.detail.item;
+      if (item && !item.children.length) {
+        addItemsDynamically(item);
+      }
+    },
+    [addItemsDynamically],
+  );
 
   return (
     <>
-      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={() => setMenuSubsOpen(!menuSubsOpen)}>Open Menu</Button>
-      <Button id="btnAddOpenerDelay" onClick={() => setDelayMenuOpen(!delayMenuOpen)}>Delayed</Button> <br />
-
-      <Menu ref={menuSubsRef} open={menuSubsOpen} id="menuSubs" opener="btnOpenBasic" onBeforeOpen={handleMenuSubsUi5BeforeOpen} onClose={() => setMenuSubsOpen(false)}>
+      <Button
+        id="btnOpenBasic"
+        endIcon="slim-arrow-down"
+        onClick={() => setMenuSubsOpen(!menuSubsOpen)}
+      >
+        Open Menu
+      </Button>
+      <Button
+        id="btnAddOpenerDelay"
+        onClick={() => setDelayMenuOpen(!delayMenuOpen)}
+      >
+        Delayed
+      </Button>{" "}
+      <br />
+      <Menu
+        ref={menuSubsRef}
+        open={menuSubsOpen}
+        id="menuSubs"
+        opener="btnOpenBasic"
+        onBeforeOpen={handleMenuSubsUi5BeforeOpen}
+        onClose={() => setMenuSubsOpen(false)}
+      >
         <MenuItem text="New File" icon="add-document" />
         <MenuItem text="New Folder" icon="add-folder" disabled={true} />
-        <MenuItem text="Open" icon="open-folder" loadingDelay={100} loading={true} />
+        <MenuItem
+          text="Open"
+          icon="open-folder"
+          loadingDelay={100}
+          loading={true}
+        />
       </Menu>
-
-      <Menu ref={delayMenuRef} open={delayMenuOpen} id="delaymenu" loadingDelay={100} loading={true} opener="btnAddOpenerDelay" onBeforeOpen={handleDelaymenuUi5BeforeOpen} onClose={() => setDelayMenuOpen(false)} />
+      <Menu
+        ref={delayMenuRef}
+        open={delayMenuOpen}
+        id="delaymenu"
+        loadingDelay={100}
+        loading={true}
+        opener="btnAddOpenerDelay"
+        onBeforeOpen={handleDelaymenuUi5BeforeOpen}
+        onClose={() => setDelayMenuOpen(false)}
+      />
     </>
   );
 }

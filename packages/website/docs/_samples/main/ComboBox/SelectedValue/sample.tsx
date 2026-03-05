@@ -10,7 +10,9 @@ const ComboBoxItem = createComponent(ComboBoxItemClass);
 function App() {
   const [selectedValue, setSelectedValue] = useState("DE");
 
-  const handleSelectionChange = (e: UI5CustomEvent<ComboBoxClass, "selection-change">) => {
+  const handleSelectionChange = (
+    e: UI5CustomEvent<ComboBoxClass, "selection-change">,
+  ) => {
     const item = e.detail.item;
     if (item) {
       setSelectedValue(item.value || "(no value)");
@@ -21,7 +23,12 @@ function App() {
 
   return (
     <>
-      <ComboBox id="country-combo" placeholder="Select a country" selectedValue="DE" onSelectionChange={handleSelectionChange}>
+      <ComboBox
+        id="country-combo"
+        placeholder="Select a country"
+        selectedValue="DE"
+        onSelectionChange={handleSelectionChange}
+      >
         <ComboBoxItem text="Austria" value="AT" />
         <ComboBoxItem text="Belgium" value="BE" />
         <ComboBoxItem text="France" value="FR" />
@@ -30,7 +37,14 @@ function App() {
         <ComboBoxItem text="Spain" value="ES" />
       </ComboBox>
 
-      <div id="output" style={{ marginTop: "1rem", fontFamily: "var(--sapFontFamily)", color: "var(--sapTextColor)" }}>
+      <div
+        id="output"
+        style={{
+          marginTop: "1rem",
+          fontFamily: "var(--sapFontFamily)",
+          color: "var(--sapTextColor)",
+        }}
+      >
         Selected value: <strong id="selected-value">{selectedValue}</strong>
       </div>
     </>

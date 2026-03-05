@@ -9,12 +9,18 @@ import "@ui5/webcomponents-icons/dist/circle-task-2.js";
 const RatingIndicator = createComponent(RatingIndicatorClass);
 
 function App() {
-
   return (
     <>
-        <RatingIndicator value={3} ratedIcon="heart" unratedIcon="heart-2" /><br />
-        <RatingIndicator value={4} ratedIcon="thumb-up" unratedIcon="border" /><br />
-        <RatingIndicator value="2.5" ratedIcon="circle-task-2" unratedIcon="border" readonly={true} />
+      <RatingIndicator value={3} ratedIcon="heart" unratedIcon="heart-2" />
+      <br />
+      <RatingIndicator value={4} ratedIcon="thumb-up" unratedIcon="border" />
+      <br />
+      <RatingIndicator
+        value="2.5"
+        ratedIcon="circle-task-2"
+        unratedIcon="border"
+        readonly={true}
+      />
     </>
   );
 }

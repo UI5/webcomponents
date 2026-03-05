@@ -6,11 +6,17 @@ const Input = createComponent(InputClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
-      <Label for="input" required={true} showColon={true}>Secret Code</Label>
-        <Input id="input" placeholder="Enter your Secret Code" required={true} type="Password" />
+      <Label for="input" required={true} showColon={true}>
+        Secret Code
+      </Label>
+      <Input
+        id="input"
+        placeholder="Enter your Secret Code"
+        required={true}
+        type="Password"
+      />
     </>
   );
 }

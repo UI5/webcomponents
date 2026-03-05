@@ -10,17 +10,18 @@ const Link = createComponent(LinkClass);
 const Title = createComponent(TitleClass);
 
 function App() {
-
   return (
     <>
       <IllustratedMessage name="UnableToUpload">
-            <Title slot="title" level="H1">Something went wrong</Title>
-            <div slot="subtitle">
-                Please try again or contact us at
-                <Link>example@example.com</Link>
-            </div>
-            <Button icon="refresh">Try again</Button>
-        </IllustratedMessage>
+        <Title slot="title" level="H1">
+          Something went wrong
+        </Title>
+        <div slot="subtitle">
+          Please try again or contact us at
+          <Link>example@example.com</Link>
+        </div>
+        <Button icon="refresh">Try again</Button>
+      </IllustratedMessage>
     </>
   );
 }

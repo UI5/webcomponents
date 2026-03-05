@@ -6,18 +6,22 @@ import "@ui5/webcomponents-icons/dist/cloud.js";
 const Link = createComponent(LinkClass);
 
 function App() {
-
   return (
     <>
       <Link href="https://www.sap.com" target="_blank" icon="employee">
-            View Profile
-        </Link>
+        View Profile
+      </Link>
 
-        <br />
+      <br />
 
-        <Link href="https://www.sap.com" target="_blank" wrappingType="Normal" endIcon="cloud">
-            Check the weather
-        </Link>
+      <Link
+        href="https://www.sap.com"
+        target="_blank"
+        wrappingType="Normal"
+        endIcon="cloud"
+      >
+        Check the weather
+      </Link>
     </>
   );
 }

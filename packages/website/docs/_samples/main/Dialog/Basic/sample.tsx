@@ -40,34 +40,56 @@ function App() {
             }
         }
       `}</style>
-      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>
+        Open Dialog
+      </Button>
 
-        <Dialog open={dialogOpen} id="dialog" headerText="Register Form" onClose={() => setDialogOpen(false)}>
-            <section className="login-form">
-                <div>
-                    <Label for="username" required={true} showColon={true}>Username</Label>
-                    <Input id="username" />
-                </div>
-                <div>
-                    <Label for="password" required={true} showColon={true}>Password</Label>
-                    <Input id="password" type="Password" valueState="Negative" />
-                </div>
-                <div>
-                    <Label for="email" required={true} showColon={true}>Email</Label>
-                    <Input id="email" type="Email" />
-                </div>
-                <div>
-                    <Label for="address" showColon={true}>Address</Label>
-                    <Input id="address" />
-                </div>
-            </section>
-            <Toolbar slot="footer">
-                <ToolbarButton class="dialogCloser" design="Emphasized" text="Submit"
-                 />
-                <ToolbarButton class="dialogCloser" design="Transparent" text="Cancel" onClick={() => setDialogOpen(false)}
-                 />
-            </Toolbar>
-        </Dialog>
+      <Dialog
+        open={dialogOpen}
+        id="dialog"
+        headerText="Register Form"
+        onClose={() => setDialogOpen(false)}
+      >
+        <section className="login-form">
+          <div>
+            <Label for="username" required={true} showColon={true}>
+              Username
+            </Label>
+            <Input id="username" />
+          </div>
+          <div>
+            <Label for="password" required={true} showColon={true}>
+              Password
+            </Label>
+            <Input id="password" type="Password" valueState="Negative" />
+          </div>
+          <div>
+            <Label for="email" required={true} showColon={true}>
+              Email
+            </Label>
+            <Input id="email" type="Email" />
+          </div>
+          <div>
+            <Label for="address" showColon={true}>
+              Address
+            </Label>
+            <Input id="address" />
+          </div>
+        </section>
+        <Toolbar slot="footer">
+          <ToolbarButton
+            class="dialogCloser"
+            design="Emphasized"
+            text="Submit"
+          />
+          <ToolbarButton
+            class="dialogCloser"
+            design="Transparent"
+            text="Cancel"
+            onClick={() => setDialogOpen(false)}
+          />
+        </Toolbar>
+      </Dialog>
     </>
   );
 }

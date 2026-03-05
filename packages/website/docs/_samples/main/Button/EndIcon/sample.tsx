@@ -6,11 +6,14 @@ import "@ui5/webcomponents-icons/dist/home.js";
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
-      <Button endIcon="navigation-down-arrow">Button with Icon at the end</Button>
-        <Button icon="home" endIcon="navigation-down-arrow">Button with two Icons</Button>
+      <Button endIcon="navigation-down-arrow">
+        Button with Icon at the end
+      </Button>
+      <Button icon="home" endIcon="navigation-down-arrow">
+        Button with two Icons
+      </Button>
     </>
   );
 }

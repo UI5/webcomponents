@@ -6,16 +6,15 @@ const MultiComboBox = createComponent(MultiComboBoxClass);
 const MultiComboBoxItem = createComponent(MultiComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <MultiComboBox placeholder="Choose your state" noValidation={true}>
-            <MultiComboBoxItem text="None"></MultiComboBoxItem>
-            <MultiComboBoxItem selected text="Positive"></MultiComboBoxItem>
-            <MultiComboBoxItem text="Negative"></MultiComboBoxItem>
-            <MultiComboBoxItem text="Critical"></MultiComboBoxItem>
-            <MultiComboBoxItem text="Information"></MultiComboBoxItem>
-        </MultiComboBox>
+        <MultiComboBoxItem text="None"></MultiComboBoxItem>
+        <MultiComboBoxItem selected text="Positive"></MultiComboBoxItem>
+        <MultiComboBoxItem text="Negative"></MultiComboBoxItem>
+        <MultiComboBoxItem text="Critical"></MultiComboBoxItem>
+        <MultiComboBoxItem text="Information"></MultiComboBoxItem>
+      </MultiComboBox>
     </>
   );
 }

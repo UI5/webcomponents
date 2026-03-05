@@ -11,7 +11,9 @@ const Label = createComponent(LabelClass);
 function App() {
   const [images, setImages] = useState<string[]>([]);
 
-  const handleFileUploaderChange = (e: UI5CustomEvent<FileUploaderClass, "change">) => {
+  const handleFileUploaderChange = (
+    e: UI5CustomEvent<FileUploaderClass, "change">,
+  ) => {
     const files = e.currentTarget!.files;
 
     if (!files.length) {
@@ -28,15 +30,34 @@ function App() {
   return (
     <>
       <div style={{ height: "100px" }}>
-            <Label for="image-uploader">Upload images:</Label>
-            <FileUploader id="image-uploader" accept="image/*" multiple={true} onChange={handleFileUploaderChange} />
-        </div>
+        <Label for="image-uploader">Upload images:</Label>
+        <FileUploader
+          id="image-uploader"
+          accept="image/*"
+          multiple={true}
+          onChange={handleFileUploaderChange}
+        />
+      </div>
 
-        <div id="result" style={images.length > 0 ? { marginTop: "1rem" } : undefined}>
-            {images.length === 0 ? null : images.map((src, index) => (
-                <img key={index} src={src} width={100} height={100} onLoad={(e: React.SyntheticEvent) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
+      <div
+        id="result"
+        style={images.length > 0 ? { marginTop: "1rem" } : undefined}
+      >
+        {images.length === 0
+          ? null
+          : images.map((src, index) => (
+              <img
+                key={index}
+				alt="image"
+                src={src}
+                width={100}
+                height={100}
+                onLoad={(e: React.SyntheticEvent) =>
+                  URL.revokeObjectURL((e.currentTarget as HTMLImageElement).src)
+                }
+              />
             ))}
-        </div>
+      </div>
     </>
   );
 }

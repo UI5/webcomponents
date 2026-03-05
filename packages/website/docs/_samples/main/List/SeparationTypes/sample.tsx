@@ -8,22 +8,22 @@ const List = createComponent(ListClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <List separators="None">
-          <ListItemStandard icon="product">Item #1</ListItemStandard>
-          <ListItemStandard icon="product">Item #2</ListItemStandard>
-          <ListItemStandard icon="product">Item #3</ListItemStandard>
-        </List>
+        <ListItemStandard icon="product">Item #1</ListItemStandard>
+        <ListItemStandard icon="product">Item #2</ListItemStandard>
+        <ListItemStandard icon="product">Item #3</ListItemStandard>
+      </List>
 
-        <br /><br />
+      <br />
+      <br />
 
-        <List separators="Inner">
-          <ListItemStandard icon="shipping-status">Devilered</ListItemStandard>
-          <ListItemStandard icon="shipping-status">Pending</ListItemStandard>
-          <ListItemStandard icon="shipping-status">Declined</ListItemStandard>
-        </List>
+      <List separators="Inner">
+        <ListItemStandard icon="shipping-status">Devilered</ListItemStandard>
+        <ListItemStandard icon="shipping-status">Pending</ListItemStandard>
+        <ListItemStandard icon="shipping-status">Declined</ListItemStandard>
+      </List>
     </>
   );
 }

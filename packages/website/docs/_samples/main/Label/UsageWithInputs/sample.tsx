@@ -16,7 +16,6 @@ const Select = createComponent(SelectClass);
 const TextArea = createComponent(TextAreaClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -29,23 +28,37 @@ function App() {
         }
       `}</style>
       <div className="f">
-            <Label for="myInput" required={true} showColon={true}>First name</Label>
-            <Input id="myInput" required={true} placeholder="Enter your name" />
-            <Label for="myDatePicker" required={true} showColon={true}>Date of birth</Label>
-            <DatePicker id="myDatePicker" required={true} />
-            <Label for="mySelect" required={true} showColon={true}>Job</Label>
-            <Select id="mySelect" required={true}>
-                <Option>Manager</Option>
-                <Option>Sales</Option>
-                <Option selected={true}>Developer</Option>
-            </Select>
-            <Label for="myTextArea" required={true} showColon={true}>Description</Label>
-            <TextArea id="myTextArea" required={true} placeholder="Type as much text as you wish" />
-            <div style={{ display: "flex", alignItems: "center" }}>
-                <Label for="myCheckBox" required={true} showColon={true}>Accept terms of use</Label>
-                <CheckBox id="myCheckBox" required={true} />
-            </div>
+        <Label for="myInput" required={true} showColon={true}>
+          First name
+        </Label>
+        <Input id="myInput" required={true} placeholder="Enter your name" />
+        <Label for="myDatePicker" required={true} showColon={true}>
+          Date of birth
+        </Label>
+        <DatePicker id="myDatePicker" required={true} />
+        <Label for="mySelect" required={true} showColon={true}>
+          Job
+        </Label>
+        <Select id="mySelect" required={true}>
+          <Option>Manager</Option>
+          <Option>Sales</Option>
+          <Option selected={true}>Developer</Option>
+        </Select>
+        <Label for="myTextArea" required={true} showColon={true}>
+          Description
+        </Label>
+        <TextArea
+          id="myTextArea"
+          required={true}
+          placeholder="Type as much text as you wish"
+        />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Label for="myCheckBox" required={true} showColon={true}>
+            Accept terms of use
+          </Label>
+          <CheckBox id="myCheckBox" required={true} />
         </div>
+      </div>
     </>
   );
 }

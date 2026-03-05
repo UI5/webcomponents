@@ -43,8 +43,8 @@ function App() {
   const sliderRef = useRef(null);
 
   const handleSliderUi5Input = () => {
-    const width = (sliderRef.current!.value / 100 * 1500);
-	containerRef.current!.style.width = `${width}px`;
+    const width = (sliderRef.current!.value / 100) * 1500;
+    containerRef.current!.style.width = `${width}px`;
   };
 
   return (
@@ -64,104 +64,165 @@ function App() {
         	margin-inline-start: -0.5rem;
         }
       `}</style>
-      <Label showColon={true}>Form Layout</Label><Text>S1 M2 L3 XL4</Text><br />
-        <Label showColon={true}>Label Span</Label><Text>S12 M12 L12 XL12</Text><br />
-        <Label showColon={true}>Page Size</Label><Text id="txtLayout">L</Text>
-        <Slider ref={sliderRef} id="slider" value={80} onInput={handleSliderUi5Input} />
+      <Label showColon={true}>Form Layout</Label>
+      <Text>S1 M2 L3 XL4</Text>
+      <br />
+      <Label showColon={true}>Label Span</Label>
+      <Text>S12 M12 L12 XL12</Text>
+      <br />
+      <Label showColon={true}>Page Size</Label>
+      <Text id="txtLayout">L</Text>
+      <Slider
+        ref={sliderRef}
+        id="slider"
+        value={80}
+        onInput={handleSliderUi5Input}
+      />
 
-        <div ref={containerRef} id="container" style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}>
-            <Form headerText="Address" layout="S1 M2 L3 XL4" labelSpan="S12 M12 L12 XL12">
-                <FormGroup headerText="Group1 (Text Fields)" columnSpan={2}>
+      <div
+        ref={containerRef}
+        id="container"
+        style={{ maxWidth: "1500px", width: "1250px", overflowX: "auto" }}
+      >
+        <Form
+          headerText="Address"
+          layout="S1 M2 L3 XL4"
+          labelSpan="S12 M12 L12 XL12"
+        >
+          <FormGroup headerText="Group1 (Text Fields)" columnSpan={2}>
+            <FormItem>
+              <Label required={true} for="nameInp" slot="labelContent">
+                Label:
+              </Label>
+              <Input id="nameInp" value="Typed text" />
+            </FormItem>
 
-                    <FormItem>
-                        <Label required={true} htmlFor="nameInp" slot="labelContent">Label:</Label>
-                        <Input id="nameInp" value="Typed text" />
-                    </FormItem>
-                
-                    <FormItem>
-                        <Label required={true} htmlFor="cityInp" slot="labelContent">Label:</Label>
-                        <div>
-                            <Input style={{ flexGrow: 1, marginInlineEnd: "0.25rem" }} id="cityInp" placeholder="Placeholder" />
-                            <Text>UNIT</Text>
-                        </div>
-                    </FormItem>
-            
-                    <FormItem>
-                        <Label required={true} htmlFor="streetInp" slot="labelContent">Label:</Label>
-                        <TextArea id="streetInp" placeholder="Write your message here" showExceededText={true} maxLength={10} />
-                    </FormItem>
-                
-                    <FormItem>
-                        <Label required={true} slot="labelContent" htmlFor="fileUpload">Label:</Label>
-                        <FileUploader id="fileUpload" placeholder="Choose a file">
-                            <Button>Browse...</Button>
-                        </FileUploader>
-                    </FormItem>
+            <FormItem>
+              <Label required={true} for="cityInp" slot="labelContent">
+                Label:
+              </Label>
+              <div>
+                <Input
+                  style={{ flexGrow: 1, marginInlineEnd: "0.25rem" }}
+                  id="cityInp"
+                  placeholder="Placeholder"
+                />
+                <Text>UNIT</Text>
+              </div>
+            </FormItem>
 
-                    <FormItem>
-                        <Label required={true} htmlFor="durationInp" slot="labelContent">Duration:</Label>
-                        <TimePicker id="durationInp" formatPattern="hh:mm:ss" value="12:00:01" />
-                    </FormItem>
-    
-                    <FormItem>
-                        <Label required={true} htmlFor="cityInp3" slot="labelContent">Label:</Label>
-                        <Input id="cityInp3" placeholder="Placeholder" />
-                        <Input placeholder="Placeholder" />
-                    </FormItem>
-                </FormGroup>
+            <FormItem>
+              <Label required={true} for="streetInp" slot="labelContent">
+                Label:
+              </Label>
+              <TextArea
+                id="streetInp"
+                placeholder="Write your message here"
+                showExceededText={true}
+                maxLength={10}
+              />
+            </FormItem>
 
-                <FormGroup headerText="Group2 (Cb, Rb, Switch)">
-                    <FormItem>
-                        <Label required={true} slot="labelContent" htmlFor="rbGroup">Label:</Label>
-                        <CheckBox class="margin--density-aware" text="Here comes your checkbox text" />
-                    </FormItem>
+            <FormItem>
+              <Label required={true} slot="labelContent" for="fileUpload">
+                Label:
+              </Label>
+              <FileUploader id="fileUpload" placeholder="Choose a file">
+                <Button>Browse...</Button>
+              </FileUploader>
+            </FormItem>
 
-                    <FormItem>
-                        <Label required={true} slot="labelContent" htmlFor="rbGroup">Label:</Label>
+            <FormItem>
+              <Label required={true} for="durationInp" slot="labelContent">
+                Duration:
+              </Label>
+              <TimePicker
+                id="durationInp"
+                formatPattern="hh:mm:ss"
+                value="12:00:01"
+              />
+            </FormItem>
 
-                        <div role="radiogroup" className="margin--density-aware">
-                            <RadioButton id="rbGroup" text="With Text" name="test" />
-                            <RadioButton text="With Tex" name="test" />
-                        </div>
-                    </FormItem>
+            <FormItem>
+              <Label required={true} for="cityInp3" slot="labelContent">
+                Label:
+              </Label>
+              <Input id="cityInp3" placeholder="Placeholder" />
+              <Input placeholder="Placeholder" />
+            </FormItem>
+          </FormGroup>
 
-                    <FormItem>
-                        <Label required={true} slot="labelContent" htmlFor="swGroup">Label:</Label>
-                        <Switch id="swGrou" class="margin--fixed" checked={true} />
-                    </FormItem>
-                </FormGroup>
+          <FormGroup headerText="Group2 (Cb, Rb, Switch)">
+            <FormItem>
+              <Label required={true} slot="labelContent" for="rbGroup">
+                Label:
+              </Label>
+              <CheckBox
+                class="margin--density-aware"
+                text="Here comes your checkbox text"
+              />
+            </FormItem>
 
-                <FormGroup headerText="Group3 (Select Fields)">
-                    <FormItem>
-                        <Label required={true} htmlFor="countrySel" slot="labelContent">Label:</Label>
-                        <Select id="countrySel" accessibleNameRef="countryLbl">
-                            <Option>Australia</Option>
-                            <Option selected={true}>Germany</Option>
-                            <Option>England</Option>
-                        </Select>
-                    </FormItem>
+            <FormItem>
+              <Label required={true} slot="labelContent" for="rbGroup">
+                Label:
+              </Label>
 
-                    <FormItem>
-                        <Label required={true} htmlFor="countrySel2" slot="labelContent">Label:</Label>
-                        <Select id="countrySel2" accessibleNameRef="countryLbl">
-                            <Option>Australia</Option>
-                            <Option>Germany</Option>
-                            <Option selected={true}>England</Option>
-                        </Select>
-                    </FormItem>
+              <div role="radiogroup" className="margin--density-aware">
+                <RadioButton id="rbGroup" text="With Text" name="test" />
+                <RadioButton text="With Tex" name="test" />
+              </div>
+            </FormItem>
 
-                    <FormItem>
-                        <Label required={true} htmlFor="mcb-grouping1" slot="labelContent">Label:</Label>
-                        <MultiInput id="mcb-grouping1" showValueHelpIcon={true}>
-                            <Token slot="tokens" text="laboris" />
-                            <Token slot="tokens" text="ipsum" />
-                            <Token slot="tokens" text="esse" />
-                            <Token slot="tokens" text="amet" />
-                        </MultiInput>
-                    </FormItem>
-                </FormGroup>
-            </Form>
-        </div>
+            <FormItem>
+              <Label required={true} slot="labelContent" for="swGroup">
+                Label:
+              </Label>
+              <Switch id="swGrou" class="margin--fixed" checked={true} />
+            </FormItem>
+          </FormGroup>
+
+          <FormGroup headerText="Group3 (Select Fields)">
+            <FormItem>
+              <Label required={true} for="countrySel" slot="labelContent">
+                Label:
+              </Label>
+              <Select id="countrySel" accessibleNameRef="countryLbl">
+                <Option>Australia</Option>
+                <Option selected={true}>Germany</Option>
+                <Option>England</Option>
+              </Select>
+            </FormItem>
+
+            <FormItem>
+              <Label required={true} for="countrySel2" slot="labelContent">
+                Label:
+              </Label>
+              <Select id="countrySel2" accessibleNameRef="countryLbl">
+                <Option>Australia</Option>
+                <Option>Germany</Option>
+                <Option selected={true}>England</Option>
+              </Select>
+            </FormItem>
+
+            <FormItem>
+              <Label
+                required={true}
+                for="mcb-grouping1"
+                slot="labelContent"
+              >
+                Label:
+              </Label>
+              <MultiInput id="mcb-grouping1" showValueHelpIcon={true}>
+                <Token slot="tokens" text="laboris" />
+                <Token slot="tokens" text="ipsum" />
+                <Token slot="tokens" text="esse" />
+                <Token slot="tokens" text="amet" />
+              </MultiInput>
+            </FormItem>
+          </FormGroup>
+        </Form>
+      </div>
     </>
   );
 }

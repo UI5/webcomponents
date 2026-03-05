@@ -15,13 +15,27 @@ function App() {
 
   return (
     <>
-      <Button id="openDialogButton" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
-        <Dialog open={dialogOpen} id="hello-dialog" headerText="Error" onClose={() => setDialogOpen(false)}>
-            <IllustratedMessage name="UnableToLoad" />
-            <Bar design="Footer" slot="footer">
-                <Button id="closeDialogButton" design="Emphasized" slot="endContent" onClick={() => setDialogOpen(false)}>Close</Button>
-            </Bar>
-        </Dialog>
+      <Button id="openDialogButton" onClick={() => setDialogOpen(true)}>
+        Open Dialog
+      </Button>
+      <Dialog
+        open={dialogOpen}
+        id="hello-dialog"
+        headerText="Error"
+        onClose={() => setDialogOpen(false)}
+      >
+        <IllustratedMessage name="UnableToLoad" />
+        <Bar design="Footer" slot="footer">
+          <Button
+            id="closeDialogButton"
+            design="Emphasized"
+            slot="endContent"
+            onClick={() => setDialogOpen(false)}
+          >
+            Close
+          </Button>
+        </Bar>
+      </Dialog>
     </>
   );
 }

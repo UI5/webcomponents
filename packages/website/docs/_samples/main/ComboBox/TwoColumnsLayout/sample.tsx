@@ -6,7 +6,6 @@ const ComboBox = createComponent(ComboBoxClass);
 const ComboBoxItem = createComponent(ComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <ComboBox placeholder="Two-column layout">
@@ -15,7 +14,10 @@ function App() {
         <ComboBoxItem text="Brazil" additionalText="BR" />
         <ComboBoxItem text="Bulgaria" additionalText="BG" />
         <ComboBoxItem text="Canada" additionalText="CA" />
-        <ComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland" additionalText="UK" />
+        <ComboBoxItem
+          text="The United Kingdom of Great Britain and Northern Ireland"
+          additionalText="UK"
+        />
       </ComboBox>
     </>
   );

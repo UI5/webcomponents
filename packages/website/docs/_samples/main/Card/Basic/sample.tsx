@@ -15,7 +15,6 @@ const List = createComponent(ListClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -24,27 +23,36 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" titleText="This header is interactive" subtitleText="Click, press Enter or Space" additionalText="3 of 6" interactive={true}>
-                <Icon name="group" slot="avatar" />
-            </CardHeader>
-            <List style={{ marginBlockEnd: "0.75rem" }} separators="None">
-                <ListItemStandard description="Software Architect">Richard Wilson
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard description="Visual Designer">Elena Petrova
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard description="Quality Specialist">John Miller
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_3.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-            </List>
-        </Card>
+        <CardHeader
+          slot="header"
+          titleText="This header is interactive"
+          subtitleText="Click, press Enter or Space"
+          additionalText="3 of 6"
+          interactive={true}
+        >
+          <Icon name="group" slot="avatar" />
+        </CardHeader>
+        <List style={{ marginBlockEnd: "0.75rem" }} separators="None">
+          <ListItemStandard description="Software Architect">
+            Richard Wilson
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard description="Visual Designer">
+            Elena Petrova
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard description="Quality Specialist">
+            John Miller
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_3.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </List>
+      </Card>
     </>
   );
 }

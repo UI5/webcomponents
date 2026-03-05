@@ -10,21 +10,30 @@ const TableHeaderCell = createComponent(TableHeaderCellClass);
 const TableHeaderRow = createComponent(TableHeaderRowClass);
 
 function App() {
-
   return (
     <>
       <Table id="table" overflowMode="Popin">
-    		<IllustratedMessage slot="noData" name="NoData" />
-    {/* playground-fold */}
-    		<TableHeaderRow slot="headerRow">
-    			<TableHeaderCell id="produtCol" width="300px"><span>Product</span></TableHeaderCell>
-    			<TableHeaderCell id="supplierCol" width="200px">Supplier</TableHeaderCell>
-    			<TableHeaderCell id="dimensionsCol" width="300px">Dimensions</TableHeaderCell>
-    			<TableHeaderCell id="weightCol" width="100px">Weight</TableHeaderCell>
-    			<TableHeaderCell id="priceCol" width="220px">Price</TableHeaderCell>
-    		</TableHeaderRow>
-    {/* playground-fold-end */}
-    	</Table>
+        <IllustratedMessage slot="noData" name="NoData" />
+        {/* playground-fold */}
+        <TableHeaderRow slot="headerRow">
+          <TableHeaderCell id="produtCol" width="300px">
+            <span>Product</span>
+          </TableHeaderCell>
+          <TableHeaderCell id="supplierCol" width="200px">
+            Supplier
+          </TableHeaderCell>
+          <TableHeaderCell id="dimensionsCol" width="300px">
+            Dimensions
+          </TableHeaderCell>
+          <TableHeaderCell id="weightCol" width="100px">
+            Weight
+          </TableHeaderCell>
+          <TableHeaderCell id="priceCol" width="220px">
+            Price
+          </TableHeaderCell>
+        </TableHeaderRow>
+        {/* playground-fold-end */}
+      </Table>
     </>
   );
 }

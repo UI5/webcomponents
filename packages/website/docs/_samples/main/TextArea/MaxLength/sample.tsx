@@ -9,13 +9,19 @@ function App() {
   const [valueState, setValueState] = useState("None");
 
   const handleTextAreaInput = (e: UI5CustomEvent<TextAreaClass, "input">) => {
-    const value = e.target.value;
-    const maxlength = e.target.maxlength;
+    const value = e.currentTarget.value;
+    const maxlength = e.currentTarget.maxlength;
     setValueState(value.length > maxlength ? "Critical" : "None");
   };
 
   return (
-    <TextArea maxLength={10} placeholder="Enter more than 10 characters" showExceededText={true} valueState={valueState} onInput={handleTextAreaInput} />
+    <TextArea
+      maxlength={10}
+      placeholder="Enter more than 10 characters"
+      showExceededText={true}
+      valueState={valueState as "None" | "Critical"}
+      onInput={handleTextAreaInput}
+    />
   );
 }
 

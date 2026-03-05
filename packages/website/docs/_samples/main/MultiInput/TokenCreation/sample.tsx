@@ -10,8 +10,18 @@ const Token = createComponent(TokenClass);
 const SuggestionItem = createComponent(SuggestionItemClass);
 
 const suggestions = [
-  "Argentina", "Bulgaria", "England", "Finland", "Germany",
-  "Hungary", "Italy", "Luxembourg", "Mexico", "Philippines", "Sweden", "USA",
+  "Argentina",
+  "Bulgaria",
+  "England",
+  "Finland",
+  "Germany",
+  "Hungary",
+  "Italy",
+  "Luxembourg",
+  "Mexico",
+  "Philippines",
+  "Sweden",
+  "USA",
 ];
 
 function App() {
@@ -19,7 +29,9 @@ function App() {
   const [valueState, setValueState] = useState("None");
   const multiInputRef = useRef(null);
 
-  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
+  const handleTokenDelete = (
+    e: UI5CustomEvent<MultiInputClass, "token-delete">,
+  ) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);
@@ -29,11 +41,15 @@ function App() {
 
   const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
-    const pastedText = (e.clipboardData || window.clipboardData).getData("text/plain");
+    const pastedText = (e.clipboardData || window.clipboardData).getData(
+      "text/plain",
+    );
     if (!pastedText) {
       return;
     }
-    const separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter((t) => !!t);
+    const separatedTexts = pastedText
+      .split(/\r\n|\r|\n|\t/g)
+      .filter((t) => !!t);
     if (separatedTexts.length === 1) {
       if (multiInputRef.current) {
         multiInputRef.current!.value += separatedTexts[0];
@@ -44,10 +60,10 @@ function App() {
   };
 
   const handleChange = (e: UI5CustomEvent<MultiInputClass, "change">) => {
-    if (!e.target.value) {
+    if (!e.currentTarget.value) {
       return;
     }
-    const isDuplicate = tokens.some((t) => t === e.target.value);
+    const isDuplicate = tokens.some((t) => t === e.currentTarget.value);
     if (isDuplicate) {
       setValueState("Negative");
       setTimeout(() => {
@@ -55,8 +71,8 @@ function App() {
       }, 2000);
       return;
     }
-    setTokens((prev) => [...prev, e.target.value]);
-    e.target.value = "";
+    setTokens((prev) => [...prev, e.currentTarget.value]);
+    e.currentTarget.value = "";
   };
 
   return (

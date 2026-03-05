@@ -18,10 +18,17 @@ function App() {
   const peoplePopoverRef = useRef(null);
   const avatarGroupRef = useRef(null);
   const [groupWidth, setGroupWidth] = useState("60%");
-  const [popAvatar, setPopAvatar] = useState<any>({ icon: "", initials: "", colorScheme: "", imageSrc: null });
+  const [popAvatar, setPopAvatar] = useState<any>({
+    icon: "",
+    initials: "",
+    colorScheme: "",
+    imageSrc: null,
+  });
   const [hiddenAvatars, setHiddenAvatars] = useState<any[]>([]);
 
-  const handleAvatarGroupClick = (e: UI5CustomEvent<AvatarGroupClass, "click">) => {
+  const handleAvatarGroupClick = (
+    e: UI5CustomEvent<AvatarGroupClass, "click">,
+  ) => {
     const group = avatarGroupRef.current;
     if (e.detail.overflowButtonClicked) {
       const items = group.hiddenItems;
@@ -55,7 +62,7 @@ function App() {
   };
 
   const handleSliderInput = (e: UI5CustomEvent<SliderClass, "input">) => {
-    setGroupWidth(e.target.value + "%");
+    setGroupWidth(e.currentTarget.value + "%");
   };
 
   return (
@@ -75,7 +82,7 @@ function App() {
               initials={popAvatar.initials}
               icon={popAvatar.icon}
             >
-              {popAvatar.imageSrc && <img src={popAvatar.imageSrc} />}
+              {popAvatar.imageSrc && <img src={popAvatar.imageSrc} alt="Avatar" />}
             </Avatar>
           </div>
           <div className="title-slot" style={{ display: "inline-block" }}>
@@ -90,23 +97,45 @@ function App() {
           style={{ width: "400px" }}
           placement="Bottom"
         >
-          <div className="placeholder" style={{ display: "flex", flexWrap: "wrap" }}>
+          <div
+            className="placeholder"
+            style={{ display: "flex", flexWrap: "wrap" }}
+          >
             {hiddenAvatars.map((av, i) => (
               <div key={i} className="avatar-slot" style={{ padding: "5px" }}>
-                <Avatar interactive={true} icon={av.icon} initials={av.initials} colorScheme={av.colorScheme}>
-                  {av.imageSrc && <img src={av.imageSrc} />}
+                <Avatar
+                  interactive={true}
+                  icon={av.icon}
+                  initials={av.initials}
+                  colorScheme={av.colorScheme}
+                >
+                  {av.imageSrc && <img src={av.imageSrc} alt="Avatar" />}
                 </Avatar>
               </div>
             ))}
           </div>
         </Popover>
-        <Slider id="sliderIndividual" min={1} max={100} value={60} onInput={handleSliderInput} />
-        <AvatarGroup ref={avatarGroupRef} type="Individual" style={{ width: groupWidth }} onClick={handleAvatarGroupClick}>
+        <Slider
+          id="sliderIndividual"
+          min={1}
+          max={100}
+          value={60}
+          onInput={handleSliderInput}
+        />
+        <AvatarGroup
+          ref={avatarGroupRef}
+          type="Individual"
+          style={{ width: groupWidth }}
+          onClick={handleAvatarGroupClick}
+        >
           <Avatar size="M" icon="employee" />
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
@@ -115,7 +144,10 @@ function App() {
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
@@ -124,7 +156,10 @@ function App() {
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />

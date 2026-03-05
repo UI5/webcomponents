@@ -4,10 +4,7 @@ import DateRangePickerClass from "@ui5/webcomponents/dist/DateRangePicker.js";
 const DateRangePicker = createComponent(DateRangePickerClass);
 
 function App() {
-
-  return (
-    <DateRangePicker />
-  );
+  return <DateRangePicker />;
 }
 
 export default App;

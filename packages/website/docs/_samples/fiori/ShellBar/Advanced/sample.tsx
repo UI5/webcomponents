@@ -31,33 +31,45 @@ const Text = createComponent(TextClass);
 const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
-      <ShellBar notificationsCount={72} showNotifications={true} showProductSwitch={true}>
-                <Button icon="menu2" slot="startButton" />
-                <Button icon="nav-back" slot="startButton" />
+      <ShellBar
+        notificationsCount={72}
+        showNotifications={true}
+        showProductSwitch={true}
+      >
+        <Button icon="menu2" slot="startButton" />
+        <Button icon="nav-back" slot="startButton" />
 
-                <ShellBarBranding slot="branding">
-                    Product Identifier
-                    <img slot="logo" src="/images/sap-logo-svg.svg" />
-                </ShellBarBranding>
-                <Tag design="Set2" colorScheme="7" slot="content">Trial</Tag>
-                <Text slot="content">30 days remaining</Text>
-                <ShellBarSpacer slot="content" />
-                <div slot="content" style={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-                    <Switch />
-                    <Label>Try Beta Version</Label>
-                </div>
+        <ShellBarBranding slot="branding">
+          Product Identifier
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+        </ShellBarBranding>
+        <Tag design="Set2" colorScheme="7" slot="content">
+          Trial
+        </Tag>
+        <Text slot="content">30 days remaining</Text>
+        <ShellBarSpacer slot="content" />
+        <div
+          slot="content"
+          style={{ display: "flex", gap: "0 5px", alignItems: "center" }}
+        >
+          <Switch />
+          <Label>Try Beta Version</Label>
+        </div>
 
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-                    <img src="/images/avatars/man_avatar_3.png"/>
-                </Avatar>
-            </ShellBar>
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
     </>
   );
 }

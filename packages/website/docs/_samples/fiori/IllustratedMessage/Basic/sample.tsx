@@ -6,13 +6,12 @@ const IllustratedMessage = createComponent(IllustratedMessageClass);
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
       <IllustratedMessage name="UnableToUpload">
-            <Button design="Emphasized">Action 1</Button>
-            <Button>Action 2</Button>
-        </IllustratedMessage>
+        <Button design="Emphasized">Action 1</Button>
+        <Button>Action 2</Button>
+      </IllustratedMessage>
     </>
   );
 }

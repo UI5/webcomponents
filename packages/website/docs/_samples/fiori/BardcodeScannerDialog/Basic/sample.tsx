@@ -12,26 +12,45 @@ const Label = createComponent(LabelClass);
 
 function App() {
   const [open, setOpen] = useState(false);
+  const [scanResult, setScanResult] = useState("");
+  const [scanError, setScanError] = useState("");
 
-  const handleDlgScanUi5ScanSuccess = (e: UI5CustomEvent<BarcodeScannerDialogClass, "scan-success">) => {
-    scanResult.innerHTML = e.detail.text;
-	setOpen(false);
+  const handleDlgScanUi5ScanSuccess = (
+    e: UI5CustomEvent<BarcodeScannerDialogClass, "scan-success">,
+  ) => {
+    setScanResult(e.detail.text);
+    setOpen(false);
   };
 
-  const handleDlgScanUi5ScanError = (e: UI5CustomEvent<BarcodeScannerDialogClass, "scan-error">) => {
-    scanError.innerHTML = e.detail.message;
-	setOpen(false);
+  const handleDlgScanUi5ScanError = (
+    e: UI5CustomEvent<BarcodeScannerDialogClass, "scan-error">,
+  ) => {
+    setScanError(e.detail.message);
+    setOpen(false);
   };
 
   return (
     <>
-      <BarcodeScannerDialog open={open} id="dlgScan" onScanSuccess={handleDlgScanUi5ScanSuccess} onScanError={handleDlgScanUi5ScanError} onClose={() => setOpen(false)} />
+      <BarcodeScannerDialog
+        open={open}
+        id="dlgScan"
+        onScanSuccess={handleDlgScanUi5ScanSuccess}
+        onScanError={handleDlgScanUi5ScanError}
+        onClose={() => setOpen(false)}
+      />
 
-        <Button id="btnScan" icon="camera" tooltip="Start Camera" onClick={() => setOpen(true)}>Scan</Button>
-        <div>
-            <Label id="scanResult" />
-            <Label id="scanError" />
-        </div>
+      <Button
+        id="btnScan"
+        icon="camera"
+        tooltip="Start Camera"
+        onClick={() => setOpen(true)}
+      >
+        Scan
+      </Button>
+      <div>
+        <Label>{scanResult}</Label>
+        <Label>{scanError}</Label>
+      </div>
     </>
   );
 }

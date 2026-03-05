@@ -8,7 +8,6 @@ const ComboBoxItem = createComponent(ComboBoxItemClass);
 const ComboBoxItemGroup = createComponent(ComboBoxItemGroupClass);
 
 function App() {
-
   return (
     <>
       <ComboBox placeholder="Grouping of items">

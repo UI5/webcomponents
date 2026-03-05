@@ -14,25 +14,33 @@ const Text = createComponent(TextClass);
 function App() {
   const [selectedValue, setSelectedValue] = useState("DE");
 
-  const handleCountrySelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
+  const handleCountrySelectChange = (
+    e: UI5CustomEvent<SelectClass, "change">,
+  ) => {
     setSelectedValue(e.currentTarget.value!);
   };
 
   return (
     <>
       <div>
-    	<Label for="countrySelect">Country:</Label>
-    	<Select id="countrySelect" value="DE" onChange={handleCountrySelectChange}>
-    		<Option value="US">United States</Option>
-    		<Option value="DE">Germany</Option>
-    		<Option value="FR">France</Option>
-    		<Option value="UK">United Kingdom</Option>
-    	</Select>
-    </div>
+        <Label for="countrySelect">Country:</Label>
+        <Select
+          id="countrySelect"
+          value="DE"
+          onChange={handleCountrySelectChange}
+        >
+          <Option value="US">United States</Option>
+          <Option value="DE">Germany</Option>
+          <Option value="FR">France</Option>
+          <Option value="UK">United Kingdom</Option>
+        </Select>
+      </div>
 
-    <div>
-    	<Label>Selected value: <Text id="output">{selectedValue}</Text></Label>
-    </div>
+      <div>
+        <Label>
+          Selected value: <Text id="output">{selectedValue}</Text>
+        </Label>
+      </div>
     </>
   );
 }

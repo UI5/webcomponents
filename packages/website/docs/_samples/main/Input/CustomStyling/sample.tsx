@@ -4,7 +4,6 @@ import InputClass from "@ui5/webcomponents/dist/Input.js";
 const Input = createComponent(InputClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -14,7 +13,7 @@ function App() {
                 background-color: #ffeded;
             }
         `}</style>
-        <Input value="Styled input" />
+      <Input value="Styled input" />
     </>
   );
 }

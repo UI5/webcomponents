@@ -12,14 +12,16 @@ const Text = createComponent(TextClass);
 const DynamicDateRange = createComponent(DynamicDateRangeClass);
 
 function App() {
-
   return (
     <>
       <Text>All options</Text>
-        <DynamicDateRange options="TODAY, TOMORROW, YESTERDAY, DATE, DATERANGE, DATETIMERANGE"></DynamicDateRange>
+      <DynamicDateRange options="TODAY, TOMORROW, YESTERDAY, DATE, DATERANGE, DATETIMERANGE"></DynamicDateRange>
 
-        <Text>Only two options</Text>
-        <DynamicDateRange id="dynamicDateRange" options="TODAY, DATE"></DynamicDateRange>
+      <Text>Only two options</Text>
+      <DynamicDateRange
+        id="dynamicDateRange"
+        options="TODAY, DATE"
+      ></DynamicDateRange>
     </>
   );
 }

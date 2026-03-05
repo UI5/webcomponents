@@ -26,7 +26,6 @@ const List = createComponent(ListClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -46,71 +45,133 @@ function App() {
             padding-inline-end: 0;
         }
       `}</style>
-      <Carousel cyclic={true} itemsPerPage="S1 M2 L3 XL3" arrowsPlacement="Navigation">
-            <Card style={{ minWidth: "18rem" }} class="medium">
-                <CardHeader slot="header" titleText="Activities" subtitleText="For Today" />
-                <Timeline>
-                    <TimelineItem id="test-item" titleText="called" timestamp={1487583000000} icon="phone" name="John Smith" nameClickable="" />
-                    <TimelineItem titleText="Weekly Sync - CP Design" timestamp={1517349600000} icon="calendar">MR
-                        SOF02 2.43</TimelineItem>
-                    <TimelineItem titleText="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">Online meeting</TimelineItem>
-                </Timeline>
-            </Card>
-            <Card style={{ minWidth: "18rem" }} class="small">
-                <CardHeader slot="header" titleText="David Williams" subtitleText="Sales Manager">
-                    <img src="/images/avatars/man_avatar_1.png" alt="" slot="avatar" />
-                </CardHeader>
-                <List separators="Inner">
-                    <ListItemStandard icon="competitor" iconEnd={true}>Personal Development</ListItemStandard>
-                    <ListItemStandard icon="wallet" iconEnd={true}>Finance</ListItemStandard>
-                    <ListItemStandard icon="collaborate" iconEnd={true}>Communications Skills</ListItemStandard>
-                </List>
-            </Card>
-            <Card style={{ minWidth: "18rem" }} class="medium">
-                <CardHeader slot="header" titleText="Team Dolphins" subtitleText="Direct Reports" status="1 of 2">
-                    <Icon name="group" slot="avatar" />
-                </CardHeader>
-                <List separators="None">
-                    <ListItemStandard description="User Researcher">Alain Chevalier
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                    <ListItemStandard description="Artist">Monique Legrand
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                    <ListItemStandard description="UX Specialist">Michael Adams
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                </List>
-            </Card>
-            <Card style={{ minWidth: "18rem" }} class="medium">
-                <CardHeader slot="header" titleText="Team Bears" subtitleText="Direct Reports" interactive={true} status="2 of 2">
-                    <Icon name="group" slot="avatar" />
-                </CardHeader>
-                <List separators="None">
-                    <ListItemStandard description="Software Architect">Richard Wilson
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                    <ListItemStandard description="Visual Designer">Elena Petrova
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                    <ListItemStandard description="Quality Specialist">John Miller
-                        <Avatar slot="image" shape="Square">
-                            <img src="/images/avatars/man_avatar_3.png" alt="Woman image" />
-                        </Avatar>
-                    </ListItemStandard>
-                </List>
-            </Card>
-        </Carousel>
+      <Carousel
+        cyclic={true}
+        itemsPerPage="S1 M2 L3 XL3"
+        arrowsPlacement="Navigation"
+      >
+        <Card style={{ minWidth: "18rem" }} class="medium">
+          <CardHeader
+            slot="header"
+            titleText="Activities"
+            subtitleText="For Today"
+          />
+          <Timeline>
+            <TimelineItem
+              id="test-item"
+              titleText="called"
+              timestamp={1487583000000}
+              icon="phone"
+              name="John Smith"
+              nameClickable=""
+            />
+            <TimelineItem
+              titleText="Weekly Sync - CP Design"
+              timestamp={1517349600000}
+              icon="calendar"
+            >
+              MR SOF02 2.43
+            </TimelineItem>
+            <TimelineItem
+              titleText="Video Conference Call - UI5"
+              timestamp={1485813600000}
+              icon="calendar"
+            >
+              Online meeting
+            </TimelineItem>
+          </Timeline>
+        </Card>
+        <Card style={{ minWidth: "18rem" }} class="small">
+          <CardHeader
+            slot="header"
+            titleText="David Williams"
+            subtitleText="Sales Manager"
+          >
+            <img src="/images/avatars/man_avatar_1.png" alt="" slot="avatar" />
+          </CardHeader>
+          <List separators="Inner">
+            <ListItemStandard icon="competitor" iconEnd={true}>
+              Personal Development
+            </ListItemStandard>
+            <ListItemStandard icon="wallet" iconEnd={true}>
+              Finance
+            </ListItemStandard>
+            <ListItemStandard icon="collaborate" iconEnd={true}>
+              Communications Skills
+            </ListItemStandard>
+          </List>
+        </Card>
+        <Card style={{ minWidth: "18rem" }} class="medium">
+          <CardHeader
+            slot="header"
+            titleText="Team Dolphins"
+            subtitleText="Direct Reports"
+            status="1 of 2"
+          >
+            <Icon name="group" slot="avatar" />
+          </CardHeader>
+          <List separators="None">
+            <ListItemStandard description="User Researcher">
+              Alain Chevalier
+              <Avatar slot="image" shape="Square">
+                <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
+              </Avatar>
+            </ListItemStandard>
+            <ListItemStandard description="Artist">
+              Monique Legrand
+              <Avatar slot="image" shape="Square">
+                <img
+                  src="/images/avatars/woman_avatar_1.png"
+                  alt="Woman image"
+                />
+              </Avatar>
+            </ListItemStandard>
+            <ListItemStandard description="UX Specialist">
+              Michael Adams
+              <Avatar slot="image" shape="Square">
+                <img
+                  src="/images/avatars/woman_avatar_2.png"
+                  alt="Woman image"
+                />
+              </Avatar>
+            </ListItemStandard>
+          </List>
+        </Card>
+        <Card style={{ minWidth: "18rem" }} class="medium">
+          <CardHeader
+            slot="header"
+            titleText="Team Bears"
+            subtitleText="Direct Reports"
+            interactive={true}
+            status="2 of 2"
+          >
+            <Icon name="group" slot="avatar" />
+          </CardHeader>
+          <List separators="None">
+            <ListItemStandard description="Software Architect">
+              Richard Wilson
+              <Avatar slot="image" shape="Square">
+                <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
+              </Avatar>
+            </ListItemStandard>
+            <ListItemStandard description="Visual Designer">
+              Elena Petrova
+              <Avatar slot="image" shape="Square">
+                <img
+                  src="/images/avatars/woman_avatar_3.png"
+                  alt="Woman image"
+                />
+              </Avatar>
+            </ListItemStandard>
+            <ListItemStandard description="Quality Specialist">
+              John Miller
+              <Avatar slot="image" shape="Square">
+                <img src="/images/avatars/man_avatar_3.png" alt="Woman image" />
+              </Avatar>
+            </ListItemStandard>
+          </List>
+        </Card>
+      </Carousel>
     </>
   );
 }

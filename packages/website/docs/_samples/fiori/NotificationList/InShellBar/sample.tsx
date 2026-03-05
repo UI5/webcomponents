@@ -24,7 +24,9 @@ import "@ui5/webcomponents-icons/dist/crm-sales.js";
 import "@ui5/webcomponents-icons/dist/expense-report.js";
 
 const NotificationList = createComponent(NotificationListClass);
-const NotificationListGroupItem = createComponent(NotificationListGroupItemClass);
+const NotificationListGroupItem = createComponent(
+  NotificationListGroupItemClass,
+);
 const NotificationListItem = createComponent(NotificationListItemClass);
 const IllustratedMessage = createComponent(IllustratedMessageClass);
 const ShellBar = createComponent(ShellBarClass);
@@ -52,28 +54,34 @@ function App() {
   const [extraItems, setExtraItems] = useState([]);
   const itemsLoadedRef = useRef(6);
 
-  const handleNotificationListItemClose = useCallback((e: UI5CustomEvent<NotificationListClass, "item-close">) => {
-    let visibleItems = 0;
-    e.detail.item.hidden = true;
+  const handleNotificationListItemClose = useCallback(
+    (e: UI5CustomEvent<NotificationListClass, "item-close">) => {
+      let visibleItems = 0;
+      e.detail.item.hidden = true;
 
-    Array.from(e.detail.item.parentElement.childNodes).forEach((element) => {
-      if (element.nodeName === "UI5-LI-NOTIFICATION" && !element.hidden) {
-        visibleItems++;
+      Array.from(e.detail.item.parentElement.childNodes).forEach((element) => {
+        if (element.nodeName === "UI5-LI-NOTIFICATION" && !element.hidden) {
+          visibleItems++;
+        }
+      });
+
+      if (visibleItems === 0) {
+        e.detail.item.parentElement.hidden = true;
       }
-    });
+    },
+    [],
+  );
 
-    if (visibleItems === 0) {
-      e.detail.item.parentElement.hidden = true;
-    }
-  }, []);
-
-  const handleShellbarNotificationsClick = useCallback((e: UI5CustomEvent<ShellBarClass, "notifications-click">) => {
-    e.preventDefault();
-    if (popoverRef.current) {
-      popoverRef.current!.opener = e.detail.targetRef;
-      popoverRef.current!.open = true;
-    }
-  }, []);
+  const handleShellbarNotificationsClick = useCallback(
+    (e: UI5CustomEvent<ShellBarClass, "notifications-click">) => {
+      e.preventDefault();
+      if (popoverRef.current) {
+        popoverRef.current!.opener = e.detail.targetRef;
+        popoverRef.current!.open = true;
+      }
+    },
+    [],
+  );
 
   const handleNotificationsListGroupGrowingLoadMore = useCallback(() => {
     const group = notificationsListGroupGrowingRef.current;
@@ -83,8 +91,16 @@ function App() {
     group.loading = true;
     setTimeout(() => {
       const newItems = [];
-      for (let i = itemsLoadedRef.current + 1; i <= itemsLoadedRef.current + 10; i++) {
-        newItems.push({ id: i, title: `Notification Title  ${i}`, description: `Description ${i}` });
+      for (
+        let i = itemsLoadedRef.current + 1;
+        i <= itemsLoadedRef.current + 10;
+        i++
+      ) {
+        newItems.push({
+          id: i,
+          title: `Notification Title  ${i}`,
+          description: `Description ${i}`,
+        });
       }
       itemsLoadedRef.current += 10;
       setExtraItems((prev) => [...prev, ...newItems]);
@@ -177,18 +193,57 @@ function App() {
       >
         <ShellBarBranding slot="branding">Corporate Portal</ShellBarBranding>
       </ShellBar>
-      <Popover ref={popoverRef} id="popover-with-notifications" placement="Bottom" class="notificationsPopover" horizontalAlign="End">
+      <Popover
+        ref={popoverRef}
+        id="popover-with-notifications"
+        placement="Bottom"
+        class="notificationsPopover"
+        horizontalAlign="End"
+      >
         <div className="notificationsPopoverHeader" slot="header">
           <Bar class="notificationsPopoverBar" design="Header">
-            <Title level="H5" slot="startContent">Notifications</Title>
-            <Button id="show-message-strip" design="Emphasized" slot="endContent" onClick={handleBtnShowMessageStripClick}>Show M. Strip</Button>
-            <Button id="clear-all" design="Transparent" slot="endContent" onClick={handleBtnClearAllClick}>Clear All</Button>
-            <Button ref={btnSortRef} id="btn-sort" design="Transparent" icon="sort" tooltip="Sort" slot="endContent" onClick={handleBtnSortClick} />
-            <Button design="Transparent" icon="action-settings" tooltip="Go to settings" slot="endContent" />
+            <Title level="H5" slot="startContent">
+              Notifications
+            </Title>
+            <Button
+              id="show-message-strip"
+              design="Emphasized"
+              slot="endContent"
+              onClick={handleBtnShowMessageStripClick}
+            >
+              Show M. Strip
+            </Button>
+            <Button
+              id="clear-all"
+              design="Transparent"
+              slot="endContent"
+              onClick={handleBtnClearAllClick}
+            >
+              Clear All
+            </Button>
+            <Button
+              ref={btnSortRef}
+              id="btn-sort"
+              design="Transparent"
+              icon="sort"
+              tooltip="Sort"
+              slot="endContent"
+              onClick={handleBtnSortClick}
+            />
+            <Button
+              design="Transparent"
+              icon="action-settings"
+              tooltip="Go to settings"
+              slot="endContent"
+            />
           </Bar>
 
           {showMessageStrip && (
-            <MessageStrip class="notificationsMessageStrip" design="Negative" onClose={handleNotificationsPopoverMessageStripClose}>
+            <MessageStrip
+              class="notificationsMessageStrip"
+              design="Negative"
+              onClose={handleNotificationsPopoverMessageStripClose}
+            >
               Something went wrong.
             </MessageStrip>
           )}
@@ -197,7 +252,10 @@ function App() {
         {cleared ? (
           <IllustratedMessage name="NoNotifications" />
         ) : (
-          <NotificationList class="notificationsPopoverList" onItemClose={handleNotificationListItemClose}>
+          <NotificationList
+            class="notificationsPopoverList"
+            onItemClose={handleNotificationListItemClose}
+          >
             <NotificationListGroupItem
               ref={notificationsListGroupGrowingRef}
               id="notificationsListGroupGrowing"
@@ -206,65 +264,139 @@ function App() {
               growing="Button"
               onLoadMore={handleNotificationsListGroupGrowingLoadMore}
             >
-              <NotificationListItem titleText="Start Your Day with Your Sales Target!" showClose={true}>
-                <Avatar icon="crm-sales" colorScheme="Accent10" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Start Your Day with Your Sales Target!"
+                showClose={true}
+              >
+                <Avatar
+                  icon="crm-sales"
+                  colorScheme="Accent10"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Sales</span>
                 <span slot="footnotes">11:13</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Good morning! Don't forget your daily sales target is $2,000, which needs to be fulfilled by the end of the business day. Let's make it a great sales day!
+                Good morning! Don't forget your daily sales target is $2,000,
+                which needs to be fulfilled by the end of the business day.
+                Let's make it a great sales day!
               </NotificationListItem>
-              <NotificationListItem titleText="Upcoming Client Meeting Reminder" importance="Important" showClose={true}>
-                <Avatar icon="crm-sales" colorScheme="Accent10" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Upcoming Client Meeting Reminder"
+                importance="Important"
+                showClose={true}
+              >
+                <Avatar
+                  icon="crm-sales"
+                  colorScheme="Accent10"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Sales</span>
                 <span slot="footnotes">11:05</span>
                 <Menu slot="menu">
                   <MenuItem text="Open in calendar" />
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                You have a client meeting scheduled at 3 PM today with Acme Corp. Location: Zoom - link in calendar.
+                You have a client meeting scheduled at 3 PM today with Acme
+                Corp. Location: Zoom - link in calendar.
               </NotificationListItem>
-              <NotificationListItem titleText="Follow-Up Needed for Prospect" showClose={true}>
-                <Avatar icon="crm-sales" colorScheme="Accent10" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Follow-Up Needed for Prospect"
+                showClose={true}
+              >
+                <Avatar
+                  icon="crm-sales"
+                  colorScheme="Accent10"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Sales</span>
                 <span slot="footnotes">11:00</span>
                 <Menu slot="menu">
                   <MenuItem text="Follow-up meeting" />
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Reminder to follow up with John Doe from XYZ Ltd. Discuss the proposal sent last week.
+                Reminder to follow up with John Doe from XYZ Ltd. Discuss the
+                proposal sent last week.
               </NotificationListItem>
-              <NotificationListItem titleText="Budget Report Submission Deadline Approaching" importance="Important" showClose={true}>
-                <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Budget Report Submission Deadline Approaching"
+                importance="Important"
+                showClose={true}
+              >
+                <Avatar
+                  icon="expense-report"
+                  colorScheme="Accent1"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Accountant</span>
                 <span slot="footnotes">10:15</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Reminder: The deadline to submit this quarter's budget report is this Friday.
+                Reminder: The deadline to submit this quarter's budget report is
+                this Friday.
               </NotificationListItem>
-              <NotificationListItem titleText="Urgent: Expense Claims Pending Your Approval" importance="Important" showClose={true}>
-                <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Urgent: Expense Claims Pending Your Approval"
+                importance="Important"
+                showClose={true}
+              >
+                <Avatar
+                  icon="expense-report"
+                  colorScheme="Accent1"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Notification</span>
                 <span slot="footnotes">09:30</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                You have 5 pending expense claims awaiting your approval. Please review them by EOD.
+                You have 5 pending expense claims awaiting your approval. Please
+                review them by EOD.
               </NotificationListItem>
-              <NotificationListItem titleText="Monthly Reconciliation Process Begins Next Week" showClose={true}>
-                <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Monthly Reconciliation Process Begins Next Week"
+                showClose={true}
+              >
+                <Avatar
+                  icon="expense-report"
+                  colorScheme="Accent1"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Accountant</span>
                 <span slot="footnotes">09:30</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Just a heads-up that we will begin the financial reconciliation process for this month next Monday.
+                Just a heads-up that we will begin the financial reconciliation
+                process for this month next Monday.
               </NotificationListItem>
               {extraItems.map((item) => (
-                <NotificationListItem key={item.id} titleText={item.title} showClose={true}>
-                  <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+                <NotificationListItem
+                  key={item.id}
+                  titleText={item.title}
+                  showClose={true}
+                >
+                  <Avatar
+                    icon="expense-report"
+                    colorScheme="Accent1"
+                    shape="Square"
+                    size="XS"
+                    slot="avatar"
+                  />
                   <span slot="footnotes">Product Name</span>
                   <span slot="footnotes">Now</span>
                   <Menu slot="menu">
@@ -276,41 +408,81 @@ function App() {
             </NotificationListGroupItem>
 
             <NotificationListGroupItem titleText="Yesterday" collapsed={true}>
-              <NotificationListItem titleText="New Sales Lead Assigned" showClose={true}>
-                <Avatar icon="crm-sales" colorScheme="Accent10" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="New Sales Lead Assigned"
+                showClose={true}
+              >
+                <Avatar
+                  icon="crm-sales"
+                  colorScheme="Accent10"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Sales</span>
                 <span slot="footnotes">1 Day</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                A new lead, Jane Smith from Innovative Tech, has been assigned to you. Contact details in CRM.
+                A new lead, Jane Smith from Innovative Tech, has been assigned
+                to you. Contact details in CRM.
               </NotificationListItem>
-              <NotificationListItem titleText=" Reminder: Submit Your EOD Sales Report" showClose={true}>
-                <Avatar icon="crm-sales" colorScheme="Accent10" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText=" Reminder: Submit Your EOD Sales Report"
+                showClose={true}
+              >
+                <Avatar
+                  icon="crm-sales"
+                  colorScheme="Accent10"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Sales</span>
                 <span slot="footnotes">1 Day</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Please submit your end-of-day sales report through the portal before logging off today.
+                Please submit your end-of-day sales report through the portal
+                before logging off today.
               </NotificationListItem>
-              <NotificationListItem titleText="Tax Filing Deadline Reminder" showClose={true}>
-                <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText="Tax Filing Deadline Reminder"
+                showClose={true}
+              >
+                <Avatar
+                  icon="expense-report"
+                  colorScheme="Accent1"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Accountant</span>
                 <span slot="footnotes">1 Day</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                Reminder: The tax filing deadline for this quarter is approaching in two weeks.
+                Reminder: The tax filing deadline for this quarter is
+                approaching in two weeks.
               </NotificationListItem>
-              <NotificationListItem titleText=" Invoice Processing Completed" showClose={true}>
-                <Avatar icon="expense-report" colorScheme="Accent1" shape="Square" size="XS" slot="avatar" />
+              <NotificationListItem
+                titleText=" Invoice Processing Completed"
+                showClose={true}
+              >
+                <Avatar
+                  icon="expense-report"
+                  colorScheme="Accent1"
+                  shape="Square"
+                  size="XS"
+                  slot="avatar"
+                />
                 <span slot="footnotes">Notification</span>
                 <span slot="footnotes">1 Day</span>
                 <Menu slot="menu">
                   <MenuItem text="Unsubscribe" />
                 </Menu>
-                All invoices for this month have been successfully processed and payments scheduled.
+                All invoices for this month have been successfully processed and
+                payments scheduled.
               </NotificationListItem>
             </NotificationListGroupItem>
           </NotificationList>
@@ -321,11 +493,28 @@ function App() {
         <MenuItem text="Importance" />
       </Menu>
 
-      <Dialog ref={clearAllDialogRef} id="clear-all-dialog" headerText="Clear All Notifications">
+      <Dialog
+        ref={clearAllDialogRef}
+        id="clear-all-dialog"
+        headerText="Clear All Notifications"
+      >
         <Text>Are you sure you want to clear all the notifications?</Text>
         <Bar slot="footer" design="Footer">
-          <Button style={{ minWidth: "4rem" }} design="Emphasized" slot="endContent" onClick={handleBtnClearAllActionClick}>OK</Button>
-          <Button style={{ minWidth: "4rem" }} slot="endContent" onClick={handleDialogCloseClick}>Cancel</Button>
+          <Button
+            style={{ minWidth: "4rem" }}
+            design="Emphasized"
+            slot="endContent"
+            onClick={handleBtnClearAllActionClick}
+          >
+            OK
+          </Button>
+          <Button
+            style={{ minWidth: "4rem" }}
+            slot="endContent"
+            onClick={handleDialogCloseClick}
+          >
+            Cancel
+          </Button>
         </Bar>
       </Dialog>
     </>
