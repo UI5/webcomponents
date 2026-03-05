@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIPromptInputClass from "@ui5/webcomponents-ai/dist/PromptInput.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";
@@ -24,7 +25,7 @@ function App() {
   const [valueState, setValueState] = useState("None");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const handleInput = useCallback((e: any) => {
+  const handleInput = useCallback((e: UI5CustomEvent<AIPromptInputClass, "input">) => {
     const inputValue = e.target.value;
     const maxLen = 10;
 

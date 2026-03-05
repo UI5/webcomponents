@@ -23,7 +23,7 @@ const TableSelection = createComponent(TableSelectionClass);
 function App() {
   const selectionRef = useRef(null);
 
-  const handleSelectionGroupChange = (e) => {
+  const handleSelectionGroupChange = (e: Event) => {
     if (selectionRef.current) {
       selectionRef.current!.selected = "";
       selectionRef.current!.mode = e.target.text;

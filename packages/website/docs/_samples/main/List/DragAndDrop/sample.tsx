@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
@@ -17,7 +18,7 @@ function App() {
     { id: "5", text: "Item #5" },
   ]);
 
-  const handleMoveOver = (e) => {
+  const handleMoveOver = (e: UI5CustomEvent<ListClass, "move-over">) => {
     const { destination, source } = e.detail;
 
     if (destination.placement === "Before" || destination.placement === "After") {
@@ -25,7 +26,7 @@ function App() {
     }
   };
 
-  const handleMove = (e) => {
+  const handleMove = (e: UI5CustomEvent<ListClass, "move">) => {
     const { destination, source } = e.detail;
 
     setItems((prevItems) => {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
@@ -25,7 +26,7 @@ const Text = createComponent(TextClass);
 function App() {
   const [editable, setEditable] = useState(false);
 
-  const handleSelectionChange = (e: any) => {
+  const handleSelectionChange = (e: UI5CustomEvent<SegmentedButtonClass, "selection-change">) => {
     const selectedItem = e.target.selectedItems[0].textContent;
     setEditable(selectedItem === "Edit");
   };

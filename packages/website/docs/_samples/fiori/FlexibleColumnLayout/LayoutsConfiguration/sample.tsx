@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useEffect, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -105,13 +106,13 @@ function App() {
     displayCustomLayoutConfigurationInfo();
   }, [displayCustomLayoutConfigurationInfo]);
 
-  const handleFclLayoutChange = useCallback((e) => {
+  const handleFclLayoutChange = useCallback((e: UI5CustomEvent<FlexibleColumnLayoutClass, "layout-change">) => {
     if (selectLayoutRef.current) {
       selectLayoutRef.current!.value = e.detail.layout;
     }
   }, []);
 
-  const handleSelectLayoutUi5Change = useCallback((e) => {
+  const handleSelectLayoutUi5Change = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
     const fcl = fclRef.current;
     if (fcl) {
       fcl.layout = e.detail.selectedOption.textContent;
@@ -120,7 +121,7 @@ function App() {
     }
   }, [displayCustomLayoutConfigurationInfo]);
 
-  const handleCategoriesListUi5ItemClick = useCallback((e) => {
+  const handleCategoriesListUi5ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
     const category = e.detail.item.dataset.category;
     const categoryName = e.detail.item.textContent;
 
@@ -140,7 +141,7 @@ function App() {
     }
   }, [displayCustomLayoutConfigurationInfo]);
 
-  const handleProductsListUi5ItemClick = useCallback((e) => {
+  const handleProductsListUi5ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
     const productId = e.detail.item.dataset.productId;
     const category = e.detail.item.dataset.category;
 

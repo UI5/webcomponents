@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
@@ -13,7 +14,7 @@ const Select = createComponent(SelectClass);
 function App() {
   const dtpRef = useRef(null);
 
-  const handleSelectChange = (e: any) => {
+  const handleSelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
     const dateFormat = DateFormat.getDateTimeInstance({ "style": "medium" });
     const value = dateFormat.parse(dtpRef.current!.value);
     setTimezone(e.detail.selectedOption.getAttribute("data-timezone"));

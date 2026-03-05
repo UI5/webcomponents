@@ -27,7 +27,7 @@ function App() {
   const aiActionPriceRef = useRef(null);
 
   useEffect(() => {
-    const showGeneratedByAIPopover = (e) => {
+    const showGeneratedByAIPopover = (e: CustomEvent) => {
       const popover = popoverRef.current;
       if (popover) {
         popover.opener = e.detail.targetRef;

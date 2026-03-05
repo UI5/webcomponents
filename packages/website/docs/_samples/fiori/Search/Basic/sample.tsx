@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
@@ -24,7 +25,7 @@ function App() {
     ? scopeData.filter(item => item.scope === currentScope)
     : scopeData;
 
-  const handleScopeChange = (e) => {
+  const handleScopeChange = (e: UI5CustomEvent<SearchClass, "scope-change">) => {
     const scope = e.detail.scope.value === "all" ? "" : e.detail.scope.value;
     setCurrentScope(scope);
   };

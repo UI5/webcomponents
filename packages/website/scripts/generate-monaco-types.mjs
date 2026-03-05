@@ -55,6 +55,58 @@ function extractEnumValues(enumName, packagesDir) {
 // Will be set in main()
 let packagesDir = null;
 
+/**
+ * Parse event detail type definitions from a .d.ts file.
+ * Returns a map of TypeName -> { fieldName: simplifiedType, ... }
+ */
+function parseEventDetailTypes(dtsContent) {
+  const detailTypes = new Map();
+
+  // Match: type SomeEventDetail = { ... };
+  // Use a regex that handles multi-line type bodies
+  const typeRegex = /type\s+(\w+EventDetail)\s*=\s*\{([^}]*)\}/g;
+  let match;
+  while ((match = typeRegex.exec(dtsContent)) !== null) {
+    const typeName = match[1];
+    const body = match[2];
+    const fields = {};
+
+    // Parse fields: fieldName?: type;
+    const fieldRegex = /(\w+)(\??):\s*([^;]+);/g;
+    let fieldMatch;
+    while ((fieldMatch = fieldRegex.exec(body)) !== null) {
+      const fieldName = fieldMatch[1];
+      const optional = fieldMatch[2] === "?";
+      const rawType = fieldMatch[3].trim();
+      fields[fieldName] = { type: simplifyDetailFieldType(rawType), optional };
+    }
+
+    if (Object.keys(fields).length > 0) {
+      detailTypes.set(typeName, fields);
+    }
+  }
+
+  return detailTypes;
+}
+
+/**
+ * Simplify a TypeScript type from event detail to a Monaco-friendly type
+ */
+function simplifyDetailFieldType(typeStr) {
+  if (typeStr === "string") return "string";
+  if (typeStr === "number") return "number";
+  if (typeStr === "boolean") return "boolean";
+  // Template literals like `${FCLLayout}` -> string
+  if (typeStr.startsWith("`")) return "string";
+  // Arrays -> any[]
+  if (typeStr.endsWith("[]")) return "any[]";
+  // null unions with primitives
+  if (typeStr === "string | null") return "string | null";
+  if (typeStr === "number | null") return "number | null";
+  // Everything else (interfaces, complex types) -> any
+  return "any";
+}
+
 // Components to generate types for
 const COMPONENTS = [
   // main package
@@ -111,6 +163,12 @@ const COMPONENTS = [
   { name: "TableCell", package: "main", tag: "ui5-table-cell" },
   { name: "TableGrowing", package: "main", tag: "ui5-table-growing" },
   { name: "TableSelection", package: "main", tag: "ui5-table-selection" },
+  { name: "TableSelectionMulti", package: "main", tag: "ui5-table-selection-multi" },
+  { name: "TableSelectionSingle", package: "main", tag: "ui5-table-selection-single" },
+  { name: "TableRowAction", package: "main", tag: "ui5-table-row-action" },
+  { name: "TableRowActionNavigation", package: "main", tag: "ui5-table-row-action-navigation" },
+  { name: "TableHeaderCellActionAI", package: "main", tag: "ui5-table-header-cell-action-ai" },
+  { name: "TableVirtualizer", package: "main", tag: "ui5-table-virtualizer" },
   { name: "Tree", package: "main", tag: "ui5-tree" },
   { name: "TreeItem", package: "main", tag: "ui5-tree-item" },
   { name: "TreeItemCustom", package: "main", tag: "ui5-tree-item-custom" },
@@ -121,6 +179,7 @@ const COMPONENTS = [
   { name: "ToolbarSeparator", package: "main", tag: "ui5-toolbar-separator" },
   { name: "ToolbarSelect", package: "main", tag: "ui5-toolbar-select" },
   { name: "ToolbarSelectOption", package: "main", tag: "ui5-toolbar-select-option" },
+  { name: "ToolbarItem", package: "main", tag: "ui5-toolbar-item" },
   { name: "SegmentedButton", package: "main", tag: "ui5-segmented-button" },
   { name: "SegmentedButtonItem", package: "main", tag: "ui5-segmented-button-item" },
   { name: "ComboBox", package: "main", tag: "ui5-combobox" },
@@ -149,7 +208,7 @@ const COMPONENTS = [
   { name: "ExpandableText", package: "main", tag: "ui5-expandable-text" },
   { name: "SuggestionItem", package: "main", tag: "ui5-suggestion-item" },
   { name: "SuggestionItemCustom", package: "main", tag: "ui5-suggestion-item-custom" },
-  { name: "SuggestionGroupItem", package: "main", tag: "ui5-suggestion-item-group" },
+  { name: "SuggestionItemGroup", package: "main", tag: "ui5-suggestion-item-group" },
   { name: "Carousel", package: "main", tag: "ui5-carousel" },
   { name: "ToggleButton", package: "main", tag: "ui5-toggle-button" },
   { name: "Form", package: "main", tag: "ui5-form" },
@@ -158,11 +217,15 @@ const COMPONENTS = [
   { name: "Bar", package: "main", tag: "ui5-bar" },
   // fiori package
   { name: "ShellBar", package: "fiori", tag: "ui5-shellbar" },
+  { name: "ShellBarBranding", package: "fiori", tag: "ui5-shellbar-branding" },
   { name: "ShellBarItem", package: "fiori", tag: "ui5-shellbar-item" },
+  { name: "ShellBarSearch", package: "fiori", tag: "ui5-shellbar-search" },
+  { name: "ShellBarSpacer", package: "fiori", tag: "ui5-shellbar-spacer" },
   { name: "SideNavigation", package: "fiori", tag: "ui5-side-navigation" },
   { name: "SideNavigationItem", package: "fiori", tag: "ui5-side-navigation-item" },
   { name: "SideNavigationSubItem", package: "fiori", tag: "ui5-side-navigation-sub-item" },
   { name: "SideNavigationGroup", package: "fiori", tag: "ui5-side-navigation-group" },
+  { name: "NavigationLayout", package: "fiori", tag: "ui5-navigation-layout" },
   { name: "NotificationList", package: "fiori", tag: "ui5-notification-list" },
   { name: "NotificationListItem", package: "fiori", tag: "ui5-li-notification" },
   { name: "NotificationListGroupItem", package: "fiori", tag: "ui5-li-notification-group" },
@@ -191,16 +254,33 @@ const COMPONENTS = [
   { name: "Search", package: "fiori", tag: "ui5-search" },
   { name: "SearchItem", package: "fiori", tag: "ui5-search-item" },
   { name: "SearchMessageArea", package: "fiori", tag: "ui5-search-message-area" },
+  { name: "SearchField", package: "fiori", tag: "ui5-search-field" },
+  { name: "SearchItemGroup", package: "fiori", tag: "ui5-search-item-group" },
+  { name: "SearchItemShowMore", package: "fiori", tag: "ui5-search-item-show-more" },
+  { name: "SearchScope", package: "fiori", tag: "ui5-search-scope" },
   { name: "UserMenu", package: "fiori", tag: "ui5-user-menu" },
   { name: "UserMenuItem", package: "fiori", tag: "ui5-user-menu-item" },
   { name: "UserMenuAccount", package: "fiori", tag: "ui5-user-menu-account" },
   { name: "BarcodeScannerDialog", package: "fiori", tag: "ui5-barcode-scanner-dialog" },
+  { name: "UserSettingsDialog", package: "fiori", tag: "ui5-user-settings-dialog" },
+  { name: "UserSettingsItem", package: "fiori", tag: "ui5-user-settings-item" },
+  { name: "UserSettingsView", package: "fiori", tag: "ui5-user-settings-view" },
+  { name: "UserSettingsAccountView", package: "fiori", tag: "ui5-user-settings-account-view" },
+  { name: "UserSettingsAppearanceView", package: "fiori", tag: "ui5-user-settings-appearance-view" },
+  { name: "UserSettingsAppearanceViewGroup", package: "fiori", tag: "ui5-user-settings-appearance-view-group" },
+  { name: "UserSettingsAppearanceViewItem", package: "fiori", tag: "ui5-user-settings-appearance-view-item" },
   // ai package - these extend base components, so we inherit their props
   { name: "AIButton", package: "ai", tag: "ui5-ai-button", className: "Button", extends: "Button" },
   { name: "AIButtonState", package: "ai", tag: "ui5-ai-button-state", className: "ButtonState" },
   { name: "AIInput", package: "ai", tag: "ui5-ai-input", className: "Input", extends: "Input" },
   { name: "AITextArea", package: "ai", tag: "ui5-ai-textarea", className: "TextArea", extends: "TextArea" },
   { name: "AIPromptInput", package: "ai", tag: "ui5-ai-prompt-input", className: "PromptInput", extends: "Input" },
+  // compat package
+  { name: "CompatTable", package: "compat", tag: "ui5-table", className: "Table" },
+  { name: "CompatTableColumn", package: "compat", tag: "ui5-table-column", className: "TableColumn" },
+  { name: "CompatTableRow", package: "compat", tag: "ui5-table-row", className: "TableRow" },
+  { name: "CompatTableCell", package: "compat", tag: "ui5-table-cell", className: "TableCell" },
+  { name: "CompatTableGroupRow", package: "compat", tag: "ui5-table-group-row", className: "TableGroupRow" },
 ];
 
 // Base class definitions - these are parsed once and reused
@@ -219,13 +299,14 @@ function parseBaseClass(baseClassName, packagesDir) {
     path.join(packagesDir, "main", "dist", `${baseClassName}.d.ts`),
     path.join(packagesDir, "fiori", "dist", `${baseClassName}.d.ts`),
     path.join(packagesDir, "ai", "dist", `${baseClassName}.d.ts`),
+    path.join(packagesDir, "compat", "dist", `${baseClassName}.d.ts`),
     path.join(packagesDir, "base", "dist", `${baseClassName}.d.ts`),
   ];
 
   for (const basePath of searchPaths) {
     if (fs.existsSync(basePath)) {
       const content = fs.readFileSync(basePath, "utf-8");
-      const result = parseDeclarationFile(content, baseClassName, packagesDir, false);
+      const result = parseDeclarationFile(content, baseClassName, packagesDir, true);
       baseClassProps.set(baseClassName, result.properties);
       return result.properties;
     }
@@ -281,18 +362,27 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
 
   const classBody = dtsContent.substring(startIndex, endIndex);
 
-  // Extract eventDetails to get event names
+  // Parse event detail type definitions from the top of the file
+  const detailTypes = parseEventDetailTypes(dtsContent);
+
+  // Extract eventDetails to get event names and their detail types
   // Match eventDetails: { ... } or eventDetails: ParentType["eventDetails"] & { ... }
   const eventDetailsMatch = classBody.match(/eventDetails\s*:[^{]*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/);
   if (eventDetailsMatch) {
     const eventBody = eventDetailsMatch[1];
-    // Match event names (kebab-case strings in quotes or simple identifiers)
-    const eventMatches = eventBody.matchAll(/["']?([a-z][a-z0-9-]*)["']?\s*:/gi);
+    // Match event names and their detail type references
+    const eventMatches = eventBody.matchAll(/["']([a-z][a-z0-9-]*)["']\s*:\s*([^;\n,]+)/gi);
     for (const match of eventMatches) {
       const eventName = match[1];
+      const detailTypeName = match[2].trim();
       // Skip internal events starting with _
       if (!eventName.startsWith('_')) {
-        events.push({ name: eventName });
+        // Resolve the detail type fields
+        let detailFields = null;
+        if (detailTypeName !== "void" && detailTypes.has(detailTypeName)) {
+          detailFields = detailTypes.get(detailTypeName);
+        }
+        events.push({ name: eventName, detailTypeName: detailTypeName, detailFields });
       }
     }
   }
@@ -531,6 +621,37 @@ declare namespace JSX {
     h4: any;
     h5: any;
     h6: any;
+    style: any;
+    section: any;
+    header: any;
+    footer: any;
+    nav: any;
+    main: any;
+    form: any;
+    select: any;
+    option: any;
+    textarea: any;
+    table: any;
+    tr: any;
+    td: any;
+    th: any;
+    thead: any;
+    tbody: any;
+    ul: any;
+    ol: any;
+    li: any;
+    pre: any;
+    code: any;
+    strong: any;
+    em: any;
+    b: any;
+    i: any;
+    u: any;
+    small: any;
+    video: any;
+    source: any;
+    iframe: any;
+    svg: any;
   }
 }
 
@@ -545,11 +666,17 @@ interface UI5BaseProps {
   children?: React.ReactNode;
 }
 
-// Custom event type with typed currentTarget for UI5 components
-interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
-  readonly currentTarget: EventTarget & Target;
-  readonly target: EventTarget & Target;
-}
+// Custom event type with typed currentTarget and detail for UI5 components
+// Two-param form: UI5CustomEvent<ComponentClass, "eventName"> - gives typed detail
+// One-param form: UI5CustomEvent<ComponentProps> - gives typed currentTarget, detail is any
+type UI5CustomEvent<T = HTMLElement, N extends string = never> =
+  Omit<CustomEvent<
+    [N] extends [never] ? any :
+    T extends { eventDetails: infer E } ? N extends keyof E ? E[N] : any : any
+  >, "currentTarget" | "target"> & {
+    readonly currentTarget: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+    readonly target: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+  };
 
 `;
 
@@ -577,9 +704,21 @@ interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
   output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `}\n\n`;
 
-  // Also declare the short path that samples use
+  // Also declare the short path that samples use for UI5CustomEvent
   output += `declare module "@ui5/webcomponents-base" {\n`;
   output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `  export type UI5CustomEvent<T = HTMLElement, N extends string = never> =\n`;
+  output += `    Omit<CustomEvent<\n`;
+  output += `      [N] extends [never] ? any :\n`;
+  output += `      T extends { eventDetails: infer E } ? N extends keyof E ? E[N] : any : any\n`;
+  output += `    >, "currentTarget" | "target"> & {\n`;
+  output += `      readonly currentTarget: EventTarget & (T extends { _jsxProps: infer P } ? P : T);\n`;
+  output += `      readonly target: EventTarget & (T extends { _jsxProps: infer P } ? P : T);\n`;
+  output += `    };\n`;
+  output += `}\n\n`;
+
+  output += `declare module "@ui5/webcomponents-compat/dist/utils/CompatCustomElementsScope.js" {\n`;
+  output += `  export function setCompatCustomElementsScopingSuffix(suffix: string): void;\n`;
   output += `}\n\n`;
 
   // Generate module for each component's import
@@ -593,9 +732,39 @@ interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
     // Use className if specified (for AI components where file name differs from type name)
     const fileName = compConfig?.className || comp.name;
 
-    // Each component module exports a class-like object with _jsxProps for type inference
+    // Each component module exports a class with:
+    // - static _jsxProps for createComponent type inference
+    // - instance _jsxProps for UI5CustomEvent target typing
+    // - eventDetails for UI5CustomEvent detail typing
     output += `declare module "${packagePath}/dist/${fileName}.js" {\n`;
-    output += `  const ${comp.name}: { _jsxProps: ${comp.name}Props };\n`;
+    output += `  class ${comp.name} {\n`;
+    output += `    static _jsxProps: ${comp.name}Props;\n`;
+    output += `    _jsxProps: ${comp.name}Props;\n`;
+
+    // Generate eventDetails with inline detail types
+    if (comp.events.length > 0) {
+      output += `    eventDetails: {\n`;
+      for (const event of comp.events) {
+        if (event.detailFields && Object.keys(event.detailFields).length > 0) {
+          // Inline the detail fields
+          const fieldStrs = Object.entries(event.detailFields).map(([field, info]) => {
+            const opt = info.optional ? "?" : "";
+            return `${field}${opt}: ${info.type}`;
+          });
+          output += `      "${event.name}": { ${fieldStrs.join("; ")} };\n`;
+        } else if (event.detailTypeName && event.detailTypeName !== "void") {
+          // Non-void detail type that couldn't be resolved - use any so e.detail.xxx works
+          output += `      "${event.name}": any;\n`;
+        } else {
+          output += `      "${event.name}": void;\n`;
+        }
+      }
+      output += `    };\n`;
+    } else {
+      output += `    eventDetails: {};\n`;
+    }
+
+    output += `  }\n`;
     output += `  export default ${comp.name};\n`;
     output += `}\n\n`;
   }

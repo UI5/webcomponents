@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -24,12 +25,12 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const openerRef = useRef(null);
 
-  const handleProfileClick = useCallback((e) => {
+  const handleProfileClick = useCallback((e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
     openerRef.current = e.detail.targetRef;
     setMenuOpen(true);
   }, []);
 
-  const handleItemClick = useCallback((e) => {
+  const handleItemClick = useCallback((e: UI5CustomEvent<UserMenuClass, "item-click">) => {
     const item = e.detail.item.getAttribute("data-id");
     switch (item) {
       case "setting":
@@ -56,7 +57,7 @@ function App() {
     console.log("Avatar clicked");
   }, []);
 
-  const handleSignOutClick = useCallback((e) => {
+  const handleSignOutClick = useCallback((e: Event) => {
     console.log("Sign Out clicked");
     const result = prompt("Sign Out", "Are you sure you want to sign out?");
     if (result) {

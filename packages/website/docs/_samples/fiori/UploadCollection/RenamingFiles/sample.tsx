@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -19,11 +20,11 @@ const initialFiles = [
 function App() {
   const [files, setFiles] = useState(initialFiles);
 
-  const handleUploadCollectionRename = (e) => {
+  const handleUploadCollectionRename = (e: UI5CustomEvent<UploadCollectionClass, "rename">) => {
     alert("Rename event: " + e.target.fileName);
   };
 
-  const handleUploadCollectionItemDelete = (e) => {
+  const handleUploadCollectionItemDelete = (e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
     const deletedItem = e.detail.item;
     setFiles(prev => prev.filter(f => f.fileName !== deletedItem.fileName));
   };

@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -169,7 +170,7 @@ function App() {
     stopBusyIndicatorAndGenerateText(textMap, textKey);
   }, [stopBusyIndicatorAndGenerateText]);
 
-  const handleMenuItemClick = useCallback((e) => {
+  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
     if (!textsRef.current) return;
     const predefinedTexts = textsRef.current!.predefinedTexts;
     const predefinedTextsBulleted = textsRef.current!.predefinedTextsBulleted;

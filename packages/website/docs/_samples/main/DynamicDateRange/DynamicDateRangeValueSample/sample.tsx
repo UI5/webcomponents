@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import DynamicDateRangeClass from "@ui5/webcomponents/dist/DynamicDateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Yesterday.js";
@@ -16,7 +17,7 @@ function App() {
   const [selectedValue, setSelectedValue] = useState("");
   const [convertedDates, setConvertedDates] = useState("");
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: UI5CustomEvent<DynamicDateRangeClass, "change">) => {
     const value = e.target.value;
     setSelectedValue(JSON.stringify(value));
 

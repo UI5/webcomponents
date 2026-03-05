@@ -21,7 +21,7 @@ function App() {
     const table = tableRef.current;
     if (!table) return;
 
-    const handleMoveOver = (e) => {
+    const handleMoveOver = (e: CustomEvent) => {
       const { source, destination } = e.detail;
 
       const sourceIndex = table.rows.indexOf(source.element);
@@ -36,7 +36,7 @@ function App() {
       }
     };
 
-    const handleMove = (e) => {
+    const handleMove = (e: CustomEvent) => {
       const { source, destination } = e.detail;
 
       switch (destination.placement) {

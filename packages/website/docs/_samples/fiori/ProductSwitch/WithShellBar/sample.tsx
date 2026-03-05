@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState } from "react";
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
@@ -34,7 +35,7 @@ function App() {
   const popoverRef = useRef(null);
   const [assistantIcon, setAssistantIcon] = useState("da");
 
-  const handleShellbarProductSwitchClick = (event) => {
+  const handleShellbarProductSwitchClick = (event: UI5CustomEvent<ShellBarClass, "product-switch-click">) => {
     if (popoverRef.current!.open) {
         popoverRef.current!.open = false;
     } else {
@@ -44,7 +45,7 @@ function App() {
     }
   };
 
-  const handleToggleButtonClick = (e) => {
+  const handleToggleButtonClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
     const toggleButton = e.target;
     setAssistantIcon(toggleButton.pressed ? "da-2" : "da");
   };

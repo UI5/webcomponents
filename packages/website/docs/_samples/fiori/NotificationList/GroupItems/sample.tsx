@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
@@ -18,7 +19,7 @@ const MenuItem = createComponent(MenuItemClass);
 
 function App() {
 
-  const handleNotificationListItemClose = (e) => {
+  const handleNotificationListItemClose = (e: UI5CustomEvent<NotificationListClass, "item-close">) => {
     var visibleItems = 0;
 
     // hide the closed Notification item

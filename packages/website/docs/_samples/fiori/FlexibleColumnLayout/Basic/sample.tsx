@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -137,7 +138,7 @@ function App() {
     return layout;
   }, [layout, enterFullScreen, exitFullScreen]);
 
-  const handleCol1ItemClick = useCallback((e) => {
+  const handleCol1ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
     const item = e.detail.item;
     setAvatarIcon(avatarIcons[getRandomInt(6)]);
     setAvatarColor(avatarColors[getRandomInt(9) + 1]);
@@ -149,7 +150,7 @@ function App() {
     setLayout(nextLayout("col1"));
   }, [nextLayout]);
 
-  const handleCol2ItemClick = useCallback((e) => {
+  const handleCol2ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
     setCol3Title(e.detail.item.textContent);
     setLayout(nextLayout("col2"));
   }, [nextLayout]);
@@ -170,7 +171,7 @@ function App() {
     setLayout(nextLayout("col3fullscreen"));
   }, [nextLayout]);
 
-  const handleToggleClick = useCallback((e) => {
+  const handleToggleClick = useCallback((e: UI5CustomEvent<ToggleButtonClass, "click">) => {
     const pressed = e.target.pressed;
     setToggleIcon(pressed ? "da-2" : "da");
   }, []);

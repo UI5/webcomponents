@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-icons/dist/upload.js";
@@ -10,7 +11,7 @@ const Label = createComponent(LabelClass);
 function App() {
   const [images, setImages] = useState<string[]>([]);
 
-  const handleFileUploaderChange = (e: any) => {
+  const handleFileUploaderChange = (e: UI5CustomEvent<FileUploaderClass, "change">) => {
     const files = e.target.files;
 
     if (!files.length) {
@@ -33,7 +34,7 @@ function App() {
 
         <div id="result" style={images.length > 0 ? { marginTop: "1rem" } : undefined}>
             {images.length === 0 ? null : images.map((src, index) => (
-                <img key={index} src={src} width={100} height={100} onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
+                <img key={index} src={src} width={100} height={100} onLoad={(e: React.SyntheticEvent) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
             ))}
         </div>
     </>

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
@@ -63,7 +64,7 @@ function App() {
     setDialogOpen(true);
   };
 
-  const handleDialogSearchInput = async (e) => {
+  const handleDialogSearchInput = async (e: UI5CustomEvent<InputClass, "input">) => {
     const products = await loadProducts();
     const query = e.target.value.toLowerCase();
     setDialogSearchValue(query);
@@ -73,7 +74,7 @@ function App() {
     setDialogListItems(filtered);
   };
 
-  const handleDialogListItemClick = (e) => {
+  const handleDialogListItemClick = (e: UI5CustomEvent<ListClass, "item-click">) => {
     const item = e.detail.item;
     if (valueHelpInputRef.current) {
       valueHelpInputRef.current!.setAttribute("value", item.innerHTML);

@@ -1,5 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import WizardClass from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import WizardStepClass from "@ui5/webcomponents-fiori/dist/WizardStep.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
@@ -32,45 +32,75 @@ const Switch = createComponent(SwitchClass);
 const Title = createComponent(TitleClass);
 
 function App() {
-  const dialogRef = useRef(null);
+  const dialogRef = useRef<any>(null);
+  const wizardRef = useRef<any>(null);
+  const [showPrev, setShowPrev] = useState(false);
+  const [showNext, setShowNext] = useState(true);
+  const [showFinalize, setShowFinalize] = useState(false);
 
-  const handleButtonClick = () => {
-    dialogRef.current!.open = true;
-    const index = wizardWiz.getSelectedStepIndex();
-    setButtonVisibility(index, wizardWiz.children.length);
+  const updateButtons = (index: number, total: number) => {
+    if (index === 0) {
+      setShowPrev(false);
+      setShowNext(true);
+      setShowFinalize(false);
+    } else if (index === total - 1) {
+      setShowPrev(true);
+      setShowNext(false);
+      setShowFinalize(true);
+    } else {
+      setShowPrev(true);
+      setShowNext(true);
+      setShowFinalize(false);
+    }
   };
 
-  const handleWizUi5StepChange = () => {
-    const index = wizardWiz.getSelectedStepIndex();
-    setButtonVisibility(index, wizardWiz.children.length)
+  const handleButtonClick = () => {
+    dialogRef.current.open = true;
+    const wiz = wizardRef.current;
+    const index = wiz.getSelectedStepIndex();
+    updateButtons(index, wiz.children.length);
+  };
+
+  const handleStepChange = () => {
+    const wiz = wizardRef.current;
+    const index = wiz.getSelectedStepIndex();
+    updateButtons(index, wiz.children.length);
   };
 
   const handleNextButtonClick = () => {
-    const index = wizardWiz.getSelectedStepIndex();
-    setNextStep(wizardWiz, index, index + 1);
-    setButtonVisibility(index + 1, wizardWiz.children.length)
+    const wiz = wizardRef.current;
+    const index = wiz.getSelectedStepIndex();
+    const nextStep = wiz.children[index + 1];
+    const currentStep = wiz.children[index];
+    nextStep.selected = true;
+    currentStep.disabled = false;
+    updateButtons(index + 1, wiz.children.length);
   };
 
   const handlePrevButtonClick = () => {
-    const index = wizardWiz.getSelectedStepIndex();
-    deselectAll(wizardWiz);
-    setPreviousStep(wizardWiz, index, index - 1);
-    setButtonVisibility(index - 1, wizardWiz.children.length)
+    const wiz = wizardRef.current;
+    const index = wiz.getSelectedStepIndex();
+    Array.from(wiz.children).forEach((step: any) => { step.selected = false; });
+    const prevStep = wiz.children[index - 1];
+    const currentStep = wiz.children[index];
+    prevStep.selected = true;
+    currentStep.disabled = false;
+    updateButtons(index - 1, wiz.children.length);
   };
 
   const handleCancelClick = () => {
-    dialogRef.current!.open = false;
+    dialogRef.current.open = false;
   };
 
-  const handleWizFinalizeClick = () => {
+  const handleFinalizeClick = () => {
     alert("Finalize");
-    dialogRef.current!.open = false;
+    dialogRef.current.open = false;
   };
 
   return (
     <>
       <Dialog ref={dialogRef} id="dialog" stretch={true} headerHeading="Wizard">
-            <Wizard id="wiz" contentLayout="SingleStep" onStepChange={handleWizUi5StepChange}>
+            <Wizard ref={wizardRef} id="wiz" contentLayout="SingleStep" onStepChange={handleStepChange}>
                 <WizardStep icon="product" titleText="Product type" selected={true}>
                     <div style={{ display: "flex", minHeight: "200px", flexDirection: "column" }}>
                         <Title>1. Product Type</Title><br />
@@ -124,7 +154,7 @@ function App() {
                             <div
                                 style={{ display: "flex", flexDirection: "row", marginTop: "1rem", justifyContent: "flex-end", alignItems: "center" }}>
                                 <Label>5 years guarantee included</Label>
-                                <Switch id="wiz-sw" />
+                                <Switch />
                             </div>
                         </div>
                     </div>
@@ -149,20 +179,20 @@ function App() {
                             <div
                                 style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "1rem" }}>
                                 <Label>Manifacture date</Label>
-                                <DatePicker id="wiz-dp" />
+                                <DatePicker />
                             </div>
                         </div>
                     </div>
                 </WizardStep>
             </Wizard>
-            <Bar id="footer" slot="footer" design="Footer">
-                <Button id="prevButton" design="Emphasized" slot="endContent" onClick={handlePrevButtonClick}>Previous Step</Button>
-                <Button id="nextButton" design="Emphasized" slot="endContent" onClick={handleNextButtonClick}>Next step</Button>
-                <Button id="wiz-finalize" design="Emphasized" slot="endContent" onClick={handleWizFinalizeClick}>Finalize</Button>
-                <Button id="cancel" design="Transparent" slot="endContent" onClick={handleCancelClick}>Cancel</Button>
+            <Bar slot="footer" design="Footer">
+                {showPrev && <Button design="Emphasized" slot="endContent" onClick={handlePrevButtonClick}>Previous Step</Button>}
+                {showNext && <Button design="Emphasized" slot="endContent" onClick={handleNextButtonClick}>Next step</Button>}
+                {showFinalize && <Button design="Emphasized" slot="endContent" onClick={handleFinalizeClick}>Finalize</Button>}
+                <Button design="Transparent" slot="endContent" onClick={handleCancelClick}>Cancel</Button>
             </Bar>
         </Dialog>
-        <Button id="button" onClick={handleButtonClick}>Open dialog</Button>
+        <Button onClick={handleButtonClick}>Open dialog</Button>
     </>
   );
 }

@@ -1,76 +1,41 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
+import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
-import TableClass from "@ui5/webcomponents/dist/Table.js";
-import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
-import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
+import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const TableColumn = createComponent(TableColumnClass);
-const Table = createComponent(TableClass);
-const TableCell = createComponent(TableCellClass);
-const TableRow = createComponent(TableRowClass);
+const CompatTable = createComponent(CompatTableClass);
+const CompatTableRow = createComponent(CompatTableRowClass);
+const CompatTableColumn = createComponent(TableColumnClass);
+const CompatTableCell = createComponent(CompatTableCellClass);
 const Text = createComponent(TextClass);
 
 function App() {
-
   return (
-    <>
-      <Table>
+    <CompatTable>
+      <CompatTableColumn slot="columns"><Text>Product</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns"><Text>Supplier</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns"><Text>Dimensions</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns"><Text>Weight</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns"><Text>Price</Text></CompatTableColumn>
 
-        <TableColumn slot="columns">
-            <Text>Product</Text>
-        </TableColumn>
-        <TableColumn slot="columns">
-            <Text>Supplier</Text>
-        </TableColumn>
-        <TableColumn slot="columns">
-            <Text>Dimensions</Text>
-        </TableColumn>
-        <TableColumn slot="columns">
-            <Text>Weight</Text>
-        </TableColumn>
-        <TableColumn slot="columns">
-            <Text>Price</Text>
-        </TableColumn>
+      <CompatTableRow type="Active">
+        <CompatTableCell><Text>Notebook Basic 15</Text></CompatTableCell>
+        <CompatTableCell><Text>Very Best Screens</Text></CompatTableCell>
+        <CompatTableCell><Text>30 x 18 x 3cm</Text></CompatTableCell>
+        <CompatTableCell><Text><b>4.2</b>KG</Text></CompatTableCell>
+        <CompatTableCell><Text><b>956</b>EUR</Text></CompatTableCell>
+      </CompatTableRow>
 
-        <TableRow type="Active">
-            <TableCell>
-                <Text>Notebook Basic 15</Text>
-            </TableCell>
-            <TableCell>
-                <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-                <Text>30 x 18 x 3cm</Text>
-            </TableCell>
-            <TableCell>
-                <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-                <Text><b>956</b>EUR</Text>
-            </TableCell>
-        </TableRow>
-
-        <TableRow type="Active">
-            <TableCell>
-                <Text>iPhone 13</Text>
-            </TableCell>
-            <TableCell>
-                <Text>Apple</Text>
-            </TableCell>
-            <TableCell>
-                <Text>10 x 12 x 3cm</Text>
-            </TableCell>
-            <TableCell>
-                <Text><b>150</b>G</Text>
-            </TableCell>
-            <TableCell>
-                <Text><b>100</b>EUR</Text>
-            </TableCell>
-        </TableRow>
-
-    </Table>
-    </>
+      <CompatTableRow type="Active">
+        <CompatTableCell><Text>iPhone 13</Text></CompatTableCell>
+        <CompatTableCell><Text>Apple</Text></CompatTableCell>
+        <CompatTableCell><Text>10 x 12 x 3cm</Text></CompatTableCell>
+        <CompatTableCell><Text><b>150</b>G</Text></CompatTableCell>
+        <CompatTableCell><Text><b>100</b>EUR</Text></CompatTableCell>
+      </CompatTableRow>
+    </CompatTable>
   );
 }
 

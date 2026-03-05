@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
@@ -63,7 +64,7 @@ function App() {
     }
   }, [buttonState, startGeneration, stopGeneration]);
 
-  const handleMenuItemClick = useCallback((e: any) => {
+  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
     if (e.detail.text === "Regenerate") {
       setButtonState("generating");
       startGeneration();

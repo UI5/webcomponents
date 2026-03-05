@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -140,7 +141,7 @@ function App() {
     setIsLoading(false);
   }, [isLoading, stopTypingAnimation, updateComponentState]);
 
-  const handleVersionChange = useCallback((e: any) => {
+  const handleVersionChange = useCallback((e: UI5CustomEvent<AITextAreaClass, "version-change">) => {
     const backwards = e.detail?.backwards;
     const history = versionHistoryRef.current;
 
@@ -163,7 +164,7 @@ function App() {
     }
   }, [updateComponentState]);
 
-  const handleMenuItemClick = useCallback((e: any) => {
+  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
     const action = e?.detail?.item?.dataset?.action;
     if (action === "generate") {
       executeGeneration();

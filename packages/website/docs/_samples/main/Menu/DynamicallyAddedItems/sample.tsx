@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
@@ -48,7 +49,7 @@ function App() {
     }
   }, [addItemsDynamically]);
 
-  const handleMenuSubsUi5BeforeOpen = useCallback((e) => {
+  const handleMenuSubsUi5BeforeOpen = useCallback((e: UI5CustomEvent<MenuClass, "before-open">) => {
     const item = e.detail.item;
     if (item && !item.children.length) {
       addItemsDynamically(item);

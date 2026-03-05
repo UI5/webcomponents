@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -23,7 +24,7 @@ function App() {
   const uploadCollectionRef = useRef(null);
   const [newFiles, setNewFiles] = useState([]);
 
-  const handleFileUploaderChange = useCallback((e) => {
+  const handleFileUploaderChange = useCallback((e: UI5CustomEvent<FileUploaderClass, "change">) => {
     const files = e.detail.files;
     const additions = [];
     for (let i = 0; i < files.length; i++) {
@@ -55,7 +56,7 @@ function App() {
       });
   }, []);
 
-  const handleUploadCollectionItemDelete = useCallback((e) => {
+  const handleUploadCollectionItemDelete = useCallback((e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
     const deletedItem = e.detail.item;
     const fileId = deletedItem.dataset.fileId;
     if (fileId) {

@@ -30,14 +30,14 @@ function App() {
     }
   }, []);
 
-  const handleAcceptButtonClick = useCallback((e) => {
+  const handleAcceptButtonClick = useCallback((e: Event) => {
     const checkbox = checkboxRef.current;
     if (!hasScrolledToBottomRef.current || !checkbox?.checked) {
       e.preventDefault();
     }
   }, []);
 
-  const handleCheckboxMousedown = useCallback((e) => {
+  const handleCheckboxMousedown = useCallback((e: MouseEvent) => {
     if (!hasScrolledToBottomRef.current) {
       e.preventDefault();
     }
@@ -48,7 +48,7 @@ function App() {
     setAcceptDisabled(!(hasScrolledToBottomRef.current && checkbox?.checked));
   }, []);
 
-  const handleTermsPanelScroll = useCallback((e) => {
+  const handleTermsPanelScroll = useCallback((e: Event) => {
     const panel = e.target;
     const scrollTop = panel.scrollTop;
     const clientHeight = panel.clientHeight;

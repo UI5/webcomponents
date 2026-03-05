@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { startMultipleDrag } from "@ui5/webcomponents-base/dist/DragAndDrop.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -30,17 +31,17 @@ function App() {
   const [selected1, setSelected1] = useState(new Set());
   const [selected2, setSelected2] = useState(new Set());
 
-  const handleSelectionChange1 = (e) => {
+  const handleSelectionChange1 = (e: UI5CustomEvent<ListClass, "selection-change">) => {
     const selectedItems = e.detail.selectedItems || [];
     setSelected1(new Set(selectedItems.map((item) => item.dataset.id)));
   };
 
-  const handleSelectionChange2 = (e) => {
+  const handleSelectionChange2 = (e: UI5CustomEvent<ListClass, "selection-change">) => {
     const selectedItems = e.detail.selectedItems || [];
     setSelected2(new Set(selectedItems.map((item) => item.dataset.id)));
   };
 
-  const handleDragStart1 = (e) => {
+  const handleDragStart1 = (e: DragEvent) => {
     const draggedId = e.target.dataset?.id;
     if (!draggedId) return;
 
@@ -53,7 +54,7 @@ function App() {
     }
   };
 
-  const handleDragStart2 = (e) => {
+  const handleDragStart2 = (e: DragEvent) => {
     const draggedId = e.target.dataset?.id;
     if (!draggedId) return;
 
@@ -66,7 +67,7 @@ function App() {
     }
   };
 
-  const handleMoveOver = (e) => {
+  const handleMoveOver = (e: UI5CustomEvent<ListClass, "move-over">) => {
     const { source, destination } = e.detail;
 
     if (destination.placement === MovePlacement.Before || destination.placement === MovePlacement.After) {
@@ -74,7 +75,7 @@ function App() {
     }
   };
 
-  const handleMove = (e) => {
+  const handleMove = (e: UI5CustomEvent<ListClass, "move">) => {
     const { source, destination } = e.detail;
     const sourceId = source.element.dataset.id;
     const destId = destination.element.dataset.id;

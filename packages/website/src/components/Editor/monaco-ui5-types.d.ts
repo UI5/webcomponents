@@ -64,6 +64,37 @@ declare namespace JSX {
     h4: any;
     h5: any;
     h6: any;
+    style: any;
+    section: any;
+    header: any;
+    footer: any;
+    nav: any;
+    main: any;
+    form: any;
+    select: any;
+    option: any;
+    textarea: any;
+    table: any;
+    tr: any;
+    td: any;
+    th: any;
+    thead: any;
+    tbody: any;
+    ul: any;
+    ol: any;
+    li: any;
+    pre: any;
+    code: any;
+    strong: any;
+    em: any;
+    b: any;
+    i: any;
+    u: any;
+    small: any;
+    video: any;
+    source: any;
+    iframe: any;
+    svg: any;
   }
 }
 
@@ -78,11 +109,17 @@ interface UI5BaseProps {
   children?: React.ReactNode;
 }
 
-// Custom event type with typed currentTarget for UI5 components
-interface UI5CustomEvent<Target = HTMLElement> extends CustomEvent<any> {
-  readonly currentTarget: EventTarget & Target;
-  readonly target: EventTarget & Target;
-}
+// Custom event type with typed currentTarget and detail for UI5 components
+// Two-param form: UI5CustomEvent<ComponentClass, "eventName"> - gives typed detail
+// One-param form: UI5CustomEvent<ComponentProps> - gives typed currentTarget, detail is any
+type UI5CustomEvent<T = HTMLElement, N extends string = never> =
+  Omit<CustomEvent<
+    [N] extends [never] ? any :
+    T extends { eventDetails: infer E } ? N extends keyof E ? E[N] : any : any
+  >, "currentTarget" | "target"> & {
+    readonly currentTarget: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+    readonly target: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+  };
 
 /** Button component props */
 interface ButtonProps extends UI5BaseProps {
@@ -148,7 +185,6 @@ interface InputProps extends UI5BaseProps {
   onChange?: (event: UI5CustomEvent<InputProps>) => void;
   onInput?: (event: UI5CustomEvent<InputProps>) => void;
   onSelect?: (event: UI5CustomEvent<InputProps>) => void;
-  onRequestSubmit?: (event: UI5CustomEvent<InputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<InputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<InputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<InputProps>) => void;
@@ -182,7 +218,6 @@ interface LinkProps extends UI5BaseProps {
   endIcon?: string;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: UI5CustomEvent<LinkProps>) => void;
 }
 
 /** CheckBox component props */
@@ -219,7 +254,6 @@ interface SwitchProps extends UI5BaseProps {
   name?: string;
   value?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<SwitchProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<SwitchProps>) => void;
 }
 
@@ -242,7 +276,6 @@ interface CardHeaderProps extends UI5BaseProps {
   avatar?: React.ReactNode;
   action?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<CardHeaderProps>) => void;
 }
 
 /** Tag component props */
@@ -256,7 +289,6 @@ interface TagProps extends UI5BaseProps {
   text?: React.ReactNode;
   icon?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<TagProps>) => void;
 }
 
 /** Menu component props */
@@ -280,6 +312,8 @@ interface MenuProps extends UI5BaseProps {
 
 /** MenuItem component props */
 interface MenuItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   type?: "Inactive" | "Active" | "Detail" | "Navigation";
   accessibilityAttributes?: object;
   navigated?: boolean;
@@ -287,7 +321,6 @@ interface MenuItemProps extends UI5BaseProps {
   highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   selected?: boolean;
   deleteButton?: React.ReactNode;
-  eventDetails?: any;
   accessibleName?: string;
   indeterminate?: boolean;
   text?: string;
@@ -410,6 +443,8 @@ interface ListProps extends UI5BaseProps {
 
 /** ListItemStandard component props */
 interface ListItemStandardProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   type?: "Inactive" | "Active" | "Detail" | "Navigation";
   accessibilityAttributes?: object;
   navigated?: boolean;
@@ -417,7 +452,6 @@ interface ListItemStandardProps extends UI5BaseProps {
   highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   selected?: boolean;
   deleteButton?: React.ReactNode;
-  eventDetails?: any;
   accessibleName?: string;
   indeterminate?: boolean;
   text?: string;
@@ -435,6 +469,8 @@ interface ListItemStandardProps extends UI5BaseProps {
 
 /** ListItemCustom component props */
 interface ListItemCustomProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   type?: "Inactive" | "Active" | "Detail" | "Navigation";
   accessibilityAttributes?: object;
   navigated?: boolean;
@@ -442,7 +478,6 @@ interface ListItemCustomProps extends UI5BaseProps {
   highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   selected?: boolean;
   deleteButton?: React.ReactNode;
-  eventDetails?: any;
   accessibleName?: string;
   indeterminate?: boolean;
   movable?: boolean;
@@ -491,7 +526,6 @@ interface IconProps extends UI5BaseProps {
   showTooltip?: boolean;
   mode?: "Image" | "Decorative" | "Interactive";
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<IconProps>) => void;
 }
 
 /** Avatar component props */
@@ -511,7 +545,6 @@ interface AvatarProps extends UI5BaseProps {
   badge?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: UI5CustomEvent<AvatarProps>) => void;
 }
 
 /** AvatarGroup component props */
@@ -563,12 +596,8 @@ interface DatePickerProps extends UI5BaseProps {
   liveValue?: string;
   isLiveUpdate?: boolean;
   responsivePopover?: any;
-  onChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<DatePickerProps>) => void;
-  onInput?: (event: UI5CustomEvent<DatePickerProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
-  onOpen?: (event: UI5CustomEvent<DatePickerProps>) => void;
-  onClose?: (event: UI5CustomEvent<DatePickerProps>) => void;
 }
 
 /** TimePicker component props */
@@ -589,15 +618,19 @@ interface TimePickerProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   tempValue?: string;
-  onChange?: (event: UI5CustomEvent<TimePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<TimePickerProps>) => void;
-  onInput?: (event: UI5CustomEvent<TimePickerProps>) => void;
-  onOpen?: (event: UI5CustomEvent<TimePickerProps>) => void;
-  onClose?: (event: UI5CustomEvent<TimePickerProps>) => void;
 }
 
 /** DateTimePicker component props */
 interface DateTimePickerProps extends UI5BaseProps {
+  primaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  secondaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  formatPattern?: string;
+  displayFormat?: string;
+  valueFormat?: string;
+  minDate?: string;
+  maxDate?: string;
+  calendarWeekNumbering?: "Default" | "MiddleEastern" | "WesternTraditional";
   value?: string;
   valueState?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   required?: boolean;
@@ -621,6 +654,14 @@ interface DateTimePickerProps extends UI5BaseProps {
 
 /** DateRangePicker component props */
 interface DateRangePickerProps extends UI5BaseProps {
+  primaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  secondaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  formatPattern?: string;
+  displayFormat?: string;
+  valueFormat?: string;
+  minDate?: string;
+  maxDate?: string;
+  calendarWeekNumbering?: "Default" | "MiddleEastern" | "WesternTraditional";
   value?: string;
   valueState?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   required?: boolean;
@@ -648,7 +689,6 @@ interface DynamicDateRangeProps extends UI5BaseProps {
   value?: any;
   options?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<DynamicDateRangeProps>) => void;
 }
 
 /** TextArea component props */
@@ -694,7 +734,6 @@ interface RadioButtonProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<RadioButtonProps>) => void;
 }
 
 /** ProgressIndicator component props */
@@ -720,7 +759,6 @@ interface RatingIndicatorProps extends UI5BaseProps {
   ratedIcon?: string;
   unratedIcon?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<RatingIndicatorProps>) => void;
 }
 
 /** Slider component props */
@@ -784,8 +822,6 @@ interface StepInputProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   focused?: boolean;
-  onChange?: (event: UI5CustomEvent<StepInputProps>) => void;
-  onInput?: (event: UI5CustomEvent<StepInputProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<StepInputProps>) => void;
 }
 
@@ -817,6 +853,17 @@ interface PopoverProps extends UI5BaseProps {
 
 /** ResponsivePopover component props */
 interface ResponsivePopoverProps extends UI5BaseProps {
+  initialFocus?: string;
+  preventFocusRestore?: boolean;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleRole?: "None" | "Dialog" | "AlertDialog";
+  accessibleDescription?: string;
+  accessibleDescriptionRef?: string;
+  preventInitialFocus?: boolean;
+  content?: React.ReactNode;
+  open?: boolean;
+  eventDetails?: any;
   headerText?: string;
   placement?: "Start" | "End" | "Top" | "Bottom";
   horizontalAlign?: "Center" | "Start" | "End" | "Stretch";
@@ -828,7 +875,6 @@ interface ResponsivePopoverProps extends UI5BaseProps {
   header?: React.ReactNode;
   footer?: React.ReactNode;
   opener?: HTMLElement | string;
-  eventDetails?: Popup["eventDetails"];
 }
 
 /** Toast component props */
@@ -848,7 +894,6 @@ interface MessageStripProps extends UI5BaseProps {
   hideCloseButton?: boolean;
   icon?: React.ReactNode;
   eventDetails?: any;
-  onClose?: (event: UI5CustomEvent<MessageStripProps>) => void;
 }
 
 /** BusyIndicator component props */
@@ -972,7 +1017,52 @@ interface TableSelectionProps extends UI5BaseProps {
   mode?: "None" | "Single" | "Multiple";
   selected?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<TableSelectionProps>) => void;
+}
+
+/** TableSelectionMulti component props */
+interface TableSelectionMultiProps extends UI5BaseProps {
+  selected?: string;
+  behavior?: "RowSelector" | "RowOnly";
+  eventDetails?: any;
+  selected?: string;
+  headerSelector?: "SelectAll" | "ClearAll";
+}
+
+/** TableSelectionSingle component props */
+interface TableSelectionSingleProps extends UI5BaseProps {
+  selected?: string;
+  behavior?: "RowSelector" | "RowOnly";
+  eventDetails?: any;
+  selected?: string;
+}
+
+/** TableRowAction component props */
+interface TableRowActionProps extends UI5BaseProps {
+  invisible?: boolean;
+  eventDetails?: any;
+  icon?: string;
+  text?: string;
+}
+
+/** TableRowActionNavigation component props */
+interface TableRowActionNavigationProps extends UI5BaseProps {
+  invisible?: boolean;
+  eventDetails?: any;
+  interactive?: boolean;
+}
+
+/** TableHeaderCellActionAI component props */
+interface TableHeaderCellActionAIProps extends UI5BaseProps {
+  eventDetails?: any;
+}
+
+/** TableVirtualizer component props */
+interface TableVirtualizerProps extends UI5BaseProps {
+  rowHeight?: number;
+  rowCount?: number;
+  extraRows?: number;
+  eventDetails?: any;
+  onRangeChange?: (event: UI5CustomEvent<TableVirtualizerProps>) => void;
 }
 
 /** Tree component props */
@@ -1001,6 +1091,17 @@ interface TreeProps extends UI5BaseProps {
 
 /** TreeItem component props */
 interface TreeItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
+  type?: "Inactive" | "Active" | "Detail" | "Navigation";
+  accessibilityAttributes?: object;
+  navigated?: boolean;
+  tooltip?: string;
+  highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  selected?: boolean;
+  deleteButton?: React.ReactNode;
+  accessibleName?: string;
+  indeterminate?: boolean;
   icon?: string;
   expanded?: boolean;
   movable?: boolean;
@@ -1010,7 +1111,6 @@ interface TreeItemProps extends UI5BaseProps {
   accessibleName?: string;
   items?: React.ReactNode;
   image?: React.ReactNode;
-  eventDetails?: any;
   level?: number;
   showToggleButton?: boolean;
   text?: string;
@@ -1019,6 +1119,17 @@ interface TreeItemProps extends UI5BaseProps {
 
 /** TreeItemCustom component props */
 interface TreeItemCustomProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
+  type?: "Inactive" | "Active" | "Detail" | "Navigation";
+  accessibilityAttributes?: object;
+  navigated?: boolean;
+  tooltip?: string;
+  highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  selected?: boolean;
+  deleteButton?: React.ReactNode;
+  accessibleName?: string;
+  indeterminate?: boolean;
   icon?: string;
   expanded?: boolean;
   movable?: boolean;
@@ -1028,7 +1139,6 @@ interface TreeItemCustomProps extends UI5BaseProps {
   accessibleName?: string;
   items?: React.ReactNode;
   image?: React.ReactNode;
-  eventDetails?: any;
   level?: number;
   showToggleButton?: boolean;
   hideSelectionElement?: boolean;
@@ -1047,7 +1157,6 @@ interface PanelProps extends UI5BaseProps {
   stickyHeader?: boolean;
   header?: React.ReactNode;
   eventDetails?: any;
-  onToggle?: (event: UI5CustomEvent<PanelProps>) => void;
 }
 
 /** Toolbar component props */
@@ -1062,7 +1171,6 @@ interface ToolbarProps extends UI5BaseProps {
   itemsToOverflow?: React.ReactNode;
   itemsWidth?: number;
   minContentWidth?: number;
-  onMinContentWidthChange?: (event: UI5CustomEvent<ToolbarProps>) => void;
 }
 
 /** ToolbarButton component props */
@@ -1128,15 +1236,24 @@ interface ToolbarSelectProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   value?: string;
-  onChange?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
-  onOpen?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
-  onClose?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
 }
 
 /** ToolbarSelectOption component props */
 interface ToolbarSelectOptionProps extends UI5BaseProps {
   text?: React.ReactNode;
   selected?: boolean;
+}
+
+/** ToolbarItem component props */
+interface ToolbarItemProps extends UI5BaseProps {
+  overflowPriority?: "Default" | "NeverOverflow" | "AlwaysOverflow";
+  preventOverflowClosing?: boolean;
+  item?: IOverflowToolbarItem[];
+  isOverflowed?: boolean;
+  eventDetails?: any;
+  closeOverflowSet?: any;
+  predefinedWrapperSet?: any;
+  onCloseOverflow?: (event: UI5CustomEvent<ToolbarItemProps>) => void;
 }
 
 /** SegmentedButton component props */
@@ -1246,20 +1363,17 @@ interface MultiComboBoxProps extends UI5BaseProps {
   valueStateHeader?: HTMLElement | string;
   list?: any;
   selectedItems?: React.ReactNode;
-  onChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
-  onInput?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
-  onOpen?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
-  onClose?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
 }
 
 /** MultiComboBoxItem component props */
 interface MultiComboBoxItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   text?: string;
   additionalText?: string;
   value?: string;
-  eventDetails?: ListItemBase["eventDetails"];
   focused?: boolean;
   selected?: boolean;
   selected?: boolean;
@@ -1268,8 +1382,13 @@ interface MultiComboBoxItemProps extends UI5BaseProps {
 
 /** MultiComboBoxItemGroup component props */
 interface MultiComboBoxItemGroupProps extends UI5BaseProps {
+  headerText?: string;
+  headerAccessibleName?: string;
   items?: React.ReactNode;
-  eventDetails?: ListItemGroup["eventDetails"];
+  wrappingType?: "None" | "Normal";
+  header?: React.ReactNode;
+  eventDetails?: any;
+  items?: React.ReactNode;
   items?: React.ReactNode;
 }
 
@@ -1359,6 +1478,14 @@ interface BreadcrumbsItemProps extends UI5BaseProps {
 
 /** Calendar component props */
 interface CalendarProps extends UI5BaseProps {
+  primaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  secondaryCalendarType?: "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
+  formatPattern?: string;
+  displayFormat?: string;
+  valueFormat?: string;
+  minDate?: string;
+  maxDate?: string;
+  calendarWeekNumbering?: "Default" | "MiddleEastern" | "WesternTraditional";
   timestamp?: number;
   selectionMode?: "Single" | "Multiple" | "Range";
   hideWeekNumbers?: boolean;
@@ -1406,7 +1533,6 @@ interface ColorPickerProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
-  onChange?: (event: UI5CustomEvent<ColorPickerProps>) => void;
 }
 
 /** ColorPalette component props */
@@ -1474,7 +1600,6 @@ interface SplitButtonProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   text?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
   onArrowClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
 }
 
@@ -1516,6 +1641,17 @@ interface SuggestionItemCustomProps extends UI5BaseProps {
   content?: React.ReactNode;
 }
 
+/** SuggestionItemGroup component props */
+interface SuggestionItemGroupProps extends UI5BaseProps {
+  headerText?: string;
+  headerAccessibleName?: string;
+  items?: React.ReactNode;
+  wrappingType?: "None" | "Normal";
+  header?: React.ReactNode;
+  eventDetails?: any;
+  items?: React.ReactNode;
+}
+
 /** Carousel component props */
 interface CarouselProps extends UI5BaseProps {
   accessibleName?: string;
@@ -1531,7 +1667,6 @@ interface CarouselProps extends UI5BaseProps {
   arrowsPlacement?: "Content" | "Navigation";
   content?: React.ReactNode;
   eventDetails?: any;
-  onNavigate?: (event: UI5CustomEvent<CarouselProps>) => void;
 }
 
 /** ToggleButton component props */
@@ -1638,6 +1773,16 @@ interface ShellBarProps extends UI5BaseProps {
   onContentItemVisibilityChange?: (event: UI5CustomEvent<ShellBarProps>) => void;
 }
 
+/** ShellBarBranding component props */
+interface ShellBarBrandingProps extends UI5BaseProps {
+  href?: string;
+  target?: string;
+  accessibleName?: string;
+  content?: React.ReactNode;
+  logo?: React.ReactNode;
+  eventDetails?: any;
+}
+
 /** ShellBarItem component props */
 interface ShellBarItemProps extends UI5BaseProps {
   icon?: string;
@@ -1645,7 +1790,33 @@ interface ShellBarItemProps extends UI5BaseProps {
   count?: string;
   accessibilityAttributes?: object;
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<ShellBarItemProps>) => void;
+}
+
+/** ShellBarSearch component props */
+interface ShellBarSearchProps extends UI5BaseProps {
+  fieldLoading?: boolean;
+  showClearIcon?: boolean;
+  value?: string;
+  placeholder?: string;
+  accessibleName?: string;
+  accessibleDescription?: string;
+  scopeValue?: string;
+  scopes?: React.ReactNode;
+  filterButton?: React.ReactNode;
+  eventDetails?: any;
+  loading?: boolean;
+  noTypeahead?: boolean;
+  items?: React.ReactNode;
+  action?: React.ReactNode;
+  illustration?: React.ReactNode;
+  messageArea?: React.ReactNode;
+  open?: boolean;
+  autoOpen?: boolean;
+}
+
+/** ShellBarSpacer component props */
+interface ShellBarSpacerProps extends UI5BaseProps {
+  visible?: boolean;
 }
 
 /** SideNavigation component props */
@@ -1662,6 +1833,13 @@ interface SideNavigationProps extends UI5BaseProps {
 
 /** SideNavigationItem component props */
 interface SideNavigationItemProps extends UI5BaseProps {
+  text?: string;
+  disabled?: boolean;
+  tooltip?: string;
+  eventDetails?: any;
+  forcedTabIndex?: string;
+  sideNavCollapsed?: boolean;
+  inPopover?: boolean;
   icon?: string;
   selected?: boolean;
   href?: string;
@@ -1669,13 +1847,19 @@ interface SideNavigationItemProps extends UI5BaseProps {
   design?: "Default" | "Action";
   unselectable?: boolean;
   accessibilityAttributes?: object;
-  eventDetails?: any;
   expanded?: boolean;
   items?: React.ReactNode;
 }
 
 /** SideNavigationSubItem component props */
 interface SideNavigationSubItemProps extends UI5BaseProps {
+  text?: string;
+  disabled?: boolean;
+  tooltip?: string;
+  eventDetails?: any;
+  forcedTabIndex?: string;
+  sideNavCollapsed?: boolean;
+  inPopover?: boolean;
   icon?: string;
   selected?: boolean;
   href?: string;
@@ -1683,7 +1867,6 @@ interface SideNavigationSubItemProps extends UI5BaseProps {
   design?: "Default" | "Action";
   unselectable?: boolean;
   accessibilityAttributes?: object;
-  eventDetails?: any;
 }
 
 /** SideNavigationGroup component props */
@@ -1700,6 +1883,16 @@ interface SideNavigationGroupProps extends UI5BaseProps {
   belowGroup?: boolean;
 }
 
+/** NavigationLayout component props */
+interface NavigationLayoutProps extends UI5BaseProps {
+  mode?: "Auto" | "Collapsed" | "Expanded";
+  header?: React.ReactNode;
+  sideContent?: React.ReactNode;
+  content?: React.ReactNode;
+  eventDetails?: any;
+  onItemClick?: (event: UI5CustomEvent<NavigationLayoutProps>) => void;
+}
+
 /** NotificationList component props */
 interface NotificationListProps extends UI5BaseProps {
   items?: React.ReactNode;
@@ -1713,11 +1906,12 @@ interface NotificationListProps extends UI5BaseProps {
 
 /** NotificationListItem component props */
 interface NotificationListItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   titleText?: string;
   read?: boolean;
   loading?: boolean;
   loadingDelay?: number;
-  eventDetails?: ListItemBase["eventDetails"];
   wrappingType?: "None" | "Normal";
   state?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   showClose?: boolean;
@@ -1729,22 +1923,19 @@ interface NotificationListItemProps extends UI5BaseProps {
   titleTextDOM?: HTMLElement | string;
   menuButtonDOM?: HTMLElement | string;
   descriptionDOM?: HTMLElement | string;
-  onPress?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
-  onClose?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
-  onClose?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
 }
 
 /** NotificationListGroupItem component props */
 interface NotificationListGroupItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   titleText?: string;
   read?: boolean;
   loading?: boolean;
   loadingDelay?: number;
-  eventDetails?: ListItemBase["eventDetails"];
   collapsed?: boolean;
   growing?: "Button" | "None";
   items?: React.ReactNode;
-  onToggle?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
   onLoadMore?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
 }
 
@@ -1765,6 +1956,8 @@ interface UploadCollectionProps extends UI5BaseProps {
 
 /** UploadCollectionItem component props */
 interface UploadCollectionItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
   type?: "Inactive" | "Active" | "Detail" | "Navigation";
   accessibilityAttributes?: object;
   navigated?: boolean;
@@ -1772,7 +1965,6 @@ interface UploadCollectionItemProps extends UI5BaseProps {
   highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
   selected?: boolean;
   deleteButton?: React.ReactNode;
-  eventDetails?: any;
   accessibleName?: string;
   indeterminate?: boolean;
   file?: File | null;
@@ -1790,7 +1982,6 @@ interface UploadCollectionItemProps extends UI5BaseProps {
   onTerminate?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onRetry?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onFocusRequested?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
-  onUciDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onRequestDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
 }
 
@@ -1976,8 +2167,6 @@ interface MediaGalleryItemProps extends UI5BaseProps {
   content?: React.ReactNode;
   thumbnail?: React.ReactNode;
   eventDetails?: any;
-  onClick?: (event: UI5CustomEvent<MediaGalleryItemProps>) => void;
-  onItem?: (event: UI5CustomEvent<MediaGalleryItemProps>) => void;
 }
 
 /** ProductSwitch component props */
@@ -1995,8 +2184,6 @@ interface ProductSwitchItemProps extends UI5BaseProps {
   image?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
-  onClick?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
-  onItem?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
 }
 
 /** ViewSettingsDialog component props */
@@ -2053,7 +2240,6 @@ interface SearchProps extends UI5BaseProps {
   illustration?: React.ReactNode;
   messageArea?: React.ReactNode;
   open?: boolean;
-  onSearch?: (event: UI5CustomEvent<SearchProps>) => void;
   onPopupActionPress?: (event: UI5CustomEvent<SearchProps>) => void;
   onOpen?: (event: UI5CustomEvent<SearchProps>) => void;
   onClose?: (event: UI5CustomEvent<SearchProps>) => void;
@@ -2081,6 +2267,46 @@ interface SearchMessageAreaProps extends UI5BaseProps {
   description?: string;
 }
 
+/** SearchField component props */
+interface SearchFieldProps extends UI5BaseProps {
+  fieldLoading?: boolean;
+  showClearIcon?: boolean;
+  value?: string;
+  placeholder?: string;
+  accessibleName?: string;
+  accessibleDescription?: string;
+  scopeValue?: string;
+  scopes?: React.ReactNode;
+  filterButton?: React.ReactNode;
+  eventDetails?: any;
+  onScopeChange?: (event: UI5CustomEvent<SearchFieldProps>) => void;
+}
+
+/** SearchItemGroup component props */
+interface SearchItemGroupProps extends UI5BaseProps {
+  headerText?: string;
+  headerAccessibleName?: string;
+  items?: React.ReactNode;
+  wrappingType?: "None" | "Normal";
+  header?: React.ReactNode;
+  eventDetails?: any;
+}
+
+/** SearchItemShowMore component props */
+interface SearchItemShowMoreProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
+  itemsToShowCount?: number;
+  selected?: boolean;
+  onClick?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
+}
+
+/** SearchScope component props */
+interface SearchScopeProps extends UI5BaseProps {
+  text?: string;
+  value?: string;
+}
+
 /** UserMenu component props */
 interface UserMenuProps extends UI5BaseProps {
   open?: boolean;
@@ -2105,6 +2331,17 @@ interface UserMenuProps extends UI5BaseProps {
 
 /** UserMenuItem component props */
 interface UserMenuItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
+  type?: "Inactive" | "Active" | "Detail" | "Navigation";
+  accessibilityAttributes?: object;
+  navigated?: boolean;
+  tooltip?: string;
+  highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  selected?: boolean;
+  deleteButton?: React.ReactNode;
+  accessibleName?: string;
+  indeterminate?: boolean;
   text?: string;
   additionalText?: string;
   icon?: string;
@@ -2117,7 +2354,6 @@ interface UserMenuItemProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   items?: React.ReactNode;
   endContent?: React.ReactNode;
-  eventDetails?: any;
   items?: React.ReactNode;
 }
 
@@ -2140,9 +2376,105 @@ interface BarcodeScannerDialogProps extends UI5BaseProps {
   footer?: React.ReactNode;
   open?: boolean;
   eventDetails?: any;
-  onClose?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
   onScanSuccess?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
   onScanError?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
+}
+
+/** UserSettingsDialog component props */
+interface UserSettingsDialogProps extends UI5BaseProps {
+  open?: boolean;
+  headerText?: string;
+  showSearchField?: boolean;
+  items?: React.ReactNode;
+  fixedItems?: React.ReactNode;
+  eventDetails?: any;
+  onSelectionChange?: (event: UI5CustomEvent<UserSettingsDialogProps>) => void;
+  onOpen?: (event: UI5CustomEvent<UserSettingsDialogProps>) => void;
+  onBeforeClose?: (event: UI5CustomEvent<UserSettingsDialogProps>) => void;
+  onClose?: (event: UI5CustomEvent<UserSettingsDialogProps>) => void;
+}
+
+/** UserSettingsItem component props */
+interface UserSettingsItemProps extends UI5BaseProps {
+  text?: string;
+  tooltip?: string;
+  headerText?: string;
+  selected?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  loadingReason?: string;
+  icon?: string;
+  accessibleName?: string;
+  pages?: React.ReactNode;
+  tabs?: React.ReactNode;
+  eventDetails?: any;
+  onSelectionChange?: (event: UI5CustomEvent<UserSettingsItemProps>) => void;
+  onBackClick?: (event: UI5CustomEvent<UserSettingsItemProps>) => void;
+}
+
+/** UserSettingsView component props */
+interface UserSettingsViewProps extends UI5BaseProps {
+  text?: string;
+  selected?: boolean;
+  secondary?: boolean;
+  content?: React.ReactNode;
+}
+
+/** UserSettingsAccountView component props */
+interface UserSettingsAccountViewProps extends UI5BaseProps {
+  text?: string;
+  selected?: boolean;
+  secondary?: boolean;
+  content?: React.ReactNode;
+  account?: React.ReactNode;
+  showManageAccount?: boolean;
+  eventDetails?: any;
+  onEditAccountsClick?: (event: UI5CustomEvent<UserSettingsAccountViewProps>) => void;
+  onManageAccountClick?: (event: UI5CustomEvent<UserSettingsAccountViewProps>) => void;
+}
+
+/** UserSettingsAppearanceView component props */
+interface UserSettingsAppearanceViewProps extends UI5BaseProps {
+  text?: string;
+  selected?: boolean;
+  secondary?: boolean;
+  content?: React.ReactNode;
+  items?: React.ReactNode;
+  additionalContent?: React.ReactNode;
+  eventDetails?: any;
+  onSelectionChange?: (event: UI5CustomEvent<UserSettingsAppearanceViewProps>) => void;
+}
+
+/** UserSettingsAppearanceViewGroup component props */
+interface UserSettingsAppearanceViewGroupProps extends UI5BaseProps {
+  headerText?: string;
+  headerAccessibleName?: string;
+  items?: React.ReactNode;
+  wrappingType?: "None" | "Normal";
+  header?: React.ReactNode;
+  eventDetails?: any;
+  items?: React.ReactNode;
+}
+
+/** UserSettingsAppearanceViewItem component props */
+interface UserSettingsAppearanceViewItemProps extends UI5BaseProps {
+  eventDetails?: any;
+  disabled?: boolean;
+  type?: "Inactive" | "Active" | "Detail" | "Navigation";
+  accessibilityAttributes?: object;
+  navigated?: boolean;
+  tooltip?: string;
+  highlight?: "None" | "Positive" | "Critical" | "Negative" | "Information";
+  selected?: boolean;
+  deleteButton?: React.ReactNode;
+  accessibleName?: string;
+  indeterminate?: boolean;
+  movable?: boolean;
+  accessibleName?: string;
+  itemKey?: string;
+  text?: string;
+  icon?: string;
+  colorScheme?: string;
 }
 
 /** AIButton component props */
@@ -2225,7 +2557,6 @@ interface AIInputProps extends UI5BaseProps {
   onChange?: (event: UI5CustomEvent<AIInputProps>) => void;
   onInput?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSelect?: (event: UI5CustomEvent<AIInputProps>) => void;
-  onRequestSubmit?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<AIInputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<AIInputProps>) => void;
@@ -2304,16 +2635,77 @@ interface AIPromptInputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
-  onSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
-  onInput?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onInput?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSelect?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
-  onRequestSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onOpen?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onClose?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+}
+
+/** CompatTable component props */
+interface CompatTableProps extends UI5BaseProps {
+  noDataText?: string;
+  growingButtonText?: string;
+  growingButtonSubtext?: string;
+  hideNoData?: boolean;
+  growing?: "Button" | "Scroll";
+  busy?: boolean;
+  busyDelay?: number;
+  stickyColumnHeader?: boolean;
+  mode?: string;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  rows?: React.ReactNode;
+  columns?: React.ReactNode;
+  eventDetails?: any;
+  tableEndObserved?: boolean;
+  visibleColumns?: any;
+  visibleColumnsCount?: number;
+  lastFocusedElement?: HTMLElement | string;
+  growingIntersectionObserver?: IntersectionObserver | null;
+  initialIntersection?: boolean;
+  onRowClick?: (event: UI5CustomEvent<CompatTableProps>) => void;
+  onPopinChange?: (event: UI5CustomEvent<CompatTableProps>) => void;
+  onLoadMore?: (event: UI5CustomEvent<CompatTableProps>) => void;
+  onSelectionChange?: (event: UI5CustomEvent<CompatTableProps>) => void;
+}
+
+/** CompatTableColumn component props */
+interface CompatTableColumnProps extends UI5BaseProps {
+  minWidth?: number;
+  popinText?: string;
+  demandPopin?: boolean;
+  popinDisplay?: string;
+}
+
+/** CompatTableRow component props */
+interface CompatTableRowProps extends UI5BaseProps {
+  type?: string;
+  selected?: boolean;
+  navigated?: boolean;
+  cells?: React.ReactNode;
+  eventDetails?: any;
+  visibleCells?: any;
+  popinCells?: any;
+  tabbableElements?: React.ReactNode;
+  onRowClick?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+  onForwardBefore?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+  onForwardAfter?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+  onF7Pressed?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+}
+
+/** CompatTableCell component props */
+interface CompatTableCellProps extends UI5BaseProps {
+  content?: React.ReactNode;
+}
+
+/** CompatTableGroupRow component props */
+interface CompatTableGroupRowProps extends UI5BaseProps {
+  eventDetails?: any;
 }
 
 // Module declarations for sample imports
@@ -2323,706 +2715,1809 @@ declare module "@ui5/webcomponents-base/dist/createComponent.js" {
 
 declare module "@ui5/webcomponents-base" {
   export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+  export type UI5CustomEvent<T = HTMLElement, N extends string = never> =
+    Omit<CustomEvent<
+      [N] extends [never] ? any :
+      T extends { eventDetails: infer E } ? N extends keyof E ? E[N] : any : any
+    >, "currentTarget" | "target"> & {
+      readonly currentTarget: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+      readonly target: EventTarget & (T extends { _jsxProps: infer P } ? P : T);
+    };
+}
+
+declare module "@ui5/webcomponents-compat/dist/utils/CompatCustomElementsScope.js" {
+  export function setCompatCustomElementsScopingSuffix(suffix: string): void;
 }
 
 declare module "@ui5/webcomponents/dist/Button.js" {
-  const Button: { _jsxProps: ButtonProps };
+  class Button {
+    static _jsxProps: ButtonProps;
+    _jsxProps: ButtonProps;
+    eventDetails: {
+      "click": { originalEvent: any; altKey: boolean; ctrlKey: boolean; metaKey: boolean; shiftKey: boolean };
+      "active-state-change": void;
+    };
+  }
   export default Button;
 }
 
 declare module "@ui5/webcomponents/dist/ButtonBadge.js" {
-  const ButtonBadge: { _jsxProps: ButtonBadgeProps };
+  class ButtonBadge {
+    static _jsxProps: ButtonBadgeProps;
+    _jsxProps: ButtonBadgeProps;
+    eventDetails: {};
+  }
   export default ButtonBadge;
 }
 
 declare module "@ui5/webcomponents/dist/Input.js" {
-  const Input: { _jsxProps: InputProps };
+  class Input {
+    static _jsxProps: InputProps;
+    _jsxProps: InputProps;
+    eventDetails: {
+      "change": { inputType: string };
+      "input": { inputType: string };
+      "select": void;
+      "selection-change": { item: any };
+      "type-ahead": void;
+      "suggestion-scroll": { scrollTop: number; scrollContainer: any };
+      "open": void;
+      "close": void;
+    };
+  }
   export default Input;
 }
 
 declare module "@ui5/webcomponents/dist/Label.js" {
-  const Label: { _jsxProps: LabelProps };
+  class Label {
+    static _jsxProps: LabelProps;
+    _jsxProps: LabelProps;
+    eventDetails: {};
+  }
   export default Label;
 }
 
 declare module "@ui5/webcomponents/dist/Link.js" {
-  const Link: { _jsxProps: LinkProps };
+  class Link {
+    static _jsxProps: LinkProps;
+    _jsxProps: LinkProps;
+    eventDetails: {};
+  }
   export default Link;
 }
 
 declare module "@ui5/webcomponents/dist/CheckBox.js" {
-  const CheckBox: { _jsxProps: CheckBoxProps };
+  class CheckBox {
+    static _jsxProps: CheckBoxProps;
+    _jsxProps: CheckBoxProps;
+    eventDetails: {
+      "change": void;
+      "value-changed": void;
+    };
+  }
   export default CheckBox;
 }
 
 declare module "@ui5/webcomponents/dist/Switch.js" {
-  const Switch: { _jsxProps: SwitchProps };
+  class Switch {
+    static _jsxProps: SwitchProps;
+    _jsxProps: SwitchProps;
+    eventDetails: {
+      "value-changed": void;
+    };
+  }
   export default Switch;
 }
 
 declare module "@ui5/webcomponents/dist/Card.js" {
-  const Card: { _jsxProps: CardProps };
+  class Card {
+    static _jsxProps: CardProps;
+    _jsxProps: CardProps;
+    eventDetails: {};
+  }
   export default Card;
 }
 
 declare module "@ui5/webcomponents/dist/CardHeader.js" {
-  const CardHeader: { _jsxProps: CardHeaderProps };
+  class CardHeader {
+    static _jsxProps: CardHeaderProps;
+    _jsxProps: CardHeaderProps;
+    eventDetails: {};
+  }
   export default CardHeader;
 }
 
 declare module "@ui5/webcomponents/dist/Tag.js" {
-  const Tag: { _jsxProps: TagProps };
+  class Tag {
+    static _jsxProps: TagProps;
+    _jsxProps: TagProps;
+    eventDetails: {};
+  }
   export default Tag;
 }
 
 declare module "@ui5/webcomponents/dist/Menu.js" {
-  const Menu: { _jsxProps: MenuProps };
+  class Menu {
+    static _jsxProps: MenuProps;
+    _jsxProps: MenuProps;
+    eventDetails: {
+      "item-click": { item: any; text: string };
+      "before-open": { item?: any };
+      "open": void;
+      "before-close": { escPressed: boolean };
+      "close": void;
+      "close-menu": void;
+    };
+  }
   export default Menu;
 }
 
 declare module "@ui5/webcomponents/dist/MenuItem.js" {
-  const MenuItem: { _jsxProps: MenuItemProps };
+  class MenuItem {
+    static _jsxProps: MenuItemProps;
+    _jsxProps: MenuItemProps;
+    eventDetails: {
+      "before-open": { item?: any };
+      "open": void;
+      "before-close": { escPressed: boolean };
+      "close": void;
+      "close-menu": void;
+      "check": void;
+      "exit-end-content": { shouldNavigateToNextItem: boolean };
+    };
+  }
   export default MenuItem;
 }
 
 declare module "@ui5/webcomponents/dist/MenuSeparator.js" {
-  const MenuSeparator: { _jsxProps: MenuSeparatorProps };
+  class MenuSeparator {
+    static _jsxProps: MenuSeparatorProps;
+    _jsxProps: MenuSeparatorProps;
+    eventDetails: {};
+  }
   export default MenuSeparator;
 }
 
 declare module "@ui5/webcomponents/dist/MenuItemGroup.js" {
-  const MenuItemGroup: { _jsxProps: MenuItemGroupProps };
+  class MenuItemGroup {
+    static _jsxProps: MenuItemGroupProps;
+    _jsxProps: MenuItemGroupProps;
+    eventDetails: {};
+  }
   export default MenuItemGroup;
 }
 
 declare module "@ui5/webcomponents/dist/Select.js" {
-  const Select: { _jsxProps: SelectProps };
+  class Select {
+    static _jsxProps: SelectProps;
+    _jsxProps: SelectProps;
+    eventDetails: {
+      "change": { selectedOption: any };
+      "live-change": { selectedOption: any };
+      "open": void;
+      "close": void;
+      "selected-item-changed": void;
+      "input": void;
+    };
+  }
   export default Select;
 }
 
 declare module "@ui5/webcomponents/dist/Option.js" {
-  const Option: { _jsxProps: OptionProps };
+  class Option {
+    static _jsxProps: OptionProps;
+    _jsxProps: OptionProps;
+    eventDetails: {};
+  }
   export default Option;
 }
 
 declare module "@ui5/webcomponents/dist/OptionCustom.js" {
-  const OptionCustom: { _jsxProps: OptionCustomProps };
+  class OptionCustom {
+    static _jsxProps: OptionCustomProps;
+    _jsxProps: OptionCustomProps;
+    eventDetails: {};
+  }
   export default OptionCustom;
 }
 
 declare module "@ui5/webcomponents/dist/List.js" {
-  const List: { _jsxProps: ListProps };
+  class List {
+    static _jsxProps: ListProps;
+    _jsxProps: ListProps;
+    eventDetails: {
+      "item-click": { item: any };
+      "item-close": { item: any };
+      "item-toggle": { item: any };
+      "item-delete": { item: any };
+      "selection-change": { selectedItems: any; previouslySelectedItems: any; selectionComponentPressed: boolean; targetItem: any; key?: string };
+      "load-more": void;
+      "item-focused": { item: any };
+      "move-over": any;
+      "move": any;
+    };
+  }
   export default List;
 }
 
 declare module "@ui5/webcomponents/dist/ListItemStandard.js" {
-  const ListItemStandard: { _jsxProps: ListItemStandardProps };
+  class ListItemStandard {
+    static _jsxProps: ListItemStandardProps;
+    _jsxProps: ListItemStandardProps;
+    eventDetails: {};
+  }
   export default ListItemStandard;
 }
 
 declare module "@ui5/webcomponents/dist/ListItemCustom.js" {
-  const ListItemCustom: { _jsxProps: ListItemCustomProps };
+  class ListItemCustom {
+    static _jsxProps: ListItemCustomProps;
+    _jsxProps: ListItemCustomProps;
+    eventDetails: {};
+  }
   export default ListItemCustom;
 }
 
 declare module "@ui5/webcomponents/dist/ListItemGroup.js" {
-  const ListItemGroup: { _jsxProps: ListItemGroupProps };
+  class ListItemGroup {
+    static _jsxProps: ListItemGroupProps;
+    _jsxProps: ListItemGroupProps;
+    eventDetails: {
+      "move-over": { source: any };
+      "move": { source: any };
+    };
+  }
   export default ListItemGroup;
 }
 
 declare module "@ui5/webcomponents/dist/Dialog.js" {
-  const Dialog: { _jsxProps: DialogProps };
+  class Dialog {
+    static _jsxProps: DialogProps;
+    _jsxProps: DialogProps;
+    eventDetails: {};
+  }
   export default Dialog;
 }
 
 declare module "@ui5/webcomponents/dist/Icon.js" {
-  const Icon: { _jsxProps: IconProps };
+  class Icon {
+    static _jsxProps: IconProps;
+    _jsxProps: IconProps;
+    eventDetails: {};
+  }
   export default Icon;
 }
 
 declare module "@ui5/webcomponents/dist/Avatar.js" {
-  const Avatar: { _jsxProps: AvatarProps };
+  class Avatar {
+    static _jsxProps: AvatarProps;
+    _jsxProps: AvatarProps;
+    eventDetails: {};
+  }
   export default Avatar;
 }
 
 declare module "@ui5/webcomponents/dist/AvatarGroup.js" {
-  const AvatarGroup: { _jsxProps: AvatarGroupProps };
+  class AvatarGroup {
+    static _jsxProps: AvatarGroupProps;
+    _jsxProps: AvatarGroupProps;
+    eventDetails: {
+      "click": { targetRef: any; overflowButtonClicked: boolean };
+      "overflow": void;
+    };
+  }
   export default AvatarGroup;
 }
 
 declare module "@ui5/webcomponents/dist/AvatarBadge.js" {
-  const AvatarBadge: { _jsxProps: AvatarBadgeProps };
+  class AvatarBadge {
+    static _jsxProps: AvatarBadgeProps;
+    _jsxProps: AvatarBadgeProps;
+    eventDetails: {};
+  }
   export default AvatarBadge;
 }
 
 declare module "@ui5/webcomponents/dist/DatePicker.js" {
-  const DatePicker: { _jsxProps: DatePickerProps };
+  class DatePicker {
+    static _jsxProps: DatePickerProps;
+    _jsxProps: DatePickerProps;
+    eventDetails: {
+      "value-changed": { value: string; valid: boolean };
+      "value-state-change": any;
+    };
+  }
   export default DatePicker;
 }
 
 declare module "@ui5/webcomponents/dist/TimePicker.js" {
-  const TimePicker: { _jsxProps: TimePickerProps };
+  class TimePicker {
+    static _jsxProps: TimePickerProps;
+    _jsxProps: TimePickerProps;
+    eventDetails: {
+      "value-changed": any;
+    };
+  }
   export default TimePicker;
 }
 
 declare module "@ui5/webcomponents/dist/DateTimePicker.js" {
-  const DateTimePicker: { _jsxProps: DateTimePickerProps };
+  class DateTimePicker {
+    static _jsxProps: DateTimePickerProps;
+    _jsxProps: DateTimePickerProps;
+    eventDetails: {};
+  }
   export default DateTimePicker;
 }
 
 declare module "@ui5/webcomponents/dist/DateRangePicker.js" {
-  const DateRangePicker: { _jsxProps: DateRangePickerProps };
+  class DateRangePicker {
+    static _jsxProps: DateRangePickerProps;
+    _jsxProps: DateRangePickerProps;
+    eventDetails: {};
+  }
   export default DateRangePicker;
 }
 
 declare module "@ui5/webcomponents/dist/DynamicDateRange.js" {
-  const DynamicDateRange: { _jsxProps: DynamicDateRangeProps };
+  class DynamicDateRange {
+    static _jsxProps: DynamicDateRangeProps;
+    _jsxProps: DynamicDateRangeProps;
+    eventDetails: {};
+  }
   export default DynamicDateRange;
 }
 
 declare module "@ui5/webcomponents/dist/TextArea.js" {
-  const TextArea: { _jsxProps: TextAreaProps };
+  class TextArea {
+    static _jsxProps: TextAreaProps;
+    _jsxProps: TextAreaProps;
+    eventDetails: {
+      "change": void;
+      "input": { escapePressed?: boolean };
+      "select": void;
+      "scroll": void;
+      "value-changed": void;
+    };
+  }
   export default TextArea;
 }
 
 declare module "@ui5/webcomponents/dist/RadioButton.js" {
-  const RadioButton: { _jsxProps: RadioButtonProps };
+  class RadioButton {
+    static _jsxProps: RadioButtonProps;
+    _jsxProps: RadioButtonProps;
+    eventDetails: {};
+  }
   export default RadioButton;
 }
 
 declare module "@ui5/webcomponents/dist/ProgressIndicator.js" {
-  const ProgressIndicator: { _jsxProps: ProgressIndicatorProps };
+  class ProgressIndicator {
+    static _jsxProps: ProgressIndicatorProps;
+    _jsxProps: ProgressIndicatorProps;
+    eventDetails: {};
+  }
   export default ProgressIndicator;
 }
 
 declare module "@ui5/webcomponents/dist/RatingIndicator.js" {
-  const RatingIndicator: { _jsxProps: RatingIndicatorProps };
+  class RatingIndicator {
+    static _jsxProps: RatingIndicatorProps;
+    _jsxProps: RatingIndicatorProps;
+    eventDetails: {};
+  }
   export default RatingIndicator;
 }
 
 declare module "@ui5/webcomponents/dist/Slider.js" {
-  const Slider: { _jsxProps: SliderProps };
+  class Slider {
+    static _jsxProps: SliderProps;
+    _jsxProps: SliderProps;
+    eventDetails: {};
+  }
   export default Slider;
 }
 
 declare module "@ui5/webcomponents/dist/RangeSlider.js" {
-  const RangeSlider: { _jsxProps: RangeSliderProps };
+  class RangeSlider {
+    static _jsxProps: RangeSliderProps;
+    _jsxProps: RangeSliderProps;
+    eventDetails: {};
+  }
   export default RangeSlider;
 }
 
 declare module "@ui5/webcomponents/dist/StepInput.js" {
-  const StepInput: { _jsxProps: StepInputProps };
+  class StepInput {
+    static _jsxProps: StepInputProps;
+    _jsxProps: StepInputProps;
+    eventDetails: {
+      "value-state-change": any;
+    };
+  }
   export default StepInput;
 }
 
 declare module "@ui5/webcomponents/dist/Popover.js" {
-  const Popover: { _jsxProps: PopoverProps };
+  class Popover {
+    static _jsxProps: PopoverProps;
+    _jsxProps: PopoverProps;
+    eventDetails: {};
+  }
   export default Popover;
 }
 
 declare module "@ui5/webcomponents/dist/ResponsivePopover.js" {
-  const ResponsivePopover: { _jsxProps: ResponsivePopoverProps };
+  class ResponsivePopover {
+    static _jsxProps: ResponsivePopoverProps;
+    _jsxProps: ResponsivePopoverProps;
+    eventDetails: {};
+  }
   export default ResponsivePopover;
 }
 
 declare module "@ui5/webcomponents/dist/Toast.js" {
-  const Toast: { _jsxProps: ToastProps };
+  class Toast {
+    static _jsxProps: ToastProps;
+    _jsxProps: ToastProps;
+    eventDetails: {
+      "close": void;
+    };
+  }
   export default Toast;
 }
 
 declare module "@ui5/webcomponents/dist/MessageStrip.js" {
-  const MessageStrip: { _jsxProps: MessageStripProps };
+  class MessageStrip {
+    static _jsxProps: MessageStripProps;
+    _jsxProps: MessageStripProps;
+    eventDetails: {};
+  }
   export default MessageStrip;
 }
 
 declare module "@ui5/webcomponents/dist/BusyIndicator.js" {
-  const BusyIndicator: { _jsxProps: BusyIndicatorProps };
+  class BusyIndicator {
+    static _jsxProps: BusyIndicatorProps;
+    _jsxProps: BusyIndicatorProps;
+    eventDetails: {};
+  }
   export default BusyIndicator;
 }
 
 declare module "@ui5/webcomponents/dist/TabContainer.js" {
-  const TabContainer: { _jsxProps: TabContainerProps };
+  class TabContainer {
+    static _jsxProps: TabContainerProps;
+    _jsxProps: TabContainerProps;
+    eventDetails: {
+      "tab-select": { tab: any; tabIndex: number };
+      "move-over": { source: any };
+      "move": { source: any };
+    };
+  }
   export default TabContainer;
 }
 
 declare module "@ui5/webcomponents/dist/Tab.js" {
-  const Tab: { _jsxProps: TabProps };
+  class Tab {
+    static _jsxProps: TabProps;
+    _jsxProps: TabProps;
+    eventDetails: {};
+  }
   export default Tab;
 }
 
 declare module "@ui5/webcomponents/dist/TabSeparator.js" {
-  const TabSeparator: { _jsxProps: TabSeparatorProps };
+  class TabSeparator {
+    static _jsxProps: TabSeparatorProps;
+    _jsxProps: TabSeparatorProps;
+    eventDetails: {};
+  }
   export default TabSeparator;
 }
 
 declare module "@ui5/webcomponents/dist/Table.js" {
-  const Table: { _jsxProps: TableProps };
+  class Table {
+    static _jsxProps: TableProps;
+    _jsxProps: TableProps;
+    eventDetails: {
+      "row-click": { row: any };
+      "move-over": any;
+      "move": any;
+      "row-action-click": { action: any; row: any };
+    };
+  }
   export default Table;
 }
 
 declare module "@ui5/webcomponents/dist/TableHeaderRow.js" {
-  const TableHeaderRow: { _jsxProps: TableHeaderRowProps };
+  class TableHeaderRow {
+    static _jsxProps: TableHeaderRowProps;
+    _jsxProps: TableHeaderRowProps;
+    eventDetails: {};
+  }
   export default TableHeaderRow;
 }
 
 declare module "@ui5/webcomponents/dist/TableHeaderCell.js" {
-  const TableHeaderCell: { _jsxProps: TableHeaderCellProps };
+  class TableHeaderCell {
+    static _jsxProps: TableHeaderCellProps;
+    _jsxProps: TableHeaderCellProps;
+    eventDetails: {};
+  }
   export default TableHeaderCell;
 }
 
 declare module "@ui5/webcomponents/dist/TableRow.js" {
-  const TableRow: { _jsxProps: TableRowProps };
+  class TableRow {
+    static _jsxProps: TableRowProps;
+    _jsxProps: TableRowProps;
+    eventDetails: {};
+  }
   export default TableRow;
 }
 
 declare module "@ui5/webcomponents/dist/TableCell.js" {
-  const TableCell: { _jsxProps: TableCellProps };
+  class TableCell {
+    static _jsxProps: TableCellProps;
+    _jsxProps: TableCellProps;
+    eventDetails: {};
+  }
   export default TableCell;
 }
 
 declare module "@ui5/webcomponents/dist/TableGrowing.js" {
-  const TableGrowing: { _jsxProps: TableGrowingProps };
+  class TableGrowing {
+    static _jsxProps: TableGrowingProps;
+    _jsxProps: TableGrowingProps;
+    eventDetails: {
+      "load-more": void;
+    };
+  }
   export default TableGrowing;
 }
 
 declare module "@ui5/webcomponents/dist/TableSelection.js" {
-  const TableSelection: { _jsxProps: TableSelectionProps };
+  class TableSelection {
+    static _jsxProps: TableSelectionProps;
+    _jsxProps: TableSelectionProps;
+    eventDetails: {};
+  }
   export default TableSelection;
 }
 
+declare module "@ui5/webcomponents/dist/TableSelectionMulti.js" {
+  class TableSelectionMulti {
+    static _jsxProps: TableSelectionMultiProps;
+    _jsxProps: TableSelectionMultiProps;
+    eventDetails: {};
+  }
+  export default TableSelectionMulti;
+}
+
+declare module "@ui5/webcomponents/dist/TableSelectionSingle.js" {
+  class TableSelectionSingle {
+    static _jsxProps: TableSelectionSingleProps;
+    _jsxProps: TableSelectionSingleProps;
+    eventDetails: {};
+  }
+  export default TableSelectionSingle;
+}
+
+declare module "@ui5/webcomponents/dist/TableRowAction.js" {
+  class TableRowAction {
+    static _jsxProps: TableRowActionProps;
+    _jsxProps: TableRowActionProps;
+    eventDetails: {};
+  }
+  export default TableRowAction;
+}
+
+declare module "@ui5/webcomponents/dist/TableRowActionNavigation.js" {
+  class TableRowActionNavigation {
+    static _jsxProps: TableRowActionNavigationProps;
+    _jsxProps: TableRowActionNavigationProps;
+    eventDetails: {};
+  }
+  export default TableRowActionNavigation;
+}
+
+declare module "@ui5/webcomponents/dist/TableHeaderCellActionAI.js" {
+  class TableHeaderCellActionAI {
+    static _jsxProps: TableHeaderCellActionAIProps;
+    _jsxProps: TableHeaderCellActionAIProps;
+    eventDetails: {};
+  }
+  export default TableHeaderCellActionAI;
+}
+
+declare module "@ui5/webcomponents/dist/TableVirtualizer.js" {
+  class TableVirtualizer {
+    static _jsxProps: TableVirtualizerProps;
+    _jsxProps: TableVirtualizerProps;
+    eventDetails: {
+      "range-change": { first: number; last: number };
+    };
+  }
+  export default TableVirtualizer;
+}
+
 declare module "@ui5/webcomponents/dist/Tree.js" {
-  const Tree: { _jsxProps: TreeProps };
+  class Tree {
+    static _jsxProps: TreeProps;
+    _jsxProps: TreeProps;
+    eventDetails: {
+      "item-toggle": any;
+      "item-mouseover": any;
+      "item-mouseout": any;
+      "item-click": any;
+      "item-delete": any;
+      "item-focus": any;
+      "selection-change": { selectedItems: any; previouslySelectedItems: any; targetItem: any };
+      "move": { source: any };
+      "move-over": { source: any };
+    };
+  }
   export default Tree;
 }
 
 declare module "@ui5/webcomponents/dist/TreeItem.js" {
-  const TreeItem: { _jsxProps: TreeItemProps };
+  class TreeItem {
+    static _jsxProps: TreeItemProps;
+    _jsxProps: TreeItemProps;
+    eventDetails: {};
+  }
   export default TreeItem;
 }
 
 declare module "@ui5/webcomponents/dist/TreeItemCustom.js" {
-  const TreeItemCustom: { _jsxProps: TreeItemCustomProps };
+  class TreeItemCustom {
+    static _jsxProps: TreeItemCustomProps;
+    _jsxProps: TreeItemCustomProps;
+    eventDetails: {};
+  }
   export default TreeItemCustom;
 }
 
 declare module "@ui5/webcomponents/dist/Panel.js" {
-  const Panel: { _jsxProps: PanelProps };
+  class Panel {
+    static _jsxProps: PanelProps;
+    _jsxProps: PanelProps;
+    eventDetails: {};
+  }
   export default Panel;
 }
 
 declare module "@ui5/webcomponents/dist/Toolbar.js" {
-  const Toolbar: { _jsxProps: ToolbarProps };
+  class Toolbar {
+    static _jsxProps: ToolbarProps;
+    _jsxProps: ToolbarProps;
+    eventDetails: {};
+  }
   export default Toolbar;
 }
 
 declare module "@ui5/webcomponents/dist/ToolbarButton.js" {
-  const ToolbarButton: { _jsxProps: ToolbarButtonProps };
+  class ToolbarButton {
+    static _jsxProps: ToolbarButtonProps;
+    _jsxProps: ToolbarButtonProps;
+    eventDetails: {};
+  }
   export default ToolbarButton;
 }
 
 declare module "@ui5/webcomponents/dist/ToolbarSpacer.js" {
-  const ToolbarSpacer: { _jsxProps: ToolbarSpacerProps };
+  class ToolbarSpacer {
+    static _jsxProps: ToolbarSpacerProps;
+    _jsxProps: ToolbarSpacerProps;
+    eventDetails: {};
+  }
   export default ToolbarSpacer;
 }
 
 declare module "@ui5/webcomponents/dist/ToolbarSeparator.js" {
-  const ToolbarSeparator: { _jsxProps: ToolbarSeparatorProps };
+  class ToolbarSeparator {
+    static _jsxProps: ToolbarSeparatorProps;
+    _jsxProps: ToolbarSeparatorProps;
+    eventDetails: {};
+  }
   export default ToolbarSeparator;
 }
 
 declare module "@ui5/webcomponents/dist/ToolbarSelect.js" {
-  const ToolbarSelect: { _jsxProps: ToolbarSelectProps };
+  class ToolbarSelect {
+    static _jsxProps: ToolbarSelectProps;
+    _jsxProps: ToolbarSelectProps;
+    eventDetails: {};
+  }
   export default ToolbarSelect;
 }
 
 declare module "@ui5/webcomponents/dist/ToolbarSelectOption.js" {
-  const ToolbarSelectOption: { _jsxProps: ToolbarSelectOptionProps };
+  class ToolbarSelectOption {
+    static _jsxProps: ToolbarSelectOptionProps;
+    _jsxProps: ToolbarSelectOptionProps;
+    eventDetails: {};
+  }
   export default ToolbarSelectOption;
 }
 
+declare module "@ui5/webcomponents/dist/ToolbarItem.js" {
+  class ToolbarItem {
+    static _jsxProps: ToolbarItemProps;
+    _jsxProps: ToolbarItemProps;
+    eventDetails: {
+      "close-overflow": void;
+    };
+  }
+  export default ToolbarItem;
+}
+
 declare module "@ui5/webcomponents/dist/SegmentedButton.js" {
-  const SegmentedButton: { _jsxProps: SegmentedButtonProps };
+  class SegmentedButton {
+    static _jsxProps: SegmentedButtonProps;
+    _jsxProps: SegmentedButtonProps;
+    eventDetails: {
+      "selection-change": { selectedItems: any };
+    };
+  }
   export default SegmentedButton;
 }
 
 declare module "@ui5/webcomponents/dist/SegmentedButtonItem.js" {
-  const SegmentedButtonItem: { _jsxProps: SegmentedButtonItemProps };
+  class SegmentedButtonItem {
+    static _jsxProps: SegmentedButtonItemProps;
+    _jsxProps: SegmentedButtonItemProps;
+    eventDetails: {};
+  }
   export default SegmentedButtonItem;
 }
 
 declare module "@ui5/webcomponents/dist/ComboBox.js" {
-  const ComboBox: { _jsxProps: ComboBoxProps };
+  class ComboBox {
+    static _jsxProps: ComboBoxProps;
+    _jsxProps: ComboBoxProps;
+    eventDetails: {
+      "change": void;
+      "input": void;
+      "open": void;
+      "close": void;
+      "selection-change": { item: any };
+    };
+  }
   export default ComboBox;
 }
 
 declare module "@ui5/webcomponents/dist/ComboBoxItem.js" {
-  const ComboBoxItem: { _jsxProps: ComboBoxItemProps };
+  class ComboBoxItem {
+    static _jsxProps: ComboBoxItemProps;
+    _jsxProps: ComboBoxItemProps;
+    eventDetails: {};
+  }
   export default ComboBoxItem;
 }
 
 declare module "@ui5/webcomponents/dist/ComboBoxItemGroup.js" {
-  const ComboBoxItemGroup: { _jsxProps: ComboBoxItemGroupProps };
+  class ComboBoxItemGroup {
+    static _jsxProps: ComboBoxItemGroupProps;
+    _jsxProps: ComboBoxItemGroupProps;
+    eventDetails: {};
+  }
   export default ComboBoxItemGroup;
 }
 
 declare module "@ui5/webcomponents/dist/MultiComboBox.js" {
-  const MultiComboBox: { _jsxProps: MultiComboBoxProps };
+  class MultiComboBox {
+    static _jsxProps: MultiComboBoxProps;
+    _jsxProps: MultiComboBoxProps;
+    eventDetails: {
+      "selection-change": { items: any };
+      "value-state-change": any;
+    };
+  }
   export default MultiComboBox;
 }
 
 declare module "@ui5/webcomponents/dist/MultiComboBoxItem.js" {
-  const MultiComboBoxItem: { _jsxProps: MultiComboBoxItemProps };
+  class MultiComboBoxItem {
+    static _jsxProps: MultiComboBoxItemProps;
+    _jsxProps: MultiComboBoxItemProps;
+    eventDetails: {
+      "selection-requested": any;
+    };
+  }
   export default MultiComboBoxItem;
 }
 
 declare module "@ui5/webcomponents/dist/MultiComboBoxItemGroup.js" {
-  const MultiComboBoxItemGroup: { _jsxProps: MultiComboBoxItemGroupProps };
+  class MultiComboBoxItemGroup {
+    static _jsxProps: MultiComboBoxItemGroupProps;
+    _jsxProps: MultiComboBoxItemGroupProps;
+    eventDetails: {};
+  }
   export default MultiComboBoxItemGroup;
 }
 
 declare module "@ui5/webcomponents/dist/Token.js" {
-  const Token: { _jsxProps: TokenProps };
+  class Token {
+    static _jsxProps: TokenProps;
+    _jsxProps: TokenProps;
+    eventDetails: {
+      "select": void;
+      "delete": { backSpace?: boolean; delete?: boolean };
+    };
+  }
   export default Token;
 }
 
 declare module "@ui5/webcomponents/dist/Tokenizer.js" {
-  const Tokenizer: { _jsxProps: TokenizerProps };
+  class Tokenizer {
+    static _jsxProps: TokenizerProps;
+    _jsxProps: TokenizerProps;
+    eventDetails: {
+      "token-delete": { tokens: any[] };
+      "selection-change": { tokens: any[] };
+      "show-more-items-press": void;
+      "before-more-popover-open": void;
+    };
+  }
   export default Tokenizer;
 }
 
 declare module "@ui5/webcomponents/dist/MultiInput.js" {
-  const MultiInput: { _jsxProps: MultiInputProps };
+  class MultiInput {
+    static _jsxProps: MultiInputProps;
+    _jsxProps: MultiInputProps;
+    eventDetails: {
+      "value-help-trigger": void;
+      "token-delete": { tokens: any[] };
+    };
+  }
   export default MultiInput;
 }
 
 declare module "@ui5/webcomponents/dist/Breadcrumbs.js" {
-  const Breadcrumbs: { _jsxProps: BreadcrumbsProps };
+  class Breadcrumbs {
+    static _jsxProps: BreadcrumbsProps;
+    _jsxProps: BreadcrumbsProps;
+    eventDetails: {
+      "item-click": { item: any; altKey?: boolean; ctrlKey?: boolean; metaKey?: boolean; shiftKey?: boolean };
+    };
+  }
   export default Breadcrumbs;
 }
 
 declare module "@ui5/webcomponents/dist/BreadcrumbsItem.js" {
-  const BreadcrumbsItem: { _jsxProps: BreadcrumbsItemProps };
+  class BreadcrumbsItem {
+    static _jsxProps: BreadcrumbsItemProps;
+    _jsxProps: BreadcrumbsItemProps;
+    eventDetails: {};
+  }
   export default BreadcrumbsItem;
 }
 
 declare module "@ui5/webcomponents/dist/Calendar.js" {
-  const Calendar: { _jsxProps: CalendarProps };
+  class Calendar {
+    static _jsxProps: CalendarProps;
+    _jsxProps: CalendarProps;
+    eventDetails: {
+      "selection-change": { selectedValues: any; selectedDates: any; timestamp: any };
+      "show-month-view": void;
+      "show-year-view": void;
+      "show-year-range-view": void;
+    };
+  }
   export default Calendar;
 }
 
 declare module "@ui5/webcomponents/dist/CalendarLegend.js" {
-  const CalendarLegend: { _jsxProps: CalendarLegendProps };
+  class CalendarLegend {
+    static _jsxProps: CalendarLegendProps;
+    _jsxProps: CalendarLegendProps;
+    eventDetails: {
+      "calendar-legend-selection-change": { item: any };
+      "calendar-legend-focus-out": void;
+    };
+  }
   export default CalendarLegend;
 }
 
 declare module "@ui5/webcomponents/dist/CalendarLegendItem.js" {
-  const CalendarLegendItem: { _jsxProps: CalendarLegendItemProps };
+  class CalendarLegendItem {
+    static _jsxProps: CalendarLegendItemProps;
+    _jsxProps: CalendarLegendItemProps;
+    eventDetails: {};
+  }
   export default CalendarLegendItem;
 }
 
 declare module "@ui5/webcomponents/dist/SpecialCalendarDate.js" {
-  const SpecialCalendarDate: { _jsxProps: SpecialCalendarDateProps };
+  class SpecialCalendarDate {
+    static _jsxProps: SpecialCalendarDateProps;
+    _jsxProps: SpecialCalendarDateProps;
+    eventDetails: {};
+  }
   export default SpecialCalendarDate;
 }
 
 declare module "@ui5/webcomponents/dist/ColorPicker.js" {
-  const ColorPicker: { _jsxProps: ColorPickerProps };
+  class ColorPicker {
+    static _jsxProps: ColorPickerProps;
+    _jsxProps: ColorPickerProps;
+    eventDetails: {};
+  }
   export default ColorPicker;
 }
 
 declare module "@ui5/webcomponents/dist/ColorPalette.js" {
-  const ColorPalette: { _jsxProps: ColorPaletteProps };
+  class ColorPalette {
+    static _jsxProps: ColorPaletteProps;
+    _jsxProps: ColorPaletteProps;
+    eventDetails: {
+      "item-click": { color: string };
+    };
+  }
   export default ColorPalette;
 }
 
 declare module "@ui5/webcomponents/dist/ColorPaletteItem.js" {
-  const ColorPaletteItem: { _jsxProps: ColorPaletteItemProps };
+  class ColorPaletteItem {
+    static _jsxProps: ColorPaletteItemProps;
+    _jsxProps: ColorPaletteItemProps;
+    eventDetails: {};
+  }
   export default ColorPaletteItem;
 }
 
 declare module "@ui5/webcomponents/dist/ColorPalettePopover.js" {
-  const ColorPalettePopover: { _jsxProps: ColorPalettePopoverProps };
+  class ColorPalettePopover {
+    static _jsxProps: ColorPalettePopoverProps;
+    _jsxProps: ColorPalettePopoverProps;
+    eventDetails: {
+      "item-click": any;
+      "close": void;
+    };
+  }
   export default ColorPalettePopover;
 }
 
 declare module "@ui5/webcomponents/dist/FileUploader.js" {
-  const FileUploader: { _jsxProps: FileUploaderProps };
+  class FileUploader {
+    static _jsxProps: FileUploaderProps;
+    _jsxProps: FileUploaderProps;
+    eventDetails: {
+      "change": { files: any };
+      "file-size-exceed": { filesData: any };
+    };
+  }
   export default FileUploader;
 }
 
 declare module "@ui5/webcomponents/dist/SplitButton.js" {
-  const SplitButton: { _jsxProps: SplitButtonProps };
+  class SplitButton {
+    static _jsxProps: SplitButtonProps;
+    _jsxProps: SplitButtonProps;
+    eventDetails: {
+      "arrow-click": void;
+    };
+  }
   export default SplitButton;
 }
 
 declare module "@ui5/webcomponents/dist/Title.js" {
-  const Title: { _jsxProps: TitleProps };
+  class Title {
+    static _jsxProps: TitleProps;
+    _jsxProps: TitleProps;
+    eventDetails: {};
+  }
   export default Title;
 }
 
 declare module "@ui5/webcomponents/dist/Text.js" {
-  const Text: { _jsxProps: TextProps };
+  class Text {
+    static _jsxProps: TextProps;
+    _jsxProps: TextProps;
+    eventDetails: {};
+  }
   export default Text;
 }
 
 declare module "@ui5/webcomponents/dist/ExpandableText.js" {
-  const ExpandableText: { _jsxProps: ExpandableTextProps };
+  class ExpandableText {
+    static _jsxProps: ExpandableTextProps;
+    _jsxProps: ExpandableTextProps;
+    eventDetails: {};
+  }
   export default ExpandableText;
 }
 
 declare module "@ui5/webcomponents/dist/SuggestionItem.js" {
-  const SuggestionItem: { _jsxProps: SuggestionItemProps };
+  class SuggestionItem {
+    static _jsxProps: SuggestionItemProps;
+    _jsxProps: SuggestionItemProps;
+    eventDetails: {};
+  }
   export default SuggestionItem;
 }
 
 declare module "@ui5/webcomponents/dist/SuggestionItemCustom.js" {
-  const SuggestionItemCustom: { _jsxProps: SuggestionItemCustomProps };
+  class SuggestionItemCustom {
+    static _jsxProps: SuggestionItemCustomProps;
+    _jsxProps: SuggestionItemCustomProps;
+    eventDetails: {};
+  }
   export default SuggestionItemCustom;
 }
 
+declare module "@ui5/webcomponents/dist/SuggestionItemGroup.js" {
+  class SuggestionItemGroup {
+    static _jsxProps: SuggestionItemGroupProps;
+    _jsxProps: SuggestionItemGroupProps;
+    eventDetails: {};
+  }
+  export default SuggestionItemGroup;
+}
+
 declare module "@ui5/webcomponents/dist/Carousel.js" {
-  const Carousel: { _jsxProps: CarouselProps };
+  class Carousel {
+    static _jsxProps: CarouselProps;
+    _jsxProps: CarouselProps;
+    eventDetails: {};
+  }
   export default Carousel;
 }
 
 declare module "@ui5/webcomponents/dist/ToggleButton.js" {
-  const ToggleButton: { _jsxProps: ToggleButtonProps };
+  class ToggleButton {
+    static _jsxProps: ToggleButtonProps;
+    _jsxProps: ToggleButtonProps;
+    eventDetails: {};
+  }
   export default ToggleButton;
 }
 
 declare module "@ui5/webcomponents/dist/Form.js" {
-  const Form: { _jsxProps: FormProps };
+  class Form {
+    static _jsxProps: FormProps;
+    _jsxProps: FormProps;
+    eventDetails: {};
+  }
   export default Form;
 }
 
 declare module "@ui5/webcomponents/dist/FormItem.js" {
-  const FormItem: { _jsxProps: FormItemProps };
+  class FormItem {
+    static _jsxProps: FormItemProps;
+    _jsxProps: FormItemProps;
+    eventDetails: {};
+  }
   export default FormItem;
 }
 
 declare module "@ui5/webcomponents/dist/FormGroup.js" {
-  const FormGroup: { _jsxProps: FormGroupProps };
+  class FormGroup {
+    static _jsxProps: FormGroupProps;
+    _jsxProps: FormGroupProps;
+    eventDetails: {};
+  }
   export default FormGroup;
 }
 
 declare module "@ui5/webcomponents/dist/Bar.js" {
-  const Bar: { _jsxProps: BarProps };
+  class Bar {
+    static _jsxProps: BarProps;
+    _jsxProps: BarProps;
+    eventDetails: {};
+  }
   export default Bar;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/ShellBar.js" {
-  const ShellBar: { _jsxProps: ShellBarProps };
+  class ShellBar {
+    static _jsxProps: ShellBarProps;
+    _jsxProps: ShellBarProps;
+    eventDetails: {
+      "notifications-click": { targetRef: any };
+      "profile-click": { targetRef: any };
+      "product-switch-click": { targetRef: any };
+      "logo-click": { targetRef: any };
+      "menu-item-click": { item: any };
+      "search-button-click": { targetRef: any; searchFieldVisible: boolean };
+      "search-field-toggle": { expanded: boolean };
+      "search-field-clear": { targetRef: any };
+      "content-item-visibility-change": { items: any };
+    };
+  }
   export default ShellBar;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/ShellBarBranding.js" {
+  class ShellBarBranding {
+    static _jsxProps: ShellBarBrandingProps;
+    _jsxProps: ShellBarBrandingProps;
+    eventDetails: {};
+  }
+  export default ShellBarBranding;
+}
+
 declare module "@ui5/webcomponents-fiori/dist/ShellBarItem.js" {
-  const ShellBarItem: { _jsxProps: ShellBarItemProps };
+  class ShellBarItem {
+    static _jsxProps: ShellBarItemProps;
+    _jsxProps: ShellBarItemProps;
+    eventDetails: {};
+  }
   export default ShellBarItem;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/ShellBarSearch.js" {
+  class ShellBarSearch {
+    static _jsxProps: ShellBarSearchProps;
+    _jsxProps: ShellBarSearchProps;
+    eventDetails: {};
+  }
+  export default ShellBarSearch;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/ShellBarSpacer.js" {
+  class ShellBarSpacer {
+    static _jsxProps: ShellBarSpacerProps;
+    _jsxProps: ShellBarSpacerProps;
+    eventDetails: {};
+  }
+  export default ShellBarSpacer;
+}
+
 declare module "@ui5/webcomponents-fiori/dist/SideNavigation.js" {
-  const SideNavigation: { _jsxProps: SideNavigationProps };
+  class SideNavigation {
+    static _jsxProps: SideNavigationProps;
+    _jsxProps: SideNavigationProps;
+    eventDetails: {
+      "selection-change": { item: any };
+      "item-click": { item: any };
+    };
+  }
   export default SideNavigation;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SideNavigationItem.js" {
-  const SideNavigationItem: { _jsxProps: SideNavigationItemProps };
+  class SideNavigationItem {
+    static _jsxProps: SideNavigationItemProps;
+    _jsxProps: SideNavigationItemProps;
+    eventDetails: {};
+  }
   export default SideNavigationItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js" {
-  const SideNavigationSubItem: { _jsxProps: SideNavigationSubItemProps };
+  class SideNavigationSubItem {
+    static _jsxProps: SideNavigationSubItemProps;
+    _jsxProps: SideNavigationSubItemProps;
+    eventDetails: {};
+  }
   export default SideNavigationSubItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js" {
-  const SideNavigationGroup: { _jsxProps: SideNavigationGroupProps };
+  class SideNavigationGroup {
+    static _jsxProps: SideNavigationGroupProps;
+    _jsxProps: SideNavigationGroupProps;
+    eventDetails: {};
+  }
   export default SideNavigationGroup;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/NavigationLayout.js" {
+  class NavigationLayout {
+    static _jsxProps: NavigationLayoutProps;
+    _jsxProps: NavigationLayoutProps;
+    eventDetails: {
+      "item-click": any;
+    };
+  }
+  export default NavigationLayout;
+}
+
 declare module "@ui5/webcomponents-fiori/dist/NotificationList.js" {
-  const NotificationList: { _jsxProps: NotificationListProps };
+  class NotificationList {
+    static _jsxProps: NotificationListProps;
+    _jsxProps: NotificationListProps;
+    eventDetails: {
+      "item-click": any;
+      "item-close": any;
+      "item-toggle": any;
+      "load-more": void;
+    };
+  }
   export default NotificationList;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/NotificationListItem.js" {
-  const NotificationListItem: { _jsxProps: NotificationListItemProps };
+  class NotificationListItem {
+    static _jsxProps: NotificationListItemProps;
+    _jsxProps: NotificationListItemProps;
+    eventDetails: {};
+  }
   export default NotificationListItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js" {
-  const NotificationListGroupItem: { _jsxProps: NotificationListGroupItemProps };
+  class NotificationListGroupItem {
+    static _jsxProps: NotificationListGroupItemProps;
+    _jsxProps: NotificationListGroupItemProps;
+    eventDetails: {
+      "load-more": void;
+    };
+  }
   export default NotificationListGroupItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/UploadCollection.js" {
-  const UploadCollection: { _jsxProps: UploadCollectionProps };
+  class UploadCollection {
+    static _jsxProps: UploadCollectionProps;
+    _jsxProps: UploadCollectionProps;
+    eventDetails: {
+      "item-delete": { item: any };
+      "selection-change": { selectedItems: any };
+    };
+  }
   export default UploadCollection;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js" {
-  const UploadCollectionItem: { _jsxProps: UploadCollectionItemProps };
+  class UploadCollectionItem {
+    static _jsxProps: UploadCollectionItemProps;
+    _jsxProps: UploadCollectionItemProps;
+    eventDetails: {
+      "file-name-click": void;
+      "rename": void;
+      "terminate": void;
+      "retry": void;
+      "focus-requested": void;
+      "request-delete": void;
+    };
+  }
   export default UploadCollectionItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/Wizard.js" {
-  const Wizard: { _jsxProps: WizardProps };
+  class Wizard {
+    static _jsxProps: WizardProps;
+    _jsxProps: WizardProps;
+    eventDetails: {
+      "step-change": { step: any; previousStep: any; withScroll: boolean };
+    };
+  }
   export default Wizard;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/WizardStep.js" {
-  const WizardStep: { _jsxProps: WizardStepProps };
+  class WizardStep {
+    static _jsxProps: WizardStepProps;
+    _jsxProps: WizardStepProps;
+    eventDetails: {};
+  }
   export default WizardStep;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/IllustratedMessage.js" {
-  const IllustratedMessage: { _jsxProps: IllustratedMessageProps };
+  class IllustratedMessage {
+    static _jsxProps: IllustratedMessageProps;
+    _jsxProps: IllustratedMessageProps;
+    eventDetails: {};
+  }
   export default IllustratedMessage;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/Timeline.js" {
-  const Timeline: { _jsxProps: TimelineProps };
+  class Timeline {
+    static _jsxProps: TimelineProps;
+    _jsxProps: TimelineProps;
+    eventDetails: {
+      "load-more": void;
+    };
+  }
   export default Timeline;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/TimelineItem.js" {
-  const TimelineItem: { _jsxProps: TimelineItemProps };
+  class TimelineItem {
+    static _jsxProps: TimelineItemProps;
+    _jsxProps: TimelineItemProps;
+    eventDetails: {
+      "name-click": void;
+    };
+  }
   export default TimelineItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js" {
-  const TimelineGroupItem: { _jsxProps: TimelineGroupItemProps };
+  class TimelineGroupItem {
+    static _jsxProps: TimelineGroupItemProps;
+    _jsxProps: TimelineGroupItemProps;
+    eventDetails: {
+      "toggle": void;
+    };
+  }
   export default TimelineGroupItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/Page.js" {
-  const Page: { _jsxProps: PageProps };
+  class Page {
+    static _jsxProps: PageProps;
+    _jsxProps: PageProps;
+    eventDetails: {};
+  }
   export default Page;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/DynamicPage.js" {
-  const DynamicPage: { _jsxProps: DynamicPageProps };
+  class DynamicPage {
+    static _jsxProps: DynamicPageProps;
+    _jsxProps: DynamicPageProps;
+    eventDetails: {
+      "pin-button-toggle": void;
+      "title-toggle": void;
+    };
+  }
   export default DynamicPage;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/DynamicPageTitle.js" {
-  const DynamicPageTitle: { _jsxProps: DynamicPageTitleProps };
+  class DynamicPageTitle {
+    static _jsxProps: DynamicPageTitleProps;
+    _jsxProps: DynamicPageTitleProps;
+    eventDetails: {
+      "toggle-title": void;
+    };
+  }
   export default DynamicPageTitle;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js" {
-  const DynamicPageHeader: { _jsxProps: DynamicPageHeaderProps };
+  class DynamicPageHeader {
+    static _jsxProps: DynamicPageHeaderProps;
+    _jsxProps: DynamicPageHeaderProps;
+    eventDetails: {};
+  }
   export default DynamicPageHeader;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/DynamicSideContent.js" {
-  const DynamicSideContent: { _jsxProps: DynamicSideContentProps };
+  class DynamicSideContent {
+    static _jsxProps: DynamicSideContentProps;
+    _jsxProps: DynamicSideContentProps;
+    eventDetails: {
+      "layout-change": { currentBreakpoint: string; previousBreakpoint: any; mainContentVisible: boolean; sideContentVisible: boolean };
+    };
+  }
   export default DynamicSideContent;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js" {
-  const FlexibleColumnLayout: { _jsxProps: FlexibleColumnLayoutProps };
+  class FlexibleColumnLayout {
+    static _jsxProps: FlexibleColumnLayoutProps;
+    _jsxProps: FlexibleColumnLayoutProps;
+    eventDetails: {
+      "layout-change": any;
+      "layout-configuration-change": any;
+    };
+  }
   export default FlexibleColumnLayout;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/MediaGallery.js" {
-  const MediaGallery: { _jsxProps: MediaGalleryProps };
+  class MediaGallery {
+    static _jsxProps: MediaGalleryProps;
+    _jsxProps: MediaGalleryProps;
+    eventDetails: {
+      "selection-change": { item: any };
+      "overflow-click": void;
+      "display-area-click": void;
+    };
+  }
   export default MediaGallery;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js" {
-  const MediaGalleryItem: { _jsxProps: MediaGalleryItemProps };
+  class MediaGalleryItem {
+    static _jsxProps: MediaGalleryItemProps;
+    _jsxProps: MediaGalleryItemProps;
+    eventDetails: {};
+  }
   export default MediaGalleryItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/ProductSwitch.js" {
-  const ProductSwitch: { _jsxProps: ProductSwitchProps };
+  class ProductSwitch {
+    static _jsxProps: ProductSwitchProps;
+    _jsxProps: ProductSwitchProps;
+    eventDetails: {};
+  }
   export default ProductSwitch;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js" {
-  const ProductSwitchItem: { _jsxProps: ProductSwitchItemProps };
+  class ProductSwitchItem {
+    static _jsxProps: ProductSwitchItemProps;
+    _jsxProps: ProductSwitchItemProps;
+    eventDetails: {};
+  }
   export default ProductSwitchItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js" {
-  const ViewSettingsDialog: { _jsxProps: ViewSettingsDialogProps };
+  class ViewSettingsDialog {
+    static _jsxProps: ViewSettingsDialogProps;
+    _jsxProps: ViewSettingsDialogProps;
+    eventDetails: {
+      "confirm": any;
+      "cancel": any;
+      "before-open": void;
+      "open": void;
+      "close": void;
+    };
+  }
   export default ViewSettingsDialog;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SortItem.js" {
-  const SortItem: { _jsxProps: SortItemProps };
+  class SortItem {
+    static _jsxProps: SortItemProps;
+    _jsxProps: SortItemProps;
+    eventDetails: {};
+  }
   export default SortItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/FilterItem.js" {
-  const FilterItem: { _jsxProps: FilterItemProps };
+  class FilterItem {
+    static _jsxProps: FilterItemProps;
+    _jsxProps: FilterItemProps;
+    eventDetails: {};
+  }
   export default FilterItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/FilterItemOption.js" {
-  const FilterItemOption: { _jsxProps: FilterItemOptionProps };
+  class FilterItemOption {
+    static _jsxProps: FilterItemOptionProps;
+    _jsxProps: FilterItemOptionProps;
+    eventDetails: {};
+  }
   export default FilterItemOption;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/Search.js" {
-  const Search: { _jsxProps: SearchProps };
+  class Search {
+    static _jsxProps: SearchProps;
+    _jsxProps: SearchProps;
+    eventDetails: {
+      "popup-action-press": void;
+      "open": void;
+      "close": void;
+    };
+  }
   export default Search;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SearchItem.js" {
-  const SearchItem: { _jsxProps: SearchItemProps };
+  class SearchItem {
+    static _jsxProps: SearchItemProps;
+    _jsxProps: SearchItemProps;
+    eventDetails: {
+      "delete": void;
+    };
+  }
   export default SearchItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/SearchMessageArea.js" {
-  const SearchMessageArea: { _jsxProps: SearchMessageAreaProps };
+  class SearchMessageArea {
+    static _jsxProps: SearchMessageAreaProps;
+    _jsxProps: SearchMessageAreaProps;
+    eventDetails: {};
+  }
   export default SearchMessageArea;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/SearchField.js" {
+  class SearchField {
+    static _jsxProps: SearchFieldProps;
+    _jsxProps: SearchFieldProps;
+    eventDetails: {
+      "scope-change": any;
+    };
+  }
+  export default SearchField;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/SearchItemGroup.js" {
+  class SearchItemGroup {
+    static _jsxProps: SearchItemGroupProps;
+    _jsxProps: SearchItemGroupProps;
+    eventDetails: {};
+  }
+  export default SearchItemGroup;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/SearchItemShowMore.js" {
+  class SearchItemShowMore {
+    static _jsxProps: SearchItemShowMoreProps;
+    _jsxProps: SearchItemShowMoreProps;
+    eventDetails: {
+      "click": { fromKeyboard: boolean };
+    };
+  }
+  export default SearchItemShowMore;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/SearchScope.js" {
+  class SearchScope {
+    static _jsxProps: SearchScopeProps;
+    _jsxProps: SearchScopeProps;
+    eventDetails: {};
+  }
+  export default SearchScope;
+}
+
 declare module "@ui5/webcomponents-fiori/dist/UserMenu.js" {
-  const UserMenu: { _jsxProps: UserMenuProps };
+  class UserMenu {
+    static _jsxProps: UserMenuProps;
+    _jsxProps: UserMenuProps;
+    eventDetails: {
+      "avatar-click": void;
+      "manage-account-click": void;
+      "edit-accounts-click": void;
+      "change-account": { prevSelectedAccount: any; selectedAccount: any };
+      "item-click": { item: any };
+      "sign-out-click": void;
+      "open": void;
+      "close": void;
+    };
+  }
   export default UserMenu;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/UserMenuItem.js" {
-  const UserMenuItem: { _jsxProps: UserMenuItemProps };
+  class UserMenuItem {
+    static _jsxProps: UserMenuItemProps;
+    _jsxProps: UserMenuItemProps;
+    eventDetails: {};
+  }
   export default UserMenuItem;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/UserMenuAccount.js" {
-  const UserMenuAccount: { _jsxProps: UserMenuAccountProps };
+  class UserMenuAccount {
+    static _jsxProps: UserMenuAccountProps;
+    _jsxProps: UserMenuAccountProps;
+    eventDetails: {};
+  }
   export default UserMenuAccount;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js" {
-  const BarcodeScannerDialog: { _jsxProps: BarcodeScannerDialogProps };
+  class BarcodeScannerDialog {
+    static _jsxProps: BarcodeScannerDialogProps;
+    _jsxProps: BarcodeScannerDialogProps;
+    eventDetails: {
+      "scan-success": { text: string; rawBytes: any };
+      "scan-error": { message: string };
+    };
+  }
   export default BarcodeScannerDialog;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js" {
+  class UserSettingsDialog {
+    static _jsxProps: UserSettingsDialogProps;
+    _jsxProps: UserSettingsDialogProps;
+    eventDetails: {
+      "selection-change": { item: any };
+      "open": void;
+      "before-close": any;
+      "close": void;
+    };
+  }
+  export default UserSettingsDialog;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsItem.js" {
+  class UserSettingsItem {
+    static _jsxProps: UserSettingsItemProps;
+    _jsxProps: UserSettingsItemProps;
+    eventDetails: {
+      "selection-change": { view: any };
+      "back-click": { view: any };
+    };
+  }
+  export default UserSettingsItem;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsView.js" {
+  class UserSettingsView {
+    static _jsxProps: UserSettingsViewProps;
+    _jsxProps: UserSettingsViewProps;
+    eventDetails: {};
+  }
+  export default UserSettingsView;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js" {
+  class UserSettingsAccountView {
+    static _jsxProps: UserSettingsAccountViewProps;
+    _jsxProps: UserSettingsAccountViewProps;
+    eventDetails: {
+      "edit-accounts-click": void;
+      "manage-account-click": void;
+    };
+  }
+  export default UserSettingsAccountView;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js" {
+  class UserSettingsAppearanceView {
+    static _jsxProps: UserSettingsAppearanceViewProps;
+    _jsxProps: UserSettingsAppearanceViewProps;
+    eventDetails: {
+      "selection-change": { item: any };
+    };
+  }
+  export default UserSettingsAppearanceView;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js" {
+  class UserSettingsAppearanceViewGroup {
+    static _jsxProps: UserSettingsAppearanceViewGroupProps;
+    _jsxProps: UserSettingsAppearanceViewGroupProps;
+    eventDetails: {};
+  }
+  export default UserSettingsAppearanceViewGroup;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js" {
+  class UserSettingsAppearanceViewItem {
+    static _jsxProps: UserSettingsAppearanceViewItemProps;
+    _jsxProps: UserSettingsAppearanceViewItemProps;
+    eventDetails: {};
+  }
+  export default UserSettingsAppearanceViewItem;
+}
+
 declare module "@ui5/webcomponents-ai/dist/Button.js" {
-  const AIButton: { _jsxProps: AIButtonProps };
+  class AIButton {
+    static _jsxProps: AIButtonProps;
+    _jsxProps: AIButtonProps;
+    eventDetails: {
+      "click": void;
+      "arrow-button-click": void;
+      "active-state-change": void;
+    };
+  }
   export default AIButton;
 }
 
 declare module "@ui5/webcomponents-ai/dist/ButtonState.js" {
-  const AIButtonState: { _jsxProps: AIButtonStateProps };
+  class AIButtonState {
+    static _jsxProps: AIButtonStateProps;
+    _jsxProps: AIButtonStateProps;
+    eventDetails: {};
+  }
   export default AIButtonState;
 }
 
 declare module "@ui5/webcomponents-ai/dist/Input.js" {
-  const AIInput: { _jsxProps: AIInputProps };
+  class AIInput {
+    static _jsxProps: AIInputProps;
+    _jsxProps: AIInputProps;
+    eventDetails: {
+      "version-change": { backwards: boolean };
+      "stop-generation": void;
+      "button-click": void;
+      "item-click": any;
+      "change": { inputType: string };
+      "input": { inputType: string };
+      "select": void;
+      "selection-change": { item: any };
+      "type-ahead": void;
+      "suggestion-scroll": { scrollTop: number; scrollContainer: any };
+      "open": void;
+      "close": void;
+    };
+  }
   export default AIInput;
 }
 
 declare module "@ui5/webcomponents-ai/dist/TextArea.js" {
-  const AITextArea: { _jsxProps: AITextAreaProps };
+  class AITextArea {
+    static _jsxProps: AITextAreaProps;
+    _jsxProps: AITextAreaProps;
+    eventDetails: {
+      "version-change": { backwards: boolean };
+      "stop-generation": void;
+      "change": void;
+      "input": { escapePressed?: boolean };
+      "select": void;
+      "scroll": void;
+      "value-changed": void;
+    };
+  }
   export default AITextArea;
 }
 
 declare module "@ui5/webcomponents-ai/dist/PromptInput.js" {
-  const AIPromptInput: { _jsxProps: AIPromptInputProps };
+  class AIPromptInput {
+    static _jsxProps: AIPromptInputProps;
+    _jsxProps: AIPromptInputProps;
+    eventDetails: {
+      "change": { inputType: string };
+      "input": { inputType: string };
+      "select": void;
+      "selection-change": { item: any };
+      "type-ahead": void;
+      "suggestion-scroll": { scrollTop: number; scrollContainer: any };
+      "open": void;
+      "close": void;
+    };
+  }
   export default AIPromptInput;
+}
+
+declare module "@ui5/webcomponents-compat/dist/Table.js" {
+  class CompatTable {
+    static _jsxProps: CompatTableProps;
+    _jsxProps: CompatTableProps;
+    eventDetails: {
+      "row-click": any;
+      "popin-change": { poppedColumns: any };
+      "load-more": void;
+      "selection-change": { selectedRows: any; previouslySelectedRows: any };
+    };
+  }
+  export default CompatTable;
+}
+
+declare module "@ui5/webcomponents-compat/dist/TableColumn.js" {
+  class CompatTableColumn {
+    static _jsxProps: CompatTableColumnProps;
+    _jsxProps: CompatTableColumnProps;
+    eventDetails: {};
+  }
+  export default CompatTableColumn;
+}
+
+declare module "@ui5/webcomponents-compat/dist/TableRow.js" {
+  class CompatTableRow {
+    static _jsxProps: CompatTableRowProps;
+    _jsxProps: CompatTableRowProps;
+    eventDetails: {
+      "row-click": { row: any };
+      "forward-before": { target: any };
+      "forward-after": { target: any };
+      "selection-requested": { row: any };
+      "f7-pressed": { row: any };
+    };
+  }
+  export default CompatTableRow;
+}
+
+declare module "@ui5/webcomponents-compat/dist/TableCell.js" {
+  class CompatTableCell {
+    static _jsxProps: CompatTableCellProps;
+    _jsxProps: CompatTableCellProps;
+    eventDetails: {};
+  }
+  export default CompatTableCell;
+}
+
+declare module "@ui5/webcomponents-compat/dist/TableGroupRow.js" {
+  class CompatTableGroupRow {
+    static _jsxProps: CompatTableGroupRowProps;
+    _jsxProps: CompatTableGroupRowProps;
+    eventDetails: {};
+  }
+  export default CompatTableGroupRow;
 }
 
 declare module "@ui5/webcomponents-icons/dist/*.js" {
@@ -3084,6 +4579,12 @@ declare function TableRow(props: TableRowProps): JSX.Element;
 declare function TableCell(props: TableCellProps): JSX.Element;
 declare function TableGrowing(props: TableGrowingProps): JSX.Element;
 declare function TableSelection(props: TableSelectionProps): JSX.Element;
+declare function TableSelectionMulti(props: TableSelectionMultiProps): JSX.Element;
+declare function TableSelectionSingle(props: TableSelectionSingleProps): JSX.Element;
+declare function TableRowAction(props: TableRowActionProps): JSX.Element;
+declare function TableRowActionNavigation(props: TableRowActionNavigationProps): JSX.Element;
+declare function TableHeaderCellActionAI(props: TableHeaderCellActionAIProps): JSX.Element;
+declare function TableVirtualizer(props: TableVirtualizerProps): JSX.Element;
 declare function Tree(props: TreeProps): JSX.Element;
 declare function TreeItem(props: TreeItemProps): JSX.Element;
 declare function TreeItemCustom(props: TreeItemCustomProps): JSX.Element;
@@ -3094,6 +4595,7 @@ declare function ToolbarSpacer(props: ToolbarSpacerProps): JSX.Element;
 declare function ToolbarSeparator(props: ToolbarSeparatorProps): JSX.Element;
 declare function ToolbarSelect(props: ToolbarSelectProps): JSX.Element;
 declare function ToolbarSelectOption(props: ToolbarSelectOptionProps): JSX.Element;
+declare function ToolbarItem(props: ToolbarItemProps): JSX.Element;
 declare function SegmentedButton(props: SegmentedButtonProps): JSX.Element;
 declare function SegmentedButtonItem(props: SegmentedButtonItemProps): JSX.Element;
 declare function ComboBox(props: ComboBoxProps): JSX.Element;
@@ -3122,6 +4624,7 @@ declare function Text(props: TextProps): JSX.Element;
 declare function ExpandableText(props: ExpandableTextProps): JSX.Element;
 declare function SuggestionItem(props: SuggestionItemProps): JSX.Element;
 declare function SuggestionItemCustom(props: SuggestionItemCustomProps): JSX.Element;
+declare function SuggestionItemGroup(props: SuggestionItemGroupProps): JSX.Element;
 declare function Carousel(props: CarouselProps): JSX.Element;
 declare function ToggleButton(props: ToggleButtonProps): JSX.Element;
 declare function Form(props: FormProps): JSX.Element;
@@ -3129,11 +4632,15 @@ declare function FormItem(props: FormItemProps): JSX.Element;
 declare function FormGroup(props: FormGroupProps): JSX.Element;
 declare function Bar(props: BarProps): JSX.Element;
 declare function ShellBar(props: ShellBarProps): JSX.Element;
+declare function ShellBarBranding(props: ShellBarBrandingProps): JSX.Element;
 declare function ShellBarItem(props: ShellBarItemProps): JSX.Element;
+declare function ShellBarSearch(props: ShellBarSearchProps): JSX.Element;
+declare function ShellBarSpacer(props: ShellBarSpacerProps): JSX.Element;
 declare function SideNavigation(props: SideNavigationProps): JSX.Element;
 declare function SideNavigationItem(props: SideNavigationItemProps): JSX.Element;
 declare function SideNavigationSubItem(props: SideNavigationSubItemProps): JSX.Element;
 declare function SideNavigationGroup(props: SideNavigationGroupProps): JSX.Element;
+declare function NavigationLayout(props: NavigationLayoutProps): JSX.Element;
 declare function NotificationList(props: NotificationListProps): JSX.Element;
 declare function NotificationListItem(props: NotificationListItemProps): JSX.Element;
 declare function NotificationListGroupItem(props: NotificationListGroupItemProps): JSX.Element;
@@ -3162,12 +4669,28 @@ declare function FilterItemOption(props: FilterItemOptionProps): JSX.Element;
 declare function Search(props: SearchProps): JSX.Element;
 declare function SearchItem(props: SearchItemProps): JSX.Element;
 declare function SearchMessageArea(props: SearchMessageAreaProps): JSX.Element;
+declare function SearchField(props: SearchFieldProps): JSX.Element;
+declare function SearchItemGroup(props: SearchItemGroupProps): JSX.Element;
+declare function SearchItemShowMore(props: SearchItemShowMoreProps): JSX.Element;
+declare function SearchScope(props: SearchScopeProps): JSX.Element;
 declare function UserMenu(props: UserMenuProps): JSX.Element;
 declare function UserMenuItem(props: UserMenuItemProps): JSX.Element;
 declare function UserMenuAccount(props: UserMenuAccountProps): JSX.Element;
 declare function BarcodeScannerDialog(props: BarcodeScannerDialogProps): JSX.Element;
+declare function UserSettingsDialog(props: UserSettingsDialogProps): JSX.Element;
+declare function UserSettingsItem(props: UserSettingsItemProps): JSX.Element;
+declare function UserSettingsView(props: UserSettingsViewProps): JSX.Element;
+declare function UserSettingsAccountView(props: UserSettingsAccountViewProps): JSX.Element;
+declare function UserSettingsAppearanceView(props: UserSettingsAppearanceViewProps): JSX.Element;
+declare function UserSettingsAppearanceViewGroup(props: UserSettingsAppearanceViewGroupProps): JSX.Element;
+declare function UserSettingsAppearanceViewItem(props: UserSettingsAppearanceViewItemProps): JSX.Element;
 declare function AIButton(props: AIButtonProps): JSX.Element;
 declare function AIButtonState(props: AIButtonStateProps): JSX.Element;
 declare function AIInput(props: AIInputProps): JSX.Element;
 declare function AITextArea(props: AITextAreaProps): JSX.Element;
 declare function AIPromptInput(props: AIPromptInputProps): JSX.Element;
+declare function CompatTable(props: CompatTableProps): JSX.Element;
+declare function CompatTableColumn(props: CompatTableColumnProps): JSX.Element;
+declare function CompatTableRow(props: CompatTableRowProps): JSX.Element;
+declare function CompatTableCell(props: CompatTableCellProps): JSX.Element;
+declare function CompatTableGroupRow(props: CompatTableGroupRowProps): JSX.Element;

@@ -1,18 +1,16 @@
 import { useState, useCallback } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import TableClass from "@ui5/webcomponents-compat/dist/Table.js";
-import TableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
+import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
+import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
-import TableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
+import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Table = createComponent(TableClass);
-const TableRow = createComponent(TableRowClass);
-const TableColumn = createComponent(TableColumnClass);
-const TableCell = createComponent(TableCellClass);
+const CompatTable = createComponent(CompatTableClass);
+const CompatTableRow = createComponent(CompatTableRowClass);
+const CompatTableColumn = createComponent(TableColumnClass);
+const CompatTableCell = createComponent(CompatTableCellClass);
 const Text = createComponent(TextClass);
-
-const ROWS_PER_LOAD = 2;
 
 const products = [
   { name: "Notebook Basic 15", supplierName: "Very Best Screens", width: 30, depth: 18, height: 3, dimUnit: "cm", weightMeasure: 4.2, weightUnit: "KG", price: 956, currencyCode: "EUR" },
@@ -27,112 +25,50 @@ const products = [
   { name: "Comfort Easy", supplierName: "Technocom", width: 84, depth: 1.5, height: 14, dimUnit: "cm", weightMeasure: 0.2, weightUnit: "KG", price: 1679, currencyCode: "EUR" },
 ];
 
+const ROWS_PER_LOAD = 2;
+
 function App() {
-  const [extraRows, setExtraRows] = useState<typeof products>([]);
+  const [visibleCount, setVisibleCount] = useState(2);
   const [busy, setBusy] = useState(false);
-  const [loads, setLoads] = useState(1);
-  const [growing, setGrowing] = useState<string>("Button");
-  const [subtext, setSubtext] = useState(`${ROWS_PER_LOAD} of ${products.length}`);
 
   const handleLoadMore = useCallback(() => {
     setBusy(true);
-
     setTimeout(() => {
-      setExtraRows((prev) => {
-        const sliceIndex = prev.length;
-        const newProducts = products.slice(sliceIndex, sliceIndex + ROWS_PER_LOAD);
-        return [...prev, ...newProducts];
-      });
-      setLoads((prev) => {
-        const newLoads = prev + 1;
-        setSubtext(`${newLoads * ROWS_PER_LOAD} of ${products.length}`);
-        if (newLoads >= products.length / 2) {
-          setGrowing("None");
-        }
-        return newLoads;
+      setVisibleCount((prev) => {
+        const next = Math.min(prev + ROWS_PER_LOAD, products.length);
+        return next;
       });
       setBusy(false);
     }, 1500);
   }, []);
 
+  const growing = visibleCount >= products.length ? "None" : "Button";
+
   return (
-    <>
-      <Table growing={growing} growingButtonText="Load More" growingButtonSubtext={subtext} busy={busy} busyDelay={0} onLoadMore={handleLoadMore}>
+    <CompatTable
+      growing={growing}
+      growingButtonText="Load More"
+      growingButtonSubtext={`${visibleCount} of ${products.length}`}
+      busyDelay="0"
+      busy={busy}
+      onLoadMore={handleLoadMore}
+    >
+      <CompatTableColumn slot="columns" popinDisplay="Inline"><Text>Product</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns" minWidth="600" popinText="Supplier" demandPopin popinDisplay="Inline"><Text>Supplier</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns" minWidth="800" popinText="Dimensions" demandPopin popinDisplay="Inline"><Text>Dimensions</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns" minWidth="800" popinText="Weight" demandPopin popinDisplay="Inline"><Text>Weight</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns" popinDisplay="Inline"><Text>Price</Text></CompatTableColumn>
 
-        <TableColumn slot="columns" popinDisplay="Inline">
-          <Text>Product</Text>
-        </TableColumn>
-        <TableColumn slot="columns" min-width={600} popinText="Supplier" demandPopin={true} popinDisplay="Inline">
-          <Text>Supplier</Text>
-        </TableColumn>
-        <TableColumn slot="columns" min-width={800} popinText="Dimensions" demandPopin={true} popinDisplay="Inline">
-          <Text>Dimensions</Text>
-        </TableColumn>
-        <TableColumn slot="columns" min-width={800} popinText="Weight" demandPopin={true} popinDisplay="Inline">
-          <Text>Weight</Text>
-        </TableColumn>
-        <TableColumn slot="columns" popinDisplay="Inline">
-          <Text>Price</Text>
-        </TableColumn>
-
-        <TableRow>
-          <TableCell>
-            <Text>Notebook Basic 15</Text>
-          </TableCell>
-          <TableCell>
-            <Text>Very Best Screens</Text>
-          </TableCell>
-          <TableCell>
-            <Text>30 x 18 x 3cm</Text>
-          </TableCell>
-          <TableCell>
-            <Text><b>4.2</b>KG</Text>
-          </TableCell>
-          <TableCell>
-            <Text><b>956</b>EUR</Text>
-          </TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>
-            <Text>Notebook Basic 175</Text>
-          </TableCell>
-          <TableCell>
-            <Text>Very Best Screens</Text>
-          </TableCell>
-          <TableCell>
-            <Text>29 x 17 x 3.1cm</Text>
-          </TableCell>
-          <TableCell>
-            <Text><b>4.5</b>KG</Text>
-          </TableCell>
-          <TableCell>
-            <Text><b>1249</b>EUR</Text>
-          </TableCell>
-        </TableRow>
-
-        {extraRows.map((product, index) => (
-          <TableRow key={index}>
-            <TableCell>
-              <Text>{product.name}</Text>
-            </TableCell>
-            <TableCell>
-              <Text>{product.supplierName}</Text>
-            </TableCell>
-            <TableCell>
-              <Text>{product.width} x {product.depth} x {product.height}{product.dimUnit}</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>{product.weightMeasure}</b>{product.weightUnit}</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b> {product.price}</b>{product.currencyCode}</Text>
-            </TableCell>
-          </TableRow>
-        ))}
-
-      </Table>
-    </>
+      {products.slice(0, visibleCount).map((p, i) => (
+        <CompatTableRow key={i}>
+          <CompatTableCell><Text>{p.name}</Text></CompatTableCell>
+          <CompatTableCell><Text>{p.supplierName}</Text></CompatTableCell>
+          <CompatTableCell><Text>{p.width} x {p.depth} x {p.height}{p.dimUnit}</Text></CompatTableCell>
+          <CompatTableCell><Text><b>{p.weightMeasure}</b>{p.weightUnit}</Text></CompatTableCell>
+          <CompatTableCell><Text><b>{p.price}</b>{p.currencyCode}</Text></CompatTableCell>
+        </CompatTableRow>
+      ))}
+    </CompatTable>
   );
 }
 

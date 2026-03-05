@@ -37,14 +37,14 @@
 .previewContainer {
   background: var(--sapBackgroundColor, var(--ifm-background-color));
   min-height: 80px;
+  max-height: 600px;
+  overflow: auto;
+  position: relative;
 }
 
 .preview {
-  margin: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  width: calc(100% - 16px);
+  padding: 8px;
+  width: 100%;
   box-sizing: border-box;
   font-family: var(--sapFontFamily);
   font-size: var(--sapFontSize);
@@ -58,9 +58,6 @@
   font-family: inherit;
 }
 
-.preview > div {
-  width: 100%;
-}
 
 .editorContainer {
   border-top: 1px solid var(--ifm-color-emphasis-200);

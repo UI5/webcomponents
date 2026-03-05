@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef } from "react";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -57,7 +58,7 @@ function App() {
     respPopoverRef.current!.open = !respPopoverRef.current!.open;
   };
 
-  const handleSideNavigationSelectionChange = (e) => {
+  const handleSideNavigationSelectionChange = (e: UI5CustomEvent<SideNavigationClass, "selection-change">) => {
     if (e.detail.item.getAttribute("target")) {
 		respPopoverRef.current!.open=false;
 		return;

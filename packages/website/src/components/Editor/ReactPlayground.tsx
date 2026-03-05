@@ -51,6 +51,10 @@ function createComponent(ComponentClass: any): any {
         if (propName.startsWith("on") && typeof propValue === "function") {
           const eventName = toEventName(propName);
           eventCleanups.push(createEventCleanup(element, eventName, propValue));
+        } else if (typeof propValue === "boolean") {
+          // React 18 sets false booleans as empty string attributes on custom elements.
+          // Set as property directly to avoid this.
+          element[propName] = propValue;
         }
       });
       return () => { eventCleanups.forEach(cleanup => cleanup()); };
@@ -58,10 +62,10 @@ function createComponent(ComponentClass: any): any {
     const domProps: Record<string, any> = {};
     Object.keys(restProps).forEach(propName => {
       const propValue = restProps[propName];
-      if (!propName.startsWith("on") || typeof propValue !== "function") {
-        const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
-        domProps[attrName] = propValue;
-      }
+      if (propName.startsWith("on") && typeof propValue === "function") return;
+      if (typeof propValue === "boolean") return; // handled in useEffect
+      const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
+      domProps[attrName] = propValue;
     });
     return React.createElement(tagName, { ref: elementRef, ...domProps }, children);
   });
@@ -247,8 +251,12 @@ import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import AIPromptInputClass from "@ui5/webcomponents-ai/dist/PromptInput.js";
 
-// Import compat package
+// Import compat package - scoping suffix MUST be set before component imports
+import "./compat-scoping-setup";
+import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
+import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
+import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 
 // Import icons commonly used in samples
@@ -277,6 +285,7 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
 import "@ui5/webcomponents/dist/Assets.js";
 import "@ui5/webcomponents-fiori/dist/Assets.js";
 import "@ui5/webcomponents-ai/dist/Assets.js";
+import "@ui5/webcomponents-compat/dist/Assets.js";
 
 // Map component class names to their classes for dynamic lookup
 const ComponentClasses: Record<string, any> = {
@@ -319,7 +328,7 @@ const ComponentClasses: Record<string, any> = {
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package
-  TableColumnClass, TableGroupRowClass,
+  CompatTableClass, TableColumnClass, CompatTableRowClass, CompatTableCellClass, TableGroupRowClass,
 };
 
 interface ReactPlaygroundProps {

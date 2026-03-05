@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState } from "react";
 import NavigationLayoutClass from "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -74,7 +75,7 @@ function App() {
     nl.mode = nl.isSideCollapsed() ? "Expanded" : "Collapsed";
   };
 
-  const handleSelectionChange = (event) => {
+  const handleSelectionChange = (event: UI5CustomEvent<SideNavigationClass, "selection-change">) => {
     if (event.detail.item.getAttribute("target")) {
       return;
     }
@@ -100,8 +101,9 @@ function App() {
         	display: block;
         }
       `}</style>
+      <div style={{ position: "relative", height: "50rem" }}>
       <NavigationLayout ref={navLayoutRef} id="nl1">
-    		<ShellBar slot="header" notificationsCount={72} showNotifications={true}>
+    		<ShellBar slot="header" notificationsCount="72" showNotifications={true}>
                 <Button icon="menu2" slot="startButton" id="startButton" onClick={handleStartButtonClick} />
                 <ShellBarBranding slot="branding">
                     Product Identifier
@@ -150,6 +152,7 @@ function App() {
           ))}
     		</div>
     	</NavigationLayout>
+      </div>
     </>
   );
 }

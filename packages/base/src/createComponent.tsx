@@ -79,7 +79,7 @@ export function createComponent<T extends UI5Element>(
 			}
 		}, [ref]);
 
-		// Handle event props (convert onXxx to event listeners)
+		// Handle event props and boolean props imperatively
 		useEffect(() => {
 			const element = elementRef.current;
 			if (!element) {
@@ -96,6 +96,10 @@ export function createComponent<T extends UI5Element>(
 					const eventName = toEventName(propName);
 					const handler = propValue as EventHandler;
 					eventCleanups.push(createEventCleanup(element, eventName, handler));
+				} else if (typeof propValue === "boolean") {
+					// React 18 sets false booleans as empty string attributes on custom elements.
+					// Set as property directly to avoid this.
+					(element as any)[propName] = propValue;
 				}
 			});
 
@@ -104,15 +108,15 @@ export function createComponent<T extends UI5Element>(
 			};
 		}, [restProps]);
 
-		// Filter out event handlers from DOM props
+		// Filter out event handlers and booleans from DOM props
 		const domProps: Record<string, unknown> = {};
 		Object.keys(restProps).forEach(propName => {
 			const propValue = (restProps as Record<string, unknown>)[propName];
-			if (!propName.startsWith("on") || typeof propValue !== "function") {
-				// Convert camelCase to kebab-case for HTML attributes
-				const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
-				domProps[attrName] = propValue;
-			}
+			if (propName.startsWith("on") && typeof propValue === "function") return;
+			if (typeof propValue === "boolean") return; // handled in useEffect
+			// Convert camelCase to kebab-case for HTML attributes
+			const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
+			domProps[attrName] = propValue;
 		});
 
 		return React.createElement(tagName, { ref: elementRef, ...domProps }, children);

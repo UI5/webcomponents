@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -19,7 +20,7 @@ const Toast = createComponent(ToastClass);
 function App() {
   const toastRef = useRef(null);
 
-  const handleTableRowClick = (e) => {
+  const handleTableRowClick = (e: UI5CustomEvent<TableClass, "row-click">) => {
     if (toastRef.current) {
       toastRef.current!.textContent = `Row with key "${e.detail.row.key}" was pressed!`;
       toastRef.current!.open = true;

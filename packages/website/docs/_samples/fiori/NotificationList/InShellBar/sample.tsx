@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState, useCallback } from "react";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
@@ -51,7 +52,7 @@ function App() {
   const [extraItems, setExtraItems] = useState([]);
   const itemsLoadedRef = useRef(6);
 
-  const handleNotificationListItemClose = useCallback((e) => {
+  const handleNotificationListItemClose = useCallback((e: UI5CustomEvent<NotificationListClass, "item-close">) => {
     let visibleItems = 0;
     e.detail.item.hidden = true;
 
@@ -66,7 +67,7 @@ function App() {
     }
   }, []);
 
-  const handleShellbarNotificationsClick = useCallback((e) => {
+  const handleShellbarNotificationsClick = useCallback((e: UI5CustomEvent<ShellBarClass, "notifications-click">) => {
     e.preventDefault();
     if (popoverRef.current) {
       popoverRef.current!.opener = e.detail.targetRef;

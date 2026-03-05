@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -19,7 +20,7 @@ const TableRow = createComponent(TableRowClass);
 function App() {
   const tableRef = useRef(null);
 
-  const handleSliderChange = (e) => {
+  const handleSliderChange = (e: UI5CustomEvent<SliderClass, "change">) => {
     if (tableRef.current) {
       tableRef.current!.style.width = `${e.target.value}%`;
     }

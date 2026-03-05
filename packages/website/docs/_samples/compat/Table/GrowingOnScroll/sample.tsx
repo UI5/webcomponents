@@ -1,18 +1,16 @@
 import { useState, useCallback } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
-import TableClass from "@ui5/webcomponents-compat/dist/Table.js";
-import TableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
+import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
+import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
-import TableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
+import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Table = createComponent(TableClass);
-const TableRow = createComponent(TableRowClass);
-const TableColumn = createComponent(TableColumnClass);
-const TableCell = createComponent(TableCellClass);
+const CompatTable = createComponent(CompatTableClass);
+const CompatTableRow = createComponent(CompatTableRowClass);
+const CompatTableColumn = createComponent(TableColumnClass);
+const CompatTableCell = createComponent(CompatTableCellClass);
 const Text = createComponent(TextClass);
-
-const ROWS_PER_LOAD = 2;
 
 const products = [
   { name: "Notebook Basic 15", supplierName: "Very Best Screens", width: 30, depth: 18, height: 3, dimUnit: "cm", weightMeasure: 4.2, weightUnit: "KG", price: 956, currencyCode: "EUR" },
@@ -27,178 +25,47 @@ const products = [
   { name: "Comfort Easy", supplierName: "Technocom", width: 84, depth: 1.5, height: 14, dimUnit: "cm", weightMeasure: 0.2, weightUnit: "KG", price: 1679, currencyCode: "EUR" },
 ];
 
+const ROWS_PER_LOAD = 2;
+
 function App() {
-  const [extraRows, setExtraRows] = useState<typeof products>([]);
+  const [visibleCount, setVisibleCount] = useState(2);
   const [busy, setBusy] = useState(false);
-  const [growing, setGrowing] = useState<string>("Scroll");
 
   const handleLoadMore = useCallback(() => {
     setBusy(true);
-
     setTimeout(() => {
-      setExtraRows((prev) => {
-        const sliceIndex = prev.length;
-        const newProducts = products.slice(sliceIndex, sliceIndex + ROWS_PER_LOAD);
-        const updated = [...prev, ...newProducts];
-        if (updated.length >= products.length) {
-          setGrowing("None");
-        }
-        return updated;
-      });
+      setVisibleCount((prev) => Math.min(prev + ROWS_PER_LOAD, products.length));
       setBusy(false);
     }, 1500);
   }, []);
 
+  const growing = visibleCount >= products.length ? "None" : "Scroll";
+
   return (
-    <>
-      <div style={{ height: "200px", overflow: "scroll" }}>
-        <Table growing={growing} busy={busy} busyDelay={0} onLoadMore={handleLoadMore}>
-          <TableColumn slot="columns">
-            <Text>Product</Text>
-          </TableColumn>
-          <TableColumn slot="columns">
-            <Text>Supplier</Text>
-          </TableColumn>
-          <TableColumn slot="columns">
-            <Text>Dimensions</Text>
-          </TableColumn>
-          <TableColumn slot="columns">
-            <Text>Weight</Text>
-          </TableColumn>
-          <TableColumn slot="columns">
-            <Text>Price</Text>
-          </TableColumn>
+    <div style={{ height: "200px", overflow: "scroll" }}>
+      <CompatTable
+        growing={growing}
+        busyDelay="0"
+        busy={busy}
+        onLoadMore={handleLoadMore}
+      >
+        <CompatTableColumn slot="columns"><Text>Product</Text></CompatTableColumn>
+        <CompatTableColumn slot="columns"><Text>Supplier</Text></CompatTableColumn>
+        <CompatTableColumn slot="columns"><Text>Dimensions</Text></CompatTableColumn>
+        <CompatTableColumn slot="columns"><Text>Weight</Text></CompatTableColumn>
+        <CompatTableColumn slot="columns"><Text>Price</Text></CompatTableColumn>
 
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 15</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>30 x 18 x 3cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>956</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 175</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>29 x 17 x 3.1cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.5</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>1249</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 18</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>28 x 19 x 2.5cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>1570</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 18</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>28 x 19 x 2.5cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>1570</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 18</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>28 x 19 x 2.5cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>1570</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>
-              <Text>Notebook Basic 18</Text>
-            </TableCell>
-            <TableCell>
-              <Text>Very Best Screens</Text>
-            </TableCell>
-            <TableCell>
-              <Text>28 x 19 x 2.5cm</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>4.2</b>KG</Text>
-            </TableCell>
-            <TableCell>
-              <Text><b>1570</b>EUR</Text>
-            </TableCell>
-          </TableRow>
-
-          {extraRows.map((product, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <Text>{product.name}</Text>
-              </TableCell>
-              <TableCell>
-                <Text>{product.supplierName}</Text>
-              </TableCell>
-              <TableCell>
-                <Text>{product.width} x {product.depth} x {product.height}{product.dimUnit}</Text>
-              </TableCell>
-              <TableCell>
-                <Text><b>{product.weightMeasure}</b>{product.weightUnit}</Text>
-              </TableCell>
-              <TableCell>
-                <Text><b> {product.price}</b>{product.currencyCode}</Text>
-              </TableCell>
-            </TableRow>
-          ))}
-        </Table>
-      </div>
-    </>
+        {products.slice(0, visibleCount).map((p, i) => (
+          <CompatTableRow key={i}>
+            <CompatTableCell><Text>{p.name}</Text></CompatTableCell>
+            <CompatTableCell><Text>{p.supplierName}</Text></CompatTableCell>
+            <CompatTableCell><Text>{p.width} x {p.depth} x {p.height}{p.dimUnit}</Text></CompatTableCell>
+            <CompatTableCell><Text><b>{p.weightMeasure}</b>{p.weightUnit}</Text></CompatTableCell>
+            <CompatTableCell><Text><b>{p.price}</b>{p.currencyCode}</Text></CompatTableCell>
+          </CompatTableRow>
+        ))}
+      </CompatTable>
+    </div>
   );
 }
 

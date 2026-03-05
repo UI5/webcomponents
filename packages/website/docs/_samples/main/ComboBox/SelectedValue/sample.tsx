@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import ComboBoxClass from "@ui5/webcomponents/dist/ComboBox.js";
 import ComboBoxItemClass from "@ui5/webcomponents/dist/ComboBoxItem.js";
 
@@ -9,7 +10,7 @@ const ComboBoxItem = createComponent(ComboBoxItemClass);
 function App() {
   const [selectedValue, setSelectedValue] = useState("DE");
 
-  const handleSelectionChange = (e: any) => {
+  const handleSelectionChange = (e: UI5CustomEvent<ComboBoxClass, "selection-change">) => {
     const item = e.detail.item;
     if (item) {
       setSelectedValue(item.value || "(no value)");

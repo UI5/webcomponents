@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useCallback } from "react";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
@@ -19,7 +20,7 @@ const ui5_database_entries = [
 function App() {
   const [suggestions, setSuggestions] = useState([]);
 
-  const handleInputInput = useCallback((e) => {
+  const handleInputInput = useCallback((e: UI5CustomEvent<InputClass, "input">) => {
     const value = e.target.value;
     if (value) {
       const filtered = ui5_database_entries.filter((item) => {

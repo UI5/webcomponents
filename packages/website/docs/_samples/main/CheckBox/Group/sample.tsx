@@ -10,7 +10,7 @@ function App() {
   const formRef = useRef<HTMLFormElement>(null);
   const [output, setOutput] = useState("");
 
-  const handleFormSubmit = (e: any) => {
+  const handleFormSubmit = (e: Event) => {
     e.preventDefault();
     const formData = new FormData(formRef.current!);
     const selectedLanguages = formData.getAll("languages");

@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
@@ -21,7 +22,7 @@ const data = [
 function App() {
   const [items, setItems] = useState(data);
 
-  const handleFilteringInput = (e) => {
+  const handleFilteringInput = (e: UI5CustomEvent<SearchClass, "input">) => {
     const value = e.target.value.toLowerCase();
     const filteredData = data.filter((item) =>
       item.name.toLowerCase().includes(value)

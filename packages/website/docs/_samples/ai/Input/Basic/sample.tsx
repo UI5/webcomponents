@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
@@ -265,7 +266,7 @@ function App() {
     if (input) input.focus();
   }, [loading, stopTypingAnimation, findActionConfig, updateComponentState]);
 
-  const handleVersionChange = useCallback((e: any) => {
+  const handleVersionChange = useCallback((e: UI5CustomEvent<AIInputClass, "version-change">) => {
     const backwards = e.detail?.backwards;
     const history = versionHistoryRef.current;
 
@@ -282,7 +283,7 @@ function App() {
     }
   }, [updateComponentState]);
 
-  const handleMenuItemClick = useCallback(async (e: any) => {
+  const handleMenuItemClick = useCallback(async (e: UI5CustomEvent<AIInputClass, "item-click">) => {
     const action = e?.detail?.item?.dataset?.menuAction || e?.detail?.item?.dataset?.action;
     if (!action) return;
     await executeAction(action);
@@ -327,8 +328,6 @@ function App() {
       }
     });
     return items;
-      );
-    });
   }, [menuConfig]);
 
   return (

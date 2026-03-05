@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -17,7 +18,7 @@ const TableRow = createComponent(TableRowClass);
 const TableRowActionNavigation = createComponent(TableRowActionNavigationClass);
 
 function App() {
-  const handleTableRowActionClick = (e) => {
+  const handleTableRowActionClick = (e: UI5CustomEvent<TableClass, "row-action-click">) => {
     const row = e.detail.row;
     console.log(`Navigate action of row ${row.rowKey} is clicked`);
   };

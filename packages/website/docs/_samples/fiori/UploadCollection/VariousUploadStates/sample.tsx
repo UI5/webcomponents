@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -21,15 +22,15 @@ const initialFiles = [
 function App() {
   const [files, setFiles] = useState(initialFiles);
 
-  const handleUploadCollectionRetry = (e) => {
+  const handleUploadCollectionRetry = (e: UI5CustomEvent<UploadCollectionClass, "retry">) => {
     alert("Retry uploading: " + e.target.fileName);
   };
 
-  const handleUploadCollectionTerminate = (e) => {
+  const handleUploadCollectionTerminate = (e: UI5CustomEvent<UploadCollectionClass, "terminate">) => {
     alert("Terminate uploading of: " + e.target.fileName);
   };
 
-  const handleUploadCollectionItemDelete = (e) => {
+  const handleUploadCollectionItemDelete = (e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
     const deletedItem = e.detail.item;
     setFiles(prev => prev.filter(f => f.fileName !== deletedItem.fileName));
   };

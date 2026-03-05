@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import TokenizerClass from "@ui5/webcomponents/dist/Tokenizer.js";
 
@@ -12,7 +13,7 @@ function App() {
     "Finland", "Germany", "Hungary", "Ireland", "Japan", "Korea", "Latvia",
   ]);
 
-  const handleTokenDelete = (e) => {
+  const handleTokenDelete = (e: UI5CustomEvent<TokenizerClass, "token-delete">) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);

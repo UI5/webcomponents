@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef } from "react";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListItemClass from "@ui5/webcomponents-fiori/dist/NotificationListItem.js";
@@ -17,11 +18,11 @@ const Toast = createComponent(ToastClass);
 function App() {
   const toastRef = useRef(null);
 
-  const handleNotificationListItemClose = (e) => {
+  const handleNotificationListItemClose = (e: UI5CustomEvent<NotificationListClass, "item-close">) => {
     e.detail.item.hidden = true;
   };
 
-  const handleMenuWithActionsUi5ItemClick = (e) => {
+  const handleMenuWithActionsUi5ItemClick = (e: UI5CustomEvent<MenuClass, "item-click">) => {
     toastRef.current!.textContent = "Menu button '" + e.detail.text + "' pressed" + " on Notification List Item with id '" + e.target.parentElement.id + "'.";
     toastRef.current!.open = true;
   };

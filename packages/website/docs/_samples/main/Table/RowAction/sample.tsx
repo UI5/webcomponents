@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -46,7 +47,7 @@ const handlers = {
 };
 
 function App() {
-  const handleTableRowActionClick = (e) => {
+  const handleTableRowActionClick = (e: UI5CustomEvent<TableClass, "row-action-click">) => {
     const { action, row } = e.detail;
     const handler = action.getAttribute("handler");
     handlers[handler]?.(row);

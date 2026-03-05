@@ -14,7 +14,7 @@ function App() {
     const tabContainer = tabContainerRef.current;
     if (!tabContainer) return;
 
-    const handleMoveOver = (event) => {
+    const handleMoveOver = (event: CustomEvent) => {
       const { source } = event.detail;
 
       if (tabContainer.contains(source.element)) {
@@ -22,7 +22,7 @@ function App() {
       }
     };
 
-    const handleMove = (event) => {
+    const handleMove = (event: CustomEvent) => {
       const { source, destination } = event.detail;
 
       switch (destination.placement) {

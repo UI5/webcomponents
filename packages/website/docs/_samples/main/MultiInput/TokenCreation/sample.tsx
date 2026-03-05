@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
@@ -18,7 +19,7 @@ function App() {
   const [valueState, setValueState] = useState("None");
   const multiInputRef = useRef(null);
 
-  const handleTokenDelete = (e) => {
+  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);
@@ -26,7 +27,7 @@ function App() {
     }
   };
 
-  const handlePaste = (e) => {
+  const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
     const pastedText = (e.clipboardData || window.clipboardData).getData("text/plain");
     if (!pastedText) {
@@ -42,7 +43,7 @@ function App() {
     setTokens((prev) => [...prev, ...separatedTexts.filter(Boolean)]);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: UI5CustomEvent<MultiInputClass, "change">) => {
     if (!e.target.value) {
       return;
     }

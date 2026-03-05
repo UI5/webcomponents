@@ -18,7 +18,7 @@ function App() {
     const tree = treeRef.current;
     if (!tree) return;
 
-    const handleBeforeItemMove = (e) => {
+    const handleBeforeItemMove = (e: CustomEvent) => {
       const { destination, source } = e.detail;
 
       if (destination.placement === "Before" || destination.placement === "After") {
@@ -30,7 +30,7 @@ function App() {
       }
     };
 
-    const handleMoveOver = (e) => {
+    const handleMoveOver = (e: CustomEvent) => {
       const { source } = e.detail;
 
       if (!tree.contains(source.element)) {
@@ -40,7 +40,7 @@ function App() {
       handleBeforeItemMove(e);
     };
 
-    const handleMove = (e) => {
+    const handleMove = (e: CustomEvent) => {
       const { destination, source } = e.detail;
 
       switch (destination.placement) {

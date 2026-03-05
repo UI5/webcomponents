@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
@@ -14,7 +15,7 @@ function App() {
     { text: "low fat", selected: true },
   ]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: UI5CustomEvent<MultiInputClass, "change">) => {
     const inputValue = e.target.value;
     if (inputValue) {
       setTokens((prev) => [...prev, { text: inputValue, selected: false }]);
@@ -22,7 +23,7 @@ function App() {
     }
   };
 
-  const handleTokenDelete = (e) => {
+  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);

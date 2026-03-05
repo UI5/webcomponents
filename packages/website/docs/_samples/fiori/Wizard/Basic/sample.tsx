@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import WizardClass from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import WizardStepClass from "@ui5/webcomponents-fiori/dist/WizardStep.js";
@@ -37,7 +38,7 @@ function App() {
   const [toStep3Hidden, setToStep3Hidden] = useState(true);
   const [finalizeHidden, setFinalizeHidden] = useState(true);
 
-  const handleStepChange = useCallback((e) => {
+  const handleStepChange = useCallback((e: UI5CustomEvent<WizardClass, "step-change">) => {
     console.log(e.detail.step);
   }, []);
 

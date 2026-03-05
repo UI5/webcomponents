@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemCustomClass from "@ui5/webcomponents/dist/SuggestionItemCustom.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
@@ -19,7 +20,7 @@ function App() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
 
-  const handleInput = (e) => {
+  const handleInput = (e: UI5CustomEvent<InputClass, "input">) => {
     const value = e.target.value;
     setInputValue(value);
     if (value) {

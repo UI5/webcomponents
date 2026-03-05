@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
@@ -20,7 +21,7 @@ function App() {
   const [popAvatar, setPopAvatar] = useState<any>({ icon: "", initials: "", colorScheme: "", imageSrc: null });
   const [hiddenAvatars, setHiddenAvatars] = useState<any[]>([]);
 
-  const handleAvatarGroupClick = (e: any) => {
+  const handleAvatarGroupClick = (e: UI5CustomEvent<AvatarGroupClass, "click">) => {
     const group = avatarGroupRef.current;
     if (e.detail.overflowButtonClicked) {
       const items = group.hiddenItems;
@@ -53,7 +54,7 @@ function App() {
     }
   };
 
-  const handleSliderInput = (e: any) => {
+  const handleSliderInput = (e: UI5CustomEvent<SliderClass, "input">) => {
     setGroupWidth(e.target.value + "%");
   };
 

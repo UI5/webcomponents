@@ -1,62 +1,51 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
+import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
+import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
-import LabelClass from "@ui5/webcomponents/dist/Label.js";
-import TableClass from "@ui5/webcomponents/dist/Table.js";
-import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
-import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
+import LabelClass from "@ui5/webcomponents/dist/Label.js";
 
-const TableColumn = createComponent(TableColumnClass);
+const CompatTable = createComponent(CompatTableClass);
+const CompatTableRow = createComponent(CompatTableRowClass);
+const CompatTableColumn = createComponent(TableColumnClass);
+const CompatTableCell = createComponent(CompatTableCellClass);
 const TableGroupRow = createComponent(TableGroupRowClass);
-const Label = createComponent(LabelClass);
-const Table = createComponent(TableClass);
-const TableCell = createComponent(TableCellClass);
-const TableRow = createComponent(TableRowClass);
 const Text = createComponent(TextClass);
+const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
-    <>
-      <Table>
+    <CompatTable>
+      <CompatTableColumn slot="columns"><Label>City</Label></CompatTableColumn>
+      <CompatTableColumn slot="columns" minWidth="500" popinText="Supplier" demandPopin><Label>Supplier</Label></CompatTableColumn>
+      <CompatTableColumn slot="columns" minWidth="500"><Label>Date Of Foundation</Label></CompatTableColumn>
 
-        <TableColumn slot="columns">
-            <Label>City</Label>
-        </TableColumn>
-        <TableColumn slot="columns" min-width={500} popinText="Supplier" demandPopin="">
-            <Label>Supplier</Label>
-        </TableColumn>
-        <TableColumn slot="columns" min-width={500}>
-            <Label>Date Of Foundation</Label>
-        </TableColumn>
+      <TableGroupRow>Country: Bulgaria</TableGroupRow>
+      <CompatTableRow>
+        <CompatTableCell><Text>Sofia</Text></CompatTableCell>
+        <CompatTableCell><Text>Data Analytics</Text></CompatTableCell>
+        <CompatTableCell><Text>1980</Text></CompatTableCell>
+      </CompatTableRow>
+      <CompatTableRow>
+        <CompatTableCell><Text>Plovdiv</Text></CompatTableCell>
+        <CompatTableCell><Text>Old Town Corp</Text></CompatTableCell>
+        <CompatTableCell><Text>1899</Text></CompatTableCell>
+      </CompatTableRow>
 
-        <TableGroupRow>Country: Bulgaria</TableGroupRow>
-        <TableRow>
-            <TableCell><Text>Sofia</Text></TableCell>
-            <TableCell><Text>Data Analytics</Text></TableCell>
-            <TableCell><Text>1980</Text></TableCell>
-        </TableRow>
-        <TableRow>
-            <TableCell><Text>Plovdiv</Text></TableCell>
-            <TableCell><Text>Old Town Corp</Text></TableCell>
-            <TableCell><Text>1899</Text></TableCell>
-        </TableRow>
-
-        <TableGroupRow><Text>Country: USA</Text></TableGroupRow>
-        <TableRow>
-            <TableCell><Text>New York</Text></TableCell>
-            <TableCell><Text>Deloitte</Text></TableCell>
-            <TableCell><Text>1845</Text></TableCell>
-        </TableRow>
-        <TableRow>
-            <TableCell><Text>Bentonville</Text></TableCell>
-            <TableCell><Text>Walmart</Text></TableCell>
-            <TableCell><Text>1962</Text></TableCell>
-        </TableRow>
-
-    </Table>
-    </>
+      <TableGroupRow><Text>Country: USA</Text></TableGroupRow>
+      <CompatTableRow>
+        <CompatTableCell><Text>New York</Text></CompatTableCell>
+        <CompatTableCell><Text>Deloitte</Text></CompatTableCell>
+        <CompatTableCell><Text>1845</Text></CompatTableCell>
+      </CompatTableRow>
+      <CompatTableRow>
+        <CompatTableCell><Text>Bentonville</Text></CompatTableCell>
+        <CompatTableCell><Text>Walmart</Text></CompatTableCell>
+        <CompatTableCell><Text>1962</Text></CompatTableCell>
+      </CompatTableRow>
+    </CompatTable>
   );
 }
 

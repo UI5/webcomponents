@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
 import UploadCollectionItemClass from "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js";
@@ -37,7 +38,7 @@ function App() {
     setItems(prev => [...prev, ...newItems]);
   }, []);
 
-  const handleFileUploaderChange = useCallback((e) => {
+  const handleFileUploaderChange = useCallback((e: UI5CustomEvent<FileUploaderClass, "change">) => {
     addFiles(e.detail.files);
   }, [addFiles]);
 
@@ -63,16 +64,16 @@ function App() {
     }));
   }, []);
 
-  const handleDrop = useCallback((e) => {
+  const handleDrop = useCallback((e: DragEvent) => {
     e.preventDefault();
     addFiles(e.dataTransfer.files);
   }, [addFiles]);
 
-  const handleDragOver = useCallback((e) => {
+  const handleDragOver = useCallback((e: DragEvent) => {
     e.preventDefault();
   }, []);
 
-  const handleItemDelete = useCallback((e) => {
+  const handleItemDelete = useCallback((e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
     const deletedItem = e.detail.item;
     setItems(prev => prev.filter(item => item.fileName !== deletedItem.fileName));
   }, []);

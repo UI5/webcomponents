@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
@@ -11,7 +12,7 @@ const Select = createComponent(SelectClass);
 function App() {
   const calRef = useRef(null);
 
-  const handleSelectChange = (e: any) => {
+  const handleSelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
     calRef.current!.calendarWeekNumbering = e.detail.selectedOption.getAttribute("data-calendar-week-numbering");
   };
 

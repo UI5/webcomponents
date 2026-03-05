@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
 import TabClass from "@ui5/webcomponents/dist/Tab.js";
@@ -22,7 +23,7 @@ function App() {
     return 1 + getTabLevel(element.parentElement);
   };
 
-  const handleNestingLevelChange = (e) => {
+  const handleNestingLevelChange = (e: UI5CustomEvent<StepInputClass, "change">) => {
     maxNestingLevelRef.current = e.target.value;
   };
 
@@ -30,7 +31,7 @@ function App() {
     const tabContainer = tabContainerRef.current;
     if (!tabContainer) return;
 
-    const handleMoveOver = (event) => {
+    const handleMoveOver = (event: CustomEvent) => {
       const { source, destination } = event.detail;
 
       if (!tabContainer.contains(source.element)) {
@@ -48,7 +49,7 @@ function App() {
       }
     };
 
-    const handleMove = (event) => {
+    const handleMove = (event: CustomEvent) => {
       const { source, destination } = event.detail;
 
       switch (destination.placement) {

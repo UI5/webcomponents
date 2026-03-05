@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback } from "react";
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -71,7 +72,7 @@ function App() {
   const userMenuRef = useRef(null);
   const settingsDialogRef = useRef(null);
 
-  const handleShellbarUi5ProfileClick = useCallback((e) => {
+  const handleShellbarUi5ProfileClick = useCallback((e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
     console.log(" menuShellBar ui5-profile-click");
     const menu = userMenuRef.current;
     if (menu) {
@@ -84,7 +85,7 @@ function App() {
     }
   }, []);
 
-  const handleUserMenuShellBarItemClick = useCallback((e) => {
+  const handleUserMenuShellBarItemClick = useCallback((e: UI5CustomEvent<UserMenuClass, "item-click">) => {
     console.log(" menuShellBar item-click");
     const item = e.detail.item.getAttribute("data-id");
     switch (item) {
@@ -116,7 +117,7 @@ function App() {
     }
   }, []);
 
-  const handleAppearanceViewSelectionChange = useCallback((e) => {
+  const handleAppearanceViewSelectionChange = useCallback((e: UI5CustomEvent<UserSettingsAppearanceViewClass, "selection-change">) => {
     const selectedItem = e.detail.item;
     if (selectedItem?.itemKey) {
       setTheme(selectedItem.itemKey);
@@ -129,7 +130,7 @@ function App() {
     }
   }, []);
 
-  const handleSettingsItemSelectionChange = useCallback((e) => {
+  const handleSettingsItemSelectionChange = useCallback((e: UI5CustomEvent<ComboBoxClass, "selection-change">) => {
     console.log(`Selection change: ${e?.detail.item?.text}`, e.detail);
   }, []);
 
@@ -159,7 +160,7 @@ function App() {
     }
   }, []);
 
-  const handleSettingsSelectionChange = useCallback((e) => {
+  const handleSettingsSelectionChange = useCallback((e: UI5CustomEvent<UserSettingsDialogClass, "selection-change">) => {
     console.log(`Selection change: ${e.detail.item.text}`, e.detail);
     if (e.detail.item.text === "Language and Region") {
       e.detail.item.loading = true;
@@ -170,22 +171,22 @@ function App() {
     }
   }, []);
 
-  const handleSettingsDialogItemSelectionChange = useCallback((e) => {
+  const handleSettingsDialogItemSelectionChange = useCallback((e: UI5CustomEvent<UserSettingsItemClass, "selection-change">) => {
     console.log(`Selection change: ${e.detail.view.text}`, e.detail);
   }, []);
 
-  const handleSettingsOpen = useCallback((e) => {
+  const handleSettingsOpen = useCallback((e: Event) => {
     console.log("Settings dialog opened", e);
   }, []);
 
-  const handleSettingsBeforeClose = useCallback((e) => {
+  const handleSettingsBeforeClose = useCallback((e: UI5CustomEvent<UserSettingsDialogClass, "before-close">) => {
     console.log("Settings dialog before close", e.detail);
     if (!confirm("Are you sure you want to close the dialog?")) {
       e.preventDefault();
     }
   }, []);
 
-  const handleSettingsClose = useCallback((e) => {
+  const handleSettingsClose = useCallback((e: Event) => {
     console.log("Settings dialog closed", e);
   }, []);
 

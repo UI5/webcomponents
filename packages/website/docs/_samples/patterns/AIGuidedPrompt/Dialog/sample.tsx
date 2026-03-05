@@ -1,4 +1,5 @@
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -133,15 +134,15 @@ function App() {
     setDialogOpen(false);
   }, []);
 
-  const handleStructureChange = useCallback((e) => {
+  const handleStructureChange = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
     optionsRef.current!.structure = e.detail.selectedOption.value;
   }, []);
 
-  const handleLanguageChange = useCallback((e) => {
+  const handleLanguageChange = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
     optionsRef.current!.language = e.detail.selectedOption.value;
   }, []);
 
-  const handleToneOfVoiceChange = useCallback((e) => {
+  const handleToneOfVoiceChange = useCallback((e: UI5CustomEvent<SegmentedButtonClass, "selection-change">) => {
     const value = e.detail.selectedItems[0].innerText;
     switch (value) {
       case "Formal": optionsRef.current!.toneOfVoice = 1; break;

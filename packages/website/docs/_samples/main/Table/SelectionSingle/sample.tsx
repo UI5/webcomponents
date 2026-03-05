@@ -28,7 +28,7 @@ function App() {
     }
   };
 
-  const handleSelectionBehaviorChange = (e) => {
+  const handleSelectionBehaviorChange = (e: Event) => {
     if (selectionRef.current) {
       selectionRef.current!.behavior = e.target.text;
     }

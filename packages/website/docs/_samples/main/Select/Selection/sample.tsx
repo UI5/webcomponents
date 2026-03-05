@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
@@ -13,8 +14,8 @@ const Text = createComponent(TextClass);
 function App() {
   const [selectedValue, setSelectedValue] = useState("DE");
 
-  const handleCountrySelectChange = (e: any) => {
-    setSelectedValue(e.target.value);
+  const handleCountrySelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
+    setSelectedValue(e.currentTarget.value!);
   };
 
   return (
