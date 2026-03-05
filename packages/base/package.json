@@ -76,5 +76,13 @@
     "typescript": "^5.6.2",
     "vite": "5.4.21"
   },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "customElements": "dist/custom-elements.json"
 }
