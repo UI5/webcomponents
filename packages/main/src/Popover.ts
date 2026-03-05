@@ -227,6 +227,7 @@ class Popover extends Popup {
 	_oldPlacement?: CalculatedPlacement;
 	_width?: string;
 	_height?: string;
+	_openerIntersectionObserver?: IntersectionObserver | null;
 
 	_popoverResize: PopoverResize;
 
@@ -292,9 +293,12 @@ class Popover extends Popup {
 		this._openerRect = opener.getBoundingClientRect();
 
 		await super.openPopup();
+		this._observeOpenerVisibility();
 	}
 
 	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false) : void {
+		this._unobserveOpenerVisibility();
+
 		Object.assign(this.style, {
 			width: this._initialWidth,
 			height: this._initialHeight,
@@ -548,6 +552,47 @@ class Popover extends Popup {
 		const actualTop = Math.ceil(this.getBoundingClientRect().top);
 
 		return top + (Number.parseInt(this.style.top || "0") - actualTop);
+	}
+
+	/**
+	 * Callback invoked when the opener element's intersection changes.
+	 * Closes popover when opener is out of view.
+	 * @private
+	 */
+	_onOpenerIntersection(entries: Array<IntersectionObserverEntry>): void {
+		if (!entries[0]?.isIntersecting) {
+			this.closePopup();
+		}
+	}
+
+	/**
+	 * Starts observing the opener element's visibility in the viewport.
+	 * @private
+	 */
+	_observeOpenerVisibility(): void {
+		const opener = this.getOpenerHTMLElement(this.opener);
+
+		if (!opener) {
+			return;
+		}
+
+		this._openerIntersectionObserver = new IntersectionObserver(
+			this._onOpenerIntersection.bind(this),
+			{ threshold: 0 },
+		);
+
+		this._openerIntersectionObserver.observe(opener);
+	}
+
+	/**
+	 * Stops observing and cleans up the IntersectionObserver.
+	 * @private
+	 */
+	_unobserveOpenerVisibility(): void {
+		if (this._openerIntersectionObserver) {
+			this._openerIntersectionObserver.disconnect();
+			this._openerIntersectionObserver = null;
+		}
 	}
 
 	getPopoverSize(calcScrollHeight: boolean = false): PopoverSize {
