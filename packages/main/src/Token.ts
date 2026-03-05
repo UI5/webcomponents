@@ -128,6 +128,14 @@ class Token extends UI5Element implements IToken {
 	toBeDeleted = false;
 
 	/**
+	 * Defines whether the token is the last one in the tokenizer
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_lastToken = false;
+
+	/**
 	 * Defines the tabIndex of the component.
 	 * @private
 	 */
