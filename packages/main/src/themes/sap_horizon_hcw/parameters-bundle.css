@@ -2,6 +2,7 @@
 @import "../base/AvatarGroup-parameters.css";
 @import "./Tag-parameters.css";
 @import "../base/Bar-parameters.css";
+@import "./Breadcrumbs-parameters.css";
 @import "./BusyIndicator-parameters.css";
 @import "./Button-parameters.css";
 @import "../base/ButtonBadge-parameters.css";
