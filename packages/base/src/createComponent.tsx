@@ -112,8 +112,8 @@ export function createComponent<T extends UI5Element>(
 		const domProps: Record<string, unknown> = {};
 		Object.keys(restProps).forEach(propName => {
 			const propValue = (restProps as Record<string, unknown>)[propName];
-			if (propName.startsWith("on") && typeof propValue === "function") return;
-			if (typeof propValue === "boolean") return; // handled in useEffect
+			if (propName.startsWith("on") && typeof propValue === "function") { return; }
+			if (typeof propValue === "boolean") { return; } // handled in useEffect
 			// Convert camelCase to kebab-case for HTML attributes
 			const attrName = propName.replace(/([A-Z])/g, "-$1").toLowerCase();
 			domProps[attrName] = propValue;
