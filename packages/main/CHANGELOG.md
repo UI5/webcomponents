@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ui5-combobox:** enable case insensitive selection ([#13172](https://github.com/UI5/webcomponents/issues/13172)) ([b0a425e](https://github.com/UI5/webcomponents/commit/b0a425ea36434d6ed480d44be4595fdc20001236))
+* **ui5-link:** open new page in correct tab ([#13120](https://github.com/UI5/webcomponents/issues/13120)) ([8eeef94](https://github.com/UI5/webcomponents/commit/8eeef9441a8ff46bc875bf729da0c8d02199b9b4)), closes [#13116](https://github.com/UI5/webcomponents/issues/13116)
+* **ui5-rating-indicator:** update custom icon properties names and default values ([#13151](https://github.com/UI5/webcomponents/issues/13151)) ([4180a6a](https://github.com/UI5/webcomponents/commit/4180a6ab23cd0a94c24b544bbba2285da6dd0931))
+* **ui5-toolbar:** correct flex behavior for ToolbarSpacer ([#13164](https://github.com/UI5/webcomponents/issues/13164)) ([c4d409b](https://github.com/UI5/webcomponents/commit/c4d409bd05515855f2a18b4aa058b80b5efab06a))
+
+
+### Features
+
+* **ui5-date-picker, ui5-daterange-picket, ui5-datetime-picker:** introduce show-clear-icon property ([89ccfb8](https://github.com/UI5/webcomponents/commit/89ccfb8b227a92ebb7c831b13f8e26e0b47177d7))
+* **ui5-list:** added default ARIA role description ([#13135](https://github.com/UI5/webcomponents/issues/13135)) ([d2de428](https://github.com/UI5/webcomponents/commit/d2de428c821c4f5b91deeb905ec0ad2be57f0c74))
+* **ui5-multi-combobox:** introduce selectedValues property ([#12987](https://github.com/UI5/webcomponents/issues/12987)) ([bbe792b](https://github.com/UI5/webcomponents/commit/bbe792bc3dad9b21fdca9cb7a588a473e2ebdfff))
+* **ui5-toolbar-item:** introduce overflowed CSS custom state ([#13157](https://github.com/UI5/webcomponents/issues/13157)) ([33dda9e](https://github.com/UI5/webcomponents/commit/33dda9eb594e6979e69bc367b0ae1477202d16df))
+
+
+
+
+
 # [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
 
 
