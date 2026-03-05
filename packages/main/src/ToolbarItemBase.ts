@@ -8,10 +8,6 @@ type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
 
-/**
- * Fired when the overflow popover is closed.
- * @public
- */
 @event("close-overflow", {
 	bubbles: true,
 })

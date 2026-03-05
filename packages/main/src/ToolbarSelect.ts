@@ -64,14 +64,6 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * @public
  */
 @event("close")
-
-/**
- * Fired when the overflow popover is closed.
- * @public
- */
-@event("close-overflow", {
-	bubbles: true,
-})
 class ToolbarSelect extends ToolbarItemBase {
 	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;

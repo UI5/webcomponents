@@ -1,4 +1,3 @@
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -50,15 +49,6 @@ interface IToolbarItemContent extends HTMLElement {
 	renderer: jsxRenderer,
 	template: ToolbarItemTemplate,
 	styles: ToolbarItemCss,
-})
-/**
- * Fired when the overflow popover is closed.
- * @public
- * @since 2.20.0
- */
-@event("close-overflow", {
-	bubbles: true,
-	cancelable: true,
 })
 class ToolbarItem extends ToolbarItemBase {
 	_maxWidth = 0;
