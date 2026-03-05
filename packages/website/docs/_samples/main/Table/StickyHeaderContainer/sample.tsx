@@ -27,7 +27,7 @@ function App() {
           design="Header"
           accessible-name-ref="title"
         >
-          <Title tabindsex={0} level="H3" id="title" slot="startContent">
+          <Title tabIndex={0} level="H3" id="title" slot="startContent">
             My Sticky Toolbar
           </Title>
         </Bar>

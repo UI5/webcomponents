@@ -74,7 +74,7 @@ function App() {
           className="personPopover"
           style={{ width: "300px" }}
           placement="Bottom"
-          preventFocusRestore=""
+          preventFocusRestore={true}
         >
           <div className="avatar-slot" style={{ display: "inline-block" }}>
             <Avatar

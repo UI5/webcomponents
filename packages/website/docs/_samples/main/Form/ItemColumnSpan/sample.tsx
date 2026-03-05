@@ -89,7 +89,7 @@ function App() {
               id="additionalCommentsInp"
               placeholder="Write your message here"
               showExceededText={true}
-              maxLength={10}
+              maxlength={10}
             />
           </FormItem>
         </Form>

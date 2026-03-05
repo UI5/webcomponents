@@ -60,21 +60,18 @@ function App() {
             <TimelineItem
               id="test-item"
               titleText="called"
-              timestamp={1487583000000}
               icon="phone"
               name="John Smith"
-              nameClickable=""
+              nameClickable={true}
             />
             <TimelineItem
               titleText="Weekly Sync - CP Design"
-              timestamp={1517349600000}
               icon="calendar"
             >
               MR SOF02 2.43
             </TimelineItem>
             <TimelineItem
               titleText="Video Conference Call - UI5"
-              timestamp={1485813600000}
               icon="calendar"
             >
               Online meeting
@@ -106,7 +103,7 @@ function App() {
             slot="header"
             titleText="Team Dolphins"
             subtitleText="Direct Reports"
-            status="1 of 2"
+            additionalText="1 of 2"
           >
             <Icon name="group" slot="avatar" />
           </CardHeader>
@@ -143,7 +140,7 @@ function App() {
             titleText="Team Bears"
             subtitleText="Direct Reports"
             interactive={true}
-            status="2 of 2"
+            additionalText="2 of 2"
           >
             <Icon name="group" slot="avatar" />
           </CardHeader>

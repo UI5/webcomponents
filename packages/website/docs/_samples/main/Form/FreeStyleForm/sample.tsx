@@ -119,7 +119,7 @@ function App() {
                 id="streetInp"
                 placeholder="Write your message here"
                 showExceededText={true}
-                maxLength={10}
+                maxlength={10}
               />
             </FormItem>
 

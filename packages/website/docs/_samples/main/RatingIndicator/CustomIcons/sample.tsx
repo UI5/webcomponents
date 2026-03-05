@@ -16,7 +16,7 @@ function App() {
       <RatingIndicator value={4} ratedIcon="thumb-up" unratedIcon="border" />
       <br />
       <RatingIndicator
-        value="2.5"
+        value={2.5}
         ratedIcon="circle-task-2"
         unratedIcon="border"
         readonly={true}

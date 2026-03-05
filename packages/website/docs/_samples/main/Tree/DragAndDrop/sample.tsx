@@ -77,7 +77,7 @@ function App() {
         ref={treeRef}
         id="tree"
         noDataText="No data"
-        mode="MultiSelect"
+        selectionMode="Multiple"
         accessibleName="Tree with accessibleName"
       >
         <TreeItem

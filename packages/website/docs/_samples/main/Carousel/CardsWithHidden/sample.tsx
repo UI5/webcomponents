@@ -41,7 +41,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 1"
+            additionalText="Item 1"
             titleText="Visible Card 1"
             subtitleText="This card is visible"
           />
@@ -65,7 +65,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 2"
+            additionalText="Item 2"
             titleText="Hidden Card 2"
             subtitleText="This card is hidden via attribute"
           >
@@ -85,7 +85,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 3"
+            additionalText="Item 3"
             titleText="Visible Card 3"
             subtitleText="Visible card after hidden one"
           />
@@ -105,7 +105,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 4"
+            additionalText="Item 4"
             titleText="Visible Card 4"
             subtitleText="Visible item example"
           />
@@ -129,7 +129,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 5"
+            additionalText="Item 5"
             titleText="Hidden Card 5"
             subtitleText="Another hidden example"
           >
@@ -147,7 +147,7 @@ function App() {
         >
           <CardHeader
             slot="header"
-            status="Item 6"
+            additionalText="Item 6"
             titleText="Visible Card 6"
             subtitleText="End of visible sequence"
           />

@@ -51,8 +51,11 @@ function App() {
     e: UI5CustomEvent<TableClass, "row-action-click">,
   ) => {
     const { action, row } = e.detail;
-    const handler = action.getAttribute("handler");
-    handlers[handler]?.(row);
+    const actionText = (action as any).text?.toLowerCase();
+    const handlerName = actionText
+      ? `on${actionText.charAt(0).toUpperCase()}${actionText.slice(1)}`
+      : null;
+    if (handlerName) handlers[handlerName]?.(row);
   };
 
   return (
@@ -68,7 +71,7 @@ function App() {
           <TableHeaderCell>Supplier</TableHeaderCell>
           <TableHeaderCell horizontalAlign="End">Price</TableHeaderCell>
         </TableHeaderRow>
-        <TableRow rowKey={1} interactive={true}>
+        <TableRow rowKey="1" interactive={true}>
           <TableCell>
             <Label>
               <b>Notebook Basic 15</b>
@@ -87,7 +90,7 @@ function App() {
           <TableRowActionNavigation slot="actions"></TableRowActionNavigation>
         </TableRow>
         {/* playground-fold-end */}
-        <TableRow rowKey={2}>
+        <TableRow rowKey="2">
           <TableCell>
             <Label>
               <b>Astro Laptop 216</b>
@@ -107,40 +110,34 @@ function App() {
             slot="actions"
             icon="delete"
             text="Delete"
-            handler="onDelete"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="add"
             text="Add"
-            handler="onAdd"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="edit"
             text="Edit"
-            handler="onEdit"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="share"
             text="Share"
-            handler="onShare"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="heart"
             text="Like"
-            handler="onLike"
           ></TableRowAction>
           <TableRowActionNavigation
             slot="actions"
-            handler="onNavigate"
             interactive
           ></TableRowActionNavigation>
         </TableRow>
         {/* playground-fold */}
-        <TableRow rowKey={3} navigated={true}>
+        <TableRow rowKey="3" navigated={true}>
           <TableCell>
             <Label>
               <b>Benda Laptop 1408</b>
@@ -160,23 +157,20 @@ function App() {
             slot="actions"
             icon="share"
             text="Share"
-            handler="onShare"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="edit"
             text="Edit"
-            handler="onEdit"
             invisible
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="heart"
             text="Like"
-            handler="onLike"
           ></TableRowAction>
         </TableRow>
-        <TableRow rowKey={4}>
+        <TableRow rowKey="4">
           <TableCell>
             <Label>
               <b>Broad Screen 22HD</b>
@@ -196,13 +190,11 @@ function App() {
             slot="actions"
             icon="share"
             text="Share"
-            handler="onShare"
           ></TableRowAction>
           <TableRowAction
             slot="actions"
             icon="add"
             text="Add"
-            handler="onAdd"
           ></TableRowAction>
         </TableRow>
         {/* playground-fold-end */}

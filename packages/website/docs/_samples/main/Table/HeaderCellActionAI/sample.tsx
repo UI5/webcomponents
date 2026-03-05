@@ -89,7 +89,7 @@ function App() {
             ></TableHeaderCellActionAI>
           </TableHeaderCell>
         </TableHeaderRow>
-        <TableRow rowKey={0}>
+        <TableRow rowKey="0">
           <TableCell>
             <Label>
               <b>Notebook Basic 17</b>
@@ -114,7 +114,7 @@ function App() {
             </Label>
           </TableCell>
         </TableRow>
-        <TableRow rowKey={1}>
+        <TableRow rowKey="1">
           <TableCell>
             <Label>
               <b>Notebook Basic 15</b>
@@ -139,7 +139,7 @@ function App() {
             </Label>
           </TableCell>
         </TableRow>
-        <TableRow rowKey={2}>
+        <TableRow rowKey="2">
           <TableCell>
             <Label>
               <b>Notebook Basic 18</b>

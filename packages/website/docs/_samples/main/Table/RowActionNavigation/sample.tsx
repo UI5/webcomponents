@@ -38,7 +38,7 @@ function App() {
           <TableHeaderCell>Supplier</TableHeaderCell>
           <TableHeaderCell horizontalAlign="End">Price</TableHeaderCell>
         </TableHeaderRow>
-        <TableRow rowKey={1}>
+        <TableRow rowKey="1">
           <TableCell>
             <Label>
               <b>Notebook Basic 15</b>
@@ -60,7 +60,7 @@ function App() {
           ></TableRowActionNavigation>
         </TableRow>
         {/* playground-fold-end */}
-        <TableRow rowKey={2} interactive={true}>
+        <TableRow rowKey="2" interactive={true}>
           <TableCell>
             <Label>
               <b>Astro Laptop 216</b>
@@ -79,7 +79,7 @@ function App() {
           <TableRowActionNavigation slot="actions"></TableRowActionNavigation>
         </TableRow>
         {/* playground-fold */}
-        <TableRow rowKey={3} navigated={true}>
+        <TableRow rowKey="3" navigated={true}>
           <TableCell>
             <Label>
               <b>Benda Laptop 1408</b>
@@ -100,7 +100,7 @@ function App() {
             invisible
           ></TableRowActionNavigation>
         </TableRow>
-        <TableRow rowKey={4}>
+        <TableRow rowKey="4">
           <TableCell>
             <Label>
               <b>Broad Screen 22HD</b>

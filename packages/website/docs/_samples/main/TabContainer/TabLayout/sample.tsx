@@ -12,9 +12,9 @@ function App() {
   return (
     <>
       <TabContainer tabLayout="Standard" collapsed>
-        <Tab icon="laptop" text="Monitors" additionalText={10} />
-        <Tab icon="video" text="Cameras" additionalText={2} selected={true} />
-        <Tab icon="home" text="Rooms" additionalText={16} />
+        <Tab icon="laptop" text="Monitors" additionalText="10" />
+        <Tab icon="video" text="Cameras" additionalText="2" selected={true} />
+        <Tab icon="home" text="Rooms" additionalText="16" />
       </TabContainer>
     </>
   );

@@ -5,7 +5,7 @@ const StepInput = createComponent(StepInputClass);
 
 function App() {
   return (
-    <StepInput value={5} min="-0" max={10} step="0.5" valuePrecision={1} />
+    <StepInput value={5} min={0} max={10} step={0.5} valuePrecision={1} />
   );
 }
 

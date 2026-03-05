@@ -62,7 +62,7 @@ function App() {
           <Label id="cityLbl" for="cityInp" slot="labelContent">
             ZIP Code/City:
           </Label>
-          <Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
+          <Input id="cityInp" value="411" accessibleNameRef="cityLbl" />
           <Input value="Maintown" accessibleNameRef="cityLbl" />
         </FormItem>
 
@@ -80,7 +80,7 @@ function App() {
           <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
           <Input
             id="streetNumberInp"
-            value={1618}
+            value="1618"
             accessibleNameRef="streetLbl"
           />
         </FormItem>

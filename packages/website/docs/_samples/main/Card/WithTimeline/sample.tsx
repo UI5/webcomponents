@@ -28,21 +28,18 @@ function App() {
         <Timeline>
           <TimelineItem
             titleText="called"
-            timestamp={1487583000000}
             icon="phone"
             name="John Smith"
             nameClickable={true}
           />
           <TimelineItem
             titleText="Weekly Sync - BTP Design"
-            timestamp={1517349600000}
             icon="calendar"
           >
             MR SOF02 2.43
           </TimelineItem>
           <TimelineItem
             titleText="Video Conference Call - UI5"
-            timestamp={1485813600000}
             icon="calendar"
           >
             Online meeting
