@@ -4,6 +4,7 @@
  */
 import React, { useContext, useState, useEffect, useCallback, useMemo, useRef, forwardRef } from "react";
 import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import { ThemeContext, ContentDensityContext, TextDirectionContext } from "@site/src/theme/Root";
 import { useColorMode } from "@docusaurus/theme-common";
 import styles from "./ReactPlayground.module.css";
@@ -457,6 +458,7 @@ export default function ReactPlayground({ code, editorVisible = false, onCodeCha
   const densityCtx = useContext(ContentDensityContext);
   const directionCtx = useContext(TextDirectionContext);
   const { colorMode } = useColorMode();
+  const baseUrl = useBaseUrl("/");
 
   const theme = themeCtx?.theme || "sap_horizon";
   const contentDensity = densityCtx?.contentDensity || "Cozy";
@@ -513,7 +515,13 @@ export default function ReactPlayground({ code, editorVisible = false, onCodeCha
       return <div style={{ padding: "1rem", color: "var(--sapNeutralTextColor)" }}>Loading...</div>;
     }
 
-    const transpileResult = transpileCode(editorCode);
+    // Fix asset paths: replace "/images/" with baseUrl-prefixed paths
+    // so images resolve correctly when deployed under a subpath (e.g. /webcomponents/nightly/)
+    const codeWithFixedPaths = baseUrl === "/"
+      ? editorCode
+      : editorCode.replace(/"\/images\//g, `"${baseUrl}images/`);
+
+    const transpileResult = transpileCode(codeWithFixedPaths);
     if (transpileResult.error) {
       // Show transpilation error inline, don't crash
       return (
@@ -538,7 +546,7 @@ export default function ReactPlayground({ code, editorVisible = false, onCodeCha
     }
 
     return execResult.element;
-  }, [editorCode, babelReady]);
+  }, [editorCode, babelReady, baseUrl]);
 
   const monacoTheme = colorMode === "dark" ? "vs-dark" : "light";
 
