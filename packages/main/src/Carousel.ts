@@ -52,6 +52,11 @@ type CarouselNavigateEventDetail = {
 	selectedIndex: number;
 }
 
+type ChangeSlideOptions = {
+	fireEvent?: boolean;
+	moveFocus?: boolean;
+}
+
 type ItemsInfo = {
 	id: string,
 	item: HTMLElement & { _individualSlot?: string },
@@ -343,7 +348,7 @@ class Carousel extends UI5Element {
 
 			this._currentSlideIndex = clamp(this._currentSlideIndex, 0, Math.max(0, this.items.length - this.effectiveItemsPerPage));
 			this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentSlideIndex, this.items.length - 1);
-			this._changeSlideIndex(this._currentSlideIndex, false);
+			this._changeSlideIndex(this._currentSlideIndex, { fireEvent: false });
 		});
 
 		this._scrollEnablement = new ScrollEnablement(this);
@@ -552,28 +557,28 @@ class Carousel extends UI5Element {
 
 	async _handleHome(e: KeyboardEvent) {
 		e.preventDefault();
-		this._changeSlideIndex(0, true, true);
+		this._changeSlideIndex(0, { moveFocus: true });
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handleEnd(e: KeyboardEvent) {
 		e.preventDefault();
-		this._changeSlideIndex(this.items.length - 1, true, true);
+		this._changeSlideIndex(this.items.length - 1, { moveFocus: true });
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handlePageUp(e: KeyboardEvent) {
 		e.preventDefault();
-		this._changeSlideIndex(this._currentSlideIndex + this._pageStep, true, true);
+		this._changeSlideIndex(this._currentSlideIndex + this._pageStep, { moveFocus: true });
 		await renderFinished();
 		this.focusItem();
 	}
 
 	async _handlePageDown(e: KeyboardEvent) {
 		e.preventDefault();
-		this._changeSlideIndex(this._currentSlideIndex - this._pageStep, true, true);
+		this._changeSlideIndex(this._currentSlideIndex - this._pageStep, { moveFocus: true });
 		await renderFinished();
 		this.focusItem();
 	}
@@ -659,13 +664,14 @@ class Carousel extends UI5Element {
 	 * @public
 	 */
 	navigateTo(itemIndex: number): void {
-		this._changeSlideIndex(itemIndex, false);
+		this._changeSlideIndex(itemIndex, { fireEvent: false });
 	}
 
-	_changeSlideIndex(itemIndex: number, fireEvent = true, moveFocusToNewIndex = false): void {
+	_changeSlideIndex(itemIndex: number, options: ChangeSlideOptions = {}): void {
+		const { fireEvent = true, moveFocus = false } = options;
 		const newSlideIndex = clamp(itemIndex, 0, this.items.length - this.effectiveItemsPerPage);
 
-		if (moveFocusToNewIndex || (this._focusedItemIndex < newSlideIndex || this._focusedItemIndex > newSlideIndex + this.effectiveItemsPerPage - 1)) {
+		if (moveFocus || (this._focusedItemIndex < newSlideIndex || this._focusedItemIndex > newSlideIndex + this.effectiveItemsPerPage - 1)) {
 			this._focusedItemIndex = clamp(itemIndex, 0, this.items.length - 1);
 		}
 
