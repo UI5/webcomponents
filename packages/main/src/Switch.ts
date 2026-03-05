@@ -17,6 +17,8 @@ import "@ui5/webcomponents-icons/dist/less.js";
 import SwitchDesign from "./types/SwitchDesign.js";
 import {
 	FORM_CHECKABLE_REQUIRED,
+	SWITCH_ON,
+	SWITCH_OFF,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -299,6 +301,20 @@ class Switch extends UI5Element implements IFormInputElement {
 
 	get _textOff() {
 		return this.graphical ? "" : this.textOff;
+	}
+
+	/**
+	 * Determines if custom on/off texts duplicate the default role announcement.
+	 * When textOn/textOff match the localized "On"/"Off" strings (case-insensitive),
+	 * they duplicate what role="switch" with aria-checked already announces,
+	 * so they should be aria-hidden to avoid duplicate screen reader announcements.
+	 */
+	get _textAriaHidden(): boolean | undefined {
+		const on = this.textOn?.toLowerCase();
+		const off = this.textOff?.toLowerCase();
+		const i18nOn = Switch.i18nBundle.getText(SWITCH_ON).toLowerCase();
+		const i18nOff = Switch.i18nBundle.getText(SWITCH_OFF).toLowerCase();
+		return (on === i18nOn && off === i18nOff) || undefined;
 	}
 
 	get effectiveTabIndex() {
