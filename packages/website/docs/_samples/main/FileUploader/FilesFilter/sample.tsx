@@ -12,7 +12,7 @@ function App() {
   const [images, setImages] = useState<string[]>([]);
 
   const handleFileUploaderChange = (e: UI5CustomEvent<FileUploaderClass, "change">) => {
-    const files = e.target.files;
+    const files = e.currentTarget!.files;
 
     if (!files.length) {
       setImages([]);

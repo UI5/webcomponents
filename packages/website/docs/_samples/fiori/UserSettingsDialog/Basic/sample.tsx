@@ -292,7 +292,7 @@ function App() {
         onClose={handleSettingsClose}
       >
         <UserSettingsItem icon="user-settings" text="User Account" tooltip="User Account" headerText="User Account" onSelectionChange={handleSettingsDialogItemSelectionChange}>
-          <UserSettingsAccountView id="account" showManageAccount="true" onEditAccountsClick={handleAccountEditAccountsClick} onManageAccountClick={handleAccountManageAccountClick}>
+          <UserSettingsAccountView id="account" showManageAccount={true} onEditAccountsClick={handleAccountEditAccountsClick} onManageAccountClick={handleAccountManageAccountClick}>
             <UserMenuAccount slot="account" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" />
             <Label for="reset-all-button">Personalization</Label><br />
             <Button id="reset-all-button" onClick={handleResetAllButtonClick}>Reset All Personalization</Button>
@@ -468,11 +468,11 @@ function App() {
         <UserSettingsItem icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" headerText="Reset Settings" onSelectionChange={handleSettingsDialogItemSelectionChange}>
           <UserSettingsView text="Reset Personalization">
             <Button id="resetPersonalization" onClick={handleResetPersonalizationClick}>Reset Personalization content</Button>
-            <Toast ref={toastResetRef} id="toastReset" design="Emphasized">Changes Reset.</Toast>
+            <Toast ref={toastResetRef} id="toastReset">Changes Reset.</Toast>
           </UserSettingsView>
           <UserSettingsView text="Reset All Settings">
             <Button id="resetAll" onClick={handleResetAllClick}>Reset All Settings content</Button>
-            <Toast ref={toastResetAllRef} id="toastResetAll" design="Emphasized">All changes Reset.</Toast>
+            <Toast ref={toastResetAllRef} id="toastResetAll">All changes Reset.</Toast>
           </UserSettingsView>
         </UserSettingsItem>
       </UserSettingsDialog>
