@@ -24,6 +24,12 @@
 	#listWithWrapping ui5-li:nth-child(2)::part(description) {
 		color: rgb(79, 128, 6);
 	}
+
+	#testGroupParts::part(title) {
+		color: blue;
+		width: 100%;
+		background-color: rgb(221, 255, 253);
+	}
 </style>
 </head>
 
@@ -226,6 +232,17 @@
 					<img src="./img/HT-2002.jpg" alt="Woman image">
 				</ui5-avatar>
 			</ui5-li>
+		</ui5-li-group>
+	</ui5-list>
+
+	<br/><br/>
+
+	<h3>ListItemGroup ::part(title) - CSS Shadow Parts</h3>
+	<ui5-list>
+		<ui5-li-group id="testGroupParts" header-text="Test Header - Should be styled via ::part(title)">
+			<ui5-li>Item 1</ui5-li>
+			<ui5-li>Item 2</ui5-li>
+			<ui5-li>Item 3</ui5-li>
 		</ui5-li-group>
 	</ui5-list>
 
@@ -447,9 +464,9 @@
 	</ui5-list>
 
 	<h3>Growing Button with Custom ARIA Name and Description</h3>
-	<ui5-list 
-		id="growingButtonAccessibility" 
-		growing="Button" 
+	<ui5-list
+		id="growingButtonAccessibility"
+		growing="Button"
 		growing-button-text="Load More Items"
 		header-text="Accessibility Demo">
 		<ui5-li>Product A</ui5-li>
@@ -714,7 +731,7 @@
 				<ui5-avatar initials="JD" color-scheme="Accent1"></ui5-avatar>
 				<div class="product-details">
 					<ui5-title size="H5">Product with Long Description</ui5-title>
-					<ui5-expandable-text 
+					<ui5-expandable-text
 						max-characters="200"
 						text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.">
 					</ui5-expandable-text>

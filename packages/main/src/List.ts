@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -7,7 +8,7 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -63,6 +64,7 @@ import listCss from "./generated/themes/List.css.js";
 
 // Texts
 import {
+	LIST_ROLE_DESCRIPTION,
 	LIST_ROLE_LIST_GROUP_DESCRIPTION,
 	LIST_ROLE_LISTBOX_GROUP_DESCRIPTION,
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
@@ -522,7 +524,7 @@ class List extends UI5Element {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<ListItemBase | ListItemGroup>;
+	items!: DefaultSlot<ListItemBase | ListItemGroup>;
 
 	/**
 	 * Defines the component header.
@@ -532,7 +534,7 @@ class List extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -738,7 +740,27 @@ class List extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups();
+		const parts = [];
+
+		if (this.accessibleRole === ListAccessibleRole.List) {
+			parts.push(this.defaultAriaDescriptionText);
+		}
+		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+
+		if (externalDescription) {
+			parts.push(externalDescription);
+		}
+
+		const groupDescription = this._getDescriptionForGroups();
+		if (groupDescription) {
+			parts.push(groupDescription);
+		}
+
+		return parts.join(" ");
+	}
+
+	get defaultAriaDescriptionText() {
+		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
 	}
 
 	get growingButtonAriaLabel() {
@@ -959,6 +981,8 @@ class List extends UI5Element {
 				groupCount++;
 				// subtract group itself for proper group header item count
 				groupItemCount += groupItems.length - 1;
+			} else if (hasListItems(item)) {
+				item.assignedSlot && items.push(...item.listItems);
 			} else {
 				item.assignedSlot && items.push(item);
 			}
@@ -1558,6 +1582,15 @@ class List extends UI5Element {
 }
 
 List.define();
+
+type ListItemWrapper = {
+	hasListItems: boolean;
+	listItems: Array<ListItemBase>;
+}
+
+const hasListItems = (item: object): item is ListItemWrapper => {
+	return "hasListItems" in item && (item as ListItemWrapper).hasListItems;
+};
 
 export default List;
 export type {

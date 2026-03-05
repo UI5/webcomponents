@@ -59,8 +59,12 @@
 	right: var(--_ui5_panel_focus_offset);
 }
 
-:host(:not([collapsed]):not([_has-header]):not([fixed])) .ui5-panel-header:focus:after {
+:host(:not([collapsed]):not([_has-header]):not([fixed])) .ui5-panel-header:focus::after {
 	border-radius: var(--_ui5_panel_border_radius_expanded);
+}
+
+:host([_touched]:not([_has-header]):not([fixed])) .ui5-panel-header:focus::after {
+	display: none;
 }
 
 :host(:not([collapsed])) .ui5-panel-header-button:not(.ui5-panel-header-button-with-icon),

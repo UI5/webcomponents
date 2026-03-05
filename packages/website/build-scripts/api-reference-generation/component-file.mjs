@@ -18,12 +18,53 @@ const processDescription = (description) => {
         .replaceAll(/\n/g, " ");
 }
 
+const packageToFolder = {
+    "@ui5/webcomponents": "main",
+    "@ui5/webcomponents-fiori": "fiori",
+    "@ui5/webcomponents-compat": "compat",
+    "@ui5/webcomponents-ai": "ai",
+    "@ui5/webcomponents-base": "base",
+};
+
+const getEnumLink = (enumRef) => {
+    const folder = packageToFolder[enumRef.package];
+    if (!folder) {
+        return null;
+    }
+    // Skip base package enums - they don't have documentation pages
+    // (base package doesn't have a manifest, only shared types)
+    if (folder === "base") {
+        return null;
+    }
+    // Use absolute paths from docs root to avoid issues with varying component slug depths
+    // Main package enums are at /components/enums/ (not /components/main/enums/)
+    // Other packages keep their folder in the path
+    if (folder === "main") {
+        return `[${enumRef.name}](/components/enums/${enumRef.name})`;
+    }
+    return `[${enumRef.name}](/components/${folder}/enums/${enumRef.name})`;
+}
+
 const processType = (type) => {
     if (!type || !type.text) {
         return " - "
     }
 
-    return `\`${type?.text?.replaceAll("|", "\\|")}\``
+    const typeText = `\`${type?.text?.replaceAll("|", "\\|")}\``;
+
+    // Add links to enum types if available
+    if (type._enumReferences?.length) {
+        const enumLinks = type._enumReferences
+            .map(getEnumLink)
+            .filter(Boolean)
+            .join(", ");
+
+        if (enumLinks) {
+            return `${typeText} (value descriptions in: ${enumLinks})`;
+        }
+    }
+
+    return typeText;
 }
 
 const getPropsTables = (declaration) => {
@@ -210,9 +251,32 @@ No CSS parts available for this component.`
     }
 
     result = `${result}
+
+For more information on how to use CSS shadow parts, see [Usage of CSS Shadow Parts](/docs/advanced/styles/#usage-of-css-shadow-parts).
+
 | Name | Description |
 |------|-------------|
 ${cssParts.map(cssPart => `| ${cssPart.name} | ${processDescription(cssPart.description)} |`).join("\n")}`
+
+    return result;
+}
+
+const getCssStatesTable = (declaration) => {
+    let result = `## CSS Custom States`
+    const cssStates = declaration.cssStates || [];
+
+    if (!cssStates.length) {
+        return `${result}
+No CSS custom states available for this component.`
+    }
+
+    result = `${result}
+
+For more information on how to use CSS custom states, see [Usage of CSS Custom States](/docs/advanced/styles/#usage-of-css-custom-states).
+
+| Name | Description |
+|------|-------------|
+${cssStates.map(cssState => `| ${cssState.name} | ${processDescription(cssState.description)} |`).join("\n")}`
 
     return result;
 }
@@ -246,6 +310,8 @@ const getTable = (kind, declaration) => {
             return getEventsTables(declaration);
         case "cssPart":
             return getCssPartsTable(declaration);
+        case "cssState":
+            return getCssStatesTable(declaration);
         case "slot":
             return getSlotsTables(declaration);
         case "enum":
@@ -362,7 +428,8 @@ ${parseDeclarationDescription(declaration.description)}`)
         "slot",
         "event",
         "method",
-        "cssPart"
+        "cssPart",
+        "cssState"
     ].map(fieldType => getTable(fieldType, declaration))
 
     fileContent = fileContent.replace("<%COMPONENT_METADATA%>", metadataSections.join("\n\n"));

@@ -121,6 +121,110 @@ describe("Accessibility", () => {
 		cy.get("#disabled-avatar").realClick();
 		cy.get("#click-event").should("have.value", "0");
 	});
+
+	// New tests for mode property
+	it("mode='Decorative' renders with role='presentation' and aria-hidden", () => {
+		cy.mount(
+			<Avatar 
+				id="decorative-avatar" 
+				initials="AB"
+				mode="Decorative"
+			></Avatar>
+		);
+
+		cy.get("#decorative-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "presentation")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("mode='Interactive' renders with role='button' and is focusable", () => {
+		cy.mount(
+			<Avatar 
+				id="interactive-mode-avatar" 
+				initials="IJ"
+				mode="Interactive"
+			></Avatar>
+		);
+
+		cy.get("#interactive-mode-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("interactive property takes precedence over mode property", () => {
+		cy.mount(
+			<Avatar 
+				interactive 
+				mode="Decorative" 
+				initials="PR" 
+				id="precedence-avatar"
+			></Avatar>
+		);
+
+		// Even though mode="Decorative", interactive=true takes precedence
+		cy.get("#precedence-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+	});
+
+	it("interactive=true with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar 
+				interactive 
+				disabled 
+				initials="DI" 
+				id="disabled-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("mode='Interactive' with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar 
+				mode="Interactive"
+				disabled 
+				initials="DM" 
+				id="disabled-mode-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-mode-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("disabled interactive avatar doesn't fire click event with mode='Interactive'", () => {
+		cy.mount(
+			<div>
+				<Avatar mode="Interactive" disabled initials="DM" id="disabled-mode-click" onClick={increment}>
+				</Avatar>
+				<input value="0" id="mode-click-event" />
+			</div>
+		);
+
+		function increment() {
+			const input = document.getElementById("mode-click-event") as HTMLInputElement;
+			input.value = "1";
+		}
+		
+		cy.get("#disabled-mode-click").realClick();
+		cy.get("#mode-click-event").should("have.value", "0");
+	});
 });
 
 describe("Fallback Logic", () => {
@@ -480,7 +584,7 @@ describe("Avatar Rendering and Interaction", () => {
 
 	it("Tests noConflict 'ui5-click' event for interactive avatars", () => {
 		cy.mount(
-			<Avatar interactive initials="XS" size="XS"></Avatar>
+			<Avatar mode="Interactive" initials="XS" size="XS"></Avatar>
 		);
 
 		cy.get("[ui5-avatar]")
@@ -573,7 +677,7 @@ describe("Avatar with Badge", () => {
 	it("renders badge with icon", () => {
 		cy.mount(
 			<Avatar id="avatar-with-badge-icon" initials="AB" size="M">
-				<AvatarBadge slot="badge" icon="accept" valueState="Positive"></AvatarBadge>
+				<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
 			</Avatar>
 		);
 
@@ -590,23 +694,23 @@ describe("Avatar with Badge", () => {
 			.and("have.attr", "name", "accept");
 	});
 
-	it("renders badge with different value states", () => {
+	it("renders badge with different states", () => {
 		cy.mount(
 			<>
 				<Avatar id="badge-none" initials="AB" size="M">
-					<AvatarBadge slot="badge" icon="ai" valueState="None"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="ai" state="None"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-positive" initials="CD" size="M">
-					<AvatarBadge slot="badge" icon="accept" valueState="Positive"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-critical" initials="EF" size="M">
-					<AvatarBadge slot="badge" icon="alert" valueState="Critical"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="alert" state="Critical"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-negative" initials="GH" size="M">
-					<AvatarBadge slot="badge" icon="message-error" valueState="Negative"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="message-error" state="Negative"></AvatarBadge>
 				</Avatar>
 				<Avatar id="badge-information" initials="IJ" size="M">
-					<AvatarBadge slot="badge" icon="information" valueState="Information"></AvatarBadge>
+					<AvatarBadge slot="badge" icon="information" state="Information"></AvatarBadge>
 				</Avatar>
 			</>
 		);
@@ -618,12 +722,12 @@ describe("Avatar with Badge", () => {
 		cy.get("#badge-negative").find("[ui5-avatar-badge]").should("exist");
 		cy.get("#badge-information").find("[ui5-avatar-badge]").should("exist");
 
-		// Verify value states are applied
-		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "value-state", "None");
-		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "value-state", "Positive");
-		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "value-state", "Critical");
-		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "value-state", "Negative");
-		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "value-state", "Information");
+		// Verify states are applied
+		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "state", "None");
+		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "state", "Positive");
+		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "state", "Critical");
+		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "state", "Negative");
+		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "state", "Information");
 	});
 
 	it("badge has correct size for each avatar size", () => {

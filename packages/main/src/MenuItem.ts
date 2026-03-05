@@ -1,9 +1,11 @@
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { AccessibilityAttributes, AriaHasPopup, AriaRole } from "@ui5/webcomponents-base";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import {
 	isLeft,
@@ -42,7 +44,6 @@ import type { IMenuItem } from "./Menu.js";
 
 // Styles
 import menuItemCss from "./generated/themes/MenuItem.css.js";
-import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type MenuBeforeOpenEventDetail = { item?: MenuItem };
 type MenuBeforeCloseEventDetail = { escPressed: boolean };
@@ -291,7 +292,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: Array<IMenuItem>;
+	items!: DefaultSlot<IMenuItem>;
 
 	/**
 	 * Defines the components that should be displayed at the end of the menu item.
@@ -310,14 +311,15 @@ class MenuItem extends ListItem implements IMenuItem {
 	 * @public
 	 * @since 2.0.0
 	 */
-	@slot({ type: HTMLElement })
-	endContent!: Array<HTMLElement>;
+	@slot()
+	endContent!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	_itemNavigation: ItemNavigation;
 	_shiftPressed: boolean = false;
+	_openedByMouse = false;
 
 	constructor() {
 		super();
@@ -534,7 +536,8 @@ class MenuItem extends ListItem implements IMenuItem {
 		if (!isInstanceOfMenuItem(item)) {
 			return;
 		}
-		item.focus();
+
+		item.getFocusDomRef()?.focus();
 
 		this._closeOtherSubMenus(item);
 	}
@@ -621,7 +624,9 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_afterPopoverOpen() {
-		this._allMenuItems[0]?.focus();
+		if (!this._openedByMouse) {
+			this._allMenuItems[0]?.focus();
+		}
 		this.fireDecoratorEvent("open");
 	}
 
@@ -643,6 +648,7 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_afterPopoverClose() {
+		this._openedByMouse = false;
 		this.fireDecoratorEvent("close");
 	}
 

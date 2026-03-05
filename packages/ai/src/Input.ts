@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
 	isEscape,
@@ -26,6 +26,7 @@ import {
 	INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type InputVersionChangeEventDetail = {
 	backwards: boolean,
@@ -104,7 +105,7 @@ type InputItemClickEventDetail = MenuItemClickEventDetail;
 /**
  * Fired when the user selects the version navigation buttons.
  *
- * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default)
+ * @param { boolean } backwards The text of the currently clicked menu item.
  * @public
  */
 @event("version-change")
@@ -164,7 +165,7 @@ class Input extends BaseInput {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	actions!: Array<HTMLElement>;
+	actions!: Slot<HTMLElement>;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
@@ -233,9 +234,9 @@ class Input extends BaseInput {
 	/**
 	 * Handles the version change event from the versioning component.
 	 *
-	 * @param {CustomEvent} e - The version change event
+	 * @param e - The version change event
 	 */
-	_handleVersionChange(e: CustomEvent<{ backwards: boolean }>) {
+	_handleVersionChange(e: CustomEvent<InputVersionChangeEventDetail>): void {
 		this.fireDecoratorEvent("version-change", {
 			backwards: e.detail.backwards,
 		});

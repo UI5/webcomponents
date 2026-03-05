@@ -178,9 +178,28 @@ class RatingIndicator extends UI5Element {
 	tooltip?: string;
 
 	/**
+	 * Defines the icon to be displayed for the selected (filled) rating symbol.
+	 *
+	 * @default "favorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	ratedIcon = "favorite";
+
+	/**
+	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
+	 * @default "unfavorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	unratedIcon = "unfavorite";
+
+	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
 	/**

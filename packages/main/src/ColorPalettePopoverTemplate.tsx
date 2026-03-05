@@ -9,11 +9,12 @@ export default function ColorPalettePopoverTemplate(this: ColorPalettePopover) {
 		<ResponsivePopover
 			hideArrow={true}
 			contentOnlyOnDesktop={true}
-			placement="Bottom"
+			placement={this.placement}
 			opener={this.opener}
 			open={this._open}
 			onClose={this.onAfterClose}
 			onOpen={this.onAfterOpen}
+			accessibleName={this._colorPaletteTitle}
 		>
 			<div slot="header" class="ui5-cp-header">
 				<Title level="H1" wrappingType="None">
@@ -27,6 +28,8 @@ export default function ColorPalettePopoverTemplate(this: ColorPalettePopover) {
 					showRecentColors={this.showRecentColors}
 					showDefaultColor={this.showDefaultColor}
 					defaultColor={this.defaultColor}
+					accessibleName={this.accessibleName}
+					accessibleNameRef={this.accessibleNameRef}
 					popupMode={true}
 					onItemClick={this.onSelectedColor}
 				>

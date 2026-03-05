@@ -109,24 +109,28 @@ describe("Icon general interaction", () => {
             });
         });
 
+        // Mouse click fires both native click and ui5-click for interactive icons
         cy.get("@interactiveIcon").click();
         cy.get("[ui5-input]").eq(0).should("have.prop", "value", "1");
-        cy.get("[ui5-input]").eq(1).should("have.prop", "value", "0");
-
-        cy.get("@interactiveIcon").realPress("Enter");
-        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "2");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "1");
 
-        cy.get("@interactiveIcon").realPress("Space");
-        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
+        // Enter key fires both native click and ui5-click for interactive icons
+        cy.get("@interactiveIcon").realPress("Enter");
+        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "2");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "2");
 
+        // Space key fires both native click and ui5-click for interactive icons
+        cy.get("@interactiveIcon").realPress("Space");
+        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
+        cy.get("[ui5-input]").eq(1).should("have.prop", "value", "3");
+
+        // Non-interactive icon: mouse click fires native click but NOT ui5-click
         cy.get("@nonInteractiveIcon").click();
         cy.get("[ui5-input]").eq(2).should("have.prop", "value", "1");
         cy.get("[ui5-input]").eq(3).should("have.prop", "value", "0");
 
         cy.get("@interactiveClickStub").should("have.been.calledThrice");
-        cy.get("@interactiveUI5ClickStub").should("have.been.calledTwice");
+        cy.get("@interactiveUI5ClickStub").should("have.been.calledThrice");
 
         cy.get("@nonInteractiveClickStub").should("have.been.calledOnce");
         cy.get("@nonInteractiveUI5ClickStub").should("not.have.been.called");

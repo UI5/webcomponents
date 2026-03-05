@@ -27,4 +27,4 @@ jobs:
       run: yarn ci:testbuild
 
     - name: Test
-      run: yarn ci:test:${{ matrix.suite }}
+      run: yarn ci:test:${{ matrix.suite }} --verbose

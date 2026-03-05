@@ -100,6 +100,23 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "value", "2018-05-05");
 	});
 
+	it("default valueFormat is ISO format (yyyy-MM-dd)", () => {
+		cy.mount(<DatePicker></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 1995")
+			.realPress("Enter");
+
+		cy.get("@datePicker")
+			.should("have.attr", "value", "1995-03-31");
+	});
+
 	it("value state", () => {
 		cy.mount(<DatePicker></DatePicker>);
 		cy.get("[ui5-date-picker]")
@@ -184,7 +201,38 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "test placeholder");
 	});
 
+	it("clear icon", () => {
+		cy.mount(<DatePicker showClearIcon={true} value="Jan 1, 2020" formatPattern="MMM d, y"></DatePicker>);
 
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("exist");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.click();
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("not.exist");
+
+		cy.realPress("Tab");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "");
+	});
 
 	it("Selected date from daypicker is the same as datepicker date", () => {
 		cy.mount(<DatePicker value="Jan 29, 2019" formatPattern="MMM d, y"></DatePicker>);
@@ -216,7 +264,7 @@ describe("Date Picker Tests", () => {
 			.realPress("Tab");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value", "Jan 1, 1999");
+			.should("have.attr", "value", "1999-01-01");
 	});
 
 	it("Select a date from the picker popover", () => {

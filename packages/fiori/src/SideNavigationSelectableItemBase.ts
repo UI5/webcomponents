@@ -60,6 +60,8 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	/**
 	 * Defines the icon of the item.
 	 *
+	 * **Note:** Icons on second-level (child) navigation items are not recommended according to the design specification.
+	 *
 	 * The SAP-icons font provides numerous options.
 	 *
 	 * See all the available icons in the [Icon Explorer](https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html).

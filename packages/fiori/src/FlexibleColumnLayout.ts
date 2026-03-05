@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -207,12 +208,13 @@ type FCLAccessibilityAttributes = {
 
 /**
  * Fired when the `layoutsConfiguration` changes via user interaction by dragging the separators.
+ *
+ * **Note:** The `layout-configuration-change` event is in an experimental state and is a subject to change.
  * @param {FCLLayout} layout The current layout
  * @param {MEDIA} media The current media type
  * @param {array} columnLayout The effective column layout, f.e ["67%", "33%", "0px"]
  * @public
  * @since 2.16.0
- * @experimental
  */
 @event("layout-configuration-change", {
 	bubbles: true,
@@ -287,7 +289,6 @@ class FlexibleColumnLayout extends UI5Element {
 	* @default {}
 	* @public
 	* @since 2.16.0
-	* @experimental
 	*/
 	@property({ type: Object })
 	layoutsConfiguration: LayoutConfiguration = {};
@@ -307,7 +308,7 @@ class FlexibleColumnLayout extends UI5Element {
 	* @default undefined
 	* @private
 	*/
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_columnLayout?: FlexibleColumnLayoutColumnLayout;
 
 	/**
@@ -347,21 +348,21 @@ class FlexibleColumnLayout extends UI5Element {
 	* @public
 	*/
 	@slot()
-	startColumn!: Array<HTMLElement>;
+	startColumn!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content in the middle column.
 	* @public
 	*/
 	@slot()
-	midColumn!: Array<HTMLElement>;
+	midColumn!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content in the end column.
 	* @public
 	*/
 	@slot()
-	endColumn!: Array<HTMLElement>;
+	endColumn!: Slot<HTMLElement>;
 
 	initialRendering: boolean;
 	_handleResize: () => void;

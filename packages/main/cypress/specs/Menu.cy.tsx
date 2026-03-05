@@ -1,4 +1,5 @@
 import Button from "../../src/Button.js";
+import SplitButton from "../../src/SplitButton.js";
 import Menu from "../../src/Menu.js";
 import MenuItem from "../../src/MenuItem.js";
 import MenuItemGroup from "../../src/MenuItemGroup.js";
@@ -347,6 +348,93 @@ describe("Menu interaction", () => {
 
 		cy.get("[ui5-menu]")
 			.ui5MenuItemCheckShiftClickAndPress("[text='Outside']", "not.have.attr");
+	});
+
+	it("should close menu with Alt+ArrowDown when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress(["Alt", "ArrowDown"]);
+
+		cy.get("@menu")
+			.ui5MenuClosed();
+	});
+
+	it("should close menu with Alt+ArrowUp when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress(["Alt", "ArrowUp"]);
+
+		cy.get("@menu")
+			.ui5MenuClosed();
+	});
+
+	it("should close menu with F4 when opened by a SplitButton", () => {
+		cy.mount(
+			<>
+				<SplitButton id="btnOpen">Open Menu</SplitButton>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem text="Item 1"></MenuItem>
+					<MenuItem text="Item 2"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.as("menu");
+
+		cy.get("@menu")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.focused")
+			.realPress("F4");
+
+		cy.get("@menu")
+			.ui5MenuClosed();
 	});
 
 	describe("Event firing", () => {
@@ -1055,8 +1143,6 @@ describe("Menu interaction", () => {
 				.should("have.attr", "accessible-name", "Select an option from the menu");
 		});
 
-		/* The test is valid, but currently it is not stable. It will be reviewed further and stabilized afterwards. */
-
 		it("Menu items - navigation in endContent", () => {
 			cy.mount(
 				<>
@@ -1071,6 +1157,10 @@ describe("Menu interaction", () => {
 				</>
 			);
 
+			// Move mouse to opener button to avoid interference with menu item hover behavior
+			cy.get("[ui5-button]")
+				.realHover();
+
 			cy.get("[ui5-menu]")
 				.ui5MenuOpen();
 
@@ -1079,24 +1169,34 @@ describe("Menu interaction", () => {
 
 			cy.get("@items")
 				.first()
-				.should("be.focused");
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").last().should("be.focused");
+			cy.get("@buttons")
+				.last()
+				.should("be.focused")
+				.realPress("ArrowRight");
 
-			cy.realPress("ArrowRight");
-			cy.get("@buttons").last().should("be.focused");
+			cy.get("@buttons")
+				.last()
+				.should("be.focused")
+				.realPress("ArrowLeft");
 
-			cy.realPress("ArrowLeft");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowLeft");
 
-			cy.realPress("ArrowLeft");
-			cy.get("@buttons").first().should("be.focused");
+			cy.get("@buttons")
+				.first()
+				.should("be.focused")
+				.realPress("ArrowDown");
 
-			cy.realPress("ArrowDown");
 			cy.get("@items").last().should("be.focused");
 		});
 	});
@@ -1161,5 +1261,156 @@ describe("Menu - getFocusDomRef", () => {
 					clickedItem = $el[1];
 				expect(menu.getFocusDomRef()).equal(clickedItem.getFocusDomRef());
 			});
+	});
+});
+
+describe("Menu - Submenu Focus Behavior", () => {
+	it("should not move focus when submenu opens via mouse hover", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu opener="btnOpen">
+					<MenuItem text="Parent Item">
+						<MenuItem text="Child Item 1"></MenuItem>
+						<MenuItem text="Child Item 2"></MenuItem>
+					</MenuItem>
+					<MenuItem text="Another Item"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.visible")
+			.as("parentItem");
+
+		// Hover item to open submenu
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Verify focus not moved to submenu
+		cy.get("@parentItem")
+			.should("be.focused");
+
+		cy.get("[ui5-menu-item] > [ui5-menu-item]")
+			.as("submenuitems");
+
+		cy.get("@submenuitems")
+			.first()
+			.should("be.visible")
+			.as("childItem");
+
+		cy.get("@childItem")
+			.should("not.be.focused");
+	});
+
+	it("should close submenu when hover moves to another item", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu opener="btnOpen">
+					<MenuItem text="Parent Item">
+						<MenuItem text="Child Item 1"></MenuItem>
+						<MenuItem text="Child Item 2"></MenuItem>
+					</MenuItem>
+					<MenuItem text="Another Item"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.visible")
+			.as("parentItem");
+
+		// Hover item to open submenu
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("submenuPopover");
+			
+		cy.get("@submenuPopover")
+			.should("have.attr", "open");
+
+		// Hover over another top-level item
+		cy.get("@items")
+			.last()
+			.should("be.visible")
+			.as("lastItem");
+			
+		cy.get("@lastItem")
+			.realHover();
+
+		// The original submenu should be closed
+		cy.get("@submenuPopover")
+			.should("not.have.attr", "open");
+	});
+
+	it("should move focus when submenu opens via keyboard", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu opener="btnOpen">
+					<MenuItem text="Parent Item">
+						<MenuItem text="Child Item 1"></MenuItem>
+						<MenuItem text="Child Item 2"></MenuItem>
+					</MenuItem>
+					<MenuItem text="Another Item"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.first()
+			.should("be.visible")
+			.as("parentItem");
+
+		// Open submenu with keyboard
+		cy.get("@parentItem")
+			.should("be.focused")
+			.realPress("ArrowRight");
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Verify focus is moved to submenu
+		cy.get("@parentItem")
+			.should("not.be.focused");
+
+		cy.get("[ui5-menu-item] > [ui5-menu-item]")
+			.as("submenuitems");
+
+		cy.get("@submenuitems")
+			.first()
+			.should("be.visible")
+			.as("childItem");
+
+		cy.get("@childItem")
+			.should("be.focused");
 	});
 });

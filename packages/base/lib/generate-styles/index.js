@@ -16,7 +16,9 @@ const generate = async () => {
 
 	return Promise.all(filesPromises)
 		.then(() => {
-			console.log("Styles files generated.");
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("Styles files generated.");
+			}
 		});
 };
 

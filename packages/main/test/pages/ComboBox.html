@@ -193,6 +193,20 @@
 	</div>
 
 	<div class="demo-section">
+		<span>Toggle Loading State</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
 		<span>Lazy Loading - example does not work on IE11</span>
 
 		<br />
@@ -305,6 +319,17 @@
 		<ui5-combobox class="combobox" id="same-name-suggestions-cb">
 			<ui5-cb-item text="Item that does not wrap"></ui5-cb-item>
 			<ui5-cb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - items with same text but different values</span>
+		<ui5-combobox id="same-items" value="Item 1" selected-value="2">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
 		</ui5-combobox>
 	</div>
 
@@ -470,6 +495,15 @@
 			});
 		</script>
 	</div>
+	<div class="demo-section">
+		<span>ComboBox - items with lower case and upper case</span>
+		<ui5-combobox id="combo-lower-upper-case" no-typeahead>
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="item 11"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="item 22"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
 
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
@@ -603,6 +637,11 @@
 
 		document.getElementById("combo-focus").addEventListener("click", function () {
 			document.getElementById("combo").focus();
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const combo = document.getElementById("toggle-loading-cb");
+			combo.loading = !combo.loading;
 		});
 	</script>
 
