@@ -9,7 +9,7 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 export default function DateRangePickerTemplate(this: DateRangePicker) {
 	return [
 		DatePickerInputTemplate.call(this),
-		DatePickerPopoverTemplate.call(this, { content, initialFocus: this.initialFocusId }),
+		DatePickerPopoverTemplate.call(this, { content, initialFocus: this.initialFocusId, footer: footer }),
 	];
 }
 
@@ -30,10 +30,17 @@ function content(this: DateRangePicker) {
 			hideWeekNumbers={this.hideWeekNumbers}
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
-			monthsToShow={2}
+			monthsToShow={1}
 			stretch={this.stretch}
 		>
 			<CalendarDateRange startValue={this.startValue} endValue={this.endValue} />
 		</Calendar>
 	);
 }
+
+function footer(this: DateRangePicker) {
+	return (
+		<p>footer</p>
+	)
+
+};

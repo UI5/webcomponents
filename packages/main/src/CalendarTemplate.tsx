@@ -10,7 +10,7 @@ import slimArrowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 export default function CalendarTemplate(this: Calendar) {
-	const showMultipleMonths = this.monthsToShow > 1 && !this._isDayPickerHidden;
+	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
 	
 	return (
 		<>

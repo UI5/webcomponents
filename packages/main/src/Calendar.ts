@@ -811,12 +811,16 @@ class Calendar extends CalendarPart {
 		};
 	}
 
+	get _monthsToShow() {
+		return isPhone() ? 1 : this.monthsToShow;
+	}
+
 	/**
 	 * The month button is hidden when the month picker or year picker is shown
 	 * @private
 	 */
 	get _isHeaderMonthButtonHidden(): boolean {
-		return this._currentPicker !== "day";
+		return this.monthsToShow > 1 ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";;
 	}
 
 	/**
