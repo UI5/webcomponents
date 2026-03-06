@@ -11,8 +11,13 @@ const MIN_MULTI_DRAG_COUNT = 2;
 
 let draggedElement: HTMLElement | null = null;
 
-const setDraggedElement = (element: HTMLElement | null) => {
+const setDraggedElement = (element: HTMLElement | null, e?: DragEvent) => {
 	draggedElement = element;
+
+	// Store the dragged element's ID in the dataTransfer object to ensure
+	// the drag operation is recognized across different browsers and contexts.
+	// Without this, Safari browser in iOS may not recognize the drag operation.
+	e?.dataTransfer?.setData("text/plain", element ? element.id : "");
 };
 
 const clearDraggedElement = () => {

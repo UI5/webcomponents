@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-compat
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+
+### Features
+
+* **ui5-multi-combobox:** introduce selectedValues property ([#12987](https://github.com/UI5/webcomponents/issues/12987)) ([bbe792b](https://github.com/UI5/webcomponents/commit/bbe792bc3dad9b21fdca9cb7a588a473e2ebdfff))
+
+
+
+
+
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-compat
+
+
+
+
+
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **ui5-table:** border visibility on firefox (compat) ([#13000](https://github.com/UI5/webcomponents/issues/13000)) ([86081ce](https://github.com/UI5/webcomponents/commit/86081ce43f71677227491341e58b37903f4b5281))
+
+
+
+
+
 # [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
 
 **Note:** Version bump only for package @ui5/webcomponents-compat

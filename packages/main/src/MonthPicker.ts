@@ -101,7 +101,7 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	 * or dates depending on the capabilities of the picker component.
 	 * @default []
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	selectedDates: Array<number> = [];
 
 	/**
@@ -118,7 +118,7 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	@property()
 	selectionMode: `${CalendarSelectionMode}` = "Single";
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_monthsInterval: MonthInterval = [];
 
 	@property({ type: Boolean, noAttribute: true })

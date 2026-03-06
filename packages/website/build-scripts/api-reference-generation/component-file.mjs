@@ -251,9 +251,32 @@ No CSS parts available for this component.`
     }
 
     result = `${result}
+
+For more information on how to use CSS shadow parts, see [Usage of CSS Shadow Parts](/docs/advanced/styles/#usage-of-css-shadow-parts).
+
 | Name | Description |
 |------|-------------|
 ${cssParts.map(cssPart => `| ${cssPart.name} | ${processDescription(cssPart.description)} |`).join("\n")}`
+
+    return result;
+}
+
+const getCssStatesTable = (declaration) => {
+    let result = `## CSS Custom States`
+    const cssStates = declaration.cssStates || [];
+
+    if (!cssStates.length) {
+        return `${result}
+No CSS custom states available for this component.`
+    }
+
+    result = `${result}
+
+For more information on how to use CSS custom states, see [Usage of CSS Custom States](/docs/advanced/styles/#usage-of-css-custom-states).
+
+| Name | Description |
+|------|-------------|
+${cssStates.map(cssState => `| ${cssState.name} | ${processDescription(cssState.description)} |`).join("\n")}`
 
     return result;
 }
@@ -287,6 +310,8 @@ const getTable = (kind, declaration) => {
             return getEventsTables(declaration);
         case "cssPart":
             return getCssPartsTable(declaration);
+        case "cssState":
+            return getCssStatesTable(declaration);
         case "slot":
             return getSlotsTables(declaration);
         case "enum":
@@ -403,7 +428,8 @@ ${parseDeclarationDescription(declaration.description)}`)
         "slot",
         "event",
         "method",
-        "cssPart"
+        "cssPart",
+        "cssState"
     ].map(fieldType => getTable(fieldType, declaration))
 
     fileContent = fileContent.replace("<%COMPONENT_METADATA%>", metadataSections.join("\n\n"));

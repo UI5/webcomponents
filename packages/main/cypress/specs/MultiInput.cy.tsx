@@ -575,10 +575,77 @@ describe("MultiInput tokens", () => {
 			.realClick();
 
 		cy.get("@input")
-			.type("b");
+			.type("B");
 
 		cy.get("[ui5-multi-input]")
 			.should("have.attr", "value", "Bulgaria");
+	});
+
+	it("should not select multiple suggestions when switching between typed values", () => {
+		cy.mount(
+			<MultiInput
+				id="multi-selection-test"
+				showSuggestions
+				placeholder="Type country name..."
+			>
+				<SuggestionItemCustom text="Bulgaria">
+					<span>Bulgaria</span>
+				</SuggestionItemCustom>
+				<SuggestionItemCustom text="Canada">
+					<span>Canada</span>
+				</SuggestionItemCustom>
+				<SuggestionItemCustom text="Germany">
+					<span>Germany</span>
+				</SuggestionItemCustom>
+				<SuggestionItemCustom text="Austria">
+					<span>Austria</span>
+				</SuggestionItemCustom>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick()
+			.realType("Bul");
+
+		// Wait for popover to open
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		// Bulgaria is first item (index 0), check it's selected
+		cy.get("[ui5-multi-input]")
+			.find("[ui5-suggestion-item-custom]")
+			.eq(0)
+			.should("have.prop", "selected", true);
+
+		// Other items should not be selected
+		cy.get("[ui5-multi-input]")
+			.find("[ui5-suggestion-item-custom]")
+			.eq(1)
+			.should("have.prop", "selected", false);
+
+		// Clear and type "Cana"
+		cy.get("@input")
+			.clear()
+			.realType("Cana");
+
+		// Canada is second item (index 1), check it's selected
+		cy.get("[ui5-multi-input]")
+			.find("[ui5-suggestion-item-custom]")
+			.eq(1)
+			.should("have.prop", "selected", true);
+
+		// Bulgaria (index 0) should NOT be selected anymore
+		cy.get("[ui5-multi-input]")
+			.find("[ui5-suggestion-item-custom]")
+			.eq(0)
+			.should("have.prop", "selected", false);
 	});
 });
 

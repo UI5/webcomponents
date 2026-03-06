@@ -868,6 +868,8 @@ describe("Responsiveness", () => {
 					<UserMenuItem text="Setting14" data-id="setting14"></UserMenuItem>
 					<UserMenuItem text="Setting15" data-id="setting15"></UserMenuItem>
 					<UserMenuItem text="Setting16" data-id="setting16"></UserMenuItem>
+					<UserMenuItem text="Setting17" data-id="setting17"></UserMenuItem>
+					<UserMenuItem text="Setting18" data-id="setting18"></UserMenuItem>
 				</UserMenu>
 			</>
 		);
@@ -912,4 +914,77 @@ describe("Responsiveness", () => {
 			cy.get("@checked")
 				.should("have.been.calledOnce");
 		});
+});
+
+describe("Footer configuration", () => {
+	it("tests default footer with Sign Out button", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").as("footer");
+		cy.get("@footer").should("exist");
+		cy.get("@footer").find("[ui5-button]").should("have.length", 1);
+		cy.get("@footer").find("[ui5-button]").should("have.class", "ui5-user-menu-sign-out-btn");
+		cy.get("@footer").find("[ui5-button]").contains("Sign Out");
+	});
+
+	it("tests custom footer slot", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<div slot="footer">
+						<Button id="customBtn1">Custom Action</Button>
+						<Button id="customBtn2">Sign Out</Button>
+					</div>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").as("footer");
+		cy.get("@footer").should("exist");
+		cy.get("@userMenu").find("[slot='footer']").should("exist");
+		cy.get("@userMenu").find("#customBtn1").should("exist");
+		cy.get("@userMenu").find("#customBtn2").should("exist");
+		cy.get("@footer").find(".ui5-user-menu-sign-out-btn").should("not.exist");
+	});
+
+	it("tests empty footer slot hides footer", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<div slot="footer"></div>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-footer").should("not.exist");
+	});
+
+	it("tests sign-out-click event fires with default footer", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").then($userMenu => {
+			$userMenu.get(0).addEventListener("sign-out-click", cy.stub().as("signOutClicked"));
+		});
+
+		cy.get("@userMenu").shadow().find(".ui5-user-menu-sign-out-btn").click();
+		cy.get("@signOutClicked").should("have.been.calledOnce");
+	});
 });

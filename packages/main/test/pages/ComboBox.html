@@ -322,6 +322,17 @@
 		</ui5-combobox>
 	</div>
 
+	<div class="demo-section">
+		<span>ComboBox - items with same text but different values</span>
+		<ui5-combobox id="same-items" value="Item 1" selected-value="2">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
 	<section>
 		<h3>ComboBox Composition</h3>
 
@@ -483,6 +494,15 @@
 				document.getElementById("comboFocus").open = true;
 			});
 		</script>
+	</div>
+	<div class="demo-section">
+		<span>ComboBox - items with lower case and upper case</span>
+		<ui5-combobox id="combo-lower-upper-case" no-typeahead>
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="item 11"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="item 22"></ui5-cb-item>
+		</ui5-combobox>
 	</div>
 
 	<script type="module">
