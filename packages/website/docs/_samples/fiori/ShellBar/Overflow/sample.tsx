@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -17,17 +17,17 @@ import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/example.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 
-const Avatar = createComponent(AvatarClass);
-const Button = createComponent(ButtonClass);
-const Icon = createComponent(IconClass);
-const Label = createComponent(LabelClass);
-const Popover = createComponent(PopoverClass);
-const Slider = createComponent(SliderClass);
-const Tag = createComponent(TagClass);
-const Text = createComponent(TextClass);
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const ShellBarItem = createComponent(ShellBarItemClass);
+const Avatar = createReactComponent(AvatarClass);
+const Button = createReactComponent(ButtonClass);
+const Icon = createReactComponent(IconClass);
+const Label = createReactComponent(LabelClass);
+const Popover = createReactComponent(PopoverClass);
+const Slider = createReactComponent(SliderClass);
+const Tag = createReactComponent(TagClass);
+const Text = createReactComponent(TextClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const ShellBarItem = createReactComponent(ShellBarItemClass);
 
 function App() {
   const [containerWidth, setContainerWidth] = useState(100);

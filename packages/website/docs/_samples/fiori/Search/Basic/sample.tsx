@@ -1,13 +1,13 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchScopeClass from "@ui5/webcomponents-fiori/dist/SearchScope.js";
 
-const Search = createComponent(SearchClass);
-const SearchItem = createComponent(SearchItemClass);
-const SearchScope = createComponent(SearchScopeClass);
+const Search = createReactComponent(SearchClass);
+const SearchItem = createReactComponent(SearchItemClass);
+const SearchScope = createReactComponent(SearchScopeClass);
 
 const scopeData = [
   { name: "Laptop", scope: "products" },

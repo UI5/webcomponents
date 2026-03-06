@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
-const MultiInput = createComponent(MultiInputClass);
-const Token = createComponent(TokenClass);
+const MultiInput = createReactComponent(MultiInputClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
   const [tokens, setTokens] = useState([

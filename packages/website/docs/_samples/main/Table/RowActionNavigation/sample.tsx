@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -9,13 +9,13 @@ import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
 import TableRowActionNavigationClass from "@ui5/webcomponents/dist/TableRowActionNavigation.js";
 
-const Label = createComponent(LabelClass);
-const Table = createComponent(TableClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableRow = createComponent(TableRowClass);
-const TableRowActionNavigation = createComponent(TableRowActionNavigationClass);
+const Label = createReactComponent(LabelClass);
+const Table = createReactComponent(TableClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableRow = createReactComponent(TableRowClass);
+const TableRowActionNavigation = createReactComponent(TableRowActionNavigationClass);
 
 function App() {
   const handleTableRowActionClick = (
