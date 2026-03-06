@@ -186,78 +186,31 @@ export default function CalendarTemplate(this: Calendar) {
 							</div>
 						</>
 					) : (
-						<><DayPicker
-							id={`${this._id}-daypicker`}
-							hidden={this._isDayPickerHidden}
-							formatPattern={this._formatPattern}
-							selectedDates={this._selectedDatesTimestamps}
-							specialCalendarDates={this._specialCalendarDates}
-							disabledDates={this._disabledDates}
-							_hidden={this._isDayPickerHidden}
-							primaryCalendarType={this._primaryCalendarType}
-							secondaryCalendarType={this._secondaryCalendarType}
-							selectionMode={this.selectionMode}
-							minDate={this.minDate}
-							maxDate={this.maxDate}
-							calendarWeekNumbering={this.calendarWeekNumbering}
-							timestamp={this._timestamp}
-							hideWeekNumbers={this.hideWeekNumbers}
-							onChange={this.onSelectedDatesChange}
-							onNavigate={this.onNavigate}
-							exportparts="day-cell, day-cell-selected, day-cell-selected-between"
-						/>
-						<MonthPicker
-						id={`${this._id}-MP`}
-						hidden={this._isMonthPickerHidden}
-						formatPattern={this._formatPattern}
-						selectedDates={this._selectedDatesTimestamps}
-						_hidden={this._isMonthPickerHidden}
-						primaryCalendarType={this._primaryCalendarType}
-						secondaryCalendarType={this._secondaryCalendarType}
-						selectionMode={this.selectionMode}
-						minDate={this.minDate}
-						maxDate={this.maxDate}
-						timestamp={this._timestamp}
-						onChange={this.onSelectedMonthChange}
-						onNavigate={this.onNavigate}
-						exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
-					/>
-
-					<YearPicker
-						id={`${this._id}-YP`}
-						hidden={this._isYearPickerHidden}
-						formatPattern={this._formatPattern}
-						selectedDates={this._selectedDatesTimestamps}
-						_hidden={this._isYearPickerHidden}
-						primaryCalendarType={this._primaryCalendarType}
-						secondaryCalendarType={this._secondaryCalendarType}
-						selectionMode={this.selectionMode}
-						minDate={this.minDate}
-						maxDate={this.maxDate}
-						timestamp={this._timestamp}
-						_currentYearRange = {this._currentYearRange}
-						onChange={this.onSelectedYearChange}
-						onNavigate={this.onNavigate}
-						exportparts="year-cell, year-cell-selected, year-cell-selected-between, year-picker-root"
-					/>
-
-					<YearRangePicker
-						id={`${this._id}-YRP`}
-						hidden={this._isYearRangePickerHidden}
-						formatPattern={this._formatPattern}
-						selectedDates={this._selectedDatesTimestamps}
-						_showRangeSelection={this.selectionMode === CalendarSelectionMode.Range}
-						_hidden={this._isYearRangePickerHidden}
-						primaryCalendarType={this._primaryCalendarType}
-						secondaryCalendarType={this._secondaryCalendarType}
-						minDate={this.minDate}
-						maxDate={this.maxDate}
-						timestamp={this._timestamp}
-						_currentYearRange = {this._currentYearRange}
-						onChange={this.onSelectedYearRangeChange}
-						onNavigate={this.onNavigate}
-						exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
-					/></>
+						<>
+							<DayPicker
+								id={`${this._id}-daypicker`}
+								hidden={this._isDayPickerHidden}
+								formatPattern={this._formatPattern}
+								selectedDates={this._selectedDatesTimestamps}
+								specialCalendarDates={this._specialCalendarDates}
+								disabledDates={this._disabledDates}
+								_hidden={this._isDayPickerHidden}
+								primaryCalendarType={this._primaryCalendarType}
+								secondaryCalendarType={this._secondaryCalendarType}
+								selectionMode={this.selectionMode}
+								minDate={this.minDate}
+								maxDate={this.maxDate}
+								calendarWeekNumbering={this.calendarWeekNumbering}
+								timestamp={this._timestamp}
+								hideWeekNumbers={this.hideWeekNumbers}
+								onChange={this.onSelectedDatesChange}
+								onNavigate={this.onNavigate}
+								exportparts="day-cell, day-cell-selected, day-cell-selected-between"
+							/>
+							{renderMonthPicker(this)}
+							{renderYearPicker(this)}
+							{renderYearRangePicker(this)}
+						</>
 					)}
 				</div>
 
@@ -266,58 +219,9 @@ export default function CalendarTemplate(this: Calendar) {
 						"ui5-cal-overlay-container": true,
 						"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
 					}}>
-						<MonthPicker
-							id={`${this._id}-MP`}
-							hidden={this._isMonthPickerHidden}
-							formatPattern={this._formatPattern}
-							selectedDates={this._selectedDatesTimestamps}
-							_hidden={this._isMonthPickerHidden}
-							primaryCalendarType={this._primaryCalendarType}
-							secondaryCalendarType={this._secondaryCalendarType}
-							selectionMode={this.selectionMode}
-							minDate={this.minDate}
-							maxDate={this.maxDate}
-							timestamp={this._timestamp}
-							onChange={this.onSelectedMonthChange}
-							onNavigate={this.onNavigate}
-							exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
-						/>
-
-						<YearPicker
-							id={`${this._id}-YP`}
-							hidden={this._isYearPickerHidden}
-							formatPattern={this._formatPattern}
-							selectedDates={this._selectedDatesTimestamps}
-							_hidden={this._isYearPickerHidden}
-							primaryCalendarType={this._primaryCalendarType}
-							secondaryCalendarType={this._secondaryCalendarType}
-							selectionMode={this.selectionMode}
-							minDate={this.minDate}
-							maxDate={this.maxDate}
-							timestamp={this._timestamp}
-							_currentYearRange = {this._currentYearRange}
-							onChange={this.onSelectedYearChange}
-							onNavigate={this.onNavigate}
-							exportparts="year-cell, year-cell-selected, year-cell-selected-between, year-picker-root"
-						/>
-
-						<YearRangePicker
-							id={`${this._id}-YRP`}
-							hidden={this._isYearRangePickerHidden}
-							formatPattern={this._formatPattern}
-							selectedDates={this._selectedDatesTimestamps}
-							_showRangeSelection={this.selectionMode === CalendarSelectionMode.Range}
-							_hidden={this._isYearRangePickerHidden}
-							primaryCalendarType={this._primaryCalendarType}
-							secondaryCalendarType={this._secondaryCalendarType}
-							minDate={this.minDate}
-							maxDate={this.maxDate}
-							timestamp={this._timestamp}
-							_currentYearRange = {this._currentYearRange}
-							onChange={this.onSelectedYearRangeChange}
-							onNavigate={this.onNavigate}
-							exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
-						/>
+						{renderMonthPicker(this)}
+						{renderYearPicker(this)}
+						{renderYearRangePicker(this)}
 					</div>
 				)}
 			</div>
@@ -329,4 +233,69 @@ export default function CalendarTemplate(this: Calendar) {
 				<slot name="calendarLegend"></slot>
 			</div>
 		</>);
+}
+
+function renderMonthPicker(calendar: Calendar) {
+	return (
+		<MonthPicker
+			id={`${calendar._id}-MP`}
+			hidden={calendar._isMonthPickerHidden}
+			formatPattern={calendar._formatPattern}
+			selectedDates={calendar._selectedDatesTimestamps}
+			_hidden={calendar._isMonthPickerHidden}
+			primaryCalendarType={calendar._primaryCalendarType}
+			secondaryCalendarType={calendar._secondaryCalendarType}
+			selectionMode={calendar.selectionMode}
+			minDate={calendar.minDate}
+			maxDate={calendar.maxDate}
+			timestamp={calendar._timestamp}
+			onChange={calendar.onSelectedMonthChange}
+			onNavigate={calendar.onNavigate}
+			exportparts="month-cell, month-cell-selected, month-cell-selected-between, month-picker-root"
+		/>
+	);
+}
+
+function renderYearPicker(calendar: Calendar) {
+	return (
+		<YearPicker
+			id={`${calendar._id}-YP`}
+			hidden={calendar._isYearPickerHidden}
+			formatPattern={calendar._formatPattern}
+			selectedDates={calendar._selectedDatesTimestamps}
+			_hidden={calendar._isYearPickerHidden}
+			primaryCalendarType={calendar._primaryCalendarType}
+			secondaryCalendarType={calendar._secondaryCalendarType}
+			selectionMode={calendar.selectionMode}
+			minDate={calendar.minDate}
+			maxDate={calendar.maxDate}
+			timestamp={calendar._timestamp}
+			_currentYearRange = {calendar._currentYearRange}
+			onChange={calendar.onSelectedYearChange}
+			onNavigate={calendar.onNavigate}
+			exportparts="year-cell, year-cell-selected, year-cell-selected-between, year-picker-root"
+		/>
+	);
+}
+
+function renderYearRangePicker(calendar: Calendar) {
+	return (
+		<YearRangePicker
+			id={`${calendar._id}-YRP`}
+			hidden={calendar._isYearRangePickerHidden}
+			formatPattern={calendar._formatPattern}
+			selectedDates={calendar._selectedDatesTimestamps}
+			_showRangeSelection={calendar.selectionMode === CalendarSelectionMode.Range}
+			_hidden={calendar._isYearRangePickerHidden}
+			primaryCalendarType={calendar._primaryCalendarType}
+			secondaryCalendarType={calendar._secondaryCalendarType}
+			minDate={calendar.minDate}
+			maxDate={calendar.maxDate}
+			timestamp={calendar._timestamp}
+			_currentYearRange = {calendar._currentYearRange}
+			onChange={calendar.onSelectedYearRangeChange}
+			onNavigate={calendar.onNavigate}
+			exportparts="year-range-cell, year-range-cell-selected, year-range-cell-selected-between, year-range-picker-root"
+		/>
+	);
 }
