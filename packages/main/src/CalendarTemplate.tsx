@@ -44,10 +44,10 @@ export default function CalendarTemplate(this: Calendar) {
 							<div class="ui5-cal-daypicker-overlay"></div>
 
 							<div class="ui5-cal-multiple-months-wrapper">
-								{Array.from({ length: this.monthsToShow }, (_, index) => {
+								{Array.from({ length: this._monthsToShow }, (_, index) => {
 								const monthTimestamp = this._getMonthTimestamp(index);
 								const isFirst = index === 0;
-								const isLast = index === this.monthsToShow - 1;
+								const isLast = index === this._monthsToShow - 1;
 								const headerText = this._getHeaderTextForMonth(monthTimestamp);
 								
 								return (

@@ -288,12 +288,12 @@ class Calendar extends CalendarPart {
 	/**
 	 * Defines the number of months to display side by side in day picker view.
 	 * Only applicable when selection mode is "Range".
-	 * @default 1
-	 * @public
+	 * @default false
+	 * @private
 	 * @since 2.0.0
 	 */
-	@property({ type: Number })
-	monthsToShow = 1;
+	@property({ type: Boolean })
+	_showTwoCalendars = false;
 
 	@property({ type: Boolean })
 	stretch = false;
@@ -812,7 +812,7 @@ class Calendar extends CalendarPart {
 	}
 
 	get _monthsToShow() {
-		return isPhone() ? 1 : this.monthsToShow;
+		return isPhone() ? 1 : (this._showTwoCalendars ? 2 : 1);
 	}
 
 	/**
@@ -820,7 +820,7 @@ class Calendar extends CalendarPart {
 	 * @private
 	 */
 	get _isHeaderMonthButtonHidden(): boolean {
-		return this.monthsToShow > 1 ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";;
+		return this._showTwoCalendars ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";;
 	}
 
 	/**
@@ -841,7 +841,7 @@ class Calendar extends CalendarPart {
 
 	get _isDayPickerHidden() {
 		// In multi-calendar mode (monthsToShow > 1), keep day pickers visible even when other pickers are shown
-		if (this.monthsToShow > 1) {
+		if (this._showTwoCalendars) {
 			return false;
 		}
 		return this._currentPicker !== "day";

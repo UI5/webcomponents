@@ -80,6 +80,9 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	@property()
 	delimiter = "-";
 
+	@property({ type: Boolean })
+	showTwoCalendars = false;
+
 	 /**
 	 * The first date in the range during selection (this is a temporary value, not the first date in the value range)
 	 * @private

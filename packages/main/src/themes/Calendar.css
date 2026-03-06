@@ -126,13 +126,13 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  width: var(--_ui5_calendar_width);
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 13;
   pointer-events: all;
-  width: 400px;
   background: var(--sapGroup_ContentBackground);
   border-radius: var(--_ui5_popup_border_radius);
   min-height: 2rem;

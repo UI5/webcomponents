@@ -30,7 +30,6 @@ export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { he
 			horizontalAlign="Start"
 			accessibleName={this.pickerAccessibleName}
 			hideArrow={true}
-			stretch={this.stretch}
 			_hideHeader={this._shouldHideHeader}
 			initialFocus={initialFocus}
 			onKeyDown={this._onkeydown}
