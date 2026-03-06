@@ -287,6 +287,7 @@ function App() {
           <img
             src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png"
             slot="avatar"
+			alt="Monique Legrand"
           />
         </CardHeader>
         <section className="guidedPromptSection">

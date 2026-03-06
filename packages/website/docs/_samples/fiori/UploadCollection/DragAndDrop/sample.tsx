@@ -26,7 +26,7 @@ function App() {
       file: File;
       fileName: string;
       description: string;
-      uploadState: string;
+      uploadState: "Error" | "Ready" | "Uploading" | "Complete";
     }[]
   >([]);
   const fileIdCounter = useRef(0);
@@ -58,7 +58,7 @@ function App() {
     setItems((prev) =>
       prev.map((item) => {
         if (item.uploadState === "Ready" && item.file) {
-          const updatedItem = { ...item, uploadState: "Uploading" };
+          const updatedItem = { ...item, uploadState: "Uploading" as const };
 
           fetch("/upload", {
             method: "POST",
@@ -69,7 +69,7 @@ function App() {
                 i.id === item.id
                   ? {
                       ...i,
-                      uploadState: res.status === 200 ? "Complete" : "Error",
+                    uploadState: res.status === 200 ? "Complete" as const : "Error" as const,
                     }
                   : i,
               ),

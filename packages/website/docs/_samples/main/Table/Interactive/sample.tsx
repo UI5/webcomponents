@@ -22,7 +22,7 @@ function App() {
 
   const handleTableRowClick = (e: UI5CustomEvent<TableClass, "row-click">) => {
     if (toastRef.current) {
-      toastRef.current!.textContent = `Row with key "${e.detail.row.key}" was pressed!`;
+      toastRef.current!.textContent = `Row with key "${e.detail.row.rowKey}" was pressed!`;
       toastRef.current!.open = true;
     }
   };

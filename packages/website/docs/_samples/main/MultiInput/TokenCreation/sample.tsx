@@ -42,7 +42,7 @@ function App() {
 
   const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
-    const pastedText = (e.clipboardData || window.clipboardData).getData(
+    const pastedText = e.clipboardData.getData(
       "text/plain",
     );
     if (!pastedText) {

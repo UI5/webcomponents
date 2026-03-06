@@ -24,9 +24,9 @@ function App() {
           <iframe
             src="https://www.youtube.com/embed/GxGZG2fv6Aw"
             title="YouTube video player"
-            frameborder="0"
+            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
+            allowFullScreen={true}
           ></iframe>
           <img
             src="/images/sap-logo-square.svg"

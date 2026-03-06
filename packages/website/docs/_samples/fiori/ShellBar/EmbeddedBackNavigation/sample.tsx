@@ -24,7 +24,7 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 function App() {
   return (
     <>
-      <ShellBar notificationsCount={72} showNotifications={true}>
+      <ShellBar notificationsCount="72" showNotifications={true}>
         <ShellBarBranding slot="branding">
           Product Identifier
           <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />

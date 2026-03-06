@@ -50,7 +50,7 @@ function App() {
     e: UI5CustomEvent<SegmentedButtonClass, "selection-change">,
   ) => {
     const selectedItem = e.detail.selectedItems[0];
-    setPopinState(selectedItem.tooltip === "Hide Details");
+    setPopinState((selectedItem as SegmentedButtonItemClass).tooltip === "Hide Details");
   };
 
   return (

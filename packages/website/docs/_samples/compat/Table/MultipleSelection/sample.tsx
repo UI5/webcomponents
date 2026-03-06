@@ -19,7 +19,7 @@ function App() {
       </CompatTableColumn>
       <CompatTableColumn
         slot="columns"
-        minWidth="600"
+        minWidth={600}
         popinText="Supplier"
         demandPopin
         popinDisplay="Inline"
@@ -28,7 +28,7 @@ function App() {
       </CompatTableColumn>
       <CompatTableColumn
         slot="columns"
-        minWidth="800"
+        minWidth={800}
         popinText="Dimensions"
         demandPopin
         popinDisplay="Inline"
@@ -37,7 +37,7 @@ function App() {
       </CompatTableColumn>
       <CompatTableColumn
         slot="columns"
-        minWidth="800"
+        minWidth={800}
         popinText="Weight"
         demandPopin
         popinDisplay="Inline"

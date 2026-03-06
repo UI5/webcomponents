@@ -199,8 +199,8 @@ function App() {
     (e: UI5CustomEvent<SelectClass, "change">) => {
       const fcl = fclRef.current;
       if (fcl) {
-        fcl.layout = e.detail.selectedOption.textContent;
-        setCurrentLayout(e.detail.selectedOption.textContent);
+        fcl.layout = e.detail.selectedOption.textContent as `${FCLLayout}`;
+        setCurrentLayout(e.detail.selectedOption.textContent as `${FCLLayout}`);
         displayCustomLayoutConfigurationInfo();
       }
     },

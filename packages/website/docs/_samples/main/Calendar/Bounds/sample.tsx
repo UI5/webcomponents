@@ -6,7 +6,8 @@ const Calendar = createReactComponent(CalendarClass);
 function App() {
   return (
     <Calendar
-      formatPattern="dd/MM/yyyy"
+      valueFormat="dd/MM/yyyy"
+      displayFormat="dd/MM/yyyy"
       minDate="7/10/2020"
       maxDate="20/10/2020"
     />

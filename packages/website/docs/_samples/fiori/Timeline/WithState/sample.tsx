@@ -18,7 +18,7 @@ function App() {
         <TimelineGroupItem groupName="Build">
           <TimelineItem
             title="Compile"
-            subtitle="Testing suite A"
+            subtitleText="Testing suite A"
             icon="accept"
             name="Testing suite A"
             state="Positive"
@@ -27,7 +27,7 @@ function App() {
           </TimelineItem>
           <TimelineItem
             title="Lint"
-            subtitle="Testing suite B"
+            subtitleText="Testing suite B"
             icon="message-information"
             name="Testing suite B"
             state="Information"
@@ -38,7 +38,7 @@ function App() {
         <TimelineGroupItem groupName="Test">
           <TimelineItem
             title="Unit Test"
-            subtitle="Testing suite C"
+            subtitleText="Testing suite C"
             icon="decline"
             name="Testing suite C"
             state="Negative"
@@ -47,7 +47,7 @@ function App() {
           </TimelineItem>
           <TimelineItem
             title="Integration Test"
-            subtitle="Testing suite D"
+            subtitleText="Testing suite D"
             icon="message-warning"
             name="Testing suite D"
             state="Critical"
@@ -56,7 +56,7 @@ function App() {
           </TimelineItem>
           <TimelineItem
             title="E2E Test"
-            subtitle="Testing suite E"
+            subtitleText="Testing suite E"
             icon="accept"
             name="Testing suite E"
             state="Positive"
