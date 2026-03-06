@@ -124,10 +124,10 @@
 
 .ui5-cal-overlay-container {
   position: absolute;
-  top: 50%;
+  top: 19%;
   left: 50%;
   width: var(--_ui5_calendar_width);
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
