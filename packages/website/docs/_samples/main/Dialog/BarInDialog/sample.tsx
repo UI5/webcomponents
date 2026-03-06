@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -6,10 +6,10 @@ import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 
-const Bar = createComponent(BarClass);
-const Button = createComponent(ButtonClass);
-const Dialog = createComponent(DialogClass);
-const Title = createComponent(TitleClass);
+const Bar = createReactComponent(BarClass);
+const Button = createReactComponent(ButtonClass);
+const Dialog = createReactComponent(DialogClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);

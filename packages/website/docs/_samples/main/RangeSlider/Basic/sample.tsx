@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import RangeSliderClass from "@ui5/webcomponents/dist/RangeSlider.js";
 
-const RangeSlider = createComponent(RangeSliderClass);
+const RangeSlider = createReactComponent(RangeSliderClass);
 
 function App() {
   return (

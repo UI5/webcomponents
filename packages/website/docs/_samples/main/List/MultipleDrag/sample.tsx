@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { startMultipleDrag } from "@ui5/webcomponents-base/dist/DragAndDrop.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
@@ -8,8 +8,8 @@ import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents-icons/dist/task.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
 
 function App() {
   const [list1Items, setList1Items] = useState([

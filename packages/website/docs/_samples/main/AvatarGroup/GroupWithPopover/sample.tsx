@@ -1,15 +1,15 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 
-const Avatar = createComponent(AvatarClass);
-const AvatarGroup = createComponent(AvatarGroupClass);
-const Popover = createComponent(PopoverClass);
-const Slider = createComponent(SliderClass);
+const Avatar = createReactComponent(AvatarClass);
+const AvatarGroup = createReactComponent(AvatarGroupClass);
+const Popover = createReactComponent(PopoverClass);
+const Slider = createReactComponent(SliderClass);
 
 function App() {
   const popoverRef = useRef(null);

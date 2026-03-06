@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -14,12 +14,12 @@ import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
 
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const UserMenu = createComponent(UserMenuClass);
-const UserMenuAccount = createComponent(UserMenuAccountClass);
-const UserMenuItem = createComponent(UserMenuItemClass);
-const Avatar = createComponent(AvatarClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const UserMenu = createReactComponent(UserMenuClass);
+const UserMenuAccount = createReactComponent(UserMenuAccountClass);
+const UserMenuItem = createReactComponent(UserMenuItemClass);
+const Avatar = createReactComponent(AvatarClass);
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);

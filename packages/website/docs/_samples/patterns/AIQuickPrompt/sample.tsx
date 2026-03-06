@@ -1,6 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback, useEffect } from "react";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
 import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
@@ -18,26 +19,26 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 
-const AIButton = createComponent(AIButtonClass);
-const AIButtonState = createComponent(AIButtonStateClass);
-const BusyIndicator = createComponent(BusyIndicatorClass);
-const Button = createComponent(ButtonClass);
-const Card = createComponent(CardClass);
-const CardHeader = createComponent(CardHeaderClass);
-const Label = createComponent(LabelClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
-const TextArea = createComponent(TextAreaClass);
-const Toast = createComponent(ToastClass);
-const Token = createComponent(TokenClass);
+const AIButton = createReactComponent(AIButtonClass);
+const AIButtonState = createReactComponent(AIButtonStateClass);
+const BusyIndicator = createReactComponent(BusyIndicatorClass);
+const Button = createReactComponent(ButtonClass);
+const Card = createReactComponent(CardClass);
+const CardHeader = createReactComponent(CardHeaderClass);
+const Label = createReactComponent(LabelClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
+const TextArea = createReactComponent(TextAreaClass);
+const Toast = createReactComponent(ToastClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
   const [buttonState, setButtonState] = useState("generate");
   const [busyActive, setBusyActive] = useState(false);
   const [outputValue, setOutputValue] = useState("");
   const [outputDisabled, setOutputDisabled] = useState(false);
-  const [outputValueState, setOutputValueState] = useState("None");
+  const [outputValueState, setOutputValueState] = useState<`${ValueState}`>("None");
   const [sendDisabled, setSendDisabled] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -68,7 +69,7 @@ function App() {
     setBusyActive(false);
   }, []);
 
-  const generateText = useCallback((text, finalState) => {
+  const generateText = useCallback((text: string, finalState: string) => {
     if (generationIdRef.current) {
       clearInterval(generationIdRef.current);
     }
@@ -99,7 +100,7 @@ function App() {
     }, 75);
   }, []);
 
-  const startQuickPromptGeneration = useCallback((finalState) => {
+  const startQuickPromptGeneration = useCallback((finalState: string) => {
     generationStoppedRef.current = false;
     const timeoutId = setTimeout(() => {
       setButtonState(finalState || "revise");
@@ -108,7 +109,7 @@ function App() {
   }, []);
 
   const stopBusyIndicatorAndGenerateText = useCallback(
-    (textMap, textKey) => {
+    (textMap: any, textKey?: string) => {
       if (!textsRef.current) return;
       const key = translationKeyRef.current;
       const tKey = textKey || currentTextKeyRef.current;
@@ -164,7 +165,7 @@ function App() {
   }, [outputValue]);
 
   const startTextGeneration = useCallback(
-    (state, textMap) => {
+    (state: string, textMap: any) => {
       setBusyActive(true);
       setButtonState(state);
       stopBusyIndicatorAndGenerateText(textMap);
@@ -173,7 +174,7 @@ function App() {
   );
 
   const setStateAndGenerate = useCallback(
-    (state, textKey, textMap) => {
+    (state: string, textKey: string, textMap: any) => {
       setBusyActive(true);
       setButtonState(state);
       stopBusyIndicatorAndGenerateText(textMap, textKey);

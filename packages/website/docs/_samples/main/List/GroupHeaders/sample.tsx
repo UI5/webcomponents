@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -6,11 +6,11 @@ import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 
-const Avatar = createComponent(AvatarClass);
-const Icon = createComponent(IconClass);
-const List = createComponent(ListClass);
-const ListItemGroup = createComponent(ListItemGroupClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
+const Avatar = createReactComponent(AvatarClass);
+const Icon = createReactComponent(IconClass);
+const List = createReactComponent(ListClass);
+const ListItemGroup = createReactComponent(ListItemGroupClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
 
 function App() {
   return (

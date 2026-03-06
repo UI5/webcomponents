@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import MediaGalleryClass from "@ui5/webcomponents-fiori/dist/MediaGallery.js";
 import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js";
@@ -8,13 +8,13 @@ import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const MediaGallery = createComponent(MediaGalleryClass);
-const MediaGalleryItem = createComponent(MediaGalleryItemClass);
-const Bar = createComponent(BarClass);
-const Button = createComponent(ButtonClass);
-const Dialog = createComponent(DialogClass);
-const Label = createComponent(LabelClass);
-const Title = createComponent(TitleClass);
+const MediaGallery = createReactComponent(MediaGalleryClass);
+const MediaGalleryItem = createReactComponent(MediaGalleryItemClass);
+const Bar = createReactComponent(BarClass);
+const Button = createReactComponent(ButtonClass);
+const Dialog = createReactComponent(DialogClass);
+const Label = createReactComponent(LabelClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const mediaGalleryDialogRef = useRef(null);

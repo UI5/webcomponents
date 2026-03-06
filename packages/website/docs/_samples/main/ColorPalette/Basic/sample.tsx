@@ -1,9 +1,9 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ColorPaletteClass from "@ui5/webcomponents/dist/ColorPalette.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 
-const ColorPalette = createComponent(ColorPaletteClass);
-const ColorPaletteItem = createComponent(ColorPaletteItemClass);
+const ColorPalette = createReactComponent(ColorPaletteClass);
+const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
 
 function App() {
   return (

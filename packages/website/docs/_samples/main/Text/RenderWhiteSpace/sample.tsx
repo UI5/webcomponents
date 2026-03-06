@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Text = createComponent(TextClass);
+const Text = createReactComponent(TextClass);
 
 function App() {
   return (
