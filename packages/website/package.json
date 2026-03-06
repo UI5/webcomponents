@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-website",
-  "version": "2.20.0-rc.2",
+  "version": "2.20.0",
   "private": true,
   "scripts": {
     "generate-local-cdn": "rimraf ./local-cdn && node ./build-scripts/local-cdn.mjs",
@@ -30,12 +30,15 @@
     "ci:build:preview": "yarn build:with:cdn"
   },
   "dependencies": {
+    "@babel/standalone": "^7.24.0",
     "@docusaurus/core": "3.1.1",
     "@docusaurus/preset-classic": "3.1.1",
     "@mdx-js/react": "^3.0.0",
+    "@monaco-editor/react": "^4.6.0",
     "clsx": "^2.0.0",
     "docusaurus-lunr-search": "^3.3.2",
     "dotenv": "^16.4.5",
+    "monaco-editor": "^0.47.0",
     "playground-elements": "patch:playground-elements@npm%3A0.18.1#~/.yarn/patches/playground-elements-npm-0.18.1-d292eadd94.patch",
     "prism-react-renderer": "^2.3.0",
     "raw-loader": "^4.0.2",

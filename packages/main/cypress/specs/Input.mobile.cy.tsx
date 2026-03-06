@@ -272,7 +272,7 @@ describe("Typeahead", () => {
 		.ui5ResponsivePopoverOpened();
 
 		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").should("be.focused");
-		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").realType("c");
+		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").realType("C");
 		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").should("have.value", "Cozy");
 	});
 
@@ -313,7 +313,7 @@ describe("Typeahead", () => {
 		.ui5ResponsivePopoverOpened();
 
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").should("be.focused");
-		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").realType("a");
+		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").realType("A");
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").should("have.value", "Albania");
 	});
 });
