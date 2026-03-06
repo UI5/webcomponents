@@ -101,7 +101,7 @@ function App() {
             padding: 0.8rem 0 0 1rem;
         }
 
-        .navigationBar{
+        .navigationBar {
             padding: 0.8rem 0 0 0;
         }
 
@@ -124,7 +124,8 @@ function App() {
             margin-left: 4rem;
         }
       `}</style>
-      <DynamicPage id="page" showFooter={showFooter}>
+	  <div style={{ height: "700px" }}>
+      <DynamicPage showFooter={showFooter}>
         <DynamicPageTitle slot="titleArea">
           <Breadcrumbs slot="breadcrumbs">
             <BreadcrumbsItem href="#">Man</BreadcrumbsItem>
@@ -136,7 +137,7 @@ function App() {
 
           <div slot="snappedHeading" className="snapped-title-heading">
             <Avatar
-              shape="square"
+              shape="Square"
               icon="laptop"
               colorScheme="Accent5"
               size="S"
@@ -185,7 +186,7 @@ function App() {
           <div className="product-info">
             <Avatar
               id="avatar"
-              shape="square"
+              shape="Square"
               icon="laptop"
               colorScheme="Accent5"
               size="L"
@@ -208,7 +209,7 @@ function App() {
           </div>
         </DynamicPageHeader>
 
-        <List headerText="Products (13)" mode="SingleSelect">
+        <List headerText="Products (13)" selectionMode="Single">
           <ListItemStandard
             description="HT-2001"
             icon="slim-arrow-right"
@@ -909,6 +910,7 @@ function App() {
           </Button>
         </Bar>
       </DynamicPage>
+	  </div>
     </>
   );
 }
