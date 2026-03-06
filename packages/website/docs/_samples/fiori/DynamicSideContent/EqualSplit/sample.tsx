@@ -26,7 +26,7 @@ function App() {
           equalSplit={true}
         >
           <div>
-            <Title level="h1">Main Content</Title>
+            <Title level="H1">Main Content</Title>
             <p className="text">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ex
               mi, elementum et ante commodo, semper sollicitudin magna. Sed
@@ -40,7 +40,7 @@ function App() {
             </p>
           </div>
           <div slot="sideContent">
-            <Title level="h1">Side Content</Title>
+            <Title level="H1">Side Content</Title>
             <p className="text">
               Morbi lorem libero, imperdiet id condimentum ac, tempor ut velit.
               Integer a laoreet sem. Nunc at sagittis nisi. Sed placerat diam eu

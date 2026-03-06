@@ -62,7 +62,7 @@ function App() {
       e.detail.item.hidden = true;
 
       Array.from(e.detail.item.parentElement.childNodes).forEach((element) => {
-        if (element.nodeName === "UI5-LI-NOTIFICATION" && !element.hidden) {
+        if (element.nodeName === "UI5-LI-NOTIFICATION" && !(element as NotificationListItemClass).hidden) {
           visibleItems++;
         }
       });
@@ -187,14 +187,16 @@ function App() {
         	width: auto;
         }
       `}</style>
+
       <ShellBar
-        logo="/images/sap-logo-svg.svg"
         showNotifications={true}
-        notificationsCount={10}
+        notificationsCount="10"
         onNotificationsClick={handleShellbarNotificationsClick}
       >
+		<img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
         <ShellBarBranding slot="branding">Corporate Portal</ShellBarBranding>
       </ShellBar>
+
       <Popover
         ref={popoverRef}
         id="popover-with-notifications"
@@ -490,6 +492,7 @@ function App() {
           </NotificationList>
         )}
       </Popover>
+
       <Menu ref={sortMenuRef} headerText="Sort By" id="sort-menu">
         <MenuItem text="Date" />
         <MenuItem text="Importance" />

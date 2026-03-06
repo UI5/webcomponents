@@ -95,7 +95,7 @@ function App() {
         }
       `}</style>
       <Page style={{ height: "500px" }}>
-        <ShellBar notificationsCount={72} showNotifications={true}>
+        <ShellBar notificationsCount="72" showNotifications={true}>
           <Button
             icon="menu2"
             slot="startButton"

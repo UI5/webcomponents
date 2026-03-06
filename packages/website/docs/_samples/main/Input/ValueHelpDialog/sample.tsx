@@ -24,7 +24,7 @@ const Title = createReactComponent(TitleClass);
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [suggestionItems, setSuggestionItems] = useState<string[]>([]);
-  const [dialogListItems, setDialogListItems] = useState<{ name: string }[]>([]);
+  const [dialogListItems, setDialogListItems] = useState<{ name: string, productId: string }[]>([]);
   const [dialogSearchValue, setDialogSearchValue] = useState("");
   const valueHelpInputRef = useRef(null);
   const productsRef = useRef(null);

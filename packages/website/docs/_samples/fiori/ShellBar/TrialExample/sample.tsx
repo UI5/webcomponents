@@ -26,7 +26,7 @@ function App() {
     <>
       <ShellBar
         primaryTitle="Product Identifier"
-        notificationsCount={72}
+        notificationsCount="72"
         showNotifications={true}
       >
         <Button icon="menu2" slot="startButton" />

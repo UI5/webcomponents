@@ -49,7 +49,7 @@ function App() {
   }, []);
 
   const handleTermsPanelScroll = useCallback((e: Event) => {
-    const panel = e.currentTarget;
+    const panel = e.currentTarget as PanelClass;
     const scrollTop = panel.scrollTop;
     const clientHeight = panel.clientHeight;
     const scrollHeight = panel.scrollHeight;

@@ -65,7 +65,7 @@ function App() {
 
   return (
     <>
-      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer id="tabContainer" ref={tabContainerRef}>
         <Tab design="Positive" text="One" data-fixed="true" />
         <Tab design="Negative" text="Two" data-fixed="true" />
         <Tab design="Critical" text="Three" data-fixed="true" />

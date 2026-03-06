@@ -29,7 +29,7 @@ function App() {
     e.detail.item.hidden = true;
 
     Array.from(e.detail.item.parentElement.childNodes).forEach((element) => {
-      if (element.nodeName === "UI5-LI-NOTIFICATION" && !element.hidden) {
+      if (element.nodeName === "UI5-LI-NOTIFICATION" && !(element as NotificationListItemClass).hidden) {
         visibleItems++;
       }
     });

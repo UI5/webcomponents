@@ -57,7 +57,7 @@ function App() {
 
   return (
     <>
-      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>
