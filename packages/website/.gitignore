@@ -20,6 +20,7 @@ src/components/Editor/ui5-autocomplete.json
 /illustrations-tnt
 static/packages
 static/assets
+static/llms.txt
 
 # Generated files
 .docusaurus
