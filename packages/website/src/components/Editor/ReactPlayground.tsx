@@ -282,6 +282,9 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/DateTimeRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
 
+// Import UI5 JSX runtime - needed for custom DynamicDateRange option templates
+import { jsx as ui5Jsx, jsxs as ui5Jsxs } from "@ui5/webcomponents-base/jsx-runtime";
+
 // Import theme assets for all packages - registers theme property loaders
 // so that setTheme() can actually apply themes
 import "@ui5/webcomponents/dist/Assets.js";
@@ -429,9 +432,9 @@ function transpileCode(code: string): { code: string | null; error: string | nul
 // Execute transpiled code and return a React element or error
 function executeCode(transpiledCode: string): { element: React.ReactNode | null; error: string | null } {
   try {
-    // Build the scope - all component classes + createComponent + React
-    const scopeNames = ["React", "createComponent", ...Object.keys(ComponentClasses)];
-    const scopeValues = [React, createComponent, ...Object.values(ComponentClasses)];
+    // Build the scope - all component classes + createComponent + React + UI5 JSX runtime
+    const scopeNames = ["React", "createComponent", "jsx", "jsxs", ...Object.keys(ComponentClasses)];
+    const scopeValues = [React, createComponent, ui5Jsx, ui5Jsxs, ...Object.values(ComponentClasses)];
 
     const fn = new Function(
       ...scopeNames,
