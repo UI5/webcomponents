@@ -7,8 +7,8 @@
  * - Ref forwarding
  * - Children handling
  *
- * Note: Suppports React >=19.
- * 
+ * Note: Supports React >=19.
+ *
  * Note: This is for documentation samples only - for production React apps,
  * use the official @ui5/webcomponents-react library.
  */
@@ -27,29 +27,29 @@ import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
  * const ReactButton = createReactComponent(Button);
  */
 export default function createReactComponent<T extends typeof UI5Element>(klass: T) {
-  const tag = klass.getMetadata().getTag();
+	const tag = klass.getMetadata().getTag();
 
-  return function Component(props: InstanceType<T>["_jsxProps"]) {
-    const patchedProps: Record<string, unknown> = {};
+	return function Component(props: InstanceType<T>["_jsxProps"]) {
+		const patchedProps: Record<string, unknown> = {};
 
-    for (const [key, value] of Object.entries(props as Record<string, unknown>)) {
-      if (key.startsWith("on") && typeof value === "function") {
-        // React 19 wraps DOM events (change, click, input, etc.) in SyntheticEvent,
-        // hiding CustomEvent.detail under nativeEvent.detail.
-        // Patch all event handlers to restore detail from nativeEvent.
-        const originalHandler = value;
-        patchedProps[key] = (e: Event) => {
-          const nativeDetail = (e as unknown as { nativeEvent?: { detail: unknown } }).nativeEvent?.detail;
-          if (nativeDetail !== undefined) {
-            (e as unknown as { detail: unknown }).detail = nativeDetail;
-          }
-          originalHandler(e);
-        };
-      } else {
-        patchedProps[key] = value;
-      }
-    }
+		Object.entries(props as Record<string, unknown>).forEach(([key, value]) => {
+			if (key.startsWith("on") && typeof value === "function") {
+				// React 19 wraps DOM events (change, click, input, etc.) in SyntheticEvent,
+				// hiding CustomEvent.detail under nativeEvent.detail.
+				// Patch all event handlers to restore detail from nativeEvent.
+				const originalHandler = value;
+				patchedProps[key] = (e: Event) => {
+					const nativeDetail = (e as unknown as { nativeEvent?: { detail: unknown } }).nativeEvent?.detail;
+					if (nativeDetail !== undefined) {
+						(e as unknown as { detail: unknown }).detail = nativeDetail;
+					}
+					originalHandler(e);
+				};
+			} else {
+				patchedProps[key] = value;
+			}
+		});
 
-    return createElement(tag, patchedProps);
-  };
+		return createElement(tag, patchedProps);
+	};
 }
