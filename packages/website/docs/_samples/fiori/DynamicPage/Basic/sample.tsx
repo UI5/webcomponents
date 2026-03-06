@@ -124,7 +124,7 @@ function App() {
             margin-left: 4rem;
         }
       `}</style>
-	  <div style={{ height: "700px" }}>
+	  <div style={{ height: "580px" }}>
       <DynamicPage showFooter={showFooter}>
         <DynamicPageTitle slot="titleArea">
           <Breadcrumbs slot="breadcrumbs">

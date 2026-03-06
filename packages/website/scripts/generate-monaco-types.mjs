@@ -740,12 +740,12 @@ type UI5CustomEvent<T = HTMLElement, N extends string = never> =
   // Generate module declarations for imports used in samples
   output += `// Module declarations for sample imports\n`;
   output += `declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {\n`;
-  output += `  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `}\n\n`;
 
   // Also declare the short path that samples use for UI5CustomEvent
   output += `declare module "@ui5/webcomponents-base" {\n`;
-  output += `  export function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `  export type UI5CustomEvent<T = HTMLElement, N extends string = never> =\n`;
   output += `    Omit<CustomEvent<\n`;
   output += `      [N] extends [never] ? any :\n`;
