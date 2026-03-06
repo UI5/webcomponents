@@ -10,11 +10,21 @@ const Text = createComponent(TextClass);
 function App() {
   return (
     <CompatTable noDataText="No data found">
-      <CompatTableColumn slot="columns"><Text>Product</Text></CompatTableColumn>
-      <CompatTableColumn slot="columns"><Text>Supplier</Text></CompatTableColumn>
-      <CompatTableColumn slot="columns"><Text>Dimensions</Text></CompatTableColumn>
-      <CompatTableColumn slot="columns"><Text>Weight</Text></CompatTableColumn>
-      <CompatTableColumn slot="columns"><Text>Price</Text></CompatTableColumn>
+      <CompatTableColumn slot="columns">
+        <Text>Product</Text>
+      </CompatTableColumn>
+      <CompatTableColumn slot="columns">
+        <Text>Supplier</Text>
+      </CompatTableColumn>
+      <CompatTableColumn slot="columns">
+        <Text>Dimensions</Text>
+      </CompatTableColumn>
+      <CompatTableColumn slot="columns">
+        <Text>Weight</Text>
+      </CompatTableColumn>
+      <CompatTableColumn slot="columns">
+        <Text>Price</Text>
+      </CompatTableColumn>
     </CompatTable>
   );
 }

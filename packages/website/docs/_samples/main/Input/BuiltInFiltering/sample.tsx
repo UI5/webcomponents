@@ -8,21 +8,20 @@ const SuggestionItem = createComponent(SuggestionItemClass);
 const SuggestionItemGroup = createComponent(SuggestionItemGroupClass);
 
 function App() {
-
   return (
     <>
       <Input filter="Contains" showSuggestions={true}>
-    		<SuggestionItemGroup headerText="Vegetables">
-    			<SuggestionItem text="Cucumber" />
-    			<SuggestionItem text="Carrot" />
-    			<SuggestionItem text="Broccoli" />
-    		</SuggestionItemGroup>
-    		<SuggestionItemGroup headerText="Fruits">
-    			<SuggestionItem text="Apple" />
-    			<SuggestionItem text="Banana" />
-    			<SuggestionItem text="Orange" />
-    		</SuggestionItemGroup>
-    	</Input>
+        <SuggestionItemGroup headerText="Vegetables">
+          <SuggestionItem text="Cucumber" />
+          <SuggestionItem text="Carrot" />
+          <SuggestionItem text="Broccoli" />
+        </SuggestionItemGroup>
+        <SuggestionItemGroup headerText="Fruits">
+          <SuggestionItem text="Apple" />
+          <SuggestionItem text="Banana" />
+          <SuggestionItem text="Orange" />
+        </SuggestionItemGroup>
+      </Input>
     </>
   );
 }

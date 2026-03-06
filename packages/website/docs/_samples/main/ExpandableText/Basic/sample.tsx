@@ -16,35 +16,48 @@ const TableRow = createComponent(TableRowClass);
 const ExpandableText = createComponent(ExpandableTextClass);
 
 function App() {
-
   return (
     <>
       <Table>
-            <TableHeaderRow slot="headerRow">
-                <TableHeaderCell>Product</TableHeaderCell>
-                <TableHeaderCell>Description</TableHeaderCell>
-                <TableHeaderCell>Dimensions</TableHeaderCell>
-                <TableHeaderCell>Price</TableHeaderCell>
-            </TableHeaderRow>
-            <TableRow>
-                <TableCell><b>Notebook Basic 15</b></TableCell>
-                <TableCell>
-                    <ExpandableText
-                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
-                </TableCell>
-                <TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
-                <TableCell><Label><b>956</b> EUR</Label></TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell><b>Notebook Basic 17</b></TableCell>
-                <TableCell>
-                    <ExpandableText
-                        text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
-                </TableCell>
-                <TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
-                <TableCell><Label><b>1249</b> EUR</Label></TableCell>
-            </TableRow>
-        </Table>
+        <TableHeaderRow slot="headerRow">
+          <TableHeaderCell>Product</TableHeaderCell>
+          <TableHeaderCell>Description</TableHeaderCell>
+          <TableHeaderCell>Dimensions</TableHeaderCell>
+          <TableHeaderCell>Price</TableHeaderCell>
+        </TableHeaderRow>
+        <TableRow>
+          <TableCell>
+            <b>Notebook Basic 15</b>
+          </TableCell>
+          <TableCell>
+            <ExpandableText text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
+          </TableCell>
+          <TableCell>
+            <Label>30 x 18 x 3 cm</Label>
+          </TableCell>
+          <TableCell>
+            <Label>
+              <b>956</b> EUR
+            </Label>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <b>Notebook Basic 17</b>
+          </TableCell>
+          <TableCell>
+            <ExpandableText text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis accusamus assumenda debitis excepturi distinctio adipisci magnam qui a id, praesentium ullam voluptatem ad, modi quo perspiciatis soluta quasi facere molestiae"></ExpandableText>
+          </TableCell>
+          <TableCell>
+            <Label>29 x 17 x 3.1 cm</Label>
+          </TableCell>
+          <TableCell>
+            <Label>
+              <b>1249</b> EUR
+            </Label>
+          </TableCell>
+        </TableRow>
+      </Table>
     </>
   );
 }

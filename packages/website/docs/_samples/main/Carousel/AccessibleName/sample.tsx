@@ -6,7 +6,6 @@ const Carousel = createComponent(CarouselClass);
 const Title = createComponent(TitleClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -20,12 +19,18 @@ function App() {
             margin-bottom: 0.5rem;
         }
       `}</style>
-      <Title style={{ textAlign: "center", marginBottom: "0.5rem" }} id="imgGallery" level="H4">Image Gallery</Title>
-        <Carousel accessibleNameRef="imgGallery">
-            <img src="/images/sample1.jpg" alt="Landscape 1" />
-            <img src="/images/sample2.jpg" alt="Landscape 2" />
-            <img src="/images/sample3.jpg" alt="Bulb" />
-        </Carousel>
+      <Title
+        style={{ textAlign: "center", marginBottom: "0.5rem" }}
+        id="imgGallery"
+        level="H4"
+      >
+        Image Gallery
+      </Title>
+      <Carousel accessibleNameRef="imgGallery">
+        <img src="/images/sample1.jpg" alt="Landscape 1" />
+        <img src="/images/sample2.jpg" alt="Landscape 2" />
+        <img src="/images/sample3.jpg" alt="Bulb" />
+      </Carousel>
     </>
   );
 }

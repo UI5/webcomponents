@@ -10,15 +10,30 @@ const ProductSwitch = createComponent(ProductSwitchClass);
 const ProductSwitchItem = createComponent(ProductSwitchItemClass);
 
 function App() {
-
   return (
     <>
       <ProductSwitch>
-            <ProductSwitchItem titleText="Home" subtitleText="Central Home" icon="home" />
-            <ProductSwitchItem titleText="Analytics Cloud" subtitleText="Analytics Cloud" icon="business-objects-experience" />
-            <ProductSwitchItem titleText="Catalog" subtitleText="Ariba" icon="contacts" />
-            <ProductSwitchItem titleText="Travel &amp; Expense" subtitleText="Concur" icon="flight" />
-        </ProductSwitch>
+        <ProductSwitchItem
+          titleText="Home"
+          subtitleText="Central Home"
+          icon="home"
+        />
+        <ProductSwitchItem
+          titleText="Analytics Cloud"
+          subtitleText="Analytics Cloud"
+          icon="business-objects-experience"
+        />
+        <ProductSwitchItem
+          titleText="Catalog"
+          subtitleText="Ariba"
+          icon="contacts"
+        />
+        <ProductSwitchItem
+          titleText="Travel &amp; Expense"
+          subtitleText="Concur"
+          icon="flight"
+        />
+      </ProductSwitch>
     </>
   );
 }

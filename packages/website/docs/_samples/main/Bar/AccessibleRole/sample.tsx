@@ -10,20 +10,28 @@ const Button = createComponent(ButtonClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
       <Label>Bar with two or more active items:</Label>
-        <Bar design="Header" accessibleRole="Toolbar">
-            <Button icon="home" tooltip="Go home" design="Transparent" slot="startContent" />
-            <Label id="basic-label">Content</Label>
-            <Button icon="action-settings" tooltip="Go to settings" slot="endContent" />
-        </Bar>
-        <br />
-        <Label>Bar with less than two active items:</Label>
-        <Bar design="Header">
-            <Label id="basic-label">Storybook title</Label>
-        </Bar>
+      <Bar design="Header" accessibleRole="Toolbar">
+        <Button
+          icon="home"
+          tooltip="Go home"
+          design="Transparent"
+          slot="startContent"
+        />
+        <Label id="basic-label">Content</Label>
+        <Button
+          icon="action-settings"
+          tooltip="Go to settings"
+          slot="endContent"
+        />
+      </Bar>
+      <br />
+      <Label>Bar with less than two active items:</Label>
+      <Bar design="Header">
+        <Label id="basic-label">Storybook title</Label>
+      </Bar>
     </>
   );
 }

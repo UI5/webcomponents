@@ -4,10 +4,7 @@ import TextClass from "@ui5/webcomponents/dist/Text.js";
 const Text = createComponent(TextClass);
 
 function App() {
-
-  return (
-    <Text emptyIndicatorMode="On" />
-  );
+  return <Text emptyIndicatorMode="On" />;
 }
 
 export default App;

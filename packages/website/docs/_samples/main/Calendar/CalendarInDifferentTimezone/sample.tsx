@@ -4,10 +4,7 @@ import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 const Calendar = createComponent(CalendarClass);
 
 function App() {
-
-  return (
-    <Calendar />
-  );
+  return <Calendar />;
 }
 
 export default App;

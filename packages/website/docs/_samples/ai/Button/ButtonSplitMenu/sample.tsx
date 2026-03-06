@@ -121,7 +121,12 @@ function App() {
       >
         <AIButtonState name="generate" text="Generate" icon="ai" />
         <AIButtonState name="generating" text="Stop Generating" icon="stop" />
-        <AIButtonState name="regenerate" text="Regenerate" icon="ai" showArrowButton={true} />
+        <AIButtonState
+          name="regenerate"
+          text="Regenerate"
+          icon="ai"
+          showArrowButton={true}
+        />
       </AIButton>
 
       <Menu

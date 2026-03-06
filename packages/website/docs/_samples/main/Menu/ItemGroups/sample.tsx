@@ -26,33 +26,63 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenGroups" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button>
-    	<Menu open={menuOpen} opener="btnOpenGroups" id="menuGroups" headerText="My ui5-menu" onClose={() => setMenuOpen(false)}>
-    		<MenuItem text="New Paragraph" icon="add-document" />
-    		<MenuItem text="New Text" />
+      <Button id="btnOpenGroups" onClick={() => setMenuOpen(!menuOpen)}>
+        Open Menu
+      </Button>
+      <Menu
+        open={menuOpen}
+        opener="btnOpenGroups"
+        id="menuGroups"
+        headerText="My ui5-menu"
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem text="New Paragraph" icon="add-document" />
+        <MenuItem text="New Text" />
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItemGroup checkMode="Single">
-    			<MenuItem text="Left Alignment" icon="text-align-left" checked={true} />
-    			<MenuItem text="Center Alignment" icon="text-align-center" checked={true} />
-    			<MenuItem text="Right Alignment" icon="text-align-right" checked={true} />
-    		</MenuItemGroup>
+        <MenuItemGroup checkMode="Single">
+          <MenuItem
+            text="Left Alignment"
+            icon="text-align-left"
+            checked={true}
+          />
+          <MenuItem
+            text="Center Alignment"
+            icon="text-align-center"
+            checked={true}
+          />
+          <MenuItem
+            text="Right Alignment"
+            icon="text-align-right"
+            checked={true}
+          />
+        </MenuItemGroup>
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItemGroup checkMode="Multiple">
-    			<MenuItem text="Bold" icon="bold-text" checked={true}>
-    				<Button id="newLock2" slot="endContent" icon="locked" design="Transparent" />
-    			</MenuItem>
-    			<MenuItem text="Italic" icon="italic-text" additionalText="Cursive Text" checked={true} />
-    			<MenuItem text="Underline" icon="underline-text" checked={true} />
-    		</MenuItemGroup>
+        <MenuItemGroup checkMode="Multiple">
+          <MenuItem text="Bold" icon="bold-text" checked={true}>
+            <Button
+              id="newLock2"
+              slot="endContent"
+              icon="locked"
+              design="Transparent"
+            />
+          </MenuItem>
+          <MenuItem
+            text="Italic"
+            icon="italic-text"
+            additionalText="Cursive Text"
+            checked={true}
+          />
+          <MenuItem text="Underline" icon="underline-text" checked={true} />
+        </MenuItemGroup>
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItem text="Exit" />
-    	</Menu>
+        <MenuItem text="Exit" />
+      </Menu>
     </>
   );
 }

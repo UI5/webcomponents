@@ -4,10 +4,7 @@ import ProgressIndicatorClass from "@ui5/webcomponents/dist/ProgressIndicator.js
 const ProgressIndicator = createComponent(ProgressIndicatorClass);
 
 function App() {
-
-  return (
-    <ProgressIndicator value={25} />
-  );
+  return <ProgressIndicator value={25} />;
 }
 
 export default App;

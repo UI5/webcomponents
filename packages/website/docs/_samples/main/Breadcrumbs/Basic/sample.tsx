@@ -6,14 +6,17 @@ const Breadcrumbs = createComponent(BreadcrumbsClass);
 const BreadcrumbsItem = createComponent(BreadcrumbsItemClass);
 
 function App() {
-
   return (
     <>
       <Breadcrumbs>
-            <BreadcrumbsItem href="https://www.sap.com" target="_blank">Root Page </BreadcrumbsItem>
-            <BreadcrumbsItem href="https://www.sap.com" target="_blank">Parent Page</BreadcrumbsItem>
-            <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-        </Breadcrumbs>
+        <BreadcrumbsItem href="https://www.sap.com" target="_blank">
+          Root Page{" "}
+        </BreadcrumbsItem>
+        <BreadcrumbsItem href="https://www.sap.com" target="_blank">
+          Parent Page
+        </BreadcrumbsItem>
+        <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+      </Breadcrumbs>
     </>
   );
 }

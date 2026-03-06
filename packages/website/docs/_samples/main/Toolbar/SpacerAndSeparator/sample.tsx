@@ -14,7 +14,6 @@ const ToolbarSeparator = createComponent(ToolbarSeparatorClass);
 const ToolbarSpacer = createComponent(ToolbarSpacerClass);
 
 function App() {
-
   return (
     <>
       <Toolbar>
@@ -26,7 +25,7 @@ function App() {
         <ToolbarSpacer />
         <ToolbarButton icon="add" text="Append" />
         <ToolbarButton icon="employee" text="Add people" />
-    </Toolbar>
+      </Toolbar>
     </>
   );
 }

@@ -12,12 +12,18 @@ function App() {
   const [valueState, setValueState] = useState("None");
   const [valueStateMessage, setValueStateMessage] = useState("");
 
-  const handleFileSizeExceed = (e: UI5CustomEvent<FileUploaderClass, "file-size-exceed">) => {
+  const handleFileSizeExceed = (
+    e: UI5CustomEvent<FileUploaderClass, "file-size-exceed">,
+  ) => {
     const uploaderMaxSize = 2;
     const filesData = e.detail.filesData;
-    const fileNames = filesData.map((fileData: any) => fileData.fileName).join(", ");
+    const fileNames = filesData
+      .map((fileData: any) => fileData.fileName)
+      .join(", ");
     setValueState("Negative");
-    setValueStateMessage(`${fileNames} exceeds the limit of ${uploaderMaxSize} MB.`);
+    setValueStateMessage(
+      `${fileNames} exceeds the limit of ${uploaderMaxSize} MB.`,
+    );
   };
 
   const handleChange = () => {
@@ -28,11 +34,20 @@ function App() {
   return (
     <>
       <div style={{ height: "300px" }}>
-            <Label for="max-file-size-uploader">Upload files up to 2 MB:</Label>
-            <FileUploader maxFileSize={2} id="max-file-size-uploader" multiple={true} valueState={valueState} onFileSizeExceed={handleFileSizeExceed} onChange={handleChange}>
-                {valueStateMessage && <div slot="valueStateMessage">{valueStateMessage}</div>}
-            </FileUploader>
-        </div>
+        <Label for="max-file-size-uploader">Upload files up to 2 MB:</Label>
+        <FileUploader
+          maxFileSize={2}
+          id="max-file-size-uploader"
+          multiple={true}
+          valueState={valueState}
+          onFileSizeExceed={handleFileSizeExceed}
+          onChange={handleChange}
+        >
+          {valueStateMessage && (
+            <div slot="valueStateMessage">{valueStateMessage}</div>
+          )}
+        </FileUploader>
+      </div>
     </>
   );
 }

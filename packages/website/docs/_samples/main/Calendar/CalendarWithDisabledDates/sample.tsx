@@ -8,14 +8,21 @@ const SpecialCalendarDate = createComponent(SpecialCalendarDateClass);
 const DateRange = createComponent(DateRangeClass);
 
 function App() {
-
   return (
     <>
       <Calendar formatPattern="dd/MM/yyyy">
-            <SpecialCalendarDate value="21/11/2024"></SpecialCalendarDate>
-            <DateRange slot="disabledDates" startValue="10/11/2024" endValue="19/11/2024"></DateRange>
-    		<DateRange slot="disabledDates" startValue="25/11/2024" endValue="27/11/2024"></DateRange>
-        </Calendar>
+        <SpecialCalendarDate value="21/11/2024"></SpecialCalendarDate>
+        <DateRange
+          slot="disabledDates"
+          startValue="10/11/2024"
+          endValue="19/11/2024"
+        ></DateRange>
+        <DateRange
+          slot="disabledDates"
+          startValue="25/11/2024"
+          endValue="27/11/2024"
+        ></DateRange>
+      </Calendar>
     </>
   );
 }

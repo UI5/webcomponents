@@ -13,40 +13,73 @@ const Icon = createComponent(IconClass);
 const Title = createComponent(TitleClass);
 
 const initialFiles = [
-  { id: "1", fileName: "LaptopHT-1000.jpg", fileNameClickable: true, uploadState: "Complete", type: "Detail", description: "Uploaded By: David Keane \u00B7 Uploaded On: 2014-07-26 \u00B7 File Size: 35 KB", thumbnail: "img", thumbnailSrc: "/images/HT-1000.jpg" },
-  { id: "2", fileName: "Notes.txt", fileNameClickable: false, uploadState: "Complete", type: "Detail", description: "Uploaded By: John Smith \u00B7 Uploaded On: 2014-09-02 \u00B7 File Size: 226.6 KB", thumbnail: "icon", thumbnailName: "document-text" },
+  {
+    id: "1",
+    fileName: "LaptopHT-1000.jpg",
+    fileNameClickable: true,
+    uploadState: "Complete",
+    type: "Detail",
+    description:
+      "Uploaded By: David Keane \u00B7 Uploaded On: 2014-07-26 \u00B7 File Size: 35 KB",
+    thumbnail: "img",
+    thumbnailSrc: "/images/HT-1000.jpg",
+  },
+  {
+    id: "2",
+    fileName: "Notes.txt",
+    fileNameClickable: false,
+    uploadState: "Complete",
+    type: "Detail",
+    description:
+      "Uploaded By: John Smith \u00B7 Uploaded On: 2014-09-02 \u00B7 File Size: 226.6 KB",
+    thumbnail: "icon",
+    thumbnailName: "document-text",
+  },
 ];
 
 function App() {
   const [files, setFiles] = useState(initialFiles);
 
-  const handleUploadCollectionRename = (e: UI5CustomEvent<UploadCollectionClass, "rename">) => {
-    alert("Rename event: " + e.target.fileName);
+  const handleUploadCollectionRename = (
+    e: UI5CustomEvent<UploadCollectionClass, "rename">,
+  ) => {
+    alert("Rename event: " + e.currentTarget.fileName);
   };
 
-  const handleUploadCollectionItemDelete = (e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
+  const handleUploadCollectionItemDelete = (
+    e: UI5CustomEvent<UploadCollectionClass, "item-delete">,
+  ) => {
     const deletedItem = e.detail.item;
-    setFiles(prev => prev.filter(f => f.fileName !== deletedItem.fileName));
+    setFiles((prev) => prev.filter((f) => f.fileName !== deletedItem.fileName));
   };
 
   return (
     <>
-      <UploadCollection onRename={handleUploadCollectionRename} onItemDelete={handleUploadCollectionItemDelete}>
-            <div slot="header" className="header">
-                <Title>Attachments ({files.length})</Title>
-            </div>
+      <UploadCollection
+        onRename={handleUploadCollectionRename}
+        onItemDelete={handleUploadCollectionItemDelete}
+      >
+        <div slot="header" className="header">
+          <Title>Attachments ({files.length})</Title>
+        </div>
 
-            {files.map((file) => (
-              <UploadCollectionItem key={file.id} fileName={file.fileName} fileNameClickable={file.fileNameClickable || false} uploadState={file.uploadState} type={file.type}>
-                {file.description}
-                {file.thumbnail === "img" ? (
-                  <img src={file.thumbnailSrc} slot="thumbnail" />
-                ) : (
-                  <Icon name={file.thumbnailName} slot="thumbnail" />
-                )}
-              </UploadCollectionItem>
-            ))}
-        </UploadCollection>
+        {files.map((file) => (
+          <UploadCollectionItem
+            key={file.id}
+            fileName={file.fileName}
+            fileNameClickable={file.fileNameClickable || false}
+            uploadState={file.uploadState}
+            type={file.type}
+          >
+            {file.description}
+            {file.thumbnail === "img" ? (
+              <img src={file.thumbnailSrc} slot="thumbnail" alt="Thumbnail" />
+            ) : (
+              <Icon name={file.thumbnailName} slot="thumbnail" />
+            )}
+          </UploadCollectionItem>
+        ))}
+      </UploadCollection>
     </>
   );
 }

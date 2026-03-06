@@ -4,12 +4,23 @@ import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 const Avatar = createComponent(AvatarClass);
 
 function App() {
-
   return (
     <>
-      <Avatar style={{ width: "250px", height: "250px", border: "1px solid var(--sapField_BorderColor)" }} size="XL" shape="Square">
-            <img src="/images/avatars/Lamp_avatar_01.jpg" alt="Lamp" style={{ objectFit: "contain" }} />
-        </Avatar>
+      <Avatar
+        style={{
+          width: "250px",
+          height: "250px",
+          border: "1px solid var(--sapField_BorderColor)",
+        }}
+        size="XL"
+        shape="Square"
+      >
+        <img
+          src="/images/avatars/Lamp_avatar_01.jpg"
+          alt="Lamp"
+          style={{ objectFit: "contain" }}
+        />
+      </Avatar>
     </>
   );
 }

@@ -15,16 +15,32 @@ function App() {
 
   return (
     <>
-      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+      <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>
+        Open Dialog
+      </Button>
 
-        <Dialog open={dialogOpen} id="dialog" headerText="Draggable/Resizable dialog" draggable={true} resizable={true} onClose={() => setDialogOpen(false)}>
-            <div>Move this dialog around the screen by dragging it by its header.</div>
-            <div>Resize this dialog by dragging it by its resize handle.</div>
-            <div>These features are available only on Desktop.</div>
-            <Toolbar slot="footer">
-                <ToolbarButton class="dialogCloser" design="Emphasized" text="OK" onClick={() => setDialogOpen(false)} />
-            </Toolbar>
-        </Dialog>
+      <Dialog
+        open={dialogOpen}
+        id="dialog"
+        headerText="Draggable/Resizable dialog"
+        draggable={true}
+        resizable={true}
+        onClose={() => setDialogOpen(false)}
+      >
+        <div>
+          Move this dialog around the screen by dragging it by its header.
+        </div>
+        <div>Resize this dialog by dragging it by its resize handle.</div>
+        <div>These features are available only on Desktop.</div>
+        <Toolbar slot="footer">
+          <ToolbarButton
+            class="dialogCloser"
+            design="Emphasized"
+            text="OK"
+            onClick={() => setDialogOpen(false)}
+          />
+        </Toolbar>
+      </Dialog>
     </>
   );
 }

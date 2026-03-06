@@ -21,18 +21,34 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenAdditionalText" endIcon="slim-arrow-down" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button> <br />
-
-        <Menu open={menuOpen} id="menuAdditionalText" opener="btnOpenAdditionalText" onClose={() => setMenuOpen(false)}>
-            <MenuItem text="New File" icon="add-document" additionalText="Ctrl+N" />
-            <MenuItem text="New Folder" icon="add-folder" additionalText="Ctrl+F" disabled={true} />
-            <MenuSeparator />
-            <MenuItem text="Open" icon="open-folder" />
-            <MenuItem text="Close" />
-            <MenuSeparator />
-            <MenuItem text="Preferences" icon="action-settings" />
-            <MenuItem text="Exit" icon="journey-arrive" additionalText="Ctrl+X" />
-        </Menu>
+      <Button
+        id="btnOpenAdditionalText"
+        endIcon="slim-arrow-down"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        Open Menu
+      </Button>{" "}
+      <br />
+      <Menu
+        open={menuOpen}
+        id="menuAdditionalText"
+        opener="btnOpenAdditionalText"
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem text="New File" icon="add-document" additionalText="Ctrl+N" />
+        <MenuItem
+          text="New Folder"
+          icon="add-folder"
+          additionalText="Ctrl+F"
+          disabled={true}
+        />
+        <MenuSeparator />
+        <MenuItem text="Open" icon="open-folder" />
+        <MenuItem text="Close" />
+        <MenuSeparator />
+        <MenuItem text="Preferences" icon="action-settings" />
+        <MenuItem text="Exit" icon="journey-arrive" additionalText="Ctrl+X" />
+      </Menu>
     </>
   );
 }

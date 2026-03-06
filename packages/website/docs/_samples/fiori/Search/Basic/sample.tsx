@@ -10,36 +10,44 @@ const SearchItem = createComponent(SearchItemClass);
 const SearchScope = createComponent(SearchScopeClass);
 
 const scopeData = [
-    { name: "Laptop", scope: "products" },
-    { name: "Leave Requests", scope: "apps" },
-    { name: "Log work", scope: "apps" },
-    { name: "Manage Products", scope: "apps" },
-    { name: "Mobile Phones", scope: "products" },
-    { name: "Tablet", scope: "products" },
+  { name: "Laptop", scope: "products" },
+  { name: "Leave Requests", scope: "apps" },
+  { name: "Log work", scope: "apps" },
+  { name: "Manage Products", scope: "apps" },
+  { name: "Mobile Phones", scope: "products" },
+  { name: "Tablet", scope: "products" },
 ];
 
 function App() {
   const [currentScope, setCurrentScope] = useState("");
 
   const filteredItems = currentScope
-    ? scopeData.filter(item => item.scope === currentScope)
+    ? scopeData.filter((item) => item.scope === currentScope)
     : scopeData;
 
-  const handleScopeChange = (e: UI5CustomEvent<SearchClass, "scope-change">) => {
+  const handleScopeChange = (
+    e: UI5CustomEvent<SearchClass, "scope-change">,
+  ) => {
     const scope = e.detail.scope.value === "all" ? "" : e.detail.scope.value;
     setCurrentScope(scope);
   };
 
   return (
     <>
-      <Search id="search-scope" scopeValue="all" showClearIcon={true} placeholder="Search Apps, Products" onScopeChange={handleScopeChange}>
-    			<SearchScope text="All" value="all" slot="scopes" />
-    			<SearchScope text="Apps" value="apps" slot="scopes" />
-    			<SearchScope text="Products" value="products" slot="scopes" />
-          {filteredItems.map((item, index) => (
-            <SearchItem key={index} text={item.name} scopeName={item.scope} />
-          ))}
-    		</Search>
+      <Search
+        id="search-scope"
+        scopeValue="all"
+        showClearIcon={true}
+        placeholder="Search Apps, Products"
+        onScopeChange={handleScopeChange}
+      >
+        <SearchScope text="All" value="all" slot="scopes" />
+        <SearchScope text="Apps" value="apps" slot="scopes" />
+        <SearchScope text="Products" value="products" slot="scopes" />
+        {filteredItems.map((item, index) => (
+          <SearchItem key={index} text={item.name} scopeName={item.scope} />
+        ))}
+      </Search>
     </>
   );
 }

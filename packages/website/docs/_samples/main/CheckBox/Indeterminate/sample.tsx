@@ -4,10 +4,7 @@ import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 const CheckBox = createComponent(CheckBoxClass);
 
 function App() {
-
-  return (
-    <CheckBox text="indeterminate" indeterminate={true} checked={true} />
-  );
+  return <CheckBox text="indeterminate" indeterminate={true} checked={true} />;
 }
 
 export default App;

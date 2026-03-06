@@ -4,10 +4,7 @@ import TimePickerClass from "@ui5/webcomponents/dist/TimePicker.js";
 const TimePicker = createComponent(TimePickerClass);
 
 function App() {
-
-  return (
-    <TimePicker />
-  );
+  return <TimePicker />;
 }
 
 export default App;

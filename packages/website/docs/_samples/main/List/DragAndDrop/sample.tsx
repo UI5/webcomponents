@@ -21,7 +21,10 @@ function App() {
   const handleMoveOver = (e: UI5CustomEvent<ListClass, "move-over">) => {
     const { destination, source } = e.detail;
 
-    if (destination.placement === "Before" || destination.placement === "After") {
+    if (
+      destination.placement === "Before" ||
+      destination.placement === "After"
+    ) {
       e.preventDefault();
     }
   };
@@ -31,8 +34,12 @@ function App() {
 
     setItems((prevItems) => {
       const newItems = [...prevItems];
-      const sourceIndex = newItems.findIndex((item) => item.id === source.element.dataset.id);
-      const destIndex = newItems.findIndex((item) => item.id === destination.element.dataset.id);
+      const sourceIndex = newItems.findIndex(
+        (item) => item.id === source.element.dataset.id,
+      );
+      const destIndex = newItems.findIndex(
+        (item) => item.id === destination.element.dataset.id,
+      );
 
       if (sourceIndex === -1 || destIndex === -1) return prevItems;
 
@@ -53,10 +60,17 @@ function App() {
   return (
     <>
       <List id="listDnd1" onMoveOver={handleMoveOver} onMove={handleMove}>
-            {items.map((item) => (
-              <ListItemStandard key={item.id} data-id={item.id} icon="checklist-item" movable={true}>{item.text}</ListItemStandard>
-            ))}
-        </List>
+        {items.map((item) => (
+          <ListItemStandard
+            key={item.id}
+            data-id={item.id}
+            icon="checklist-item"
+            movable={true}
+          >
+            {item.text}
+          </ListItemStandard>
+        ))}
+      </List>
     </>
   );
 }

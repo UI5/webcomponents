@@ -4,10 +4,7 @@ import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 const DatePicker = createComponent(DatePickerClass);
 
 function App() {
-
-  return (
-    <DatePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />
-  );
+  return <DatePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />;
 }
 
 export default App;

@@ -20,39 +20,58 @@ const Tag = createComponent(TagClass);
 const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
-      <ShellBar style={{ marginBottom: "1rem" }} primary-title="Product Identifier" notifications-count={72} show-notifications={true}>
-                <Button icon="menu2" slot="startButton" />
-                <img slot="logo" src="/images/sap-logo-svg.svg" />
+      <ShellBar
+        style={{ marginBottom: "1rem" }}
+        primary-title="Product Identifier"
+        notifications-count={72}
+        show-notifications={true}
+      >
+        <Button icon="menu2" slot="startButton" />
+        <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
 
-                <Tag design="Set2" colorScheme="10" slot="content">Region EMEA</Tag>
+        <Tag design="Set2" colorScheme="10" slot="content">
+          Region EMEA
+        </Tag>
 
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
 
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-                    <img src="/images/avatars/man_avatar_3.png"/>
-                </Avatar>
-            </ShellBar>
+      <ShellBar
+        primaryTitle="Product Identifier"
+        notificationsCount={72}
+        showNotifications={true}
+      >
+        <Button icon="menu2" slot="startButton" />
+        <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
 
-            <ShellBar primaryTitle="Product Identifier" notificationsCount={72} showNotifications={true}>
-                <Button icon="menu2" slot="startButton" />
-                <img slot="logo" src="/images/sap-logo-svg.svg" />
+        <Tag design="Set2" colorScheme="10" slot="content">
+          Region APJ
+        </Tag>
 
-                <Tag design="Set2" colorScheme="10" slot="content">Region APJ</Tag>
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
-
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-        <img src="/images/avatars/man_avatar_3.png"/>
-    </Avatar>
-            </ShellBar>
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
     </>
   );
 }

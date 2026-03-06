@@ -9,22 +9,22 @@ const SegmentedButton = createComponent(SegmentedButtonClass);
 const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
 
 function App() {
-
   return (
     <>
       <SegmentedButton accessibleName="Font style">
-            <SegmentedButtonItem tooltip="Bold" icon="bold-text" selected={true} />
-            <SegmentedButtonItem tooltip="Underline" icon="underline-text" />
-            <SegmentedButtonItem tooltip="Italic" icon="italic-text" />
-        </SegmentedButton>
+        <SegmentedButtonItem tooltip="Bold" icon="bold-text" selected={true} />
+        <SegmentedButtonItem tooltip="Underline" icon="underline-text" />
+        <SegmentedButtonItem tooltip="Italic" icon="italic-text" />
+      </SegmentedButton>
 
-        <br /><br />
+      <br />
+      <br />
 
-        <SegmentedButton accessibleName="Map style">
-            <SegmentedButtonItem>Map</SegmentedButtonItem>
-            <SegmentedButtonItem selected={true}>Satellite</SegmentedButtonItem>
-            <SegmentedButtonItem>Terrain</SegmentedButtonItem>
-        </SegmentedButton>
+      <SegmentedButton accessibleName="Map style">
+        <SegmentedButtonItem>Map</SegmentedButtonItem>
+        <SegmentedButtonItem selected={true}>Satellite</SegmentedButtonItem>
+        <SegmentedButtonItem>Terrain</SegmentedButtonItem>
+      </SegmentedButton>
     </>
   );
 }

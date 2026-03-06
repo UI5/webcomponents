@@ -12,7 +12,9 @@ function App() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Show Toast</Button>
-      <Toast open={open} duration={5000} onClose={() => setOpen(false)}>Toast message, displayed for 5 seconds.</Toast>
+      <Toast open={open} duration={5000} onClose={() => setOpen(false)}>
+        Toast message, displayed for 5 seconds.
+      </Toast>
     </>
   );
 }

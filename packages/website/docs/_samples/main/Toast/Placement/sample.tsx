@@ -12,7 +12,13 @@ function App() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Show Toast</Button>
-      <Toast open={open} placement="MiddleCenter" onClose={() => setOpen(false)}>Toast message, displayed in the "MiddleCenter".</Toast>
+      <Toast
+        open={open}
+        placement="MiddleCenter"
+        onClose={() => setOpen(false)}
+      >
+        Toast message, displayed in the "MiddleCenter".
+      </Toast>
     </>
   );
 }

@@ -5,10 +5,7 @@ import "@ui5/webcomponents-icons/dist/home.js";
 const Icon = createComponent(IconClass);
 
 function App() {
-
-  return (
-    <Icon name="home" mode="Interactive" />
-  );
+  return <Icon name="home" mode="Interactive" />;
 }
 
 export default App;

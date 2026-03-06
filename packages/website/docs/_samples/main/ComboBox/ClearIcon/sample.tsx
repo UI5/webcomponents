@@ -6,16 +6,15 @@ const ComboBox = createComponent(ComboBoxClass);
 const ComboBoxItem = createComponent(ComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <ComboBox value="Denmark" showClearIcon={true}>
-            <ComboBoxItem text="Austria" />
-            <ComboBoxItem text="Bulgaria" />
-            <ComboBoxItem text="Germany" />
-            <ComboBoxItem text="Italy" />
-            <ComboBoxItem text="Spain" />
-        </ComboBox>
+        <ComboBoxItem text="Austria" />
+        <ComboBoxItem text="Bulgaria" />
+        <ComboBoxItem text="Germany" />
+        <ComboBoxItem text="Italy" />
+        <ComboBoxItem text="Spain" />
+      </ComboBox>
     </>
   );
 }

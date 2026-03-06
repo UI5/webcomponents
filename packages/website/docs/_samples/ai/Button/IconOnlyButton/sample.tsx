@@ -64,19 +64,31 @@ function App() {
     }
   }, [buttonState, startGeneration, stopGeneration]);
 
-  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
-    if (e.detail.text === "Regenerate") {
-      setButtonState("generating");
-      startGeneration();
-    }
-  }, [startGeneration]);
+  const handleMenuItemClick = useCallback(
+    (e: UI5CustomEvent<MenuClass, "item-click">) => {
+      if (e.detail.text === "Regenerate") {
+        setButtonState("generating");
+        startGeneration();
+      }
+    },
+    [startGeneration],
+  );
 
   return (
     <>
-      <AIButton ref={buttonRef} id="myAiButtonIconOnly" state={buttonState} onClick={handleButtonClick}>
+      <AIButton
+        ref={buttonRef}
+        id="myAiButtonIconOnly"
+        state={buttonState}
+        onClick={handleButtonClick}
+      >
         <AIButtonState name="generate" icon="ai" />
         <AIButtonState name="generating" icon="stop" />
-        <AIButtonState name="revise" icon="ai" endIcon="navigation-down-arrow" />
+        <AIButtonState
+          name="revise"
+          icon="ai"
+          endIcon="navigation-down-arrow"
+        />
       </AIButton>
 
       <Menu ref={menuRef} id="menu" onItemClick={handleMenuItemClick}>
