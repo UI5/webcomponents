@@ -1825,7 +1825,7 @@ describe("Opener visibility in scrollable containers", () => {
 			</div>
 		);
 
-		cy.get("[ui5-popover]").should("have.prop", "open", true);
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 		cy.get("#scrollContainer").scrollTo(0, 200);
 
@@ -1847,7 +1847,7 @@ describe("Opener visibility in scrollable containers", () => {
 			</Dialog>
 		);
 
-		cy.get("[ui5-popover]").should("have.prop", "open", true);
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 		cy.get("#dialogScrollContainer").scrollTo(0, 500);
 
@@ -1870,7 +1870,7 @@ describe("Opener visibility in scrollable containers", () => {
 			</div>
 		);
 
-		cy.get("[ui5-popover]").should("have.prop", "open", true);
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 		cy.get("#innerScroll").scrollTo(0, 300);
 
@@ -1889,7 +1889,7 @@ describe("Opener visibility in scrollable containers", () => {
 			</div>
 		);
 
-		cy.get("[ui5-popover]").should("have.prop", "open", true);
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
 
 		cy.get("#horizontalScroll").scrollTo(500, 0);
 

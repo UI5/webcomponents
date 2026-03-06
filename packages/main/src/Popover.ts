@@ -559,10 +559,8 @@ class Popover extends Popup {
 	 * Closes popover when opener is out of view.
 	 * @private
 	 */
-	async _onOpenerIntersection(entries: Array<IntersectionObserverEntry>): Promise<void> {
-		if (!entries[0]?.isIntersecting) {
-			await this._waitForDomRef();
-
+	_onOpenerIntersection(entries: Array<IntersectionObserverEntry>): void {
+		if (this.open && !entries[0]?.isIntersecting) {
 			this.closePopup();
 		}
 	}
