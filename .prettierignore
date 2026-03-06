@@ -1,0 +1,108 @@
+# Dependencies
+node_modules
+.yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Build outputs
+dist
+**/dist
+build
+coverage
+.nyc_output
+*.log
+.dev-server-port
+
+# Generated files
+**/src/generated
+**/test/test-elements/generated
+packages/*/src/generated
+packages/*/dist
+
+# Scoping feature generated entry points
+packages/compat/test/pages/scoped
+packages/main/test/pages/scoped
+packages/fiori/test/pages/scoped
+packages/ai/test/pages/scoped
+
+# Test generated files
+packages/main/test/pages/fix.js
+packages/fiori/test/pages/fix.js
+
+# Cypress internal logs
+cypress-logs
+
+# Third-party
+.github
+LICENSES
+
+# Lock files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+yarn-error.log*
+yarn-debug.log*
+.yarn-integrity
+
+# Minified/bundled files
+*.min.js
+*.bundle.js
+
+# Documentation build (website)
+packages/website/.docusaurus
+packages/website/build
+
+# Playground
+packages/playground/_site/
+packages/playground/.sass-cache/
+packages/playground/assets/js/ui5-webcomponents/
+packages/playground/docs/components
+!packages/playground/docs/components/component.md
+packages/playground/docs/documentation
+!packages/playground/docs/documentation/documentation.md
+packages/playground/docs/tutorials
+!packages/playground/docs/tutorials/tutorials.md
+packages/playground/docs/pages/content/main/*
+packages/playground/docs/pages/content/fiori/*
+packages/playground/docs/advanced
+packages/playground/docs/contributing/
+packages/playground/docs/customizing/
+packages/playground/docs/development/
+packages/playground/docs/frameworks/
+packages/playground/docs/getting-started/
+packages/playground/docs/FAQ.md
+
+# Storybook generated files
+packages/playground/_stories/**/*/argTypes.ts
+packages/playground/_stories/**/*/*Overview.mdx
+packages/playground/_stories/**/Enums.mdx
+packages/playground/_stories/**/Interfaces.mdx
+packages/playground/.storybook/custom-elements.json
+packages/playground/docs/storybook/**/*
+packages/playground/docs/storybook-pages/**/*
+!packages/playground/docs/storybook-pages/.gitkeep
+packages/playground/public/sitemap.xml
+
+# Playground assets (generated from bundles)
+packages/playground/assets/*.js
+packages/playground/assets/*.png
+packages/playground/assets/*.jpg
+packages/playground/assets/*.gif
+packages/playground/assets/*.css
+packages/playground/assets/test/pages/*.css
+packages/playground/assets/test/pages/*.js
+
+# IDE
+.vscode
+.idea
+.DS_Store
+
+# Config files
+.gitignore
+!packages/create-package/template/.gitignore
+!packages/website/.gitignore

@@ -1,0 +1,20 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
+
+echo "[Pre-commit] Hook started"
+echo "[Pre-commit] Running lint-staged..."
+
+yarn lint-staged
+
+LINT_STAGED_EXIT_CODE=$?
+
+if [ $LINT_STAGED_EXIT_CODE -eq 0 ]; then
+  echo "[Pre-commit] lint-staged completed successfully"
+else
+  echo "[Pre-commit] lint-staged failed with exit code: $LINT_STAGED_EXIT_CODE"
+fi
+
+echo "[Pre-commit] Hook finished"
+
+exit $LINT_STAGED_EXIT_CODE

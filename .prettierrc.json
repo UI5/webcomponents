@@ -1,0 +1,21 @@
+{
+	"useTabs": true,
+	"tabWidth": 4,
+	"printWidth": 120,
+	"endOfLine": "lf",
+	"semi": true,
+	"singleQuote": false,
+	"quoteProps": "as-needed",
+	"trailingComma": "all",
+	"bracketSpacing": true,
+	"arrowParens": "avoid",
+	"overrides": [
+		{
+			"files": "package.json",
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		}
+	]
+}

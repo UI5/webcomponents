@@ -13,12 +13,10 @@ const getTsModeOverrides = () => {
 		plugins: ["@typescript-eslint"],
 		extends: [
 			"plugin:@typescript-eslint/recommended",
-			"plugin:@typescript-eslint/recommended-requiring-type-checking"
+			"plugin:@typescript-eslint/recommended-requiring-type-checking",
 		],
 		parserOptions: {
-			"project": [
-				"./tsconfig.json"
-			],
+			project: ["./tsconfig.json"],
 			EXPERIMENTAL_useSourceOfProjectReferenceRedirect: true,
 		},
 		rules: {
@@ -36,7 +34,9 @@ const getTsModeOverrides = () => {
 			"@typescript-eslint/no-empty-function": "off",
 			"@typescript-eslint/no-empty-interface": "off",
 			"lines-between-class-members": "off",
-		}
+			indent: "off",
+			"@typescript-eslint/indent": [2, "tab", { SwitchCase: 1 }],
+		},
 	};
 
 	const tsxConfiguration = JSON.parse(JSON.stringify(tsConfiguration));
@@ -51,28 +51,25 @@ const getTsModeOverrides = () => {
 		"no-nested-ternary": "off",
 		"implicit-arrow-linebreak": "off",
 		"function-paren-newline": "off",
-		"comma-dangle": "off"
+		"comma-dangle": "off",
 	};
 
-	return [
-		tsConfiguration,
-		tsxConfiguration
-	];
-}
+	return [tsConfiguration, tsxConfiguration];
+};
 
 module.exports = {
-	"env": {
-		"browser": true,
-		"es6": true
+	env: {
+		browser: true,
+		es6: true,
 	},
-	"root": true,
-	"extends": "airbnb-base",
-	"overrides": tsMode ? getTsModeOverrides() : [],
-	"parserOptions": {
-		"ecmaVersion": 2018,
-		"sourceType": "module"
+	root: true,
+	extends: "airbnb-base",
+	overrides: tsMode ? getTsModeOverrides() : [],
+	parserOptions: {
+		ecmaVersion: 2018,
+		sourceType: "module",
 	},
-	"rules": {
+	rules: {
 		"comma-dangle": [2, "always-multiline"], // difference from openui5
 		"no-cond-assign": 2,
 		"no-console": 2,
@@ -107,7 +104,7 @@ module.exports = {
 		"accessor-pairs": 2,
 		"block-scoped-var": 1,
 		// "consistent-return": 1, // removed for UI5 WebComponents
-		"curly": [2, "all"],
+		curly: [2, "all"],
 		// "default-case": 1, // removed for UI5 WebComponents
 		"import/extensions": ["error", "always"], // override for UI5 WebComponents
 		"import/order": "off",
@@ -140,11 +137,11 @@ module.exports = {
 		"no-void": 2,
 		"no-warning-comments": 1,
 		"no-with": 2,
-		"radix": [2, "as-needed"],
+		radix: [2, "as-needed"],
 		"wrap-iife": [2, "any"],
-		"yoda": 2,
+		yoda: 2,
 
-		"strict": [2, "function"],
+		strict: [2, "function"],
 
 		"no-catch-shadow": 2,
 		"no-delete-var": 2,
@@ -152,10 +149,10 @@ module.exports = {
 		"no-shadow-restricted-names": 2,
 		"no-undef-init": 2,
 		"no-undef": 2,
-		"no-unused-vars": [2, { "vars": "all", "args": "none" }],
+		"no-unused-vars": [2, { vars: "all", args: "none" }],
 
-		"brace-style": [2, "1tbs", { "allowSingleLine": true }],
-		"camelcase": [1, { "properties": "never" }], // added for UI5 WebComponents
+		"brace-style": [2, "1tbs", { allowSingleLine: true }],
+		camelcase: [1, { properties: "never" }], // added for UI5 WebComponents
 		"consistent-this": [1, "that"],
 		"linebreak-style": 2,
 		"max-nested-callbacks": [1, 3],
@@ -167,17 +164,17 @@ module.exports = {
 		"no-nested-ternary": 2,
 		"no-new-object": 2,
 		"no-spaced-func": 2,
-		"quote-props": [2, "as-needed", { "keywords": true, "unnecessary": false }],
-		"semi-spacing": [1, { "before": false, "after": true }],
-		"semi": 2,
+		"quote-props": [2, "as-needed", { keywords: true, unnecessary: false }],
+		"semi-spacing": [1, { before: false, after: true }],
+		semi: 2,
 		"keyword-spacing": 2,
 		"space-infix-ops": 2,
-		"space-unary-ops": [2, { "words": true, "nonwords": false }],
+		"space-unary-ops": [2, { words: true, nonwords: false }],
 		// airbnb overrides
-		"indent": [2, "tab"],
+		indent: [2, "tab", { SwitchCase: 1 }],
 		"no-underscore-dangle": 0,
 		"no-tabs": 0,
-		"quotes": [2, "double", { "allowTemplateLiterals": true }],
+		quotes: [2, "double", { allowTemplateLiterals: true }],
 		"no-useless-constructor": 0,
 		"no-param-reassign": 0,
 		"one-var": 0,
@@ -190,6 +187,6 @@ module.exports = {
 		"prefer-destructuring": 0,
 		"arrow-body-style": 0,
 		"import/no-unresolved": 0,
-		"no-use-before-define": 0
-	}
+		"no-use-before-define": 0,
+	},
 };
