@@ -67,7 +67,7 @@ function arrowBack(this: Carousel) {
 	return <Icon name={slimArrowLeft}
 		tabindex={-1}
 		data-ui5-arrow-back
-		title={this.previousPageText	}
+		title={this.previousPageText}
 		mode="Decorative"
 		class={{
 			"ui5-carousel-navigation-button": true,
