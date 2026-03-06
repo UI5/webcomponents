@@ -1,9 +1,9 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
 
-const Avatar = createComponent(AvatarClass);
-const AvatarGroup = createComponent(AvatarGroupClass);
+const Avatar = createReactComponent(AvatarClass);
+const AvatarGroup = createReactComponent(AvatarGroupClass);
 
 function App() {
   return (

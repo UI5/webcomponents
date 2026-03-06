@@ -1,9 +1,9 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 
-const IllustratedMessage = createComponent(IllustratedMessageClass);
-const Button = createComponent(ButtonClass);
+const IllustratedMessage = createReactComponent(IllustratedMessageClass);
+const Button = createReactComponent(ButtonClass);
 
 function App() {
   return (

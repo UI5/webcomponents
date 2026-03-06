@@ -1,9 +1,9 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const MultiInput = createComponent(MultiInputClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
+const MultiInput = createReactComponent(MultiInputClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
 
 function App() {
   return (

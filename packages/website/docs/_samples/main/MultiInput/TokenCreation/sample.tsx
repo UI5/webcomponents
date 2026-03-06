@@ -1,13 +1,14 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const MultiInput = createComponent(MultiInputClass);
-const Token = createComponent(TokenClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
+const MultiInput = createReactComponent(MultiInputClass);
+const Token = createReactComponent(TokenClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
 
 const suggestions = [
   "Argentina",
@@ -25,8 +26,8 @@ const suggestions = [
 ];
 
 function App() {
-  const [tokens, setTokens] = useState([]);
-  const [valueState, setValueState] = useState("None");
+  const [tokens, setTokens] = useState<string[]>([]);
+  const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const multiInputRef = useRef(null);
 
   const handleTokenDelete = (

@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState, useCallback } from "react";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
@@ -23,24 +23,24 @@ import "@ui5/webcomponents-icons/dist/sort.js";
 import "@ui5/webcomponents-icons/dist/crm-sales.js";
 import "@ui5/webcomponents-icons/dist/expense-report.js";
 
-const NotificationList = createComponent(NotificationListClass);
-const NotificationListGroupItem = createComponent(
+const NotificationList = createReactComponent(NotificationListClass);
+const NotificationListGroupItem = createReactComponent(
   NotificationListGroupItemClass,
 );
-const NotificationListItem = createComponent(NotificationListItemClass);
-const IllustratedMessage = createComponent(IllustratedMessageClass);
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const Avatar = createComponent(AvatarClass);
-const Bar = createComponent(BarClass);
-const Button = createComponent(ButtonClass);
-const Dialog = createComponent(DialogClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MessageStrip = createComponent(MessageStripClass);
-const Popover = createComponent(PopoverClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
+const NotificationListItem = createReactComponent(NotificationListItemClass);
+const IllustratedMessage = createReactComponent(IllustratedMessageClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const Avatar = createReactComponent(AvatarClass);
+const Bar = createReactComponent(BarClass);
+const Button = createReactComponent(ButtonClass);
+const Dialog = createReactComponent(DialogClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MessageStrip = createReactComponent(MessageStripClass);
+const Popover = createReactComponent(PopoverClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const clearAllDialogRef = useRef(null);
@@ -51,7 +51,9 @@ function App() {
 
   const [showMessageStrip, setShowMessageStrip] = useState(false);
   const [cleared, setCleared] = useState(false);
-  const [extraItems, setExtraItems] = useState([]);
+  const [extraItems, setExtraItems] = useState<
+    { id: number; title: string; description: string }[]
+  >([]);
   const itemsLoadedRef = useRef(6);
 
   const handleNotificationListItemClose = useCallback(

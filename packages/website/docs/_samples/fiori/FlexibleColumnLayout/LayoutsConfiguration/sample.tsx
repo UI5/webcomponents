@@ -1,7 +1,8 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useEffect, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
+import type FCLLayout from "@ui5/webcomponents-fiori/dist/types/FCLLayout.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -13,15 +14,15 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
-const FlexibleColumnLayout = createComponent(FlexibleColumnLayoutClass);
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
-const Option = createComponent(OptionClass);
-const Select = createComponent(SelectClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
+const FlexibleColumnLayout = createReactComponent(FlexibleColumnLayoutClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
+const Option = createReactComponent(OptionClass);
+const Select = createReactComponent(SelectClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
 
 const categoryData = {
   electronics: [
@@ -149,10 +150,12 @@ function App() {
   const fclRef = useRef(null);
   const selectLayoutRef = useRef(null);
 
-  const [currentLayout, setCurrentLayout] = useState("OneColumn");
+  const [currentLayout, setCurrentLayout] = useState<`${FCLLayout}`>("OneColumn");
   const [configInfo, setConfigInfo] = useState("none");
   const [categoryTitle, setCategoryTitle] = useState("Select a category");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<
+    { id: string; name: string; description: string }[]
+  >([]);
   const [showProducts, setShowProducts] = useState(false);
   const [productTitle, setProductTitle] = useState("Product Details");
   const [selectedProduct, setSelectedProduct] = useState(null);

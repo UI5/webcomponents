@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -11,15 +11,15 @@ import "@ui5/webcomponents/dist/TableHeaderCellActionAI.js";
 import TableHeaderCellActionAIClass from "@ui5/webcomponents/dist/TableHeaderCellActionAI.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 
-const Label = createComponent(LabelClass);
-const Popover = createComponent(PopoverClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableRow = createComponent(TableRowClass);
-const Text = createComponent(TextClass);
-const TableHeaderCellActionAI = createComponent(TableHeaderCellActionAIClass);
-const Table = createComponent(TableClass);
+const Label = createReactComponent(LabelClass);
+const Popover = createReactComponent(PopoverClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableRow = createReactComponent(TableRowClass);
+const Text = createReactComponent(TextClass);
+const TableHeaderCellActionAI = createReactComponent(TableHeaderCellActionAIClass);
+const Table = createReactComponent(TableClass);
 
 function App() {
   const popoverRef = useRef(null);

@@ -1,12 +1,12 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 import ColorPalettePopoverClass from "@ui5/webcomponents/dist/ColorPalettePopover.js";
 
-const Button = createComponent(ButtonClass);
-const ColorPaletteItem = createComponent(ColorPaletteItemClass);
-const ColorPalettePopover = createComponent(ColorPalettePopoverClass);
+const Button = createReactComponent(ButtonClass);
+const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
+const ColorPalettePopover = createReactComponent(ColorPalettePopoverClass);
 
 function App() {
   const [open, setOpen] = useState(false);

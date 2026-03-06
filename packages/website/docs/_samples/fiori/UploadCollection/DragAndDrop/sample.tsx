@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
@@ -11,19 +11,27 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/document-text.js";
 import "@ui5/webcomponents-icons/dist/add.js";
 
-const UploadCollection = createComponent(UploadCollectionClass);
-const UploadCollectionItem = createComponent(UploadCollectionItemClass);
-const Button = createComponent(ButtonClass);
-const FileUploader = createComponent(FileUploaderClass);
-const Icon = createComponent(IconClass);
-const Label = createComponent(LabelClass);
-const Title = createComponent(TitleClass);
+const UploadCollection = createReactComponent(UploadCollectionClass);
+const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
+const Button = createReactComponent(ButtonClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Icon = createReactComponent(IconClass);
+const Label = createReactComponent(LabelClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<
+    {
+      id: number;
+      file: File;
+      fileName: string;
+      description: string;
+      uploadState: string;
+    }[]
+  >([]);
   const fileIdCounter = useRef(0);
 
-  const addFiles = useCallback((files) => {
+  const addFiles = useCallback((files: FileList) => {
     const newItems = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -32,7 +40,7 @@ function App() {
         file: file,
         fileName: file.name,
         description:
-          "Last modified: " + file.lastModifiedDate + ", size: " + file.size,
+          "Last modified: " + file.lastModified + ", size: " + file.size,
         uploadState: "Ready",
       });
     }

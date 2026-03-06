@@ -2964,12 +2964,12 @@ interface CompatTableGroupRowProps extends UI5BaseProps {
 }
 
 // Module declarations for sample imports
-declare module "@ui5/webcomponents-base/dist/createComponent.js" {
-  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {
+  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
 }
 
 declare module "@ui5/webcomponents-base" {
-  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
   export type UI5CustomEvent<T = HTMLElement, N extends string = never> =
     Omit<CustomEvent<
       [N] extends [never] ? any :

@@ -1,4 +1,4 @@
-name: Check React Samples Sync
+name: PR - React Samples Check
 
 on:
   pull_request:

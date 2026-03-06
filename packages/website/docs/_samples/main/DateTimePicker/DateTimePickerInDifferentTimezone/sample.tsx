@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { setTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
@@ -7,9 +7,9 @@ import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 
-const DateTimePicker = createComponent(DateTimePickerClass);
-const Option = createComponent(OptionClass);
-const Select = createComponent(SelectClass);
+const DateTimePicker = createReactComponent(DateTimePickerClass);
+const Option = createReactComponent(OptionClass);
+const Select = createReactComponent(SelectClass);
 
 function App() {
   const dtpRef = useRef(null);
