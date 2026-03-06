@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@cypress/mount-utils": "^4.1.2",
-    "cypress": "^15.3.0",
+    "cypress": "15.9.0",
     "preact": "^10.25.4"
   },
   "peerDependencies": {
