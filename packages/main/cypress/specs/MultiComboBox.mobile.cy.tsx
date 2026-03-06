@@ -197,7 +197,7 @@ describe("Typeahead", () => {
             .find("[ui5-input]")
             .as("respPopoverInput")
             .realClick()
-            .realType("c");
+            .realType("C");
 
         cy.get("@respPopoverInput")
             .should("have.value", "Cosy");

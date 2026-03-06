@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-base",
-  "version": "2.20.0-rc.3",
+  "version": "2.20.0",
   "description": "UI5 Web Components: webcomponents.base",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -66,7 +66,7 @@
     "@openui5/sap.ui.core": "1.120.17",
     "@sap-theming/theming-base-content": "11.33.0",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.20.0-rc.3",
+    "@ui5/webcomponents-tools": "2.20.0",
     "clean-css": "^5.2.2",
     "cypress": "15.9.0",
     "mocha": "^11.7.2",
@@ -75,6 +75,14 @@
     "touch": "^3.1.0",
     "typescript": "^5.6.2",
     "vite": "5.4.21"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "customElements": "dist/custom-elements.json"
 }

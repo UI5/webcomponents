@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ui5-date*:** remove seconds from timezone tests ([#13192](https://github.com/UI5/webcomponents/issues/13192)) ([b6fa4db](https://github.com/UI5/webcomponents/commit/b6fa4db6bc9449818f3908387bcc5b2b6ee2d813))
+
+
+
+
+
 # [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
 
 
