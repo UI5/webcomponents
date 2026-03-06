@@ -22,24 +22,27 @@ const Button = createComponent(ButtonClass);
 const ToggleButton = createComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
       <ShellBar notificationsCount={72} showNotifications={true}>
-                <ShellBarBranding slot="branding">
-                    Product Identifier
-                    <img slot="logo" src="/images/sap-logo-svg.svg" />
-                </ShellBarBranding>
+        <ShellBarBranding slot="branding">
+          Product Identifier
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+        </ShellBarBranding>
 
-                <Button icon="nav-back" slot="startButton" />
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
+        <Button icon="nav-back" slot="startButton" />
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-                    <img src="/images/avatars/man_avatar_3.png"/>
-                </Avatar>
-            </ShellBar>
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
     </>
   );
 }

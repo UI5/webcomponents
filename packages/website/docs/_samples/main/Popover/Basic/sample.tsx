@@ -15,21 +15,36 @@ function App() {
 
   return (
     <>
-      <Button id="btn" onClick={() => setOpen(!open)}>Open Popover</Button>
+      <Button id="btn" onClick={() => setOpen(!open)}>
+        Open Popover
+      </Button>
 
-        <Popover open={open} opener="btn" headerText="Newsletter subscription" onClose={() => setOpen(false)}>
+      <Popover
+        open={open}
+        opener="btn"
+        headerText="Newsletter subscription"
+        onClose={() => setOpen(false)}
+      >
+        <div className="popover-content">
+          <Label for="emailInput" required={true} showColon={true}>
+            Email
+          </Label>
+          <Input
+            style={{ minWidth: "150px" }}
+            id="emailInput"
+            placeholder="Enter Email"
+          />
+          <Label>
+            Note: If you open the page in mobile, a dialog would be displayed.
+          </Label>
+        </div>
 
-            <div className="popover-content">
-                <Label for="emailInput" required={true} showColon={true}>Email</Label>
-                <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
-                <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
-            </div>
-
-            <div slot="footer" className="popover-footer">
-                <Button id="closePopoverButton" design="Emphasized">Subscribe</Button>
-            </div>
-
-        </Popover>
+        <div slot="footer" className="popover-footer">
+          <Button id="closePopoverButton" design="Emphasized">
+            Subscribe
+          </Button>
+        </div>
+      </Popover>
     </>
   );
 }

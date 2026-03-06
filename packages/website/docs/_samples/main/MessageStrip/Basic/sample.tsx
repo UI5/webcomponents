@@ -4,10 +4,7 @@ import MessageStripClass from "@ui5/webcomponents/dist/MessageStrip.js";
 const MessageStrip = createComponent(MessageStripClass);
 
 function App() {
-
-  return (
-    <MessageStrip design="Information">Information Message</MessageStrip>
-  );
+  return <MessageStrip design="Information">Information Message</MessageStrip>;
 }
 
 export default App;

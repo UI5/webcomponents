@@ -10,34 +10,33 @@ const OptionCustom = createComponent(OptionCustomClass);
 const Select = createComponent(SelectClass);
 
 function App() {
-
   return (
     <>
       <Select>
         <OptionCustom displayText="AR">
-            <div className="optionContent">
-                <Icon name="soccer" />
-                Argentina
-                <Icon name="employee" />
-            </div>
+          <div className="optionContent">
+            <Icon name="soccer" />
+            Argentina
+            <Icon name="employee" />
+          </div>
         </OptionCustom>
 
         <OptionCustom displayText="BE">
-            <div className="optionContent">
-                <Icon name="soccer" />
-                Belgium
-                <Icon name="employee" />
-            </div>
+          <div className="optionContent">
+            <Icon name="soccer" />
+            Belgium
+            <Icon name="employee" />
+          </div>
         </OptionCustom>
 
         <OptionCustom displayText="BR">
-            <div className="optionContent">
-                <Icon name="soccer" />
-                Brazil
-                <Icon name="employee" />
-            </div>
+          <div className="optionContent">
+            <Icon name="soccer" />
+            Brazil
+            <Icon name="employee" />
+          </div>
         </OptionCustom>
-    </Select>
+      </Select>
     </>
   );
 }

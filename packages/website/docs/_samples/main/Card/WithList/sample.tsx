@@ -17,7 +17,6 @@ const List = createComponent(ListClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -26,28 +25,38 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" titleText="Team Space" subtitleText="Direct Reports" additionalText="3 of 10">
-                <Icon name="group" slot="avatar" />
-                <Button design="Transparent" slot="action">View All</Button>
-            </CardHeader>
-            <List style={{ marginBlockEnd: "0.75rem" }} separators="None">
-                <ListItemStandard description="User Researcher">Alain Chevalier
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard description="Artist">Monique Legrand
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard description="UX Specialist">Isabella Adams
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-            </List>
-        </Card>
+        <CardHeader
+          slot="header"
+          titleText="Team Space"
+          subtitleText="Direct Reports"
+          additionalText="3 of 10"
+        >
+          <Icon name="group" slot="avatar" />
+          <Button design="Transparent" slot="action">
+            View All
+          </Button>
+        </CardHeader>
+        <List style={{ marginBlockEnd: "0.75rem" }} separators="None">
+          <ListItemStandard description="User Researcher">
+            Alain Chevalier
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard description="Artist">
+            Monique Legrand
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard description="UX Specialist">
+            Isabella Adams
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </List>
+      </Card>
     </>
   );
 }

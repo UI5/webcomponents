@@ -4,7 +4,6 @@ import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 const DateTimePicker = createComponent(DateTimePickerClass);
 
 function App() {
-
   return (
     <DateTimePicker displayFormat="medium" valueFormat="yyyy-MM-dd HH:mm:ss" />
   );

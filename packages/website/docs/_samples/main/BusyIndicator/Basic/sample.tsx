@@ -4,10 +4,7 @@ import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
 const BusyIndicator = createComponent(BusyIndicatorClass);
 
 function App() {
-
-  return (
-    <BusyIndicator active={true} />
-  );
+  return <BusyIndicator active={true} />;
 }
 
 export default App;

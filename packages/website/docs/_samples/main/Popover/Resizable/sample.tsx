@@ -15,15 +15,29 @@ function App() {
 
   return (
     <>
-      <Button id="popoverOpener" onClick={() => setOpen(true)}>Open Popover</Button>
+      <Button id="popoverOpener" onClick={() => setOpen(true)}>
+        Open Popover
+      </Button>
 
-        <Popover open={open} id="popover" opener="popoverOpener" headerText="Resizable Popover" resizable={true} onClose={() => setOpen(false)}>
-            <p>Resize this popover by dragging its resize handle.</p>
-            <p>This feature is available only on desktop devices.</p>
-            <Toolbar slot="footer">
-                <ToolbarButton class="popoverCloser" design="Emphasized" text="OK" onClick={() => setOpen(false)} />
-            </Toolbar>
-        </Popover>
+      <Popover
+        open={open}
+        id="popover"
+        opener="popoverOpener"
+        headerText="Resizable Popover"
+        resizable={true}
+        onClose={() => setOpen(false)}
+      >
+        <p>Resize this popover by dragging its resize handle.</p>
+        <p>This feature is available only on desktop devices.</p>
+        <Toolbar slot="footer">
+          <ToolbarButton
+            class="popoverCloser"
+            design="Emphasized"
+            text="OK"
+            onClick={() => setOpen(false)}
+          />
+        </Toolbar>
+      </Popover>
     </>
   );
 }

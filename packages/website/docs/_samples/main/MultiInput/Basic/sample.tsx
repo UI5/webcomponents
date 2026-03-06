@@ -8,9 +8,17 @@ const MultiInput = createComponent(MultiInputClass);
 const Token = createComponent(TokenClass);
 
 function App() {
-  const [tokens, setTokens] = useState(["Argentina", "Mexico", "Philippines", "Sweden", "USA"]);
+  const [tokens, setTokens] = useState([
+    "Argentina",
+    "Mexico",
+    "Philippines",
+    "Sweden",
+    "USA",
+  ]);
 
-  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
+  const handleTokenDelete = (
+    e: UI5CustomEvent<MultiInputClass, "token-delete">,
+  ) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);

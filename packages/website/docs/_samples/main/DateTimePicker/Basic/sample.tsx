@@ -4,10 +4,7 @@ import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 const DateTimePicker = createComponent(DateTimePickerClass);
 
 function App() {
-
-  return (
-    <DateTimePicker />
-  );
+  return <DateTimePicker />;
 }
 
 export default App;

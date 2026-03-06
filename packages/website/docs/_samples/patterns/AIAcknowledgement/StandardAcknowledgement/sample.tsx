@@ -26,16 +26,39 @@ function App() {
       <Dialog open={dialogOpen} state="Information" headerText="Information">
         <br />
         <Text>
-          [ &lt;Application Help&gt; ] now provides embedded AI ("Artificial Intelligence") services. For more information, see <Link href="https://www.sap.com" target="_blank">&lt;link&gt;</Link>.
+          [ &lt;Application Help&gt; ] now provides embedded AI ("Artificial
+          Intelligence") services. For more information, see{" "}
+          <Link href="https://www.sap.com" target="_blank">
+            &lt;link&gt;
+          </Link>
+          .
         </Text>
         <br />
         <Title level="H5">Disclaimer</Title>
         <br />
-        <Text>Artificial Intelligence (AI) generates results based on multiple sources. Outputs may contain errors and inaccuracies. Consider reviewing all generated results and adjust as necessary.</Text>
+        <Text>
+          Artificial Intelligence (AI) generates results based on multiple
+          sources. Outputs may contain errors and inaccuracies. Consider
+          reviewing all generated results and adjust as necessary.
+        </Text>
         <br />
-        <CheckBox style={{ marginInlineStart: "-0.625rem" }} text="Don't show this message again" />
-        <div slot="footer" style={{ display: "flex", justifyContent: "flex-end", width: "100%", alignItems: "center", gap: "0.25rem" }}>
-          <Button design="Emphasized" onClick={handleDialogClose}>OK</Button>
+        <CheckBox
+          style={{ marginInlineStart: "-0.625rem" }}
+          text="Don't show this message again"
+        />
+        <div
+          slot="footer"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: "100%",
+            alignItems: "center",
+            gap: "0.25rem",
+          }}
+        >
+          <Button design="Emphasized" onClick={handleDialogClose}>
+            OK
+          </Button>
           <Button onClick={handleDialogClose}>Cancel</Button>
         </div>
       </Dialog>

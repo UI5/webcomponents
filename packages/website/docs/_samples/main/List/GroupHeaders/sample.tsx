@@ -13,63 +13,78 @@ const ListItemGroup = createComponent(ListItemGroupClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <List selectionMode="Multiple">
-            <ListItemGroup headerText="Front End Developers">
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Jennifer
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Lora
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_4.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Carlotta
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_5.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-            </ListItemGroup>
+        <ListItemGroup headerText="Front End Developers">
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Jennifer
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Lora
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_4.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Carlotta
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_5.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </ListItemGroup>
 
-            <ListItemGroup headerText="Back End Developers">
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Clark
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Ellen
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Adam
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-            </ListItemGroup>
+        <ListItemGroup headerText="Back End Developers">
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Clark
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Ellen
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Adam
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </ListItemGroup>
 
-            <ListItemGroup>
-                <div style={{ width: "'100%'", display: "flex", justifyContent: "space-between", alignItems: "center" }} slot="header">
-                    <span>Back End Developers</span>
-                    <Icon name="navigation-right-arrow" />
-                </div>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Ellen
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-                <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>Adam
-                    <Avatar slot="image" shape="Square">
-                        <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
-                    </Avatar>
-                </ListItemStandard>
-            </ListItemGroup>
-        </List>
+        <ListItemGroup>
+          <div
+            style={{
+              width: "'100%'",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            slot="header"
+          >
+            <span>Back End Developers</span>
+            <Icon name="navigation-right-arrow" />
+          </div>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Ellen
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard icon="navigation-right-arrow" iconEnd={true}>
+            Adam
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_2.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </ListItemGroup>
+      </List>
     </>
   );
 }

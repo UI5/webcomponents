@@ -12,29 +12,35 @@ const Text = createComponent(TextClass);
 function App() {
   return (
     <>
-      <div id="container" style={{ maxWidth: "1500px", width: "300px", overflowX: "auto" }}>
-            <Form class="addressForm" headerText="A very long header title for the form and more">
-                <FormItem>
-                    <Label slot="labelContent">Name:</Label>
-                    <Text class="text">Red Point Stores</Text>
-                </FormItem>
-            
-                <FormItem>
-                    <Label slot="labelContent">ZIP Code/City:</Label>
-                    <Text class="text">411 Maintown</Text>
-                </FormItem>
-            
-                <FormItem>
-                    <Label slot="labelContent">Street:</Label>
-                    <Text class="text">Main St 1618</Text>
-                </FormItem>
+      <div
+        id="container"
+        style={{ maxWidth: "1500px", width: "300px", overflowX: "auto" }}
+      >
+        <Form
+          class="addressForm"
+          headerText="A very long header title for the form and more"
+        >
+          <FormItem>
+            <Label slot="labelContent">Name:</Label>
+            <Text class="text">Red Point Stores</Text>
+          </FormItem>
 
-                <FormItem>
-                    <Label slot="labelContent">Country:</Label>
-                    <Text class="text">Germany</Text>
-                </FormItem>
-            </Form>
-        </div>
+          <FormItem>
+            <Label slot="labelContent">ZIP Code/City:</Label>
+            <Text class="text">411 Maintown</Text>
+          </FormItem>
+
+          <FormItem>
+            <Label slot="labelContent">Street:</Label>
+            <Text class="text">Main St 1618</Text>
+          </FormItem>
+
+          <FormItem>
+            <Label slot="labelContent">Country:</Label>
+            <Text class="text">Germany</Text>
+          </FormItem>
+        </Form>
+      </div>
     </>
   );
 }

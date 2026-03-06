@@ -4,14 +4,11 @@ import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 const Avatar = createComponent(AvatarClass);
 
 function App() {
-
   return (
     <>
-      <Avatar shape="Circle" size="M" initials="CI"
-         />
+      <Avatar shape="Circle" size="M" initials="CI" />
 
-        <Avatar shape="Square" size="M" initials="Sq"
-         />
+      <Avatar shape="Square" size="M" initials="Sq" />
     </>
   );
 }

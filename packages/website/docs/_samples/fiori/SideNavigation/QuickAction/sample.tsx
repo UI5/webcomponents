@@ -29,7 +29,7 @@ function App() {
   useEffect(() => {
     if (quickActionRef.current) {
       quickActionRef.current!.accessibilityAttributes = {
-        hasPopup: "dialog"
+        hasPopup: "dialog",
       };
     }
   }, []);
@@ -55,7 +55,12 @@ function App() {
       <SideNavigation>
         <SideNavigationItem text="Home" icon="home" />
         <SideNavigationGroup text="Group 1" expanded={true}>
-          <SideNavigationItem text="People" expanded={true} icon="group" unselectable={true}>
+          <SideNavigationItem
+            text="People"
+            expanded={true}
+            icon="group"
+            unselectable={true}
+          >
             <SideNavigationSubItem text="From My Team" />
             <SideNavigationSubItem text="From Other Teams" />
           </SideNavigationItem>
@@ -72,11 +77,22 @@ function App() {
         <SideNavigationItem slot="fixedItems" text="History" icon="history" />
       </SideNavigation>
 
-      <Dialog open={dialogOpen} headerText="Create New Item" draggable={true} resizable={true} id="quickActionDialog" onClose={() => setDialogOpen(false)}>
+      <Dialog
+        open={dialogOpen}
+        headerText="Create New Item"
+        draggable={true}
+        resizable={true}
+        id="quickActionDialog"
+        onClose={() => setDialogOpen(false)}
+      >
         <Text>Create new item...</Text>
         <Bar slot="footer" design="Footer">
-          <Button slot="endContent" design="Emphasized">Create</Button>
-          <Button slot="endContent" onClick={handleCloseClick}>Close</Button>
+          <Button slot="endContent" design="Emphasized">
+            Create
+          </Button>
+          <Button slot="endContent" onClick={handleCloseClick}>
+            Close
+          </Button>
         </Bar>
       </Dialog>
     </>

@@ -11,28 +11,35 @@ const Avatar = createComponent(AvatarClass);
 const AvatarBadge = createComponent(AvatarBadgeClass);
 
 function App() {
-
   return (
     <>
       <Avatar mode="Interactive" size="M" initials="PM" colorScheme="Accent6">
-    		<AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
-    	</Avatar>
+        <AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" initials="JD" colorScheme="Accent1">
-    		<AvatarBadge icon="sys-enter-2" state="Positive" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M" initials="JD" colorScheme="Accent1">
+        <AvatarBadge
+          icon="sys-enter-2"
+          state="Positive"
+          slot="badge"
+        ></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" initials="YM" colorScheme="Accent8">
-    		<AvatarBadge icon="alert" state="Critical" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M" initials="YM" colorScheme="Accent8">
+        <AvatarBadge icon="alert" state="Critical" slot="badge"></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" initials="KG" colorScheme="Accent10">
-    		<AvatarBadge icon="error" state="Negative" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M" initials="KG" colorScheme="Accent10">
+        <AvatarBadge icon="error" state="Negative" slot="badge"></AvatarBadge>
+      </Avatar>
 
-    	<Avatar mode="Interactive" size="M" initials="PI" colorScheme="Accent5">
-    		<AvatarBadge icon="information" state="Information" slot="badge"></AvatarBadge>
-    	</Avatar>
+      <Avatar mode="Interactive" size="M" initials="PI" colorScheme="Accent5">
+        <AvatarBadge
+          icon="information"
+          state="Information"
+          slot="badge"
+        ></AvatarBadge>
+      </Avatar>
     </>
   );
 }

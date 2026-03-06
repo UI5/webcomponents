@@ -23,18 +23,30 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenBasic" endIcon="slim-arrow-down" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button> <br />
-
-        <Menu headerText="Basic Menu with Items" open={menuOpen} id="menuBasic" opener="btnOpenBasic" onClose={() => setMenuOpen(false)}>
-            <MenuItem text="New File" icon="add-document" />
-            <MenuItem text="New Folder" icon="add-folder" disabled={true} />
-            <MenuSeparator />
-            <MenuItem text="Open" icon="open-folder" />
-            <MenuItem text="Close" />
-            <MenuSeparator />
-            <MenuItem text="Preferences" icon="action-settings" />
-            <MenuItem text="Exit" icon="journey-arrive" />
-        </Menu>
+      <Button
+        id="btnOpenBasic"
+        endIcon="slim-arrow-down"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        Open Menu
+      </Button>{" "}
+      <br />
+      <Menu
+        headerText="Basic Menu with Items"
+        open={menuOpen}
+        id="menuBasic"
+        opener="btnOpenBasic"
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem text="New File" icon="add-document" />
+        <MenuItem text="New Folder" icon="add-folder" disabled={true} />
+        <MenuSeparator />
+        <MenuItem text="Open" icon="open-folder" />
+        <MenuItem text="Close" />
+        <MenuSeparator />
+        <MenuItem text="Preferences" icon="action-settings" />
+        <MenuItem text="Exit" icon="journey-arrive" />
+      </Menu>
     </>
   );
 }

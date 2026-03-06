@@ -55,7 +55,9 @@ async function fetchProducts(first: number, last: number): Promise<Product[]> {
 }
 
 function App() {
-  const [rows, setRows] = useState<Array<{ position: number; product: Product }>>([]);
+  const [rows, setRows] = useState<
+    Array<{ position: number; product: Product }>
+  >([]);
   const virtualizerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -76,9 +78,21 @@ function App() {
 
   return (
     <>
-      <Table id="table" loading-delay={100} style={{ height: "150px" }} class="ui5-content-density-compact">
-        <TableVirtualizer id="virtualizer" slot="features" rowCount={1000} rowHeight={32} ref={virtualizerRef} onRangeChange={handleRangeChange} />
-      {/* playground-fold */}
+      <Table
+        id="table"
+        loading-delay={100}
+        style={{ height: "150px" }}
+        class="ui5-content-density-compact"
+      >
+        <TableVirtualizer
+          id="virtualizer"
+          slot="features"
+          rowCount={1000}
+          rowHeight={32}
+          ref={virtualizerRef}
+          onRangeChange={handleRangeChange}
+        />
+        {/* playground-fold */}
         <TableSelection slot="features" />
         <TableHeaderRow slot="headerRow" sticky={true}>
           <TableHeaderCell min-width="150px">Product Name</TableHeaderCell>
@@ -86,9 +100,13 @@ function App() {
           <TableHeaderCell>Weight</TableHeaderCell>
           <TableHeaderCell horizontalAlign="Right">Price</TableHeaderCell>
         </TableHeaderRow>
-      {/* playground-fold-end */}
+        {/* playground-fold-end */}
         {rows.map((row) => (
-          <TableRow key={row.product.key} position={row.position} rowKey={row.product.key}>
+          <TableRow
+            key={row.product.key}
+            position={row.position}
+            rowKey={row.product.key}
+          >
             <TableCell>{row.product.name}</TableCell>
             <TableCell>{row.product.height}</TableCell>
             <TableCell>{row.product.weight}</TableCell>

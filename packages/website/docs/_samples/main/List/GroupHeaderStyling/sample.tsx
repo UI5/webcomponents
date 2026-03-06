@@ -11,7 +11,6 @@ const ListItemGroup = createComponent(ListItemGroupClass);
 const ListItemStandard = createComponent(ListItemStandardClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -29,37 +28,42 @@ function App() {
         }
       `}</style>
       <List selectionMode="Multiple">
-    		<ListItemGroup id="styled-group" headerText="Styled Header">
-    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 1
-    				<Avatar slot="image" shape="Square">
-    					<img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
-    				</Avatar>
-    			</ListItemStandard>
-    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 2
-    				<Avatar slot="image" shape="Square">
-    					<img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
-    				</Avatar>
-    			</ListItemStandard>
-    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item 3
-    				<Avatar slot="image" shape="Square">
-    					<img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
-    				</Avatar>
-    			</ListItemStandard>
-    		</ListItemGroup>
+        <ListItemGroup id="styled-group" headerText="Styled Header">
+          <ListItemStandard iconEnd={true} icon="navigation-right-arrow">
+            Item 1
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_1.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard iconEnd={true} icon="navigation-right-arrow">
+            Item 2
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_2.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard iconEnd={true} icon="navigation-right-arrow">
+            Item 3
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/woman_avatar_3.png" alt="Woman image" />
+            </Avatar>
+          </ListItemStandard>
+        </ListItemGroup>
 
-    		<ListItemGroup headerText="Normal Header">
-    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item A
-    				<Avatar slot="image" shape="Square">
-    					<img src="/images/avatars/man_avatar_1.png" alt="Man image" />
-    				</Avatar>
-    			</ListItemStandard>
-    			<ListItemStandard iconEnd={true} icon="navigation-right-arrow">Item B
-    				<Avatar slot="image" shape="Square">
-    					<img src="/images/avatars/man_avatar_2.png" alt="Man image" />
-    				</Avatar>
-    			</ListItemStandard>
-    		</ListItemGroup>
-    	</List>
+        <ListItemGroup headerText="Normal Header">
+          <ListItemStandard iconEnd={true} icon="navigation-right-arrow">
+            Item A
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_1.png" alt="Man image" />
+            </Avatar>
+          </ListItemStandard>
+          <ListItemStandard iconEnd={true} icon="navigation-right-arrow">
+            Item B
+            <Avatar slot="image" shape="Square">
+              <img src="/images/avatars/man_avatar_2.png" alt="Man image" />
+            </Avatar>
+          </ListItemStandard>
+        </ListItemGroup>
+      </List>
     </>
   );
 }

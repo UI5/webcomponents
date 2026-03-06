@@ -6,12 +6,13 @@ import "@ui5/webcomponents-icons/dist/unfavorite.js";
 const RatingIndicator = createComponent(RatingIndicatorClass);
 
 function App() {
-
   return (
     <>
-        <RatingIndicator value={4} max={7} /><br />
-        <RatingIndicator value={4} max={7} readonly={true} /><br />
-        <RatingIndicator value={4} max={7} disabled={true} />
+      <RatingIndicator value={4} max={7} />
+      <br />
+      <RatingIndicator value={4} max={7} readonly={true} />
+      <br />
+      <RatingIndicator value={4} max={7} disabled={true} />
     </>
   );
 }

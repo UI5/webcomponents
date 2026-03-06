@@ -9,11 +9,23 @@ const Tokenizer = createComponent(TokenizerClass);
 
 function App() {
   const [tokens, setTokens] = useState([
-    "Andora", "Bulgaria", "Canada", "Denmark", "Estonia",
-    "Finland", "Germany", "Hungary", "Ireland", "Japan", "Korea", "Latvia",
+    "Andora",
+    "Bulgaria",
+    "Canada",
+    "Denmark",
+    "Estonia",
+    "Finland",
+    "Germany",
+    "Hungary",
+    "Ireland",
+    "Japan",
+    "Korea",
+    "Latvia",
   ]);
 
-  const handleTokenDelete = (e: UI5CustomEvent<TokenizerClass, "token-delete">) => {
+  const handleTokenDelete = (
+    e: UI5CustomEvent<TokenizerClass, "token-delete">,
+  ) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);
@@ -23,7 +35,13 @@ function App() {
 
   return (
     <>
-      <Tokenizer style={{ width: "320px" }} id="clear-all" show-clear-all={true} multi-line={true} onTokenDelete={handleTokenDelete}>
+      <Tokenizer
+        style={{ width: "320px" }}
+        id="clear-all"
+        show-clear-all={true}
+        multi-line={true}
+        onTokenDelete={handleTokenDelete}
+      >
         {tokens.map((t) => (
           <Token key={t} text={t} />
         ))}

@@ -61,10 +61,10 @@ function App() {
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>
-    		<Tab id="tab3.1" text="Tab 3.1" slot="items" movable={true} />
-    		<Tab id="tab3.2" text="Tab 3.2" slot="items" movable={true} />
-    		<Tab id="tab3.3" text="Tab 3.3" slot="items" movable={true} />
-    	</Tab>
+          <Tab id="tab3.1" text="Tab 3.1" slot="items" movable={true} />
+          <Tab id="tab3.2" text="Tab 3.2" slot="items" movable={true} />
+          <Tab id="tab3.3" text="Tab 3.3" slot="items" movable={true} />
+        </Tab>
         <Tab id="tab4" text="Tab 4" movable={true} />
         <Tab id="tab5" text="Tab 5" movable={true} />
         <Tab id="tab6" text="Tab 6" movable={true} />

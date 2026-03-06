@@ -15,9 +15,21 @@ function App() {
   return (
     <>
       <Search id="advancedFiltering" placeholder="Start typing ...">
-    		<Button id="advancedButton" slot="filterButton" icon="filter" onClick={() => setToastOpen(true)} />
-    	</Search>
-    	<Toast open={toastOpen} id="advancedFilterToast" placement="BottomCenter" onClose={() => setToastOpen(false)}>Search refined using advanced filters</Toast>
+        <Button
+          id="advancedButton"
+          slot="filterButton"
+          icon="filter"
+          onClick={() => setToastOpen(true)}
+        />
+      </Search>
+      <Toast
+        open={toastOpen}
+        id="advancedFilterToast"
+        placement="BottomCenter"
+        onClose={() => setToastOpen(false)}
+      >
+        Search refined using advanced filters
+      </Toast>
     </>
   );
 }

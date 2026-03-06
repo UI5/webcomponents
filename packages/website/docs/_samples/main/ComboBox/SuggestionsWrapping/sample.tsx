@@ -6,7 +6,6 @@ const ComboBox = createComponent(ComboBoxClass);
 const ComboBoxItem = createComponent(ComboBoxItemClass);
 
 function App() {
-
   return (
     <>
       <ComboBox placeholder="Enter product">

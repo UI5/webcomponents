@@ -4,10 +4,7 @@ import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 const TextArea = createComponent(TextAreaClass);
 
 function App() {
-
-  return (
-    <TextArea placeholder="Type message..." />
-  );
+  return <TextArea placeholder="Type message..." />;
 }
 
 export default App;

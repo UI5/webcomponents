@@ -6,7 +6,6 @@ const Tab = createComponent(TabClass);
 const TabContainer = createComponent(TabContainerClass);
 
 function App() {
-
   return (
     <>
       <TabContainer>
@@ -33,7 +32,7 @@ function App() {
         <Tab text="Tab 21" />
         <Tab text="Tab 22" />
         <Tab text="Tab 23" />
-    </TabContainer>
+      </TabContainer>
     </>
   );
 }

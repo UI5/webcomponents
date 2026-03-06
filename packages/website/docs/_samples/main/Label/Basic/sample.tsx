@@ -6,13 +6,15 @@ const Input = createComponent(InputClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
-      <Label>Simple Label</Label><br />
+      <Label>Simple Label</Label>
+      <br />
 
-        <Label for="myInputSimple" showColon={true}>Label</Label>
-        <Input id="myInputSimple" placeholder="Type message" />
+      <Label for="myInputSimple" showColon={true}>
+        Label
+      </Label>
+      <Input id="myInputSimple" placeholder="Type message" />
     </>
   );
 }

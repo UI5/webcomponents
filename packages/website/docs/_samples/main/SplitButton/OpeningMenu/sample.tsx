@@ -27,7 +27,9 @@ function App() {
 
   return (
     <>
-      <SplitButton ref={splitBtnRef} onArrowClick={handleArrowClick}>Open Menu</SplitButton>
+      <SplitButton ref={splitBtnRef} onArrowClick={handleArrowClick}>
+        Open Menu
+      </SplitButton>
 
       <div style={{ height: "200px" }}>
         <Menu ref={menuRef} onClose={handleMenuClose}>

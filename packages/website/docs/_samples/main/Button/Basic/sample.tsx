@@ -5,12 +5,11 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 const Button = createComponent(ButtonClass);
 
 function App() {
-
   return (
     <>
       <Button>Press</Button>
-        <Button icon="edit">Edit</Button>
-        <Button disabled={true}>Merge</Button>
+      <Button icon="edit">Edit</Button>
+      <Button disabled={true}>Merge</Button>
     </>
   );
 }

@@ -12,7 +12,9 @@ function App() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Show Toast</Button>
-      <Toast open={open} onClose={() => setOpen(false)}>This is a Toast message.</Toast>
+      <Toast open={open} onClose={() => setOpen(false)}>
+        This is a Toast message.
+      </Toast>
     </>
   );
 }

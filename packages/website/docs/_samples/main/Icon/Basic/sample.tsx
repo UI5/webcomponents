@@ -9,14 +9,13 @@ import "@ui5/webcomponents-icons/dist/da-2.js";
 const Icon = createComponent(IconClass);
 
 function App() {
-
   return (
     <>
       <Icon name="home" />
-        <Icon name="ai" />
-        <Icon name="da-2" />
-        <Icon name="heart" />
-        <Icon name="activities" />
+      <Icon name="ai" />
+      <Icon name="da-2" />
+      <Icon name="heart" />
+      <Icon name="activities" />
     </>
   );
 }

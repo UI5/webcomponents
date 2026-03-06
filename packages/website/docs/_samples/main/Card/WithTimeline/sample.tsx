@@ -12,7 +12,6 @@ const Card = createComponent(CardClass);
 const CardHeader = createComponent(CardHeaderClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -21,17 +20,32 @@ function App() {
         }
       `}</style>
       <Card style={{ width: "22rem" }}>
-            <CardHeader slot="header" titleText="Upcoming Activities" subtitleText="Today" />
-            <Timeline>
-                <TimelineItem titleText="called" timestamp={1487583000000} icon="phone" name="John Smith" nameClickable={true} />
-                <TimelineItem titleText="Weekly Sync - BTP Design" timestamp={1517349600000} icon="calendar">
-                    MR SOF02 2.43
-                </TimelineItem>
-                <TimelineItem titleText="Video Conference Call - UI5" timestamp={1485813600000} icon="calendar">
-                    Online meeting
-                </TimelineItem>
-            </Timeline>
-        </Card>
+        <CardHeader
+          slot="header"
+          titleText="Upcoming Activities"
+          subtitleText="Today"
+        />
+        <Timeline>
+          <TimelineItem
+            titleText="called"
+            icon="phone"
+            name="John Smith"
+            nameClickable={true}
+          />
+          <TimelineItem
+            titleText="Weekly Sync - BTP Design"
+            icon="calendar"
+          >
+            MR SOF02 2.43
+          </TimelineItem>
+          <TimelineItem
+            titleText="Video Conference Call - UI5"
+            icon="calendar"
+          >
+            Online meeting
+          </TimelineItem>
+        </Timeline>
+      </Card>
     </>
   );
 }

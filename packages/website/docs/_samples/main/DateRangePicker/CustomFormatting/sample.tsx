@@ -4,10 +4,7 @@ import DateRangePickerClass from "@ui5/webcomponents/dist/DateRangePicker.js";
 const DateRangePicker = createComponent(DateRangePickerClass);
 
 function App() {
-
-  return (
-    <DateRangePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />
-  );
+  return <DateRangePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />;
 }
 
 export default App;

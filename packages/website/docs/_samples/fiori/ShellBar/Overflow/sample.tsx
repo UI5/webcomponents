@@ -34,7 +34,9 @@ function App() {
   const [hiddenItems, setHiddenItems] = useState<any[]>([]);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const handleContentItemVisibilityChange = (e: UI5CustomEvent<ShellBarClass, "content-item-visibility-change">) => {
+  const handleContentItemVisibilityChange = (
+    e: UI5CustomEvent<ShellBarClass, "content-item-visibility-change">,
+  ) => {
     const items = e.detail.items || [];
     setHiddenItems(items);
     if (items.length === 0) {
@@ -48,8 +50,21 @@ function App() {
 
   return (
     <>
-      <Popover open={popoverOpen} opener="overflowBtn" placement="Bottom" horizontalAlign="End" onClose={() => setPopoverOpen(false)}>
-        <div style={{ padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      <Popover
+        open={popoverOpen}
+        opener="overflowBtn"
+        placement="Bottom"
+        horizontalAlign="End"
+        onClose={() => setPopoverOpen(false)}
+      >
+        <div
+          style={{
+            padding: "0.5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+          }}
+        >
           {hiddenItems.map((item: any, i: number) => (
             <Text key={i}>{item.textContent}</Text>
           ))}
@@ -57,19 +72,30 @@ function App() {
       </Popover>
 
       <div style={{ width: `${containerWidth}%` }}>
-        <ShellBar showNotifications={true} onContentItemVisibilityChange={handleContentItemVisibilityChange}>
+        <ShellBar
+          showNotifications={true}
+          onContentItemVisibilityChange={handleContentItemVisibilityChange}
+        >
           <Button icon="menu2" slot="startButton" />
 
           <ShellBarBranding slot="branding">
             Product
-            <img slot="logo" src="/images/sap-logo-svg.svg" alt="logo"/>
+            <img slot="logo" src="/images/sap-logo-svg.svg" alt="logo" />
           </ShellBarBranding>
 
           {hiddenItems.length > 0 && (
-            <Button id="overflowBtn" icon="slim-arrow-down" slot="content" data-hide-order="999" onClick={() => setPopoverOpen(!popoverOpen)} />
+            <Button
+              id="overflowBtn"
+              icon="slim-arrow-down"
+              slot="content"
+              data-hide-order="999"
+              onClick={() => setPopoverOpen(!popoverOpen)}
+            />
           )}
 
-          <Text slot="content" data-hide-order="1">Customer Rainbird</Text>
+          <Text slot="content" data-hide-order="1">
+            Customer Rainbird
+          </Text>
           <Tag slot="content" design="Set2" colorScheme="4">
             <Icon slot="icon" name="example" />
             Development - System 1
@@ -78,14 +104,21 @@ function App() {
           <ShellBarItem icon="sys-help" text="Help" />
 
           <Avatar slot="profile">
-            <img src="/images/avatars/man_avatar_3.png" alt="profile"/>
+            <img src="/images/avatars/man_avatar_3.png" alt="profile" />
           </Avatar>
         </ShellBar>
       </div>
 
       <br />
       <Label showColon={true}>Resize</Label>
-      <Slider min={30} max={100} value={containerWidth} labelInterval={0} showTooltip={true} onInput={handleSliderInput} />
+      <Slider
+        min={30}
+        max={100}
+        value={containerWidth}
+        labelInterval={0}
+        showTooltip={true}
+        onInput={handleSliderInput}
+      />
     </>
   );
 }

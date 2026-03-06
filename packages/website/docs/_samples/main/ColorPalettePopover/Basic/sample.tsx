@@ -13,19 +13,26 @@ function App() {
 
   return (
     <>
-      <Button id="colorPaletteBtn" onClick={() => setOpen(!open)}>Open ColorPalettePopover</Button>
-        <ColorPalettePopover open={open} id="colorPalettePopover" opener="colorPaletteBtn" onClose={() => setOpen(false)}>
-            <ColorPaletteItem value="lightsalmon" />
-            <ColorPaletteItem value="lightpink" />
-            <ColorPaletteItem value="rgb(216,124,172)" />
-            <ColorPaletteItem value="#6c666d" />
-            <ColorPaletteItem value="rgb(55,81,95)" />
-            <ColorPaletteItem value="#0072bb" />
-            <ColorPaletteItem value="powderblue" />
-            <ColorPaletteItem value="rgb(143,201,58)" />
-            <ColorPaletteItem value="rgb(195,172,206)" />
-            <ColorPaletteItem value="orange" />
-        </ColorPalettePopover>
+      <Button id="colorPaletteBtn" onClick={() => setOpen(!open)}>
+        Open ColorPalettePopover
+      </Button>
+      <ColorPalettePopover
+        open={open}
+        id="colorPalettePopover"
+        opener="colorPaletteBtn"
+        onClose={() => setOpen(false)}
+      >
+        <ColorPaletteItem value="lightsalmon" />
+        <ColorPaletteItem value="lightpink" />
+        <ColorPaletteItem value="rgb(216,124,172)" />
+        <ColorPaletteItem value="#6c666d" />
+        <ColorPaletteItem value="rgb(55,81,95)" />
+        <ColorPaletteItem value="#0072bb" />
+        <ColorPaletteItem value="powderblue" />
+        <ColorPaletteItem value="rgb(143,201,58)" />
+        <ColorPaletteItem value="rgb(195,172,206)" />
+        <ColorPaletteItem value="orange" />
+      </ColorPalettePopover>
     </>
   );
 }

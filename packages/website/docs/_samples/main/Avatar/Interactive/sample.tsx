@@ -17,9 +17,14 @@ function App() {
 
   return (
     <>
-      <Avatar id="avt" mode="Interactive" initials="FJ" onClick={handleAvtClick} />
+      <Avatar
+        id="avt"
+        mode="Interactive"
+        initials="FJ"
+        onClick={handleAvtClick}
+      />
 
-        <Label id="lbl">{labelText}</Label>
+      <Label id="lbl">{labelText}</Label>
     </>
   );
 }

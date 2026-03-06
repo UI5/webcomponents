@@ -18,7 +18,7 @@ function App() {
     setBusy(true);
 
     setTimeout(() => {
-      setItems(prev => [...prev, "UI5", "Web", "Components"]);
+      setItems((prev) => [...prev, "UI5", "Web", "Components"]);
       setBusy(false);
     }, 3000);
   };
@@ -33,15 +33,15 @@ function App() {
         }
       `}</style>
       <div className="sample">
-            <Button onClick={handleFetchBtnClick}>Fetch List Data</Button>
-            <BusyIndicator active={busy}>
-                <List noDataText="No Data" headerText="Available Items">
-                    {items.map((title, index) => (
-                        <ListItemStandard key={index}>{title}</ListItemStandard>
-                    ))}
-                </List>
-            </BusyIndicator>
-        </div>
+        <Button onClick={handleFetchBtnClick}>Fetch List Data</Button>
+        <BusyIndicator active={busy}>
+          <List noDataText="No Data" headerText="Available Items">
+            {items.map((title, index) => (
+              <ListItemStandard key={index}>{title}</ListItemStandard>
+            ))}
+          </List>
+        </BusyIndicator>
+      </div>
     </>
   );
 }

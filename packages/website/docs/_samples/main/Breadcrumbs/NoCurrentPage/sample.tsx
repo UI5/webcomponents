@@ -6,19 +6,26 @@ const Breadcrumbs = createComponent(BreadcrumbsClass);
 const BreadcrumbsItem = createComponent(BreadcrumbsItemClass);
 
 function App() {
-
   return (
     <>
       <Breadcrumbs design="NoCurrentPage">
-            <BreadcrumbsItem href="https://www.sap.com" target="_blank">Root Page</BreadcrumbsItem>
-            <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-            <BreadcrumbsItem>Parent Page</BreadcrumbsItem>
-        </Breadcrumbs>
-        <Breadcrumbs design="Standard">
-            <BreadcrumbsItem href="https://www.sap.com" target="_blank">Root Page</BreadcrumbsItem>
-            <BreadcrumbsItem href="https://www.sap.com">Parent Page</BreadcrumbsItem>
-            <BreadcrumbsItem>Current Page</BreadcrumbsItem>
-        </Breadcrumbs>
+        <BreadcrumbsItem href="https://www.sap.com" target="_blank">
+          Root Page
+        </BreadcrumbsItem>
+        <BreadcrumbsItem href="https://www.sap.com">
+          Parent Page
+        </BreadcrumbsItem>
+        <BreadcrumbsItem>Parent Page</BreadcrumbsItem>
+      </Breadcrumbs>
+      <Breadcrumbs design="Standard">
+        <BreadcrumbsItem href="https://www.sap.com" target="_blank">
+          Root Page
+        </BreadcrumbsItem>
+        <BreadcrumbsItem href="https://www.sap.com">
+          Parent Page
+        </BreadcrumbsItem>
+        <BreadcrumbsItem>Current Page</BreadcrumbsItem>
+      </Breadcrumbs>
     </>
   );
 }

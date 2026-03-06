@@ -46,7 +46,11 @@ function App() {
   const [sendDisabled, setSendDisabled] = useState(true);
   const [toastOpen, setToastOpen] = useState(false);
 
-  const optionsRef = useRef({ structure: "paragraph", language: "en", toneOfVoice: 2 });
+  const optionsRef = useRef({
+    structure: "paragraph",
+    language: "en",
+    toneOfVoice: 2,
+  });
   const textsRef = useRef(null);
   const generationIdRef = useRef(null);
   const generationStoppedRef = useRef(false);
@@ -54,8 +58,8 @@ function App() {
 
   useEffect(() => {
     fetch("../assets/data/predefinedTexts.json")
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         textsRef.current = {
           paragraph: data.predefinedTexts,
           bulleted: data.predefinedTextsBulleted,
@@ -82,7 +86,8 @@ function App() {
   const startGenerating = useCallback(() => {
     if (!textsRef.current) return;
     const opts = optionsRef.current;
-    const text = textsRef.current[opts.structure][opts.language][opts.toneOfVoice];
+    const text =
+      textsRef.current[opts.structure][opts.language][opts.toneOfVoice];
     setBusyActive(true);
     setOutputValue("");
     setAiButtonState("generating");
@@ -134,22 +139,37 @@ function App() {
     setDialogOpen(false);
   }, []);
 
-  const handleStructureChange = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
-    optionsRef.current!.structure = e.detail.selectedOption.value;
-  }, []);
+  const handleStructureChange = useCallback(
+    (e: UI5CustomEvent<SelectClass, "change">) => {
+      optionsRef.current!.structure = e.detail.selectedOption.value;
+    },
+    [],
+  );
 
-  const handleLanguageChange = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
-    optionsRef.current!.language = e.detail.selectedOption.value;
-  }, []);
+  const handleLanguageChange = useCallback(
+    (e: UI5CustomEvent<SelectClass, "change">) => {
+      optionsRef.current!.language = e.detail.selectedOption.value;
+    },
+    [],
+  );
 
-  const handleToneOfVoiceChange = useCallback((e: UI5CustomEvent<SegmentedButtonClass, "selection-change">) => {
-    const value = e.detail.selectedItems[0].innerText;
-    switch (value) {
-      case "Formal": optionsRef.current!.toneOfVoice = 1; break;
-      case "Neutral": optionsRef.current!.toneOfVoice = 2; break;
-      case "Casual": optionsRef.current!.toneOfVoice = 3; break;
-    }
-  }, []);
+  const handleToneOfVoiceChange = useCallback(
+    (e: UI5CustomEvent<SegmentedButtonClass, "selection-change">) => {
+      const value = e.detail.selectedItems[0].innerText;
+      switch (value) {
+        case "Formal":
+          optionsRef.current!.toneOfVoice = 1;
+          break;
+        case "Neutral":
+          optionsRef.current!.toneOfVoice = 2;
+          break;
+        case "Casual":
+          optionsRef.current!.toneOfVoice = 3;
+          break;
+      }
+    },
+    [],
+  );
 
   const handleSendClick = useCallback(() => {
     if (outputValue) {
@@ -222,7 +242,13 @@ function App() {
             </div>
             <div className="guidedPromptFormGroup">
               <Label>Length:</Label>
-              <RangeSlider min={50} max={150} startValue={75} endValue={125} showTooltip={true} />
+              <RangeSlider
+                min={50}
+                max={150}
+                startValue={75}
+                endValue={125}
+                showTooltip={true}
+              />
             </div>
             <div className="guidedPromptFormGroup">
               <Label>Language:</Label>
@@ -235,7 +261,9 @@ function App() {
               <Label>Tone Of Voice:</Label>
               <SegmentedButton onSelectionChange={handleToneOfVoiceChange}>
                 <SegmentedButtonItem>Formal</SegmentedButtonItem>
-                <SegmentedButtonItem selected={true}>Neutral</SegmentedButtonItem>
+                <SegmentedButtonItem selected={true}>
+                  Neutral
+                </SegmentedButtonItem>
                 <SegmentedButtonItem>Casual</SegmentedButtonItem>
               </SegmentedButton>
             </div>
@@ -243,36 +271,70 @@ function App() {
         </div>
 
         <div slot="footer" className="guidedPromptDialogFooter">
-          <Button design="Emphasized" icon="ai" onClick={handleApplyClick}>Apply</Button>
+          <Button design="Emphasized" icon="ai" onClick={handleApplyClick}>
+            Apply
+          </Button>
           <Button onClick={handleCloseDialogClick}>Close</Button>
         </div>
       </Dialog>
 
       <Card>
-        <CardHeader slot="header" titleText="Monique Legrand" subtitleText="Senior Sales Executive">
-          <img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" slot="avatar" />
+        <CardHeader
+          slot="header"
+          titleText="Monique Legrand"
+          subtitleText="Senior Sales Executive"
+        >
+          <img
+            src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png"
+            slot="avatar"
+          />
         </CardHeader>
         <section className="guidedPromptSection">
           <Label required={true}>To: </Label>
           <div style={{ display: "flex", gap: "0.125rem" }}>
-            <Token style={{ width: "fit-content", marginBlockEnd: "1rem" }} selected={true} text="DL Marketing Sector SAP" />
+            <Token
+              style={{ width: "fit-content", marginBlockEnd: "1rem" }}
+              selected={true}
+              text="DL Marketing Sector SAP"
+            />
           </div>
           <div className="guidedPromptLblBtn">
-            <Label style={{ alignSelf: "flex-end" }} required={true}>Offer: </Label>
-            <AIButton state={aiButtonState} onClick={handleOpenDialogButtonClick}>
+            <Label style={{ alignSelf: "flex-end" }} required={true}>
+              Offer:{" "}
+            </Label>
+            <AIButton
+              state={aiButtonState}
+              onClick={handleOpenDialogButtonClick}
+            >
               <AIButtonState name="generate" text="Compose Text" icon="ai" />
-              <AIButtonState name="generating" text="Stop Generating" icon="stop" />
+              <AIButtonState
+                name="generating"
+                text="Stop Generating"
+                icon="stop"
+              />
             </AIButton>
           </div>
           <BusyIndicator style={{ height: "100%" }} active={busyActive}>
-            <TextArea style={{ height: "100%" }} value={outputValue} disabled={outputDisabled} />
+            <TextArea
+              style={{ height: "100%" }}
+              value={outputValue}
+              disabled={outputDisabled}
+            />
           </BusyIndicator>
         </section>
         <div className="guidedPromptCardFooter">
-          <Button design="Emphasized" disabled={sendDisabled} onClick={handleSendClick}>Send</Button>
+          <Button
+            design="Emphasized"
+            disabled={sendDisabled}
+            onClick={handleSendClick}
+          >
+            Send
+          </Button>
           <Button design="Transparent">Cancel</Button>
         </div>
-        <Toast placement="MiddleCenter" open={toastOpen} duration={3000}>Your message was sent successfully!</Toast>
+        <Toast placement="MiddleCenter" open={toastOpen} duration={3000}>
+          Your message was sent successfully!
+        </Toast>
       </Card>
     </>
   );

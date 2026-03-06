@@ -7,11 +7,17 @@ const Icon = createComponent(IconClass);
 const MessageStrip = createComponent(MessageStripClass);
 
 function App() {
-
   return (
     <>
-      <MessageStrip design="ColorSet2">MessageStrip with default custom color without icon</MessageStrip><br /><br />
-        <MessageStrip design="ColorSet1" colorScheme="8"><Icon name="palette" slot="icon" />MessageStrip with custom icon and color set</MessageStrip>
+      <MessageStrip design="ColorSet2">
+        MessageStrip with default custom color without icon
+      </MessageStrip>
+      <br />
+      <br />
+      <MessageStrip design="ColorSet1" colorScheme="8">
+        <Icon name="palette" slot="icon" />
+        MessageStrip with custom icon and color set
+      </MessageStrip>
     </>
   );
 }

@@ -7,13 +7,12 @@ const FileUploader = createComponent(FileUploaderClass);
 const Label = createComponent(LabelClass);
 
 function App() {
-
   return (
     <>
       <div style={{ height: "100px" }}>
-            <Label for="multiple-files-uploader">Choose files:</Label>
-            <FileUploader id="multiple-files-uploader" multiple={true} />
-        </div>
+        <Label for="multiple-files-uploader">Choose files:</Label>
+        <FileUploader id="multiple-files-uploader" multiple={true} />
+      </div>
     </>
   );
 }

@@ -4,9 +4,12 @@ import ListClass from "@ui5/webcomponents/dist/List.js";
 const List = createComponent(ListClass);
 
 function App() {
-
   return (
-    <List selectionMode="None" headerText="No Data" noDataText="No Data Available" />
+    <List
+      selectionMode="None"
+      headerText="No Data"
+      noDataText="No Data Available"
+    />
   );
 }
 

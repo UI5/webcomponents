@@ -12,7 +12,6 @@ const SideNavigationItem = createComponent(SideNavigationItemClass);
 const SideNavigationSubItem = createComponent(SideNavigationSubItemClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -21,20 +20,35 @@ function App() {
         }
       `}</style>
       <SideNavigation>
-    		<SideNavigationItem text="Home" icon="home" />
-    		<SideNavigationItem text="People" expanded={true} icon="group" unselectable={true}>
-    			<SideNavigationSubItem text="From My Team" />
-    			<SideNavigationSubItem text="From Other Teams" />
-    		</SideNavigationItem>
-    		<SideNavigationItem text="Locations" icon="locate-me" unselectable={true}>
-    			<SideNavigationSubItem text="Office" />
-    			<SideNavigationSubItem text="Home" />
-    		</SideNavigationItem>
-    		<SideNavigationItem slot="fixedItems" text="History" expanded={true} icon="history" unselectable={true}>
-    			<SideNavigationSubItem text="Today" />
-    			<SideNavigationSubItem text="Yesterday" />
-    		</SideNavigationItem>
-    	</SideNavigation>
+        <SideNavigationItem text="Home" icon="home" />
+        <SideNavigationItem
+          text="People"
+          expanded={true}
+          icon="group"
+          unselectable={true}
+        >
+          <SideNavigationSubItem text="From My Team" />
+          <SideNavigationSubItem text="From Other Teams" />
+        </SideNavigationItem>
+        <SideNavigationItem
+          text="Locations"
+          icon="locate-me"
+          unselectable={true}
+        >
+          <SideNavigationSubItem text="Office" />
+          <SideNavigationSubItem text="Home" />
+        </SideNavigationItem>
+        <SideNavigationItem
+          slot="fixedItems"
+          text="History"
+          expanded={true}
+          icon="history"
+          unselectable={true}
+        >
+          <SideNavigationSubItem text="Today" />
+          <SideNavigationSubItem text="Yesterday" />
+        </SideNavigationItem>
+      </SideNavigation>
     </>
   );
 }

@@ -17,32 +17,70 @@ function App() {
   return (
     <>
       <div className="center">
-            <Button id="btn1" onClick={() => setPopover1Open(!popover1Open)}>Open Popover to Bottom</Button>
-            <Button id="btn2" onClick={() => setPopover2Open(!popover2Open)}>Open Popover to Left</Button>
+        <Button id="btn1" onClick={() => setPopover1Open(!popover1Open)}>
+          Open Popover to Bottom
+        </Button>
+        <Button id="btn2" onClick={() => setPopover2Open(!popover2Open)}>
+          Open Popover to Left
+        </Button>
+      </div>
+
+      <Popover
+        open={popover1Open}
+        id="popover1"
+        opener="btn1"
+        headerText="Newsletter subscription"
+        placement="Bottom"
+        onClose={() => setPopover1Open(false)}
+      >
+        <div className="popover-content">
+          <Label for="emailInput" required={true} showColon={true}>
+            Email
+          </Label>
+          <Input
+            style={{ minWidth: "150px" }}
+            id="emailInput"
+            placeholder="Enter Email"
+          />
+          <Label>
+            Note: If you open the page in mobile, a dialog would be displayed.
+          </Label>
         </div>
 
-        <Popover open={popover1Open} id="popover1" opener="btn1" headerText="Newsletter subscription" placement="Bottom" onClose={() => setPopover1Open(false)}>
-            <div className="popover-content">
-                <Label for="emailInput" required={true} showColon={true}>Email</Label>
-                <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
-                <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
-            </div>
+        <div slot="footer" className="popover-footer">
+          <Button id="closePopoverButton" design="Emphasized">
+            Subscribe
+          </Button>
+        </div>
+      </Popover>
 
-            <div slot="footer" className="popover-footer">
-                <Button id="closePopoverButton" design="Emphasized">Subscribe</Button>
-            </div>
-        </Popover>
-
-        <Popover open={popover2Open} id="popover2" opener="btn2" headerText="Newsletter subscription" placement="Start" onClose={() => setPopover2Open(false)}>
-            <div className="popover-content">
-                <Label for="emailInput" required={true} showColon={true}>Email</Label>
-                <Input style={{ minWidth: "150px" }} id="emailInput" placeholder="Enter Email" />
-                <Label>Note: If you open the page in mobile, a dialog would be displayed.</Label>
-            </div>
-            <div slot="footer" className="popover-footer">
-                <Button id="closePopoverButton" design="Emphasized">Subscribe</Button>
-            </div>
-        </Popover>
+      <Popover
+        open={popover2Open}
+        id="popover2"
+        opener="btn2"
+        headerText="Newsletter subscription"
+        placement="Start"
+        onClose={() => setPopover2Open(false)}
+      >
+        <div className="popover-content">
+          <Label for="emailInput" required={true} showColon={true}>
+            Email
+          </Label>
+          <Input
+            style={{ minWidth: "150px" }}
+            id="emailInput"
+            placeholder="Enter Email"
+          />
+          <Label>
+            Note: If you open the page in mobile, a dialog would be displayed.
+          </Label>
+        </div>
+        <div slot="footer" className="popover-footer">
+          <Button id="closePopoverButton" design="Emphasized">
+            Subscribe
+          </Button>
+        </div>
+      </Popover>
     </>
   );
 }

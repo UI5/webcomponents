@@ -23,8 +23,10 @@ function App() {
     return 1 + getTabLevel(element.parentElement);
   };
 
-  const handleNestingLevelChange = (e: UI5CustomEvent<StepInputClass, "change">) => {
-    maxNestingLevelRef.current = e.target.value;
+  const handleNestingLevelChange = (
+    e: UI5CustomEvent<StepInputClass, "change">,
+  ) => {
+    maxNestingLevelRef.current = e.currentTarget.value;
   };
 
   useEffect(() => {
@@ -84,10 +86,19 @@ function App() {
 
   return (
     <>
-      <Label showColon={true} htmlFor="maxNestingLevelInput">Max nesting level</Label>
-      <StepInput style={{ width: "5rem" }} id="maxNestingLevelInput" placeholder="maxNestingLevel" value={1} min={1} onChange={handleNestingLevelChange} />
+      <Label showColon={true} for="maxNestingLevelInput">
+        Max nesting level
+      </Label>
+      <StepInput
+        style={{ width: "5rem" }}
+        id="maxNestingLevelInput"
+        placeholder="maxNestingLevel"
+        value={1}
+        min={1}
+        onChange={handleNestingLevelChange}
+      />
 
-      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>
