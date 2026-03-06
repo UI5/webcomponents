@@ -1,8 +1,8 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import "@ui5/webcomponents-icons/dist/da-2.js";
 
-const Icon = createComponent(IconClass);
+const Icon = createReactComponent(IconClass);
 
 function App() {
   return (

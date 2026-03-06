@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageHeaderClass from "@ui5/webcomponents-fiori/dist/DynamicPageHeader.js";
@@ -19,21 +19,21 @@ import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/share.js";
 import "@ui5/webcomponents-icons/dist/laptop.js";
 
-const DynamicPage = createComponent(DynamicPageClass);
-const DynamicPageHeader = createComponent(DynamicPageHeaderClass);
-const DynamicPageTitle = createComponent(DynamicPageTitleClass);
-const Avatar = createComponent(AvatarClass);
-const Bar = createComponent(BarClass);
-const Breadcrumbs = createComponent(BreadcrumbsClass);
-const BreadcrumbsItem = createComponent(BreadcrumbsItemClass);
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
-const Tag = createComponent(TagClass);
-const Title = createComponent(TitleClass);
-const Toolbar = createComponent(ToolbarClass);
-const ToolbarButton = createComponent(ToolbarButtonClass);
+const DynamicPage = createReactComponent(DynamicPageClass);
+const DynamicPageHeader = createReactComponent(DynamicPageHeaderClass);
+const DynamicPageTitle = createReactComponent(DynamicPageTitleClass);
+const Avatar = createReactComponent(AvatarClass);
+const Bar = createReactComponent(BarClass);
+const Breadcrumbs = createReactComponent(BreadcrumbsClass);
+const BreadcrumbsItem = createReactComponent(BreadcrumbsItemClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
+const Tag = createReactComponent(TagClass);
+const Title = createReactComponent(TitleClass);
+const Toolbar = createReactComponent(ToolbarClass);
+const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
   const [showFooter, setShowFooter] = useState(true);
@@ -101,7 +101,7 @@ function App() {
             padding: 0.8rem 0 0 1rem;
         }
 
-        .navigationBar{
+        .navigationBar {
             padding: 0.8rem 0 0 0;
         }
 
@@ -124,7 +124,8 @@ function App() {
             margin-left: 4rem;
         }
       `}</style>
-      <DynamicPage id="page" showFooter={showFooter}>
+	  <div style={{ height: "580px" }}>
+      <DynamicPage showFooter={showFooter}>
         <DynamicPageTitle slot="titleArea">
           <Breadcrumbs slot="breadcrumbs">
             <BreadcrumbsItem href="#">Man</BreadcrumbsItem>
@@ -136,7 +137,7 @@ function App() {
 
           <div slot="snappedHeading" className="snapped-title-heading">
             <Avatar
-              shape="square"
+              shape="Square"
               icon="laptop"
               colorScheme="Accent5"
               size="S"
@@ -185,7 +186,7 @@ function App() {
           <div className="product-info">
             <Avatar
               id="avatar"
-              shape="square"
+              shape="Square"
               icon="laptop"
               colorScheme="Accent5"
               size="L"
@@ -208,7 +209,7 @@ function App() {
           </div>
         </DynamicPageHeader>
 
-        <List headerText="Products (13)" mode="SingleSelect">
+        <List headerText="Products (13)" selectionMode="Single">
           <ListItemStandard
             description="HT-2001"
             icon="slim-arrow-right"
@@ -909,6 +910,7 @@ function App() {
           </Button>
         </Bar>
       </DynamicPage>
+	  </div>
     </>
   );
 }

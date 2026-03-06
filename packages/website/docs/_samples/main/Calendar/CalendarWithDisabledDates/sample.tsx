@@ -1,11 +1,11 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 import SpecialCalendarDateClass from "@ui5/webcomponents/dist/SpecialCalendarDate.js";
 import DateRangeClass from "@ui5/webcomponents/dist/DateRange.js";
 
-const Calendar = createComponent(CalendarClass);
-const SpecialCalendarDate = createComponent(SpecialCalendarDateClass);
-const DateRange = createComponent(DateRangeClass);
+const Calendar = createReactComponent(CalendarClass);
+const SpecialCalendarDate = createReactComponent(SpecialCalendarDateClass);
+const DateRange = createReactComponent(DateRangeClass);
 
 function App() {
   return (

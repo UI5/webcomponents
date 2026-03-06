@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
-const Token = createComponent(TokenClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
   return (

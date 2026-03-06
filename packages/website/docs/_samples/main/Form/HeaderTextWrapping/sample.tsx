@@ -1,13 +1,13 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Form = createComponent(FormClass);
-const FormItem = createComponent(FormItemClass);
-const Label = createComponent(LabelClass);
-const Text = createComponent(TextClass);
+const Form = createReactComponent(FormClass);
+const FormItem = createReactComponent(FormItemClass);
+const Label = createReactComponent(LabelClass);
+const Text = createReactComponent(TextClass);
 
 function App() {
   return (

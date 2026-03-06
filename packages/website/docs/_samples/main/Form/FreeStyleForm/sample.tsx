@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
@@ -19,24 +19,24 @@ import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 import TimePickerClass from "@ui5/webcomponents/dist/TimePicker.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
-const Button = createComponent(ButtonClass);
-const CheckBox = createComponent(CheckBoxClass);
-const FileUploader = createComponent(FileUploaderClass);
-const Form = createComponent(FormClass);
-const FormGroup = createComponent(FormGroupClass);
-const FormItem = createComponent(FormItemClass);
-const Input = createComponent(InputClass);
-const Label = createComponent(LabelClass);
-const MultiInput = createComponent(MultiInputClass);
-const Option = createComponent(OptionClass);
-const RadioButton = createComponent(RadioButtonClass);
-const Select = createComponent(SelectClass);
-const Slider = createComponent(SliderClass);
-const Switch = createComponent(SwitchClass);
-const Text = createComponent(TextClass);
-const TextArea = createComponent(TextAreaClass);
-const TimePicker = createComponent(TimePickerClass);
-const Token = createComponent(TokenClass);
+const Button = createReactComponent(ButtonClass);
+const CheckBox = createReactComponent(CheckBoxClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Form = createReactComponent(FormClass);
+const FormGroup = createReactComponent(FormGroupClass);
+const FormItem = createReactComponent(FormItemClass);
+const Input = createReactComponent(InputClass);
+const Label = createReactComponent(LabelClass);
+const MultiInput = createReactComponent(MultiInputClass);
+const Option = createReactComponent(OptionClass);
+const RadioButton = createReactComponent(RadioButtonClass);
+const Select = createReactComponent(SelectClass);
+const Slider = createReactComponent(SliderClass);
+const Switch = createReactComponent(SwitchClass);
+const Text = createReactComponent(TextClass);
+const TextArea = createReactComponent(TextAreaClass);
+const TimePicker = createReactComponent(TimePickerClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
   const containerRef = useRef(null);

@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -7,8 +7,8 @@ import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import AvatarBadgeClass from "@ui5/webcomponents/dist/AvatarBadge.js";
 
-const Avatar = createComponent(AvatarClass);
-const AvatarBadge = createComponent(AvatarBadgeClass);
+const Avatar = createReactComponent(AvatarClass);
+const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
 function App() {
   return (

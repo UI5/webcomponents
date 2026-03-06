@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 
-const List = createComponent(ListClass);
+const List = createReactComponent(ListClass);
 
 function App() {
   return (
