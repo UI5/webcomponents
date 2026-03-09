@@ -299,7 +299,7 @@ class Carousel extends UI5Element {
 	_visibleItemsCount = 0;
 
 	/**
-	 * Defines the current page index, which determines the first visible item in the viewport.
+	 * Defines the current page index, which determines the first visible item.
 	 * @private
 	 * @since 2.16.0-r.c1
 	 */
@@ -370,7 +370,7 @@ class Carousel extends UI5Element {
 			this._visibleNavigationArrows = true;
 		}
 
-		this.validateSelectedIndex();
+		this.validateFocusedIndex();
 	}
 
 	onAfterRendering() {
@@ -391,7 +391,7 @@ class Carousel extends UI5Element {
 		ResizeHandler.deregister(this, this._onResizeBound);
 	}
 
-	validateSelectedIndex() {
+	validateFocusedIndex() {
 		if (!this.isIndexInRange(this._focusedItemIndex)) {
 			this._focusedItemIndex = 0;
 		}
@@ -591,7 +591,7 @@ class Carousel extends UI5Element {
 		for (let i = 0; i < this._orderOfLastFocusedItems.length; i++) {
 			const itemIndex = this._orderOfLastFocusedItems[i];
 
-			if (this.isItemInViewport(itemIndex)) {
+			if (this.isItemVisible(itemIndex)) {
 				return itemIndex;
 			}
 		}
@@ -726,10 +726,10 @@ class Carousel extends UI5Element {
 			return {
 				id: `${this._id}-carousel-item-${idx + 1}`,
 				item,
-				tabIndex: this.isItemInViewport(this._focusedItemIndex) ? 0 : -1,
+				tabIndex: this.isItemVisible(this._focusedItemIndex) ? 0 : -1,
 				posinset: idx + 1,
 				setsize: this._visibleItems.length,
-				visible: this.isItemInViewport(idx),
+				visible: this.isItemVisible(idx),
 			};
 		});
 	}
@@ -771,7 +771,7 @@ class Carousel extends UI5Element {
 		return itemsPerPageSizeXL;
 	}
 
-	isItemInViewport(index: number): boolean {
+	isItemVisible(index: number): boolean {
 		return this._visibleItemsIndexes.includes(index);
 	}
 
@@ -893,10 +893,6 @@ class Carousel extends UI5Element {
 
 	get _isRTL() {
 		return this.effectiveDir === "rtl";
-	}
-
-	get selectedIndexToShow() {
-		return this._isRTL ? this.items.length - (this.items.length - this._focusedItemIndex) + 1 : this._focusedItemIndex + 1;
 	}
 
 	get ofText() {
