@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
@@ -6,9 +6,9 @@ import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-icons/dist/camera.js";
 
-const BarcodeScannerDialog = createComponent(BarcodeScannerDialogClass);
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
+const BarcodeScannerDialog = createReactComponent(BarcodeScannerDialogClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
 
 function App() {
   const [open, setOpen] = useState(false);

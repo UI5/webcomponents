@@ -1,15 +1,15 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const CompatTable = createComponent(CompatTableClass);
-const CompatTableRow = createComponent(CompatTableRowClass);
-const CompatTableColumn = createComponent(TableColumnClass);
-const CompatTableCell = createComponent(CompatTableCellClass);
-const Text = createComponent(TextClass);
+const CompatTable = createReactComponent(CompatTableClass);
+const CompatTableRow = createReactComponent(CompatTableRowClass);
+const CompatTableColumn = createReactComponent(TableColumnClass);
+const CompatTableCell = createReactComponent(CompatTableCellClass);
+const Text = createReactComponent(TextClass);
 
 function App() {
   return (
@@ -18,12 +18,12 @@ function App() {
         <CompatTableColumn slot="columns">
           <Text>Product</Text>
         </CompatTableColumn>
-        <CompatTableColumn slot="columns" minWidth="800">
+        <CompatTableColumn slot="columns" minWidth={800}>
           <Text>Supplier</Text>
         </CompatTableColumn>
         <CompatTableColumn
           slot="columns"
-          minWidth="600"
+          minWidth={600}
           popinText="Dimensions"
           demandPopin
         >
@@ -31,7 +31,7 @@ function App() {
         </CompatTableColumn>
         <CompatTableColumn
           slot="columns"
-          minWidth="600"
+          minWidth={600}
           popinText="Weight"
           demandPopin
         >

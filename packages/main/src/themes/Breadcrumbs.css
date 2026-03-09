@@ -29,6 +29,10 @@
     align-self: center;
 }
 
+.ui5-breadcrumbs-current-location [ui5-label] {
+	color: var(--_ui5_breadcrumbs_current_location_color);
+}
+
 .ui5-breadcrumbs-current-location,
 .ui5-breadcrumbs-link-wrapper:last-child {
 	min-width: 1%;
@@ -96,7 +100,7 @@
 	content: "/"; /* default separator is "Slash" */
 	padding: 0 .25rem;
 	cursor: auto;
-	color: var(--sapContent_LabelColor);
+	color: var(--_ui5_breadcrumbs_separator_color);
 	display: inline-block;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);

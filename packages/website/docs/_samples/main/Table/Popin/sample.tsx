@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
@@ -13,24 +13,24 @@ import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents-icons/dist/detail-more.js";
 import "@ui5/webcomponents-icons/dist/detail-less.js";
 
-const Bar = createComponent(BarClass);
-const Label = createComponent(LabelClass);
-const SegmentedButton = createComponent(SegmentedButtonClass);
-const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
-const Table = createComponent(TableClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableRow = createComponent(TableRowClass);
+const Bar = createReactComponent(BarClass);
+const Label = createReactComponent(LabelClass);
+const SegmentedButton = createReactComponent(SegmentedButtonClass);
+const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
+const Table = createReactComponent(TableClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableRow = createReactComponent(TableRowClass);
 
 const HIDDEN_COLUMNS = ["dimensionsCol", "weightCol"];
 
 function App() {
   const tableRef = useRef(null);
 
-  const setPopinState = (hideDetails) => {
+  const setPopinState = (hideDetails: boolean) => {
     HIDDEN_COLUMNS.forEach((columnId) => {
-      const headerCell = document.getElementById(columnId);
+      const headerCell = document.getElementById(columnId) as any;
       if (headerCell) {
         headerCell.popinHidden = hideDetails;
       }
@@ -50,7 +50,7 @@ function App() {
     e: UI5CustomEvent<SegmentedButtonClass, "selection-change">,
   ) => {
     const selectedItem = e.detail.selectedItems[0];
-    setPopinState(selectedItem.tooltip === "Hide Details");
+    setPopinState((selectedItem as SegmentedButtonItemClass).tooltip === "Hide Details");
   };
 
   return (

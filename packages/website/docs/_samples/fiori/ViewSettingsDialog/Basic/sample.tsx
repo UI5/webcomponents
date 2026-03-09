@@ -1,18 +1,18 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef, useState } from "react";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
+import GroupItemClass from "@ui5/webcomponents-fiori/dist/GroupItem.js";
 import SortItemClass from "@ui5/webcomponents-fiori/dist/SortItem.js";
 import ViewSettingsDialogClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
-import ListItemGroupClass from "@ui5/webcomponents/dist/ListItemGroup.js";
 
-const FilterItem = createComponent(FilterItemClass);
-const FilterItemOption = createComponent(FilterItemOptionClass);
-const SortItem = createComponent(SortItemClass);
-const ViewSettingsDialog = createComponent(ViewSettingsDialogClass);
-const Button = createComponent(ButtonClass);
-const ListItemGroup = createComponent(ListItemGroupClass);
+const FilterItem = createReactComponent(FilterItemClass);
+const FilterItemOption = createReactComponent(FilterItemOptionClass);
+const SortItem = createReactComponent(SortItemClass);
+const ViewSettingsDialog = createReactComponent(ViewSettingsDialogClass);
+const Button = createReactComponent(ButtonClass);
+const GroupItem = createReactComponent(GroupItemClass);
 
 function App() {
   const [vsdOpen, setVsdOpen] = useState(false);
@@ -23,7 +23,7 @@ function App() {
     setVsdOpen(true);
   };
 
-  const handleVsd1Confirm = (evt) => {
+  const handleVsd1Confirm = (evt: CustomEvent) => {
     vsdResultsRef.current!.innerHTML = JSON.stringify(evt.detail);
   };
 
@@ -64,15 +64,15 @@ function App() {
           <FilterItemOption slot="values" text="CPO" />
           <FilterItemOption slot="values" text="VP" />
         </FilterItem>
-        <ListItemGroup
+        <GroupItem
           slot="groupItems"
           text="Name"
-          selected=""
-        ></ListItemGroup>
-        <ListItemGroup slot="groupItems" text="Position"></ListItemGroup>
-        <ListItemGroup slot="groupItems" text="Company"></ListItemGroup>
-        <ListItemGroup slot="groupItems" text="Department"></ListItemGroup>
-        <ListItemGroup slot="groupItems" text="(Not Grouped)"></ListItemGroup>
+          selected={true}
+        ></GroupItem>
+        <GroupItem slot="groupItems" text="Position"></GroupItem>
+        <GroupItem slot="groupItems" text="Company"></GroupItem>
+        <GroupItem slot="groupItems" text="Department"></GroupItem>
+        <GroupItem slot="groupItems" text="(Not Grouped)"></GroupItem>
       </ViewSettingsDialog>
       <br />
       <br />

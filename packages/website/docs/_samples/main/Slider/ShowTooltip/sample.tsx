@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 
-const Slider = createComponent(SliderClass);
+const Slider = createReactComponent(SliderClass);
 
 function App() {
   return (

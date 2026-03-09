@@ -1,8 +1,8 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ToggleButtonClass from "@ui5/webcomponents/dist/ToggleButton.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 
-const ToggleButton = createComponent(ToggleButtonClass);
+const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
   return (
