@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Banner</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<link rel="stylesheet" type="text/css" href="./styles/Banner.css">
+</head>
+
+<body>
+	<div class="showcase">
+
+		<!-- ====================================== -->
+		<!-- 1. Basic Banner: Salutation Only       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>1. Basic Banner (Salutation Only)</h2>
+			<p>The simplest banner with only the mandatory salutation text.</p>
+
+			<ui5-banner id="banner-basic"
+				salutation-text="Hello, John">
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 2. Banner with Date                    -->
+		<!-- ====================================== -->
+		<section>
+			<h2>2. Banner with Date</h2>
+			<p>A banner combining salutation and date text.</p>
+
+			<ui5-banner id="banner-date"
+				salutation-text="Good Morning, Jane"
+				date-text="Thursday, March 6, 2026">
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 3. FullWidth Layout with Content       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>3. FullWidth Layout</h2>
+			<p>Banner with a full-width search field below the salutation.</p>
+
+			<ui5-banner id="banner-fullwidth"
+				salutation-text="Welcome back, Alex"
+				date-text="Thursday, March 6, 2026"
+				layout="FullWidth">
+				<ui5-input slot="startContent"
+					placeholder="Search products, documents, reports..."
+					style="width: 100%;">
+				</ui5-input>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 4. HalfWidth Layout (50/50 Split)      -->
+		<!-- ====================================== -->
+		<section>
+			<h2>4. HalfWidth Layout (50/50 Split)</h2>
+			<p>Two KPI cards side by side in a 50/50 layout.</p>
+
+			<ui5-banner id="banner-half"
+				salutation-text="Hello, Maria"
+				date-text="Thursday, March 6, 2026"
+				layout="HalfWidth">
+
+				<div slot="startContent" class="kpi-card">
+					<span class="kpi-label">Open Orders</span>
+					<span class="kpi-value">1,247</span>
+					<span class="kpi-trend">▲ 12% vs last month</span>
+				</div>
+
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">Revenue YTD</span>
+					<span class="kpi-value">€4.2M</span>
+					<span class="kpi-trend negative">▼ 3% vs target</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 5. TwoThirds Layout (2/3 + 1/3)       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>5. TwoThirds Layout (2/3 + 1/3)</h2>
+			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
+
+			<ui5-banner id="banner-twothirds"
+				salutation-text="Good Afternoon, Thomas"
+				date-text="Thursday, March 6, 2026"
+				layout="TwoThirds">
+
+				<div slot="startContent" class="kpi-card">
+					<span class="kpi-label">Pipeline Overview</span>
+					<span class="kpi-value">€12.8M</span>
+					<span class="kpi-trend">▲ 8% quarter over quarter</span>
+					<div style="margin-top: 0.5rem;">
+						<ui5-button design="Emphasized">View Details</ui5-button>
+						<ui5-button design="Transparent">Export</ui5-button>
+					</div>
+				</div>
+
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">Tasks Due Today</span>
+					<span class="kpi-value">7</span>
+					<span class="kpi-trend negative">▼ 2 overdue</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 6. Banner with Background Image        -->
+		<!-- ====================================== -->
+		<section>
+			<h2>6. Banner with Background Image</h2>
+			<p>A banner with a custom background image applied to the canvas.</p>
+
+			<ui5-banner id="banner-bg"
+				salutation-text="Welcome, Sarah"
+				date-text="Thursday, March 6, 2026"
+				background-image="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg">
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 7. Banner with Interactive Elements    -->
+		<!-- ====================================== -->
+		<section>
+			<h2>7. Banner with Interactive Elements</h2>
+			<p>The banner itself is non-interactive, but slotted content like buttons and cards follow their own interactive states.</p>
+
+			<ui5-banner id="banner-interactive"
+				salutation-text="Hello, David"
+				date-text="Thursday, March 6, 2026"
+				layout="HalfWidth">
+
+				<ui5-card slot="startContent">
+					<ui5-card-header
+						slot="header"
+						title-text="Quick Actions"
+						subtitle-text="Frequently used">
+					</ui5-card-header>
+					<div style="padding: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+						<ui5-button icon="create" design="Default">New Order</ui5-button>
+						<ui5-button icon="document" design="Default">Create Report</ui5-button>
+						<ui5-button icon="email" design="Default">Send Message</ui5-button>
+					</div>
+				</ui5-card>
+
+				<ui5-card slot="endContent">
+					<ui5-card-header
+						slot="header"
+						title-text="Recent Activity"
+						subtitle-text="Last 24 hours">
+					</ui5-card-header>
+					<ui5-list>
+						<ui5-li description="2 hours ago" icon="sales-order">Order #4821 approved</ui5-li>
+						<ui5-li description="5 hours ago" icon="shipping-status">Shipment dispatched</ui5-li>
+					</ui5-list>
+				</ui5-card>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 8. Scroll-Away Behavior Demo           -->
+		<!-- ====================================== -->
+		<section>
+			<h2>8. Scroll-Away Behavior</h2>
+			<p>The banner scrolls away with the page content. It is not sticky. Scroll the container below to see the behavior.</p>
+
+			<div class="scroll-container">
+				<ui5-banner id="banner-scroll"
+					salutation-text="Hello, Lisa"
+					date-text="Thursday, March 6, 2026"
+					layout="FullWidth">
+					<div slot="startContent" class="kpi-card">
+						<span class="kpi-label">Notifications</span>
+						<span class="kpi-value">23</span>
+					</div>
+				</ui5-banner>
+
+				<div class="filler-content">
+					<p>↓ Scroll down to see the banner scroll away ↓</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 9. Dynamic Property Controls           -->
+		<!-- ====================================== -->
+		<section>
+			<h2>9. Interactive Controls</h2>
+			<p>Change the banner properties dynamically.</p>
+
+			<div class="controls-bar">
+				<ui5-button id="btn-change-salutation">Change Salutation</ui5-button>
+				<ui5-button id="btn-toggle-date">Toggle Date</ui5-button>
+				<ui5-button id="btn-layout-full">FullWidth</ui5-button>
+				<ui5-button id="btn-layout-half">HalfWidth</ui5-button>
+				<ui5-button id="btn-layout-twothirds">TwoThirds</ui5-button>
+			</div>
+
+			<ui5-banner id="banner-dynamic"
+				salutation-text="Hello, User"
+				date-text="Thursday, March 6, 2026"
+				layout="FullWidth">
+				<div slot="startContent" class="kpi-card">
+					<span class="kpi-label">Start Block</span>
+					<span class="kpi-value">100</span>
+				</div>
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">End Block</span>
+					<span class="kpi-value">200</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+	</div>
+
+	<script>
+		// Dynamic property controls
+		var dynamicBanner = document.getElementById("banner-dynamic");
+		var names = ["John", "Maria", "Thomas", "Lisa", "Alex", "Sarah", "David"];
+		var nameIndex = 0;
+
+		document.getElementById("btn-change-salutation").addEventListener("click", function () {
+			nameIndex = (nameIndex + 1) % names.length;
+			dynamicBanner.salutationText = "Hello, " + names[nameIndex];
+		});
+
+		document.getElementById("btn-toggle-date").addEventListener("click", function () {
+			if (dynamicBanner.dateText) {
+				dynamicBanner.dateText = "";
+			} else {
+				dynamicBanner.dateText = "Thursday, March 6, 2026";
+			}
+		});
+
+		document.getElementById("btn-layout-full").addEventListener("click", function () {
+			dynamicBanner.layout = "FullWidth";
+		});
+
+		document.getElementById("btn-layout-half").addEventListener("click", function () {
+			dynamicBanner.layout = "HalfWidth";
+		});
+
+		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
+			dynamicBanner.layout = "TwoThirds";
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+:host {
+	--_ui5_banner_background: var(--sapShell_Banner_Background, var(--sapTile_Background));
+	--_ui5_banner_background_image: var(--sapShell_Banner_BackgroundImage, none);
+	--_ui5_banner_text_color: var(--sapShell_Banner_TextColor, var(--sapTextColor));
+	--_ui5_banner_border_radius: var(--sapTile_BorderCornerRadius);
+	--_ui5_banner_border: 0.0625rem solid var(--sapTile_BorderColor);
+	--_ui5_banner_box_shadow: var(--sapContent_Shadow0);
+}

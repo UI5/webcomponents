@@ -1,0 +1,125 @@
+/* Banner Component Styles */
+
+:host(:not([hidden])) {
+	display: block;
+	width: 100%;
+	container-type: inline-size;
+}
+
+/* Banner Canvas */
+.ui5-banner-root {
+	box-sizing: border-box;
+	min-height: 4.75rem;
+	max-height: 24rem;
+	border-radius: var(--_ui5_banner_border_radius);
+	background-color: var(--_ui5_banner_background);
+	background-image: var(--_ui5_banner_background_image);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	box-shadow: var(--_ui5_banner_box_shadow);
+	border: var(--_ui5_banner_border);
+	overflow: hidden;
+	position: relative;
+}
+
+/* Content area */
+.ui5-banner-content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	gap: 1rem;
+	box-sizing: border-box;
+	padding: 1.5rem;
+}
+
+/* Header (Salutation + Date) */
+.ui5-banner-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.ui5-banner-salutation {
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader2Size);
+	font-weight: bold;
+	color: var(--_ui5_banner_text_color);
+	line-height: 1.4;
+}
+
+.ui5-banner-date {
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	color: var(--_ui5_banner_text_color);
+	line-height: 1.4;
+}
+
+/* Free content blocks area */
+.ui5-banner-blocks {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	flex: 1;
+	min-height: 0;
+}
+
+.ui5-banner-block {
+	box-sizing: border-box;
+	min-width: 0;
+}
+
+/* Layout: FullWidth - blocks take full width */
+.ui5-banner-layout-FullWidth .ui5-banner-block {
+	flex: 1 1 100%;
+}
+
+/* Layout: HalfWidth - 50/50 split */
+.ui5-banner-layout-HalfWidth .ui5-banner-block {
+	flex: 1 1 calc(50% - 0.5rem);
+}
+
+/* Layout: TwoThirds - 2/3 + 1/3 split */
+.ui5-banner-layout-TwoThirds .ui5-banner-block-start {
+	flex: 2 1 calc(66.66% - 0.5rem);
+}
+
+.ui5-banner-layout-TwoThirds .ui5-banner-block-end {
+	flex: 1 1 calc(33.33% - 0.5rem);
+}
+
+/*** Responsive Paddings ***/
+
+/* M Size (600px - 1439px) */
+@container (min-width: 600px) and (max-width: 1439px) {
+	.ui5-banner-content {
+		padding: 1.5rem 2rem;
+	}
+}
+
+/* XL / MAX Size (1440px - 2559px) */
+@container (min-width: 1440px) and (max-width: 2559px) {
+	.ui5-banner-content {
+		padding: 1.5rem 3rem;
+	}
+}
+
+/* 4K Size (2560px+) */
+@container (min-width: 2560px) {
+	.ui5-banner-content {
+		padding: 1.5rem 4rem;
+	}
+}
+
+/* Stack blocks vertically on small screens */
+@container (max-width: 599px) {
+	.ui5-banner-blocks {
+		flex-direction: column;
+	}
+
+	.ui5-banner-layout-HalfWidth .ui5-banner-block,
+	.ui5-banner-layout-TwoThirds .ui5-banner-block-start,
+	.ui5-banner-layout-TwoThirds .ui5-banner-block-end {
+		flex: 1 1 100%;
+	}
+}
