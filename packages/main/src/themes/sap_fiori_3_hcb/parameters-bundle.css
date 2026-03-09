@@ -5,6 +5,7 @@
 @import "../base/Breadcrumbs-parameters.css";
 @import "./Button-parameters.css";
 @import "../base/ButtonBadge-parameters.css";
+@import "./BusyIndicator-parameters.css";
 @import "../base/CalendarLegend-parameters.css";
 @import "../base/CalendarLegendItem-parameters.css";
 @import "./CalendarHeader-parameters.css";
