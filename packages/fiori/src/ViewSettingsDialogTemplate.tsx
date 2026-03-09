@@ -92,6 +92,19 @@ function _getSplitButtonItems(this: ViewSettingsDialog) {
 		);
 	}
 
+	if (this.shouldBuildCustomTabs) {
+		this.customTabs.forEach((customTab, index) => {
+			buttonItems.push(
+				<SegmentedButtonItem
+					selected={this.isCurrentCustomMode(index)}
+					data-mode={this._customMode(index)}
+					tooltip={customTab.tooltip}
+					icon={customTab.icon}
+				>{customTab.icon ? undefined : customTab.title}</SegmentedButtonItem>
+			);
+		});
+	}
+
 	return buttonItems;
 }
 
@@ -113,6 +126,15 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 
 			{this.shouldBuildGroup && this.isModeGroup && (
 				ViewSettingsDialogSortAndGroupTemplate.call(this, false)
+			)}
+
+			{this.isModeCustom && this._selectedCustomTab && (
+				<div class="ui5-vsd-custom-tab-content">
+					{this._selectedCustomTab.title && (
+						<div class="ui5-vsd-custom-tab-title">{this._selectedCustomTab.title}</div>
+					)}
+					<slot class="ui5-vsd-custom-tab-slot" name={this._selectedCustomTab._individualSlot}></slot>
+				</div>
 			)}
 
 		</div>
