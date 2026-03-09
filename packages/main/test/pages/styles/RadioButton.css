@@ -34,7 +34,6 @@ div.customStyling{
 .customStyling ui5-radio-button[value-state="Negative"]::part(outer-ring) {
     stroke: rgb(212 56 247);
 }
-
 .customStyling ui5-radio-button[value-state="Positive"]::part(outer-ring) {
     stroke: rgb(12 223 147);
 }
