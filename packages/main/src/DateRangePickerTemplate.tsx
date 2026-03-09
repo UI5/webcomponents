@@ -52,7 +52,6 @@ function footer(this: DateRangePicker) {
 			>
 				{this._okButtonText}
 			</Button>
-
 			<Button
 				id="cancel"
 				class="ui5-dt-picker-action"
@@ -62,5 +61,5 @@ function footer(this: DateRangePicker) {
 				{this._cancelButtonText}
 			</Button>
 		</div>
-	)
-};
+	);
+}

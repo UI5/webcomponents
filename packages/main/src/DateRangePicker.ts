@@ -14,7 +14,6 @@ import {
 	DATERANGE_PATTERN_MISMATCH,
 	DATERANGE_UNDERFLOW,
 	DATERANGE_OVERFLOW,
-	CALENDAR_HEADER_TITLE,
 	CALENDAR_FOOTER_CANCEL_BUTTON,
 	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
@@ -31,6 +30,7 @@ import type {
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import { isPhone } from "@ui5/webcomponents-base";
+
 const DEFAULT_DELIMITER = "-";
 
 /**
@@ -211,7 +211,6 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return [];
 	}
 
-	
 	get _isPhone() {
 		return isPhone();
 	}
@@ -275,10 +274,17 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	/**
-	 * Handles clicking on the `submit` button, within the picker`s footer.
+	 * Handles clicking on the `submit` button, within the picker`s footer in mobile devices.
 	 */
 	_submitClick() {
-		//TODO ADD ACTION
+		const selectedDates = this._calendarSelectedDates;
+
+		if (selectedDates.length <= 1) {
+			return;
+		}
+
+		const newValue = this._buildValue(this._startDateTimestamp, this._endDateTimestamp);
+		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
 		this._togglePicker();
 	}
 

@@ -418,10 +418,10 @@ class Calendar extends CalendarPart {
 	_handleResize() {
 		const documentWidth = document.body.offsetWidth;
 		const underBreakpoint = documentWidth <= PHONE_MODE_BREAKPOINT;
-		
+
 		// Phone mode: only when it's an actual phone device
 		const phoneModeChange = (underBreakpoint && !this._phoneMode) || (!underBreakpoint && this._phoneMode);
-		
+
 		if (phoneModeChange) {
 			this._phoneMode = underBreakpoint;
 		}
@@ -429,7 +429,7 @@ class Calendar extends CalendarPart {
 		// Portrait mode: when resolution is under breakpoint (can be tablet, desktop in narrow window, etc.)
 		const toPortraitMode = underBreakpoint;
 		const portraitModeChange = (toPortraitMode && !this._portraitMode) || (!toPortraitMode && this._portraitMode);
-		
+
 		if (portraitModeChange) {
 			this._portraitMode = toPortraitMode;
 		}
@@ -447,18 +447,18 @@ class Calendar extends CalendarPart {
 		if (monthIndex === 0) {
 			return this._timestamp;
 		}
-		
+
 		const calendarDate = CalendarDateComponent.fromTimestamp(this._timestamp * 1000, this._primaryCalendarType);
-		
+
 		// Set day to 1 to avoid day-of-month overflow issues
 		// (e.g., Jan 31 + 1 month would overflow to March if Feb doesn't have 31 days)
 		calendarDate.setDate(1);
-		
+
 		// Add months one by one to handle month boundaries correctly
 		for (let i = 0; i < monthIndex; i++) {
 			const currentMonth = calendarDate.getMonth();
 			const currentYear = calendarDate.getYear();
-			
+
 			if (currentMonth === 11) {
 				// December -> January of next year
 				calendarDate.setYear(currentYear + 1);
@@ -468,7 +468,7 @@ class Calendar extends CalendarPart {
 				calendarDate.setMonth(currentMonth + 1);
 			}
 		}
-		
+
 		return calendarDate.valueOf() / 1000;
 	}
 
@@ -480,16 +480,16 @@ class Calendar extends CalendarPart {
 		const calendarDate = CalendarDateComponent.fromTimestamp(monthTimestamp * 1000, this._primaryCalendarType);
 		const localeData = getCachedLocaleDataInstance(getLocale());
 		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
-		
+
 		const monthText = localeData.getMonthsStandAlone("wide", this.primaryCalendarType)[calendarDate.getMonth()];
 		const localDate = calendarDate.toLocalJSDate();
 		const yearText = String(yearFormat.format(localDate, true));
-		
+
 		const result: { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } = {
 			monthText,
 			yearText,
 		};
-		
+
 		if (this.hasSecondaryCalendarType) {
 			const secondaryDate = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, monthTimestamp, true);
 			const secondaryCalendarDate = secondaryDate.firstDate || secondaryDate.lastDate;
@@ -812,7 +812,8 @@ class Calendar extends CalendarPart {
 	}
 
 	get _monthsToShow() {
-		return isPhone() ? 1 : (this._showTwoCalendars ? 2 : 1);
+		const monthsToShow = this._showTwoCalendars ? 2 : 1;
+		return isPhone() ? 1 : monthsToShow;
 	}
 
 	/**
@@ -820,7 +821,7 @@ class Calendar extends CalendarPart {
 	 * @private
 	 */
 	get _isHeaderMonthButtonHidden(): boolean {
-		return this._showTwoCalendars ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";;
+		return this._showTwoCalendars ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";
 	}
 
 	/**
