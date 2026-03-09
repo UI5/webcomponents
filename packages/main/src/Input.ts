@@ -809,8 +809,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onAfterRendering() {
-		const innerInput = this.getInputDOMRefSync()!;
-
 		if (this.showSuggestions && this.Suggestions?._getPicker()) {
 			this._listWidth = this.Suggestions._getListWidth();
 
