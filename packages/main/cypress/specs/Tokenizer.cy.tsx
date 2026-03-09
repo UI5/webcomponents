@@ -1326,6 +1326,28 @@ describe("Keyboard Handling", () => {
 			.should("have.length", 2);
 	});
 
+	it("should focus previous token when deleting last token with [Backspace]", () => {
+		cy.get("[ui5-token]")
+			.eq(1)
+			.as("secondToken");
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("lastToken");
+
+		cy.get("@lastToken")
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 2);
+
+		cy.get("@secondToken")
+			.should("be.focused");
+	});
+
 	it("should delete all selected tokens on [Backspace]", () => {
 		cy.get("[ui5-token]")
 			.eq(0)
