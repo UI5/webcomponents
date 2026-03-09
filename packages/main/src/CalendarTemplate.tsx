@@ -5,9 +5,6 @@ import YearPicker from "./YearPicker.js";
 import YearRangePicker from "./YearRangePicker.js";
 import CalendarHeaderTemplate from "./CalendarHeaderTemplate.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
-import Icon from "./Icon.js";
-import slimArrowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
-import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
@@ -48,116 +45,18 @@ export default function CalendarTemplate(this: Calendar) {
 									const monthTimestamp = this._getMonthTimestamp(index);
 									const isFirst = index === 0;
 									const isLast = index === this._monthsToShow - 1;
-									const headerText = this._getHeaderTextForMonth(monthTimestamp);
 
 									return (
 										<div key={`calendar-month-${index}`} class="ui5-cal-month-container">
 											{/* Show per-calendar headers only in default mode (day picker) */}
-											{this._isDefaultHeaderModeInMultipleMonths && (
-												<div class="ui5-calheader ui5-calheader-multiple">
-													{isFirst && (
-														<div
-															data-ui5-cal-header-btn-prev
-															class={{
-																"ui5-calheader-arrowbtn": true,
-																"ui5-calheader-arrowbtn-disabled": this._previousButtonDisabled,
-															}}
-															part="calendar-header-arrow-button"
-															role="button"
-															onMouseDown={this.onPrevButtonClick}
-															tabindex={this._previousButtonDisabled ? -1 : 0}
-															title={this.accInfo.tooltipPrevButton}
-															aria-label={this.accInfo.ariaLabelPrevButton}
-															aria-description={this.accInfo.ariaLabelPrevButton}
-															aria-keyshortcuts={this.accInfo.keyShortcutPrevButton}
-														>
-															<Icon class="ui5-calheader-arrowicon" name={slimArrowLeft}/>
-														</div>
-													)}
-													{!isFirst && <div class="ui5-calheader-spacer"></div>}
-													<div class="ui5-calheader-midcontainer">
-														<div
-															data-ui5-cal-header-btn-month
-															class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
-															part="calendar-header-middle-button"
-															hidden={this._isHeaderMonthButtonHidden}
-															tabindex={0}
-															role="button"
-															aria-label={this.accInfo.ariaLabelMonthButton}
-															aria-description={this.accInfo.ariaLabelMonthButton}
-															title={this.accInfo.tooltipMonthButton}
-															aria-keyshortcuts={this.accInfo.keyShortcutMonthButton}
-															onClick={this.onHeaderMonthButtonPress}
-															onKeyDown={this.onMonthButtonKeyDown}
-															onKeyUp={this.onMonthButtonKeyUp}
-														>
-															<span>{headerText.monthText}</span>
-															{this.hasSecondaryCalendarType && headerText.secondMonthText &&
-																<span class="ui5-calheader-btn-sectext">{headerText.secondMonthText}</span>
-															}
-														</div>
-
-														<div
-															data-ui5-cal-header-btn-year
-															class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
-															part="calendar-header-middle-button"
-															hidden={this._isHeaderYearButtonHidden}
-															tabindex={0}
-															role="button"
-															aria-label={this.accInfo.ariaLabelYearButton}
-															aria-description={this.accInfo.ariaLabelYearButton}
-															onClick={this.onHeaderYearButtonPress}
-															onKeyDown={this.onYearButtonKeyDown}
-															onKeyUp={this.onYearButtonKeyUp}
-															title={this.accInfo.tooltipYearButton}
-															aria-keyshortcuts={this.accInfo.keyShortcutYearButton}
-														>
-															<span>{headerText.yearText}</span>
-															{this.hasSecondaryCalendarType && headerText.secondYearText &&
-																<span class="ui5-calheader-btn-sectext">{headerText.secondYearText}</span>
-															}
-														</div>
-														<div
-															data-ui5-cal-header-btn-year-range
-															class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
-															part="calendar-header-middle-button"
-															hidden={this._isHeaderYearRangeButtonHidden}
-															tabindex={0}
-															role="button"
-															aria-label={this.accInfo.ariaLabelYearRangeButton}
-															aria-description={this.accInfo.ariaLabelYearRangeButton}
-															title={this.accInfo.tooltipYearRangeButton}
-															aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
-															onClick={this.onHeaderYearRangeButtonPress}
-															onKeyDown={this.onYearRangeButtonKeyDown}
-															onKeyUp={this.onYearRangeButtonKeyUp}
-														>
-															<span>{this._headerYearRangeButtonText}</span>
-															{this.hasSecondaryCalendarType &&
-																<span class="ui5-calheader-btn-sectext">{this._headerYearRangeButtonTextSecType}</span>
-															}
-														</div>
-													</div>
-													{((isLast && !this._portraitView) || (isFirst && this._portraitView)) && (
-														<div
-															data-ui5-cal-header-btn-next
-															class={{
-																"ui5-calheader-arrowbtn": true,
-																"ui5-calheader-arrowbtn-disabled": this._nextButtonDisabled,
-															}}
-															role="button"
-															onMouseDown={this.onNextButtonClick}
-															tabindex={this._nextButtonDisabled ? -1 : 0}
-															title={this.accInfo.tooltipNextButton}
-															aria-label={this.accInfo.ariaLabelNextButton}
-														>
-															<Icon class="ui5-calheader-arrowicon" name={slimArrowRight}/>
-														</div>
-													)}
-													{!isLast && !this._portraitView && <div class="ui5-calheader-spacer"></div>}
-													{isLast && this._portraitView && <div class="ui5-calheader-spacer"></div>}
-												</div>
-											)}
+											{this._isDefaultHeaderModeInMultipleMonths && 
+												CalendarHeaderTemplate.call(this, {
+													headerText: this._getHeaderTextForMonth(monthTimestamp),
+													isFirst,
+													isLast,
+													isMultiple: true,
+												})
+											}
 											<div class="ui5-cal-daypicker-wrapper">
 												<DayPicker
 													id={`${this._id}-daypicker-${index}`}
