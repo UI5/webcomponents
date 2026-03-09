@@ -692,7 +692,7 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	_handleModeChange(e: CustomEvent) { // use SegmentedButton event when done
-		const mode = e.detail.selectedItems[0].getAttribute("data-mode");
+		const mode = (e.detail.selectedItems[0].getAttribute("data-mode") as string | null);
 
 		if (!mode || !this._isValidMode(mode)) {
 			return;
@@ -881,9 +881,9 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	_isValidMode(mode: string): mode is ViewSettingsDialogInternalMode {
-		return mode === ViewSettingsDialogMode.Sort
-			|| mode === ViewSettingsDialogMode.Filter
-			|| mode === ViewSettingsDialogMode.Group
+		return mode === (ViewSettingsDialogMode.Sort as string)
+			|| mode === (ViewSettingsDialogMode.Filter as string)
+			|| mode === (ViewSettingsDialogMode.Group as string)
 			|| this._isCustomMode(mode);
 	}
 
