@@ -23,13 +23,13 @@ function App() {
       </CompatTableColumn>
       <CompatTableColumn
         slot="columns"
-        minWidth="500"
+        minWidth={500}
         popinText="Supplier"
         demandPopin
       >
         <Label>Supplier</Label>
       </CompatTableColumn>
-      <CompatTableColumn slot="columns" minWidth="500">
+      <CompatTableColumn slot="columns" minWidth={500}>
         <Label>Date Of Foundation</Label>
       </CompatTableColumn>
 

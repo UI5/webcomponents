@@ -16,7 +16,7 @@ const initialFiles = [
   {
     id: "1",
     fileName: "LaptopHT-1000.jpg",
-    uploadState: "Complete",
+    uploadState: "Complete" as const,
     description: 'uploadState="Complete"',
     thumbnail: "img",
     thumbnailSrc: "/images/HT-1000.jpg",
@@ -24,8 +24,8 @@ const initialFiles = [
   {
     id: "2",
     fileName: "Laptop.jpg",
-    uploadState: "Uploading",
-    type: "Active",
+    uploadState: "Uploading" as const,
+    type: "Active" as const,
     progress: 37,
     description: 'uploadState="Uploading"',
     thumbnail: "img",
@@ -34,8 +34,8 @@ const initialFiles = [
   {
     id: "3",
     fileName: "latest-reports.pdf",
-    uploadState: "Error",
-    type: "Active",
+    uploadState: "Error" as const,
+    type: "Active" as const,
     progress: 59,
     description: 'uploadState="Error"',
     thumbnail: "icon",
@@ -44,7 +44,7 @@ const initialFiles = [
   {
     id: "4",
     fileName: "Notes.txt",
-    uploadState: "Ready",
+    uploadState: "Ready" as const,
     description: 'uploadState="Ready" (default)',
     thumbnail: "icon",
     thumbnailName: "document-text",
@@ -55,13 +55,13 @@ function App() {
   const [files, setFiles] = useState(initialFiles);
 
   const handleUploadCollectionRetry = (
-    e: UI5CustomEvent<UploadCollectionClass, "retry">,
+    e: UI5CustomEvent<UploadCollectionItemClass, "retry">,
   ) => {
     alert("Retry uploading: " + e.currentTarget.fileName);
   };
 
   const handleUploadCollectionTerminate = (
-    e: UI5CustomEvent<UploadCollectionClass, "terminate">,
+    e: UI5CustomEvent<UploadCollectionItemClass, "terminate">,
   ) => {
     alert("Terminate uploading of: " + e.currentTarget.fileName);
   };
@@ -76,8 +76,6 @@ function App() {
   return (
     <>
       <UploadCollection
-        onRetry={handleUploadCollectionRetry}
-        onTerminate={handleUploadCollectionTerminate}
         onItemDelete={handleUploadCollectionItemDelete}
       >
         <div slot="header" className="header">
@@ -91,6 +89,8 @@ function App() {
             uploadState={file.uploadState}
             type={file.type}
             progress={file.progress}
+			onRetry={handleUploadCollectionRetry}
+			onTerminate={handleUploadCollectionTerminate}
           >
             {file.description}
             {file.thumbnail === "img" ? (

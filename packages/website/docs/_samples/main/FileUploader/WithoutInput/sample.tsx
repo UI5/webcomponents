@@ -13,7 +13,7 @@ function App() {
     <>
       <Label for="button-only-uploader">Choose file:</Label>
       <FileUploader id="button-only-uploader" hideInput={true}>
-        <Button icon="upload" tabIndex="-1">
+        <Button icon="upload" tabIndex={-1}>
           Upload
         </Button>
       </FileUploader>

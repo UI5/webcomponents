@@ -17,8 +17,8 @@ const initialFiles = [
     id: "1",
     fileName: "LaptopHT-1000.jpg",
     fileNameClickable: true,
-    uploadState: "Complete",
-    type: "Detail",
+    uploadState: "Complete" as const,
+    type: "Detail" as const,
     description:
       "Uploaded By: David Keane \u00B7 Uploaded On: 2014-07-26 \u00B7 File Size: 35 KB",
     thumbnail: "img",
@@ -28,8 +28,8 @@ const initialFiles = [
     id: "2",
     fileName: "Notes.txt",
     fileNameClickable: false,
-    uploadState: "Complete",
-    type: "Detail",
+    uploadState: "Complete" as const,
+    type: "Detail" as const,
     description:
       "Uploaded By: John Smith \u00B7 Uploaded On: 2014-09-02 \u00B7 File Size: 226.6 KB",
     thumbnail: "icon",
@@ -41,7 +41,7 @@ function App() {
   const [files, setFiles] = useState(initialFiles);
 
   const handleUploadCollectionRename = (
-    e: UI5CustomEvent<UploadCollectionClass, "rename">,
+    e: UI5CustomEvent<UploadCollectionItemClass, "rename">,
   ) => {
     alert("Rename event: " + e.currentTarget.fileName);
   };
@@ -56,7 +56,6 @@ function App() {
   return (
     <>
       <UploadCollection
-        onRename={handleUploadCollectionRename}
         onItemDelete={handleUploadCollectionItemDelete}
       >
         <div slot="header" className="header">
@@ -65,6 +64,7 @@ function App() {
 
         {files.map((file) => (
           <UploadCollectionItem
+		  	onRename={handleUploadCollectionRename}
             key={file.id}
             fileName={file.fileName}
             fileNameClickable={file.fileNameClickable || false}

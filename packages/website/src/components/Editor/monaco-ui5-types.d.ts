@@ -2149,6 +2149,9 @@ interface UploadCollectionProps extends UI5BaseProps {
   eventDetails?: any;
   onItemDelete?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onRename?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onRetry?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onTerminate?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
 }
 
 /** UploadCollectionItem component props */
@@ -4460,6 +4463,9 @@ declare module "@ui5/webcomponents-fiori/dist/UploadCollection.js" {
     eventDetails: {
       "item-delete": { item: any };
       "selection-change": { selectedItems: any };
+      "rename": void;
+      "retry": void;
+      "terminate": void;
     };
   }
   export default UploadCollection;

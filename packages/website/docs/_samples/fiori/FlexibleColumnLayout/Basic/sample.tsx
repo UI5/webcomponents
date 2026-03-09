@@ -183,7 +183,7 @@ function App() {
       setRatingValue(getRandomInt(4) + 1);
       setCol2Title(item.textContent);
       setProductName(item.textContent);
-      setProductDesc(item.description);
+      setProductDesc((item as ListItemStandardClass).description);
       setProductSupplier(supplierNames[getRandomInt(11)]);
       setLayout(nextLayout("col1"));
     },

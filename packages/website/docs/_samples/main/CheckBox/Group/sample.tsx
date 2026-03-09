@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, FormEvent } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
@@ -10,7 +10,7 @@ function App() {
   const formRef = useRef<HTMLFormElement>(null);
   const [output, setOutput] = useState("");
 
-  const handleFormSubmit = (e: Event) => {
+  const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(formRef.current!);
     const selectedLanguages = formData.getAll("languages");

@@ -42,7 +42,7 @@ function App() {
   };
 
   const handleDragStart1 = (e: DragEvent) => {
-    const draggedId = e.currentTarget.dataset?.id;
+    const draggedId = (e.currentTarget as HTMLElement).dataset?.id;
     if (!draggedId) return;
 
     if (!selected1.has(draggedId)) {
@@ -55,7 +55,7 @@ function App() {
   };
 
   const handleDragStart2 = (e: DragEvent) => {
-    const draggedId = e.currentTarget.dataset?.id;
+    const draggedId = (e.currentTarget as HTMLElement).dataset?.id;
     if (!draggedId) return;
 
     if (!selected2.has(draggedId)) {

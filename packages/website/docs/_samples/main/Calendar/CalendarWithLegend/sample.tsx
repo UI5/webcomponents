@@ -17,7 +17,7 @@ function App() {
     const formattedMonth = (currentDate.getMonth() + 1)
       .toString()
       .padStart(2, "0");
-    const types = ["Type05", "Type07", "Type13", "NonWorking"];
+    const types = ["Type05", "Type07", "Type13", "NonWorking"] as const;
     const daysInMonth = new Date(year, currentDate.getMonth() + 1, 0).getDate();
     const assignedDays = new Set<number>();
 

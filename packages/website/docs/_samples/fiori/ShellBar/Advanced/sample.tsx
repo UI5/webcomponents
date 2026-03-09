@@ -34,7 +34,7 @@ function App() {
   return (
     <>
       <ShellBar
-        notificationsCount={72}
+        notificationsCount="72"
         showNotifications={true}
         showProductSwitch={true}
       >
