@@ -68,10 +68,6 @@ let activeRadio: RadioButton;
  * @public
  * @csspart outer-ring - Used to style the outer ring of the `ui5-radio-button`.
  * @csspart inner-ring - Used to style the inner ring of the `ui5-radio-button`.
- * @csspart ring - Used to style the ring of the `ui5-radio-button`.
- * @csspart label - Used to style the label of the `ui5-radio-button`.
- * @csspart radio-button-inner - Used to style the inner element of the `ui5-radio-button`.
- * @csspart svg - Used to style the svg element of the `ui5-radio-button`.
  */
 @customElement({
 	tag: "ui5-radio-button",

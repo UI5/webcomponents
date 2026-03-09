@@ -5,7 +5,6 @@ import Label from "./Label.js";
 export default function RadioButtonTemplate(this: RadioButton) {
 	return (
 		<div
-			part="radio-button-inner"
 			role="radio"
 			class="ui5-radio-root"
 			aria-checked={this.checked}
@@ -20,11 +19,11 @@ export default function RadioButtonTemplate(this: RadioButton) {
 			onMouseUp={this._onmouseup}
 			onFocusOut={this._onfocusout}
 		>
-			<div part="ring" class={{
+			<div class={{
 				"ui5-radio-inner": true,
 				"ui5-radio-inner--hoverable": !this.disabled && !this.readonly && isDesktop(),
 			}}>
-				<svg part="svg" class="ui5-radio-svg" focusable="false" aria-hidden="true">
+				<svg class="ui5-radio-svg" focusable="false" aria-hidden="true">
 					<circle part="outer-ring" class="ui5-radio-svg-outer" cx="50%" cy="50%" r="50%" />
 					<circle part="inner-ring" class="ui5-radio-svg-inner" cx="50%" cy="50%" />
 				</svg>
@@ -40,7 +39,7 @@ export default function RadioButtonTemplate(this: RadioButton) {
 			</div>
 
 			{this.text &&
-				<Label part="label" id={`${this._id}-label`} class="ui5-radio-label" for={this._id} wrappingType={this.wrappingType}>{this.text}</Label>
+				<Label id={`${this._id}-label`} class="ui5-radio-label" for={this._id} wrappingType={this.wrappingType}>{this.text}</Label>
 			}
 
 			{this.hasValueState &&
