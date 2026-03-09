@@ -29,7 +29,7 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
-import { isPhone } from "@ui5/webcomponents-base";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 const DEFAULT_DELIMITER = "-";
 
@@ -80,6 +80,19 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	@property()
 	delimiter = "-";
 
+	/**
+	 * Defines whether the component displays two calendars side by side in the picker popup.
+	 *
+	 * When enabled, two consecutive months are shown, making it easier to select date ranges
+	 * that span multiple months without the need to navigate between months.
+	 *
+	 * **Note:** On mobile devices only a single calendar
+	 * will be displayed regardless of this setting.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.21.0
+	 */
 	@property({ type: Boolean })
 	showTwoCalendars = false;
 
