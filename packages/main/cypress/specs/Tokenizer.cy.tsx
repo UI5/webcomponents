@@ -63,7 +63,7 @@ describe("General Interaction", () => {
 describe("Tokenizer nMore Popover", () => {
 	it("tests opening of nMore Popover", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -102,7 +102,7 @@ describe("Tokenizer nMore Popover", () => {
 
 	it("tests F7 list item navigation", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -190,7 +190,7 @@ describe("Tokenizer nMore Popover", () => {
 
 	it("tests item deletion via keyboard", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -350,7 +350,7 @@ describe("Readonly", () => {
 
 	it("tests expanding of tokenizer + focus handling in readonly mode.", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer readonly onTokenDelete={onTokenDelete}>
 					<Token text="Andora" readonly></Token>
 					<Token text="Bulgaria" readonly></Token>
@@ -724,7 +724,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-disabled");
 	});
 
-	it("should test tokenizer content aria attributes",  () => {
+	it("should test tokenizer content aria attributes", () => {
 		cy.mount(
 			<Tokenizer>
 				<Token text="Andora"></Token>
@@ -1324,6 +1324,9 @@ describe("Keyboard Handling", () => {
 		cy.get("[ui5-tokenizer]")
 			.find("[ui5-token]")
 			.should("have.length", 2);
+
+		cy.get("@firstToken")
+			.should("be.focused");
 	});
 
 	it("should focus previous token when deleting last token with [Backspace]", () => {
@@ -1824,46 +1827,46 @@ describe("Clipboard Operations", () => {
 });
 
 describe("Tokenizer - getFocusDomRef Method", () => {
-    it("should focus the last focused token on tokenizer focus if its visible", () => {
-        const onButtonClick = () => {
-            document.getElementById("tokenizer").focus();
-        }
-        cy.mount(
-            <>
+	it("should focus the last focused token on tokenizer focus if its visible", () => {
+		const onButtonClick = () => {
+			document.getElementById("tokenizer").focus();
+		}
+		cy.mount(
+			<>
 				<Tokenizer id="tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
 					<Token text="Canada"></Token>
 					<Token text="Denmark"></Token>
 				</Tokenizer>
-                <Button>Dummy Btn</Button>
-                <Button onClick={onButtonClick}>Focus Tokenizer</Button>
-            </>
-        );
+				<Button>Dummy Btn</Button>
+				<Button onClick={onButtonClick}>Focus Tokenizer</Button>
+			</>
+		);
 
-        cy.get("[ui5-token]")
-            .eq(1)
-            .realClick();
+		cy.get("[ui5-token]")
+			.eq(1)
+			.realClick();
 
-        cy.get("[ui5-button]")
-            .eq(0)
-            .realClick();
+		cy.get("[ui5-button]")
+			.eq(0)
+			.realClick();
 
-        cy.get("[ui5-button]")
-            .eq(1)
-            .realClick();
+		cy.get("[ui5-button]")
+			.eq(1)
+			.realClick();
 
-        cy.get("[ui5-token]")
-            .eq(1)
-            .should("be.focused");
-    });
+		cy.get("[ui5-token]")
+			.eq(1)
+			.should("be.focused");
+	});
 
-    it("should focus the first token if the previously focused token is not visible", () => {
-        const onButtonClick = () => {
-            document.getElementById("nmore-token").focus();
-        }
-        cy.mount(
-            <>
+	it("should focus the first token if the previously focused token is not visible", () => {
+		const onButtonClick = () => {
+			document.getElementById("nmore-token").focus();
+		}
+		cy.mount(
+			<>
 				<div style={"width: 200px"}>
 					<Tokenizer id="nmore-token" style={"width: 200px"}>
 						<Token text="Andora"></Token>
@@ -1874,28 +1877,28 @@ describe("Tokenizer - getFocusDomRef Method", () => {
 					</Tokenizer>
 				</div>
 				<Button>Dummy Btn</Button>
-                <Button onClick={onButtonClick}>Focus Tokenizer</Button>
-            </>
-        );
+				<Button onClick={onButtonClick}>Focus Tokenizer</Button>
+			</>
+		);
 
-        cy.get("[ui5-button]")
+		cy.get("[ui5-button]")
 			.eq(1)
-            .realClick();
+			.realClick();
 
-        cy.get("[ui5-token]")
-            .eq(2)
-            .realClick();
+		cy.get("[ui5-token]")
+			.eq(2)
+			.realClick();
 
 		cy.get("[ui5-button]")
 			.eq(0)
-            .realClick();
+			.realClick();
 
 		cy.get("[ui5-button]")
 			.eq(1)
-            .realClick();
+			.realClick();
 
 		cy.get("[ui5-token]")
-            .eq(0)
-            .should("be.focused");
+			.eq(0)
+			.should("be.focused");
 	});
 });
