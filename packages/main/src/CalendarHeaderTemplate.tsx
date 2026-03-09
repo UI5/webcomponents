@@ -5,10 +5,10 @@ import slimArowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 interface CalendarHeaderOptions {
-	headerText?: { 
-		monthText: string; 
-		yearText: string; 
-		secondMonthText?: string; 
+	headerText?: {
+		monthText: string;
+		yearText: string;
+		secondMonthText?: string;
 		secondYearText?: string;
 	};
 	isFirst?: boolean;
@@ -69,10 +69,10 @@ function renderPrevButton(this: Calendar, isFirst: boolean, isMultiple: boolean)
 
 function renderMiddleButtons(
 	this: Calendar,
-	headerText: { 
-		monthText: string; 
-		yearText: string; 
-		secondMonthText?: string; 
+	headerText: {
+		monthText: string;
+		yearText: string;
+		secondMonthText?: string;
 		secondYearText?: string;
 	}
 ) {
@@ -119,7 +119,7 @@ function renderMiddleButtons(
 					<span class="ui5-calheader-btn-sectext">{headerText.secondYearText}</span>
 				}
 			</div>
-			
+
 			<div
 				data-ui5-cal-header-btn-year-range
 				class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
@@ -146,7 +146,7 @@ function renderMiddleButtons(
 
 function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isMultiple: boolean) {
 	const shouldShowNextButton = !isMultiple || (isLast && !this._portraitView) || (isFirst && this._portraitView);
-	const shouldShowSpacer = isMultiple && (!isLast && !this._portraitView || isLast && this._portraitView);
+	const shouldShowSpacer = isMultiple && ((!isLast && !this._portraitView) || (isLast && this._portraitView));
 
 	if (shouldShowNextButton) {
 		return (
@@ -176,4 +176,3 @@ function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isM
 
 	return null;
 }
-

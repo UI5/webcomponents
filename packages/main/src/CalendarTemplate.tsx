@@ -49,7 +49,7 @@ export default function CalendarTemplate(this: Calendar) {
 									return (
 										<div key={`calendar-month-${index}`} class="ui5-cal-month-container">
 											{/* Show per-calendar headers only in default mode (day picker) */}
-											{this._isDefaultHeaderModeInMultipleMonths && 
+											{this._isDefaultHeaderModeInMultipleMonths &&
 												CalendarHeaderTemplate.call(this, {
 													headerText: this._getHeaderTextForMonth(monthTimestamp),
 													isFirst,
