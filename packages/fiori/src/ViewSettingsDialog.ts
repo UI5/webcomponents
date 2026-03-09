@@ -89,6 +89,9 @@ type VSDInternalSettings = {
 	groupBy: Array<VSDItem & {index: number}>,
 }
 
+type ViewSettingsCustomMode = `Custom-${number}`;
+type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettingsCustomMode;
+
 const CUSTOM_MODE_PREFIX = "Custom-";
 
 /**
@@ -257,7 +260,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @private
 	 */
 	@property()
-	_currentMode: string = ViewSettingsDialogMode.Sort;
+	_currentMode: ViewSettingsDialogInternalMode = ViewSettingsDialogMode.Sort;
 
 	/**
 	 * When in Filter By mode, defines whether we need to show the list of keys, or the list with values.
@@ -420,7 +423,7 @@ class ViewSettingsDialog extends UI5Element {
 		return builtInTabsCount > 1;
 	}
 
-	get _defaultMode() {
+	get _defaultMode(): ViewSettingsDialogInternalMode {
 		if (this.shouldBuildSort) {
 			return ViewSettingsDialogMode.Sort;
 		}
@@ -446,7 +449,7 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	get _selectedCustomTab() {
-		if (!this.isModeCustom) {
+		if (!this._isCustomMode(this._currentMode)) {
 			return;
 		}
 
@@ -653,7 +656,7 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	get isModeCustom() {
-		return this._currentMode.startsWith(CUSTOM_MODE_PREFIX);
+		return this._isCustomMode(this._currentMode);
 	}
 
 	get showBackButton() {
@@ -691,7 +694,7 @@ class ViewSettingsDialog extends UI5Element {
 	_handleModeChange(e: CustomEvent) { // use SegmentedButton event when done
 		const mode = e.detail.selectedItems[0].getAttribute("data-mode");
 
-		if (!mode) {
+		if (!mode || !this._isValidMode(mode)) {
 			return;
 		}
 
@@ -865,12 +868,23 @@ class ViewSettingsDialog extends UI5Element {
 		return this._currentMode === this._customMode(index);
 	}
 
-	_customMode(index: number) {
+	_customMode(index: number): ViewSettingsCustomMode {
 		return `${CUSTOM_MODE_PREFIX}${index}`;
 	}
 
-	_getCustomTabIndexByMode(mode: string) {
+	_getCustomTabIndexByMode(mode: ViewSettingsCustomMode) {
 		return Number(mode.replace(CUSTOM_MODE_PREFIX, ""));
+	}
+
+	_isCustomMode(mode: string): mode is ViewSettingsCustomMode {
+		return mode.startsWith(CUSTOM_MODE_PREFIX);
+	}
+
+	_isValidMode(mode: string): mode is ViewSettingsDialogInternalMode {
+		return mode === ViewSettingsDialogMode.Sort
+			|| mode === ViewSettingsDialogMode.Filter
+			|| mode === ViewSettingsDialogMode.Group
+			|| this._isCustomMode(mode);
 	}
 
 	/**
