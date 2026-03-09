@@ -2,6 +2,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import packageJson from "./package.json";
+import path from 'path';
 
 
 console.log("DEPLOYMENT_TYPE", process.env.DEPLOYMENT_TYPE); // eslint-disable-line
@@ -102,6 +103,24 @@ const config: Config = {
     ],
   ],
   plugins: [
+    function resolveReact() {
+      return {
+        name: 'resolve-react',
+        configureWebpack() {
+          return {
+            resolve: {
+              alias: {
+                // Ensure 'react' resolves from the project's node_modules,
+                // not from a parent directory where it may not be installed.
+                // This is needed because @ui5/webcomponents-base re-exports
+                // createComponent which imports React.
+                'react': path.resolve(__dirname, '../../node_modules/react'),
+              },
+            },
+          };
+        },
+      };
+    },
   ],
   themeConfig: {
     algolia: {

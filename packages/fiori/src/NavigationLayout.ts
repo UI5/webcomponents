@@ -7,12 +7,14 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import NavigationLayoutMode from "./types/NavigationLayoutMode.js";
 import type SideNavigation from "./SideNavigation.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { isInstanceOfSideNavigation } from "./SideNavigation.js";
 
 // Template
 import NavigationLayoutTemplate from "./NavigationLayoutTemplate.js";
 
 // Styles
 import NavigationLayoutCss from "./generated/themes/NavigationLayout.css.js";
+import type { SideNavigationItemClickEventDetail } from "./SideNavigationItemBase.js";
 
 const SCREEN_WIDTH_BREAKPOINT = 600;
 
@@ -52,7 +54,11 @@ const SCREEN_WIDTH_BREAKPOINT = 600;
 	],
 	template: NavigationLayoutTemplate,
 })
+
 class NavigationLayout extends UI5Element {
+	eventDetails!: {
+		"item-click": SideNavigationItemClickEventDetail
+	}
 	/**
 	 * Specifies the navigation layout mode.
 	 * @default "Auto"
@@ -65,7 +71,7 @@ class NavigationLayout extends UI5Element {
 	 * @private
 	 */
 	@property({ type: Boolean })
-	sideCollapsed : boolean = isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	sideCollapsed : boolean = this._isSmallScreen();
 
 	/**
 	 * @private
@@ -78,6 +84,9 @@ class NavigationLayout extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	isPhone = isPhone();
+
+	private _itemClickHandler = this._handleItemClick.bind(this);
+	private _sideNavigationItemClicked = false;
 
 	/**
 	 * Gets whether the side navigation is collapsed.
@@ -110,19 +119,69 @@ class NavigationLayout extends UI5Element {
 	content!: DefaultSlot<HTMLElement>;
 
 	onBeforeRendering() {
-		this.calcSideCollapsed();
+		if (!this._sideNavigationItemClicked) {
+			this.calcSideCollapsed();
+		}
 
 		const sideNavigation = this.sideContent[0];
 		this.hasSideNavigation = !!sideNavigation;
 
-		if (sideNavigation) {
+		if (sideNavigation && !this._sideNavigationItemClicked) {
 			sideNavigation.collapsed = this.isSideCollapsed();
+		}
+	}
+
+	onAfterRendering() {
+		this._sideNavigationItemClicked = false;
+		this._detachSideNavigationListeners();
+		this._attachSideNavigationListeners();
+	}
+
+	onExitDOM() {
+		this._detachSideNavigationListeners();
+	}
+
+	private _isSideNavigation(sideNavigation: HTMLElement | undefined): boolean {
+		return isInstanceOfSideNavigation(sideNavigation);
+	}
+
+	private _attachSideNavigationListeners() {
+		const sideNavigation = this.sideContent[0];
+		if (this._isSideNavigation(sideNavigation)) {
+			sideNavigation.addEventListener("ui5-item-click", this._itemClickHandler);
+		}
+	}
+
+	private _detachSideNavigationListeners() {
+		const sideNavigation = this.sideContent[0];
+		if (this._isSideNavigation(sideNavigation)) {
+			sideNavigation.removeEventListener("ui5-item-click", this._itemClickHandler);
+		}
+	}
+
+	private _handleItemClick() {
+		if (this._isSmallScreen()) {
+			this._sideNavigationItemClicked = true;
+			this._collapseSideNavigation();
+		}
+	}
+
+	private _isSmallScreen(): boolean {
+		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
+	private _collapseSideNavigation() {
+		const sideNavigation = this.sideContent[0];
+		if (this._isSideNavigation(sideNavigation)) {
+			sideNavigation.collapsed = true;
+			this.sideCollapsed = true;
+			this.mode = NavigationLayoutMode.Collapsed;
 		}
 	}
 
 	calcSideCollapsed() {
 		if (this.mode === NavigationLayoutMode.Auto) {
-			this.sideCollapsed = isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+			this.sideCollapsed = this._isSmallScreen();
 		} else {
 			this.sideCollapsed = this.mode === NavigationLayoutMode.Collapsed;
 		}

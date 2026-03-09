@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ui5-date*:** remove seconds from timezone tests ([#13192](https://github.com/UI5/webcomponents/issues/13192)) ([b6fa4db](https://github.com/UI5/webcomponents/commit/b6fa4db6bc9449818f3908387bcc5b2b6ee2d813))
+
+
+### Features
+
+* **ui5-shellbar:** add application-level overflow sample ([#13115](https://github.com/UI5/webcomponents/issues/13115)) ([570513f](https://github.com/UI5/webcomponents/commit/570513f27ac258a8d592c8d0b908501d24143b01))
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ui5-combobox:** enable case insensitive selection ([#13172](https://github.com/UI5/webcomponents/issues/13172)) ([b0a425e](https://github.com/UI5/webcomponents/commit/b0a425ea36434d6ed480d44be4595fdc20001236))
+* **ui5-link:** open new page in correct tab ([#13120](https://github.com/UI5/webcomponents/issues/13120)) ([8eeef94](https://github.com/UI5/webcomponents/commit/8eeef9441a8ff46bc875bf729da0c8d02199b9b4)), closes [#13116](https://github.com/UI5/webcomponents/issues/13116)
+* **ui5-rating-indicator:** update custom icon properties names and default values ([#13151](https://github.com/UI5/webcomponents/issues/13151)) ([4180a6a](https://github.com/UI5/webcomponents/commit/4180a6ab23cd0a94c24b544bbba2285da6dd0931))
+* **ui5-shellbar:** resolve visual issues after refactor ([#13148](https://github.com/UI5/webcomponents/issues/13148)) ([8661177](https://github.com/UI5/webcomponents/commit/86611774c04657d6cfb461c2b240512fbcf0b361)), closes [#13141](https://github.com/UI5/webcomponents/issues/13141)
+* **ui5-toolbar:** correct flex behavior for ToolbarSpacer ([#13164](https://github.com/UI5/webcomponents/issues/13164)) ([c4d409b](https://github.com/UI5/webcomponents/commit/c4d409bd05515855f2a18b4aa058b80b5efab06a))
+
+
+### Features
+
+* **ui5-date-picker, ui5-daterange-picket, ui5-datetime-picker:** introduce show-clear-icon property ([89ccfb8](https://github.com/UI5/webcomponents/commit/89ccfb8b227a92ebb7c831b13f8e26e0b47177d7))
+* **ui5-list:** added default ARIA role description ([#13135](https://github.com/UI5/webcomponents/issues/13135)) ([d2de428](https://github.com/UI5/webcomponents/commit/d2de428c821c4f5b91deeb905ec0ad2be57f0c74))
+* **ui5-multi-combobox:** introduce selectedValues property ([#12987](https://github.com/UI5/webcomponents/issues/12987)) ([bbe792b](https://github.com/UI5/webcomponents/commit/bbe792bc3dad9b21fdca9cb7a588a473e2ebdfff))
+* **ui5-toolbar-item:** introduce overflowed CSS custom state ([#13157](https://github.com/UI5/webcomponents/issues/13157)) ([33dda9e](https://github.com/UI5/webcomponents/commit/33dda9eb594e6979e69bc367b0ae1477202d16df))
+
+
+
+
+
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* CSS variables scoping to depend VersionInfo ([#13091](https://github.com/UI5/webcomponents/issues/13091)) ([d2e43ed](https://github.com/UI5/webcomponents/commit/d2e43ed692c63a0a36a9b14da59de354e2e7d0b0))
+* **DnD:** fix drag and drop in iOS Safari browser ([#13129](https://github.com/UI5/webcomponents/issues/13129)) ([849215f](https://github.com/UI5/webcomponents/commit/849215f36224f55416c8b291a7abe683dbcee44c))
+* **ui5-avatar-group:** aligned with the latest design spec ([#13113](https://github.com/UI5/webcomponents/issues/13113)) ([629a58e](https://github.com/UI5/webcomponents/commit/629a58e60b88e52027145f74e538b02de716bd7e))
+* **ui5-form-item:** fix label-content alignment ([#13119](https://github.com/UI5/webcomponents/issues/13119)) ([bf2b707](https://github.com/UI5/webcomponents/commit/bf2b707879a5d80e8c951e9ec2266ae22a24e9d3)), closes [#13118](https://github.com/UI5/webcomponents/issues/13118)
+* **ui5-progress-indicator:** apply rounded corners for Horizon themes ([#13126](https://github.com/UI5/webcomponents/issues/13126)) ([6182c67](https://github.com/UI5/webcomponents/commit/6182c6771b671bc8e96b3e46fdb1cf16f32e8b0c)), closes [#13112](https://github.com/UI5/webcomponents/issues/13112)
+* **ui5-shellbar:** remove separators on mobile ([#13107](https://github.com/UI5/webcomponents/issues/13107)) ([ef5986c](https://github.com/UI5/webcomponents/commit/ef5986ce89f0c1d9b008148cf299e4990a0eed50))
+* **ui5-side-navigation:** enhance Shell Bar in samples ([#13122](https://github.com/UI5/webcomponents/issues/13122)) ([daf9a11](https://github.com/UI5/webcomponents/commit/daf9a1173fac42fdb396b6bb31c993af5ceb96cc))
+* **ui5-side-navigation:** fix footer separator margins ([#13117](https://github.com/UI5/webcomponents/issues/13117)) ([72d61ee](https://github.com/UI5/webcomponents/commit/72d61eecb9a3cc53d824fc1609cdfac98c1a4b01))
+* **ui5-side-navigation:** fix long words wrap/truncate ([#13110](https://github.com/UI5/webcomponents/issues/13110)) ([c8728f6](https://github.com/UI5/webcomponents/commit/c8728f6033f9b05d0ffba81f2c852fd9c3582b9d))
+* **ui5-side-navigation:** update visual styles and mobile/small screen interaction ([#13047](https://github.com/UI5/webcomponents/issues/13047)) ([9e35e4f](https://github.com/UI5/webcomponents/commit/9e35e4f4a321e84608b47fa2d57e425d495c71c5))
+* **ui5-tokenizer:** modernize Copy/Cut command ([#13103](https://github.com/UI5/webcomponents/issues/13103)) ([2d9fcff](https://github.com/UI5/webcomponents/commit/2d9fcff5e99d99c5ffb345878ce47035f3b3ae49))
+
+
+### Features
+
+* **ui5-combobox:** introduce selectedValue property ([#12958](https://github.com/UI5/webcomponents/issues/12958)) ([623ffb2](https://github.com/UI5/webcomponents/commit/623ffb2eb6e56674734f0c6cabd066a48d322131))
+
+
+
+
+
 # [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
 
 

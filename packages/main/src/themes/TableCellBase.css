@@ -11,7 +11,8 @@
 }
 
 :host([_popin]) {
-	justify-content: normal !important;
+	justify-content: initial !important;
+	text-align: initial !important;
 }
 
 :host([tabindex]:focus) {

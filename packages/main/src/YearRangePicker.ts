@@ -97,7 +97,7 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	 * or dates depending on the capabilities of the picker component.
 	 * @default []
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	selectedDates: Array<number> = [];
 
 	/**
@@ -117,7 +117,7 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	@property({ type: Number })
 	_secondTimestamp?: number;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_yearRanges: YearRanges = [];
 
 	@property({ type: Boolean, noAttribute: true })

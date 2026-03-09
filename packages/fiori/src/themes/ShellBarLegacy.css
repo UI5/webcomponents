@@ -4,6 +4,8 @@
 .ui5-shellbar-logo {
 	overflow: hidden;
 	cursor: pointer;
+	display: flex;
+	align-items: center;
 }
 
 .ui5-shellbar-logo-area,
@@ -71,7 +73,8 @@
 }
 
 .ui5-shellbar-secondary-title {
-	display: inline-block;
+	display: flex;
+	align-items: center;
 	font-size: var(--sapFontSmallSize);
 	color: var(--sapShell_TextColor);
 	font-weight: normal;
