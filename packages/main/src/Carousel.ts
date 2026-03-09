@@ -514,7 +514,7 @@ class Carousel extends UI5Element {
 	}
 
 	async _handleF7Key(e: KeyboardEvent) {
-		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedActiveItemIndex];
+		const lastFocusedElement = this._lastFocusedElements[this._getLastFocusedItemIndex];
 		if (!this._lastInnerFocusedElement) {
 			const firstFocusable = await getFirstFocusableElement(this.items[this._focusedItemIndex].item);
 			firstFocusable?.focus();
@@ -587,7 +587,7 @@ class Carousel extends UI5Element {
 		return this.backgroundDesign.toLowerCase();
 	}
 
-	get _getLastFocusedActiveItemIndex() {
+	get _getLastFocusedItemIndex() {
 		for (let i = 0; i < this._orderOfLastFocusedItems.length; i++) {
 			const itemIndex = this._orderOfLastFocusedItems[i];
 
@@ -777,7 +777,7 @@ class Carousel extends UI5Element {
 
 	_updateVisibleItems(index: number) {
 		let newItemIndex = index;
-		const effectiveItemsPerPage: number = this.effectiveItemsPerPage;
+		const effectiveItemsPerPage = this.effectiveItemsPerPage;
 		const items = this.items;
 
 		if (!items.length) {
