@@ -126,7 +126,7 @@
   position: absolute;
   width: 16rem;
   left: 50%;
-  top: 50%;
+  top: 57%;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -139,7 +139,14 @@
   box-sizing: border-box;
 }
 
-.ui5-cal-overlay-container .ui5-mp-root {
+.ui5-dt-cal--portrait .ui5-cal-overlay-container {
+	top:54%;
+}
+
+
+.ui5-cal-overlay-container [ui5-monthpicker]::part(month-picker-root),
+.ui5-cal-overlay-container [ui5-yearpicker]::part(year-picker-root),
+.ui5-cal-overlay-container [ui5-yearrangepicker]::part(year-range-picker-root) {
 	padding: 0.5rem;
 }
 

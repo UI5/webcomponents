@@ -217,9 +217,6 @@ export default function CalendarTemplate(this: Calendar) {
 				{showMultipleMonths && (
 					<div class={{
 						"ui5-cal-overlay-container": true,
-						"ui5-cal-overlay-year-range-container": !this._isYearRangePickerHidden,
-						"ui5-cal-overlay-month-container": !this._isMonthPickerHidden,
-						"ui5-cal-overlay-year-container": !this._isYearPickerHidden,
 						"ui5-cal-overlay-hidden": this._isMonthPickerHidden && this._isYearPickerHidden && this._isYearRangePickerHidden,
 					}}>
 						{renderMonthPicker(this)}
