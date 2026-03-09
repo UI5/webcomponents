@@ -1,14 +1,14 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarButtonClass from "@ui5/webcomponents/dist/ToolbarButton.js";
 
-const Button = createComponent(ButtonClass);
-const Popover = createComponent(PopoverClass);
-const Toolbar = createComponent(ToolbarClass);
-const ToolbarButton = createComponent(ToolbarButtonClass);
+const Button = createReactComponent(ButtonClass);
+const Popover = createReactComponent(PopoverClass);
+const Toolbar = createReactComponent(ToolbarClass);
+const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
   const [open, setOpen] = useState(false);

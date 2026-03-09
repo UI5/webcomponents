@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import NotificationListClass from "@ui5/webcomponents-fiori/dist/NotificationList.js";
 import NotificationListGroupItemClass from "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js";
@@ -10,26 +10,26 @@ import "@ui5/webcomponents-icons/dist/employee.js";
 import "@ui5/webcomponents-icons/dist/message-error.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 
-const NotificationList = createComponent(NotificationListClass);
-const NotificationListGroupItem = createComponent(
+const NotificationList = createReactComponent(NotificationListClass);
+const NotificationListGroupItem = createReactComponent(
   NotificationListGroupItemClass,
 );
-const NotificationListItem = createComponent(NotificationListItemClass);
-const Avatar = createComponent(AvatarClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
+const NotificationListItem = createReactComponent(NotificationListItemClass);
+const Avatar = createReactComponent(AvatarClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
   const handleNotificationListItemClose = (
     e: UI5CustomEvent<NotificationListClass, "item-close">,
   ) => {
-    var visibleItems = 0;
+    let visibleItems = 0;
 
     // hide the closed Notification item
     e.detail.item.hidden = true;
 
     Array.from(e.detail.item.parentElement.childNodes).forEach((element) => {
-      if (element.nodeName === "UI5-LI-NOTIFICATION" && !element.hidden) {
+      if (element.nodeName === "UI5-LI-NOTIFICATION" && !(element as NotificationListItemClass).hidden) {
         visibleItems++;
       }
     });

@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import FileUploaderClass from "@ui5/webcomponents/dist/FileUploader.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-icons/dist/upload.js";
 
-const FileUploader = createComponent(FileUploaderClass);
-const Label = createComponent(LabelClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Label = createReactComponent(LabelClass);
 
 function App() {
-  const [valueState, setValueState] = useState("None");
+  const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const [valueStateMessage, setValueStateMessage] = useState("");
 
   const handleFileSizeExceed = (

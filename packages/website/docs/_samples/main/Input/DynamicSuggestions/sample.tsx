@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const Input = createComponent(InputClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
+const Input = createReactComponent(InputClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
 
 const THRESHOLD = 3;
 
@@ -55,7 +55,7 @@ const countries = [
 ];
 
 function App() {
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleInput = (e: UI5CustomEvent<InputClass, "input">) => {
     const value = e.currentTarget.value;

@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback, useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
@@ -9,9 +9,9 @@ import "@ui5/webcomponents-icons/dist/add-folder.js";
 import "@ui5/webcomponents-icons/dist/open-folder.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 
-const Button = createComponent(ButtonClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
+const Button = createReactComponent(ButtonClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
   const menuSubsRef = useRef(null);
@@ -19,13 +19,13 @@ function App() {
   const [menuSubsOpen, setMenuSubsOpen] = useState(false);
   const [delayMenuOpen, setDelayMenuOpen] = useState(false);
 
-  const addItemsDynamically = useCallback((menu) => {
+  const addItemsDynamically = useCallback((menu: any) => {
     setTimeout(() => {
       menu.loading = false;
       menu.loadingDelay = 0;
-      const oneNode = document.createElement("ui5-menu-item");
+      const oneNode = document.createElement("ui5-menu-item") as MenuItemClass;
       oneNode.text = "Open from Amazon Cloud";
-      const twoNode = document.createElement("ui5-menu-item");
+      const twoNode = document.createElement("ui5-menu-item") as MenuItemClass;
       twoNode.text = "Open from Google Cloud";
       menu.append(oneNode, twoNode);
       menu.focus();

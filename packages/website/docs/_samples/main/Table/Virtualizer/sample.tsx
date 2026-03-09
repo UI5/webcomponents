@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -8,13 +8,13 @@ import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableVirtualizerClass from "@ui5/webcomponents/dist/TableVirtualizer.js";
 import TableSelectionClass from "@ui5/webcomponents/dist/TableSelection.js";
 
-const Table = createComponent(TableClass);
-const TableRow = createComponent(TableRowClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableVirtualizer = createComponent(TableVirtualizerClass);
-const TableSelection = createComponent(TableSelectionClass);
+const Table = createReactComponent(TableClass);
+const TableRow = createReactComponent(TableRowClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableVirtualizer = createReactComponent(TableVirtualizerClass);
+const TableSelection = createReactComponent(TableSelectionClass);
 
 interface Product {
   key: string;

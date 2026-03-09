@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 
-const Button = createComponent(ButtonClass);
-const Input = createComponent(InputClass);
-const Label = createComponent(LabelClass);
-const ResponsivePopover = createComponent(ResponsivePopoverClass);
+const Button = createReactComponent(ButtonClass);
+const Input = createReactComponent(InputClass);
+const Label = createReactComponent(LabelClass);
+const ResponsivePopover = createReactComponent(ResponsivePopoverClass);
 
 function App() {
   const [open, setOpen] = useState(false);

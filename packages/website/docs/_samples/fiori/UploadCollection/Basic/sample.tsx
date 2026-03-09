@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
@@ -12,28 +12,37 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/document.js";
 import "@ui5/webcomponents-icons/dist/document-text.js";
 
-const UploadCollection = createComponent(UploadCollectionClass);
-const UploadCollectionItem = createComponent(UploadCollectionItemClass);
-const Button = createComponent(ButtonClass);
-const FileUploader = createComponent(FileUploaderClass);
-const Icon = createComponent(IconClass);
-const Label = createComponent(LabelClass);
-const Title = createComponent(TitleClass);
+const UploadCollection = createReactComponent(UploadCollectionClass);
+const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
+const Button = createReactComponent(ButtonClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Icon = createReactComponent(IconClass);
+const Label = createReactComponent(LabelClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const uploadCollectionRef = useRef(null);
-  const [newFiles, setNewFiles] = useState([]);
+  const [newFiles, setNewFiles] = useState<
+    {
+      id: string;
+      file: File;
+      fileName: string;
+      description: string;
+      uploadState: "Error" | "Ready" | "Uploading" | "Complete";
+    }[]
+  >([]);
 
   const handleFileUploaderChange = useCallback(
     (e: UI5CustomEvent<FileUploaderClass, "change">) => {
       const files = e.detail.files;
       const additions = [];
+
       for (let i = 0; i < files.length; i++) {
         additions.push({
           id: Date.now() + "-" + i,
           file: files[i],
           fileName: files[i].name,
-          description: `Last modified: ${files[i].lastModifiedDate}, size: ${files[i].size}`,
+          description: `Last modified: ${new Date(files[i].lastModified)}, size: ${files[i].size}`,
           uploadState: "Ready",
         });
       }

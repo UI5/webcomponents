@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
@@ -20,22 +20,22 @@ import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
-const AIButton = createComponent(AIButtonClass);
-const AIButtonState = createComponent(AIButtonStateClass);
-const BusyIndicator = createComponent(BusyIndicatorClass);
-const Button = createComponent(ButtonClass);
-const Card = createComponent(CardClass);
-const CardHeader = createComponent(CardHeaderClass);
-const Dialog = createComponent(DialogClass);
-const Label = createComponent(LabelClass);
-const Option = createComponent(OptionClass);
-const RangeSlider = createComponent(RangeSliderClass);
-const SegmentedButton = createComponent(SegmentedButtonClass);
-const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
-const Select = createComponent(SelectClass);
-const TextArea = createComponent(TextAreaClass);
-const Toast = createComponent(ToastClass);
-const Token = createComponent(TokenClass);
+const AIButton = createReactComponent(AIButtonClass);
+const AIButtonState = createReactComponent(AIButtonStateClass);
+const BusyIndicator = createReactComponent(BusyIndicatorClass);
+const Button = createReactComponent(ButtonClass);
+const Card = createReactComponent(CardClass);
+const CardHeader = createReactComponent(CardHeaderClass);
+const Dialog = createReactComponent(DialogClass);
+const Label = createReactComponent(LabelClass);
+const Option = createReactComponent(OptionClass);
+const RangeSlider = createReactComponent(RangeSliderClass);
+const SegmentedButton = createReactComponent(SegmentedButtonClass);
+const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
+const Select = createReactComponent(SelectClass);
+const TextArea = createReactComponent(TextAreaClass);
+const Toast = createReactComponent(ToastClass);
+const Token = createReactComponent(TokenClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -287,6 +287,7 @@ function App() {
           <img
             src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png"
             slot="avatar"
+			alt="Monique Legrand"
           />
         </CardHeader>
         <section className="guidedPromptSection">

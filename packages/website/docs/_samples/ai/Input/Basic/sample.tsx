@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -7,9 +7,9 @@ import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
-const AIInput = createComponent(AIInputClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
+const AIInput = createReactComponent(AIInputClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 const SAMPLE_TEXTS: Record<string, string> = {
   en: "Innovation managers lead with creativity.",
@@ -20,7 +20,18 @@ const SAMPLE_TEXTS: Record<string, string> = {
   summarized: "Driving innovation creatively.",
 };
 
-const INITIAL_MENU_CONFIG = [
+type Config = {
+  text?: string;
+  action?: string;
+  processingLabel?: string;
+  completedLabel?: string;
+  textKey?: string;
+  slot?: string;
+  children?: Config[];
+  separator?: boolean;
+};
+
+const INITIAL_MENU_CONFIG: Array<Config> = [
   {
     text: "Generate",
     action: "generate",
@@ -31,7 +42,7 @@ const INITIAL_MENU_CONFIG = [
   },
 ];
 
-const FULL_MENU_CONFIG = [
+const FULL_MENU_CONFIG: Array<Config> = [
   {
     text: "Regenerate",
     action: "regenerate",
@@ -125,7 +136,7 @@ function App() {
   const [currentVersion, setCurrentVersion] = useState(0);
   const [totalVersions, setTotalVersions] = useState(0);
   const [promptDescription, setPromptDescription] = useState("");
-  const [menuConfig, setMenuConfig] = useState(INITIAL_MENU_CONFIG);
+  const [menuConfig, setMenuConfig] = useState<Config[]>(INITIAL_MENU_CONFIG);
 
   const versionHistoryRef = useRef<VersionEntry[]>([]);
   const currentIndexRef = useRef(0);

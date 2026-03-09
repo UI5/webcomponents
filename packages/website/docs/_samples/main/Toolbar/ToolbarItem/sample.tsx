@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 import ComboBoxClass from "@ui5/webcomponents/dist/ComboBox.js";
 import ComboBoxItemClass from "@ui5/webcomponents/dist/ComboBoxItem.js";
@@ -11,17 +11,17 @@ import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarItemClass from "@ui5/webcomponents/dist/ToolbarItem.js";
 import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
 
-const CheckBox = createComponent(CheckBoxClass);
-const ComboBox = createComponent(ComboBoxClass);
-const ComboBoxItem = createComponent(ComboBoxItemClass);
-const DatePicker = createComponent(DatePickerClass);
-const Input = createComponent(InputClass);
-const MultiComboBox = createComponent(MultiComboBoxClass);
-const RadioButton = createComponent(RadioButtonClass);
-const Switch = createComponent(SwitchClass);
-const Toolbar = createComponent(ToolbarClass);
-const ToolbarItem = createComponent(ToolbarItemClass);
-const MultiComboBoxItem = createComponent(MultiComboBoxItemClass);
+const CheckBox = createReactComponent(CheckBoxClass);
+const ComboBox = createReactComponent(ComboBoxClass);
+const ComboBoxItem = createReactComponent(ComboBoxItemClass);
+const DatePicker = createReactComponent(DatePickerClass);
+const Input = createReactComponent(InputClass);
+const MultiComboBox = createReactComponent(MultiComboBoxClass);
+const RadioButton = createReactComponent(RadioButtonClass);
+const Switch = createReactComponent(SwitchClass);
+const Toolbar = createReactComponent(ToolbarClass);
+const ToolbarItem = createReactComponent(ToolbarItemClass);
+const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 
 function App() {
   return (

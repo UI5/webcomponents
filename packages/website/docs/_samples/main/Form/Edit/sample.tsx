@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
 import FormItemClass from "@ui5/webcomponents/dist/FormItem.js";
@@ -12,16 +12,16 @@ import SegmentedButtonItemClass from "@ui5/webcomponents/dist/SegmentedButtonIte
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 
-const Form = createComponent(FormClass);
-const FormItem = createComponent(FormItemClass);
-const Input = createComponent(InputClass);
-const Label = createComponent(LabelClass);
-const Link = createComponent(LinkClass);
-const Option = createComponent(OptionClass);
-const SegmentedButton = createComponent(SegmentedButtonClass);
-const SegmentedButtonItem = createComponent(SegmentedButtonItemClass);
-const Select = createComponent(SelectClass);
-const Text = createComponent(TextClass);
+const Form = createReactComponent(FormClass);
+const FormItem = createReactComponent(FormItemClass);
+const Input = createReactComponent(InputClass);
+const Label = createReactComponent(LabelClass);
+const Link = createReactComponent(LinkClass);
+const Option = createReactComponent(OptionClass);
+const SegmentedButton = createReactComponent(SegmentedButtonClass);
+const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
+const Select = createReactComponent(SelectClass);
+const Text = createReactComponent(TextClass);
 
 function App() {
   const [editable, setEditable] = useState(false);

@@ -1,10 +1,12 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
+import FCLLayout from "@ui5/webcomponents-fiori/dist/types/FCLLayout.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
+import type AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorScheme.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -32,20 +34,20 @@ import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import "@ui5/webcomponents-icons/dist/full-screen.js";
 import "@ui5/webcomponents-icons/dist/add.js";
 
-const FlexibleColumnLayout = createComponent(FlexibleColumnLayoutClass);
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const ShellBarItem = createComponent(ShellBarItemClass);
-const Avatar = createComponent(AvatarClass);
-const Button = createComponent(ButtonClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
-const RatingIndicator = createComponent(RatingIndicatorClass);
-const Tab = createComponent(TabClass);
-const TabContainer = createComponent(TabContainerClass);
-const TabSeparator = createComponent(TabSeparatorClass);
-const Title = createComponent(TitleClass);
-const ToggleButton = createComponent(ToggleButtonClass);
+const FlexibleColumnLayout = createReactComponent(FlexibleColumnLayoutClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const ShellBarItem = createReactComponent(ShellBarItemClass);
+const Avatar = createReactComponent(AvatarClass);
+const Button = createReactComponent(ButtonClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
+const RatingIndicator = createReactComponent(RatingIndicatorClass);
+const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
+const TabSeparator = createReactComponent(TabSeparatorClass);
+const Title = createReactComponent(TitleClass);
+const ToggleButton = createReactComponent(ToggleButtonClass);
 
 const avatarIcons = [
   "camera",
@@ -83,19 +85,19 @@ const supplierNames = [
   "Brainsoft",
 ];
 
-function getRandomInt(max) {
+function getRandomInt(max: number) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
 function App() {
-  const [layout, setLayout] = useState("OneColumn");
+  const [layout, setLayout] = useState<`${FCLLayout}`>("OneColumn");
   const [col2Title, setCol2Title] = useState("");
   const [col3Title, setCol3Title] = useState("");
   const [productName, setProductName] = useState("");
   const [productDesc, setProductDesc] = useState("");
   const [productSupplier, setProductSupplier] = useState("Titanium");
   const [avatarIcon, setAvatarIcon] = useState("laptop");
-  const [avatarColor, setAvatarColor] = useState("Accent5");
+  const [avatarColor, setAvatarColor] = useState<`${AvatarColorScheme}`>("Accent5");
   const [ratingValue, setRatingValue] = useState(3.5);
   const [midFullscreenIcon, setMidFullscreenIcon] = useState("full-screen");
   const [endFullscreenIcon, setEndFullscreenIcon] = useState("full-screen");
@@ -120,7 +122,7 @@ function App() {
   }, []);
 
   const nextLayout = useCallback(
-    (target) => {
+    (target: string): `${FCLLayout}` => {
       if (target === "col1") {
         exitFullScreen();
         return "TwoColumnsMidExpanded";
@@ -177,11 +179,11 @@ function App() {
     (e: UI5CustomEvent<ListClass, "item-click">) => {
       const item = e.detail.item;
       setAvatarIcon(avatarIcons[getRandomInt(6)]);
-      setAvatarColor(avatarColors[getRandomInt(9) + 1]);
+      setAvatarColor(avatarColors[getRandomInt(9) + 1] as `${AvatarColorScheme}`);
       setRatingValue(getRandomInt(4) + 1);
       setCol2Title(item.textContent);
       setProductName(item.textContent);
-      setProductDesc(item.description);
+      setProductDesc((item as ListItemStandardClass).description);
       setProductSupplier(supplierNames[getRandomInt(11)]);
       setLayout(nextLayout("col1"));
     },
@@ -262,6 +264,7 @@ function App() {
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
                 slot="logo"
+				alt="Logo"
               />
             </ShellBarBranding>
             <ToggleButton

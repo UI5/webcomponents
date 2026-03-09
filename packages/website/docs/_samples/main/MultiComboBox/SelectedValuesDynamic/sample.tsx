@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import MultiComboBoxClass from "@ui5/webcomponents/dist/MultiComboBox.js";
 import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
 
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
-const MultiComboBox = createComponent(MultiComboBoxClass);
-const MultiComboBoxItem = createComponent(MultiComboBoxItemClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
+const MultiComboBox = createReactComponent(MultiComboBoxClass);
+const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 
 const europeanCountries = ["DE", "FR", "IT"];
 const allCountries = ["DE", "FR", "IT", "US", "CA", "JP"];

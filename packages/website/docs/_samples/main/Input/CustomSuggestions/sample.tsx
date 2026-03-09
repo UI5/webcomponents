@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemCustomClass from "@ui5/webcomponents/dist/SuggestionItemCustom.js";
@@ -7,9 +7,9 @@ import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 
-const Input = createComponent(InputClass);
-const SuggestionItemCustom = createComponent(SuggestionItemCustomClass);
-const Icon = createComponent(IconClass);
+const Input = createReactComponent(InputClass);
+const SuggestionItemCustom = createReactComponent(SuggestionItemCustomClass);
+const Icon = createReactComponent(IconClass);
 
 const countries = [
   "Albania",

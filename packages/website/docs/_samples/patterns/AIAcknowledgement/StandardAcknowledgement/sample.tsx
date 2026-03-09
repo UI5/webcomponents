@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState, useCallback } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
@@ -7,12 +7,12 @@ import LinkClass from "@ui5/webcomponents/dist/Link.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Button = createComponent(ButtonClass);
-const CheckBox = createComponent(CheckBoxClass);
-const Dialog = createComponent(DialogClass);
-const Link = createComponent(LinkClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
+const Button = createReactComponent(ButtonClass);
+const CheckBox = createReactComponent(CheckBoxClass);
+const Dialog = createReactComponent(DialogClass);
+const Link = createReactComponent(LinkClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(true);

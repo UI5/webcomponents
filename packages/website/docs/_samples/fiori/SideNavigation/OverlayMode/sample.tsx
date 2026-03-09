@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
@@ -32,23 +32,23 @@ import "@ui5/webcomponents-icons/dist/compare.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 
-const Page = createComponent(PageClass);
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const ShellBarItem = createComponent(ShellBarItemClass);
-const ShellBarSearch = createComponent(ShellBarSearchClass);
-const SideNavigation = createComponent(SideNavigationClass);
-const SideNavigationGroup = createComponent(SideNavigationGroupClass);
-const SideNavigationItem = createComponent(SideNavigationItemClass);
-const SideNavigationSubItem = createComponent(SideNavigationSubItemClass);
-const Avatar = createComponent(AvatarClass);
-const Bar = createComponent(BarClass);
-const Button = createComponent(ButtonClass);
-const Dialog = createComponent(DialogClass);
-const ResponsivePopover = createComponent(ResponsivePopoverClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
-const ToggleButton = createComponent(ToggleButtonClass);
+const Page = createReactComponent(PageClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const ShellBarItem = createReactComponent(ShellBarItemClass);
+const ShellBarSearch = createReactComponent(ShellBarSearchClass);
+const SideNavigation = createReactComponent(SideNavigationClass);
+const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
+const SideNavigationItem = createReactComponent(SideNavigationItemClass);
+const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
+const Avatar = createReactComponent(AvatarClass);
+const Bar = createReactComponent(BarClass);
+const Button = createReactComponent(ButtonClass);
+const Dialog = createReactComponent(DialogClass);
+const ResponsivePopover = createReactComponent(ResponsivePopoverClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
+const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -95,7 +95,7 @@ function App() {
         }
       `}</style>
       <Page style={{ height: "500px" }}>
-        <ShellBar notificationsCount={72} showNotifications={true}>
+        <ShellBar notificationsCount="72" showNotifications={true}>
           <Button
             icon="menu2"
             slot="startButton"
