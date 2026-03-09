@@ -975,12 +975,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			token.forcedTabIndex = "-1";
 		});
 
-		if (!this._tokenDeleting) {
-			this._itemNav._currentIndex = -1;
-		}
+		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget) && !this._tokenDeleting) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
