@@ -826,13 +826,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			// }
 
 			if (this.typedInValue.length && this.value.length) {
-				// "Contains" filtering requires custom selection range handling.
-				// Example: "e" → "Belgium" (item does not start with typed value, so select all).
-				if (this.filter === InputSuggestionsFilter.Contains) {
-					this._adjustContainsSelectionRange();
-				} else {
-					innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
-				}
+				this._adjustSelectionRange();
 			}
 
 			this.fireDecoratorEvent("type-ahead");
@@ -847,7 +841,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 	}
 
-	_adjustContainsSelectionRange() {
+	_adjustSelectionRange() {
 		const innerInput = this.getInputDOMRefSync()!;
 		const visibleItems = this.Suggestions?._getItems().filter(item => !item.hidden) as IInputSuggestionItemSelectable[];
 		const currentItem = visibleItems?.find(item => { return item.selected || item.focused; });
@@ -860,6 +854,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			} else {
 				innerInput.setSelectionRange(0, this.value.length);
 			}
+		} else {
+			// No current item selected (e.g., during typing) - use default typeahead selection
+			innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
 		}
 	}
 

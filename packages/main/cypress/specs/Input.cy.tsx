@@ -3425,5 +3425,88 @@ describe("Input built-in filtering", () => {
 			cy.get("@input")
 				.should("have.value", "a");
 		});
+
+		it("should restore typed value when pressing arrow up from first suggestion", () => {
+			cy.mount(
+				<Input id="arrow-up-test" showSuggestions>
+					<SuggestionItem text="Argentina" />
+					<SuggestionItem text="Australia" />
+				</Input>
+			);
+
+			cy.get("#arrow-up-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Argentina");
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "Australia");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "Argentina");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "A");
+		});
+
+		it("should select all text for non-matching items and partial for matching during navigation", () => {
+			cy.mount(
+				<Input id="typeahead-nav-test" showSuggestions>
+					<SuggestionItem text="Aute" />
+					<SuggestionItem text="ad" />
+					<SuggestionItem text="exercitation" />
+				</Input>
+			);
+
+			cy.get("#typeahead-nav-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Aute");
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "ad");
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "exercitation");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "ad");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "Aute");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "A");
+		});
 	});
 });
