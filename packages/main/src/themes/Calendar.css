@@ -124,10 +124,10 @@
 
 .ui5-cal-overlay-container {
   position: absolute;
-  top: 19%;
+  width: 16rem;
   left: 50%;
-  width: var(--_ui5_calendar_width);
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,6 +137,10 @@
   border-radius: var(--_ui5_popup_border_radius);
   min-height: 2rem;
   box-sizing: border-box;
+}
+
+.ui5-cal-overlay-container .ui5-mp-root {
+	padding: 0.5rem;
 }
 
 .ui5-cal-overlay-hidden {
