@@ -154,6 +154,28 @@
 	flex:none;
 }
 
+
 .ui5-dt-cal--portrait.ui5-dt-cal--multiple .ui5-cal-overlay-container  {
 	width: 100%;
+}
+
+/* Portrait mode: Stack calendars vertically in mobile view */
+.ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-content-multiple {
+    gap: 0;
+}
+
+.ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-multiple-months-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
+    min-width: var(--_ui5_calendar_width);
+    width: 100%;
+}
+
+.ui5-dt-cal--portrait .ui5-cal-content-multiple > * {
+    width: 100%;
+    min-width: auto;
+    max-width: 100%;
 }
