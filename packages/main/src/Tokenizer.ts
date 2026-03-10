@@ -561,6 +561,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -977,7 +978,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;

@@ -1,10 +1,9 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 
-const Input = createComponent(InputClass);
+const Input = createReactComponent(InputClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -14,7 +13,7 @@ function App() {
                 background-color: #ffeded;
             }
         `}</style>
-        <Input value="Styled input" />
+      <Input value="Styled input" />
     </>
   );
 }

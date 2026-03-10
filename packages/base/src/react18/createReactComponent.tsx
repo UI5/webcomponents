@@ -7,6 +7,7 @@
  * - Ref forwarding
  * - Children handling
  *
+ * Note: The function supports react >= 18.
  * Note: This is for documentation samples only - for production React apps,
  * use the official @ui5/webcomponents-react library.
  */
@@ -18,7 +19,7 @@ import {
 	useEffect,
 	forwardRef,
 } from "react";
-import type UI5Element from "./UI5Element.js";
+import type UI5Element from "../UI5Element.js";
 
 type EventHandler<E = Event> = (event: E) => void;
 
@@ -51,13 +52,13 @@ const createEventCleanup = (element: UI5Element, eventName: string, handler: Eve
  *
  * @param ComponentClass - The UI5 Web Component class (e.g., Button from "@ui5/webcomponents/dist/Button.js")
  * @returns A React component that renders the custom element with proper TypeScript types
- *
+ * @since 2.21.0
  * @example
  * import Button from "@ui5/webcomponents/dist/Button.js";
- * const ReactButton = createComponent(Button);
+ * const ReactButton = createReactComponent(Button);
  * // ReactButton props are typed based on Button's _jsxProps
  */
-export function createComponent<T extends UI5Element>(
+function createReactComponent<T extends UI5Element>(
 	ComponentClass: UI5ComponentClass<T>,
 ): React.ForwardRefExoticComponent<
 	React.PropsWithoutRef<T["_jsxProps"] & { children?: ReactNode }> & React.RefAttributes<T>
@@ -136,4 +137,4 @@ export function createComponent<T extends UI5Element>(
 	return Component;
 }
 
-export default createComponent;
+export default createReactComponent;

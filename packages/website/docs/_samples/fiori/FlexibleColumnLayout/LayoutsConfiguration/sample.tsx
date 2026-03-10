@@ -1,7 +1,8 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useEffect, useCallback } from "react";
 import FlexibleColumnLayoutClass from "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
+import type FCLLayout from "@ui5/webcomponents-fiori/dist/types/FCLLayout.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
@@ -13,41 +14,116 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
-const FlexibleColumnLayout = createComponent(FlexibleColumnLayoutClass);
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
-const Option = createComponent(OptionClass);
-const Select = createComponent(SelectClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
+const FlexibleColumnLayout = createReactComponent(FlexibleColumnLayoutClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
+const Option = createReactComponent(OptionClass);
+const Select = createReactComponent(SelectClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
 
 const categoryData = {
   electronics: [
-    { id: "laptop", name: "Laptop", description: "High-performance laptop with 16GB RAM and SSD storage. Perfect for work and gaming." },
-    { id: "smartphone", name: "Smartphone", description: "Latest smartphone with advanced camera system and long battery life." },
-    { id: "tablet", name: "Tablet", description: "Lightweight tablet with high-resolution display, ideal for reading and media consumption." },
+    {
+      id: "laptop",
+      name: "Laptop",
+      description:
+        "High-performance laptop with 16GB RAM and SSD storage. Perfect for work and gaming.",
+    },
+    {
+      id: "smartphone",
+      name: "Smartphone",
+      description:
+        "Latest smartphone with advanced camera system and long battery life.",
+    },
+    {
+      id: "tablet",
+      name: "Tablet",
+      description:
+        "Lightweight tablet with high-resolution display, ideal for reading and media consumption.",
+    },
   ],
   clothing: [
-    { id: "jeans", name: "Jeans", description: "Premium denim jeans with comfortable fit and durable construction." },
-    { id: "shirt", name: "Shirt", description: "Cotton shirt with modern cut and breathable fabric, perfect for any occasion." },
-    { id: "jacket", name: "Jacket", description: "Stylish jacket with weather-resistant materials and multiple pockets." },
+    {
+      id: "jeans",
+      name: "Jeans",
+      description:
+        "Premium denim jeans with comfortable fit and durable construction.",
+    },
+    {
+      id: "shirt",
+      name: "Shirt",
+      description:
+        "Cotton shirt with modern cut and breathable fabric, perfect for any occasion.",
+    },
+    {
+      id: "jacket",
+      name: "Jacket",
+      description:
+        "Stylish jacket with weather-resistant materials and multiple pockets.",
+    },
   ],
   books: [
-    { id: "novel", name: "Novel", description: "Bestselling fiction novel with compelling characters and engaging plot." },
-    { id: "cookbook", name: "Cookbook", description: "Collection of delicious recipes from around the world with step-by-step instructions." },
-    { id: "biography", name: "Biography", description: "Inspiring life story of a remarkable person who changed the world." },
+    {
+      id: "novel",
+      name: "Novel",
+      description:
+        "Bestselling fiction novel with compelling characters and engaging plot.",
+    },
+    {
+      id: "cookbook",
+      name: "Cookbook",
+      description:
+        "Collection of delicious recipes from around the world with step-by-step instructions.",
+    },
+    {
+      id: "biography",
+      name: "Biography",
+      description:
+        "Inspiring life story of a remarkable person who changed the world.",
+    },
   ],
   home: [
-    { id: "chair", name: "Chair", description: "Ergonomic office chair with lumbar support and adjustable height." },
-    { id: "lamp", name: "Lamp", description: "Modern LED lamp with adjustable brightness and energy-efficient design." },
-    { id: "plant", name: "Plant", description: "Low-maintenance indoor plant that purifies air and adds natural beauty." },
+    {
+      id: "chair",
+      name: "Chair",
+      description:
+        "Ergonomic office chair with lumbar support and adjustable height.",
+    },
+    {
+      id: "lamp",
+      name: "Lamp",
+      description:
+        "Modern LED lamp with adjustable brightness and energy-efficient design.",
+    },
+    {
+      id: "plant",
+      name: "Plant",
+      description:
+        "Low-maintenance indoor plant that purifies air and adds natural beauty.",
+    },
   ],
   sports: [
-    { id: "shoes", name: "Running Shoes", description: "Professional running shoes with advanced cushioning and lightweight design." },
-    { id: "ball", name: "Football", description: "Official size football with durable leather construction and excellent grip." },
-    { id: "racket", name: "Tennis Racket", description: "Professional tennis racket with carbon fiber frame and comfortable grip." },
+    {
+      id: "shoes",
+      name: "Running Shoes",
+      description:
+        "Professional running shoes with advanced cushioning and lightweight design.",
+    },
+    {
+      id: "ball",
+      name: "Football",
+      description:
+        "Official size football with durable leather construction and excellent grip.",
+    },
+    {
+      id: "racket",
+      name: "Tennis Racket",
+      description:
+        "Professional tennis racket with carbon fiber frame and comfortable grip.",
+    },
   ],
 };
 
@@ -74,10 +150,12 @@ function App() {
   const fclRef = useRef(null);
   const selectLayoutRef = useRef(null);
 
-  const [currentLayout, setCurrentLayout] = useState("OneColumn");
+  const [currentLayout, setCurrentLayout] = useState<`${FCLLayout}`>("OneColumn");
   const [configInfo, setConfigInfo] = useState("none");
   const [categoryTitle, setCategoryTitle] = useState("Select a category");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<
+    { id: string; name: string; description: string }[]
+  >([]);
   const [showProducts, setShowProducts] = useState(false);
   const [productTitle, setProductTitle] = useState("Product Details");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -87,7 +165,9 @@ function App() {
     const fcl = fclRef.current;
     if (!fcl) return;
     const configurationPerMedia = layoutsConfiguration[fcl.media];
-    const layoutConfiguration = configurationPerMedia ? configurationPerMedia[fcl.layout] : undefined;
+    const layoutConfiguration = configurationPerMedia
+      ? configurationPerMedia[fcl.layout]
+      : undefined;
     if (layoutConfiguration) {
       setConfigInfo(`[${layoutConfiguration.layout.join(", ")}]`);
     } else {
@@ -106,62 +186,74 @@ function App() {
     displayCustomLayoutConfigurationInfo();
   }, [displayCustomLayoutConfigurationInfo]);
 
-  const handleFclLayoutChange = useCallback((e: UI5CustomEvent<FlexibleColumnLayoutClass, "layout-change">) => {
-    if (selectLayoutRef.current) {
-      selectLayoutRef.current!.value = e.detail.layout;
-    }
-  }, []);
-
-  const handleSelectLayoutUi5Change = useCallback((e: UI5CustomEvent<SelectClass, "change">) => {
-    const fcl = fclRef.current;
-    if (fcl) {
-      fcl.layout = e.detail.selectedOption.textContent;
-      setCurrentLayout(e.detail.selectedOption.textContent);
-      displayCustomLayoutConfigurationInfo();
-    }
-  }, [displayCustomLayoutConfigurationInfo]);
-
-  const handleCategoriesListUi5ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
-    const category = e.detail.item.dataset.category;
-    const categoryName = e.detail.item.textContent;
-
-    setCategoryTitle(categoryName);
-    setProducts(categoryData[category] || []);
-    setShowProducts(true);
-    setSelectedProduct(null);
-    setProductTitle("Product Details");
-
-    const fcl = fclRef.current;
-    if (fcl) {
-      fcl.layout = "TwoColumnsMidExpanded";
+  const handleFclLayoutChange = useCallback(
+    (e: UI5CustomEvent<FlexibleColumnLayoutClass, "layout-change">) => {
       if (selectLayoutRef.current) {
-        selectLayoutRef.current!.value = "TwoColumnsMidExpanded";
+        selectLayoutRef.current!.value = e.detail.layout;
       }
-      displayCustomLayoutConfigurationInfo();
-    }
-  }, [displayCustomLayoutConfigurationInfo]);
+    },
+    [],
+  );
 
-  const handleProductsListUi5ItemClick = useCallback((e: UI5CustomEvent<ListClass, "item-click">) => {
-    const productId = e.detail.item.dataset.productId;
-    const category = e.detail.item.dataset.category;
+  const handleSelectLayoutUi5Change = useCallback(
+    (e: UI5CustomEvent<SelectClass, "change">) => {
+      const fcl = fclRef.current;
+      if (fcl) {
+        fcl.layout = e.detail.selectedOption.textContent as `${FCLLayout}`;
+        setCurrentLayout(e.detail.selectedOption.textContent as `${FCLLayout}`);
+        displayCustomLayoutConfigurationInfo();
+      }
+    },
+    [displayCustomLayoutConfigurationInfo],
+  );
 
-    const product = categoryData[category]?.find((p) => p.id === productId);
+  const handleCategoriesListUi5ItemClick = useCallback(
+    (e: UI5CustomEvent<ListClass, "item-click">) => {
+      const category = e.detail.item.dataset.category;
+      const categoryName = e.detail.item.textContent;
 
-    if (product) {
-      setProductTitle(product.name);
-      setSelectedProduct(product);
-      setSelectedCategory(category);
+      setCategoryTitle(categoryName);
+      setProducts(categoryData[category] || []);
+      setShowProducts(true);
+      setSelectedProduct(null);
+      setProductTitle("Product Details");
 
       const fcl = fclRef.current;
       if (fcl) {
-        fcl.layout = "ThreeColumnsMidExpanded";
+        fcl.layout = "TwoColumnsMidExpanded";
         if (selectLayoutRef.current) {
-          selectLayoutRef.current!.value = "ThreeColumnsMidExpanded";
+          selectLayoutRef.current!.value = "TwoColumnsMidExpanded";
         }
         displayCustomLayoutConfigurationInfo();
       }
-    }
-  }, [displayCustomLayoutConfigurationInfo]);
+    },
+    [displayCustomLayoutConfigurationInfo],
+  );
+
+  const handleProductsListUi5ItemClick = useCallback(
+    (e: UI5CustomEvent<ListClass, "item-click">) => {
+      const productId = e.detail.item.dataset.productId;
+      const category = e.detail.item.dataset.category;
+
+      const product = categoryData[category]?.find((p) => p.id === productId);
+
+      if (product) {
+        setProductTitle(product.name);
+        setSelectedProduct(product);
+        setSelectedCategory(category);
+
+        const fcl = fclRef.current;
+        if (fcl) {
+          fcl.layout = "ThreeColumnsMidExpanded";
+          if (selectLayoutRef.current) {
+            selectLayoutRef.current!.value = "ThreeColumnsMidExpanded";
+          }
+          displayCustomLayoutConfigurationInfo();
+        }
+      }
+    },
+    [displayCustomLayoutConfigurationInfo],
+  );
 
   const handleCloseEndColumnClick = useCallback(() => {
     setSelectedProduct(null);
@@ -237,7 +329,11 @@ function App() {
       `}</style>
       <div className="layout-grid">
         <Label showColon={true}>Current layout</Label>
-        <Select ref={selectLayoutRef} id="selectLayout" onChange={handleSelectLayoutUi5Change}>
+        <Select
+          ref={selectLayoutRef}
+          id="selectLayout"
+          onChange={handleSelectLayoutUi5Change}
+        >
           <Option>OneColumn</Option>
           <Option>TwoColumnsStartExpanded</Option>
           <Option>TwoColumnsMidExpanded</Option>
@@ -260,23 +356,60 @@ function App() {
             <Title>Categories</Title>
           </div>
           <List onItemClick={handleCategoriesListUi5ItemClick}>
-            <ListItemStandard data-category="electronics" icon="slim-arrow-right" iconEnd={true}>Electronics</ListItemStandard>
-            <ListItemStandard data-category="clothing" icon="slim-arrow-right" iconEnd={true}>Clothing</ListItemStandard>
-            <ListItemStandard data-category="books" icon="slim-arrow-right" iconEnd={true}>Books</ListItemStandard>
-            <ListItemStandard data-category="home" icon="slim-arrow-right" iconEnd={true}>Home &amp; Garden</ListItemStandard>
-            <ListItemStandard data-category="sports" icon="slim-arrow-right" iconEnd={true}>Sports</ListItemStandard>
+            <ListItemStandard
+              data-category="electronics"
+              icon="slim-arrow-right"
+              iconEnd={true}
+            >
+              Electronics
+            </ListItemStandard>
+            <ListItemStandard
+              data-category="clothing"
+              icon="slim-arrow-right"
+              iconEnd={true}
+            >
+              Clothing
+            </ListItemStandard>
+            <ListItemStandard
+              data-category="books"
+              icon="slim-arrow-right"
+              iconEnd={true}
+            >
+              Books
+            </ListItemStandard>
+            <ListItemStandard
+              data-category="home"
+              icon="slim-arrow-right"
+              iconEnd={true}
+            >
+              Home &amp; Garden
+            </ListItemStandard>
+            <ListItemStandard
+              data-category="sports"
+              icon="slim-arrow-right"
+              iconEnd={true}
+            >
+              Sports
+            </ListItemStandard>
           </List>
         </div>
         <div className="col" slot="midColumn">
           <div className="colHeader">
             <Title>{categoryTitle}</Title>
           </div>
-          <List style={{ display: showProducts ? "block" : "none" }} onItemClick={handleProductsListUi5ItemClick}>
+          <List
+            style={{ display: showProducts ? "block" : "none" }}
+            onItemClick={handleProductsListUi5ItemClick}
+          >
             {products.map((product) => (
               <ListItemStandard
                 key={product.id}
                 data-product-id={product.id}
-                data-category={Object.keys(categoryData).find((cat) => categoryData[cat].includes(product)) || ""}
+                data-category={
+                  Object.keys(categoryData).find((cat) =>
+                    categoryData[cat].includes(product),
+                  ) || ""
+                }
                 icon="slim-arrow-right"
                 iconEnd={true}
               >
@@ -289,7 +422,11 @@ function App() {
           <div className="colHeader">
             <Title>{productTitle}</Title>
             <div className="colSubHeader">
-              <Button icon="decline" design="Transparent" onClick={handleCloseEndColumnClick} />
+              <Button
+                icon="decline"
+                design="Transparent"
+                onClick={handleCloseEndColumnClick}
+              />
             </div>
           </div>
           <div className="product-details">
@@ -297,10 +434,15 @@ function App() {
               <div className="product-info">
                 <Title level="H3">{selectedProduct.name}</Title>
                 <Text>{selectedProduct.description}</Text>
-                <br /><br />
+                <br />
+                <br />
                 <Label showColon={true}>Category</Label>
-                <Text>{selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</Text>
-                <br /><br />
+                <Text>
+                  {selectedCategory.charAt(0).toUpperCase() +
+                    selectedCategory.slice(1)}
+                </Text>
+                <br />
+                <br />
                 <Label showColon={true}>Product ID</Label>
                 <Text>{selectedProduct.id}</Text>
               </div>

@@ -1,15 +1,16 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AITextAreaClass from "@ui5/webcomponents-ai/dist/TextArea.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 
-const AITextArea = createComponent(AITextAreaClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
+const AITextArea = createReactComponent(AITextAreaClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
 
-const SAMPLE_TEXT = "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.";
+const SAMPLE_TEXT =
+  "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture, streamline the execution of new ideas, and ultimately unlock value for the organization and its customers.";
 
 interface VersionEntry {
   value: string;
@@ -21,7 +22,7 @@ function App() {
   const textareaRef = useRef<any>(null);
   const menuRef = useRef<any>(null);
   const [textValue, setTextValue] = useState(
-    "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture."
+    "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.",
   );
   const [isLoading, setIsLoading] = useState(false);
   const [currentVersion, setCurrentVersion] = useState(0);
@@ -76,29 +77,32 @@ function App() {
     setIsLoading(false);
   }, [stopTypingAnimation, updateComponentState]);
 
-  const animateTextGeneration = useCallback((text: string) => {
-    return new Promise<void>((resolve) => {
-      const chars = text.split("");
-      let i = 0;
-      const textarea = textareaRef.current;
-      if (textarea) {
-        textarea.value = "";
-      }
-      setTextValue("");
-
-      typingIntervalRef.current = setInterval(() => {
-        if (i < chars.length) {
-          if (textarea) {
-            textarea.value = (textarea.value || "") + chars[i];
-          }
-          i++;
-        } else {
-          completeGeneration();
-          resolve();
+  const animateTextGeneration = useCallback(
+    (text: string) => {
+      return new Promise<void>((resolve) => {
+        const chars = text.split("");
+        let i = 0;
+        const textarea = textareaRef.current;
+        if (textarea) {
+          textarea.value = "";
         }
-      }, 10);
-    });
-  }, [completeGeneration]);
+        setTextValue("");
+
+        typingIntervalRef.current = setInterval(() => {
+          if (i < chars.length) {
+            if (textarea) {
+              textarea.value = (textarea.value || "") + chars[i];
+            }
+            i++;
+          } else {
+            completeGeneration();
+            resolve();
+          }
+        }, 10);
+      });
+    },
+    [completeGeneration],
+  );
 
   const executeGeneration = useCallback(async () => {
     if (isLoading) return;
@@ -141,35 +145,44 @@ function App() {
     setIsLoading(false);
   }, [isLoading, stopTypingAnimation, updateComponentState]);
 
-  const handleVersionChange = useCallback((e: UI5CustomEvent<AITextAreaClass, "version-change">) => {
-    const backwards = e.detail?.backwards;
-    const history = versionHistoryRef.current;
+  const handleVersionChange = useCallback(
+    (e: UI5CustomEvent<AITextAreaClass, "version-change">) => {
+      const backwards = e.detail?.backwards;
+      const history = versionHistoryRef.current;
 
-    if (backwards && currentVersionIndexRef.current > 0) {
-      currentVersionIndexRef.current--;
-      const entry = history[currentVersionIndexRef.current];
-      setTextValue(entry.value);
-      if (textareaRef.current) {
-        textareaRef.current!.value = entry.value;
+      if (backwards && currentVersionIndexRef.current > 0) {
+        currentVersionIndexRef.current--;
+        const entry = history[currentVersionIndexRef.current];
+        setTextValue(entry.value);
+        if (textareaRef.current) {
+          textareaRef.current!.value = entry.value;
+        }
+        updateComponentState();
+      } else if (
+        !backwards &&
+        currentVersionIndexRef.current < history.length - 1
+      ) {
+        currentVersionIndexRef.current++;
+        const entry = history[currentVersionIndexRef.current];
+        setTextValue(entry.value);
+        if (textareaRef.current) {
+          textareaRef.current!.value = entry.value;
+        }
+        updateComponentState();
       }
-      updateComponentState();
-    } else if (!backwards && currentVersionIndexRef.current < history.length - 1) {
-      currentVersionIndexRef.current++;
-      const entry = history[currentVersionIndexRef.current];
-      setTextValue(entry.value);
-      if (textareaRef.current) {
-        textareaRef.current!.value = entry.value;
-      }
-      updateComponentState();
-    }
-  }, [updateComponentState]);
+    },
+    [updateComponentState],
+  );
 
-  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
-    const action = e?.detail?.item?.dataset?.action;
-    if (action === "generate") {
-      executeGeneration();
-    }
-  }, [executeGeneration]);
+  const handleMenuItemClick = useCallback(
+    (e: UI5CustomEvent<MenuClass, "item-click">) => {
+      const action = e?.detail?.item?.dataset?.action;
+      if (action === "generate") {
+        executeGeneration();
+      }
+    },
+    [executeGeneration],
+  );
 
   const handleStopGeneration = useCallback(() => {
     stopGeneration();

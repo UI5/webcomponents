@@ -1,25 +1,38 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import MultiInputClass from "@ui5/webcomponents/dist/MultiInput.js";
 import TokenClass from "@ui5/webcomponents/dist/Token.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const MultiInput = createComponent(MultiInputClass);
-const Token = createComponent(TokenClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
+const MultiInput = createReactComponent(MultiInputClass);
+const Token = createReactComponent(TokenClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
 
 const suggestions = [
-  "Argentina", "Bulgaria", "England", "Finland", "Germany",
-  "Hungary", "Italy", "Luxembourg", "Mexico", "Philippines", "Sweden", "USA",
+  "Argentina",
+  "Bulgaria",
+  "England",
+  "Finland",
+  "Germany",
+  "Hungary",
+  "Italy",
+  "Luxembourg",
+  "Mexico",
+  "Philippines",
+  "Sweden",
+  "USA",
 ];
 
 function App() {
-  const [tokens, setTokens] = useState([]);
-  const [valueState, setValueState] = useState("None");
+  const [tokens, setTokens] = useState<string[]>([]);
+  const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const multiInputRef = useRef(null);
 
-  const handleTokenDelete = (e: UI5CustomEvent<MultiInputClass, "token-delete">) => {
+  const handleTokenDelete = (
+    e: UI5CustomEvent<MultiInputClass, "token-delete">,
+  ) => {
     const deletedTokens = e.detail?.tokens;
     if (deletedTokens) {
       const deletedTexts = deletedTokens.map((t) => t.text);
@@ -29,11 +42,15 @@ function App() {
 
   const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
-    const pastedText = (e.clipboardData || window.clipboardData).getData("text/plain");
+    const pastedText = e.clipboardData.getData(
+      "text/plain",
+    );
     if (!pastedText) {
       return;
     }
-    const separatedTexts = pastedText.split(/\r\n|\r|\n|\t/g).filter((t) => !!t);
+    const separatedTexts = pastedText
+      .split(/\r\n|\r|\n|\t/g)
+      .filter((t) => !!t);
     if (separatedTexts.length === 1) {
       if (multiInputRef.current) {
         multiInputRef.current!.value += separatedTexts[0];
@@ -44,10 +61,10 @@ function App() {
   };
 
   const handleChange = (e: UI5CustomEvent<MultiInputClass, "change">) => {
-    if (!e.target.value) {
+    if (!e.currentTarget.value) {
       return;
     }
-    const isDuplicate = tokens.some((t) => t === e.target.value);
+    const isDuplicate = tokens.some((t) => t === e.currentTarget.value);
     if (isDuplicate) {
       setValueState("Negative");
       setTimeout(() => {
@@ -55,8 +72,8 @@ function App() {
       }, 2000);
       return;
     }
-    setTokens((prev) => [...prev, e.target.value]);
-    e.target.value = "";
+    setTokens((prev) => [...prev, e.currentTarget.value]);
+    e.currentTarget.value = "";
   };
 
   return (

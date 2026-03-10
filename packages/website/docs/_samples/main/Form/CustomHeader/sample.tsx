@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import BarClass from "@ui5/webcomponents/dist/Bar.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
@@ -9,18 +9,17 @@ import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import SelectClass from "@ui5/webcomponents/dist/Select.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Bar = createComponent(BarClass);
-const Button = createComponent(ButtonClass);
-const Form = createComponent(FormClass);
-const FormItem = createComponent(FormItemClass);
-const Input = createComponent(InputClass);
-const Label = createComponent(LabelClass);
-const Option = createComponent(OptionClass);
-const Select = createComponent(SelectClass);
-const Title = createComponent(TitleClass);
+const Bar = createReactComponent(BarClass);
+const Button = createReactComponent(ButtonClass);
+const Form = createReactComponent(FormClass);
+const FormItem = createReactComponent(FormItemClass);
+const Input = createReactComponent(InputClass);
+const Label = createReactComponent(LabelClass);
+const Option = createReactComponent(OptionClass);
+const Select = createReactComponent(SelectClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -28,50 +27,71 @@ function App() {
         	box-shadow: none;
         }
       `}</style>
-      <Form style={{ width: "800px" }} layout="S1 M2 L2 XL2" item-spacing="Large">
+      <Form
+        style={{ width: "800px" }}
+        layout="S1 M2 L2 XL2"
+        item-spacing="Large"
+      >
+        <Bar style={{ boxShadow: "none" }} design="Subheader" slot="header">
+          <Title level="H4" slot="startContent">
+            Address
+          </Title>
+          <Button slot="endContent">Action 1</Button>
+          <Button slot="endContent">Action 2</Button>
+        </Bar>
 
-                <Bar style={{ boxShadow: "none" }} design="Subheader" slot="header">
-                    <Title level="H4" slot="startContent">Address</Title>
-                    <Button slot="endContent">Action 1</Button>
-                    <Button slot="endContent">Action 2</Button>
-                </Bar>
+        <FormItem>
+          <Label for="nameInp" slot="labelContent">
+            Name:
+          </Label>
+          <Input value="Red Point Stores" id="nameInp" />
+        </FormItem>
 
-                <FormItem>
-                    <Label for="nameInp" slot="labelContent">Name:</Label>
-                    <Input value="Red Point Stores" id="nameInp" />
-                </FormItem>
-            
-                <FormItem>
-                    <Label id="countryLbl" htmlFor="countrySel" slot="labelContent">Country:</Label>
-                    <Select id="countrySel" accessibleNameRef="countryLbl">
-                        <Option>Australia</Option>
-                        <Option selected={true}>Germany</Option>
-                        <Option>England</Option>
-                    </Select>
-                </FormItem>
-    
-                <FormItem>
-                    <Label id="cityLbl" htmlFor="cityInp" slot="labelContent">ZIP Code/City:</Label>
-                    <Input id="cityInp" value={411} accessibleNameRef="cityLbl" />
-                    <Input value="Maintown" accessibleNameRef="cityLbl" />
-                </FormItem>
-        
-                <FormItem>
-                    <Label for="wsInp" slot="labelContent">WebSite:</Label>
-                    <Input value="sap.com" id="wsInp" />
-                </FormItem>
-    
-                <FormItem>
-                    <Label id="streetLbl" htmlFor="streetInp" slot="labelContent">Street:</Label>
-                    <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
-                    <Input id="streetNumberInp" value={1618} accessibleNameRef="streetLbl" />
-                </FormItem>
-    
-                <FormItem>
-                    <Label for="delInp" slot="labelContent">Delivery address:</Label>
-                    <Input value="Newtown" id="delInp" />
-                </FormItem>
-        </Form>
+        <FormItem>
+          <Label id="countryLbl" for="countrySel" slot="labelContent">
+            Country:
+          </Label>
+          <Select id="countrySel" accessibleNameRef="countryLbl">
+            <Option>Australia</Option>
+            <Option selected={true}>Germany</Option>
+            <Option>England</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem>
+          <Label id="cityLbl" for="cityInp" slot="labelContent">
+            ZIP Code/City:
+          </Label>
+          <Input id="cityInp" value="411" accessibleNameRef="cityLbl" />
+          <Input value="Maintown" accessibleNameRef="cityLbl" />
+        </FormItem>
+
+        <FormItem>
+          <Label for="wsInp" slot="labelContent">
+            WebSite:
+          </Label>
+          <Input value="sap.com" id="wsInp" />
+        </FormItem>
+
+        <FormItem>
+          <Label id="streetLbl" for="streetInp" slot="labelContent">
+            Street:
+          </Label>
+          <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
+          <Input
+            id="streetNumberInp"
+            value="1618"
+            accessibleNameRef="streetLbl"
+          />
+        </FormItem>
+
+        <FormItem>
+          <Label for="delInp" slot="labelContent">
+            Delivery address:
+          </Label>
+          <Input value="Newtown" id="delInp" />
+        </FormItem>
+      </Form>
     </>
   );
 }

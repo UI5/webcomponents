@@ -1,13 +1,10 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 
-const DateTimePicker = createComponent(DateTimePickerClass);
+const DateTimePicker = createReactComponent(DateTimePickerClass);
 
 function App() {
-
-  return (
-    <DateTimePicker />
-  );
+  return <DateTimePicker />;
 }
 
 export default App;

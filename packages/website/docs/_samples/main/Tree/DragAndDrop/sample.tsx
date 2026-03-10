@@ -1,15 +1,15 @@
 import { useRef, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 
-const Label = createComponent(LabelClass);
-const Title = createComponent(TitleClass);
-const Tree = createComponent(TreeClass);
-const TreeItem = createComponent(TreeItemClass);
+const Label = createReactComponent(LabelClass);
+const Title = createReactComponent(TitleClass);
+const Tree = createReactComponent(TreeClass);
+const TreeItem = createReactComponent(TreeItemClass);
 
 function App() {
   const treeRef = useRef(null);
@@ -21,11 +21,17 @@ function App() {
     const handleBeforeItemMove = (e: CustomEvent) => {
       const { destination, source } = e.detail;
 
-      if (destination.placement === "Before" || destination.placement === "After") {
+      if (
+        destination.placement === "Before" ||
+        destination.placement === "After"
+      ) {
         e.preventDefault();
       }
 
-      if (destination.placement === "On" && "allowsNesting" in destination.element.dataset) {
+      if (
+        destination.placement === "On" &&
+        "allowsNesting" in destination.element.dataset
+      ) {
         e.preventDefault();
       }
     };
@@ -67,21 +73,59 @@ function App() {
 
   return (
     <>
-      <Tree ref={treeRef} id="tree" noDataText="No data" mode="MultiSelect" accessibleName="Tree with accessibleName">
-
-        <TreeItem movable={true} text="Tree 1" icon="paste" additionalText="Available" indeterminate={true} selected={true} additionalTextState="Information" accessibleName="Tree item with accessibleName">
+      <Tree
+        ref={treeRef}
+        id="tree"
+        noDataText="No data"
+        selectionMode="Multiple"
+        accessibleName="Tree with accessibleName"
+      >
+        <TreeItem
+          movable={true}
+          text="Tree 1"
+          icon="paste"
+          additionalText="Available"
+          indeterminate={true}
+          selected={true}
+          additionalTextState="Information"
+          accessibleName="Tree item with accessibleName"
+        >
           <Title slot="content">
             <Label>Tree 1</Label>
             <Label>Tree 1</Label>
           </Title>
 
-          <TreeItem movable={true} expanded={true} text="Tree 1.1" additionalText="Re-stock" additionalTextState="Negative" indeterminate={true} selected={true}>
-            <TreeItem movable={true} text="Tree 1.1.1" additionalText="Required" additionalTextState="Critical" selected={true} />
-            <TreeItem movable={true} text="Tree 1.1.2" additionalText="Available" additionalTextState="Positive" />
+          <TreeItem
+            movable={true}
+            expanded={true}
+            text="Tree 1.1"
+            additionalText="Re-stock"
+            additionalTextState="Negative"
+            indeterminate={true}
+            selected={true}
+          >
+            <TreeItem
+              movable={true}
+              text="Tree 1.1.1"
+              additionalText="Required"
+              additionalTextState="Critical"
+              selected={true}
+            />
+            <TreeItem
+              movable={true}
+              text="Tree 1.1.2"
+              additionalText="Available"
+              additionalTextState="Positive"
+            />
           </TreeItem>
         </TreeItem>
 
-        <TreeItem movable={true} data-allows-nesting={true} text="Tree 2(Allows Nesting)" icon="copy">
+        <TreeItem
+          movable={true}
+          data-allows-nesting={true}
+          text="Tree 2(Allows Nesting)"
+          icon="copy"
+        >
           <TreeItem movable={true} id="firstCollapsedItem" text="Tree 2.1">
             <TreeItem movable={true} text="Tree 2.1.1" />
             <TreeItem movable={true} text="Tree 2.1.2">
@@ -96,7 +140,6 @@ function App() {
         </TreeItem>
 
         <TreeItem movable={true} text="Tree 3 (no icon)" />
-
       </Tree>
     </>
   );

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import DynamicDateRangeClass from "@ui5/webcomponents/dist/DynamicDateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/Today.js";
@@ -10,7 +10,7 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/DateRange.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/LastOptions.js";
 import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
 
-const DynamicDateRange = createComponent(DynamicDateRangeClass);
+const DynamicDateRange = createReactComponent(DynamicDateRangeClass);
 
 function App() {
   const ddrRef = useRef(null);
@@ -18,11 +18,13 @@ function App() {
   const [convertedDates, setConvertedDates] = useState("");
 
   const handleChange = (e: UI5CustomEvent<DynamicDateRangeClass, "change">) => {
-    const value = e.target.value;
+    const value = e.currentTarget.value;
     setSelectedValue(JSON.stringify(value));
 
     const dates = ddrRef.current!.toDates(value);
-    setConvertedDates(dates.map((date: Date) => date.toLocaleString()).join(" - "));
+    setConvertedDates(
+      dates.map((date: Date) => date.toLocaleString()).join(" - "),
+    );
   };
 
   return (
@@ -35,11 +37,25 @@ function App() {
       />
 
       <div style={{ marginTop: "20px" }}>
-        <Label for="selectedValue">Selected Value:</label>
-        <input id="selectedValue" type="text" readOnly style={{ width: "300px" }} value={selectedValue} />
+        <label htmlFor="selectedValue">Selected Value:</label>
+        <input
+          id="selectedValue"
+          type="text"
+          readOnly
+          style={{ width: "300px" }}
+          value={selectedValue}
+        />
 
-        <Label for="convertedDates" style={{ marginLeft: "20px" }}>Converted Dates:</label>
-        <input id="convertedDates" type="text" readOnly style={{ width: "300px" }} value={convertedDates} />
+        <label htmlFor="convertedDates" style={{ marginLeft: "20px" }}>
+          Converted Dates:
+        </label>
+        <input
+          id="convertedDates"
+          type="text"
+          readOnly
+          style={{ width: "300px" }}
+          value={convertedDates}
+        />
       </div>
     </>
   );

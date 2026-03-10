@@ -1,20 +1,25 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 
-const Input = createComponent(InputClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
+const Input = createReactComponent(InputClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
 
 function App() {
-
   return (
     <>
-      <Input placeholder="Choose content density" valueState="Negative" showSuggestions={true}>
-            <div slot="valueStateMessage">This is an error message. Extra long text used as an error message.</div>
-            <SuggestionItem text="Cozy" />
-            <SuggestionItem text="Compact" />
-            <SuggestionItem text="Condensed" />
-        </Input>
+      <Input
+        placeholder="Choose content density"
+        valueState="Negative"
+        showSuggestions={true}
+      >
+        <div slot="valueStateMessage">
+          This is an error message. Extra long text used as an error message.
+        </div>
+        <SuggestionItem text="Cozy" />
+        <SuggestionItem text="Compact" />
+        <SuggestionItem text="Condensed" />
+      </Input>
     </>
   );
 }

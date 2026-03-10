@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIInputClass from "@ui5/webcomponents-ai/dist/Input.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
@@ -7,9 +7,9 @@ import MenuSeparatorClass from "@ui5/webcomponents/dist/MenuSeparator.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
-const AIInput = createComponent(AIInputClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
+const AIInput = createReactComponent(AIInputClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 const SAMPLE_TEXTS: Record<string, string> = {
   en: "Innovation managers lead with creativity.",
@@ -20,7 +20,18 @@ const SAMPLE_TEXTS: Record<string, string> = {
   summarized: "Driving innovation creatively.",
 };
 
-const INITIAL_MENU_CONFIG = [
+type Config = {
+  text?: string;
+  action?: string;
+  processingLabel?: string;
+  completedLabel?: string;
+  textKey?: string;
+  slot?: string;
+  children?: Config[];
+  separator?: boolean;
+};
+
+const INITIAL_MENU_CONFIG: Array<Config> = [
   {
     text: "Generate",
     action: "generate",
@@ -31,7 +42,7 @@ const INITIAL_MENU_CONFIG = [
   },
 ];
 
-const FULL_MENU_CONFIG = [
+const FULL_MENU_CONFIG: Array<Config> = [
   {
     text: "Regenerate",
     action: "regenerate",
@@ -53,18 +64,54 @@ const FULL_MENU_CONFIG = [
     text: "Rewrite text",
     slot: "actions",
     children: [
-      { text: "Simplify", action: "simplify", processingLabel: "Simplifying text", completedLabel: "Simplified text", textKey: "simplified" },
-      { text: "Expand", action: "expand", processingLabel: "Expanding text", completedLabel: "Expanded text", textKey: "expanded" },
-      { text: "Summarize", action: "summarize", processingLabel: "Summarizing text", completedLabel: "Summarized text", textKey: "summarized" },
+      {
+        text: "Simplify",
+        action: "simplify",
+        processingLabel: "Simplifying text",
+        completedLabel: "Simplified text",
+        textKey: "simplified",
+      },
+      {
+        text: "Expand",
+        action: "expand",
+        processingLabel: "Expanding text",
+        completedLabel: "Expanded text",
+        textKey: "expanded",
+      },
+      {
+        text: "Summarize",
+        action: "summarize",
+        processingLabel: "Summarizing text",
+        completedLabel: "Summarized text",
+        textKey: "summarized",
+      },
     ],
   },
   {
     text: "Translate",
     slot: "actions",
     children: [
-      { text: "English", action: "translateEN", processingLabel: "Translating to English", completedLabel: "Translated to English", textKey: "en" },
-      { text: "German", action: "translateDE", processingLabel: "Translating to German", completedLabel: "Translated to German", textKey: "de" },
-      { text: "Bulgarian", action: "translateBG", processingLabel: "Translating to Bulgarian", completedLabel: "Translated to Bulgarian", textKey: "bg" },
+      {
+        text: "English",
+        action: "translateEN",
+        processingLabel: "Translating to English",
+        completedLabel: "Translated to English",
+        textKey: "en",
+      },
+      {
+        text: "German",
+        action: "translateDE",
+        processingLabel: "Translating to German",
+        completedLabel: "Translated to German",
+        textKey: "de",
+      },
+      {
+        text: "Bulgarian",
+        action: "translateBG",
+        processingLabel: "Translating to Bulgarian",
+        completedLabel: "Translated to Bulgarian",
+        textKey: "bg",
+      },
     ],
   },
 ];
@@ -89,7 +136,7 @@ function App() {
   const [currentVersion, setCurrentVersion] = useState(0);
   const [totalVersions, setTotalVersions] = useState(0);
   const [promptDescription, setPromptDescription] = useState("");
-  const [menuConfig, setMenuConfig] = useState(INITIAL_MENU_CONFIG);
+  const [menuConfig, setMenuConfig] = useState<Config[]>(INITIAL_MENU_CONFIG);
 
   const versionHistoryRef = useRef<VersionEntry[]>([]);
   const currentIndexRef = useRef(0);
@@ -113,22 +160,25 @@ function App() {
     }
   }, []);
 
-  const updateComponentState = useCallback((versionIndex: number | null = null) => {
-    const history = versionHistoryRef.current;
-    if (versionIndex !== null && history[versionIndex]) {
-      currentIndexRef.current = versionIndex;
-      setInputValue(history[versionIndex].value);
-    }
+  const updateComponentState = useCallback(
+    (versionIndex: number | null = null) => {
+      const history = versionHistoryRef.current;
+      if (versionIndex !== null && history[versionIndex]) {
+        currentIndexRef.current = versionIndex;
+        setInputValue(history[versionIndex].value);
+      }
 
-    setCurrentVersion(currentIndexRef.current + 1);
-    setTotalVersions(history.length);
+      setCurrentVersion(currentIndexRef.current + 1);
+      setTotalVersions(history.length);
 
-    if (history[currentIndexRef.current]) {
-      setPromptDescription(history[currentIndexRef.current].endAction);
-    } else {
-      setPromptDescription("");
-    }
-  }, []);
+      if (history[currentIndexRef.current]) {
+        setPromptDescription(history[currentIndexRef.current].endAction);
+      } else {
+        setPromptDescription("");
+      }
+    },
+    [],
+  );
 
   const findActionConfig = useCallback((action: string) => {
     for (const item of [...INITIAL_MENU_CONFIG, ...FULL_MENU_CONFIG]) {
@@ -142,92 +192,104 @@ function App() {
     return null;
   }, []);
 
-  const completeGeneration = useCallback((action: string, config: any) => {
-    stopTypingAnimation();
-    const completedLabel = config?.completedLabel || "Action completed";
-    const input = inputRef.current;
-
-    versionHistoryRef.current!.push({
-      value: input ? input.value : "",
-      action,
-      endAction: completedLabel,
-      timestamp: new Date().toISOString(),
-    });
-
-    currentIndexRef.current = versionHistoryRef.current!.length - 1;
-    currentActionRef.current = null;
-
-    if (versionHistoryRef.current!.length === 1) {
-      setMenuConfig(FULL_MENU_CONFIG);
-    }
-
-    updateComponentState(null);
-    setLoading(false);
-    setPlaceholder("Write your title");
-    if (input) input.focus();
-  }, [stopTypingAnimation, updateComponentState]);
-
-  const animateTextGeneration = useCallback((text: string, action: string, config: any) => {
-    return new Promise<void>((resolve) => {
-      const chars = text.split("");
-      let i = 0;
-      setInputValue("");
-      setLoading(true);
-      animationStartedRef.current = true;
+  const completeGeneration = useCallback(
+    (action: string, config: any) => {
+      stopTypingAnimation();
+      const completedLabel = config?.completedLabel || "Action completed";
       const input = inputRef.current;
 
-      typingIntervalRef.current = setInterval(() => {
-        if (i < chars.length) {
-          if (input) {
-            input.value = (input.value || "") + chars[i];
-          }
-          i++;
-        } else {
-          const finalValue = input ? input.value : text;
-          completeGeneration(action, config);
-          resolve();
-        }
-      }, TIMING_CONFIG.typingSpeed);
-    });
-  }, [completeGeneration]);
+      versionHistoryRef.current!.push({
+        value: input ? input.value : "",
+        action,
+        endAction: completedLabel,
+        timestamp: new Date().toISOString(),
+      });
 
-  const executeAction = useCallback(async (action: string) => {
-    if (loading) return;
-
-    const config = findActionConfig(action);
-    if (!config) return;
-
-    const processingLabel = (config as any).processingLabel || "Processing...";
-    const textKey = (config as any).textKey || "en";
-
-    // Save current version
-    const history = versionHistoryRef.current;
-    if (history.length > 0 && history[currentIndexRef.current]) {
-      history[currentIndexRef.current].value = inputRef.current?.value || "";
-    }
-
-    currentActionRef.current = action;
-    const genId = generationIndexRef.current;
-    animationStartedRef.current = false;
-
-    // Set loading state
-    setInputValue("");
-    setLoading(true);
-    setPlaceholder("");
-    setPromptDescription(processingLabel);
-
-    await new Promise((resolve) => setTimeout(resolve, TIMING_CONFIG.processingDelay));
-
-    if (genId !== generationIndexRef.current) {
-      stopTypingAnimation();
+      currentIndexRef.current = versionHistoryRef.current!.length - 1;
       currentActionRef.current = null;
-      setLoading(false);
-      return;
-    }
 
-    const text = SAMPLE_TEXTS[textKey] || SAMPLE_TEXTS.en;
-    await animateTextGeneration(text, action, config);
-  }, [loading, findActionConfig, stopTypingAnimation, animateTextGeneration]);
+      if (versionHistoryRef.current!.length === 1) {
+        setMenuConfig(FULL_MENU_CONFIG);
+      }
+
+      updateComponentState(null);
+      setLoading(false);
+      setPlaceholder("Write your title");
+      if (input) input.focus();
+    },
+    [stopTypingAnimation, updateComponentState],
+  );
+
+  const animateTextGeneration = useCallback(
+    (text: string, action: string, config: any) => {
+      return new Promise<void>((resolve) => {
+        const chars = text.split("");
+        let i = 0;
+        setInputValue("");
+        setLoading(true);
+        animationStartedRef.current = true;
+        const input = inputRef.current;
+
+        typingIntervalRef.current = setInterval(() => {
+          if (i < chars.length) {
+            if (input) {
+              input.value = (input.value || "") + chars[i];
+            }
+            i++;
+          } else {
+            const finalValue = input ? input.value : text;
+            completeGeneration(action, config);
+            resolve();
+          }
+        }, TIMING_CONFIG.typingSpeed);
+      });
+    },
+    [completeGeneration],
+  );
+
+  const executeAction = useCallback(
+    async (action: string) => {
+      if (loading) return;
+
+      const config = findActionConfig(action);
+      if (!config) return;
+
+      const processingLabel =
+        (config as any).processingLabel || "Processing...";
+      const textKey = (config as any).textKey || "en";
+
+      // Save current version
+      const history = versionHistoryRef.current;
+      if (history.length > 0 && history[currentIndexRef.current]) {
+        history[currentIndexRef.current].value = inputRef.current?.value || "";
+      }
+
+      currentActionRef.current = action;
+      const genId = generationIndexRef.current;
+      animationStartedRef.current = false;
+
+      // Set loading state
+      setInputValue("");
+      setLoading(true);
+      setPlaceholder("");
+      setPromptDescription(processingLabel);
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, TIMING_CONFIG.processingDelay),
+      );
+
+      if (genId !== generationIndexRef.current) {
+        stopTypingAnimation();
+        currentActionRef.current = null;
+        setLoading(false);
+        return;
+      }
+
+      const text = SAMPLE_TEXTS[textKey] || SAMPLE_TEXTS.en;
+      await animateTextGeneration(text, action, config);
+    },
+    [loading, findActionConfig, stopTypingAnimation, animateTextGeneration],
+  );
 
   const handleStopGeneration = useCallback(() => {
     if (!loading) return;
@@ -236,7 +298,9 @@ function App() {
     generationIndexRef.current += 1;
     const action = currentActionRef.current || "generate";
     const config = findActionConfig(action);
-    const completedLabel = config ? (config as any).completedLabel : "Action completed";
+    const completedLabel = config
+      ? (config as any).completedLabel
+      : "Action completed";
     const input = inputRef.current;
 
     if (animationStartedRef.current) {
@@ -266,40 +330,47 @@ function App() {
     if (input) input.focus();
   }, [loading, stopTypingAnimation, findActionConfig, updateComponentState]);
 
-  const handleVersionChange = useCallback((e: UI5CustomEvent<AIInputClass, "version-change">) => {
-    const backwards = e.detail?.backwards;
-    const history = versionHistoryRef.current;
+  const handleVersionChange = useCallback(
+    (e: UI5CustomEvent<AIInputClass, "version-change">) => {
+      const backwards = e.detail?.backwards;
+      const history = versionHistoryRef.current;
 
-    if (backwards && currentIndexRef.current > 0) {
-      if (history.length > 0 && history[currentIndexRef.current]) {
-        history[currentIndexRef.current].value = inputRef.current?.value || "";
+      if (backwards && currentIndexRef.current > 0) {
+        if (history.length > 0 && history[currentIndexRef.current]) {
+          history[currentIndexRef.current].value =
+            inputRef.current?.value || "";
+        }
+        updateComponentState(currentIndexRef.current - 1);
+      } else if (!backwards && currentIndexRef.current < history.length - 1) {
+        if (history.length > 0 && history[currentIndexRef.current]) {
+          history[currentIndexRef.current].value =
+            inputRef.current?.value || "";
+        }
+        updateComponentState(currentIndexRef.current + 1);
       }
-      updateComponentState(currentIndexRef.current - 1);
-    } else if (!backwards && currentIndexRef.current < history.length - 1) {
-      if (history.length > 0 && history[currentIndexRef.current]) {
-        history[currentIndexRef.current].value = inputRef.current?.value || "";
-      }
-      updateComponentState(currentIndexRef.current + 1);
-    }
-  }, [updateComponentState]);
+    },
+    [updateComponentState],
+  );
 
-  const handleMenuItemClick = useCallback(async (e: UI5CustomEvent<AIInputClass, "item-click">) => {
-    const action = e?.detail?.item?.dataset?.menuAction || e?.detail?.item?.dataset?.action;
-    if (!action) return;
-    await executeAction(action);
-  }, [executeAction]);
+  const handleMenuItemClick = useCallback(
+    async (e: UI5CustomEvent<AIInputClass, "item-click">) => {
+      const action =
+        e?.detail?.item?.dataset?.menuAction ||
+        e?.detail?.item?.dataset?.action;
+      if (!action) return;
+      await executeAction(action);
+    },
+    [executeAction],
+  );
 
   const renderMenuItems = useCallback(() => {
     const items: any[] = [];
     menuConfig.forEach((item: any, index: number) => {
-      if (item.separator) items.push(<MenuSeparator key={"sep-" + index} slot={item.slot} />);
+      if (item.separator)
+        items.push(<MenuSeparator key={"sep-" + index} slot={item.slot} />);
       if (item.children) {
         items.push(
-          <MenuItem
-            key={item.text + index}
-            text={item.text}
-            slot={item.slot}
-          >
+          <MenuItem key={item.text + index} text={item.text} slot={item.slot}>
             {item.children.map((child: any) => (
               <MenuItem
                 key={child.action}
@@ -310,7 +381,7 @@ function App() {
                 data-text-key={child.textKey}
               />
             ))}
-          </MenuItem>
+          </MenuItem>,
         );
       } else {
         items.push(
@@ -323,7 +394,7 @@ function App() {
             data-processing-label={item.processingLabel}
             data-completed-label={item.completedLabel}
             data-text-key={item.textKey}
-          />
+          />,
         );
       }
     });

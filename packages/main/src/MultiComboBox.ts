@@ -1475,6 +1475,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			innerInput.setSelectionRange(matchingItem.text!.length, matchingItem.text!.length);
 			this.open = false;
 		} else {
+			// If dropdown is open with a focused item, just close it instead of submitting
+			if (this.open && this._getList()._itemNavigation._currentIndex >= 0) {
+				this.open = false;
+				return;
+			}
+
 			if (this._lastValue !== this.value) {
 				this._inputChange();
 			}

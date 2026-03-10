@@ -1,16 +1,15 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import SwitchClass from "@ui5/webcomponents/dist/Switch.js";
 
-const Switch = createComponent(SwitchClass);
+const Switch = createReactComponent(SwitchClass);
 
 function App() {
-
   return (
     <>
       <Switch />
-    <Switch checked={true} />
-    <Switch disabled={true} />
-    <Switch disabled={true} checked={true} />
+      <Switch checked={true} />
+      <Switch disabled={true} />
+      <Switch disabled={true} checked={true} />
     </>
   );
 }

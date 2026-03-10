@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useRef, useCallback } from "react";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -14,44 +14,50 @@ import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
 
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const UserMenu = createComponent(UserMenuClass);
-const UserMenuAccount = createComponent(UserMenuAccountClass);
-const UserMenuItem = createComponent(UserMenuItemClass);
-const Avatar = createComponent(AvatarClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const UserMenu = createReactComponent(UserMenuClass);
+const UserMenuAccount = createReactComponent(UserMenuAccountClass);
+const UserMenuItem = createReactComponent(UserMenuItemClass);
+const Avatar = createReactComponent(AvatarClass);
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const openerRef = useRef(null);
 
-  const handleProfileClick = useCallback((e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
-    openerRef.current = e.detail.targetRef;
-    setMenuOpen(true);
-  }, []);
+  const handleProfileClick = useCallback(
+    (e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
+      openerRef.current = e.detail.targetRef;
+      setMenuOpen(true);
+    },
+    [],
+  );
 
-  const handleItemClick = useCallback((e: UI5CustomEvent<UserMenuClass, "item-click">) => {
-    const item = e.detail.item.getAttribute("data-id");
-    switch (item) {
-      case "setting":
-        console.log("Open Setting Dialog");
-        break;
-      case "privacy-policy":
-        console.log("Privacy Policy");
-        break;
-      case "terms-of-use":
-        console.log("Terms of Use");
-        break;
-      case "account-action1":
-        console.log("Product-specific account action 1");
-        break;
-      case "account-action2":
-        console.log("Product-specific account action 2");
-        break;
-      default:
-        console.log("Default");
-    }
-  }, []);
+  const handleItemClick = useCallback(
+    (e: UI5CustomEvent<UserMenuClass, "item-click">) => {
+      const item = e.detail.item.getAttribute("data-id");
+      switch (item) {
+        case "setting":
+          console.log("Open Setting Dialog");
+          break;
+        case "privacy-policy":
+          console.log("Privacy Policy");
+          break;
+        case "terms-of-use":
+          console.log("Terms of Use");
+          break;
+        case "account-action1":
+          console.log("Product-specific account action 1");
+          break;
+        case "account-action2":
+          console.log("Product-specific account action 2");
+          break;
+        default:
+          console.log("Default");
+      }
+    },
+    [],
+  );
 
   const handleAvatarClick = useCallback(() => {
     console.log("Avatar clicked");
@@ -65,13 +71,16 @@ function App() {
     console.log("Edit accounts clicked");
   }, []);
 
-  const handleChangeAccount = useCallback((e: UI5CustomEvent<UserMenuClass, "change-account">) => {
-    console.log("Change account account", e.detail);
-    e.detail.selectedAccount.loading = true;
-    setTimeout(() => {
-      e.detail.selectedAccount.loading = false;
-    }, 1000);
-  }, []);
+  const handleChangeAccount = useCallback(
+    (e: UI5CustomEvent<UserMenuClass, "change-account">) => {
+      console.log("Change account account", e.detail);
+      e.detail.selectedAccount.loading = true;
+      setTimeout(() => {
+        e.detail.selectedAccount.loading = false;
+      }, 1000);
+    },
+    [],
+  );
 
   const handleSignOutClick = useCallback((e: Event) => {
     console.log("Sign Out clicked");
@@ -87,10 +96,10 @@ function App() {
       <ShellBar onProfileClick={handleProfileClick}>
         <ShellBarBranding slot="branding">
           Corporate Portal
-          <img slot="logo" src="/images/sap-logo-svg.svg" />
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
         </ShellBarBranding>
         <Avatar slot="profile">
-          <img src="/images/avatars/man_avatar_3.png"/>
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
         </Avatar>
       </ShellBar>
       <UserMenu
@@ -108,11 +117,34 @@ function App() {
         onSignOutClick={handleSignOutClick}
         onClose={() => setMenuOpen(false)}
       >
-        <UserMenuAccount slot="accounts" avatarSrc="/images/avatars/man_avatar_3.png" titleText="Alain Chevalier 1" subtitleText="alian.chevalier@sap.com" description="Delivery Manager, SAP SE" selected={true} />
-        <UserMenuAccount slot="accounts" avatarInitials="SD" titleText="John Walker" subtitleText="john.walker@sap.com" description="Project Manager" />
-        <UserMenuAccount slot="accounts" avatarInitials="DS" titleText="David Wilson" subtitleText="davud,wilson@sap.com" description="Project Manager" />
+        <UserMenuAccount
+          slot="accounts"
+          avatarSrc="/images/avatars/man_avatar_3.png"
+          titleText="Alain Chevalier 1"
+          subtitleText="alian.chevalier@sap.com"
+          description="Delivery Manager, SAP SE"
+          selected={true}
+        />
+        <UserMenuAccount
+          slot="accounts"
+          avatarInitials="SD"
+          titleText="John Walker"
+          subtitleText="john.walker@sap.com"
+          description="Project Manager"
+        />
+        <UserMenuAccount
+          slot="accounts"
+          avatarInitials="DS"
+          titleText="David Wilson"
+          subtitleText="davud,wilson@sap.com"
+          description="Project Manager"
+        />
         <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
-        <UserMenuItem icon="collaborate" text="Product-specific account action" data-id="product-action">
+        <UserMenuItem
+          icon="collaborate"
+          text="Product-specific account action"
+          data-id="product-action"
+        >
           <UserMenuItem text="Terms of Use" data-id="terms-of-use" />
           <UserMenuItem text="Private Policy" data-id="privacy-policy" />
         </UserMenuItem>

@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
@@ -14,10 +14,10 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/hint.js";
 import "@ui5/webcomponents-icons/dist/favorite.js";
 
-const Button = createComponent(ButtonClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
+const Button = createReactComponent(ButtonClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,29 +36,72 @@ function App() {
 
   return (
     <>
-      <Button id="btnOpenEndContent" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button>
+      <Button id="btnOpenEndContent" onClick={() => setMenuOpen(!menuOpen)}>
+        Open Menu
+      </Button>
 
-    	<Menu open={menuOpen} opener="btnOpenEndContent" id="menuEndContent" headerText="My ui5-menu" onClose={() => setMenuOpen(false)}>
-    		<MenuItem text="New File" accessibleName="Opens a file explorer" additionalText="Ctrl+Alt+Shift+N" tooltip="Select a file - prevent default" icon="add-document">
-    			<Button id="newAdd" slot="endContent" icon="add" design="Transparent" onClick={handleNewAddClick} />
-    			<Button id="newHint" slot="endContent" icon="hint" design="Transparent" onClick={handleNewHintClick} />
-    			<Button id="newFavorite" slot="endContent" icon="favorite" design="Transparent" onClick={handleNewFavoriteClick} />
-    		</MenuItem>
-    		<MenuItem text="New Folder" additionalText="Ctrl+F" icon="add-folder" />
-    		<MenuSeparator />
-    		<MenuItem text="Open" icon="open-folder" accessibleName="Choose platform">
-    			<MenuItem text="Open Locally" icon="open-folder" additionalText="Ctrl+K" />
-    			<MenuItem text="Open from SAP Cloud" additionalText="Ctrl+L" />
-    		</MenuItem>
-    		<MenuItem text="Save with very long title for a menu item text inside" icon="save">
-    			<MenuItem text="Save Locally" icon="save" />
-    			<MenuItem text="Save on Cloud" icon="upload-to-cloud" />
-    		</MenuItem>
-    		<MenuItem text="Close" additionalText="Ctrl+W" />
-    		<MenuSeparator />
-    		<MenuItem text="Preferences" icon="action-settings" />
-    		<MenuItem text="Exit" icon="journey-arrive" />
-    	</Menu>
+      <Menu
+        open={menuOpen}
+        opener="btnOpenEndContent"
+        id="menuEndContent"
+        headerText="My ui5-menu"
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem
+          text="New File"
+          accessibleName="Opens a file explorer"
+          additionalText="Ctrl+Alt+Shift+N"
+          tooltip="Select a file - prevent default"
+          icon="add-document"
+        >
+          <Button
+            id="newAdd"
+            slot="endContent"
+            icon="add"
+            design="Transparent"
+            onClick={handleNewAddClick}
+          />
+          <Button
+            id="newHint"
+            slot="endContent"
+            icon="hint"
+            design="Transparent"
+            onClick={handleNewHintClick}
+          />
+          <Button
+            id="newFavorite"
+            slot="endContent"
+            icon="favorite"
+            design="Transparent"
+            onClick={handleNewFavoriteClick}
+          />
+        </MenuItem>
+        <MenuItem text="New Folder" additionalText="Ctrl+F" icon="add-folder" />
+        <MenuSeparator />
+        <MenuItem
+          text="Open"
+          icon="open-folder"
+          accessibleName="Choose platform"
+        >
+          <MenuItem
+            text="Open Locally"
+            icon="open-folder"
+            additionalText="Ctrl+K"
+          />
+          <MenuItem text="Open from SAP Cloud" additionalText="Ctrl+L" />
+        </MenuItem>
+        <MenuItem
+          text="Save with very long title for a menu item text inside"
+          icon="save"
+        >
+          <MenuItem text="Save Locally" icon="save" />
+          <MenuItem text="Save on Cloud" icon="upload-to-cloud" />
+        </MenuItem>
+        <MenuItem text="Close" additionalText="Ctrl+W" />
+        <MenuSeparator />
+        <MenuItem text="Preferences" icon="action-settings" />
+        <MenuItem text="Exit" icon="journey-arrive" />
+      </Menu>
     </>
   );
 }
