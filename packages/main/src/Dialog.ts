@@ -202,8 +202,6 @@ class Dialog extends Popup {
 	/**
 	 * Defines the header HTML Element.
 	 *
-	 * **Note:** When a `ui5-bar` is used in the header with design="Header", the Dialog automatically adjusts the Bar's padding.
-	 *
 	 * **Note:** If `header` slot is provided, the labelling of the dialog is a responsibility of the application developer.
 	 * `accessibleName` should be used.
 	 * @public
@@ -214,7 +212,6 @@ class Dialog extends Popup {
 	/**
 	 * Defines the footer HTML Element.
 	 *
-	 * **Note:** When a `ui5-bar` is used in the footer with design="Footer", the Dialog automatically adjusts the Bar's padding.
 	 * @public
 	 */
 	@slot()
