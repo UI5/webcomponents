@@ -19,16 +19,6 @@ function App() {
     <>
       <style>{`
         /* Styles for Dialog */
-        #dialog::part(header),
-        #dialog::part(footer) {
-            padding-inline: 0;
-        }
-
-        /* Styles for Dialog with State */
-        #dialogState::part(header),
-        #dialogState::part(footer) {
-            padding-inline-end: 0;
-        }
 
         #bar::part(startContent) {
             padding-inline-start: 0;
