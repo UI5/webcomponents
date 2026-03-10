@@ -227,6 +227,12 @@ class Search extends SearchField {
 	 */
 	_isTyping: boolean;
 
+	/**
+	 * Bound reference to the delete handler for proper event listener removal.
+	 * @private
+	 */
+	_deleteHandler: (e: CustomEvent) => void;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -237,6 +243,8 @@ class Search extends SearchField {
 		this._typedInValue = "";
 		this._valueBeforeOpen = this.getAttribute("value") || "";
 		this._isTyping = false;
+
+		this._deleteHandler = this._onItemDelete.bind(this);
 	}
 
 	onBeforeRendering() {
@@ -280,9 +288,8 @@ class Search extends SearchField {
 
 			// Listen for delete events on each item
 			// Using capture phase to ensure we catch it before application handlers
-			const deleteHandler = (e: Event) => this._onItemDelete(e as CustomEvent);
-			item.removeEventListener("ui5-delete", deleteHandler, true);
-			item.addEventListener("ui5-delete", deleteHandler, true);
+			item.removeEventListener("ui5-delete", this._deleteHandler as EventListener, true);
+			item.addEventListener("ui5-delete", this._deleteHandler as EventListener, true);
 		});
 	}
 
@@ -374,24 +381,22 @@ class Search extends SearchField {
 		const focusableItems = this._getItemsList().listItems;
 		const firstListItem = focusableItems.at(0);
 
-		if (this.open) {
-			// Store the original value before navigation starts
-			if (this._valueBeforeArrowNav === undefined) {
-				this._valueBeforeArrowNav = this._typedInValue || this.value;
-			}
-
-			this._deselectItems();
-			this.value = this._typedInValue || this.value;
-			this._innerValue = this.value;
-
-			// Clear any text selection to allow autocomplete to work again when navigating back
-			const innerInput = this.nativeInput;
-			if (innerInput) {
-				innerInput.setSelectionRange(this.value.length, this.value.length);
-			}
-
-			firstListItem?.focus();
+		// Store the original value before navigation starts
+		if (this._valueBeforeArrowNav === undefined) {
+			this._valueBeforeArrowNav = this._typedInValue || this.value;
 		}
+
+		this._deselectItems();
+		this.value = this._typedInValue || this.value;
+		this._innerValue = this.value;
+
+		// Clear any text selection to allow autocomplete to work again when navigating back
+		const innerInput = this.nativeInput;
+		if (innerInput) {
+			innerInput.setSelectionRange(this.value.length, this.value.length);
+		}
+
+		firstListItem?.focus();
 	}
 
 	_handleInnerClick() {
