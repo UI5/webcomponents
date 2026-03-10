@@ -3481,27 +3481,52 @@ describe("Input built-in filtering", () => {
 				.realType("A");
 
 			cy.get("@input")
-				.should("have.value", "Aute");
+				.should("have.value", "Aute")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(4);
+				});
 
 			cy.realPress("ArrowDown");
 
 			cy.get("@input")
-				.should("have.value", "ad");
+				.should("have.value", "ad")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(2);
+				});
 
 			cy.realPress("ArrowDown");
 
 			cy.get("@input")
-				.should("have.value", "exercitation");
+				.should("have.value", "exercitation")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(0);
+					expect(input.selectionEnd).to.equal(12);
+				});
 
 			cy.realPress("ArrowUp");
 
 			cy.get("@input")
-				.should("have.value", "ad");
+				.should("have.value", "ad")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(2);
+				});
 
 			cy.realPress("ArrowUp");
 
 			cy.get("@input")
-				.should("have.value", "Aute");
+				.should("have.value", "Aute")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(4);
+				});
 
 			cy.realPress("ArrowUp");
 
