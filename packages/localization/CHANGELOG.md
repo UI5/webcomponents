@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.3](https://github.com/UI5/webcomponents/compare/v2.19.2...v2.19.3) (2026-03-10)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
 ## [2.19.2](https://github.com/UI5/webcomponents/compare/v2.19.1...v2.19.2) (2026-02-13)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization
