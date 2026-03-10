@@ -24,6 +24,7 @@ export default function SelectTemplate(this: Select) {
 
 				<div
 					class="ui5-select-label-root"
+					part="label"
 					data-sap-focus-ref
 					tabindex={this._effectiveTabIndex}
 					role="combobox"

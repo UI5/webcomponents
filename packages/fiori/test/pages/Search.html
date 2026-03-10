@@ -221,6 +221,17 @@
 		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows scoped search with scoped suggestions. Change scope to filter suggestions.</ui5-text>
 	</div>
 
+	<div class="container">
+		<ui5-label>Search with long Scoped Suggestions</ui5-label>
+		<ui5-search id="long-scope" show-clear-icon scope-value="apps" placeholder="Search Apps, Products">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Very very very long scope text" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Very very very  very very very very very very very very long scope text" value="products" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Very very very  very very very very very very very very very very very very very long scope text" value="products" slot="scopes"></ui5-search-scope>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">This example demonstrates scope adaptive width behavior.</ui5-text>
+	</div>
+
 
 	<div class="container">
 		<ui5-label>Search with Suggestions - Filters and noTypeAhead</ui5-label>
@@ -312,6 +323,8 @@
 			{ name: 'Manage Products', scope: 'apps' },
 			{ name: 'Mobile Phones', scope: 'products' },
 			{ name: 'Tablet', scope: 'products' },
+			{ name: 'Long Scope', scope: 'long' },
+			{ name: 'Very long scope', scope: 'long' },
 		];
 
 		function createScopeItems(scope) {

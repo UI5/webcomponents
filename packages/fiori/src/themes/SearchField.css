@@ -76,15 +76,24 @@
 /* scope select */
 [ui5-select] {
 	outline: none;
-	margin: var(--_ui5_search_input_scope_margin);
-	max-width: 10rem;
+	margin: 0 0.25rem;
+	width: fit-content;
+	min-width: auto;
+	max-width: 18rem;
+	flex: 0 1 auto;
 	border-radius: var(--_ui5_search_input_border_radius);
 	border: var(--_ui5-search-border);
 	box-shadow: none;
-	background: unset;
-	background-color: var(--_ui5-search-elements-background);
-	height: var(--_ui5-search-select-height);
-	--_ui5_select_label_color: var(--sapShell_TextColor);
+	background: none;
+	height: 1.75rem;
+	--_ui5_select_label_color: var(--sapField_TextColor);
+}
+
+.ui5-search-field-content [ui5-select]::part(label) {
+	padding-inline-end: 0.25rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 [ui5-select]:hover {
