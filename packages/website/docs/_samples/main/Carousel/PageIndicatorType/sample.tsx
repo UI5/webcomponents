@@ -1,7 +1,7 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CarouselClass from "@ui5/webcomponents/dist/Carousel.js";
 
-const Carousel = createComponent(CarouselClass);
+const Carousel = createReactComponent(CarouselClass);
 
 function App() {
   return (

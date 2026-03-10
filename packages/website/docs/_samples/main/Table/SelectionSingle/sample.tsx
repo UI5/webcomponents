@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import { FormEvent, useRef } from "react";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
@@ -9,14 +9,14 @@ import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableSelectionSingleClass from "@ui5/webcomponents/dist/TableSelectionSingle.js";
 
-const Label = createComponent(LabelClass);
-const RadioButton = createComponent(RadioButtonClass);
-const Table = createComponent(TableClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableRow = createComponent(TableRowClass);
-const TableSelectionSingle = createComponent(TableSelectionSingleClass);
+const Label = createReactComponent(LabelClass);
+const RadioButton = createReactComponent(RadioButtonClass);
+const Table = createReactComponent(TableClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableRow = createReactComponent(TableRowClass);
+const TableSelectionSingle = createReactComponent(TableSelectionSingleClass);
 
 function App() {
   const selectionRef = useRef(null);
@@ -31,9 +31,9 @@ function App() {
     }
   };
 
-  const handleSelectionBehaviorChange = (e: Event) => {
+  const handleSelectionBehaviorChange = (e: FormEvent) => {
     if (selectionRef.current) {
-      selectionRef.current!.behavior = e.currentTarget.text;
+      selectionRef.current!.behavior = (e.currentTarget as RadioButtonClass).text;
     }
   };
 

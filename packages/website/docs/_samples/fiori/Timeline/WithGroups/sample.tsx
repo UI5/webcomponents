@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineGroupItemClass from "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
@@ -7,11 +7,11 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-icons/dist/phone.js";
 import "@ui5/webcomponents-icons/dist/calendar.js";
 
-const Timeline = createComponent(TimelineClass);
-const TimelineGroupItem = createComponent(TimelineGroupItemClass);
-const TimelineItem = createComponent(TimelineItemClass);
-const Avatar = createComponent(AvatarClass);
-const Label = createComponent(LabelClass);
+const Timeline = createReactComponent(TimelineClass);
+const TimelineGroupItem = createReactComponent(TimelineGroupItemClass);
+const TimelineItem = createReactComponent(TimelineItemClass);
+const Avatar = createReactComponent(AvatarClass);
+const Label = createReactComponent(LabelClass);
 
 function App() {
   return (

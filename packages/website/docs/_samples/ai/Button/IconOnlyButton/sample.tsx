@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -10,11 +10,11 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 
-const AIButton = createComponent(AIButtonClass);
-const AIButtonState = createComponent(AIButtonStateClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
+const AIButton = createReactComponent(AIButtonClass);
+const AIButtonState = createReactComponent(AIButtonStateClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const [buttonState, setButtonState] = useState("generate");

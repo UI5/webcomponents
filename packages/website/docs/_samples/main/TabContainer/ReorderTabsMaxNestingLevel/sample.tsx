@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
@@ -7,16 +7,16 @@ import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
-const Label = createComponent(LabelClass);
-const StepInput = createComponent(StepInputClass);
-const Tab = createComponent(TabClass);
-const TabContainer = createComponent(TabContainerClass);
+const Label = createReactComponent(LabelClass);
+const StepInput = createReactComponent(StepInputClass);
+const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
   const tabContainerRef = useRef(null);
   const maxNestingLevelRef = useRef(1);
 
-  const getTabLevel = (element) => {
+  const getTabLevel = (element: HTMLElement): number => {
     if (element.hasAttribute("ui5-tabcontainer")) {
       return 0;
     }

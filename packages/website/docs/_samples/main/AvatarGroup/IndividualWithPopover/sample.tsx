@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
@@ -7,11 +7,11 @@ import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
-const Avatar = createComponent(AvatarClass);
-const AvatarGroup = createComponent(AvatarGroupClass);
-const Popover = createComponent(PopoverClass);
-const Slider = createComponent(SliderClass);
-const Title = createComponent(TitleClass);
+const Avatar = createReactComponent(AvatarClass);
+const AvatarGroup = createReactComponent(AvatarGroupClass);
+const Popover = createReactComponent(PopoverClass);
+const Slider = createReactComponent(SliderClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const personPopoverRef = useRef(null);
@@ -47,13 +47,13 @@ function App() {
       peoplePopoverRef.current!.opener = e.detail.targetRef;
       peoplePopoverRef.current!.open = true;
     } else {
-      const avatarRef = e.detail.targetRef;
+      const avatarRef = e.detail.targetRef as AvatarClass;
       const avatarIndex = group.items.indexOf(avatarRef);
       setPopAvatar({
         colorScheme: group.colorScheme[avatarIndex],
         initials: avatarRef.initials,
         icon: avatarRef.icon,
-        imageSrc: avatarRef.image.length > 0 ? avatarRef.image[0].src : null,
+        imageSrc: avatarRef.image.length > 0 ? (avatarRef.image[0] as HTMLImageElement).src : null,
       });
       personPopoverRef.current!.open = false;
       personPopoverRef.current!.opener = avatarRef;
@@ -71,7 +71,7 @@ function App() {
         <Popover
           ref={personPopoverRef}
           headerText="Person Card"
-          className="personPopover"
+          class="personPopover"
           style={{ width: "300px" }}
           placement="Bottom"
           preventFocusRestore={true}

@@ -394,7 +394,7 @@ describe("Carousel general interaction", () => {
 
 	});
 
-	it("navigateTo method and visibleItemsIndices", () => {
+	it("navigateTo and _changeFocusIndex methods", () => {
 		cy.mount(
 			<Carousel id="carousel9" itemsPerPage="S2 M2 L2 XL2" arrowsPlacement="Navigation">
 				<Button>Button 1</Button>
@@ -413,11 +413,50 @@ describe("Carousel general interaction", () => {
 			.invoke("prop", "visibleItemsIndices")
 			.should("deep.equal", [0, 1]);
 
-		cy.get("#carousel9").shadow().find('[data-ui5-arrow-forward="true"]').realClick();
+		cy.get<Carousel>("#carousel9")
+			.then($carousel => {
+				$carousel[0].navigateTo(2);
+			});
 
 		cy.get("#carousel9")
 			.invoke("prop", "visibleItemsIndices")
-			.should("deep.equal", [1, 2]);
+			.should("deep.equal", [2, 3]);
+
+		cy.get<Carousel>("#carousel9")
+			.then($carousel => {
+				$carousel[0].navigateTo(3);
+			});
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [3, 4]);
+
+		cy.get<Carousel>("#carousel9")
+			.then($carousel => {
+				$carousel[0]._changeFocusIndex(4);
+			});
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [3, 4]);
+
+		cy.get<Carousel>("#carousel9")
+			.then($carousel => {
+				$carousel[0]._changeFocusIndex(5);
+			});
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [4, 5]);
+
+		cy.get<Carousel>("#carousel9")
+			.then($carousel => {
+				$carousel[0].navigateTo(3);
+			});
+
+		cy.get("#carousel9")
+			.invoke("prop", "visibleItemsIndices")
+			.should("deep.equal", [3, 4]);
 	});
 
 	it("F7 keyboard navigation", () => {
@@ -518,8 +557,10 @@ describe("Carousel general interaction", () => {
 		cy.get("#firstButton").realClick();
 		cy.realPress("End");
 		cy.get("#testHomeAndEnd").should("have.prop", "_focusedItemIndex", 9);
+		cy.get("#testHomeAndEnd").should("have.prop", "_currentPageIndex", 9);
 		cy.realPress("Home");
 		cy.get("#testHomeAndEnd").should("have.prop", "_focusedItemIndex", 0);
+		cy.get("#testHomeAndEnd").should("have.prop", "_currentPageIndex", 0);
 	});
 
 	it("'PageUp' and 'PageDown' button press", () => {
@@ -551,16 +592,22 @@ describe("Carousel general interaction", () => {
 
 		cy.get("#firstButton").realClick();
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 0);
 		cy.realPress("PageUp");
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 10);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 10);
 		cy.realPress("PageUp");
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 20);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 19);
 		cy.realPress("PageUp");
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 21);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 19);
 		cy.realPress("PageDown");
-		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 11);
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 9);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 9);
 		cy.realPress("PageDown");
-		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 1);
+		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
+		cy.get("#testPageUpDown").should("have.prop", "_currentPageIndex", 0);
 		cy.realPress("PageDown");
 		cy.get("#testPageUpDown").should("have.prop", "_focusedItemIndex", 0);
 	});
