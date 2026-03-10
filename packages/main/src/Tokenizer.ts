@@ -561,6 +561,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -977,7 +978,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
@@ -1047,15 +1048,27 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
-		const cutToClipboard = (e: ClipboardEvent) => {
-			navigator.clipboard.writeText(tokensTexts);
+		// Async clipboard API (works in secure contexts - HTTPS/localhost)
+		if (navigator.clipboard?.writeText && window.isSecureContext) {
+			navigator.clipboard.writeText(tokensTexts)?.catch(() => {
+				// Silent fallback - user can retry
+			});
+			return;
+		}
 
+		// Fallback for HTTP: use ClipboardEvent with execCommand
+		// execCommand is deprecated but it is kept for compatibility reasons, as
+		// there is no other way to write to clipboard in non-secure contexts
+		const fillClipboardHandler = (e: ClipboardEvent) => {
+			if (e.clipboardData) {
+				e.clipboardData.setData("text/plain", tokensTexts);
+			}
 			e.preventDefault();
 		};
 
-		document.addEventListener(shortcutName, cutToClipboard);
+		document.addEventListener(shortcutName, fillClipboardHandler);
 		document.execCommand(shortcutName);
-		document.removeEventListener(shortcutName, cutToClipboard);
+		document.removeEventListener(shortcutName, fillClipboardHandler);
 	}
 
 	/**

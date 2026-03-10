@@ -22,6 +22,16 @@ describe("General API", () => {
 			.should("have.attr", "rel", "noreferrer noopener");
 	});
 
+	it("should not add rel attribute for custom target", () => {
+		cy.mount(<Link href="https://www.sap.com" target="my-target"></Link>);
+
+		cy.get("[ui5-link]")
+			.shadow()
+			.find(".ui5-link-root")
+			.should("have.attr", "target", "my-target")
+			.and("not.have.attr", "rel");
+	});
+
 	it("should wrap the text of the link", () => {
 		cy.mount(
 			<>
