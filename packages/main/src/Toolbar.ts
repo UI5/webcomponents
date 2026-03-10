@@ -688,6 +688,13 @@ class Toolbar extends UI5Element {
 		}
 	}
 
+	_onoverflowkeydown(e: KeyboardEvent) {
+		// Prevent arrow keys from scrolling the page while focus is inside the overflow popover
+		if (isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e)) {
+			e.preventDefault();
+		}
+	}
+
 	_isFromComplexToolbarChild(e: KeyboardEvent): boolean {
 		return e.composedPath().some(target => {
 			return target instanceof HTMLElement && target.tagName === "UI5-TOOLBAR-SELECT";
