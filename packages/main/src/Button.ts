@@ -10,7 +10,11 @@ import {
 	isEscape,
 	isShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AriaLabelHelper.js";
+import {
+	getAllAccessibleNameRefTexts,
+	registerUI5Element,
+	deregisterUI5Element,
+} from "@ui5/webcomponents-base/dist/util/AriaLabelHelper.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
 import type { PassiveEventListenerObject } from "@ui5/webcomponents-base/dist/types.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -300,6 +304,13 @@ class Button extends UI5Element implements IFormElement, IButton {
 	_cancelAction!: boolean;
 
 	/**
+	 * Constantly updated value of texts collected from the accessibleNameRef elements
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_accessibleNameRefTexts?: string;
+
+	/**
 	 * Defines the text of the component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -349,6 +360,16 @@ class Button extends UI5Element implements IFormElement, IButton {
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
+
+		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
+	}
+
+	_updateAccessibleNameRefTexts() {
+		this._accessibleNameRefTexts = getAllAccessibleNameRefTexts(this);
+	}
+
+	onExitDOM() {
+		deregisterUI5Element(this);
 	}
 
 	async onBeforeRendering() {
@@ -528,7 +549,8 @@ class Button extends UI5Element implements IFormElement, IButton {
 	}
 
 	get ariaLabelText() {
-		return getEffectiveAriaLabelText(this);
+		// Use accessibleNameRef texts (cached), then accessibleName (direct), then textContent as fallback
+		return this._accessibleNameRefTexts || this.accessibleName || undefined;
 	}
 
 	get ariaDescribedbyText() {
