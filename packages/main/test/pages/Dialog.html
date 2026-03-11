@@ -24,7 +24,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
 	<ui5-checkbox text="Compact size" id="cbCompact"></ui5-checkbox>
 	<ui5-checkbox text="Scrollable page" id="cbScrollable"></ui5-checkbox>
 	<br>
@@ -62,6 +61,9 @@
 	<ui5-button id="resizable-open">Open resizable dialog</ui5-button>
 	<br>
 	<br>
+	<ui5-button id="native-dnd-open">Open draggable dialog with native DnD</ui5-button>
+	<br>
+	<br>
 	<ui5-button id="resizable-custom-header-open">Open resizable dialog with custom header</ui5-button>
 	<br>
 	<br>
@@ -72,84 +74,6 @@
 	<br>
 	<br>
 	<ui5-button id="multiple-show">Open dialog calling show() multiple times</ui5-button>
-=======
-	<div class="wrapper">
-		<div>
-			<ui5-segmented-button id="theme-switch">
-				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon" selected>Morning</ui5-segmented-button-item>
-				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_dark">Evening</ui5-segmented-button-item>
-				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcb">HCB</ui5-segmented-button-item>
-				<ui5-segmented-button-item data-ui5-theme-name="sap_horizon_hcw">HCW</ui5-segmented-button-item>
-			</ui5-segmented-button>
-		</div>
-		<ui5-checkbox text="Compact size" id="cbCompact"></ui5-checkbox>
-		<ui5-checkbox text="Scrollable page" id="cbScrollable"></ui5-checkbox>
-		<br>
-		<br>
-		<ui5-button id="btnOpenDialogWithInput">Open Dialog with Input</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="btnOpenDialog">Open Stretched Dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="btnOpenDialogNoPaddings">Open Stretched Dialog - no paddings</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="btnOpenDialogWithAttr">Open with Attribute</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="message">Open Message Dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="prevent">Open Prevent closing Dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="modals-open">Open Multiple modals</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="empty-open">Open empty dialog (no focusable element)</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="wide-open">Open wide dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="wide-open2">Open wide dialog 2</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="draggable-open">Open draggable dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="resizable-open">Open resizable dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="resizable-rtl-open">Open resizable dialog in rtl with max-width</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="resizable-custom-header-open">Open resizable dialog with custom header</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="draggable-and-resizable-open">Open draggable & resizable dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="rtl-draggable-and-resizable-open">Open RTL draggable & resizable dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="rtl-maxwidth-resizable-open">Open RTL max-width resizable dialog</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="dynamic-open">Open dialog which is created dynamically</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="multiple-show">Open dialog calling ".open = true" multiple times</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="open-big-content">Open dialog with big content</ui5-button>
-		<br>
-		<br>
-		<ui5-button id="native-dnd-open">Open draggable dialog with native DnD</ui5-button>
-	</div>
-	<ui5-block-layer></ui5-block-layer>
->>>>>>> 828b4c6148 (fix(ui5-dialog): prevent native drag behavior only for header (#13177))
 
 	<ui5-block-layer></ui5-block-layer>
 
@@ -315,6 +239,16 @@
 		</div>
 	</ui5-dialog>
 
+	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
+		<p>Drag items to drop zone:</p>
+		<div id="dnd-item-1" draggable="true">Item 1</div>
+		<div id="dnd-item-2" draggable="true">Item 2</div>
+		<div id="drop-zone">Drop Zone</div>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="native-dnd-close">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
 	<ui5-dialog id="dialogNoPaddings" header-text="No content paddings" stretch class="noContentPaddingsDialog">
 		<div class="dialog3auto">
 			<ui5-title level="H3">Hello World!</ui5-title>
@@ -467,43 +401,7 @@
 		</div>
 	</ui5-dialog>
 
-<<<<<<< HEAD
 	<ui5-popover header-text="My Heading" id="pop" class="dialog8auto" placement-type="Top">
-=======
-	<div dir="rtl">
-		<ui5-dialog id="rtl-draggable-and-resizable-dialog" header-text="Draggable/Resizable dialog" draggable resizable>
-			<p>Move this dialog around the screen by dragging it by its header.</p>
-			<p>Resize this dialog by dragging it by its resize handle.</p>
-			<p>These features are available only on Desktop.</p>
-			<ui5-toolbar slot="footer">
-				<ui5-toolbar-button id="rtl-draggable-and-resizable-close" design="Emphasized" text="OK"></ui5-toolbar-button>
-			</ui5-toolbar>
-		</ui5-dialog>
-	</div>
-
-	<div dir="rtl">
-		<ui5-dialog  style="max-width: 500px" id="rtl-maxwidth-resizable-dialog" header-text="Draggable/Resizable dialog" draggable resizable>
-			<p>Move this dialog around the screen by dragging it by its header.</p>
-			<p>Resize this dialog by dragging it by its resize handle.</p>
-			<p>These features are available only on Desktop.</p>
-			<ui5-toolbar slot="footer">
-				<ui5-toolbar-button id="rtl-maxwidth-resizable-close" design="Emphasized" text="OK"></ui5-toolbar-button>
-			</ui5-toolbar>
-		</ui5-dialog>
-	</div>
-
-	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
-		<p>Drag items to drop zone:</p>
-		<div id="dnd-item-1" draggable="true">Item 1</div>
-		<div id="dnd-item-2" draggable="true">Item 2</div>
-		<div id="drop-zone">Drop Zone</div>
-		<div slot="footer" class="dialogFooter">
-			<ui5-button id="native-dnd-close">Close</ui5-button>
-		</div>
-	</ui5-dialog>
-
-	<ui5-popover header-text="My Heading" id="pop" class="dialog8auto" placement="Top">
->>>>>>> 828b4c6148 (fix(ui5-dialog): prevent native drag behavior only for header (#13177))
 		<!-- <div slot="header">
 			Hello World
 		</div> -->
@@ -826,6 +724,25 @@
 		window["draggable-and-resizable-open"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].show(); });
 		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].close(); });
 
+		window["native-dnd-open"].addEventListener("click", () => window["native-dnd-dialog"].open = true);
+		window["native-dnd-close"].addEventListener("click", () => window["native-dnd-dialog"].open = false);
+
+		document.getElementById("dnd-item-1").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-1");
+		});
+
+		document.getElementById("dnd-item-2").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-2");
+		});
+
+		const dropZone = document.getElementById("drop-zone");
+		dropZone.addEventListener("dragover", (e) => e.preventDefault());
+		dropZone.addEventListener("drop", (e) => {
+			e.preventDefault();
+			const data = e.dataTransfer.getData("text");
+			dropZone.textContent = `Dropped: ${data}`;
+		});
+
 		window["dynamic-open"].addEventListener("click", function () {
 			var dialog = document.createElement("ui5-dialog"),
 				button = document.createElement("ui5-button"),
@@ -920,71 +837,6 @@
 			window["dialogFocus1"].close();
 		});
 
-<<<<<<< HEAD
-=======
-		window["btnDialogAutofocus"].addEventListener("click", function () {
-			window["dialogAutofocus"].open = true;
-		});
-
-		window["btnDialogAutofocusClose"].addEventListener("click", function () {
-			window["dialogAutofocus"].open = false;
-		});
-
-		window["btnConfirmationDialog"].addEventListener("click", function () {
-			window["confirmationDialog"].open = true;
-		});
-
-		window["btnAccessibleDescrRefDialog"].addEventListener("click", function () {
-			window["accessibleDescrRefDialog"].open = true;
-		});
-
-		window["btnAccessibleDescrRefDialogSubmit"].addEventListener("click", function () {
-			window["accessibleDescrRefDialog"].open = false;
-		});
-
-		window["btnAccessibleDescrDialog"].addEventListener("click", function () {
-			window["accessibleDescrDialog"].open = true;
-		});
-
-		window["btnAccessibleDescrDialogSubmit"].addEventListener("click", function () {
-			window["accessibleDescrDialog"].open = false;
-		});
-
-		window["btnConfirmationDialogSubmit"].addEventListener("click", function () {
-			window["confirmationDialog"].open = false;
-		})
-
-		window["btnConfirmationDialogCancel"].addEventListener("click", function () {
-			window["confirmationDialog"].open = false;
-		})
-
-		document.getElementById("theme-switch").addEventListener("ui5-selection-change", event => {
-			window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.detail.selectedItems[0].getAttribute("data-ui5-theme-name"));
-		});
-
-		document.getElementById("open-big-content").addEventListener("click", function () {
-			window["dlgBigContent"].open = true;
-		});
-
-		window["native-dnd-open"].addEventListener("click", () => window["native-dnd-dialog"].open = true);
-		window["native-dnd-close"].addEventListener("click", () => window["native-dnd-dialog"].open = false);
-
-		document.getElementById("dnd-item-1").addEventListener("dragstart", (e) => {
-			e.dataTransfer.setData("text", "item-1");
-		});
-
-		document.getElementById("dnd-item-2").addEventListener("dragstart", (e) => {
-			e.dataTransfer.setData("text", "item-2");
-		});
-
-		const dropZone = document.getElementById("drop-zone");
-		dropZone.addEventListener("dragover", (e) => e.preventDefault());
-		dropZone.addEventListener("drop", (e) => {
-			e.preventDefault();
-			const data = e.dataTransfer.getData("text");
-			dropZone.textContent = `Dropped: ${data}`;
-		});
->>>>>>> 828b4c6148 (fix(ui5-dialog): prevent native drag behavior only for header (#13177))
 	</script>
 </body>
 
