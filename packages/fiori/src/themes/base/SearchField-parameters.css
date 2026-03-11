@@ -10,6 +10,8 @@
 	--_ui5-search-elements-hover-background: none;
 	--_ui5-search-elements-active-background: none;
 	--_ui5_search_input_scope_margin: 0 0.125rem 0 .5rem;
+	--_ui5-search_input_scope_hover_shadow: 0 0 0 var(--sapField_BorderWidth) var(--sapButton_Lite_Hover_BorderColor);
+	--_ui5-search_input_scope_active_shadow: 0 0 0 var(--sapField_BorderWidth) var(--sapButton_Lite_Active_BorderColor);
 	--_ui5-search-elements-background: inherit;
 	--_ui5_search_wrapper_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapField_Active_BorderColor);
 	--_ui5_search_input_outline: none;

@@ -87,8 +87,15 @@
 	--_ui5_select_label_color: var(--sapShell_TextColor);
 }
 
-[ui5-select]:hover {
-	box-shadow: var(--sapField_Hover_Shadow);
+[ui5-select]:hover,
+.ui5-search-field-select::part(icon-wrapper):hover  {
+	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
+}
+
+[ui5-select]:active,
+.ui5-search-field-select:active::part(icon-wrapper) {
+	box-shadow: var(--_ui5-search_input_scope_active_shadow);
+	background: var(--sapShell_Active_Background);
 }
 
 [ui5-select]::part(icon) {
@@ -259,7 +266,6 @@
 .ui5-shell-search-field-icon:hover,
 .ui5-shell-search-field-input-button:hover {
 	background: var(--sapShell_Hover_Background);
-	border: 1px solid var(--sapButton_Lite_Hover_BorderColor);
 	color: var(--sapShell_InteractiveTextColor);
 }
 
@@ -281,18 +287,6 @@
 .ui5-search-field-select::part(icon-wrapper) {
 	border-radius: var(--_ui5_search_input_border_radius);
 	height: 100%;
-}
-
-.ui5-search-field-select[focused]::part(icon-wrapper) {
-	box-shadow: var(--sapField_Hover_Shadow);
-}
-
-:host(:not([collapsed]):hover):has([ui5-select]:hover) {
-	background: var(--_ui5-search-wrapper-background);
-}
-
-:host(:not([collapsed])):has([ui5-select][focused]) {
-	background: var(--_ui5-search-wrapper-background);
 }
 
 .ui5-search-field-inner-input::selection {
