@@ -43,7 +43,7 @@
 	padding: .1875rem .5rem
 }
 
-[inner-input] {
+[ui5-responsive-popover] [inner-input] {
 	background: transparent;
 	color: inherit;
 	border: none;
@@ -62,19 +62,19 @@
 	border-radius: var(--_ui5_input_border_radius);
 }
 
-[inner-input]::selection,
-[inner-input]::-moz-selection {
+[ui5-responsive-popover] [inner-input]::selection,
+[ui5-responsive-popover] [inner-input]::-moz-selection {
 	background: var(--sapSelectedColor);
 	color: var(--sapContent_ContrastTextColor);
 }
 
 /* Input placeholder */
-[inner-input]::-webkit-input-placeholder {
+[ui5-responsive-popover] [inner-input]::-webkit-input-placeholder {
 	font-style: var(--_ui5_input_placeholder_style);
 	color: var(--sapField_PlaceholderTextColor);
 }
 
-[inner-input]::-moz-placeholder {
+[ui5-responsive-popover] [inner-input]::-moz-placeholder {
 	font-style: var(--_ui5_input_placeholder_style);
 	color: var(--sapField_PlaceholderTextColor);
 }
