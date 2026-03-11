@@ -291,9 +291,9 @@ class Popover extends Popup {
 		this._initialHeight = this.style.height;
 
 		this._openerRect = opener.getBoundingClientRect();
+		this._observeOpenerVisibility();
 
 		await super.openPopup();
-		this._observeOpenerVisibility();
 	}
 
 	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false) : void {
@@ -366,6 +366,10 @@ class Popover extends Popup {
 		}
 
 		let rootNode = this.getRootNode();
+
+		if (!rootNode) {
+			return null;
+		}
 
 		if (rootNode === this) {
 			rootNode = document;
@@ -570,6 +574,8 @@ class Popover extends Popup {
 	 * @private
 	 */
 	_observeOpenerVisibility(): void {
+		this._unobserveOpenerVisibility();
+
 		const opener = this.getOpenerHTMLElement(this.opener);
 
 		if (!opener) {
