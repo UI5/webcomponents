@@ -17,13 +17,6 @@ function App() {
 
   return (
     <>
-      <style>{`
-        /* Styles for Dialog */
-
-        #bar::part(startContent) {
-            padding-inline-start: 0;
-        }
-      `}</style>
       <Button id="dialogOpener" onClick={() => setDialogOpen(true)}>
         Open Dialog
       </Button>
@@ -45,10 +38,6 @@ function App() {
             onClick={() => setDialogOpen(false)}
           />
         </Bar>
-        <div>
-          Custom styles are applied to remove the default Dialog's paddings when
-          ui5-bar is placed in the header or footer of a dialog.
-        </div>
         <Bar slot="footer" design="Footer">
           <Button
             style={{ minWidth: "4rem" }}
