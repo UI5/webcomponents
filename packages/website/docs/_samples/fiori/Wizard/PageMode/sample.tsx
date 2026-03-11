@@ -101,7 +101,7 @@ function App() {
         open={dialogOpen}
         id="dialog"
         stretch={true}
-        headerHeading="Wizard"
+        headerText="Wizard"
         onClose={() => setDialogOpen(false)}
       >
         <Wizard

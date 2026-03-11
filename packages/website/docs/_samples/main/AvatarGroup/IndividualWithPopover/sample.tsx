@@ -47,13 +47,13 @@ function App() {
       peoplePopoverRef.current!.opener = e.detail.targetRef;
       peoplePopoverRef.current!.open = true;
     } else {
-      const avatarRef = e.detail.targetRef;
+      const avatarRef = e.detail.targetRef as AvatarClass;
       const avatarIndex = group.items.indexOf(avatarRef);
       setPopAvatar({
         colorScheme: group.colorScheme[avatarIndex],
         initials: avatarRef.initials,
         icon: avatarRef.icon,
-        imageSrc: avatarRef.image.length > 0 ? avatarRef.image[0].src : null,
+        imageSrc: avatarRef.image.length > 0 ? (avatarRef.image[0] as HTMLImageElement).src : null,
       });
       personPopoverRef.current!.open = false;
       personPopoverRef.current!.opener = avatarRef;
@@ -71,7 +71,7 @@ function App() {
         <Popover
           ref={personPopoverRef}
           headerText="Person Card"
-          className="personPopover"
+          class="personPopover"
           style={{ width: "300px" }}
           placement="Bottom"
           preventFocusRestore={true}

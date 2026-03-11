@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { FormEvent, useRef } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
@@ -31,9 +31,9 @@ function App() {
     }
   };
 
-  const handleSelectionBehaviorChange = (e: Event) => {
+  const handleSelectionBehaviorChange = (e: FormEvent) => {
     if (selectionRef.current) {
-      selectionRef.current!.behavior = e.currentTarget.text;
+      selectionRef.current!.behavior = (e.currentTarget as RadioButtonClass).text;
     }
   };
 

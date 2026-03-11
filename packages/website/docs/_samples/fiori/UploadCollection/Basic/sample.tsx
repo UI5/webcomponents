@@ -28,7 +28,7 @@ function App() {
       file: File;
       fileName: string;
       description: string;
-      uploadState: string;
+      uploadState: "Error" | "Ready" | "Uploading" | "Complete";
     }[]
   >([]);
 
@@ -36,12 +36,13 @@ function App() {
     (e: UI5CustomEvent<FileUploaderClass, "change">) => {
       const files = e.detail.files;
       const additions = [];
+
       for (let i = 0; i < files.length; i++) {
         additions.push({
           id: Date.now() + "-" + i,
           file: files[i],
           fileName: files[i].name,
-          description: `Last modified: ${files[i].lastModifiedDate}, size: ${files[i].size}`,
+          description: `Last modified: ${new Date(files[i].lastModified)}, size: ${files[i].size}`,
           uploadState: "Ready",
         });
       }

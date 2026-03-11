@@ -20,7 +20,18 @@ const SAMPLE_TEXTS: Record<string, string> = {
   summarized: "Driving innovation creatively.",
 };
 
-const INITIAL_MENU_CONFIG = [
+type Config = {
+  text?: string;
+  action?: string;
+  processingLabel?: string;
+  completedLabel?: string;
+  textKey?: string;
+  slot?: string;
+  children?: Config[];
+  separator?: boolean;
+};
+
+const INITIAL_MENU_CONFIG: Array<Config> = [
   {
     text: "Generate",
     action: "generate",
@@ -31,7 +42,7 @@ const INITIAL_MENU_CONFIG = [
   },
 ];
 
-const FULL_MENU_CONFIG = [
+const FULL_MENU_CONFIG: Array<Config> = [
   {
     text: "Regenerate",
     action: "regenerate",
@@ -125,7 +136,7 @@ function App() {
   const [currentVersion, setCurrentVersion] = useState(0);
   const [totalVersions, setTotalVersions] = useState(0);
   const [promptDescription, setPromptDescription] = useState("");
-  const [menuConfig, setMenuConfig] = useState(INITIAL_MENU_CONFIG);
+  const [menuConfig, setMenuConfig] = useState<Config[]>(INITIAL_MENU_CONFIG);
 
   const versionHistoryRef = useRef<VersionEntry[]>([]);
   const currentIndexRef = useRef(0);

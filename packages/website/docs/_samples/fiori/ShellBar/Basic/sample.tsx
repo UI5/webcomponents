@@ -22,7 +22,7 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 function App() {
   return (
     <>
-      <ShellBar notificationsCount={72} showNotifications={true}>
+      <ShellBar notificationsCount="72" showNotifications={true}>
         <Button icon="menu2" slot="startButton" />
         <ShellBarBranding slot="branding">
           Product Identifier

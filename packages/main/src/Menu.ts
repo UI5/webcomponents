@@ -17,6 +17,8 @@ import {
 	isDesktop,
 } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -40,6 +42,7 @@ import menuTemplate from "./MenuTemplate.js";
 import {
 	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
+	MENU_ITEM_LOADING,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -496,6 +499,9 @@ class Menu extends UI5Element {
 
 	_afterPopoverOpen() {
 		this._allMenuItems[0]?.focus();
+		if (this.loading) {
+			announce(Menu.i18nBundle.getText(MENU_ITEM_LOADING), InvisibleMessageMode.Polite);
+		}
 		this.fireDecoratorEvent("open");
 	}
 

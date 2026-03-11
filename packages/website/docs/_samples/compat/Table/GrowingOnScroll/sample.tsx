@@ -157,7 +157,7 @@ function App() {
     <div style={{ height: "200px", overflow: "scroll" }}>
       <CompatTable
         growing={growing}
-        busyDelay="0"
+        busyDelay={0}
         busy={busy}
         onLoadMore={handleLoadMore}
       >
