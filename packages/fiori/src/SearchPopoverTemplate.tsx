@@ -60,6 +60,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 						class="ui5-search-list"
 						separators={ListSeparator.None}
 						onKeyDown={this._onItemKeydown}
+						onFocusIn={this._onListItemFocusIn}
 						accessibleRole={ListAccessibleRole.ListBox}
 						onItemClick={this._onItemClick}>
 						<slot></slot>
