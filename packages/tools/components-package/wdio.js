@@ -236,6 +236,12 @@ exports.config = {
 			}, this, attrName);
 		}, true);
 
+		await browser.addCommand("matches", async function(selector) {
+			return browser.executeAsync((elem, selector, done) => {
+				done(elem.matches(selector));
+			}, this, selector);
+		}, true);
+
 		await browser.addCommand("getStaticAreaItemClassName", async function(selector) {
 			return browser.executeAsync(async (selector, done) => {
 				const staticAreaItem = await document.querySelector(selector).getStaticAreaItemDomRef();

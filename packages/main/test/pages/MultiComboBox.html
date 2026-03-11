@@ -640,6 +640,10 @@
 		multiComboBox.addEventListener("ui5-selection-change", function (event) {
 			event.preventDefault();
 		});
+
+		document.getElementById("mcb-error").addEventListener("ui5-selection-change", e => {
+			event.target.valueState = "None";
+		});
 	</script>
 
 </body>

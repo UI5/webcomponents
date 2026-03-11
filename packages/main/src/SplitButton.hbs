@@ -20,29 +20,29 @@
 		@touchstart={{_textButtonPress}}
 		@mousedown={{_textButtonPress}}
 		@mouseup={{_textButtonRelease}}
-		@focusin={{_textButtonFocusIn}}
+		@focusin={{_onInnerButtonFocusIn}}
 		@focusout={{_onFocusOut}}
 	>
 		{{#if isTextButton}}
 			<slot></slot>
 		{{/if}}
 	</ui5-button>
-		<ui5-button
-			class="ui5-split-arrow-button"
-			design="{{design}}"
-			icon="slim-arrow-down"
-			tabindex="-1"
-			?disabled="{{disabled}}"
-			?active="{{effectiveActiveArrowButton}}"
-			tooltip="{{accInfo.arrowButton.title}}"
-			.accessibilityAttributes={{accInfo.arrowButton.accessibilityAttributes}}
-			@click="{{_handleArrowButtonAction}}"
-			@mousedown={{_arrowButtonPress}}
-			@mouseup={{_arrowButtonRelease}}
-			@focusin={{_setTabIndexValue}}
-			@ui5-_active-state-change={{_onArrowButtonActiveStateChange}}
-		>
-		</ui5-button>
+	<ui5-button
+		class="ui5-split-arrow-button"
+		design="{{design}}"
+		icon="slim-arrow-down"
+		tabindex="-1"
+		?disabled="{{disabled}}"
+		?active="{{effectiveActiveArrowButton}}"
+		tooltip="{{accInfo.arrowButton.title}}"
+		.accessibilityAttributes={{accInfo.arrowButton.accessibilityAttributes}}
+		@click="{{_handleArrowButtonAction}}"
+		@mousedown={{_arrowButtonPress}}
+		@mouseup={{_arrowButtonRelease}}
+		@focusin={{_onInnerButtonFocusIn}}
+		@ui5-_active-state-change={{_onArrowButtonActiveStateChange}}
+	>
+	</ui5-button>
 	<span id="{{_id}}-invisibleText" class="ui5-hidden-text">{{accInfo.root.description}} {{accInfo.root.keyboardHint}} {{accessibleName}}</span>
 	<span id="{{_id}}-invisibleTextDefault" class="ui5-hidden-text">{{textButtonAccText}}</span>
 

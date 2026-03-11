@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.26](https://github.com/UI5/webcomponents/compare/v1.24.25...v1.24.26) (2026-01-19)
+
+
+### Bug Fixes
+
+* **ui5-menu:** center busy state animation ([#12907](https://github.com/UI5/webcomponents/issues/12907)) ([f9131eb](https://github.com/UI5/webcomponents/commit/f9131ebecc5838550e152777714cd35f307426b8)), closes [#12887](https://github.com/UI5/webcomponents/issues/12887)
+
+
+
+
+
+## [1.24.25](https://github.com/UI5/webcomponents/compare/v1.24.24...v1.24.25) (2025-12-17)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+## [1.24.24](https://github.com/SAP/ui5-webcomponents/compare/v1.24.23...v1.24.24) (2025-07-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+## [1.24.23](https://github.com/SAP/ui5-webcomponents/compare/v1.24.22...v1.24.23) (2025-07-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+## [1.24.22](https://github.com/SAP/ui5-webcomponents/compare/v1.24.21...v1.24.22) (2025-06-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+## [1.24.21](https://github.com/SAP/ui5-webcomponents/compare/v1.24.20...v1.24.21) (2025-05-07)
+
+
+### Bug Fixes
+
+* **DragRegistry - TypeScript:** correct import ([#11389](https://github.com/SAP/ui5-webcomponents/issues/11389)) ([cc9738a](https://github.com/SAP/ui5-webcomponents/commit/cc9738a9c911e76b8251919282b74ce6cfc46680)), closes [#8677](https://github.com/SAP/ui5-webcomponents/issues/8677) [#11387](https://github.com/SAP/ui5-webcomponents/issues/11387)
+* **ui5-popover:** fix arrow positioning ([#11363](https://github.com/SAP/ui5-webcomponents/issues/11363)) ([05f33c0](https://github.com/SAP/ui5-webcomponents/commit/05f33c0220fe71e00852c300f61ef5b91096c8eb))
+
+
+
+
+
+## [1.24.20](https://github.com/SAP/ui5-webcomponents/compare/v1.24.19...v1.24.20) (2025-04-08)
+
+
+### Bug Fixes
+
+* update CLDR cdn url ([4f89797](https://github.com/SAP/ui5-webcomponents/commit/4f897974b4a36e8c46a21f46a51faf5b08f56d9e))
+
+
+
+
+
+## [1.24.19](https://github.com/SAP/ui5-webcomponents/compare/v1.24.18...v1.24.19) (2025-04-03)
+
+
+### Bug Fixes
+
+* **framework:** fix fetching "id" (indonesian) language ([8dc60ae](https://github.com/SAP/ui5-webcomponents/commit/8dc60aeaada5d7666692c0f6f605d6428c48fb50)), closes [#11233](https://github.com/SAP/ui5-webcomponents/issues/11233)
+
+
+
+
+
+## [1.24.18](https://github.com/SAP/ui5-webcomponents/compare/v1.24.17...v1.24.18) (2025-04-03)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
 ## [1.24.17](https://github.com/SAP/ui5-webcomponents/compare/v1.24.16...v1.24.17) (2025-03-04)
 
 

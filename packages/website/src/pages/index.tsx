@@ -53,9 +53,8 @@ function HomepageHeader() {
 function Banner() {
   return (
     <div className="alert alert--info" role="alert" style={{fontSize: "1.5rem", textAlign: "center"}}>
-          This is the documentation of <b>UI5 Web Components 1.24 </b> which is still supported until <b>30 June 2025</b>.
-          <p>However, we are excited to announce that <b>UI5 Web Components 2.0 is now available!</b></p>
-          🎉Discover <b><a href="https://github.com/SAP/ui5-webcomponents/releases/tag/v2.0.0"> all the great features in version 2! </a></b>&nbsp;🎉
+         Since 30 June 2025, UI5 Web Components 1.24 is <b>out of maintenance</b>.
+         <p>We recommend using <b><a href="https://github.com/UI5/webcomponents/releases/tag/v2.0.0">UI5 Web Components 2.0</a></b></p>
     </div>
   );
 }

@@ -49,6 +49,6 @@ fetch('https://registry.npmjs.org/@ui5/webcomponents').then(async (response) => 
     if (ui5wcPackageMetadata?.['dist-tags'].latest) {
         const version = ui5wcPackageMetadata['dist-tags'].latest;
         versionAnchor.textContent = version;
-        versionAnchor.setAttribute('href', `https://github.com/SAP/ui5-webcomponents/releases/tag/v${version}`);
+        versionAnchor.setAttribute('href', `https://github.com/UI5/webcomponents/releases/tag/v${version}`);
     }
 });

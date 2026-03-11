@@ -17,7 +17,7 @@ describe("ColorPalette interactions", () => {
 		const defaultButton = await colorPalette.shadow$(".ui5-cp-default-color-button");
 
 		// assert - default btn is focused
-		assert.ok(await defaultButton.getProperty("focused"),  "The first element is focused");
+		assert.ok(await defaultButton.matches(":focus"),  "The first element is focused");
 
 		// act - close popover
 		await defaultButton.click();
@@ -67,7 +67,7 @@ describe("ColorPalette interactions", () => {
 
 		// act - open color palette popover
 		await colorPaletteButton.click();
-	
+
 		const colorPalettePopover = await browser.$("#colorPalettePopoverTest4");
 		const colorPalette = await colorPalettePopover.shadow$("[ui5-responsive-popover]").$("[ui5-color-palette]");
 		const moreColorsButton = await colorPalette.shadow$(".ui5-cp-more-colors");
@@ -76,7 +76,7 @@ describe("ColorPalette interactions", () => {
 		await defaultButton.keys("ArrowUp");
 
 		// assert - MoreColors button is focused
-		assert.ok(await moreColorsButton.getProperty("focused"),  "Button 'MoreColors' is focused");
+		assert.ok(await moreColorsButton.matches(":focus"),  "Button 'MoreColors' is focused");
 
 		// act - close popover
 		await defaultButton.click();
@@ -84,7 +84,7 @@ describe("ColorPalette interactions", () => {
 
 	it("Tests navigation with recent colors", async () => {
 		const colorPaletteButton = await browser.$("#colorPaletteBtnTest5");
-	
+
 		// act - open color palette popover
 		await colorPaletteButton.click();
 
@@ -103,7 +103,7 @@ describe("ColorPalette interactions", () => {
 		await firstRecentColorsElement.keys("ArrowUp");
 
 		// assert - MoreColors is focused
-		assert.ok(await moreColorsButton.getProperty("focused"),  "Check if more colors button is focused");
+		assert.ok(await moreColorsButton.matches(":focus"),  "Check if more colors button is focused");
 
 		// act - close popover
 		await defaultButton.click();
@@ -149,5 +149,5 @@ describe("ColorPalette interactions", () => {
 		assert.ok(await colorPalette.getProperty("showRecentColors"), "Check if recent colors is on");
 		assert.ok(await colorPalette.getProperty("showMoreColors"), "Check if more colors is on");
 	})
-	
+
 });

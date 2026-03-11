@@ -99,6 +99,26 @@
 	<br>
 	<br>
 
+	<ui5-icon id="icon1" name="home" mode="Interactive"></ui5-icon>
+
+	<ui5-popover id="popoverAlignedToIcon"
+				 opener="icon1"
+				 header-text="Newsletter subscription"
+				 placement="End"
+				 vertical-align="Top">
+		<div class="popover-content">
+			<ui5-label for="emailInput" required show-colon>Email</ui5-label>
+			<ui5-input id="emailInput" style="min-width: 150px;" placeholder="Enter Email"></ui5-input>
+			<ui5-label>Note: If you open the page in mobile, a dialog would be displayed.</ui5-label>
+		</div>
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="closePopoverButton" design="Emphasized">Subscribe</ui5-button>
+		</div>
+	</ui5-popover>
+
+	<br>
+	<br>
+
 	<ui5-select>
 		<ui5-option>Hello</ui5-option>
 		<ui5-option>World</ui5-option>
@@ -826,6 +846,10 @@ z-index: 1;
 
 		btn4.addEventListener("click", () => {
 			respPopover4.open = !respPopover4.open;
+		});
+
+		icon1.addEventListener("click", () => {
+			popoverAlignedToIcon.open = true;
 		});
 
 	</script>

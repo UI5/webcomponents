@@ -67,10 +67,17 @@ class NavigationMenu extends Menu {
 	}
 
 	_itemMouseOver(e: MouseEvent) {
+		let opener;
 		if (isDesktop()) {
 			// respect mouseover only on desktop
-			const opener = e.target as OpenerStandardListItem;
-			let item = opener.associatedItem;
+			opener = e.target as OpenerStandardListItem;
+
+			// If the opener is a ui5-icon inside a Navigation item, we need to get the Navigation Item
+			if (opener?.hasAttribute("ui5-icon") && opener.parentElement) {
+				opener = opener.parentElement;
+			}
+
+			let item = (opener as OpenerStandardListItem).associatedItem;
 
 			if (!item) {
 				// for nested <a>
@@ -80,8 +87,15 @@ class NavigationMenu extends Menu {
 				}
 			}
 
+			// The opener should be the navigation list item, not the anchor inside it
+			if (opener?.hasAttribute("target")) {
+				opener = opener.parentElement;
+			}
+
 			// Opens submenu with 300ms delay
-			this._startOpenTimeout(item, opener);
+			if (item && opener) {
+				this._startOpenTimeout(item, opener);
+			}
 		}
 	}
 

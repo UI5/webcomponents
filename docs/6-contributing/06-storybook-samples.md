@@ -6,7 +6,7 @@ and to document all the potential states that a component can display.
 
 ## Running the Storybook App Locally
 
-To run the [UI5 Web Components Storybook app](https://sap.github.io/ui5-webcomponents/) locally and test your changes and samples, follow the steps below:
+To run the [UI5 Web Components Storybook app](https://ui5.github.io/webcomponents/) locally and test your changes and samples, follow the steps below:
 
 ### 1. In the root folder of the project, run the following command:
 

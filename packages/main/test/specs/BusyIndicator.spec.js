@@ -42,7 +42,7 @@ describe("BusyIndicator general interaction", () => {
 
 		innerFocusElement = await browser.$(innerFocusElement);
 
-		assert.strictEqual(await innerFocusElement.getAttribute("class"), "ui5-busy-indicator-busy-area", "The correct inner element is focused");
+		assert.ok((await innerFocusElement.getAttribute("class")).includes("ui5-busy-indicator-busy-area"), "The correct inner element is focused");
 	});
 
 	it("tests internal focused element attributes", async () => {

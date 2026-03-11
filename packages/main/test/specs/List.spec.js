@@ -562,7 +562,7 @@ describe("List Tests", () => {
 
 		await listItem.click();
 		const url = await browser.getUrl();
-		assert.strictEqual(url, "https://sap.github.io/ui5-webcomponents/playground/components", "Link target is accessible");
+		assert.strictEqual(url, "https://ui5.github.io/webcomponents/playground/components", "Link target is accessible");
 
 		await browser.url(`test/pages/List_test_page.html`);
 	});

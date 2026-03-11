@@ -16,7 +16,7 @@ We designed some components such as Title, Label, Badge, Button, Input, and a fe
     background: purple;
   }
 ```
-You can try this yourself on the Input [test page](https://sap.github.io/ui5-webcomponents/main/playground/main/pages/Input/). 
+You can try this yourself on the Input [test page](https://ui5.github.io/webcomponents/main/playground/main/pages/Input/). 
 
 Unfortunately, this can't be done for all components because it depends on the complexity of the DOM structure.
 

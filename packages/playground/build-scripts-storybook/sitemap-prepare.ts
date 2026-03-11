@@ -10,7 +10,7 @@ xml.att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 for (let key in data.stories) {
     const kind = data.stories[key]?.kind?.split('/')[0]?.toLowerCase();
     xml.ele('url')
-        .ele('loc', {}, `https://sap.github.io/ui5-webcomponents/playground/?path=/${kind}/${key}`)
+        .ele('loc', {}, `https://ui5.github.io/webcomponents/playground/?path=/${kind}/${key}`)
         .up()
         .ele('changefreq', {}, 'monthly');
 }

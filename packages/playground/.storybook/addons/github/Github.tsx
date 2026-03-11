@@ -15,7 +15,7 @@ const GithubLink = () => (
         <a style={{
             width: "20px",
             height: "20px",
-        }} href="https://github.com/SAP/ui5-webcomponents" target="_blank"
+        }} href="https://github.com/UI5/webcomponents" target="_blank"
             rel="noreferrer">
             <GithubSvg />
         </a>
@@ -23,7 +23,7 @@ const GithubLink = () => (
             textDecoration: "none",
             color: "inherit"
         }}
-            href={`https://github.com/SAP/ui5-webcomponents/tree/v${packageJson.version}`}
+            href={`https://github.com/UI5/webcomponents/tree/v${packageJson.version}`}
             target="_blank" rel="noreferrer"
         >
             v{packageJson.version}

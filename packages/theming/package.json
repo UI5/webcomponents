@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-theming",
-  "version": "1.24.17",
+  "version": "1.24.26",
   "description": "UI5 Web Components: webcomponents.theming",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -26,15 +26,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/theming"
   },
   "dependencies": {
-    "@sap-theming/theming-base-content": "11.12.0",
-    "@ui5/webcomponents-base": "1.24.17"
+    "@sap-theming/theming-base-content": "11.29.3",
+    "@ui5/webcomponents-base": "1.24.26"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "1.24.17",
+    "@ui5/webcomponents-tools": "1.24.26",
     "globby": "^13.1.1",
     "json-beautify": "^1.1.1",
     "nps": "^5.10.0",

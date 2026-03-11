@@ -29,10 +29,10 @@
 	color: var(--sapButton_Selected_TextColor);
 }
 
-:host([active][focused]),
-:host([design="Default"][active][focused]),
-:host([design="Transparent"][active][focused]),
-:host([design="Emphasized"][active][focused]) {
+:host([active]:not([disabled])),
+:host([design="Default"][active]:not([disabled])),
+:host([design="Transparent"][active]:not([disabled])),
+:host([design="Emphasized"][active]:not([disabled])) {
 	background: var(--sapButton_Active_Background);
 	border-color: var(--sapButton_Active_BorderColor);
 	color: var(--sapButton_Selected_TextColor);
@@ -53,7 +53,7 @@
 	color: var(--sapButton_Reject_Selected_TextColor);
 }
 
-:host([design="Negative"][active][focused]) {
+:host([design="Negative"][active]:not([disabled])){
 	background: var(--sapButton_Reject_Active_Background);
 	border-color: var(--sapButton_Reject_Active_BorderColor);
 	color: var(--sapButton_Reject_Active_TextColor);
@@ -78,7 +78,7 @@
 	color: var(--sapButton_Accept_Selected_TextColor);
 }
 
-:host([design="Positive"][active][focused]) {
+:host([design="Positive"][active]:not([disabled])) {
 	background: var(--sapButton_Accept_Active_Background);
 	border-color: var(--sapButton_Accept_Active_BorderColor);
 	color: var(--sapButton_Accept_Selected_TextColor);
@@ -103,7 +103,7 @@
 	color: var(--sapButton_Attention_Selected_TextColor);
 }
 
-:host([design="Attention"][active][focused]) {
+:host([design="Attention"][active]:not([disabled])){
 	background: var(--sapButton_Attention_Active_Background);
 	border-color: var(--sapButton_Attention_Active_BorderColor);
 	color: var(--sapButton_Attention_Active_TextColor);

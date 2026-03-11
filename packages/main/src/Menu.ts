@@ -33,6 +33,7 @@ import staticAreaMenuTemplate from "./generated/templates/MenuTemplate.lit.js";
 import {
 	MENU_BACK_BUTTON_ARIA_LABEL,
 	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents-icons/dist/nav-back.js";
 
@@ -371,6 +372,10 @@ class Menu extends UI5Element {
 		return parentMenuItem ? parentMenuItem.text : this.headerText;
 	}
 
+	get acessibleNameText() {
+		return Menu.i18nBundle.getText(MENU_POPOVER_ACCESSIBLE_NAME);
+	}
+
 	onBeforeRendering() {
 		this._prepareCurrentItems(this.items);
 
@@ -625,7 +630,7 @@ class Menu extends UI5Element {
 
 	_itemMouseOut(e: MouseEvent) {
 		if (isDesktop()) {
-			const opener = e.target as OpenerStandardListItem;
+			const opener = e.currentTarget as OpenerStandardListItem;
 			const item = opener.associatedItem;
 
 			clearTimeout(this._timeout);

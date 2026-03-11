@@ -419,7 +419,10 @@ class TabContainer extends UI5Element {
 
 		if (!this.shadowRoot!.contains(document.activeElement)) {
 			const focusStart = this._getRootTab(this._selectedTab);
-			this._itemNavigation.setCurrentItem(focusStart);
+
+			if (focusStart) {
+				this._itemNavigation.setCurrentItem(focusStart);
+			}
 		}
 
 		if (this.responsivePopover?.opened) {
@@ -776,7 +779,7 @@ class TabContainer extends UI5Element {
 		await renderFinished();
 
 		const selectedTopLevel = this._getRootTab(this._selectedTab);
-		selectedTopLevel.getTabInStripDomRef()!.focus();
+		selectedTopLevel?.getTabInStripDomRef()!.focus();
 	}
 
 	/**
@@ -988,13 +991,13 @@ class TabContainer extends UI5Element {
 		}
 	}
 
-	_getRootTab(tab: Tab) {
-		while (tab.hasAttribute("ui5-tab")) {
-			if (tab.parentElement!.hasAttribute("ui5-tabcontainer")) {
+	_getRootTab(tab: Tab | undefined): Tab | undefined {
+		while (tab?.hasAttribute("ui5-tab")) {
+			if (tab.parentElement?.hasAttribute("ui5-tabcontainer")) {
 				break;
 			}
 
-			tab = tab.parentElement as Tab;
+			tab = (tab.parentElement ?? undefined) as Tab | undefined;
 		}
 
 		return tab;
@@ -1004,7 +1007,7 @@ class TabContainer extends UI5Element {
 		// show end overflow
 		this._getEndOverflow().removeAttribute("hidden");
 		const selectedTab = this._getRootTab(this._selectedTab);
-		const selectedTabDomRef = selectedTab.getTabInStripDomRef()!;
+		const selectedTabDomRef = selectedTab?.getTabInStripDomRef() as ITab | undefined;
 		const containerWidth = this._getTabStrip().offsetWidth;
 
 		const selectedItemIndexAndWidth = this._getSelectedItemIndexAndWidth(itemsDomRefs, selectedTabDomRef);
@@ -1021,7 +1024,7 @@ class TabContainer extends UI5Element {
 	_updateStartAndEndOverflow(itemsDomRefs: Array<ITab>) {
 		let containerWidth = this._getTabStrip().offsetWidth;
 		const selectedTab = this._getRootTab(this._selectedTab);
-		const selectedTabDomRef = selectedTab.getTabInStripDomRef()!;
+		const selectedTabDomRef = selectedTab?.getTabInStripDomRef() as ITab | undefined;
 		const selectedItemIndexAndWidth = this._getSelectedItemIndexAndWidth(itemsDomRefs, selectedTabDomRef);
 		const hasStartOverflow = this._hasStartOverflow(containerWidth, itemsDomRefs, selectedItemIndexAndWidth);
 		const hasEndOverflow = this._hasEndOverflow(containerWidth, itemsDomRefs, selectedItemIndexAndWidth);
@@ -1140,7 +1143,14 @@ class TabContainer extends UI5Element {
 		return itemDomRef.offsetWidth + margins;
 	}
 
-	_getSelectedItemIndexAndWidth(itemsDomRefs: Array<ITab>, selectedTabDomRef: ITab) {
+	_getSelectedItemIndexAndWidth(itemsDomRefs: Array<ITab>, selectedTabDomRef: ITab | undefined) {
+		if (!selectedTabDomRef) {
+			return {
+				index: 0,
+				width: 0,
+			};
+		}
+
 		let index = itemsDomRefs.indexOf(selectedTabDomRef);
 		let width = selectedTabDomRef.offsetWidth;
 		let selectedSeparator;

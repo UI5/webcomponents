@@ -4,7 +4,6 @@
 
 .busyindicator2auto {
     width: 10rem;
-    border: 1px solid red
 }
 
 .busyindicator3auto {
@@ -31,4 +30,8 @@
 
 .busyindicator8auto {
     width: 100%;
+}
+
+.redBorder {
+    border: 1px solid red;
 }

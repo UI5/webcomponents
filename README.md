@@ -1,9 +1,9 @@
 ![UI5 icon](/docs/images/UI5_logo_wide.png)
 
 # UI5 Web Components
-[![CI](https://github.com/SAP/ui5-webcomponents/actions/workflows/test.yaml/badge.svg)](https://github.com/SAP/ui5-webcomponents/actions/workflows/test.yaml)
+[![CI](https://github.com/UI5/webcomponents/actions/workflows/test.yaml/badge.svg)](https://github.com/UI5/webcomponents/actions/workflows/test.yaml)
 [![npm Package Version](https://badge.fury.io/js/%40ui5%2Fwebcomponents.svg)](https://www.npmjs.com/package/@ui5/webcomponents)
-[![REUSE status](https://api.reuse.software/badge/github.com/SAP/ui5-webcomponents)](https://api.reuse.software/info/github.com/SAP/ui5-webcomponents)
+[![REUSE status](https://api.reuse.software/badge/github.com/UI5/webcomponents)](https://api.reuse.software/info/github.com/UI5/webcomponents)
 
 ## What are [UI5 Web Components](https://sap.github.io/ui5-webcomponents)?
 
@@ -20,7 +20,7 @@
  - **Elegant**: being *custom HTML elements*, they hide implementation complexity behind a single HTML tag, making them easily usable with the standard DOM APIs.
 
 ## Where can I see them in action?
-- [Playground and API Reference](https://sap.github.io/ui5-webcomponents/playground/)
+- [Playground and API Reference](https://ui5.github.io/webcomponents/playground/)
 
 ## More Resources
 - [UI5 Web Components Home Page](https://sap.github.io/ui5-webcomponents)
@@ -117,7 +117,7 @@ This section might be of interest to you mainly if you need to run or build the 
 - [Yarn](https://yarnpkg.com/en) (**version 1.22 or higher**)
 
 **Note:** The UI5 Web Components project is set up with the [Yarn](https://yarnpkg.com/) node package manager.
-This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/SAP/ui5-webcomponents). Note that npm [might add](https://github.com/npm/npm/pull/15900#issuecomment-315335381) this feature in the future.
+This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/UI5/webcomponents). Note that npm [might add](https://github.com/npm/npm/pull/15900#issuecomment-315335381) this feature in the future.
 
 ### Structure
 
@@ -174,7 +174,7 @@ For example, to find the Button component (that belongs to the `main` package), 
 None as of 1.3.0
 
 ## Known Issues
-No major bugs known. To report an issue or view the currently open issues, click [here](https://github.com/SAP/ui5-webcomponents/issues).
+No major bugs known. To report an issue or view the currently open issues, click [here](https://github.com/UI5/webcomponents/issues).
 
 ## Support
 We welcome all comments, suggestions, questions, and bug reports. Please follow our [Support Guidelines](/SUPPORT.md#-content) on how to report an issue, or chat with us in the `#webcomponents` channel of the [OpenUI5 Community Slack](https://ui5-slack-invite.cfapps.eu10.hana.ondemand.com/).

@@ -32,6 +32,8 @@ describe("Component Behavior", () => {
 			const sideNavigation = await browser.$("#sn1");
 
 			await browser.$("#item1").click();
+
+			await browser.$("#item21").scrollIntoView();
 			await browser.$("#item21").click();
 
 			assert.strictEqual(await input.getProperty("value"), "2", "Event is fired");
@@ -125,12 +127,14 @@ describe("Component Behavior", () => {
 			assert.strictEqual(await popoverItems[1].getAttribute("title"), await browser.$("#item21").getAttribute("title"), "Title is set as tooltip to sub item");
 
 			// clean up
+			await browser.keys("Escape");
 			await browser.$("#sn1").setProperty("collapsed", false);
 		});
 
 		it("tests the prevention of the ui5-selection-change event", async () => {
 			const items = await browser.$$(">>>#sn1 .ui5-sn-item");
 
+			await browser.$("#item21").scrollIntoView();
 			await browser.$("#item21").click();
 
 			assert.ok(await browser.$("#item21").getProperty("selected"), "new item is selected");
@@ -139,6 +143,7 @@ describe("Component Behavior", () => {
 			const selectionChangeCheckbox = await browser.$("#prevent-selection");
 			await selectionChangeCheckbox.click();
 
+			await browser.$("#item1").scrollIntoView();
 			await browser.$("#item1").click();
 
 			assert.notOk(await browser.$("#item1").getProperty("selected"), "new item is not selected");

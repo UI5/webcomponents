@@ -6,32 +6,32 @@ In this tutorial, you will learn how to add UI5 Web Components to your applicati
 
 Here are the steps to use pure UI5 Web Components in React:
 
-### Step 1. Create a new application. For example, with `create-react-app`.
+## Step 1. Create a new application. For example, with `create-react-app`.
 
 ```bash
 npx create-react-app ui5-web-components-application
 cd ui5-web-components-application
 ```
 
-### Step 2. Add UI5 Web Components.
+## Step 2. Add UI5 Web Components.
 
 ```bash
 npm install @ui5/webcomponents --save
 ```
 
-### Step 3. Import the components that you are going to use.
+## Step 3. Import the components that you are going to use.
 
 ```js
 import "@ui5/webcomponents/dist/Button.js";
 ```
 
-### Step 4. Use the imported elements in your application.
+## Step 4. Use the imported elements in your application.
 
 ```html
 <ui5-button>Hello world!</ui5-button>
 ```
 
-### Step 5. Launch the application.
+## Step 5. Launch the application.
 
 ```bash
 yarn start

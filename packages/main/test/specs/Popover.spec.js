@@ -220,7 +220,7 @@ describe("Popover general interaction", () => {
 
 		await btnOpenPopover.click();
 
-		assert.ok(await focusedButton.getProperty("focused"), "The button is focused.");
+		assert.ok(await focusedButton.matches(":focus"), "The button is focused.");
 
 		await browser.keys("Escape");
 	});
@@ -231,17 +231,17 @@ describe("Popover general interaction", () => {
 
 		await btn.click();
 
-		assert.ok(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.ok(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		// list
 		await browser.keys("Tab");
 
-		assert.notOk(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.notOk(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		// button
 		await browser.keys("Tab");
 
-		assert.notOk(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.notOk(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		// select
 		await browser.keys("Tab");
@@ -252,7 +252,7 @@ describe("Popover general interaction", () => {
 		// goes to first focusable again
 		await browser.keys("Tab");
 
-		assert.ok(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.ok(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		await browser.keys("Escape");
 	});
@@ -263,7 +263,7 @@ describe("Popover general interaction", () => {
 
 		await btn.click();
 
-		assert.ok(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.ok(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		// footer button
 		await browser.keys(["Shift", "Tab"]);
@@ -280,7 +280,7 @@ describe("Popover general interaction", () => {
 		// header button
 		await browser.keys(["Shift", "Tab"]);
 
-		assert.ok(await ff.getProperty("focused"), "The first focusable element is focused.");
+		assert.ok(await ff.matches(":focus"), "The first focusable element is focused.");
 
 		await browser.keys("Escape");
 	});

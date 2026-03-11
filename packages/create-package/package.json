@@ -1,6 +1,6 @@
 {
   "name": "@ui5/create-webcomponents-package",
-  "version": "1.24.17",
+  "version": "1.24.26",
   "description": "UI5 Web Components: create package",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/ui5-webcomponents.git",
+    "url": "https://github.com/UI5/webcomponents.git",
     "directory": "packages/create-package"
   },
   "dependencies": {

@@ -10,20 +10,20 @@ describe("ToggleButton general interaction", () => {
 		const result = await browser.$("#click-result");
 
 		await toggleButton.click();
-		assert.strictEqual(await result.getText(), "ToggleButton: false", "click event changed pressed state");
+		assert.strictEqual(await result.getText(), "ToggleButton: true", "click event changed pressed state");
 
 		await toggleButton.keys("Space");
-		assert.strictEqual(await result.getText(), "ToggleButton: true", "Space triggered click and changed pressed state");
+		assert.strictEqual(await result.getText(), "ToggleButton: false", "Space triggered click and changed pressed state");
 
 		await toggleButton.keys("Enter");
-		assert.strictEqual(await result.getText(), "ToggleButton: false", "Enter triggered click and changed pressed state");
+		assert.strictEqual(await result.getText(), "ToggleButton: true", "Enter triggered click and changed pressed state");
 	});
 
 	it("should not fire click event on a disabled togglebutton", async () => {
 		const toggleButton = await browser.$("#disabled-toggle-button").shadow$("button");
 		const result = await browser.$("#click-result");
 
-		assert.strictEqual(await result.getText(), "ToggleButton: false", "toggle state should not change");
+		assert.strictEqual(await result.getText(), "ToggleButton: true", "toggle state should not change");
 
 		// don't test space and enter, as wdio always fires a click but the browser not.
 

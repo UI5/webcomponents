@@ -6,8 +6,8 @@ import packageJson from "./package.json";
 
 console.log(process.env.DEPLOYMENT_TYPE); // eslint-disable-line
 
-const LATEST_URL_PARTH = "/ui5-webcomponents/";
-const NIGHTLY_URL_PARTH = "/ui5-webcomponents/v1/";
+const LATEST_URL_PARTH = "/webcomponents/";
+const NIGHTLY_URL_PARTH = "/webcomponents/v1/";
 
 const LATEST_DEPLOYMENT = process.env.DEPLOYMENT_TYPE === "latest";
 const DEVELOPMENT_ENVIRONMENT =  process.env.NODE_ENV === "development";
@@ -25,7 +25,7 @@ const getBaseURL = () => {
 const BASE_URL = getBaseURL();
 
 const getFullURL = () => {
-  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://sap.github.io${BASE_URL}`
+  return DEVELOPMENT_ENVIRONMENT ? `${BASE_URL}` : `https://ui5.github.io${BASE_URL}`
 }
 
 
@@ -39,7 +39,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://sap.github.io',
+  url: 'https://ui5.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: BASE_URL,
@@ -134,7 +134,7 @@ const config: Config = {
       copyright: `© Copyright ${new Date().getFullYear()}, SAP SE and UI5 Web Components Contributors`,
       logo: {
         alt: 'SAP Logo',
-        src: 'https://sap.github.io/ui5-webcomponents/img/footer/sap-1920-1440.svg',
+        src: 'https://ui5.github.io/webcomponents/img/footer/sap-1920-1440.svg',
         width: 160,
         height: 51,
       },
@@ -156,7 +156,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              to: 'https://github.com/SAP/ui5-webcomponents/',
+              to: 'https://github.com/UI5/webcomponents/',
             },
             // {
             //   html: `
@@ -170,7 +170,7 @@ const config: Config = {
             //     <a href="https://www.youtube.com/watch?v=9P5Jk4S3438&list=PLHUs_FUbq4dXkQpUt6b4eCXAAjiOg0IC-" target="_blank" rel="noreferrer noopener" aria-label="Youtube">
             //       <img src="img/footer/sap-youtube-1920-1440.svg" alt="Youtube" style="width: 2rem; height:2rem;margin-inline-end: 1rem;"/>
             //     </a>
-            //     <a href="https://sap.github.io/ui5-webcomponents/" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+            //     <a href="https://ui5.github.io/webcomponents/" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
             //       <img src="img/footer/sap-slack-1920-1440.svg" alt="GitHub" style="width: 2rem; height:2rem;margin-inline-end: 1rem;"/>
             //     </a>
             //   </div>
@@ -217,7 +217,7 @@ const config: Config = {
           items: [
             {
               label: 'Report Issue',
-              to: 'https://github.com/SAP/ui5-webcomponents/issues/new',
+              to: 'https://github.com/UI5/webcomponents/issues/new',
             },
             {
               label: 'Technical Questions',

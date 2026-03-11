@@ -222,4 +222,16 @@ describe("Menu Accessibility", () => {
 			"New File(selection prevented) Opens a file explorer",
 			"There is additional description added");
 	});
+
+	it("Menu popover has an accessible name", async () => {
+		await browser.url(`test/pages/Menu.html`);
+		const openButton = await browser.$("#btnOpen");
+
+		openButton.click();
+
+		const staticAreaItemClassName = await browser.getStaticAreaItemClassName("#menu");
+		const popover = await browser.$(`.${staticAreaItemClassName}`).shadow$("ui5-responsive-popover");
+
+		assert.strictEqual(await popover.getAttribute("accessible-name"), "Select an option from the menu", "test popover accessible name");
+	});
 });

@@ -150,7 +150,7 @@ const registerLocaleDataLoader = (localeId: string, loader: LocaleDataLoader) =>
 
 // register default loader for "en" from ui5 CDN (dev workflow without assets)
 registerLocaleDataLoader("en", async () => {
-	const cldrContent = await fetch(`https://sdk.openui5.org/1.120.5/resources/sap/ui/core/cldr/en.json`);
+	const cldrContent = await fetch(`https://sdk.openui5.org/1.120.17/resources/sap/ui/core/cldr/en.json`);
 	return cldrContent.json() as Promise<CLDRData>;
 });
 

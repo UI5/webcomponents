@@ -1786,6 +1786,28 @@ describe("MultiComboBox general interaction", () => {
 			assert.strictEqual(await $("#clear-icon-change-count").getText(), "0", "change event is not fired");
 			assert.strictEqual(await $("#clear-icon-input-count").getText(), "2", "input event is fired twice");
 		});
+
+		it("Should remove header when value state is reset", async () => {
+			await browser.url(`test/pages/MultiComboBox.html`);
+
+			const mcb = $("#mcb-error");
+			let staticAreaItemClassName = await browser.getStaticAreaItemClassName("#mcb-error");
+
+			// click on arrow
+			await mcb.shadow$("ui5-icon").click();
+
+			// arrow down twice
+			await browser.keys("ArrowDown");
+			await browser.keys("ArrowDown");
+
+			// Enter to make selection
+			await browser.keys("Space");
+
+			// get value state header
+			const valueStateHeader = await browser.$(`.${staticAreaItemClassName}`).shadow$("ui5-responsive-popover .ui5-valuestatemessage-header");
+
+			assert.notOk(await valueStateHeader.isExisting(), "Value state header should not be rendered");
+		});
 	});
 
 	describe("MultiComboBox Truncated Token", () => {

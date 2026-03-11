@@ -29,7 +29,7 @@ Here is the established release process of UI5 Web Components:
 - **Monthly Stable Releases** - 1.11.0, 1.12.0....1.18.0
 
 Every start of the month, a new minor version is released, which we consider stable and recommended for consumers.
-Check the [Release Timelines](https://github.com/SAP/ui5-webcomponents/projects?type=classic) for up-to-date information (the related content is at the bottom of the page).
+Check the [Release Timelines](https://github.com/UI5/webcomponents/projects?type=classic) for up-to-date information (the related content is at the bottom of the page).
 
 - **Weekly Preview Releases** - 1.13.0-rc.0, 1.13.0-rc.1, 1.13.0-rc.2 (preview of 1.13)
 
@@ -42,4 +42,4 @@ It's more up-to-date with the latest development and it's useful for consumers t
 Patches are released on-demand for high-priority issues.
 
 
-**Note:** The changelog of all releases can be found on the [GitHub Release](https://github.com/SAP/ui5-webcomponents/releases) page.
+**Note:** The changelog of all releases can be found on the [GitHub Release](https://github.com/UI5/webcomponents/releases) page.

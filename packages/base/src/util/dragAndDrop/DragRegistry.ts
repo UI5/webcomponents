@@ -1,4 +1,4 @@
-import type UI5Element from "../../UI5Element";
+import type UI5Element from "../../UI5Element.js";
 
 let draggedElement: HTMLElement | null = null;
 let globalHandlersAttached = false;

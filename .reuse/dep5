@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: OpenUI5
 Upstream-Contact: SAP OpenUI5 <openui5@sap.com>
-Source: https://github.com/SAP/ui5-webcomponents
+Source: https://github.com/UI5/webcomponents
 Disclaimer: The code in this project may include calls to APIs (“API Calls”) of
  SAP or third-party products or services developed outside of this project
  (“External Products”).

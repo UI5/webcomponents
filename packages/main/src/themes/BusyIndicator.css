@@ -75,13 +75,16 @@
 	height: inherit;
 }
 
-.ui5-busy-indicator-busy-area {
+.ui5-busy-indicator-busy-area.ui5-busy-indicator-busy-area-over-content {
 	position: absolute;
-	z-index: 99;
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
+	z-index: 99;
+}
+
+.ui5-busy-indicator-busy-area {
 	display: flex;
 	justify-content: center;
 	align-items: center;

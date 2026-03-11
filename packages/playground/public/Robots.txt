@@ -4,4 +4,4 @@ Disallow: /nogooglebot/
 User-agent: *
 Allow: /
 
-Sitemap: https://sap.github.io/ui5-webcomponents/playground/sitemap.xml
+Sitemap: https://ui5.github.io/webcomponents/playground/sitemap.xml

@@ -7,6 +7,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isTabNext } from "@ui5/webcomponents-base/dist/Keys.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
+import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import BusyIndicatorSize from "./types/BusyIndicatorSize.js";
 import BusyIndicatorTextPlacement from "./types/BusyIndicatorTextPlacement.js";
 import Label from "./Label.js";
@@ -164,6 +165,10 @@ class BusyIndicator extends UI5Element {
 			root: {
 				"ui5-busy-indicator-root": true,
 			},
+			busyArea: {
+				"ui5-busy-indicator-busy-area": true,
+				"ui5-busy-indicator-busy-area-over-content": this.hasContent,
+			},
 		};
 	}
 	get textPosition() {
@@ -171,6 +176,10 @@ class BusyIndicator extends UI5Element {
 			top: this.text && this.textPlacement === BusyIndicatorTextPlacement.Top,
 			bottom: this.text && this.textPlacement === BusyIndicatorTextPlacement.Bottom,
 		};
+	}
+
+	get hasContent() {
+		return willShowContent(Array.from(this.children));
 	}
 
 	onBeforeRendering() {

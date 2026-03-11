@@ -631,14 +631,14 @@ class Popover extends Popup {
 
 		// Restricts the arrow's translate value along each dimension,
 		// so that the arrow does not clip over the popover's rounded borders.
-		const safeRangeForArrowY = popoverSize.height / 2 - borderRadius - ARROW_SIZE / 2;
+		const safeRangeForArrowY = popoverSize.height / 2 - borderRadius - ARROW_SIZE / 2 - 2;
 		arrowTranslateY = clamp(
 			arrowTranslateY,
 			-safeRangeForArrowY,
 			safeRangeForArrowY,
 		);
 
-		const safeRangeForArrowX = popoverSize.width / 2 - borderRadius - ARROW_SIZE / 2;
+		const safeRangeForArrowX = popoverSize.width / 2 - borderRadius - ARROW_SIZE / 2 - 2;
 		arrowTranslateX = clamp(
 			arrowTranslateX,
 			-safeRangeForArrowX,
