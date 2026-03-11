@@ -243,6 +243,30 @@ describe("MultiInput Web Component", () => {
 		cy.get("@valueHelpTrigger")
 			.should("have.been.calledTwice");
 	});
+
+	it("keeps focused state when clicking on value help icon", () => {
+		cy.mount(
+			<MultiInput showValueHelpIcon={true}>
+				<Token slot="tokens" text="Amet"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.as("innerInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-icon]")
+			.realMouseDown();
+
+		cy.get("@multiInput")
+			.should("have.prop", "focused", true);
+	});
 })
 
 describe("MultiInput tokens", () => {

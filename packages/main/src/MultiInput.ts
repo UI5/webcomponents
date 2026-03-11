@@ -32,7 +32,6 @@ import type Token from "./Token.js";
 import type Tokenizer from "./Tokenizer.js";
 import { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
-import type Icon from "./Icon.js";
 
 import type {
 	InputSelectionChangeEventDetail as MultiInputSelectionChangeEventDetail,
@@ -215,11 +214,11 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	valueHelpMouseDown(e: MouseEvent) {
-		const target = e.target as Icon;
+		e.preventDefault();
+		this.focus();
 		this.closeValueStatePopover();
 		this.tokenizer.open = false;
 		this._valueHelpIconPressed = true;
-		target.focus();
 	}
 
 	_tokenizerFocusOut(e: FocusEvent) {
