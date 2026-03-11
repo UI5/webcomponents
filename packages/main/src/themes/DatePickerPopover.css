@@ -37,3 +37,8 @@
 .ui5-dt-picker-action {
 	margin: 0.25rem;
 }
+
+[ui5-responsive-popover]::part(header) {
+	font-family: var(--_ui5_button_fontFamily);
+	text-align: left;
+}
