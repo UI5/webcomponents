@@ -1,12 +1,31 @@
 import { useEffect, useRef } from 'react';
 import sdk from '@stackblitz/sdk';
 
-export default function NewEditor({ files = [], mainFile = "main.js", standalone = false, mainFileSelected = false }) {
+// Delay before embedding to ensure DOM is ready and prevent race conditions
+const EMBED_DELAY_MS = 50;
+
+/**
+ * StackBlitz editor component for interactive UI5 Web Components samples.
+ *
+ * @param {Object} props
+ * @param {Array<{name: string, content: string}>} props.files - Array of files to include in the project
+ * @param {string} props.mainFile - The main file to highlight (default: "index.js")
+ * @param {boolean} props.mainFileSelected - Whether to open mainFile by default (default: false, opens index.html)
+ */
+export default function NewEditor({ files = [], mainFile = "index.js", mainFileSelected = false }) {
 	const editorRef = useRef(null);
 	const vmRef = useRef(null);
 
 	useEffect(() => {
-		if (!editorRef.current) return;
+		const element = editorRef.current;
+
+		// Ensure element exists and is in the DOM
+		if (!element || !document.contains(element)) {
+			return;
+		}
+
+		// Clear any existing content (important for navigation)
+		element.innerHTML = '';
 
 		// Prepare project files from files array
 		const projectFiles = {};
@@ -22,12 +41,13 @@ export default function NewEditor({ files = [], mainFile = "main.js", standalone
 				description: 'UI5 Web Components interactive sample',
 				dependencies: {
 					"@ui5/webcomponents": "^2.20.0",
+					"@ui5/webcomponents-fiori": "^2.20.0",
 					"@ui5/webcomponents-icons": "^2.20.0"
 				}
 			}, null, 2);
 		}
 
-		// Add package.json with UI5 Web Components dependencies
+		// Add index.js entry point if missing
 		if (!projectFiles['index.js']) {
 			projectFiles['index.js'] = "";
 		}
@@ -47,25 +67,52 @@ export default function NewEditor({ files = [], mainFile = "main.js", standalone
 			},
 		};
 
-		// Embed StackBlitz
-		sdk.embedProject(editorRef.current, project, {
-			forceEmbedLayout: true,
-			clickToLoad: false,
-			openFile: mainFileSelected ? mainFile : 'index.html',
-			view: 'preview',
-			theme: 'light',
-			height: 600,
-			hideNavigation: false,
-			hideDevTools: false,
-		}).then(vm => {
-			vmRef.current = vm;
-		});
+		// Track if component is still mounted
+		let isMounted = true;
+
+		// Embed StackBlitz with a delay to ensure DOM is ready and prevent race conditions
+		const embedTimeout = setTimeout(() => {
+			// Double-check element is still valid before embedding
+			if (!isMounted || !element || !document.contains(element)) {
+				return;
+			}
+
+			sdk.embedProject(element, project, {
+				forceEmbedLayout: true,
+				clickToLoad: false,
+				openFile: mainFileSelected ? mainFile : 'index.html',
+				view: 'preview',
+				theme: 'light',
+				height: 600,
+				hideNavigation: false,
+				hideDevTools: false,
+			}).then(vm => {
+				if (isMounted) {
+					vmRef.current = vm;
+				}
+			}).catch(err => {
+				// Suppress errors during navigation/unmount
+				if (isMounted) {
+					console.error('StackBlitz embed error:', err);
+				}
+			});
+		}, EMBED_DELAY_MS);
 
 		// Cleanup
 		return () => {
-			if (vmRef.current) {
-				vmRef.current = null;
+			isMounted = false;
+			clearTimeout(embedTimeout);
+
+			// Remove the iframe that StackBlitz created
+			if (element && document.contains(element)) {
+				const iframe = element.querySelector('iframe');
+				if (iframe) {
+					iframe.remove();
+				}
+				element.innerHTML = '';
 			}
+
+			vmRef.current = null;
 		};
 	}, [files, mainFile, mainFileSelected]);
 
@@ -74,7 +121,7 @@ export default function NewEditor({ files = [], mainFile = "main.js", standalone
 			ref={editorRef}
 			style={{
 				width: '100%',
-				height: standalone ? '100vh' : '600px',
+				height: '600px',
 				border: '1px solid #ddd',
 				borderRadius: '4px',
 			}}
