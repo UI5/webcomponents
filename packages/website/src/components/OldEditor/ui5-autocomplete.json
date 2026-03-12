@@ -1,0 +1,5777 @@
+{
+  "ui5-avatar": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "color-scheme": [
+        "Auto",
+        "Accent1",
+        "Accent2",
+        "Accent3",
+        "Accent4",
+        "Accent5",
+        "Accent6",
+        "Accent7",
+        "Accent8",
+        "Accent9",
+        "Accent10",
+        "Placeholder",
+        "Transparent"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "fallback-icon": "null",
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "initials": [
+        "string",
+        "undefined"
+      ],
+      "interactive": [
+        "",
+        "interactive"
+      ],
+      "mode": [
+        "Image",
+        "Decorative",
+        "Interactive"
+      ],
+      "shape": [
+        "Circle",
+        "Square"
+      ],
+      "size": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    }
+  },
+  "ui5-avatar-badge": {
+    "attrs": {
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-avatar-group": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "color-scheme": "null",
+      "hidden-items": "null",
+      "type": [
+        "Group",
+        "Individual"
+      ]
+    }
+  },
+  "ui5-bar": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "None",
+        "Toolbar"
+      ],
+      "design": [
+        "Header",
+        "Subheader",
+        "Footer",
+        "FloatingFooter"
+      ]
+    }
+  },
+  "ui5-breadcrumbs": {
+    "attrs": {
+      "design": [
+        "Standard",
+        "NoCurrentPage"
+      ],
+      "separators": [
+        "Slash",
+        "BackSlash",
+        "DoubleBackSlash",
+        "DoubleGreaterThan",
+        "DoubleSlash",
+        "GreaterThan"
+      ]
+    }
+  },
+  "ui5-breadcrumbs-item": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-busy-indicator": {
+    "attrs": {
+      "active": [
+        "",
+        "active"
+      ],
+      "delay": "null",
+      "size": [
+        "S",
+        "M",
+        "L"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "text-placement": [
+        "Top",
+        "Bottom"
+      ]
+    }
+  },
+  "ui5-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "Button",
+        "Link"
+      ],
+      "design": [
+        "Transparent",
+        "Positive",
+        "Negative",
+        "Default",
+        "Emphasized",
+        "Attention"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "submits": [
+        "",
+        "submits"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Button",
+        "Submit",
+        "Reset"
+      ]
+    }
+  },
+  "ui5-button-badge": {
+    "attrs": {
+      "design": [
+        "InlineText",
+        "OverlayText",
+        "AttentionDot"
+      ],
+      "text": "null"
+    }
+  },
+  "ui5-calendar": {
+    "attrs": {
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "hide-week-numbers": [
+        "",
+        "hide-week-numbers"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "selection-mode": [
+        "Single",
+        "Multiple",
+        "Range"
+      ],
+      "value-format": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-date": {
+    "attrs": {
+      "value": "null"
+    }
+  },
+  "ui5-date-range": {
+    "attrs": {
+      "end-value": "null",
+      "start-value": "null"
+    }
+  },
+  "ui5-calendar-legend": {
+    "attrs": {
+      "hide-non-working-day": [
+        "",
+        "hide-non-working-day"
+      ],
+      "hide-selected-day": [
+        "",
+        "hide-selected-day"
+      ],
+      "hide-today": [
+        "",
+        "hide-today"
+      ],
+      "hide-working-day": [
+        "",
+        "hide-working-day"
+      ]
+    }
+  },
+  "ui5-calendar-legend-item": {
+    "attrs": {
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "None",
+        "Today",
+        "Selected",
+        "Working",
+        "NonWorking",
+        "Type01",
+        "Type02",
+        "Type03",
+        "Type04",
+        "Type05",
+        "Type06",
+        "Type07",
+        "Type08",
+        "Type09",
+        "Type10",
+        "Type11",
+        "... 8 more ...",
+        "Type20"
+      ]
+    }
+  },
+  "undefined": {
+    "attrs": {
+      "effective-dir": "null",
+      "is-ui5-element": "null"
+    }
+  },
+  "ui5-card": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null"
+    }
+  },
+  "ui5-card-header": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "interactive": [
+        "",
+        "interactive"
+      ],
+      "subtitle-text": [
+        "string",
+        "undefined"
+      ],
+      "title-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-carousel": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "arrows-placement": [
+        "Content",
+        "Navigation"
+      ],
+      "background-design": [
+        "Transparent",
+        "Solid",
+        "Translucent"
+      ],
+      "cyclic": [
+        "",
+        "cyclic"
+      ],
+      "hide-navigation-arrows": [
+        "",
+        "hide-navigation-arrows"
+      ],
+      "hide-page-indicator": [
+        "",
+        "hide-page-indicator"
+      ],
+      "items-per-page": "null",
+      "page-indicator-background-design": [
+        "Transparent",
+        "Solid",
+        "Translucent"
+      ],
+      "page-indicator-border-design": [
+        "None",
+        "Solid"
+      ],
+      "page-indicator-type": [
+        "Default",
+        "Numeric"
+      ],
+      "visible-items-indices": "null"
+    }
+  },
+  "ui5-checkbox": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "display-only": [
+        "",
+        "display-only"
+      ],
+      "indeterminate": [
+        "",
+        "indeterminate"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-color-palette": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-color-palette-item": {
+    "attrs": {
+      "selected": [
+        "",
+        "selected"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-color-palette-popover": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "default-color": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "opener": [
+        "string",
+        "HTMLElement",
+        "null",
+        "undefined"
+      ],
+      "placement": [
+        "Top",
+        "Bottom",
+        "Start",
+        "End"
+      ],
+      "show-default-color": [
+        "",
+        "show-default-color"
+      ],
+      "show-more-colors": [
+        "",
+        "show-more-colors"
+      ],
+      "show-recent-colors": [
+        "",
+        "show-recent-colors"
+      ]
+    }
+  },
+  "ui5-color-picker": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "simplified": [
+        "",
+        "simplified"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-combobox": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "selected-value": [
+        "string",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-cb-item": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-cb-item-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-date-picker": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "date-value": "null",
+      "date-value-async": "null",
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "hide-week-numbers": [
+        "",
+        "hide-week-numbers"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null",
+      "value-format": [
+        "string",
+        "undefined"
+      ],
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-daterange-picker": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "date-value": "null",
+      "date-value-async": "null",
+      "date-value-utc": "null",
+      "delimiter": "null",
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "end-date-value": "null",
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "hide-week-numbers": [
+        "",
+        "hide-week-numbers"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "start-date-value": "null",
+      "value": "null",
+      "value-format": [
+        "string",
+        "undefined"
+      ],
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-datetime-input": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-suggestions": [
+        "",
+        "show-suggestions"
+      ],
+      "type": [
+        "Text",
+        "Email",
+        "Number",
+        "Password",
+        "Tel",
+        "URL",
+        "Search"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-datetime-picker": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "date-value": "null",
+      "date-value-async": "null",
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "hide-week-numbers": [
+        "",
+        "hide-week-numbers"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null",
+      "value-format": [
+        "string",
+        "undefined"
+      ],
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-daypicker": {
+    "attrs": {
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "value-format": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-dialog": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "None",
+        "Dialog",
+        "AlertDialog"
+      ],
+      "draggable": [
+        "",
+        "draggable"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "initial-focus": [
+        "string",
+        "undefined"
+      ],
+      "open": "null",
+      "prevent-focus-restore": [
+        "",
+        "prevent-focus-restore"
+      ],
+      "prevent-initial-focus": [
+        "",
+        "prevent-initial-focus"
+      ],
+      "resizable": [
+        "",
+        "resizable"
+      ],
+      "state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "stretch": [
+        "",
+        "stretch"
+      ]
+    }
+  },
+  "ui5-drop-indicator": {
+    "attrs": {
+      "orientation": [
+        "Vertical",
+        "Horizontal"
+      ],
+      "owner-reference": [
+        "HTMLElement",
+        "null"
+      ],
+      "placement": [
+        "On",
+        "Before",
+        "After"
+      ],
+      "target-reference": [
+        "HTMLElement",
+        "null"
+      ]
+    }
+  },
+  "ui5-dynamic-date-range": {
+    "attrs": {
+      "options": "null",
+      "value": [
+        "DynamicDateRangeValue",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-expandable-text": {
+    "attrs": {
+      "empty-indicator-mode": [
+        "On",
+        "Off"
+      ],
+      "max-characters": "null",
+      "overflow-mode": [
+        "InPlace",
+        "Popover"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-file-uploader": {
+    "attrs": {
+      "accept": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "files": "null",
+      "hide-input": [
+        "",
+        "hide-input"
+      ],
+      "max-file-size": [
+        "number",
+        "undefined"
+      ],
+      "multiple": [
+        "",
+        "multiple"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-form": {
+    "attrs": {
+      "accessible-mode": [
+        "Display",
+        "Edit"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "empty-span": "null",
+      "header-level": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "item-spacing": [
+        "Normal",
+        "Large"
+      ],
+      "label-span": "null",
+      "layout": "null"
+    }
+  },
+  "ui5-form-group": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "column-span": [
+        "number",
+        "undefined"
+      ],
+      "header-level": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-form-item": {
+    "attrs": {
+      "column-span": [
+        "number",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-icon": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "design": [
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information",
+        "Default",
+        "Contrast",
+        "Neutral",
+        "NonInteractive"
+      ],
+      "mode": [
+        "Image",
+        "Decorative",
+        "Interactive"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "show-tooltip": [
+        "",
+        "show-tooltip"
+      ]
+    }
+  },
+  "ui5-input": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-suggestions": [
+        "",
+        "show-suggestions"
+      ],
+      "type": [
+        "Text",
+        "Email",
+        "Number",
+        "Password",
+        "Tel",
+        "URL",
+        "Search"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-label": {
+    "attrs": {
+      "for": [
+        "string",
+        "undefined"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "show-colon": [
+        "",
+        "show-colon"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-link": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "Button",
+        "Link"
+      ],
+      "design": [
+        "Default",
+        "Emphasized",
+        "Subtle"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "interactive-area-size": [
+        "Normal",
+        "Large"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-list": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "List",
+        "Menu",
+        "Tree",
+        "ListBox"
+      ],
+      "footer-text": [
+        "string",
+        "undefined"
+      ],
+      "growing": [
+        "None",
+        "Button",
+        "Scroll"
+      ],
+      "growing-button-text": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "indent": [
+        "",
+        "indent"
+      ],
+      "list-items": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "selection-mode": [
+        "None",
+        "Single",
+        "Multiple",
+        "SingleStart",
+        "SingleEnd",
+        "SingleAuto",
+        "Delete"
+      ],
+      "separators": [
+        "None",
+        "All",
+        "Inner"
+      ],
+      "sticky-header": [
+        "",
+        "sticky-header"
+      ]
+    }
+  },
+  "ui5-li-custom": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-li-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-li-group-header": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-li": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "additional-text-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "description": [
+        "string",
+        "undefined"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "icon-end": [
+        "",
+        "icon-end"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-menu": {
+    "attrs": {
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "horizontal-align": [
+        "Start",
+        "End",
+        "Center",
+        "Stretch"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "open": [
+        "",
+        "open"
+      ],
+      "opener": [
+        "string",
+        "HTMLElement",
+        "null",
+        "undefined"
+      ],
+      "placement": [
+        "Top",
+        "Bottom",
+        "Start",
+        "End"
+      ]
+    }
+  },
+  "ui5-menu-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-menu-item-group": {
+    "attrs": {
+      "check-mode": [
+        "None",
+        "Single",
+        "Multiple"
+      ]
+    }
+  },
+  "ui5-menu-separator": {
+    "attrs": {}
+  },
+  "ui5-message-strip": {
+    "attrs": {
+      "color-scheme": "null",
+      "design": [
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information",
+        "ColorSet1",
+        "ColorSet2"
+      ],
+      "hide-close-button": [
+        "",
+        "hide-close-button"
+      ],
+      "hide-icon": [
+        "",
+        "hide-icon"
+      ]
+    }
+  },
+  "ui5-monthpicker": {
+    "attrs": {
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "value-format": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-multi-combobox": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "no-validation": [
+        "",
+        "no-validation"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "selected-values": "null",
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-select-all": [
+        "",
+        "show-select-all"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-mcb-item": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-mcb-item-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-multi-input": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-suggestions": [
+        "",
+        "show-suggestions"
+      ],
+      "show-value-help-icon": [
+        "",
+        "show-value-help-icon"
+      ],
+      "type": [
+        "Text",
+        "Email",
+        "Number",
+        "Password",
+        "Tel",
+        "URL",
+        "Search"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-option": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-option-custom": {
+    "attrs": {
+      "display-text": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-panel": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "Complementary",
+        "Form",
+        "Region"
+      ],
+      "collapsed": [
+        "",
+        "collapsed"
+      ],
+      "fixed": [
+        "",
+        "fixed"
+      ],
+      "header-level": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "no-animation": [
+        "",
+        "no-animation"
+      ],
+      "sticky-header": [
+        "",
+        "sticky-header"
+      ]
+    }
+  },
+  "ui5-popover": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "None",
+        "Dialog",
+        "AlertDialog"
+      ],
+      "allow-target-overlap": [
+        "",
+        "allow-target-overlap"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "hide-arrow": [
+        "",
+        "hide-arrow"
+      ],
+      "horizontal-align": [
+        "Start",
+        "End",
+        "Center",
+        "Stretch"
+      ],
+      "initial-focus": [
+        "string",
+        "undefined"
+      ],
+      "modal": [
+        "",
+        "modal"
+      ],
+      "open": "null",
+      "opener": "null",
+      "placement": [
+        "Top",
+        "Bottom",
+        "Start",
+        "End"
+      ],
+      "prevent-focus-restore": [
+        "",
+        "prevent-focus-restore"
+      ],
+      "prevent-initial-focus": [
+        "",
+        "prevent-initial-focus"
+      ],
+      "resizable": [
+        "",
+        "resizable"
+      ],
+      "vertical-align": [
+        "Top",
+        "Bottom",
+        "Center",
+        "Stretch"
+      ]
+    }
+  },
+  "ui5-progress-indicator": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "display-value": [
+        "string",
+        "undefined"
+      ],
+      "hide-value": [
+        "",
+        "hide-value"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-radio-button": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-range-slider": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "editable-tooltip": [
+        "",
+        "editable-tooltip"
+      ],
+      "end-value": "null",
+      "label-interval": "null",
+      "max": "null",
+      "min": "null",
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "show-tickmarks": [
+        "",
+        "show-tickmarks"
+      ],
+      "show-tooltip": [
+        "",
+        "show-tooltip"
+      ],
+      "start-value": "null",
+      "step": "null"
+    }
+  },
+  "ui5-rating-indicator": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "max": "null",
+      "rated-icon": "null",
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "size": [
+        "S",
+        "M",
+        "L"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "unrated-icon": "null",
+      "value": "null"
+    }
+  },
+  "ui5-responsive-popover": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "None",
+        "Dialog",
+        "AlertDialog"
+      ],
+      "allow-target-overlap": [
+        "",
+        "allow-target-overlap"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "hide-arrow": [
+        "",
+        "hide-arrow"
+      ],
+      "horizontal-align": [
+        "Start",
+        "End",
+        "Center",
+        "Stretch"
+      ],
+      "initial-focus": [
+        "string",
+        "undefined"
+      ],
+      "modal": [
+        "",
+        "modal"
+      ],
+      "open": "null",
+      "opener": "null",
+      "placement": [
+        "Top",
+        "Bottom",
+        "Start",
+        "End"
+      ],
+      "prevent-focus-restore": [
+        "",
+        "prevent-focus-restore"
+      ],
+      "prevent-initial-focus": [
+        "",
+        "prevent-initial-focus"
+      ],
+      "resizable": [
+        "",
+        "resizable"
+      ],
+      "vertical-align": [
+        "Top",
+        "Bottom",
+        "Center",
+        "Stretch"
+      ]
+    }
+  },
+  "ui5-segmented-button": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "items-fit-content": [
+        "",
+        "items-fit-content"
+      ],
+      "selected-items": "null",
+      "selection-mode": [
+        "Single",
+        "Multiple"
+      ]
+    }
+  },
+  "ui5-segmented-button-item": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-select": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "selected-option": "null",
+      "text-separator": [
+        "Bullet",
+        "Dash",
+        "VerticalLine"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-slider": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "editable-tooltip": [
+        "",
+        "editable-tooltip"
+      ],
+      "label-interval": "null",
+      "max": "null",
+      "min": "null",
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "show-tickmarks": [
+        "",
+        "show-tickmarks"
+      ],
+      "show-tooltip": [
+        "",
+        "show-tooltip"
+      ],
+      "step": "null",
+      "value": "null"
+    }
+  },
+  "ui5-slider-handle": {
+    "attrs": {
+      "active": [
+        "",
+        "active"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "max": "null",
+      "min": "null",
+      "value": "null"
+    }
+  },
+  "ui5-slider-tooltip": {
+    "attrs": {}
+  },
+  "ui5-special-date": {
+    "attrs": {
+      "type": [
+        "None",
+        "Today",
+        "Selected",
+        "Working",
+        "NonWorking",
+        "Type01",
+        "Type02",
+        "Type03",
+        "Type04",
+        "Type05",
+        "Type06",
+        "Type07",
+        "Type08",
+        "Type09",
+        "Type10",
+        "Type11",
+        "... 8 more ...",
+        "Type20"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-split-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "active-arrow-button": [
+        "",
+        "active-arrow-button"
+      ],
+      "design": [
+        "Transparent",
+        "Positive",
+        "Negative",
+        "Default",
+        "Emphasized",
+        "Attention"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-step-input": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "max": [
+        "number",
+        "undefined"
+      ],
+      "min": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "step": "null",
+      "value": "null",
+      "value-precision": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-suggestion-item": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-suggestion-item-custom": {
+    "attrs": {
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-suggestion-item-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-li-suggestion-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "additional-text-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "description": [
+        "string",
+        "undefined"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "icon-end": [
+        "",
+        "icon-end"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-switch": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "design": [
+        "Textual",
+        "Graphical"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "text-off": [
+        "string",
+        "undefined"
+      ],
+      "text-on": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-tab": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "design": [
+        "Positive",
+        "Critical",
+        "Negative",
+        "Default",
+        "Neutral"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-tabcontainer": {
+    "attrs": {
+      "all-items": "null",
+      "collapsed": [
+        "",
+        "collapsed"
+      ],
+      "content-background-design": [
+        "Transparent",
+        "Solid",
+        "Translucent"
+      ],
+      "header-background-design": [
+        "Transparent",
+        "Solid",
+        "Translucent"
+      ],
+      "no-auto-selection": [
+        "",
+        "no-auto-selection"
+      ],
+      "overflow-mode": [
+        "End",
+        "StartAndEnd"
+      ],
+      "tab-layout": [
+        "Standard",
+        "Inline"
+      ]
+    }
+  },
+  "ui5-tab-separator": {
+    "attrs": {}
+  },
+  "ui5-table": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "busy": [
+        "",
+        "busy"
+      ],
+      "busy-delay": "null",
+      "growing": [
+        "Button",
+        "Scroll",
+        "None"
+      ],
+      "growing-button-subtext": [
+        "string",
+        "undefined"
+      ],
+      "growing-button-text": [
+        "string",
+        "undefined"
+      ],
+      "hide-no-data": [
+        "",
+        "hide-no-data"
+      ],
+      "mode": [
+        "None",
+        "SingleSelect",
+        "MultiSelect"
+      ],
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "sticky-column-header": [
+        "",
+        "sticky-column-header"
+      ]
+    }
+  },
+  "ui5-table-cell": {
+    "attrs": {}
+  },
+  "ui5-table-growing": {
+    "attrs": {
+      "mode": [
+        "Button",
+        "Scroll"
+      ],
+      "subtext": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-table-header-cell": {
+    "attrs": {
+      "horizontal-align": [
+        "Start",
+        "End",
+        "Center",
+        "Left",
+        "Right",
+        "undefined"
+      ],
+      "importance": "null",
+      "min-width": [
+        "string",
+        "undefined"
+      ],
+      "popin-hidden": [
+        "",
+        "popin-hidden"
+      ],
+      "popin-text": [
+        "string",
+        "undefined"
+      ],
+      "sort-indicator": [
+        "None",
+        "Ascending",
+        "Descending"
+      ],
+      "width": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-table-header-cell-action-ai": {
+    "attrs": {}
+  },
+  "ui5-table-header-row": {
+    "attrs": {
+      "sticky": [
+        "",
+        "sticky"
+      ]
+    }
+  },
+  "ui5-table-row": {
+    "attrs": {
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "type": [
+        "Inactive",
+        "Active"
+      ]
+    }
+  },
+  "ui5-table-row-action": {
+    "attrs": {
+      "icon": "null",
+      "invisible": [
+        "",
+        "invisible"
+      ],
+      "text": "null"
+    }
+  },
+  "ui5-table-row-action-navigation": {
+    "attrs": {
+      "interactive": [
+        "",
+        "interactive"
+      ],
+      "invisible": [
+        "",
+        "invisible"
+      ]
+    }
+  },
+  "ui5-table-selection": {
+    "attrs": {
+      "mode": [
+        "None",
+        "Single",
+        "Multiple"
+      ],
+      "selected": "null"
+    }
+  },
+  "ui5-table-selection-multi": {
+    "attrs": {
+      "behavior": [
+        "RowSelector",
+        "RowOnly"
+      ],
+      "header-selector": [
+        "SelectAll",
+        "ClearAll"
+      ],
+      "selected": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-table-selection-single": {
+    "attrs": {
+      "behavior": [
+        "RowSelector",
+        "RowOnly"
+      ],
+      "selected": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-table-virtualizer": {
+    "attrs": {
+      "extra-rows": "null",
+      "row-count": "null",
+      "row-height": "null"
+    }
+  },
+  "ui5-tag": {
+    "attrs": {
+      "color-scheme": "null",
+      "design": [
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information",
+        "Neutral",
+        "Set1",
+        "Set2"
+      ],
+      "hide-state-icon": [
+        "",
+        "hide-state-icon"
+      ],
+      "interactive": [
+        "",
+        "interactive"
+      ],
+      "size": [
+        "S",
+        "L"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-text": {
+    "attrs": {
+      "empty-indicator-mode": [
+        "On",
+        "Off"
+      ],
+      "max-lines": "null"
+    }
+  },
+  "ui5-textarea": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "growing": [
+        "",
+        "growing"
+      ],
+      "growing-max-rows": "null",
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "rows": "null",
+      "show-exceeded-text": [
+        "",
+        "show-exceeded-text"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-time-picker": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "date-value": "null",
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "value": "null",
+      "value-format": [
+        "string",
+        "undefined"
+      ],
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-time-picker-clock": {
+    "attrs": {}
+  },
+  "ui5-time-selection-clocks": {
+    "attrs": {
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-time-selection-inputs": {
+    "attrs": {
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-title": {
+    "attrs": {
+      "level": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "size": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-toast": {
+    "attrs": {
+      "duration": "null",
+      "open": [
+        "",
+        "open"
+      ],
+      "placement": [
+        "TopStart",
+        "TopCenter",
+        "TopEnd",
+        "MiddleStart",
+        "MiddleCenter",
+        "MiddleEnd",
+        "BottomStart",
+        "BottomCenter",
+        "BottomEnd"
+      ]
+    }
+  },
+  "ui5-toggle-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "Button",
+        "Link"
+      ],
+      "design": [
+        "Transparent",
+        "Positive",
+        "Negative",
+        "Default",
+        "Emphasized",
+        "Attention"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "pressed": [
+        "",
+        "pressed"
+      ],
+      "submits": [
+        "",
+        "submits"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Button",
+        "Submit",
+        "Reset"
+      ]
+    }
+  },
+  "ui5-toggle-spin-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "Button",
+        "Link"
+      ],
+      "design": [
+        "Transparent",
+        "Positive",
+        "Negative",
+        "Default",
+        "Emphasized",
+        "Attention"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "pressed": [
+        "",
+        "pressed"
+      ],
+      "submits": [
+        "",
+        "submits"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Button",
+        "Submit",
+        "Reset"
+      ]
+    }
+  },
+  "ui5-token": {
+    "attrs": {
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-tokenizer": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "multi-line": [
+        "",
+        "multi-line"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "show-clear-all": [
+        "",
+        "show-clear-all"
+      ]
+    }
+  },
+  "ui5-toolbar": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "align-content": [
+        "Start",
+        "End"
+      ],
+      "design": [
+        "Transparent",
+        "Solid"
+      ]
+    }
+  },
+  "ui5-toolbar-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "design": [
+        "Transparent",
+        "Positive",
+        "Negative",
+        "Default",
+        "Emphasized",
+        "Attention"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ],
+      "show-overflow-text": [
+        "",
+        "show-overflow-text"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "width": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-toolbar-item": {
+    "attrs": {
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ]
+    }
+  },
+  "ui5-toolbar-select": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "width": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-toolbar-select-option": {
+    "attrs": {
+      "selected": "null"
+    }
+  },
+  "ui5-toolbar-separator": {
+    "attrs": {
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ]
+    }
+  },
+  "ui5-toolbar-spacer": {
+    "attrs": {
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ],
+      "width": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-tree": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "footer-text": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "selection-mode": [
+        "None",
+        "Single",
+        "Multiple",
+        "SingleStart",
+        "SingleEnd",
+        "SingleAuto",
+        "Delete",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-tree-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "additional-text-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "expanded": [
+        "",
+        "expanded"
+      ],
+      "has-children": [
+        "",
+        "has-children"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "indeterminate": [
+        "",
+        "indeterminate"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-tree-item-custom": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "expanded": [
+        "",
+        "expanded"
+      ],
+      "has-children": [
+        "",
+        "has-children"
+      ],
+      "hide-selection-element": [
+        "",
+        "hide-selection-element"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "indeterminate": [
+        "",
+        "indeterminate"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-yearpicker": {
+    "attrs": {
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "value-format": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-yearrangepicker": {
+    "attrs": {
+      "calendar-week-numbering": [
+        "Default",
+        "ISO_8601",
+        "MiddleEastern",
+        "WesternTraditional"
+      ],
+      "display-format": [
+        "string",
+        "undefined"
+      ],
+      "format-pattern": [
+        "string",
+        "undefined"
+      ],
+      "max-date": "null",
+      "min-date": "null",
+      "primary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "secondary-calendar-type": [
+        "Gregorian",
+        "Islamic",
+        "Japanese",
+        "Buddhist",
+        "Persian",
+        "undefined"
+      ],
+      "value-format": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-barcode-scanner-dialog": {
+    "attrs": {
+      "open": [
+        "",
+        "open"
+      ]
+    }
+  },
+  "ui5-dynamic-page": {
+    "attrs": {
+      "header-pinned": [
+        "",
+        "header-pinned"
+      ],
+      "header-snapped": "null",
+      "hide-pin-button": [
+        "",
+        "hide-pin-button"
+      ],
+      "show-footer": [
+        "",
+        "show-footer"
+      ]
+    }
+  },
+  "ui5-dynamic-page-header": {
+    "attrs": {}
+  },
+  "ui5-dynamic-page-header-actions": {
+    "attrs": {}
+  },
+  "ui5-dynamic-page-title": {
+    "attrs": {}
+  },
+  "ui5-dynamic-side-content": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "equal-split": [
+        "",
+        "equal-split"
+      ],
+      "hide-main-content": [
+        "",
+        "hide-main-content"
+      ],
+      "hide-side-content": [
+        "",
+        "hide-side-content"
+      ],
+      "side-content-fall-down": [
+        "BelowXL",
+        "BelowL",
+        "BelowM",
+        "OnMinimumWidth"
+      ],
+      "side-content-position": [
+        "End",
+        "Start"
+      ],
+      "side-content-visibility": [
+        "AlwaysShow",
+        "ShowAboveL",
+        "ShowAboveM",
+        "ShowAboveS",
+        "NeverShow"
+      ]
+    }
+  },
+  "ui5-filter-item": {
+    "attrs": {
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-filter-item-option": {
+    "attrs": {
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-flexible-column-layout": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "column-layout": "null",
+      "disable-resizing": [
+        "",
+        "disable-resizing"
+      ],
+      "end-column-visible": "null",
+      "layout": [
+        "OneColumn",
+        "TwoColumnsStartExpanded",
+        "TwoColumnsMidExpanded",
+        "ThreeColumnsMidExpanded",
+        "ThreeColumnsEndExpanded",
+        "ThreeColumnsStartExpandedEndHidden",
+        "ThreeColumnsMidExpandedEndHidden",
+        "ThreeColumnsStartHiddenMidExpanded",
+        "ThreeColumnsStartHiddenEndExpanded",
+        "MidColumnFullScreen",
+        "EndColumnFullS..."
+      ],
+      "layouts-configuration": "null",
+      "mid-column-visible": "null",
+      "start-column-visible": "null",
+      "visible-columns": "null"
+    }
+  },
+  "ui5-group-item": {
+    "attrs": {
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-illustrated-message": {
+    "attrs": {
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "decorative": [
+        "",
+        "decorative"
+      ],
+      "design": [
+        "Auto",
+        "Base",
+        "Dot",
+        "Spot",
+        "Dialog",
+        "Scene",
+        "ExtraSmall",
+        "Small",
+        "Medium",
+        "Large"
+      ],
+      "name": "null",
+      "subtitle-text": [
+        "string",
+        "undefined"
+      ],
+      "title-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-media-gallery": {
+    "attrs": {
+      "interactive-display-area": [
+        "",
+        "interactive-display-area"
+      ],
+      "layout": [
+        "Auto",
+        "Vertical",
+        "Horizontal"
+      ],
+      "menu-horizontal-align": [
+        "Left",
+        "Right"
+      ],
+      "menu-vertical-align": [
+        "Top",
+        "Bottom"
+      ],
+      "show-all-thumbnails": [
+        "",
+        "show-all-thumbnails"
+      ]
+    }
+  },
+  "ui5-media-gallery-item": {
+    "attrs": {
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "layout": [
+        "Square",
+        "Wide"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ]
+    }
+  },
+  "ui5-navigation-layout": {
+    "attrs": {
+      "mode": [
+        "Auto",
+        "Collapsed",
+        "Expanded"
+      ]
+    }
+  },
+  "ui5-navigation-menu": {
+    "attrs": {
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "horizontal-align": [
+        "Start",
+        "End",
+        "Center",
+        "Stretch"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "open": [
+        "",
+        "open"
+      ],
+      "opener": [
+        "string",
+        "HTMLElement",
+        "null",
+        "undefined"
+      ],
+      "placement": [
+        "Top",
+        "Bottom",
+        "Start",
+        "End"
+      ]
+    }
+  },
+  "ui5-navigation-menu-item": {
+    "attrs": {
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ],
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-notification-list": {
+    "attrs": {
+      "no-data-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-li-notification-group": {
+    "attrs": {
+      "collapsed": [
+        "",
+        "collapsed"
+      ],
+      "growing": [
+        "Button",
+        "None"
+      ]
+    }
+  },
+  "ui5-notification-group-list": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "List",
+        "Menu",
+        "Tree",
+        "ListBox"
+      ],
+      "footer-text": [
+        "string",
+        "undefined"
+      ],
+      "growing": [
+        "None",
+        "Button",
+        "Scroll"
+      ],
+      "growing-button-text": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "indent": [
+        "",
+        "indent"
+      ],
+      "list-items": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "selection-mode": [
+        "None",
+        "Single",
+        "Multiple",
+        "SingleStart",
+        "SingleEnd",
+        "SingleAuto",
+        "Delete"
+      ],
+      "separators": [
+        "None",
+        "All",
+        "Inner"
+      ],
+      "sticky-header": [
+        "",
+        "sticky-header"
+      ]
+    }
+  },
+  "ui5-notification-list-internal": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-role": [
+        "List",
+        "Menu",
+        "Tree",
+        "ListBox"
+      ],
+      "footer-text": [
+        "string",
+        "undefined"
+      ],
+      "growing": [
+        "None",
+        "Button",
+        "Scroll"
+      ],
+      "growing-button-text": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "indent": [
+        "",
+        "indent"
+      ],
+      "list-items": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "selection-mode": [
+        "None",
+        "Single",
+        "Multiple",
+        "SingleStart",
+        "SingleEnd",
+        "SingleAuto",
+        "Delete"
+      ],
+      "separators": [
+        "None",
+        "All",
+        "Inner"
+      ],
+      "sticky-header": [
+        "",
+        "sticky-header"
+      ]
+    }
+  },
+  "ui5-li-notification": {
+    "attrs": {
+      "importance": [
+        "Standard",
+        "Important"
+      ],
+      "show-close": [
+        "",
+        "show-close"
+      ],
+      "state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-page": {
+    "attrs": {
+      "background-design": [
+        "List",
+        "Solid",
+        "Transparent"
+      ],
+      "fixed-footer": [
+        "",
+        "fixed-footer"
+      ],
+      "hide-footer": [
+        "",
+        "hide-footer"
+      ],
+      "no-scrolling": [
+        "",
+        "no-scrolling"
+      ]
+    }
+  },
+  "ui5-product-switch": {
+    "attrs": {}
+  },
+  "ui5-product-switch-item": {
+    "attrs": {
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "subtitle-text": [
+        "string",
+        "undefined"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ],
+      "target-src": [
+        "string",
+        "undefined"
+      ],
+      "title-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-search": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "field-loading": [
+        "",
+        "field-loading"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "scope-value": [
+        "string",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-search-field": {
+    "attrs": {
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "field-loading": [
+        "",
+        "field-loading"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "scope-value": [
+        "string",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-search-item": {
+    "attrs": {
+      "deletable": [
+        "",
+        "deletable"
+      ],
+      "description": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "scope-name": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-search-item-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-search-item-show-more": {
+    "attrs": {
+      "items-to-show-count": [
+        "number",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ]
+    }
+  },
+  "ui5-search-message-area": {
+    "attrs": {
+      "description": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-search-scope": {
+    "attrs": {
+      "text": "null",
+      "value": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-shellbar": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "disable-search-collapse": [
+        "",
+        "disable-search-collapse"
+      ],
+      "hide-search-button": [
+        "",
+        "hide-search-button"
+      ],
+      "logo-dom-ref": "null",
+      "notifications-count": [
+        "string",
+        "undefined"
+      ],
+      "notifications-dom-ref": "null",
+      "overflow-dom-ref": "null",
+      "primary-title": [
+        "string",
+        "undefined"
+      ],
+      "product-switch-dom-ref": "null",
+      "profile-dom-ref": "null",
+      "secondary-title": [
+        "string",
+        "undefined"
+      ],
+      "show-notifications": [
+        "",
+        "show-notifications"
+      ],
+      "show-product-switch": [
+        "",
+        "show-product-switch"
+      ],
+      "show-search-field": [
+        "",
+        "show-search-field"
+      ]
+    }
+  },
+  "ui5-shellbar-branding": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-shellbar-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "count": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-shellbar-search": {
+    "attrs": {
+      "auto-open": [
+        "",
+        "auto-open"
+      ],
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "field-loading": [
+        "",
+        "field-loading"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "scope-value": [
+        "string",
+        "undefined"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "value": "null"
+    }
+  },
+  "ui5-shellbar-spacer": {
+    "attrs": {}
+  },
+  "ui5-side-navigation": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "collapsed": [
+        "",
+        "collapsed"
+      ]
+    }
+  },
+  "ui5-side-navigation-group": {
+    "attrs": {
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "expanded": [
+        "",
+        "expanded"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-side-navigation-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "design": [
+        "Default",
+        "Action"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "expanded": [
+        "",
+        "expanded"
+      ],
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "unselectable": [
+        "",
+        "unselectable"
+      ]
+    }
+  },
+  "ui5-side-navigation-sub-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "design": [
+        "Default",
+        "Action"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "href": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "target": [
+        "string",
+        "undefined"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "unselectable": [
+        "",
+        "unselectable"
+      ]
+    }
+  },
+  "ui5-sort-item": {
+    "attrs": {
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-timeline": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "growing": [
+        "Button",
+        "None",
+        "Scroll"
+      ],
+      "layout": [
+        "Vertical",
+        "Horizontal"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null"
+    }
+  },
+  "ui5-timeline-group-item": {
+    "attrs": {
+      "collapsed": [
+        "",
+        "collapsed"
+      ],
+      "group-name": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-timeline-item": {
+    "attrs": {
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "name-clickable": [
+        "",
+        "name-clickable"
+      ],
+      "state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "subtitle-text": [
+        "string",
+        "undefined"
+      ],
+      "title-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-upload-collection": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "hide-drag-overlay": [
+        "",
+        "hide-drag-overlay"
+      ],
+      "no-data-description": [
+        "string",
+        "undefined"
+      ],
+      "no-data-header-level": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "no-data-text": [
+        "string",
+        "undefined"
+      ],
+      "selection-mode": [
+        "None",
+        "Single",
+        "SingleStart",
+        "SingleEnd",
+        "SingleAuto",
+        "Multiple"
+      ]
+    }
+  },
+  "ui5-upload-collection-item": {
+    "attrs": {
+      "disable-delete-button": [
+        "",
+        "disable-delete-button"
+      ],
+      "file": [
+        "File",
+        "null"
+      ],
+      "file-name": "null",
+      "file-name-clickable": [
+        "",
+        "file-name-clickable"
+      ],
+      "hide-delete-button": [
+        "",
+        "hide-delete-button"
+      ],
+      "hide-retry-button": [
+        "",
+        "hide-retry-button"
+      ],
+      "hide-terminate-button": [
+        "",
+        "hide-terminate-button"
+      ],
+      "progress": "null",
+      "upload-state": [
+        "Complete",
+        "Error",
+        "Ready",
+        "Uploading"
+      ],
+      "accessibility-attributes": "null",
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-user-menu": {
+    "attrs": {
+      "open": [
+        "",
+        "open"
+      ],
+      "opener": [
+        "string",
+        "HTMLElement",
+        "null",
+        "undefined"
+      ],
+      "show-edit-accounts": [
+        "",
+        "show-edit-accounts"
+      ],
+      "show-edit-button": [
+        "",
+        "show-edit-button"
+      ],
+      "show-manage-account": [
+        "",
+        "show-manage-account"
+      ],
+      "show-other-accounts": [
+        "",
+        "show-other-accounts"
+      ]
+    }
+  },
+  "ui5-user-menu-account": {
+    "attrs": {
+      "additional-info": "null",
+      "avatar-color-scheme": [
+        "Auto",
+        "Transparent",
+        "Accent1",
+        "Accent2",
+        "Accent3",
+        "Accent4",
+        "Accent5",
+        "Accent6",
+        "Accent7",
+        "Accent8",
+        "Accent9",
+        "Accent10",
+        "Placeholder"
+      ],
+      "avatar-initials": [
+        "string",
+        "undefined"
+      ],
+      "avatar-src": [
+        "string",
+        "undefined"
+      ],
+      "description": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "subtitle-text": "null",
+      "title-text": "null"
+    }
+  },
+  "ui5-user-menu-item": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "additional-text": [
+        "string",
+        "undefined"
+      ],
+      "checked": [
+        "",
+        "checked"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-delay": "null",
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-user-menu-item-group": {
+    "attrs": {
+      "check-mode": [
+        "None",
+        "Single",
+        "Multiple"
+      ]
+    }
+  },
+  "ui5-user-settings-account-view": {
+    "attrs": {
+      "secondary": [
+        "",
+        "secondary"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "show-manage-account": [
+        "",
+        "show-manage-account"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-user-settings-appearance-view": {
+    "attrs": {
+      "secondary": [
+        "",
+        "secondary"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-user-settings-appearance-view-group": {
+    "attrs": {
+      "header-accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "wrapping-type": [
+        "None",
+        "Normal"
+      ]
+    }
+  },
+  "ui5-user-settings-appearance-view-item": {
+    "attrs": {
+      "color-scheme": "null",
+      "icon": "null",
+      "item-key": "null",
+      "text": "null",
+      "accessibility-attributes": "null",
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "highlight": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ],
+      "movable": [
+        "",
+        "movable"
+      ],
+      "navigated": [
+        "",
+        "navigated"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "tooltip": [
+        "string",
+        "undefined"
+      ],
+      "type": [
+        "Navigation",
+        "Inactive",
+        "Active",
+        "Detail"
+      ]
+    }
+  },
+  "ui5-user-settings-dialog": {
+    "attrs": {
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "show-search-field": [
+        "",
+        "show-search-field"
+      ]
+    }
+  },
+  "ui5-user-settings-item": {
+    "attrs": {
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "header-text": [
+        "string",
+        "undefined"
+      ],
+      "icon": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "loading-reason": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": "null",
+      "tooltip": "null"
+    }
+  },
+  "ui5-user-settings-view": {
+    "attrs": {
+      "secondary": [
+        "",
+        "secondary"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-view-settings-dialog": {
+    "attrs": {
+      "group-descending": [
+        "",
+        "group-descending"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "sort-descending": [
+        "",
+        "sort-descending"
+      ]
+    }
+  },
+  "ui5-wizard": {
+    "attrs": {
+      "content-layout": [
+        "MultipleSteps",
+        "SingleStep"
+      ]
+    }
+  },
+  "ui5-wizard-step": {
+    "attrs": {
+      "branching": [
+        "",
+        "branching"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "selected": [
+        "",
+        "selected"
+      ],
+      "subtitle-text": [
+        "string",
+        "undefined"
+      ],
+      "title-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-wizard-tab": {
+    "attrs": {}
+  },
+  "ui5-table-column": {
+    "attrs": {
+      "demand-popin": [
+        "",
+        "demand-popin"
+      ],
+      "min-width": "null",
+      "popin-display": [
+        "Block",
+        "Inline"
+      ],
+      "popin-text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-table-group-row": {
+    "attrs": {}
+  },
+  "ui5-ai-button": {
+    "attrs": {
+      "accessibility-attributes": "null",
+      "arrow-button-pressed": [
+        "",
+        "arrow-button-pressed"
+      ],
+      "design": [
+        "Default",
+        "Positive",
+        "Negative",
+        "Transparent",
+        "Emphasized",
+        "Attention",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "state": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-ai-button-state": {
+    "attrs": {
+      "end-icon": [
+        "string",
+        "undefined"
+      ],
+      "icon": [
+        "string",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "show-arrow-button": [
+        "",
+        "show-arrow-button"
+      ],
+      "text": [
+        "string",
+        "undefined"
+      ]
+    }
+  },
+  "ui5-ai-input": {
+    "attrs": {
+      "current-version": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "total-versions": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "filter": [
+        "None",
+        "StartsWithPerTerm",
+        "StartsWith",
+        "Contains"
+      ],
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "no-typeahead": [
+        "",
+        "no-typeahead"
+      ],
+      "open": [
+        "",
+        "open"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-suggestions": [
+        "",
+        "show-suggestions"
+      ],
+      "type": [
+        "Text",
+        "Email",
+        "Number",
+        "Password",
+        "Tel",
+        "URL",
+        "Search"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-ai-prompt-input": {
+    "attrs": {
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "label": [
+        "string",
+        "undefined"
+      ],
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "show-clear-icon": [
+        "",
+        "show-clear-icon"
+      ],
+      "show-exceeded-text": [
+        "",
+        "show-exceeded-text"
+      ],
+      "show-suggestions": [
+        "",
+        "show-suggestions"
+      ],
+      "value": "null",
+      "value-state": [
+        "Positive",
+        "Negative",
+        "None",
+        "Critical",
+        "Information"
+      ]
+    }
+  },
+  "ui5-ai-textarea": {
+    "attrs": {
+      "current-version": "null",
+      "loading": [
+        "",
+        "loading"
+      ],
+      "prompt-description": "null",
+      "total-versions": "null",
+      "accessible-description": [
+        "string",
+        "undefined"
+      ],
+      "accessible-description-ref": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name": [
+        "string",
+        "undefined"
+      ],
+      "accessible-name-ref": [
+        "string",
+        "undefined"
+      ],
+      "disabled": [
+        "",
+        "disabled"
+      ],
+      "growing": [
+        "",
+        "growing"
+      ],
+      "growing-max-rows": "null",
+      "maxlength": [
+        "number",
+        "undefined"
+      ],
+      "name": [
+        "string",
+        "undefined"
+      ],
+      "placeholder": [
+        "string",
+        "undefined"
+      ],
+      "readonly": [
+        "",
+        "readonly"
+      ],
+      "required": [
+        "",
+        "required"
+      ],
+      "rows": "null",
+      "show-exceeded-text": [
+        "",
+        "show-exceeded-text"
+      ],
+      "value": "null",
+      "value-state": [
+        "None",
+        "Positive",
+        "Critical",
+        "Negative",
+        "Information"
+      ]
+    }
+  },
+  "ui5-ai-toolbar-label": {
+    "attrs": {
+      "text": "null",
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ]
+    }
+  },
+  "ui5-ai-versioning": {
+    "attrs": {
+      "current-step": "null",
+      "total-steps": "null",
+      "overflow-priority": [
+        "Default",
+        "NeverOverflow",
+        "AlwaysOverflow"
+      ],
+      "prevent-overflow-closing": [
+        "",
+        "prevent-overflow-closing"
+      ]
+    }
+  },
+  "ui5-ai-writing-assistant": {
+    "attrs": {
+      "current-version": "null",
+      "prompt-description": "null",
+      "total-versions": "null"
+    }
+  }
+}

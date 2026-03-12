@@ -6307,6 +6307,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stackblitz/sdk@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@stackblitz/sdk@npm:1.11.0"
+  checksum: 10c0/53a3303bf3572d69f31de220c1f23bc727d68f7113fa3cca0e792158b81deb9455d639df28759701af3761af611c1488a98ff16ab66bc3fdc4a08dc9e6bc7174
+  languageName: node
+  linkType: hard
+
 "@svgr/babel-plugin-add-jsx-attribute@npm:^6.5.1":
   version: 6.5.1
   resolution: "@svgr/babel-plugin-add-jsx-attribute@npm:6.5.1"
@@ -7871,6 +7878,7 @@ __metadata:
     "@docusaurus/types": "npm:3.1.1"
     "@mdx-js/react": "npm:^3.0.0"
     "@monaco-editor/react": "npm:^4.6.0"
+    "@stackblitz/sdk": "npm:^1.11.0"
     clsx: "npm:^2.0.0"
     copy-and-watch: "npm:^0.1.5"
     docusaurus-lunr-search: "npm:^3.3.2"

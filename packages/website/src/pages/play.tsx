@@ -1,4 +1,4 @@
-import Editor from "../components/Editor";
+import OldEditor from "../components/OldEditor";
 import Layout from '@theme/Layout';
 
 
@@ -53,7 +53,7 @@ export default function () {
   return (
     <>
       <Layout>
-        <Editor
+        <OldEditor
           html={html}
           js={ts}
           css={''}

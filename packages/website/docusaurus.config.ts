@@ -188,11 +188,6 @@ const config: Config = {
           activeBasePath: 'illustrations',
         },
         {
-          to: 'play/',
-          label: 'Playground',
-          activeBasePath: 'play',
-        },
-        {
           type: 'custom-versionsNavbarItem',
           position: "right",
         },
