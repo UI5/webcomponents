@@ -60,6 +60,8 @@
 }
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header {
+	max-width: 100%;
+	width: 100%;
 	padding: var(--_ui5_value_state_header_padding);
 	border: var(--_ui5_value_state_header_border);
 	border-bottom: var(--_ui5_value_state_header_border_bottom);
