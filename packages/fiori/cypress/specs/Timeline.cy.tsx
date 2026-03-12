@@ -756,7 +756,7 @@ describe("Timeline Header Bar", () => {
 	});
 
 	describe("Application-side filtering", () => {
-		it("application can hide items based on search event", () => {
+		it("application can remove items from DOM based on search event", () => {
 			cy.mount(
 				<Timeline id="appFilterTimeline">
 					<TimelineHeaderBar slot="headerBar" showSearch />
@@ -765,15 +765,32 @@ describe("Timeline Header Bar", () => {
 				</Timeline>
 			);
 
-			// Application handles filtering
+			// Application handles filtering by removing non-matching items from DOM
 			cy.get("[ui5-timeline]").then($timeline => {
-				$timeline.get(0).addEventListener("search", (e: CustomEvent<TimelineSearchEventDetail>) => {
+				const timeline = $timeline.get(0) as Timeline;
+				const allItems = Array.from(timeline.querySelectorAll("[ui5-timeline-item]")) as TimelineItem[];
+
+				timeline.addEventListener("search", (e: CustomEvent<TimelineSearchEventDetail>) => {
 					const searchValue = e.detail.value.toLowerCase();
-					$timeline.find("[ui5-timeline-item]").each((_, item) => {
-						const timelineItem = item as TimelineItem;
-						const titleText = timelineItem.titleText?.toLowerCase() || "";
-						timelineItem.hidden = searchValue !== "" && !titleText.includes(searchValue);
-					});
+
+					if (searchValue === "") {
+						// Restore all items when search is cleared
+						allItems.forEach(item => {
+							if (!item.parentElement) {
+								timeline.appendChild(item);
+							}
+						});
+					} else {
+						// Remove non-matching items from DOM
+						allItems.forEach(item => {
+							const titleText = item.titleText?.toLowerCase() || "";
+							if (!titleText.includes(searchValue)) {
+								item.remove();
+							} else if (!item.parentElement) {
+								timeline.appendChild(item);
+							}
+						});
+					}
 				});
 			});
 
@@ -785,9 +802,9 @@ describe("Timeline Header Bar", () => {
 
 			cy.realType("Meeting");
 
-			// Application filtered - first item visible, second hidden
-			cy.get("[ui5-timeline-item]").eq(0).should("not.have.attr", "hidden");
-			cy.get("[ui5-timeline-item]").eq(1).should("have.attr", "hidden");
+			// Application filtered - only matching item remains in DOM
+			cy.get("[ui5-timeline-item]").should("have.length", 1);
+			cy.get("[ui5-timeline-item]").eq(0).should("have.attr", "title-text", "Meeting with John");
 		});
 	});
 });

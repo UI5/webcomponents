@@ -90,7 +90,8 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * The Timeline supports a `header-bar` slot for search, filter, and sort functionality.
  * Use the `ui5-timeline-header-bar` component in this slot.
  * The Timeline fires `search`, `filter`, and `sort` events that the application should handle
- * to filter/sort the timeline items. The Timeline itself does not perform filtering or sorting.
+ * by adding, removing, or reordering items in the DOM. The Timeline itself does not perform
+ * filtering or sorting — it renders whatever items are provided in the default slot.
  *
  * @constructor
  * @extends UI5Element
@@ -120,7 +121,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * Fired when the user performs a search in the header bar.
  *
  * **Note:** The Timeline does not perform filtering. The application should handle
- * this event and filter the items accordingly.
+ * this event and add/remove items from the DOM to reflect the search results.
  *
  * @param {string} value The search value entered by the user.
  * @public
@@ -134,7 +135,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * Fired when the user changes filter selection in the header bar.
  *
  * **Note:** The Timeline does not perform filtering. The application should handle
- * this event and filter the items accordingly.
+ * this event and add/remove items from the DOM to reflect the filter selection.
  *
  * @param {string} filterBy The filter category.
  * @param {string[]} selectedOptions The selected filter option texts.
@@ -149,7 +150,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * Fired when the user changes sort order in the header bar.
  *
  * **Note:** The Timeline does not perform sorting. The application should handle
- * this event and sort the items accordingly.
+ * this event and reorder the items in the DOM accordingly.
  *
  * @param {string} sortOrder The sort order ("Ascending" or "Descending").
  * @public
@@ -530,11 +531,6 @@ class Timeline extends UI5Element {
 		}
 
 		this.items.forEach(item => {
-			// Skip hidden items (filtered out by application)
-			if (item.hidden) {
-				return;
-			}
-
 			if (!item.isGroupItem) {
 				navigatableItems.push(item);
 
@@ -549,10 +545,7 @@ class Timeline extends UI5Element {
 
 			if (!item.collapsed) {
 				item.items?.forEach(groupItem => {
-					// Skip hidden group items (filtered out by application)
-					if (!groupItem.hidden) {
-						navigatableItems.push(groupItem);
-					}
+					navigatableItems.push(groupItem);
 				});
 			}
 		});

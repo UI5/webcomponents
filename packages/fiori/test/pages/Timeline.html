@@ -545,122 +545,81 @@
 </section>
 
 <script>
+	// Items are collected on first use (not at script parse time)
+	// because custom elements are upgraded after the module bundle loads.
+	//
+	// Every handler follows the same 3-step pattern:
+	//   1. Remove all items from the DOM
+	//   2. Filter / sort the saved references
+	//   3. Re-add the matching items
+
 	// ============================================
-	// Full Demo Timeline - Search, Filter, Sort
+	// Full Demo Timeline — Search, Filter, Sort
 	// ============================================
 	const fullDemoTimeline = document.getElementById("fullDemoTimeline");
 	const fullDemoEventLog = document.getElementById("fullDemoEventLog");
 	const fullDemoItemCount = document.getElementById("fullDemoItemCount");
+	const fullDemoState = { search: "", filter: "All", sort: "None" };
+	let fullDemoItems;
 
-	// Store current filter state
-	let fullDemoState = {
-		searchValue: "",
-		filterCategory: "All",
-		sortOrder: "None"
-	};
+	function applyFullDemo() {
+		if (!fullDemoItems) fullDemoItems = [...fullDemoTimeline.querySelectorAll("[ui5-timeline-item]")];
 
-	// Get all items as array for sorting
-	function getFullDemoItems() {
-		return Array.from(fullDemoTimeline.querySelectorAll("[ui5-timeline-item]"));
-	}
+		// 1. Remove all
+		fullDemoItems.forEach(item => item.remove());
 
-	// Apply all filters and sorting
-	function applyFullDemoFilters() {
-		const items = getFullDemoItems();
-		let visibleCount = 0;
-
-		items.forEach(item => {
-			const titleText = (item.titleText || "").toLowerCase();
-			const name = (item.name || "").toLowerCase();
-			const subtitleText = (item.subtitleText || "").toLowerCase();
-			const category = item.dataset.category || "";
-
-			// Check search match
-			const searchMatch = !fullDemoState.searchValue ||
-				titleText.includes(fullDemoState.searchValue) ||
-				name.includes(fullDemoState.searchValue) ||
-				subtitleText.includes(fullDemoState.searchValue);
-
-			// Check filter match
-			const filterMatch = fullDemoState.filterCategory === "All" ||
-				category === fullDemoState.filterCategory;
-
-			// Show item only if both conditions match
-			const isVisible = searchMatch && filterMatch;
-			item.hidden = !isVisible;
-
-			if (isVisible) visibleCount++;
+		// 2. Filter
+		let visible = fullDemoItems.filter(item => {
+			const text = [item.titleText, item.name, item.subtitleText].join(" ").toLowerCase();
+			const searchOk = !fullDemoState.search || text.includes(fullDemoState.search);
+			const filterOk = fullDemoState.filter === "All" || item.dataset.category === fullDemoState.filter;
+			return searchOk && filterOk;
 		});
 
-		// Update visible count
-		fullDemoItemCount.textContent = visibleCount;
-
-		// Apply sorting if needed
-		if (fullDemoState.sortOrder !== "None") {
-			sortFullDemoItems();
+		// 2b. Sort (if active)
+		if (fullDemoState.sort !== "None") {
+			visible.sort((a, b) => fullDemoState.sort === "Ascending"
+				? (a.dataset.date || "").localeCompare(b.dataset.date || "")
+				: (b.dataset.date || "").localeCompare(a.dataset.date || ""));
 		}
-	}
 
-	// Sort items by date
-	function sortFullDemoItems() {
-		const items = getFullDemoItems();
-		const container = fullDemoTimeline;
-
-		// Sort by data-date attribute
-		items.sort((a, b) => {
-			const dateA = new Date(a.dataset.date || 0);
-			const dateB = new Date(b.dataset.date || 0);
-
-			if (fullDemoState.sortOrder === "Ascending") {
-				return dateA - dateB; // Oldest first
-			} else {
-				return dateB - dateA; // Newest first
-			}
-		});
-
-		// Re-append items in sorted order
-		items.forEach(item => container.appendChild(item));
+		// 3. Re-add matching items
+		visible.forEach(item => fullDemoTimeline.appendChild(item));
+		fullDemoItemCount.textContent = visible.length;
 	}
 
 	fullDemoTimeline.addEventListener("search", (e) => {
-		fullDemoState.searchValue = e.detail.value.toLowerCase();
+		fullDemoState.search = e.detail.value.toLowerCase();
 		fullDemoEventLog.textContent = `Search: "${e.detail.value}"`;
-		applyFullDemoFilters();
+		applyFullDemo();
 	});
 
 	fullDemoTimeline.addEventListener("filter", (e) => {
-		fullDemoState.filterCategory = e.detail.selectedOptions[0] || "All";
-		fullDemoEventLog.textContent = `Filter by ${e.detail.filterBy}: ${fullDemoState.filterCategory}`;
-		applyFullDemoFilters();
+		fullDemoState.filter = e.detail.selectedOptions[0] || "All";
+		fullDemoEventLog.textContent = `Filter by ${e.detail.filterBy}: ${fullDemoState.filter}`;
+		applyFullDemo();
 	});
 
 	fullDemoTimeline.addEventListener("sort", (e) => {
-		fullDemoState.sortOrder = e.detail.sortOrder;
+		fullDemoState.sort = e.detail.sortOrder;
 		fullDemoEventLog.textContent = `Sort: ${e.detail.sortOrder} (by date)`;
-		applyFullDemoFilters();
+		applyFullDemo();
 	});
 
 	// ============================================
 	// Search Only Timeline
 	// ============================================
 	const searchOnlyTimeline = document.getElementById("searchOnlyTimeline");
+	let searchOnlyItems;
 
 	searchOnlyTimeline.addEventListener("search", (e) => {
-		const searchValue = e.detail.value.toLowerCase();
-		searchOnlyTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
-			const titleText = (item.titleText || "").toLowerCase();
-			const name = (item.name || "").toLowerCase();
-			const subtitleText = (item.subtitleText || "").toLowerCase();
-			const content = (item.textContent || "").toLowerCase();
+		if (!searchOnlyItems) searchOnlyItems = [...searchOnlyTimeline.querySelectorAll("[ui5-timeline-item]")];
+		const query = e.detail.value.toLowerCase();
 
-			const matches = !searchValue ||
-				titleText.includes(searchValue) ||
-				name.includes(searchValue) ||
-				subtitleText.includes(searchValue) ||
-				content.includes(searchValue);
-
-			item.hidden = !matches;
-		});
+		searchOnlyItems.forEach(item => item.remove());
+		searchOnlyItems
+			.filter(item => !query || [item.titleText, item.name, item.subtitleText, item.textContent].join(" ").toLowerCase().includes(query))
+			.forEach(item => searchOnlyTimeline.appendChild(item));
 	});
 
 	// ============================================
@@ -668,41 +627,48 @@
 	// ============================================
 	const sortOnlyTimeline = document.getElementById("sortOnlyTimeline");
 	const sortOrderDisplay = document.getElementById("sortOrderDisplay");
+	let sortOnlyItems;
 
 	sortOnlyTimeline.addEventListener("sort", (e) => {
-		const sortOrder = e.detail.sortOrder;
-		sortOrderDisplay.textContent = sortOrder === "Ascending" ? "Oldest First ↑" : "Newest First ↓";
+		if (!sortOnlyItems) sortOnlyItems = [...sortOnlyTimeline.querySelectorAll("[ui5-timeline-item]")];
+		const asc = e.detail.sortOrder === "Ascending";
+		sortOrderDisplay.textContent = asc ? "Oldest First ↑" : "Newest First ↓";
 
-		const items = Array.from(sortOnlyTimeline.querySelectorAll("[ui5-timeline-item]"));
-
-		items.sort((a, b) => {
-			const dateA = new Date(a.dataset.date || 0);
-			const dateB = new Date(b.dataset.date || 0);
-			return sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
-		});
-
-		items.forEach(item => sortOnlyTimeline.appendChild(item));
+		sortOnlyItems.sort((a, b) => asc
+			? (a.dataset.date || "").localeCompare(b.dataset.date || "")
+			: (b.dataset.date || "").localeCompare(a.dataset.date || ""));
+		sortOnlyItems.forEach(item => sortOnlyTimeline.appendChild(item));
 	});
 
 	// ============================================
 	// Filter Only Timeline (with Groups)
 	// ============================================
 	const filterOnlyTimeline = document.getElementById("filterOnlyTimeline");
+	let filterGroups;
 
 	filterOnlyTimeline.addEventListener("filter", (e) => {
-		const selectedPriority = e.detail.selectedOptions[0] || "All";
+		// Collect groups and their items once
+		if (!filterGroups) {
+			filterGroups = [...filterOnlyTimeline.querySelectorAll("[ui5-timeline-group-item]")].map(group => ({
+				element: group,
+				items: [...group.querySelectorAll("[ui5-timeline-item]")]
+			}));
+		}
+		const selected = e.detail.selectedOptions[0] || "All";
 
-		// Filter items
-		filterOnlyTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
-			const priority = item.dataset.priority || "";
-			const matches = selectedPriority === "All" || priority === selectedPriority;
-			item.hidden = !matches;
-		});
+		filterGroups.forEach(({ element: group, items }) => {
+			// 1. Remove all items from the group, remove group from timeline
+			items.forEach(item => item.remove());
+			group.remove();
 
-		// Hide groups with no visible items
-		filterOnlyTimeline.querySelectorAll("[ui5-timeline-group-item]").forEach(group => {
-			const visibleItems = group.querySelectorAll("[ui5-timeline-item]:not([hidden])");
-			group.hidden = visibleItems.length === 0;
+			// 2. Find matching items
+			const matching = items.filter(item => selected === "All" || item.dataset.priority === selected);
+
+			// 3. Re-add matching items into the group, re-add group to timeline
+			if (matching.length > 0) {
+				matching.forEach(item => group.appendChild(item));
+				filterOnlyTimeline.appendChild(group);
+			}
 		});
 	});
 
@@ -710,41 +676,31 @@
 	// Combined Search and Filter Timeline
 	// ============================================
 	const searchFilterTimeline = document.getElementById("searchFilterTimeline");
+	const searchFilterState = { search: "", filter: "All" };
+	let searchFilterItems;
 
-	let searchFilterState = {
-		searchValue: "",
-		filterType: "All"
-	};
+	function applySearchFilter() {
+		if (!searchFilterItems) searchFilterItems = [...searchFilterTimeline.querySelectorAll("[ui5-timeline-item]")];
 
-	function applySearchFilterLogic() {
-		searchFilterTimeline.querySelectorAll("[ui5-timeline-item]").forEach(item => {
-			const titleText = (item.titleText || "").toLowerCase();
-			const name = (item.name || "").toLowerCase();
-			const content = (item.textContent || "").toLowerCase();
-			const type = item.dataset.type || "";
-
-			// Search match
-			const searchMatch = !searchFilterState.searchValue ||
-				titleText.includes(searchFilterState.searchValue) ||
-				name.includes(searchFilterState.searchValue) ||
-				content.includes(searchFilterState.searchValue);
-
-			// Filter match
-			const filterMatch = searchFilterState.filterType === "All" || type === searchFilterState.filterType;
-
-			// Both must match
-			item.hidden = !(searchMatch && filterMatch);
-		});
+		searchFilterItems.forEach(item => item.remove());
+		searchFilterItems
+			.filter(item => {
+				const text = [item.titleText, item.name, item.textContent].join(" ").toLowerCase();
+				const searchOk = !searchFilterState.search || text.includes(searchFilterState.search);
+				const filterOk = searchFilterState.filter === "All" || item.dataset.type === searchFilterState.filter;
+				return searchOk && filterOk;
+			})
+			.forEach(item => searchFilterTimeline.appendChild(item));
 	}
 
 	searchFilterTimeline.addEventListener("search", (e) => {
-		searchFilterState.searchValue = e.detail.value.toLowerCase();
-		applySearchFilterLogic();
+		searchFilterState.search = e.detail.value.toLowerCase();
+		applySearchFilter();
 	});
 
 	searchFilterTimeline.addEventListener("filter", (e) => {
-		searchFilterState.filterType = e.detail.selectedOptions[0] || "All";
-		applySearchFilterLogic();
+		searchFilterState.filter = e.detail.selectedOptions[0] || "All";
+		applySearchFilter();
 	});
 </script>
 	</div>
