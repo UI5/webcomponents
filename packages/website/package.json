@@ -19,6 +19,8 @@
     "copy:pages:ai": "copy-and-watch \"../ai/dist/assets/**/*\" \"./static/assets/\" && copy-and-watch \"../ai/dist/test/pages/**/*\" \"./static/packages/ai/test/pages/\"",
     "copy:pages:main": "copy-and-watch \"../main/dist/assets/**/*\" \"./static/assets/\" && copy-and-watch \"../main/dist/test/pages/**/*\" \"./static/packages/main/test/pages/\"",
     "copy:pages:fiori": "copy-and-watch \"../fiori/dist/assets/**/*\" \"./static/assets/\" && copy-and-watch \"../fiori/dist/test/pages/**/*\" \"./static/packages/fiori/test/pages/\"",
+    "validate-slugs": "node ./build-scripts/validate-slugs.mjs",
+    "validate-slugs:fix": "node ./build-scripts/validate-slugs.mjs --fix",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
