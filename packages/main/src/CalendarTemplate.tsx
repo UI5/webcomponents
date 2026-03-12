@@ -99,6 +99,7 @@ export default function CalendarTemplate(this: Calendar) {
 													onChange={this.onSelectedDatesChange}
 													onNavigate={this.onNavigate}
 													exportparts="day-cell, day-cell-selected, day-cell-selected-between"
+													inert={this._areDayPickersInert}
 												/>
 											</div>
 										</div>
