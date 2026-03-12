@@ -53,6 +53,7 @@
 	line-height: normal;
 	padding: var(--_ui5_input_inner_padding);
 	box-sizing: border-box;
+	min-width: 3rem;
 	text-overflow: ellipsis;
 	flex: 1;
 	outline: none;
