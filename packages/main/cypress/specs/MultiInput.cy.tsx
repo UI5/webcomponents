@@ -1290,7 +1290,7 @@ describe("Keyboard handling", () => {
 			.should("be.focused");
 	});
 
-	it("should focus token last token when caret is at the beginning of the value", () => {
+	it("should not focus token on backspace when input has value and caret is at position 0", () => {
 		cy.mount(
 			<MultiInput id="two-tokens" value="abc">
 				<Token slot="tokens" id="firstToken" text="aa"></Token>
@@ -1312,9 +1312,11 @@ describe("Keyboard handling", () => {
 
 		cy.realPress("Backspace");
 
-		cy.get("[ui5-token]")
-			.eq(1)
+		cy.get("@innerInput")
 			.should("be.focused");
+
+		cy.get("@innerInput")
+			.should("have.value", "abc");
 	});
 
 	// Test is skipped for now as it fails randomly
