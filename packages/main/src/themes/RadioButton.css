@@ -12,6 +12,29 @@
 	overflow: hidden;
 	color: var(--_ui5_radio_button_color);
 	border-radius: var(--_ui5_radio_button_border_radius);
+	font-size: 1rem;
+
+	/* Enable font-size based scaling - all em values below are relative to font-size */
+	--_ui5_radio_button_inner_size: 2.75em;
+	--_ui5_radio_button_svg_size: 1.375em;
+	--_ui5_radio_button_height: 2.75em;
+	--_ui5_radio_button_outer_ring_padding: 0 0.625em;
+	--_ui5_radio_button_outer_ring_padding_with_label: 0 0.6875em;
+	--_ui5_radio_button_label_offset: 0.125em;
+	--_ui5_radio_button_focus_dist: 0.375em;
+	--_ui5_radio_button_label_font_size: 0.875em;
+}
+
+/* Compact mode - override em values */
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_radio_button_inner_size: 2em;
+		--_ui5_radio_button_svg_size: 1em;
+		--_ui5_radio_button_height: 2em;
+		--_ui5_radio_button_outer_ring_padding: 0 0.5em;
+		--_ui5_radio_button_outer_ring_padding_with_label: 0 0.5em;
+		--_ui5_radio_button_focus_dist: 0.375em;
+	}
 }
 
 :host(:not([disabled])) .ui5-radio-root {
@@ -194,7 +217,6 @@
 	padding: var(--_ui5_radio_button_outer_ring_padding);
 	flex-shrink: 0;
 	height: var(--_ui5_radio_button_inner_size);
-	font-size: 1rem; /* override font size of the message dialog */
 	pointer-events: none;
 	vertical-align: top;
 }
@@ -218,12 +240,12 @@
 	display: flex;
 	align-items: center;
 	padding-inline-end: var(--_ui5_radio_button_label_offset);
-	padding-block: var(--_ui5_radio_button_label_side_padding);
 	vertical-align: top;
 	max-width: 100%;
 	pointer-events: none;
 	color: var(--_ui5_radio_button_label_color);
 	overflow-wrap: break-word;
+	font-size: var(--_ui5_radio_button_label_font_size);
 }
 
 :host([wrapping-type="None"][text]) .ui5-radio-root {
