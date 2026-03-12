@@ -14,9 +14,9 @@
 	border-radius: var(--_ui5_banner_border_radius);
 	background-color: var(--_ui5_banner_background);
 	background-image: var(--_ui5_banner_background_image);
-	background-size: cover;
-	background-position: center;
 	background-repeat: no-repeat;
+	background-position: top;
+    background-size: cover;
 	box-shadow: var(--_ui5_banner_box_shadow);
 	border: var(--_ui5_banner_border);
 	overflow: hidden;
