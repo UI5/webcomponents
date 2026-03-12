@@ -1,122 +1,202 @@
+/**
+ * CSS Processor for Theme Parameters
+ *
+ * Processes theme parameter bundles from src slash-star-star slash parameters-bundle.css
+ *
+ * Pipeline:
+ * - Glob parameters-bundle.css files
+ * - Bundle and minify with esbuild
+ * - Apply package-specific processing
+ * - Output to dist/css, dist/generated/assets, src/generated
+ *
+ * Features:
+ * - Different processing for theming vs component packages
+ * - Content density handling (cozy/compact modes)
+ * - Version scoping of CSS variables
+ * - JSON output for asset registry
+ */
+
 import { globby } from "globby";
-import * as esbuild from 'esbuild'
-import * as fs from "fs";
-import * as path from "path";
-import { writeFile, mkdir } from "fs/promises";
-import postcss from "postcss";
-import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
-import postcssPlugin from "./postcss-plugin.mjs";
-import { writeFileIfChanged, getFileContent } from "./shared.mjs";
-import scopeVariables from "./scope-variables.mjs";
+import * as esbuild from 'esbuild';
 import { pathToFileURL } from "url";
+import postcss from "postcss";
+import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js";
+import postcssPlugin from "./postcss-plugin.mjs";
+import scopeVariables from "./scope-variables.mjs";
+import {
+    ProcessorConfig,
+    writeOutputFiles,
+    createEsbuildConfig,
+    setupWatchMode,
+    parseArgs,
+    createPlugin,
+    readPackageJson,
+} from "./processor-utils.mjs";
 
-const generate = async (argv) => {
-    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
-    const tsMode = process.env.UI5_TS === "true";
-    const extension = tsMode ? ".css.ts" : ".css.js";
+/**
+ * Processes theming package files (@ui5/webcomponents-theming)
+ * Extracts :root variables, excluding font URLs, and transforms SAP variables
+ */
+async function processThemingPackageFile(f) {
+    const rootSelector = ':root';
 
-    const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
+    // Use arrays instead of PostCSS nodes to reduce memory overhead
+    const defaultDecls = [];
+    const scopedDecls = [];
+
+    const result = await postcss().process(f.text);
+
+    result.root.walkRules(rootSelector, rule => {
+        for (const decl of rule.nodes) {
+            if (decl.type !== 'decl') {
+                continue;
+            } else if (decl.prop.startsWith('--sapFontUrl')) {
+                continue;
+            } else if (!decl.prop.startsWith('--sap')) {
+                // Non-SAP variables go to scoped variant only
+                scopedDecls.push(`${decl.prop}:${decl.value}`);
+            } else {
+                const originalProp = decl.prop;
+                const originalValue = decl.value;
+
+                // Add original --sap variable to default variant
+                defaultDecls.push(`${originalProp}:${originalValue}`);
+
+                // Add --ui5-sap variable to scoped variant with fallback
+                const scopedProp = originalProp.replace("--sap", "--ui5-sap");
+                scopedDecls.push(`${scopedProp}:var(${originalProp}, ${originalValue})`);
+            }
+        }
+    });
+
+    return {
+        default: `:root{${defaultDecls.join(';')}}`,
+        scoped: `:root{${scopedDecls.join(';')}}`
+    };
+};
+
+/**
+ * Processes component package files (@ui5/webcomponents, @ui5/webcomponents-fiori, etc.)
+ * Applies selector combination, density handling, and scoping
+ */
+const processComponentPackage = async (fileText, filePath, config) => {
     const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
-    const inputFiles = await globby([
-        "src/**/parameters-bundle.css",
-    ]);
-    const restArgs = argv.slice(2);
-
-    const saveFiles = async (distPath, css, suffix = "") => {
-        await mkdir(path.dirname(distPath), { recursive: true });
-        writeFile(distPath.replace(".css", suffix + ".css"), css);
-
-        // JSON
-        const jsonPath = distPath.replace(/dist[\/\\]css/, "dist/generated/assets").replace(".css", suffix + ".css.json");
-        await mkdir(path.dirname(jsonPath), { recursive: true });
-        writeFileIfChanged(jsonPath, JSON.stringify(css));
-
-        // JS/TS
-        const jsPath = distPath.replace(/dist[\/\\]css/, "src/generated/").replace(".css", suffix + extension);
-        const jsContent = getFileContent(packageJSON.name, "\`" + css + "\`");
-        writeFileIfChanged(jsPath, jsContent);
-    }
-
-    const processThemingPackageFile = async (f) => {
-        const selector = ':root';
-        const result = await postcss().process(f.text, { from: undefined });
-
-        const newRule = postcss.rule({ selector });
-
-        result.root.walkRules(selector, rule => {
-            rule.walkDecls(decl => {
-                if (!decl.prop.startsWith('--sapFontUrl')) {
-                    newRule.append(decl.clone());
-                }
-            });
-        });
-
-        return { css: newRule.toString() };
-    };
-
-    const processComponentPackageFile = async (f) => {
-        if (CSS_VARIABLES_TARGET) {
-            const result = await postcss([
-                combineDuplicatedSelectors,
-                postcssPlugin
-            ]).process(f.text, { from: undefined });
-
-            return { css: result.css };
-        }
-
-
-        const combined = await postcss([
+    // If targeting host, apply density plugin
+    if (config.cssVariablesTarget) {
+        const result = await postcss([
             combineDuplicatedSelectors,
-        ]).process(f.text, { from: undefined });
+            postcssPlugin
+        ]).process(fileText, { from: undefined });
 
-        return { css: scopeVariables(combined.css, basePackageJSON, f.path) };
+        // Replace --sap with --ui5-sap after processing
+        return result.css.replaceAll('--sap', '--ui5-sap');
     }
 
-    let scopingPlugin = {
-        name: 'scoping',
-        setup(build) {
-            build.initialOptions.write = false;
+    // Otherwise, combine selectors and apply scoping
+    const combined = await postcss([
+        combineDuplicatedSelectors,
+    ]).process(fileText, { from: undefined });
 
-            build.onEnd(result => {
-                result.outputFiles.forEach(async f => {
-                    let { css } = f.path.includes("packages/theming") ? await processThemingPackageFile(f) : await processComponentPackageFile(f);
+    const scoped = scopeVariables(combined.css, basePackageJSON,filePath)
 
-                    saveFiles(f.path, css);
-                });
-            })
-        },
-    }
+    // Replace --sap with --ui5-sap after scoping
+    return scoped.replaceAll('--sap', '--ui5-sap');
+};
 
-    const config = {
-        entryPoints: inputFiles,
-        bundle: true,
-        minify: true,
-        outdir: 'dist/css',
-        outbase: 'src',
-        logLevel: process.env.UI5_VERBOSE === "true" ? "warning" : "error",
-        plugins: [
-            scopingPlugin,
-        ],
-        external: ["*.ttf", "*.woff", "*.woff2"],
+/**
+ * Main processing function
+ */
+const generate = async (argv) => {
+    const config = new ProcessorConfig();
+    const packageJSON = readPackageJson();
+    const inputFilesGlob = "src/**/parameters-bundle.css";
+    const { watch } = parseArgs(argv);
+
+    /**
+     * Processes a single output file from esbuild
+     */
+    const processFile = async (file) => {
+        // Determine package type and apply appropriate processing
+        const isThemingPackage = file.path.includes("packages/theming");
+
+        if (isThemingPackage) {
+            // Handle theming package with dual output
+            const { default: defaultCss, scoped: scopedCss } = await processThemingPackageFile(file);
+
+            // Write default variant (--sap* variables)
+            await writeOutputFiles({
+                distPath: file.path,
+                css: defaultCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                suffix: "",
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+
+            // Write scoped variant (--ui5-sap* variables)
+            await writeOutputFiles({
+                distPath: file.path,
+                css: scopedCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                suffix: ".scoped",
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+        } else {
+            // Component packages unchanged
+            const processedCss = await processComponentPackage(file.text, file.path, config);
+            await writeOutputFiles({
+                distPath: file.path,
+                css: processedCss,
+                packageName: packageJSON.name,
+                extension: config.extension,
+                includeJson: true,
+                includeDefaultTheme: false,
+            });
+        }
     };
 
-    if (restArgs.includes("-w")) {
-        let ctx = await esbuild.context(config);
-        console.log('watching...')
-        await ctx.watch()
-    } else {
-        await esbuild.build(config);
-    }
-}
+    /**
+     * Creates the esbuild plugin for themes
+     */
+    const plugin = createPlugin('ui5-theme-processor', processFile);
 
+    /**
+     * Creates esbuild configuration with current entry points
+     */
+    const getConfig = async () => {
+        return createEsbuildConfig({
+            entryPoints: await globby(inputFilesGlob),
+            plugin,
+            verbose: config.verbose,
+            external: ["*.ttf", "*.woff", "*.woff2"], // Exclude font files
+        });
+    };
+
+    // Execute build or watch mode
+    if (watch) {
+        const initialConfig = await getConfig();
+        await setupWatchMode({
+            config: initialConfig,
+            // No file watching needed - themes don't dynamically add files
+        });
+    } else {
+        const buildConfig = await getConfig();
+        await esbuild.build(buildConfig);
+    }
+};
+
+// CLI invocation support
 const filePath = process.argv[1];
 const fileUrl = pathToFileURL(filePath).href;
 
 if (import.meta.url === fileUrl) {
-    generate(process.argv)
+    generate(process.argv);
 }
 
 export default {
     _ui5mainFn: generate
-}
+};

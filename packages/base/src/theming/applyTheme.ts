@@ -9,6 +9,7 @@ import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
 import { updateComponentStyles } from "./componentStyles.js";
+import { getSkipThemingBaseVariables } from "../config/ThemeLoading.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -27,9 +28,30 @@ const loadThemeBase = async (theme: string) => {
 		return;
 	}
 
-	const cssData = await getThemeProperties(BASE_THEME_PACKAGE, theme);
-	if (cssData) {
-		createOrUpdateStyle(cssData, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
+	// Load default properties (--sap*) to avoid conflicts
+	const [defaultCss] = await Promise.all([
+		getThemeProperties(BASE_THEME_PACKAGE, theme),
+	]);
+
+	// Apply default variables (--sap*)
+	if (defaultCss) {
+		createOrUpdateStyle(defaultCss, "data-ui5-theme-properties", BASE_THEME_PACKAGE, theme);
+	}
+};
+
+const loadThemeBaseScoped = async (theme: string) => {
+	if (!isThemeBaseRegistered()) {
+		return;
+	}
+
+	// Load scoped properties (--ui5-sap* framework-scoped)
+	const [scopedCss] = await Promise.all([
+		getThemeProperties(BASE_THEME_PACKAGE, `${theme}-scoped`),
+	]);
+
+	// Apply scoped variables (--ui5-sap* framework-scoped)
+	if (scopedCss) {
+		createOrUpdateStyle(scopedCss, "data-ui5-theme-properties-scoped", BASE_THEME_PACKAGE, theme);
 	}
 };
 
@@ -84,16 +106,22 @@ const detectExternalTheme = async (theme: string) => {
 
 const applyTheme = async (theme: string) => {
 	const extTheme = await detectExternalTheme(theme);
+	const hasExternalTheme = extTheme && theme === extTheme.themeName;
 
-	// Only load theme_base properties if there is no externally loaded theme, or there is, but it is not being loaded
-	if (!extTheme || theme !== extTheme.themeName) {
-		await loadThemeBase(theme);
-	} else {
+	const skipBase = getSkipThemingBaseVariables();
+
+	// If an external theme is detected or skipBase is true, do not load the base theme to avoid conflicts.
+	if (hasExternalTheme || skipBase) {
 		deleteThemeBase();
+	} else if (!skipBase) {
+		await loadThemeBase(theme);
 	}
 
+	// Always load scoped --ui5-sap* variables
+	await loadThemeBaseScoped(theme);
+
 	// Always load component packages properties. For non-registered themes, try with the base theme, if any
-	const externalThemeName = extTheme && extTheme.themeName === theme ? theme : undefined;
+	const externalThemeName = hasExternalTheme ? theme : undefined;
 	const baseThemeName = extTheme && extTheme.baseThemeName;
 	const effectiveThemeName = isThemeRegistered(theme) ? theme : (baseThemeName || DEFAULT_THEME);
 

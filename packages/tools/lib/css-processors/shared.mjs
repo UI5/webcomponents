@@ -31,9 +31,11 @@ const getDefaultThemeCode = packageName => {
     return `import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
 
 import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.css.js";
+import defaultThemeBaseScoped from "@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.scoped.css.js";
 import defaultTheme from "./${DEFAULT_THEME}/parameters-bundle.css.js";
 
 registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}-scoped", async () => defaultThemeBaseScoped);
 registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, "${DEFAULT_THEME}", async () => defaultTheme${CSS_VARIABLES_TARGET ? ', "host"' : ''});
 `;
 };
