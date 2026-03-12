@@ -2,10 +2,9 @@
 	display: block;
 }
 
-.ui5-timeline-root {
-	padding: var(--_ui5_tl_padding);
-	box-sizing: border-box;
-	overflow: hidden;
+/* Header bar wrapper - slotted content */
+.ui5-timeline-header-bar-wrapper {
+	flex-shrink: 0;
 }
 
 .ui5-timeline-list {
@@ -69,17 +68,31 @@
 	display: none;
 }
 
-.ui5-timeline-root,
-.ui5-timeline-busy-indicator {
+.ui5-timeline-root {
 	width: 100%;
 	height: 100%;
 	position: relative;
 	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	padding: var(--_ui5_tl_padding);
+	overflow: hidden;
+}
+
+.ui5-timeline-busy-indicator {
+	display: block;
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
 }
 
 :host([layout="Vertical"]) .ui5-timeline-scroll-container {
 	height: 100%;
 	width: 100%;
+	overflow: auto;
 }
 
 :host([growing="Scroll"]) .ui5-timeline-end-marker {

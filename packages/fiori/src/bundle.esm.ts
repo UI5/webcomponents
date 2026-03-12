@@ -56,6 +56,8 @@ import UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js"
 import UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
 import Timeline from "./Timeline.js";
 import TimelineGroupItem from "./TimelineGroupItem.js";
+import TimelineHeaderBar from "./TimelineHeaderBar.js";
+import TimelineFilterOption from "./TimelineFilterOption.js";
 import NavigationLayout from "./NavigationLayout.js";
 import UploadCollection from "./UploadCollection.js";
 import UploadCollectionItem from "./UploadCollectionItem.js";
