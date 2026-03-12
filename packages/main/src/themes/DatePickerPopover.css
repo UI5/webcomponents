@@ -46,4 +46,8 @@
 
 .ui5-daterange-calendar-mobile-footer {
 	height: auto;
+}  
+[ui5-responsive-popover]::part(header) {
+	font-family: var(--_ui5_button_fontFamily);
+	text-align: left;
 }

@@ -21,6 +21,7 @@
 	--_ui5_day_picker_item_height: 2.875rem;
 	--_ui5_day_picker_empty_height: 3rem;
 	--_ui5_day_picker_item_justify_content: space-between;
+	--_ui5_dp_item_withsecondtype_font_size: var(--sapFontSize);
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_special_day_top: 2rem;
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_special_day_right: 1.4375rem;
 	--_ui5_dp_two_calendar_item_secondary_text_height: 1rem;
@@ -238,6 +239,7 @@
 		--_ui5_day_picker_item_height: 2rem;
 		--_ui5_day_picker_empty_height: 2.125rem;
 		--_ui5_day_picker_item_justify_content: flex-end;
+		--_ui5_dp_item_withsecondtype_font_size: var(--sapFontSmallSize);
 		--_ui5_dp_two_calendar_item_secondary_text_height: 0.75rem;
 		--_ui5_dp_two_calendar_item_text_padding_top: 0.5rem;
 
