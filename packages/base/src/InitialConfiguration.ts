@@ -25,7 +25,7 @@ type InitialConfig = {
 	fetchDefaultLanguage: boolean,
 	defaultFontLoading: boolean,
 	enableDefaultTooltips: boolean,
-	skipThemeBase: boolean,
+	skipThemingBaseVariables: boolean,
 };
 
 let initialConfig: InitialConfig = {
@@ -42,7 +42,7 @@ let initialConfig: InitialConfig = {
 	fetchDefaultLanguage: false,
 	defaultFontLoading: true,
 	enableDefaultTooltips: true,
-	skipThemeBase: false,
+	skipThemingBaseVariables: false,
 };
 
 /* General settings */
@@ -133,9 +133,9 @@ const getFormatSettings = () => {
  * Returns if theme base loading should be skipped.
  * @returns { boolean } true if theme base loading should be skipped
  */
-const getSkipThemeBase = () => {
+const getSkipThemingBaseVariables = () => {
 	initConfiguration();
-	return initialConfig.skipThemeBase;
+	return initialConfig.skipThemingBaseVariables;
 };
 
 const booleanMapping = new Map();
@@ -268,5 +268,5 @@ export {
 	getDefaultFontLoading,
 	resetConfiguration,
 	getEnableDefaultTooltips,
-	getSkipThemeBase,
+	getSkipThemingBaseVariables,
 };

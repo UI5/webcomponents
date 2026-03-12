@@ -1,10 +1,10 @@
-import { getSkipThemeBase as getConfiguredSkipThemeBase } from "../InitialConfiguration.js";
+import { getSkipThemingBaseVariables as getConfiguredSkipThemingBaseVariables } from "../InitialConfiguration.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
 
-let skipThemeBase: boolean | undefined;
+let skipThemingBaseVariables: boolean | undefined;
 
 attachConfigurationReset(() => {
-	skipThemeBase = undefined;
+	skipThemingBaseVariables = undefined;
 });
 
 /**
@@ -20,12 +20,12 @@ attachConfigurationReset(() => {
  * @since 2.20.0
  * @returns { boolean }
  */
-const getSkipThemeBase = (): boolean => {
-	if (skipThemeBase === undefined) {
-		skipThemeBase = getConfiguredSkipThemeBase();
+const getSkipThemingBaseVariables = (): boolean => {
+	if (skipThemingBaseVariables === undefined) {
+		skipThemingBaseVariables = getConfiguredSkipThemingBaseVariables();
 	}
 
-	return skipThemeBase;
+	return skipThemingBaseVariables;
 };
 
 /**
@@ -40,11 +40,11 @@ const getSkipThemeBase = (): boolean => {
  * @since 2.20.0
  * @param { boolean } skip - whether to skip loading base theme variables
  */
-const setSkipThemeBase = (skip: boolean) => {
-	skipThemeBase = skip;
+const setSkipThemingBaseVariables = (skip: boolean) => {
+	skipThemingBaseVariables = skip;
 };
 
 export {
-	getSkipThemeBase,
-	setSkipThemeBase,
+	getSkipThemingBaseVariables,
+	setSkipThemingBaseVariables,
 };

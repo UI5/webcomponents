@@ -9,7 +9,7 @@ import type OpenUI5Support from "../features/OpenUI5Support.js";
 import { DEFAULT_THEME } from "../generated/AssetParameters.js";
 import { getCurrentRuntimeIndex } from "../Runtimes.js";
 import { updateComponentStyles } from "./componentStyles.js";
-import { getSkipThemeBase } from "../config/ThemeLoading.js";
+import { getSkipThemingBaseVariables } from "../config/ThemeLoading.js";
 
 // eslint-disable-next-line
 export let _lib = "ui5";
@@ -108,7 +108,7 @@ const applyTheme = async (theme: string) => {
 	const extTheme = await detectExternalTheme(theme);
 	const hasExternalTheme = extTheme && theme === extTheme.themeName;
 
-	const skipBase = getSkipThemeBase();
+	const skipBase = getSkipThemingBaseVariables();
 
 	// If an external theme is detected or skipBase is true, do not load the base theme to avoid conflicts.
 	if (hasExternalTheme || skipBase) {

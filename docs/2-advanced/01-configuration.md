@@ -18,7 +18,7 @@ There are several configuration settings that affect all UI5 Web Components glob
 | [fetchDefaultLanguage](#fetchDefaultLanguage) | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | Whether to fetch assets even for the default language                  | Framework                                                      |
 | [defaultFontLoading](#defaultFontLoading) | `true`, `false`                                                                                                                                                                                                                                                                                | `true`               | Whether to fetch default font faces                  | Framework                                                      |
 | [enableDefaultTooltips](#enableDefaultTooltips) | `true`, `false`                                                                                                                                                                                                                                                                                | `true`               | Whether to display default tooltips                     | Components (Icon, Button, RatingIndicator, etc.)                                                      |
-| [skipThemeBase](#skipThemeBase) | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | Whether to skip loading current theme base                  | Framework                                                      |
+| [skipThemingBaseVariables](#skipThemingBaseVariables) | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | Whether to skip loading current theme base                  | Framework                                                      |
 | [timezone](#timezone)                         | `Asia/Tokyo`, `Pacific/Apia`, `Asia/Kolkata`, `Europe/Sofia` and etc.                                                                                                                                                                                                                          | Your local time zone. | Allows to override your local time zone.                               | Date/time components (`ui5-date-picker`, etc.)                 |
 | [themeRoot](#themeRoot)                       | String to a URL - see the [themeRoot](#themeRoot) section below                                                                                                                                                                                                                                | N/A                   | Allows to set a URL to a Theme-designer-created custom theme.          | All components                                                 |
 
@@ -254,34 +254,34 @@ Example:
 </script>
 ```
 
-### skipThemeBase
-<a name="skipThemeBase"></a>
+### skipThemingBaseVariables
+<a name="skipThemingBaseVariables"></a>
 
 This configuration option controls whether the framework should skip loading its theme base CSS variables (`--sap*`).
 
 By default, the framework loads both:
 - **Base theme variables** (`--sap*`) - global SAP Fiori design tokens
 
-When `skipThemeBase` is set to `true`, the framework skips loading the base `--sap*` variables This is useful when your application provides theme variables externally and handles theming independently from the framework.
+When `skipThemingBaseVariables` is set to `true`, the framework skips loading the base `--sap*` variables This is useful when your application provides theme variables externally and handles theming independently from the framework.
 
-Typically, you would not need to modify this setting. However, if your application manages SAP Fiori theme variables externally (e.g., through a separate theming system), you can set `skipThemeBase` to `true` to avoid loading duplicate variables.
+Typically, you would not need to modify this setting. However, if your application manages SAP Fiori theme variables externally (e.g., through a separate theming system), you can set `skipThemingBaseVariables` to `true` to avoid loading duplicate variables.
 
 Example:
 ```html
 <script data-ui5-config type="application/json">
 {
-	"skipThemeBase": true
+	"skipThemingBaseVariables": true
 }
 </script>
 ```
 
 You can also control this setting programmatically:
 ```js
-import { setSkipThemeBase } from "@ui5/webcomponents-base/dist/config/ThemeLoading.js";
+import { setSkipThemingBaseVariables } from "@ui5/webcomponents-base/dist/config/ThemeLoading.js";
 import { setTheme, getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 // Skip framework's base theme loading
-setSkipThemeBase(true);
+setSkipThemingBaseVariables(true);
 
 // Re-apply theme to take effect immediately
 await setTheme(getTheme());
@@ -431,10 +431,10 @@ import { getDefaultFontLoading, setDefaultFontLoading } from "@ui5/webcomponents
 import { getEnableDefaultTooltips, setEnableDefaultTooltips } from "@ui5/webcomponents-base/dist/config/Tooltips.js";
 ```
 
- - `skipThemeBase`
+ - `skipThemingBaseVariables`
 
 ```js
-import { getSkipThemeBase, setSkipThemeBase } from "@ui5/webcomponents-base/dist/config/ThemeLoading.js";
+import { getSkipThemingBaseVariables, setSkipThemingBaseVariables } from "@ui5/webcomponents-base/dist/config/ThemeLoading.js";
 ```
 
  - `timezone` - can only be set initially in the configuration script.
