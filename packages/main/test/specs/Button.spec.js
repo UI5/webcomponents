@@ -119,6 +119,27 @@ describe("Button general interaction", () => {
 		assert.strictEqual(await button.getAttribute("aria-label"), "Download Application", "Attribute is reflected");
 	});
 
+	it("accessible-name-ref updates aria-label when referenced element text changes", async () => {
+		const btn1 = await browser.$("#btnCounter1").shadow$("button");
+		const btn2 = await browser.$("#btnCounter2").shadow$("button");
+
+		// both buttons should have the same aria-label from the referenced label
+		assert.strictEqual(await btn1.getAttribute("aria-label"), "Counter value is 0", "btn1 aria-label is correct");
+		assert.strictEqual(await btn2.getAttribute("aria-label"), "Counter value is 0", "btn2 aria-label is correct");
+
+		// update text of referenced label (simulating counter increment)
+		await browser.execute(() => {
+			document.getElementById("lblCounter").innerHTML = "Counter value is 3";
+		});
+
+		// wait for mutation observer and re-render
+		await browser.pause(500);
+
+		// both buttons should update their aria-label
+		assert.strictEqual(await btn1.getAttribute("aria-label"), "Counter value is 3", "btn1 aria-label updated after label change");
+		assert.strictEqual(await btn2.getAttribute("aria-label"), "Counter value is 3", "btn2 aria-label updated after label change");
+	});
+
 	it("setting tooltip on the host is reflected on the button tag", async () => {
 		const button = await browser.$("#customTooltip").shadow$("button");
 
