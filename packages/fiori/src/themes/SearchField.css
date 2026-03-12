@@ -266,6 +266,7 @@
 .ui5-shell-search-field-icon:hover,
 .ui5-shell-search-field-input-button:hover {
 	background: var(--sapShell_Hover_Background);
+	border: 1px solid var(--sapButton_Lite_Hover_BorderColor);
 	color: var(--sapShell_InteractiveTextColor);
 }
 

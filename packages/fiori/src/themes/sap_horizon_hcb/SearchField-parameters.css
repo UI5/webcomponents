@@ -7,7 +7,7 @@
 	--_ui5-search-wrapper-background: none;
 	--_ui5_search_separator_background: none;
 	--_ui5-search-wrapper-hover-background: none;
-	--_ui5-search-wrapper-hover-background-color: var(--sapField_Hover_Background);
+	--_ui5-search-wrapper-hover-background-color: none;
 	--_ui5_search_input_scope_margin: 0;
 	--_ui5-search_input_scope_hover_shadow: none;
 	--_ui5-search_input_scope_active_shadow: none;
