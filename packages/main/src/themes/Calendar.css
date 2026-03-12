@@ -21,11 +21,12 @@
 }
 
 .ui5-dt-cal--multiple.ui5-cal-root {
-    width: calc(var(--_ui5_calendar_width) * 2 + var(--_ui5_calendar_left_right_padding) * 2);
+    width: var(--_ui5_calendar_multiple_width);
+	height: var(--_ui5_calendar_multiple-months_height);
 }
 
 .ui5-dt-cal--portrait.ui5-dt-cal--multiple {
-	height: auto;
+	height: calc(2 * var(--_ui5_calendar_height));
 }
 
 .ui5-cal-root .ui5-cal-content {
@@ -42,8 +43,9 @@
 
 .ui5-cal-multiple-months-wrapper, .ui5-cal-multiple-months-header-wrapper {
     display: flex;
-    gap: 1rem;
+    gap: var(--_ui5_calendar_multiple_gap);
     flex-wrap: nowrap;
+    flex-direction: var(--_ui5_calendar_multiple_layout);
 }
 
 .ui5-cal-multiple-months-header-wrapper {
@@ -111,9 +113,9 @@
 
 .ui5-cal-overlay-container {
   position: absolute;
-  width: 16rem;
+  width: var(--_ui5_calendar_overlay_width);
   left: 50%;
-  top: 57%;
+  top: var(--_ui5_calendar_overlay_top);
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -124,10 +126,6 @@
   border-radius: var(--_ui5_popup_border_radius);
   min-height: 2rem;
   box-sizing: border-box;
-}
-
-.ui5-dt-cal--portrait .ui5-cal-overlay-container {
-	top:54%;
 }
 
 
@@ -162,11 +160,6 @@
 	flex:none;
 }
 
-
-.ui5-dt-cal--portrait.ui5-dt-cal--multiple .ui5-cal-overlay-container  {
-	width: 100%;
-}
-
 /* Portrait mode: Stack calendars vertically in mobile view */
 .ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-content-multiple {
     gap: 0;
@@ -174,20 +167,15 @@
 
 .ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-multiple-months-wrapper {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--_ui5_calendar_multiple_gap);
 }
 
 .ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
-    min-width: var(--_ui5_calendar_width);
-    width: 100%;
+    width: var(--_ui5_calendar_width);
 }
 
 .ui5-dt-cal--portrait .ui5-cal-content-multiple > * {
     width: 100%;
     min-width: auto;
     max-width: 100%;
-}
-
-.ui5-cal-multiple-months-header-wrapper {
-
 }

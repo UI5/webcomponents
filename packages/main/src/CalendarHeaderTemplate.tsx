@@ -145,8 +145,10 @@ function renderMiddleButtons(
 }
 
 function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isMultiple: boolean) {
-	const shouldShowNextButton = !isMultiple || (isLast && !this._portraitView) || (isFirst && this._portraitView);
-	const shouldShowSpacer = isMultiple && ((!isLast && !this._portraitView) || (isLast && this._portraitView));
+	// In portrait or compact mode, show next button only on first calendar
+	// In normal mode, show next button only on last calendar
+	const shouldShowNextButton = !isMultiple || (isLast && !this._portraitView && !this._isCompactMode) || (isFirst && (this._portraitView || this._isCompactMode));
+	const shouldShowSpacer = isMultiple && ((!isLast && !this._portraitView && !this._isCompactMode) || (isLast && (this._portraitView || this._isCompactMode)));
 
 	if (shouldShowNextButton) {
 		return (

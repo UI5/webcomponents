@@ -40,8 +40,8 @@ export default function CalendarTemplate(this: Calendar) {
 
 							<div class="ui5-cal-daypicker-overlay"></div>
 
-							{/* Render headers in a separate loop */}
-							{this._isDefaultHeaderModeInMultipleMonths && !this._portraitMode &&(
+							{/* Render headers in separate loop when: default mode AND (not portrait AND not compact) */}
+							{this._isDefaultHeaderModeInMultipleMonths && !this._portraitMode && !this._isCompactMode && (
 								<div class="ui5-cal-multiple-months-header-wrapper">
 									{Array.from({ length: this._monthsToShow }, (_, index) => {
 										const monthTimestamp = this._getMonthTimestamp(index);
@@ -71,7 +71,8 @@ export default function CalendarTemplate(this: Calendar) {
 
 									return (
 										<div key={`calendar-month-picker-${index}`} class="ui5-cal-month-container">
-											{this._isDefaultHeaderModeInMultipleMonths && this._portraitMode &&
+											{/* Render header inline when: default mode AND (portrait OR compact) */}
+											{this._isDefaultHeaderModeInMultipleMonths && (this._portraitMode || this._isCompactMode) &&
 												CalendarHeaderTemplate.call(this, {
 													headerText: this._getHeaderTextForMonth(monthTimestamp),
 													isFirst,
