@@ -40,15 +40,23 @@
     overflow: visible;
 }
 
-.ui5-cal-multiple-months-wrapper {
+.ui5-cal-multiple-months-wrapper, .ui5-cal-multiple-months-header-wrapper {
     display: flex;
     gap: 1rem;
     flex-wrap: nowrap;
 }
 
-.ui5-cal-month-container {
+.ui5-cal-multiple-months-header-wrapper {
+	width: 100%;
+}
+
+.ui5-cal-month-container, .ui5-cal-month-header-container {
     display: flex;
     flex-direction: column;
+}
+
+.ui5-cal-month-header-container {
+	width: 50%;
 }
 
 .ui5-cal-root .ui5-calheader.ui5-calheader-multiple {
@@ -178,4 +186,8 @@
     width: 100%;
     min-width: auto;
     max-width: 100%;
+}
+
+.ui5-cal-multiple-months-header-wrapper {
+
 }
