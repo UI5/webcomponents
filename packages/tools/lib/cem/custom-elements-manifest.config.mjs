@@ -48,7 +48,7 @@ const wrapPluginForQuietMode = (plugin) => {
 		...plugin,
 		packageLinkPhase(context) {
 			const originalLog = console.log;
-			console.log = () => {};
+			console.log = () => { };
 			try {
 				return originalPackageLinkPhase.call(plugin, context);
 			} finally {
@@ -134,6 +134,13 @@ function processClass(ts, classNode, moduleDoc) {
 
 		if (currClass.superclass?.name === "UI5Element") {
 			currClass.customElement = true;
+		}
+	} else if (currClass.customElement && classNode?.heritageClauses) {
+		// Find the extends clause (not implements)
+		const extendsClause = classNode.heritageClauses.find(clause => clause.token === ts.SyntaxKind.ExtendsKeyword);
+		if (extendsClause?.types?.[0]?.expression?.text) {
+			const extendedClass = extendsClause.types[0].expression.text;
+			logDocumentationError(moduleDoc.path, `Class extends ${extendedClass} but @extends tag is missing in JSDoc`);
 		}
 	}
 
@@ -417,10 +424,10 @@ const processPublicAPI = object => {
 		return true;
 	}
 	for (const key of keys) {
-		if ((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) {
+		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && !object.customElement) {
 			return true;
 		} else if (typeof object[key] === "object") {
-			if (key === "cssParts" || key === "attributes" || key === "_ui5implements") {
+			if (key === "cssParts" || key === "cssStates" || key === "attributes" || key === "_ui5implements") {
 				continue;
 			}
 
@@ -567,6 +574,38 @@ export default {
 				if (devMode) {
 					displayDocumentationErrors();
 				}
+			}
+		},
+		{
+			name: 'alphabetical-sort-plugin',
+			packageLinkPhase({ customElementsManifest }) {
+				const sortByName = (arr) => {
+					if (Array.isArray(arr)) {
+						arr.sort((a, b) => {
+							if (a?.name && b?.name) {
+								return a.name.localeCompare(b.name);
+							}
+							return 0;
+						});
+					}
+				};
+
+				const sortArraysInObject = (obj) => {
+					if (!obj || typeof obj !== 'object') return;
+
+					for (const key in obj) {
+						if (Array.isArray(obj[key])) {
+							sortByName(obj[key]);
+							obj[key].forEach(item => sortArraysInObject(item));
+						} else if (typeof obj[key] === 'object') {
+							sortArraysInObject(obj[key]);
+						}
+					}
+				};
+
+				customElementsManifest.modules?.forEach(moduleDoc => {
+					sortArraysInObject(moduleDoc);
+				});
 			}
 		},
 		wrapPluginForQuietMode(generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),

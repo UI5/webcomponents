@@ -105,7 +105,7 @@ type InputItemClickEventDetail = MenuItemClickEventDetail;
 /**
  * Fired when the user selects the version navigation buttons.
  *
- * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default)
+ * @param { boolean } backwards The text of the currently clicked menu item.
  * @public
  */
 @event("version-change")
@@ -234,9 +234,9 @@ class Input extends BaseInput {
 	/**
 	 * Handles the version change event from the versioning component.
 	 *
-	 * @param {CustomEvent} e - The version change event
+	 * @param e - The version change event
 	 */
-	_handleVersionChange(e: CustomEvent<{ backwards: boolean }>) {
+	_handleVersionChange(e: CustomEvent<InputVersionChangeEventDetail>): void {
 		this.fireDecoratorEvent("version-change", {
 			backwards: e.detail.backwards,
 		});

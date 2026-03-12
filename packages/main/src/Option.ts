@@ -91,8 +91,10 @@ class Option extends ListItemBase implements IOption {
 
 	/**
 	 * Defines the selected state of the component.
+	 *
 	 * @default false
 	 * @public
+	 * @deprecated since 2.20.0, please use the parent Select's `value` property instead.
 	 */
 	@property({ type: Boolean })
 	declare selected: boolean;

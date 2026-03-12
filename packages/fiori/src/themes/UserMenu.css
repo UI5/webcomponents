@@ -40,10 +40,6 @@
     padding-bottom: 0.5rem;
 }
 
-.ui5-user-menu-rp::part(footer) {
-    padding-block: 0.5rem;
-}
-
 .ui5-user-menu-selected-account {
     display: flex;
     align-items: center;

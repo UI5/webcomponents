@@ -1,0 +1,3 @@
+:host {
+	--ui5_slider_handle_outline: var(--sapContent_FocusWidth) dotted var(--sapContent_FocusColor);
+}

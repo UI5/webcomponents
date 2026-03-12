@@ -2,6 +2,18 @@
 	visibility: hidden;
 }
 
+.viewModeToggle {
+	display: flex;
+	padding: 0.5rem;
+	background: var(--ifm-color-emphasis-100);
+	border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.viewModeToggle button {
+	display: inline-flex;
+	align-items: center;
+}
+
 .editor__toolbar {
 	display: flex;
 	justify-content: space-between;

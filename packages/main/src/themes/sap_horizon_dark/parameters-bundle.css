@@ -28,6 +28,9 @@
 @import "./Link-parameters.css";
 @import "./List-parameters.css";
 @import "../base/ListItemBase-parameters.css";
+@import "./SliderHandle-parameters.css";
+@import "./SliderScale-parameters.css";
+@import "./Slider-parameters.css";
 @import "./Menu-parameters.css";
 @import "./MonthPicker-parameters.css";
 @import "./MessageStrip-parameters.css";

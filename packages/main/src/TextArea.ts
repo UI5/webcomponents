@@ -311,7 +311,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_mirrorText: IndexedTokenizedText = [];
 
 	/**

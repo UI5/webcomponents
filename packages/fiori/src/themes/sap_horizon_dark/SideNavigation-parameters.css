@@ -4,8 +4,6 @@
 	--_ui5_side_navigation_width: 16rem;
 	--_ui5_side_navigation_collapsed_width: 4rem;
 
-	--_ui5_side_navigation_navigation_separator_margin: 0.25rem 0.5rem 0.25rem 0.5rem;
-	--_ui5_side_navigation_navigation_separator_margin_collapsed: var(--_ui5_side_navigation_navigation_separator_margin);
 	--_ui5_side_navigation_navigation_separator_background_color: var(--sapToolbar_SeparatorColor);
 	--_ui5_side_navigation_navigation_separator_radius: 0.125rem;
 	--_ui5_side_navigation_navigation_separator_height: 0.0625rem;

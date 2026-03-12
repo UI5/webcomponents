@@ -143,3 +143,10 @@
 ::slotted([slot="footer"][ui5-toolbar]) {
 	border: 0;
 }
+
+::slotted([slot="footer"][ui5-bar][design="Footer"]),
+::slotted([slot="header"][ui5-bar][design="Header"]) {
+	--_ui5_bar-start-container-padding-start: 0;
+	--_ui5_bar-mid-container-padding-start-end: 0;
+	--_ui5_bar-end-container-padding-end: 0;
+}

@@ -24,7 +24,7 @@ import BreadcrumbsDesign from "./types/BreadcrumbsDesign.js";
 import "./BreadcrumbsItem.js";
 import type BreadcrumbsItem from "./BreadcrumbsItem.js";
 import type BreadcrumbsSeparator from "./types/BreadcrumbsSeparator.js";
-import type { IOverflowToolbarItem } from "./ToolbarItem.js";
+import type { IToolbarItemContent } from "./ToolbarItem.js";
 
 import {
 	BREADCRUMB_ITEM_POS,
@@ -85,7 +85,7 @@ type FocusAdaptor = ITabbable & {
  * - [End] - Navigates to the last item.
  * @constructor
  * @extends UI5Element
- * @implements {IOverflowToolbarItem}
+ * @implements {IToolbarItemContent}
  * @public
  * @since 1.0.0-rc.15
  */
@@ -111,7 +111,7 @@ type FocusAdaptor = ITabbable & {
 	bubbles: true,
 	cancelable: true,
 })
-class Breadcrumbs extends UI5Element implements IOverflowToolbarItem {
+class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	eventDetails!: {
 		"item-click": BreadcrumbsItemClickEventDetail,
 	}

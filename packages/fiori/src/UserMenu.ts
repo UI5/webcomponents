@@ -228,7 +228,7 @@ class UserMenu extends UI5Element {
 	 *
 	 * **Note:** When provided, replaces the default "Sign Out" button. Use an empty element to hide the footer completely.
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@slot()
 	footer!: Slot<HTMLElement>;
@@ -288,21 +288,25 @@ class UserMenu extends UI5Element {
 	}
 
 	onAfterRendering(): void {
-		if (this._responsivePopover) {
-			const observerOptions = {
-				threshold: [0.15],
-			};
+		if (this._responsivePopover && this.open && !this._observer) {
+			this._setupObserver();
+		}
+	}
 
-			this._observer?.disconnect();
-			this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
+	_setupObserver() {
+		const observerOptions = {
+			threshold: [0.15],
+		};
 
-			if (this._selectedAccountTitleEl) {
-				this._observer.observe(this._selectedAccountTitleEl);
-			}
+		this._observer?.disconnect();
+		this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
 
-			if (this._selectedAccountManageBtn) {
-				this._observer.observe(this._selectedAccountManageBtn);
-			}
+		if (this._selectedAccountTitleEl) {
+			this._observer.observe(this._selectedAccountTitleEl);
+		}
+
+		if (this._selectedAccountManageBtn) {
+			this._observer.observe(this._selectedAccountManageBtn);
 		}
 	}
 
@@ -390,10 +394,17 @@ class UserMenu extends UI5Element {
 	}
 
 	_handlePopoverAfterOpen() {
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
+		this._setupObserver();
 		this.fireDecoratorEvent("open");
 	}
 
 	_handlePopoverAfterClose() {
+		this._observer?.disconnect();
+		this._observer = undefined;
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
 		this.open = false;
 		this.fireDecoratorEvent("close");
 	}
