@@ -9,6 +9,7 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import type List from "@ui5/webcomponents/dist/List.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -308,6 +309,12 @@ class ViewSettingsDialog extends UI5Element {
 
 	@query("[ui5-list][group-by]")
 	_groupBy?: List;
+
+	@query("[ui5-list][filter-list]")
+	_filterList?: List;
+
+	@query("[ui5-list][filter-options]")
+	_filterOptions?: List;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -651,16 +658,29 @@ class ViewSettingsDialog extends UI5Element {
 		});
 	}
 
-	_navigateToFilters() {
+	async _navigateToFilters() {
 		this._filterStepTwo = false;
+		await renderFinished();
+		if (this._filterList) {
+			this._filterList.focusFirstItem();
+		}
 	}
 
-	_changeCurrentFilter(e: CustomEvent<ListItemClickEventDetail>) {
+	async _changeCurrentFilter(e: CustomEvent<ListItemClickEventDetail>) {
 		this._filterStepTwo = true;
 		this._currentSettings.filters = this._currentSettings.filters.map(filter => {
 			filter.selected = filter.text === e.detail.item.innerText;
 			return filter;
 		});
+		await renderFinished();
+		if (this._filterOptions) {
+			const selectedItems = this._filterOptions.getSelectedItems();
+			if (selectedItems.length) {
+				selectedItems[0].focus();
+			} else {
+				this._filterOptions.focusFirstItem();
+			}
+		}
 	}
 
 	/**
