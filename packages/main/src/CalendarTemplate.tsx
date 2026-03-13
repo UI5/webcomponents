@@ -8,6 +8,8 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
+	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitMode && !this._isCompactMode;
+	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && (this._portraitMode || this._isCompactMode);
 
 	return (
 		<>
@@ -40,72 +42,16 @@ export default function CalendarTemplate(this: Calendar) {
 
 							<div class="ui5-cal-daypicker-overlay"></div>
 
-							{/* Render headers in separate loop when: default mode AND (not portrait AND not compact) */}
-							{this._isDefaultHeaderModeInMultipleMonths && !this._portraitMode && !this._isCompactMode && (
+							{/* Render headers in separate loop when in horizontal layout (cozy mode, not portrait, not compact) */}
+							{shouldRenderSeparateHeaders && (
 								<div class="ui5-cal-multiple-months-header-wrapper">
-									{Array.from({ length: this._monthsToShow }, (_, index) => {
-										const monthTimestamp = this._getMonthTimestamp(index);
-										const isFirst = index === 0;
-										const isLast = index === this._monthsToShow - 1;
-
-										return (
-											<div key={`calendar-month-header-${index}`} class="ui5-cal-month-header-container">
-												{CalendarHeaderTemplate.call(this, {
-													headerText: this._getHeaderTextForMonth(monthTimestamp),
-													isFirst,
-													isLast,
-													isMultiple: true,
-												})}
-											</div>
-										);
-									})}
+									{renderMonthHeaders.call(this)}
 								</div>
 							)}
 
-							{/* Render day pickers in a separate loop */}
+							{/* Render day pickers (with inline headers in vertical layout) */}
 							<div class="ui5-cal-multiple-months-wrapper">
-								{Array.from({ length: this._monthsToShow }, (_, index) => {
-									const monthTimestamp = this._getMonthTimestamp(index);
-										const isFirst = index === 0;
-										const isLast = index === this._monthsToShow - 1;
-
-									return (
-										<div key={`calendar-month-picker-${index}`} class="ui5-cal-month-container">
-											{/* Render header inline when: default mode AND (portrait OR compact) */}
-											{this._isDefaultHeaderModeInMultipleMonths && (this._portraitMode || this._isCompactMode) &&
-												CalendarHeaderTemplate.call(this, {
-													headerText: this._getHeaderTextForMonth(monthTimestamp),
-													isFirst,
-													isLast,
-													isMultiple: true,
-												})
-											}
-											<div class="ui5-cal-daypicker-wrapper">
-												<DayPicker
-													id={`${this._id}-daypicker-${index}`}
-													hidden={this._isDayPickerHidden}
-													formatPattern={this._formatPattern}
-													selectedDates={this._selectedDatesTimestamps}
-													specialCalendarDates={this._specialCalendarDates}
-													disabledDates={this._disabledDates}
-													_hidden={this._isDayPickerHidden}
-													primaryCalendarType={this._primaryCalendarType}
-													secondaryCalendarType={this._secondaryCalendarType}
-													selectionMode={this.selectionMode}
-													minDate={this.minDate}
-													maxDate={this.maxDate}
-													calendarWeekNumbering={this.calendarWeekNumbering}
-													timestamp={monthTimestamp}
-													hideWeekNumbers={this.hideWeekNumbers}
-													onChange={this.onSelectedDatesChange}
-													onNavigate={this.onNavigate}
-													exportparts="day-cell, day-cell-selected, day-cell-selected-between"
-													inert={this._areDayPickersInert}
-												/>
-											</div>
-										</div>
-									);
-								})}
+								{renderMonthPickers.call(this, shouldRenderInlineHeaders)}
 							</div>
 						</>
 					) : (
@@ -156,6 +102,76 @@ export default function CalendarTemplate(this: Calendar) {
 				<slot name="calendarLegend"></slot>
 			</div>
 		</>);
+}
+
+/**
+ * Renders month headers in a separate loop (horizontal layout)
+ */
+function renderMonthHeaders(this: Calendar) {
+	return Array.from({ length: this._monthsToShow }, (_, index) => {
+		const monthTimestamp = this._getMonthTimestamp(index);
+		const isFirst = index === 0;
+		const isLast = index === this._monthsToShow - 1;
+
+		return (
+			<div key={`calendar-month-header-${index}`} class="ui5-cal-month-header-container">
+				{CalendarHeaderTemplate.call(this, {
+					headerText: this._getHeaderTextForMonth(monthTimestamp),
+					isFirst,
+					isLast,
+					isMultiple: true,
+				})}
+			</div>
+		);
+	});
+}
+
+/**
+ * Renders month pickers (with optional inline headers for vertical layout)
+ */
+function renderMonthPickers(this: Calendar, shouldRenderInlineHeaders: boolean) {
+	return Array.from({ length: this._monthsToShow }, (_, index) => {
+		const monthTimestamp = this._getMonthTimestamp(index);
+		const isFirst = index === 0;
+		const isLast = index === this._monthsToShow - 1;
+
+		return (
+			<div key={`calendar-month-picker-${index}`} class="ui5-cal-month-container">
+				{/* Render header inline when in vertical layout (portrait OR compact) */}
+				{shouldRenderInlineHeaders &&
+					CalendarHeaderTemplate.call(this, {
+						headerText: this._getHeaderTextForMonth(monthTimestamp),
+						isFirst,
+						isLast,
+						isMultiple: true,
+					})
+				}
+				<div class="ui5-cal-daypicker-wrapper">
+					<DayPicker
+						id={`${this._id}-daypicker-${index}`}
+						hidden={this._isDayPickerHidden}
+						formatPattern={this._formatPattern}
+						selectedDates={this._selectedDatesTimestamps}
+						specialCalendarDates={this._specialCalendarDates}
+						disabledDates={this._disabledDates}
+						_hidden={this._isDayPickerHidden}
+						primaryCalendarType={this._primaryCalendarType}
+						secondaryCalendarType={this._secondaryCalendarType}
+						selectionMode={this.selectionMode}
+						minDate={this.minDate}
+						maxDate={this.maxDate}
+						calendarWeekNumbering={this.calendarWeekNumbering}
+						timestamp={monthTimestamp}
+						hideWeekNumbers={this.hideWeekNumbers}
+						onChange={this.onSelectedDatesChange}
+						onNavigate={this.onNavigate}
+						exportparts="day-cell, day-cell-selected, day-cell-selected-between"
+						inert={this._areDayPickersInert}
+					/>
+				</div>
+			</div>
+		);
+	});
 }
 
 function renderMonthPicker(calendar: Calendar) {
