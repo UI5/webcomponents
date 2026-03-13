@@ -6,17 +6,19 @@ With UI5 Web Components, developers can leverage a powerful, flexible, and futur
 
 ## Key Features of UI5 Web Components
 
-- Enterprise-Grade: A comprehensive collection of reusable UI elements that adhere to enterprise standards - accessibility, themeability, i18n and more.
+- **Enterprise-Grade:** A comprehensive collection of reusable UI elements that adhere to enterprise standards - accessibility, themeability, i18n and more.
 
-- Framework Agnostic: Fully compatible with any current or future web development frameworks such as React, Angular, and Vue, allowing seamless integration into any tech stack.
+- **Framework Agnostic:** Fully compatible with any current or future web development frameworks such as React, Angular, and Vue, allowing seamless integration into any tech stack.
 
-- Elegant: Being custom HTML elements, they hide implementation complexity behind a single HTML tag, making them easily usable with the standard DOM APIs.
+- **Elegant:** Being custom HTML elements, they hide implementation complexity behind a single HTML tag, making them easily usable with the standard DOM APIs.
 
-- Consistent User Experience: Implementing the [SAP Fiori design](https://experience.sap.com/fiori-design/) and adhering to the [SAP Fiori Design Guidelines](https://experience.sap.com/fiori-design-web/) ensures a consistent and intuitive user experience across all applications.
+- **Consistent User Experience:** Implementing the [SAP Fiori design](https://experience.sap.com/fiori-design/) and adhering to the [SAP Fiori Design Guidelines](https://experience.sap.com/fiori-design-web/) ensures a consistent and intuitive user experience across all applications.
 
-- Open Source: UI5 Web Components is an open-source project available to the general public, inviting developers from all backgrounds to contribute and benefit.
+- **Open Source:** UI5 Web Components is an open-source project available to the general public, inviting developers from all backgrounds to contribute and benefit.
 
-- SAP Backing: Developed and maintained by [SAP](https://sap.com) as part of the [UI5](https://openui5.org/) product family, guaranteeing ongoing support and integration with SAP's ecosystem.
+- **SAP Backing:** Developed and maintained by [SAP](https://sap.com) as part of the [UI5](https://openui5.org/) product family, guaranteeing ongoing support and integration with SAP's ecosystem.
+
+- **AI-Ready:** The project is structured for AI-assisted development with an [MCP server](./05-MCP-Server.md) for direct IDE integration, a machine-readable [llms.txt](/llms.txt) file, an [AGENTS.md](https://github.com/UI5/webcomponents/blob/main/AGENTS.md) guide for coding assistants, installable [Agent Skills](./06-Skills.md), and a dedicated set of [AI components](/components/ai/) for building conversational and generative AI interfaces.
 
 
 ## Ecosystem
@@ -27,7 +29,11 @@ UI5 Web Components are complemented by a range of related projects that enhance 
 
 [UI5 Web Components for React](https://github.com/UI5/webcomponents-react) is a wrapper implementation around UI5 Web Components which makes using them in React even more comfortable. The current version of React (`react 18`) has some shortcomings when it comes to handling Custom Elements, namely the binding of `boolean` attributes as well as adding event listeners to custom event names like `selection-change`. With the help of UI5 Web Components for React, you can use the UI5 Web Components in React as if they were native React components. In addition to that, this library is also offering some complex layout components built on top of UI5 Web Components as well as Charting Components.
 
-**Note:** [React 19](https://react.dev/blog/2024/04/25/react-19) promises to fill all gaps in the web coponents support - the binding of `boolean` attributes and subscribing to custom events.
+#### Native Web Components Support in React 19
+
+[React 19](https://react.dev/blog/2024/04/25/react-19) introduces full native support for Custom Elements, resolving the long-standing gaps in how React handles web components. Specifically, React 19 correctly binds `boolean` attributes, passes properties (not just attributes) to custom elements, and supports subscribing to custom events. This means you can use UI5 Web Components directly in React 19 without a wrapper library — they work just like any other HTML element.
+
+The UI5 Web Components for React library remains valuable for its additional features — higher-level layout components, charting components, and TypeScript definitions — but it is no longer required for basic usage.
 
 ### UI5 Web Components for Angular
 
