@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.1](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.20.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* **website:** correct TypeScript type mismatches in React samples ([d64a3cf](https://github.com/UI5/webcomponents/commit/d64a3cfdab35ba0b863f8a3afffbfc003ade0b90))
+* **website:** fix image paths in React preview for subpath deployments ([894e58e](https://github.com/UI5/webcomponents/commit/894e58ec5e83433990198688f562fa6fb5912f41))
+
+
+### Features
+
+* add new `styling` and `accessibility` Skills ([#13261](https://github.com/UI5/webcomponents/issues/13261)) ([dc663e1](https://github.com/UI5/webcomponents/commit/dc663e1e072b480d238b4ee4b73461b65fb9f5c3))
+
+
+
+
+
 # [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
 
 
