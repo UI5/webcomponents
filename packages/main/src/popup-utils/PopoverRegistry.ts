@@ -43,8 +43,6 @@ const closePopoversIfLostFocus = () => {
 
 const runUpdateInterval = () => {
 	updateInterval = setInterval(() => {
-		repositionPopovers();
-
 		closePopoversIfLostFocus();
 	}, intervalTimeout);
 };

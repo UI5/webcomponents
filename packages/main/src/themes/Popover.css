@@ -8,6 +8,23 @@
 	box-shadow: var(--_ui5_popover_no_arrow_box_shadow);
 }
 
+/* Arrow-gap margins for CSS anchor positioning */
+:host(:not([hide-arrow])[actual-placement="Bottom"]) {
+	margin-top: 0.5rem;
+}
+
+:host(:not([hide-arrow])[actual-placement="Top"]) {
+	margin-bottom: 0.5625rem;
+}
+
+:host(:not([hide-arrow])[actual-placement="Left"]) {
+	margin-inline-end: 0.5625rem;
+}
+
+:host(:not([hide-arrow])[actual-placement="Right"]) {
+	margin-inline-start: 0.5625rem;
+}
+
 /* pointing upward arrow */
 :host([actual-placement="Bottom"]) .ui5-popover-arrow {
 	left: calc(50% - 0.5625rem);

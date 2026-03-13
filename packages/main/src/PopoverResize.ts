@@ -27,16 +27,6 @@ class PopoverResize {
 	_minHeight?: number;
 	_resized = false;
 
-	_currentDeltaX?: number;
-	_currentDeltaY?: number;
-
-	// These variables track the cumulative resize difference throughout the entire resizing process.
-	// It covers scenarios where: the mouse is pressed down,
-	// moved, and released; the popover remains open;
-	// and the mouse is pressed down, moved, and released again.
-	_totalDeltaX?: number;
-	_totalDeltaY?: number;
-
 	constructor(popover: Popover) {
 		this._popover = popover;
 		this._resizeMouseMoveHandler = this._onResizeMouseMove.bind(this);
@@ -52,12 +42,6 @@ class PopoverResize {
 		}
 
 		this._resized = false;
-
-		delete this._currentDeltaX;
-		delete this._currentDeltaY;
-
-		delete this._totalDeltaX;
-		delete this._totalDeltaY;
 	}
 
 	/**
@@ -65,28 +49,6 @@ class PopoverResize {
 	 */
 	get isResized(): boolean {
 		return this._resized;
-	}
-
-	/*
-	 * Gets the corrected left position considering resize deltas
-	 */
-	getCorrectedLeft(left: number): number {
-		if (this.isResized) {
-			left -= this._currentDeltaX || 0;
-		}
-
-		return left;
-	}
-
-	/*
-	 * Gets the corrected top position considering resize deltas
-	 */
-	getCorrectedTop(top: number): number {
-		if (this.isResized) {
-			top -= this._currentDeltaY || 0;
-		}
-
-		return top;
 	}
 
 	setCorrectResizeHandleClass(allClasses: ClassMap) {
@@ -142,7 +104,8 @@ class PopoverResize {
 			popoverCX = -popoverCX;
 		}
 
-		switch (popover.getActualPlacement(openerRect)) {
+		// Use the current actualPlacement from CSS anchor positioning
+		switch (popover.actualPlacement) {
 		case PopoverActualPlacement.Left:
 			if (isPopoverHeightBiggerThanOpener) {
 				if (popoverCY > openerCY + offset) {
@@ -220,7 +183,9 @@ class PopoverResize {
 	}
 
 	/**
-	 * Handles mouse down event on resize handle
+	 * Handles mouse down event on resize handle.
+	 * Captures the current CSS-anchored position and switches to inline positioning
+	 * so that drag-based resize works without CSS anchor interference.
 	 */
 	onResizeMouseDown(e: MouseEvent) {
 		if (!this._popover.resizable) {
@@ -232,8 +197,15 @@ class PopoverResize {
 		this._resized = true;
 		this._initialBoundingRect = this._popover.getBoundingClientRect();
 
-		this._totalDeltaX = this._currentDeltaX;
-		this._totalDeltaY = this._currentDeltaY;
+		// Bypass CSS anchor positioning: capture current position and switch to inline styles
+		const rect = this._initialBoundingRect;
+		this._popover.style.setProperty("position-area", "unset");
+		this._popover.style.setProperty("position-anchor", "unset");
+		this._popover.style.setProperty("position-try-fallbacks", "unset");
+		Object.assign(this._popover.style, {
+			top: `${rect.top}px`,
+			left: `${rect.left}px`,
+		});
 
 		const {
 			minWidth,
@@ -252,7 +224,8 @@ class PopoverResize {
 	}
 
 	/**
-	 * Handles mouse move event during resize
+	 * Handles mouse move event during resize.
+	 * Computes new size and position directly (no calcPlacement dependency).
 	 */
 	private _onResizeMouseMove(e: MouseEvent) {
 		const popover = this._popover;
@@ -263,8 +236,10 @@ class PopoverResize {
 		const deltaX = clientX - this._initialClientX!;
 		const deltaY = clientY - this._initialClientY!;
 
-		let newWidth,
-			newHeight;
+		let newWidth: number;
+		let newHeight: number;
+		let newLeft = initialBoundingRect.x;
+		let newTop = initialBoundingRect.y;
 
 		// Determine if we're resizing from left or right edge
 		const isResizingFromLeft = resizeHandlePlacement === ResizeHandlePlacement.TopLeft
@@ -275,7 +250,6 @@ class PopoverResize {
 
 		// Calculate width changes
 		if (isResizingFromLeft) {
-			// Resizing from left edge - width increases when moving left (negative delta)
 			const maxWidthFromLeft = initialBoundingRect.x + initialBoundingRect.width - margin;
 
 			newWidth = clamp(
@@ -284,20 +258,14 @@ class PopoverResize {
 				maxWidthFromLeft,
 			);
 
-			// Adjust left position when resizing from left
-			// Ensure the left edge respects the viewport margin and the right edge position
-			const newLeft = clamp(
+			newLeft = clamp(
 				initialBoundingRect.x + deltaX,
 				margin,
 				initialBoundingRect.x + initialBoundingRect.width - this._minWidth!,
 			);
 
-			// Recalculate width based on actual left position to stay within viewport with margin
 			newWidth = Math.min(newWidth, initialBoundingRect.x + initialBoundingRect.width - newLeft);
-
-			this._currentDeltaX = (initialBoundingRect.x - newLeft) / 2;
 		} else {
-			// Resizing from right edge - width increases when moving right (positive delta)
 			const maxWidthFromRight = window.innerWidth - initialBoundingRect.x - margin;
 
 			newWidth = clamp(
@@ -305,13 +273,10 @@ class PopoverResize {
 				this._minWidth!,
 				maxWidthFromRight,
 			);
-
-			this._currentDeltaX = (initialBoundingRect.width - newWidth) / 2;
 		}
 
 		// Calculate height changes
 		if (isResizingFromTop) {
-			// Resizing from top edge - height increases when moving up (negative delta)
 			const maxHeightFromTop = initialBoundingRect.y + initialBoundingRect.height - margin;
 
 			newHeight = clamp(
@@ -320,20 +285,14 @@ class PopoverResize {
 				maxHeightFromTop,
 			);
 
-			// Adjust top position when resizing from top
-			// Ensure the top edge respects the viewport margin and the bottom edge position
-			const newTop = clamp(
+			newTop = clamp(
 				initialBoundingRect.y + deltaY,
 				margin,
 				initialBoundingRect.y + initialBoundingRect.height - this._minHeight!,
 			);
 
-			// Recalculate height based on actual top position to stay within viewport with margin
 			newHeight = Math.min(newHeight, initialBoundingRect.y + initialBoundingRect.height - newTop);
-
-			this._currentDeltaY = (initialBoundingRect.y - newTop) / 2;
 		} else {
-			// Resizing from bottom edge - height increases when moving down (positive delta)
 			const maxHeightFromBottom = window.innerHeight - initialBoundingRect.y - margin;
 
 			newHeight = clamp(
@@ -341,24 +300,14 @@ class PopoverResize {
 				this._minHeight!,
 				maxHeightFromBottom,
 			);
-
-			this._currentDeltaY = (initialBoundingRect.height - newHeight) / 2;
 		}
 
-		this._currentDeltaX += this._totalDeltaX || 0;
-		this._currentDeltaY += this._totalDeltaY || 0;
+		// Update arrow position based on new dimensions
+		popover._updateArrowPosition();
 
-		const placement = this._popover.calcPlacement(this._popover._openerRect!, {
-			width: newWidth,
-			height: newHeight,
-		});
-
-		this._popover.arrowTranslateX = placement.arrow.x;
-		this._popover.arrowTranslateY = placement.arrow.y;
-
-		Object.assign(this._popover.style, {
-			left: `${placement.left}px`,
-			top: `${placement.top}px`,
+		Object.assign(popover.style, {
+			left: `${newLeft}px`,
+			top: `${newTop}px`,
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
 		});
