@@ -375,10 +375,10 @@ class Calendar extends CalendarPart {
 	@property()
 	_selectedItemType: `${CalendarLegendItemType}` = "None";
 
-	@property({ type: Boolean, noAttribute: true})
+	@property({ type: Boolean, noAttribute: true })
 	_phoneMode = false;
 
-	@property({ type: Boolean, noAttribute: true})
+	@property({ type: Boolean, noAttribute: true })
 	_portraitMode = false;
 
 	_handleResizeBound: ResizeObserverCallback;
