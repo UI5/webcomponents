@@ -72,7 +72,7 @@
 
 .ui5-calheader-multiple .ui5-calheader-midcontainer {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--_ui5_calendar_header_midcontainer_gap);
     flex: 1;
     justify-content: center;
     padding: 0;
@@ -80,7 +80,7 @@
 }
 
 .ui5-calheader-multiple .ui5-calheader-arrowbtn {
-    flex-shrink: 0;
+    flex-shrink: var(--_ui5_calendar_header_arrow_button_flex_shrink);
     height: 100%;
 }
 
@@ -178,4 +178,8 @@
     width: 100%;
     min-width: auto;
     max-width: 100%;
+}
+
+.ui5-dt-cal--portrait .ui5-cal-overlay-container {
+	width: 100%;
 }

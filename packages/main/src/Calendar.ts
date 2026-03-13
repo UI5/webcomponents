@@ -287,11 +287,10 @@ class Calendar extends CalendarPart {
 	hideWeekNumbers = false;
 
 	/**
-	 * Defines the number of months to display side by side in day picker view.
-	 * Only applicable when selection mode is "Range".
+	 * Defines whether the component displays two months side by side in the picker popup.
 	 * @default false
 	 * @private
-	 * @since 2.20.0
+	 * @since 2.21.0
 	 */
 	@property({ type: Boolean })
 	_showTwoMonths = false;
@@ -376,10 +375,10 @@ class Calendar extends CalendarPart {
 	@property()
 	_selectedItemType: `${CalendarLegendItemType}` = "None";
 
-	@property({ type: Boolean })
+	@property({ type: Boolean, noAttribute: true})
 	_phoneMode = false;
 
-	@property({ type: Boolean })
+	@property({ type: Boolean, noAttribute: true})
 	_portraitMode = false;
 
 	_handleResizeBound: ResizeObserverCallback;
