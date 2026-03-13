@@ -64,12 +64,13 @@ All global SAP CSS variables are defined in [@sap-theming/theming-base-content](
 
 ## 5. Custom CSS via `addCustomCSS` (Last Resort)
 
-If none of the above work, custom CSS can be injected directly into a component's shadow DOM using the `addCustomCSS` API. **This approach is fragile** — it targets internal DOM structure that may change between versions. Only use it when CSS variables, tag-level styles, and shadow parts cannot achieve the desired result.
+If none of the above work, custom CSS can be injected directly into a component's shadow DOM using the `addCustomCSS` API. It targets internal DOM structure that may change between versions. Only use it when CSS variables, tag-level styles, and shadow parts cannot achieve the desired result.
 
 Before writing custom CSS:
-1. Inspect the component's shadow DOM in DevTools to understand the internal structure
-2. Target the minimal set of selectors needed
-3. Warn users that this may break on version upgrades
+1. Find the component's template and existing styles in node_modules
+2. Optionally, inspect the component's shadow DOM in DevTools to understand the internal structure
+3. Target the minimal set of selectors needed
+
 
 Custom CSS must be registered before any instances of the component are created:
 
