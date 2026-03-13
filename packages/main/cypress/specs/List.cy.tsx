@@ -698,6 +698,37 @@ describe("List Tests", () => {
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 	});
 
+	it("does not fire item-click when nested button disables itself on click", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<Button id="action-button">Action</Button>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#action-button").then(($button) => {
+			const buttonClickStub = cy.stub().as("buttonClickStub");
+			buttonClickStub.callsFake(() => {
+				($button[0] as Button).disabled = true;
+			});
+
+			$button[0].addEventListener("click", buttonClickStub);
+		});
+
+		cy.get("#action-button").click();
+
+		cy.get("@buttonClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
 	it("selectionChange events provides previousSelection item", () => {
 		cy.mount(
 			<div>
