@@ -13,6 +13,7 @@ import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
 import Bar from "../../src/Bar.js";
+import Link from "../../src/Link.js";
 
 function getGrowingWithScrollList(length: number, height: string = "100px") {
 	return (
@@ -727,6 +728,98 @@ describe("List Tests", () => {
 
 		cy.get("@buttonClickStub").should("have.been.calledOnce");
 		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("fires item-click when nested ui5-link is clicked", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<Link id="nested-link" href="#">Details</Link>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#nested-link").then(($link) => {
+			const linkClickStub = cy.stub().as("linkClickStub");
+			$link[0].addEventListener("click", linkClickStub);
+		});
+
+		cy.get("#nested-link").click();
+
+		cy.get("@linkClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+	});
+
+	it("does not fire item-click when nested disabled custom element is clicked", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<div id="custom-host"></div>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#custom-host").then(($host) => {
+			const customAction = document.createElement("x-action");
+			customAction.id = "disabled-custom-action";
+			customAction.setAttribute("aria-disabled", "true");
+			customAction.textContent = "Disabled Action";
+			$host[0].appendChild(customAction);
+
+			const customClickStub = cy.stub().as("customClickStub");
+			customAction.addEventListener("click", customClickStub);
+		});
+
+		cy.get("#disabled-custom-action").click();
+
+		cy.get("@customClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("fires item-click when nested custom element is not disabled", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<div id="custom-host-enabled"></div>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#custom-host-enabled").then(($host) => {
+			const customAction = document.createElement("x-action");
+			customAction.id = "enabled-custom-action";
+			customAction.textContent = "Enabled Action";
+			$host[0].appendChild(customAction);
+
+			const customClickStub = cy.stub().as("customClickStub");
+			customAction.addEventListener("click", customClickStub);
+		});
+
+		cy.get("#enabled-custom-action").click();
+
+		cy.get("@customClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("have.been.calledOnce");
 	});
 
 	it("selectionChange events provides previousSelection item", () => {

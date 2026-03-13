@@ -173,22 +173,43 @@ class ListItemBase extends UI5Element implements ITabbable {
 
 	_isDisabledInteractiveContentClicked(e: MouseEvent): boolean {
 		const path = e.composedPath();
+		const focusDomRef = this.getFocusDomRef();
 
 		return path.some(target => {
 			if (!(target instanceof HTMLElement)) {
 				return false;
 			}
 
-			if (target.matches("button, input, select, textarea")) {
-				return (target as HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).disabled;
+			if (target === this || target === focusDomRef) {
+				return false;
 			}
 
-			if (target.matches("ui5-button, ui5-input, ui5-textarea, ui5-select, ui5-combobox, ui5-multi-combobox, ui5-switch, ui5-checkbox, ui5-radio-button, ui5-date-picker, ui5-daterange-picker, ui5-time-picker, ui5-step-input")) {
-				return !!(target as { disabled?: boolean }).disabled;
+			if (!this._isNativeInteractiveElement(target) && !this._isCustomInteractiveElement(target)) {
+				return false;
 			}
 
-			return false;
+			return this._isElementDisabled(target);
 		});
+	}
+
+	_isNativeInteractiveElement(target: HTMLElement): boolean {
+		return target.matches("button, input, select, textarea");
+	}
+
+	_isCustomInteractiveElement(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+
+		return target.tagName.includes("-")
+			&& ("disabled" in targetWithDisabled || target.hasAttribute("aria-disabled"));
+	}
+
+	_isElementDisabled(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+		if (typeof targetWithDisabled.disabled === "boolean") {
+			return targetWithDisabled.disabled;
+		}
+
+		return target.getAttribute("aria-disabled") === "true";
 	}
 
 	/**
