@@ -7,6 +7,11 @@
 	--_ui5_calendar_header_height: 3rem;
 	--_ui5_calendar_header_arrow_button_width: 2.5rem;
 	--_ui5_calendar_header_padding: 0.25rem 0;
+	--_ui5_calendar_multiple_layout: row;
+	--_ui5_calendar_multiple_gap: 1rem;
+	--_ui5_calendar_multiple_width: calc(var(--_ui5_calendar_width) * 2 + var(--_ui5_calendar_left_right_padding) * 2);
+	--_ui5_calendar_overlay_top: 57%;
+	--_ui5_calendar_overlay_width: 16rem;
 
 	--_ui5_checkbox_root_side_padding: .6875rem;
 	--_ui5_checkbox_icon_size: 1rem;
@@ -26,6 +31,7 @@
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_secondary_text_padding_block: 0 0.5rem;
 	--_ui5_daypicker_two_calendar_item_selected_focus_margin_bottom: 0;
 	--_ui5_daypicker_two_calendar_item_selected_focus_padding_right: 0.4375rem;
+	--_ui5_calendar_multiple-months_height: calc(var(--_ui5_calendar_height));
 
 	/* CalendarLegend */
 	--_ui5-calendar-legend-item-root-focus-offset: -0.125rem;
@@ -176,6 +182,13 @@
 		--_ui5_calendar_header_height: 2rem;
 		--_ui5_calendar_header_arrow_button_width: 2rem;
 		--_ui5_calendar_header_padding: 0;
+		--_ui5_calendar_multiple_layout: column;
+		--_ui5_calendar_multiple_gap: 0.5rem;
+		--_ui5_calendar_multiple_width: var(--_ui5_calendar_width);
+		--_ui5_calendar_overlay_top: 54%;
+		--_ui5_calendar_overlay_width: 100%;
+		--_ui5_calendar_multiple-months_height: calc(2 * var(--_ui5_calendar_height));
+		--_ui5_calendar_multiple_width: calc(var(--_ui5_calendar_width));
 
 		/* Calendar Legend */
 		--_ui5-calendar-legend-root-padding: 0.5rem;

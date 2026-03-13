@@ -17,8 +17,169 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+}
+
+.ui5-dt-cal--multiple.ui5-cal-root {
+    width: var(--_ui5_calendar_multiple_width);
+	height: var(--_ui5_calendar_multiple-months_height);
+}
+
+.ui5-dt-cal--portrait.ui5-dt-cal--multiple {
+	height: calc(2 * var(--_ui5_calendar_height));
 }
 
 .ui5-cal-root .ui5-cal-content {
     padding: 0 var(--_ui5_calendar_left_right_padding) var(--_ui5_calendar_top_bottom_padding);
+}
+
+.ui5-cal-root .ui5-cal-content-multiple {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex-wrap: nowrap;
+    overflow: visible;
+}
+
+.ui5-cal-multiple-months-wrapper, .ui5-cal-multiple-months-header-wrapper {
+    display: flex;
+    gap: var(--_ui5_calendar_multiple_gap);
+    flex-wrap: nowrap;
+    flex-direction: var(--_ui5_calendar_multiple_layout);
+}
+
+.ui5-cal-multiple-months-header-wrapper {
+	width: 100%;
+}
+
+.ui5-cal-month-container, .ui5-cal-month-header-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ui5-cal-month-header-container {
+	width: 50%;
+}
+
+.ui5-cal-root .ui5-calheader.ui5-calheader-multiple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--_ui5_calendar_header_height);
+    padding: var(--_ui5_calendar_header_padding);
+    box-sizing: border-box;
+}
+
+.ui5-calheader-multiple .ui5-calheader-midcontainer {
+    display: flex;
+    gap: var(--_ui5_calendar_header_midcontainer_gap);
+    flex: 1;
+    justify-content: center;
+    padding: 0;
+    height: 100%;
+}
+
+.ui5-calheader-multiple .ui5-calheader-arrowbtn {
+    flex-shrink: var(--_ui5_calendar_header_arrow_button_flex_shrink);
+    height: 100%;
+}
+
+.ui5-calheader-spacer {
+    width: var(--_ui5_calendar_header_arrow_button_width);
+    flex-shrink: 0;
+}
+
+.ui5-cal-daypicker-wrapper {
+    position: relative;
+}
+
+.ui5-cal-daypicker-overlay {
+    background-color: var(--sapBlockLayer_Background);
+    opacity: var(--sapBlockLayer_Opacity);
+    top: calc(var(--_ui5_calendar_header_height) + var(--_ui5_calendar_top_bottom_padding));
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    outline: 0 none;
+    z-index: 11;
+    pointer-events: all;
+    display: none;
+}
+
+.ui5-cal-content-multiple:has(~ .ui5-cal-overlay-container:not(.ui5-cal-overlay-hidden)) .ui5-cal-daypicker-overlay {
+    display: block;
+}
+
+.ui5-cal-overlay-container {
+  position: absolute;
+  width: var(--_ui5_calendar_overlay_width);
+  left: 50%;
+  top: var(--_ui5_calendar_overlay_top);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 13;
+  pointer-events: all;
+  background: var(--sapGroup_ContentBackground);
+  border-radius: var(--_ui5_popup_border_radius);
+  min-height: 2rem;
+  box-sizing: border-box;
+}
+
+
+.ui5-cal-overlay-container [ui5-monthpicker]::part(month-picker-root),
+.ui5-cal-overlay-container [ui5-yearpicker]::part(year-picker-root),
+.ui5-cal-overlay-container [ui5-yearrangepicker]::part(year-range-picker-root) {
+	padding: 0.5rem;
+}
+
+.ui5-cal-overlay-hidden {
+  display: none;
+}
+
+/* Overlay effect on DayPickers when MonthPicker is visible in multi-month mode */
+.ui5-cal-content-multiple:has(~ .ui5-cal-overlay-container:not(.ui5-cal-overlay-hidden)) .ui5-cal-month-container::part(day-picker-root) {
+  background-color: var(--sapBlockLayer_Background);
+  opacity: var(--sapBlockLayer_Opacity);
+  top: 0;
+  left: -0.5rem;
+  right: -0.5rem;
+  bottom: 0;
+  position: absolute;
+  outline: 0 none;
+  z-index: 11;
+}
+
+.ui5-calheader-default-multiple, .ui5-calheader-default-multiple .ui5-calheader-root {
+	width: 100%;
+}
+
+.ui5-calheader-multiple .ui5-calheader-middlebtn {
+	flex:none;
+}
+
+/* Portrait mode: Stack calendars vertically in mobile view */
+.ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-content-multiple {
+    gap: 0;
+}
+
+.ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-multiple-months-wrapper {
+    flex-direction: column;
+    gap: var(--_ui5_calendar_multiple_gap);
+}
+
+.ui5-dt-cal--portrait.ui5-cal-root:has(.ui5-cal-content-multiple) {
+    width: var(--_ui5_calendar_width);
+}
+
+.ui5-dt-cal--portrait .ui5-cal-content-multiple > * {
+    width: 100%;
+    min-width: auto;
+    max-width: 100%;
+}
+
+.ui5-dt-cal--portrait .ui5-cal-overlay-container {
+	width: 100%;
 }

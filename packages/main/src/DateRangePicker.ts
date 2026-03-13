@@ -14,6 +14,8 @@ import {
 	DATERANGE_PATTERN_MISMATCH,
 	DATERANGE_UNDERFLOW,
 	DATERANGE_OVERFLOW,
+	CALENDAR_FOOTER_CANCEL_BUTTON,
+	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateRangePickerTemplate from "./DateRangePickerTemplate.js";
 
@@ -27,6 +29,7 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 const DEFAULT_DELIMITER = "-";
 
@@ -76,6 +79,22 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 */
 	@property()
 	delimiter = "-";
+
+	/**
+	 * Defines whether the component displays two months side by side in the picker popup.
+	 *
+	 * When enabled, two consecutive months are shown, making it easier to select date ranges
+	 * that span multiple months without the need to navigate between months.
+	 *
+	 * **Note:** On mobile devices only a single month
+	 * will be displayed regardless of this setting.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property({ type: Boolean })
+	showTwoMonths = false;
 
 	 /**
 	 * The first date in the range during selection (this is a temporary value, not the first date in the value range)
@@ -196,6 +215,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return [];
 	}
 
+	get _isPhone() {
+		return isPhone();
+	}
+
 	/**
 	 * Returns the start date of the currently selected range as JavaScript Date instance.
 	 * @public
@@ -240,6 +263,41 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 
 		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
 		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
+	}
+
+	get _submitDisabled() {
+		return !this._calendarSelectedDates || !this._calendarSelectedDates.length;
+	}
+
+	get _cancelButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_CANCEL_BUTTON);
+	}
+
+	get _okButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	/**
+	 * Handles clicking on the `submit` button, within the picker`s footer in mobile devices.
+	 */
+	_submitClick() {
+		const selectedDates = this._calendarSelectedDates;
+
+		if (selectedDates.length <= 1) {
+			return;
+		}
+
+		const newValue = this._buildValue(this._startDateTimestamp, this._endDateTimestamp);
+		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+		this._togglePicker();
+	}
+
+	/**
+	 * Handles clicking on the `cancel` button, within the picker`s footer,
+	 * that would disregard the user selection.
+	 */
+	_cancelClick() {
+		this._togglePicker();
 	}
 
 	/**
