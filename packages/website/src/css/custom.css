@@ -280,6 +280,8 @@ code {
 .theme-doc-sidebar-item-category.expComponentBadge:before,
 .theme-doc-sidebar-item-category.deprComponentBadge:before {
     inset-inline-end: 2.25rem;
+    top: 0.45rem;
+    transform: none;
 }
 
 .theme-doc-sidebar-item-category.newComponentBadge.expComponentBadge:before,
