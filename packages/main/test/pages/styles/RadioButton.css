@@ -34,6 +34,25 @@ div.customStyling{
 .customStyling ui5-radio-button[value-state="Negative"]::part(outer-ring) {
     stroke: rgb(212 56 247);
 }
+
 .customStyling ui5-radio-button[value-state="Positive"]::part(outer-ring) {
     stroke: rgb(12 223 147);
+}
+
+.customStyling #customRb2::part(ring),
+.customStyling #customRb2::part(label),
+.customStyling #customRb3::part(ring),
+.customStyling #customRb3::part(label) {
+    padding: 0;
+    max-height: 22px;
+}
+
+.customStyling #customRb2::part(radio-button-inner)::before,
+.customStyling #customRb3::part(radio-button-inner)::before {
+    inset: 0;
+}
+
+.customStyling #customRb2::part(svg) {
+    width: 16px;
+    height: 16px;
 }
