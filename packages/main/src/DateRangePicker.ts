@@ -81,12 +81,12 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	delimiter = "-";
 
 	/**
-	 * Defines whether the component displays two calendars side by side in the picker popup.
+	 * Defines whether the component displays two months side by side in the picker popup.
 	 *
 	 * When enabled, two consecutive months are shown, making it easier to select date ranges
 	 * that span multiple months without the need to navigate between months.
 	 *
-	 * **Note:** On mobile devices only a single calendar
+	 * **Note:** On mobile devices only a single month
 	 * will be displayed regardless of this setting.
 	 *
 	 * @default false
@@ -94,7 +94,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @since 2.21.0
 	 */
 	@property({ type: Boolean })
-	showTwoCalendars = false;
+	showTwoMonths = false;
 
 	 /**
 	 * The first date in the range during selection (this is a temporary value, not the first date in the value range)

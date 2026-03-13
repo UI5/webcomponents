@@ -30,7 +30,7 @@ function content(this: DateRangePicker) {
 			hideWeekNumbers={this.hideWeekNumbers}
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
-			_showTwoCalendars={this.showTwoCalendars}
+			_showTwoMonths={this.showTwoMonths}
 			stretch={this.stretch}
 		>
 			<CalendarDateRange startValue={this.startValue} endValue={this.endValue} />

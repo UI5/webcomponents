@@ -291,10 +291,10 @@ class Calendar extends CalendarPart {
 	 * Only applicable when selection mode is "Range".
 	 * @default false
 	 * @private
-	 * @since 2.0.0
+	 * @since 2.20.0
 	 */
 	@property({ type: Boolean })
-	_showTwoCalendars = false;
+	_showTwoMonths = false;
 
 	@property({ type: Boolean })
 	stretch = false;
@@ -817,7 +817,7 @@ class Calendar extends CalendarPart {
 	}
 
 	get _monthsToShow() {
-		const monthsToShow = this._showTwoCalendars ? 2 : 1;
+		const monthsToShow = this._showTwoMonths ? 2 : 1;
 		return isPhone() ? 1 : monthsToShow;
 	}
 
@@ -826,7 +826,7 @@ class Calendar extends CalendarPart {
 	 * @private
 	 */
 	get _isHeaderMonthButtonHidden(): boolean {
-		return this._showTwoCalendars ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";
+		return this._showTwoMonths ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";
 	}
 
 	/**
@@ -846,8 +846,8 @@ class Calendar extends CalendarPart {
 	}
 
 	get _isDayPickerHidden() {
-		// In multi-calendar mode (monthsToShow > 1), keep day pickers visible even when other pickers are shown
-		if (this._showTwoCalendars) {
+		// In multi-month mode (monthsToShow > 1), keep day pickers visible even when other pickers are shown
+		if (this._showTwoMonths) {
 			return false;
 		}
 		return this._currentPicker !== "day";
@@ -874,7 +874,7 @@ class Calendar extends CalendarPart {
 	}
 
 	get _areDayPickersInert() {
-		return this._showTwoCalendars && (!this._isMonthPickerHidden || !this._isYearPickerHidden || !this._isYearRangePickerHidden);
+		return this._showTwoMonths && (!this._isMonthPickerHidden || !this._isYearPickerHidden || !this._isYearRangePickerHidden);
 	}
 
 	get _currentYearRange(): CalendarYearRangeT {
