@@ -1,5 +1,6 @@
 ---
 sidebar_label: MCP Server
+sidebar_class_name: sidebar-sparkle
 title: MCP Server
 ---
 

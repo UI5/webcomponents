@@ -1,5 +1,6 @@
 ---
 sidebar_label: Skills
+sidebar_class_name: sidebar-sparkle
 title: Skills
 ---
 
