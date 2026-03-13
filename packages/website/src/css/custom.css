@@ -11,6 +11,7 @@
   --ifm-table-background: transparent;
   --ifm-table-stripe-background: transparent;
   --playground-toolbar-bg: #334eff;
+  --ifm-font-family-base: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
