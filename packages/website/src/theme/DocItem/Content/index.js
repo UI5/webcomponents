@@ -4,6 +4,7 @@ import {ThemeClassNames} from '@docusaurus/theme-common';
 import {useDoc} from '@docusaurus/theme-common/internal';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
+import AskAI from '@site/src/components/AskAI';
 /**
  Title can be declared inside md content or declared through
  front matter and added manually. To make both cases consistent,
@@ -40,8 +41,12 @@ const renderAdditionalInfo = () => {
 
 export default function DocItemContent({children}) {
   const syntheticTitle = useSyntheticTitle();
+  const {metadata, frontMatter} = useDoc();
   return (
     <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
+      <div style={{ float: 'right', marginLeft: '1rem' }}>
+        <AskAI title={metadata.title} tagName={frontMatter.ui5_tag_name} />
+      </div>
       {syntheticTitle && (
         <header>
           <Heading as="h1">{syntheticTitle}</Heading>
