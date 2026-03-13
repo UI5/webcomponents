@@ -88,6 +88,7 @@ interface IOption extends UI5Element {
 	text?: Array<Node>,
 	stableDomRef: string,
 	displayText?: string,
+	accessibleName?: string,
 }
 
 type SelectChangeEventDetail = {
@@ -1110,7 +1111,8 @@ class Select extends UI5Element implements IFormElement {
 		const itemPositionText = Select.i18nBundle.getText(LIST_ITEM_POSITION, this._selectedIndex + 1, optionsCount);
 
 		if (this.focused && this._currentlySelectedOption) {
-			text = `${this._currentlySelectedOption.textContent as string} ${this._isPickerOpen ? itemPositionText : ""}`;
+			const optionText = this._currentlySelectedOption.accessibleName || this._currentlySelectedOption.textContent as string;
+			text = `${optionText}${this._isPickerOpen ? `, ${itemPositionText}` : ""}`;
 
 			announce(text, InvisibleMessageMode.Polite);
 		}

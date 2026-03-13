@@ -150,4 +150,20 @@ describe("Select Menu general interaction", () => {
 
 		assert.strictEqual(await inpTestChange.getProperty("value"), "1", "Change event should be fired after focus out");
 	});
+
+	it("Tests accessible-name on SelectMenuOption", async () => {
+		const menu = await browser.$("#selectOptions");
+		const options = await menu.$$("ui5-select-menu-option");
+
+		const EXPECTED_FIRST_OPTION_ACCESSIBLE_NAME = "T-shirt size S";
+		const EXPECTED_SECOND_OPTION_ACCESSIBLE_NAME = "Dress size M";
+		const EXPECTED_THIRD_OPTION_ACCESSIBLE_NAME = "Skirt size L";
+
+		assert.strictEqual(await options[0].getProperty("accessibleName"), EXPECTED_FIRST_OPTION_ACCESSIBLE_NAME,
+			"The accessible-name property on first ui5-select-menu-option is correctly set.");
+		assert.strictEqual(await options[1].getProperty("accessibleName"), EXPECTED_SECOND_OPTION_ACCESSIBLE_NAME,
+			"The accessible-name property on second ui5-select-menu-option is correctly set.");
+		assert.strictEqual(await options[2].getProperty("accessibleName"), EXPECTED_THIRD_OPTION_ACCESSIBLE_NAME,
+			"The accessible-name property on third ui5-select-menu-option is correctly set.");
+	});
 });
