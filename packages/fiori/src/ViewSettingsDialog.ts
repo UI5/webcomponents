@@ -23,6 +23,7 @@ import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type SortItem from "./SortItem.js";
 import type FilterItem from "./FilterItem.js";
 import type GroupItem from "./GroupItem.js";
+import type ViewSettingsCustomTab from "./ViewSettingsCustomTab.js";
 
 import {
 	VSD_DIALOG_TITLE_SORT,
@@ -87,6 +88,11 @@ type VSDInternalSettings = {
 	groupOrder: Array<VSDItem>,
 	groupBy: Array<VSDItem & {index: number}>,
 }
+
+type ViewSettingsCustomMode = `Custom-${number}`;
+type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettingsCustomMode;
+
+const CUSTOM_MODE_PREFIX = "Custom-";
 
 /**
  * @class
@@ -254,7 +260,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @private
 	 */
 	@property()
-	_currentMode: `${ViewSettingsDialogMode}` = "Sort";
+	_currentMode: ViewSettingsDialogInternalMode = ViewSettingsDialogMode.Sort;
 
 	/**
 	 * When in Filter By mode, defines whether we need to show the list of keys, or the list with values.
@@ -290,6 +296,25 @@ class ViewSettingsDialog extends UI5Element {
 	 */
 	@slot()
 	groupItems!: Slot<GroupItem>;
+
+	/**
+	 * Defines custom tabs for the dialog.
+	 *
+	 * The custom tabs are rendered after the built-in tabs (`Sort`, `Filter`, `Group`).
+	 *
+	 * **Note:** If you want to use this slot, you need to import the item: `import "@ui5/webcomponents-fiori/dist/ViewSettingsCustomTab.js";`
+	 * @public
+	 * @since 2.21.0
+	 */
+	@slot({
+		type: HTMLElement,
+		individualSlots: true,
+		invalidateOnChildChange: {
+			properties: true,
+			slots: false,
+		},
+	})
+	customTabs!: Slot<ViewSettingsCustomTab>;
 
 	@query("[ui5-list]")
 	_list!: List;
@@ -328,6 +353,11 @@ class ViewSettingsDialog extends UI5Element {
 
 		if (this.shouldBuildGroup) {
 			this._currentMode = ViewSettingsDialogMode.Group;
+			return;
+		}
+
+		if (this.shouldBuildCustomTabs && (!this.isModeCustom || !this._selectedCustomTab)) {
+			this._currentMode = this._defaultMode;
 		}
 	}
 
@@ -377,9 +407,54 @@ class ViewSettingsDialog extends UI5Element {
 		return !!this.groupItems.length;
 	}
 
+	get shouldBuildCustomTabs() {
+		return !!this.customTabs.length;
+	}
+
 	get hasPagination() {
-		const buildConditions = [this.shouldBuildSort, this.shouldBuildFilter, this.shouldBuildGroup];
-		return buildConditions.filter(condition => condition).length > 1;
+		const builtInTabsCount = [this.shouldBuildSort, this.shouldBuildFilter, this.shouldBuildGroup]
+			.filter(condition => condition)
+			.length;
+
+		if (this.shouldBuildCustomTabs) {
+			return builtInTabsCount + this.customTabs.length > 1;
+		}
+
+		return builtInTabsCount > 1;
+	}
+
+	get _defaultMode(): ViewSettingsDialogInternalMode {
+		if (this.shouldBuildSort) {
+			return ViewSettingsDialogMode.Sort;
+		}
+
+		if (this.shouldBuildFilter) {
+			return ViewSettingsDialogMode.Filter;
+		}
+
+		if (this.shouldBuildGroup) {
+			return ViewSettingsDialogMode.Group;
+		}
+
+		if (this.shouldBuildCustomTabs) {
+			return this._customMode(this._defaultCustomTabIndex);
+		}
+
+		return ViewSettingsDialogMode.Sort;
+	}
+
+	get _defaultCustomTabIndex() {
+		const selectedIndex = this.customTabs.findIndex(item => item.selected);
+		return selectedIndex > -1 ? selectedIndex : 0;
+	}
+
+	get _selectedCustomTab() {
+		if (!this._isCustomMode(this._currentMode)) {
+			return;
+		}
+
+		const currentTabIndex = this._getCustomTabIndexByMode(this._currentMode);
+		return this.customTabs[currentTabIndex];
 	}
 
 	get _filterByTitle() {
@@ -580,6 +655,10 @@ class ViewSettingsDialog extends UI5Element {
 		return this._currentMode === ViewSettingsDialogMode.Group;
 	}
 
+	get isModeCustom() {
+		return this._isCustomMode(this._currentMode);
+	}
+
 	get showBackButton() {
 		return this.isModeFilter && this._filterStepTwo;
 	}
@@ -613,8 +692,13 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	_handleModeChange(e: CustomEvent) { // use SegmentedButton event when done
-		const mode: ViewSettingsDialogMode = e.detail.selectedItems[0].getAttribute("data-mode");
-		this._currentMode = ViewSettingsDialogMode[mode];
+		const mode = (e.detail.selectedItems[0].getAttribute("data-mode") as string | null);
+
+		if (!mode || !this._isValidMode(mode)) {
+			return;
+		}
+
+		this._currentMode = mode;
 	}
 
 	_handleFilterValueItemClick(e: CustomEvent<ListSelectionChangeEventDetail>) {
@@ -755,7 +839,7 @@ class ViewSettingsDialog extends UI5Element {
 	_restoreConfirmedOnEscape(evt: CustomEvent) { // Dialog#before-close
 		if (evt.detail.escPressed) {
 			this._cancelSettings();
-			this._currentMode = ViewSettingsDialogMode.Sort;
+			this._currentMode = this._defaultMode;
 			this._filterStepTwo = false;
 		}
 	}
@@ -776,8 +860,31 @@ class ViewSettingsDialog extends UI5Element {
 	 */
 	_restoreSettings(settings: VSDInternalSettings) {
 		this._currentSettings = JSON.parse(JSON.stringify(settings));
-		this._currentMode = ViewSettingsDialogMode.Sort;
+		this._currentMode = this._defaultMode;
 		this._filterStepTwo = false;
+	}
+
+	isCurrentCustomMode(index: number) {
+		return this._currentMode === this._customMode(index);
+	}
+
+	_customMode(index: number): ViewSettingsCustomMode {
+		return `${CUSTOM_MODE_PREFIX}${index}`;
+	}
+
+	_getCustomTabIndexByMode(mode: ViewSettingsCustomMode) {
+		return Number(mode.replace(CUSTOM_MODE_PREFIX, ""));
+	}
+
+	_isCustomMode(mode: string): mode is ViewSettingsCustomMode {
+		return mode.startsWith(CUSTOM_MODE_PREFIX);
+	}
+
+	_isValidMode(mode: string): mode is ViewSettingsDialogInternalMode {
+		return mode === (ViewSettingsDialogMode.Sort as string)
+			|| mode === (ViewSettingsDialogMode.Filter as string)
+			|| mode === (ViewSettingsDialogMode.Group as string)
+			|| this._isCustomMode(mode);
 	}
 
 	/**

@@ -3,6 +3,7 @@ import GroupItem from "../../src/GroupItem.js";
 import SortItem from "../../src/SortItem.js";
 import FilterItem from "../../src/FilterItem.js";
 import FilterItemOption from "../../src/FilterItemOption.js";
+import ViewSettingsCustomTab from "../../src/ViewSettingsCustomTab.js";
 
 describe("View settings dialog - confirm event", () => {
 	it("should throw confirm event after selecting sort options and confirm button", () => {
@@ -483,5 +484,122 @@ describe("ViewSettingsDialog Tests", () => {
 
 		cy.get("@items")
 			.should("have.length", 3);
+	});
+
+	it("should render custom tabs after built-in tabs", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsdCustomOrder">
+				<SortItem slot="sortItems" text="Name"></SortItem>
+				<FilterItem slot="filterItems" text="Category">
+					<FilterItemOption slot="values" text="A"></FilterItemOption>
+				</FilterItem>
+				<GroupItem slot="groupItems" text="Department"></GroupItem>
+				<ViewSettingsCustomTab slot="customTabs" title="Advanced Settings" tooltip="Advanced" icon="action-settings">
+					<div id="advanced-tab-content">Advanced settings</div>
+				</ViewSettingsCustomTab>
+				<ViewSettingsCustomTab slot="customTabs" title="Metrics Panel" tooltip="Metrics" icon="table-view">
+					<div id="metrics-tab-content">Metrics settings</div>
+				</ViewSettingsCustomTab>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsdCustomOrder")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[ui5-segmented-button-item]")
+			.as("items")
+			.should("have.length", 5);
+
+		cy.get("@items")
+			.eq(0)
+			.should("have.attr", "data-mode", "Sort");
+
+		cy.get("@items")
+			.eq(1)
+			.should("have.attr", "data-mode", "Filter");
+
+		cy.get("@items")
+			.eq(2)
+			.should("have.attr", "data-mode", "Group");
+
+		cy.get("@items")
+			.eq(3)
+			.should("have.attr", "data-mode", "Custom-0");
+
+		cy.get("@items")
+			.eq(3)
+			.should("have.attr", "tooltip", "Advanced");
+
+		cy.get("@items")
+			.eq(4)
+			.should("have.attr", "data-mode", "Custom-1");
+
+		cy.get("@items")
+			.eq(3)
+			.realClick();
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-title")
+			.should("have.text", "View Settings");
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-custom-tab-title")
+			.should("have.text", "Advanced Settings");
+
+		cy.get("@vsd")
+			.find("#advanced-tab-content")
+			.should("be.visible");
+	});
+
+	it("should render only custom tabs when no built-in tabs are provided", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsdCustomOnly">
+				<ViewSettingsCustomTab slot="customTabs" title="General Settings" tooltip="General" icon="action-settings" selected={true}>
+					<div id="general-tab-content">General content</div>
+				</ViewSettingsCustomTab>
+				<ViewSettingsCustomTab slot="customTabs" title="Extra Settings" tooltip="Extra" icon="table-view">
+					<div id="extra-tab-content">Extra content</div>
+				</ViewSettingsCustomTab>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsdCustomOnly")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[ui5-segmented-button-item]")
+			.should("have.length", 2);
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-title")
+			.should("have.text", "View Settings");
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-custom-tab-title")
+			.should("have.text", "General Settings");
+
+		cy.get("@vsd")
+			.find("#general-tab-content")
+			.should("be.visible");
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[ui5-segmented-button-item]")
+			.eq(1)
+			.realClick();
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-custom-tab-title")
+			.should("have.text", "Extra Settings");
 	});
 });

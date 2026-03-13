@@ -128,6 +128,108 @@
 
 	</ui5-view-settings-dialog>
 
+	<h3>ViewSettingsDialog with default + custom tabs</h3>
+
+	<ui5-button id="btnOpenDialogWithDefaultAndCustomTabs">VSD - Default + Custom Tabs</ui5-button>
+	<pre id="defaultAndCustomTabsStateJson" class="vsd-custom-tab-state"></pre>
+	<ui5-view-settings-dialog id="vsdDefaultAndCustomTabs">
+
+		<ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
+
+		<ui5-group-item slot="groupItems" text="Title"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="Author"></ui5-group-item>
+		<ui5-group-item slot="groupItems" text="(No Group)"></ui5-group-item>
+
+		<ui5-sort-item slot="sortItems" text="Name" data-key="sortName"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Position" data-key="sortPosition"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Company" data-key="sortCompany"></ui5-sort-item>
+
+		<ui5-filter-item slot="filterItems" text="Category" data-key="filterCategory">
+			<ui5-filter-item-option slot="values" text="Electronics" data-key="filterOptionElectronics" selected></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Clothing" data-key="filterOptionClothing"></ui5-filter-item-option>
+		</ui5-filter-item>
+
+		<ui5-filter-item slot="filterItems" text="Color" data-key="filterColor">
+			<ui5-filter-item-option slot="values" text="Red" data-key="filterOptionRed"></ui5-filter-item-option>
+			<ui5-filter-item-option slot="values" text="Blue" data-key="filterOptionBlue"></ui5-filter-item-option>
+		</ui5-filter-item>
+
+		<ui5-view-settings-custom-tab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings" selected>
+			<div class="vsd-custom-tab-section">
+				<div class="vsd-custom-tab-row">
+					<span>Compact mode</span>
+					<ui5-switch id="defaultAndCustomCompactSwitch"></ui5-switch>
+				</div>
+				<div class="vsd-custom-tab-row">
+					<span>Live updates</span>
+					<ui5-switch id="defaultAndCustomLiveSwitch" checked></ui5-switch>
+				</div>
+				<ui5-segmented-button id="defaultAndCustomDensitySegmented">
+					<ui5-segmented-button-item selected>Cozy</ui5-segmented-button-item>
+					<ui5-segmented-button-item>Compact</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+		</ui5-view-settings-custom-tab>
+
+		<ui5-view-settings-custom-tab slot="customTabs" title="Display" tooltip="Display" icon="palette">
+			<div class="vsd-custom-tab-section">
+				<ui5-segmented-button id="defaultAndCustomLayoutSegmented">
+					<ui5-segmented-button-item selected>List</ui5-segmented-button-item>
+					<ui5-segmented-button-item>Grid</ui5-segmented-button-item>
+				</ui5-segmented-button>
+				<ui5-combobox id="defaultAndCustomThemeCombo" placeholder="Theme">
+					<ui5-cb-item text="Default"></ui5-cb-item>
+					<ui5-cb-item text="High Contrast"></ui5-cb-item>
+					<ui5-cb-item text="Compact Light"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-step-input id="defaultAndCustomRowsStepInput" min="10" max="100" value="25"></ui5-step-input>
+			</div>
+		</ui5-view-settings-custom-tab>
+
+	</ui5-view-settings-dialog>
+
+	<h3>ViewSettingsDialog with just custom tabs</h3>
+
+	<ui5-button id="btnOpenDialogWithJustCustomTabs">VSD - Custom Tabs Only</ui5-button>
+	<pre id="justCustomTabsStateJson" class="vsd-custom-tab-state"></pre>
+	<ui5-view-settings-dialog id="vsdJustCustomTabs">
+		<ui5-view-settings-custom-tab slot="customTabs" title="Behavior" tooltip="Behavior" icon="action-settings" selected>
+			<div class="vsd-custom-tab-section">
+				<div class="vsd-custom-tab-row">
+					<span>Enable notifications</span>
+					<ui5-switch id="justCustomNotificationsSwitch" checked></ui5-switch>
+				</div>
+				<div class="vsd-custom-tab-row">
+					<span>Auto-save</span>
+					<ui5-switch id="justCustomAutosaveSwitch"></ui5-switch>
+				</div>
+				<ui5-segmented-button id="justCustomPrioritySegmented">
+					<ui5-segmented-button-item selected>Normal</ui5-segmented-button-item>
+					<ui5-segmented-button-item>High</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+		</ui5-view-settings-custom-tab>
+
+		<ui5-view-settings-custom-tab slot="customTabs" title="Layout" tooltip="Layout" icon="palette">
+			<div class="vsd-custom-tab-section">
+				<ui5-segmented-button id="justCustomLayoutSegmented">
+					<ui5-segmented-button-item selected>Cards</ui5-segmented-button-item>
+					<ui5-segmented-button-item>Table</ui5-segmented-button-item>
+				</ui5-segmented-button>
+				<ui5-combobox id="justCustomThemeCombo" placeholder="Theme">
+					<ui5-cb-item text="Default"></ui5-cb-item>
+					<ui5-cb-item text="Dark"></ui5-cb-item>
+					<ui5-cb-item text="High Contrast"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-step-input id="justCustomRowsStepInput" min="5" max="50" value="15"></ui5-step-input>
+			</div>
+		</ui5-view-settings-custom-tab>
+	</ui5-view-settings-dialog>
+
+
+
+
 	<script>
 		btnOpenGroup.addEventListener("click", function () {
 			vsdGroup.open = true;
@@ -161,7 +263,7 @@
 			}
 			alert("OK button clicked, returned info is: " + JSON.stringify(e.detail));
 		});
-	
+
 		btnOpenDialog.addEventListener("click", function () {
 			vsd.open = true;
 		});
@@ -186,6 +288,109 @@
 		});
 		vsdFilter.addEventListener("ui5-confirm", function(evt) {
 			alert("OK button clicked, returned info is: " + JSON.stringify(evt.detail));
+		});
+
+		btnOpenDialogWithDefaultAndCustomTabs.addEventListener("click", function () {
+			applyDefaultAndCustomTabsState(defaultAndCustomTabsState);
+			vsdDefaultAndCustomTabs.open = true;
+		});
+
+		btnOpenDialogWithJustCustomTabs.addEventListener("click", function () {
+			applyJustCustomTabsState(justCustomTabsState);
+			vsdJustCustomTabs.open = true;
+		});
+
+		const defaultAndCustomTabsStateJson = document.getElementById("defaultAndCustomTabsStateJson");
+		const defaultAndCustomCompactSwitch = document.getElementById("defaultAndCustomCompactSwitch");
+		const defaultAndCustomLiveSwitch = document.getElementById("defaultAndCustomLiveSwitch");
+		const defaultAndCustomDensitySegmented = document.getElementById("defaultAndCustomDensitySegmented");
+		const defaultAndCustomLayoutSegmented = document.getElementById("defaultAndCustomLayoutSegmented");
+		const defaultAndCustomThemeCombo = document.getElementById("defaultAndCustomThemeCombo");
+		const defaultAndCustomRowsStepInput = document.getElementById("defaultAndCustomRowsStepInput");
+
+		const justCustomTabsStateJson = document.getElementById("justCustomTabsStateJson");
+		const justCustomNotificationsSwitch = document.getElementById("justCustomNotificationsSwitch");
+		const justCustomAutosaveSwitch = document.getElementById("justCustomAutosaveSwitch");
+		const justCustomPrioritySegmented = document.getElementById("justCustomPrioritySegmented");
+		const justCustomLayoutSegmented = document.getElementById("justCustomLayoutSegmented");
+		const justCustomThemeCombo = document.getElementById("justCustomThemeCombo");
+		const justCustomRowsStepInput = document.getElementById("justCustomRowsStepInput");
+
+		function getSelectedSegmentIndex(segmentedButton) {
+			const items = Array.from(segmentedButton.querySelectorAll("ui5-segmented-button-item"));
+			const selectedIndex = items.findIndex(item => item.selected);
+			return selectedIndex > -1 ? selectedIndex : 0;
+		}
+
+		function setSelectedSegmentIndex(segmentedButton, index) {
+			const items = Array.from(segmentedButton.querySelectorAll("ui5-segmented-button-item"));
+			items.forEach((item, currentIndex) => {
+				item.selected = currentIndex === index;
+			});
+		}
+
+		function collectDefaultAndCustomTabsState() {
+			return {
+				compactMode: defaultAndCustomCompactSwitch.checked,
+				liveUpdates: defaultAndCustomLiveSwitch.checked,
+				densityIndex: getSelectedSegmentIndex(defaultAndCustomDensitySegmented),
+				layoutIndex: getSelectedSegmentIndex(defaultAndCustomLayoutSegmented),
+				theme: defaultAndCustomThemeCombo.value,
+				rows: defaultAndCustomRowsStepInput.value,
+			};
+		}
+
+		function applyDefaultAndCustomTabsState(state) {
+			defaultAndCustomCompactSwitch.checked = !!state.compactMode;
+			defaultAndCustomLiveSwitch.checked = !!state.liveUpdates;
+			setSelectedSegmentIndex(defaultAndCustomDensitySegmented, state.densityIndex ?? 0);
+			setSelectedSegmentIndex(defaultAndCustomLayoutSegmented, state.layoutIndex ?? 0);
+			defaultAndCustomThemeCombo.value = state.theme || "";
+			defaultAndCustomRowsStepInput.value = state.rows || "25";
+		}
+
+		function renderDefaultAndCustomTabsState(state) {
+			defaultAndCustomTabsStateJson.textContent = JSON.stringify(state, null, 2);
+		}
+
+		function collectJustCustomTabsState() {
+			return {
+				notificationsEnabled: justCustomNotificationsSwitch.checked,
+				autosaveEnabled: justCustomAutosaveSwitch.checked,
+				priorityIndex: getSelectedSegmentIndex(justCustomPrioritySegmented),
+				layoutIndex: getSelectedSegmentIndex(justCustomLayoutSegmented),
+				theme: justCustomThemeCombo.value,
+				rows: justCustomRowsStepInput.value,
+			};
+		}
+
+		function applyJustCustomTabsState(state) {
+			justCustomNotificationsSwitch.checked = !!state.notificationsEnabled;
+			justCustomAutosaveSwitch.checked = !!state.autosaveEnabled;
+			setSelectedSegmentIndex(justCustomPrioritySegmented, state.priorityIndex ?? 0);
+			setSelectedSegmentIndex(justCustomLayoutSegmented, state.layoutIndex ?? 0);
+			justCustomThemeCombo.value = state.theme || "";
+			justCustomRowsStepInput.value = state.rows || "15";
+		}
+
+		function renderJustCustomTabsState(state) {
+			justCustomTabsStateJson.textContent = JSON.stringify(state, null, 2);
+		}
+
+		let defaultAndCustomTabsState = collectDefaultAndCustomTabsState();
+		renderDefaultAndCustomTabsState(defaultAndCustomTabsState);
+
+		let justCustomTabsState = collectJustCustomTabsState();
+		renderJustCustomTabsState(justCustomTabsState);
+
+		vsdDefaultAndCustomTabs.addEventListener("ui5-confirm", function() {
+			defaultAndCustomTabsState = collectDefaultAndCustomTabsState();
+			renderDefaultAndCustomTabsState(defaultAndCustomTabsState);
+		});
+
+		vsdJustCustomTabs.addEventListener("ui5-confirm", function() {
+			justCustomTabsState = collectJustCustomTabsState();
+			renderJustCustomTabsState(justCustomTabsState);
 		});
 	</script>
 
