@@ -153,10 +153,10 @@ describe("List Tests", () => {
 				<ListItemStandard>HP Monitor 24</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]")
 			.as("list");
-	
+
 		cy.get("@list").invoke('prop', 'accessibilityAttributes', {
 			growingButton: {
 				name: "Load more products from catalog"
@@ -167,7 +167,7 @@ describe("List Tests", () => {
 			.shadow()
 			.find("[id$='growing-btn']")
 			.should("have.attr", "aria-label", "Load more products from catalog");
-	
+
 		cy.get("@list")
 			.shadow()
 			.find("[id$='growing-btn']")
@@ -182,7 +182,7 @@ describe("List Tests", () => {
 				<ListItemStandard>Product 3</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]")
 			.as("list");
 
@@ -652,22 +652,22 @@ describe("List Tests", () => {
 				<input placeholder="selectionComponentPressed result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
-	
+
 		cy.get("[ui5-li]").eq(1)
 			.shadow()
 			.find("ui5-radio-button")
 			.click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledTwice");
 		cy.get("@selectionChangeStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("selectionComponentPressed", true)));
@@ -686,14 +686,14 @@ describe("List Tests", () => {
 				<input placeholder="selectionChange result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 	});
@@ -710,13 +710,13 @@ describe("List Tests", () => {
 				<input placeholder="selectionChange previousSelection result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("previouslySelectedItems")));
 		cy.get("[ui5-li]").eq(1).should("exist");
@@ -730,7 +730,7 @@ describe("List Tests", () => {
 				<ListItemStandard selected>China</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("selectionChangeStub");
 			stub.callsFake((event) => {
@@ -738,11 +738,11 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-selection-change", stub);
 		});
-	
+
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
@@ -756,7 +756,7 @@ describe("List Tests", () => {
 				<ListItemStandard selected>China</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("selectionChangeStub");
 			stub.callsFake((event) => {
@@ -764,13 +764,13 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-selection-change", stub);
 		});
-	
+
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(1).should("have.attr", "selected");
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(1).should("have.attr", "selected");
@@ -1129,35 +1129,35 @@ describe("List Tests", () => {
 				<label>0</label>
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
 		});
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.click();
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.should("not.have.attr", "selected");
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.shadow()
 			.find("ui5-button")
 			.should("exist");
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.shadow()
 			.find("ui5-button")
 			.click();
-	
+
 		cy.get("@itemDeleteStub").should("have.been.calledOnce");
 		cy.get("@itemDeleteStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
@@ -1180,25 +1180,95 @@ describe("List Tests", () => {
 				<label>0</label>
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
 		});
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.click();
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.should("not.have.attr", "selected");
-	
+
 		cy.realPress("Delete");
-	
+
 		cy.get("@itemDeleteStub").should("have.been.calledOnce");
 		cy.get("@itemDeleteStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
+	});
+
+	it("selectionMode: delete. Tab key moves focus to delete button", () => {
+		cy.mount(
+			<div>
+				<button>Before button</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Laptop HP</ListItemStandard>
+					<ListItemStandard>Laptop Lenovo</ListItemStandard>
+				</List>
+				<button>After button</button>
+			</div>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
+		});
+
+		// Click first item to focus it
+		cy.get("[ui5-li]").first().click();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should move focus to the delete button inside the first item
+		cy.realPress("Tab");
+		cy.get("[ui5-li]")
+			.first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Enter on the focused delete button should trigger deletion
+		cy.realPress("Enter");
+		cy.get("@itemDeleteStub").should("have.been.calledOnce");
+
+		// Tab again from delete button should move focus out of the item
+		cy.get("[ui5-li]").first().click();
+		cy.realPress("Tab");
+		cy.get("[ui5-li]")
+			.first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("button").last().should("be.focused");
+	});
+
+	it("selectionMode: delete. F2 toggles focus to delete button", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Laptop HP</ListItemStandard>
+				<ListItemStandard>Laptop Lenovo</ListItemStandard>
+			</List>
+		);
+
+		// Click first item to focus it
+		cy.get("[ui5-li]").first().click();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// F2 should move focus to the delete button
+		cy.realPress("F2");
+		cy.get("[ui5-li]")
+			.first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 again should return focus to the list item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
 	});
 
 	it("item size and classes, when an item has both text and description", () => {
@@ -1714,16 +1784,16 @@ describe("List Tests", () => {
 				</List>
 			</div>
 		);
-	
+
 		cy.get("[ui5-li]").first().then(($item) => {
 			$item[0].addEventListener("ui5-detail-click", cy.stub().as("detailClickStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find(".ui5-li-detailbtn")
 			.click();
-	
+
 		cy.get("@detailClickStub").should("have.been.calledOnce");
 	});
 
@@ -1870,12 +1940,12 @@ describe("List Tests", () => {
 				<Button>Change empty item text</Button>
 			</div>
 		);
-	
+
 		const NEW_TEXT = "updated";
-	
+
 		cy.get("[ui5-li]").first()
 			.should("have.prop", "innerHTML", "");
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find("slot")
@@ -1883,7 +1953,7 @@ describe("List Tests", () => {
 				const assignedNodes = ($slot[0] as any).assignedNodes();
 				expect(assignedNodes.length).to.equal(0);
 			});
-	
+
 		cy.get("[ui5-button]").then(($btn) => {
 			const stub = cy.stub().as("buttonClickStub");
 			stub.callsFake(() => {
@@ -1894,13 +1964,13 @@ describe("List Tests", () => {
 			});
 			$btn[0].addEventListener("click", stub);
 		});
-	
+
 		cy.get("[ui5-button]").click();
-	
+
 		cy.get("@buttonClickStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first()
 			.should("have.prop", "innerHTML", NEW_TEXT);
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find("slot")
@@ -1920,7 +1990,7 @@ describe("List Tests", () => {
 				<input placeholder="itemClick prevented result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("itemClickStub");
 			stub.callsFake((event) => {
@@ -1928,9 +1998,9 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-item-click", stub);
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 	});
@@ -2113,18 +2183,18 @@ describe("List Tests", () => {
 				<input value="0" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-select]").then(($select) => {
 			const listItem = $select.closest("ui5-li-custom")[0];
 			if (listItem) {
 				listItem.addEventListener("ui5-item-close", cy.stub().as("itemCloseStub"));
 			}
 		});
-	
+
 		cy.get("[ui5-select]").click();
-	
+
 		cy.realPress("Escape");
-	
+
 		cy.get("@itemCloseStub").should("not.have.been.called");
 	});
 
@@ -2487,14 +2557,14 @@ describe("List keyboard drag and drop tests", () => {
 
 		cy.get("[ui5-list]").then(($list) => {
 			const list = $list[0];
-			
+
 			list.addEventListener("keydown", (e) => {
 				if (e.ctrlKey) {
 					const focusedItem = document.activeElement as HTMLElement;
 					if (!focusedItem || !focusedItem.matches("[ui5-li]")) return;
-					
+
 					let targetItem = null;
-					
+
 					switch (e.key) {
 						case "ArrowRight":
 						case "ArrowDown":
@@ -2554,14 +2624,14 @@ describe("List keyboard drag and drop tests", () => {
 
 		cy.get("[ui5-list]").then(($list) => {
 			const list = $list[0];
-			
+
 			list.addEventListener("keydown", (e) => {
 				if (e.ctrlKey) {
 					const focusedItem = document.activeElement as HTMLElement;
 					if (!focusedItem || !focusedItem.matches("[ui5-li]")) return;
-					
+
 					let targetItem = null;
-					
+
 					switch (e.key) {
 						case "ArrowUp":
 							targetItem = focusedItem.previousElementSibling as HTMLElement;
@@ -2625,10 +2695,10 @@ describe("List sticky header", () => {
 		cy.get("@header")
 			.then(($headerBefore) => {
 				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
-	
+
 				cy.get("@container")
 					.scrollTo(0, 50);
-	
+
 				cy.get("@header")
 					.should(($headerAfter) => {
 						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
@@ -2661,10 +2731,10 @@ describe("List sticky header", () => {
 		cy.get("@header")
 			.then(($headerBefore) => {
 				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
-	
+
 				cy.get("@container")
 					.scrollTo(0, 50);
-	
+
 				cy.get("@header")
 					.should(($headerAfter) => {
 						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
