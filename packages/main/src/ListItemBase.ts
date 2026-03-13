@@ -165,32 +165,29 @@ class ListItemBase extends UI5Element implements ITabbable {
 	}
 
 	_onclick(e: MouseEvent) {
-		if (this._isInteractiveContentClicked(e)) {
+		if (this.getFocusDomRef()!.matches(":has(:focus-within)") || this._isDisabledInteractiveContentClicked(e)) {
 			return;
 		}
 		this.fireItemPress(e);
 	}
 
-	_isInteractiveContentClicked(e: MouseEvent): boolean {
-		const focusDomRef = this.getFocusDomRef();
-		if (!focusDomRef) {
-			return false;
-		}
-
+	_isDisabledInteractiveContentClicked(e: MouseEvent): boolean {
 		const path = e.composedPath();
-		const boundaryIndex = path.findIndex(target => target === this || target === focusDomRef);
-		const relevantPath = boundaryIndex === -1 ? path : path.slice(0, boundaryIndex);
 
-		return relevantPath.some(target => {
+		return path.some(target => {
 			if (!(target instanceof HTMLElement)) {
 				return false;
 			}
 
-			if (target.matches("button, input, select, textarea, a[href], [contenteditable]:not([contenteditable='false'])")) {
-				return true;
+			if (target.matches("button, input, select, textarea")) {
+				return (target as HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).disabled;
 			}
 
-			return target.matches("ui5-button, ui5-link, ui5-input, ui5-textarea, ui5-select, ui5-combobox, ui5-multi-combobox, ui5-switch, ui5-checkbox, ui5-radio-button, ui5-date-picker, ui5-daterange-picker, ui5-time-picker, ui5-step-input");
+			if (target.matches("ui5-button, ui5-input, ui5-textarea, ui5-select, ui5-combobox, ui5-multi-combobox, ui5-switch, ui5-checkbox, ui5-radio-button, ui5-date-picker, ui5-daterange-picker, ui5-time-picker, ui5-step-input")) {
+				return !!(target as { disabled?: boolean }).disabled;
+			}
+
+			return false;
 		});
 	}
 
