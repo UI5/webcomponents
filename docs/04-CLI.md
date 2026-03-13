@@ -109,4 +109,4 @@ Every scaffolded project comes with these commands:
 | `npm run clean` | Clean generated and build artifacts |
 | `npm test` | Run tests (if Cypress was selected) |
 
-[View on npm](https://www.npmjs.com/package/@ui5/create-webcomponents-package) · [GitHub](https://github.com/SAP/ui5-webcomponents/tree/main/packages/create-package)
+[View on npm](https://www.npmjs.com/package/@ui5/create-webcomponents-package) · [GitHub](https://github.com/UI5/webcomponents/tree/main/packages/create-package)

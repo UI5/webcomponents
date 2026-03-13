@@ -20,7 +20,7 @@ UI5 Web Components ships [Agent Skills](https://agentskills.io) — portable, st
 Install all UI5 Web Components skills into your project:
 
 ```bash
-npx skills add "SAP/ui5-webcomponents"
+npx skills add "UI5/webcomponents"
 ```
 
 This downloads the skill files into your project so that AI assistants (Claude Code, Copilot, Cursor, etc.) can pick them up automatically.
@@ -28,16 +28,16 @@ This downloads the skill files into your project so that AI assistants (Claude C
 To install a specific skill:
 
 ```bash
-npx skills add "SAP/ui5-webcomponents" --skill "styling"
+npx skills add "UI5/webcomponents" --skill "styling"
 ```
 
 ### In the Repository
 
-When working inside the UI5 Web Components repository, AI coding assistants automatically discover and use the skills from the [`skills/`](https://github.com/SAP/ui5-webcomponents/tree/main/skills) directory — no setup needed.
+When working inside the UI5 Web Components repository, AI coding assistants automatically discover and use the skills from the [`skills/`](https://github.com/UI5/webcomponents/tree/main/skills) directory — no setup needed.
 
 ### Manual Setup
 
-You can also copy skills directly from the repository's [`skills/`](https://github.com/SAP/ui5-webcomponents/tree/main/skills) directory into your project's `.agents/skills/` folder:
+You can also copy skills directly from the repository's [`skills/`](https://github.com/UI5/webcomponents/tree/main/skills) directory into your project's `.agents/skills/` folder:
 
 ```
 your-project/

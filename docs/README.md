@@ -18,7 +18,7 @@ With UI5 Web Components, developers can leverage a powerful, flexible, and futur
 
 - **SAP Backing:** Developed and maintained by [SAP](https://sap.com) as part of the [UI5](https://openui5.org/) product family, guaranteeing ongoing support and integration with SAP's ecosystem.
 
-- **AI-Ready:** The project is structured for AI-assisted development with an [MCP server](./05-MCP-Server.md) for direct IDE integration, a machine-readable [llms.txt](/llms.txt) file, an [AGENTS.md](https://github.com/SAP/ui5-webcomponents/blob/main/AGENTS.md) guide for coding assistants, installable [Agent Skills](./06-Skills.md), and a dedicated set of [AI components](/components/ai/) for building conversational and generative AI interfaces.
+- **AI-Ready:** The project is structured for AI-assisted development with an [MCP server](./05-MCP-Server.md) for direct IDE integration, a machine-readable [llms.txt](/llms.txt) file, an [AGENTS.md](https://github.com/UI5/webcomponents/blob/main/AGENTS.md) guide for coding assistants, installable [Agent Skills](./06-Skills.md), and a dedicated set of [AI components](/components/ai/) for building conversational and generative AI interfaces.
 
 
 ## Ecosystem
