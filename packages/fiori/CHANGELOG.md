@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
+
+
+### Bug Fixes
+
+* **ui5-dialog:** remove ui5-bar's padding when slotted as header or footer ([#13201](https://github.com/UI5/webcomponents/issues/13201)) ([5ac39e7](https://github.com/UI5/webcomponents/commit/5ac39e7cb501287f5cad171aca1e359ad9c03d6f))
+* **ui5-dynamic-page:** guard against null scrollContainer in _toggleHeader ([#13255](https://github.com/UI5/webcomponents/issues/13255)) ([14873e8](https://github.com/UI5/webcomponents/commit/14873e8037670c1588c19cf1a5676079eea1b74a)), closes [#13236](https://github.com/UI5/webcomponents/issues/13236)
+* **ui5-illustrated-message:** add v5 loader in tnt illustrations ([#13160](https://github.com/UI5/webcomponents/issues/13160)) ([3dc4694](https://github.com/UI5/webcomponents/commit/3dc4694ecbb9ca3c2e8061fccaf917bfa211861a)), closes [#8145](https://github.com/UI5/webcomponents/issues/8145) [#8145](https://github.com/UI5/webcomponents/issues/8145)
+* **ui5-search:** fix suggestion item selected state border-bottom ([#13209](https://github.com/UI5/webcomponents/issues/13209)) ([48a7cb2](https://github.com/UI5/webcomponents/commit/48a7cb29071db6723d5fd06a943940c68f42f508))
+* **ui5-user-menu:** prevent title flickering in header on open ([#13239](https://github.com/UI5/webcomponents/issues/13239)) ([9304032](https://github.com/UI5/webcomponents/commit/93040320b0958577d04018357f408e02751c59e7)), closes [#12874](https://github.com/UI5/webcomponents/issues/12874)
+
+
+### Features
+
+* **ui5-search:** update autocomplete behavior when focusing list items ([#13197](https://github.com/UI5/webcomponents/issues/13197)) ([ad3ab3c](https://github.com/UI5/webcomponents/commit/ad3ab3cf90a6dce24647914847325604e5c0df35))
+
+
+
+
+
 # [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
 
 

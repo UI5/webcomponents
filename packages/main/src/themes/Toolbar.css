@@ -32,12 +32,6 @@
 	margin-inline-start: var(--_ui5-toolbar-item-margin-left);
 }
 
-.ui5-tb-spacer {
-	flex: 1 1 auto;
-	margin-inline-end: var(--_ui5-toolbar-item-margin-right);
-	margin-inline-start: var(--_ui5-toolbar-item-margin-left);
-}
-
 .ui5-tb-self-overflow {
 	min-width:  2.5rem;
 	flex-shrink: 1;
