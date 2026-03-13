@@ -1769,9 +1769,9 @@ describe("Calendar Global Configuration", () => {
 
 describe("Calendar - Multiple Months Mode", () => {
 	describe("Two Calendars Display", () => {
-		it("should display two calendars when _showTwoCalendars is true", () => {
+		it("should display two calendars when _showTwoMonths is true", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 1, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1782,9 +1782,9 @@ describe("Calendar - Multiple Months Mode", () => {
 				.should("have.length", 2);
 		});
 
-		it("should display only one calendar when _showTwoCalendars is false", () => {
+		it("should display only one calendar when _showTwoMonths is false", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={false}>
+				<Calendar id="cal" _showTwoMonths={false}>
 					<CalendarDate value="Jan 1, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1802,7 +1802,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should display consecutive months in two calendar mode", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1826,7 +1826,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should have correct CSS classes for multiple months mode", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 1, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1851,7 +1851,7 @@ describe("Calendar - Multiple Months Mode", () => {
 	describe("Navigation in Multiple Months Mode", () => {
 		it("should show prev button only in first calendar header", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1882,7 +1882,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should show next button only in last calendar header (desktop)", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1906,7 +1906,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should navigate both calendars when clicking prev button", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Mar 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1936,7 +1936,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should navigate both calendars when clicking next button", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1968,7 +1968,7 @@ describe("Calendar - Multiple Months Mode", () => {
 	describe("Picker Overlays in Multiple Months Mode", () => {
 		it("should show month picker as overlay when clicking month button", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -1996,7 +1996,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should show year picker as overlay when clicking year button", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2024,7 +2024,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should show overlay effect on day pickers when picker is open", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2045,7 +2045,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should hide overlay when selecting a month", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2078,7 +2078,7 @@ describe("Calendar - Multiple Months Mode", () => {
 	describe("Date Selection in Multiple Months Mode", () => {
 		it("should allow selecting dates from both calendars", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true} selectionMode={CalendarSelectionMode.Single}>
+				<Calendar id="cal" _showTwoMonths={true} selectionMode={CalendarSelectionMode.Single}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2104,7 +2104,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should support range selection across both calendars", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true} selectionMode={CalendarSelectionMode.Range}>
+				<Calendar id="cal" _showTwoMonths={true} selectionMode={CalendarSelectionMode.Range}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2143,7 +2143,7 @@ describe("Calendar - Multiple Months Mode", () => {
 	describe("Header Buttons in Multiple Months Mode", () => {
 		it("should hide month button when year or year-range picker is shown", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2165,7 +2165,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should show all header buttons in default day picker mode", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2189,7 +2189,7 @@ describe("Calendar - Multiple Months Mode", () => {
 	describe("Accessibility in Multiple Months Mode", () => {
 		it("should have proper ARIA labels on navigation buttons", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
@@ -2207,7 +2207,7 @@ describe("Calendar - Multiple Months Mode", () => {
 
 		it("should have proper role attributes on header buttons", () => {
 			cy.mount(
-				<Calendar id="cal" _showTwoCalendars={true}>
+				<Calendar id="cal" _showTwoMonths={true}>
 					<CalendarDate value="Jan 15, 2024"></CalendarDate>
 				</Calendar>
 			);
