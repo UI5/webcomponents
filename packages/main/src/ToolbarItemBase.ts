@@ -116,6 +116,17 @@ class ToolbarItemBase extends UI5Element {
 		return false;
 	}
 
+	/**
+	 * Returns if the item is a spacer.
+	 * A spacer item is an item that takes space in the toolbar, but does not render any content.
+	 * @protected
+	 * @since 2.21.0
+	 */
+
+	get isSpacer() {
+		return false;
+	}
+
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
@@ -127,6 +138,10 @@ class ToolbarItemBase extends UI5Element {
 				"ui5-tb-item": true,
 			},
 		};
+	}
+
+	get styles() {
+		return {};
 	}
 }
 
