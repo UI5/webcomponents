@@ -367,6 +367,75 @@ describe("CheckBox general interaction", () => {
             .find("ui5-icon")
             .should("have.attr", "name", "tri-state");
     });
+
+    it("tests font-size based scaling for standalone checkboxes", () => {
+        cy.mount(
+            <div>
+                <CheckBox style={{ fontSize: "12px" }} checked />
+                <CheckBox style={{ fontSize: "48px" }} checked />
+                <CheckBox style={{ fontSize: "48px" }} checked indeterminate />
+            </div>
+        );
+
+        let smallInnerWidth: number;
+        let smallInnerHeight: number;
+        let largeInnerWidth: number;
+        let largeInnerHeight: number;
+        let smallIconWidth: number;
+        let smallIconHeight: number;
+        let largeIconWidth: number;
+        let largeIconHeight: number;
+
+        // Measure small checkbox (12px)
+        cy.get("[ui5-checkbox]").eq(0)
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                smallInnerWidth = $inner[0].offsetWidth;
+                smallInnerHeight = $inner[0].offsetHeight;
+            });
+
+        cy.get("[ui5-checkbox]").eq(0)
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                smallIconWidth = $icon[0].offsetWidth;
+                smallIconHeight = $icon[0].offsetHeight;
+            });
+
+        // Measure large checkbox (48px)
+        cy.get("[ui5-checkbox]").eq(1)
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                largeInnerWidth = $inner[0].offsetWidth;
+                largeInnerHeight = $inner[0].offsetHeight;
+            });
+
+        cy.get("[ui5-checkbox]").eq(1)
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                largeIconWidth = $icon[0].offsetWidth;
+                largeIconHeight = $icon[0].offsetHeight;
+
+                // Perform assertions after all measurements are captured
+                // 48px checkbox should be ~4x larger than 12px checkbox
+                expect(largeInnerWidth).to.be.closeTo(smallInnerWidth * 4, 2);
+                expect(largeInnerHeight).to.be.closeTo(smallInnerHeight * 4, 2);
+                expect(largeIconWidth).to.be.closeTo(smallIconWidth * 4, 2);
+                expect(largeIconHeight).to.be.closeTo(smallIconHeight * 4, 2);
+            });
+
+        // Verify indeterminate state (tri-state box) scales as well
+        cy.get("[ui5-checkbox]").eq(2)
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                expect($inner[0].offsetWidth).to.be.greaterThan(smallInnerWidth * 3);
+                expect($inner[0].offsetHeight).to.be.greaterThan(smallInnerHeight * 3);
+            });
+    });
 });
 
 describe("Accessibility", () => {
