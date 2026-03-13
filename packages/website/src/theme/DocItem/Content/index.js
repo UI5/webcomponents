@@ -44,7 +44,7 @@ export default function DocItemContent({children}) {
   const {metadata, frontMatter} = useDoc();
   return (
     <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
-      <div style={{ float: 'right', marginLeft: '1rem' }}>
+      <div style={{ float: 'right', marginTop: '0.625rem', marginLeft: '1rem' }}>
         <AskAI title={metadata.title} tagName={frontMatter.ui5_tag_name} />
       </div>
       {syntheticTitle && (
