@@ -1202,13 +1202,14 @@ abstract class UI5Element extends HTMLElement {
 	/**
 	 * @private
 	 */
-	static _generateAccessors() {
+	static _generateAccessors(props?: string[]) {
 		const proto = this.prototype;
 		const slotsAreManaged = this.getMetadata().slotsAreManaged();
 
 		// Properties
-		const properties = this.getMetadata().getProperties();
-		for (const [prop, propData] of Object.entries(properties)) { // eslint-disable-line
+		const properties = Object.keys(this.getMetadata().getProperties());
+
+		for (const prop of props ?? properties) { // eslint-disable-line
 			if (!isValidPropertyName(prop)) {
 				console.warn(`"${prop}" is not a valid property name. Use a name that does not collide with DOM APIs`); /* eslint-disable-line */
 			}
@@ -1272,6 +1273,10 @@ abstract class UI5Element extends HTMLElement {
 					}
 				},
 			});
+		}
+
+		if (props) {
+			return;
 		}
 
 		// Slots

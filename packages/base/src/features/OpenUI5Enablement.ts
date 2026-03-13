@@ -1,4 +1,3 @@
-import type { TemplateResult } from "lit-html";
 import { registerFeature } from "../FeaturesRegistry.js";
 import BusyIndicatorStyles from "../generated/css/BusyIndicator.css.js";
 import merge from "../thirdparty/merge.js";
@@ -18,63 +17,30 @@ const busyIndicatorMetadata = {
 };
 
 class OpenUI5Enablement {
-	static wrapTemplateResultInBusyMarkup(html: (strings: TemplateStringsArray, ...values: Array<unknown>) => TemplateResult, host: OpenUI5Element, templateResult: TemplateResult) {
-		if (host.isOpenUI5Component && host.__isBusy) {
-			templateResult = html`
-			<div class="busy-indicator-wrapper">
-				<span tabindex="0" busy-indicator-before-span @focusin=${host.__suppressFocusIn}></span>
-				${templateResult}
-				<div class="busy-indicator-overlay"></div>
-				<div busy-indicator
-					class="busy-indicator-busy-area"
-					tabindex="0"
-					role="progressbar"
-					@keydown=${host.__suppressFocusBack}
-					aria-valuemin="0"
-					aria-valuemax="100"
-					aria-valuetext="Busy">
-					<div>
-						<div class="busy-indicator-circle circle-animation-0"></div>
-						<div class="busy-indicator-circle circle-animation-1"></div>
-						<div class="busy-indicator-circle circle-animation-2"></div>
-					</div>
-				</div>
-			</div>`;
-		}
-
-		return templateResult;
-	}
-
 	static enrichBusyIndicatorSettings(klass: typeof UI5Element) {
 		OpenUI5Enablement.enrichBusyIndicatorMetadata(klass);
 		OpenUI5Enablement.enrichBusyIndicatorMethods(klass.prototype);
 	}
 
 	static enrichBusyIndicatorMetadata(klass: typeof UI5Element) {
-		klass.metadata = merge(klass.metadata, busyIndicatorMetadata);
+		klass._metadata.metadata = merge(klass._metadata.metadata, busyIndicatorMetadata);
+		klass._generateAccessors(["__isBusy"]);
 	}
 
 	static enrichBusyIndicatorMethods(UI5ElementPrototype: typeof OpenUI5Element.prototype) {
 		Object.defineProperties(UI5ElementPrototype, {
 			"__redirectFocus": { value: true, writable: true },
-			"__suppressFocusBack": {
-				get() {
-					return {
-						handleEvent: (e: KeyboardEvent) => {
-							if (isTabPrevious(e)) {
-								const beforeElem = this.shadowRoot.querySelector("[busy-indicator-before-span]");
-								this.__redirectFocus = false;
-								beforeElem.focus();
-								this.__redirectFocus = true;
-							}
-						},
-						capture: true,
-						passive: false,
-					};
-				},
-			},
 			"isOpenUI5Component": { get: () => { return true; } },
 		});
+
+		UI5ElementPrototype.__suppressFocusBack = function handleFocusBack(e: KeyboardEvent) {
+			if (isTabPrevious(e)) {
+				const beforeElem = this.shadowRoot!.querySelector<HTMLElement>("[busy-indicator-before-span]");
+				this.__redirectFocus = false;
+				beforeElem?.focus();
+				this.__redirectFocus = true;
+			}
+		};
 
 		UI5ElementPrototype.__suppressFocusIn = function handleFocusIn() {
 			const busyIndicator = this.shadowRoot?.querySelector("[busy-indicator]") as HTMLElement;
