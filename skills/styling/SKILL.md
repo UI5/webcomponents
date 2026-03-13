@@ -6,7 +6,7 @@ user-invocable: false
 
 # Styling UI5 Web Components
 
-UI5 Web Components use Shadow DOM for encapsulation. Styles are isolated — external CSS won't leak in, but customization requires specific techniques. There are four approaches, ordered from most recommended to least.
+UI5 Web Components use Shadow DOM for encapsulation. Styles are isolated — external CSS won't leak in, but customization requires specific techniques. There are five approaches, ordered from most recommended to least.
 
 ## 1. Styles on Tag Level
 
@@ -62,6 +62,29 @@ All global SAP CSS variables are defined in [@sap-theming/theming-base-content](
 
 **Best practice:** For broad theme changes, prefer using the UI Theme Designer to ensure consistency. Use direct CSS variable overrides only for targeted, scoped customizations.
 
+## 5. Custom CSS via `addCustomCSS` (Last Resort)
+
+If none of the above work, custom CSS can be injected directly into a component's shadow DOM using the `addCustomCSS` API. **This approach is fragile** — it targets internal DOM structure that may change between versions. Only use it when CSS variables, tag-level styles, and shadow parts cannot achieve the desired result.
+
+Before writing custom CSS:
+1. Inspect the component's shadow DOM in DevTools to understand the internal structure
+2. Target the minimal set of selectors needed
+3. Warn users that this may break on version upgrades
+
+Custom CSS must be registered before any instances of the component are created:
+
+```javascript
+import { addCustomCSS } from "@ui5/webcomponents-base/dist/Theming.js";
+
+addCustomCSS("ui5-select", `
+  .ui5-select-root {
+    background-color: red;
+  }
+`);
+```
+
+The first argument is the component's tag name, the second is a CSS string that gets injected into every instance's shadow DOM.
+
 ## What NOT to Do
 
 - **Don't pierce shadow DOM** with deprecated `>>>` or `/deep/` selectors — they don't work.
@@ -78,3 +101,4 @@ All global SAP CSS variables are defined in [@sap-theming/theming-base-content](
 | Style based on component state | `:state(name)` |
 | Change colors/fonts globally | Override `--sap*` CSS variables |
 | Full theme customization | UI Theme Designer |
+| Override internal shadow DOM styles | `addCustomCSS` (last resort) |
