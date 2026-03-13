@@ -1,6 +1,10 @@
 .ui5-valuestatemessage-popover {
 	border-radius: var(--_ui5_value_state_message_popover_border_radius);
 	box-shadow: var(--_ui5_value_state_message_popover_box_shadow);
+	min-height: var(--_ui5_value_state_message_popover_header_min_height);
+	min-width: var(--_ui5_value_state_message_popover_header_min_width);
+	max-width: var(--_ui5_value_state_message_popover_header_max_width);
+	width: var(--_ui5_value_state_message_popover_header_width);
 }
 
 .ui5-input-value-state-message-icon {
@@ -44,13 +48,6 @@
 	min-width: 6.25rem;
 	border: var(--_ui5_value_state_message_border);
 	line-height: var(--_ui5_value_state_message_line_height);
-}
-
-[ui5-responsive-popover] .ui5-valuestatemessage-header, [ui5-popover] .ui5-valuestatemessage-header  {
-	min-height: var(--_ui5_value_state_message_popover_header_min_height);
-	min-width: var(--_ui5_value_state_message_popover_header_min_width);
-	max-width: var(--_ui5_value_state_message_popover_header_max_width);
-	width: var(--_ui5_value_state_message_popover_header_width);
 }
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header {

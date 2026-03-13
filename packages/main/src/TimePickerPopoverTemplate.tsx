@@ -16,7 +16,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 		<>
 			<ResponsivePopover
 				id={`${this._id}-responsive-popover`}
-				class="ui5-time-picker-popover ui5-popover-with-value-state-header-phone"
+				class="ui5-time-picker-popover"
 				placement="Bottom"
 				horizontalAlign="Start"
 				opener={this}
