@@ -175,6 +175,150 @@ describe("Toolbar general interaction", () => {
 			.should("have.been.calledOnce");
 	});
 
+	it("Should navigate items with arrows and Tab/Shift+Tab within toolbar", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarButton text="First"></ToolbarButton>
+					<ToolbarSelect>
+						<ToolbarSelectOption>One</ToolbarSelectOption>
+						<ToolbarSelectOption>Two</ToolbarSelectOption>
+					</ToolbarSelect>
+					<ToolbarButton text="Last"></ToolbarButton>
+				</Toolbar>
+				<input data-testid="after" />
+			</>
+		);
+
+		cy.get("ui5-toolbar-button")
+			.first()
+			.shadow()
+			.find("ui5-button")
+			.realClick()
+			.should("be.focused");
+
+		// Arrow navigation from First to Select
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.should("be.focused");
+
+		// Tab from Select should navigate to Last button (not exit)
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.realPress("Tab");
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		// Tab from Last button should exit to after input
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.realPress("Tab");
+		cy.get("[data-testid='after']")
+			.should("be.focused");
+
+		// Shift+Tab from after input should go back to Last button
+		cy.get("[data-testid='after']")
+			.realPress(["Shift", "Tab"]);
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		// Shift+Tab from Last should navigate to Select
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.realPress(["Shift", "Tab"]);
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.should("be.focused");
+	});
+
+	it("Should focus first item on entry and restore last focused on re-entry", () => {
+		cy.mount(
+			<>
+				<input data-testid="before" />
+				<Toolbar>
+					<ToolbarButton text="First"></ToolbarButton>
+					<ToolbarSelect>
+						<ToolbarSelectOption>One</ToolbarSelectOption>
+						<ToolbarSelectOption>Two</ToolbarSelectOption>
+					</ToolbarSelect>
+					<ToolbarButton text="Last"></ToolbarButton>
+				</Toolbar>
+				<input data-testid="after" />
+			</>
+		);
+
+		// Tab into toolbar should focus first item
+		cy.get("[data-testid='before']")
+			.realClick();
+
+		cy.get("[data-testid='before']")
+			.realPress("Tab");
+		cy.get("ui5-toolbar-button")
+			.first()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		// Navigate to Select
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.should("be.focused");
+
+		// Tab out of toolbar to 'after' input
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.realPress("Tab");
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.realPress("Tab");
+		cy.get("[data-testid='after']")
+			.should("be.focused");
+
+		// Shift+Tab back into toolbar should restore last focused item (Select)
+		cy.get("[data-testid='after']")
+			.realPress(["Shift", "Tab"]);
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.realPress(["Shift", "Tab"]);
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.should("be.focused");
+	});
+
 	it("Should move button with alwaysOverflow priority to overflow popover", () => {
 
 		cy.mount(
