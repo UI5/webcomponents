@@ -15,33 +15,27 @@ UI5 Web Components ships [Agent Skills](https://agentskills.io) — portable, st
 | **styling** | How to customize and style UI5 Web Components — CSS shadow parts, custom states, CSS variables, and tag-level styling |
 | **accessibility** | How to make UI5 Web Components applications accessible — accessibility APIs, label-input relationships, invisible messaging, keyboard handling, and high contrast themes |
 
-## Installation
+## Usage
 
-Install all UI5 Web Components skills into your project:
+### In the Repository
 
-```bash
-npx skills add "SAP/ui5-webcomponents"
-```
+When working inside the UI5 Web Components repository, AI coding assistants (Claude Code, Cursor, etc.) automatically discover and use the skills from the [`skills/`](https://github.com/SAP/ui5-webcomponents/tree/main/skills) directory — no setup needed.
 
-This clones the skill files into your project so that AI assistants (Claude Code, Copilot, Cursor, etc.) can pick them up automatically.
+### In Your Own Project
 
-To install a specific skill:
-
-```bash
-npx skills add "SAP/ui5-webcomponents" --skill "styling"
-```
-
-### Manual Setup
-
-You can also copy skills directly from the repository's [`skills/`](https://github.com/SAP/ui5-webcomponents/tree/main/skills) directory into your project's `.agents/skills/` folder:
+Copy the skills you need from the repository's [`skills/`](https://github.com/SAP/ui5-webcomponents/tree/main/skills) directory into your project's `.agents/skills/` folder:
 
 ```
 your-project/
 └── .agents/
     └── skills/
-        └── styling/
+        ├── styling/
+        │   └── SKILL.md
+        └── accessibility/
             └── SKILL.md
 ```
+
+AI assistants that support the [Agent Skills](https://agentskills.io) standard will pick them up automatically.
 
 ## How Skills Work
 
