@@ -475,7 +475,7 @@ class UserMenu extends UI5Element {
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
-		return `${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
+		return `${account.titleText} ${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
 	}
 
 	getAccountByRefId(refId: string) {
