@@ -13,6 +13,7 @@ UI5 Web Components ships [Agent Skills](https://agentskills.io) — portable, st
 | Skill | Description |
 |-------|-------------|
 | **styling** | How to customize and style UI5 Web Components — CSS shadow parts, custom states, CSS variables, and tag-level styling |
+| **accessibility** | How to make UI5 Web Components applications accessible — accessibility APIs, label-input relationships, invisible messaging, keyboard handling, and high contrast themes |
 
 ## Installation
 
