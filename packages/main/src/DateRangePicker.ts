@@ -103,15 +103,6 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	@property()
 	_tempValue?: string;
 
-	/**
-	 * Defines if the `DateTimePicker` should be displayed in phone mode.
-	 * The phone mode turns on when the component is used on small screens or phone devices.
-	 * In phone mode the user can see either the calendar view, or the time view
-	 * and can switch between the views via toggle buttons.
-	 * @default false
-	 * @private
-	 */
-
 	private _prevDelimiter: string | null;
 
 	get formValidityMessage() {

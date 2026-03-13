@@ -330,9 +330,6 @@ class Calendar extends CalendarPart {
 	@property({ noAttribute: true })
 	_pickersMode: `${CalendarPickersMode}` = "DAY_MONTH_YEAR";
 
-	@property({ type: Boolean })
-	_isPortraitMode = false;
-
 	_valueIsProcessed = false;
 
 	_rangeStartYear?: number;
