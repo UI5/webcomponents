@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Shell Bar - Application-Level Overflow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+  <style>
+    #popoverContent {
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  </style>
+  <script type="module" crossorigin src="/webcomponents/assets/bundle.esm-BknLJTWX.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/ShellBar-BRTo017q.css">
+</head>
+
+<body class="shellbar1auto">
+
+  <ui5-popover id="popover" placement="Bottom" horizontal-align="End">
+    <div id="popoverContent"></div>
+  </ui5-popover>
+
+  <div id="container" style="width: 100%;">
+    <ui5-shellbar id="shellbar" show-notifications>
+      <ui5-button icon="menu2" slot="startButton"></ui5-button>
+      <ui5-shellbar-branding slot="branding">
+        Analytics Dashboard
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+      </ui5-shellbar-branding>
+      <ui5-avatar slot="profile" initials="AD"></ui5-avatar>
+    </ui5-shellbar>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; padding: 0 1rem;">
+    <ui5-label for="slider">Resize ShellBar:</ui5-label>
+    <ui5-slider id="slider" style="flex: 1;" min="30" max="100" value="100" show-tooltip></ui5-slider>
+  </div>
+
+  <script>
+    const shellbar = document.getElementById("shellbar");
+    const popover = document.getElementById("popover");
+    const popoverContent = document.getElementById("popoverContent");
+
+    // Shared state
+    const state = {
+      region: "na",
+      liveMode: true,
+      hiddenIds: new Set()
+    };
+
+    // Item definitions
+    const items = [
+      {
+        id: "regionSelect",
+        create: () => {
+          const el = document.createElement("ui5-select");
+          ["North America:na", "Europe:eu", "Asia Pacific:apac"].forEach(item => {
+            const [text, value] = item.split(":");
+            const opt = document.createElement("ui5-option");
+            opt.textContent = text;
+            opt.value = value;
+            if (value === state.region) opt.selected = true;
+            el.appendChild(opt);
+          });
+          el.addEventListener("ui5-change", (e) => {
+            state.region = e.detail.selectedOption.value;
+            syncAll();
+          });
+          return el;
+        },
+        sync: (el) => {
+          const opt = el.querySelector(`ui5-option[value="${state.region}"]`);
+          if (opt) opt.selected = true;
+        }
+      },
+      {
+        id: "devTag",
+        create: () => {
+          const el = document.createElement("ui5-tag");
+          el.textContent = "Development";
+          return el;
+        }
+      },
+      {
+        id: "spacer",
+        create: () => document.createElement("ui5-shellbar-spacer")
+      },
+      {
+        id: "refreshBtn",
+        create: () => {
+          const el = document.createElement("ui5-button");
+          el.icon = "refresh";
+          el.textContent = "Refresh";
+          return el;
+        }
+      },
+      {
+        id: "liveSwitch",
+        create: () => {
+          const wrapper = document.createElement("div");
+          wrapper.style.cssText = "display: flex; align-items: center; gap: 0.5rem;";
+          const sw = document.createElement("ui5-switch");
+          sw.checked = state.liveMode;
+          sw.addEventListener("ui5-change", (e) => {
+            state.liveMode = e.target.checked;
+            syncAll();
+          });
+          const label = document.createElement("ui5-label");
+          label.textContent = "Live";
+          wrapper.append(sw, label);
+          return wrapper;
+        },
+        sync: (el) => {
+          const sw = el.querySelector("ui5-switch");
+          if (sw) sw.checked = state.liveMode;
+        }
+      }
+    ];
+
+    // Sync state to all elements (shellbar + popover)
+    function syncAll() {
+      items.forEach(item => {
+        if (!item.sync) return;
+        const shellbarEl = document.getElementById(item.id);
+        const popoverEl = document.getElementById(`${item.id}-popover`);
+        if (shellbarEl) item.sync(shellbarEl);
+        if (popoverEl) item.sync(popoverEl);
+      });
+    }
+
+    // Render items in shellbar
+    items.forEach((item, index) => {
+      const el = item.create();
+      el.id = item.id;
+      el.slot = "content";
+      el.dataset.hideOrder = String(index + 1);
+      shellbar.appendChild(el);
+    });
+
+    // Overflow button
+    const overflowBtn = document.createElement("ui5-button");
+    overflowBtn.icon = "slim-arrow-down";
+    overflowBtn.slot = "content";
+    overflowBtn.dataset.hideOrder = "999";
+    overflowBtn.addEventListener("click", () => {
+      popover.opener = overflowBtn;
+      popover.open = !popover.open;
+    });
+
+    // Handle visibility changes
+    shellbar.addEventListener("content-item-visibility-change", (e) => {
+      state.hiddenIds = new Set(e.detail.items.map(el => el.id));
+
+      // Rebuild popover content
+      popoverContent.innerHTML = "";
+      items.forEach(item => {
+        if (state.hiddenIds.has(item.id)) {
+          const el = item.create();
+          el.id = `${item.id}-popover`;
+          popoverContent.appendChild(el);
+        }
+      });
+
+      // Show/hide overflow button
+      if (state.hiddenIds.size > 0) {
+        shellbar.prepend(overflowBtn);
+      } else {
+        overflowBtn.remove();
+        popover.open = false;
+      }
+    });
+
+    // Slider resize
+    document.getElementById("slider").addEventListener("input", (e) => {
+      document.getElementById("container").style.width = `${e.target.value}%`;
+    });
+  </script>
+
+</body>
+
+</html>

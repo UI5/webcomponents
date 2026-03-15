@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_ui5_webcomponents_website=self.webpackChunk_ui5_webcomponents_website||[]).push([[51863],{49386:e=>{e.exports=JSON.parse('{"label":"v2","permalink":"/webcomponents/nightly/blog/tags/v-2","allTagsPath":"/webcomponents/nightly/blog/tags","count":4,"unlisted":false}')}}]);

@@ -1,0 +1,13 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "ai-feature-estimator";
+const pathData = "M96 272q0-16 16-16t16 16-16 16-16-16zm0-64q0-16 16-16t16 16-16 16-16-16zm0 128q0-16 16-16t16 16-16 16-16-16zm96-128q0 16-16 16t-16-16 16-16 16 16zm-16 144q-16 0-16-16t16-16 16 16-16 16zm16-80q0 16-16 16t-16-16 16-16 16 16zM0 58q0-24 17-41T58 0h268q24 0 41 17t17 41v136q0 9-4 14.5t-9 7.5q-6 3-13 3t-12-3q-5-2-9-7.5t-4-14.5V58q0-7-7-7H58q-7 0-7 7v332q0 7 7 7h81q10 0 14.5 3.5t6.5 8.5q2 6 2 13t-3 13q-2 5-6.5 9t-13.5 4H58q-24 0-41-17T0 390V58zm220 364q-10-3-10-13.5t10-14.5q34-11 51.5-28.5T300 314q3-10 14-10 10 0 13 10 11 34 29 51.5t51 28.5q10 4 10.5 14.5T407 422q-33 11-51 28.5T327 502q-3 10-13 10-11 0-14-10-11-34-28.5-51.5T220 422zm-98-262q-11 0-18.5-7.5T96 134v-12q0-11 7.5-18.5T122 96h140q11 0 18.5 7.5T288 122v12q0 11-7.5 18.5T262 160H122zm134 48q0 16-16 16t-16-16 16-16 16 16zm-32 64q0-16 16-16t16 16-16 16-16-16zm180 2q-5-2-5-7.5t5-7.5q19-6 28.5-15.5T448 215q2-5 7.5-5t7.5 5q6 19 15.5 28.5T507 259q5 2 5 7.5t-5 7.5q-19 6-28.5 15.5T463 318q-2 5-7.5 5t-7.5-5q-6-19-15.5-28.5T404 274z";
+const ltr = false;
+const accData = null;
+const collection = "tnt-v3";
+const packageName = "@ui5/webcomponents-icons-tnt";
+
+registerIcon(name, { pathData, ltr, collection, packageName });
+
+export default "tnt-v3/ai-feature-estimator";
+export { pathData, ltr, accData };

@@ -1,0 +1,11 @@
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "@ui5/webcomponents-base/jsx-runtime";
+import WizardTab from "./WizardTab.js";
+import WizardPopoverTemplate from "./WizardPopoverTemplate.js";
+export default function WizardTemplate() {
+    return (_jsxs(_Fragment, { children: [_jsxs("div", { class: "ui5-wiz-root", "aria-label": this.ariaLabelText, role: "region", children: [_jsx("nav", { class: "ui5-wiz-nav", part: "navigator", "aria-label": this.navAriaLabelText, tabIndex: -1, children: _jsx("div", { class: "ui5-wiz-nav-list", role: "list", "aria-label": this.listAriaLabelText, "aria-describedby": "wiz-nav-descr", "aria-controls": `${this._id}-wiz-content`, children: this._stepsInHeader.map(step => _jsx(WizardTab, { titleText: step.titleText, subtitleText: step.subtitleText, icon: step.icon, number: String(step.number), disabled: step.disabled, selected: step.selected, hideSeparator: step.hideSeparator, activeSeparator: step.activeSeparator, branchingSeparator: step.branchingSeparator, _wizardTabAccInfo: step.accInfo, "data-ui5-content-ref-id": step.refStepId, "data-ui5-index": step.pos, onSelectionChangeRequested: this.onSelectionChangeRequested, onFocused: this.onStepInHeaderFocused, onClick: this._onGroupedTabClick, style: step.styles })) }) }), _jsx("span", { id: "wiz-nav-descr", class: "ui5-hidden-text", "aria-hidden": "true", children: this.navAriaDescribedbyText }), _jsx("div", { id: `${this._id}-wiz-content`, class: "ui5-wiz-content", onScroll: this.onScroll, children: this._steps.map(step => _jsx("div", { class: {
+                                "ui5-wiz-content-item": true,
+                                "ui5-wiz-content-item-stretch": step.stretch,
+                                "ui5-wiz-content-item-selected": step.selected,
+                            }, hidden: step.disabled, part: "step-content", "aria-label": step.stepContentAriaLabel, role: "region", "data-ui5-content-item-ref-id": step._id, children: _jsx("div", { class: "ui5-wiz-content-item-wrapper", children: _jsx("slot", { name: step._individualSlot }) }) })) })] }), WizardPopoverTemplate.call(this)] }));
+}
+//# sourceMappingURL=WizardTemplate.js.map
