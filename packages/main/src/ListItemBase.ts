@@ -165,10 +165,51 @@ class ListItemBase extends UI5Element implements ITabbable {
 	}
 
 	_onclick(e: MouseEvent) {
-		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
+		if (this.getFocusDomRef()!.matches(":has(:focus-within)") || this._isDisabledInteractiveContentClicked(e)) {
 			return;
 		}
 		this.fireItemPress(e);
+	}
+
+	_isDisabledInteractiveContentClicked(e: MouseEvent): boolean {
+		const path = e.composedPath();
+		const focusDomRef = this.getFocusDomRef();
+
+		return path.some(target => {
+			if (!(target instanceof HTMLElement)) {
+				return false;
+			}
+
+			if (target === this || target === focusDomRef) {
+				return false;
+			}
+
+			if (!this._isNativeInteractiveElement(target) && !this._isCustomInteractiveElement(target)) {
+				return false;
+			}
+
+			return this._isElementDisabled(target);
+		});
+	}
+
+	_isNativeInteractiveElement(target: HTMLElement): boolean {
+		return target.matches("button, input, select, textarea");
+	}
+
+	_isCustomInteractiveElement(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+
+		return target.tagName.includes("-")
+			&& ("disabled" in targetWithDisabled || target.hasAttribute("aria-disabled"));
+	}
+
+	_isElementDisabled(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+		if (typeof targetWithDisabled.disabled === "boolean") {
+			return targetWithDisabled.disabled;
+		}
+
+		return target.getAttribute("aria-disabled") === "true";
 	}
 
 	/**
