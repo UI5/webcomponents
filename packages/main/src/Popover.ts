@@ -227,6 +227,7 @@ class Popover extends Popup {
 	_oldPlacement?: CalculatedPlacement;
 	_width?: string;
 	_height?: string;
+	_openerIntersectionObserver?: IntersectionObserver | null;
 
 	_popoverResize: PopoverResize;
 
@@ -290,11 +291,14 @@ class Popover extends Popup {
 		this._initialHeight = this.style.height;
 
 		this._openerRect = opener.getBoundingClientRect();
+		this._observeOpenerVisibility();
 
 		await super.openPopup();
 	}
 
 	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false) : void {
+		this._unobserveOpenerVisibility();
+
 		Object.assign(this.style, {
 			width: this._initialWidth,
 			height: this._initialHeight,
@@ -362,6 +366,10 @@ class Popover extends Popup {
 		}
 
 		let rootNode = this.getRootNode();
+
+		if (!rootNode) {
+			return null;
+		}
 
 		if (rootNode === this) {
 			rootNode = document;
@@ -548,6 +556,49 @@ class Popover extends Popup {
 		const actualTop = Math.ceil(this.getBoundingClientRect().top);
 
 		return top + (Number.parseInt(this.style.top || "0") - actualTop);
+	}
+
+	/**
+	 * Callback invoked when the opener element's intersection changes.
+	 * Closes popover when opener is out of view.
+	 * @private
+	 */
+	_onOpenerIntersection(entries: Array<IntersectionObserverEntry>): void {
+		if (this.open && !entries[0]?.isIntersecting) {
+			this.closePopup();
+		}
+	}
+
+	/**
+	 * Starts observing the opener element's visibility in the viewport.
+	 * @private
+	 */
+	_observeOpenerVisibility(): void {
+		this._unobserveOpenerVisibility();
+
+		const opener = this.getOpenerHTMLElement(this.opener);
+
+		if (!opener) {
+			return;
+		}
+
+		this._openerIntersectionObserver = new IntersectionObserver(
+			this._onOpenerIntersection.bind(this),
+			{ threshold: 0 },
+		);
+
+		this._openerIntersectionObserver.observe(opener);
+	}
+
+	/**
+	 * Stops observing and cleans up the IntersectionObserver.
+	 * @private
+	 */
+	_unobserveOpenerVisibility(): void {
+		if (this._openerIntersectionObserver) {
+			this._openerIntersectionObserver.disconnect();
+			this._openerIntersectionObserver = null;
+		}
 	}
 
 	getPopoverSize(calcScrollHeight: boolean = false): PopoverSize {
