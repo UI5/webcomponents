@@ -72,6 +72,10 @@
 	<br>
 	<ui5-button id="multiple-show">Open dialog calling show() multiple times</ui5-button>
 
+	<br>
+	<br>
+	<ui5-button id="native-dnd-open">Open draggable dialog with native DnD</ui5-button>
+
 	<ui5-block-layer></ui5-block-layer>
 
 	<ui5-dialog id="msg-dialog" header-text="Message dialog" class="dialog1auto">
@@ -555,6 +559,17 @@
 		</div>
 		<ui5-button id="dialogOverDialog1Btn">Open a new Dialog</ui5-button>
 	</ui5-dialog>
+
+	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
+		<p>Drag items to drop zone:</p>
+		<div id="dnd-item-1" draggable="true">Item 1</div>
+		<div id="dnd-item-2" draggable="true">Item 2</div>
+		<div id="drop-zone">Drop Zone</div>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="native-dnd-close">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
 	<ui5-dialog id="dialogOverDialog2">
 		<div slot="header">
 			<ui5-title level="H1">Header 2</ui5-title>
@@ -803,6 +818,25 @@
 
 		window["closeDialogFocusButton"].addEventListener("click", function () {
 			window["dialogFocus1"].close();
+		});
+
+		window["native-dnd-open"].addEventListener("click", () => window["native-dnd-dialog"].open = true);
+		window["native-dnd-close"].addEventListener("click", () => window["native-dnd-dialog"].open = false);
+
+		document.getElementById("dnd-item-1").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-1");
+		});
+
+		document.getElementById("dnd-item-2").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-2");
+		});
+
+		const dropZone = document.getElementById("drop-zone");
+		dropZone.addEventListener("dragover", (e) => e.preventDefault());
+		dropZone.addEventListener("drop", (e) => {
+			e.preventDefault();
+			const data = e.dataTransfer.getData("text");
+			dropZone.textContent = `Dropped: ${data}`;
 		});
 
 	</script>
