@@ -709,7 +709,7 @@ class Dialog extends Popup {
 	_handleDragStart(e: DragEvent) {
 		// Only prevent native drag behavior when dragging from the header
 		// to allow native drag-and-drop functionality in the dialog content.
-		if (this.draggable) {
+		if (this.draggable && e.target instanceof HTMLElement && Dialog._isHeader(e.target)) {
 			e.preventDefault();
 		}
 	}
