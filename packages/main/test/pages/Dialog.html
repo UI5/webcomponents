@@ -78,16 +78,6 @@
 
 	<ui5-block-layer></ui5-block-layer>
 
-	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
-		<p>Drag items to drop zone:</p>
-		<div id="dnd-item-1" draggable="true">Item 1</div>
-		<div id="dnd-item-2" draggable="true">Item 2</div>
-		<div id="drop-zone">Drop Zone</div>
-		<div slot="footer" class="dialogFooter">
-			<ui5-button id="native-dnd-close">Close</ui5-button>
-		</div>
-	</ui5-dialog>
-
 	<ui5-dialog id="msg-dialog" header-text="Message dialog" class="dialog1auto">
 		<p>Build enterprise-ready web applications, responsive to all devices and running on the browser of your choice.
 			That´s OpenUI5.</p>
@@ -569,6 +559,17 @@
 		</div>
 		<ui5-button id="dialogOverDialog1Btn">Open a new Dialog</ui5-button>
 	</ui5-dialog>
+
+	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
+		<p>Drag items to drop zone:</p>
+		<div id="dnd-item-1" draggable="true">Item 1</div>
+		<div id="dnd-item-2" draggable="true">Item 2</div>
+		<div id="drop-zone">Drop Zone</div>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="native-dnd-close">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
 	<ui5-dialog id="dialogOverDialog2">
 		<div slot="header">
 			<ui5-title level="H1">Header 2</ui5-title>
