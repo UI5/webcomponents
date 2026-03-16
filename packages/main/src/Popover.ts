@@ -559,8 +559,8 @@ class Popover extends Popup {
 	}
 
 	/**
-	 * Callback invoked when the opener element's intersection changes.
-	 * Closes popover when opener is out of view.
+	 * Callback invoked when the opener element's intersection status changes.
+	 * Closes the popover when the opener is no longer visible.
 	 * @private
 	 */
 	_onOpenerIntersection(entries: Array<IntersectionObserverEntry>): void {
@@ -591,7 +591,7 @@ class Popover extends Popup {
 	}
 
 	/**
-	 * Stops observing and cleans up the IntersectionObserver.
+	 * Stops observing the opener element and cleans up the IntersectionObserver instance.
 	 * @private
 	 */
 	_unobserveOpenerVisibility(): void {
