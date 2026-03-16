@@ -22,7 +22,7 @@
 }
 
 .ui5-illustrated-message-illustration {
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 
 .ui5-illustrated-message-illustration svg {
@@ -68,11 +68,20 @@
 }
 
 .ui5-illustrated-message-actions {
-    margin: 1rem 0;
+    margin: 0 0 1rem;
+}
+
+.ui5-illustrated-message-actions slot {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 :host([media="dialog"]) .ui5-illustrated-message-illustration {
-    margin: 1rem 0;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 :host([media="dialog"]) .ui5-illustrated-message-title [ui5-title],
@@ -89,7 +98,7 @@
 }
 
 :host([media="dialog"]) .ui5-illustrated-message-actions {
-    margin-top: 0.5rem;
+    margin-top: 0;
     margin-bottom: 1rem;
 }
 
@@ -116,7 +125,7 @@
 }
 
 :host([media="spot"]) .ui5-illustrated-message-actions {
-    margin: 0.5rem 0;
+    margin: 0 0 0.5rem;
 }
 
 :host([media="dot"]) {
@@ -124,32 +133,35 @@
 	min-height: 4rem; /* needed to avoid infinite loop between "dot" and "base" when only illustration is used (no title, etc.) */
 }
 
-:host([media="dot"]) .ui5-illustrated-message-inner {
-	flex-direction: row;
-}
-
 :host([media="dot"]) .ui5-illustrated-message-illustration {
-	margin: 0 0.25rem 0 0;
+    margin: 0 0 0.25rem;
 	height: 2.8125rem;
 	width: 2.8125rem;
-	align-self: baseline;
 }
 
 :host([media="dot"]) .ui5-illustrated-message-title [ui5-title],
 :host([media="dot"]) ::slotted([slot="title"])  {
+    font-family: var(--sapFontBoldFamily);
 	margin-bottom: 0.25rem;
-	font-size: var(--sapFontHeader5Size);
-	max-width: 12.6875rem;
+    font-size: 1rem;
+    line-height: 1.1875rem;
+    color: var(--sapGroup_TitleTextColor);
+    max-width: 8.4375rem;
+    max-height: 2.3125rem;
+    overflow: hidden;
 }
 
 :host([media="dot"]) .ui5-illustrated-message-subtitle {
+    font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
-	max-width: 12.6875rem;
+    max-width: 8.4375rem;
+    max-height: 5.25rem;
+    overflow: hidden;
 	margin-bottom: 0.25rem;
 }
 
 :host([media="dot"]) .ui5-illustrated-message-actions {
-	margin: 0.25rem 0;
+    margin: 0 0 0.25rem;
 }
 
 :host([media="base"]) .ui5-illustrated-message-illustration {
@@ -160,12 +172,12 @@
 :host([media="base"]) ::slotted([slot="title"]) {
     margin-bottom: 0.25rem;
     font-size: var(--sapFontHeader5Size);
-    max-width: 10rem;
+    max-width: 8.875rem;
 }
 
 :host([media="base"]) .ui5-illustrated-message-subtitle {
     font-size: var(--sapFontSize);
-    max-width: 10rem;
+    max-width: 8.875rem;
     margin-bottom: 0rem;
 }
 

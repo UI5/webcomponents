@@ -71,6 +71,22 @@ describe("Accessibility", () => {
 });
 
 describe("design", () => {
+	it("uses updated responsive breakpoint thresholds", () => {
+		expect(IllustratedMessage.BREAKPOINTS).to.deep.equal({
+			BASE: 142,
+			DOT: 190,
+			SPOT: 350,
+			DIALOG: 351,
+		});
+
+		expect(IllustratedMessage.BREAKPOINTS_HEIGHT).to.deep.equal({
+			BASE: 181,
+			DOT: 340,
+			SPOT: 396,
+			DIALOG: 518,
+		});
+	});
+
 	it("Large design should evaluate to Scene media", () => {
 		cy.mount(
 			<IllustratedMessage design="Large" name="UnableToUpload">
@@ -158,7 +174,7 @@ describe("IllustratedMessage 'design' property", () => {
 
 describe("Vertical responsiveness", () => {
 	it("content with auto design shrinks to fit the parent container", () => {
-		const expectedMedia = "dialog";
+		const expectedMedia = "dot";
 
 		cy.mount(
 			<div style={{ height: "300px" }}>
@@ -275,6 +291,17 @@ describe("Vertical responsiveness", () => {
 });
 
 describe("Dot design resource handling", () => {
+	it("uses vertical layout for Dot media", () => {
+		cy.mount(
+			<IllustratedMessage name="AddPeople" design="Dot" />
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should("have.css", "flex-direction", "column");
+	});
+
 	it("uses substitute Spot illustration", () => {
 		cy.mount(
 			<IllustratedMessage name="TntUnableToLoad" design="Dot" />
