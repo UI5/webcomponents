@@ -284,6 +284,7 @@
 		--_ui5_input_inner_space_to_tokenizer: 0.125rem;
 		--_ui5_input_inner_space_to_n_more_text: 0.125rem;
 		--_ui5_input_icon_min_width: var(--_ui5_input_compact_min_width);
+		--_ui5_input_min_width_tokenizer_available: 2rem;
 
 		/* Menu */
 		--_ui5_menu_item_padding: 0 0.75rem 0 0.5rem;
