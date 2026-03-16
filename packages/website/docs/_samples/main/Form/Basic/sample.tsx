@@ -42,22 +42,22 @@ function App() {
       >
         <Form headerText="Address" layout="S1 M2 L2 XL2">
           <FormItem>
-            <Label slot="labelContent">Name:</Label>
+            <Label slot="labelContent" showColon={true}>Name</Label>
             <Text class="text">Red Point Stores</Text>
           </FormItem>
 
           <FormItem>
-            <Label slot="labelContent">ZIP Code/City:</Label>
+            <Label slot="labelContent" showColon={true}>ZIP Code/City</Label>
             <Text class="text">411 Maintown</Text>
           </FormItem>
 
           <FormItem>
-            <Label slot="labelContent">Street:</Label>
+            <Label slot="labelContent" showColon={true}>Street</Label>
             <Text class="text">Main St 1618</Text>
           </FormItem>
 
           <FormItem>
-            <Label slot="labelContent">Country:</Label>
+            <Label slot="labelContent" showColon={true}>Country</Label>
             <Text class="text">Germany</Text>
           </FormItem>
         </Form>
