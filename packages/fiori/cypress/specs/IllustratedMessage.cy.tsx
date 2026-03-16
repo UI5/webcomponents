@@ -254,7 +254,7 @@ describe("Vertical responsiveness", () => {
 		cy.get("[ui5-illustrated-message]")
 			.shadow()
 			.find(".ui5-illustrated-message-illustration svg")
-			.should("have.css", "height", "160px");
+			.should("have.css", "height", "240px");
 	});
 
 	it("Illustration visible, when container fit content height", () => {

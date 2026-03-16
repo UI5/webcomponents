@@ -965,8 +965,10 @@ describe("Table - Interactive Rows", () => {
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
 
 		cy.get("#row2").find("ui5-button").as("row2button");
-		cy.get("@row2button").realMouseDown();
+		cy.get("#row2").realMouseUp();
 		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("@row2button").realMouseDown();
+		cy.get("#row2").should("have.attr", "_active");
 		cy.get("@row2button").realMouseUp();
 		cy.get("#row2").should("not.have.attr", "_active");
 		cy.get("@row2button").invoke("on", "click", cy.stub().as("buttonClickHandler"));
