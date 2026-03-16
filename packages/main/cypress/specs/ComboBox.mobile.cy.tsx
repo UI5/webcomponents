@@ -543,3 +543,103 @@ describe("Value state header", () => {
 			.should("be.visible");
 	});
 });
+
+describe("Mobile Highlighting", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should highlight suggestions in mobile mode", () => {
+		cy.mount(
+			<ComboBox highlight>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="South Africa" />
+				<ComboBoxItem text="Bulgaria" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Type in mobile input
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+
+		// Check that SuggestionItems are highlighted
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+	});
+
+	it("Should highlight grouped items in mobile mode", () => {
+		cy.mount(
+			<ComboBox highlight>
+				<ComboBoxItemGroup header-text="Group A">
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup header-text="Group B">
+					<ComboBoxItem text="South Africa" />
+					<ComboBoxItem text="Brazil" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Type in mobile input
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+
+		// Check that the first three suggestion items are highlighted (Argentina, Australia, South Africa)
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(2)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+	});
+
+	it("Should not highlight in mobile mode when highlight is disabled", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="Australia" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Type in mobile input
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+
+		// Should NOT contain <b> tags
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
+			.shadow().find(".ui5-li-title")
+			.should("not.contain.html", "<b>");
+	});
+});
