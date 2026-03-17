@@ -59,8 +59,8 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 					<div class="ui5-cp-recent-colors-wrapper">
 						<div class="ui5-cp-separator"></div>
 						<div class="ui5-cp-recent-colors-container" onKeyDown={this._onRecentColorsContainerKeyDown}>
-							{this.recentColors.map(color =>
-								<ColorPaletteItem value={color}/>
+							{this.recentColors.map((color, index) =>
+								<ColorPaletteItem value={color} index={index + 1}/>
 							)}
 						</div>
 					</div>

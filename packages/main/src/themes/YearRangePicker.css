@@ -50,8 +50,8 @@
 }
 
 .ui5-yrp-item-sec-type {
-	font-size: 0.75rem;
-	color: var(--sapNeutralElementColor);
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapTextColor);
 }
 
 .ui5-yrp-item-one-column-view {

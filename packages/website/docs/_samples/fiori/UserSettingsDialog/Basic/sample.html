@@ -86,7 +86,7 @@
 	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
 		<ui5-user-settings-view>
 			<div id="language-region-container" class="language-region-container">
-				<ui5-label class="language-region-label">Display Language:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Display Language</ui5-label>
 				<ui5-combobox id="language" class="language-region-control" placeholder="Language" value="English (United States)">
 					<ui5-cb-item text="Browser Language" selected additional-text="English"></ui5-cb-item>
 					<ui5-cb-item text="English (United Kingdom)" additional-text="English (United Kingdom)"></ui5-cb-item>
@@ -101,7 +101,7 @@
 					<ui5-cb-item text="Spanish (Mexico)" additional-text="Español (América Latina)"></ui5-cb-item>
 					<ui5-cb-item text="Spanish (Spain)" additional-text="Español (España)"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Region:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Region</ui5-label>
 				<ui5-combobox id="region" class="language-region-control" placeholder="Region" value="United States">
 					<ui5-cb-item text="United Kingdom" additional-text="GB"></ui5-cb-item>
 					<ui5-cb-item text="United States" additional-text="US"></ui5-cb-item>
@@ -115,7 +115,7 @@
 					<ui5-cb-item text="Spanish (Mexico)" additional-text="MX"></ui5-cb-item>
 					<ui5-cb-item text="Spanish (Spain)" additional-text="ES"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Date Format:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Date Format</ui5-label>
 				<ui5-combobox  id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
 					<ui5-cb-item text="MM/DD/YYYY" additional-text="e.g. 10/23/2025"></ui5-cb-item>
 					<ui5-cb-item text="MM.DD.YYYY" additional-text="e.g. 10.23.2025"></ui5-cb-item>
@@ -127,7 +127,7 @@
 					<ui5-cb-item text="YYYY.MM.DD" additional-text="e.g. 2025.10.23"></ui5-cb-item>
 					<ui5-cb-item text="YYYY-MM-DD" additional-text="e.g. 2025-10-23"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Time Format:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Time Format</ui5-label>
 				<ui5-combobox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
 					<ui5-cb-item text="24 Hour" additional-text="e.g. 12:05:10"></ui5-cb-item>
 					<ui5-cb-item text="12 Hour" additional-text="e.g. 12:05:10 PM"></ui5-cb-item>
@@ -135,7 +135,7 @@
 					<ui5-cb-item text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM"></ui5-cb-item>
 					<ui5-cb-item text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Time Zone:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Time Zone</ui5-label>
 				<ui5-combobox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)">
 					<ui5-cb-item text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States"></ui5-cb-item>
 					<ui5-cb-item text="Mountain Time (UTC -07:00)" additional-text="Denver, United States"></ui5-cb-item>
@@ -162,7 +162,7 @@
 					<ui5-cb-item text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia"></ui5-cb-item>
 					<ui5-cb-item text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Currency:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Currency</ui5-label>
 				<ui5-combobox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar">
 					<ui5-cb-item text="USD - United States Dollar" additional-text="USD" value="USD"></ui5-cb-item>
 					<ui5-cb-item text="Euro" additional-text="EUR"></ui5-cb-item>
@@ -185,7 +185,7 @@
 					<ui5-cb-item text="South Korean Won" additional-text="KRW"></ui5-cb-item>
 					<ui5-cb-item text="Turkish Lira" additional-text="TRY"></ui5-cb-item>
 				</ui5-combobox>
-				<ui5-label class="language-region-label">Number Format:</ui5-label>
+				<ui5-label class="language-region-label" show-colon>Number Format</ui5-label>
 				<ui5-combobox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56">
 					<ui5-cb-item text="1.234,56" additional-text="Germany"></ui5-cb-item>
 					<ui5-cb-item text="1,234.56" additional-text="US/UK"></ui5-cb-item>

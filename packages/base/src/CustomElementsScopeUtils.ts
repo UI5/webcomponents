@@ -9,7 +9,7 @@ type Rules = {
 };
 
 let rulesObj: Rules = {
-	include: [/^ui5-/],
+	include: [/./],
 	exclude: [],
 };
 
@@ -18,7 +18,7 @@ const tagsCache = new Map<string, boolean>(); // true/false means the tag should
 /**
  * Sets the suffix to be used for custom elements scoping, f.e. pass "demo" to get tags such as "ui5-button-demo".
  *
- * **Note:** By default all tags starting with "ui5-" will be scoped, unless you change this by calling "setCustomElementsScopingRules"
+ * **Note:** By default all tags registered by the current runtime will be scoped, unless you change this by calling "setCustomElementsScopingRules"
  * **Note:** Setting the scoping suffix must be done before importing any components.
  *
  * @public
@@ -76,7 +76,7 @@ const setCustomElementsScopingRules = (rules: Rules) => {
 
 /**
  * Returns the rules, governing which custom element tags to scope and which not. By default, all elements
- * starting with "ui5-" are scoped. The default rules are: {include: [/^ui5-/]}.
+ * are scoped. The default rules are: {include: [/./]}.
  *
  * @public
  * @returns {Object}
