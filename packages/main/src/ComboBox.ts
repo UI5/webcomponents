@@ -1243,7 +1243,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	_highlightItem(item: ComboBoxItem) {
-		item.markupText = generateHighlightedMarkupFirstMatch(item.text, this.filterValue);
+		item.markupText = generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue);
 	}
 
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {

@@ -10,7 +10,7 @@ import encodeXML from "../sap/base/security/encodeXML.js";
  * @param {string} textToHighlight The text which should be highlighted (case-insensitive)
  * @return {string} the markup HTML which contains the first match surrounded with a `<b>` tag.
  */
-function generateHighlightedMarkupFirstMatch(text: string | undefined, textToHighlight: string): string {
+function generateHighlightedMarkupFirstMatch(text: string, textToHighlight: string): string {
 	const normalizedText = text || "";
 
 	if (!normalizedText || !textToHighlight) {

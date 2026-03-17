@@ -60,11 +60,11 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 										return item.items
 											.filter(nestedItem => !!nestedItem)
 											.map(nestedItem =>
-												<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text, this.filterValue)}/>
+												<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)}/>
 											);
 									}
 									// For regular items
-									return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text, this.filterValue)}/>;
+									return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)}/>;
 								})}
 							</Input>
 						</div>
