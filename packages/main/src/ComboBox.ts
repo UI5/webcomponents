@@ -389,17 +389,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	showClearIcon = false;
 
 	/**
-	 * Defines if characters within the suggestions are to be highlighted
-	 * in case the input value matches parts of the suggestions text.
-	 *
-	 * @default false
-	 * @public
-	 * @since 2.21.0
-	 */
-	@property({ type: Boolean })
-	highlight = false;
-
-	/**
 	 * Indicates whether the input is focused
 	 * @private
 	 */
@@ -1250,7 +1239,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @private
 	 */
 	_highlightItem(item: ComboBoxItem) {
-		item.markupText = generateHighlightedMarkupFirstMatch(item.text, this._highlightValue);
+		item.markupText = generateHighlightedMarkupFirstMatch(item.text, this.filterValue);
 	}
 
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {
@@ -1736,13 +1725,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		};
 	}
 
-	/**
-	 * Getter that returns the filter value for highlighting when highlight is enabled.
-	 * @private
-	 */
-	get _highlightValue() {
-		return this.highlight ? this.filterValue : "";
-	}
 }
 
 ComboBox.define();

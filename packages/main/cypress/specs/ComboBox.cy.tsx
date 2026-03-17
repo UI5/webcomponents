@@ -3544,9 +3544,9 @@ describe("Case-Insensitive Selection", () => {
 });
 
 describe("Highlighting", () => {
-	it("should highlight first match when highlight is enabled", () => {
+	it("should highlight first match when typing", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="Argentina"></ComboBoxItem>
 				<ComboBoxItem text="South Africa"></ComboBoxItem>
 				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
@@ -3572,33 +3572,9 @@ describe("Highlighting", () => {
 			.should("contain.html", "<b>A</b>");
 	});
 
-	it("should not highlight when highlight is disabled", () => {
-		cy.mount(
-			<ComboBox>
-				<ComboBoxItem text="Argentina"></ComboBoxItem>
-				<ComboBoxItem text="South Africa"></ComboBoxItem>
-			</ComboBox>
-		);
-
-		cy.get("[ui5-combobox]")
-			.as("combobox")
-			.shadow()
-			.find("input")
-			.realClick();
-
-		cy.get("[ui5-combobox]")
-			.shadow()
-			.find("input")
-			.realType("A");
-
-		// Check no <b> tags in the items
-		cy.get("@combobox").find("[ui5-cb-item]").eq(0).shadow().find(".ui5-li-title")
-			.should("not.contain.html", "<b>");
-	});
-
 	it("should highlight with StartsWithPerTerm pattern regardless of filter mode", () => {
 		cy.mount(
-			<ComboBox highlight filter="Contains">
+			<ComboBox filter="Contains">
 				<ComboBoxItem text="Bosnia and Herzegovina"></ComboBoxItem>
 				<ComboBoxItem text="South Africa"></ComboBoxItem>
 			</ComboBox>
@@ -3622,7 +3598,7 @@ describe("Highlighting", () => {
 
 	it("should highlight grouped items", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItemGroup header-text="Group A">
 					<ComboBoxItem text="Argentina"></ComboBoxItem>
 					<ComboBoxItem text="Australia"></ComboBoxItem>
@@ -3662,7 +3638,7 @@ describe("Highlighting", () => {
 
 	it("should handle special characters safely", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="<script>alert('XSS')</script>"></ComboBoxItem>
 				<ComboBoxItem text="Price: $100 & Up"></ComboBoxItem>
 			</ComboBox>
@@ -3690,7 +3666,7 @@ describe("Highlighting", () => {
 
 	it("should only highlight text, not additionalText", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="Argentina" additional-text="AR"></ComboBoxItem>
 				<ComboBoxItem text="Australia" additional-text="AU"></ComboBoxItem>
 			</ComboBox>
@@ -3718,7 +3694,7 @@ describe("Highlighting", () => {
 
 	it("should clear highlighting when input is cleared", () => {
 		cy.mount(
-			<ComboBox highlight showClearIcon>
+			<ComboBox showClearIcon>
 				<ComboBoxItem text="Argentina"></ComboBoxItem>
 				<ComboBoxItem text="Australia"></ComboBoxItem>
 			</ComboBox>
@@ -3751,7 +3727,7 @@ describe("Highlighting", () => {
 
 	it("should highlight only the first match, not all occurrences", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="New New York"></ComboBoxItem>
 			</ComboBox>
 		);
@@ -3781,7 +3757,7 @@ describe("Highlighting", () => {
 
 	it("should handle case-insensitive matching", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="ARGENTINA"></ComboBoxItem>
 				<ComboBoxItem text="argentina"></ComboBoxItem>
 				<ComboBoxItem text="ArGeNtInA"></ComboBoxItem>
@@ -3812,7 +3788,7 @@ describe("Highlighting", () => {
 
 	it("should preserve original case in highlighting", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="South AFRICA"></ComboBoxItem>
 			</ComboBox>
 		);

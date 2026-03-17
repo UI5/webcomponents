@@ -551,7 +551,7 @@ describe("Mobile Highlighting", () => {
 
 	it("Should highlight suggestions in mobile mode", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItem text="Argentina" />
 				<ComboBoxItem text="South Africa" />
 				<ComboBoxItem text="Bulgaria" />
@@ -581,7 +581,7 @@ describe("Mobile Highlighting", () => {
 
 	it("Should highlight grouped items in mobile mode", () => {
 		cy.mount(
-			<ComboBox highlight>
+			<ComboBox>
 				<ComboBoxItemGroup header-text="Group A">
 					<ComboBoxItem text="Argentina" />
 					<ComboBoxItem text="Australia" />
@@ -616,30 +616,5 @@ describe("Mobile Highlighting", () => {
 		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(2)
 			.shadow().find(".ui5-li-title")
 			.should("contain.html", "<b>A</b>");
-	});
-
-	it("Should not highlight in mobile mode when highlight is disabled", () => {
-		cy.mount(
-			<ComboBox>
-				<ComboBoxItem text="Argentina" />
-				<ComboBoxItem text="Australia" />
-			</ComboBox>
-		);
-
-		cy.get("[ui5-combobox]").realClick();
-
-		cy.get("[ui5-combobox]")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		// Type in mobile input
-		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
-
-		// Should NOT contain <b> tags
-		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
-			.shadow().find(".ui5-li-title")
-			.should("not.contain.html", "<b>");
 	});
 });
