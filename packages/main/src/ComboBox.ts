@@ -1728,7 +1728,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			},
 		};
 	}
-
 }
 
 ComboBox.define();
