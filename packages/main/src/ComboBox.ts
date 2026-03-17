@@ -758,8 +758,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	_arrowClick() {
+	_arrowMouseDown(e: MouseEvent) {
+		e.preventDefault();
 		this.inner.focus();
+	}
+
+	_arrowClick() {
 		this._resetFilter();
 
 		if (isPhone() && this.value && !this._lastValue) {

@@ -176,6 +176,17 @@ describe("General Interaction", () => {
 		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
 	});
 
+	it("keeps focused state when clicking on the arrow icon", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realMouseDown();
+		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
+	});
+
 	it("tests Combo with two-column layout", () => {
 		cy.mount(
 			<ComboBox>

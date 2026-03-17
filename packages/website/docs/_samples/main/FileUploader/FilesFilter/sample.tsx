@@ -30,7 +30,7 @@ function App() {
   return (
     <>
       <div style={{ height: "100px" }}>
-        <Label for="image-uploader">Upload images:</Label>
+        <Label showColon={true} for="image-uploader">Upload images</Label>
         <FileUploader
           id="image-uploader"
           accept="image/*"
