@@ -582,10 +582,7 @@ class Popover extends Popup {
 			return;
 		}
 
-		this._openerIntersectionObserver = new IntersectionObserver(
-			this._onOpenerIntersection.bind(this),
-			{ threshold: 0 },
-		);
+		this._openerIntersectionObserver = new IntersectionObserver(this._onOpenerIntersection.bind(this));
 
 		this._openerIntersectionObserver.observe(opener);
 	}
