@@ -690,6 +690,9 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleHomeKey(e);
 		} else if (isEnd(e)) {
 			this._handleEndKey(e);
+		// When focus is on the list item, Enter triggers _handleItemPress via the List item-click
+		// event, which already calls _handleSelectionChange and prevents default.
+		// Skip here to avoid a double selection change.
 		} else if (isEnter(e) && !e.defaultPrevented) {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
@@ -942,8 +945,8 @@ class Select extends UI5Element implements IFormInputElement {
 		this.options.forEach(option => {
 			option.focused = option.selected;
 			if (option.focused) {
-				// on phone, the popover opens full screen (dialog)
-				// move focus to option to read out dialog header
+				// move focus to the selected option so screen readers
+				// can announce it when the popover opens
 				option.focus();
 			}
 		});
