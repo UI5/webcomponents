@@ -143,7 +143,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${geoLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", geoLocationDescr);
 
 	});
 
@@ -159,7 +159,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${gpsLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", gpsLocationDescr);
 	});
 
 	it("Should set correct correct tooltip on the root", () => {
@@ -169,11 +169,13 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("title", gpsLocationDescr);
 	});
 
-	it("Should set correct attribute 'aria-label' when 'text-on' and 'text-off' attributes aren't set", () => {
+	it("Should not have 'aria-label' attribute when 'text-on' and 'text-off' attributes aren't set", () => {
 		cy.mount(<Switch></Switch>);
 
 		cy.get("[ui5-switch]")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", "");
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("not.have.attr", "aria-label");
 	});
 
 	it("Should propagate 'required' attribute properly on the root", () => {

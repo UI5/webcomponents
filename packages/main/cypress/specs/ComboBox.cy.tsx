@@ -176,6 +176,17 @@ describe("General Interaction", () => {
 		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
 	});
 
+	it("keeps focused state when clicking on the arrow icon", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").shadow().find("[ui5-icon]").realMouseDown();
+		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
+	});
+
 	it("tests Combo with two-column layout", () => {
 		cy.mount(
 			<ComboBox>
@@ -256,6 +267,57 @@ describe("General Interaction", () => {
 			.shadow()
 			.find(".ui5-li-title")
 			.should("have.text", "Canada");
+	});
+
+	it("should highlight entire value when navigating to item that doesn't start with typed text", () => {
+		cy.mount(
+			<ComboBox filter="Contains">
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("a");
+
+		cy.get("@combo")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("have.attr", "open");
+
+		cy.get("@input").should("have.value", "Algeria");
+		cy.get("@input").then(($input) => {
+			const input = $input[0] as HTMLInputElement;
+
+			expect(input.selectionStart).to.equal(1);
+			expect(input.selectionEnd).to.equal("Algeria".length);
+		});
+
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@input").should("have.value", "Bulgaria");
+		cy.get("@input").then(($input) => {
+			const input = $input[0] as HTMLInputElement;
+
+			expect(input.selectionStart).to.equal(0);
+			expect(input.selectionEnd).to.equal("Bulgaria".length);
+		});
+
+		cy.get("@input").realPress("ArrowDown");
+
+		cy.get("@input").should("have.value", "Canada");
+		cy.get("@input").then(($input) => {
+			const input = $input[0] as HTMLInputElement;
+			expect(input.selectionStart).to.equal(0);
+			expect(input.selectionEnd).to.equal("Canada".length);
+		});
 	});
 
 	it("tests Combo with startswith filter", () => {
@@ -2626,6 +2688,56 @@ describe("Event firing", () => {
 		}));
 	});
 
+	it("fires selection-change when selectedValue changes via keyboard and input", () => {
+		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
+		cy.mount(
+			<ComboBox onSelectionChange={selectionChangeSpy}>
+				<ComboBoxItem text="Bulgaria" value="bg"></ComboBoxItem>
+				<ComboBoxItem text="Brazil" value="br"></ComboBoxItem>
+				<ComboBoxItem text="China" value="ch"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="de"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "bg")
+			.should("have.attr", "value", "Bulgaria");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-combobox]")
+			.should("have.attr", "selected-value", "br")
+			.should("have.attr", "value", "Brazil");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledTwice");
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item.text === "Brazil";
+		}));
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get("[ui5-combobox]")
+		.should("have.attr", "value", "Brazi")
+			.should("not.have.attr", "selected-value");
+
+		cy.get("@selectionChangeSpy")
+			.should("be.calledThrice");
+
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item === null;
+		}));
+	});
+
 	it("should check clear icon events", () => {
 		cy.mount(
 			<>
@@ -3127,5 +3239,317 @@ describe("Validation inside a form", () => {
 
 		cy.get("@submit")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("SelectedValue API", () => {
+	it("should clear selectedValue when clear icon is clicked", () => {
+		cy.mount(
+			<ComboBox value="Germany" selectedValue="DE" showClearIcon>
+				<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+				<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.should("have.attr", "selected-value", "DE")
+			.should("have.attr", "value", "Germany");
+
+		// Click the clear icon
+		cy.get("@combo")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "")
+			.should("not.have.attr", "selected-value");
+	});
+
+	it("should correctly select items with same text but different values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		// Open dropdown and click first John Smith (Sales)
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(0).realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "John Smith")
+			.should("have.attr", "selected-value", "emp-101");
+
+		// Open dropdown and click second John Smith (Engineering)
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(1).realClick();
+
+		cy.get("@combo")
+			.should("have.attr", "value", "John Smith")
+			.should("have.attr", "selected-value", "emp-205");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledTwice");
+	});
+
+	it("should return item value in formFormattedValue for form submission", () => {
+		cy.mount(
+			<form id="test-form">
+				<ComboBox name="country" value="Germany" selectedValue="DE">
+					<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+					<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+					<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+				</ComboBox>
+			</form>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				// formFormattedValue should return the item's value, not the display text
+				expect(comboBox.formFormattedValue).to.equal("DE");
+			});
+
+		// Change selection to France
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").eq(2).realClick();
+
+		cy.get("@combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				expect(comboBox.formFormattedValue).to.equal("FR");
+			});
+	});
+
+	it("should fallback to display text in formFormattedValue when item has no value", () => {
+		cy.mount(
+			<form id="test-form">
+				<ComboBox name="country" value="Germany">
+					<ComboBoxItem text="Austria"></ComboBoxItem>
+					<ComboBoxItem text="Germany"></ComboBoxItem>
+					<ComboBoxItem text="France"></ComboBoxItem>
+				</ComboBox>
+			</form>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.then(($combo) => {
+				const comboBox = $combo[0] as ComboBox;
+				// Without item values, formFormattedValue should return the display text
+				expect(comboBox.formFormattedValue).to.equal("Germany");
+			});
+	});
+
+	it("should populate input value from selectedValue on initial render", () => {
+		cy.mount(
+			<ComboBox selectedValue="DE">
+				<ComboBoxItem text="Austria" value="AT"></ComboBoxItem>
+				<ComboBoxItem text="Germany" value="DE"></ComboBoxItem>
+				<ComboBoxItem text="France" value="FR"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "Germany")
+			.should("have.prop", "selectedValue", "DE");
+
+		cy.get("[ui5-cb-item]").eq(1)
+			.should("have.prop", "selected", true);
+	});
+
+	it("should select correct item by selectedValue when multiple items have same text", () => {
+		cy.mount(
+			<ComboBox selectedValue="emp-205">
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-205");
+
+		// The second item (Engineering) should be selected, not the first
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", false);
+	});
+});
+
+describe("Case-Insensitive Selection", () => {
+	it("should select item with case-insensitive matching", () => {
+		cy.mount(
+			<ComboBox noTypeahead>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("b");
+		cy.get("@input").realType("u");
+		cy.get("@input").realType("l");
+		cy.get("@input").realType("g");
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("r");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("a");
+
+		cy.get("@combobox").should("have.prop", "value", "bulgaria");
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+	});
+
+	it("should select item case-insensitively with Contains filter", () => {
+		cy.mount(
+			<ComboBox filter="Contains">
+				<ComboBoxItem text="United Kingdom"></ComboBoxItem>
+				<ComboBoxItem text="United States"></ComboBoxItem>
+				<ComboBoxItem text="United Arab Emirates"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("u");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("d");
+		cy.get("@input").realType(" ");
+		cy.get("@input").realType("s");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("s");
+
+		cy.get("@combobox").should("have.prop", "value", "United States");
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+	});
+
+	it("should select matching item of a group case-insensitively", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup headerText="Americas">
+					<ComboBoxItem text="Argentina"></ComboBoxItem>
+					<ComboBoxItem text="Brazil"></ComboBoxItem>
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup headerText="Europe">
+					<ComboBoxItem text="France"></ComboBoxItem>
+					<ComboBoxItem text="Germany"></ComboBoxItem>
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("a");
+		cy.get("@input").realType("r");
+		cy.get("@input").realType("g");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("n");
+		cy.get("@input").realType("a");
+
+		cy.get("@combobox").should("have.prop", "value", "Argentina");
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", true);
+	});
+
+	it("should select item case-insensitively when using selectedValue", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" value="item-1"></ComboBoxItem>
+				<ComboBoxItem text="Item 2" value="item-2"></ComboBoxItem>
+				<ComboBoxItem text="Item 3" value="item-3"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("i");
+		cy.get("@input").realType("t");
+		cy.get("@input").realType("e");
+		cy.get("@input").realType("m");
+		cy.get("@input").realType(" ");
+		cy.get("@input").realType("2");
+
+		cy.get("@combobox").should("have.prop", "value", "Item 2");
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+		cy.get("@combobox").should("have.prop", "selectedValue", "item-2");
+	});
+
+	it("should handle progressive typing with mixed case", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Belgium"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Brazil"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("B");
+		cy.get("@combobox").should("have.prop", "value", "Belgium");
+
+		cy.get("@input").realType("u");
+		cy.get("@combobox").should("have.prop", "value", "Bulgaria");
+
+		cy.get("@input").realType("l");
+		cy.get("@combobox").should("have.prop", "value", "Bulgaria");
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
 	});
 });

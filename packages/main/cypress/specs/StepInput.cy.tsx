@@ -646,12 +646,32 @@ describe("StepInput thousand separator formatting", () => {
 		);
 
 		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
 			.ui5StepInputGetInnerInput()
 			.should($input => {
             	const val = $input.val() as string;
 				const num = Number(val.replace(/[^\d]/g, ""));
             	expect(num).to.equal(12345);
         });
+
+		cy.get<StepInput>("@stepInput")
+			.realClick({ "clickCount": 2 })
+			.should("be.focused");
+
+		cy.realType("1,0000");
+		cy.realPress("Enter");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+            	const val = $input.val() as string;
+            	expect(val).to.equal("10,000");
+        });
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 10000);
     });
 
 	it("should update input value when language is changed", () => {

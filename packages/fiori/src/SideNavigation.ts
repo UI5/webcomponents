@@ -13,6 +13,8 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -51,6 +53,10 @@ type SideNavigationSelectionChangeEventDetail = {
 	item: SideNavigationItemBase,
 };
 
+type SideNavigationItemClickEventDetail = {
+	item: SideNavigationSelectableItemBase,
+};
+
 type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNavigationSelectableItemBase };
 
 /**
@@ -62,7 +68,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * It consists of three containers: header (top-aligned), main navigation section (top-aligned) and the secondary section (bottom-aligned).
  *
  *  - The header is meant for displaying user related information - profile data, avatar, etc.
- *  - The main navigation section is related to the user’s current work context
+ *  - The main navigation section is related to the user's current work context.
  *  - The secondary section is mostly used to link additional information that may be of interest (legal information, developer communities, external help, contact information and so on).
  *
  * ### Usage
@@ -108,19 +114,34 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	template: SideNavigationTemplate,
 	styles: [SideNavigationCss, SideNavigationPopoverCss],
 })
+
 /**
- * Fired when the selection has changed via user interaction
+ * Fired when the selection has changed via user interaction.
  *
- * @param {SideNavigationSelectableItemBase} item the clicked item.
+ * @param {SideNavigationSelectableItemBase} item The selected item.
  * @public
  */
 @event("selection-change", {
 	bubbles: true,
 	cancelable: true,
 })
+
+/**
+ * Fired when an item is clicked.
+ *
+ * @param {SideNavigationSelectableItemBase} item The clicked item.
+ * @since 2.20.0
+ * @public
+ */
+@event("item-click", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class SideNavigation extends UI5Element {
 	eventDetails!: {
-		"selection-change": SideNavigationSelectionChangeEventDetail
+		"selection-change": SideNavigationSelectionChangeEventDetail,
+		"item-click": SideNavigationItemClickEventDetail
 	}
 
 	/**
@@ -184,7 +205,7 @@ class SideNavigation extends UI5Element {
 	_popoverContents!: SideNavigationPopoverContents;
 
 	@property({ type: Boolean })
-	inPopover= false;
+	inPopover = false;
 
 	@property({ type: Object })
 	_menuPopoverItems: Array<SideNavigationItem> = [];
@@ -321,6 +342,10 @@ class SideNavigation extends UI5Element {
 		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_OVERFLOW_ACCESSIBLE_NAME);
 	}
 
+	get _effectiveCollapsed() {
+		return this.collapsed && !this._isSmallScreen();
+	}
+
 	handlePopupItemClick(e: KeyboardEvent | PointerEvent) {
 		const associatedItem = (e.target as PopupSideNavigationItem).associatedItem;
 
@@ -360,10 +385,8 @@ class SideNavigation extends UI5Element {
 
 		this._selectItem(associatedItem);
 
-		setTimeout(() => {
-			this.closePicker();
-			this._popoverContents.item?.getDomRef()!.classList.add("ui5-sn-item-no-hover-effect");
-		});
+		this.closePicker();
+		this._popoverContents.item?.getDomRef()!.classList.add("ui5-sn-item-no-hover-effect");
 	}
 
 	getOverflowPopover() {
@@ -422,11 +445,11 @@ class SideNavigation extends UI5Element {
 		return this.inPopover ? "none" : undefined;
 	}
 
-	getEnabledFixedItems() : Array<ITabbable> {
+	getEnabledFixedItems(): Array<ITabbable> {
 		return this.getEnabledItems(this.fixedItems);
 	}
 
-	getEnabledFlexibleItems() : Array<ITabbable> {
+	getEnabledFlexibleItems(): Array<ITabbable> {
 		const items = this.getEnabledItems(this.items);
 
 		if (this._overflowItem) {
@@ -436,7 +459,7 @@ class SideNavigation extends UI5Element {
 		return items;
 	}
 
-	getEnabledItems(items: Array<SideNavigationItemBase>) : Array<ITabbable> {
+	getEnabledItems(items: Array<SideNavigationItemBase>): Array<ITabbable> {
 		const result = new Array<ITabbable>();
 
 		this._getFocusableItems(items).forEach(item => {
@@ -498,7 +521,7 @@ class SideNavigation extends UI5Element {
 		}
 
 		const overflowItem = this._overflowItem!;
-		const flexibleContentDomRef : HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
+		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
 		if (!overflowItem) {
 			return null;
 		}
@@ -563,39 +586,45 @@ class SideNavigation extends UI5Element {
 		this._flexibleItemNavigation._init();
 	}
 
-	_findFocusedItem(items: Array<SideNavigationItemBase>) : SideNavigationItemBase | undefined {
+	_findFocusedItem(items: Array<SideNavigationItemBase>): SideNavigationItemBase | undefined {
 		return this._getFocusableItems(items).find(item => item.forcedTabIndex === "0");
 	}
 
-	_getSelectableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationSelectableItemBase> {
+	_getSelectableItems(items: Array<SideNavigationItemBase>): Array<SideNavigationSelectableItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.selectableItems);
 		}, new Array<SideNavigationSelectableItemBase>());
 	}
 
-	_getFocusableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+	_getFocusableItems(items: Array<SideNavigationItemBase>): Array<SideNavigationItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.focusableItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_getAllItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+	_getAllItems(items: Array<SideNavigationItemBase>): Array<SideNavigationItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.allItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_findSelectedItem(items: Array<SideNavigationItemBase>) : SideNavigationSelectableItemBase | undefined {
+	_findSelectedItem(items: Array<SideNavigationItemBase>): SideNavigationSelectableItemBase | undefined {
 		return this._getSelectableItems(items).find(item => item._selected);
 	}
 
-	get overflowItems() : Array<HTMLElement> {
+	get overflowItems(): Array<HTMLElement> {
 		return this.items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.overflowItems);
 		}, new Array<HTMLElement>());
 	}
 
+	private _isSmallScreen(): boolean {
+		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
 	_handleItemClick(e: KeyboardEvent | MouseEvent, item: SideNavigationSelectableItemBase) {
+		this.fireDecoratorEvent("item-click", { item });
+
 		if (item.effectiveDisabled) {
 			e.stopPropagation();
 			e.preventDefault();
@@ -624,7 +653,7 @@ class SideNavigation extends UI5Element {
 			return;
 		}
 
-		if (this.collapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
+		if (this._effectiveCollapsed && isInstanceOfSideNavigationItem(item) && item.items.length) {
 			e.preventDefault();
 			this._isOverflow = false;
 
@@ -712,7 +741,11 @@ class SideNavigation extends UI5Element {
 		return this._isOverflow;
 	}
 
-	captureRef(ref: HTMLElement & { associatedItem?: UI5Element} | null) {
+	get isSideNavigation() {
+		return true;
+	}
+
+	captureRef(ref: HTMLElement & { associatedItem?: UI5Element } | null) {
 		if (ref) {
 			ref.associatedItem = this;
 		}
@@ -723,8 +756,10 @@ const instanceOfItemOrGroup = createMultiInstanceChecker<SideNavigationItem | Si
 
 SideNavigation.define();
 
+export const isInstanceOfSideNavigation = createInstanceChecker<SideNavigation>("isSideNavigation");
 export default SideNavigation;
 
 export type {
 	SideNavigationSelectionChangeEventDetail,
+	SideNavigationItemClickEventDetail,
 };

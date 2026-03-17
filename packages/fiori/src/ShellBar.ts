@@ -1212,6 +1212,7 @@ export {
 export type {
 	/* Event Types */
 	ShellBarProfileClickEventDetail,
+	ShellBarSearchButtonEventDetail,
 	ShellBarSearchFieldClearEventDetail,
 	ShellBarSearchFieldToggleEventDetail,
 	ShellBarProductSwitchClickEventDetail,

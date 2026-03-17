@@ -8,6 +8,8 @@ import Filters from "../../../_samples/main/ComboBox/Filters/Filters.md";
 import TwoColumnsLayout from "../../../_samples/main/ComboBox/TwoColumnsLayout/TwoColumnsLayout.md";
 import Grouping from "../../../_samples/main/ComboBox/Grouping/Grouping.md";
 import SuggestionsWrapping from "../../../_samples/main/ComboBox/SuggestionsWrapping/SuggestionsWrapping.md";
+import SelectedValue from "../../../_samples/main/ComboBox/SelectedValue/SelectedValue.md";
+import SameTextDifferentValues from "../../../_samples/main/ComboBox/SameTextDifferentValues/SameTextDifferentValues.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -43,3 +45,15 @@ Grouping of items can be implented via the ui5-cb-group-item web component.
 The sample demonstrates how the text of the items wrap when too long.
 
 <SuggestionsWrapping />
+
+### Selected Value
+Use the `value` property on items and `selected-value` on the ComboBox to decouple the display text from the underlying selection value.
+This is useful for form submission, programmatic selection, and handling items with identical display text.
+
+<SelectedValue />
+
+### Items with Same Text but Different Values
+When you have multiple items with identical display text (e.g., employees with the same name), use the `value` property to uniquely identify each item.
+The `additional-text` property helps users distinguish between items visually.
+
+<SameTextDifferentValues />

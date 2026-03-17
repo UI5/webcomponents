@@ -149,7 +149,7 @@ function ShellBarLegacySecondaryTitle(this: ShellBar) {
 	}
 
 	return (
-		<div style={{ display: "block" }} class="ui5-shellbar-secondary-title ui5-shellbar-gap-start ui5-shellbar-gap-end" data-ui5-stable="secondary-title">
+		<div class="ui5-shellbar-secondary-title ui5-shellbar-gap-start ui5-shellbar-gap-end" data-ui5-stable="secondary-title">
 			{this.secondaryTitle}
 		</div>
 	);

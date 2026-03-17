@@ -868,6 +868,8 @@ describe("Responsiveness", () => {
 					<UserMenuItem text="Setting14" data-id="setting14"></UserMenuItem>
 					<UserMenuItem text="Setting15" data-id="setting15"></UserMenuItem>
 					<UserMenuItem text="Setting16" data-id="setting16"></UserMenuItem>
+					<UserMenuItem text="Setting17" data-id="setting17"></UserMenuItem>
+					<UserMenuItem text="Setting18" data-id="setting18"></UserMenuItem>
 				</UserMenu>
 			</>
 		);

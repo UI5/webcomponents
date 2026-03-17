@@ -306,7 +306,7 @@ class TabContainer extends UI5Element {
 	@property({ noAttribute: true })
 	_endOverflowText = "More";
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_popoverItemsFlat: Array<ITab> = [];
 
 	@property({ type: Number, noAttribute: true })
@@ -497,7 +497,7 @@ class TabContainer extends UI5Element {
 		e.dataTransfer.dropEffect = "move";
 		e.dataTransfer.effectAllowed = "move";
 
-		DragRegistry.setDraggedElement((e.target as TabInStrip).realTabReference);
+		DragRegistry.setDraggedElement((e.target as TabInStrip).realTabReference, e);
 	}
 
 	_onHeaderDragEnter(e: DragEvent) {

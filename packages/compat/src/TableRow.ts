@@ -171,7 +171,7 @@ class TableRow extends UI5Element implements ITableRow {
 	@property({ type: Boolean })
 	active = false;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_columnsInfo?: Array<TableColumnInfo>;
 
 	@property()
