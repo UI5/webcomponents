@@ -173,6 +173,36 @@ describe("ExpandableText", () => {
 				.should("exist");
 		});
 
+		it("Scroll toggle link into view after expansion with long text (accessibility)", () => {
+			// Generate long text that will definitely push content below viewport
+			const longText = "This is a very long text. ".repeat(50);
+			const maxCharacters = 10;
+
+			cy.mount(
+				<div style={{ height: "200px", overflow: "auto" }}>
+					<button id="before">before</button>
+					<ExpandableText text={longText} maxCharacters={maxCharacters}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]").shadow().as("expTextShadow");
+			cy.get("@expTextShadow").find(".ui5-exp-text-toggle").as("toggle");
+
+			// Focus and expand
+			cy.get("#before").focus();
+			cy.get("#before").realPress("Tab");
+
+			cy.get("@toggle")
+				.should("be.focused")
+				.realPress("Enter");
+
+			// After expansion, the toggle link (now showing "Show Less") should still be visible
+			// by checking that it's within the viewport
+			cy.get("@toggle")
+				.contains(EXPANDABLE_TEXT_SHOW_LESS.defaultText)
+				.should("be.visible");
+		});
+
 		it("ARIA attributes", () => {
 			const text = "This is a very long text that should be displayed";
 

@@ -96,8 +96,25 @@ class ExpandableText extends UI5Element {
 	@property({ type: Boolean })
 	_expanded = false;
 
+	@property({ type: Boolean })
+	_shouldScrollIntoView = false;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	onAfterRendering() {
+		if (this._shouldScrollIntoView) {
+			this._shouldScrollIntoView = false;
+			const toggleLink = this.shadowRoot?.querySelector("[ui5-link]") as HTMLElement;
+			if (toggleLink) {
+				toggleLink.scrollIntoView({
+					behavior: "smooth",
+					block: "nearest",
+					inline: "nearest",
+				});
+			}
+		}
+	}
 
 	getFocusDomRef(): HTMLElement | undefined {
 		if (this._usePopover) {
@@ -168,6 +185,11 @@ class ExpandableText extends UI5Element {
 
 	_handleToggleClick() {
 		this._expanded = !this._expanded;
+		// Scroll the toggle link into view after expanding/collapsing, especially important
+		// when expanded content is long and pushes the "Show Less" link out of viewport
+		if (!this._usePopover) {
+			this._shouldScrollIntoView = true;
+		}
 	}
 
 	_handleCloseButtonClick(e: UI5CustomEvent<Button, "click">) {
