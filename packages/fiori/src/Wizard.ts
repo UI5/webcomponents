@@ -245,7 +245,7 @@ class Wizard extends UI5Element {
 	 * Stores references to the grouped steps.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_groupedTabs: Array<WizardTab> = [];
 
 	/**

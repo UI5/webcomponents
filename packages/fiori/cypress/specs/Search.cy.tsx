@@ -402,6 +402,274 @@ describe("Properties", () => {
 			.should("have.value", "I");
 	});
 
+	it("arrow key navigation autocompletes input field", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Apple" icon={history} />
+				<SearchItem text="Apricot" icon={history} />
+				<SearchItem text="Banana" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		// Type "A"
+		cy.get("[ui5-search]")
+			.realPress("A");
+
+		// Input should be autocompleted to "Apple"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Press ArrowDown to navigate to first item
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		// First item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.should("be.focused");
+
+		// Input value should still show "Apple" (the focused item's text)
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Press ArrowDown again to navigate to second item
+		cy.realPress("ArrowDown");
+
+		// Second item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(1)
+			.should("be.focused");
+
+		// Input value should update to "Apricot"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apricot");
+
+		// Press ArrowDown again to navigate to third item
+		cy.realPress("ArrowDown");
+
+		// Third item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(2)
+			.should("be.focused");
+
+		// Input value should update to "Banana"
+		cy.get("[ui5-search]")
+			.should("have.value", "Banana");
+
+		// Press ArrowUp to go back to second item
+		cy.realPress("ArrowUp");
+
+		// Second item should be focused again
+		cy.get("[ui5-search-item]")
+			.eq(1)
+			.should("be.focused");
+
+		// Input value should revert to "Apricot"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apricot");
+
+		// Press ArrowUp to go back to first item
+		cy.realPress("ArrowUp");
+
+		// First item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.should("be.focused");
+
+		// Input value should revert to "Apple"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Press ArrowUp to go back to input field
+		cy.realPress("ArrowUp");
+
+		// Input field should be focused
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		// Input value should restore and autocomplete to "Apple" (with "pple" highlighted)
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Verify text selection: "A" typed, "pple" autocompleted
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				expect(input.selectionStart).to.equal(1); // After "A"
+				expect(input.selectionEnd).to.equal(5);   // After "Apple"
+			});
+	});
+
+	it("escape key restores original value during arrow navigation", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Apple" icon={history} />
+				<SearchItem text="Apricot" icon={history} />
+				<SearchItem text="Banana" icon={history} />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Type "A"
+		cy.get("[ui5-search]")
+			.realPress("A");
+
+		// Input should be autocompleted to "Apple"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Press ArrowDown to navigate to first item
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		// First item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.should("be.focused");
+
+		// Press ArrowDown to navigate to second item
+		cy.realPress("ArrowDown");
+
+		// Input value should update to "Apricot"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apricot");
+
+		// Press Escape to cancel navigation
+		cy.realPress("Escape");
+
+		// Input value should restore to original typed value "A"
+		cy.get("[ui5-search]")
+			.should("have.value", "A");
+
+		// Popup should be closed (open property should be false)
+		cy.get("[ui5-search]")
+			.should("not.have.attr", "open");
+	});
+
+	it("delete button updates input to next matching item during arrow navigation", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Red Apple" icon={history} deletable />
+				<SearchItem text="Apple" icon={history} deletable />
+				<SearchItem text="Apricot" icon={history} deletable />
+				<SearchItem text="Banana" icon={history} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Type "A"
+		cy.get("[ui5-search]")
+			.realPress("A");
+
+		// Press ArrowDown to navigate to first item
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		// First item should be focused and selected
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.should("be.focused")
+			.should("have.attr", "selected");
+
+		// Press F2 to enter action mode
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-button].ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		// Press Enter to delete the item
+		cy.realPress("Enter");
+
+		// Wait for item to be removed
+		cy.wait(100);
+
+		// Input value should update to next matching item "Apple"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Second item should now be focused (which was originally third)
+		cy.get("[ui5-search-item]")
+			.eq(1)
+			.should("be.focused");
+	});
+
+	it("delete all matching items restores original typed value", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Apple" icon={history} deletable />
+				<SearchItem text="Banana" icon={history} deletable />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Type "A"
+		cy.get("[ui5-search]")
+			.realPress("A");
+
+		// Input should be autocompleted to "Apple"
+		cy.get("[ui5-search]")
+			.should("have.value", "Apple");
+
+		// Press ArrowDown to navigate to first item
+		cy.get("[ui5-search]")
+			.realPress("ArrowDown");
+
+		// First item should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.should("be.focused");
+
+		// Press F2 to enter action mode
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-button].ui5-search-item-selected-delete")
+			.should("be.focused");
+
+		// Press Enter to delete the only matching item
+		cy.realPress("Enter");
+
+		// Wait for item to be removed
+		cy.wait(100);
+
+		// Input value should restore to original typed value "A"
+		cy.get("[ui5-search]")
+			.should("have.value", "A");
+
+		// Input field should be focused
+		cy.get("[ui5-search]")
+			.should("be.focused");
+	});
+
 	it("Popup properties", () => {
 		cy.mount(
 			<Search>
@@ -608,7 +876,9 @@ describe("Properties", () => {
 			.eq(0)
 			.shadow()
 			.find(".ui5-search-item-selected-delete")
-			.realClick();
+			.shadow()
+			.find("button")
+			.focus();
 
 		cy.realPress(["Shift", "Tab"]);
 

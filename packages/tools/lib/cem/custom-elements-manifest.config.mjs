@@ -576,6 +576,38 @@ export default {
 				}
 			}
 		},
+		{
+			name: 'alphabetical-sort-plugin',
+			packageLinkPhase({ customElementsManifest }) {
+				const sortByName = (arr) => {
+					if (Array.isArray(arr)) {
+						arr.sort((a, b) => {
+							if (a?.name && b?.name) {
+								return a.name.localeCompare(b.name);
+							}
+							return 0;
+						});
+					}
+				};
+
+				const sortArraysInObject = (obj) => {
+					if (!obj || typeof obj !== 'object') return;
+
+					for (const key in obj) {
+						if (Array.isArray(obj[key])) {
+							sortByName(obj[key]);
+							obj[key].forEach(item => sortArraysInObject(item));
+						} else if (typeof obj[key] === 'object') {
+							sortArraysInObject(obj[key]);
+						}
+					}
+				};
+
+				customElementsManifest.modules?.forEach(moduleDoc => {
+					sortArraysInObject(moduleDoc);
+				});
+			}
+		},
 		wrapPluginForQuietMode(generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),
 		wrapPluginForQuietMode(customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }))
 	],
