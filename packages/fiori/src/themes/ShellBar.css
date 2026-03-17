@@ -36,6 +36,7 @@
 	align-items: center;
 	height: var(--_ui5_shellbar_root_height);
 	position: relative;
+	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 }
@@ -77,6 +78,16 @@
 ::slotted([ui5-button]:not([slot^="content"])),
 ::slotted([ui5-toggle-button]:not([slot^="content"])) {
 	--_ui5_button_focused_border: var(--_ui5_shellbar_button_focused_border);
+}
+
+/* ============================================================================
+   CONTENT SLOT BUTTONS
+   ============================================================================ */
+
+::slotted([ui5-button][slot^="content"]),
+::slotted([ui5-toggle-button][slot^="content"]) {
+	height: 2.25rem;
+	min-width: 2.25rem;
 }
 
 /* ============================================================================
@@ -135,7 +146,7 @@
 	display: flex;
 	align-items: center;
 	min-width: 0;
-	overflow: hidden;
+	overflow: visible;
 	position: relative;
 }
 
@@ -233,6 +244,11 @@ of the search field container in the bar even when the search is in full mode. *
 	width: 2.25rem;
 	height: 2.25rem;
 	box-sizing: border-box;
+}
+
+.ui5-shellbar-action-button > [ui5-button-badge][slot="badge"][design="OverlayText"] {
+	top: var(--_ui5-shellbar-badge-offset, 0);
+	margin: var(--_ui5-shellbar-badge-margin, -0.5rem);
 }
 
 .ui5-shellbar-image-button {

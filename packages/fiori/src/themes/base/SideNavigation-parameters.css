@@ -4,8 +4,7 @@
 	--_ui5_side_navigation_width: 15rem;
 	--_ui5_side_navigation_collapsed_width: 3rem;
 
-	--_ui5_side_navigation_navigation_separator_margin: 0.25rem 0.875rem 0.25rem 0.875rem;
-	--_ui5_side_navigation_navigation_separator_margin_collapsed: 0.25rem 0.5rem 0.25rem 0.5rem;
+	--_ui5_side_navigation_navigation_separator_margin: 0.25rem 0.5rem 0.25rem 0.5rem;
 	--_ui5_side_navigation_navigation_separator_background_color: var(--sapList_GroupHeaderBorderColor);
 	--_ui5_side_navigation_navigation_separator_radius: unset;
 	--_ui5_side_navigation_navigation_separator_height: calc(2 * var(--sapList_BorderWidth));
@@ -69,7 +68,6 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-		--_ui5_side_navigation_navigation_separator_margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
 		--_ui5_side_navigation_item_height: 2rem;
 		--_ui5_side_navigation_item_expand_arrow_padding: 0.3125rem;
 		--_ui5_side_navigation_item_margin: 0.5rem;

@@ -6,6 +6,7 @@ import getSharedResource from "./getSharedResource.js";
 type RuntimeData = VersionInfo & {
 	alias: string,
 	description: string,
+	importMetaUrl: string,
 };
 
 let currentRuntimeIndex: number;
@@ -41,6 +42,7 @@ const registerCurrentRuntime = () => {
 			},
 			alias: currentRuntimeAlias,
 			description: `Runtime ${currentRuntimeIndex} - ver ${versionInfo.version}${currentRuntimeAlias ? ` (${currentRuntimeAlias})` : ""}`,
+			importMetaUrl: import.meta.url,
 		});
 	}
 };

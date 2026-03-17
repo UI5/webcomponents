@@ -493,6 +493,8 @@ class AvatarGroup extends UI5Element {
 
 		this._slottedItems.forEach((avatar, index) => {
 			const colorIndex = this._getNextBackgroundColor();
+			// In Group mode: avatars are not individually interactive, but visual states are applied at group level
+			// In Individual mode: each avatar is interactive
 			avatar.interactive = !this._isGroup;
 
 			if (avatar.getAttribute("_color-scheme") === AvatarColorScheme.Auto) {

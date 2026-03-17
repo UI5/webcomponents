@@ -11,6 +11,7 @@ import { isDesktop, isPhone, isTablet } from "@ui5/webcomponents-base/dist/Devic
  * Intended to be used for the DateTime components.
  *
  * @class
+ * @extends Input
  * @private
  */
 @customElement({
