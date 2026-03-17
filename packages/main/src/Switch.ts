@@ -99,7 +99,7 @@ class Switch extends UI5Element implements IFormInputElement {
 	 * but can still be focused and its value read programmatically.
 	 * @default false
 	 * @public
-	 * @since 2.20.0
+	 * @since 2.21.0
 	 */
 	@property({ type: Boolean })
 	readonly = false;
