@@ -24,7 +24,7 @@ function App() {
         headerText="Error"
         onClose={() => setDialogOpen(false)}
       >
-        <IllustratedMessage name="UnableToLoad" />
+        <IllustratedMessage name="UnableToLoad" design="Dialog" />
         <Bar design="Footer" slot="footer">
           <Button
             id="closeDialogButton"
