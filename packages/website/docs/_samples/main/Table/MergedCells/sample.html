@@ -1,0 +1,65 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <div class="section">
+		<ui5-bar>
+			<ui5-segmented-button id="sizeBtn" accessible-name="Switch Table Size">
+				<ui5-segmented-button-item>50%</ui5-segmented-button-item>
+				<ui5-segmented-button-item selected>100%</ui5-segmented-button-item>
+			</ui5-segmented-button>
+		</ui5-bar>
+<!-- playground-fold-end -->
+<ui5-table id="table" overflow-mode="Popin">
+	<ui5-table-selection-multi id="selection" slot="features"></ui5-table-selection-multi>
+	<ui5-table-header-row slot="headerRow">
+		<ui5-table-header-cell id="productCol" min-width="300px">Product</ui5-table-header-cell>
+		<ui5-table-header-cell id="supplierCol" min-width="200px">Supplier</ui5-table-header-cell>
+		<ui5-table-header-cell id="dimensionsCol" min-width="200px">Dimensions</ui5-table-header-cell>
+		<ui5-table-header-cell id="priceCol" min-width="150px">Price</ui5-table-header-cell>
+	</ui5-table-header-row>
+	<ui5-table-row row-key="Row1">
+		<ui5-table-cell><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row2">
+		<ui5-table-cell merged><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>29 x 17 x 3.1 cm</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row3">
+		<ui5-table-cell merged><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row4">
+		<ui5-table-cell><ui5-label>Notebook Basic 17</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>33 x 22 x 3.5 cm</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label><b>1200</b> EUR</ui5-label></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row5">
+		<ui5-table-cell merged><ui5-label>Notebook Basic 17</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label>33 x 22 x 3.5 cm</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-label><b>1450</b> EUR</ui5-label></ui5-table-cell>
+	</ui5-table-row>
+</ui5-table>
+<!-- playground-fold -->
+	</div>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

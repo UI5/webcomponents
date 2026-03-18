@@ -1,7 +1,25 @@
+:host {
+	border-top: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+}
+
+:host([merged]),
+:host([data-border-merged]) {
+	--_ui5_table_cell_merged_border_color: var(--_ui5_table_cell_merged) transparent;
+	border-top-color: var(--_ui5_table_cell_merged_border_color, var(--sapList_BorderColor));
+}
+
+:host([merged]) ::slotted(*) {
+	interactivity: var(--_ui5_table_cell_merged) inert;
+	pointer-events: var(--_ui5_table_cell_merged) none;
+	opacity: var(--_ui5_table_cell_merged) 0;
+	transition: opacity 300ms ease;
+}
+
 :host([_popin]) {
 	padding-inline-start: 0;
 	padding-inline-end: 0;
 	align-items: center;
+	border-top: none;
 }
 
 :host([_popin]) #popin-header {
