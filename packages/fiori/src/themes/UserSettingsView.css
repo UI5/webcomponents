@@ -11,3 +11,18 @@
 		padding-inline: 2rem;
 	}
 }
+
+.user-settings-appearance-view-list-header {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	box-sizing: border-box;
+	font-size: var(--sapFontHeader4Size);
+	font-family: var(--sapFontFamily);
+	color: var(--sapGroup_TitleTextColor);
+	height: 3rem;
+	line-height: 3rem;
+	padding: 0 1rem;
+	background-color: var(--sapGroup_TitleBackground);
+	border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+}
