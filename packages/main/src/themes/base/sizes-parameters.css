@@ -188,7 +188,6 @@
 		--_ui5_calendar_overlay_top: 54%;
 		--_ui5_calendar_overlay_width: 100%;
 		--_ui5_calendar_multiple-months_height: calc(2 * var(--_ui5_calendar_height));
-		--_ui5_calendar_multiple_width: calc(var(--_ui5_calendar_width));
 
 		/* Calendar Legend */
 		--_ui5-calendar-legend-root-padding: 0.5rem;
