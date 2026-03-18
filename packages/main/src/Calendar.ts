@@ -413,6 +413,10 @@ class Calendar extends CalendarPart {
 	 * - `_portraitMode`: When resolution is under PHONE_MODE_BREAKPOINT (regardless of device type)
 	 */
 	_handleResize() {
+		if (!this._showTwoMonths) {
+			return;
+		}
+
 		const documentWidth = document.body.offsetWidth;
 		const underBreakpoint = documentWidth <= PHONE_MODE_BREAKPOINT;
 
