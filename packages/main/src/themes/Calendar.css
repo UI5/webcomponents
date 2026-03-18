@@ -22,7 +22,7 @@
 
 .ui5-dt-cal--multiple.ui5-cal-root {
     width: var(--_ui5_calendar_multiple_width);
-	height: var(--_ui5_calendar_multiple-months_height);
+	height: var(--_ui5_calendar_multiple_months_height);
 }
 
 .ui5-dt-cal--portrait.ui5-dt-cal--multiple {
