@@ -266,7 +266,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	get _submitDisabled() {
-		return !this._calendarSelectedDates || !this._calendarSelectedDates.length;
+		return !this._startDateTimestamp || !this._endDateTimestamp;
 	}
 
 	get _cancelButtonText() {
@@ -281,9 +281,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * Handles clicking on the `submit` button, within the picker`s footer in mobile devices.
 	 */
 	_submitClick() {
-		const selectedDates = this._calendarSelectedDates;
-
-		if (selectedDates.length <= 1) {
+		if (!this._startDateTimestamp || !this._endDateTimestamp) {
 			return;
 		}
 
@@ -446,8 +444,12 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 			return;
 		}
 		const newValue = this._buildValue(event.detail.selectedDates[0], event.detail.selectedDates[1]); // the value will be normalized so we don't need to order them here
-		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
-		this._togglePicker();
+		if (!this._isPhone) { // on desktop we update the value immediately, on mobile we wait for the user to confirm the selection with the "OK" button
+			this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+			this._togglePicker();
+		} else {
+			this._updateValueAndFireEvents(newValue, true, ["value-changed"]); // fire value-changed immediately on mobile so the app can react to the change (e.g. update the input field), but wait with firing "change" until the user clicks "OK"
+		}
 	}
 
 	/**
