@@ -75,7 +75,6 @@ function defaultContent(this: DatePicker) {
 			hideWeekNumbers={this.hideWeekNumbers}
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
-			stretch={this.stretch}
 		>
 			{ this._calendarSelectedDates.map(date => <CalendarDate value={date}/>)}
 		</Calendar>

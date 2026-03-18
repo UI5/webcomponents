@@ -31,7 +31,6 @@ function content(this: DateRangePicker) {
 			_currentPicker={this._calendarCurrentPicker}
 			_pickersMode={this._calendarPickersMode}
 			_showTwoMonths={this.showTwoMonths}
-			stretch={this.stretch}
 		>
 			<CalendarDateRange startValue={this.startValue} endValue={this.endValue} />
 		</Calendar>
