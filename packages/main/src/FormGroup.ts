@@ -75,6 +75,15 @@ class FormGroup extends UI5Element implements IFormItem {
 	columnSpan?: number;
 
 	/**
+	 * Defines column span of the component as a string.
+	 *
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	colSpan?: string;
+
+	/**
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public

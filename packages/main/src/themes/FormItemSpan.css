@@ -17,34 +17,34 @@
 		--ui5-form-item-layout: var(--ui5-form-item-layout-S);
 	}
 
-	:host([label-span-s="12"]) .ui5-form-item,
-	:host([label-span-s="12"]) .ui5-form-group {
+	:host(:is([label-span~="S12"], :not([label-span*="S"]))) .ui5-form-item,
+	:host(:is([label-span~="S12"], :not([label-span*="S"]))) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
-@container (width > 600px) and (width <= 1024px) {
+@container (width > 600px) and (width <=1024px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-M);
 	}
 
-	:host([label-span-m="12"]) .ui5-form-item,
-	:host([label-span-m="12"]) .ui5-form-group {
+	:host([label-span~="M12"]) .ui5-form-item,
+	:host([label-span~="M12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
-@container (width > 1024px) and (width <= 1440px) {
+@container (width > 1024px) and (width <=1440px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-L);
 	}
 
-	:host([label-span-l="12"]) .ui5-form-item,
-	:host([label-span-l="12"]) .ui5-form-group {
+	:host([label-span~="L12"]) .ui5-form-item,
+	:host([label-span~="L12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
@@ -56,8 +56,8 @@
 		--ui5-form-item-layout: var(--ui5-form-item-layout-XL);
 	}
 
-	:host([label-span-xl="12"]) .ui5-form-item,
-	:host([label-span-xl="12"]) .ui5-form-group {
+	:host([label-span~="XL12"]) .ui5-form-item,
+	:host([label-span~="XL12"]) .ui5-form-group {
 		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
 		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}

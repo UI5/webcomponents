@@ -56,6 +56,8 @@ class FormItem extends UI5Element implements IFormItem {
 	 * or the Form. The available columns can be affected by the FormGroup#columnSpan and/or the Form#layout.
 	 * A number bigger than the available columns won't take effect.
 	 *
+	 * @deprecated As of version 2.21.0, this property is deprecated.
+	 * **Note:** This property will not have any effect on the layout of the form item
 	 * @default undefined
 	 * @public
 	 */

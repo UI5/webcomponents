@@ -1,159 +1,75 @@
-/* 
-* The Form layout is divided into one or more columns. 
+/*
+* The Form layout is divided into one or more columns.
 * XL - max. 6 columns, L - max. 3 columns, M - max. 2 columns and S - 1 column.
 */
-/* 
+/*
 * S max-width: 600px - container padding 24px
 */
 
 /* S - 1 column */
 @container (max-width: 600px) {
 	.ui5-form-layout {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(var(--ui5-form-columns-s), 1fr);
 	}
 
 	::slotted(*) {
 		justify-self: start;
 	}
-	::slotted(:nth-child(2n)){
+
+	::slotted(:nth-child(2n)) {
 		margin-bottom: 0.5rem;
+	}
+
+	.ui5-form-column {
+		grid-column: span var(--ui5-form-column-span-s, 1);
+	}
+
+	.ui5-form-group-layout {
+		column-count: var(--ui5-form-column-span-s, 1)
 	}
 }
 
 /* M  - 1 column by default, up to 2 columns */
-@container (width > 600px) and (width <= 1024px) {
+@container (width > 600px) and (width <=1024px) {
 	.ui5-form-layout {
-		grid-template-columns: 1fr;
-	}
-	:host([columns-m="1"]) .ui5-form-layout {
-		grid-template-columns: 1fr;
-	}
-	:host([columns-m="2"]) .ui5-form-layout {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(var(--ui5-form-columns-m), 1fr);
 	}
 
-	.ui5-form-column-spanM-2 {
-		grid-column: span 2;
+	.ui5-form-column {
+		grid-column: span var(--ui5-form-column-span-m, 1);
 	}
 
-	.ui5-form-column-spanM-2 .ui5-form-group-layout {
-		grid-template-columns: repeat(2, 1fr);
+	.ui5-form-group-layout {
+		column-count: var(--ui5-form-column-span-m, 1)
 	}
 }
 
 /* L - 2 columns by default, up to 3 columns */
-@container (width > 1024px) and (width <= 1440px) {
-
+@container (width > 1024px) and (width <=1440px) {
 	.ui5-form-layout {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(var(--ui5-form-columns-l), 1fr);
 	}
+
 	.ui5-form-column {
-		grid-template-columns: 1fr;
+		grid-column: span var(--ui5-form-column-span-l, 1);
 	}
 
-	:host([columns-l="1"]) .ui5-form-layout {
-		grid-template-columns: 1fr;
-	}
-	:host([columns-l="2"]) .ui5-form-layout {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	:host([columns-l="3"]) .ui5-form-layout {
-		grid-template-columns: repeat(3, 1fr);
-	}
-
-	.ui5-form-column-spanL-2 {
-		grid-column: span 2;
-	}
-	.ui5-form-column-spanL-2 .ui5-form-group-layout {
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.ui5-form-column-spanL-3 {
-		grid-column: span 3;
-	}
-	.ui5-form-column-spanL-3 .ui5-form-group-layout {
-		grid-template-columns: repeat(3, 1fr);
+	.ui5-form-group-layout {
+		column-count: var(--ui5-form-column-span-l, 1)
 	}
 }
 
 /* XL - 3 columns by default, up to 6 */
 @container (min-width: 1441px) {
 	.ui5-form-layout {
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(var(--ui5-form-columns-xl), 1fr);
 	}
 
-	:host([columns-xl="1"]) .ui5-form-layout {
-		grid-template-columns: 1fr;
-	}
-	:host([columns-xl="2"]) .ui5-form-layout {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	:host([columns-xl="3"]) .ui5-form-layout {
-		grid-template-columns: repeat(3, 1fr);
-	}
-	:host([columns-xl="4"]) .ui5-form-layout {
-		grid-template-columns: repeat(4, 1fr);
-	}
-	:host([columns-xl="5"]) .ui5-form-layout {
-		grid-template-columns: repeat(5, 1fr);
-	}
-	:host([columns-xl="6"]) .ui5-form-layout {
-		grid-template-columns: repeat(6, 1fr);
+	.ui5-form-column {
+		grid-column: span var(--ui5-form-column-span-xl, 1);
 	}
 
-	.ui5-form-column-spanXL-2 {
-		grid-column: span 2;
+	.ui5-form-group-layout {
+		column-count: var(--ui5-form-column-span-xl, 1)
 	}
-	.ui5-form-column-spanXL-2 .ui5-form-group-layout {
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.ui5-form-column-spanXL-3 {
-		grid-column: span 3;
-	}
-	.ui5-form-column-spanXL-3 .ui5-form-group-layout {
-		grid-template-columns: repeat(3, 1fr);
-	}
-
-	.ui5-form-column-spanXL-4 {
-		grid-column: span 4;
-	}
-	.ui5-form-column-spanXL-4 .ui5-form-group-layout {
-		grid-template-columns: repeat(4, 1fr);
-
-	}
-
-	.ui5-form-column-spanXL-5 {
-		grid-column: span 5;
-	}
-	.ui5-form-column-spanXL-5 .ui5-form-group-layout {
-		grid-template-columns: repeat(5, 1fr);
-
-	}
-
-	.ui5-form-column-spanXL-6 {
-		grid-column: span 6;
-	}
-	.ui5-form-column-spanXL-6 .ui5-form-group-layout {
-		grid-template-columns: repeat(6, 1fr);
-	}
-}
-
-.ui5-form-item-span-2 {
-	grid-column: span 2;
-}
-
-.ui5-form-item-span-3 {
-	grid-column: span 3;
-}
-
-.ui5-form-item-span-4 {
-	grid-column: span 4;
-}
-
-.ui5-form-item-span-5 {
-	grid-column: span 5;
-}
-.ui5-form-item-span-6 {
-	grid-column: span 6;
 }
