@@ -395,7 +395,6 @@ class Calendar extends CalendarPart {
 
 	onEnterDOM() {
 		ResizeHandler.register(document.body, this._handleResizeBound);
-		// Initialize modes on first load
 		this._handleResize();
 	}
 
@@ -817,8 +816,8 @@ class Calendar extends CalendarPart {
 	}
 
 	get _monthsToShow() {
-		const monthsToShow = this._showTwoMonths ? 2 : 1;
-		return isPhone() ? 1 : monthsToShow;
+		const monthsToShow = this._showTwoMonths && !isPhone() ? 2 : 1;
+		return monthsToShow;
 	}
 
 	/**
