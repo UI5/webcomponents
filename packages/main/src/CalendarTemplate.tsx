@@ -35,7 +35,7 @@ export default function CalendarTemplate(this: Calendar) {
 						<>
 							{/* When pickers are active, show standard calendar header */}
 							{this._shouldShowOnePickerHeaderButtonInMultipleMonths && (
-								<div class="ui5-calheader ui5-calheader-multiple ui5-calheader-default-multiple test" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
+								<div class="ui5-calheader ui5-calheader-multiple ui5-calheader-default-multiple" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
 									{ CalendarHeaderTemplate.call(this) }
 								</div>
 							)}
