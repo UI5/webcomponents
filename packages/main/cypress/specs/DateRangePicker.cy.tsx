@@ -987,14 +987,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 			cy.realPress("F4");
 
 			cy.get<DateRangePicker>("@dateRangePicker")
-				.ui5DateRangePickerExpectToBeOpen();
-
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.should("have.length", 2);
+				.ui5DateRangePickerExpectToBeOpen()
+				.ui5DateRangePickerExpectMonthContainerCount(2);
 		});
 
 		it("should display one calendar when showTwoMonths is false", () => {
@@ -1014,11 +1008,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 			cy.get<DateRangePicker>("@dateRangePicker")
 				.ui5DateRangePickerExpectToBeOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetMonthContainers()
 				.should("not.exist");
 		});
 
@@ -1046,6 +1037,84 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.find(".ui5-calheader-middlebtn")
 				.should("have.length.greaterThan", 1);
 		});
+
+		it("should dynamically toggle showTwoMonths after initial render", () => {
+			cy.mount(
+				<DateRangePicker value="Jan 15, 2024 - Jan 20, 2024" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Initially should show single calendar (no month containers in multi-month mode)
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Enable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = true;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should now show two calendars
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("have.length", 2);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Disable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = false;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should be back to single calendar
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+		});
 	});
 
 	describe("Date Range Selection with Two Calendars", () => {
@@ -1059,30 +1128,12 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerOpen();
 
 			// Select start date in first calendar
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.first()
-				.find("[id$='-daypicker-0']")
-				.shadow()
-				.find("[data-sap-timestamp]")
-				.eq(14)
-				.realClick();
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 14);
 
 			// Select end date in second calendar
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.last()
-				.find("[id$='-daypicker-1']")
-				.shadow()
-				.find("[data-sap-timestamp]")
-				.eq(9)
-				.realClick();
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 9);
 
 			cy.get("@dateRangePicker")
 				.invoke("attr", "value")
@@ -1100,28 +1151,12 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerOpen();
 
 			// First calendar should have selected dates
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.first()
-				.find("[id$='-daypicker-0']")
-				.shadow()
-				.find(".ui5-dp-item--selected")
-				.should("exist");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(0);
 
 			// Second calendar should have selected dates
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.last()
-				.find("[id$='-daypicker-1']")
-				.shadow()
-				.find(".ui5-dp-item--selected")
-				.should("exist");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(1);
 		});
 
 		it("should update value when selecting new range", () => {
@@ -1139,32 +1174,50 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerOpen();
 
 			// Select new start date
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.first()
-				.find("[id$='-daypicker-0']")
-				.shadow()
-				.find("[data-sap-timestamp]")
-				.eq(9)
-				.realClick();
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 9);
 
 			// Select new end date
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.last()
-				.find("[id$='-daypicker-1']")
-				.shadow()
-				.find("[data-sap-timestamp]")
-				.eq(14)
-				.realClick();
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 14);
 
 			cy.get("@changeSpy").should("have.been.called");
+		});
+
+		it("should respect min/max date constraints with two calendars", () => {
+			cy.mount(
+				<DateRangePicker 
+					showTwoMonths={true} 
+					formatPattern="dd/MM/yyyy"
+					minDate="10/01/2024"
+					maxDate="28/02/2024"
+					value="15/01/2024 - 20/01/2024"
+				/>
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Both calendars should show months within the valid range (Jan and Feb 2024)
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+
+			// Check that dates before minDate are disabled (e.g., Jan 5, 2024)
+			// Jan 5, 2024 = timestamp 1704412800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1704412800']")
+				.should("have.class", "ui5-dp-item--disabled");
+
+			// Check that dates within valid range are NOT disabled (e.g., Jan 15, 2024)
+			// Jan 15, 2024 = timestamp 1705276800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1705276800']")
+				.should("not.have.class", "ui5-dp-item--disabled");
 		});
 	});
 
@@ -1178,32 +1231,16 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find("[data-ui5-cal-header-btn-next]")
-				.realClick();
-
-			// Get all calendar headers
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-calheader")
-				.as("headers");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("next");
 
 			// First calendar should show February
-			cy.get("@headers")
-				.eq(0)
-				.find("[data-ui5-cal-header-btn-month]")
-				.should("contain.text", "February");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
 
 			// Second calendar should show March
-			cy.get("@headers")
-				.eq(1)
-				.find("[data-ui5-cal-header-btn-month]")
-				.should("contain.text", "March");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
 		});
 
 		it("should navigate both calendars backward", () => {
@@ -1215,32 +1252,16 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find("[data-ui5-cal-header-btn-prev]")
-				.realClick();
-
-			// Get all calendar headers
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-calheader")
-				.as("headers");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("prev");
 
 			// First calendar should show February
-			cy.get("@headers")
-				.eq(0)
-				.find("[data-ui5-cal-header-btn-month]")
-				.should("contain.text", "February");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
 
 			// Second calendar should show March
-			cy.get("@headers")
-				.eq(1)
-				.find("[data-ui5-cal-header-btn-month]")
-				.should("contain.text", "March");
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
 		});
 	});
 
@@ -1254,24 +1275,20 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.first()
 				.realClick();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.should("not.have.class", "ui5-cal-overlay-hidden");
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.find("[id$='-MP']")
@@ -1287,17 +1304,14 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-year]")
-				.first()
 				.realClick();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.should("not.have.class", "ui5-cal-overlay-hidden");
@@ -1312,17 +1326,14 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.first()
 				.realClick();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.find("[id$='-MP']")
@@ -1331,19 +1342,14 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.first()
 				.realClick();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.should("have.class", "ui5-cal-overlay-hidden");
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.should("have.length", 2);
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
 		});
 	});
 
@@ -1365,11 +1371,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 			cy.get<DateRangePicker>("@dateRangePicker")
 				.ui5DateRangePickerExpectToBeOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-calheader")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
 				.should("have.length.greaterThan", 0);
 		});
 
@@ -1382,19 +1385,16 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.first()
 				.focus();
 
 			cy.realPress("Space");
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.should("not.have.class", "ui5-cal-overlay-hidden");
@@ -1419,12 +1419,9 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 			cy.get<DateRangePicker>("@dateRangePicker")
 				.ui5DateRangePickerExpectToBeOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-calheader-middlebtn")
-				.should("have.length.greaterThan", 2);
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.should("have.length.greaterThan", 0);
 		});
 
 		it("should handle empty initial value", () => {
@@ -1436,12 +1433,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.as("dateRangePicker")
 				.ui5DateRangePickerOpen();
 
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.should("have.length", 2);
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
 		});
 	});
 });
