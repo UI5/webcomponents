@@ -371,11 +371,6 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	stretch = false;
 
 	/**
-	 * Determines on which side the component is placed at.
-	 * @default "Bottom"
-	 * @public
-	 */
-	/**
 	 * Defines whether the clear icon of the input will be shown.
 	 * @default false
 	 * @public
