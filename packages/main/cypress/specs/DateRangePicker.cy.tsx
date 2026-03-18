@@ -1185,23 +1185,23 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.find("[data-ui5-cal-header-btn-next]")
 				.realClick();
 
-			// First calendar should show February
+			// Get all calendar headers
 			cy.get("@dateRangePicker")
 				.shadow()
 				.find("[ui5-calendar]")
 				.shadow()
-				.find(".ui5-cal-month-container")
-				.first()
+				.find(".ui5-calheader")
+				.as("headers");
+
+			// First calendar should show February
+			cy.get("@headers")
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "February");
 
 			// Second calendar should show March
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.last()
+			cy.get("@headers")
+				.eq(1)
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "March");
 		});
@@ -1222,23 +1222,23 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.find("[data-ui5-cal-header-btn-prev]")
 				.realClick();
 
-			// First calendar should show February
+			// Get all calendar headers
 			cy.get("@dateRangePicker")
 				.shadow()
 				.find("[ui5-calendar]")
 				.shadow()
-				.find(".ui5-cal-month-container")
-				.first()
+				.find(".ui5-calheader")
+				.as("headers");
+
+			// First calendar should show February
+			cy.get("@headers")
+				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "February");
 
 			// Second calendar should show March
-			cy.get("@dateRangePicker")
-				.shadow()
-				.find("[ui5-calendar]")
-				.shadow()
-				.find(".ui5-cal-month-container")
-				.last()
+			cy.get("@headers")
+				.eq(1)
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "March");
 		});

@@ -1810,7 +1810,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// First calendar should show January
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "January");
@@ -1818,7 +1818,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Second calendar should show February
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "February");
@@ -1859,7 +1859,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// First calendar should have prev button
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-prev]")
 				.should("exist");
@@ -1867,14 +1867,14 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Second calendar should have spacer instead of prev button
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find("[data-ui5-cal-header-btn-prev]")
 				.should("not.exist");
 
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find(".ui5-calheader-spacer")
 				.should("exist");
@@ -1890,7 +1890,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// First calendar should have spacer instead of next button
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-next]")
 				.should("not.exist");
@@ -1898,7 +1898,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Second calendar should have next button
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find("[data-ui5-cal-header-btn-next]")
 				.should("exist");
@@ -1920,7 +1920,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// First calendar should show February
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "February");
@@ -1928,7 +1928,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Second calendar should show March
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "March");
@@ -1950,7 +1950,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// First calendar should show February
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "February");
@@ -1958,7 +1958,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Second calendar should show March
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.last()
 				.find("[data-ui5-cal-header-btn-month]")
 				.should("contain.text", "March");
@@ -1976,7 +1976,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Click month button in first calendar
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-month]")
 				.realClick();
@@ -2004,7 +2004,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Click year button in first calendar
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.first()
 				.find("[data-ui5-cal-header-btn-year]")
 				.realClick();
@@ -2173,7 +2173,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			// Both calendars should show month and year buttons
 			cy.get<Calendar>("#cal")
 				.shadow()
-				.find(".ui5-cal-month-container")
+				.find(".ui5-cal-month-header-container")
 				.each(($container) => {
 					cy.wrap($container)
 						.find("[data-ui5-cal-header-btn-month]")
