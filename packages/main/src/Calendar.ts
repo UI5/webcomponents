@@ -67,6 +67,7 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
 import getEffectiveContentDensity from "@ui5/webcomponents-base/dist/util/getEffectiveContentDensity.js";
+import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
 
@@ -449,27 +450,9 @@ class Calendar extends CalendarPart {
 		}
 
 		const calendarDate = CalendarDateComponent.fromTimestamp(this._timestamp * 1000, this._primaryCalendarType);
+		const modifiedDate = modifyDateBy(calendarDate, monthIndex, "month", false);
 
-		// Set day to 1 to avoid day-of-month overflow issues
-		// (e.g., Jan 31 + 1 month would overflow to March if Feb doesn't have 31 days)
-		calendarDate.setDate(1);
-
-		// Add months one by one to handle month boundaries correctly
-		for (let i = 0; i < monthIndex; i++) {
-			const currentMonth = calendarDate.getMonth();
-			const currentYear = calendarDate.getYear();
-
-			if (currentMonth === 11) {
-				// December -> January of next year
-				calendarDate.setYear(currentYear + 1);
-				calendarDate.setMonth(0);
-			} else {
-				// Just increment the month
-				calendarDate.setMonth(currentMonth + 1);
-			}
-		}
-
-		return calendarDate.valueOf() / 1000;
+		return modifiedDate.valueOf() / 1000;
 	}
 
 	/**
