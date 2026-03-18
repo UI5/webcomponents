@@ -31,10 +31,10 @@ export default function CalendarHeaderTemplate(this: Calendar, options?: Calenda
 		<div class={isMultiple ? "ui5-calheader ui5-calheader-multiple" : "ui5-calheader-root"}>
 			{renderPrevButton.call(this, isFirst, isMultiple)}
 			{renderMiddleButtons.call(this, {
-				monthText: monthText!,
-				yearText: yearText!,
-				secondMonthText,
-				secondYearText,
+				monthText: monthText || "",
+				yearText: yearText || "",
+				secondMonthText: secondMonthText || "",
+				secondYearText: secondYearText || "",
 			})}
 			{renderNextButton.call(this, isFirst, isLast, isMultiple)}
 		</div>
