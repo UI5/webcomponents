@@ -58,7 +58,7 @@
 }
 
 .ui5-cal-month-header-container {
-	width: 50%;
+	flex: 1;
 }
 
 .ui5-cal-root .ui5-calheader.ui5-calheader-multiple {
