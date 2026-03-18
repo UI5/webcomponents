@@ -139,19 +139,6 @@
   display: none;
 }
 
-/* Overlay effect on DayPickers when MonthPicker is visible in multi-month mode */
-.ui5-cal-content-multiple:has(~ .ui5-cal-overlay-container:not(.ui5-cal-overlay-hidden)) .ui5-cal-month-container::part(day-picker-root) {
-  background-color: var(--sapBlockLayer_Background);
-  opacity: var(--sapBlockLayer_Opacity);
-  top: 0;
-  left: -0.5rem;
-  right: -0.5rem;
-  bottom: 0;
-  position: absolute;
-  outline: 0 none;
-  z-index: 11;
-}
-
 .ui5-calheader-default-multiple, .ui5-calheader-default-multiple .ui5-calheader-root {
 	width: 100%;
 }
@@ -160,7 +147,6 @@
 	flex:none;
 }
 
-/* Portrait mode: Stack calendars vertically in mobile view */
 .ui5-cal-root.ui5-dt-cal--portrait .ui5-cal-content-multiple {
     gap: 0;
 }
