@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** Fix badge misplacement of the ShellBar ([#13212](https://github.com/UI5/webcomponents/issues/13212)) ([c9e326f](https://github.com/UI5/webcomponents/commit/c9e326f0ffc757281ef8be434b402342f66cdab0)), closes [#12962](https://github.com/UI5/webcomponents/issues/12962)
+* **ui5-view-settings-dialog:** ensure proper focus management in filter view ([#13092](https://github.com/UI5/webcomponents/issues/13092)) ([91fb9eb](https://github.com/UI5/webcomponents/commit/91fb9eb69318468633f2506793917f95fd680419))
+
+
+
+
+
 # [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
 
 

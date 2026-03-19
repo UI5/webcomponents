@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+
+### Features
+
+* add new `styling` and `accessibility` Skills ([#13261](https://github.com/UI5/webcomponents/issues/13261)) ([3c8381a](https://github.com/UI5/webcomponents/commit/3c8381a91a24132cf9f3ec2f3d287536ae3ee087))
+
+
+
+
+
 # [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
 
 
