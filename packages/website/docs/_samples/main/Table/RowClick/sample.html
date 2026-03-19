@@ -1,0 +1,38 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+<!-- playground-fold-end -->
+	<ui5-toast id="message"></ui5-toast>
+	<ui5-table id="table">
+<!-- playground-fold -->
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell width="300px">Product</ui5-table-header-cell>
+			<ui5-table-header-cell width="200px">Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell width="100px">Price</ui5-table-header-cell>
+		</ui5-table-header-row>
+<!-- playground-fold-end -->
+		<ui5-table-row id="row-a" row-key="a" interactive>
+			<ui5-table-cell><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+		<ui5-table-row id="row-b" row-key="b" interactive>
+			<ui5-table-cell><ui5-label>Notebook Basic 17</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
+			<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+		</ui5-table-row>
+	</ui5-table>
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

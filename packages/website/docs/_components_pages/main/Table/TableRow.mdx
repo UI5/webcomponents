@@ -3,6 +3,7 @@ slug: ../../TableRow
 ---
 
 import Interactive from "../../../_samples/main/Table/Interactive/Interactive.md";
+import RowClick from "../../../_samples/main/Table/RowClick/RowClick.md";
 import DragAndDrop from "../../../_samples/main/Table/DragAndDrop/DragAndDrop.md";
 
 <%COMPONENT_OVERVIEW%>
@@ -15,6 +16,13 @@ Create an interactive table by marking `ui5-table-row` components as `interactiv
 will fire the `row-click` event.
 
 <Interactive />
+
+## Row Click Event
+
+The `click` event is fired directly on `ui5-table-row` when an interactive row is activated via mouse click or keyboard Enter.
+This allows attaching click handlers directly on row elements, which is particularly useful for framework wrappers like React.
+
+<RowClick />
 
 ## Movable Rows
 

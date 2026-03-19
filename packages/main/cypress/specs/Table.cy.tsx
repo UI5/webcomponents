@@ -982,6 +982,41 @@ describe("Table - Interactive Rows", () => {
 		cy.get("@buttonClickHandler").should("have.been.calledThrice");
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
 	});
+
+	it("fires click event on the row element", () => {
+		cy.mount(
+			<Table id="table1">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+					<TableHeaderCell>ColumnB</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1" rowKey="1">
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+				</TableRow>
+				<TableRow id="row2" rowKey="2" interactive={true}>
+					<TableCell><Label>Cell A</Label></TableCell>
+					<TableCell><Label>Cell B</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#row1").invoke("on", "click", cy.stub().as("row1ClickSpy"));
+		cy.get("#row2").invoke("on", "click", cy.stub().as("row2ClickSpy"));
+
+		// Non-interactive row should not fire click
+		cy.get("#row1").realClick();
+		cy.get("@row1ClickSpy").should("not.have.been.called");
+
+		// Interactive row fires click on mouse click
+		cy.get("#row2").realClick();
+		cy.get("@row2ClickSpy").should("have.been.calledOnce");
+		cy.get("@row2ClickSpy").invoke("getCall", 0).its("args.0").should("have.property", "detail");
+
+		// Interactive row fires click on Enter key
+		cy.get("#row2").realPress("Enter");
+		cy.get("@row2ClickSpy").should("have.been.calledTwice");
+	});
 });
 
 describe("Table - HeaderCell", () => {

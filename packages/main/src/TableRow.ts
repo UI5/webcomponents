@@ -1,4 +1,6 @@
-import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
+import {
+	customElement, slotStrict as slot, property, eventStrict,
+} from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -31,12 +33,33 @@ import {
  * @since 2.0.0
  * @public
  */
+/**
+ * Fired when the row is activated by the user via click or Enter key.
+ *
+ * **Note:** This event is not fired when the row has `behavior="RowOnly"` selection.
+ * In that case, use the selection component's `change` event instead.
+ *
+ * @public
+ * @since 2.9.0
+ */
+@eventStrict("click", {
+	bubbles: true,
+})
 @customElement({
 	tag: "ui5-table-row",
 	styles: [TableRowBase.styles, TableRowCss],
 	template: TableRowTemplate,
 })
 class TableRow extends TableRowBase<TableCell> {
+	eventDetails!: TableRowBase["eventDetails"] & {
+		click: void
+	}
+
+	constructor() {
+		super();
+		this.addEventListener("click", this._interceptClick);
+	}
+
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -124,6 +147,14 @@ class TableRow extends TableRowBase<TableCell> {
 	@query("#actions-cell")
 	_actionsCell?: TableCell;
 
+	_interceptClick = (e: Event) => {
+		if (e instanceof CustomEvent) {
+			return;
+		}
+		e.stopImmediatePropagation();
+		this._table?._onEvent(e);
+	};
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
@@ -160,15 +191,24 @@ class TableRow extends TableRowBase<TableCell> {
 
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
-			this._onclick();
+			this._handleClick();
 		}
 	}
 
-	_onclick() {
+	_onclick(e: Event) {
+		if (e instanceof CustomEvent) {
+			return;
+		}
+
+		this._handleClick();
+	}
+
+	_handleClick() {
 		if (this === getActiveElement()) {
 			if (this._isSelectable && !this._hasSelector) {
 				this._onSelectionChange();
 			} else 	if (this.interactive || this._isNavigable) {
+				this.fireDecoratorEvent("click");
 				this._table?._onRowClick(this);
 			}
 		}

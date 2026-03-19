@@ -26,6 +26,10 @@ import {
 	styles: TableRowBaseCss,
 })
 abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+	eventDetails!: {
+		click: void
+	}
+
 	cells!: Array<TCell>;
 
 	@property({ type: Number, noAttribute: true })
