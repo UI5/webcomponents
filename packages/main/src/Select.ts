@@ -1111,7 +1111,7 @@ class Select extends UI5Element implements IFormElement {
 		const itemPositionText = Select.i18nBundle.getText(LIST_ITEM_POSITION, this._selectedIndex + 1, optionsCount);
 
 		if (this.focused && this._currentlySelectedOption) {
-			const optionText = this._currentlySelectedOption.accessibleName || this._currentlySelectedOption.textContent as string;
+			const optionText = this._currentlySelectedOption.getAttribute("accessible-name") || this._currentlySelectedOption.textContent as string;
 			text = `${optionText}${this._isPickerOpen ? `, ${itemPositionText}` : ""}`;
 
 			announce(text, InvisibleMessageMode.Polite);
