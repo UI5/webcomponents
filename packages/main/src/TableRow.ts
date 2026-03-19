@@ -33,6 +33,11 @@ import {
  * @since 2.0.0
  * @public
  */
+@customElement({
+	tag: "ui5-table-row",
+	styles: [TableRowBase.styles, TableRowCss],
+	template: TableRowTemplate,
+})
 /**
  * Fired when the row is activated by the user via click or Enter key.
  *
@@ -44,11 +49,6 @@ import {
  */
 @eventStrict("click", {
 	bubbles: true,
-})
-@customElement({
-	tag: "ui5-table-row",
-	styles: [TableRowBase.styles, TableRowCss],
-	template: TableRowTemplate,
 })
 class TableRow extends TableRowBase<TableCell> {
 	eventDetails!: TableRowBase["eventDetails"] & {
