@@ -1373,6 +1373,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		// On first item select the _useSelectedValue is still false. 
+		// In case the item has a value property, we set the _useSelectedValue to true to start working with the value instead with the text
+		if (!this._useSelectedValue && item.value != undefined) {
+			this._useSelectedValue = true;
+		}
+
 		if (this._useSelectedValue) {
 			this.selectedValue = item.value;
 		}
