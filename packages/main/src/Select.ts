@@ -90,6 +90,10 @@ type SelectLiveChangeEventDetail = {
 	selectedOption: IOption,
 }
 
+const isPrintableCharacter = (e: KeyboardEvent) => {
+	return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+};
+
 /**
  * @class
  *
@@ -697,11 +701,13 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
 			this._handleArrowNavigation(e);
+		} else if (isPrintableCharacter(e)) {
+			this._handleKeyboardNavigation(e);
 		}
 	}
 
 	_handleKeyboardNavigation(e: KeyboardEvent) {
-		if (isEnter(e) || this.readonly) {
+		if (this.readonly) {
 			return;
 		}
 
