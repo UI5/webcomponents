@@ -91,15 +91,15 @@ function App() {
         >
           <FormGroup headerText="Group1 (Text Fields)" columnSpan={2}>
             <FormItem>
-              <Label required={true} for="nameInp" slot="labelContent">
-                Label:
+              <Label required={true} for="nameInp" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <Input id="nameInp" value="Typed text" />
             </FormItem>
 
             <FormItem>
-              <Label required={true} for="cityInp" slot="labelContent">
-                Label:
+              <Label required={true} for="cityInp" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <div>
                 <Input
@@ -112,8 +112,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} for="streetInp" slot="labelContent">
-                Label:
+              <Label required={true} for="streetInp" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <TextArea
                 id="streetInp"
@@ -124,8 +124,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} slot="labelContent" for="fileUpload">
-                Label:
+              <Label required={true} slot="labelContent" for="fileUpload" showColon={true}>
+                Label
               </Label>
               <FileUploader id="fileUpload" placeholder="Choose a file">
                 <Button>Browse...</Button>
@@ -133,8 +133,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} for="durationInp" slot="labelContent">
-                Duration:
+              <Label required={true} for="durationInp" slot="labelContent" showColon={true}>
+                Duration
               </Label>
               <TimePicker
                 id="durationInp"
@@ -144,8 +144,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} for="cityInp3" slot="labelContent">
-                Label:
+              <Label required={true} for="cityInp3" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <Input id="cityInp3" placeholder="Placeholder" />
               <Input placeholder="Placeholder" />
@@ -154,8 +154,8 @@ function App() {
 
           <FormGroup headerText="Group2 (Cb, Rb, Switch)">
             <FormItem>
-              <Label required={true} slot="labelContent" for="rbGroup">
-                Label:
+              <Label required={true} slot="labelContent" for="rbGroup" showColon={true}>
+                Label
               </Label>
               <CheckBox
                 class="margin--density-aware"
@@ -164,8 +164,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} slot="labelContent" for="rbGroup">
-                Label:
+              <Label required={true} slot="labelContent" for="rbGroup" showColon={true}>
+                Label
               </Label>
 
               <div role="radiogroup" className="margin--density-aware">
@@ -175,8 +175,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} slot="labelContent" for="swGroup">
-                Label:
+              <Label required={true} slot="labelContent" for="swGroup" showColon={true}>
+                Label
               </Label>
               <Switch id="swGrou" class="margin--fixed" checked={true} />
             </FormItem>
@@ -184,8 +184,8 @@ function App() {
 
           <FormGroup headerText="Group3 (Select Fields)">
             <FormItem>
-              <Label required={true} for="countrySel" slot="labelContent">
-                Label:
+              <Label required={true} for="countrySel" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <Select id="countrySel" accessibleNameRef="countryLbl">
                 <Option>Australia</Option>
@@ -195,8 +195,8 @@ function App() {
             </FormItem>
 
             <FormItem>
-              <Label required={true} for="countrySel2" slot="labelContent">
-                Label:
+              <Label required={true} for="countrySel2" slot="labelContent" showColon={true}>
+                Label
               </Label>
               <Select id="countrySel2" accessibleNameRef="countryLbl">
                 <Option>Australia</Option>
@@ -210,8 +210,9 @@ function App() {
                 required={true}
                 for="mcb-grouping1"
                 slot="labelContent"
+                showColon={true}
               >
-                Label:
+                Label
               </Label>
               <MultiInput id="mcb-grouping1" showValueHelpIcon={true}>
                 <Token slot="tokens" text="laboris" />

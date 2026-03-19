@@ -18,14 +18,14 @@
 		<div class="content">
 			<div class="guidedPromptForm">
 				<div class="guidedPromptFormGroup">
-					<ui5-label>Structure:</ui5-label>
+					<ui5-label show-colon>Structure</ui5-label>
 					<ui5-select id="structureSelect">
 						<ui5-option value="paragraph">Paragraph</ui5-option>
 						<ui5-option value="bulleted"> Bullet list</ui5-option>
 					</ui5-select>
 				</div>
 				<div class="guidedPromptFormGroup">
-					<ui5-label>Length:</ui5-label>
+					<ui5-label show-colon>Length</ui5-label>
 					<ui5-range-slider
 						min="50"
 						max="150"
@@ -34,14 +34,14 @@
 						show-tooltip></ui5-range-slider>
 				</div>
 				<div class="guidedPromptFormGroup">
-					<ui5-label>Language:</ui5-label>
+					<ui5-label show-colon>Language</ui5-label>
 					<ui5-select id="languageSelect">
 						<ui5-option value="en">English</ui5-option>
 						<ui5-option value="de">German</ui5-option>
 					</ui5-select>
 				</div>
 				<div class="guidedPromptFormGroup">
-					<ui5-label>Tone Of Voice:</ui5-label>
+					<ui5-label show-colon>Tone Of Voice</ui5-label>
 					<ui5-segmented-button id="toneOfVoiceSelect">
 						<ui5-segmented-button-item>Formal</ui5-segmented-button-item>
 						<ui5-segmented-button-item selected>Neutral</ui5-segmented-button-item>
@@ -68,12 +68,12 @@
 			<img src="https://ui5.github.io/webcomponents/images/avatars/woman_avatar_1.png" slot="avatar">
 		</ui5-card-header>
 		<section class="guidedPromptSection">
-			<ui5-label required>To: </ui5-label>
+			<ui5-label required show-colon>To</ui5-label>
 			<div style="display: flex; gap: 0.125rem;">
 				<ui5-token selected text="DL Marketing Sector SAP" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
 			</div>
 			<div class="guidedPromptLblBtn">
-				<ui5-label style="align-self: flex-end;" required>Offer: </ui5-label>
+				<ui5-label style="align-self: flex-end;" required show-colon>Offer</ui5-label>
 				<ui5-ai-button id="openDialogButton" state="generate">
 					<ui5-ai-button-state
 						name="generate"

@@ -12,7 +12,7 @@ const Label = createReactComponent(LabelClass);
 function App() {
   return (
     <>
-      <Label>Bar with two or more active items:</Label>
+      <Label showColon={true}>Bar with two or more active items</Label>
       <Bar design="Header" accessibleRole="Toolbar">
         <Button
           icon="home"
@@ -28,7 +28,7 @@ function App() {
         />
       </Bar>
       <br />
-      <Label>Bar with less than two active items:</Label>
+      <Label showColon={true}>Bar with less than two active items</Label>
       <Bar design="Header">
         <Label id="basic-label">Storybook title</Label>
       </Bar>
