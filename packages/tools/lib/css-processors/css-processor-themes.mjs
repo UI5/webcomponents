@@ -17,9 +17,7 @@ import { pathToFileURL } from "url";
  */
 const AUTO_THEME_PAIRS = [
     { light: "sap_horizon", dark: "sap_horizon_dark", auto: "sap_horizon_auto" },
-    { light: "sap_fiori_3", dark: "sap_fiori_3_dark", auto: "sap_fiori_3_auto" },
     { light: "sap_horizon_hcw", dark: "sap_horizon_hcb", auto: "sap_horizon_hc_auto" },
-    { light: "sap_fiori_3_hcw", dark: "sap_fiori_3_hcb", auto: "sap_fiori_3_hc_auto" },
 ];
 
 const generate = async (argv) => {
