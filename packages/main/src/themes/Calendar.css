@@ -55,9 +55,6 @@
 .ui5-cal-month-container, .ui5-cal-month-header-container {
     display: flex;
     flex-direction: column;
-}
-
-.ui5-cal-month-header-container {
 	flex: 1;
 }
 
