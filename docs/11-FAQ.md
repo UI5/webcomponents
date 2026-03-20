@@ -6,14 +6,14 @@ sidebar_label: FAQ
 
 **Q: How can I play with UI5 Web Components easily?**
 
-**A:** Use this [Stackblitz](https://stackblitz.com/edit/js-vsrpnb?file=index.js,index.html).
+**A:** Use the interactive [Web Components Samples](https://ui5.github.io/webcomponents/components/) or [Playground](https://ui5.github.io/webcomponents/play/).
 
 
 **Q: Where is the documentation?**
 
 **A:** There are several resources:
-- [Web Components APIs](https://ui5.github.io/webcomponents/play/)
-- [How to get started?](https://blogs.sap.com/2019/04/01/the-fastest-way-to-get-started-with-ui5-web-components/)
+- [Web Components APIs](https://ui5.github.io/webcomponents/components/)
+- [How to get started?](https://ui5.github.io/webcomponents/docs/getting-started/first-steps/)
 
 **Q: Is there a CDN to load UI5 Web Components from?**
 
@@ -22,7 +22,7 @@ sidebar_label: FAQ
 
 **Q: Are UI5 Web Components APIs stable?**
 
-**A:** Mostly yes since the project is in Release Candidate state, but minor changes may still be expected until the official release.
+**A:**Yes.
 
 
 **Q: Can I create my own UI5 Web Components?**
@@ -107,3 +107,8 @@ or to be more precise, you can apply the CSS rule when `forced-colors` mode is `
 ``` 
 
 By setting `forced-color-adjust` to `none`, the element's colors will not be automatically adjusted by the user agent in forced colors mode.
+
+
+**Q: How do I use UI5 Web Components with Tailwind CSS?**
+
+**A:** Tailwind's base reset (preflight) applies a comprehensive CSS reset to all elements. Since some UI5 components intentionally place styles on the `:host` element for easy customizability, preflight's resets override those `:host` styles — most visibly causing missing borders on components like `ui5-input`, `ui5-button`, `ui5-li`, and others. See the [Tailwind CSS integration guide](3-frameworks/04-Tailwind.md) for the one-step setup.

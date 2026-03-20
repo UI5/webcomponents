@@ -710,6 +710,7 @@ class Button extends UI5Element implements IButton {
 			disabled: this.disabled,
 			children: this.text,
 			type: this.effectiveAccRoleTranslation,
+			label: this.ariaLabelText,
 		};
 	}
 

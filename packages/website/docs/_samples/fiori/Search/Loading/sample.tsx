@@ -43,7 +43,7 @@ function App() {
         onInput={handleInput}
       />
 
-      <Label style={{ marginTop: "1rem", display: "block" }}>Result:</Label>
+      <Label showColon={true} style={{ marginTop: "1rem", display: "block" }}>Result</Label>
       <Text id="result-text">{resultText}</Text>
     </>
   );
