@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.2](https://github.com/UI5/webcomponents/compare/v2.20.1...v2.20.2) (2026-03-20)
+
+
+### Bug Fixes
+
+* **ui5-time-picker:** update test for CLDR 48 Bulgarian time format ([d9c0a44](https://github.com/UI5/webcomponents/commit/d9c0a4422a57367e4e2af5ac89be7e80c94df6ec))
+
+
+
+
+
 ## [2.20.1](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.20.1) (2026-03-13)
 
 **Note:** Version bump only for package @ui5/webcomponents
