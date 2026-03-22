@@ -74,7 +74,8 @@
 	--_ui5_input_inner_padding: 0 0.625rem;
 	--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.625rem;
 	--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-	--_ui5_input_inner_space_to_n_more_text: 0.1875rem;
+	--_ui5_input_inner_space_to_n_more_text: 0.3125rem;
+	--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.3125rem;
 	--_ui5_list_no_data_height: 3rem;
 	--_ui5_list_item_cb_margin_right: 0;
 	--_ui5_list_item_title_size: var(--sapFontLargeSize);
@@ -103,7 +104,7 @@
 	--_ui5_popup_default_header_height: 2.75rem;
 
 	--_ui5_year_picker_item_height: 3rem;
-	--_ui5_tokenizer_padding: 0.25rem;
+	--_ui5_tokenizer_padding: 0.3125rem;
 	--_ui5_token_height: 1.625rem;
 	--_ui5_token_icon_size: .75rem;
 	--_ui5_token_icon_padding: 0.25rem 0.5rem;
@@ -267,9 +268,10 @@
 		/* Input */
 		--_ui5_input_height: var(--sapElement_Compact_Height);
 		--_ui5_input_inner_padding: 0 0.5rem;
-		--_ui5_input_inner_padding_with_icon: 0 0.2rem 0 0.5rem;
+		--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.5rem;
 		--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-		--_ui5_input_inner_space_to_n_more_text: 0.125rem;
+		--_ui5_input_inner_space_to_n_more_text: 0.25rem;
+		--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.25rem;
 		--_ui5_input_icon_min_width: var(--_ui5_input_compact_min_width);
 		--_ui5_input_min_width_tokenizer_available: 2rem;
 
@@ -350,6 +352,9 @@
 		--_ui5-tree-toggle-box-width: 2rem;
 		--_ui5-tree-toggle-box-height: 1.5rem;
 		--_ui5-tree-toggle-icon-size: 0.8125rem;
+
+		/* Tokenizer */
+		--_ui5_tokenizer_padding: 0.25rem;
 
 		/* Toolbar */
 		--_ui5-toolbar-separator-height: 1.5rem;
