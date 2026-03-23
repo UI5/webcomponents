@@ -639,3 +639,127 @@ describe("Accessibility", () => {
 			});
 	});
 });
+
+describe("Button form attribute", () => {
+	it("should submit an external form using form attribute", () => {
+		const submitSpy = cy.spy().as("submitSpy");
+
+		cy.mount(
+			<div>
+				<form id="externalForm" onSubmit={e => {
+					e.preventDefault();
+					submitSpy();
+				}}>
+					<input name="test" defaultValue="value" />
+				</form>
+				<Button form="externalForm" type="Submit">Submit External Form</Button>
+			</div>
+		);
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@submitSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should reset an external form using form attribute", () => {
+		cy.mount(
+			<div>
+				<form id="resetForm">
+					<input name="test" id="testInput" defaultValue="initial" />
+				</form>
+				<Button form="resetForm" type="Reset">Reset External Form</Button>
+			</div>
+		);
+
+		// Change the input value
+		cy.get("#testInput")
+			.clear()
+			.type("changed");
+
+		cy.get("#testInput")
+			.should("have.value", "changed");
+
+		// Click the reset button
+		cy.get("[ui5-button]")
+			.realClick();
+
+		// Verify the form was reset
+		cy.get("#testInput")
+			.should("have.value", "initial");
+	});
+
+	it("should not submit when form attribute references non-existent form", () => {
+		const submitSpy = cy.spy().as("submitSpy");
+
+		cy.mount(
+			<div>
+				<form id="realForm" onSubmit={e => {
+					e.preventDefault();
+					submitSpy();
+				}}>
+					<input name="test" defaultValue="value" />
+				</form>
+				<Button form="nonExistentForm" type="Submit">Submit</Button>
+			</div>
+		);
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@submitSpy")
+			.should("not.have.been.called");
+	});
+
+	it("should prioritize form attribute over parent form", () => {
+		const parentFormSubmitSpy = cy.spy().as("parentFormSubmit");
+		const externalFormSubmitSpy = cy.spy().as("externalFormSubmit");
+
+		cy.mount(
+			<div>
+				<form id="externalForm" onSubmit={e => {
+					e.preventDefault();
+					externalFormSubmitSpy();
+				}}>
+					<input name="external" defaultValue="external" />
+				</form>
+				<form id="parentForm" onSubmit={e => {
+					e.preventDefault();
+					parentFormSubmitSpy();
+				}}>
+					<input name="parent" defaultValue="parent" />
+					<Button form="externalForm" type="Submit">Submit External</Button>
+				</form>
+			</div>
+		);
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@externalFormSubmit")
+			.should("have.been.calledOnce");
+		cy.get("@parentFormSubmit")
+			.should("not.have.been.called");
+	});
+
+	it("should fall back to parent form when form attribute is not set", () => {
+		const submitSpy = cy.spy().as("submitSpy");
+
+		cy.mount(
+			<form onSubmit={e => {
+				e.preventDefault();
+				submitSpy();
+			}}>
+				<input name="test" defaultValue="value" />
+				<Button type="Submit">Submit Parent Form</Button>
+			</form>
+		);
+
+		cy.get("[ui5-button]")
+			.realClick();
+
+		cy.get("@submitSpy")
+			.should("have.been.calledOnce");
+	});
+});
