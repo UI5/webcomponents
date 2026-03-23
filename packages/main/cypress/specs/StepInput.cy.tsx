@@ -816,6 +816,74 @@ describe("StepInput property propagation", () => {
     });
 });
 
+describe("Number expressions", () => {
+	it("should work properly with number expressions which contains Euler`s constant", () => {
+		 cy.mount(
+			<StepInput value={5}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber("1e3");
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 1000);
+	});
+
+	it("should work properly with number expressions which contains Euler`s constant and decimals", () => {
+		cy.mount(
+			<StepInput value={5} valuePrecision={2}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber("1.5e3");
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 1500);
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "None");
+	});
+
+	it("should set value to 0 when the number expression is infinity", () => {
+		cy.mount(
+			<StepInput value={5}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber("1e9999");
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 0);
+	});
+});
+
 describe("Validation inside form", () => {
 	it("has correct validity for patternMissmatch", () => {
 		cy.mount(
@@ -835,7 +903,7 @@ describe("Validation inside form", () => {
 			.as("stepInput");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(2.34);
+			.ui5StepInputTypeNumber("2.34");
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -855,7 +923,7 @@ describe("Validation inside form", () => {
 			.should("exist", "StepInput without formatted value should have :invalid CSS class");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(2.345);
+			.ui5StepInputTypeNumber("2.345");
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -886,7 +954,7 @@ describe("Validation inside form", () => {
 			.as("stepInput");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(2);
+			.ui5StepInputTypeNumber("2");
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -906,7 +974,7 @@ describe("Validation inside form", () => {
 			.should("exist", "StepInput with value lower than min should have :invalid CSS class");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(4);
+			.ui5StepInputTypeNumber("4");
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -938,7 +1006,7 @@ describe("Validation inside form", () => {
 			.as("stepInput");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(4);
+			.ui5StepInputTypeNumber("4");
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -958,7 +1026,7 @@ describe("Validation inside form", () => {
 			.should("exist", "StepInput without value lower than min should have :invalid CSS class");
 
 		cy.get<StepInput>("@stepInput")
-			.ui5StepInputTypeNumber(2);
+			.ui5StepInputTypeNumber("2");
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({

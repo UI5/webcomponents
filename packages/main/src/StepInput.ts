@@ -609,6 +609,10 @@ class StepInput extends UI5Element implements IFormInputElement {
  	 * @private
  	*/
 	_parseNumber(formattedValue: string): number {
+		if (this._isScientificNotation(formattedValue)) {
+			return Number(formattedValue);
+		}
+
 		return this.formatter.parse(formattedValue) as number;
 	}
 
@@ -627,6 +631,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
+		if (this._isScientificNotation(this.input?.value)) {
+			return true;
+		}
+
 		const delimiter = this.delimiter;
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
@@ -643,8 +651,13 @@ class StepInput extends UI5Element implements IFormInputElement {
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
 		const updatedValue = this._removeGroupSeparators(this.input.value);
-		const inputValue = this._parseNumber(updatedValue);
-		if (this._isValueChanged(inputValue)) {
+		let inputValue = this._parseNumber(updatedValue);
+		const isInfinity = Math.abs(inputValue) === Infinity;
+		if (isInfinity) {
+			inputValue = 0;
+		}
+
+		if (this._isValueChanged(inputValue) || isInfinity) {
 			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
 			this.innerInput.value = this.input.value;
 		}
@@ -763,7 +776,18 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return value.replaceAll(groupSeparator, "");
 	}
 
+	_isScientificNotation(value: string) {
+		const sEscapedDecimalSep = this.delimiter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const oScientificNotationRegex = new RegExp(`^[+-]?\\d+(${sEscapedDecimalSep}\\d*)?[eE]([+-]?\\d+)?$`);
+
+		return oScientificNotationRegex.test(value);
+	}
+
 	_isInputValueValid(typedValue: string, parsedValue: number) {
+		if (this._isScientificNotation(typedValue)) {
+			return true;
+		}
+
 		return !Number.isNaN(parsedValue) && !/, {2,}/.test(typedValue);
 	}
 
