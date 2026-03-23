@@ -243,6 +243,20 @@ describe("Toolbar general interaction", () => {
 			.find("ui5-select")
 			.should("be.focused");
 
+		// Arrow navigation from Select should not get trapped
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-button")
+			.last()
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		cy.realPress("ArrowLeft");
+		cy.get("ui5-toolbar-select")
+			.shadow()
+			.find("ui5-select")
+			.should("be.focused");
+
 		// Tab from Select should navigate to Last button (not exit)
 		cy.get("ui5-toolbar-select")
 			.shadow()
@@ -356,6 +370,94 @@ describe("Toolbar general interaction", () => {
 			.shadow()
 			.find("ui5-select")
 			.should("be.focused");
+	});
+
+	it("Should navigate toolbar-item wrapped controls with arrows", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem><Button>First</Button></ToolbarItem>
+				<ToolbarItem><Button>Second</Button></ToolbarItem>
+				<ToolbarItem><Button>Third</Button></ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-button")
+			.first()
+			.shadow()
+			.find("button")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-button")
+			.eq(1)
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-button")
+			.eq(2)
+			.should("be.focused");
+	});
+
+	it("Should skip non-focusable toolbar-item content during arrow navigation", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarItem><span>Not focusable</span></ToolbarItem>
+				<ToolbarButton text="Last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-button")
+			.first()
+			.shadow()
+			.find("ui5-button")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-button")
+			.last()
+			.should("be.focused");
+	});
+
+	it("Should swap left and right arrow behavior in RTL", () => {
+		cy.document().then(doc => {
+			doc.body.setAttribute("dir", "rtl");
+		});
+
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-button")
+			.eq(1)
+			.shadow()
+			.find("ui5-button")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowLeft");
+		cy.get("ui5-toolbar-button")
+			.eq(2)
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-button")
+			.eq(1)
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+
+		cy.document().then(doc => {
+			doc.body.removeAttribute("dir");
+		});
 	});
 
 	it("Should move button with alwaysOverflow priority to overflow popover", () => {

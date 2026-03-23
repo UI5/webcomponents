@@ -72,6 +72,8 @@ class ToolbarSelect extends ToolbarItemBase {
 		"click": ToolbarItemEventDetail;
 	}
 
+	handlesOwnKeyboardNavigation = true;
+
 	/**
 	 * Defines the width of the select.
 	 *

@@ -17,6 +17,7 @@ import {
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -44,6 +45,11 @@ import type Popover from "./Popover.js";
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
+};
+
+type ToolbarNavigationItem = {
+	item?: ToolbarItemBase,
+	focusRef: HTMLElement,
 };
 
 function calculateCSSREMValue(styleSet: CSSStyleDeclaration, propertyName: string): number {
@@ -302,7 +308,7 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const lastItem = this._getNavigationItems().at(-1);
+			const lastItem = this._getNavigationItems().at(-1)?.focusRef;
 			if (lastItem) {
 				this._lastFocusedItem = lastItem;
 				this._hasFocusHistory = true;
@@ -557,21 +563,64 @@ class Toolbar extends UI5Element {
 		return this.ITEMS_WIDTH_MAP.get(id);
 	}
 
-	_getNavigationItems(): HTMLElement[] {
-		const itemFocusRefs = this.standardItems
+	_getItemFocusRef(item: ToolbarItemBase): HTMLElement | null {
+		const slottedItem = (item as { item?: Array<HTMLElement> }).item?.[0];
+		if (slottedItem) {
+			const slottedItemFocusRef = (slottedItem as HTMLElement & { getFocusDomRef?: () => HTMLElement | null })?.getFocusDomRef?.();
+			if (slottedItemFocusRef) {
+				const isFocusableSelfRef = slottedItemFocusRef !== slottedItem
+					|| slottedItemFocusRef.tabIndex > -1
+					|| slottedItemFocusRef.matches("a[href], button, input, select, textarea, [tabindex]");
+
+				if (isFocusableSelfRef) {
+					return slottedItemFocusRef;
+				}
+			}
+
+			if (slottedItem.tabIndex > -1 || slottedItem.matches("a[href], button, input, select, textarea")) {
+				return slottedItem;
+			}
+
+			const firstTabbable = getTabbableElements(slottedItem)[0];
+			return firstTabbable || null;
+		}
+
+		const itemFocusRef = item.getFocusDomRef() as HTMLElement | null;
+		if (itemFocusRef && itemFocusRef !== item) {
+			return itemFocusRef;
+		}
+
+		return itemFocusRef;
+	}
+
+	_getNavigationItems(): Array<ToolbarNavigationItem> {
+		const itemFocusRefs: Array<ToolbarNavigationItem> = [];
+
+		this.standardItems
 			.filter(item => {
 				if (!item.isInteractive || item.hidden || item.isOverflowed) {
 					return false;
 				}
 				return !("disabled" in item && (item as { disabled?: boolean }).disabled);
 			})
-			.map(item => item.getFocusDomRef() as HTMLElement)
-			.filter((el): el is HTMLElement => !!el && this._isVisible(el));
+			.forEach(item => {
+				const focusRef = this._getItemFocusRef(item);
+				if (!focusRef || !this._isVisible(focusRef)) {
+					return;
+				}
+
+				itemFocusRefs.push({
+					item,
+					focusRef,
+				});
+			});
 
 		if (!this.hideOverflowButton && this.overflowButtonDOM) {
 			const overflowButtonFocusRef = this.overflowButtonDOM.getFocusDomRef() as HTMLElement;
 			if (overflowButtonFocusRef && this._isVisible(overflowButtonFocusRef)) {
-				itemFocusRefs.push(overflowButtonFocusRef);
+				itemFocusRefs.push({
+					focusRef: overflowButtonFocusRef,
+				});
 			}
 		}
 
@@ -579,7 +628,7 @@ class Toolbar extends UI5Element {
 	}
 
 	_updateRovingTabIndex(currentItem?: HTMLElement) {
-		const items = this._getNavigationItems();
+		const items = this._getNavigationItems().map(item => item.focusRef);
 		if (!items.length) {
 			return;
 		}
@@ -592,9 +641,11 @@ class Toolbar extends UI5Element {
 	_isVisible(element: HTMLElement): boolean {
 		const style = getComputedStyle(element);
 		return style.display !== "none"
-			&& style.visibility !== "hidden"
-			&& element.offsetWidth > 0
-			&& element.offsetHeight > 0;
+			&& style.visibility !== "hidden";
+	}
+
+	_shouldItemHandleOwnNavigation(item?: ToolbarItemBase | null): boolean {
+		return !!item?.handlesOwnKeyboardNavigation;
 	}
 
 	_shouldChildHandleNavigation(element: HTMLElement, e: KeyboardEvent): boolean {
@@ -618,8 +669,11 @@ class Toolbar extends UI5Element {
 		return false;
 	}
 
-	_getCurrentItemIndex(items: HTMLElement[], activeElement: HTMLElement): number {
-		return items.findIndex(item => {
+	_getCurrentItemIndex(items: Array<ToolbarNavigationItem>, activeElement: HTMLElement): number {
+		return items.findIndex(itemInfo => {
+			const item = itemInfo.focusRef;
+			const toolbarItem = itemInfo.item;
+
 			if (item === activeElement || item.contains(activeElement)) {
 				return true;
 			}
@@ -628,13 +682,24 @@ class Toolbar extends UI5Element {
 				return true;
 			}
 
+			if (toolbarItem && (toolbarItem === activeElement || toolbarItem.contains(activeElement))) {
+				return true;
+			}
+
+			if (toolbarItem?.shadowRoot && toolbarItem.shadowRoot.contains(activeElement)) {
+				return true;
+			}
+
 			return false;
 		});
 	}
 
-	_getCurrentItemFromEvent(items: HTMLElement[], e: FocusEvent): HTMLElement | undefined {
+	_getCurrentItemFromEvent(items: Array<ToolbarNavigationItem>, e: FocusEvent): HTMLElement | undefined {
 		const path = e.composedPath().filter((node): node is HTMLElement => node instanceof HTMLElement);
-		return items.find(item => {
+		const currentItem = items.find(itemInfo => {
+			const item = itemInfo.focusRef;
+			const toolbarItem = itemInfo.item;
+
 			if (path.includes(item)) {
 				return true;
 			}
@@ -643,8 +708,18 @@ class Toolbar extends UI5Element {
 				return true;
 			}
 
+			if (toolbarItem && path.includes(toolbarItem)) {
+				return true;
+			}
+
+			if (toolbarItem?.shadowRoot && path.some(node => toolbarItem.shadowRoot!.contains(node))) {
+				return true;
+			}
+
 			return path.some(node => item.contains(node));
 		});
+
+		return currentItem?.focusRef;
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -657,14 +732,15 @@ class Toolbar extends UI5Element {
 		const relatedTarget = e.relatedTarget as HTMLElement | null;
 		const isEntering = !relatedTarget || !root.contains(relatedTarget);
 
-		const items = this._getNavigationItems();
+		const navigationItems = this._getNavigationItems();
+		const items = navigationItems.map(item => item.focusRef);
 		if (!items.length) {
 			return;
 		}
 
 		const target = e.target as HTMLElement;
 		const activeElement = (getActiveElement() || target) as HTMLElement;
-		const currentItem = this._getCurrentItemFromEvent(items, e) || items[this._getCurrentItemIndex(items, activeElement)];
+		const currentItem = this._getCurrentItemFromEvent(navigationItems, e) || items[this._getCurrentItemIndex(navigationItems, activeElement)];
 		const currentIndex = currentItem ? items.indexOf(currentItem) : -1;
 
 		if (currentIndex !== -1) {
@@ -695,12 +771,6 @@ class Toolbar extends UI5Element {
 		}
 	}
 
-	_isFromComplexToolbarChild(e: KeyboardEvent): boolean {
-		return e.composedPath().some(target => {
-			return target instanceof HTMLElement && target.tagName === "UI5-TOOLBAR-SELECT";
-		});
-	}
-
 	_onkeydown(e: KeyboardEvent) {
 		const isNavigationKey = isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e);
 		const isTabKey = e.key === "Tab";
@@ -715,16 +785,19 @@ class Toolbar extends UI5Element {
 			return;
 		}
 
-		const items = this._getNavigationItems();
-		const currentIndex = this._getCurrentItemIndex(items, activeElement as HTMLElement);
+		const navigationItems = this._getNavigationItems();
+		const items = navigationItems.map(item => item.focusRef);
+		const currentIndex = this._getCurrentItemIndex(navigationItems, activeElement as HTMLElement);
 
 		// Not on a toolbar item, don't handle
 		if (currentIndex === -1) {
 			return;
 		}
 
-		// Complex controls like ToolbarSelect should keep their own arrow/home/end behavior.
-		if (isNavigationKey && this._isFromComplexToolbarChild(e)) {
+		const currentNavigationItem = navigationItems[currentIndex];
+		if (isNavigationKey
+			&& this._shouldItemHandleOwnNavigation(currentNavigationItem?.item)
+			&& (isUp(e) || isDown(e) || isHome(e) || isEnd(e))) {
 			return;
 		}
 
@@ -751,9 +824,13 @@ class Toolbar extends UI5Element {
 	}
 
 	_navigateToItem(items: HTMLElement[], currentIndex: number, e: KeyboardEvent): void {
-		if (isLeft(e) || isUp(e)) {
+		const isRTL = this.effectiveDir === "rtl";
+		const shouldMovePrevious = isUp(e) || (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
+		const shouldMoveNext = isDown(e) || (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+
+		if (shouldMovePrevious) {
 			this._focusPrevious(items, currentIndex);
-		} else if (isRight(e) || isDown(e)) {
+		} else if (shouldMoveNext) {
 			this._focusNext(items, currentIndex);
 		} else if (isHome(e)) {
 			this._updateRovingTabIndex(items[0]);
