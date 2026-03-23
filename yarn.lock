@@ -5834,10 +5834,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openui5/sap.ui.core@npm:1.120.17":
-  version: 1.120.17
-  resolution: "@openui5/sap.ui.core@npm:1.120.17"
-  checksum: 10c0/9f4c6b7ed2c86b437f49a52d7b29ba163a49c7ffd2813d5fe9c8f095af76492b65e0917fb489cda7350b5291c5d15cf2fc015b3fdcb59dfc922402c177ca4f74
+"@openui5/sap.ui.core@npm:1.146.0":
+  version: 1.146.0
+  resolution: "@openui5/sap.ui.core@npm:1.146.0"
+  checksum: 10c0/575123ea0b45462210460e5c16a72fb228a8d9321216b21395e191f6647564b272a04e0a32b5338cfc46e64f3ed545fecf0702dd7fd6173012af2b55122f923f
   languageName: node
   linkType: hard
 
@@ -7681,7 +7681,7 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@lit-labs/ssr-dom-shim": "npm:^1.1.2"
-    "@openui5/sap.ui.core": "npm:1.120.17"
+    "@openui5/sap.ui.core": "npm:1.146.0"
     "@sap-theming/theming-base-content": "npm:11.34.1"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents-tools": "npm:2.21.0-rc.2"
@@ -7771,7 +7771,7 @@ __metadata:
     "@babel/core": "npm:^7.24.6"
     "@babel/generator": "npm:^7.24.6"
     "@babel/parser": "npm:^7.24.6"
-    "@openui5/sap.ui.core": "npm:1.120.17"
+    "@openui5/sap.ui.core": "npm:1.146.0"
     "@types/openui5": "npm:^1.113.0"
     "@ui5/webcomponents-base": "npm:2.21.0-rc.2"
     "@ui5/webcomponents-tools": "npm:2.21.0-rc.2"
