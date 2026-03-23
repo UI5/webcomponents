@@ -150,6 +150,17 @@ class Banner extends UI5Element {
 	@slot({ type: HTMLElement, "default": true })
 	content!: DefaultSlot<HTMLElement>;
 
+	/**
+	 * Defines action buttons displayed to the right of the salutation and date area.
+	 *
+	 * Can contain buttons, links, or other interactive elements that provide
+	 * quick access to relevant actions directly from the banner header.
+	 *
+	 * @public
+	 */
+	@slot()
+	headerActions!: Slot<HTMLElement>;
+
 	get _backgroundImageStyle(): Record<string, string> | undefined {
 		if (this.backgroundImage) {
 			return { "background-image": `url('${this.backgroundImage}')` };
@@ -167,6 +178,10 @@ class Banner extends UI5Element {
 
 	get _hasEndContent() {
 		return this.endContent.length > 0;
+	}
+
+	get _hasHeaderActions() {
+		return this.headerActions.length > 0;
 	}
 }
 

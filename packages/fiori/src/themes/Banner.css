@@ -36,8 +36,31 @@
 /* Header (Salutation + Date) */
 .ui5-banner-header {
 	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.ui5-banner-header-text {
+	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+	min-width: 0;
+}
+
+.ui5-banner-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+	/* Override button color tokens so Transparent-design buttons are readable on the banner background */
+	--sapButton_Lite_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Hover_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Active_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Hover_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 15%, transparent);
+	--sapButton_Lite_Active_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 25%, transparent);
+	--sapButton_IconColor: var(--_ui5_banner_text_color);
 }
 
 .ui5-banner-salutation {

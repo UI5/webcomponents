@@ -69,6 +69,47 @@ html, body {
 	padding: 0.5rem 0;
 }
 
+/* Interactive Controls panel (Section 10) */
+.controls-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	background: var(--sapGroup_ContentBackground);
+	border: 1px solid var(--sapGroup_TitleBorderColor);
+	border-radius: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.controls-row {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.controls-label {
+	font-size: var(--sapFontSize);
+	font-weight: bold;
+	color: var(--sapContent_LabelColor);
+	white-space: nowrap;
+}
+
+.toggle-label {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: var(--sapFontSize);
+	color: var(--sapTextColor);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.controls-separator {
+	color: var(--sapGroup_TitleBorderColor);
+	font-size: 1.2rem;
+}
+
 /* Scrollable content for scroll-away demo */
 .scroll-container {
 	height: 500px;

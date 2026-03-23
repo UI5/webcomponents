@@ -12,17 +12,23 @@ export default function BannerTemplate(this: Banner) {
 		>
 			<div class="ui5-banner-content" part="content">
 				<div class="ui5-banner-header">
-					{this.dateText &&
-						<div class="ui5-banner-date">
-							{this.dateText}
-						</div>
-					}
+					<div class="ui5-banner-header-text">
+						{this.dateText &&
+							<div class="ui5-banner-date">
+								{this.dateText}
+							</div>
+						}
 
-					{this.salutationText &&
-						<div class="ui5-banner-salutation">
-							{this.salutationText}
-						</div>
-					}
+						{this.salutationText &&
+							<div class="ui5-banner-salutation">
+								{this.salutationText}
+							</div>
+						}
+					</div>
+
+					<div class="ui5-banner-header-actions">
+						<slot name="headerActions"></slot>
+					</div>
 				</div>
 
 				{this._hasContent &&

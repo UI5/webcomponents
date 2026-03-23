@@ -234,24 +234,40 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 10. Dynamic Property Controls          -->
+		<!-- 10. Interactive Controls               -->
 		<!-- ====================================== -->
 		<section>
 			<h2>10. Interactive Controls</h2>
-			<p>Change the banner properties dynamically.</p>
+			<p>All banner options can be toggled on/off. The salutation is mandatory and cannot be hidden.</p>
 
-			<div class="controls-bar">
-				<ui5-button id="btn-change-salutation">Change Salutation</ui5-button>
-				<ui5-button id="btn-toggle-date">Toggle Date</ui5-button>
-				<ui5-button id="btn-layout-full">FullWidth</ui5-button>
-				<ui5-button id="btn-layout-half">HalfWidth</ui5-button>
-				<ui5-button id="btn-layout-twothirds">TwoThirds</ui5-button>
+			<div class="controls-panel">
+				<div class="controls-row">
+					<span class="controls-label">Toggle Options:</span>
+					<label class="toggle-label"><input type="checkbox" id="chk-date" checked> Date Text</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-bg"> Background Image</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-header-actions" checked> Header Actions</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-start" checked> Start Content</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-end" checked> End Content</label>
+				</div>
+				<div class="controls-row">
+					<span class="controls-label">Salutation:</span>
+					<ui5-button id="btn-change-salutation">Cycle Name</ui5-button>
+					<span class="controls-separator">|</span>
+					<span class="controls-label">Layout:</span>
+					<ui5-button id="btn-layout-full">FullWidth</ui5-button>
+					<ui5-button id="btn-layout-half">HalfWidth</ui5-button>
+					<ui5-button id="btn-layout-twothirds">TwoThirds</ui5-button>
+				</div>
 			</div>
 
 			<ui5-banner id="banner-dynamic"
 				salutation-text="Hello, User"
 				date-text="Thursday, March 6, 2026"
 				layout="FullWidth">
+
+				<ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
+				<ui5-button slot="headerActions" icon="bell">Notifications</ui5-button>
+
 				<div slot="startContent" class="kpi-card">
 					<span class="kpi-label">Start Block</span>
 					<span class="kpi-value">100</span>
@@ -265,33 +281,62 @@
 
 	</div>
 
+	<!-- Hidden holder for toggled-off slotted elements -->
+	<div id="slot-holder" style="display: none;"></div>
+
 	<script>
-		// Dynamic property controls
 		var dynamicBanner = document.getElementById("banner-dynamic");
+		var slotHolder = document.getElementById("slot-holder");
 		var names = ["John", "Maria", "Thomas", "Lisa", "Alex", "Sarah", "David"];
 		var nameIndex = 0;
 
+		// --- Salutation (mandatory: cycle through names, never hidden) ---
 		document.getElementById("btn-change-salutation").addEventListener("click", function () {
 			nameIndex = (nameIndex + 1) % names.length;
 			dynamicBanner.salutationText = "Hello, " + names[nameIndex];
 		});
 
-		document.getElementById("btn-toggle-date").addEventListener("click", function () {
-			if (dynamicBanner.dateText) {
-				dynamicBanner.dateText = "";
-			} else {
-				dynamicBanner.dateText = "Thursday, March 6, 2026";
-			}
+		// --- Date Text toggle ---
+		document.getElementById("chk-date").addEventListener("change", function () {
+			dynamicBanner.dateText = this.checked ? "Thursday, March 6, 2026" : "";
 		});
 
+		// --- Background Image toggle ---
+		document.getElementById("chk-bg").addEventListener("change", function () {
+			dynamicBanner.backgroundImage = this.checked
+				? "https://wallpapershome.com/images/pages/pic_h/17796.jpg"
+				: undefined;
+		});
+
+		// --- Slot toggle helper: moves elements between the banner and the hidden holder ---
+		function toggleSlot(checkboxId, slotName) {
+			document.getElementById(checkboxId).addEventListener("change", function () {
+				if (this.checked) {
+					[...slotHolder.querySelectorAll("[data-slot='" + slotName + "']")].forEach(function (el) {
+						el.setAttribute("slot", slotName);
+						dynamicBanner.appendChild(el);
+					});
+				} else {
+					[...dynamicBanner.querySelectorAll("[slot='" + slotName + "']")].forEach(function (el) {
+						el.dataset.slot = slotName;
+						el.removeAttribute("slot");
+						slotHolder.appendChild(el);
+					});
+				}
+			});
+		}
+
+		toggleSlot("chk-header-actions", "headerActions");
+		toggleSlot("chk-start", "startContent");
+		toggleSlot("chk-end", "endContent");
+
+		// --- Layout buttons ---
 		document.getElementById("btn-layout-full").addEventListener("click", function () {
 			dynamicBanner.layout = "FullWidth";
 		});
-
 		document.getElementById("btn-layout-half").addEventListener("click", function () {
 			dynamicBanner.layout = "HalfWidth";
 		});
-
 		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
 			dynamicBanner.layout = "TwoThirds";
 		});
