@@ -55,11 +55,6 @@ class TableRow extends TableRowBase<TableCell> {
 		click: void
 	}
 
-	constructor() {
-		super();
-		this.addEventListener("click", this._interceptClick);
-	}
-
 	/**
 	 * Defines the cells of the component.
 	 *
@@ -147,14 +142,6 @@ class TableRow extends TableRowBase<TableCell> {
 	@query("#actions-cell")
 	_actionsCell?: TableCell;
 
-	_interceptClick = (e: Event) => {
-		if (e instanceof CustomEvent) {
-			return;
-		}
-		e.stopImmediatePropagation();
-		this._table?._onEvent(e);
-	};
-
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
@@ -191,7 +178,7 @@ class TableRow extends TableRowBase<TableCell> {
 
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
-			this._handleClick();
+			this._handleClick(true);
 		}
 	}
 
@@ -199,16 +186,17 @@ class TableRow extends TableRowBase<TableCell> {
 		if (e instanceof CustomEvent) {
 			return;
 		}
-
-		this._handleClick();
+		this._handleClick(false);
 	}
 
-	_handleClick() {
+	_handleClick(fireClick = false) {
 		if (this === getActiveElement()) {
 			if (this._isSelectable && !this._hasSelector) {
 				this._onSelectionChange();
 			} else 	if (this.interactive || this._isNavigable) {
-				this.fireDecoratorEvent("click");
+				if (fireClick) {
+					this.fireDecoratorEvent("click");
+				}
 				this._table?._onRowClick(this);
 			}
 		}

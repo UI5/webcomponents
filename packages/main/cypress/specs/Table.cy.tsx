@@ -1004,18 +1004,27 @@ describe("Table - Interactive Rows", () => {
 		cy.get("#row1").invoke("on", "click", cy.stub().as("row1ClickSpy"));
 		cy.get("#row2").invoke("on", "click", cy.stub().as("row2ClickSpy"));
 
-		// Non-interactive row should not fire click
+		// Non-interactive row should not fire custom click
 		cy.get("#row1").realClick();
-		cy.get("@row1ClickSpy").should("not.have.been.called");
+		cy.get("@row1ClickSpy").then(stub => {
+			const customClicks = (stub as unknown as Cypress.Agent<sinon.SinonStub>).getCalls().filter(call => call.args[0].originalEvent instanceof CustomEvent);
+			expect(customClicks).to.have.length(0);
+		});
 
-		// Interactive row fires click on mouse click
+		// Interactive row does not fire custom click on mouse click (native click bubbles normally)
 		cy.get("#row2").realClick();
-		cy.get("@row2ClickSpy").should("have.been.calledOnce");
-		cy.get("@row2ClickSpy").invoke("getCall", 0).its("args.0").should("have.property", "detail");
+		cy.get("@row2ClickSpy").then(stub => {
+			const customClicks = (stub as unknown as Cypress.Agent<sinon.SinonStub>).getCalls().filter(call => call.args[0].originalEvent instanceof CustomEvent);
+			expect(customClicks).to.have.length(0);
+		});
 
-		// Interactive row fires click on Enter key
+		// Interactive row fires custom click on Enter key
 		cy.get("#row2").realPress("Enter");
-		cy.get("@row2ClickSpy").should("have.been.calledTwice");
+		cy.get("@row2ClickSpy").then(stub => {
+			const customClicks = (stub as unknown as Cypress.Agent<sinon.SinonStub>).getCalls().filter(call => call.args[0].originalEvent instanceof CustomEvent);
+			expect(customClicks).to.have.length(1);
+			expect(customClicks[0].args[0].originalEvent).to.have.property("detail");
+		});
 	});
 });
 
