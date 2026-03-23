@@ -1,4 +1,5 @@
 import type SliderScale from "./SliderScale.js";
+import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 
 export default function SliderScaleTemplate(this: SliderScale) {
 	return (
@@ -25,7 +26,26 @@ export default function SliderScaleTemplate(this: SliderScale) {
 					))}
 				</div>
 			)}
-			<div class="ui5-slider-scale-progress" part="progress" style={this._progressStyle}></div>
+			<div
+				class={{
+					"ui5-slider-scale-progress": true,
+					"ui5-slider-progress": true,
+					"ui5-slider-progress--focused": this.progressFocused || this.progressPressed,
+				}}
+				part="progress"
+				style={this._progressStyle}
+				tabIndex={this.progressFocusable ? this.progressTabIndex : undefined}
+				role={this.progressRole as AriaRole | undefined}
+				aria-orientation={this.progressRole ? "horizontal" : undefined}
+				aria-valuemin={this.progressRole ? this.min : undefined}
+				aria-valuemax={this.progressRole ? this.max : undefined}
+				aria-valuenow={this.progressAriaValueNow}
+				aria-valuetext={this.progressAriaValueText}
+				aria-label={this.progressAriaLabel}
+				aria-disabled={this.progressAriaDisabled}
+				onFocusIn={this.onProgressFocusIn}
+				onFocusOut={this.onProgressFocusOut}
+			></div>
 			<slot></slot>
 		</div>
 	);

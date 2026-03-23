@@ -66,6 +66,41 @@
 	border-radius: .25rem;
 }
 
+/* Progress bar focus styling - used by RangeSlider for selected range */
+.ui5-slider-scale-progress:focus {
+	outline: none;
+}
+
+.ui5-slider-scale-progress:focus::after,
+.ui5-slider-scale-progress.ui5-slider-progress--focused::after {
+	border: 0.125rem solid var(--sapContent_FocusColor);
+	border-radius: 0.5rem;
+	content: "";
+	display: var(--_ui5_range_slider_progress_focus_display);
+	position: absolute;
+	top: var(--_ui5_range_slider_progress_focus_top);
+	left: var(--_ui5_range_slider_progress_focus_left);
+	right: var(--_ui5_range_slider_progress_focus_right);
+	padding: var(--_ui5_range_slider_progress_focus_padding);
+	height: var(--_ui5_range_slider_progress_focus_height);
+	box-sizing: border-box;
+}
+
+/* Legacy progress focus styling (for backward compatibility) */
+.ui5-slider-scale-progress:focus::before,
+.ui5-slider-scale-progress.ui5-slider-progress--focused::before {
+	display: var(--_ui5_range_slider_legacy_progress_focus_display);
+	content: '';
+	position: absolute;
+	width: var(--_ui5_range_slider_focus_outline_width);
+	border: var(--_ui5_slider_progress_outline);
+	border-radius: var(--_ui5_range_slider_focus_outline_radius);
+	top: var(--_ui5_slider_progress_outline_offset);
+	height: var(--_ui5_slider_outer_height);
+	box-sizing: border-box;
+	left: var(--_ui5_slider_progress_outline_offset_left);
+}
+
 .ui5-slider-scale-root::before {
 	content: "";
 	position: absolute;

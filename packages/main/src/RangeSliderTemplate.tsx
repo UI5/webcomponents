@@ -1,128 +1,170 @@
-import directionArrows from "@ui5/webcomponents-icons/dist/direction-arrows.js";
 import type RangeSlider from "./RangeSlider.js";
-import Icon from "./Icon.js";
-import SliderBaseTemplate from "./SliderBaseTemplate.js";
 import SliderTooltip from "./SliderTooltip.js";
+import SliderHandle from "./SliderHandle.js";
+import SliderScale from "./SliderScale.js";
+
+const _handlePosition = (min: number, max: number, value: number) => {
+	const range = max - min;
+	const position = ((value - min) / range) * 100;
+	return position;
+};
+
+const startHandle = (slider: RangeSlider) => {
+	const position = _handlePosition(slider.min, slider.max, slider.startValue);
+
+	return (
+		<>
+			<SliderHandle
+				value={slider.startValue}
+				min={slider.min}
+				max={slider.max}
+				tabIndex={slider._tabIndex}
+				disabled={slider.disabled}
+				handleType="start"
+				aria-orientation="horizontal"
+				part="handle"
+				exportparts="icon: handle-icon"
+				role="slider"
+				aria-valuemin={slider.min}
+				aria-valuemax={slider.max}
+				aria-valuenow={slider.startValue}
+				aria-labelledby={slider._ariaLabelledByStartHandleText}
+				aria-disabled={slider._ariaDisabled}
+				aria-describedby={slider._ariaDescribedByHandleText}
+				aria-keyshortcuts={slider._ariaKeyshortcuts}
+				onFocusIn={slider._onfocusin}
+				onFocusOut={slider._onfocusout}
+				style={{
+					"inset-inline-start": `clamp(0%, ${position}%, 100%)`,
+				}}
+			></SliderHandle>
+
+			{startTooltip(slider)}
+		</>
+	);
+};
+
+const endHandle = (slider: RangeSlider) => {
+	const position = _handlePosition(slider.min, slider.max, slider.endValue);
+
+	return (
+		<>
+			<SliderHandle
+				value={slider.endValue}
+				min={slider.min}
+				max={slider.max}
+				tabIndex={slider._tabIndex}
+				disabled={slider.disabled}
+				handleType="end"
+				aria-orientation="horizontal"
+				part="handle"
+				exportparts="icon: handle-icon"
+				role="slider"
+				aria-valuemin={slider.min}
+				aria-valuemax={slider.max}
+				aria-valuenow={slider.endValue}
+				aria-labelledby={slider._ariaLabelledByEndHandleText}
+				aria-disabled={slider._ariaDisabled}
+				aria-describedby={slider._ariaDescribedByHandleText}
+				aria-keyshortcuts="F2"
+				onFocusIn={slider._onfocusin}
+				onFocusOut={slider._onfocusout}
+				style={{
+					"inset-inline-start": `clamp(0%, ${position}%, 100%)`,
+				}}
+			></SliderHandle>
+
+			{endTooltip(slider)}
+		</>
+	);
+};
+
+const startTooltip = (slider: RangeSlider) => (
+	<SliderTooltip
+		open={slider._tooltipsOpen}
+		value={slider.tooltipStartValue}
+		valueState={slider.tooltipStartValueState}
+		min={slider.min}
+		max={slider.max}
+		data-sap-ui-start-value
+		editable={slider.editableTooltip}
+		followRef={slider._startHandle}
+		onChange={slider._onTooltipChange}
+		onKeyDown={slider._onTooltipKeydown}
+		onFocusChange={slider._onTooltipFocusChange}
+		onOpen={slider._onTooltipOpen}
+		onInput={slider._onTooltipInput}
+	>
+	</SliderTooltip>
+);
+
+const endTooltip = (slider: RangeSlider) => (
+	<SliderTooltip
+		open={slider._tooltipsOpen}
+		value={slider.tooltipEndValue}
+		valueState={slider.tooltipEndValueState}
+		min={slider.min}
+		max={slider.max}
+		data-sap-ui-end-value
+		editable={slider.editableTooltip}
+		followRef={slider._endHandle}
+		onChange={slider._onTooltipChange}
+		onKeyDown={slider._onTooltipKeydown}
+		onFocusChange={slider._onTooltipFocusChange}
+		onOpen={slider._onTooltipOpen}
+		onInput={slider._onTooltipInput}
+	>
+	</SliderTooltip>
+);
 
 export default function RangeSliderTemplate(this: RangeSlider) {
-	return SliderBaseTemplate.call(this, {
-		handlesAriaText,
-		progressBar,
-		handles,
-	});
-}
-
-export function handlesAriaText(this: RangeSlider) {
-	return (<>
-		<span id="ui5-slider-startHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.startHandleText}</span>
-		<span id="ui5-slider-endHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.endHandleText}</span>
-	</>);
-}
-
-export function progressBar(this: RangeSlider) {
 	return (
-		<div
-			class="ui5-slider-progress-container"
-			part="progress-container"
-		>
-			<div class="ui5-slider-progress"
-				part="progress-bar"
-				style={this.styles.progress}
-				onFocusIn={this._onfocusin}
-				onFocusOut={this._onfocusout}
-				role="slider"
-				tabIndex={this._tabIndex}
-				aria-orientation="horizontal"
-				aria-valuemin={this.min}
-				aria-valuemax={this.max}
-				aria-valuenow={this._ariaValueNow}
-				aria-valuetext={`From ${this.startValue} to ${this.endValue}`}
-				aria-label={this._ariaLabel}
-				aria-disabled={this._ariaDisabled}
-			></div>
-		</div>
+		<>
+			<div
+				class="ui5-slider-evo-root"
+				part="root-container"
+				onMouseDown={this._onmousedown}
+				onTouchStart={this._onmousedown}
+				onMouseOver={this._onmouseover}
+				onMouseOut={this._onmouseout}
+				onKeyDown={this._onkeydown}
+				onKeyUp={this._onkeyup}
+			>
+				{/* Hidden accessibility text for handle descriptions */}
+				<span id="ui5-slider-startHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.startHandleText}</span>
+				<span id="ui5-slider-endHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.endHandleText}</span>
+				{this.accessibleName && <span id="ui5-slider-accName" class="ui5-hidden-text">{this.accessibleName}</span>}
+
+				<SliderScale
+					startValue={this.startValue}
+					endValue={this.endValue}
+					min={this.min}
+					max={this.max}
+					step={this._effectiveStep}
+					showTickmarks={this.showTickmarks}
+					labelInterval={this.labelInterval}
+					progressFocusable={true}
+					progressTabIndex={this._tabIndex}
+					progressRole="slider"
+					progressAriaValueNow={this._ariaValueNow}
+					progressAriaValueText={`From ${this.startValue} to ${this.endValue}`}
+					progressAriaLabel={this._ariaLabel}
+					progressAriaDisabled={this._ariaDisabled}
+					progressPressed={this.rangePressed}
+					progressFocused={this._progressFocused}
+					onProgressFocusIn={this._onfocusin}
+					onProgressFocusOut={this._onfocusout}
+					part="scale"
+					exportparts="inner: scale-inner, progress: progress-bar"
+				>
+					{startHandle(this)}
+					{endHandle(this)}
+
+					{this.editableTooltip && <>
+						<span id="ui5-slider-InputDesc" class="ui5-hidden-text">{this._ariaDescribedByInputText}</span>
+					</>}
+				</SliderScale>
+			</div>
+		</>
 	);
-}
-
-export function handles(this: RangeSlider) {
-	return (<>
-		<div class="ui5-slider-handle-container" style={this.styles.startHandle} part="handle-container">
-			<div class="ui5-slider-handle ui5-slider-handle--start"
-				part="handle"
-				onFocusIn={this._onfocusin}
-				onFocusOut={this._onfocusout}
-				role="slider"
-				tabindex={this._tabIndex}
-				aria-orientation="horizontal"
-				aria-valuemin={this.min}
-				aria-valuemax={this.max}
-				aria-valuenow={this.startValue}
-				aria-labelledby={this._ariaLabelledByStartHandleText}
-				aria-disabled={this._ariaDisabled}
-				aria-describedby={this._ariaDescribedByHandleText}
-				aria-keyshortcuts={this._ariaKeyshortcuts}
-			>
-				<Icon name={directionArrows}
-					mode="Decorative"
-					slider-icon
-				></Icon>
-			</div>
-
-			<SliderTooltip
-				open={this._tooltipsOpen}
-				value={this.tooltipStartValue}
-				valueState={this.tooltipStartValueState}
-				min={this.min}
-				max={this.max}
-				data-sap-ui-start-value
-				editable={this.editableTooltip}
-				followRef={this._startHandle}
-				onChange={this._onTooltipChange}
-				onKeyDown={this._onTooltipKeydown}
-				onFocusChange={this._onTooltipFocusChange}
-				onOpen={this._onTooltipOpen}
-				onInput={this._onTooltipInput}
-			>
-			</SliderTooltip>
-		</div>
-		<div class="ui5-slider-handle-container" style={this.styles.endHandle} part="handle-container">
-			<div class="ui5-slider-handle ui5-slider-handle--end"
-				part="handle"
-				onFocusIn={this._onfocusin}
-				onFocusOut={this._onfocusout}
-				role="slider"
-				tabIndex={this._tabIndex}
-				aria-orientation="horizontal"
-				aria-valuemin={this.min}
-				aria-valuemax={this.max}
-				aria-valuenow={this.endValue}
-				aria-labelledby={this._ariaLabelledByEndHandleText}
-				aria-describedby={this._ariaDescribedByHandleText}
-				aria-disabled={this._ariaDisabled}
-				aria-keyshortcuts="F2"
-			>
-				<Icon name={directionArrows}
-					mode="Decorative"
-					slider-icon
-				></Icon>
-			</div>
-
-			<SliderTooltip
-				open={this._tooltipsOpen}
-				value={this.tooltipEndValue}
-				valueState={this.tooltipEndValueState}
-				min={this.min}
-				max={this.max}
-				data-sap-ui-end-value
-				editable={this.editableTooltip}
-				followRef={this._endHandle}
-				onChange={this._onTooltipChange}
-				onKeyDown={this._onTooltipKeydown}
-				onFocusChange={this._onTooltipFocusChange}
-				onOpen={this._onTooltipOpen}
-				onInput={this._onTooltipInput}
-			>
-			</SliderTooltip>
-		</div>
-	</>);
 }

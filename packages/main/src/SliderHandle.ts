@@ -80,6 +80,15 @@ class SliderHandle extends UI5Element {
 	@property()
 	orientation: `${SliderScaleOrientation}` = "Horizontal";
 
+	/**
+	 * Defines the type of handle for styling purposes.
+	 * Used by RangeSlider to differentiate between start and end handles.
+	 *
+	 * @private
+	 */
+	@property()
+	handleType: "start" | "end" | "single" = "single";
+
 	getFocusDomRef(): HTMLElement | undefined {
 		return this;
 	}

@@ -4,6 +4,21 @@
 
 	--_ui5_slider_scale_dots_distance: -1rem;
 	--_ui5_slider_scale_tickmark_height: .5rem;
+
+	/* Progress bar focus styling - used by RangeSlider for selected range */
+	--_ui5_range_slider_progress_focus_display: none;
+	--_ui5_range_slider_progress_focus_top: -1.063rem;
+	--_ui5_range_slider_progress_focus_left: -1.438rem;
+	--_ui5_range_slider_progress_focus_right: -1.438rem;
+	--_ui5_range_slider_progress_focus_padding: 0 1.375rem 0 1.438rem;
+	--_ui5_range_slider_progress_focus_height: 2rem;
+	--_ui5_range_slider_legacy_progress_focus_display: block;
+	--_ui5_range_slider_focus_outline_width: 100%;
+	--_ui5_slider_progress_outline: 0.0625rem dotted var(--sapContent_FocusColor);
+	--_ui5_range_slider_focus_outline_radius: 0;
+	--_ui5_slider_progress_outline_offset: -0.8125rem;
+	--_ui5_slider_outer_height: 1.6875rem;
+	--_ui5_slider_progress_outline_offset_left: 0;
 }
 
 @container style(--ui5_content_density: compact) {

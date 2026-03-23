@@ -391,7 +391,7 @@ abstract class SliderBase extends UI5Element {
 		const labelItemsParent = this.shadowRoot!.querySelector(".ui5-slider-labels") as HTMLElement;
 
 		const labelItemsSumWidth = this._labels.length * childWidthPx; // all labels width
-		const labelItemsParentWidth = labelItemsParent.clientWidth; // label parent width
+		const labelItemsParentWidth = labelItemsParent && labelItemsParent.clientWidth; // label parent width
 
 		this._labelsOverlapping = labelItemsParentWidth < labelItemsSumWidth;
 	}

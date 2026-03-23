@@ -93,7 +93,7 @@ type AffectedValue = "startValue" | "endValue";
 	languageAware: true,
 	formAssociated: true,
 	template: RangeSliderTemplate,
-	styles: [SliderBase.styles, rangeSliderStyles],
+	styles: [rangeSliderStyles],
 })
 class RangeSlider extends SliderBase implements IFormInputElement {
 	/**
@@ -146,6 +146,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	rangePressed = false;
 
 	@property({ type: Boolean })
+	_progressFocused = false;
+
+	@property({ type: Boolean })
 	_isStartValueValid = false;
 
 	@property({ type: Boolean })
@@ -192,6 +195,28 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._stateStorage.endValue = undefined;
 		this._lastValidStartValue = this.min.toString();
 		this._lastValidEndValue = this.max.toString();
+		this._onDocumentClick = this._onDocumentClick.bind(this);
+	}
+
+	onEnterDOM() {
+		document.addEventListener("mousedown", this._onDocumentClick, true);
+	}
+
+	onExitDOM() {
+		document.removeEventListener("mousedown", this._onDocumentClick, true);
+	}
+
+	/**
+	 * Handles document-level clicks to clear progress focus when clicking outside.
+	 * @private
+	 */
+	_onDocumentClick(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		const clickedInside = e.composedPath().includes(this);
+
+		if (!clickedInside && this._progressFocused) {
+			this._progressFocused = false;
+		}
 	}
 
 	get _ariaDisabled() {
@@ -326,6 +351,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._setAffectedValue(undefined);
 		this._startValueInitial = undefined;
 		this._endValueInitial = undefined;
+		this._progressFocused = false;
 
 		if (this.showTooltip && !(e.relatedTarget as HTMLInputElement)?.hasAttribute("ui5-slider-tooltip")) {
 			this._tooltipsOpen = false;
@@ -481,15 +507,30 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			return;
 		}
 
-		// Calculate the new value from the press position of the event
+		// Pre-calculate whether the press is in the current range before handleDownBase
+		// This is needed so focusInnerElement() knows where to focus
+		const ctor = this.constructor as typeof RangeSlider;
+		const pageX = ctor.getPageXValueFromEvent(e);
+		const tempValue = ctor.getValueFromInteraction(e, this._effectiveStep, this._effectiveMin, this._effectiveMax, this.getBoundingClientRect(), this.directionStart);
+		const isInRange = tempValue >= this.startValue && tempValue <= this.endValue;
+		const startHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='start']");
+		const endHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='end']");
+		const inStartHandle = startHandle && pageX >= startHandle.getBoundingClientRect().left && pageX <= startHandle.getBoundingClientRect().right;
+		const inEndHandle = endHandle && pageX >= endHandle.getBoundingClientRect().left && pageX <= endHandle.getBoundingClientRect().right;
+
+		if (isInRange && !inStartHandle && !inEndHandle) {
+			this._setIsPressInCurrentRange(true);
+			this._progressFocused = true;
+			this.rangePressed = true;
+		} else {
+			this._progressFocused = false;
+			this.rangePressed = false;
+		}
+
 		const newValue = this.handleDownBase(e);
 
-		// Determine the rest of the needed details from the start of the interaction.
 		this._saveInteractionStartData(e, newValue);
 
-		this.rangePressed = this._isPressInCurrentRange;
-
-		// Do not yet update the RangeSlider if press is in range or over a handle.
 		if (this._isPressInCurrentRange || this._handeIsPressed) {
 			this._handeIsPressed = false;
 			return;
@@ -509,7 +550,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_saveInteractionStartData(e: TouchEvent | MouseEvent, newValue: number) {
-		const progressBarDom = this.shadowRoot!.querySelector(".ui5-slider-progress")!.getBoundingClientRect();
+		const progressBarDom = this._progressBar?.getBoundingClientRect();
 
 		// Save the state of the value properties on the start of the interaction
 		this._startValueAtBeginningOfAction = this.startValue;
@@ -521,7 +562,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		// Which element of the Range Slider is pressed and which value property to be modified on further interaction
 		this._pressTargetAndAffectedValue(this._initialPageXPosition, newValue);
 		// Use the progress bar to save the initial coordinates of the start-handle when the interaction begins.
-		this._initialStartHandlePageX = this.directionStart === "left" ? progressBarDom.left : progressBarDom.right;
+		if (progressBarDom) {
+			this._initialStartHandlePageX = this.directionStart === "left" ? progressBarDom.left : progressBarDom.right;
+		}
 	}
 
 	/**
@@ -606,8 +649,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_pressTargetAndAffectedValue(clientX: number, value: number) {
-		const startHandle = this.shadowRoot!.querySelector(".ui5-slider-handle--start")!;
-		const endHandle = this.shadowRoot!.querySelector(".ui5-slider-handle--end")!;
+		const startHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='start']")!;
+		const endHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='end']")!;
 
 		// Check if the press point is in the bounds of any of the Range Slider handles
 		const handleStartDomRect = startHandle.getBoundingClientRect();
@@ -690,16 +733,16 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const affectedValue = this._valueAffected;
 
 		if (this._isPressInCurrentRange || !affectedValue) {
-			this._progressBar.focus();
+			this._progressBar?.focus();
 		}
 
 		if ((affectedValue === "startValue" && !isReversed) || (affectedValue === "endValue" && isReversed)) {
-			this._startHandle.focus();
+			this._startHandle?.focus();
 			this.bringToFrontTooltip("start");
 		}
 
 		if ((affectedValue === "endValue" && !isReversed) || (affectedValue === "startValue" && isReversed)) {
-			this._endHandle.focus();
+			this._endHandle?.focus();
 			this.bringToFrontTooltip("end");
 		}
 	}
@@ -1004,15 +1047,16 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	get _startHandle() {
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-slider-handle--start")!;
+		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='start']")!;
 	}
 
 	get _endHandle() {
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-slider-handle--end")!;
+		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='end']")!;
 	}
 
 	get _progressBar() {
-		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-slider-progress")!;
+		const sliderScale = this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-scale]");
+		return sliderScale?.shadowRoot?.querySelector<HTMLElement>(".ui5-slider-progress") ?? null;
 	}
 
 	get _ariaLabelledByStartHandleText() {

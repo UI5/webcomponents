@@ -7,4 +7,16 @@
 	--_ui5_slider_scale_progress_height: 100%;
 	--_ui5_slider_scale_progress_top: 0;
 	--_ui5_slider_scale_dots_display: inline-block;
+
+	/* Progress bar focus styling - Horizon theme overrides */
+	--_ui5_range_slider_legacy_progress_focus_display: none;
+	--_ui5_range_slider_progress_focus_display: block;
+	--_ui5_slider_handle_height: 1.5rem;
+	--_ui5_slider_handle_width: 2rem;
+	--_ui5_slider_progress_border_width: 0.0625rem;
+	--_ui5_range_slider_progress_focus_height: calc(var(--_ui5_slider_handle_height) + 0.375rem);
+	--_ui5_range_slider_progress_focus_top: calc(-1 * ((var(--_ui5_slider_handle_height) / 2) + 0.1875rem) + var(--_ui5_slider_progress_border_width) + 0.0625rem);
+	--_ui5_range_slider_progress_focus_left: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
+	--_ui5_range_slider_progress_focus_right: calc(-1 * ((var(--_ui5_slider_handle_width) / 2) + 0.1875rem + var(--_ui5_slider_progress_border_width)));
+	--_ui5_range_slider_progress_focus_padding: 0 1rem 0 1rem;
 }

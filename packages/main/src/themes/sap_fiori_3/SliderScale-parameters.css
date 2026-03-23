@@ -10,4 +10,15 @@
 	/* Fiori 3 specific */
 	--_ui5_slider_scale_dots_display: none;
 	--_ui5_slider_scale_tickmark_height: 1rem;
+
+	/* Handle dimensions for focus calculations */
+	--_ui5_slider_handle_width: 1.875rem;
+	--_ui5_slider_handle_height: 1.875rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_handle_width: 1.5rem;
+		--_ui5_slider_handle_height: 1.5rem;
+	}
 }

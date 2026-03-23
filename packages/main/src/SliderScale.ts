@@ -110,6 +110,88 @@ class SliderScale extends UI5Element {
 	labelInterval = 0;
 
 	/**
+	 * Enables focus capability on the progress bar.
+	 * Used by RangeSlider for range selection dragging.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressFocusable = false;
+
+	/**
+	 * Tab index for the progress bar when focusable.
+	 * @default -1
+	 * @private
+	 */
+	@property({ type: Number })
+	progressTabIndex = -1;
+
+	/**
+	 * ARIA role for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressRole?: string;
+
+	/**
+	 * ARIA aria-valuenow for the progress bar.
+	 * @private
+	 */
+	@property({ type: Number })
+	progressAriaValueNow?: number;
+
+	/**
+	 * ARIA aria-valuetext for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressAriaValueText?: string;
+
+	/**
+	 * ARIA aria-label for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressAriaLabel?: string;
+
+	/**
+	 * ARIA aria-disabled for the progress bar.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressAriaDisabled?: boolean;
+
+	/**
+	 * Indicates that the progress bar is being pressed/dragged.
+	 * Used to show the focus outline during mouse interaction.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressPressed = false;
+
+	/**
+	 * Indicates that the progress bar should show as focused.
+	 * Set by parent component (RangeSlider) when the progress bar has focus.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressFocused = false;
+
+	/**
+	 * Event handler for focusin on the progress bar.
+	 * @private
+	 */
+	onProgressFocusIn?: (e: FocusEvent) => void;
+
+	/**
+	 * Event handler for focusout on the progress bar.
+	 * @private
+	 */
+	onProgressFocusOut?: (e: FocusEvent) => void;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Number })
