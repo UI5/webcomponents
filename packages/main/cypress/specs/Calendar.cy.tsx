@@ -2135,7 +2135,7 @@ describe("Calendar - Multiple Months Mode", () => {
 			cy.get<Calendar>("#cal")
 				.then($cal => {
 					const selectedDates = $cal[0].selectedDates;
-					expect(selectedDates).to.have.length.greaterThan(1);
+					expect(selectedDates).to.have.length(2);
 				});
 		});
 	});

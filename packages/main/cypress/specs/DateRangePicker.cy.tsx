@@ -1035,7 +1035,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.find("[ui5-calendar]")
 				.shadow()
 				.find(".ui5-calheader-middlebtn")
-				.should("have.length.greaterThan", 1);
+				.should("have.length", 6);
 		});
 
 		it("should dynamically toggle showTwoMonths after initial render", () => {
@@ -1389,7 +1389,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerGetCalendarHeaders()
 				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.focus();
+				.realClick()
+				.should("be.focused");
 
 			cy.realPress("Space");
 

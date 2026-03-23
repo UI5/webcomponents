@@ -295,14 +295,8 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * that would disregard the user selection.
 	 */
 	_cancelClick() {
-		this._clearValue();
-		this._togglePicker();
-	}
-
-	_clearValue() {
 		this._tempValue = "";
-		this.value = "";
-		this._dateTimeInput.value = "";
+		this._togglePicker();
 	}
 
 	/**

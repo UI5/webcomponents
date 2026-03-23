@@ -31,7 +31,7 @@
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_secondary_text_padding_block: 0 0.5rem;
 	--_ui5_daypicker_two_calendar_item_selected_focus_margin_bottom: 0;
 	--_ui5_daypicker_two_calendar_item_selected_focus_padding_right: 0.4375rem;
-	--_ui5_calendar_multiple_months_height: calc(var(--_ui5_calendar_height));
+	--_ui5_calendar_multiple_months_height: var(--_ui5_calendar_height);
 
 	/* CalendarLegend */
 	--_ui5-calendar-legend-item-root-focus-offset: -0.125rem;

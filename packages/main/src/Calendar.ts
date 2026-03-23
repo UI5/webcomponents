@@ -296,9 +296,6 @@ class Calendar extends CalendarPart {
 	@property({ type: Boolean })
 	_showTwoMonths = false;
 
-	@property({ type: Boolean })
-	stretch = false;
-
 	/**
 	 * Which picker is currently visible to the user: day/month/year/yearRange
 	 * @private
