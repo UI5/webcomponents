@@ -20,10 +20,12 @@ export default function SwitchTemplate(this: Switch) {
 			aria-label={this.ariaLabelText}
 			aria-checked={this.checked}
 			aria-disabled={this.effectiveAriaDisabled}
+			aria-readonly={this.effectiveAriaReadonly}
 			aria-required={this.required}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
+			onFocusIn={this._onfocusin}
 			tabindex={this.effectiveTabIndex}
 			title={this.tooltip}
 		>

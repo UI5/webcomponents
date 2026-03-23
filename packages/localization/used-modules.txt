@@ -12,6 +12,7 @@ sap/base/i18n/LanguageTag.js
 sap/base/i18n/date/CalendarWeekNumbering.js
 sap/base/i18n/date/TimezoneUtils.js
 sap/base/i18n/date/CalendarType.js
+sap/base/i18n/date/_EnumHelper.js
 sap/base/i18n/Localization.js
 sap/base/strings/formatMessage.js
 sap/base/strings/camelize.js
@@ -19,8 +20,10 @@ sap/base/util/ObjectPath.js
 sap/base/util/resolveReference.js
 sap/base/util/array/uniqueSort.js
 sap/base/util/deepEqual.js
+sap/base/util/deepExtend.js
 sap/base/util/isPlainObject.js
 sap/base/util/isEmptyObject.js
+sap/base/util/merge.js
 sap/base/util/now.js
 sap/base/util/uid.js
 sap/base/util/_merge.js
@@ -30,6 +33,7 @@ sap/base/util/Version.js
 sap/ui/base/Interface.js
 sap/ui/base/Metadata.js
 sap/ui/base/Object.js
+sap/ui/core/AnimationMode.js
 sap/ui/core/CalendarType.js
 sap/ui/core/Configuration.js
 sap/ui/core/Supportability.js
@@ -47,6 +51,7 @@ sap/ui/core/date/Japanese.js
 sap/ui/core/date/Persian.js
 sap/ui/core/date/UI5Date.js
 sap/ui/core/date/UniversalDate.js
+sap/ui/core/format/FormatUtils.js
 sap/ui/core/format/TimezoneUtil.js
 sap/ui/core/format/DateFormat.js
 sap/ui/core/format/NumberFormat.js
