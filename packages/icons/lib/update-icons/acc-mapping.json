@@ -1,0 +1,246 @@
+{
+  "action-settings": {
+    "key": "ICON_ACTION_SETTINGS",
+    "defaultText": "Settings"
+  },
+  "activate": {
+    "key": "ICON_ACTIVATE",
+    "defaultText": "Activate"
+  },
+  "add-contact": {
+    "key": "ICON_ADD_CONTACT",
+    "defaultText": "Add Contact"
+  },
+  "add-filter": {
+    "key": "ICON_ADD_FILTER",
+    "defaultText": "Add Filter"
+  },
+  "add-photo": {
+    "key": "ICON_ADD_PHOTO",
+    "defaultText": "Add Photo"
+  },
+  "add": {
+    "key": "ICON_ADD",
+    "defaultText": "Add"
+  },
+  "back-to-top": {
+    "key": "ICON_BACK_TO_TOP",
+    "defaultText": "Back to Top"
+  },
+  "collapse-group": {
+    "key": "ICON_COLLAPSE_GROUP",
+    "defaultText": "Collapse Group"
+  },
+  "collapse": {
+    "key": "ICON_COLLAPSE",
+    "defaultText": "Collapse"
+  },
+  "crop": {
+    "key": "ICON_CROP",
+    "defaultText": "Crop"
+  },
+  "decline": {
+    "key": "ICON_DECLINE",
+    "defaultText": "Decline"
+  },
+  "delete": {
+    "key": "ICON_DELETE",
+    "defaultText": "Delete"
+  },
+  "display": {
+    "key": "ICON_DISPLAY",
+    "defaultText": "Display"
+  },
+  "down": {
+    "key": "ICON_DOWN",
+    "defaultText": "Down"
+  },
+  "download": {
+    "key": "ICON_DOWNLOAD",
+    "defaultText": "Download"
+  },
+  "drill-down": {
+    "key": "ICON_DRILL_DOWN",
+    "defaultText": "Drill Down"
+  },
+  "drill-up": {
+    "key": "ICON_DRILL_UP",
+    "defaultText": "Drill Up"
+  },
+  "error": {
+    "key": "ICON_ERROR",
+    "defaultText": "Error"
+  },
+  "exit-full-screen": {
+    "key": "ICON_EXIT_FULL_SCREEN",
+    "defaultText": "Exit Full Screen"
+  },
+  "expand-group": {
+    "key": "ICON_EXPAND_GROUP",
+    "defaultText": "Expand Group"
+  },
+  "expand": {
+    "key": "ICON_EXPAND",
+    "defaultText": "Expand"
+  },
+  "filter": {
+    "key": "ICON_FILTER",
+    "defaultText": "Filter"
+  },
+  "flag-2": {
+    "key": "ICON_FLAG",
+    "defaultText": "Flag"
+  },
+  "flag": {
+    "key": "ICON_FLAG",
+    "defaultText": "Flag"
+  },
+  "forward": {
+    "key": "ICON_FORWARD",
+    "defaultText": "Forward"
+  },
+  "full-screen": {
+    "key": "ICON_FULL_SCREEN",
+    "defaultText": "Enter Full Screen"
+  },
+  "generate-shortcut": {
+    "key": "ICON_GENERATE_SHORTCUT",
+    "defaultText": "Create Shortcut"
+  },
+  "group-2": {
+    "key": "ICON_GROUP_2",
+    "defaultText": "Group"
+  },
+  "hide": {
+    "key": "ICON_HIDE",
+    "defaultText": "Hide"
+  },
+  "ipad-2": {
+    "key": "ICON_IPAD",
+    "defaultText": "Tablet"
+  },
+  "ipad": {
+    "key": "ICON_IPAD",
+    "defaultText": "Tablet"
+  },
+  "iphone-2": {
+    "key": "ICON_IPHONE",
+    "defaultText": "Phone"
+  },
+  "iphone": {
+    "key": "ICON_IPHONE",
+    "defaultText": "Phone"
+  },
+  "laptop": {
+    "key": "ICON_LAPTOP",
+    "defaultText": "Laptop"
+  },
+  "message-error": {
+    "key": "ICON_MESSAGE_ERROR",
+    "defaultText": "Error"
+  },
+  "message-information": {
+    "key": "ICON_MESSAGE_INFORMATION",
+    "defaultText": "Information"
+  },
+  "message-success": {
+    "key": "ICON_MESSAGE_SUCCESS",
+    "defaultText": "Successful"
+  },
+  "message-warning": {
+    "key": "ICON_MESSAGE_WARNING",
+    "defaultText": "Warning"
+  },
+  "move": {
+    "key": "ICON_MOVE",
+    "defaultText": "Move"
+  },
+  "multi-select": {
+    "key": "ICON_MULTI_SELECT",
+    "defaultText": "Multi Select"
+  },
+  "nav-back": {
+    "key": "ICON_NAV_BACK",
+    "defaultText": "Navigate Back"
+  },
+  "overflow": {
+    "key": "ICON_OVERFLOW",
+    "defaultText": "More"
+  },
+  "redo": {
+    "key": "ICON_REDO",
+    "defaultText": "Redo"
+  },
+  "refresh": {
+    "key": "ICON_REFRESH",
+    "defaultText": "Refresh"
+  },
+  "resize-horizontal": {
+    "key": "ICON_RESIZE_HORIZONTAL",
+    "defaultText": "Resize Horizontally"
+  },
+  "resize-vertical": {
+    "key": "ICON_RESIZE_VERTICAL",
+    "defaultText": "Resize Vertically"
+  },
+  "resize": {
+    "key": "ICON_RESIZE",
+    "defaultText": "Resize"
+  },
+  "response": {
+    "key": "ICON_RESPONSE",
+    "defaultText": "Reply"
+  },
+  "save": {
+    "key": "ICON_SAVE",
+    "defaultText": "Save"
+  },
+  "search": {
+    "key": "ICON_SEARCH",
+    "defaultText": "Search"
+  },
+  "settings": {
+    "key": "ICON_SETTINGS",
+    "defaultText": "Settings"
+  },
+  "show": {
+    "key": "ICON_SHOW",
+    "defaultText": "Show"
+  },
+  "sort-ascending": {
+    "key": "ICON_SORT_ASCENDING",
+    "defaultText": "Sort Ascending"
+  },
+  "sort-descending": {
+    "key": "ICON_SORT_DESCENDING",
+    "defaultText": "Sort Descending"
+  },
+  "sort": {
+    "key": "ICON_SORT",
+    "defaultText": "Sort"
+  },
+  "synchronize": {
+    "key": "ICON_SYNCHRONIZE",
+    "defaultText": "Synchronize"
+  },
+  "undo": {
+    "key": "ICON_UNDO",
+    "defaultText": "Undo"
+  },
+  "up": {
+    "key": "ICON_UP",
+    "defaultText": "Up"
+  },
+  "upload": {
+    "key": "ICON_UPLOAD",
+    "defaultText": "Upload"
+  },
+  "zoom-in": {
+    "key": "ICON_ZOOM_IN",
+    "defaultText": "Zoom In"
+  },
+  "zoom-out": {
+    "key": "ICON_ZOOM_OUT",
+    "defaultText": "Zoom Out"
+  }
+}
