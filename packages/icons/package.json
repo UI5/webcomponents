@@ -16,6 +16,8 @@
     "./*": "./dist/*"
   },
   "scripts": {
+    "update": "node ./lib/update-icons/index.js",
+    "sort-icons": "node ./lib/update-icons/sort-icons.js",
     "clean": "wc-dev clean",
     "generate": "wc-dev generate",
     "build": "wc-dev build",
@@ -30,6 +32,8 @@
     "@ui5/webcomponents-base": "2.21.0-rc.0"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "2.21.0-rc.0"
+    "@sap-theming/theming-base-content": "11.34.1",
+    "@ui5/webcomponents-tools": "2.21.0-rc.0",
+    "jsdom": "^29.0.0"
   }
 }
