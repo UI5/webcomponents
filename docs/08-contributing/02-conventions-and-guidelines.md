@@ -6,7 +6,7 @@ You may also find an ESLint integration for your favorite IDE [here](https://esl
 
 ## Testing
 Integration tests are implemented with [Cypress](https://www.cypress.io/). You can run all tests using `npm run test`.
-If reasonable, take the time and write a test for the proposed change or fix. Learn more about testing at the [Testing UI5 Web Components page](../4-development/10-testing.md).
+If reasonable, take the time and write a test for the proposed change or fix. Learn more about testing at the [Testing UI5 Web Components page](../07-development/10-testing.md).
 
 ## Git Guidelines
 

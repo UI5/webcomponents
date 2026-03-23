@@ -71,6 +71,45 @@ describe("Toolbar general interaction", () => {
 			.should("exist", "hidden class attached to tb button, meaning it's not shown as expected");
 	});
 
+	it("Should apply fixed spacer widths without enabling flexible full-width layout", () => {
+		cy.mount(
+			<Toolbar id="otb_fixed_spacers">
+				<ToolbarSpacer width="50px"></ToolbarSpacer>
+				<ToolbarButton text="Left"></ToolbarButton>
+				<ToolbarSpacer width="100px"></ToolbarSpacer>
+				<ToolbarButton text="Right"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#otb_fixed_spacers")
+			.as("toolbar");
+
+		cy.get("@toolbar")
+			.shadow()
+			.find(".ui5-tb-items")
+			.should("not.have.class", "ui5-tb-items-full-width");
+
+		cy.get("@toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar;
+				const fixedSpacers = Array.from(toolbar.querySelectorAll("ui5-toolbar-spacer")) as ToolbarSpacer[];
+
+				expect(fixedSpacers).to.have.length(2);
+				expect(fixedSpacers[0].hasFlexibleWidth).to.be.false;
+				expect(fixedSpacers[1].hasFlexibleWidth).to.be.false;
+
+				cy.get("@toolbar")
+					.shadow()
+					.find(`#${fixedSpacers[0]._individualSlot}`)
+					.should("have.css", "width", "50px");
+
+				cy.get("@toolbar")
+					.shadow()
+					.find(`#${fixedSpacers[1]._individualSlot}`)
+					.should("have.css", "width", "100px");
+			});
+	});
+
 	it("shouldn't show overflow button if there is enough space", () => {
 		cy.mount(
 			<Toolbar style={{ width: "fit-content", " max-width": "100%;" }}>

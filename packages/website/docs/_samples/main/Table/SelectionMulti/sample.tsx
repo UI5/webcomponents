@@ -71,7 +71,7 @@ function App() {
   return (
     <>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Label>Selection Behavior: </Label>
+        <Label showColon={true}>Selection Behavior</Label>
         <span
           id="selectionBehavior"
           role="radiogroup"
@@ -85,7 +85,7 @@ function App() {
           <RadioButton name="selectionBehavior" text="RowOnly" />
         </span>
         <div style={{ flexGrow: 1 }}></div>
-        <Label>Header Selector: </Label>
+        <Label showColon={true}>Header Selector</Label>
         <span
           id="headerSelector"
           role="radiogroup"
