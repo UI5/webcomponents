@@ -534,8 +534,13 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	_updateValueState() {
-		const isWithinRange = (this.min === undefined || this._parseNumber(this.input.value) >= this.min)
-							  && (this.max === undefined || this._parseNumber(this.input.value) <= this.max);
+		let parsedValue = this._parseNumber(this.input.value);
+		if (this._isInfinity(parsedValue) && this._isScientificNotation(this.input.value)) {
+			parsedValue = this._defaultValue;
+		}
+
+		const isWithinRange = (this.min === undefined || parsedValue >= this.min)
+							  && (this.max === undefined || parsedValue <= this.max);
 		const isValueWithCorrectPrecision = this._isValueWithCorrectPrecision;
 		const previousValueState = this.valueState;
 		const isValid = isWithinRange && isValueWithCorrectPrecision;
@@ -648,24 +653,32 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return decimalPartLength === this.valuePrecision;
 	}
 
+	_isInfinity(value: number) {
+		return Math.abs(value) === Infinity;
+	}
+
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
 		const updatedValue = this._removeGroupSeparators(this.input.value);
 		let inputValue = this._parseNumber(updatedValue);
-		const isInfinity = Math.abs(inputValue) === Infinity;
+		const isInfinity = this._isInfinity(inputValue);
 		if (isInfinity) {
-			inputValue = 0;
+			inputValue = this._defaultValue;
 		}
 
 		if (this._isValueChanged(inputValue) || isInfinity) {
-			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
+			this._updateValueAndValidate(Number.isNaN(inputValue) ? this._defaultValue : inputValue);
 			this.innerInput.value = this.input.value;
 		}
 	}
 
+	get _defaultValue() {
+		return this.min !== undefined ? this.min : 0;
+	}
+
 	_setDefaultInputValueIfNeeded() {
 		if (this.input.value === "") {
-			const defaultValue = this._formatNumber(this.min || 0);
+			const defaultValue = this._formatNumber(this._defaultValue);
 			this.input.value = defaultValue;
 			this.innerInput.value = defaultValue; // we need to update inner input value as well, to avoid empty input scenario
 		}

@@ -68,7 +68,7 @@ Cypress.Commands.add("ui5StepInputCheckInnerInputProperty", { prevSubject: true 
         });
 });
 
-Cypress.Commands.add("ui5StepInputTypeNumber", { prevSubject: true }, (subject, value: number) => {
+Cypress.Commands.add("ui5StepInputTypeNumber", { prevSubject: true }, (subject, value: string) => {
 	cy.wrap(subject)
 		 .as("stepInput")
 		.should("be.visible");
@@ -79,7 +79,7 @@ Cypress.Commands.add("ui5StepInputTypeNumber", { prevSubject: true }, (subject, 
 		.shadow()
 		.find("input")
 		.clear()
-		.realType(value.toString())
+		.realType(value)
 		.realPress("Enter");
 });
 
@@ -120,7 +120,7 @@ declare global {
 			ui5StepInputAttachHandler(eventName: string, stubName: string): Chainable<void>
 			ui5StepInputGetInnerInput(): Chainable<JQuery<HTMLElement>>
 			ui5StepInputCheckInnerInputProperty(propName: string, expectedValue: any, shouldBePropagated?: boolean): Chainable<void>
-			ui5StepInputTypeNumber(value: number): Chainable<void>
+			ui5StepInputTypeNumber(value: string): Chainable<void>
 			ui5StepInputScrollToChangeValue(expectedValue: number, decreaseValue: boolean): Chainable<void>
 		}
 	}

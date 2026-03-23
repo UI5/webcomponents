@@ -816,7 +816,7 @@ describe("StepInput property propagation", () => {
     });
 });
 
-describe("Number expressions", () => {
+describe("Number expressions with constants", () => {
 	it("should work properly with number expressions which contains Euler`s constant", () => {
 		 cy.mount(
 			<StepInput value={5}></StepInput>
@@ -862,9 +862,9 @@ describe("Number expressions", () => {
 			.should("have.prop", "valueState", "None");
 	});
 
-	it("should set value to 0 when the number expression is infinity", () => {
+	it("should set default value when value is out of bounds", () => {
 		cy.mount(
-			<StepInput value={5}></StepInput>
+			<StepInput value={5} max={20}></StepInput>
 		);
 
 		cy.get("[ui5-step-input]")
@@ -881,6 +881,9 @@ describe("Number expressions", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.should("have.prop", "value", 0);
+		
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "None");
 	});
 });
 
