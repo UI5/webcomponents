@@ -1414,3 +1414,91 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.should("be.focused");
 	});
 });
+
+describe("MenuItem semantic click event", () => {
+	it("fires click event on menu item when clicked", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu opener="btnOpen">
+					<MenuItem id="item1" text="New File"></MenuItem>
+					<MenuItem id="item2" text="New Folder"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen({ opener: "btnOpen" });
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.item).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event on menu item when activated with Enter", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu opener="btnOpen">
+					<MenuItem id="item1" text="New File"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen({ opener: "btnOpen" });
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpened();
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("[ui5-menu-item]")
+			.ui5MenuItemPress("Enter");
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+	});
+
+	it("fires both click on MenuItem and item-click on Menu", () => {
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu id="menu" opener="btnOpen">
+					<MenuItem id="item1" text="New File"></MenuItem>
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpen({ opener: "btnOpen" });
+
+		cy.get("[ui5-menu]")
+			.ui5MenuOpened();
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#menu").then(($menu) => {
+			$menu[0].addEventListener("ui5-item-click", cy.stub().as("menuItemClickStub"));
+		});
+
+		cy.get("[ui5-menu-item]")
+			.ui5MenuItemClick();
+
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+		cy.get("@menuItemClickStub").should("have.been.calledOnce");
+	});
+});

@@ -780,3 +780,103 @@ describe("Tree drag and drop tests", () => {
 		});
 	});
 });
+
+describe("TreeItem semantic click event", () => {
+	it("fires click event on tree item when clicked", () => {
+		cy.mount(
+			<Tree>
+				<TreeItem id="item1" text="Tree 1"></TreeItem>
+				<TreeItem text="Tree 2"></TreeItem>
+			</Tree>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.item).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event on tree item when activated with Enter", () => {
+		cy.mount(
+			<Tree>
+				<TreeItem id="item1" text="Tree 1"></TreeItem>
+				<TreeItem text="Tree 2"></TreeItem>
+			</Tree>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+		cy.realPress("Enter");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("fires click event on tree item when activated with Space", () => {
+		cy.mount(
+			<Tree>
+				<TreeItem id="item1" text="Tree 1"></TreeItem>
+				<TreeItem text="Tree 2"></TreeItem>
+			</Tree>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+		cy.realPress("Space");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("does not fire click event on disabled tree item", () => {
+		cy.mount(
+			<Tree>
+				<TreeItem id="item1" text="Tree 1" disabled></TreeItem>
+				<TreeItem text="Tree 2"></TreeItem>
+			</Tree>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick({ force: true });
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("fires both click on TreeItem and item-click on Tree", () => {
+		cy.mount(
+			<Tree id="tree">
+				<TreeItem id="item1" text="Tree 1"></TreeItem>
+				<TreeItem text="Tree 2"></TreeItem>
+			</Tree>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#tree").then(($tree) => {
+			$tree[0].addEventListener("ui5-item-click", cy.stub().as("treeItemClickStub"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+		cy.get("@treeItemClickStub").should("have.been.calledOnce");
+	});
+});

@@ -2797,3 +2797,101 @@ describe("List sticky header", () => {
 			});
 	});
 });
+
+describe("ListItemBase semantic click event", () => {
+	it("fires click event on list item when clicked", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.item).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event on list item when activated with Enter key", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+		cy.realPress("Enter");
+
+		cy.get("@clickStub")
+			.should("have.been.calledTwice");
+	});
+
+	it("fires click event on list item when activated with Space key", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick();
+		cy.realPress("Space");
+
+		cy.get("@clickStub")
+			.should("have.been.calledTwice");
+	});
+
+	it("does not fire click event on disabled list item", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1" disabled>Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#item1").realClick({ position: "center" });
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("fires both click and item-click events", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("listItemClickStub"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+		cy.get("@listItemClickStub").should("have.been.calledOnce");
+	});
+});

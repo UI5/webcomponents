@@ -44,6 +44,7 @@ interface ISearchSuggestionItem extends UI5Element {
 	selected: boolean;
 	text: string;
 	items?: ISearchSuggestionItem[];
+	eventDetails: { click?: object };
 }
 
 type SearchEventDetails = {

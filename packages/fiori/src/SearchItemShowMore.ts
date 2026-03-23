@@ -2,6 +2,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
+import type { ListItemBaseClickEventDetail } from "@ui5/webcomponents/dist/ListItemBase.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -11,7 +12,7 @@ import SearchItemShowMoreCss from "./generated/themes/SearchItemShowMore.css.js"
 import { SEARCH_ITEM_SHOW_MORE_COUNT, SEARCH_ITEM_SHOW_MORE_NO_COUNT } from "./generated/i18n/i18n-defaults.js";
 import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
 
-type ShowMoreItemClickEventDetail = {
+type ShowMoreItemClickEventDetail = ListItemBaseClickEventDetail & {
 	fromKeyboard: boolean;
 }
 
@@ -100,7 +101,7 @@ If a number is provided, it displays "Show more (N)", where N is that number.
 
 	_onclick(e: MouseEvent | KeyboardEvent, fromKeyboard = false) {
 		e.stopImmediatePropagation();
-		this.fireDecoratorEvent("click", { fromKeyboard });
+		this.fireDecoratorEvent("click", { item: this, originalEvent: e, fromKeyboard });
 	}
 
 	_onkeydown(e: KeyboardEvent) {
