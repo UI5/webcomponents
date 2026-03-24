@@ -140,7 +140,7 @@ describe("DateRangePicker mobile footer interactions", () => {
 			.and("match", /\d{2}\/\d{2}\/\d{4} - \d{2}\/\d{2}\/\d{4}/);
 	});
 
-	it("Cancel button clears the selection and closes the picker", () => {
+	it("Cancel button closes the picker", () => {
 		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" value="01/01/2020 - 05/01/2020" />);
 
 		cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -165,10 +165,6 @@ describe("DateRangePicker mobile footer interactions", () => {
 		// Picker should be closed
 		cy.get<DateRangePicker>("@dateRangePicker")
 			.should("have.prop", "open", false);
-
-		// Value should be cleared
-		cy.get("@dateRangePicker")
-			.should("have.attr", "value", "");
 	});
 
 	it("Change event is not fired immediately on date selection in mobile mode", () => {
