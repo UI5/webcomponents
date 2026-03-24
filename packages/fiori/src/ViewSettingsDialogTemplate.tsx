@@ -93,14 +93,14 @@ function _getSplitButtonItems(this: ViewSettingsDialog) {
 	}
 
 	if (this.shouldBuildCustomTabs) {
-		this.customTabs.forEach((customTab, index) => {
+		this._renderableCustomTabs.forEach(customTab => {
 			buttonItems.push(
 				<SegmentedButtonItem
-					selected={this.isCurrentCustomMode(index)}
-					data-mode={this._customMode(index)}
+					selected={this.isCurrentCustomTabMode(customTab)}
+					data-mode={this._customTabMode(customTab)}
 					tooltip={customTab.tooltip}
 					icon={customTab.icon}
-				>{customTab.icon ? undefined : customTab.title}</SegmentedButtonItem>
+				/>
 			);
 		});
 	}
@@ -136,6 +136,15 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 					<slot class="ui5-vsd-custom-tab-slot" name={this._selectedCustomTab._individualSlot}></slot>
 				</div>
 			)}
+
+			{/* Hidden slots for non-active custom tabs to prevent content leaking */}
+			<div style={{ display: "none" }}>
+				{this.customTabs
+					.filter(tab => tab !== this._selectedCustomTab)
+					.map(tab => (
+						<slot name={tab._individualSlot}></slot>
+					))}
+			</div>
 
 		</div>
 	);

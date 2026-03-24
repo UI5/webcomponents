@@ -132,7 +132,7 @@
 
 	<ui5-button id="btnOpenDialogWithDefaultAndCustomTabs">VSD - Default + Custom Tabs</ui5-button>
 	<pre id="defaultAndCustomTabsStateJson" class="vsd-custom-tab-state"></pre>
-	<ui5-view-settings-dialog id="vsdDefaultAndCustomTabs">
+	<ui5-view-settings-dialog id="vsdDefaultAndCustomTabs" enable-reset>
 
 		<ui5-sort-item slot="sortItems" text="Title"></ui5-sort-item>
 		<ui5-sort-item slot="sortItems" text="Author"></ui5-sort-item>
@@ -155,7 +155,7 @@
 			<ui5-filter-item-option slot="values" text="Blue" data-key="filterOptionBlue"></ui5-filter-item-option>
 		</ui5-filter-item>
 
-		<ui5-view-settings-custom-tab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings" selected>
+		<ui5-view-settings-dialog-custom-tab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings">
 			<div class="vsd-custom-tab-section">
 				<div class="vsd-custom-tab-row">
 					<span>Compact mode</span>
@@ -170,9 +170,9 @@
 					<ui5-segmented-button-item>Compact</ui5-segmented-button-item>
 				</ui5-segmented-button>
 			</div>
-		</ui5-view-settings-custom-tab>
+		</ui5-view-settings-dialog-custom-tab>
 
-		<ui5-view-settings-custom-tab slot="customTabs" title="Display" tooltip="Display" icon="palette">
+		<ui5-view-settings-dialog-custom-tab slot="customTabs" title="Display" tooltip="Display" icon="palette">
 			<div class="vsd-custom-tab-section">
 				<ui5-segmented-button id="defaultAndCustomLayoutSegmented">
 					<ui5-segmented-button-item selected>List</ui5-segmented-button-item>
@@ -185,7 +185,7 @@
 				</ui5-combobox>
 				<ui5-step-input id="defaultAndCustomRowsStepInput" min="10" max="100" value="25"></ui5-step-input>
 			</div>
-		</ui5-view-settings-custom-tab>
+		</ui5-view-settings-dialog-custom-tab>
 
 	</ui5-view-settings-dialog>
 
@@ -193,8 +193,8 @@
 
 	<ui5-button id="btnOpenDialogWithJustCustomTabs">VSD - Custom Tabs Only</ui5-button>
 	<pre id="justCustomTabsStateJson" class="vsd-custom-tab-state"></pre>
-	<ui5-view-settings-dialog id="vsdJustCustomTabs">
-		<ui5-view-settings-custom-tab slot="customTabs" title="Behavior" tooltip="Behavior" icon="action-settings" selected>
+	<ui5-view-settings-dialog id="vsdJustCustomTabs" enable-reset>
+		<ui5-view-settings-dialog-custom-tab slot="customTabs" title="Behavior" tooltip="Behavior" icon="action-settings">
 			<div class="vsd-custom-tab-section">
 				<div class="vsd-custom-tab-row">
 					<span>Enable notifications</span>
@@ -209,9 +209,9 @@
 					<ui5-segmented-button-item>High</ui5-segmented-button-item>
 				</ui5-segmented-button>
 			</div>
-		</ui5-view-settings-custom-tab>
+		</ui5-view-settings-dialog-custom-tab>
 
-		<ui5-view-settings-custom-tab slot="customTabs" title="Layout" tooltip="Layout" icon="palette">
+		<ui5-view-settings-dialog-custom-tab slot="customTabs" title="Layout" tooltip="Layout" icon="palette">
 			<div class="vsd-custom-tab-section">
 				<ui5-segmented-button id="justCustomLayoutSegmented">
 					<ui5-segmented-button-item selected>Cards</ui5-segmented-button-item>
@@ -224,7 +224,7 @@
 				</ui5-combobox>
 				<ui5-step-input id="justCustomRowsStepInput" min="5" max="50" value="15"></ui5-step-input>
 			</div>
-		</ui5-view-settings-custom-tab>
+		</ui5-view-settings-dialog-custom-tab>
 	</ui5-view-settings-dialog>
 
 
@@ -388,9 +388,19 @@
 			renderDefaultAndCustomTabsState(defaultAndCustomTabsState);
 		});
 
+		vsdDefaultAndCustomTabs.addEventListener("ui5-reset-click", function() {
+			alert("[vsdDefaultAndCustomTabs] Reset clicked - restoring custom tabs to initial state");
+			applyDefaultAndCustomTabsState(defaultAndCustomTabsState);
+		});
+
 		vsdJustCustomTabs.addEventListener("ui5-confirm", function() {
 			justCustomTabsState = collectJustCustomTabsState();
 			renderJustCustomTabsState(justCustomTabsState);
+		});
+
+		vsdJustCustomTabs.addEventListener("ui5-reset-click", function() {
+			alert("[vsdJustCustomTabs] Reset clicked - restoring custom tabs to initial state");
+			applyJustCustomTabsState(justCustomTabsState);
 		});
 	</script>
 

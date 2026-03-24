@@ -23,7 +23,7 @@ import "@ui5/webcomponents-icons/dist/nav-back.js";
 import type SortItem from "./SortItem.js";
 import type FilterItem from "./FilterItem.js";
 import type GroupItem from "./GroupItem.js";
-import type ViewSettingsCustomTab from "./ViewSettingsCustomTab.js";
+import type ViewSettingsDialogCustomTab from "./ViewSettingsDialogCustomTab.js";
 
 import {
 	VSD_DIALOG_TITLE_SORT,
@@ -89,10 +89,10 @@ type VSDInternalSettings = {
 	groupBy: Array<VSDItem & {index: number}>,
 }
 
-type ViewSettingsCustomMode = `Custom-${number}`;
-type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettingsCustomMode;
+const CUSTOM_MODE_PREFIX = "customTabs-";
 
-const CUSTOM_MODE_PREFIX = "Custom-";
+type ViewSettingsCustomMode = `${typeof CUSTOM_MODE_PREFIX}${number}`;
+type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettingsCustomMode;
 
 /**
  * @class
@@ -186,6 +186,17 @@ const CUSTOM_MODE_PREFIX = "Custom-";
 @event("close", {
 	bubbles: true,
 })
+/**
+ * Fired when the Reset button is clicked.
+ *
+ * **Note:** Use this event to reset the state of custom tab content,
+ * as the component cannot detect changes within custom tabs.
+ * @since 2.22.0
+ * @public
+ */
+@event("reset-click", {
+	bubbles: true,
+})
 class ViewSettingsDialog extends UI5Element {
 	eventDetails!: {
 		"confirm": ViewSettingsDialogConfirmEventDetail,
@@ -193,6 +204,7 @@ class ViewSettingsDialog extends UI5Element {
 		"before-open": void,
 		"open": void,
 		"close": void,
+		"reset-click": void,
 	}
 	/**
 	 * Defines the initial sort order.
@@ -219,6 +231,20 @@ class ViewSettingsDialog extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	open = false;
+
+	/**
+	 * Defines whether the Reset button is always enabled.
+	 *
+	 * **Note:** By default, the Reset button is only enabled when the dialog settings
+	 * differ from their initial state. Set this property to `true` to keep the Reset
+	 * button always enabled, which is useful when working with custom tabs
+	 * whose internal state changes cannot be detected by the component.
+	 * @default false
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	enableReset = false;
 
 	/**
 	 * Keeps recently focused list in order to focus it on next dialog open.
@@ -259,7 +285,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * @since 1.0.0-rc.16
 	 * @private
 	 */
-	@property()
+	@property({ noAttribute: true })
 	_currentMode: ViewSettingsDialogInternalMode = ViewSettingsDialogMode.Sort;
 
 	/**
@@ -302,9 +328,9 @@ class ViewSettingsDialog extends UI5Element {
 	 *
 	 * The custom tabs are rendered after the built-in tabs (`Sort`, `Filter`, `Group`).
 	 *
-	 * **Note:** If you want to use this slot, you need to import the item: `import "@ui5/webcomponents-fiori/dist/ViewSettingsCustomTab.js";`
+	 * **Note:** If you want to use this slot, you need to import the item: `import "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";`
 	 * @public
-	 * @since 2.21.0
+	 * @since 2.22.0
 	 */
 	@slot({
 		type: HTMLElement,
@@ -314,7 +340,7 @@ class ViewSettingsDialog extends UI5Element {
 			slots: false,
 		},
 	})
-	customTabs!: Slot<ViewSettingsCustomTab>;
+	customTabs!: Slot<ViewSettingsDialogCustomTab>;
 
 	@query("[ui5-list]")
 	_list!: List;
@@ -408,7 +434,14 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	get shouldBuildCustomTabs() {
-		return !!this.customTabs.length;
+		return !!this._renderableCustomTabs.length;
+	}
+
+	/**
+	 * Returns only custom tabs that have an icon defined and can be rendered.
+	 */
+	get _renderableCustomTabs() {
+		return this.customTabs.filter(tab => tab.icon);
 	}
 
 	get hasPagination() {
@@ -417,7 +450,7 @@ class ViewSettingsDialog extends UI5Element {
 			.length;
 
 		if (this.shouldBuildCustomTabs) {
-			return builtInTabsCount + this.customTabs.length > 1;
+			return builtInTabsCount + this._renderableCustomTabs.length > 1;
 		}
 
 		return builtInTabsCount > 1;
@@ -437,15 +470,10 @@ class ViewSettingsDialog extends UI5Element {
 		}
 
 		if (this.shouldBuildCustomTabs) {
-			return this._customMode(this._defaultCustomTabIndex);
+			return this._customTabMode(this._renderableCustomTabs[0]);
 		}
 
 		return ViewSettingsDialogMode.Sort;
-	}
-
-	get _defaultCustomTabIndex() {
-		const selectedIndex = this.customTabs.findIndex(item => item.selected);
-		return selectedIndex > -1 ? selectedIndex : 0;
 	}
 
 	get _selectedCustomTab() {
@@ -453,8 +481,7 @@ class ViewSettingsDialog extends UI5Element {
 			return;
 		}
 
-		const currentTabIndex = this._getCustomTabIndexByMode(this._currentMode);
-		return this.customTabs[currentTabIndex];
+		return this._renderableCustomTabs.find(tab => this._customTabMode(tab) === this._currentMode);
 	}
 
 	get _filterByTitle() {
@@ -540,6 +567,10 @@ class ViewSettingsDialog extends UI5Element {
 	 * Determines disabled state of the `Reset` button.
 	 */
 	get _disableResetButton() {
+		if (this.enableReset) {
+			return false;
+		}
+
 		return this._dialog && this._settingsAreInitial && this._filteresAreInitial;
 	}
 
@@ -852,6 +883,7 @@ class ViewSettingsDialog extends UI5Element {
 		this._recentlyFocused = this._sortOrder!;
 		this._focusRecentlyUsedControl();
 		announce(this._resetButtonAction, InvisibleMessageMode.Assertive);
+		this.fireDecoratorEvent("reset-click");
 	}
 
 	/**
@@ -864,16 +896,12 @@ class ViewSettingsDialog extends UI5Element {
 		this._filterStepTwo = false;
 	}
 
-	isCurrentCustomMode(index: number) {
-		return this._currentMode === this._customMode(index);
+	isCurrentCustomTabMode(tab: ViewSettingsDialogCustomTab) {
+		return this._currentMode === this._customTabMode(tab);
 	}
 
-	_customMode(index: number): ViewSettingsCustomMode {
-		return `${CUSTOM_MODE_PREFIX}${index}`;
-	}
-
-	_getCustomTabIndexByMode(mode: ViewSettingsCustomMode) {
-		return Number(mode.replace(CUSTOM_MODE_PREFIX, ""));
+	_customTabMode(tab: ViewSettingsDialogCustomTab): ViewSettingsCustomMode {
+		return tab._individualSlot as ViewSettingsCustomMode;
 	}
 
 	_isCustomMode(mode: string): mode is ViewSettingsCustomMode {
@@ -881,10 +909,17 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	_isValidMode(mode: string): mode is ViewSettingsDialogInternalMode {
-		return mode === (ViewSettingsDialogMode.Sort as string)
+		if (mode === (ViewSettingsDialogMode.Sort as string)
 			|| mode === (ViewSettingsDialogMode.Filter as string)
-			|| mode === (ViewSettingsDialogMode.Group as string)
-			|| this._isCustomMode(mode);
+			|| mode === (ViewSettingsDialogMode.Group as string)) {
+			return true;
+		}
+
+		if (this._isCustomMode(mode)) {
+			return this._renderableCustomTabs.some(tab => this._customTabMode(tab) === mode);
+		}
+
+		return false;
 	}
 
 	/**

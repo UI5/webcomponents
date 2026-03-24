@@ -4,32 +4,32 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import ViewSettingsCustomTabTemplate from "./ViewSettingsCustomTabTemplate.js";
+import ViewSettingsDialogCustomTabTemplate from "./ViewSettingsDialogCustomTabTemplate.js";
 
 /**
  * @class
  *
  * ### Overview
  *
- * The `ui5-view-settings-custom-tab` component allows defining custom tabs for the `ui5-view-settings-dialog`.
+ * The `ui5-view-settings-dialog-custom-tab` component allows defining custom tabs for the `ui5-view-settings-dialog`.
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents-fiori/dist/ViewSettingsCustomTab.js";`
+ * `import "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";`
  *
  * @constructor
  * @extends UI5Element
- * @since 2.21.0
+ * @since 2.22.0
  * @public
  * @abstract
  * @slot {Node[]} default - Defines the custom tab content.
  */
 @customElement({
-	tag: "ui5-view-settings-custom-tab",
+	tag: "ui5-view-settings-dialog-custom-tab",
 	renderer: jsxRenderer,
-	template: ViewSettingsCustomTabTemplate,
+	template: ViewSettingsDialogCustomTabTemplate,
 })
-class ViewSettingsCustomTab extends UI5Element {
+class ViewSettingsDialogCustomTab extends UI5Element {
 	/**
 	 * Defines the title of the custom tab.
 	 *
@@ -53,22 +53,12 @@ class ViewSettingsCustomTab extends UI5Element {
 	/**
 	 * Defines the icon of the custom tab.
 	 *
-	 * **Note:** If not provided, the segmented button item is rendered with text.
-	 * @default undefined
+	 * **Note:** If not provided, the tab should not be rendered.
+	 * @default ""
 	 * @public
 	 */
-	@property()
-	icon?: string;
-
-	/**
-	 * Defines whether the custom tab is selected initially.
-	 *
-	 * **Note:** If multiple custom tabs are marked as selected, the first one is used.
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	selected = false;
+	@property({ type: String })
+	icon = "";
 
 	/**
 	 * Defines the custom tab content.
@@ -80,6 +70,6 @@ class ViewSettingsCustomTab extends UI5Element {
 	_individualSlot?: string;
 }
 
-ViewSettingsCustomTab.define();
+ViewSettingsDialogCustomTab.define();
 
-export default ViewSettingsCustomTab;
+export default ViewSettingsDialogCustomTab;

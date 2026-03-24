@@ -3,7 +3,7 @@ import GroupItem from "../../src/GroupItem.js";
 import SortItem from "../../src/SortItem.js";
 import FilterItem from "../../src/FilterItem.js";
 import FilterItemOption from "../../src/FilterItemOption.js";
-import ViewSettingsCustomTab from "../../src/ViewSettingsCustomTab.js";
+import ViewSettingsDialogCustomTab from "../../src/ViewSettingsDialogCustomTab.js";
 
 describe("View settings dialog - confirm event", () => {
 	it("should throw confirm event after selecting sort options and confirm button", () => {
@@ -494,12 +494,12 @@ describe("ViewSettingsDialog Tests", () => {
 					<FilterItemOption slot="values" text="A"></FilterItemOption>
 				</FilterItem>
 				<GroupItem slot="groupItems" text="Department"></GroupItem>
-				<ViewSettingsCustomTab slot="customTabs" title="Advanced Settings" tooltip="Advanced" icon="action-settings">
+				<ViewSettingsDialogCustomTab slot="customTabs" title="Advanced Settings" tooltip="Advanced" icon="action-settings">
 					<div id="advanced-tab-content">Advanced settings</div>
-				</ViewSettingsCustomTab>
-				<ViewSettingsCustomTab slot="customTabs" title="Metrics Panel" tooltip="Metrics" icon="table-view">
+				</ViewSettingsDialogCustomTab>
+				<ViewSettingsDialogCustomTab slot="customTabs" title="Metrics Panel" tooltip="Metrics" icon="table-view">
 					<div id="metrics-tab-content">Metrics settings</div>
-				</ViewSettingsCustomTab>
+				</ViewSettingsDialogCustomTab>
 			</ViewSettingsDialog>
 		);
 
@@ -527,7 +527,8 @@ describe("ViewSettingsDialog Tests", () => {
 
 		cy.get("@items")
 			.eq(3)
-			.should("have.attr", "data-mode", "Custom-0");
+			.invoke("attr", "data-mode")
+			.should("match", /^customTabs-\d+$/);
 
 		cy.get("@items")
 			.eq(3)
@@ -535,7 +536,8 @@ describe("ViewSettingsDialog Tests", () => {
 
 		cy.get("@items")
 			.eq(4)
-			.should("have.attr", "data-mode", "Custom-1");
+			.invoke("attr", "data-mode")
+			.should("match", /^customTabs-\d+$/);
 
 		cy.get("@items")
 			.eq(3)
@@ -559,12 +561,12 @@ describe("ViewSettingsDialog Tests", () => {
 	it("should render only custom tabs when no built-in tabs are provided", () => {
 		cy.mount(
 			<ViewSettingsDialog id="vsdCustomOnly">
-				<ViewSettingsCustomTab slot="customTabs" title="General Settings" tooltip="General" icon="action-settings" selected={true}>
+				<ViewSettingsDialogCustomTab slot="customTabs" title="General Settings" tooltip="General" icon="action-settings">
 					<div id="general-tab-content">General content</div>
-				</ViewSettingsCustomTab>
-				<ViewSettingsCustomTab slot="customTabs" title="Extra Settings" tooltip="Extra" icon="table-view">
+				</ViewSettingsDialogCustomTab>
+				<ViewSettingsDialogCustomTab slot="customTabs" title="Extra Settings" tooltip="Extra" icon="table-view">
 					<div id="extra-tab-content">Extra content</div>
-				</ViewSettingsCustomTab>
+				</ViewSettingsDialogCustomTab>
 			</ViewSettingsDialog>
 		);
 
@@ -601,5 +603,110 @@ describe("ViewSettingsDialog Tests", () => {
 			.shadow()
 			.find(".ui5-vsd-custom-tab-title")
 			.should("have.text", "Extra Settings");
+	});
+
+	it("should keep Reset button disabled by default when settings are initial", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsd">
+				<SortItem slot="sortItems" text="Name"></SortItem>
+				<SortItem slot="sortItems" text="Position"></SortItem>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsd")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-header ui5-button")
+			.should("have.attr", "disabled");
+	});
+
+	it("should keep Reset button always enabled when enableReset is set", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsd" enableReset={true}>
+				<SortItem slot="sortItems" text="Name"></SortItem>
+				<SortItem slot="sortItems" text="Position"></SortItem>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsd")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-header ui5-button")
+			.should("not.have.attr", "disabled");
+	});
+
+	it("should fire reset-click event when Reset button is clicked", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsd" enableReset={true} onResetClick={cy.stub().as("resetClick")}>
+				<SortItem slot="sortItems" text="Name"></SortItem>
+				<SortItem slot="sortItems" text="Position"></SortItem>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsd")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-header ui5-button")
+			.should("not.have.attr", "disabled");
+
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-header ui5-button")
+			.realClick();
+
+		cy.get("@resetClick")
+			.should("have.been.calledOnce");
+	});
+
+	it("should reset built-in settings and fire reset-click when Reset is clicked", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsd" enableReset={true} onResetClick={cy.stub().as("resetClick")}>
+				<SortItem slot="sortItems" text="Name"></SortItem>
+				<SortItem slot="sortItems" text="Position"></SortItem>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("#vsd")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		// Change sort order to Descending
+		cy.get("@vsd")
+			.shadow()
+			.find("[sort-order] ui5-li")
+			.eq(1)
+			.realClick();
+
+		// Verify Descending is selected
+		cy.get("@vsd")
+			.shadow()
+			.find("[sort-order] ui5-li")
+			.eq(1)
+			.should("have.attr", "selected");
+
+		// Click Reset
+		cy.get("@vsd")
+			.shadow()
+			.find(".ui5-vsd-header ui5-button")
+			.realClick();
+
+		// Verify Ascending is selected again
+		cy.get("@vsd")
+			.shadow()
+			.find("[sort-order] ui5-li")
+			.eq(0)
+			.should("have.attr", "selected");
+
+		cy.get("@resetClick")
+			.should("have.been.calledOnce");
 	});
 });
