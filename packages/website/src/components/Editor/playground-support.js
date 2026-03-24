@@ -136,6 +136,15 @@ const loadAndCheck2 = async (themeName) => {
 ["sap_fiori_3", "sap_fiori_3_dark", "sap_fiori_3_hcb", "sap_fiori_3_hcw", "sap_horizon", "sap_horizon_dark", "sap_horizon_hcb", "sap_horizon_hcw"]
     .forEach(themeName => registerThemePropertiesLoader("@ui5/webcomponents-theming", themeName, loadAndCheck2));
 
+// CLDR locale data loaders - use absolute URLs to avoid import.meta.url issues in the playground sandbox
+import { registerLocaleDataLoader } from "@ui5/webcomponents-base/dist/asset-registries/LocaleData.js";
+const cldrBaseUrl = "${settings.cldrBaseUrl}";
+const availableLocales = ["ar","ar_EG","ar_SA","bg","ca","cnr","cs","da","de","de_AT","de_CH","el","el_CY","en","en_AU","en_GB","en_HK","en_IE","en_IN","en_NZ","en_PG","en_SG","en_ZA","es","es_AR","es_BO","es_CL","es_CO","es_MX","es_PE","es_UY","es_VE","et","fa","fi","fr","fr_BE","fr_CA","fr_CH","fr_LU","he","hi","hr","hu","id","it","it_CH","ja","kk","ko","lt","lv","ms","mk","nb","nl","nl_BE","pl","pt","pt_PT","ro","ru","ru_UA","sk","sl","sr","sr_Latn","sv","th","tr","uk","vi","zh_CN","zh_HK","zh_SG","zh_TW"];
+availableLocales.forEach(localeId => registerLocaleDataLoader(localeId, async () => {
+    const response = await fetch(cldrBaseUrl + localeId + ".json");
+    return response.json();
+}));
+
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 import applyDirection from "@ui5/webcomponents-base/dist/locale/applyDirection.js";
 

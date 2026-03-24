@@ -369,14 +369,14 @@ export default function Editor({ html, js, css, react, mainFile = "main.js", can
     if (!gistConfig.files["playground-support.js"]) {
       gistConfig.files["playground-support.js"] = {
         name: "playground-support.js",
-        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId, cldrBaseUrl: calcImports()["@ui5/webcomponents-localization/"] + "dist/generated/assets/cldr/" }),
         hidden: true
       };
     } else {
       //  update existing playground support with current settings
       gistConfig.files["playground-support.js"] = {
         ...gistConfig.files["playground-support.js"],
-        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+        content: playgroundSupport({ theme, textDirection, contentDensity, iframeId, cldrBaseUrl: calcImports()["@ui5/webcomponents-localization/"] + "dist/generated/assets/cldr/" }),
         hidden: true
       };
     }
@@ -422,7 +422,7 @@ export default function Editor({ html, js, css, react, mainFile = "main.js", can
           content: addHeadContent(fixAssetPaths(_html)),
         },
         "playground-support.js": {
-          content: playgroundSupport({ theme, textDirection, contentDensity, iframeId }),
+          content: playgroundSupport({ theme, textDirection, contentDensity, iframeId, cldrBaseUrl: calcImports()["@ui5/webcomponents-localization/"] + "dist/generated/assets/cldr/" }),
           hidden: true,
         },
         [mainFile]: {
@@ -539,7 +539,7 @@ ${fixAssetPaths(_js)}`,
     // setting has changed but exising project config is there
     // update the playground-support.js only with the new settings so refresh works correctly
     const newConfig = JSON.parse(JSON.stringify(projectRef.current.config));
-    newConfig.files["playground-support.js"].content = playgroundSupport({ theme, textDirection, contentDensity, iframeId });
+    newConfig.files["playground-support.js"].content = playgroundSupport({ theme, textDirection, contentDensity, iframeId, cldrBaseUrl: calcImports()["@ui5/webcomponents-localization/"] + "dist/generated/assets/cldr/" });
     projectRef.current.config = newConfig;
   }, [theme, contentDensity, textDirection]);
 

@@ -1,4 +1,3 @@
-import "@ui5/webcomponents/dist/Assets-fetch.js";
 import "@ui5/webcomponents/dist/DatePicker.js";
 import "@ui5/webcomponents/dist/Select.js";
 import "@ui5/webcomponents/dist/Option.js";
