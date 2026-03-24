@@ -614,10 +614,6 @@ class StepInput extends UI5Element implements IFormInputElement {
  	 * @private
  	*/
 	_parseNumber(formattedValue: string): number {
-		if (this._isScientificNotation(formattedValue)) {
-			return Number(formattedValue);
-		}
-
 		return this.formatter.parse(formattedValue) as number;
 	}
 
