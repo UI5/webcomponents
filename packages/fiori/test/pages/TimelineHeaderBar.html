@@ -53,7 +53,6 @@
 			<div class="timeline-container">
 				<ui5-timeline id="fullDemo" accessible-name="Project Activity Feed">
 					<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Category">
-						<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
@@ -237,7 +236,6 @@
 			<div class="timeline-container">
 				<ui5-timeline id="filterDemo" accessible-name="Incident Response Log">
 					<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Severity">
-						<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Critical"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Warning"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Info"></ui5-timeline-filter-option>
@@ -307,7 +305,6 @@
 			<div class="timeline-container">
 				<ui5-timeline id="combinedDemo" accessible-name="Team Activity Stream">
 					<ui5-timeline-header-bar slot="headerBar" show-search show-filter filter-by="Type">
-						<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Code"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Review"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Deploy"></ui5-timeline-filter-option>
@@ -412,7 +409,7 @@
 		<h2 class="section-title">Mixed Layout — Flat Items + Groups Interleaved</h2>
 		<p class="section-desc">
 			Tests ordering preservation when flat items and groups are interleaved.
-			Filter by category, then select "All" again — items must return to their original positions.
+			Filter by category, then clear all filters — items must return to their original positions.
 		</p>
 
 		<div class="event-log">
@@ -424,7 +421,6 @@
 			<div class="timeline-container">
 				<ui5-timeline id="mixedDemo" accessible-name="Mixed Layout Demo">
 					<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Category">
-						<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Alert"></ui5-timeline-filter-option>
 						<ui5-timeline-filter-option text="Change"></ui5-timeline-filter-option>
 					</ui5-timeline-header-bar>
@@ -474,6 +470,85 @@
 						title-text="7. Incident resolved (flat, after groups)" subtitle-text="17:00"
 						icon="accept" name="On-Call" state="Positive">
 						This flat item should always appear last.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 9. MULTI-SELECT FILTER — Dialog with Checkboxes
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Multi-Select Filter</span>
+		<h2 class="section-title">Deployment Pipeline — Multi-Tag Filter</h2>
+		<p class="section-desc">
+			Click the filter icon to open a dialog with checkboxes. Select one or more tags.
+			An item is shown if it matches <strong>any</strong> selected tag.
+			If nothing is selected, all items are shown.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Active filters</span>
+			<span class="event-log-value" id="multiFilterLog">None (showing all)</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="multiFilterDemo" accessible-name="Deployment Pipeline">
+					<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Tags">
+						<ui5-timeline-filter-option text="Frontend"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Backend"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Infra"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Security"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-tags="Frontend" data-date="2024-03-18T09:00"
+						title-text="UI component library v3.2" subtitle-text="18.03.2024 09:00"
+						icon="palette" name="Design System Team" state="Positive">
+						Published 12 new components. Bundle size reduced by 8%.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Backend,Security" data-date="2024-03-18T10:30"
+						title-text="Auth service — rate limiting" subtitle-text="18.03.2024 10:30"
+						icon="locked" name="Platform Team">
+						Added per-IP rate limiting to /login and /token endpoints. Threshold: 10 req/min.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Infra" data-date="2024-03-18T11:00"
+						title-text="Kubernetes cluster upgrade" subtitle-text="18.03.2024 11:00"
+						icon="cloud" name="SRE Team" state="Information">
+						Upgraded from 1.28 to 1.29. Rolling restart completed with zero downtime.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Frontend,Backend" data-date="2024-03-18T13:00"
+						title-text="GraphQL schema v2 migration" subtitle-text="18.03.2024 13:00"
+						icon="synchronize" name="API Team" state="Critical">
+						Breaking change: deprecated Query.users field removed. 3 consumer apps updated.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Security" data-date="2024-03-18T14:30"
+						title-text="Dependency audit — CVE patches" subtitle-text="18.03.2024 14:30"
+						icon="shield" name="Security Team" state="Negative">
+						Patched 2 critical CVEs in openssl and libcurl across all base images.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Infra,Security" data-date="2024-03-18T16:00"
+						title-text="WAF rule update" subtitle-text="18.03.2024 16:00"
+						icon="firewall" name="SRE Team">
+						Added geo-blocking rules for 14 high-risk regions. False-positive rate: 0.01%.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Backend" data-date="2024-03-18T17:00"
+						title-text="Database connection pooling" subtitle-text="18.03.2024 17:00"
+						icon="database" name="Platform Team" state="Positive">
+						Switched to PgBouncer. Connection count dropped from 850 to 120.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Frontend" data-date="2024-03-18T18:00"
+						title-text="Performance audit — Core Web Vitals" subtitle-text="18.03.2024 18:00"
+						icon="performance" name="Frontend Team" state="Positive">
+						LCP improved from 2.8s to 1.4s. CLS reduced to 0.02.
 					</ui5-timeline-item>
 				</ui5-timeline>
 			</div>
@@ -611,14 +686,14 @@
 		const sortLabelEl = document.getElementById("fullDemoSortLabel");
 
 		const mgr = createItemManager(timeline);
-		const state = { search: "", filter: "All", sortOrder: "None" };
+		const state = { search: "", filters: [], sortOrder: "None" };
 
 		function apply() {
 			const count = mgr.reconcile(item => {
 				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 					.join(" ").toLowerCase();
 				const searchOk = !state.search || text.includes(state.search);
-				const filterOk = state.filter === "All" || item.dataset.category === state.filter;
+				const filterOk = state.filters.length === 0 || state.filters.includes(item.dataset.category);
 				return searchOk && filterOk;
 			});
 
@@ -640,8 +715,8 @@
 		});
 
 		timeline.addEventListener("filter", e => {
-			state.filter = e.detail.selectedOptions[0] || "All";
-			logEl.textContent = `filter → ${state.filter}`;
+			state.filters = e.detail.selectedOptions;
+			logEl.textContent = state.filters.length ? `filter → ${state.filters.join(", ")}` : "filter cleared";
 			apply();
 		});
 
@@ -703,9 +778,9 @@
 		const mgr = createItemManager(timeline);
 
 		timeline.addEventListener("filter", e => {
-			const severity = e.detail.selectedOptions[0] || "All";
+			const severities = e.detail.selectedOptions;
 			mgr.reconcile(item => {
-				return severity === "All" || item.dataset.severity === severity;
+				return severities.length === 0 || severities.includes(item.dataset.severity);
 			});
 		});
 	})();
@@ -718,21 +793,21 @@
 		const timeline = document.getElementById("combinedDemo");
 		const logEl = document.getElementById("combinedLog");
 		const mgr = createItemManager(timeline);
-		const state = { search: "", type: "All" };
+		const state = { search: "", types: [] };
 
 		function apply() {
 			mgr.reconcile(item => {
 				const text = [item.titleText, item.name, item.textContent]
 					.join(" ").toLowerCase();
 				const searchOk = !state.search || text.includes(state.search);
-				const typeOk = state.type === "All" || item.dataset.type === state.type;
+				const typeOk = state.types.length === 0 || state.types.includes(item.dataset.type);
 				return searchOk && typeOk;
 			});
 
 			const parts = [];
-			if (state.type !== "All") parts.push(`Type: ${state.type}`);
+			if (state.types.length) parts.push(`Type: ${state.types.join(", ")}`);
 			if (state.search) parts.push(`Search: "${state.search}"`);
-			logEl.textContent = parts.length ? parts.join(" + ") : "Category: All";
+			logEl.textContent = parts.length ? parts.join(" + ") : "No filters active";
 		}
 
 		timeline.addEventListener("search", e => {
@@ -741,7 +816,7 @@
 		});
 
 		timeline.addEventListener("filter", e => {
-			state.type = e.detail.selectedOptions[0] || "All";
+			state.types = e.detail.selectedOptions;
 			apply();
 		});
 	})();
@@ -784,13 +859,70 @@
 		const mgr = createItemManager(timeline);
 
 		timeline.addEventListener("filter", e => {
-			const category = e.detail.selectedOptions[0] || "All";
+			const categories = e.detail.selectedOptions;
 			const count = mgr.reconcile(item => {
-				return category === "All" || item.dataset.cat === category;
+				return categories.length === 0 || categories.includes(item.dataset.cat);
 			});
-			logEl.textContent = category === "All"
+			logEl.textContent = categories.length === 0
 				? "All items visible"
-				: `Showing ${count} "${category}" items`;
+				: `Showing ${count} "${categories.join(", ")}" items`;
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 9. MULTI-SELECT FILTER — Dialog with Checkboxes
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("multiFilterDemo");
+		const logEl = document.getElementById("multiFilterLog");
+		const mgr = createItemManager(timeline);
+		const state = { search: "", filters: [], sortOrder: "None" };
+
+		function apply() {
+			const count = mgr.reconcile(item => {
+				// Search: match against all text content
+				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+					.join(" ").toLowerCase();
+				const searchOk = !state.search || text.includes(state.search);
+
+				// Filter: item matches if ANY of its tags is in the selected set
+				const itemTags = (item.dataset.tags || "").split(",");
+				const filterOk = state.filters.length === 0
+					|| itemTags.some(tag => state.filters.includes(tag));
+
+				return searchOk && filterOk;
+			});
+
+			if (state.sortOrder !== "None") {
+				mgr.sort((a, b) => {
+					const da = new Date(a.dataset.date || 0);
+					const db = new Date(b.dataset.date || 0);
+					return state.sortOrder === "Ascending" ? da - db : db - da;
+				});
+			}
+
+			// Update status display
+			if (state.filters.length === 0) {
+				logEl.textContent = "None (showing all)";
+			} else {
+				logEl.textContent = state.filters.join(", ") + ` (${count} items)`;
+			}
+		}
+
+		timeline.addEventListener("search", e => {
+			state.search = e.detail.value.toLowerCase();
+			apply();
+		});
+
+		timeline.addEventListener("filter", e => {
+			state.filters = e.detail.selectedOptions;
+			apply();
+		});
+
+		timeline.addEventListener("sort", e => {
+			state.sortOrder = e.detail.sortOrder;
+			apply();
 		});
 	})();
 

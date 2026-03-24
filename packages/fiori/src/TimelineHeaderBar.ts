@@ -8,14 +8,13 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
-import type Select from "@ui5/webcomponents/dist/Select.js";
+import type List from "@ui5/webcomponents/dist/List.js";
 import type TimelineSortOrder from "./types/TimelineSortOrder.js";
 import type TimelineFilterOption from "./TimelineFilterOption.js";
 
 // Import icons to register them
-import "@ui5/webcomponents-icons/dist/sort.js";
-import "@ui5/webcomponents-icons/dist/sort-ascending.js";
 import "@ui5/webcomponents-icons/dist/sort-descending.js";
+import "@ui5/webcomponents-icons/dist/add-filter.js";
 
 import TimelineHeaderBarTemplate from "./TimelineHeaderBarTemplate.js";
 import TimelineHeaderBarCss from "./generated/themes/TimelineHeaderBar.css.js";
@@ -28,6 +27,9 @@ import {
 	TIMELINE_SORT_ASCENDING_TOOLTIP,
 	TIMELINE_SORT_DESCENDING_TOOLTIP,
 	TIMELINE_SORT_ACCESSIBLE_NAME,
+	TIMELINE_FILTER_DIALOG_TITLE,
+	TIMELINE_FILTER_DIALOG_OK,
+	TIMELINE_FILTER_DIALOG_CANCEL,
 } from "./generated/i18n/i18n-defaults.js";
 
 type TimelineHeaderBarSearchEventDetail = {
@@ -122,7 +124,7 @@ class TimelineHeaderBar extends UI5Element {
 	showSearch = false;
 
 	/**
-	 * Shows the filter dropdown.
+	 * Shows the filter button.
 	 * @default false
 	 * @public
 	 */
@@ -170,7 +172,14 @@ class TimelineHeaderBar extends UI5Element {
 	sortOrder: `${TimelineSortOrder}` = "None";
 
 	/**
-	 * Filter options to display in the filter dropdown.
+	 * Controls the filter dialog visibility.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_filterDialogOpen = false;
+
+	/**
+	 * Filter options to display in the filter dialog.
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true })
@@ -200,20 +209,30 @@ class TimelineHeaderBar extends UI5Element {
 	}
 
 	get _sortTooltip() {
-		if (this.sortOrder === "Ascending") {
-			return TimelineHeaderBar.i18nBundle.getText(TIMELINE_SORT_DESCENDING_TOOLTIP);
+		if (this.sortOrder === "Descending") {
+			return TimelineHeaderBar.i18nBundle.getText(TIMELINE_SORT_ASCENDING_TOOLTIP);
 		}
-		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_SORT_ASCENDING_TOOLTIP);
+		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_SORT_DESCENDING_TOOLTIP);
 	}
 
 	get _sortIcon() {
-		if (this.sortOrder === "Ascending") {
-			return "sort-ascending";
-		}
-		if (this.sortOrder === "Descending") {
-			return "sort-descending";
-		}
-		return "sort";
+		return "sort-descending";
+	}
+
+	get _filterIcon() {
+		return "add-filter";
+	}
+
+	get _filterDialogTitle() {
+		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_FILTER_DIALOG_TITLE);
+	}
+
+	get _filterDialogOkText() {
+		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_FILTER_DIALOG_OK);
+	}
+
+	get _filterDialogCancelText() {
+		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_FILTER_DIALOG_CANCEL);
 	}
 
 	_onSearchInput(e: CustomEvent) {
@@ -222,15 +241,22 @@ class TimelineHeaderBar extends UI5Element {
 		this.fireDecoratorEvent("search", { value });
 	}
 
-	_onFilterChange(e: CustomEvent) {
-		const select = e.target as Select;
-		const selectedOption = select.selectedOption;
-		const selectedText = selectedOption?.textContent?.trim() || "";
+	_onFilterClick() {
+		this._filterDialogOpen = true;
+	}
 
-		// Update the selected state of filter options
-		this.filterOptions.forEach(option => {
-			option.selected = option.text === selectedText;
-		});
+	_onFilterDialogConfirm() {
+		// Read selected state from the list items in the dialog
+		const list = this.shadowRoot!.querySelector<List>(".ui5-timeline-filter-list");
+		if (list) {
+			const selectedItems = list.getSelectedItems();
+			const selectedTexts = selectedItems.map(item => item.textContent?.trim() || "");
+
+			// Update the TimelineFilterOption elements to match the dialog selection
+			this.filterOptions.forEach(option => {
+				option.selected = selectedTexts.includes(option.text);
+			});
+		}
 
 		const selectedOptions = this.filterOptions
 			.filter(option => option.selected)
@@ -240,14 +266,24 @@ class TimelineHeaderBar extends UI5Element {
 			filterBy: this.filterBy,
 			selectedOptions,
 		});
+
+		this._filterDialogOpen = false;
+	}
+
+	_onFilterDialogCancel() {
+		this._filterDialogOpen = false;
+	}
+
+	_onFilterDialogClose() {
+		this._filterDialogOpen = false;
 	}
 
 	_onSortClick() {
-		// Toggle sort order: None -> Ascending -> Descending -> Ascending
-		if (this.sortOrder === "None" || this.sortOrder === "Descending") {
-			this.sortOrder = "Ascending";
-		} else {
+		// Toggle sort order: None -> Descending -> Ascending -> Descending
+		if (this.sortOrder === "None" || this.sortOrder === "Ascending") {
 			this.sortOrder = "Descending";
+		} else {
+			this.sortOrder = "Ascending";
 		}
 
 		this.fireDecoratorEvent("sort", {

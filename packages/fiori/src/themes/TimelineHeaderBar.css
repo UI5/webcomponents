@@ -1,37 +1,17 @@
 :host {
 	display: block;
-	--_ui5_timeline_header_bar_padding: 0.5rem 1rem;
-	--_ui5_timeline_header_bar_gap: 0.5rem;
 	--_ui5_timeline_header_bar_search_max_width: 16rem;
-	--_ui5_timeline_header_bar_filter_min_width: 8rem;
-}
-
-.ui5-timeline-header-bar {
-	display: flex;
-	align-items: center;
-	gap: var(--_ui5_timeline_header_bar_gap);
-	padding: var(--_ui5_timeline_header_bar_padding);
-	background: var(--sapList_HeaderBackground);
-	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
+	--_ui5_timeline_filter_dialog_min_width: 20rem;
 }
 
 .ui5-timeline-header-bar-search {
 	max-width: var(--_ui5_timeline_header_bar_search_max_width);
-	flex-shrink: 0;
 }
 
-.ui5-timeline-header-bar-spacer {
-	flex: 1;
+.ui5-timeline-filter-dialog {
+	min-width: var(--_ui5_timeline_filter_dialog_min_width);
 }
 
-.ui5-timeline-header-bar-filter {
-	flex-shrink: 0;
-}
-
-.ui5-timeline-header-bar-filter-select {
-	min-width: var(--_ui5_timeline_header_bar_filter_min_width);
-}
-
-.ui5-timeline-header-bar-sort {
-	flex-shrink: 0;
+.ui5-timeline-filter-list {
+	width: 100%;
 }

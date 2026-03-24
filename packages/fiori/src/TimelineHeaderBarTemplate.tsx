@@ -1,18 +1,28 @@
+import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
+import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
-import Button from "@ui5/webcomponents/dist/Button.js";
-import Select from "@ui5/webcomponents/dist/Select.js";
-import Option from "@ui5/webcomponents/dist/Option.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
+import Dialog from "@ui5/webcomponents/dist/Dialog.js";
+import List from "@ui5/webcomponents/dist/List.js";
+import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
+import Bar from "@ui5/webcomponents/dist/Bar.js";
+import Button from "@ui5/webcomponents/dist/Button.js";
 import type TimelineHeaderBar from "./TimelineHeaderBar.js";
-import search from "@ui5/webcomponents-icons/dist/search.js";
+import searchIcon from "@ui5/webcomponents-icons/dist/search.js";
+import sortDescending from "@ui5/webcomponents-icons/dist/sort-descending.js";
+import addFilter from "@ui5/webcomponents-icons/dist/add-filter.js";
 
 export default function TimelineHeaderBarTemplate(this: TimelineHeaderBar) {
-	return (
-		<div
-			class="ui5-timeline-header-bar"
-			role="toolbar"
-			aria-label={this._headerBarAccessibleName}
+	return (<>
+		<Toolbar
+			class="ui5-timeline-header-bar-toolbar"
+			accessibleName={this._headerBarAccessibleName}
+			design="Transparent"
 		>
+			{/* Spacer pushes all controls to the end */}
+			<ToolbarSpacer />
+
 			{/* Search Input */}
 			{this.showSearch && (
 				<Input
@@ -23,44 +33,73 @@ export default function TimelineHeaderBarTemplate(this: TimelineHeaderBar) {
 					accessibleName={this._searchAccessibleName}
 					onInput={this._onSearchInput}
 				>
-					<Icon slot="icon" name={search} />
+					<Icon slot="icon" name={searchIcon} />
 				</Input>
-			)}
-
-			{/* Spacer */}
-			<div class="ui5-timeline-header-bar-spacer"></div>
-
-			{/* Filter Dropdown */}
-			{this.showFilter && this.filterOptions.length > 0 && (
-				<div class="ui5-timeline-header-bar-filter">
-					<Select
-						class="ui5-timeline-header-bar-filter-select"
-						accessibleName={this._filterAccessibleName}
-						onChange={this._onFilterChange}
-					>
-						{this.filterOptions.map(option => (
-							<Option
-								key={option.text}
-								selected={option.selected}
-							>
-								{option.text}
-							</Option>
-						))}
-					</Select>
-				</div>
 			)}
 
 			{/* Sort Button */}
 			{this.showSort && (
-				<Button
-					class="ui5-timeline-header-bar-sort"
-					icon={this._sortIcon}
+				<ToolbarButton
+					icon={sortDescending}
 					design="Transparent"
 					tooltip={this._sortTooltip}
 					accessibleName={this._sortAccessibleName}
 					onClick={this._onSortClick}
 				/>
 			)}
-		</div>
-	);
+
+			{/* Filter Button */}
+			{this.showFilter && (
+				<ToolbarButton
+					icon={addFilter}
+					design="Transparent"
+					tooltip={this._filterAccessibleName}
+					accessibleName={this._filterAccessibleName}
+					onClick={this._onFilterClick}
+				/>
+			)}
+		</Toolbar>
+
+		{/* Filter Dialog */}
+		{this.showFilter && (
+			<Dialog
+				class="ui5-timeline-filter-dialog"
+				headerText={this._filterDialogTitle}
+				open={this._filterDialogOpen}
+				onClose={this._onFilterDialogClose}
+			>
+				<List
+					selectionMode="Multiple"
+					class="ui5-timeline-filter-list"
+				>
+					{this.filterOptions.map(option => (
+						<ListItemStandard
+							key={option.text}
+							selected={option.selected}
+							data-filter-text={option.text}
+						>
+							{option.text}
+						</ListItemStandard>
+					))}
+				</List>
+
+				<Bar slot="footer" design="Footer">
+					<Button
+						slot="endContent"
+						design="Emphasized"
+						onClick={this._onFilterDialogConfirm}
+					>
+						{this._filterDialogOkText}
+					</Button>
+					<Button
+						slot="endContent"
+						design="Transparent"
+						onClick={this._onFilterDialogCancel}
+					>
+						{this._filterDialogCancelText}
+					</Button>
+				</Bar>
+			</Dialog>
+		)}
+	</>);
 }
