@@ -188,6 +188,7 @@
 	box-sizing: border-box;
 	border: var(--_ui5_radio_button_border);
 	border-radius: var(--_ui5_radio_button_border_radius);
+	padding-block: var(--_ui5_radio_button_label_side_padding);
 }
 
 /* Inner */
@@ -218,7 +219,6 @@
 	display: flex;
 	align-items: center;
 	padding-inline-end: var(--_ui5_radio_button_label_offset);
-	padding-block: var(--_ui5_radio_button_label_side_padding);
 	max-width: 100%;
 	pointer-events: none;
 	color: var(--_ui5_radio_button_label_color);
