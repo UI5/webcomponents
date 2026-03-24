@@ -123,9 +123,9 @@
 
 	/* Radio Button */
 	--_ui5_radio_button_height: 2.75rem;
-	--_ui5_radio_button_label_side_padding: .875rem;
+	--_ui5_radio_button_label_side_padding: 1em;
 	--_ui5_radio_button_inner_size: 2.75rem;
-	--_ui5_radio_button_svg_size: 1.375rem;
+	--_ui5_radio_button_svg_size: 1.5714em;
 
 	/* Responsive Popover */
 	--_ui5-responsive_popover_header_height: 2.75rem;
@@ -323,9 +323,9 @@
 
 		/* Radio Button */
 		--_ui5_radio_button_height: 2rem;
-		--_ui5_radio_button_label_side_padding: .5rem;
+		--_ui5_radio_button_label_side_padding: 0.5714em;
 		--_ui5_radio_button_inner_size: 2rem;
-		--_ui5_radio_button_svg_size: 1rem;
+		--_ui5_radio_button_svg_size: 1.1429em;
 
 		/* Responsive Popover */
 		--_ui5-responsive_popover_header_height: 2.5rem;

@@ -2,7 +2,8 @@
 @import "./FormComponents.css";
 
 :host(:not([hidden])) {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
 }
 
 :host {
@@ -12,6 +13,7 @@
 	overflow: hidden;
 	color: var(--_ui5_radio_button_color);
 	border-radius: var(--_ui5_radio_button_border_radius);
+	font-size: var(--sapFontSize);
 }
 
 :host(:not([disabled])) .ui5-radio-root {
@@ -179,6 +181,7 @@
 	height: auto;
 	position: relative;
 	display: inline-flex;
+	align-items: center;
 	flex-wrap: nowrap;
 	outline: none;
 	max-width: 100%;
@@ -192,11 +195,8 @@
 	display: flex;
 	align-items: center;
 	padding: var(--_ui5_radio_button_outer_ring_padding);
-	flex-shrink: 0;
-	height: var(--_ui5_radio_button_inner_size);
-	font-size: 1rem; /* override font size of the message dialog */
+	flex: 1;
 	pointer-events: none;
-	vertical-align: top;
 }
 
 .ui5-radio-inner {
@@ -219,11 +219,11 @@
 	align-items: center;
 	padding-inline-end: var(--_ui5_radio_button_label_offset);
 	padding-block: var(--_ui5_radio_button_label_side_padding);
-	vertical-align: top;
 	max-width: 100%;
 	pointer-events: none;
 	color: var(--_ui5_radio_button_label_color);
 	overflow-wrap: break-word;
+	font-size: inherit;
 }
 
 :host([wrapping-type="None"][text]) .ui5-radio-root {
