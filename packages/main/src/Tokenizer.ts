@@ -367,7 +367,6 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_deletedDialogItems!: Token[];
 	_lastFocusedToken: Token | null = null;
 	_isFocusSetInternally: boolean = false;
-	_lastMarkedToken?: Token;
 	/**
 	 * Scroll to end when tokenizer is expanded
 	 * @private
@@ -425,10 +424,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			token.readonly = this.readonly;
 		});
 
-		// If expanding, immediately remove last-visible-token attribute to ensure proper spacing
-		if (this.expanded && this._lastMarkedToken) {
-			this._lastMarkedToken.removeAttribute("last-visible-token");
-			this._lastMarkedToken = undefined;
+		// Clear lastVisibleToken when expanding to ensure proper spacing
+		if (this.expanded) {
+			this._tokens.forEach(token => {
+				token.lastVisibleToken = false;
+			});
 		}
 	}
 
@@ -524,7 +524,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	/**
-	 * Updates the last-visible-token attribute on tokens.
+	 * Updates the lastVisibleToken property on tokens.
 	 * When collapsed with overflow, marks the last visible token for proper spacing to the n-more indicator.
 	 * @private
 	 */
@@ -534,22 +534,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		const visibleTokens = tokensArray.filter(token => !token.overflows);
 		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
 
-		// Only set attribute when NOT expanded AND overflow exists
-		const newMarkedToken = (!this.expanded && hasOverflow && lastVisibleToken) ? lastVisibleToken : undefined;
-		const previousToken = this._lastMarkedToken;
-
-		// Only update DOM if state changed (prevents render loop)
-		if (previousToken !== newMarkedToken) {
-			if (previousToken) {
-				previousToken.removeAttribute("last-visible-token");
-			}
-
-			if (newMarkedToken) {
-				newMarkedToken.setAttribute("last-visible-token", "");
-			}
-
-			this._lastMarkedToken = newMarkedToken;
-		}
+		tokensArray.forEach(token => {
+			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
+		});
 	}
 
 	/**
