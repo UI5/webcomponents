@@ -3397,6 +3397,138 @@ describe("SelectedValue API", () => {
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
 		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", false);
 	});
+
+	it("should properly select an item when first choosing from items with same text but different values", () => {
+		cy.mount(
+			<ComboBox id="employee-combo" placeholder="Select an employee">
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+				<ComboBoxItem text="Jane Doe" additionalText="HR" value="emp-118"></ComboBoxItem>
+				<ComboBoxItem text="Jane Doe" additionalText="Finance" value="emp-267"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("#employee-combo")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		// Open the picker
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Select the third item (John Smith - Marketing, emp-342)
+		cy.get("[ui5-cb-item]").eq(2).realClick();
+
+		// Check that selection-change event fired with the correct item
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item.text === "John Smith" &&
+				event.detail.item.value === "emp-342" &&
+				event.detail.item.additionalText === "Marketing";
+		}));
+
+		// Verify the combo has the correct value and selectedValue
+		cy.get("@combo")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-342");
+
+		// Re-open the picker
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Verify the third item is selected
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", true);
+		cy.get("[ui5-cb-item]").eq(3).should("have.prop", "selected", false);
+		cy.get("[ui5-cb-item]").eq(4).should("have.prop", "selected", false);
+	});
+
+	it("should properly select item with same text but different values after consecutive selects", () => {
+		cy.mount(
+			<ComboBox id="employee-combo" placeholder="Select an employee">
+				<ComboBoxItem text="John Smith" additionalText="Sales" value="emp-101"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Engineering" value="emp-205"></ComboBoxItem>
+				<ComboBoxItem text="John Smith" additionalText="Marketing" value="emp-342"></ComboBoxItem>
+				<ComboBoxItem text="Jane Doe" additionalText="HR" value="emp-118"></ComboBoxItem>
+				<ComboBoxItem text="Jane Doe" additionalText="Finance" value="emp-267"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("#employee-combo")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		// Open the picker
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Select the third item (John Smith - Marketing, emp-342)
+		cy.get("[ui5-cb-item]").eq(2).realClick();
+
+		// Verify the combo has the correct value and selectedValue
+		cy.get("@combo")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-342");
+
+		// Re-open the picker
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Verify the third item is selected
+		cy.get("[ui5-cb-item]").eq(2).should("have.prop", "selected", true);
+
+		// select the second item
+		cy.get("[ui5-cb-item]").eq(1).realClick();
+
+		// Verify the combo has the correct value and selectedValue
+		cy.get("@combo")
+			.should("have.prop", "value", "John Smith")
+			.should("have.prop", "selectedValue", "emp-205");
+
+		// Re-open the picker
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combo")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		// Verify the second item is selected
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
+	});
 });
 
 describe("Case-Insensitive Selection", () => {
