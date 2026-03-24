@@ -459,9 +459,9 @@ class Calendar extends CalendarPart {
 	_getHeaderTextForMonth(monthTimestamp: number): { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } {
 		const calendarDate = CalendarDateComponent.fromTimestamp(monthTimestamp * 1000, this._primaryCalendarType);
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
+		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
 
-		const monthText = localeData.getMonthsStandAlone("wide", this.primaryCalendarType)[calendarDate.getMonth()];
+		const monthText = localeData.getMonthsStandAlone("wide", this._primaryCalendarType)[calendarDate.getMonth()];
 		const localDate = calendarDate.toLocalJSDate();
 		const yearText = String(yearFormat.format(localDate, true));
 
@@ -471,7 +471,7 @@ class Calendar extends CalendarPart {
 		};
 
 		if (this.hasSecondaryCalendarType) {
-			const secondaryDate = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, monthTimestamp, true);
+			const secondaryDate = transformDateToSecondaryType(this._primaryCalendarType, this._secondaryCalendarType, monthTimestamp, true);
 			const secondaryCalendarDate = secondaryDate.firstDate || secondaryDate.lastDate;
 			const secondaryLocaleData = getCachedLocaleDataInstance(getLocale());
 			result.secondMonthText = secondaryLocaleData.getMonthsStandAlone("wide", this._secondaryCalendarType)[secondaryCalendarDate.getMonth()];
