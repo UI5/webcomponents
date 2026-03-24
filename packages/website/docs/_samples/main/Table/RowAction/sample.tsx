@@ -46,7 +46,7 @@ const handlers: Record<string, (row: any) => void> = {
   },
 };
 
-function App() {
+export const Example = () => {
   const handleTableRowActionClick = (
     e: UI5CustomEvent<TableClass, "row-action-click">,
   ) => {
@@ -202,5 +202,3 @@ function App() {
     </>
   );
 }
-
-export default App;

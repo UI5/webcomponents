@@ -146,7 +146,7 @@ const layoutsConfiguration = {
   },
 };
 
-function App() {
+export const Example = () => {
   const fclRef = useRef(null);
   const selectLayoutRef = useRef(null);
 
@@ -455,5 +455,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -5,7 +5,7 @@ import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js
 const MultiComboBox = createReactComponent(MultiComboBoxClass);
 const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <MultiComboBox placeholder="Select countries" selectedValues={["DE", "FR"]}>
       <MultiComboBoxItem text="Germany" value="DE" />
@@ -16,5 +16,3 @@ function App() {
     </MultiComboBox>
   );
 }
-
-export default App;

@@ -37,7 +37,7 @@ const initialFiles = [
   },
 ];
 
-function App() {
+export const Example = () => {
   const [files, setFiles] = useState(initialFiles);
 
   const handleUploadCollectionRename = (
@@ -83,5 +83,3 @@ function App() {
     </>
   );
 }
-
-export default App;

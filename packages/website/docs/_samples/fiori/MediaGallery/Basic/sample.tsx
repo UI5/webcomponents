@@ -5,7 +5,7 @@ import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryIte
 const MediaGallery = createReactComponent(MediaGalleryClass);
 const MediaGalleryItem = createReactComponent(MediaGalleryItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -42,5 +42,3 @@ function App() {
     </>
   );
 }
-
-export default App;

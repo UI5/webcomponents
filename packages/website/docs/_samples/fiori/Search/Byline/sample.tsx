@@ -10,7 +10,7 @@ const SearchItem = createReactComponent(SearchItemClass);
 const SearchItemGroup = createReactComponent(SearchItemGroupClass);
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Search showClearIcon={true} placeholder="Type D to search ...">
@@ -48,5 +48,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -11,7 +11,7 @@ const DateTimePicker = createReactComponent(DateTimePickerClass);
 const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 
-function App() {
+export const Example = () => {
   const dtpRef = useRef(null);
 
   const handleSelectChange = (e: UI5CustomEvent<SelectClass, "change">) => {
@@ -54,5 +54,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -19,7 +19,7 @@ const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
-function App() {
+export const Example = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNewAddClick = () => {
@@ -105,5 +105,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import LinkClass from "@ui5/webcomponents/dist/Link.js";
 
 const Link = createReactComponent(LinkClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Link
@@ -24,5 +24,3 @@ function App() {
     </>
   );
 }
-
-export default App;

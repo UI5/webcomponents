@@ -4,7 +4,7 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ToggleButton>Toggle</ToggleButton>
@@ -12,5 +12,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -7,7 +7,7 @@ const MultiComboBox = createReactComponent(MultiComboBoxClass);
 const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 const MultiComboBoxItemGroup = createReactComponent(MultiComboBoxItemGroupClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <MultiComboBox placeholder="Select a country">
@@ -34,5 +34,3 @@ function App() {
     </>
   );
 }
-
-export default App;

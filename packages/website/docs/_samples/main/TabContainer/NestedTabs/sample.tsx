@@ -5,7 +5,7 @@ import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 const Tab = createReactComponent(TabClass);
 const TabContainer = createReactComponent(TabContainerClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <TabContainer>
@@ -47,5 +47,3 @@ function App() {
     </>
   );
 }
-
-export default App;

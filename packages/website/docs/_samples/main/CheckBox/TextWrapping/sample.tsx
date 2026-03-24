@@ -3,7 +3,7 @@ import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 
 const CheckBox = createReactComponent(CheckBoxClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <CheckBox
@@ -22,5 +22,3 @@ function App() {
     </>
   );
 }
-
-export default App;

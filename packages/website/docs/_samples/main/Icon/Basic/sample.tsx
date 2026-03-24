@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/da-2.js";
 
 const Icon = createReactComponent(IconClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Icon name="home" />
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

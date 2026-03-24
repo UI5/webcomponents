@@ -6,7 +6,7 @@ import "@ui5/webcomponents-icons/dist/map.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <List selectionMode="Single" headerText="Single Select Mode">
@@ -69,5 +69,3 @@ function App() {
     </>
   );
 }
-
-export default App;

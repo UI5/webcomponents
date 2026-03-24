@@ -3,7 +3,7 @@ import TextClass from "@ui5/webcomponents/dist/Text.js";
 
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Text style={{ hyphens: "auto", width: "60px" }}>
@@ -16,5 +16,3 @@ function App() {
     </>
   );
 }
-
-export default App;

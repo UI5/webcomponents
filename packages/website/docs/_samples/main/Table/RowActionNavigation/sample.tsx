@@ -17,7 +17,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableRowActionNavigation = createReactComponent(TableRowActionNavigationClass);
 
-function App() {
+export const Example = () => {
   const handleTableRowActionClick = (
     e: UI5CustomEvent<TableClass, "row-action-click">,
   ) => {
@@ -126,5 +126,3 @@ function App() {
     </>
   );
 }
-
-export default App;

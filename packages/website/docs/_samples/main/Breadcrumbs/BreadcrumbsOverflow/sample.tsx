@@ -5,7 +5,7 @@ import BreadcrumbsItemClass from "@ui5/webcomponents/dist/BreadcrumbsItem.js";
 const Breadcrumbs = createReactComponent(BreadcrumbsClass);
 const BreadcrumbsItem = createReactComponent(BreadcrumbsItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Breadcrumbs>
@@ -47,5 +47,3 @@ function App() {
     </>
   );
 }
-
-export default App;

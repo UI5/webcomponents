@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/account.js";
 
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Button icon="edit">Edit</Button>
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -11,7 +11,7 @@ const ProductSwitch = createReactComponent(ProductSwitchClass);
 const ProductSwitchItem = createReactComponent(ProductSwitchItemClass);
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ProductSwitch>
@@ -53,5 +53,3 @@ function App() {
     </>
   );
 }
-
-export default App;

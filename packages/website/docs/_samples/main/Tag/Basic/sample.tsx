@@ -3,12 +3,10 @@ import TagClass from "@ui5/webcomponents/dist/Tag.js";
 
 const Tag = createReactComponent(TagClass);
 
-function App() {
+export const Example = () => {
   return (
     <Tag design="Set1" colorScheme="6">
       Tag Text
     </Tag>
   );
 }
-
-export default App;

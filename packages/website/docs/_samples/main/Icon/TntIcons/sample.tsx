@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons-tnt/dist/repeater.js";
 
 const Icon = createReactComponent(IconClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Icon name="tnt/actor" />
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

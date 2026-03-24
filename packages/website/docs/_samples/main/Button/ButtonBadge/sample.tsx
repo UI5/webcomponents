@@ -8,7 +8,7 @@ const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 const ButtonBadge = createReactComponent(ButtonBadgeClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div>
@@ -47,5 +47,3 @@ function App() {
     </>
   );
 }
-
-export default App;

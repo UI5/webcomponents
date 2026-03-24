@@ -10,7 +10,7 @@ const Popover = createReactComponent(PopoverClass);
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
-function App() {
+export const Example = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -41,5 +41,3 @@ function App() {
     </>
   );
 }
-
-export default App;

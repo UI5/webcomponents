@@ -7,7 +7,7 @@ import "@ui5/webcomponents-icons/dist/copy.js";
 const Tree = createReactComponent(TreeClass);
 const TreeItem = createReactComponent(TreeItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Tree>
@@ -38,5 +38,3 @@ function App() {
     </>
   );
 }
-
-export default App;

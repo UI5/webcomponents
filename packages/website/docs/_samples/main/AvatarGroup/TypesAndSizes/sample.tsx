@@ -5,7 +5,7 @@ import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
 const Avatar = createReactComponent(AvatarClass);
 const AvatarGroup = createReactComponent(AvatarGroupClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <AvatarGroup type="Individual">
@@ -67,5 +67,3 @@ function App() {
     </>
   );
 }
-
-export default App;

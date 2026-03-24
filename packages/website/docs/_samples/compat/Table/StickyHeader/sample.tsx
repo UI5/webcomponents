@@ -11,7 +11,7 @@ const CompatTableColumn = createReactComponent(TableColumnClass);
 const CompatTableCell = createReactComponent(CompatTableCellClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <div style={{ height: "150px", overflow: "scroll" }}>
       <CompatTable stickyColumnHeader>
@@ -154,5 +154,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

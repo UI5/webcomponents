@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/circle-task-2.js";
 
 const RatingIndicator = createReactComponent(RatingIndicatorClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <RatingIndicator value={3} ratedIcon="heart" unratedIcon="heart-2" />
@@ -24,5 +24,3 @@ function App() {
     </>
   );
 }
-
-export default App;

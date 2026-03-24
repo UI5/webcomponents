@@ -6,7 +6,7 @@ import ToastClass from "@ui5/webcomponents/dist/Toast.js";
 const Button = createReactComponent(ButtonClass);
 const Toast = createReactComponent(ToastClass);
 
-function App() {
+export const Example = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,5 +22,3 @@ function App() {
     </>
   );
 }
-
-export default App;

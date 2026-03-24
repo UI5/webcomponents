@@ -137,7 +137,7 @@ const products = [
 
 const ROWS_PER_LOAD = 2;
 
-function App() {
+export const Example = () => {
   const [visibleCount, setVisibleCount] = useState(2);
   const [busy, setBusy] = useState(false);
 
@@ -209,5 +209,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

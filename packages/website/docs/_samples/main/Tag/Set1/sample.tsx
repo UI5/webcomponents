@@ -3,7 +3,7 @@ import TagClass from "@ui5/webcomponents/dist/Tag.js";
 
 const Tag = createReactComponent(TagClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div
@@ -48,5 +48,3 @@ function App() {
     </>
   );
 }
-
-export default App;

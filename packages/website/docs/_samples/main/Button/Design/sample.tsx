@@ -3,7 +3,7 @@ import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Button design="Emphasized">Emphasized</Button>
@@ -15,5 +15,3 @@ function App() {
     </>
   );
 }
-
-export default App;

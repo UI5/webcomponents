@@ -14,7 +14,7 @@ const Link = createReactComponent(LinkClass);
 const Text = createReactComponent(TextClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(true);
 
   const handleDialogClose = useCallback(() => {
@@ -65,5 +65,3 @@ function App() {
     </>
   );
 }
-
-export default App;

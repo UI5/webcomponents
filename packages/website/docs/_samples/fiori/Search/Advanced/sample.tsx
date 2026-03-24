@@ -19,7 +19,7 @@ const data = [
   { name: "Tomato", category: "Vegetable" },
 ];
 
-function App() {
+export const Example = () => {
   const [items, setItems] = useState(data);
 
   const handleFilteringInput = (e: UI5CustomEvent<SearchClass, "input">) => {
@@ -62,5 +62,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import SplitButtonClass from "@ui5/webcomponents/dist/SplitButton.js";
 
 const SplitButton = createReactComponent(SplitButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <SplitButton design="Emphasized">Emphasized</SplitButton>
@@ -15,5 +15,3 @@ function App() {
     </>
   );
 }
-
-export default App;

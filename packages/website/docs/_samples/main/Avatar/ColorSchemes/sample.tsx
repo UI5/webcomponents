@@ -3,7 +3,7 @@ import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Avatar colorScheme="Accent1" />
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -10,7 +10,7 @@ const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Dialog = createReactComponent(DialogClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
@@ -39,5 +39,3 @@ function App() {
     </>
   );
 }
-
-export default App;

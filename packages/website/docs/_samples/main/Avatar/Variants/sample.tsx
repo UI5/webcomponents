@@ -6,7 +6,7 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 const Avatar = createReactComponent(AvatarClass);
 const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
-function App() {
+export const Example = () => {
   const handleInteractiveAvtClick = () => {
     console.log("Interactive avatar clicked");
   };
@@ -142,5 +142,3 @@ function App() {
     </>
   );
 }
-
-export default App;

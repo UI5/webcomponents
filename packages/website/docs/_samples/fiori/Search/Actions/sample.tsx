@@ -9,7 +9,7 @@ const Search = createReactComponent(SearchClass);
 const SearchItem = createReactComponent(SearchItemClass);
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Search id="actions-search" showClearIcon={true}>
@@ -34,5 +34,3 @@ function App() {
     </>
   );
 }
-
-export default App;

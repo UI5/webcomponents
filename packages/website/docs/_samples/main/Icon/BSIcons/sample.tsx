@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons-business-suite/dist/ab-testing.js";
 
 const Icon = createReactComponent(IconClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Icon name="business-suite/add-polygon" />
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

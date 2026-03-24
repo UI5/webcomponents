@@ -439,8 +439,8 @@ function executeCode(transpiledCode: string): { element: React.ReactNode | null;
       const { useState, useEffect, useCallback, useMemo, useRef, Fragment } = React;
       ${transpiledCode}
       // Return the default export or last expression
-      if (typeof App !== 'undefined') return React.createElement(App);
       if (typeof Example !== 'undefined') return React.createElement(Example);
+      if (typeof App !== 'undefined') return React.createElement(App);
       if (typeof Demo !== 'undefined') return React.createElement(Demo);
       return null;
       `
@@ -644,7 +644,7 @@ export default function ReactPlayground({ code, editorVisible = false, onCodeCha
       {editorVisible && MonacoEditor && (
         <div className={styles.editorContainer} onKeyDown={(e) => { if (e.key === "/") e.stopPropagation(); }}>
           <div className={styles.tabBar}>
-            <span className={styles.tab}>App.tsx</span>
+            <span className={styles.tab}>Example.tsx</span>
             <span className={styles.reactVersion}>React &gt;=18</span>
           </div>
           <MonacoEditor

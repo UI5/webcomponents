@@ -11,7 +11,7 @@ const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 const SplitButton = createReactComponent(SplitButtonClass);
 
-function App() {
+export const Example = () => {
   const menuRef = useRef(null);
   const splitBtnRef = useRef(null);
 
@@ -41,5 +41,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -54,7 +54,7 @@ const countries = [
   "Vietnam",
 ];
 
-function App() {
+export const Example = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleInput = (e: UI5CustomEvent<InputClass, "input">) => {
@@ -83,5 +83,3 @@ function App() {
     </Input>
   );
 }
-
-export default App;

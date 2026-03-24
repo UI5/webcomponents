@@ -9,7 +9,7 @@ const Tab = createReactComponent(TabClass);
 const TabSeparator = createReactComponent(TabSeparatorClass);
 const TabContainer = createReactComponent(TabContainerClass);
 
-function App() {
+export const Example = () => {
   const tabContainerRef = useRef(null);
 
   useEffect(() => {
@@ -85,5 +85,3 @@ function App() {
     </>
   );
 }
-
-export default App;

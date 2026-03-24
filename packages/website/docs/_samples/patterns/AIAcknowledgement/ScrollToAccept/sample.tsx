@@ -18,7 +18,7 @@ const Panel = createReactComponent(PanelClass);
 const Text = createReactComponent(TextClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const dialogRef = useRef(null);
   const checkboxRef = useRef(null);
   const [acceptDisabled, setAcceptDisabled] = useState(true);
@@ -367,5 +367,3 @@ function App() {
     </>
   );
 }
-
-export default App;

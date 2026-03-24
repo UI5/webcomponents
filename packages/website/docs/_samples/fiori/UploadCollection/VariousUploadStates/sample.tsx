@@ -51,7 +51,7 @@ const initialFiles = [
   },
 ];
 
-function App() {
+export const Example = () => {
   const [files, setFiles] = useState(initialFiles);
 
   const handleUploadCollectionRetry = (
@@ -104,5 +104,3 @@ function App() {
     </>
   );
 }
-
-export default App;

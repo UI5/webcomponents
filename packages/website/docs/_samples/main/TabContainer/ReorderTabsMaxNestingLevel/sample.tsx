@@ -12,7 +12,7 @@ const StepInput = createReactComponent(StepInputClass);
 const Tab = createReactComponent(TabClass);
 const TabContainer = createReactComponent(TabContainerClass);
 
-function App() {
+export const Example = () => {
   const tabContainerRef = useRef(null);
   const maxNestingLevelRef = useRef(1);
 
@@ -123,5 +123,3 @@ function App() {
     </>
   );
 }
-
-export default App;

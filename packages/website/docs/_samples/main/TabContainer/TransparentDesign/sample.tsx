@@ -7,7 +7,7 @@ const Tab = createReactComponent(TabClass);
 const Text = createReactComponent(TextClass);
 const TabContainer = createReactComponent(TabContainerClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <TabContainer
@@ -55,5 +55,3 @@ function App() {
     </>
   );
 }
-
-export default App;

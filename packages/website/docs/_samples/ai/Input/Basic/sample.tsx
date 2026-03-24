@@ -128,7 +128,7 @@ interface VersionEntry {
   timestamp: string;
 }
 
-function App() {
+export const Example = () => {
   const inputRef = useRef<any>(null);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -423,5 +423,3 @@ function App() {
     </>
   );
 }
-
-export default App;

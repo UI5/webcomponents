@@ -5,7 +5,7 @@ import CalendarLegendItemClass from "@ui5/webcomponents/dist/CalendarLegendItem.
 const CalendarLegend = createReactComponent(CalendarLegendClass);
 const CalendarLegendItem = createReactComponent(CalendarLegendItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <CalendarLegend>
@@ -33,5 +33,3 @@ function App() {
     </>
   );
 }
-
-export default App;

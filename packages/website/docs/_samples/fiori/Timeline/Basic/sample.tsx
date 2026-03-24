@@ -9,7 +9,7 @@ const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Timeline>
@@ -47,5 +47,3 @@ function App() {
     </>
   );
 }
-
-export default App;

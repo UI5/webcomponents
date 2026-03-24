@@ -4,7 +4,7 @@ import "@ui5/webcomponents-icons/dist/edit.js";
 
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Button>Press</Button>
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

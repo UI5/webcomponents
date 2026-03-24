@@ -18,7 +18,7 @@ interface VersionEntry {
   timestamp: string;
 }
 
-function App() {
+export const Example = () => {
   const textareaRef = useRef<any>(null);
   const menuRef = useRef<any>(null);
   const [textValue, setTextValue] = useState(
@@ -214,5 +214,3 @@ function App() {
     </AITextArea>
   );
 }
-
-export default App;

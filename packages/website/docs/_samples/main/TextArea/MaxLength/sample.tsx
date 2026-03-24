@@ -6,7 +6,7 @@ import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
 const TextArea = createReactComponent(TextAreaClass);
 
-function App() {
+export const Example = () => {
   const [valueState, setValueState] = useState<`${ValueState}`>("None");
 
   const handleTextAreaInput = (e: UI5CustomEvent<TextAreaClass, "input">) => {
@@ -25,5 +25,3 @@ function App() {
     />
   );
 }
-
-export default App;

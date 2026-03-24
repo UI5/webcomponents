@@ -9,7 +9,7 @@ const FormItem = createReactComponent(FormItemClass);
 const Label = createReactComponent(LabelClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div
@@ -44,5 +44,3 @@ function App() {
     </>
   );
 }
-
-export default App;

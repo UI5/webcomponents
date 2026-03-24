@@ -33,7 +33,7 @@ const TextArea = createReactComponent(TextAreaClass);
 const Toast = createReactComponent(ToastClass);
 const Token = createReactComponent(TokenClass);
 
-function App() {
+export const Example = () => {
   const [buttonState, setButtonState] = useState("generate");
   const [busyActive, setBusyActive] = useState(false);
   const [outputValue, setOutputValue] = useState("");
@@ -408,5 +408,3 @@ function App() {
     </>
   );
 }
-
-export default App;

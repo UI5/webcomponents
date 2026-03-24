@@ -3,8 +3,6 @@ import DateRangePickerClass from "@ui5/webcomponents/dist/DateRangePicker.js";
 
 const DateRangePicker = createReactComponent(DateRangePickerClass);
 
-function App() {
+export const Example = () => {
   return <DateRangePicker displayFormat="medium" valueFormat="yyyy-MM-dd" />;
 }
-
-export default App;

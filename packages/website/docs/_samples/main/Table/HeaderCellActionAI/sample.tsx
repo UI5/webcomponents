@@ -21,7 +21,7 @@ const Text = createReactComponent(TextClass);
 const TableHeaderCellActionAI = createReactComponent(TableHeaderCellActionAIClass);
 const Table = createReactComponent(TableClass);
 
-function App() {
+export const Example = () => {
   const popoverRef = useRef(null);
   const aiActionProductRef = useRef(null);
   const aiActionPriceRef = useRef(null);
@@ -182,5 +182,3 @@ function App() {
     </>
   );
 }
-
-export default App;

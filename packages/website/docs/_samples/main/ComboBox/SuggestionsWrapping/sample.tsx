@@ -5,7 +5,7 @@ import ComboBoxItemClass from "@ui5/webcomponents/dist/ComboBoxItem.js";
 const ComboBox = createReactComponent(ComboBoxClass);
 const ComboBoxItem = createReactComponent(ComboBoxItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ComboBox placeholder="Enter product">
@@ -16,5 +16,3 @@ function App() {
     </>
   );
 }
-
-export default App;

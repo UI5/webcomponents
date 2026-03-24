@@ -3,7 +3,7 @@ import ToggleButtonClass from "@ui5/webcomponents/dist/ToggleButton.js";
 
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ToggleButton design="Emphasized">Emphasized</ToggleButton>
@@ -15,5 +15,3 @@ function App() {
     </>
   );
 }
-
-export default App;

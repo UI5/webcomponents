@@ -14,7 +14,7 @@ const Tab = createReactComponent(TabClass);
 const TabSeparator = createReactComponent(TabSeparatorClass);
 const TabContainer = createReactComponent(TabContainerClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <TabContainer>
@@ -59,5 +59,3 @@ function App() {
     </>
   );
 }
-
-export default App;

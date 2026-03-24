@@ -3,7 +3,7 @@ import InputClass from "@ui5/webcomponents/dist/Input.js";
 
 const Input = createReactComponent(InputClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -17,5 +17,3 @@ function App() {
     </>
   );
 }
-
-export default App;

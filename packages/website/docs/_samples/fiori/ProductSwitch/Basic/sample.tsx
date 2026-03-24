@@ -9,7 +9,7 @@ import "@ui5/webcomponents-icons/dist/flight.js";
 const ProductSwitch = createReactComponent(ProductSwitchClass);
 const ProductSwitchItem = createReactComponent(ProductSwitchItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ProductSwitch>
@@ -37,5 +37,3 @@ function App() {
     </>
   );
 }
-
-export default App;

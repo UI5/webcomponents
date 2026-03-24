@@ -19,7 +19,7 @@ const Icon = createReactComponent(IconClass);
 const Label = createReactComponent(LabelClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [items, setItems] = useState<
     {
       id: number;
@@ -155,5 +155,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -21,7 +21,7 @@ const Avatar = createReactComponent(AvatarClass);
 const Button = createReactComponent(ButtonClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ShellBar notificationsCount="72" showNotifications={true}>
@@ -46,5 +46,3 @@ function App() {
     </>
   );
 }
-
-export default App;

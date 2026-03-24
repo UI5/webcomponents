@@ -21,7 +21,7 @@ const MenuItem = createReactComponent(MenuItemClass);
 const MenuSeparator = createReactComponent(MenuSeparatorClass);
 const MenuItemGroup = createReactComponent(MenuItemGroupClass);
 
-function App() {
+export const Example = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -86,5 +86,3 @@ function App() {
     </>
   );
 }
-
-export default App;

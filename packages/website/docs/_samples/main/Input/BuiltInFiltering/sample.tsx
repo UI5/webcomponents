@@ -7,7 +7,7 @@ const Input = createReactComponent(InputClass);
 const SuggestionItem = createReactComponent(SuggestionItemClass);
 const SuggestionItemGroup = createReactComponent(SuggestionItemGroupClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Input filter="Contains" showSuggestions={true}>
@@ -25,5 +25,3 @@ function App() {
     </>
   );
 }
-
-export default App;

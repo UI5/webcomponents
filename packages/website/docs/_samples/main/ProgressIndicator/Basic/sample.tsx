@@ -3,8 +3,6 @@ import ProgressIndicatorClass from "@ui5/webcomponents/dist/ProgressIndicator.js
 
 const ProgressIndicator = createReactComponent(ProgressIndicatorClass);
 
-function App() {
+export const Example = () => {
   return <ProgressIndicator value={25} />;
 }
-
-export default App;

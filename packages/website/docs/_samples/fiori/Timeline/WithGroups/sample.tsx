@@ -13,7 +13,7 @@ const TimelineItem = createReactComponent(TimelineItemClass);
 const Avatar = createReactComponent(AvatarClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Timeline layout="Vertical" id="testTimeline">
@@ -94,5 +94,3 @@ function App() {
     </>
   );
 }
-
-export default App;

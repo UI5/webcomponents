@@ -13,7 +13,7 @@ const AIButtonState = createReactComponent(AIButtonStateClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
-function App() {
+export const Example = () => {
   const [buttonState, setButtonState] = useState("generate");
   const [menuOpen, setMenuOpen] = useState(false);
   const buttonRef = useRef(null);
@@ -142,5 +142,3 @@ function App() {
     </>
   );
 }
-
-export default App;

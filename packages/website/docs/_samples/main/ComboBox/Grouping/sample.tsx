@@ -7,7 +7,7 @@ const ComboBox = createReactComponent(ComboBoxClass);
 const ComboBoxItem = createReactComponent(ComboBoxItemClass);
 const ComboBoxItemGroup = createReactComponent(ComboBoxItemGroupClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ComboBox placeholder="Grouping of items">
@@ -29,5 +29,3 @@ function App() {
     </>
   );
 }
-
-export default App;

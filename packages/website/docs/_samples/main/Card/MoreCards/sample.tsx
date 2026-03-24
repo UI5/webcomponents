@@ -16,7 +16,7 @@ const Link = createReactComponent(LinkClass);
 const Text = createReactComponent(TextClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -66,5 +66,3 @@ function App() {
     </>
   );
 }
-
-export default App;

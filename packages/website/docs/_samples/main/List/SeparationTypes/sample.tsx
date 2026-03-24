@@ -7,7 +7,7 @@ import "@ui5/webcomponents-icons/dist/shipping-status.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <List separators="None">
@@ -27,5 +27,3 @@ function App() {
     </>
   );
 }
-
-export default App;

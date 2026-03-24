@@ -11,7 +11,7 @@ import "@ui5/webcomponents-icons/dist/accept.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   const [list1Items, setList1Items] = useState([
     { id: "1", text: "Review design mockups", icon: "task" },
     { id: "2", text: "Update documentation", icon: "task" },
@@ -218,5 +218,3 @@ function App() {
     </>
   );
 }
-
-export default App;

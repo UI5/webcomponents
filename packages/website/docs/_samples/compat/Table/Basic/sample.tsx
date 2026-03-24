@@ -11,7 +11,7 @@ const TableColumn = createReactComponent(TableColumnClass);
 const CompatTableCell = createReactComponent(CompatTableCellClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <CompatTable>
       <TableColumn slot="columns">
@@ -98,5 +98,3 @@ function App() {
     </CompatTable>
   );
 }
-
-export default App;

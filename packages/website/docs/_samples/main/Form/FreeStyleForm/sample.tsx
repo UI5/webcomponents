@@ -38,7 +38,7 @@ const TextArea = createReactComponent(TextAreaClass);
 const TimePicker = createReactComponent(TimePickerClass);
 const Token = createReactComponent(TokenClass);
 
-function App() {
+export const Example = () => {
   const containerRef = useRef(null);
   const sliderRef = useRef(null);
 
@@ -227,5 +227,3 @@ function App() {
     </>
   );
 }
-
-export default App;

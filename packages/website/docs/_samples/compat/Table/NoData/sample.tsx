@@ -7,7 +7,7 @@ const CompatTable = createReactComponent(CompatTableClass);
 const CompatTableColumn = createReactComponent(TableColumnClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <CompatTable noDataText="No data found">
       <CompatTableColumn slot="columns">
@@ -28,5 +28,3 @@ function App() {
     </CompatTable>
   );
 }
-
-export default App;

@@ -12,7 +12,7 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/NextOptions.js";
 
 const DynamicDateRange = createReactComponent(DynamicDateRangeClass);
 
-function App() {
+export const Example = () => {
   const ddrRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState("");
   const [convertedDates, setConvertedDates] = useState("");
@@ -60,5 +60,3 @@ function App() {
     </>
   );
 }
-
-export default App;

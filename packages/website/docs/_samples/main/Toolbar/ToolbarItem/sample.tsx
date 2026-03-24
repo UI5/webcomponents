@@ -23,7 +23,7 @@ const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarItem = createReactComponent(ToolbarItemClass);
 const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -97,5 +97,3 @@ function App() {
     </>
   );
 }
-
-export default App;

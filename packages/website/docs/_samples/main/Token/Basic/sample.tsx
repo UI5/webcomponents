@@ -3,7 +3,7 @@ import TokenClass from "@ui5/webcomponents/dist/Token.js";
 
 const Token = createReactComponent(TokenClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Token text="green" />
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import ListClass from "@ui5/webcomponents/dist/List.js";
 
 const List = createReactComponent(ListClass);
 
-function App() {
+export const Example = () => {
   return (
     <List
       selectionMode="None"
@@ -12,5 +12,3 @@ function App() {
     />
   );
 }
-
-export default App;

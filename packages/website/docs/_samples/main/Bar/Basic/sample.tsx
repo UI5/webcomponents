@@ -9,7 +9,7 @@ const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Bar design="Header">
@@ -29,5 +29,3 @@ function App() {
     </>
   );
 }
-
-export default App;

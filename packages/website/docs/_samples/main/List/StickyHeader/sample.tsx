@@ -8,7 +8,7 @@ const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -111,5 +111,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 
 const DatePicker = createReactComponent(DatePickerClass);
 
-function App() {
+export const Example = () => {
   return (
     <DatePicker
       valueFormat="dd/MM/yyyy"
@@ -13,5 +13,3 @@ function App() {
     />
   );
 }
-
-export default App;

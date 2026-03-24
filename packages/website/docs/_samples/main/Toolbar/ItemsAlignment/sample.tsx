@@ -9,7 +9,7 @@ import "@ui5/webcomponents-icons/dist/decline.js";
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Toolbar align-content="Start">
@@ -28,5 +28,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -23,5 +23,3 @@ function App() {
     </>
   );
 }
-
-export default App;

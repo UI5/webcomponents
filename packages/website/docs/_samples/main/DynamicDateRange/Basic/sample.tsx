@@ -11,7 +11,7 @@ import "@ui5/webcomponents/dist/dynamic-date-range-options/DateTimeRange.js";
 const Text = createReactComponent(TextClass);
 const DynamicDateRange = createReactComponent(DynamicDateRangeClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Text>All options</Text>
@@ -25,5 +25,3 @@ function App() {
     </>
   );
 }
-
-export default App;

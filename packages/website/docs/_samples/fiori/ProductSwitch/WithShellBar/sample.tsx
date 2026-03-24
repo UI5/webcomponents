@@ -31,7 +31,7 @@ const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const Popover = createReactComponent(PopoverClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   const popoverRef = useRef(null);
   const [assistantIcon, setAssistantIcon] = useState("da");
 
@@ -131,5 +131,3 @@ function App() {
     </>
   );
 }
-
-export default App;

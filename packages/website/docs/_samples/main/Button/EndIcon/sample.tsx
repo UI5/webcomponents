@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/home.js";
 
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Button endIcon="navigation-down-arrow">
@@ -17,5 +17,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -23,7 +23,7 @@ const countries = [
   "Denmark",
 ];
 
-function App() {
+export const Example = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -82,5 +82,3 @@ function App() {
     </>
   );
 }
-
-export default App;

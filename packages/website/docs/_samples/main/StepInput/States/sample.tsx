@@ -3,7 +3,7 @@ import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
 
 const StepInput = createReactComponent(StepInputClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <StepInput disabled={true} value={5} />
@@ -34,5 +34,3 @@ function App() {
     </>
   );
 }
-
-export default App;

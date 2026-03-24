@@ -5,7 +5,7 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 const Carousel = createReactComponent(CarouselClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -34,5 +34,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -8,7 +8,7 @@ const Button = createReactComponent(ButtonClass);
 const FileUploader = createReactComponent(FileUploaderClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Label showColon={true} for="button-only-uploader">Choose file</Label>
@@ -20,5 +20,3 @@ function App() {
     </>
   );
 }
-
-export default App;

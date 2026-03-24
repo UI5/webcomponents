@@ -67,7 +67,7 @@ const contentPages = [
   { id: "subitem6", title: "Sub Item 6" },
 ];
 
-function App() {
+export const Example = () => {
   const navLayoutRef = useRef(null);
   const [activePage, setActivePage] = useState("home");
 
@@ -224,5 +224,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -23,7 +23,7 @@ const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
 const Select = createReactComponent(SelectClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   const [editable, setEditable] = useState(false);
 
   const handleSelectionChange = (
@@ -154,5 +154,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 
 const DateTimePicker = createReactComponent(DateTimePickerClass);
 
-function App() {
+export const Example = () => {
   return (
     <DateTimePicker
       value="Jan 11, 2020, 11:11:11 AM"
@@ -14,5 +14,3 @@ function App() {
     />
   );
 }
-
-export default App;

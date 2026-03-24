@@ -3,7 +3,7 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Title level="H1" size="H1">
@@ -27,5 +27,3 @@ function App() {
     </>
   );
 }
-
-export default App;

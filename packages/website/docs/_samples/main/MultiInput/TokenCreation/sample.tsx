@@ -25,7 +25,7 @@ const suggestions = [
   "USA",
 ];
 
-function App() {
+export const Example = () => {
   const [tokens, setTokens] = useState<string[]>([]);
   const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const multiInputRef = useRef(null);
@@ -99,5 +99,3 @@ function App() {
     </>
   );
 }
-
-export default App;

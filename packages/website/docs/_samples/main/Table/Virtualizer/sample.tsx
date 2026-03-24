@@ -54,7 +54,7 @@ async function fetchProducts(first: number, last: number): Promise<Product[]> {
   return products;
 }
 
-function App() {
+export const Example = () => {
   const [rows, setRows] = useState<
     Array<{ position: number; product: Product }>
   >([]);
@@ -117,5 +117,3 @@ function App() {
     </>
   );
 }
-
-export default App;

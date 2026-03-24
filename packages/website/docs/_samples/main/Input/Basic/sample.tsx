@@ -3,8 +3,6 @@ import InputClass from "@ui5/webcomponents/dist/Input.js";
 
 const Input = createReactComponent(InputClass);
 
-function App() {
+export const Example = () => {
   return <Input value="Input" />;
 }
-
-export default App;

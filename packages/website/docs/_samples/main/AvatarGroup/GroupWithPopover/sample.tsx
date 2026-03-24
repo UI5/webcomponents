@@ -11,7 +11,7 @@ const AvatarGroup = createReactComponent(AvatarGroupClass);
 const Popover = createReactComponent(PopoverClass);
 const Slider = createReactComponent(SliderClass);
 
-function App() {
+export const Example = () => {
   const popoverRef = useRef(null);
   const avatarGroupRef = useRef(null);
   const [groupWidth, setGroupWidth] = useState("60%");
@@ -119,5 +119,3 @@ function App() {
     </>
   );
 }
-
-export default App;

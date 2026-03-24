@@ -9,7 +9,7 @@ const Icon = createReactComponent(IconClass);
 const OptionCustom = createReactComponent(OptionCustomClass);
 const Select = createReactComponent(SelectClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Select>
@@ -40,5 +40,3 @@ function App() {
     </>
   );
 }
-
-export default App;

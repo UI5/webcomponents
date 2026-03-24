@@ -7,7 +7,7 @@ import TokenClass from "@ui5/webcomponents/dist/Token.js";
 const MultiInput = createReactComponent(MultiInputClass);
 const Token = createReactComponent(TokenClass);
 
-function App() {
+export const Example = () => {
   const [tokens, setTokens] = useState([
     "Argentina",
     "Mexico",
@@ -36,5 +36,3 @@ function App() {
     </>
   );
 }
-
-export default App;

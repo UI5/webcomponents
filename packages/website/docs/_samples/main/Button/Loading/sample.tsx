@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/employee.js";
 
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div>
@@ -47,5 +47,3 @@ function App() {
     </>
   );
 }
-
-export default App;

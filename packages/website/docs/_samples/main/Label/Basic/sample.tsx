@@ -5,7 +5,7 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 const Input = createReactComponent(InputClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Label>Simple Label</Label>
@@ -18,5 +18,3 @@ function App() {
     </>
   );
 }
-
-export default App;

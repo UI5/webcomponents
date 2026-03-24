@@ -10,7 +10,7 @@ const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
-function App() {
+export const Example = () => {
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -79,5 +79,3 @@ function App() {
     </>
   );
 }
-
-export default App;

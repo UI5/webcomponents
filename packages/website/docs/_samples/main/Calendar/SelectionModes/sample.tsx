@@ -5,7 +5,7 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 const Calendar = createReactComponent(CalendarClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div
@@ -21,5 +21,3 @@ function App() {
     </>
   );
 }
-
-export default App;

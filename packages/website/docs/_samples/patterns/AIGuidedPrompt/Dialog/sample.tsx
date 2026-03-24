@@ -37,7 +37,7 @@ const TextArea = createReactComponent(TextAreaClass);
 const Toast = createReactComponent(ToastClass);
 const Token = createReactComponent(TokenClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [aiButtonState, setAiButtonState] = useState("generate");
   const [busyActive, setBusyActive] = useState(false);
@@ -340,5 +340,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -14,7 +14,7 @@ const ViewSettingsDialog = createReactComponent(ViewSettingsDialogClass);
 const Button = createReactComponent(ButtonClass);
 const GroupItem = createReactComponent(GroupItemClass);
 
-function App() {
+export const Example = () => {
   const [vsdOpen, setVsdOpen] = useState(false);
   const vsdResultsRef = useRef(null);
 
@@ -80,5 +80,3 @@ function App() {
     </>
   );
 }
-
-export default App;

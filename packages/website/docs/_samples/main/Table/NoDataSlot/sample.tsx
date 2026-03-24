@@ -9,7 +9,7 @@ const Table = createReactComponent(TableClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Table id="table" overflowMode="Popin">
@@ -37,5 +37,3 @@ function App() {
     </>
   );
 }
-
-export default App;

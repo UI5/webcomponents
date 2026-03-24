@@ -5,7 +5,7 @@ import ColorPaletteItemClass from "@ui5/webcomponents/dist/ColorPaletteItem.js";
 const ColorPalette = createReactComponent(ColorPaletteClass);
 const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ColorPalette>
@@ -25,5 +25,3 @@ function App() {
     </>
   );
 }
-
-export default App;

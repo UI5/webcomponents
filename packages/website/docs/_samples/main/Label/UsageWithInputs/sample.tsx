@@ -15,7 +15,7 @@ const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 const TextArea = createReactComponent(TextAreaClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -62,5 +62,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -16,7 +16,7 @@ const Link = createReactComponent(LinkClass);
 const Slider = createReactComponent(SliderClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   const containerRef = useRef(null);
   const sliderRef = useRef(null);
 
@@ -448,5 +448,3 @@ function App() {
     </>
   );
 }
-
-export default App;

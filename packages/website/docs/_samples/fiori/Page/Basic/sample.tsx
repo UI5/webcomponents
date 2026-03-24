@@ -11,7 +11,7 @@ const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Page style={{ height: "500px" }} background-design="Solid">
@@ -83,5 +83,3 @@ function App() {
     </>
   );
 }
-
-export default App;

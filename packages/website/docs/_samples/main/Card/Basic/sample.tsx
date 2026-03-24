@@ -14,7 +14,7 @@ const Icon = createReactComponent(IconClass);
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -56,5 +56,3 @@ function App() {
     </>
   );
 }
-
-export default App;

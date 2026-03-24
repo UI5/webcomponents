@@ -13,7 +13,7 @@ const ToolbarButton = createReactComponent(ToolbarButtonClass);
 const ToolbarSeparator = createReactComponent(ToolbarSeparatorClass);
 const ToolbarSpacer = createReactComponent(ToolbarSpacerClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Toolbar>
@@ -29,5 +29,3 @@ function App() {
     </>
   );
 }
-
-export default App;

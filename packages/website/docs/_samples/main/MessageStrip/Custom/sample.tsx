@@ -3,7 +3,7 @@ import MessageStripClass from "@ui5/webcomponents/dist/MessageStrip.js";
 
 const MessageStrip = createReactComponent(MessageStripClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <MessageStrip design="Negative">
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

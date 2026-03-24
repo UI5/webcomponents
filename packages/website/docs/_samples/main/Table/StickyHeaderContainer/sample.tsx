@@ -17,7 +17,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div style={{ height: "150px", overflow: "auto" }}>
@@ -200,5 +200,3 @@ function App() {
     </>
   );
 }
-
-export default App;

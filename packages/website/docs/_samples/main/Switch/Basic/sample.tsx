@@ -3,7 +3,7 @@ import SwitchClass from "@ui5/webcomponents/dist/Switch.js";
 
 const Switch = createReactComponent(SwitchClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Switch />
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

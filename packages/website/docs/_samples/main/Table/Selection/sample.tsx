@@ -20,7 +20,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableSelection = createReactComponent(TableSelectionClass);
 
-function App() {
+export const Example = () => {
   const selectionRef = useRef(null);
 
   const handleSelectionGroupChange = (e: React.FormEvent<HTMLDivElement>) => {
@@ -145,5 +145,3 @@ function App() {
     </>
   );
 }
-
-export default App;

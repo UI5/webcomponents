@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/cloud.js";
 
 const Link = createReactComponent(LinkClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Link href="https://www.sap.com" target="_blank" icon="employee">
@@ -25,5 +25,3 @@ function App() {
     </>
   );
 }
-
-export default App;

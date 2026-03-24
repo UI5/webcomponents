@@ -25,7 +25,7 @@ const TableRow = createReactComponent(TableRowClass);
 
 const HIDDEN_COLUMNS = ["dimensionsCol", "weightCol"];
 
-function App() {
+export const Example = () => {
   const tableRef = useRef(null);
 
   const setPopinState = (hideDetails: boolean) => {
@@ -189,5 +189,3 @@ function App() {
     </>
   );
 }
-
-export default App;

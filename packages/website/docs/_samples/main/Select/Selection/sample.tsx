@@ -11,7 +11,7 @@ const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   const [selectedValue, setSelectedValue] = useState("DE");
 
   const handleCountrySelectChange = (
@@ -44,5 +44,3 @@ function App() {
     </>
   );
 }
-
-export default App;

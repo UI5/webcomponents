@@ -3,7 +3,7 @@ import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Avatar shape="Circle" size="M" initials="CI" />
@@ -12,5 +12,3 @@ function App() {
     </>
   );
 }
-
-export default App;

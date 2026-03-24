@@ -18,7 +18,7 @@ const TableRow = createReactComponent(TableRowClass);
 
 const MAX_GROW = 3;
 
-function App() {
+export const Example = () => {
   const [extraRows, setExtraRows] = useState<
     Array<{ key: number; name: string; code: string }>
   >([]);
@@ -171,5 +171,3 @@ function App() {
     </>
   );
 }
-
-export default App;

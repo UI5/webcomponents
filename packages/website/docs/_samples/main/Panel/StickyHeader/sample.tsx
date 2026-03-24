@@ -7,7 +7,7 @@ const Label = createReactComponent(LabelClass);
 const Panel = createReactComponent(PanelClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <div style={{ height: "250px", overflow: "scroll" }}>
@@ -72,5 +72,3 @@ function App() {
     </>
   );
 }
-
-export default App;

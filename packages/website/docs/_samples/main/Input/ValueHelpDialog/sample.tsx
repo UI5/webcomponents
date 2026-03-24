@@ -21,7 +21,7 @@ const ListItemStandard = createReactComponent(ListItemStandardClass);
 const SuggestionItem = createReactComponent(SuggestionItemClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [suggestionItems, setSuggestionItems] = useState<string[]>([]);
   const [dialogListItems, setDialogListItems] = useState<{ name: string, productId: string }[]>([]);
@@ -148,5 +148,3 @@ function App() {
     </>
   );
 }
-
-export default App;

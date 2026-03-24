@@ -21,7 +21,7 @@ const Tag = createReactComponent(TagClass);
 const Text = createReactComponent(TextClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ShellBar
@@ -51,5 +51,3 @@ function App() {
     </>
   );
 }
-
-export default App;

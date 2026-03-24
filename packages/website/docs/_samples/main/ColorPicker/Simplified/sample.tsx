@@ -3,12 +3,10 @@ import ColorPickerClass from "@ui5/webcomponents/dist/ColorPicker.js";
 
 const ColorPicker = createReactComponent(ColorPickerClass);
 
-function App() {
+export const Example = () => {
   return (
     <ColorPicker simplified={true} value="#F6A192">
       Picker
     </ColorPicker>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
 const TextArea = createReactComponent(TextAreaClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <TextArea disabled={true} />
@@ -18,5 +18,3 @@ function App() {
     </>
   );
 }
-
-export default App;

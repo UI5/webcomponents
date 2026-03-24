@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/unfavorite.js";
 
 const RatingIndicator = createReactComponent(RatingIndicatorClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <RatingIndicator value={4} max={7} />
@@ -16,5 +16,3 @@ function App() {
     </>
   );
 }
-
-export default App;

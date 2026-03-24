@@ -28,7 +28,7 @@ const Select = createReactComponent(SelectClass);
 const Switch = createReactComponent(SwitchClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [step1Selected, setStep1Selected] = useState(true);
   const [step2Selected, setStep2Selected] = useState(false);
   const [step3Selected, setStep3Selected] = useState(false);
@@ -246,5 +246,3 @@ function App() {
     </>
   );
 }
-
-export default App;

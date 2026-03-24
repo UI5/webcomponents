@@ -13,7 +13,7 @@ const Title = createReactComponent(TitleClass);
 const Tree = createReactComponent(TreeClass);
 const TreeItemCustom = createReactComponent(TreeItemCustomClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Tree>
@@ -50,5 +50,3 @@ function App() {
     </>
   );
 }
-
-export default App;

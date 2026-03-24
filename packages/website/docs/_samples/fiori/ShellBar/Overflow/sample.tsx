@@ -29,7 +29,7 @@ const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const ShellBarItem = createReactComponent(ShellBarItemClass);
 
-function App() {
+export const Example = () => {
   const [containerWidth, setContainerWidth] = useState(100);
   const [hiddenItems, setHiddenItems] = useState<any[]>([]);
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -122,5 +122,3 @@ function App() {
     </>
   );
 }
-
-export default App;

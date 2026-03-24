@@ -35,7 +35,7 @@ const DEFAULT_OUTPUT1 =
 const DEFAULT_OUTPUT2 =
   "Experience the future of cooking with our state-of-the-art smart oven. This innovative appliance offers a range of features to enhance your culinary skills, including precise temperature control and multiple cooking modes. The smart oven connects to your smartphone, allowing you to monitor and adjust settings remotely. With its sleek design and intuitive interface, cooking has never been easier or more enjoyable. Whether you're baking, roasting, or broiling, this smart oven ensures perfect results every time. Upgrade your kitchen and transform the way you cook.";
 
-function App() {
+export const Example = () => {
   const [aiButtonState, setAiButtonState] = useState("regenerate");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [skipDialog, setSkipDialog] = useState(false);
@@ -272,5 +272,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -31,7 +31,7 @@ const Select = createReactComponent(SelectClass);
 const Switch = createReactComponent(SwitchClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const wizardRef = useRef<any>(null);
   const [showPrev, setShowPrev] = useState(false);
@@ -300,5 +300,3 @@ function App() {
     </>
   );
 }
-
-export default App;

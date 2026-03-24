@@ -10,7 +10,7 @@ const Button = createReactComponent(ButtonClass);
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   const [busy, setBusy] = useState(false);
   const [items, setItems] = useState<string[]>([]);
 
@@ -45,5 +45,3 @@ function App() {
     </>
   );
 }
-
-export default App;

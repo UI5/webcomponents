@@ -18,7 +18,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableSelectionMulti = createReactComponent(TableSelectionMultiClass);
 
-function App() {
+export const Example = () => {
   const selectionRef = useRef(null);
   const oldSelectedSetRef = useRef(null);
 
@@ -201,5 +201,3 @@ function App() {
     </>
   );
 }
-
-export default App;

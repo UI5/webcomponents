@@ -13,7 +13,7 @@ const Popover = createReactComponent(PopoverClass);
 const Slider = createReactComponent(SliderClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const personPopoverRef = useRef(null);
   const peoplePopoverRef = useRef(null);
   const avatarGroupRef = useRef(null);
@@ -169,5 +169,3 @@ function App() {
     </>
   );
 }
-
-export default App;

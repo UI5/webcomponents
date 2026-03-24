@@ -5,7 +5,7 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 const DynamicSideContent = createReactComponent(DynamicSideContentClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -60,5 +60,3 @@ function App() {
     </>
   );
 }
-
-export default App;

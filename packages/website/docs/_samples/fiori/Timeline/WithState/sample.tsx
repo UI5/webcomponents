@@ -11,7 +11,7 @@ const Timeline = createReactComponent(TimelineClass);
 const TimelineGroupItem = createReactComponent(TimelineGroupItemClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Timeline id="test-timeline">
@@ -68,5 +68,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -12,7 +12,7 @@ const List = createReactComponent(ListClass);
 const ListItemGroup = createReactComponent(ListItemGroupClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <List selectionMode="Multiple">
@@ -88,5 +88,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -50,7 +50,7 @@ const Text = createReactComponent(TextClass);
 const Title = createReactComponent(TitleClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   const [navOpen, setNavOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -342,5 +342,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -89,7 +89,7 @@ function getRandomInt(max: number) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function App() {
+export const Example = () => {
   const [layout, setLayout] = useState<`${FCLLayout}`>("OneColumn");
   const [col2Title, setCol2Title] = useState("");
   const [col3Title, setCol3Title] = useState("");
@@ -611,5 +611,3 @@ function App() {
     </>
   );
 }
-
-export default App;

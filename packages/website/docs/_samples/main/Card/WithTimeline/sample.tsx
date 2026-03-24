@@ -11,7 +11,7 @@ const TimelineItem = createReactComponent(TimelineItemClass);
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -49,5 +49,3 @@ function App() {
     </>
   );
 }
-
-export default App;

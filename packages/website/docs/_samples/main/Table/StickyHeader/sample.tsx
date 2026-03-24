@@ -13,7 +13,7 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Table style={{ height: "150px" }} id="table">
@@ -184,5 +184,3 @@ function App() {
     </>
   );
 }
-
-export default App;

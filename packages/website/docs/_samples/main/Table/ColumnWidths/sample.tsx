@@ -17,7 +17,7 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+export const Example = () => {
   const tableRef = useRef(null);
 
   const handleSliderChange = (e: UI5CustomEvent<SliderClass, "change">) => {
@@ -116,5 +116,3 @@ function App() {
     </>
   );
 }
-
-export default App;

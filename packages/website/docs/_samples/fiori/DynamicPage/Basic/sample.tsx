@@ -35,7 +35,7 @@ const Title = createReactComponent(TitleClass);
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
-function App() {
+export const Example = () => {
   const [showFooter, setShowFooter] = useState(true);
 
   const handleEditButtonClick = () => {
@@ -914,5 +914,3 @@ function App() {
     </>
   );
 }
-
-export default App;

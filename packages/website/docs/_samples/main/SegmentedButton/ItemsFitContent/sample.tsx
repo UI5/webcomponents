@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/italic-text.js";
 const SegmentedButton = createReactComponent(SegmentedButtonClass);
 const SegmentedButtonItem = createReactComponent(SegmentedButtonItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <SegmentedButton accessibleName="Font style" itemsFitContent={true}>
@@ -20,5 +20,3 @@ function App() {
     </>
   );
 }
-
-export default App;

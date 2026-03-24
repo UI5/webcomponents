@@ -14,7 +14,7 @@ const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
 const europeanCountries = ["DE", "FR", "IT"];
 const allCountries = ["DE", "FR", "IT", "US", "CA", "JP"];
 
-function App() {
+export const Example = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const handleSelectionChange = (
@@ -72,5 +72,3 @@ function App() {
     </>
   );
 }
-
-export default App;

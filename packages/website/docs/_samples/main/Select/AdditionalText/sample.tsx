@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/laptop.js";
 const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Select>
@@ -21,5 +21,3 @@ function App() {
     </>
   );
 }
-
-export default App;

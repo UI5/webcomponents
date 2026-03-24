@@ -3,7 +3,7 @@ import RadioButtonClass from "@ui5/webcomponents/dist/RadioButton.js";
 
 const RadioButton = createReactComponent(RadioButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <RadioButton name="myGroup" text="Option A" />
@@ -12,5 +12,3 @@ function App() {
     </>
   );
 }
-
-export default App;

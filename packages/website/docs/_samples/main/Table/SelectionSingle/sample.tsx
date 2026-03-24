@@ -18,7 +18,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableSelectionSingle = createReactComponent(TableSelectionSingleClass);
 
-function App() {
+export const Example = () => {
   const selectionRef = useRef(null);
 
   const handleSelectionChange = () => {
@@ -160,5 +160,3 @@ function App() {
     </>
   );
 }
-
-export default App;

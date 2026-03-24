@@ -3,8 +3,6 @@ import TimePickerClass from "@ui5/webcomponents/dist/TimePicker.js";
 
 const TimePicker = createReactComponent(TimePickerClass);
 
-function App() {
+export const Example = () => {
   return <TimePicker />;
 }
-
-export default App;

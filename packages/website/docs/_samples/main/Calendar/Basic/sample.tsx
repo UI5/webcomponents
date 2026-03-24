@@ -3,8 +3,6 @@ import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 
 const Calendar = createReactComponent(CalendarClass);
 
-function App() {
+export const Example = () => {
   return <Calendar />;
 }
-
-export default App;

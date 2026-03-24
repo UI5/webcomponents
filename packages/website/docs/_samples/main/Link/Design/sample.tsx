@@ -3,7 +3,7 @@ import LinkClass from "@ui5/webcomponents/dist/Link.js";
 
 const Link = createReactComponent(LinkClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Link design="Emphasized" href="https://www.sap.com" target="_blank">
@@ -20,5 +20,3 @@ function App() {
     </>
   );
 }
-
-export default App;

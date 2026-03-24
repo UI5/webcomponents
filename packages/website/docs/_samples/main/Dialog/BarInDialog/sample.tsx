@@ -11,7 +11,7 @@ const Button = createReactComponent(ButtonClass);
 const Dialog = createReactComponent(DialogClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogStateOpen, setDialogStateOpen] = useState(false);
 
@@ -85,5 +85,3 @@ function App() {
     </>
   );
 }
-
-export default App;

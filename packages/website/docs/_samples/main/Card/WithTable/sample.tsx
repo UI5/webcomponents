@@ -17,7 +17,7 @@ const TableCell = createReactComponent(TableCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -103,5 +103,3 @@ function App() {
     </>
   );
 }
-
-export default App;

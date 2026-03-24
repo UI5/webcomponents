@@ -7,7 +7,7 @@ import TokenizerClass from "@ui5/webcomponents/dist/Tokenizer.js";
 const Token = createReactComponent(TokenClass);
 const Tokenizer = createReactComponent(TokenizerClass);
 
-function App() {
+export const Example = () => {
   const [tokens, setTokens] = useState([
     "Andora",
     "Bulgaria",
@@ -49,5 +49,3 @@ function App() {
     </>
   );
 }
-
-export default App;

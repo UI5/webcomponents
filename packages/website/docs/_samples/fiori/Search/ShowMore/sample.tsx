@@ -27,7 +27,7 @@ const allItems = [
 
 const visibleCount = 3;
 
-function App() {
+export const Example = () => {
   const [expanded, setExpanded] = useState(false);
   const [group1Items, setGroup1Items] = useState(allItems);
 
@@ -83,5 +83,3 @@ function App() {
     </>
   );
 }
-
-export default App;

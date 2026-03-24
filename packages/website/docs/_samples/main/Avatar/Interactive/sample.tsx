@@ -6,7 +6,7 @@ import LabelClass from "@ui5/webcomponents/dist/Label.js";
 const Avatar = createReactComponent(AvatarClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   const counterRef = useRef(0);
   const [labelText, setLabelText] = useState("");
 
@@ -28,5 +28,3 @@ function App() {
     </>
   );
 }
-
-export default App;

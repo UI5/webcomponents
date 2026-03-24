@@ -15,7 +15,7 @@ const TableGroupRow = createReactComponent(TableGroupRowClass);
 const Text = createReactComponent(TextClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <CompatTable>
       <CompatTableColumn slot="columns">
@@ -85,5 +85,3 @@ function App() {
     </CompatTable>
   );
 }
-
-export default App;

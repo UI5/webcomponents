@@ -5,7 +5,7 @@ import "@ui5/webcomponents-icons/dist/account.js";
 
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <ToggleButton icon="edit" design="Default" tooltip="Edit Button" />
@@ -17,5 +17,3 @@ function App() {
     </>
   );
 }
-
-export default App;

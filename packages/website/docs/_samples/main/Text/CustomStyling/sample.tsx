@@ -3,7 +3,7 @@ import TextClass from "@ui5/webcomponents/dist/Text.js";
 
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Text style={{ color: "var(--sapPositiveColor)", fontSize: "1.25rem" }}>
@@ -21,5 +21,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/shipping-status.js";
 
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Avatar icon="filter" size="XS" />
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

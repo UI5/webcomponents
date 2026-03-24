@@ -6,7 +6,7 @@ import "@ui5/webcomponents-icons/dist/meal.js";
 const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Select valueState="Positive" value="apple">
@@ -97,5 +97,3 @@ function App() {
     </>
   );
 }
-
-export default App;

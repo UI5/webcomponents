@@ -9,7 +9,7 @@ const Bar = createReactComponent(BarClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Label showColon={true}>Bar with two or more active items</Label>
@@ -35,5 +35,3 @@ function App() {
     </>
   );
 }
-
-export default App;

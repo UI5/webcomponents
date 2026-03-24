@@ -7,7 +7,7 @@ import "@ui5/webcomponents-icons/dist/nutrition-activity.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   const [extraItems, setExtraItems] = useState<Array<{ index: number }>>([]);
   const [loading, setLoading] = useState(false);
   const listRef = useRef(null);
@@ -93,5 +93,3 @@ function App() {
     </>
   );
 }
-
-export default App;

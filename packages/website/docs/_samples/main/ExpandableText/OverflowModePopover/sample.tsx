@@ -15,7 +15,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const ExpandableText = createReactComponent(ExpandableTextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Table>
@@ -67,5 +67,3 @@ function App() {
     </>
   );
 }
-
-export default App;

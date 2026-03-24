@@ -6,7 +6,7 @@ import CheckBoxClass from "@ui5/webcomponents/dist/CheckBox.js";
 const Button = createReactComponent(ButtonClass);
 const CheckBox = createReactComponent(CheckBoxClass);
 
-function App() {
+export const Example = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [output, setOutput] = useState("");
 
@@ -46,5 +46,3 @@ function App() {
     </>
   );
 }
-
-export default App;

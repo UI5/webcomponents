@@ -11,7 +11,7 @@ const Title = createReactComponent(TitleClass);
 const Tree = createReactComponent(TreeClass);
 const TreeItem = createReactComponent(TreeItemClass);
 
-function App() {
+export const Example = () => {
   const treeRef = useRef(null);
 
   useEffect(() => {
@@ -144,5 +144,3 @@ function App() {
     </>
   );
 }
-
-export default App;

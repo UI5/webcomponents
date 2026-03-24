@@ -3,8 +3,6 @@ import TextAreaClass from "@ui5/webcomponents/dist/TextArea.js";
 
 const TextArea = createReactComponent(TextAreaClass);
 
-function App() {
+export const Example = () => {
   return <TextArea placeholder="Type message..." />;
 }
-
-export default App;

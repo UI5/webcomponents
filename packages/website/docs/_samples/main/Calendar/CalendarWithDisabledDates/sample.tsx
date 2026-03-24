@@ -7,7 +7,7 @@ const Calendar = createReactComponent(CalendarClass);
 const SpecialCalendarDate = createReactComponent(SpecialCalendarDateClass);
 const DateRange = createReactComponent(DateRangeClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Calendar valueFormat="dd/MM/yyyy" displayFormat="dd/MM/yyyy">
@@ -26,5 +26,3 @@ function App() {
     </>
   );
 }
-
-export default App;

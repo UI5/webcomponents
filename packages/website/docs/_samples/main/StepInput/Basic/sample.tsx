@@ -3,8 +3,6 @@ import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
 
 const StepInput = createReactComponent(StepInputClass);
 
-function App() {
+export const Example = () => {
   return <StepInput />;
 }
-
-export default App;

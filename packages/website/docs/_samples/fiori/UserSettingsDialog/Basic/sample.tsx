@@ -70,7 +70,7 @@ const Toast = createReactComponent(ToastClass);
 const Toolbar = createReactComponent(ToolbarClass);
 const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
-function App() {
+export const Example = () => {
   const additionalDialogRef = useRef(null);
   const mobileSecondPageRef = useRef(null);
   const toastResetRef = useRef(null);
@@ -851,5 +851,3 @@ function App() {
     </>
   );
 }
-
-export default App;

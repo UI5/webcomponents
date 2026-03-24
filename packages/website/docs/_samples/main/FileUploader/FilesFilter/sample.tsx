@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/upload.js";
 const FileUploader = createReactComponent(FileUploaderClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   const [images, setImages] = useState<string[]>([]);
 
   const handleFileUploaderChange = (
@@ -61,5 +61,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -13,7 +13,7 @@ const Button = createReactComponent(ButtonClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
-function App() {
+export const Example = () => {
   const menuSubsRef = useRef(null);
   const delayMenuRef = useRef(null);
   const [menuSubsOpen, setMenuSubsOpen] = useState(false);
@@ -95,5 +95,3 @@ function App() {
     </>
   );
 }
-
-export default App;

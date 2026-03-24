@@ -7,7 +7,7 @@ const Label = createReactComponent(LabelClass);
 const Panel = createReactComponent(PanelClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Panel headerText="Panel">
@@ -22,5 +22,3 @@ function App() {
     </>
   );
 }
-
-export default App;

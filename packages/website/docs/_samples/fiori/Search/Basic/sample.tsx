@@ -18,7 +18,7 @@ const scopeData = [
   { name: "Tablet", scope: "products" },
 ];
 
-function App() {
+export const Example = () => {
   const [currentScope, setCurrentScope] = useState("");
 
   const filteredItems = currentScope
@@ -51,5 +51,3 @@ function App() {
     </>
   );
 }
-
-export default App;

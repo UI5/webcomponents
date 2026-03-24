@@ -10,7 +10,7 @@ import AvatarBadgeClass from "@ui5/webcomponents/dist/AvatarBadge.js";
 const Avatar = createReactComponent(AvatarClass);
 const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Avatar mode="Interactive" size="M" initials="PM" colorScheme="Accent6">
@@ -43,5 +43,3 @@ function App() {
     </>
   );
 }
-
-export default App;

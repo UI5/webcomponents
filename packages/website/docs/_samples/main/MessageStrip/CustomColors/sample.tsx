@@ -6,7 +6,7 @@ import "@ui5/webcomponents-icons/dist/palette.js";
 const Icon = createReactComponent(IconClass);
 const MessageStrip = createReactComponent(MessageStripClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <MessageStrip design="ColorSet2">
@@ -21,5 +21,3 @@ function App() {
     </>
   );
 }
-
-export default App;

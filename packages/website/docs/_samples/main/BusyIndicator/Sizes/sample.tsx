@@ -3,7 +3,7 @@ import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
 
 const BusyIndicator = createReactComponent(BusyIndicatorClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <BusyIndicator size="S" active={true} />
@@ -12,5 +12,3 @@ function App() {
     </>
   );
 }
-
-export default App;

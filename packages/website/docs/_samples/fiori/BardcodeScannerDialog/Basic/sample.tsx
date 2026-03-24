@@ -10,7 +10,7 @@ const BarcodeScannerDialog = createReactComponent(BarcodeScannerDialogClass);
 const Button = createReactComponent(ButtonClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   const [open, setOpen] = useState(false);
   const [scanResult, setScanResult] = useState("");
   const [scanError, setScanError] = useState("");
@@ -54,5 +54,3 @@ function App() {
     </>
   );
 }
-
-export default App;

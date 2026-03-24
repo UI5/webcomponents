@@ -6,7 +6,7 @@ import "@ui5/webcomponents-icons/dist/nutrition-activity.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <List>
@@ -46,5 +46,3 @@ function App() {
     </>
   );
 }
-
-export default App;

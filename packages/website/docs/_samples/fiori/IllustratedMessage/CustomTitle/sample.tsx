@@ -9,7 +9,7 @@ const Button = createReactComponent(ButtonClass);
 const Link = createReactComponent(LinkClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <IllustratedMessage name="UnableToUpload">
@@ -25,5 +25,3 @@ function App() {
     </>
   );
 }
-
-export default App;

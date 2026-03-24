@@ -3,12 +3,10 @@ import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 
 const Slider = createReactComponent(SliderClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Slider value={20} min={0} max={100} step={5} />
     </>
   );
 }
-
-export default App;

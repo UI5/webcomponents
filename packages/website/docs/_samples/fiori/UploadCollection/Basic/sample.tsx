@@ -20,7 +20,7 @@ const Icon = createReactComponent(IconClass);
 const Label = createReactComponent(LabelClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const uploadCollectionRef = useRef(null);
   const [newFiles, setNewFiles] = useState<
     {
@@ -154,5 +154,3 @@ function App() {
     </>
   );
 }
-
-export default App;

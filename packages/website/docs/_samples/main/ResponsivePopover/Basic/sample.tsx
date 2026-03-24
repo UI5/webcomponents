@@ -10,7 +10,7 @@ const Input = createReactComponent(InputClass);
 const Label = createReactComponent(LabelClass);
 const ResponsivePopover = createReactComponent(ResponsivePopoverClass);
 
-function App() {
+export const Example = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -48,5 +48,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -9,7 +9,7 @@ import "@ui5/webcomponents-icons/dist/checklist-item.js";
 const List = createReactComponent(ListClass);
 const ListItemStandard = createReactComponent(ListItemStandardClass);
 
-function App() {
+export const Example = () => {
   const [items, setItems] = useState([
     { id: "1", text: "Item #1" },
     { id: "2", text: "Item #2" },
@@ -74,5 +74,3 @@ function App() {
     </>
   );
 }
-
-export default App;

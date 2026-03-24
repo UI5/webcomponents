@@ -5,7 +5,7 @@ import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 const MultiInput = createReactComponent(MultiInputClass);
 const SuggestionItem = createReactComponent(SuggestionItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <MultiInput placeholder="Type anything" showSuggestions={true}>
@@ -17,5 +17,3 @@ function App() {
     </>
   );
 }
-
-export default App;

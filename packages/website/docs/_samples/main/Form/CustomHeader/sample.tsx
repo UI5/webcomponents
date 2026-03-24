@@ -19,7 +19,7 @@ const Option = createReactComponent(OptionClass);
 const Select = createReactComponent(SelectClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -95,5 +95,3 @@ function App() {
     </>
   );
 }
-
-export default App;

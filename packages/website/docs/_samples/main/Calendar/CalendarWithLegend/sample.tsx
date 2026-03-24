@@ -10,7 +10,7 @@ const CalendarLegend = createReactComponent(CalendarLegendClass);
 const CalendarLegendItem = createReactComponent(CalendarLegendItemClass);
 const SpecialCalendarDate = createReactComponent(SpecialCalendarDateClass);
 
-function App() {
+export const Example = () => {
   const specialDates = useMemo(() => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -62,5 +62,3 @@ function App() {
     </>
   );
 }
-
-export default App;

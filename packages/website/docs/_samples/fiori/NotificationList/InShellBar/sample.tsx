@@ -42,7 +42,7 @@ const Popover = createReactComponent(PopoverClass);
 const Text = createReactComponent(TextClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const clearAllDialogRef = useRef(null);
   const notificationsListGroupGrowingRef = useRef(null);
   const popoverRef = useRef(null);
@@ -525,5 +525,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -8,7 +8,7 @@ const SearchField = createReactComponent(SearchFieldClass);
 const Label = createReactComponent(LabelClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   const [resultText, setResultText] = useState(
     "Enter a search term and press Enter or click the search icon",
   );
@@ -48,5 +48,3 @@ function App() {
     </>
   );
 }
-
-export default App;

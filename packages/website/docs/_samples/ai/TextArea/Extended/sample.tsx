@@ -126,7 +126,7 @@ interface VersionEntry {
   timestamp: string;
 }
 
-function App() {
+export const Example = () => {
   const textareaRef = useRef<any>(null);
   const [textValue, setTextValue] = useState(
     "Innovation managers operate with both creativity and business acumen, driving initiatives that cultivate an innovation-friendly culture.",
@@ -447,5 +447,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

@@ -15,7 +15,7 @@ const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 const Toast = createReactComponent(ToastClass);
 
-function App() {
+export const Example = () => {
   const toastRef = useRef(null);
 
   const handleNotificationListItemClose = (
@@ -101,5 +101,3 @@ function App() {
     </>
   );
 }
-
-export default App;

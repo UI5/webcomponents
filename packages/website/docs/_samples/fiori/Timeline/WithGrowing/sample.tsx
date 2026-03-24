@@ -12,7 +12,7 @@ const Label = createReactComponent(LabelClass);
 
 const itemToLoad = 5;
 
-function App() {
+export const Example = () => {
   const timelineRef = useRef(null);
   const [extraItems, setExtraItems] = useState<
     { titleText: string; subtitleText: string; icon: string }[]
@@ -97,5 +97,3 @@ function App() {
     </>
   );
 }
-
-export default App;

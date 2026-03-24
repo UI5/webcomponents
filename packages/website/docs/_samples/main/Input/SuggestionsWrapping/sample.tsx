@@ -5,7 +5,7 @@ import SuggestionItemClass from "@ui5/webcomponents/dist/SuggestionItem.js";
 const Input = createReactComponent(InputClass);
 const SuggestionItem = createReactComponent(SuggestionItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Input placeholder="Type something" showSuggestions={true}>
@@ -16,5 +16,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -13,7 +13,7 @@ const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Card>
@@ -54,5 +54,3 @@ function App() {
     </>
   );
 }
-
-export default App;

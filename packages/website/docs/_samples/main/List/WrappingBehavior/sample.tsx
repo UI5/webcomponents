@@ -17,7 +17,7 @@ const ListItemStandard = createReactComponent(ListItemStandardClass);
 const Title = createReactComponent(TitleClass);
 const ExpandableText = createReactComponent(ExpandableTextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -138,5 +138,3 @@ function App() {
     </>
   );
 }
-
-export default App;

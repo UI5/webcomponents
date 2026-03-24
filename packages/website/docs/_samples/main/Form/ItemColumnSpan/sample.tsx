@@ -1,3 +1,4 @@
+
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useRef } from "react";
 import FormClass from "@ui5/webcomponents/dist/Form.js";
@@ -20,7 +21,7 @@ const Slider = createReactComponent(SliderClass);
 const Text = createReactComponent(TextClass);
 const TextArea = createReactComponent(TextAreaClass);
 
-function App() {
+export const Example = () => {
   const containerRef = useRef(null);
   const sliderRef = useRef(null);
 
@@ -97,5 +98,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -44,7 +44,7 @@ const ui5_database_entries = [
   "USA",
 ];
 
-function App() {
+export const Example = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleInputInput = useCallback(
@@ -75,5 +75,3 @@ function App() {
     </Input>
   );
 }
-
-export default App;

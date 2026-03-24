@@ -5,7 +5,7 @@ import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 const IllustratedMessage = createReactComponent(IllustratedMessageClass);
 const Button = createReactComponent(ButtonClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <IllustratedMessage name="UnableToUpload">
@@ -15,5 +15,3 @@ function App() {
     </>
   );
 }
-
-export default App;

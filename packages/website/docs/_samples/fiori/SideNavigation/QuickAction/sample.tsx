@@ -22,7 +22,7 @@ const Button = createReactComponent(ButtonClass);
 const Dialog = createReactComponent(DialogClass);
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const quickActionRef = useRef(null);
 
@@ -98,5 +98,3 @@ function App() {
     </>
   );
 }
-
-export default App;

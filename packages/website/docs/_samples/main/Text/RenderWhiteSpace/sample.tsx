@@ -3,7 +3,7 @@ import TextClass from "@ui5/webcomponents/dist/Text.js";
 
 const Text = createReactComponent(TextClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Text style={{ whiteSpace: "pre", width: "300px" }}>
@@ -14,5 +14,3 @@ function App() {
     </>
   );
 }
-
-export default App;

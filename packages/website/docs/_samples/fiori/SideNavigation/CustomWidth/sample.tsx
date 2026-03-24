@@ -17,7 +17,7 @@ const SideNavigationGroup = createReactComponent(SideNavigationGroupClass);
 const SideNavigationItem = createReactComponent(SideNavigationItemClass);
 const SideNavigationSubItem = createReactComponent(SideNavigationSubItemClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -79,5 +79,3 @@ function App() {
     </>
   );
 }
-
-export default App;

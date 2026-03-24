@@ -9,7 +9,7 @@ import "@ui5/webcomponents-icons/dist/upload.js";
 const FileUploader = createReactComponent(FileUploaderClass);
 const Label = createReactComponent(LabelClass);
 
-function App() {
+export const Example = () => {
   const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const [valueStateMessage, setValueStateMessage] = useState("");
 
@@ -52,5 +52,3 @@ function App() {
     </>
   );
 }
-
-export default App;

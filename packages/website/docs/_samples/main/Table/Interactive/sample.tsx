@@ -17,7 +17,7 @@ const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 const Toast = createReactComponent(ToastClass);
 
-function App() {
+export const Example = () => {
   const toastRef = useRef(null);
 
   const handleTableRowClick = (e: UI5CustomEvent<TableClass, "row-click">) => {
@@ -129,5 +129,3 @@ function App() {
     </>
   );
 }
-
-export default App;

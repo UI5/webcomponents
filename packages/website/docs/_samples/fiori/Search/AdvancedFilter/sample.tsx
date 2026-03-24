@@ -9,7 +9,7 @@ const Search = createReactComponent(SearchClass);
 const Button = createReactComponent(ButtonClass);
 const Toast = createReactComponent(ToastClass);
 
-function App() {
+export const Example = () => {
   const [toastOpen, setToastOpen] = useState(false);
 
   return (
@@ -33,5 +33,3 @@ function App() {
     </>
   );
 }
-
-export default App;

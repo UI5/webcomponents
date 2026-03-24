@@ -21,7 +21,7 @@ const UserMenuAccount = createReactComponent(UserMenuAccountClass);
 const UserMenuItem = createReactComponent(UserMenuItemClass);
 const Avatar = createReactComponent(AvatarClass);
 
-function App() {
+export const Example = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const openerRef = useRef(null);
 
@@ -154,5 +154,3 @@ function App() {
     </>
   );
 }
-
-export default App;

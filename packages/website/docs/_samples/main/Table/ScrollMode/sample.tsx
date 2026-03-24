@@ -13,7 +13,7 @@ const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableRow = createReactComponent(TableRowClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <Table id="table" overflowMode="Scroll">
@@ -115,5 +115,3 @@ function App() {
     </>
   );
 }
-
-export default App;

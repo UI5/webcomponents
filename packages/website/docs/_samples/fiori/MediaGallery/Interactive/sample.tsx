@@ -16,7 +16,7 @@ const Dialog = createReactComponent(DialogClass);
 const Label = createReactComponent(LabelClass);
 const Title = createReactComponent(TitleClass);
 
-function App() {
+export const Example = () => {
   const mediaGalleryDialogRef = useRef(null);
 
   const handleCloseDialogButtonClick = () => {
@@ -150,5 +150,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -8,7 +8,7 @@ const Button = createReactComponent(ButtonClass);
 const ColorPaletteItem = createReactComponent(ColorPaletteItemClass);
 const ColorPalettePopover = createReactComponent(ColorPalettePopoverClass);
 
-function App() {
+export const Example = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -46,5 +46,3 @@ function App() {
     </>
   );
 }
-
-export default App;

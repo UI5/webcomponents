@@ -22,7 +22,7 @@ const countries = [
   "Bolivia",
 ];
 
-function App() {
+export const Example = () => {
   const [valueState, setValueState] = useState<`${ValueState}`>("None");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -63,5 +63,3 @@ function App() {
     </>
   );
 }
-
-export default App;

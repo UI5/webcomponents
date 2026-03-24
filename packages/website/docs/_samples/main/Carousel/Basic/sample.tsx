@@ -3,7 +3,7 @@ import CarouselClass from "@ui5/webcomponents/dist/Carousel.js";
 
 const Carousel = createReactComponent(CarouselClass);
 
-function App() {
+export const Example = () => {
   return (
     <>
       <style>{`
@@ -19,5 +19,3 @@ function App() {
     </>
   );
 }
-
-export default App;

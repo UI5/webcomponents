@@ -19,7 +19,7 @@ const Avatar = createReactComponent(AvatarClass);
 const Menu = createReactComponent(MenuClass);
 const MenuItem = createReactComponent(MenuItemClass);
 
-function App() {
+export const Example = () => {
   const handleNotificationListItemClose = (
     e: UI5CustomEvent<NotificationListClass, "item-close">,
   ) => {
@@ -154,5 +154,3 @@ function App() {
     </>
   );
 }
-
-export default App;
