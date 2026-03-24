@@ -676,7 +676,7 @@ describe("Button form attribute", () => {
 		// Change the input value
 		cy.get("#testInput")
 			.clear()
-			.type("changed");
+			.realType("changed");
 
 		cy.get("#testInput")
 			.should("have.value", "changed");
