@@ -432,11 +432,14 @@
 
 		function handleExternalFormSubmit(event) {
 			event.preventDefault();
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData.entries());
 			const message = document.getElementById('externalFormMessage');
+			message.textContent = 'Submitted: ' + JSON.stringify(values);
 			message.style.display = 'inline';
 			setTimeout(() => {
 				message.style.display = 'none';
-			}, 3000);
+			}, 5000);
 		}
 		window.handleExternalFormSubmit = handleExternalFormSubmit;
 	</script>
