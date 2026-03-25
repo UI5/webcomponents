@@ -33,9 +33,17 @@
 			<p>A banner combining salutation and date text.</p>
 
 			<ui5-banner id="banner-date"
-				background-image="https://plus.unsplash.com/premium_photo-1701534008693-0eee0632d47a?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 				salutation-text="Good Morning, Jane"
 				date-text="Thursday, March 6, 2026">
+				<ui5-card slot="headerActions" style="width: 300px;">
+						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
+						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
+					</ui5-card>
+					<div slot="startContent" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+					<ui5-button icon="create">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
+				</div>
 			</ui5-banner>
 		</section>
 
@@ -276,6 +284,49 @@
 					<span class="kpi-label">End Block</span>
 					<span class="kpi-value">200</span>
 				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 11. SuccessFactors-Style Header Banner -->
+		<!-- ====================================== -->
+		<section>
+			<h2>11. SuccessFactors-Style Header Banner</h2>
+			<p>The blue home page header as seen in SAP SuccessFactors: a personalized greeting with quick-action shortcuts on the left and a carousel of alert cards on the right.</p>
+
+			<ui5-banner id="banner-sf"
+				layout="TwoThirds">
+				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
+				<div slot="startContent" style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
+					<div>
+						<div style="font-family: var(--sapFontHeaderFamily); font-size: var(--sapFontHeader2Size); font-weight: bold; color: var(--_ui5_banner_text_color);">Hello, Henry</div>
+					</div>
+					<div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+						<ui5-button icon="heart" design="Default">Appreciate a Colleague</ui5-button>
+						<ui5-button icon="group" design="Default">Create Team</ui5-button>
+						<ui5-button icon="email" design="Default">Email</ui5-button>
+						<ui5-button icon="time-entry-request" design="Default">Clock In/Out</ui5-button>
+					</div>
+				</div>
+
+				<!-- End Content (1/3): carousel of alert/attention cards -->
+				<ui5-carousel slot="endContent" style="width: 100%;">
+					<div class="kpi-card">
+						<span class="kpi-label">Needs Attention</span>
+						<span class="kpi-value" style="font-size: var(--sapFontHeader4Size);">PTO Leave</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapTextColor);">Debra Labade</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapContent_LabelColor);">Oct 10 – Oct 17, 2024 · Annual Leave</span>
+						<ui5-link style="margin-top: 0.25rem;" href="#">View All (4)</ui5-link>
+					</div>
+					<div class="kpi-card">
+						<span class="kpi-label">Needs Attention</span>
+						<span class="kpi-value" style="font-size: var(--sapFontHeader4Size);">Information Security</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapTextColor);">Overdue Learning Assignment</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapContent_LabelColor);">Online · 30 Hours</span>
+						<ui5-button design="Emphasized" style="margin-top: 0.5rem;">Take Course Now</ui5-button>
+					</div>
+				</ui5-carousel>
+
 			</ui5-banner>
 		</section>
 

@@ -1,8 +1,11 @@
 :host {
 	--_ui5_banner_background: var(--sapShell_Banner_Background, var(--sapShellColor));
-	--_ui5_banner_background_image: var(--sapShell_Banner_BackgroundImage, none);
 	--_ui5_banner_text_color: var(--sapShell_Banner_TextColor, var(--sapShell_TextColor));
 	--_ui5_banner_border_radius: var(--sapTile_BorderCornerRadius);
 	--_ui5_banner_border: 0.0625rem solid var(--sapTile_BorderColor);
 	--_ui5_banner_box_shadow: var(--sapContent_Shadow0);
+	--_ui5_banner_background_image:
+    linear-gradient(135deg, transparent 0, transparent 50%, #0000003d 50%, #1f1f1f34 75%, #6666663d 80%),
+    /* left anvil, below the right anvil */
+    linear-gradient(90deg, #0003 15%, #6660 60%);
 }

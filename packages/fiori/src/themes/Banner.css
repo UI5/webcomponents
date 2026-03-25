@@ -63,6 +63,11 @@
 	--sapButton_IconColor: var(--_ui5_banner_text_color);
 }
 
+/* Gradient overlay when a background image is present */
+.ui5-banner--has-bg-image {
+	background-image: linear-gradient(to right, var(--_ui5_banner_background) 0%, color-mix(in srgb, var(--_ui5_banner_background) 60%, transparent) 40%, transparent 70%), var(--_ui5_banner_user_image);
+}
+
 .ui5-banner-salutation {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader2Size);

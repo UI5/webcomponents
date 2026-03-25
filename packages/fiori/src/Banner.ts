@@ -163,7 +163,7 @@ class Banner extends UI5Element {
 
 	get _backgroundImageStyle(): Record<string, string> | undefined {
 		if (this.backgroundImage) {
-			return { "background-image": `url('${this.backgroundImage}')` };
+			return { "--_ui5_banner_user_image": `url('${this.backgroundImage}')` };
 		}
 		return undefined;
 	}
