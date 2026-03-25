@@ -14,6 +14,7 @@
 	color: var(--_ui5_radio_button_color);
 	border-radius: var(--_ui5_radio_button_border_radius);
 	font-size: var(--sapFontSize);
+	padding-block: var(--_ui5_radio_button_label_side_padding);
 }
 
 :host(:not([disabled])) .ui5-radio-root {
@@ -188,7 +189,13 @@
 	box-sizing: border-box;
 	border: var(--_ui5_radio_button_border);
 	border-radius: var(--_ui5_radio_button_border_radius);
-	padding-block: var(--_ui5_radio_button_label_side_padding);
+}
+
+.ui5-radio-root::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	inset-block: calc(-1 * var(--_ui5_radio_button_label_side_padding));
 }
 
 /* Inner */
