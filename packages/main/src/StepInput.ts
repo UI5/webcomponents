@@ -54,6 +54,7 @@ const INITIAL_WAIT_TIMEOUT = 500; // milliseconds
 const ACCELERATION = 0.8;
 const MIN_WAIT_TIMEOUT = 50; // milliseconds
 const INITIAL_SPEED = 120; // milliseconds
+const MAX_FORMATTED_LENGTH = 25;
 
 type StepInputValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
@@ -577,6 +578,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 	 * @param fireChangeEvent if `true`, fires `change` event when the value is changed
 	 */
 	_modifyValue(modifier: number, fireChangeEvent = false) {
+		if (this._isScientificNotation(this.value.toString())) {
+			this.value = this._defaultValue;
+		}
+
 		let value;
 		value = this.value + modifier;
 		if (this.min !== undefined && value < this.min) {
@@ -606,6 +611,9 @@ class StepInput extends UI5Element implements IFormInputElement {
  	 * @private
  	 */
 	_formatNumber(value: number): string {
+		if (this._isScientificNotation(value.toString()) || value.toString().length > MAX_FORMATTED_LENGTH) {
+			return parseFloat(value.toString()).toExponential(this.valuePrecision);
+		}
 		return this.formatter.format(value);
 	}
 

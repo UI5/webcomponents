@@ -885,6 +885,33 @@ describe("Number expressions with constants", () => {
 		cy.get<StepInput>("@stepInput")
 			.should("have.prop", "valueState", "None");
 	});
+
+	it("should not format value when formatted value is too bid", () => {
+		cy.mount(
+			<StepInput value={5}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber("1e100");
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 1e100);
+		
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "None");
+		
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputCheckInnerInputProperty("value", "1e+100");
+	});
 });
 
 describe("Validation inside form", () => {
