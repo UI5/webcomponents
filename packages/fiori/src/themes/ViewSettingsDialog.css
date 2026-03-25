@@ -94,6 +94,10 @@
 	color: var(--sapTextColor);
 }
 
+.ui5-vsd-hidden-tabs {
+	display: none;
+}
+
 [ui5-li-group]::part(header) {
 	overflow: hidden;
 }

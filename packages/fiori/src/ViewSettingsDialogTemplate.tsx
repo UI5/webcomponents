@@ -138,7 +138,7 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 			)}
 
 			{/* Hidden slots for non-active custom tabs to prevent content leaking */}
-			<div style={{ display: "none" }}>
+			<div class="ui5-vsd-hidden-tabs">
 				{this.customTabs
 					.filter(tab => tab !== this._selectedCustomTab)
 					.map(tab => (

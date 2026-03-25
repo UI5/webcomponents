@@ -66,8 +66,6 @@ class ViewSettingsDialogCustomTab extends UI5Element {
 	 */
 	@slot({ type: Node, "default": true })
 	content!: DefaultSlot<Node>;
-
-	_individualSlot?: string;
 }
 
 ViewSettingsDialogCustomTab.define();
