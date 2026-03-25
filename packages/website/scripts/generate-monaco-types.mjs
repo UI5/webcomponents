@@ -370,28 +370,57 @@ function parseDeclarationFile(dtsContent, componentName, packagesDir = null, inc
 
   // Extract eventDetails to get event names and their detail types
   // Match eventDetails: { ... } or eventDetails: ParentType["eventDetails"] & { ... }
-  const eventDetailsMatch = classBody.match(/eventDetails\s*:[^{]*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/);
-  if (eventDetailsMatch) {
-    const eventBody = eventDetailsMatch[1];
-    // Match event names and their detail type references
-    const eventMatches = eventBody.matchAll(/["']([a-z][a-z0-9-]*)["']\s*:\s*([^;\n,]+)/gi);
-    for (const match of eventMatches) {
-      const eventName = match[1];
-      const detailTypeName = match[2].trim();
-      // Skip internal events starting with _
-      if (!eventName.startsWith('_')) {
-        // Resolve the detail type fields
-        let detailFields = null;
-        if (detailTypeName !== "void" && detailTypes.has(detailTypeName)) {
-          detailFields = detailTypes.get(detailTypeName);
+  const eventDetailsIdx = classBody.indexOf("eventDetails");
+  if (eventDetailsIdx >= 0) {
+    // Find the opening brace of eventDetails
+    const openBrace = classBody.indexOf("{", eventDetailsIdx);
+    if (openBrace >= 0) {
+      // Use brace counting to find the matching close brace
+      let depth = 1;
+      let i = openBrace + 1;
+      while (i < classBody.length && depth > 0) {
+        if (classBody[i] === "{") depth++;
+        if (classBody[i] === "}") depth--;
+        i++;
+      }
+      const eventDetailsBody = classBody.substring(openBrace + 1, i - 1);
+
+      // Parse top-level event entries only (depth 0 relative to eventDetails body)
+      // Skip entries nested inside inline detail type objects like { item: ListItem; }
+      let entryDepth = 0;
+      let pos = 0;
+      while (pos < eventDetailsBody.length) {
+        if (eventDetailsBody[pos] === "{") { entryDepth++; pos++; continue; }
+        if (eventDetailsBody[pos] === "}") { entryDepth--; pos++; continue; }
+
+        // Only match at top level (entryDepth === 0)
+        if (entryDepth === 0) {
+          // Try to match: "event-name": Type  or  eventName: Type
+          const entryMatch = eventDetailsBody.substring(pos).match(/^["']?([a-z][a-z0-9-]*)["']?\s*:\s*([^;{\n,]+)/i);
+          if (entryMatch) {
+            const eventName = entryMatch[1];
+            const detailTypeName = entryMatch[2].trim();
+            pos += entryMatch[0].length;
+
+            // Skip internal events starting with _
+            if (!eventName.startsWith('_')) {
+              // Resolve the detail type fields
+              let detailFields = null;
+              if (detailTypeName !== "void" && detailTypes.has(detailTypeName)) {
+                detailFields = detailTypes.get(detailTypeName);
+              }
+              // Override inherited event with same name if present
+              const existingIndex = events.findIndex(e => e.name === eventName);
+              if (existingIndex >= 0) {
+                events[existingIndex] = { name: eventName, detailTypeName, detailFields };
+              } else {
+                events.push({ name: eventName, detailTypeName, detailFields });
+              }
+            }
+            continue;
+          }
         }
-        // Override inherited event with same name if present
-        const existingIndex = events.findIndex(e => e.name === eventName);
-        if (existingIndex >= 0) {
-          events[existingIndex] = { name: eventName, detailTypeName: detailTypeName, detailFields };
-        } else {
-          events.push({ name: eventName, detailTypeName: detailTypeName, detailFields });
-        }
+        pos++;
       }
     }
   }
@@ -710,13 +739,13 @@ type UI5CustomEvent<T = HTMLElement, N extends string = never> =
 
   // Generate module declarations for imports used in samples
   output += `// Module declarations for sample imports\n`;
-  output += `declare module "@ui5/webcomponents-base/dist/createComponent.js" {\n`;
-  output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {\n`;
+  output += `  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `}\n\n`;
 
   // Also declare the short path that samples use for UI5CustomEvent
   output += `declare module "@ui5/webcomponents-base" {\n`;
-  output += `  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
+  output += `  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;\n`;
   output += `  export type UI5CustomEvent<T = HTMLElement, N extends string = never> =\n`;
   output += `    Omit<CustomEvent<\n`;
   output += `      [N] extends [never] ? any :\n`;

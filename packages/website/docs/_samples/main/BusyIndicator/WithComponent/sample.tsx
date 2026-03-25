@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import BusyIndicatorClass from "@ui5/webcomponents/dist/BusyIndicator.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import ListClass from "@ui5/webcomponents/dist/List.js";
 import ListItemStandardClass from "@ui5/webcomponents/dist/ListItemStandard.js";
 
-const BusyIndicator = createComponent(BusyIndicatorClass);
-const Button = createComponent(ButtonClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
+const BusyIndicator = createReactComponent(BusyIndicatorClass);
+const Button = createReactComponent(ButtonClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
 
 function App() {
   const [busy, setBusy] = useState(false);
@@ -18,7 +18,7 @@ function App() {
     setBusy(true);
 
     setTimeout(() => {
-      setItems(prev => [...prev, "UI5", "Web", "Components"]);
+      setItems((prev) => [...prev, "UI5", "Web", "Components"]);
       setBusy(false);
     }, 3000);
   };
@@ -33,15 +33,15 @@ function App() {
         }
       `}</style>
       <div className="sample">
-            <Button onClick={handleFetchBtnClick}>Fetch List Data</Button>
-            <BusyIndicator active={busy}>
-                <List noDataText="No Data" headerText="Available Items">
-                    {items.map((title, index) => (
-                        <ListItemStandard key={index}>{title}</ListItemStandard>
-                    ))}
-                </List>
-            </BusyIndicator>
-        </div>
+        <Button onClick={handleFetchBtnClick}>Fetch List Data</Button>
+        <BusyIndicator active={busy}>
+          <List noDataText="No Data" headerText="Available Items">
+            {items.map((title, index) => (
+              <ListItemStandard key={index}>{title}</ListItemStandard>
+            ))}
+          </List>
+        </BusyIndicator>
+      </div>
     </>
   );
 }

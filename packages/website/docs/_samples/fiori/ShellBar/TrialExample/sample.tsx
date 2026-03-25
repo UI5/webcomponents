@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
 import ShellBarSearchClass from "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
@@ -12,33 +12,42 @@ import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarItem = createComponent(ShellBarItemClass);
-const ShellBarSearch = createComponent(ShellBarSearchClass);
-const Avatar = createComponent(AvatarClass);
-const Button = createComponent(ButtonClass);
-const Tag = createComponent(TagClass);
-const Text = createComponent(TextClass);
-const ToggleButton = createComponent(ToggleButtonClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarItem = createReactComponent(ShellBarItemClass);
+const ShellBarSearch = createReactComponent(ShellBarSearchClass);
+const Avatar = createReactComponent(AvatarClass);
+const Button = createReactComponent(ButtonClass);
+const Tag = createReactComponent(TagClass);
+const Text = createReactComponent(TextClass);
+const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
-      <ShellBar primaryTitle="Product Identifier" notificationsCount={72} showNotifications={true}>
-                <Button icon="menu2" slot="startButton" />
-                <img slot="logo" src="/images/sap-logo-svg.svg" />
+      <ShellBar
+        primaryTitle="Product Identifier"
+        notificationsCount="72"
+        showNotifications={true}
+      >
+        <Button icon="menu2" slot="startButton" />
+        <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
 
-                <Tag design="Set2" colorScheme="7" slot="content">Trial</Tag>
-                <Text slot="content">30 days remaining</Text>
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
+        <Tag design="Set2" colorScheme="7" slot="content">
+          Trial
+        </Tag>
+        <Text slot="content">30 days remaining</Text>
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-                    <img src="/images/avatars/man_avatar_3.png"/>
-                </Avatar>
-            </ShellBar>
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
     </>
   );
 }

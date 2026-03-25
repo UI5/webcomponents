@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -8,13 +8,13 @@ import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableVirtualizerClass from "@ui5/webcomponents/dist/TableVirtualizer.js";
 import TableSelectionClass from "@ui5/webcomponents/dist/TableSelection.js";
 
-const Table = createComponent(TableClass);
-const TableRow = createComponent(TableRowClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableVirtualizer = createComponent(TableVirtualizerClass);
-const TableSelection = createComponent(TableSelectionClass);
+const Table = createReactComponent(TableClass);
+const TableRow = createReactComponent(TableRowClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableVirtualizer = createReactComponent(TableVirtualizerClass);
+const TableSelection = createReactComponent(TableSelectionClass);
 
 interface Product {
   key: string;
@@ -55,7 +55,9 @@ async function fetchProducts(first: number, last: number): Promise<Product[]> {
 }
 
 function App() {
-  const [rows, setRows] = useState<Array<{ position: number; product: Product }>>([]);
+  const [rows, setRows] = useState<
+    Array<{ position: number; product: Product }>
+  >([]);
   const virtualizerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -76,9 +78,21 @@ function App() {
 
   return (
     <>
-      <Table id="table" loading-delay={100} style={{ height: "150px" }} class="ui5-content-density-compact">
-        <TableVirtualizer id="virtualizer" slot="features" rowCount={1000} rowHeight={32} ref={virtualizerRef} onRangeChange={handleRangeChange} />
-      {/* playground-fold */}
+      <Table
+        id="table"
+        loading-delay={100}
+        style={{ height: "150px" }}
+        class="ui5-content-density-compact"
+      >
+        <TableVirtualizer
+          id="virtualizer"
+          slot="features"
+          rowCount={1000}
+          rowHeight={32}
+          ref={virtualizerRef}
+          onRangeChange={handleRangeChange}
+        />
+        {/* playground-fold */}
         <TableSelection slot="features" />
         <TableHeaderRow slot="headerRow" sticky={true}>
           <TableHeaderCell min-width="150px">Product Name</TableHeaderCell>
@@ -86,9 +100,13 @@ function App() {
           <TableHeaderCell>Weight</TableHeaderCell>
           <TableHeaderCell horizontalAlign="Right">Price</TableHeaderCell>
         </TableHeaderRow>
-      {/* playground-fold-end */}
+        {/* playground-fold-end */}
         {rows.map((row) => (
-          <TableRow key={row.product.key} position={row.position} rowKey={row.product.key}>
+          <TableRow
+            key={row.product.key}
+            position={row.position}
+            rowKey={row.product.key}
+          >
             <TableCell>{row.product.name}</TableCell>
             <TableCell>{row.product.height}</TableCell>
             <TableCell>{row.product.weight}</TableCell>

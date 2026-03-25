@@ -1,15 +1,15 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarGroupClass from "@ui5/webcomponents/dist/AvatarGroup.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 
-const Avatar = createComponent(AvatarClass);
-const AvatarGroup = createComponent(AvatarGroupClass);
-const Popover = createComponent(PopoverClass);
-const Slider = createComponent(SliderClass);
+const Avatar = createReactComponent(AvatarClass);
+const AvatarGroup = createReactComponent(AvatarGroupClass);
+const Popover = createReactComponent(PopoverClass);
+const Slider = createReactComponent(SliderClass);
 
 function App() {
   const popoverRef = useRef(null);
@@ -17,7 +17,9 @@ function App() {
   const [groupWidth, setGroupWidth] = useState("60%");
   const [popoverAvatars, setPopoverAvatars] = useState<any[]>([]);
 
-  const handleAvatarGroupClick = (e: UI5CustomEvent<AvatarGroupClass, "click">) => {
+  const handleAvatarGroupClick = (
+    e: UI5CustomEvent<AvatarGroupClass, "click">,
+  ) => {
     const group = avatarGroupRef.current;
     const avatars: any[] = [];
     group.items.forEach((avatar: any, index: number) => {
@@ -36,18 +38,32 @@ function App() {
   };
 
   const handleSliderInput = (e: UI5CustomEvent<SliderClass, "input">) => {
-    setGroupWidth(e.target.value + "%");
+    setGroupWidth(e.currentTarget.value + "%");
   };
 
   return (
     <>
       <div className="group">
-        <Popover ref={popoverRef} header-text="My people" class="peoplePopover" style={{ width: "400px" }} placement="Bottom">
-          <div className="placeholder" style={{ display: "flex", flexWrap: "wrap" }}>
+        <Popover
+          ref={popoverRef}
+          header-text="My people"
+          class="peoplePopover"
+          style={{ width: "400px" }}
+          placement="Bottom"
+        >
+          <div
+            className="placeholder"
+            style={{ display: "flex", flexWrap: "wrap" }}
+          >
             {popoverAvatars.map((av, i) => (
               <div key={i} className="avatar-slot" style={{ padding: "5px" }}>
-                <Avatar interactive={true} icon={av.icon} initials={av.initials} colorScheme={av.colorScheme}>
-                  {av.imageSrc && <img src={av.imageSrc} />}
+                <Avatar
+                  mode="Interactive"
+                  icon={av.icon}
+                  initials={av.initials}
+                  colorScheme={av.colorScheme}
+                >
+                  {av.imageSrc && <img src={av.imageSrc} alt="image"/>}
                 </Avatar>
               </div>
             ))}
@@ -56,12 +72,20 @@ function App() {
 
         <Slider min={1} max={100} value={60} onInput={handleSliderInput} />
 
-        <AvatarGroup ref={avatarGroupRef} type="Group" style={{ width: groupWidth }} onClick={handleAvatarGroupClick}>
+        <AvatarGroup
+          ref={avatarGroupRef}
+          type="Group"
+          style={{ width: groupWidth }}
+          onClick={handleAvatarGroupClick}
+        >
           <Avatar size="M" icon="employee" />
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
@@ -70,7 +94,10 @@ function App() {
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />
@@ -79,7 +106,10 @@ function App() {
           <Avatar size="M" icon="employee" />
           <Avatar size="M" initials="JD" />
           <Avatar size="M">
-            <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
+            <img
+              src="/images/avatars/woman_avatar_5.png"
+              alt="Woman Avatar 5"
+            />
           </Avatar>
           <Avatar size="M">
             <img src="/images/avatars/man_avatar_3.png" alt="Man Avatar 3" />

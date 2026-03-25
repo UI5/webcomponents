@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ToolbarClass from "@ui5/webcomponents/dist/Toolbar.js";
 import ToolbarButtonClass from "@ui5/webcomponents/dist/ToolbarButton.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
@@ -6,11 +6,10 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/employee.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 
-const Toolbar = createComponent(ToolbarClass);
-const ToolbarButton = createComponent(ToolbarButtonClass);
+const Toolbar = createReactComponent(ToolbarClass);
+const ToolbarButton = createReactComponent(ToolbarButtonClass);
 
 function App() {
-
   return (
     <>
       <Toolbar align-content="Start">
@@ -18,14 +17,14 @@ function App() {
         <ToolbarButton icon="add" text="Add" />
         <ToolbarButton icon="employee" text="Add people" />
         <ToolbarButton icon="employee" text="Call me later" />
-    </Toolbar>
+      </Toolbar>
 
-    <Toolbar align-content="End">
+      <Toolbar align-content="End">
         <ToolbarButton icon="decline" text="Decline" />
         <ToolbarButton icon="add" text="Add" />
         <ToolbarButton icon="employee" text="Add people" />
         <ToolbarButton icon="employee" text="Call me later" />
-    </Toolbar>
+      </Toolbar>
     </>
   );
 }

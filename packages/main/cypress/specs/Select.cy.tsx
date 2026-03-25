@@ -1001,22 +1001,27 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
-	
-		cy.get("@select").realPress("ArrowUp");
-	
+		cy.get("@select").should("not.have.attr", "opened");
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
+	
+		cy.get("@labelRoot").realPress("ArrowUp");
+	
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT2);
@@ -1045,24 +1050,40 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
+		// Closed-state arrow navigation with announcement
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
 	
-		cy.get("@select").realPress("ArrowUp");
+		cy.get("@labelRoot").realPress("ArrowUp");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
+		// Open picker, navigate, escape (revert)
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
 	
+		// Open picker, navigate, enter (confirm)
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 	
 		cy.get("@select")
 			.shadow()
@@ -1140,15 +1161,14 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Banana";
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("Space");
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Tab");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("ArrowUp");
-		cy.get("[ui5-select]").realPress("Tab");
-
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
@@ -1174,20 +1194,22 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Watermelon";
 
-		cy.get("[ui5-select]").eq(1).realClick();
-		cy.get("[ui5-select]").eq(1).realClick();
+		cy.get("[ui5-select]").eq(1).as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("Space");
+		cy.get("@select").realPress("ArrowDown");
+		cy.get("@select").realPress(["Shift", "Tab"]);
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("ArrowDown");
-		cy.get("[ui5-select]").eq(1).realPress(["Shift", "Tab"]);
-
-		cy.get("[ui5-select]").eq(1)
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
 
-		cy.get("[ui5-select]").eq(0).should("be.focused");
+		cy.get("[ui5-select]").eq(0)
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused");
 	});
 
 	it("tests selection does not cycle with ArrowDown", () => {
@@ -1754,24 +1776,32 @@ describe("Select general interaction", () => {
 			</Select>
 		);
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realPress("s");
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+		cy.get("@select").realPress("s");
 
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", "Second");
 
-		cy.get("[ui5-select]").realPress("Enter");
+		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("t");
-
-		cy.get("[ui5-select]")
+		// After picker closes, focus the label root before type-to-select
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
+
+		cy.get("@labelRoot").realPress("t");
+
+		cy.get("@labelRoot")
 			.should("contain.text", "Third");
 
-		cy.get("[ui5-select]").should("have.prop", "value", "Third");
+		cy.get("@select").should("have.prop", "value", "Third");
 	});
 
 	it("navigates with ArrowDown when initial value does not match any option", () => {
@@ -1818,5 +1848,68 @@ describe("Select general interaction", () => {
 			.eq(2)
 			.should("have.attr", "selected");
 		cy.get("[ui5-select]").should("have.prop", "value", "C");
+	});
+
+	it("fires change event only once when pressing Enter on opened picker", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select")
+			.then(($select) => {
+				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
+			});
+
+		// Open the picker, navigate to a different option, and press Enter
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// The change event must fire exactly once (not twice due to both
+		// the list item click and the Select's own Enter key handler)
+		cy.get("@changeStub").should("have.been.calledOnce");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "Compact");
+	});
+
+	it("focuses the select root after the picker closes so screen readers can announce the selected value", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select");
+
+		// Open the picker and select a different option
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// After the picker closes, the select root should be focused
+		// so that screen readers like NVDA can announce the selected value
+		cy.get("@select")
+			.should("be.focused");
 	});
 });

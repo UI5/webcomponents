@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 
-const Avatar = createComponent(AvatarClass);
-const Label = createComponent(LabelClass);
+const Avatar = createReactComponent(AvatarClass);
+const Label = createReactComponent(LabelClass);
 
 function App() {
   const counterRef = useRef(0);
@@ -17,9 +17,14 @@ function App() {
 
   return (
     <>
-      <Avatar id="avt" mode="Interactive" initials="FJ" onClick={handleAvtClick} />
+      <Avatar
+        id="avt"
+        mode="Interactive"
+        initials="FJ"
+        onClick={handleAvtClick}
+      />
 
-        <Label id="lbl">{labelText}</Label>
+      <Label id="lbl">{labelText}</Label>
     </>
   );
 }

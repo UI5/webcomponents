@@ -21,3 +21,6 @@ jobs:
         export NODE_OPTIONS="--max_old_space_size=4096"
         yarn install
         yarn ci:deploy:nightly
+
+    - name: Typecheck Samples
+      run: yarn workspace @ui5/webcomponents-website typecheck:samples

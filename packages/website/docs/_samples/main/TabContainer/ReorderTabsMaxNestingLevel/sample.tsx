@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
@@ -7,24 +7,26 @@ import TabClass from "@ui5/webcomponents/dist/Tab.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import TabContainerClass from "@ui5/webcomponents/dist/TabContainer.js";
 
-const Label = createComponent(LabelClass);
-const StepInput = createComponent(StepInputClass);
-const Tab = createComponent(TabClass);
-const TabContainer = createComponent(TabContainerClass);
+const Label = createReactComponent(LabelClass);
+const StepInput = createReactComponent(StepInputClass);
+const Tab = createReactComponent(TabClass);
+const TabContainer = createReactComponent(TabContainerClass);
 
 function App() {
   const tabContainerRef = useRef(null);
   const maxNestingLevelRef = useRef(1);
 
-  const getTabLevel = (element) => {
+  const getTabLevel = (element: HTMLElement): number => {
     if (element.hasAttribute("ui5-tabcontainer")) {
       return 0;
     }
     return 1 + getTabLevel(element.parentElement);
   };
 
-  const handleNestingLevelChange = (e: UI5CustomEvent<StepInputClass, "change">) => {
-    maxNestingLevelRef.current = e.target.value;
+  const handleNestingLevelChange = (
+    e: UI5CustomEvent<StepInputClass, "change">,
+  ) => {
+    maxNestingLevelRef.current = e.currentTarget.value;
   };
 
   useEffect(() => {
@@ -84,10 +86,19 @@ function App() {
 
   return (
     <>
-      <Label showColon={true} htmlFor="maxNestingLevelInput">Max nesting level</Label>
-      <StepInput style={{ width: "5rem" }} id="maxNestingLevelInput" placeholder="maxNestingLevel" value={1} min={1} onChange={handleNestingLevelChange} />
+      <Label showColon={true} for="maxNestingLevelInput">
+        Max nesting level
+      </Label>
+      <StepInput
+        style={{ width: "5rem" }}
+        id="maxNestingLevelInput"
+        placeholder="maxNestingLevel"
+        value={1}
+        min={1}
+        onChange={handleNestingLevelChange}
+      />
 
-      <TabContainer fixed id="tabContainer" ref={tabContainerRef}>
+      <TabContainer id="tabContainer" ref={tabContainerRef}>
         <Tab id="tab1" text="Tab 1" movable={true} />
         <Tab id="tab2" text="Tab 2" movable={true} />
         <Tab id="tab3" text="Tab 3" movable={true}>

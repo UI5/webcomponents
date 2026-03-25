@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
@@ -11,15 +11,15 @@ import "@ui5/webcomponents/dist/TableHeaderCellActionAI.js";
 import TableHeaderCellActionAIClass from "@ui5/webcomponents/dist/TableHeaderCellActionAI.js";
 import TableClass from "@ui5/webcomponents/dist/Table.js";
 
-const Label = createComponent(LabelClass);
-const Popover = createComponent(PopoverClass);
-const TableCell = createComponent(TableCellClass);
-const TableHeaderCell = createComponent(TableHeaderCellClass);
-const TableHeaderRow = createComponent(TableHeaderRowClass);
-const TableRow = createComponent(TableRowClass);
-const Text = createComponent(TextClass);
-const TableHeaderCellActionAI = createComponent(TableHeaderCellActionAIClass);
-const Table = createComponent(TableClass);
+const Label = createReactComponent(LabelClass);
+const Popover = createReactComponent(PopoverClass);
+const TableCell = createReactComponent(TableCellClass);
+const TableHeaderCell = createReactComponent(TableHeaderCellClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
+const TableRow = createReactComponent(TableRowClass);
+const Text = createReactComponent(TextClass);
+const TableHeaderCellActionAI = createReactComponent(TableHeaderCellActionAIClass);
+const Table = createReactComponent(TableClass);
 
 function App() {
   const popoverRef = useRef(null);
@@ -61,42 +61,122 @@ function App() {
         <TableHeaderRow slot="headerRow">
           <TableHeaderCell id="produtCol" width="200px">
             <Label required={true}>Product</Label>
-            <TableHeaderCellActionAI slot="action" id="aiActionProduct" ref={aiActionProductRef}></TableHeaderCellActionAI>
+            <TableHeaderCellActionAI
+              slot="action"
+              id="aiActionProduct"
+              ref={aiActionProductRef}
+            ></TableHeaderCellActionAI>
           </TableHeaderCell>
           <TableHeaderCell id="supplierCol">Supplier</TableHeaderCell>
-          <TableHeaderCell id="dimensionsCol" importance={-1}>Dimensions</TableHeaderCell>
-          <TableHeaderCell id="weightCol" popinText="Weight">Weight</TableHeaderCell>
-          <TableHeaderCell id="priceCol" min-width="100px" horizontalAlign="End" popinText="Price in Popin" sortIndicator="Descending">
+          <TableHeaderCell id="dimensionsCol" importance={-1}>
+            Dimensions
+          </TableHeaderCell>
+          <TableHeaderCell id="weightCol" popinText="Weight">
+            Weight
+          </TableHeaderCell>
+          <TableHeaderCell
+            id="priceCol"
+            min-width="100px"
+            horizontalAlign="End"
+            popinText="Price in Popin"
+            sortIndicator="Descending"
+          >
             <Label>Price</Label>
-            <TableHeaderCellActionAI slot="action" id="aiActionPrice" ref={aiActionPriceRef}></TableHeaderCellActionAI>
+            <TableHeaderCellActionAI
+              slot="action"
+              id="aiActionPrice"
+              ref={aiActionPriceRef}
+            ></TableHeaderCellActionAI>
           </TableHeaderCell>
         </TableHeaderRow>
-        <TableRow rowKey={0}>
-          <TableCell><Label><b>Notebook Basic 17</b><br />HT-1001</Label></TableCell>
-          <TableCell><Label>Smartcards</Label></TableCell>
-          <TableCell><Label>29 x 17 x 3.1 cm</Label></TableCell>
-          <TableCell><Label style={{ color: "#2b7c2b" }}><b>4.5</b> KG</Label></TableCell>
-          <TableCell><Label><b>1249</b> EUR</Label></TableCell>
+        <TableRow rowKey="0">
+          <TableCell>
+            <Label>
+              <b>Notebook Basic 17</b>
+              <br />
+              HT-1001
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>Smartcards</Label>
+          </TableCell>
+          <TableCell>
+            <Label>29 x 17 x 3.1 cm</Label>
+          </TableCell>
+          <TableCell>
+            <Label style={{ color: "#2b7c2b" }}>
+              <b>4.5</b> KG
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>
+              <b>1249</b> EUR
+            </Label>
+          </TableCell>
         </TableRow>
-        <TableRow rowKey={1}>
-          <TableCell><Label><b>Notebook Basic 15</b><br />HT-1000</Label></TableCell>
-          <TableCell><Label>Very Best Screens</Label></TableCell>
-          <TableCell><Label>30 x 18 x 3 cm</Label></TableCell>
-          <TableCell><Label style={{ color: "#2b7c2b" }}><b>4.2</b> KG</Label></TableCell>
-          <TableCell><Label><b>956</b> EUR</Label></TableCell>
+        <TableRow rowKey="1">
+          <TableCell>
+            <Label>
+              <b>Notebook Basic 15</b>
+              <br />
+              HT-1000
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>Very Best Screens</Label>
+          </TableCell>
+          <TableCell>
+            <Label>30 x 18 x 3 cm</Label>
+          </TableCell>
+          <TableCell>
+            <Label style={{ color: "#2b7c2b" }}>
+              <b>4.2</b> KG
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>
+              <b>956</b> EUR
+            </Label>
+          </TableCell>
         </TableRow>
-        <TableRow rowKey={2}>
-          <TableCell><Label><b>Notebook Basic 18</b><br />HT-1002</Label></TableCell>
-          <TableCell><Label>Technocom</Label></TableCell>
-          <TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
-          <TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
-          <TableCell><Label><b>290</b> EUR</Label></TableCell>
+        <TableRow rowKey="2">
+          <TableCell>
+            <Label>
+              <b>Notebook Basic 18</b>
+              <br />
+              HT-1002
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>Technocom</Label>
+          </TableCell>
+          <TableCell>
+            <Label>32 x 21 x 4 cm</Label>
+          </TableCell>
+          <TableCell>
+            <Label style={{ color: "#2b7c2b" }}>
+              <b>3.7</b> KG
+            </Label>
+          </TableCell>
+          <TableCell>
+            <Label>
+              <b>290</b> EUR
+            </Label>
+          </TableCell>
         </TableRow>
       </Table>
-      <Popover ref={popoverRef} style={{ width: "25rem" }} id="generatedByAIPopover">
+      <Popover
+        ref={popoverRef}
+        style={{ width: "25rem" }}
+        id="generatedByAIPopover"
+      >
         <Text>
-          This content was partially or fully generated by artificial intelligence (AI) technologies.<br /><br />
-          The AI-generated content may contain inaccuracies due to using multiple information sources. Verify results before use.
+          This content was partially or fully generated by artificial
+          intelligence (AI) technologies.
+          <br />
+          <br />
+          The AI-generated content may contain inaccuracies due to using
+          multiple information sources. Verify results before use.
         </Text>
       </Popover>
     </>

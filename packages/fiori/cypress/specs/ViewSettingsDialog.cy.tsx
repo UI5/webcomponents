@@ -403,6 +403,46 @@ describe("ViewSettingsDialog Tests", () => {
 			.invoke("prop", "open", false);
 	});
 
+	it("should keep focus in filter options and tab to OK", () => {
+		cy.mount(
+			<ViewSettingsDialog id="vsd">
+				<FilterItem slot="filterItems" text="Filter 1">
+					<FilterItemOption slot="values" text="Some filter 1"></FilterItemOption>
+					<FilterItemOption slot="values" text="Some filter 2"></FilterItemOption>
+				</FilterItem>
+				<FilterItem slot="filterItems" text="Filter 2">
+					<FilterItemOption slot="values" text="Some filter 3"></FilterItemOption>
+					<FilterItemOption slot="values" text="Some filter 4"></FilterItemOption>
+				</FilterItem>
+			</ViewSettingsDialog>
+		);
+
+		cy.get("[ui5-view-settings-dialog]")
+			.as("vsd")
+			.invoke("prop", "open", true);
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[ui5-li]")
+			.eq(0)
+			.shadow()
+			.find("span[part=title]")
+			.realClick();
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[filter-options] [ui5-li]")
+			.first()
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("@vsd")
+			.shadow()
+			.find("[ui5-button][design=Emphasized]")
+			.should("be.focused");
+	});
+
 	it("should handle sort-only mode", () => {
 		cy.mount(
 			<ViewSettingsDialog id="vsdSort">

@@ -288,21 +288,25 @@ class UserMenu extends UI5Element {
 	}
 
 	onAfterRendering(): void {
-		if (this._responsivePopover) {
-			const observerOptions = {
-				threshold: [0.15],
-			};
+		if (this._responsivePopover && this.open && !this._observer) {
+			this._setupObserver();
+		}
+	}
 
-			this._observer?.disconnect();
-			this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
+	_setupObserver() {
+		const observerOptions = {
+			threshold: [0.15],
+		};
 
-			if (this._selectedAccountTitleEl) {
-				this._observer.observe(this._selectedAccountTitleEl);
-			}
+		this._observer?.disconnect();
+		this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
 
-			if (this._selectedAccountManageBtn) {
-				this._observer.observe(this._selectedAccountManageBtn);
-			}
+		if (this._selectedAccountTitleEl) {
+			this._observer.observe(this._selectedAccountTitleEl);
+		}
+
+		if (this._selectedAccountManageBtn) {
+			this._observer.observe(this._selectedAccountManageBtn);
 		}
 	}
 
@@ -390,10 +394,17 @@ class UserMenu extends UI5Element {
 	}
 
 	_handlePopoverAfterOpen() {
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
+		this._setupObserver();
 		this.fireDecoratorEvent("open");
 	}
 
 	_handlePopoverAfterClose() {
+		this._observer?.disconnect();
+		this._observer = undefined;
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
 		this.open = false;
 		this.fireDecoratorEvent("close");
 	}
@@ -464,7 +475,7 @@ class UserMenu extends UI5Element {
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
-		return `${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
+		return `${account.titleText} ${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
 	}
 
 	getAccountByRefId(refId: string) {

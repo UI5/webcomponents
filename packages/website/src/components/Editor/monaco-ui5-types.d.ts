@@ -186,6 +186,7 @@ interface InputProps extends UI5BaseProps {
   onChange?: (event: UI5CustomEvent<InputProps>) => void;
   onInput?: (event: UI5CustomEvent<InputProps>) => void;
   onSelect?: (event: UI5CustomEvent<InputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<InputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<InputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<InputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<InputProps>) => void;
@@ -219,6 +220,7 @@ interface LinkProps extends UI5BaseProps {
   endIcon?: string;
   eventDetails?: any;
   forcedTabIndex?: string;
+  onClick?: (event: UI5CustomEvent<LinkProps>) => void;
 }
 
 /** CheckBox component props */
@@ -255,6 +257,7 @@ interface SwitchProps extends UI5BaseProps {
   name?: string;
   value?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<SwitchProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<SwitchProps>) => void;
 }
 
@@ -277,6 +280,7 @@ interface CardHeaderProps extends UI5BaseProps {
   avatar?: React.ReactNode;
   action?: React.ReactNode;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<CardHeaderProps>) => void;
 }
 
 /** Tag component props */
@@ -290,6 +294,7 @@ interface TagProps extends UI5BaseProps {
   text?: React.ReactNode;
   icon?: React.ReactNode;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<TagProps>) => void;
 }
 
 /** Menu component props */
@@ -337,9 +342,12 @@ interface MenuItemProps extends UI5BaseProps {
   items?: React.ReactNode;
   endContent?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<MenuItemProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onBeforeOpen?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onOpen?: (event: UI5CustomEvent<MenuItemProps>) => void;
   onBeforeClose?: (event: UI5CustomEvent<MenuItemProps>) => void;
@@ -354,6 +362,8 @@ interface MenuSeparatorProps extends UI5BaseProps {
   eventDetails?: any;
   disabled?: boolean;
   onRequestTabindexChange?: (event: UI5CustomEvent<MenuSeparatorProps>) => void;
+  onPress?: (event: UI5CustomEvent<MenuSeparatorProps>) => void;
+  onFocused?: (event: UI5CustomEvent<MenuSeparatorProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<MenuSeparatorProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<MenuSeparatorProps>) => void;
 }
@@ -403,6 +413,8 @@ interface OptionProps extends UI5BaseProps {
   tooltip?: string;
   selected?: boolean;
   onRequestTabindexChange?: (event: UI5CustomEvent<OptionProps>) => void;
+  onPress?: (event: UI5CustomEvent<OptionProps>) => void;
+  onFocused?: (event: UI5CustomEvent<OptionProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<OptionProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<OptionProps>) => void;
 }
@@ -417,6 +429,8 @@ interface OptionCustomProps extends UI5BaseProps {
   tooltip?: string;
   selected?: boolean;
   onRequestTabindexChange?: (event: UI5CustomEvent<OptionCustomProps>) => void;
+  onPress?: (event: UI5CustomEvent<OptionCustomProps>) => void;
+  onFocused?: (event: UI5CustomEvent<OptionCustomProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<OptionCustomProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<OptionCustomProps>) => void;
 }
@@ -480,9 +494,12 @@ interface ListItemStandardProps extends UI5BaseProps {
   content?: React.ReactNode;
   image?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
+  onPress?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
+  onFocused?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<ListItemStandardProps>) => void;
 }
 
 /** ListItemCustom component props */
@@ -501,9 +518,12 @@ interface ListItemCustomProps extends UI5BaseProps {
   movable?: boolean;
   accessibleName?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
+  onPress?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
+  onFocused?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<ListItemCustomProps>) => void;
 }
 
 /** ListItemGroup component props */
@@ -553,6 +573,7 @@ interface IconProps extends UI5BaseProps {
   showTooltip?: boolean;
   mode?: "Image" | "Decorative" | "Interactive";
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<IconProps>) => void;
 }
 
 /** Avatar component props */
@@ -572,6 +593,7 @@ interface AvatarProps extends UI5BaseProps {
   badge?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
+  onClick?: (event: UI5CustomEvent<AvatarProps>) => void;
 }
 
 /** AvatarGroup component props */
@@ -623,8 +645,12 @@ interface DatePickerProps extends UI5BaseProps {
   liveValue?: string;
   isLiveUpdate?: boolean;
   responsivePopover?: any;
+  onChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<DatePickerProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<DatePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<DatePickerProps>) => void;
 }
 
 /** TimePicker component props */
@@ -645,7 +671,11 @@ interface TimePickerProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   tempValue?: string;
+  onChange?: (event: UI5CustomEvent<TimePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<TimePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<TimePickerProps>) => void;
 }
 
 /** DateTimePicker component props */
@@ -677,8 +707,12 @@ interface DateTimePickerProps extends UI5BaseProps {
   liveValue?: string;
   isLiveUpdate?: boolean;
   responsivePopover?: any;
+  onChange?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<DateTimePickerProps>) => void;
 }
 
 /** DateRangePicker component props */
@@ -711,8 +745,12 @@ interface DateRangePickerProps extends UI5BaseProps {
   isLiveUpdate?: boolean;
   responsivePopover?: any;
   delimiter?: string;
+  onChange?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
   onValueChanged?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
+  onInput?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
+  onOpen?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
+  onClose?: (event: UI5CustomEvent<DateRangePickerProps>) => void;
 }
 
 /** DynamicDateRange component props */
@@ -720,6 +758,7 @@ interface DynamicDateRangeProps extends UI5BaseProps {
   value?: any;
   options?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<DynamicDateRangeProps>) => void;
 }
 
 /** TextArea component props */
@@ -765,6 +804,7 @@ interface RadioButtonProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<RadioButtonProps>) => void;
 }
 
 /** ProgressIndicator component props */
@@ -790,6 +830,7 @@ interface RatingIndicatorProps extends UI5BaseProps {
   ratedIcon?: string;
   unratedIcon?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<RatingIndicatorProps>) => void;
 }
 
 /** Slider component props */
@@ -857,6 +898,8 @@ interface StepInputProps extends UI5BaseProps {
   valueStateMessage?: React.ReactNode;
   eventDetails?: any;
   focused?: boolean;
+  onChange?: (event: UI5CustomEvent<StepInputProps>) => void;
+  onInput?: (event: UI5CustomEvent<StepInputProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<StepInputProps>) => void;
 }
 
@@ -939,6 +982,7 @@ interface MessageStripProps extends UI5BaseProps {
   hideCloseButton?: boolean;
   icon?: React.ReactNode;
   eventDetails?: any;
+  onClose?: (event: UI5CustomEvent<MessageStripProps>) => void;
 }
 
 /** BusyIndicator component props */
@@ -1062,6 +1106,7 @@ interface TableSelectionProps extends UI5BaseProps {
   mode?: "None" | "Single" | "Multiple";
   selected?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<TableSelectionProps>) => void;
 }
 
 /** TableSelectionMulti component props */
@@ -1071,6 +1116,7 @@ interface TableSelectionMultiProps extends UI5BaseProps {
   eventDetails?: any;
   selected?: string;
   headerSelector?: "SelectAll" | "ClearAll";
+  onChange?: (event: UI5CustomEvent<TableSelectionMultiProps>) => void;
 }
 
 /** TableSelectionSingle component props */
@@ -1079,6 +1125,7 @@ interface TableSelectionSingleProps extends UI5BaseProps {
   behavior?: "RowSelector" | "RowOnly";
   eventDetails?: any;
   selected?: string;
+  onChange?: (event: UI5CustomEvent<TableSelectionSingleProps>) => void;
 }
 
 /** TableRowAction component props */
@@ -1164,9 +1211,13 @@ interface TreeItemProps extends UI5BaseProps {
   text?: string;
   additionalText?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<TreeItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<TreeItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<TreeItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<TreeItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<TreeItemProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<TreeItemProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<TreeItemProps>) => void;
+  onToggle?: (event: UI5CustomEvent<TreeItemProps>) => void;
   onStepIn?: (event: UI5CustomEvent<TreeItemProps>) => void;
   onStepOut?: (event: UI5CustomEvent<TreeItemProps>) => void;
 }
@@ -1198,9 +1249,13 @@ interface TreeItemCustomProps extends UI5BaseProps {
   hideSelectionElement?: boolean;
   content?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
+  onPress?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
+  onFocused?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
+  onToggle?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
   onStepIn?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
   onStepOut?: (event: UI5CustomEvent<TreeItemCustomProps>) => void;
 }
@@ -1217,6 +1272,7 @@ interface PanelProps extends UI5BaseProps {
   stickyHeader?: boolean;
   header?: React.ReactNode;
   eventDetails?: any;
+  onToggle?: (event: UI5CustomEvent<PanelProps>) => void;
 }
 
 /** Toolbar component props */
@@ -1231,6 +1287,7 @@ interface ToolbarProps extends UI5BaseProps {
   itemsToOverflow?: React.ReactNode;
   itemsWidth?: number;
   minContentWidth?: number;
+  onMinContentWidthChange?: (event: UI5CustomEvent<ToolbarProps>) => void;
 }
 
 /** ToolbarButton component props */
@@ -1253,6 +1310,7 @@ interface ToolbarButtonProps extends UI5BaseProps {
   text?: string;
   showOverflowText?: boolean;
   width?: string;
+  onClick?: (event: UI5CustomEvent<ToolbarButtonProps>) => void;
   onCloseOverflow?: (event: UI5CustomEvent<ToolbarButtonProps>) => void;
 }
 
@@ -1266,6 +1324,7 @@ interface ToolbarSpacerProps extends UI5BaseProps {
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   width?: string;
+  onClick?: (event: UI5CustomEvent<ToolbarSpacerProps>) => void;
   onCloseOverflow?: (event: UI5CustomEvent<ToolbarSpacerProps>) => void;
 }
 
@@ -1279,6 +1338,7 @@ interface ToolbarSeparatorProps extends UI5BaseProps {
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
   visible?: boolean;
+  onClick?: (event: UI5CustomEvent<ToolbarSeparatorProps>) => void;
   onCloseOverflow?: (event: UI5CustomEvent<ToolbarSeparatorProps>) => void;
 }
 
@@ -1299,7 +1359,11 @@ interface ToolbarSelectProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   value?: string;
+  onClick?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
   onCloseOverflow?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
+  onChange?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
+  onOpen?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
+  onClose?: (event: UI5CustomEvent<ToolbarSelectProps>) => void;
 }
 
 /** ToolbarSelectOption component props */
@@ -1317,6 +1381,7 @@ interface ToolbarItemProps extends UI5BaseProps {
   eventDetails?: any;
   closeOverflowSet?: any;
   predefinedWrapperSet?: any;
+  onClick?: (event: UI5CustomEvent<ToolbarItemProps>) => void;
   onCloseOverflow?: (event: UI5CustomEvent<ToolbarItemProps>) => void;
 }
 
@@ -1385,6 +1450,8 @@ interface ComboBoxItemProps extends UI5BaseProps {
   focused?: boolean;
   selected?: boolean;
   onRequestTabindexChange?: (event: UI5CustomEvent<ComboBoxItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<ComboBoxItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<ComboBoxItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<ComboBoxItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<ComboBoxItemProps>) => void;
 }
@@ -1432,6 +1499,10 @@ interface MultiComboBoxProps extends UI5BaseProps {
   valueStateHeader?: HTMLElement | string;
   list?: any;
   selectedItems?: React.ReactNode;
+  onChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onInput?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onOpen?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
+  onClose?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
   onValueStateChange?: (event: UI5CustomEvent<MultiComboBoxProps>) => void;
 }
@@ -1448,6 +1519,8 @@ interface MultiComboBoxItemProps extends UI5BaseProps {
   selected?: boolean;
   value?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
   onSelectionRequested?: (event: UI5CustomEvent<MultiComboBoxItemProps>) => void;
@@ -1532,6 +1605,7 @@ interface MultiInputProps extends UI5BaseProps {
   onChange?: (event: UI5CustomEvent<MultiInputProps>) => void;
   onInput?: (event: UI5CustomEvent<MultiInputProps>) => void;
   onSelect?: (event: UI5CustomEvent<MultiInputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<MultiInputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<MultiInputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<MultiInputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<MultiInputProps>) => void;
@@ -1616,6 +1690,7 @@ interface ColorPickerProps extends UI5BaseProps {
   accessibleName?: string;
   accessibleNameRef?: string;
   eventDetails?: any;
+  onChange?: (event: UI5CustomEvent<ColorPickerProps>) => void;
 }
 
 /** ColorPalette component props */
@@ -1683,6 +1758,7 @@ interface SplitButtonProps extends UI5BaseProps {
   accessibilityAttributes?: object;
   text?: React.ReactNode;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
   onArrowClick?: (event: UI5CustomEvent<SplitButtonProps>) => void;
 }
 
@@ -1715,6 +1791,8 @@ interface SuggestionItemProps extends UI5BaseProps {
   text?: string;
   additionalText?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<SuggestionItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<SuggestionItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<SuggestionItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<SuggestionItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<SuggestionItemProps>) => void;
 }
@@ -1726,6 +1804,8 @@ interface SuggestionItemCustomProps extends UI5BaseProps {
   text?: string;
   content?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<SuggestionItemCustomProps>) => void;
+  onPress?: (event: UI5CustomEvent<SuggestionItemCustomProps>) => void;
+  onFocused?: (event: UI5CustomEvent<SuggestionItemCustomProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<SuggestionItemCustomProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<SuggestionItemCustomProps>) => void;
 }
@@ -1758,6 +1838,7 @@ interface CarouselProps extends UI5BaseProps {
   arrowsPlacement?: "Content" | "Navigation";
   content?: React.ReactNode;
   eventDetails?: any;
+  onNavigate?: (event: UI5CustomEvent<CarouselProps>) => void;
 }
 
 /** ToggleButton component props */
@@ -1874,6 +1955,7 @@ interface ShellBarBrandingProps extends UI5BaseProps {
   content?: React.ReactNode;
   logo?: React.ReactNode;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<ShellBarBrandingProps>) => void;
 }
 
 /** ShellBarItem component props */
@@ -1883,6 +1965,7 @@ interface ShellBarItemProps extends UI5BaseProps {
   count?: string;
   accessibilityAttributes?: object;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<ShellBarItemProps>) => void;
 }
 
 /** ShellBarSearch component props */
@@ -1905,6 +1988,8 @@ interface ShellBarSearchProps extends UI5BaseProps {
   messageArea?: React.ReactNode;
   open?: boolean;
   autoOpen?: boolean;
+  onSearch?: (event: UI5CustomEvent<ShellBarSearchProps>) => void;
+  onInput?: (event: UI5CustomEvent<ShellBarSearchProps>) => void;
   onScopeChange?: (event: UI5CustomEvent<ShellBarSearchProps>) => void;
   onPopupActionPress?: (event: UI5CustomEvent<ShellBarSearchProps>) => void;
   onOpen?: (event: UI5CustomEvent<ShellBarSearchProps>) => void;
@@ -1980,6 +2065,7 @@ interface SideNavigationGroupProps extends UI5BaseProps {
   expanded?: boolean;
   items?: React.ReactNode;
   belowGroup?: boolean;
+  onClick?: (event: UI5CustomEvent<SideNavigationGroupProps>) => void;
 }
 
 /** NavigationLayout component props */
@@ -2023,8 +2109,11 @@ interface NotificationListItemProps extends UI5BaseProps {
   menuButtonDOM?: HTMLElement | string;
   descriptionDOM?: HTMLElement | string;
   onRequestTabindexChange?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
+  onClose?: (event: UI5CustomEvent<NotificationListItemProps>) => void;
 }
 
 /** NotificationListGroupItem component props */
@@ -2039,8 +2128,11 @@ interface NotificationListGroupItemProps extends UI5BaseProps {
   growing?: "Button" | "None";
   items?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
+  onToggle?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
   onLoadMore?: (event: UI5CustomEvent<NotificationListGroupItemProps>) => void;
 }
 
@@ -2057,6 +2149,9 @@ interface UploadCollectionProps extends UI5BaseProps {
   eventDetails?: any;
   onItemDelete?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onRename?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onRetry?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
+  onTerminate?: (event: UI5CustomEvent<UploadCollectionProps>) => void;
 }
 
 /** UploadCollectionItem component props */
@@ -2083,14 +2178,18 @@ interface UploadCollectionItemProps extends UI5BaseProps {
   uploadState?: "Complete" | "Error" | "Ready" | "Uploading";
   thumbnail?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onFileNameClick?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onRename?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onTerminate?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onRetry?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onFocusRequested?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
+  onUciDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
   onRequestDelete?: (event: UI5CustomEvent<UploadCollectionItemProps>) => void;
 }
 
@@ -2276,6 +2375,7 @@ interface MediaGalleryItemProps extends UI5BaseProps {
   content?: React.ReactNode;
   thumbnail?: React.ReactNode;
   eventDetails?: any;
+  onClick?: (event: UI5CustomEvent<MediaGalleryItemProps>) => void;
 }
 
 /** ProductSwitch component props */
@@ -2293,6 +2393,8 @@ interface ProductSwitchItemProps extends UI5BaseProps {
   image?: React.ReactNode;
   eventDetails?: any;
   forcedTabIndex?: string;
+  onClick?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<ProductSwitchItemProps>) => void;
 }
 
 /** ViewSettingsDialog component props */
@@ -2349,6 +2451,8 @@ interface SearchProps extends UI5BaseProps {
   illustration?: React.ReactNode;
   messageArea?: React.ReactNode;
   open?: boolean;
+  onSearch?: (event: UI5CustomEvent<SearchProps>) => void;
+  onInput?: (event: UI5CustomEvent<SearchProps>) => void;
   onScopeChange?: (event: UI5CustomEvent<SearchProps>) => void;
   onPopupActionPress?: (event: UI5CustomEvent<SearchProps>) => void;
   onOpen?: (event: UI5CustomEvent<SearchProps>) => void;
@@ -2369,6 +2473,8 @@ interface SearchItemProps extends UI5BaseProps {
   actions?: React.ReactNode;
   highlightText?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<SearchItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<SearchItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<SearchItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<SearchItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<SearchItemProps>) => void;
   onDelete?: (event: UI5CustomEvent<SearchItemProps>) => void;
@@ -2392,6 +2498,8 @@ interface SearchFieldProps extends UI5BaseProps {
   scopes?: React.ReactNode;
   filterButton?: React.ReactNode;
   eventDetails?: any;
+  onSearch?: (event: UI5CustomEvent<SearchFieldProps>) => void;
+  onInput?: (event: UI5CustomEvent<SearchFieldProps>) => void;
   onScopeChange?: (event: UI5CustomEvent<SearchFieldProps>) => void;
 }
 
@@ -2414,6 +2522,8 @@ interface SearchItemShowMoreProps extends UI5BaseProps {
   itemsToShowCount?: number;
   selected?: boolean;
   onRequestTabindexChange?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
+  onPress?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
+  onFocused?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
   onClick?: (event: UI5CustomEvent<SearchItemShowMoreProps>) => void;
@@ -2474,9 +2584,12 @@ interface UserMenuItemProps extends UI5BaseProps {
   endContent?: React.ReactNode;
   items?: React.ReactNode;
   onRequestTabindexChange?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onBeforeOpen?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onOpen?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
   onBeforeClose?: (event: UI5CustomEvent<UserMenuItemProps>) => void;
@@ -2505,6 +2618,7 @@ interface BarcodeScannerDialogProps extends UI5BaseProps {
   footer?: React.ReactNode;
   open?: boolean;
   eventDetails?: any;
+  onClose?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
   onScanSuccess?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
   onScanError?: (event: UI5CustomEvent<BarcodeScannerDialogProps>) => void;
 }
@@ -2537,6 +2651,7 @@ interface UserSettingsItemProps extends UI5BaseProps {
   pages?: React.ReactNode;
   tabs?: React.ReactNode;
   eventDetails?: any;
+  onCollapse?: (event: UI5CustomEvent<UserSettingsItemProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<UserSettingsItemProps>) => void;
   onBackClick?: (event: UI5CustomEvent<UserSettingsItemProps>) => void;
 }
@@ -2607,9 +2722,12 @@ interface UserSettingsAppearanceViewItemProps extends UI5BaseProps {
   icon?: string;
   colorScheme?: string;
   onRequestTabindexChange?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
+  onPress?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
+  onFocused?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
   onDetailClick?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
+  onSelectionRequested?: (event: UI5CustomEvent<UserSettingsAppearanceViewItemProps>) => void;
 }
 
 /** AIButton component props */
@@ -2692,6 +2810,7 @@ interface AIInputProps extends UI5BaseProps {
   onChange?: (event: UI5CustomEvent<AIInputProps>) => void;
   onInput?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSelect?: (event: UI5CustomEvent<AIInputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<AIInputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<AIInputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<AIInputProps>) => void;
@@ -2770,9 +2889,11 @@ interface AIPromptInputProps extends UI5BaseProps {
   typedInValue?: string;
   lastConfirmedValue?: string;
   isTyping?: boolean;
-  onChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onInput?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSelect?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
+  onRequestSubmit?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSelectionChange?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onTypeAhead?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
   onSuggestionScroll?: (event: UI5CustomEvent<AIPromptInputProps>) => void;
@@ -2827,6 +2948,7 @@ interface CompatTableRowProps extends UI5BaseProps {
   popinCells?: any;
   tabbableElements?: React.ReactNode;
   onRowClick?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
+  onFocused?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
   onForwardBefore?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
   onForwardAfter?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
   onSelectionRequested?: (event: UI5CustomEvent<CompatTableRowProps>) => void;
@@ -2841,15 +2963,16 @@ interface CompatTableCellProps extends UI5BaseProps {
 /** CompatTableGroupRow component props */
 interface CompatTableGroupRowProps extends UI5BaseProps {
   eventDetails?: any;
+  onFocused?: (event: UI5CustomEvent<CompatTableGroupRowProps>) => void;
 }
 
 // Module declarations for sample imports
-declare module "@ui5/webcomponents-base/dist/createComponent.js" {
-  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+declare module "@ui5/webcomponents-base/dist/createReactComponent.js" {
+  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
 }
 
 declare module "@ui5/webcomponents-base" {
-  export function createComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
+  export default function createReactComponent<P>(ComponentClass: { _jsxProps: P }): (props: P & { children?: React.ReactNode }) => JSX.Element;
   export type UI5CustomEvent<T = HTMLElement, N extends string = never> =
     Omit<CustomEvent<
       [N] extends [never] ? any :
@@ -2893,6 +3016,7 @@ declare module "@ui5/webcomponents/dist/Input.js" {
       "change": { inputType: string };
       "input": { inputType: string };
       "select": void;
+      "request-submit": void;
       "selection-change": { item: any };
       "type-ahead": void;
       "suggestion-scroll": { scrollTop: number; scrollContainer: any };
@@ -2916,7 +3040,9 @@ declare module "@ui5/webcomponents/dist/Link.js" {
   class Link {
     static _jsxProps: LinkProps;
     _jsxProps: LinkProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": { altKey: boolean; ctrlKey: boolean; metaKey: boolean; shiftKey: boolean };
+    };
   }
   export default Link;
 }
@@ -2938,6 +3064,7 @@ declare module "@ui5/webcomponents/dist/Switch.js" {
     static _jsxProps: SwitchProps;
     _jsxProps: SwitchProps;
     eventDetails: {
+      "change": void;
       "value-changed": void;
     };
   }
@@ -2957,7 +3084,9 @@ declare module "@ui5/webcomponents/dist/CardHeader.js" {
   class CardHeader {
     static _jsxProps: CardHeaderProps;
     _jsxProps: CardHeaderProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default CardHeader;
 }
@@ -2966,7 +3095,9 @@ declare module "@ui5/webcomponents/dist/Tag.js" {
   class Tag {
     static _jsxProps: TagProps;
     _jsxProps: TagProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default Tag;
 }
@@ -2993,9 +3124,12 @@ declare module "@ui5/webcomponents/dist/MenuItem.js" {
     _jsxProps: MenuItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
       "before-open": { item?: any };
       "open": void;
       "before-close": { escPressed: boolean };
@@ -3014,6 +3148,8 @@ declare module "@ui5/webcomponents/dist/MenuSeparator.js" {
     _jsxProps: MenuSeparatorProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -3052,6 +3188,8 @@ declare module "@ui5/webcomponents/dist/Option.js" {
     _jsxProps: OptionProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -3065,6 +3203,8 @@ declare module "@ui5/webcomponents/dist/OptionCustom.js" {
     _jsxProps: OptionCustomProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -3097,9 +3237,12 @@ declare module "@ui5/webcomponents/dist/ListItemStandard.js" {
     _jsxProps: ListItemStandardProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
     };
   }
   export default ListItemStandard;
@@ -3111,9 +3254,12 @@ declare module "@ui5/webcomponents/dist/ListItemCustom.js" {
     _jsxProps: ListItemCustomProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
     };
   }
   export default ListItemCustom;
@@ -3150,7 +3296,9 @@ declare module "@ui5/webcomponents/dist/Icon.js" {
   class Icon {
     static _jsxProps: IconProps;
     _jsxProps: IconProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default Icon;
 }
@@ -3159,7 +3307,9 @@ declare module "@ui5/webcomponents/dist/Avatar.js" {
   class Avatar {
     static _jsxProps: AvatarProps;
     _jsxProps: AvatarProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default Avatar;
 }
@@ -3190,8 +3340,12 @@ declare module "@ui5/webcomponents/dist/DatePicker.js" {
     static _jsxProps: DatePickerProps;
     _jsxProps: DatePickerProps;
     eventDetails: {
+      "change": { value: string; valid: boolean };
       "value-changed": { value: string; valid: boolean };
+      "input": { value: string; valid: boolean };
       "value-state-change": any;
+      "open": void;
+      "close": void;
     };
   }
   export default DatePicker;
@@ -3202,7 +3356,11 @@ declare module "@ui5/webcomponents/dist/TimePicker.js" {
     static _jsxProps: TimePickerProps;
     _jsxProps: TimePickerProps;
     eventDetails: {
+      "change": any;
       "value-changed": any;
+      "input": any;
+      "open": void;
+      "close": void;
     };
   }
   export default TimePicker;
@@ -3213,8 +3371,12 @@ declare module "@ui5/webcomponents/dist/DateTimePicker.js" {
     static _jsxProps: DateTimePickerProps;
     _jsxProps: DateTimePickerProps;
     eventDetails: {
+      "change": { value: string; valid: boolean };
       "value-changed": { value: string; valid: boolean };
+      "input": { value: string; valid: boolean };
       "value-state-change": any;
+      "open": void;
+      "close": void;
     };
   }
   export default DateTimePicker;
@@ -3225,8 +3387,12 @@ declare module "@ui5/webcomponents/dist/DateRangePicker.js" {
     static _jsxProps: DateRangePickerProps;
     _jsxProps: DateRangePickerProps;
     eventDetails: {
+      "change": { value: string; valid: boolean };
       "value-changed": { value: string; valid: boolean };
+      "input": { value: string; valid: boolean };
       "value-state-change": any;
+      "open": void;
+      "close": void;
     };
   }
   export default DateRangePicker;
@@ -3236,7 +3402,9 @@ declare module "@ui5/webcomponents/dist/DynamicDateRange.js" {
   class DynamicDateRange {
     static _jsxProps: DynamicDateRangeProps;
     _jsxProps: DynamicDateRangeProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": void;
+    };
   }
   export default DynamicDateRange;
 }
@@ -3260,7 +3428,9 @@ declare module "@ui5/webcomponents/dist/RadioButton.js" {
   class RadioButton {
     static _jsxProps: RadioButtonProps;
     _jsxProps: RadioButtonProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": void;
+    };
   }
   export default RadioButton;
 }
@@ -3278,7 +3448,9 @@ declare module "@ui5/webcomponents/dist/RatingIndicator.js" {
   class RatingIndicator {
     static _jsxProps: RatingIndicatorProps;
     _jsxProps: RatingIndicatorProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": void;
+    };
   }
   export default RatingIndicator;
 }
@@ -3312,6 +3484,8 @@ declare module "@ui5/webcomponents/dist/StepInput.js" {
     static _jsxProps: StepInputProps;
     _jsxProps: StepInputProps;
     eventDetails: {
+      "change": void;
+      "input": any;
       "value-state-change": any;
     };
   }
@@ -3363,7 +3537,9 @@ declare module "@ui5/webcomponents/dist/MessageStrip.js" {
   class MessageStrip {
     static _jsxProps: MessageStripProps;
     _jsxProps: MessageStripProps;
-    eventDetails: {};
+    eventDetails: {
+      "close": void;
+    };
   }
   export default MessageStrip;
 }
@@ -3473,7 +3649,9 @@ declare module "@ui5/webcomponents/dist/TableSelection.js" {
   class TableSelection {
     static _jsxProps: TableSelectionProps;
     _jsxProps: TableSelectionProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": void;
+    };
   }
   export default TableSelection;
 }
@@ -3482,7 +3660,9 @@ declare module "@ui5/webcomponents/dist/TableSelectionMulti.js" {
   class TableSelectionMulti {
     static _jsxProps: TableSelectionMultiProps;
     _jsxProps: TableSelectionMultiProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": any;
+    };
   }
   export default TableSelectionMulti;
 }
@@ -3491,7 +3671,9 @@ declare module "@ui5/webcomponents/dist/TableSelectionSingle.js" {
   class TableSelectionSingle {
     static _jsxProps: TableSelectionSingleProps;
     _jsxProps: TableSelectionSingleProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": any;
+    };
   }
   export default TableSelectionSingle;
 }
@@ -3565,9 +3747,13 @@ declare module "@ui5/webcomponents/dist/TreeItem.js" {
     _jsxProps: TreeItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
+      "toggle": any;
       "step-in": any;
       "step-out": any;
     };
@@ -3581,9 +3767,13 @@ declare module "@ui5/webcomponents/dist/TreeItemCustom.js" {
     _jsxProps: TreeItemCustomProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
+      "toggle": any;
       "step-in": any;
       "step-out": any;
     };
@@ -3595,7 +3785,9 @@ declare module "@ui5/webcomponents/dist/Panel.js" {
   class Panel {
     static _jsxProps: PanelProps;
     _jsxProps: PanelProps;
-    eventDetails: {};
+    eventDetails: {
+      "toggle": void;
+    };
   }
   export default Panel;
 }
@@ -3604,7 +3796,9 @@ declare module "@ui5/webcomponents/dist/Toolbar.js" {
   class Toolbar {
     static _jsxProps: ToolbarProps;
     _jsxProps: ToolbarProps;
-    eventDetails: {};
+    eventDetails: {
+      "min-content-width-change": { minWidth: number };
+    };
   }
   export default Toolbar;
 }
@@ -3614,6 +3808,7 @@ declare module "@ui5/webcomponents/dist/ToolbarButton.js" {
     static _jsxProps: ToolbarButtonProps;
     _jsxProps: ToolbarButtonProps;
     eventDetails: {
+      "click": { targetRef: any };
       "close-overflow": void;
     };
   }
@@ -3625,6 +3820,7 @@ declare module "@ui5/webcomponents/dist/ToolbarSpacer.js" {
     static _jsxProps: ToolbarSpacerProps;
     _jsxProps: ToolbarSpacerProps;
     eventDetails: {
+      "click": { targetRef: any };
       "close-overflow": void;
     };
   }
@@ -3636,6 +3832,7 @@ declare module "@ui5/webcomponents/dist/ToolbarSeparator.js" {
     static _jsxProps: ToolbarSeparatorProps;
     _jsxProps: ToolbarSeparatorProps;
     eventDetails: {
+      "click": { targetRef: any };
       "close-overflow": void;
     };
   }
@@ -3647,7 +3844,11 @@ declare module "@ui5/webcomponents/dist/ToolbarSelect.js" {
     static _jsxProps: ToolbarSelectProps;
     _jsxProps: ToolbarSelectProps;
     eventDetails: {
+      "click": { targetRef: any };
       "close-overflow": void;
+      "change": any;
+      "open": any;
+      "close": any;
     };
   }
   export default ToolbarSelect;
@@ -3667,6 +3868,7 @@ declare module "@ui5/webcomponents/dist/ToolbarItem.js" {
     static _jsxProps: ToolbarItemProps;
     _jsxProps: ToolbarItemProps;
     eventDetails: {
+      "click": { targetRef: any };
       "close-overflow": void;
     };
   }
@@ -3714,6 +3916,8 @@ declare module "@ui5/webcomponents/dist/ComboBoxItem.js" {
     _jsxProps: ComboBoxItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -3738,6 +3942,10 @@ declare module "@ui5/webcomponents/dist/MultiComboBox.js" {
     static _jsxProps: MultiComboBoxProps;
     _jsxProps: MultiComboBoxProps;
     eventDetails: {
+      "change": void;
+      "input": void;
+      "open": void;
+      "close": void;
       "selection-change": { items: any };
       "value-state-change": any;
     };
@@ -3751,6 +3959,8 @@ declare module "@ui5/webcomponents/dist/MultiComboBoxItem.js" {
     _jsxProps: MultiComboBoxItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
       "selection-requested": any;
@@ -3805,6 +4015,7 @@ declare module "@ui5/webcomponents/dist/MultiInput.js" {
       "change": { inputType: string };
       "input": { inputType: string };
       "select": void;
+      "request-submit": void;
       "selection-change": { item: any };
       "type-ahead": void;
       "suggestion-scroll": { scrollTop: number; scrollContainer: any };
@@ -3885,7 +4096,9 @@ declare module "@ui5/webcomponents/dist/ColorPicker.js" {
   class ColorPicker {
     static _jsxProps: ColorPickerProps;
     _jsxProps: ColorPickerProps;
-    eventDetails: {};
+    eventDetails: {
+      "change": void;
+    };
   }
   export default ColorPicker;
 }
@@ -3939,6 +4152,7 @@ declare module "@ui5/webcomponents/dist/SplitButton.js" {
     static _jsxProps: SplitButtonProps;
     _jsxProps: SplitButtonProps;
     eventDetails: {
+      "click": void;
       "arrow-click": void;
     };
   }
@@ -3978,6 +4192,8 @@ declare module "@ui5/webcomponents/dist/SuggestionItem.js" {
     _jsxProps: SuggestionItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -3991,6 +4207,8 @@ declare module "@ui5/webcomponents/dist/SuggestionItemCustom.js" {
     _jsxProps: SuggestionItemCustomProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
     };
@@ -4014,7 +4232,9 @@ declare module "@ui5/webcomponents/dist/Carousel.js" {
   class Carousel {
     static _jsxProps: CarouselProps;
     _jsxProps: CarouselProps;
-    eventDetails: {};
+    eventDetails: {
+      "navigate": { selectedIndex: number };
+    };
   }
   export default Carousel;
 }
@@ -4090,7 +4310,9 @@ declare module "@ui5/webcomponents-fiori/dist/ShellBarBranding.js" {
   class ShellBarBranding {
     static _jsxProps: ShellBarBrandingProps;
     _jsxProps: ShellBarBrandingProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default ShellBarBranding;
 }
@@ -4099,7 +4321,9 @@ declare module "@ui5/webcomponents-fiori/dist/ShellBarItem.js" {
   class ShellBarItem {
     static _jsxProps: ShellBarItemProps;
     _jsxProps: ShellBarItemProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": { targetRef: any };
+    };
   }
   export default ShellBarItem;
 }
@@ -4109,6 +4333,8 @@ declare module "@ui5/webcomponents-fiori/dist/ShellBarSearch.js" {
     static _jsxProps: ShellBarSearchProps;
     _jsxProps: ShellBarSearchProps;
     eventDetails: {
+      "search": any;
+      "input": void;
       "scope-change": any;
       "popup-action-press": void;
       "open": void;
@@ -4165,7 +4391,9 @@ declare module "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js" {
   class SideNavigationGroup {
     static _jsxProps: SideNavigationGroupProps;
     _jsxProps: SideNavigationGroupProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": { altKey: boolean; ctrlKey: boolean; metaKey: boolean; shiftKey: boolean };
+    };
   }
   export default SideNavigationGroup;
 }
@@ -4201,8 +4429,11 @@ declare module "@ui5/webcomponents-fiori/dist/NotificationListItem.js" {
     _jsxProps: NotificationListItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
+      "close": { item: any };
     };
   }
   export default NotificationListItem;
@@ -4214,8 +4445,11 @@ declare module "@ui5/webcomponents-fiori/dist/NotificationListGroupItem.js" {
     _jsxProps: NotificationListGroupItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
+      "toggle": { item: any };
       "load-more": void;
     };
   }
@@ -4229,6 +4463,9 @@ declare module "@ui5/webcomponents-fiori/dist/UploadCollection.js" {
     eventDetails: {
       "item-delete": { item: any };
       "selection-change": { selectedItems: any };
+      "rename": void;
+      "retry": void;
+      "terminate": void;
     };
   }
   export default UploadCollection;
@@ -4240,14 +4477,18 @@ declare module "@ui5/webcomponents-fiori/dist/UploadCollectionItem.js" {
     _jsxProps: UploadCollectionItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
       "file-name-click": void;
       "rename": void;
       "terminate": void;
       "retry": void;
       "focus-requested": void;
+      "uci-delete": void;
       "request-delete": void;
     };
   }
@@ -4397,7 +4638,9 @@ declare module "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js" {
   class MediaGalleryItem {
     static _jsxProps: MediaGalleryItemProps;
     _jsxProps: MediaGalleryItemProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+    };
   }
   export default MediaGalleryItem;
 }
@@ -4415,7 +4658,10 @@ declare module "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js" {
   class ProductSwitchItem {
     static _jsxProps: ProductSwitchItemProps;
     _jsxProps: ProductSwitchItemProps;
-    eventDetails: {};
+    eventDetails: {
+      "click": void;
+      "focused": void;
+    };
   }
   export default ProductSwitchItem;
 }
@@ -4467,6 +4713,8 @@ declare module "@ui5/webcomponents-fiori/dist/Search.js" {
     static _jsxProps: SearchProps;
     _jsxProps: SearchProps;
     eventDetails: {
+      "search": any;
+      "input": void;
       "scope-change": any;
       "popup-action-press": void;
       "open": void;
@@ -4482,6 +4730,8 @@ declare module "@ui5/webcomponents-fiori/dist/SearchItem.js" {
     _jsxProps: SearchItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
       "delete": void;
@@ -4504,6 +4754,8 @@ declare module "@ui5/webcomponents-fiori/dist/SearchField.js" {
     static _jsxProps: SearchFieldProps;
     _jsxProps: SearchFieldProps;
     eventDetails: {
+      "search": any;
+      "input": void;
       "scope-change": any;
     };
   }
@@ -4528,6 +4780,8 @@ declare module "@ui5/webcomponents-fiori/dist/SearchItemShowMore.js" {
     _jsxProps: SearchItemShowMoreProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
       "click": { fromKeyboard: boolean };
@@ -4569,9 +4823,12 @@ declare module "@ui5/webcomponents-fiori/dist/UserMenuItem.js" {
     _jsxProps: UserMenuItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
       "before-open": { item?: any };
       "open": void;
       "before-close": { escPressed: boolean };
@@ -4598,6 +4855,7 @@ declare module "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js" {
     static _jsxProps: BarcodeScannerDialogProps;
     _jsxProps: BarcodeScannerDialogProps;
     eventDetails: {
+      "close": void;
       "scan-success": { text: string; rawBytes: any };
       "scan-error": { message: string };
     };
@@ -4624,6 +4882,7 @@ declare module "@ui5/webcomponents-fiori/dist/UserSettingsItem.js" {
     static _jsxProps: UserSettingsItemProps;
     _jsxProps: UserSettingsItemProps;
     eventDetails: {
+      "collapse": void;
       "selection-change": { view: any };
       "back-click": { view: any };
     };
@@ -4681,9 +4940,12 @@ declare module "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js"
     _jsxProps: UserSettingsAppearanceViewItemProps;
     eventDetails: {
       "request-tabindex-change": any;
+      "press": { item: any; selected?: boolean; key?: string };
+      "focused": any;
       "forward-after": void;
       "forward-before": void;
-      "detail-click": any;
+      "detail-click": void;
+      "selection-requested": { item: any; selectionComponentPressed: boolean; selected?: boolean; key?: string };
     };
   }
   export default UserSettingsAppearanceViewItem;
@@ -4723,6 +4985,7 @@ declare module "@ui5/webcomponents-ai/dist/Input.js" {
       "change": { inputType: string };
       "input": { inputType: string };
       "select": void;
+      "request-submit": void;
       "selection-change": { item: any };
       "type-ahead": void;
       "suggestion-scroll": { scrollTop: number; scrollContainer: any };
@@ -4755,9 +5018,11 @@ declare module "@ui5/webcomponents-ai/dist/PromptInput.js" {
     static _jsxProps: AIPromptInputProps;
     _jsxProps: AIPromptInputProps;
     eventDetails: {
-      "change": { inputType: string };
-      "input": { inputType: string };
+      "submit": void;
+      "input": void;
+      "change": void;
       "select": void;
+      "request-submit": void;
       "selection-change": { item: any };
       "type-ahead": void;
       "suggestion-scroll": { scrollTop: number; scrollContainer: any };
@@ -4797,6 +5062,7 @@ declare module "@ui5/webcomponents-compat/dist/TableRow.js" {
     _jsxProps: CompatTableRowProps;
     eventDetails: {
       "row-click": { row: any };
+      "focused": any;
       "forward-before": { target: any };
       "forward-after": { target: any };
       "selection-requested": { row: any };
@@ -4819,7 +5085,9 @@ declare module "@ui5/webcomponents-compat/dist/TableGroupRow.js" {
   class CompatTableGroupRow {
     static _jsxProps: CompatTableGroupRowProps;
     _jsxProps: CompatTableGroupRowProps;
-    eventDetails: {};
+    eventDetails: {
+      "focused": any;
+    };
   }
   export default CompatTableGroupRow;
 }

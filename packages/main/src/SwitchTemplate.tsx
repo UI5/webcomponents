@@ -20,10 +20,12 @@ export default function SwitchTemplate(this: Switch) {
 			aria-label={this.ariaLabelText}
 			aria-checked={this.checked}
 			aria-disabled={this.effectiveAriaDisabled}
+			aria-readonly={this.effectiveAriaReadonly}
 			aria-required={this.required}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
+			onFocusIn={this._onfocusin}
 			tabindex={this.effectiveTabIndex}
 			title={this.tooltip}
 		>
@@ -52,8 +54,8 @@ export default function SwitchTemplate(this: Switch) {
 									</>
 									:
 									<>
-										<span class="ui5-switch-text ui5-switch-text--on" part="text-on">{this._textOn}</span>
-										<span class="ui5-switch-text ui5-switch-text--off" part="text-off">{this._textOff}</span>
+										<span class="ui5-switch-text ui5-switch-text--on" part="text-on" aria-hidden={this._textAriaHidden}>{this._textOn}</span>
+										<span class="ui5-switch-text ui5-switch-text--off" part="text-off" aria-hidden={this._textAriaHidden}>{this._textOff}</span>
 									</>
 								}
 							</>
