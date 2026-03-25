@@ -460,6 +460,89 @@ describe("Toolbar general interaction", () => {
 		});
 	});
 
+	it("Should preserve Home/End behavior for text inputs inside toolbar-item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarItem>
+					<input data-testid="editor" defaultValue="abcdef" />
+				</ToolbarItem>
+				<ToolbarButton text="Last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[data-testid='editor']")
+			.realClick()
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(3, 3);
+			});
+
+		cy.realPress("Home");
+		cy.get("[data-testid='editor']")
+			.should("be.focused")
+			.then($input => {
+				expect(($input[0] as HTMLInputElement).selectionStart).to.equal(0);
+			});
+
+		cy.get("[data-testid='editor']")
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(2, 2);
+			});
+
+		cy.realPress("End");
+		cy.get("[data-testid='editor']")
+			.should("be.focused")
+			.then($input => {
+				expect(($input[0] as HTMLInputElement).selectionStart).to.equal(6);
+			});
+	});
+
+	it("Should not suppress input arrow/home/end behavior inside overflow popover", () => {
+		cy.viewport(220, 600);
+
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarItem overflow-priority="AlwaysOverflow">
+					<input data-testid="overflow-editor" defaultValue="abcdef" />
+				</ToolbarItem>
+				<ToolbarButton text="Last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-overflow-popover")
+			.should("have.prop", "open", true);
+
+		cy.get("[data-testid='overflow-editor']")
+			.realClick()
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(2, 2);
+			});
+
+		cy.realPress("ArrowLeft");
+		cy.get("[data-testid='overflow-editor']")
+			.should("be.focused")
+			.then($input => {
+				expect(($input[0] as HTMLInputElement).selectionStart).to.equal(1);
+			});
+
+		cy.realPress("Home");
+		cy.get("[data-testid='overflow-editor']")
+			.then($input => {
+				expect(($input[0] as HTMLInputElement).selectionStart).to.equal(0);
+			});
+	});
+
 	it("Should move button with alwaysOverflow priority to overflow popover", () => {
 
 		cy.mount(
@@ -987,7 +1070,7 @@ describe("ToolbarButton", () => {
 			const toolbar = $toolbar[0] as Toolbar;
 			const addButton = document.getElementById("add-btn") as ToolbarButton;
 
-			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
+			expect(toolbar.itemsToOverflow.some(item => item._id === addButton._id)).to.be.true;
 
 			const initialOverflowCount = toolbar.itemsToOverflow.length;
 			const initialItemsWidth = toolbar.itemsWidth;

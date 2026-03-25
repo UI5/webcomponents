@@ -74,6 +74,13 @@ class ToolbarSelect extends ToolbarItemBase {
 
 	handlesOwnKeyboardNavigation = true;
 
+	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
+		return e.key === "ArrowUp"
+			|| e.key === "ArrowDown"
+			|| e.key === "Home"
+			|| e.key === "End";
+	}
+
 	/**
 	 * Defines the width of the select.
 	 *

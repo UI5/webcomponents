@@ -72,7 +72,9 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
  * - The control is not interactive, but can contain of interactive elements
- * - [Tab] - iterates through elements
+ * - [Left]/[Right]/[Up]/[Down] - navigate among toolbar items
+ * - [Home]/[End] - move to first/last toolbar item
+ * - [Tab] / [Shift] + [Tab] - move through toolbar items and exit at edges
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/Toolbar.js";`
@@ -594,9 +596,24 @@ class Toolbar extends UI5Element {
 	}
 
 	_getNavigationItems(): Array<ToolbarNavigationItem> {
+		const itemFocusRefs = this._getNavigationItemsFromItems(this.standardItems);
+
+		if (!this.hideOverflowButton && this.overflowButtonDOM) {
+			const overflowButtonFocusRef = this.overflowButtonDOM.getFocusDomRef() as HTMLElement;
+			if (overflowButtonFocusRef && this._isVisible(overflowButtonFocusRef)) {
+				itemFocusRefs.push({
+					focusRef: overflowButtonFocusRef,
+				});
+			}
+		}
+
+		return itemFocusRefs;
+	}
+
+	_getNavigationItemsFromItems(items: Array<ToolbarItemBase>): Array<ToolbarNavigationItem> {
 		const itemFocusRefs: Array<ToolbarNavigationItem> = [];
 
-		this.standardItems
+		items
 			.filter(item => {
 				if (!item.isInteractive || item.hidden || item.isOverflowed) {
 					return false;
@@ -614,15 +631,6 @@ class Toolbar extends UI5Element {
 					focusRef,
 				});
 			});
-
-		if (!this.hideOverflowButton && this.overflowButtonDOM) {
-			const overflowButtonFocusRef = this.overflowButtonDOM.getFocusDomRef() as HTMLElement;
-			if (overflowButtonFocusRef && this._isVisible(overflowButtonFocusRef)) {
-				itemFocusRefs.push({
-					focusRef: overflowButtonFocusRef,
-				});
-			}
-		}
 
 		return itemFocusRefs;
 	}
@@ -644,12 +652,16 @@ class Toolbar extends UI5Element {
 			&& style.visibility !== "hidden";
 	}
 
-	_shouldItemHandleOwnNavigation(item?: ToolbarItemBase | null): boolean {
-		return !!item?.handlesOwnKeyboardNavigation;
+	_shouldItemHandleOwnNavigation(item: ToolbarItemBase | undefined, e: KeyboardEvent): boolean {
+		return !!item?.shouldHandleOwnKeyboardNavigation(e);
 	}
 
 	_shouldChildHandleNavigation(element: HTMLElement, e: KeyboardEvent): boolean {
-		// If element is an input or textarea, check cursor position
+		if (element.isContentEditable) {
+			return isLeft(e) || isRight(e) || isHome(e) || isEnd(e) || isUp(e) || isDown(e);
+		}
+
+		// If element is an input or textarea, preserve native text/caret behavior.
 		if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
 			const input = element as HTMLInputElement | HTMLTextAreaElement;
 			const cursorPos = input.selectionStart || 0;
@@ -662,6 +674,18 @@ class Toolbar extends UI5Element {
 
 			// Let input handle right arrow if cursor is not at end
 			if (isRight(e) && cursorPos < textLength) {
+				return true;
+			}
+
+			if (isHome(e) && cursorPos > 0) {
+				return true;
+			}
+
+			if (isEnd(e) && cursorPos < textLength) {
+				return true;
+			}
+
+			if (element.tagName === "TEXTAREA" && (isUp(e) || isDown(e))) {
 				return true;
 			}
 		}
@@ -765,10 +789,33 @@ class Toolbar extends UI5Element {
 	}
 
 	_onoverflowkeydown(e: KeyboardEvent) {
-		// Prevent arrow keys from scrolling the page while focus is inside the overflow popover
-		if (isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e)) {
-			e.preventDefault();
+		const isNavigationKey = isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e);
+		if (!isNavigationKey) {
+			return;
 		}
+
+		const activeElement = getActiveElement();
+		if (!activeElement) {
+			return;
+		}
+
+		const navigationItems = this._getNavigationItemsFromItems(this.overflowItems);
+		const currentIndex = this._getCurrentItemIndex(navigationItems, activeElement as HTMLElement);
+		if (currentIndex === -1) {
+			return;
+		}
+
+		const currentNavigationItem = navigationItems[currentIndex];
+		if (this._shouldItemHandleOwnNavigation(currentNavigationItem?.item, e)) {
+			return;
+		}
+
+		if (this._shouldChildHandleNavigation(activeElement as HTMLElement, e)) {
+			return;
+		}
+
+		// Prevent page scrolling only when toolbar should consume the key.
+		e.preventDefault();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -795,9 +842,7 @@ class Toolbar extends UI5Element {
 		}
 
 		const currentNavigationItem = navigationItems[currentIndex];
-		if (isNavigationKey
-			&& this._shouldItemHandleOwnNavigation(currentNavigationItem?.item)
-			&& (isUp(e) || isDown(e) || isHome(e) || isEnd(e))) {
+		if (isNavigationKey && this._shouldItemHandleOwnNavigation(currentNavigationItem?.item, e)) {
 			return;
 		}
 
