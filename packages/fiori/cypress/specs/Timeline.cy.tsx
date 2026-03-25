@@ -580,12 +580,12 @@ describe("Timeline Header Bar", () => {
 	});
 
 	describe("Filter functionality", () => {
-		it("should show filter dropdown when showFilter is true", () => {
+		it("should show filter button when showFilter is true", () => {
 			cy.mount(
 				<Timeline>
 					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
-						<TimelineFilterOption text="All" selected />
 						<TimelineFilterOption text="Open" />
+						<TimelineFilterOption text="Closed" />
 					</TimelineHeaderBar>
 					<TimelineItem titleText="Meeting" />
 				</Timeline>
@@ -593,7 +593,7 @@ describe("Timeline Header Bar", () => {
 
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-select]")
+				.find("[ui5-toolbar-button]")
 				.should("exist");
 		});
 
@@ -601,8 +601,8 @@ describe("Timeline Header Bar", () => {
 			cy.mount(
 				<Timeline>
 					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
-						<TimelineFilterOption text="All" selected />
 						<TimelineFilterOption text="Open" />
+						<TimelineFilterOption text="Closed" />
 					</TimelineHeaderBar>
 					<TimelineItem titleText="Meeting" />
 				</Timeline>
@@ -612,15 +612,26 @@ describe("Timeline Header Bar", () => {
 				$timeline.get(0).addEventListener("filter", cy.stub().as("filterEvent"));
 			});
 
-			// Click on the select to open it
+			// Click the filter button to open the dialog
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-select]")
+				.find("[ui5-toolbar-button]")
 				.realClick();
 
-			// Use keyboard to select next option
-			cy.realPress("ArrowDown");
-			cy.realPress("Enter");
+			// Select the first option in the dialog list
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-dialog]")
+				.find("[ui5-li]")
+				.first()
+				.realClick();
+
+			// Confirm the dialog
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-dialog]")
+				.find("[ui5-button][design='Emphasized']")
+				.realClick();
 
 			cy.get("@filterEvent").should("have.been.called");
 		});
@@ -637,7 +648,7 @@ describe("Timeline Header Bar", () => {
 
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-button]")
+				.find("[ui5-toolbar-button]")
 				.should("exist");
 		});
 
@@ -655,7 +666,7 @@ describe("Timeline Header Bar", () => {
 
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-button]")
+				.find("[ui5-toolbar-button]")
 				.realClick();
 
 			cy.get("@sortEvent").should("have.been.called");
@@ -678,7 +689,7 @@ describe("Timeline Header Bar", () => {
 
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-button]")
+				.find("[ui5-toolbar-button]")
 				.as("sortButton");
 
 			cy.get("@sortButton").realClick();
@@ -686,7 +697,7 @@ describe("Timeline Header Bar", () => {
 			cy.get("@sortButton").realClick();
 
 			cy.wrap(null).then(() => {
-				expect(sortOrders).to.deep.equal(["Ascending", "Descending", "Ascending"]);
+				expect(sortOrders).to.deep.equal(["Descending", "Ascending", "Descending"]);
 			});
 		});
 	});
@@ -702,8 +713,10 @@ describe("Timeline Header Bar", () => {
 
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find(".ui5-timeline-header-bar")
-				.should("have.attr", "role", "toolbar");
+				.find("[ui5-toolbar]")
+				.shadow()
+				.find("[role='toolbar']")
+				.should("exist");
 		});
 
 		it("should have accessible name on search input", () => {
@@ -726,7 +739,6 @@ describe("Timeline Header Bar", () => {
 			cy.mount(
 				<Timeline>
 					<TimelineHeaderBar slot="headerBar" showSearch showFilter showSort filterBy="Category">
-						<TimelineFilterOption text="All" selected />
 						<TimelineFilterOption text="Work" />
 						<TimelineFilterOption text="Personal" />
 					</TimelineHeaderBar>
@@ -741,17 +753,11 @@ describe("Timeline Header Bar", () => {
 				.find("[ui5-input]")
 				.should("exist");
 
-			// Filter select should exist
+			// Toolbar buttons should exist (sort + filter = 2 buttons)
 			cy.get("[ui5-timeline-header-bar]")
 				.shadow()
-				.find("[ui5-select]")
-				.should("exist");
-
-			// Sort button should exist
-			cy.get("[ui5-timeline-header-bar]")
-				.shadow()
-				.find("[ui5-button]")
-				.should("exist");
+				.find("[ui5-toolbar-button]")
+				.should("have.length", 2);
 		});
 	});
 
