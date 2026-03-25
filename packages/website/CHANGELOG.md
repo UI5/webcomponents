@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+
+### Features
+
+* add new `styling` and `accessibility` Skills ([#13261](https://github.com/UI5/webcomponents/issues/13261)) ([3c8381a](https://github.com/UI5/webcomponents/commit/3c8381a91a24132cf9f3ec2f3d287536ae3ee087))
+
+
+
+
+
+# [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
+
+
+### Bug Fixes
+
+* **ui5-dialog:** remove ui5-bar's padding when slotted as header or footer ([#13201](https://github.com/UI5/webcomponents/issues/13201)) ([5ac39e7](https://github.com/UI5/webcomponents/commit/5ac39e7cb501287f5cad171aca1e359ad9c03d6f))
+* **website:** correct TypeScript type mismatches in React samples ([cac2899](https://github.com/UI5/webcomponents/commit/cac28993ced360885961f4fb5c1193d57f07081b))
+* **website:** fix image paths in React preview for subpath deployments ([f22525f](https://github.com/UI5/webcomponents/commit/f22525f1102701ebfcb6f0bfce409c19d4e9c9cc))
+
+
+### Features
+
+* **ui5-time-picker:** display-value and value-format properties are introduced ([f82f678](https://github.com/UI5/webcomponents/commit/f82f678cc7ed441af686671adb6870aa9c5acd86))
+
+
+
+
+
 # [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
 
 

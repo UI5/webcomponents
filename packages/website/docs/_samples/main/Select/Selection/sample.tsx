@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <div>
-        <Label for="countrySelect">Country:</Label>
+        <Label showColon={true} for="countrySelect">Country</Label>
         <Select
           id="countrySelect"
           value="DE"

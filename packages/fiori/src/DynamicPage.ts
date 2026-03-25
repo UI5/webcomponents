@@ -310,7 +310,7 @@ class DynamicPage extends UI5Element {
 	}
 
 	snapTitleByScroll() {
-		if (!this.dynamicPageTitle || !this.dynamicPageHeader || this.headerPinned) {
+		if (!this.dynamicPageTitle || !this.dynamicPageHeader || this.headerPinned || !this.scrollContainer) {
 			return;
 		}
 
@@ -324,7 +324,7 @@ class DynamicPage extends UI5Element {
 			return;
 		}
 
-		const scrollTop = this.scrollContainer!.scrollTop;
+		const scrollTop = this.scrollContainer.scrollTop;
 		const headerHeight = this.dynamicPageHeader.getBoundingClientRect().height;
 		const lastHeaderSnapped = this._headerSnapped;
 
@@ -344,8 +344,8 @@ class DynamicPage extends UI5Element {
 			// If the header is snapped and the scroll is at the top, scroll down a bit
 			// to avoid ending in an endless loop of snapping and unsnapping
 			requestAnimationFrame(() => {
-				if (this.scrollContainer!.scrollTop === 0) {
-					this.scrollContainer!.scrollTop = SCROLL_THRESHOLD;
+				if (this.scrollContainer && this.scrollContainer.scrollTop === 0) {
+					this.scrollContainer.scrollTop = SCROLL_THRESHOLD;
 				}
 			});
 		} else if (shouldExpand) {
@@ -376,7 +376,7 @@ class DynamicPage extends UI5Element {
 		this.headerPinned = !this.headerPinned;
 		if (this.headerPinned) {
 			this.showHeaderInStickArea = true;
-		} else if (this.scrollContainer!.scrollTop === 0) {
+		} else if (this.scrollContainer && this.scrollContainer.scrollTop === 0) {
 			this.showHeaderInStickArea = false;
 		}
 		this.fireDecoratorEvent("pin-button-toggle");
@@ -396,8 +396,12 @@ class DynamicPage extends UI5Element {
 	}
 
 	async _toggleHeader() {
+		if (!this.scrollContainer) {
+			return;
+		}
+
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-		const currentScrollTop = this.scrollContainer!.scrollTop;
+		const currentScrollTop = this.scrollContainer.scrollTop;
 
 		if (!this._headerSnapped && this.headerPinned) {
 			this.headerPinned = false;
@@ -414,7 +418,7 @@ class DynamicPage extends UI5Element {
 			if (!this._headerSnapped) {
 				this._headerSnapped = true;
 				this.showHeaderInStickArea = true;
-				this.scrollContainer!.scrollTop = 0;
+				this.scrollContainer.scrollTop = 0;
 			} else {
 				this.showHeaderInStickArea = false;
 				this._headerSnapped = false;
@@ -422,8 +426,8 @@ class DynamicPage extends UI5Element {
 			return;
 		}
 
-		if (this.scrollContainer!.scrollTop === SCROLL_THRESHOLD) {
-			this.scrollContainer!.scrollTop = 0;
+		if (this.scrollContainer.scrollTop === SCROLL_THRESHOLD) {
+			this.scrollContainer.scrollTop = 0;
 		}
 
 		this.showHeaderInStickArea = !this.showHeaderInStickArea;
@@ -432,8 +436,8 @@ class DynamicPage extends UI5Element {
 		this.skipSnapOnScroll = true;
 
 		await renderFinished();
-		if (this._headerSnapped && this.scrollContainer!.scrollTop < SCROLL_THRESHOLD) {
-			this.scrollContainer!.scrollTop = SCROLL_THRESHOLD;
+		if (this._headerSnapped && this.scrollContainer.scrollTop < SCROLL_THRESHOLD) {
+			this.scrollContainer.scrollTop = SCROLL_THRESHOLD;
 		}
 	}
 

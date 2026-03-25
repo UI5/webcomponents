@@ -41,15 +41,15 @@ function App() {
         </Bar>
 
         <FormItem>
-          <Label for="nameInp" slot="labelContent">
-            Name:
+          <Label for="nameInp" slot="labelContent" showColon={true}>
+            Name
           </Label>
           <Input value="Red Point Stores" id="nameInp" />
         </FormItem>
 
         <FormItem>
-          <Label id="countryLbl" for="countrySel" slot="labelContent">
-            Country:
+          <Label id="countryLbl" for="countrySel" slot="labelContent" showColon={true}>
+            Country
           </Label>
           <Select id="countrySel" accessibleNameRef="countryLbl">
             <Option>Australia</Option>
@@ -59,23 +59,23 @@ function App() {
         </FormItem>
 
         <FormItem>
-          <Label id="cityLbl" for="cityInp" slot="labelContent">
-            ZIP Code/City:
+          <Label id="cityLbl" for="cityInp" slot="labelContent" showColon={true}>
+            ZIP Code/City
           </Label>
           <Input id="cityInp" value="411" accessibleNameRef="cityLbl" />
           <Input value="Maintown" accessibleNameRef="cityLbl" />
         </FormItem>
 
         <FormItem>
-          <Label for="wsInp" slot="labelContent">
-            WebSite:
+          <Label for="wsInp" slot="labelContent" showColon={true}>
+            WebSite
           </Label>
           <Input value="sap.com" id="wsInp" />
         </FormItem>
 
         <FormItem>
-          <Label id="streetLbl" for="streetInp" slot="labelContent">
-            Street:
+          <Label id="streetLbl" for="streetInp" slot="labelContent" showColon={true}>
+            Street
           </Label>
           <Input id="streetInp" value="Main St" accessibleNameRef="streetLbl" />
           <Input
@@ -86,8 +86,8 @@ function App() {
         </FormItem>
 
         <FormItem>
-          <Label for="delInp" slot="labelContent">
-            Delivery address:
+          <Label for="delInp" slot="labelContent" showColon={true}>
+            Delivery address
           </Label>
           <Input value="Newtown" id="delInp" />
         </FormItem>

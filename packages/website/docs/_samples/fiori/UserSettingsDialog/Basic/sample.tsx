@@ -437,7 +437,7 @@ function App() {
               id="language-region-container"
               className="language-region-container"
             >
-              <Label class="language-region-label">Display Language:</Label>
+              <Label showColon={true} class="language-region-label">Display Language</Label>
               <ComboBox
                 id="language"
                 class="language-region-control"
@@ -495,7 +495,7 @@ function App() {
                   additionalText="Espa&ntilde;ol (Espa&ntilde;a)"
                 />
               </ComboBox>
-              <Label class="language-region-label">Region:</Label>
+              <Label showColon={true} class="language-region-label">Region</Label>
               <ComboBox
                 id="region"
                 class="language-region-control"
@@ -518,7 +518,7 @@ function App() {
                 <ComboBoxItem text="Spanish (Mexico)" additionalText="MX" />
                 <ComboBoxItem text="Spanish (Spain)" additionalText="ES" />
               </ComboBox>
-              <Label class="language-region-label">Date Format:</Label>
+              <Label showColon={true} class="language-region-label">Date Format</Label>
               <ComboBox
                 id="dateFormat"
                 class="language-region-control"
@@ -563,7 +563,7 @@ function App() {
                   additionalText="e.g. 2025-10-23"
                 />
               </ComboBox>
-              <Label class="language-region-label">Time Format:</Label>
+              <Label showColon={true} class="language-region-label">Time Format</Label>
               <ComboBox
                 id="timeFormat"
                 class="language-region-control"
@@ -589,7 +589,7 @@ function App() {
                   additionalText="e.g. 00:05:10 pm"
                 />
               </ComboBox>
-              <Label class="language-region-label">Time Zone:</Label>
+              <Label showColon={true} class="language-region-label">Time Zone</Label>
               <ComboBox
                 id="timeZone"
                 class="language-region-control"
@@ -694,7 +694,7 @@ function App() {
                   additionalText="Wellington, New Zealand"
                 />
               </ComboBox>
-              <Label class="language-region-label">Currency:</Label>
+              <Label showColon={true} class="language-region-label">Currency</Label>
               <ComboBox
                 id="currency"
                 class="language-region-control"
@@ -730,7 +730,7 @@ function App() {
                 <ComboBoxItem text="South Korean Won" additionalText="KRW" />
                 <ComboBoxItem text="Turkish Lira" additionalText="TRY" />
               </ComboBox>
-              <Label class="language-region-label">Number Format:</Label>
+              <Label showColon={true} class="language-region-label">Number Format</Label>
               <ComboBox
                 id="numberFormat"
                 class="language-region-control"

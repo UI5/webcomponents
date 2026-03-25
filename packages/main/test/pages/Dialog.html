@@ -97,9 +97,7 @@
 		<ui5-button id="open-big-content">Open dialog with big content</ui5-button>
 		<br>
 		<br>
-		<ui5-button id="open-big-dynamic-content">Open dynamic dialog with big content</ui5-button>
-		<br>
-		<br>
+		<ui5-button id="native-dnd-open">Open draggable dialog with native DnD</ui5-button>
 	</div>
 	<ui5-block-layer></ui5-block-layer>
 
@@ -456,6 +454,16 @@
 			</ui5-toolbar>
 		</ui5-dialog>
 	</div>
+
+	<ui5-dialog id="native-dnd-dialog" header-text="Draggable Dialog with Native DnD" draggable>
+		<p>Drag items to drop zone:</p>
+		<div id="dnd-item-1" draggable="true">Item 1</div>
+		<div id="dnd-item-2" draggable="true">Item 2</div>
+		<div id="drop-zone">Drop Zone</div>
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="native-dnd-close">Close</ui5-button>
+		</div>
+	</ui5-dialog>
 
 	<ui5-popover header-text="My Heading" id="pop" class="dialog8auto" placement="Top">
 		<!-- <div slot="header">
@@ -1133,70 +1141,23 @@
 			window["dlgBigContent"].open = true;
 		});
 
-		document.getElementById("open-big-dynamic-content").addEventListener("click", function () {
-			const dialog = document.createElement("ui5-dialog");
-			const child1 = `
-				<div slot="header" design="Header">
-					<h3>Random Title</h3>
-				</div>
-			`;
+		window["native-dnd-open"].addEventListener("click", () => window["native-dnd-dialog"].open = true);
+		window["native-dnd-close"].addEventListener("click", () => window["native-dnd-dialog"].open = false);
 
-			const child2 = `
-				<div>
-					<div>
-						<div>
-							<div>
-								<div>
-									<img src="randomImage.png">
-								</div>
-							</div>
-							<div>
-								<div>Contact RANDOM CORP</div>
-								<div>Some subtitle</div>
-							</div>
-						</div>
-					</div>
-					<form>
-						<div>
-							<div>
-								<p>Subscribe to our newsletter</p>
-								<small>No spam, only updates.</small>
-							</div>
-						</div>
-						<div>
-							<small>Hint: Use a valid code</small>
-						</div>
-						<div>Your Info</div>
-						<div>
-							<div>
-							</div>
-							<div>
-							</div>
-						</div>
-						<div>Company Info</div>
-						<div>
-							<div>
-							</div>
-							<div>
-							</div>
-						</div>
-						<div></div>
-						<div>
-							<div>
-								<span>
-									I agree to the random terms and conditions.
-										Read Privacy Policy.
-								</span>
-							</div>
-						</div>
-						<div></div>
-					</form>
-				</div>
-			`;
+		document.getElementById("dnd-item-1").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-1");
+		});
 
-			dialog.innerHTML = child1 + child2;
-			document.body.appendChild(dialog);
-			dialog.open = true;
+		document.getElementById("dnd-item-2").addEventListener("dragstart", (e) => {
+			e.dataTransfer.setData("text", "item-2");
+		});
+
+		const dropZone = document.getElementById("drop-zone");
+		dropZone.addEventListener("dragover", (e) => e.preventDefault());
+		dropZone.addEventListener("drop", (e) => {
+			e.preventDefault();
+			const data = e.dataTransfer.getData("text");
+			dropZone.textContent = `Dropped: ${data}`;
 		});
 	</script>
 </body>
