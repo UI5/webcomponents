@@ -360,12 +360,13 @@ describe("List - Accessibility", () => {
 			</List>
 		);
 
-		// assert
+		// assert - "Is Active" should NOT be announced for type="Active"
+		// The type property indicates behavior (clickable), not state (selected)
 		cy.get("#active").invoke("prop", "_id").then(_id => {
 			cy.get("#active")
 				.shadow()
 				.find(`#${_id}-invisibleText`)
-				.should("have.text", "Is Active");
+				.should("not.have.text", "Is Active");
 		});
 
 		cy.get("#inactive").invoke("prop", "_id").then(_id => {

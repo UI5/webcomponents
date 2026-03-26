@@ -26,7 +26,6 @@ import {
 	DELETE,
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
 	ARIA_LABEL_LIST_ITEM_RADIO_BUTTON,
-	LIST_ITEM_ACTIVE,
 	LIST_ITEM_SELECTED,
 	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
@@ -475,7 +474,6 @@ abstract class ListItem extends ListItemBase {
 		const texts = [
 			this._accInfo.listItemAriaLabel,
 			this.accessibleName,
-			this.typeActive ? ListItem.i18nBundle.getText(LIST_ITEM_ACTIVE) : undefined,
 		].filter(Boolean);
 
 		return texts.join(" ");
