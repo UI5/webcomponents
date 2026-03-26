@@ -1851,7 +1851,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._filteredItems = this._getItems();
 		}
 
-		if (this.selectedValues) {
+		if (this.selectedValues?.length > 0) {
 			this._syncSelection();
 		}
 
