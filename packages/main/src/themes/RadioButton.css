@@ -15,6 +15,11 @@
 	border-radius: var(--_ui5_radio_button_border_radius);
 	font-size: var(--sapFontSize);
 	padding-block: var(--_ui5_radio_button_label_side_padding);
+	padding-inline-start: var(--_ui5_radio_button_outer_ring_padding);
+}
+
+:host([text]) {
+	padding-inline-start: var(--_ui5_radio_button_outer_ring_padding_with_label);
 }
 
 :host(:not([disabled])) .ui5-radio-root {
@@ -87,11 +92,11 @@
 
 :host([text][desktop]) .ui5-radio-root:focus::before,
 :host([text]) .ui5-radio-root:focus-visible::before {
-	inset-inline-end: 0px;
+	inset-inline-end: 0;
 }
 
 :host([text]) .ui5-radio-inner {
-	padding: var(--_ui5_radio_button_outer_ring_padding_with_label);
+	padding-inline-end: var(--_ui5_radio_button_outer_ring_padding_with_label);
 }
 
 /* readonly */
@@ -202,7 +207,7 @@
 .ui5-radio-inner {
 	display: flex;
 	align-items: center;
-	padding: var(--_ui5_radio_button_outer_ring_padding);
+	padding-inline-end: var(--_ui5_radio_button_outer_ring_padding);
 	flex: 1;
 	pointer-events: none;
 }

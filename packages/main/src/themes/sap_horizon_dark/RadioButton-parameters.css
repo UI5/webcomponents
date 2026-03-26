@@ -10,7 +10,7 @@
 	--_ui5_radio_button_border_radius: 0.5rem;
 	--_ui5_radio_button_label_color: var(--sapField_TextColor);
 	--_ui5_radio_button_inner_ring_radius: 27.5%;
-	--_ui5_radio_button_outer_ring_padding: 0 0.6875rem;
+	--_ui5_radio_button_outer_ring_padding: 0.6875rem;
 	--_ui5_radio_button_read_only_border_type: 4, 2;
 	--_ui5_radio_button_inner_ring_color: var(--sapContent_Selected_ForegroundColor);
 	--_ui5_radio_button_checked_warning_fill: var(--sapField_WarningColor);
@@ -21,7 +21,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-		--_ui5_radio_button_outer_ring_padding: 0 0.5rem;
+		--_ui5_radio_button_outer_ring_padding: 0.5rem;
 		--_ui5_radio_button_focus_dist: 0.1875rem;
 	}
 }

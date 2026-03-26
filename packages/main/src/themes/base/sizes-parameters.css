@@ -123,7 +123,7 @@
 
 	/* Radio Button */
 	--_ui5_radio_button_height: 2.75rem;
-	--_ui5_radio_button_label_side_padding: .875rem;
+	--_ui5_radio_button_label_side_padding: .6875rem;
 	--_ui5_radio_button_inner_size: 2.75rem;
 	--_ui5_radio_button_svg_size: 1.5714em;
 
