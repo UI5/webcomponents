@@ -38,6 +38,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import type { IIcon } from "./Icon.js";
 import * as Filters from "./Filters.js";
@@ -574,6 +575,23 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.selectedValue) {
 			this._useSelectedValue = true;
 		}
+
+		// Highlight filtered items
+		this._filteredItems.forEach(item => {
+			if (!item) {
+				return;
+			}
+			if (isInstanceOfComboBoxItemGroup(item)) {
+				// For grouped items, highlight each item in the group
+				item.items.forEach(nestedItem => {
+					if (nestedItem) {
+						this._highlightItem(nestedItem);
+					}
+				});
+			} else {
+				this._highlightItem(item as ComboBoxItem);
+			}
+		});
 
 		this._selectMatchingItem();
 		this._initialRendering = false;
@@ -1217,6 +1235,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 
 		return [...filteredItemGroups, ...filteredItems];
+	}
+
+	/**
+	 * Sets the markupText property of an item with highlighted first match.
+	 * @param item The ComboBox item to highlight
+	 * @private
+	 */
+	_highlightItem(item: ComboBoxItem) {
+		item.markupText = generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue);
 	}
 
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {
