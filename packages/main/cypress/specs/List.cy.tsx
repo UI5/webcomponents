@@ -13,6 +13,7 @@ import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
 import Bar from "../../src/Bar.js";
+import Link from "../../src/Link.js";
 
 function getGrowingWithScrollList(length: number, height: string = "100px") {
 	return (
@@ -1201,7 +1202,7 @@ describe("List Tests", () => {
 		cy.get("@itemDeleteStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
 
-	it("selectionMode: delete. Tab key moves focus to delete button", () => {
+	it("selectionMode: delete. F2 + Tab reaches delete button", () => {
 		cy.mount(
 			<div>
 				<button>Before button</button>
@@ -1221,8 +1222,13 @@ describe("List Tests", () => {
 		cy.get("[ui5-li]").first().click();
 		cy.get("[ui5-li]").first().should("be.focused");
 
-		// Tab should move focus to the delete button inside the first item
+		// Tab in navigation mode should forward out — not reach delete button
 		cy.realPress("Tab");
+		cy.get("button").last().should("be.focused");
+
+		// Re-focus item, then F2 to enter edit mode
+		cy.get("[ui5-li]").first().click();
+		cy.realPress("F2");
 		cy.get("[ui5-li]")
 			.first()
 			.shadow()
@@ -1232,18 +1238,6 @@ describe("List Tests", () => {
 		// Enter on the focused delete button should trigger deletion
 		cy.realPress("Enter");
 		cy.get("@itemDeleteStub").should("have.been.calledOnce");
-
-		// Tab again from delete button should move focus out of the item
-		cy.get("[ui5-li]").first().click();
-		cy.realPress("Tab");
-		cy.get("[ui5-li]")
-			.first()
-			.shadow()
-			.find("[ui5-button]")
-			.should("be.focused");
-
-		cy.realPress("Tab");
-		cy.get("button").last().should("be.focused");
 	});
 
 	it("selectionMode: delete. F2 toggles focus to delete button", () => {
@@ -1385,16 +1379,7 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().click();
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("button").first().should("be.focused");
-
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("a").should("be.focused");
-
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("input[type='radio']").should("be.focused");
-
-		cy.get("[ui5-li]").first().click();
+		// Tab forwards out of item (navigation mode) — internal elements require F2
 		cy.realPress("Tab");
 		cy.get("[ui5-list]")
 			.shadow()
@@ -1452,15 +1437,15 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").realClick();
 		cy.get("[ui5-li-custom]").should("be.focused");
 
-		// F7 goes to first focusable element
+		// F7 goes to first focusable element (enters edit mode)
 		cy.realPress("F7");
 		cy.get("[ui5-button]").first().should("be.focused");
 
-		// Tab to second button
+		// Tab to second button (edit mode allows cycling)
 		cy.realPress("Tab");
 		cy.get("[ui5-button]").last().should("be.focused");
 
-		// F7 returns to list item
+		// F7 returns to list item (exits edit mode)
 		cy.realPress("F7");
 		cy.get("[ui5-li-custom]").should("be.focused");
 
@@ -1489,11 +1474,11 @@ describe("List Tests", () => {
 		cy.realPress("Tab");
 		cy.get("[ui5-li-custom]").should("be.focused");
 
-		// Tab into internal elements (goes to first button)
-		cy.realPress("Tab");
+		// F7 to enter internal elements (enables edit mode)
+		cy.realPress("F7");
 		cy.get("[ui5-button]").first().should("be.focused");
 
-		// Tab to second button
+		// Tab to second button (edit mode allows cycling)
 		cy.realPress("Tab");
 		cy.get("[ui5-button]").last().should("be.focused");
 
@@ -1526,11 +1511,11 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().realClick();
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 
-		// F7 to enter (should go to first button)
+		// F7 to enter (should go to first button, enables edit mode)
 		cy.realPress("F7");
 		cy.get("[ui5-button]").eq(0).should("be.focused");
 
-		// Tab to second button
+		// Tab to second button (edit mode allows cycling)
 		cy.realPress("Tab");
 		cy.get("[ui5-button]").eq(1).should("be.focused");
 
@@ -1745,9 +1730,7 @@ describe("List Tests", () => {
 		cy.get("[ui5-li]").eq(1).click();
 		cy.get("[ui5-li]").eq(1).should("be.focused");
 
-		cy.realPress("Tab");
-		cy.get("ui5-breadcrumbs").should("be.focused");
-
+		// Tab forwards out of item (navigation mode) — internal Breadcrumbs requires F2
 		cy.realPress("Tab");
 		cy.get("[ui5-button]").should("be.focused");
 	});
@@ -2741,5 +2724,328 @@ describe("List sticky header", () => {
 						expect(headerTopAfter).to.eq(headerTopBefore);
 					});
 			});
+	});
+});
+
+describe("Edit mode (F2) with Delete selection mode", () => {
+	it("F2 enters edit mode and Tab cycles to delete button", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		// Focus first item
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// F2 enters edit mode - focus moves to first focusable element
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 again exits edit mode - focus returns to list item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+	});
+
+	it("Tab in non-edit delete mode forwards to next item", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button>After</button>
+			</div>
+		);
+
+		// Focus first item (not in edit mode)
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should move focus out of list (forward-after), not to delete button
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first().should("not.be.focused");
+	});
+
+	it("Tab cycles through focusable elements in edit mode", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		// Focus first item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// First focusable (delete button) should be focused
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab should cycle back (only one focusable element)
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
+
+	it("F7 exits edit mode and returns focus to list item", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		// Focus first item, enter edit mode via F2
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F7 returns focus to the list item and exits edit mode
+		cy.realPress("F7");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should forward (not cycle), confirming edit mode is off
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first().should("not.be.focused");
+	});
+
+	it("Arrow Down/Up transfers edit mode to adjacent items", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+				<ListItemStandard>Item 3</ListItemStandard>
+			</List>
+		);
+
+		// Focus first item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button of first item should be focused
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down moves to delete button of second item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab still cycles (edit mode was transferred) — single focusable, stays put
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down again to third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down at boundary does nothing — stays on third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up goes back to second item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up to first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up at boundary does nothing — stays on first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 exits edit mode from any item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").eq(0).should("be.focused");
+	});
+
+	it("focus-out clears edit mode", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+				</List>
+				<button>Outside</button>
+			</div>
+		);
+
+		// Focus item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Click outside to move focus away
+		cy.get("button").contains("Outside").realClick();
+
+		// Re-focus the list item
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should forward (not cycle), confirming edit mode was cleared
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first().should("not.be.focused");
+	});
+
+	it("complete edit mode workflow with complex list items", () => {
+		// Complex list: ListItemCustom with multiple interactive elements,
+		// standard items, and a custom delete button slot
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemCustom>
+						<Button id="action1">Action 1</Button>
+						<Link>SAP Link</Link>
+						<Button id="action2">Action 2</Button>
+					</ListItemCustom>
+					<ListItemStandard>Simple Item</ListItemStandard>
+					<ListItemStandard>
+						Item with custom delete
+						<div slot="deleteButton">
+							<Button id="customDel">Custom Delete</Button>
+						</div>
+					</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// === Step 1: Focus first custom item ===
+		cy.get("[ui5-li-custom]").realClick();
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// === Step 2: Enter edit mode with F2 ===
+		cy.realPress("F2");
+		// First focusable inside the custom item (Action 1 button) should be focused
+		cy.get("#action1").should("be.focused");
+
+		// === Step 3: Tab cycles through all internal elements ===
+		cy.realPress("Tab");
+		cy.get("[ui5-link]").should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#action2").should("be.focused");
+
+		// Next Tab should reach the delete button in shadow DOM
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab wraps back to first element (Action 1)
+		cy.realPress("Tab");
+		cy.get("#action1").should("be.focused");
+
+		// === Step 4: Shift+Tab cycles backward ===
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("[ui5-li-custom]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#action2").should("be.focused");
+
+		// === Step 5: Arrow Down transfers edit mode to next item ===
+		cy.realPress("ArrowDown");
+		// Second item (ListItemStandard "Simple Item") should have its
+		// delete button focused (same positional index, clamped)
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab should cycle (still in edit mode) — only 1 focusable, stays put
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// === Step 6: Arrow Down to item with custom delete button ===
+		cy.realPress("ArrowDown");
+		// Third item has a custom delete button in the light DOM slot
+		cy.get("#customDel").should("be.focused");
+
+		// === Step 7: Arrow Up goes back, preserving edit mode ===
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// === Step 8: F2 exits edit mode, returns to item level ===
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// === Step 9: Tab in non-edit delete mode forwards out ===
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first().should("not.be.focused");
+	});
+
+	it("Shift+Tab in non-edit delete mode forwards to previous item", () => {
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Focus second item
+		cy.get("[ui5-li]").last().realClick();
+		cy.get("[ui5-li]").last().should("be.focused");
+
+		// Shift+Tab should move focus out of the list (forward-before)
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("[ui5-li]").last().should("not.be.focused");
 	});
 });

@@ -195,6 +195,16 @@ abstract class ListItem extends ListItemBase {
 	_selectionMode: `${ListSelectionMode}` = "None";
 
 	/**
+	 * Indicates whether the list item is in edit mode.
+	 * When active, Tab cycles through internal focusable elements
+	 * instead of navigating to the next list item.
+	 * Toggled by F2 or F7.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_editMode = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @default "S"
 	 * @private
@@ -314,6 +324,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onfocusout(e: FocusEvent) {
+		if (this._editMode) {
+			const relatedTarget = e.relatedTarget as Node;
+			if (!relatedTarget || !(this.contains(relatedTarget) || this.shadowRoot!.contains(relatedTarget))) {
+				this._editMode = false;
+			}
+		}
+
 		if (e.target !== this.getFocusDomRef()) {
 			return;
 		}
@@ -518,11 +535,54 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (activeElement === focusDomRef) {
+			this._editMode = true;
 			const firstFocusable = await getFirstFocusableElement(focusDomRef);
 			firstFocusable?.focus();
 		} else {
+			this._editMode = false;
 			focusDomRef.focus();
 		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			e.preventDefault();
+			const focusables = this._getFocusableElements();
+			if (focusables.length <= 1) {
+				return;
+			}
+
+			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+			const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % focusables.length;
+			focusables[nextIndex].focus();
+			return;
+		}
+
+		// In navigation mode (non-edit), always forward Tab to the next item,
+		// bypassing shouldForwardTabAfter() which would stop at internal
+		// focusable elements. F2 enables edit mode for Tab cycling.
+		if (!this.fireDecoratorEvent("forward-after")) {
+			e.preventDefault();
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			e.preventDefault();
+			const focusables = this._getFocusableElements();
+			if (focusables.length <= 1) {
+				return;
+			}
+
+			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+			const prevIndex = currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
+			focusables[prevIndex].focus();
+			return;
+		}
+
+		// In navigation mode (non-edit), always forward Shift+Tab to the
+		// previous item. F2 enables edit mode for backward Tab cycling.
+		this.fireDecoratorEvent("forward-before");
 	}
 
 	_getFocusableElements(): HTMLElement[] {

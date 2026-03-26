@@ -1067,10 +1067,12 @@ class List extends UI5Element {
 		e.preventDefault();
 
 		if (activeElement === listItemDomRef) {
+			listItem._editMode = true;
 			listItem._focusInternalElement(this._lastFocusedElementIndex ?? 0);
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
 		} else {
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
+			listItem._editMode = false;
 			listItemDomRef.focus();
 		}
 	}
@@ -1270,6 +1272,7 @@ class List extends UI5Element {
 			return false;
 		}
 
+		nextNode._editMode = listItem._editMode;
 		const focusedIndex = nextNode._focusInternalElement(targetInternalElementIndex);
 		if (focusedIndex !== undefined) {
 			this._lastFocusedElementIndex = focusedIndex;
