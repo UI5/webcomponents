@@ -122,7 +122,6 @@
 	--_ui5_textarea_margin: .25rem 0;
 
 	/* Radio Button */
-	--_ui5_radio_button_height: 2.75rem;
 	--_ui5_radio_button_label_side_padding: .6875rem;
 	--_ui5_radio_button_inner_size: 2.75rem;
 	--_ui5_radio_button_svg_size: 1.5714em;
@@ -321,7 +320,6 @@
 		--_ui5_tc_item_icon_circle_size: 2rem;
 
 		/* Radio Button */
-		--_ui5_radio_button_height: 2rem;
 		--_ui5_radio_button_label_side_padding: 0.5rem;
 		--_ui5_radio_button_inner_size: 2rem;
 		--_ui5_radio_button_svg_size: 1.1429em;

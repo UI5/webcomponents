@@ -55,7 +55,8 @@
 	content: "";
 	display: var(--_ui5_radio_button_focus_outline);
 	position: absolute;
-	inset: var(--_ui5_radio_button_focus_dist);
+	inset-block: calc(-1 * var(--_ui5_radio_button_focus_dist));
+	inset-inline: calc(-1 * var(--_ui5_radio_button_focus_dist)) var(--_ui5_radio_button_focus_dist);
 	pointer-events: none;
 	border: var(--_ui5_radio_button_border_width) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	border-radius: var(--_ui5_radio_button_border_radius);
@@ -207,6 +208,7 @@
 .ui5-radio-inner {
 	display: flex;
 	align-items: center;
+	align-self: start;
 	padding-inline-end: var(--_ui5_radio_button_outer_ring_padding);
 	flex: 1;
 	pointer-events: none;
@@ -236,10 +238,6 @@
 	color: var(--_ui5_radio_button_label_color);
 	overflow-wrap: break-word;
 	font-size: inherit;
-}
-
-:host([wrapping-type="None"][text]) .ui5-radio-root {
-	height: var(--_ui5_radio_button_height);
 }
 
 :host([wrapping-type="None"][text]) [ui5-label].ui5-radio-label {
