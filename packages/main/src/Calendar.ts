@@ -376,9 +376,6 @@ class Calendar extends CalendarPart {
 	@property({ type: Boolean, noAttribute: true })
 	_phoneMode = false;
 
-	@property({ type: Boolean, noAttribute: true })
-	_portraitMode = false;
-
 	_handleResizeBound: ResizeObserverCallback;
 
 	@i18n("@ui5/webcomponents")
@@ -401,13 +398,12 @@ class Calendar extends CalendarPart {
 	}
 
 	get _portraitView() {
-		return this._portraitMode;
+		return this._phoneMode;
 	}
 
 	/**
 	 * Handles document resize to switch between `phoneMode` and `portraitMode`.
-	 * - `_phoneMode`: Only when it's an actual phone device (isPhone() returns true)
-	 * - `_portraitMode`: When resolution is under PHONE_MODE_BREAKPOINT (regardless of device type)
+	 * - `_phoneMode`: When resolution is under PHONE_MODE_BREAKPOINT (regardless of device type)
 	 */
 	_handleResize() {
 		if (!this._showTwoMonths) {
@@ -422,14 +418,6 @@ class Calendar extends CalendarPart {
 
 		if (phoneModeChange) {
 			this._phoneMode = underBreakpoint;
-		}
-
-		// Portrait mode: when resolution is under breakpoint (can be tablet, desktop in narrow window, etc.)
-		const toPortraitMode = underBreakpoint;
-		const portraitModeChange = (toPortraitMode && !this._portraitMode) || (!toPortraitMode && this._portraitMode);
-
-		if (portraitModeChange) {
-			this._portraitMode = toPortraitMode;
 		}
 	}
 
@@ -852,7 +840,7 @@ class Calendar extends CalendarPart {
 		return !this._isDayPickerHidden && !this._isYearPickerHidden;
 	}
 
-	get _areDayPickersInert() {
+	get _inert() {
 		return this._showTwoMonths && (!this._isMonthPickerHidden || !this._isYearPickerHidden || !this._isYearRangePickerHidden);
 	}
 

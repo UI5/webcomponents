@@ -8,8 +8,8 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
-	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitMode && !this._isCompactMode;
-	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && (this._portraitMode || this._isCompactMode);
+	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitView && !this._isCompactMode;
+	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && (this._portraitView || this._isCompactMode);
 
 	return (
 		<>
@@ -17,7 +17,7 @@ export default function CalendarTemplate(this: Calendar) {
 				class={{
 					"ui5-cal-root": true,
 					"ui5-dt-cal--mobile": this._phoneView,
-					"ui5-dt-cal--portrait": this._portraitMode,
+					"ui5-dt-cal--portrait": this._portraitView,
 					"ui5-dt-cal--multiple": showMultipleMonths,
 				}}
 				onKeyDown={this._onkeydown}
@@ -166,7 +166,7 @@ function renderMonthPickers(this: Calendar, shouldRenderInlineHeaders: boolean) 
 						onChange={this.onSelectedDatesChange}
 						onNavigate={this.onNavigate}
 						exportparts="day-cell, day-cell-selected, day-cell-selected-between"
-						inert={this._areDayPickersInert}
+						inert={this._inert}
 					/>
 				</div>
 			</div>
