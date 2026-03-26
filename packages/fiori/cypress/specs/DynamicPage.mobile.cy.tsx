@@ -199,7 +199,7 @@ describe("DynamicPage Mobile Behaviour", () => {
       .shadow()
       .find("ui5-dynamic-page-header-actions")
       .shadow()
-      .find(".ui5-dynamic-page-header-action-pin-button")
+      .find(".ui5-dynamic-page-header-action-pin")
       .should("not.exist");
   });
 });
