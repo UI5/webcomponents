@@ -422,14 +422,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._tokens.forEach(token => {
 			token.singleToken = (tokensLength === 1) || this.multiLine;
 			token.readonly = this.readonly;
-		});
-
-		// Clear lastVisibleToken when expanding to ensure proper spacing
-		if (this.expanded) {
-			this._tokens.forEach(token => {
+			// Clear lastVisibleToken when expanding
+			if (this.expanded && token.lastVisibleToken) {
 				token.lastVisibleToken = false;
-			});
-		}
+			}
+		});
 	}
 
 	onEnterDOM() {
@@ -520,7 +517,11 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
-		this._updateLastVisibleTokenAttribute();
+
+		// Update lastVisibleToken after rendering is complete to avoid render loops
+		renderFinished().then(() => {
+			this._updateLastVisibleTokenAttribute();
+		});
 	}
 
 	/**
