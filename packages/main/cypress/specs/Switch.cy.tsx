@@ -3,6 +3,7 @@ import Label from "../../src/Label.js";
 import Switch from "../../src/Switch.js";
 
 describe("General events interactions", () => {
+
 	it("Should fire change event", () => {
 		cy.mount(<Switch onChange={cy.stub().as("changed")}>Click me</Switch>);
 
@@ -98,6 +99,37 @@ describe("General events interactions", () => {
     cy.get("@switch")
         .should("not.have.attr", "checked");
 	});
+
+	it("Should not toggle when readonly (click)", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.realClick();
+
+		cy.get("@switch")
+			.should("not.have.attr", "checked");
+	});
+
+	it("Should not toggle when readonly (keyboard)", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.shadow()
+			.find(".ui5-switch-root")
+			.focus()
+			.should("be.focused")
+			.realPress("Space");
+
+		cy.get("@switch")
+			.should("not.have.attr", "checked");
+	});
+
 });
 
 describe("General accesibility attributes", () => {
@@ -231,6 +263,15 @@ describe("General interactions in form", () => {
 });
 
 describe("Accessibility", () => {
+
+	it("should have aria-readonly when readonly", () => {
+		cy.mount(<Switch readonly></Switch>);
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("have.attr", "aria-readonly", "true");
+	});
+
 	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
 		const labelText = "Enable notifications";
 
