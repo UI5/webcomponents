@@ -212,7 +212,7 @@ class Button extends UI5Element implements IButton {
 	 * **Note:** This property takes effect only when the button's "type" property is set to "Submit" or "Reset".
 	 * @default undefined
 	 * @public
-	 * @since 2.1x.0
+	 * @since 2.21.0
 	 */
 	@property()
 	form?: string;
