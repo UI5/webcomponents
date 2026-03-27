@@ -47,7 +47,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 					{this._filteredFixedItems.length > 0 && renderList.call(this, this._filteredFixedItems, "ui5-user-settings-side-fixedItems")}
 				</div>
 
-				<div class="ui5-user-settings-content" data-sap-ui-fastnavgroup="true">
+				<div class="ui5-user-settings-content">
 					<slot name={this._selectedItemSlotName}></slot>
 				</div>
 			</div>

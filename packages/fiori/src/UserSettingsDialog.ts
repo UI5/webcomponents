@@ -13,8 +13,6 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
-import { isF6Next, isF6Previous } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -195,19 +193,10 @@ class UserSettingsDialog extends UI5Element {
 	@property({ type: String })
 	_mediaRange?: any;
 
-	_boundHandleF6: (e: KeyboardEvent) => void;
 
 	constructor() {
 		super();
-		this._boundHandleF6 = this._handleF6.bind(this);
-	}
-
-	onEnterDOM() {
-		this.addEventListener("keydown", this._boundHandleF6 as EventListener);
-	}
-
-	onExitDOM() {
-		this.removeEventListener("keydown", this._boundHandleF6 as EventListener);
+		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
 	}
 
 	onBeforeRendering() {
@@ -246,6 +235,15 @@ class UserSettingsDialog extends UI5Element {
 		if (!this._selectedSetting) {
 			this._selectedSetting = this.items[0] || this.fixedItems[0];
 		}
+
+		const allItems = [...this.items, ...this.fixedItems];
+		allItems.forEach(item => {
+			if (item === this._selectedSetting) {
+				item.setAttribute("data-sap-ui-fastnavgroup", "true");
+			} else {
+				item.removeAttribute("data-sap-ui-fastnavgroup");
+			}
+		});
 	}
 
 	_handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
@@ -325,50 +323,6 @@ class UserSettingsDialog extends UI5Element {
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {
 		this._searchValue = (e.target as Input).value;
-	}
-
-	async _handleF6(e: KeyboardEvent) {
-		const forward = isF6Next(e);
-		const backward = isF6Previous(e);
-
-		if (!forward && !backward) {
-			return;
-		}
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		const zones = this._getVisibleF6Zones();
-		if (zones.length === 0) {
-			return;
-		}
-
-		const currentZone = e.composedPath().find(node => zones.includes(node as HTMLElement)) as HTMLElement | undefined;
-		const currentIndex = currentZone ? zones.indexOf(currentZone) : -1;
-
-		let nextIndex: number;
-		if (forward) {
-			nextIndex = currentIndex + 1;
-			if (nextIndex >= zones.length) {
-				nextIndex = 0;
-			}
-		} else {
-			nextIndex = currentIndex - 1;
-			if (nextIndex < 0) {
-				nextIndex = zones.length - 1;
-			}
-		}
-
-		const elementToFocus = await getFirstFocusableElement(zones[nextIndex]);
-		elementToFocus?.focus();
-	}
-
-	_getVisibleF6Zones(): HTMLElement[] {
-		return Array.from(this.shadowRoot!.querySelectorAll<HTMLElement>("[data-sap-ui-fastnavgroup='true']"))
-			.filter(el => {
-				const style = getComputedStyle(el);
-				return style.display !== "none" && style.visibility !== "hidden";
-			});
 	}
 
 	captureRef(ref: HTMLElement & { associatedSettingItem?: UI5Element} | null) {
