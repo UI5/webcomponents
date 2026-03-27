@@ -22,13 +22,14 @@
 
 :host(:not([_haspopin])) {
 	/* Use CSS Space Toggles until if() or container style queries are widely supported */
-	--_ui5_table_cell_merged: ;
+	--_ui5_table_cell_border_merged: ;
+	--_ui5_table_cell_content_merged: ;
 }
 
-:host(:not([_haspopin]):hover),
+:host(:not([_haspopin]):active),
 :host(:not([_haspopin]):focus-within) {
 	/* Provide a valid CSS value to intentionally invalidate the TableCell variable-based rules and disable visual merging. */
-	--_ui5_table_cell_merged: initial;
+	--_ui5_table_cell_content_merged: initial;
 }
 
 @media (hover: hover) {
@@ -37,6 +38,10 @@
 	}
 	:host([_interactive][aria-selected=true]:hover) {
 		background: var(--sapList_Hover_SelectionBackground);
+	}
+	:host(:not([_haspopin]):hover) {
+		/* Provide a valid CSS value to intentionally invalidate the TableCell variable-based rules and disable visual merging. */
+		--_ui5_table_cell_content_merged: initial;
 	}
 }
 

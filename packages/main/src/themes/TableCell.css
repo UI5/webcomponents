@@ -4,14 +4,13 @@
 
 :host([merged]),
 :host([data-border-merged]) {
-	--_ui5_table_cell_merged_border_color: var(--_ui5_table_cell_merged) transparent;
+	--_ui5_table_cell_merged_border_color: var(--_ui5_table_cell_border_merged) transparent;
 	border-top-color: var(--_ui5_table_cell_merged_border_color, var(--sapList_BorderColor));
 }
 
 :host([merged]) ::slotted(*) {
-	interactivity: var(--_ui5_table_cell_merged) inert;
-	pointer-events: var(--_ui5_table_cell_merged) none;
-	opacity: var(--_ui5_table_cell_merged) 0;
+	--_ui5_table_cell_merged_content_opacity: var(--_ui5_table_cell_content_merged) 0;
+	opacity: var(--_ui5_table_cell_merged_content_opacity, 1);
 	transition: opacity 300ms ease;
 }
 

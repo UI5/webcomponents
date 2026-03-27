@@ -9,10 +9,12 @@
 </head>
 
 <body style="background-color: var(--sapBackgroundColor)">
-    <div class="section">
+    <div class="section" style="height: 250px; overflow: auto;">
 		<ui5-bar>
 			<ui5-segmented-button id="sizeBtn" accessible-name="Switch Table Size">
+				<ui5-segmented-button-item>25%</ui5-segmented-button-item>
 				<ui5-segmented-button-item>50%</ui5-segmented-button-item>
+				<ui5-segmented-button-item>75%</ui5-segmented-button-item>
 				<ui5-segmented-button-item selected>100%</ui5-segmented-button-item>
 			</ui5-segmented-button>
 		</ui5-bar>
@@ -26,34 +28,100 @@
 		<ui5-table-header-cell id="priceCol" min-width="150px">Price</ui5-table-header-cell>
 	</ui5-table-header-row>
 	<ui5-table-row row-key="Row1">
-		<ui5-table-cell><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>30 x 18 x 3 cm</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label><b>956</b> EUR</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Notebook Basic 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Very Best Screens</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>30 x 18 x 3 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>956</b> EUR</ui5-text></ui5-table-cell>
 	</ui5-table-row>
 	<ui5-table-row row-key="Row2">
-		<ui5-table-cell merged><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>29 x 17 x 3.1 cm</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label><b>1249</b> EUR</ui5-label></ui5-table-cell>
+		<ui5-table-cell merged><ui5-text>Notebook Basic 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Smartcards</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>29 x 17 x 3.1 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1249</b> EUR</ui5-text></ui5-table-cell>
 	</ui5-table-row>
 	<ui5-table-row row-key="Row3">
-		<ui5-table-cell merged><ui5-label>Notebook Basic 15</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>Technocom</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>32 x 21 x 4 cm</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label><b>29</b> EUR</ui5-label></ui5-table-cell>
+		<ui5-table-cell merged><ui5-text>Notebook Basic 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Technocom</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>32 x 21 x 4 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>29</b> EUR</ui5-text></ui5-table-cell>
 	</ui5-table-row>
 	<ui5-table-row row-key="Row4">
-		<ui5-table-cell><ui5-label>Notebook Basic 17</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>Very Best Screens</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>33 x 22 x 3.5 cm</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label><b>1200</b> EUR</ui5-label></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Very Best Screens</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 22 x 3.5 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1200</b> EUR</ui5-text></ui5-table-cell>
 	</ui5-table-row>
 	<ui5-table-row row-key="Row5">
-		<ui5-table-cell merged><ui5-label>Notebook Basic 17</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>Smartcards</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label>33 x 22 x 3.5 cm</ui5-label></ui5-table-cell>
-		<ui5-table-cell><ui5-label><b>1450</b> EUR</ui5-label></ui5-table-cell>
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Smartcards</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 22 x 3.5 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1450</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row6">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Technocom</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>34 x 23 x 3.2 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1100</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row7">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>DisplayTech</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 21 x 3.4 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1050</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row8">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>ProVision</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>34 x 22 x 3.3 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1320</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row9">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>ScreenWorld</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 22 x 3.6 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1180</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row10">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>MicroChip</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>34 x 23 x 3.5 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1390</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row11">
+		<ui5-table-cell merged><ui5-text>Notebook Basic 17</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>PanelPlus</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 21 x 3.2 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1275</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row12">
+		<ui5-table-cell><ui5-text>Notebook Professional 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Very Best Screens</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>33 x 21 x 2.5 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1999</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row13">
+		<ui5-table-cell merged><ui5-text>Notebook Professional 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Smartcards</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>31 x 20 x 2.8 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>2150</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row14">
+		<ui5-table-cell merged><ui5-text>Notebook Professional 15</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Technocom</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>32 x 21 x 3.1 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>1850</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row15">
+		<ui5-table-cell><ui5-text>ITElite Chromebook</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Very Best Screens</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>28 x 19 x 2.1 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>399</b> EUR</ui5-text></ui5-table-cell>
+	</ui5-table-row>
+	<ui5-table-row row-key="Row16">
+		<ui5-table-cell merged><ui5-text>ITElite Chromebook</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>Smartcards</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text>27 x 18 x 2.0 cm</ui5-text></ui5-table-cell>
+		<ui5-table-cell><ui5-text><b>459</b> EUR</ui5-text></ui5-table-cell>
 	</ui5-table-row>
 </ui5-table>
 <!-- playground-fold -->

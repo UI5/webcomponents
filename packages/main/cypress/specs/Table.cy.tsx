@@ -13,6 +13,7 @@ import Title from "../../src/Title.js";
 import Slider from "../../src/Slider.js";
 import Button from "../../src/Button.js";
 
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 describe("Table - Rendering", () => {
 	function checkWidth(id: string, expectedWidth: number) {
@@ -1115,21 +1116,20 @@ describe("Table - Cell Merging", () => {
 		mountMergedTable();
 
 		// Merged cell should have transparent top border
-		cy.get("#r2cA").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
 		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
-		cy.get("#r2cA").find("ui5-label").should("have.css", "pointer-events", "none");
 
 		// Non-merged cell should not have transparent border
-		cy.get("#r2cB").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cB").should("not.have.css", "border-top-color", TRANSPARENT);
 		cy.get("#r2cB").find("ui5-label").should("have.css", "opacity", "1");
 
 		// Selection cell should have transparent border when first cell is merged
 		cy.get("#row2").shadow().find("#selection-cell").should("have.attr", "data-border-merged");
-		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
 
 		// Selection cell should NOT have transparent border when first cell is not merged
 		cy.get("#row1").shadow().find("#selection-cell").should("not.have.attr", "data-border-merged");
-		cy.get("#row1").shadow().find("#selection-cell").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#row1").shadow().find("#selection-cell").should("not.have.css", "border-top-color", TRANSPARENT);
 	});
 
 	it("should disable merged styles when row has popin", () => {
@@ -1138,8 +1138,8 @@ describe("Table - Cell Merging", () => {
 		// At full width, merged styles should be active
 		cy.get("ui5-table").invoke("css", "width", "600px");
 		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
-		cy.get("#r2cA").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
 
 		// Shrink table to trigger popin
 		cy.get("ui5-table").invoke("css", "width", "250px");
@@ -1147,20 +1147,19 @@ describe("Table - Cell Merging", () => {
 
 		// Merged cell border should fall back to normal border color (not transparent)
 		cy.get("#row2").should("have.attr", "_haspopin");
-		cy.get("#r2cA").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-		cy.get("#row2").shadow().find("#selection-cell").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("not.have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("not.have.css", "border-top-color", TRANSPARENT);
 
 		// Merged cell content should be fully visible (opacity back to 1)
 		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "1");
-		cy.get("#r2cA").find("ui5-label").should("have.css", "pointer-events", "auto");
 
 		// Expand table again, merged styles should re-activate
 		cy.get("ui5-table").invoke("css", "width", "600px");
 		cy.wait(50);
 
 		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
-		cy.get("#r2cA").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
 	});
 
 	it("should toggle merged styles at runtime", () => {
@@ -1172,31 +1171,25 @@ describe("Table - Cell Merging", () => {
 		// Remove merged attribute
 		cy.get("#r3cA").invoke("removeAttr", "merged");
 		cy.get("#r3cA").find("ui5-label").should("have.css", "opacity", "1");
-		cy.get("#r3cA").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r3cA").should("not.have.css", "border-top-color", TRANSPARENT);
 
 		// Re-add merged attribute
 		cy.get("#r3cA").invoke("prop", "merged", true);
 		cy.get("#r3cA").find("ui5-label").should("have.css", "opacity", "0");
-		cy.get("#r3cA").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r3cA").should("have.css", "border-top-color", TRANSPARENT);
 	});
 
-	it("should disable merged styles on hover and focus", () => {
+	it("should disable merged styles on focus", () => {
 		mountMergedTable();
 
 		// Before hover: merged styles active
 		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
-		cy.get("#r2cA").should("have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
 
-		// On hover: merged cell content should become visible and border should restore
-		cy.get("#row2").realHover();
+		// On focus: merged cell content should become visible but border should remain transparent
+		cy.get("#row2").realClick();
 		cy.get("#r2cA").find("ui5-label").should("not.have.css", "opacity", "0");
-		cy.get("#r2cA").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-		cy.get("#row2").shadow().find("#selection-cell").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-
-		// On focus: merged cell content should become visible and border should restore
-		cy.get("#row3").realClick();
-		cy.get("#r3cA").find("ui5-label").should("not.have.css", "opacity", "0");
-		cy.get("#r3cA").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
-		cy.get("#row3").shadow().find("#selection-cell").should("not.have.css", "border-top-color", "rgba(0, 0, 0, 0)");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
 	});
 });
