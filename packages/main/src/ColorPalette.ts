@@ -210,6 +210,7 @@ class ColorPalette extends UI5Element {
 	_recentColors: Array<string>;
 	_currentlySelected?: ColorPaletteItem;
 	_shouldFocusRecentColors = false;
+	_iLastFocusedColumn = 0;
 
 	@query(".ui5-cp-default-color-button")
 	_defaultColorButton!: Button;
@@ -225,13 +226,13 @@ class ColorPalette extends UI5Element {
 		this._itemNavigation = new ItemNavigation(this, {
 			getItemsCallback: () => this.displayedColors,
 			rowSize: this.rowSize,
-			behavior: ItemNavigationBehavior.Cyclic,
+			behavior: ItemNavigationBehavior.Static,
 		});
 
 		this._itemNavigationRecentColors = new ItemNavigation(this, {
 			getItemsCallback: () => this.recentColorsElements,
 			rowSize: this.rowSize,
-			behavior: ItemNavigationBehavior.Cyclic,
+			behavior: ItemNavigationBehavior.Static,
 		});
 
 		this._recentColors = [];
@@ -422,29 +423,21 @@ class ColorPalette extends UI5Element {
 			this._handleDefaultColorClick(e);
 		}
 
-		if (this._isNext(e)) {
+		if (isDown(e)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusFirstDisplayedColor();
-		} else if (isLeft(e)) {
-			e.preventDefault();
-			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusLastRecentColor(),
-				() => this._focusMoreColors(),
-				() => this._focusLastDisplayedColor(),
-			);
+			// DOWN: enter palette grid restoring column
+			this._focusPaletteGridWithColumnRestore(true);
 		} else if (isUp(e)) {
 			e.preventDefault();
 			e.stopPropagation();
+			// UP: navigate backward with column restore
 			this._focusFirstAvailable(
-				() => this._focusLastRecentColor(),
+				() => this._focusRecentColorsWithColumnRestore(false),
 				() => this._focusMoreColors(),
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
+				() => this._focusPaletteGridWithColumnRestore(false),
 			);
 		} else if (isEnd(e)) {
-			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 			if (this._shouldPreventHomeEnd(e)) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -456,31 +449,37 @@ class ColorPalette extends UI5Element {
 				() => this._focusMoreColors(),
 				() => this._focusLastDisplayedColor(),
 			);
+		} else if (isHome(e)) {
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			// Default Color is the first element, Home stays here
+			e.preventDefault();
+			e.stopPropagation();
 		}
 	}
 
 	_onMoreColorsKeyDown(e: KeyboardEvent) {
-		if (isLeft(e)) {
+		if (isUp(e)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusLastDisplayedColor();
-		} else if (isUp(e)) {
-			e.preventDefault();
-			e.stopPropagation();
+			// UP: navigate backward with column restore
 			this._focusFirstAvailable(
-				() => this._focusLastSwatchOfLastFullRow(),
+				() => this._focusPaletteGridWithColumnRestore(false),
 				() => this._focusLastDisplayedColor(),
 			);
-		} else if (this._isNext(e)) {
+		} else if (isDown(e)) {
 			e.preventDefault();
 			e.stopPropagation();
+			// DOWN: navigate forward with column restore
 			this._focusFirstAvailable(
-				() => this._focusFirstRecentColor(),
+				() => this._focusRecentColorsWithColumnRestore(true),
 				() => this._focusDefaultColor(),
-				() => this._focusFirstDisplayedColor(),
+				() => this._focusPaletteGridWithColumnRestore(true),
 			);
 		} else if (isHome(e)) {
-			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 			if (this._shouldPreventHomeEnd(e)) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -493,7 +492,6 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isEnd(e)) {
-			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 			if (this._shouldPreventHomeEnd(e)) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -507,7 +505,6 @@ class ColorPalette extends UI5Element {
 
 	_onColorContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
-		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(target, this.displayedColors);
 
 		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 		if (this._shouldPreventHomeEnd(e)) {
@@ -525,48 +522,100 @@ class ColorPalette extends UI5Element {
 			this.selectColor(target);
 		}
 
-		if (this._isPrevious(e) && this._isFirstSwatch(target, this.displayedColors)) {
+		// LEFT at first column → stay
+		if (isLeft(e) && this._isFirstSwatchInRow(target)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusDefaultColor(),
-				() => this._focusLastRecentColor(),
-				() => this._focusMoreColors(),
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
-			);
-		} else if ((isRight(e) && this._isLastSwatch(target, this.displayedColors))
-			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(target) || isLastSwatchInSingleRow))
-		) {
-			e.preventDefault();
-			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusMoreColors(),
-				() => this._focusFirstRecentColor(),
-				() => this._focusDefaultColor(),
-				() => this._focusFirstDisplayedColor(),
-			);
-		} else if (isHome(e) && this._isFirstSwatchInRow(target)) {
-			e.preventDefault();
-			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusDefaultColor(),
-				() => this._focusMoreColors(),
-				() => this._focusFirstDisplayedColor(),
-			);
-		} else if (isEnd(e) && this._isLastSwatchInRow(target)) {
-			e.preventDefault();
-			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusMoreColors(),
-				() => this._focusDefaultColor(),
-				() => this._focusLastDisplayedColor(),
-			);
-		} else if (isEnd(e) && this._isSwatchInLastRow(target)) {
-			e.preventDefault();
-			e.stopPropagation();
-			this._focusLastDisplayedColor();
+			return;
 		}
+
+		// RIGHT at last column or last item → stay
+		if (isRight(e) && this._isLastSwatchInRow(target)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		// UP on first row → escape to previous section (popover) or stay (standalone)
+		if (isUp(e) && this._isInFirstRow(target)) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (this.popupMode) {
+				this._storeColumn(target, this.displayedColors);
+				this._focusFirstAvailable(
+					() => this._focusDefaultColor(),
+					() => this._focusRecentColorsWithColumnRestore(false),
+					() => this._focusMoreColors(),
+				);
+			}
+			return;
+		}
+
+		// DOWN on last row (no item below) → escape to next section (popover) or stay (standalone)
+		if (isDown(e) && !this._hasItemBelow(target)) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (this.popupMode) {
+				this._storeColumn(target, this.displayedColors);
+				this._focusFirstAvailable(
+					() => this._focusMoreColors(),
+					() => this._focusRecentColorsWithColumnRestore(true),
+					() => this._focusDefaultColor(),
+					() => this._focusFirstDisplayedColor(),
+				);
+			}
+			return;
+		}
+
+		// Home enhanced multi-step behavior (popover only)
+		if (isHome(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			const index = this.displayedColors.indexOf(target);
+			if (!this._isFirstSwatchInRow(target)) {
+				// Step 1: go to first item in current row
+				const rowStart = Math.floor(index / this.rowSize) * this.rowSize;
+				this.focusColorElement(this.displayedColors[rowStart], this._itemNavigation);
+			} else if (index !== 0) {
+				// Step 2: in first column but not first item → go to first item in grid
+				this.focusColorElement(this.displayedColors[0], this._itemNavigation);
+			} else {
+				// Step 3: already on first item → escape backward
+				this._focusFirstAvailable(
+					() => this._focusDefaultColor(),
+					() => this._focusMoreColors(),
+					() => this._focusFirstDisplayedColor(),
+				);
+			}
+			return;
+		}
+
+		// End enhanced multi-step behavior (popover only)
+		if (isEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			const index = this.displayedColors.indexOf(target);
+			const lastIndex = this.displayedColors.length - 1;
+			if (!this._isLastSwatchInRow(target)) {
+				// Step 1: go to last item in current row
+				const rowEnd = Math.min(Math.floor(index / this.rowSize) * this.rowSize + this.rowSize - 1, lastIndex);
+				this.focusColorElement(this.displayedColors[rowEnd], this._itemNavigation);
+			} else if (index !== lastIndex) {
+				// Step 2: in last column but not last item → go to last item in grid
+				this.focusColorElement(this.displayedColors[lastIndex], this._itemNavigation);
+			} else {
+				// Step 3: already on last item → escape forward
+				this._focusFirstAvailable(
+					() => this._focusMoreColors(),
+					() => this._focusDefaultColor(),
+					() => this._focusLastDisplayedColor(),
+				);
+			}
+			return;
+		}
+
+		// For UP/DOWN not at borders and LEFT/RIGHT not at column boundaries,
+		// let ItemNavigation handle them normally.
 	}
 
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
@@ -583,27 +632,83 @@ class ColorPalette extends UI5Element {
 			this._currentlySelected = undefined;
 		}
 
-		if (this._isNext(e) && this._isLastSwatch(target, this.recentColorsElements)) {
+		// LEFT at first item → stay
+		if (isLeft(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusDefaultColor(),
-				() => this._focusMoreColors(),
-				() => this._focusFirstDisplayedColor(),
-			);
-		} else if (this._isPrevious(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
+			return;
+		}
+
+		// RIGHT at last item → stay
+		if (isRight(e) && this._isLastSwatch(target, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusFirstAvailable(
-				() => this._focusMoreColors(),
-				() => this._focusLastSwatchOfLastFullRow(),
-				() => this._focusLastDisplayedColor(),
-				() => this._focusDefaultColor(),
-			);
-		} else if (isEnd(e)) {
+			return;
+		}
+
+		// UP from any recent color → escape to previous section (popover) or stay (standalone)
+		if (isUp(e)) {
 			e.preventDefault();
 			e.stopPropagation();
-			this._focusLastRecentColor();
+			if (this.popupMode) {
+				this._storeColumn(target, this.recentColorsElements);
+				this._focusFirstAvailable(
+					() => this._focusMoreColors(),
+					() => this._focusPaletteGridWithColumnRestore(false),
+					() => this._focusDefaultColor(),
+				);
+			}
+			return;
+		}
+
+		// DOWN from any recent color → escape to next section (popover) or stay (standalone)
+		if (isDown(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (this.popupMode) {
+				this._storeColumn(target, this.recentColorsElements);
+				this._focusFirstAvailable(
+					() => this._focusDefaultColor(),
+					() => this._focusPaletteGridWithColumnRestore(true),
+				);
+			}
+			return;
+		}
+
+		// Home enhanced behavior (popover only)
+		if (isHome(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (this._isFirstSwatch(target, this.recentColorsElements)) {
+				// Already at first → escape backward
+				this._focusFirstAvailable(
+					() => this._focusMoreColors(),
+					() => this._focusPaletteGridWithColumnRestore(false),
+					() => this._focusDefaultColor(),
+				);
+			} else {
+				// Go to first recent color
+				this.focusColorElement(this.recentColorsElements[0], this._itemNavigationRecentColors);
+			}
+			return;
+		}
+
+		// End enhanced behavior (popover only)
+		if (isEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			const lastIdx = this.recentColorsElements.length - 1;
+			if (this._isLastSwatch(target, this.recentColorsElements)) {
+				// Already at last → escape forward
+				this._focusFirstAvailable(
+					() => this._focusDefaultColor(),
+					() => this._focusPaletteGridWithColumnRestore(true),
+				);
+			} else {
+				// Go to last recent color
+				this.focusColorElement(this.recentColorsElements[lastIdx], this._itemNavigationRecentColors);
+			}
+			return;
 		}
 	}
 
@@ -618,14 +723,6 @@ class ColorPalette extends UI5Element {
 
 		return this.displayedColors.includes(this._currentlySelected)
 			|| this.recentColorsElements.includes(this._currentlySelected);
-	}
-
-	_isPrevious(e: KeyboardEvent): boolean {
-		return isUp(e) || isLeft(e);
-	}
-
-	_isNext(e: KeyboardEvent): boolean {
-		return isDown(e) || isRight(e);
 	}
 
 	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
@@ -655,31 +752,6 @@ class ColorPalette extends UI5Element {
 	}
 
 	/**
-	 * Checks if the given color swatch is the last swatch of the last full row.
-	 *
-	 * Example 1: 12 colors with rowSize 5
-	 * Row 1: [0, 1, 2, 3, 4]  ← Complete row
-	 * Row 2: [5, 6, 7, 8, 9]  ← Complete row (last complete row)
-	 * Row 3: [10, 11]         ← Incomplete row
-	 *
-	 * @param target The color swatch to check.
-	 * @returns True if the swatch is the last of the last full row, false otherwise.
-	 */
-	_isLastSwatchOfLastFullRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target);
-		const rowSize = this.rowSize;
-		const total = this.displayedColors.length;
-		const lastCompleteRowEndIndex = this._getLastCompleteRowEndIndex(total, rowSize);
-		return index >= 0 && index === lastCompleteRowEndIndex;
-	}
-
-	_isSwatchInLastRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target);
-		const lastRowSwatchesCount = this.displayedColors.length % this.rowSize;
-		return index >= 0 && index >= this.displayedColors.length - lastRowSwatchesCount;
-	}
-
-	/**
 	 * Checks if HOME/END navigation should be prevented in embedded mode.
 	 * In embedded mode, HOME/END keys are blocked as they only work in popup mode per design.
 	 * @private
@@ -691,11 +763,35 @@ class ColorPalette extends UI5Element {
 	}
 
 	/**
-	 * Helper to check if all displayed colors fit in a single row
+	 * Checks if the target swatch is in the first row of the palette grid.
 	 * @private
 	 */
-	_isSingleRow(): boolean {
-		return this.displayedColors.length <= this.rowSize;
+	_isInFirstRow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		return index >= 0 && index < this.rowSize;
+	}
+
+	/**
+	 * Checks if there's an item directly below the target in the next row.
+	 * @private
+	 */
+	_hasItemBelow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		if (index < 0) {
+			return false;
+		}
+		return index + this.rowSize < this.displayedColors.length;
+	}
+
+	/**
+	 * Stores the column position when leaving a grid vertically for cross-section navigation.
+	 * @private
+	 */
+	_storeColumn(target: ColorPaletteItem, items: Array<IColorPaletteItem>) {
+		const index = items.indexOf(target);
+		if (index >= 0) {
+			this._iLastFocusedColumn = index % this.rowSize;
+		}
 	}
 
 	/**
@@ -768,32 +864,6 @@ class ColorPalette extends UI5Element {
 	}
 
 	/**
-	 * Helper to focus last swatch of last full row if available
-	 * @private
-	 */
-	_focusLastSwatchOfLastFullRow(): boolean {
-		const rowSize = this.rowSize;
-		const total = this.displayedColors.length;
-		const lastCompleteRowEndIndex = this._getLastCompleteRowEndIndex(total, rowSize);
-
-		// Return false if there are no full rows (less than one complete row)
-		if (lastCompleteRowEndIndex < 0 || !this.displayedColors[lastCompleteRowEndIndex]) {
-			return false;
-		}
-
-		this.focusColorElement(this.displayedColors[lastCompleteRowEndIndex], this._itemNavigation);
-		return true;
-	}
-
-	/**
-	 * Returns the index of the last swatch in the last complete row.
-	 * @private
-	 */
-	_getLastCompleteRowEndIndex(total: number, rowSize: number): number {
-		return Math.floor(total / rowSize) * rowSize - 1;
-	}
-
-	/**
 	 * Helper to focus first recent color if available
 	 * @private
 	 */
@@ -815,6 +885,71 @@ class ColorPalette extends UI5Element {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Focuses a palette grid item using column memory.
+	 * @param fromTop true if entering from the top (first row), false for bottom (last row)
+	 * @private
+	 */
+	_focusPaletteGridWithColumnRestore(fromTop: boolean): boolean {
+		if (!this.displayedColors.length) {
+			return false;
+		}
+		const rowSize = this.rowSize;
+		const startRow = fromTop ? 0 : Math.floor((this.displayedColors.length - 1) / rowSize);
+		let targetIndex = startRow * rowSize + this._iLastFocusedColumn;
+		if (targetIndex >= this.displayedColors.length) {
+			if (!fromTop) {
+				// Target column doesn't exist on the last (partial) row.
+				// Search upward for a row that has the target column.
+				for (let row = startRow - 1; row >= 0; row--) {
+					const idx = row * rowSize + this._iLastFocusedColumn;
+					if (idx < this.displayedColors.length) {
+						targetIndex = idx;
+						break;
+					}
+				}
+			}
+			// If still out of bounds, fall back to the last item.
+			if (targetIndex >= this.displayedColors.length) {
+				targetIndex = this.displayedColors.length - 1;
+			}
+		}
+		this.focusColorElement(this.displayedColors[targetIndex], this._itemNavigation);
+		return true;
+	}
+
+	/**
+	 * Focuses the first item of the first or last row of the palette grid (column 0, no column restore).
+	 * @param fromTop true for first row, false for last row
+	 * @private
+	 */
+	_focusPaletteGridRowStart(fromTop: boolean): boolean {
+		if (!this.displayedColors.length) {
+			return false;
+		}
+		const rowSize = this.rowSize;
+		const targetIndex = fromTop ? 0 : Math.floor((this.displayedColors.length - 1) / rowSize) * rowSize;
+		this.focusColorElement(this.displayedColors[targetIndex], this._itemNavigation);
+		return true;
+	}
+
+	/**
+	 * Focuses a recent colors grid item using column memory.
+	 * @param fromTop true if entering from the top, false for bottom
+	 * @private
+	 */
+	_focusRecentColorsWithColumnRestore(fromTop: boolean): boolean {
+		if (!this.hasRecentColors || !this.recentColorsElements.length) {
+			return false;
+		}
+		let targetIndex = this._iLastFocusedColumn;
+		if (targetIndex >= this.recentColorsElements.length) {
+			targetIndex = this.recentColorsElements.length - 1;
+		}
+		this.focusColorElement(this.recentColorsElements[targetIndex], this._itemNavigationRecentColors);
+		return true;
 	}
 
 	focusColorElement(element: ColorPaletteNavigationItem, itemNavigation: ItemNavigation) {
