@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="./styles/RadioButton.css">
 </head>
 
-<body class="radiobutton1auto sapUiSizeCompact">
+<body class="radiobutton1auto">
 
 	<ui5-radio-button name="simple" text="Option A"></ui5-radio-button>
 	<ui5-radio-button checked name="simple" text="Option B"></ui5-radio-button>
@@ -18,10 +18,7 @@
 	<div aria-labelledby="radioGroupTitle1" role="radiogroup" class="radio-section">
 		<ui5-title id="radioGroupTitle1">Group1 - None pre-selection</ui5-title>
 		<ui5-radio-button id="testRbtn" text="N/A" disabled name="test"></ui5-radio-button>
-		<ui5-radio-button
-			id="testRbtn1"
-			text="Male"
-			name="test"></ui5-radio-button>
+		<ui5-radio-button id="testRbtn1" text="Male" name="test"></ui5-radio-button>
 		<ui5-radio-button id="testRbtn2" text="Female" name="test"></ui5-radio-button>
 	</div>
 
@@ -175,6 +172,15 @@
 		<ui5-radio-button id="customRb1" checked text="Inner ring on hover"></ui5-radio-button>
 		<ui5-radio-button value-state="Negative" text="Outer ring with Negative State"></ui5-radio-button>
 		<ui5-radio-button value-state="Positive" text="Outer ring with Positive State"></ui5-radio-button>
+	</div>
+
+	<ui5-title level="H2">Custom font and focus outline</ui5-title>
+	<div>
+		<ui5-radio-button class="customizedRB" text="Item 1"></ui5-radio-button>
+		<br>
+		<ui5-radio-button class="customizedRB" text="Item 2"></ui5-radio-button>
+		<br>
+		<ui5-radio-button class="customizedRB" text="Item 3"></ui5-radio-button>
 	</div>
 
 	<script>
