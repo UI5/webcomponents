@@ -91,7 +91,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 *
 	 * @default false
 	 * @public
-	 * @since 2.21.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
 	showTwoMonths = false;

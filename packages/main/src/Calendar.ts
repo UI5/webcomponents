@@ -291,7 +291,7 @@ class Calendar extends CalendarPart {
 	 * Defines whether the component displays two months side by side in the picker popup.
 	 * @default false
 	 * @private
-	 * @since 2.21.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
 	_showTwoMonths = false;
