@@ -1,5 +1,6 @@
-import { customElement, slotStrict as slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import MenuItem, { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuItemGroupCheckMode from "@ui5/webcomponents/dist/types/MenuItemGroupCheckMode.js";
 
 import UserMenuItemTemplate from "./UserMenuItemTemplate.js";
 
@@ -44,8 +45,38 @@ class UserMenuItem extends MenuItem {
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
 	declare items: DefaultSlot<UserMenuItem>;
 
+	/**
+	 * When set, a second line appears below the menu item text
+	 * showing the text of the currently selected (checked) sub-item.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showSelectionText = false;
+
 	get _menuItems() {
 		return this.items.filter(isInstanceOfMenuItem);
+	}
+
+	/**
+	 * Returns the text of the currently checked sub-item.
+	 * Only returns text for single-select groups.
+	 */
+	get _selectedSubItemText(): string {
+		if (!this.showSelectionText) {
+			return "";
+		}
+
+		const singleSelectGroup = this._menuItemGroups.find(
+			g => g.checkMode === MenuItemGroupCheckMode.Single,
+		);
+		if (!singleSelectGroup) {
+			return "";
+		}
+
+		const checkedItem = singleSelectGroup._menuItems.find(item => item.checked);
+		return checkedItem?.text || "";
 	}
 }
 

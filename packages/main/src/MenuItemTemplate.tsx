@@ -11,13 +11,33 @@ import Icon from "./Icon.js";
 import ListItemTemplate from "./ListItemTemplate.js";
 import type { ListItemHooks } from "./ListItemTemplate.js";
 
+export type MenuItemHooks = {
+	menuItemTextContent: (this: any) => JSX.Element;
+}
+
+const predefinedMenuItemHooks: MenuItemHooks = {
+	menuItemTextContent,
+};
+
 const predefinedHooks: Partial<ListItemHooks> = {
 	listItemContent,
 	iconBegin,
 };
 
-export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListItemHooks>) {
+export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListItemHooks>, menuItemHooks?: Partial<MenuItemHooks>) {
 	const currentHooks = { ...predefinedHooks, ...hooks };
+	const currentMenuItemHooks = { ...predefinedMenuItemHooks, ...menuItemHooks };
+
+	if (!hooks?.listItemContent) {
+		currentHooks.listItemContent = function(this: MenuItem) {
+			return (<>
+				{currentMenuItemHooks.menuItemTextContent.call(this)}
+
+				{rightContent.call(this)}
+				{checkmarkContent.call(this)}
+			</>);
+		};
+	}
 
 	return <>
 		{ListItemTemplate.call(this, currentHooks)}
@@ -28,11 +48,15 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListIte
 
 function listItemContent(this: MenuItem) {
 	return (<>
-		{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
+		{menuItemTextContent.call(this)}
 
 		{rightContent.call(this)}
 		{checkmarkContent.call(this)}
 	</>);
+}
+
+function menuItemTextContent(this: MenuItem) {
+	return <>{this.text && <div class="ui5-menu-item-text">{this.text}</div>}</>;
 }
 
 function checkmarkContent(this: MenuItem) {
