@@ -283,20 +283,6 @@ class MenuItem extends ListItem implements IMenuItem {
 	_checkMode: `${MenuItemGroupCheckMode}` = "None";
 
 	/**
-	 * Defines the position of the item within its group.
-	 * @private
-	 */
-	@property({ type: Number, noAttribute: true })
-	_posinset?: number;
-
-	/**
-	 * Defines the total number of items in the group.
-	 * @private
-	 */
-	@property({ type: Number, noAttribute: true })
-	_setsize?: number;
-
-	/**
 	 * Defines the items of this component.
 	 *
 	 * **Note:** The slot can hold menu item and menu separator items.
@@ -498,19 +484,10 @@ class MenuItem extends ListItem implements IMenuItem {
 			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
 			ariaExpanded: this.hasSubmenu ? this.isSubMenuOpen : undefined,
 			ariaHidden: !!this.additionalText && !!this.accessibilityAttributes.ariaKeyShortcuts ? true : undefined,
-			ariaChecked: this._checkMode !== MenuItemGroupCheckMode.None ? this.checked : undefined,
+			ariaChecked: this._markChecked ? true : undefined,
 		};
 
-		const result = { ...super._accInfo, ...accInfoSettings };
-
-		if (this._posinset !== undefined) {
-			result.posinset = this._posinset;
-		}
-		if (this._setsize !== undefined) {
-			result.setsize = this._setsize;
-		}
-
-		return result;
+		return { ...super._accInfo, ...accInfoSettings };
 	}
 
 	get _popover() {

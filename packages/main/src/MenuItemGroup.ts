@@ -108,11 +108,8 @@ class MenuItemGroup extends UI5Element implements IMenuItem {
 	 * @private
 	 */
 	_updateItemsCheckMode() {
-		const menuItems = this._menuItems;
-		menuItems.forEach((item: MenuItem, index: number) => {
+		this._menuItems.forEach((item: MenuItem) => {
 			item._checkMode = this.checkMode;
-			item._posinset = index + 1;
-			item._setsize = menuItems.length;
 		});
 	}
 
