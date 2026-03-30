@@ -14,7 +14,7 @@ export default function UserMenuItemTemplate(this: UserMenuItem) {
 
 function userMenuItemTextContent(this: UserMenuItem) {
 	return (
-		<div class="ui5-user-menu-item-text-wrapper">
+		<div id={`${this._id}-menu-item-text`} class="ui5-user-menu-item-text-wrapper">
 			{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
 			{this._selectedSubItemText &&
 				<div class="ui5-user-menu-item-selection-text">{this._selectedSubItemText}</div>
