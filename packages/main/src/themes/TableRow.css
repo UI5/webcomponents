@@ -6,9 +6,30 @@
 	background: var(--_ui5_table_row_alternating_background);
 }
 
-:host([aria-selected=true]) {
+:host(:first-of-type) > [ui5-table-cell],
+:host(:first-of-type) > ::slotted([ui5-table-cell]) {
+	border-top: none;
+}
+
+:host(:last-of-type) {
+	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_TableFooterBorder);
+}
+
+:host([aria-selected="true"]) {
 	background: var(--sapList_SelectionBackgroundColor);
-	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_SelectionBorderColor);
+	box-shadow: inset 0 calc(-1 * var(--sapList_BorderWidth)) 0 0 var(--sapList_SelectionBorderColor);
+}
+
+:host(:not([_haspopin])) {
+	/* Use CSS Space Toggles until if() or container style queries are widely supported */
+	--_ui5_table_cell_border_merged: ;
+	--_ui5_table_cell_content_merged: ;
+}
+
+:host(:not([_haspopin]):active),
+:host(:not([_haspopin]):focus-within) {
+	/* Provide a valid CSS value to intentionally invalidate the TableCell variable-based rules and disable visual merging. */
+	--_ui5_table_cell_content_merged: initial;
 }
 
 @media (hover: hover) {
@@ -18,10 +39,14 @@
 	:host([_interactive][aria-selected=true]:hover) {
 		background: var(--sapList_Hover_SelectionBackground);
 	}
+	:host(:not([_haspopin]):hover) {
+		/* Provide a valid CSS value to intentionally invalidate the TableCell variable-based rules and disable visual merging. */
+		--_ui5_table_cell_content_merged: initial;
+	}
 }
 
 :host([_interactive][_active]),
-:host([_interactive][aria-selected=true][_active]) {
+:host([_interactive][aria-selected="true"][_active]) {
 	background: var(--sapList_Active_Background);
 }
 
@@ -34,35 +59,34 @@
 }
 
 #popin-cell {
+	padding-inline-start: var(--_ui5_first_table_cell_horizontal_padding);
 	align-content: initial;
 	flex-direction: column;
 	grid-column: 1 / -1;
+	border-top: none;
 }
 
 #navigated-cell {
-	position: sticky;
-	right: 0;
+ 	position: sticky;
+	inset-inline-end: 0;
+	z-index: 1;
+	background-color: inherit;
 	overflow: visible;
 	grid-row: span 2;
 	min-width: 0;
 	padding: 0;
-	background: inherit;
-}
-
-:dir(rtl)#navigated-cell {
-	left: 0;
 }
 
 :host([navigated]) #navigated {
 	position: absolute;
-	inset: 0;
+	inset: -1px 0px 0px 1px;
 	background: var(--sapList_SelectionBorderColor);
 }
 
 :host([tabindex]:focus) #navigated {
 	transform: translateX(calc(var(--_ui5_table_navigated_cell_width) * -1));
-	bottom: 2px;
-	top: 3px;
+	bottom: 3px;
+	top: 2px;
 }
 
 :host([tabindex]:focus) #navigated:dir(rtl) {
@@ -83,19 +107,13 @@
 
 #selection-cell ~ #popin-cell {
 	grid-column-start: 2;
+	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
 }
 
 #actions-cell {
-	display: flex;
-	align-items: center;
 	gap: var(--_ui5_table_row_actions_gap);
 }
 
 #actions-cell:has(+ #navigated-cell) {
-	right: var(--_ui5_table_navigated_cell_width);
-	overflow: auto;
-}
-
-:dir(rtl)#actions-cell:has(+ #navigated-cell) {
-	left: var(--_ui5_table_navigated_cell_width);
+	inset-inline-end: var(--_ui5_table_navigated_cell_width);
 }
