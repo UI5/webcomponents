@@ -193,9 +193,7 @@ class UserSettingsDialog extends UI5Element {
 	@property({ type: String })
 	_mediaRange?: any;
 
-
-	constructor() {
-		super();
+	onEnterDOM() {
 		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
 	}
 
