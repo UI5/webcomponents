@@ -43,10 +43,10 @@ div.customStyling{
 }
 
 .customizedRB::part(root) {
-	padding: 3px;
+	padding: 2px;
 }
 
 .customizedRB::part(root):focus::before,
 .customizedRB::part(root):focus-visible::before {
-	inset: -2px;
+	inset: 0;
 }

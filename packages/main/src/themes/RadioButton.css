@@ -49,8 +49,7 @@
 	content: "";
 	display: var(--_ui5_radio_button_focus_outline);
 	position: absolute;
-	inset-block: var(--_ui5_radio_button_focus_dist);
-	inset-inline: var(--_ui5_radio_button_focus_dist);
+	inset: var(--_ui5_radio_button_focus_dist);
 	pointer-events: none;
 	border: var(--_ui5_radio_button_border_width) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	border-radius: var(--_ui5_radio_button_border_radius);
