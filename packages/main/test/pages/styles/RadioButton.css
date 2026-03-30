@@ -38,12 +38,15 @@ div.customStyling{
     stroke: rgb(12 223 147);
 }
 
+.customizedRB {
+	font-size: 30px
+}
+
+.customizedRB::part(root) {
+	padding: 3px;
+}
+
 .customizedRB::part(root):focus::before,
 .customizedRB::part(root):focus-visible::before {
 	inset: -2px;
-}
-
-.customizedRB {
-	padding: 3px;
-	font-size: 30px
 }
