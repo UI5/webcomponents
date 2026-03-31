@@ -123,6 +123,16 @@ describe("Accessibility", () => {
 	});
 
 	// New tests for mode property
+	it("mode='Decorative' returns empty accessibilityInfo", () => {
+		cy.mount(
+			<Avatar mode="Decorative" initials="JD" id="decorative-avatar"></Avatar>
+		);
+		cy.get("#decorative-avatar").then(($el) => {
+			const avatar = $el[0] as any;
+			expect(avatar.accessibilityInfo).to.deep.equal({});
+		});
+	});
+
 	it("mode='Decorative' renders with role='presentation' and aria-hidden", () => {
 		cy.mount(
 			<Avatar 
