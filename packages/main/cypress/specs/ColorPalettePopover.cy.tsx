@@ -306,7 +306,7 @@ describe("Color Popover Palette events tests", () => {
 });
 
 describe("Color Popover Palette arrow keys navigation", () => {
-    it("should navigate with Arrow right", () => {
+    it("should navigate with Arrow Down from last swatch to More Colors", () => {
         cy.mount(
             <SimplePalettePopover showMoreColors={true} />
         );
@@ -322,13 +322,13 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .and("include", "red");
 
         cy.focused()
-            .realPress("ArrowRight");
+            .realPress("ArrowDown");
 
         cy.focused()
             .should("have.attr", "aria-label", "More Colors...");
 
         cy.focused()
-            .realPress("ArrowLeft");
+            .realPress("ArrowUp");
 
         cy.focused()
             .should("have.attr", "aria-label")
@@ -366,7 +366,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .should("have.attr", "_selected-color", "hotpink");
     });
 
-    it("should navigate with Arrow left", () => {
+    it("should navigate with Arrow Down and Arrow Up between Default Color and swatches", () => {
         cy.mount(
             <SimplePalettePopover showDefaultColor={true} />
         );
@@ -389,18 +389,15 @@ describe("Color Popover Palette arrow keys navigation", () => {
         cy.get("@defaultColorButton")
             .should("have.focus");
 
-        // Navigate right to first color item
+        // Navigate down to first color item
         cy.get("@defaultColorButton")
-            .realPress("ArrowRight");
+            .realPress("ArrowDown");
 
         cy.get("[ui5-color-palette-popover]")
             .ui5GetColorPaletteItem(0)
             .as("firstColorItem")
             .should("be.visible")
             .and("have.attr", "value", "cyan");
-
-        cy.get("@firstColorItem")
-            .should("have.attr", "value", "cyan");
 
         cy.get("@firstColorItem")
             .should("have.focus")
@@ -411,7 +408,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .and("include", "cyan");
 
         cy.focused()
-            .realPress("ArrowLeft");
+            .realPress("ArrowUp");
 
         cy.focused()
             .should("have.attr", "aria-label", "Default Color");
@@ -420,7 +417,7 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .should("have.focus");
     });
 
-    it("should cycle through colors horizontally with left/right arrows", () => {
+    it("should stay at boundary when navigating horizontally past edges", () => {
         cy.mount(
             <SimplePalettePopover />
         );
@@ -450,20 +447,33 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .should("have.attr", "aria-label")
             .and("include", "red");
 
+        // At last item, ArrowRight stays (no sections to escape to)
         cy.focused()
             .realPress("ArrowRight");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "cyan");
+            .and("include", "red");
 
+        // Navigate back to first
+        cy.focused()
+            .realPress("ArrowLeft");
+        cy.focused()
+            .realPress("ArrowLeft");
         cy.focused()
             .realPress("ArrowLeft");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "red");
+            .and("include", "cyan");
+
+        // At first item, ArrowLeft stays (no sections to escape to)
+        cy.focused()
+            .realPress("ArrowLeft");
+        cy.focused()
+            .should("have.attr", "aria-label")
+            .and("include", "cyan");
     });
 
-    it("should cycle through colors vertically with up/down arrows", () => {
+    it("should navigate vertically with up/down arrows", () => {
         cy.mount(
             <MultiRowPalettePopover />
         );
@@ -482,16 +492,10 @@ describe("Color Popover Palette arrow keys navigation", () => {
             .and("include", "yellow");
 
         cy.focused()
-            .realPress("ArrowDown");
-        cy.focused()
-            .should("have.attr", "aria-label")
-            .and("include", "orange");
-
-        cy.focused()
             .realPress("ArrowUp");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "yellow");
+            .and("include", "cyan");
     });
 
     it("should navigate to More Colors from colors grid", () => {
@@ -502,19 +506,24 @@ describe("Color Popover Palette arrow keys navigation", () => {
         cy.get("[ui5-color-palette-popover]")
             .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
+        // Navigate to last item in second (incomplete) row
+        cy.focused()
+            .realPress("End");
         cy.focused()
             .realPress("End");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "green");
+            .and("include", "purple");
 
+        // ArrowDown from last row goes to More Colors
         cy.focused()
             .realPress("ArrowDown");
         cy.focused()
             .should("have.attr", "aria-label", "More Colors...");
 
+        // ArrowUp from More Colors restores column back into grid
         cy.focused()
-            .realPress("ArrowLeft");
+            .realPress("ArrowUp");
         cy.focused()
             .should("have.attr", "aria-label")
             .and("include", "purple");
@@ -528,17 +537,26 @@ describe("Color Popover Palette arrow keys navigation", () => {
         cy.get("[ui5-color-palette-popover]")
             .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
+        // Navigate to second row item
         cy.focused()
-            .realPress("End");
+            .realPress("ArrowDown");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "green");
+            .and("include", "yellow");
 
+        // Navigate right within incomplete row
+        cy.focused()
+            .realPress("ArrowRight");
+        cy.focused()
+            .should("have.attr", "aria-label")
+            .and("include", "purple");
+
+        // ArrowUp from column 1 in last row goes to column 1 in first row
         cy.focused()
             .realPress("ArrowUp");
         cy.focused()
             .should("have.attr", "aria-label")
-            .and("include", "red");
+            .and("include", "orange");
     });
 });
 

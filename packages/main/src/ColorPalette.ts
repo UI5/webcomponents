@@ -433,7 +433,7 @@ class ColorPalette extends UI5Element {
 			e.stopPropagation();
 			// UP: navigate backward with column restore
 			this._focusFirstAvailable(
-				() => this._focusRecentColorsWithColumnRestore(false),
+				() => this._focusRecentColorsWithColumnRestore(),
 				() => this._focusMoreColors(),
 				() => this._focusPaletteGridWithColumnRestore(false),
 			);
@@ -475,7 +475,7 @@ class ColorPalette extends UI5Element {
 			e.stopPropagation();
 			// DOWN: navigate forward with column restore
 			this._focusFirstAvailable(
-				() => this._focusRecentColorsWithColumnRestore(true),
+				() => this._focusRecentColorsWithColumnRestore(),
 				() => this._focusDefaultColor(),
 				() => this._focusPaletteGridWithColumnRestore(true),
 			);
@@ -544,7 +544,7 @@ class ColorPalette extends UI5Element {
 				this._storeColumn(target, this.displayedColors);
 				this._focusFirstAvailable(
 					() => this._focusDefaultColor(),
-					() => this._focusRecentColorsWithColumnRestore(false),
+					() => this._focusRecentColorsWithColumnRestore(),
 					() => this._focusMoreColors(),
 				);
 			}
@@ -559,7 +559,7 @@ class ColorPalette extends UI5Element {
 				this._storeColumn(target, this.displayedColors);
 				this._focusFirstAvailable(
 					() => this._focusMoreColors(),
-					() => this._focusRecentColorsWithColumnRestore(true),
+					() => this._focusRecentColorsWithColumnRestore(),
 					() => this._focusDefaultColor(),
 					() => this._focusFirstDisplayedColor(),
 				);
@@ -611,7 +611,6 @@ class ColorPalette extends UI5Element {
 					() => this._focusLastDisplayedColor(),
 				);
 			}
-			return;
 		}
 
 		// For UP/DOWN not at borders and LEFT/RIGHT not at column boundaries,
@@ -708,7 +707,6 @@ class ColorPalette extends UI5Element {
 				// Go to last recent color
 				this.focusColorElement(this.recentColorsElements[lastIdx], this._itemNavigationRecentColors);
 			}
-			return;
 		}
 	}
 
@@ -937,10 +935,9 @@ class ColorPalette extends UI5Element {
 
 	/**
 	 * Focuses a recent colors grid item using column memory.
-	 * @param fromTop true if entering from the top, false for bottom
 	 * @private
 	 */
-	_focusRecentColorsWithColumnRestore(fromTop: boolean): boolean {
+	_focusRecentColorsWithColumnRestore(): boolean {
 		if (!this.hasRecentColors || !this.recentColorsElements.length) {
 			return false;
 		}
