@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import UserSettingsItem from "../../src/UserSettingsItem.js";
 import UserSettingsView from "../../src/UserSettingsView.js";
 import UserSettingsAccountView from "../../src/UserSettingsAccountView.js";
@@ -1338,5 +1339,159 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").shadow().find("[ui5-list]").as("list");
         cy.get("@list").should("exist");
         cy.get("@list").should("have.class", "user-settings-appearance-view-list");
+    });
+});
+
+describe("F6 Navigation", () => {
+    it("tests host has fastnavgroup-container attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]")
+            .should("have.attr", "data-sap-ui-fastnavgroup-container", "true");
+    });
+
+    it("tests side panel has fastnavgroup attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find(".ui5-user-settings-side")
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests footer toolbar has fastnavgroup attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-toolbar]")
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests lists have fastnavgroup false", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-list]")
+            .each($list => {
+                cy.wrap($list).should("have.attr", "data-sap-ui-fastnavgroup", "false");
+            });
+    });
+
+    it("tests selected item has fastnavgroup attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").find("[ui5-user-settings-item]")
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests non-selected items do not have fastnavgroup attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting 1" selected>
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Setting 2">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").find("[ui5-user-settings-item]").first()
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+        cy.get("[ui5-user-settings-dialog]").find("[ui5-user-settings-item]").last()
+            .should("not.have.attr", "data-sap-ui-fastnavgroup");
+    });
+
+    it("tests fastnavgroup moves to newly selected item", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting 1" selected>
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Setting 2">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-item]").first()
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+        cy.get("@settings").find("[ui5-user-settings-item]").last()
+            .should("not.have.attr", "data-sap-ui-fastnavgroup");
+
+        cy.get("@settings").shadow()
+            .find("[ui5-list]")
+            .find("[ui5-li]").last()
+            .click();
+
+        cy.get("@settings").find("[ui5-user-settings-item]").first()
+            .should("not.have.attr", "data-sap-ui-fastnavgroup");
+        cy.get("@settings").find("[ui5-user-settings-item]").last()
+            .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("F6 navigation", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting" selected>
+                <UserSettingsView>
+                    <Button id="content-btn">Content</Button>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+
+        // Initial focus: side panel (first list item)
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-li]").first()
+            .should("be.focused");
+
+        // F6: side → content
+        cy.realPress("F6");
+        cy.get("#content-btn").should("be.focused");
+
+        // F6: content → footer (Close button)
+        cy.realPress("F6");
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-toolbar-button]")
+            .should("be.focused");
+
+        // F6: footer → side (wraps, focus stays inside dialog)
+        cy.realPress("F6");
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-li]").first()
+            .should("be.focused");
+
+        // Shift+F6: side → footer (wraps backward)
+        cy.realPress(["Shift", "F6"]);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-toolbar-button]")
+            .should("be.focused");
+
+        // Shift+F6: footer → content
+        cy.realPress(["Shift", "F6"]);
+        cy.get("#content-btn").should("be.focused");
+
+        // Shift+F6: content → side (back to starting point)
+        cy.realPress(["Shift", "F6"]);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-li]").first()
+            .should("be.focused");
     });
 });
