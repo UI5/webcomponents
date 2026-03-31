@@ -4027,7 +4027,7 @@ describe("Keyboard Handling", () => {
 
 	it("Should select/deselect a token with CTRL+SPACE", () => {
 		cy.mount(
-			<MultiComboBox noValidation={true}>
+			<MultiComboBox style={{ width: "300px" }} noValidation={true}>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
 			</MultiComboBox>
