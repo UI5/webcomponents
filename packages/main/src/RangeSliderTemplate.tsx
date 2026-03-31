@@ -20,6 +20,7 @@ const startHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				disabled={slider.disabled}
+				active={slider.rangePressed}
 				handleType="start"
 				aria-orientation="horizontal"
 				part="handle"
@@ -55,6 +56,7 @@ const endHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				disabled={slider.disabled}
+				active={slider.rangePressed}
 				handleType="end"
 				aria-orientation="horizontal"
 				part="handle"

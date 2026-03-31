@@ -1,5 +1,10 @@
 @import "../base/SliderHandle-parameters.css";
 
 :host {
+	--ui5_slider_handle_outline: none;
 	--ui5_slider_handle_outline_offset: 3px;
+	--_ui5_slider_handle_box_sizing: border-box;
+	--_ui5_slider_handle_hover_border: var(--_ui5_slider_handle_border);
+	--_ui5_slider_handle_background_focus: var(--sapSlider_Active_RangeHandleBackground);
+	--_ui5_slider_handle_icon_display: inline-block;
 }

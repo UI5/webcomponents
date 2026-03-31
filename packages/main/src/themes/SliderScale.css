@@ -11,9 +11,6 @@
 	height: .25rem;
 	top: 50%;
 	transform: translateY(-50%);
-}
-
-.ui5-slider-scale-root {
 	box-sizing: var(--_ui5_slider_scale_root_box_sizing);
 	border-radius: 0.25rem;
 	width: 100%;

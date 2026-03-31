@@ -1,11 +1,13 @@
 :host {
 	--ui5_slider_scale_background: var(--sapSlider_Background);
 	--_ui5_slider_scale_border: var(--sapSlider_Background);
-
 	--_ui5_slider_scale_dots_distance: -1rem;
+	--_ui5_slider_scale_dots_display: none;
 	--_ui5_slider_scale_tickmark_height: .5rem;
-
-	/* Progress bar focus styling - used by RangeSlider for selected range */
+	--_ui5_slider_scale_root_box_sizing: border-box;
+	--_ui5_slider_scale_progress_top: 0;
+	--_ui5_slider_scale_progress_height: 100%;
+	--_ui5_slider_scale_progress_border: none;
 	--_ui5_range_slider_progress_focus_display: none;
 	--_ui5_range_slider_progress_focus_top: -1.063rem;
 	--_ui5_range_slider_progress_focus_left: -1.438rem;

@@ -33,7 +33,7 @@
 
 /* Range Slider specific styles */
 
-/* Handle background styling */
+/* Handle background styling - these work because we're styling the custom element host, not its shadow DOM */
 [ui5-slider-handle] {
 	background: var(--_ui5_range_slider_handle_background);
 }
@@ -42,29 +42,12 @@
 	background: var(--_ui5_range_slider_root_hover_handle_bg);
 }
 
-[ui5-slider-handle]:hover [slider-icon] {
-	display: var(--_ui5_range_slider_root_hover_handle_icon_display);
-}
-
 [ui5-slider-handle]:focus {
 	background: var(--_ui5_range_slider_handle_background_focus);
 }
 
-[ui5-slider-handle]:focus [slider-icon] {
-	display: none;
-}
-
-/* Range pressed state - when dragging the entire range */
 :host([range-pressed]) [ui5-slider-handle]:not(:focus) {
 	background: var(--_ui5_range_slider_handle_active_background);
 	border: var(--_ui5_slider_handle_focus_border);
 	box-shadow: none;
-}
-
-:host([range-pressed]) [ui5-slider-handle] [slider-icon] {
-	display: var(--_ui5_range_slider_active_handle_icon_display);
-}
-
-:host([range-pressed]) [ui5-slider-handle]:not(:focus) [slider-icon] {
-	display: var(--_ui5_range_slider_root_active_handle_icon_display);
 }
