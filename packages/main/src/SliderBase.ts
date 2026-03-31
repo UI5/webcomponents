@@ -296,12 +296,17 @@ abstract class SliderBase extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		const target = e.target as HTMLElement;
+		const isHandleFocused = target.hasAttribute("ui5-slider-handle");
 
-		if (isF2(e) && target.classList.contains("ui5-slider-handle")) {
-			(target.parentNode!.querySelector("[ui5-slider-tooltip]") as HTMLElement).focus();
+		if (isF2(e) && isHandleFocused) {
+			const handleType = target.getAttribute("handle-type");
+			const tooltipSelector = handleType === "start" ? "[data-sap-ui-start-value]" : handleType === "end" ? "[data-sap-ui-end-value]" : "[ui5-slider-tooltip]";
+			const tooltip = this.shadowRoot!.querySelector<HTMLElement>(tooltipSelector);
+			tooltip?.focus();
+			return;
 		}
 
-		if (this.disabled || this._effectiveStep === 0 || target.hasAttribute("ui5-slider-handle")) {
+		if (this.disabled || this._effectiveStep === 0) {
 			return;
 		}
 

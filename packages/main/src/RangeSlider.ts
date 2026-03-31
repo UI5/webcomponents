@@ -106,7 +106,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set startValue(value: number) {
 		this._startValue = value;
-		this.tooltipStartValue = value.toString();
+		this.tooltipStartValue = value?.toString() ?? "";
 	}
 
 	get startValue(): number {
@@ -123,7 +123,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set endValue(value: number) {
 		this._endValue = value;
-		this.tooltipEndValue = value.toString();
+		this.tooltipEndValue = value?.toString() ?? "";
 	}
 
 	get endValue(): number {
@@ -214,8 +214,13 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const target = e.target as HTMLElement;
 		const clickedInside = e.composedPath().includes(this);
 
-		if (!clickedInside && this._progressFocused) {
-			this._progressFocused = false;
+		if (!clickedInside) {
+			if (this._progressFocused) {
+				this._progressFocused = false;
+			}
+			if (this._tooltipsOpen) {
+				this._tooltipsOpen = false;
+			}
 		}
 	}
 
@@ -384,7 +389,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._endValueAtBeginningOfAction = this.endValue;
 
 		if (isEscape(e)) {
-			this.update(undefined, this._startValueInitial, this._endValueInitial);
+			if (this._startValueInitial !== undefined && this._endValueInitial !== undefined) {
+				this.update(undefined, this._startValueInitial, this._endValueInitial);
+			}
 			return;
 		}
 

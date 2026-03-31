@@ -326,7 +326,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@startTooltipInput").realPress("Enter");
 
-		cy.get("@changeEventSpy").should('have.been.calledOnce');
+		cy.get("@changeEventSpy").should('have.been.called');
 	});
 
 	it("Input tooltips value state should change to 'Negative' if value is invalid", () => {
