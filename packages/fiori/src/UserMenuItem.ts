@@ -45,20 +45,6 @@ class UserMenuItem extends MenuItem {
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
 	declare items: DefaultSlot<UserMenuItem>;
 
-	get _accessibleNameRef(): string {
-		return `${this._id}-menu-item-text`;
-	}
-
-	get _accInfo() {
-		const result = { ...super._accInfo };
-
-		if (this.hasSubmenu) {
-			result.ariaOwns = `${this._id}-menu-list`;
-		}
-
-		return result;
-	}
-
 	/**
 	 * When set, a second line appears below the menu item text
 	 * showing the text of the currently selected (checked) sub-item.
@@ -67,7 +53,7 @@ class UserMenuItem extends MenuItem {
 	 * @public
 	 */
 	@property({ type: Boolean })
-	showSelectionText = false;
+	showSelection = false;
 
 	get _menuItems() {
 		return this.items.filter(isInstanceOfMenuItem);
@@ -78,7 +64,7 @@ class UserMenuItem extends MenuItem {
 	 * Only returns text for single-select groups.
 	 */
 	get _selectedSubItemText(): string {
-		if (!this.showSelectionText) {
+		if (!this.showSelection) {
 			return "";
 		}
 
