@@ -87,7 +87,7 @@
 
 .ui5-tokenizer-more-text {
 	display: inline-block;
-	margin-inline-start: .25rem;
+	margin-inline-start: var(--_ui5_token_right_margin);
 	cursor: pointer;
 	white-space: nowrap;
 	font-size: var(--sapFontSize);

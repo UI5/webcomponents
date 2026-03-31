@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+
+### Features
+
+* **ui5-combobox:** add suggestion highlight of matching characters ([#13282](https://github.com/UI5/webcomponents/issues/13282)) ([05c1e08](https://github.com/UI5/webcomponents/commit/05c1e087cdf655f593101d7a549f5141cf9eb7cb))
+
+
+
+
+
 # [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
 
 

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+
+### Bug Fixes
+
+* **ui5-combo-box:** proper first select of an item with duplicate text ([#13302](https://github.com/UI5/webcomponents/issues/13302)) ([9434684](https://github.com/UI5/webcomponents/commit/9434684e475fadac7a30d96e1ab2c464274f9e29)), closes [#13292](https://github.com/UI5/webcomponents/issues/13292)
+* **ui5-li:** prevent item-click for disabled nested interactive controls ([#13275](https://github.com/UI5/webcomponents/issues/13275)) ([489891c](https://github.com/UI5/webcomponents/commit/489891cb448b4850eb095e4c3e158456a21cd334)), closes [#10976](https://github.com/UI5/webcomponents/issues/10976)
+* **ui5-select:** nvda announcement of the selected value ([#12774](https://github.com/UI5/webcomponents/issues/12774)) ([00bb8fe](https://github.com/UI5/webcomponents/commit/00bb8fe75e340be66aa4f7531d350ec7cde2efa4))
+
+
+### Features
+
+* **ui5-combobox:** add suggestion highlight of matching characters ([#13282](https://github.com/UI5/webcomponents/issues/13282)) ([05c1e08](https://github.com/UI5/webcomponents/commit/05c1e087cdf655f593101d7a549f5141cf9eb7cb))
+
+
+
+
+
 # [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
 
 
