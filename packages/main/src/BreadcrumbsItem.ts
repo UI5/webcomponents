@@ -3,8 +3,16 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import eventStrict from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import LinkDesign from "./types/LinkDesign.js";
+
+type BreadcrumbsItemClickEventDetail = {
+	altKey: boolean;
+	ctrlKey: boolean;
+	metaKey: boolean;
+	shiftKey: boolean;
+};
 
 /**
  * @class
@@ -19,7 +27,26 @@ import LinkDesign from "./types/LinkDesign.js";
  * @abstract
  */
 @customElement("ui5-breadcrumbs-item")
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event is also fired for the current page location item (the last item), which is not a link by design.
+ *
+ * @param {boolean} altKey Returns whether the "ALT" key was pressed when the event was triggered.
+ * @param {boolean} ctrlKey Returns whether the "CTRL" key was pressed when the event was triggered.
+ * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
+ * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
+ * @public
+ * @since 2.10.0
+ */
+@eventStrict("click", {
+	bubbles: true,
+	cancelable: true,
+})
 class BreadcrumbsItem extends UI5Element {
+	eventDetails!: {
+		"click": BreadcrumbsItemClickEventDetail,
+	}
 	/**
 	 * Defines the link href.
 	 *
@@ -87,3 +114,4 @@ class BreadcrumbsItem extends UI5Element {
 BreadcrumbsItem.define();
 
 export default BreadcrumbsItem;
+export type { BreadcrumbsItemClickEventDetail };

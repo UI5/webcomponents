@@ -1032,3 +1032,96 @@ describe("Breadcrumbs with item for current page", () => {
 			});
 	});
 });
+
+describe("BreadcrumbsItem click event", () => {
+	it("fires click event on item when a visible link is clicked", () => {
+		cy.mount(
+			<Breadcrumbs>
+				<BreadcrumbsItem id="item1" href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="item2" href="#">Link2</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find("ui5-link")
+			.first()
+			.realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+	});
+
+	it("fires click event on current page item (label) when activated", () => {
+		cy.mount(
+			<Breadcrumbs>
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="currentItem">Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#currentItem").then(($item) => {
+			$item[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-current-location span")
+			.realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+	});
+
+	it("prevents item-click on breadcrumbs when item click is cancelled", () => {
+		let itemClickFired = false;
+
+		cy.mount(
+			<Breadcrumbs onItemClick={() => { itemClickFired = true; }}>
+				<BreadcrumbsItem id="item1" href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("ui5-click", (e: Event) => { e.preventDefault(); });
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find("ui5-link")
+			.first()
+			.realClick();
+
+		cy.then(() => {
+			expect(itemClickFired).to.be.false;
+		});
+	});
+
+	it("prevents item-click on breadcrumbs when current page item click is cancelled", () => {
+		let itemClickFired = false;
+
+		cy.mount(
+			<Breadcrumbs onItemClick={() => { itemClickFired = true; }}>
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="currentItem">Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#currentItem").then(($item) => {
+			$item[0].addEventListener("ui5-click", (e: Event) => { e.preventDefault(); });
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-current-location span")
+			.realClick();
+
+		cy.then(() => {
+			expect(itemClickFired).to.be.false;
+		});
+	});
+});
