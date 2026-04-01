@@ -1049,7 +1049,7 @@ describe("BreadcrumbsItem click event", () => {
 
 		cy.get("[ui5-breadcrumbs]")
 			.shadow()
-			.find("ui5-link")
+			.find(".ui5-breadcrumbs-link-wrapper ui5-link")
 			.first()
 			.realClick();
 
@@ -1092,7 +1092,7 @@ describe("BreadcrumbsItem click event", () => {
 
 		cy.get("[ui5-breadcrumbs]")
 			.shadow()
-			.find("ui5-link")
+			.find(".ui5-breadcrumbs-link-wrapper ui5-link")
 			.first()
 			.realClick();
 
