@@ -7,6 +7,7 @@ import { getTheme } from "../../src/config/Theme.js";
 import { getAnimationMode } from "../../src/config/AnimationMode.js";
 import AnimationMode from "../../src/types/AnimationMode.js";
 import { getThemeRoot } from "../../src/config/ThemeRoot.js";
+import applyTheme from "../../src/theming/applyTheme.js";
 
 describe("Some settings can be set via SAP UI URL params", () => {
 	before(() => {
@@ -53,88 +54,409 @@ describe("Some settings can be set via SAP UI URL params", () => {
 });
 
 describe("Different themeRoot configurations", () => {
-	it("Allowed theme root", () => {
-		const searchParams = "sap-ui-theme=sap_horizon_hcb@https://example.com";
+	describe("Allowed theme root", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=sap_horizon_hcb@https://example.com";
 
-		// All allowed theme roots need to be described inside the meta tag.
-		cy.window()
-			.then($el => {
-				const metaTag = document.createElement("meta");
-				metaTag.name = "sap-allowed-theme-origins";
-				metaTag.content = "https://example.com";
+			// All allowed theme roots need to be described inside the meta tag.
+			cy.window()
+				.then($el => {
+					const metaTag = document.createElement("meta");
+					metaTag.name = "sap-allowed-theme-origins";
+					metaTag.content = "https://example.com";
 
-				$el.document.head.append(metaTag);
-			})
+					$el.document.head.append(metaTag);
+				});
 
-		cy.stub(internals, "search").callsFake(() => {
-			return searchParams;
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
 		});
 
-		cy.wrap({ resetConfiguration })
-			.invoke("resetConfiguration", true);
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
 
-		cy.wrap(internals)
-			.invoke("search")
-			.should("be.equal", searchParams);
+		after(() => {
+			cy.window()
+				.then($el => {
+					const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
+					metaTag?.remove();
+				});
+		});
 
-		cy.mount(<TestGeneric />);
+		it("should return raw themeRoot from URL parameter", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "https://example.com");
+		});
 
-		cy.wrap({ getThemeRoot })
-			.invoke("getThemeRoot")
-			.should("equal", "https://example.com/UI5/");
+		it("should extract theme without themeRoot part", () => {
+			cy.wrap({ getTheme })
+				.invoke("getTheme")
+				.should("equal", "sap_horizon_hcb");
+		});
 
-		// All allowed theme roots need to be described inside the meta tag.
-		cy.window()
-			.then($el => {
-				const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
+		it("should create link in DOM with validated URL", () => {
+			// Apply theme to trigger link creation
+			cy.wrap({ applyTheme, getTheme })
+				.invoke("getTheme")
+				.then(theme => {
+					return cy.wrap({ applyTheme }).invoke("applyTheme", theme);
+				});
 
-				metaTag?.remove();
-			})
+			cy.get("link[sap-ui-webcomponents-theme='sap_horizon_hcb']")
+				.should("exist")
+				.and("have.attr", "href")
+				.and("equal", "https://example.com/UI5/Base/baseLib/sap_horizon_hcb/css_variables.css");
+		});
 	});
 
-	it("Unallowed theme root", () => {
-		const searchParams = "sap-ui-theme=sap_horizon_hcb@https://another-example.com";
+	describe("Unallowed theme root", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=sap_horizon_hcb@https://another-example.com";
 
-		cy.stub(internals, "search").callsFake(() => {
-			return searchParams;
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
 		});
 
-		cy.wrap({ resetConfiguration })
-			.invoke("resetConfiguration", true);
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
 
-		cy.wrap(internals)
-			.invoke("search")
-			.should("be.equal", searchParams);
+		it("should return raw themeRoot even if not allowed", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "https://another-example.com");
+		});
 
-		cy.mount(<TestGeneric />);
-
-		cy.wrap({ getThemeRoot })
-			.invoke("getThemeRoot")
-			.should("equal", `${window.location.origin}/UI5/`);
+		it("should not create link in DOM due to validation failure", () => {
+			cy.get("link[sap-ui-webcomponents-theme='sap_horizon_hcb']")
+				.should("not.exist");
+		});
 	});
 
-	it("Relative theme root", () => {
-		const searchParams = "sap-ui-theme=sap_horizon_hcb@./test";
+	describe("Relative theme root", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=sap_horizon_hcb@./test";
 
-		cy.stub(internals, "search").callsFake(() => {
-			return searchParams;
+			cy.window()
+				.then($el => {
+					const metaTag = document.createElement("meta");
+					metaTag.name = "sap-allowed-theme-origins";
+					metaTag.content = "*";
+					$el.document.head.append(metaTag);
+				});
+
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
 		});
 
-		cy.wrap({ resetConfiguration })
-			.invoke("resetConfiguration", true);
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
 
-		cy.wrap(internals)
-			.invoke("search")
-			.should("be.equal", searchParams);
+		after(() => {
+			cy.window()
+				.then($el => {
+					const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
+					metaTag?.remove();
+				});
+		});
 
-		cy.mount(<TestGeneric />);
+		it("should return raw relative themeRoot", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "./test");
+		});
 
-		cy.wrap({ getThemeRoot })
-			.invoke("getThemeRoot")
-			.then(themeRoot => {
-				return themeRoot?.endsWith("/test/UI5/");
-			})
-			.should("be.true");
+		it("should create link with resolved URL", () => {
+			// Apply theme to trigger link creation
+			cy.wrap({ applyTheme, getTheme })
+				.invoke("getTheme")
+				.then(theme => {
+					return cy.wrap({ applyTheme }).invoke("applyTheme", theme);
+				});
+
+			cy.get("link[sap-ui-webcomponents-theme='sap_horizon_hcb']")
+				.should("exist")
+				.and("have.attr", "href")
+				.then(href => {
+					return href.endsWith("/test/UI5/Base/baseLib/sap_horizon_hcb/css_variables.css");
+				})
+				.should("be.true");
+		});
+	});
+
+	describe("Absolute path theme root", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=custom_theme@/absolute/path";
+
+			cy.window()
+				.then($el => {
+					const metaTag = document.createElement("meta");
+					metaTag.name = "sap-allowed-theme-origins";
+					metaTag.content = "*";
+					$el.document.head.append(metaTag);
+				});
+
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
+		});
+
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
+
+		after(() => {
+			cy.window()
+				.then($el => {
+					const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
+					metaTag?.remove();
+				});
+		});
+
+		it("should return raw absolute path", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "/absolute/path");
+		});
+
+		it("should create link with resolved URL", () => {
+			// Apply theme to trigger link creation
+			cy.wrap({ applyTheme, getTheme })
+				.invoke("getTheme")
+				.then(theme => {
+					return cy.wrap({ applyTheme }).invoke("applyTheme", theme);
+				});
+
+			cy.get("link[sap-ui-webcomponents-theme='custom_theme']")
+				.should("exist")
+				.and("have.attr", "href")
+				.then(href => {
+					return href.endsWith("/absolute/path/UI5/Base/baseLib/custom_theme/css_variables.css");
+				})
+				.should("be.true");
+		});
+	});
+
+	describe("ThemeRoot with trailing slash", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=custom_theme@https://cdn.example.com/themes/";
+
+			cy.window()
+				.then($el => {
+					const metaTag = document.createElement("meta");
+					metaTag.name = "sap-allowed-theme-origins";
+					metaTag.content = "https://cdn.example.com";
+					$el.document.head.append(metaTag);
+				});
+
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
+		});
+
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
+
+		after(() => {
+			cy.window()
+				.then($el => {
+					const metaTag = $el.document.head.querySelector("[name='sap-allowed-theme-origins']");
+					metaTag?.remove();
+				});
+		});
+
+		it("should return raw themeRoot with trailing slash", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "https://cdn.example.com/themes/");
+		});
+
+		it("should create link normalizing trailing slash", () => {
+			// Apply theme to trigger link creation
+			cy.wrap({ applyTheme, getTheme })
+				.invoke("getTheme")
+				.then(theme => {
+					return cy.wrap({ applyTheme }).invoke("applyTheme", theme);
+				});
+
+			cy.get("link[sap-ui-webcomponents-theme='custom_theme']")
+				.should("exist")
+				.and("have.attr", "href")
+				.and("equal", "https://cdn.example.com/themes/UI5/Base/baseLib/custom_theme/css_variables.css");
+		});
+	});
+
+	describe("Invalid URL format", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=custom_theme@not-a-valid-url";
+
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
+		});
+
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
+
+		it("should return raw invalid URL value", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "not-a-valid-url");
+		});
+
+		it("should not create link due to invalid URL", () => {
+			cy.get("link[sap-ui-webcomponents-theme='custom_theme']")
+				.should("not.exist");
+		});
+	});
+
+	describe("Legacy meta tag name support", () => {
+		before(() => {
+			const searchParams = "sap-ui-theme=custom_theme@https://legacy.example.com";
+
+			cy.window()
+				.then($el => {
+					const metaTag = document.createElement("meta");
+					metaTag.name = "sap-allowedThemeOrigins"; // Old camelCase format
+					metaTag.content = "https://legacy.example.com";
+					$el.document.head.append(metaTag);
+				});
+
+			cy.stub(internals, "search").callsFake(() => {
+				return searchParams;
+			});
+
+			cy.wrap({ resetConfiguration })
+				.invoke("resetConfiguration", true);
+
+			cy.wrap(internals)
+				.invoke("search")
+				.should("be.equal", searchParams);
+
+			cy.mount(<TestGeneric />);
+		});
+
+		afterEach(() => {
+			cy.window()
+				.then($el => {
+					const link = $el.document.head.querySelector("link[sap-ui-webcomponents-theme]");
+					link?.remove();
+				});
+		});
+
+		after(() => {
+			cy.window()
+				.then($el => {
+					const metaTag = $el.document.head.querySelector("[name='sap-allowedThemeOrigins']");
+					metaTag?.remove();
+				});
+		});
+
+		it("should return raw themeRoot", () => {
+			cy.wrap({ getThemeRoot })
+				.invoke("getThemeRoot")
+				.should("equal", "https://legacy.example.com");
+		});
+
+		it("should support legacy sap-allowedThemeOrigins meta tag", () => {
+			// Apply theme to trigger link creation
+			cy.wrap({ applyTheme, getTheme })
+				.invoke("getTheme")
+				.then(theme => {
+					return cy.wrap({ applyTheme }).invoke("applyTheme", theme);
+				});
+
+			cy.get("link[sap-ui-webcomponents-theme='custom_theme']")
+				.should("exist")
+				.and("have.attr", "href")
+				.and("equal", "https://legacy.example.com/UI5/Base/baseLib/custom_theme/css_variables.css");
+		});
 	});
 });
 
