@@ -9,7 +9,7 @@
 /* Banner Canvas */
 .ui5-banner-root {
 	box-sizing: border-box;
-	min-height: 4.75rem;
+	min-height: 5.75rem;
 	max-height: 24rem;
 	border-radius: var(--_ui5_banner_border_radius);
 	background-color: var(--_ui5_banner_background);
@@ -31,6 +31,9 @@
 	gap: 1rem;
 	box-sizing: border-box;
 	padding: 1.5rem;
+	color: var(--_ui5_banner_text_color);
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
 }
 
 /* Header (Salutation + Date) */
@@ -54,7 +57,6 @@
 	align-items: center;
 	gap: 0.5rem;
 	flex-shrink: 0;
-	/* Override button color tokens so Transparent-design buttons are readable on the banner background */
 	--sapButton_Lite_TextColor: var(--_ui5_banner_text_color);
 	--sapButton_Lite_Hover_TextColor: var(--_ui5_banner_text_color);
 	--sapButton_Lite_Active_TextColor: var(--_ui5_banner_text_color);
@@ -70,8 +72,8 @@
 
 .ui5-banner-salutation {
 	font-family: var(--sapFontHeaderFamily);
-	font-size: var(--sapFontHeader2Size);
-	font-weight: bold;
+	font-size: var(--sapFontHeader3Size);
+	text-align: left;
 	color: var(--_ui5_banner_text_color);
 	line-height: 1.4;
 }
@@ -79,6 +81,7 @@
 .ui5-banner-date {
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
+	text-align: left;
 	color: var(--_ui5_banner_text_color);
 	line-height: 1.4;
 }
@@ -116,30 +119,39 @@
 	flex: 1 1 calc(33.33% - 0.5rem);
 }
 
-/*** Responsive Paddings ***/
+/* L → XS (≤1024px): stack header items top-to-bottom in spec order */
+@container (max-width: 1024px) {
+	.ui5-banner-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 
-/* M Size (600px - 1439px) */
-@container (min-width: 600px) and (max-width: 1439px) {
-	.ui5-banner-content {
-		padding: 1.5rem 2rem;
+	/* Explicit order: 1-date, 2-salutation (inside header-text), 3-header buttons */
+	.ui5-banner-header-text {
+		order: 1;
+		width: 100%;
+	}
+
+	.ui5-banner-header-actions {
+		order: 2;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		width: 100%;
+	}
+
+	/* D – Salutation: max 3 lines, truncate with ellipsis */
+	.ui5-banner-salutation {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 }
 
-/* XL / MAX Size (1440px - 2559px) */
-@container (min-width: 1440px) and (max-width: 2559px) {
-	.ui5-banner-content {
-		padding: 1.5rem 3rem;
-	}
-}
-
-/* 4K Size (2560px+) */
-@container (min-width: 2560px) {
-	.ui5-banner-content {
-		padding: 1.5rem 4rem;
-	}
-}
-
-/* Stack blocks vertically on small screens */
+/* XS (≤599px): stack content blocks top-to-bottom: start slot, then end slot */
 @container (max-width: 599px) {
 	.ui5-banner-blocks {
 		flex-direction: column;
@@ -149,5 +161,14 @@
 	.ui5-banner-layout-TwoThirds .ui5-banner-block-start,
 	.ui5-banner-layout-TwoThirds .ui5-banner-block-end {
 		flex: 1 1 100%;
+	}
+
+	/* Explicit order: 4-start slot, 5-end slot */
+	.ui5-banner-block-start {
+		order: 1;
+	}
+
+	.ui5-banner-block-end {
+		order: 2;
 	}
 }
