@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Features
+
+* update sap/icons to v5.12 & 4.24 ([#13319](https://github.com/UI5/webcomponents/issues/13319)) ([0b16434](https://github.com/UI5/webcomponents/commit/0b164348069b96f5464eaea3425a4876097dc44d))
+
+
+
+
+
 # [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
 
 
