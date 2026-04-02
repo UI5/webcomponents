@@ -1,7 +1,6 @@
 import merge from "./thirdparty/merge.js";
 import { getFeature } from "./FeaturesRegistry.js";
 import { DEFAULT_THEME } from "./generated/AssetParameters.js";
-import validateThemeRoot from "./validateThemeRoot.js";
 import type OpenUI5Support from "./features/OpenUI5Support.js";
 import type { FormatSettings } from "./config/FormatSettings.js";
 import AnimationMode from "./types/AnimationMode.js";
@@ -56,16 +55,6 @@ const getTheme = () => {
 
 const getThemeRoot = () => {
 	initConfiguration();
-
-	if (initialConfig.themeRoot === undefined) {
-		return;
-	}
-
-	if (!validateThemeRoot(initialConfig.themeRoot)) {
-		console.warn(`The ${initialConfig.themeRoot} is not valid. Check the allowed origins as suggested in the "setThemeRoot" description.`); // eslint-disable-line
-		return;
-	}
-
 	return initialConfig.themeRoot;
 };
 
@@ -175,7 +164,7 @@ const parseURLParameters = () => {
 const normalizeThemeRootParamValue = (value: string) => {
 	const themeRoot = value.split("@")[1];
 
-	return validateThemeRoot(themeRoot);
+	return themeRoot;
 };
 
 const normalizeThemeParamValue = (param: string, value: string) => {
