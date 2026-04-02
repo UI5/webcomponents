@@ -284,6 +284,10 @@ class DynamicPage extends UI5Element {
 		return this.hasHeading ? this._headerLabel : undefined;
 	}
 
+	get _hidePinButton() {
+		return this.hidePinButton || isPhone();
+	}
+
 	/**
 	 * Defines if the header is snapped.
 	 *
