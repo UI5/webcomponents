@@ -415,6 +415,12 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onDefaultColorKeyDown(e: KeyboardEvent) {
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
 		if (isTabNext(e) && this.popupMode) {
 			this._handleDefaultColorClick(e);
 		}
@@ -438,11 +444,6 @@ class ColorPalette extends UI5Element {
 				() => this._focusPaletteGridWithColumnRestore(false),
 			);
 		} else if (isEnd(e)) {
-			if (this._shouldPreventHomeEnd(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-				return;
-			}
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -450,11 +451,6 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isHome(e)) {
-			if (this._shouldPreventHomeEnd(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-				return;
-			}
 			// Default Color is the first element, Home stays here
 			e.preventDefault();
 			e.stopPropagation();
@@ -462,6 +458,12 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onMoreColorsKeyDown(e: KeyboardEvent) {
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
 		if (isUp(e)) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -480,11 +482,6 @@ class ColorPalette extends UI5Element {
 				() => this._focusPaletteGridWithColumnRestore(true),
 			);
 		} else if (isHome(e)) {
-			if (this._shouldPreventHomeEnd(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-				return;
-			}
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -492,11 +489,6 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isEnd(e)) {
-			if (this._shouldPreventHomeEnd(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-				return;
-			}
 			// More Colors button is typically the last element, so END key stays here
 			e.preventDefault();
 			e.stopPropagation();
@@ -522,15 +514,10 @@ class ColorPalette extends UI5Element {
 			this.selectColor(target);
 		}
 
-		// LEFT at first column → stay
-		if (isLeft(e) && this._isFirstSwatchInRow(target)) {
-			e.preventDefault();
-			e.stopPropagation();
-			return;
-		}
+		const isAtLeftBorder = isLeft(e) && this._isFirstSwatchInRow(target);
+		const isAtRightBorder = isRight(e) && this._isLastSwatchInRow(target);
 
-		// RIGHT at last column or last item → stay
-		if (isRight(e) && this._isLastSwatchInRow(target)) {
+		if (isAtLeftBorder || isAtRightBorder) {
 			e.preventDefault();
 			e.stopPropagation();
 			return;
@@ -572,10 +559,10 @@ class ColorPalette extends UI5Element {
 			e.preventDefault();
 			e.stopPropagation();
 			const index = this.displayedColors.indexOf(target);
-			if (!this._isFirstSwatchInRow(target)) {
+			const colOffset = index % this.rowSize;
+			if (colOffset !== 0) {
 				// Step 1: go to first item in current row
-				const rowStart = Math.floor(index / this.rowSize) * this.rowSize;
-				this.focusColorElement(this.displayedColors[rowStart], this._itemNavigation);
+				this.focusColorElement(this.displayedColors[index - colOffset], this._itemNavigation);
 			} else if (index !== 0) {
 				// Step 2: in first column but not first item → go to first item in grid
 				this.focusColorElement(this.displayedColors[0], this._itemNavigation);
@@ -584,7 +571,6 @@ class ColorPalette extends UI5Element {
 				this._focusFirstAvailable(
 					() => this._focusDefaultColor(),
 					() => this._focusMoreColors(),
-					() => this._focusFirstDisplayedColor(),
 				);
 			}
 			return;
@@ -596,9 +582,9 @@ class ColorPalette extends UI5Element {
 			e.stopPropagation();
 			const index = this.displayedColors.indexOf(target);
 			const lastIndex = this.displayedColors.length - 1;
-			if (!this._isLastSwatchInRow(target)) {
+			const rowEnd = Math.min(index - (index % this.rowSize) + this.rowSize - 1, lastIndex);
+			if (index !== rowEnd) {
 				// Step 1: go to last item in current row
-				const rowEnd = Math.min(Math.floor(index / this.rowSize) * this.rowSize + this.rowSize - 1, lastIndex);
 				this.focusColorElement(this.displayedColors[rowEnd], this._itemNavigation);
 			} else if (index !== lastIndex) {
 				// Step 2: in last column but not last item → go to last item in grid
@@ -608,13 +594,9 @@ class ColorPalette extends UI5Element {
 				this._focusFirstAvailable(
 					() => this._focusMoreColors(),
 					() => this._focusDefaultColor(),
-					() => this._focusLastDisplayedColor(),
 				);
 			}
 		}
-
-		// For UP/DOWN not at borders and LEFT/RIGHT not at column boundaries,
-		// let ItemNavigation handle them normally.
 	}
 
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
@@ -631,15 +613,10 @@ class ColorPalette extends UI5Element {
 			this._currentlySelected = undefined;
 		}
 
-		// LEFT at first item → stay
-		if (isLeft(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
-			e.preventDefault();
-			e.stopPropagation();
-			return;
-		}
+		const isAtLeftBorder = isLeft(e) && this._isFirstSwatch(target, this.recentColorsElements);
+		const isAtRightBorder = isRight(e) && this._isLastSwatch(target, this.recentColorsElements);
 
-		// RIGHT at last item → stay
-		if (isRight(e) && this._isLastSwatch(target, this.recentColorsElements)) {
+		if (isAtLeftBorder || isAtRightBorder) {
 			e.preventDefault();
 			e.stopPropagation();
 			return;
@@ -696,7 +673,6 @@ class ColorPalette extends UI5Element {
 		if (isEnd(e)) {
 			e.preventDefault();
 			e.stopPropagation();
-			const lastIdx = this.recentColorsElements.length - 1;
 			if (this._isLastSwatch(target, this.recentColorsElements)) {
 				// Already at last → escape forward
 				this._focusFirstAvailable(
@@ -705,6 +681,7 @@ class ColorPalette extends UI5Element {
 				);
 			} else {
 				// Go to last recent color
+				const lastIdx = this.recentColorsElements.length - 1;
 				this.focusColorElement(this.recentColorsElements[lastIdx], this._itemNavigationRecentColors);
 			}
 		}
@@ -862,30 +839,6 @@ class ColorPalette extends UI5Element {
 	}
 
 	/**
-	 * Helper to focus first recent color if available
-	 * @private
-	 */
-	_focusFirstRecentColor(): boolean {
-		if (this.hasRecentColors && this.recentColorsElements.length) {
-			this.focusColorElement(this.recentColorsElements[0], this._itemNavigationRecentColors);
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Helper to focus last recent color if available
-	 * @private
-	 */
-	_focusLastRecentColor(): boolean {
-		if (this.hasRecentColors && this.recentColorsElements.length) {
-			this.focusColorElement(this.recentColorsElements[this.recentColorsElements.length - 1], this._itemNavigationRecentColors);
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Focuses a palette grid item using column memory.
 	 * @param fromTop true if entering from the top (first row), false for bottom (last row)
 	 * @private
@@ -895,40 +848,22 @@ class ColorPalette extends UI5Element {
 			return false;
 		}
 		const rowSize = this.rowSize;
-		const startRow = fromTop ? 0 : Math.floor((this.displayedColors.length - 1) / rowSize);
-		let targetIndex = startRow * rowSize + this._iLastFocusedColumn;
+		const col = this._iLastFocusedColumn;
+		let targetRow;
+		if (fromTop) {
+			targetRow = 0;
+		} else {
+			// Find the last row that has the remembered column.
+			const lastRowWithCol = Math.floor((this.displayedColors.length - 1 - col) / rowSize);
+			targetRow = Math.max(lastRowWithCol, 0);
+		}
+		let targetIndex = targetRow * rowSize + col;
 		if (targetIndex >= this.displayedColors.length) {
-			if (!fromTop) {
-				// Target column doesn't exist on the last (partial) row.
-				// Search upward for a row that has the target column.
-				for (let row = startRow - 1; row >= 0; row--) {
-					const idx = row * rowSize + this._iLastFocusedColumn;
-					if (idx < this.displayedColors.length) {
-						targetIndex = idx;
-						break;
-					}
-				}
-			}
-			// If still out of bounds, fall back to the last item.
+			// Fall back to the last item if the column doesn't exist at all.
 			if (targetIndex >= this.displayedColors.length) {
 				targetIndex = this.displayedColors.length - 1;
 			}
 		}
-		this.focusColorElement(this.displayedColors[targetIndex], this._itemNavigation);
-		return true;
-	}
-
-	/**
-	 * Focuses the first item of the first or last row of the palette grid (column 0, no column restore).
-	 * @param fromTop true for first row, false for last row
-	 * @private
-	 */
-	_focusPaletteGridRowStart(fromTop: boolean): boolean {
-		if (!this.displayedColors.length) {
-			return false;
-		}
-		const rowSize = this.rowSize;
-		const targetIndex = fromTop ? 0 : Math.floor((this.displayedColors.length - 1) / rowSize) * rowSize;
 		this.focusColorElement(this.displayedColors[targetIndex], this._itemNavigation);
 		return true;
 	}
@@ -941,10 +876,9 @@ class ColorPalette extends UI5Element {
 		if (!this.hasRecentColors || !this.recentColorsElements.length) {
 			return false;
 		}
-		let targetIndex = this._iLastFocusedColumn;
-		if (targetIndex >= this.recentColorsElements.length) {
-			targetIndex = this.recentColorsElements.length - 1;
-		}
+
+		const targetIndex = Math.min(this._iLastFocusedColumn, this.recentColorsElements.length - 1);
+
 		this.focusColorElement(this.recentColorsElements[targetIndex], this._itemNavigationRecentColors);
 		return true;
 	}

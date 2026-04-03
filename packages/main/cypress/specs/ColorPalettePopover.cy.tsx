@@ -561,76 +561,31 @@ describe("Color Popover Palette arrow keys navigation", () => {
 });
 
 describe("Color Popover Palette Home and End keyboard navigation", () => {
-    it.skip("should navigate with Home/End when showDefaultColor is set", () => {
-        cy.mount(
-            <SimplePalettePopover showDefaultColor={true} />
-        );
+	it("should navigate with Home/End when showDefaultColor is set", () => {
+		cy.mount(
+			<SimplePalettePopover showDefaultColor={true} />
+		);
 
-        cy.get("[ui5-color-palette-popover]")
-            .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
+		cy.get("[ui5-color-palette-popover]")
+			.ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
-        cy.get("[ui5-color-palette-popover]")
-            .should("have.attr", "open");
+		cy.focused()
+			.should("have.attr", "aria-label", "Default Color")
+			.realPress("End");
 
-        cy.get("[ui5-color-palette-popover]")
-            .ui5GetColorPaletteInPopover()
-            .as("colorPalette");
+		cy.focused()
+			.should("have.attr", "aria-label")
+			.and("include", "red")
+			.realPress("Home");
 
-        cy.get("@colorPalette")
-            .ui5GetColorPaletteDefaultButton()
-            .as("defaultColorButton")
-            .should("be.visible")
-            .and("have.focus");
+		cy.focused()
+			.should("have.attr", "aria-label")
+			.and("include", "cyan")
+			.realPress("Home");
 
-        cy.get("@defaultColorButton")
-            .should("have.focus")
-            .shadow()
-            .find("button[data-sap-focus-ref]")
-            .should("have.focus");
-
-        cy.get("@defaultColorButton")
-            .realPress("End");
-
-        cy.get("[ui5-color-palette-popover]")
-            .ui5GetColorPaletteItem(3)
-            .as("lastColorPaletteItem")
-            .should("be.visible")
-            .and("have.attr", "value", "red");
-
-        cy.get("@lastColorPaletteItem")
-            .should("have.focus")
-            .shadow()
-            .find(".ui5-cp-item")
-            .should("have.attr", "tabindex", "0")
-            .and("have.attr", "aria-label")
-            .and("include", "red");
-
-        cy.focused()
-            .realPress("Home");
-
-        cy.get("[ui5-color-palette-popover]")
-            .ui5GetColorPaletteItem(0)
-            .as("firstColorPaletteItem")
-            .should("be.visible")
-            .and("have.attr", "value", "cyan");
-
-        cy.get("@firstColorPaletteItem")
-            .should("have.focus")
-            .shadow()
-            .find(".ui5-cp-item")
-            .should("have.attr", "tabindex", "0")
-            .and("have.attr", "aria-label")
-            .and("include", "cyan");
-
-        cy.focused()
-            .realPress("Home");
-
-        cy.focused()
-            .should("have.attr", "aria-label", "Default Color");
-
-        cy.get("@defaultColorButton")
-            .should("have.focus");
-    });
+		cy.focused()
+			.should("have.attr", "aria-label", "Default Color");
+	});
 
     it("should navigate with Home/End keys when showMoreColors is set", () => {
         cy.mount(
@@ -658,43 +613,25 @@ describe("Color Popover Palette Home and End keyboard navigation", () => {
             .should("have.attr", "aria-label", "More Colors...");
     });
 
-    it.skip("should navigate with Home/End when showDefaultColor & showMoreColors are set", () => {
-        cy.mount(
-            <SimplePalettePopover showDefaultColor={true} showMoreColors={true} />
-        );
+	it("should navigate with Home/End when showDefaultColor and showMoreColors are set", () => {
+		cy.mount(
+			<SimplePalettePopover showDefaultColor={true} showMoreColors={true} />
+		);
 
-        cy.get<ColorPalettePopover>("[ui5-color-palette-popover]")
-            .as("colorPalettePopover")
-            .ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
+		cy.get("[ui5-color-palette-popover]")
+			.ui5ColorPalettePopoverOpen({ opener: "btnPalette" });
 
-        cy.get<ColorPalette>("@colorPalettePopover")
-            .ui5GetColorPaletteInPopover()
-            .as("colorPalette");
+		cy.focused()
+			.should("have.attr", "aria-label", "Default Color")
+			.realPress("End");
 
-        cy.get("@colorPalette")
-            .ui5GetColorPaletteDefaultButton()
-            .as("defaultColorButton");
+		cy.focused()
+			.should("have.attr", "aria-label", "More Colors...")
+			.realPress("Home");
 
-        cy.get("@defaultColorButton")
-            .should("have.focus")
-            .realPress("End");
-
-        cy.get("@colorPalette")
-            .ui5GetColorPaletteMoreColorsButton()
-            .as("moreColorsButton")
-            .should("be.visible");
-
-        cy.get("@moreColorsButton")
-            .should("exist")
-            .and("be.visible")
-            .and("have.focus");
-
-        cy.get("@moreColorsButton")
-            .realPress("Home");
-
-        cy.get("@defaultColorButton")
-            .should("have.focus");
-    });
+		cy.focused()
+			.should("have.attr", "aria-label", "Default Color");
+	});
 
     it("should navigate with End key", () => {
         cy.mount(
