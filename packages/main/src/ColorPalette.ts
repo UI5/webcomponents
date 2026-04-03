@@ -725,11 +725,8 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusDefaultColor(): boolean {
 		if (this.showDefaultColor && this._defaultColorButton) {
-			const focusDomRef = this._defaultColorButton.getFocusDomRef();
-			if (focusDomRef) {
-				focusDomRef.focus();
-				return true;
-			}
+			this._defaultColorButton.focus();
+			return true;
 		}
 		return false;
 	}
@@ -740,11 +737,8 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusMoreColors(): boolean {
 		if (this.showMoreColors && this._moreColorsButton) {
-			const focusDomRef = this._moreColorsButton.getFocusDomRef();
-			if (focusDomRef) {
-				focusDomRef.focus();
-				return true;
-			}
+			this._moreColorsButton.focus();
+			return true;
 		}
 		return false;
 	}
