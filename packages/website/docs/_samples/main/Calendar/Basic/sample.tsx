@@ -1,13 +1,10 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import CalendarClass from "@ui5/webcomponents/dist/Calendar.js";
 
-const Calendar = createComponent(CalendarClass);
+const Calendar = createReactComponent(CalendarClass);
 
 function App() {
-
-  return (
-    <Calendar />
-  );
+  return <Calendar />;
 }
 
 export default App;

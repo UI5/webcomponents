@@ -121,6 +121,38 @@ describe("MultiInput Web Component", () => {
 			.should("have.prop", "expanded", false);
 	});
 
+	it("expands tokenizer on input focus", () => {
+		cy.mount(
+			<MultiInput id="basic-overflow">
+				<Token slot="tokens" text="Amet"></Token>
+				<Token slot="tokens" text="Incididunt"></Token>
+				<Token slot="tokens" text="laboris"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		cy.get("@tokenizer")
+			.should("not.have.attr", "expanded");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.get("@tokenizer")
+			.should("have.attr", "expanded");
+	});
+
 	it("tests opening of tokenizer Popover", () => {
 		cy.mount(
 			<MultiInput id="basic-overflow">
@@ -210,6 +242,30 @@ describe("MultiInput Web Component", () => {
 
 		cy.get("@valueHelpTrigger")
 			.should("have.been.calledTwice");
+	});
+
+	it("keeps focused state when clicking on value help icon", () => {
+		cy.mount(
+			<MultiInput showValueHelpIcon={true}>
+				<Token slot="tokens" text="Amet"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.as("innerInput");
+
+		cy.get("@multiInput")
+			.shadow()
+			.find("[ui5-icon]")
+			.realMouseDown();
+
+		cy.get("@multiInput")
+			.should("have.prop", "focused", true);
 	});
 })
 
@@ -1234,7 +1290,7 @@ describe("Keyboard handling", () => {
 			.should("be.focused");
 	});
 
-	it("should focus token last token when caret is at the beginning of the value", () => {
+	it("should not focus token on backspace when input has value and caret is at position 0", () => {
 		cy.mount(
 			<MultiInput id="two-tokens" value="abc">
 				<Token slot="tokens" id="firstToken" text="aa"></Token>
@@ -1256,9 +1312,11 @@ describe("Keyboard handling", () => {
 
 		cy.realPress("Backspace");
 
-		cy.get("[ui5-token]")
-			.eq(1)
+		cy.get("@innerInput")
 			.should("be.focused");
+
+		cy.get("@innerInput")
+			.should("have.value", "abc");
 	});
 
 	// Test is skipped for now as it fails randomly

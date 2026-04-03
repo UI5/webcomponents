@@ -16,6 +16,7 @@
 	--_ui5_day_picker_item_height: 2.875rem;
 	--_ui5_day_picker_empty_height: 3rem;
 	--_ui5_day_picker_item_justify_content: space-between;
+	--_ui5_dp_item_withsecondtype_font_size: var(--sapFontSize);
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_special_day_top: 2rem;
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_special_day_right: 1.4375rem;
 	--_ui5_dp_two_calendar_item_secondary_text_height: 1rem;
@@ -73,7 +74,8 @@
 	--_ui5_input_inner_padding: 0 0.625rem;
 	--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.625rem;
 	--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-	--_ui5_input_inner_space_to_n_more_text: 0.1875rem;
+	--_ui5_input_inner_space_to_n_more_text: 0.3125rem;
+	--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.3125rem;
 	--_ui5_list_no_data_height: 3rem;
 	--_ui5_list_item_cb_margin_right: 0;
 	--_ui5_list_item_title_size: var(--sapFontLargeSize);
@@ -102,7 +104,7 @@
 	--_ui5_popup_default_header_height: 2.75rem;
 
 	--_ui5_year_picker_item_height: 3rem;
-	--_ui5_tokenizer_padding: 0.25rem;
+	--_ui5_tokenizer_padding: 0.3125rem;
 	--_ui5_token_height: 1.625rem;
 	--_ui5_token_icon_size: .75rem;
 	--_ui5_token_icon_padding: 0.25rem 0.5rem;
@@ -225,6 +227,7 @@
 		--_ui5_day_picker_item_height: 2rem;
 		--_ui5_day_picker_empty_height: 2.125rem;
 		--_ui5_day_picker_item_justify_content: flex-end;
+		--_ui5_dp_item_withsecondtype_font_size: var(--sapFontSmallSize);
 		--_ui5_dp_two_calendar_item_secondary_text_height: 0.75rem;
 		--_ui5_dp_two_calendar_item_text_padding_top: 0.5rem;
 
@@ -265,10 +268,12 @@
 		/* Input */
 		--_ui5_input_height: var(--sapElement_Compact_Height);
 		--_ui5_input_inner_padding: 0 0.5rem;
-		--_ui5_input_inner_padding_with_icon: 0 0.2rem 0 0.5rem;
+		--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.5rem;
 		--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-		--_ui5_input_inner_space_to_n_more_text: 0.125rem;
+		--_ui5_input_inner_space_to_n_more_text: 0.25rem;
+		--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.25rem;
 		--_ui5_input_icon_min_width: var(--_ui5_input_compact_min_width);
+		--_ui5_input_min_width_tokenizer_available: 2rem;
 
 		/* Menu */
 		--_ui5_menu_item_padding: 0 0.75rem 0 0.5rem;
@@ -347,6 +352,9 @@
 		--_ui5-tree-toggle-box-width: 2rem;
 		--_ui5-tree-toggle-box-height: 1.5rem;
 		--_ui5-tree-toggle-icon-size: 0.8125rem;
+
+		/* Tokenizer */
+		--_ui5_tokenizer_padding: 0.25rem;
 
 		/* Toolbar */
 		--_ui5-toolbar-separator-height: 1.5rem;

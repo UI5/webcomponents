@@ -1,12 +1,11 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import MediaGalleryClass from "@ui5/webcomponents-fiori/dist/MediaGallery.js";
 import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryItem.js";
 
-const MediaGallery = createComponent(MediaGalleryClass);
-const MediaGalleryItem = createComponent(MediaGalleryItemClass);
+const MediaGallery = createReactComponent(MediaGalleryClass);
+const MediaGalleryItem = createReactComponent(MediaGalleryItemClass);
 
 function App() {
-
   return (
     <>
       <style>{`
@@ -20,12 +19,16 @@ function App() {
             }
         }
       `}</style>
-      <MediaGallery layout="Horizontal" showAllThumbnails={true} menuHorizontalAlign="Right">
-            <MediaGalleryItem>
-                <img src="/images/HT-1000.jpg" />
-                <img src="/images/HT-1000-small.jpg" slot="thumbnail" />
-            </MediaGalleryItem>
-        </MediaGallery>
+      <MediaGallery
+        layout="Horizontal"
+        showAllThumbnails={true}
+        menuHorizontalAlign="Right"
+      >
+        <MediaGalleryItem>
+          <img src="/images/HT-1000.jpg" alt="Product" />
+          <img src="/images/HT-1000-small.jpg" slot="thumbnail" alt="Product thumbnail" />
+        </MediaGalleryItem>
+      </MediaGallery>
     </>
   );
 }

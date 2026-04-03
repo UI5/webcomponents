@@ -1,14 +1,14 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
 import MenuItemClass from "@ui5/webcomponents/dist/MenuItem.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 
-const Button = createComponent(ButtonClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
+const Button = createReactComponent(ButtonClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
 
 function App() {
   const menuRef = useRef(null);
@@ -30,9 +30,20 @@ function App() {
   };
 
   const handleMenuButtonKeydown = (e: KeyboardEvent) => {
-    const F4Key = !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "F4";
-    const AltArrowDownKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowDown";
-    const AltArrowUpKey = e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "ArrowUp";
+    const F4Key =
+      !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey && e.key === "F4";
+    const AltArrowDownKey =
+      e.altKey &&
+      !e.shiftKey &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      e.key === "ArrowDown";
+    const AltArrowUpKey =
+      e.altKey &&
+      !e.shiftKey &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      e.key === "ArrowUp";
 
     if (F4Key || AltArrowDownKey || AltArrowUpKey) {
       openMenu();

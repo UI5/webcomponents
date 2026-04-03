@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState, useRef, useCallback, useEffect } from "react";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -16,22 +16,24 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 
-const AIButton = createComponent(AIButtonClass);
-const AIButtonState = createComponent(AIButtonStateClass);
-const DynamicPage = createComponent(DynamicPageClass);
-const DynamicPageHeader = createComponent(DynamicPageHeaderClass);
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const Avatar = createComponent(AvatarClass);
-const BusyIndicator = createComponent(BusyIndicatorClass);
-const Button = createComponent(ButtonClass);
-const CheckBox = createComponent(CheckBoxClass);
-const Dialog = createComponent(DialogClass);
-const Text = createComponent(TextClass);
-const Title = createComponent(TitleClass);
+const AIButton = createReactComponent(AIButtonClass);
+const AIButtonState = createReactComponent(AIButtonStateClass);
+const DynamicPage = createReactComponent(DynamicPageClass);
+const DynamicPageHeader = createReactComponent(DynamicPageHeaderClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const Avatar = createReactComponent(AvatarClass);
+const BusyIndicator = createReactComponent(BusyIndicatorClass);
+const Button = createReactComponent(ButtonClass);
+const CheckBox = createReactComponent(CheckBoxClass);
+const Dialog = createReactComponent(DialogClass);
+const Text = createReactComponent(TextClass);
+const Title = createReactComponent(TitleClass);
 
-const DEFAULT_OUTPUT1 = "Discover the ultimate solution for home organization with our versatile storage bins. These durable containers come in various sizes to fit any space, from closets to garages. Their stackable design maximizes your storage capacity while keeping your items easily accessible. Each bin features a transparent body, allowing you to quickly identify contents without opening them. Perfect for seasonal items, toys, or tools, these storage bins are the key to a clutter-free home. Start organizing today and enjoy a more spacious and tidy living environment.";
-const DEFAULT_OUTPUT2 = "Experience the future of cooking with our state-of-the-art smart oven. This innovative appliance offers a range of features to enhance your culinary skills, including precise temperature control and multiple cooking modes. The smart oven connects to your smartphone, allowing you to monitor and adjust settings remotely. With its sleek design and intuitive interface, cooking has never been easier or more enjoyable. Whether you're baking, roasting, or broiling, this smart oven ensures perfect results every time. Upgrade your kitchen and transform the way you cook.";
+const DEFAULT_OUTPUT1 =
+  "Discover the ultimate solution for home organization with our versatile storage bins. These durable containers come in various sizes to fit any space, from closets to garages. Their stackable design maximizes your storage capacity while keeping your items easily accessible. Each bin features a transparent body, allowing you to quickly identify contents without opening them. Perfect for seasonal items, toys, or tools, these storage bins are the key to a clutter-free home. Start organizing today and enjoy a more spacious and tidy living environment.";
+const DEFAULT_OUTPUT2 =
+  "Experience the future of cooking with our state-of-the-art smart oven. This innovative appliance offers a range of features to enhance your culinary skills, including precise temperature control and multiple cooking modes. The smart oven connects to your smartphone, allowing you to monitor and adjust settings remotely. With its sleek design and intuitive interface, cooking has never been easier or more enjoyable. Whether you're baking, roasting, or broiling, this smart oven ensures perfect results every time. Upgrade your kitchen and transform the way you cook.";
 
 function App() {
   const [aiButtonState, setAiButtonState] = useState("regenerate");
@@ -43,18 +45,18 @@ function App() {
   const [output2Text, setOutput2Text] = useState(DEFAULT_OUTPUT2);
 
   const textsRef = useRef(null);
-  const generationIntervalsRef = useRef([]);
+  const generationIntervalsRef = useRef<ReturnType<typeof setInterval>[]>([]);
   const checkboxRef = useRef(null);
 
   useEffect(() => {
     fetch("../assets/data/predefinedTexts.json")
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         textsRef.current = data.predefinedTexts;
       });
   }, []);
 
-  const getRandomPredefinedText = useCallback((texts, count) => {
+  const getRandomPredefinedText = useCallback((texts: any, count: number) => {
     const keys = Object.keys(texts);
     const selectedTexts = [];
     for (let i = 0; i < count; i++) {
@@ -64,7 +66,7 @@ function App() {
     return selectedTexts;
   }, []);
 
-  const setBusyIndicator = useCallback((isActive) => {
+  const setBusyIndicator = useCallback((isActive: boolean) => {
     setBusy1(isActive);
     setBusy2(isActive);
   }, []);
@@ -75,7 +77,7 @@ function App() {
     setBusyIndicator(false);
   }, [setBusyIndicator]);
 
-  const typeText = useCallback((text, setter) => {
+  const typeText = useCallback((text: string, setter: (val: string) => void) => {
     const words = text.split(" ");
     setter("");
     return new Promise((resolve) => {
@@ -91,7 +93,7 @@ function App() {
           const intervals = generationIntervalsRef.current;
           const idx = intervals.indexOf(interval);
           if (idx !== -1) intervals.splice(idx, 1);
-          resolve();
+          resolve(null);
         }
       }, 50);
       generationIntervalsRef.current!.push(interval);
@@ -194,10 +196,17 @@ function App() {
           <ShellBar>
             <ShellBarBranding slot="branding">
               Your Application
-              <img slot="logo" src="https://ui5.github.io/webcomponents/nightly/images/sap-logo-svg.svg" alt="SAP Logo"/>
+              <img
+                slot="logo"
+                src="https://ui5.github.io/webcomponents/nightly/images/sap-logo-svg.svg"
+                alt="SAP Logo"
+              />
             </ShellBarBranding>
             <Avatar slot="profile">
-              <img src="https://ui5.github.io/webcomponents/nightly/images/avatars/woman_avatar_3.png" alt="avatar"/>
+              <img
+                src="https://ui5.github.io/webcomponents/nightly/images/avatars/woman_avatar_3.png"
+                alt="avatar"
+              />
             </Avatar>
           </ShellBar>
           <AIButton
@@ -206,29 +215,37 @@ function App() {
             onClick={handleAiButtonClick}
           >
             <AIButtonState name="regenerate" text="Regenerate" icon="ai" />
-            <AIButtonState name="generating" text="Stop Generating" icon="stop" />
+            <AIButtonState
+              name="generating"
+              text="Stop Generating"
+              icon="stop"
+            />
           </AIButton>
         </DynamicPageHeader>
 
         <div className="content">
           <div className="section">
-            <Title level="H1" size="H4">Article 1</Title>
-            <Title level="H2" size="H5">Informative Subtitle for Article 1</Title>
+            <Title level="H1" size="H4">
+              Article 1
+            </Title>
+            <Title level="H2" size="H5">
+              Informative Subtitle for Article 1
+            </Title>
             <br />
             <hr />
             <BusyIndicator delay={0} class="busy-indicator" active={busy1}>
-              <Text class="output-text">
-                {output1Text}
-              </Text>
+              <Text class="output-text">{output1Text}</Text>
             </BusyIndicator>
-            <Title level="H1" size="H4">Article 2</Title>
-            <Title level="H2" size="H5">Informative Subtitle for Article 2</Title>
+            <Title level="H1" size="H4">
+              Article 2
+            </Title>
+            <Title level="H2" size="H5">
+              Informative Subtitle for Article 2
+            </Title>
             <br />
             <hr />
             <BusyIndicator delay={0} class="busy-indicator" active={busy2}>
-              <Text class="output-text">
-                {output2Text}
-              </Text>
+              <Text class="output-text">{output2Text}</Text>
             </BusyIndicator>
           </div>
         </div>
@@ -236,12 +253,19 @@ function App() {
 
       <Dialog open={dialogOpen} state="Critical" headerText="Warning">
         <Text>
-          Regenerating will overwrite all fields with AI-generated content.<br />
+          Regenerating will overwrite all fields with AI-generated content.
+          <br />
           Do you want to continue?
         </Text>
-        <CheckBox ref={checkboxRef} style={{ marginInlineStart: "-0.625rem" }} text="Don't ask me again" />
+        <CheckBox
+          ref={checkboxRef}
+          style={{ marginInlineStart: "-0.625rem" }}
+          text="Don't ask me again"
+        />
         <div slot="footer" className="dialog-footer">
-          <Button design="Emphasized" onClick={handleDialogProceed}>Regenerate</Button>
+          <Button design="Emphasized" onClick={handleDialogProceed}>
+            Regenerate
+          </Button>
           <Button onClick={handleDialogClose}>Cancel</Button>
         </div>
       </Dialog>

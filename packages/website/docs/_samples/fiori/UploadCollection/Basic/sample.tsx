@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useState, useCallback } from "react";
 import UploadCollectionClass from "@ui5/webcomponents-fiori/dist/UploadCollection.js";
@@ -12,32 +12,44 @@ import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/document.js";
 import "@ui5/webcomponents-icons/dist/document-text.js";
 
-const UploadCollection = createComponent(UploadCollectionClass);
-const UploadCollectionItem = createComponent(UploadCollectionItemClass);
-const Button = createComponent(ButtonClass);
-const FileUploader = createComponent(FileUploaderClass);
-const Icon = createComponent(IconClass);
-const Label = createComponent(LabelClass);
-const Title = createComponent(TitleClass);
+const UploadCollection = createReactComponent(UploadCollectionClass);
+const UploadCollectionItem = createReactComponent(UploadCollectionItemClass);
+const Button = createReactComponent(ButtonClass);
+const FileUploader = createReactComponent(FileUploaderClass);
+const Icon = createReactComponent(IconClass);
+const Label = createReactComponent(LabelClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const uploadCollectionRef = useRef(null);
-  const [newFiles, setNewFiles] = useState([]);
+  const [newFiles, setNewFiles] = useState<
+    {
+      id: string;
+      file: File;
+      fileName: string;
+      description: string;
+      uploadState: "Error" | "Ready" | "Uploading" | "Complete";
+    }[]
+  >([]);
 
-  const handleFileUploaderChange = useCallback((e: UI5CustomEvent<FileUploaderClass, "change">) => {
-    const files = e.detail.files;
-    const additions = [];
-    for (let i = 0; i < files.length; i++) {
-      additions.push({
-        id: Date.now() + "-" + i,
-        file: files[i],
-        fileName: files[i].name,
-        description: `Last modified: ${files[i].lastModifiedDate}, size: ${files[i].size}`,
-        uploadState: "Ready",
-      });
-    }
-    setNewFiles((prev) => [...prev, ...additions]);
-  }, []);
+  const handleFileUploaderChange = useCallback(
+    (e: UI5CustomEvent<FileUploaderClass, "change">) => {
+      const files = e.detail.files;
+      const additions = [];
+
+      for (let i = 0; i < files.length; i++) {
+        additions.push({
+          id: Date.now() + "-" + i,
+          file: files[i],
+          fileName: files[i].name,
+          description: `Last modified: ${new Date(files[i].lastModified)}, size: ${files[i].size}`,
+          uploadState: "Ready",
+        });
+      }
+      setNewFiles((prev) => [...prev, ...additions]);
+    },
+    [],
+  );
 
   const handleStartUploadingClick = useCallback(() => {
     const uc = uploadCollectionRef.current;
@@ -56,15 +68,18 @@ function App() {
       });
   }, []);
 
-  const handleUploadCollectionItemDelete = useCallback((e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
-    const deletedItem = e.detail.item;
-    const fileId = deletedItem.dataset.fileId;
-    if (fileId) {
-      setNewFiles((prev) => prev.filter((f) => f.id !== fileId));
-    } else {
-      deletedItem.parentElement?.removeChild(deletedItem);
-    }
-  }, []);
+  const handleUploadCollectionItemDelete = useCallback(
+    (e: UI5CustomEvent<UploadCollectionClass, "item-delete">) => {
+      const deletedItem = e.detail.item;
+      const fileId = deletedItem.dataset.fileId;
+      if (fileId) {
+        setNewFiles((prev) => prev.filter((f) => f.id !== fileId));
+      } else {
+        deletedItem.parentElement?.removeChild(deletedItem);
+      }
+    },
+    [],
+  );
 
   return (
     <>
@@ -84,29 +99,53 @@ function App() {
             margin: 0.25rem;
         }
       `}</style>
-      <UploadCollection ref={uploadCollectionRef} id="uploadCollection" accessibleName="Uploaded (2)" onItemDelete={handleUploadCollectionItemDelete}>
+      <UploadCollection
+        ref={uploadCollectionRef}
+        id="uploadCollection"
+        accessibleName="Uploaded (2)"
+        onItemDelete={handleUploadCollectionItemDelete}
+      >
         <div slot="header" className="header">
           <Title>Uploaded (2)</Title>
-          <Label showColon={true}>Add new files and press to start uploading pending files</Label>
-          <Button id="startUploading" onClick={handleStartUploadingClick}>Start</Button>
+          <Label showColon={true}>
+            Add new files and press to start uploading pending files
+          </Label>
+          <Button id="startUploading" onClick={handleStartUploadingClick}>
+            Start
+          </Button>
           <div className="spacer"></div>
-          <FileUploader id="fileUploader" hideInput={true} multiple={true} onChange={handleFileUploaderChange}>
+          <FileUploader
+            id="fileUploader"
+            hideInput={true}
+            multiple={true}
+            onChange={handleFileUploaderChange}
+          >
             <Button icon="add" design="Transparent" />
           </FileUploader>
         </div>
 
-        <UploadCollectionItem fileName="LaptopHT-1000.jpg" fileNameClickable={true} uploadState="Complete">
+        <UploadCollectionItem
+          fileName="LaptopHT-1000.jpg"
+          fileNameClickable={true}
+          uploadState="Complete"
+        >
           Uploaded By: David Keane · Uploaded On: 2014-07-26 · File Size: 35 KB
-          <img src="/images/HT-1000.jpg" slot="thumbnail" />
+          <img src="/images/HT-1000.jpg" slot="thumbnail" alt="Product" />
         </UploadCollectionItem>
 
         <UploadCollectionItem fileName="Notes.txt" uploadState="Complete">
-          Uploaded By: John Smith · Uploaded On: 2014-09-02 · File Size: 226.6 KB
+          Uploaded By: John Smith · Uploaded On: 2014-09-02 · File Size: 226.6
+          KB
           <Icon name="document-text" slot="thumbnail" />
         </UploadCollectionItem>
 
         {newFiles.map((f) => (
-          <UploadCollectionItem key={f.id} data-file-id={f.id} fileName={f.fileName} uploadState={f.uploadState}>
+          <UploadCollectionItem
+            key={f.id}
+            data-file-id={f.id}
+            fileName={f.fileName}
+            uploadState={f.uploadState}
+          >
             {f.description}
             <Icon name="document" slot="thumbnail" />
           </UploadCollectionItem>

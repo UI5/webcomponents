@@ -38,6 +38,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import type { IIcon } from "./Icon.js";
 import * as Filters from "./Filters.js";
@@ -575,6 +576,23 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._useSelectedValue = true;
 		}
 
+		// Highlight filtered items
+		this._filteredItems.forEach(item => {
+			if (!item) {
+				return;
+			}
+			if (isInstanceOfComboBoxItemGroup(item)) {
+				// For grouped items, highlight each item in the group
+				item.items.forEach(nestedItem => {
+					if (nestedItem) {
+						this._highlightItem(nestedItem);
+					}
+				});
+			} else {
+				this._highlightItem(item as ComboBoxItem);
+			}
+		});
+
 		this._selectMatchingItem();
 		this._initialRendering = false;
 
@@ -740,8 +758,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	_arrowClick() {
+	_arrowMouseDown(e: MouseEvent) {
+		e.preventDefault();
 		this.inner.focus();
+	}
+
+	_arrowClick() {
 		this._resetFilter();
 
 		if (isPhone() && this.value && !this._lastValue) {
@@ -1215,6 +1237,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		return [...filteredItemGroups, ...filteredItems];
 	}
 
+	/**
+	 * Sets the markupText property of an item with highlighted first match.
+	 * @param item The ComboBox item to highlight
+	 * @private
+	 */
+	_highlightItem(item: ComboBoxItem) {
+		item.markupText = generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue);
+	}
+
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {
 		const allItems = this._getItems();
 		const currentlyFocusedItem = allItems.find(item => item.focused === true);
@@ -1369,6 +1400,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		// On first item select the _useSelectedValue is still false.
+		// In case the item has a value property, we set the _useSelectedValue to true to start working with the value instead with the text.
+		if (!this._useSelectedValue && item.value !== undefined) {
+			this._useSelectedValue = true;
+		}
+
 		if (this._useSelectedValue) {
 			this.selectedValue = item.value;
 		}

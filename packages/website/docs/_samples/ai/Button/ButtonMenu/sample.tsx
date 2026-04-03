@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
 import AIButtonStateClass from "@ui5/webcomponents-ai/dist/ButtonState.js";
@@ -10,11 +10,11 @@ import "@ui5/webcomponents-icons/dist/ai.js";
 import "@ui5/webcomponents-icons/dist/stop.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
 
-const AIButton = createComponent(AIButtonClass);
-const AIButtonState = createComponent(AIButtonStateClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
+const AIButton = createReactComponent(AIButtonClass);
+const AIButtonState = createReactComponent(AIButtonStateClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
 
 function App() {
   const [buttonState, setButtonState] = useState("generate");
@@ -81,19 +81,32 @@ function App() {
     }
   }, [buttonState, startGeneration, stopGeneration]);
 
-  const handleMenuItemClick = useCallback((e: UI5CustomEvent<MenuClass, "item-click">) => {
-    if (e.detail.text === "Regenerate") {
-      setButtonState("generating");
-      startGeneration();
-    }
-  }, [startGeneration]);
+  const handleMenuItemClick = useCallback(
+    (e: UI5CustomEvent<MenuClass, "item-click">) => {
+      if (e.detail.text === "Regenerate") {
+        setButtonState("generating");
+        startGeneration();
+      }
+    },
+    [startGeneration],
+  );
 
   return (
     <>
-      <AIButton ref={buttonRef} id="myAiButton" state={buttonState} onClick={handleButtonClick}>
+      <AIButton
+        ref={buttonRef}
+        id="myAiButton"
+        state={buttonState}
+        onClick={handleButtonClick}
+      >
         <AIButtonState name="generate" text="Generate" icon="ai" />
         <AIButtonState name="generating" text="Stop Generating" icon="stop" />
-        <AIButtonState name="revise" text="Revise" icon="ai" endIcon="navigation-down-arrow" />
+        <AIButtonState
+          name="revise"
+          text="Revise"
+          icon="ai"
+          endIcon="navigation-down-arrow"
+        />
       </AIButton>
 
       <Menu ref={menuRef} id="menu" onItemClick={handleMenuItemClick}>

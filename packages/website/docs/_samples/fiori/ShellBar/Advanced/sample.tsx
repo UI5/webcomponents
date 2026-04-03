@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
@@ -17,47 +17,59 @@ import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 
-const ShellBar = createComponent(ShellBarClass);
-const ShellBarBranding = createComponent(ShellBarBrandingClass);
-const ShellBarItem = createComponent(ShellBarItemClass);
-const ShellBarSearch = createComponent(ShellBarSearchClass);
-const ShellBarSpacer = createComponent(ShellBarSpacerClass);
-const Avatar = createComponent(AvatarClass);
-const Button = createComponent(ButtonClass);
-const Label = createComponent(LabelClass);
-const Switch = createComponent(SwitchClass);
-const Tag = createComponent(TagClass);
-const Text = createComponent(TextClass);
-const ToggleButton = createComponent(ToggleButtonClass);
+const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
+const ShellBarItem = createReactComponent(ShellBarItemClass);
+const ShellBarSearch = createReactComponent(ShellBarSearchClass);
+const ShellBarSpacer = createReactComponent(ShellBarSpacerClass);
+const Avatar = createReactComponent(AvatarClass);
+const Button = createReactComponent(ButtonClass);
+const Label = createReactComponent(LabelClass);
+const Switch = createReactComponent(SwitchClass);
+const Tag = createReactComponent(TagClass);
+const Text = createReactComponent(TextClass);
+const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
-
   return (
     <>
-      <ShellBar notificationsCount={72} showNotifications={true} showProductSwitch={true}>
-                <Button icon="menu2" slot="startButton" />
-                <Button icon="nav-back" slot="startButton" />
+      <ShellBar
+        notificationsCount="72"
+        showNotifications={true}
+        showProductSwitch={true}
+      >
+        <Button icon="menu2" slot="startButton" />
+        <Button icon="nav-back" slot="startButton" />
 
-                <ShellBarBranding slot="branding">
-                    Product Identifier
-                    <img slot="logo" src="/images/sap-logo-svg.svg" />
-                </ShellBarBranding>
-                <Tag design="Set2" colorScheme="7" slot="content">Trial</Tag>
-                <Text slot="content">30 days remaining</Text>
-                <ShellBarSpacer slot="content" />
-                <div slot="content" style={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-                    <Switch />
-                    <Label>Try Beta Version</Label>
-                </div>
+        <ShellBarBranding slot="branding">
+          Product Identifier
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+        </ShellBarBranding>
+        <Tag design="Set2" colorScheme="7" slot="content">
+          Trial
+        </Tag>
+        <Text slot="content">30 days remaining</Text>
+        <ShellBarSpacer slot="content" />
+        <div
+          slot="content"
+          style={{ display: "flex", gap: "0 5px", alignItems: "center" }}
+        >
+          <Switch />
+          <Label>Try Beta Version</Label>
+        </div>
 
-                <ShellBarSearch slot="searchField" showClearIcon={true} placeholder="Search Apps, Products" />
+        <ShellBarSearch
+          slot="searchField"
+          showClearIcon={true}
+          placeholder="Search Apps, Products"
+        />
 
-                <ShellBarItem icon="sys-help" text="Help" />
-                <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
-                <Avatar slot="profile">
-                    <img src="/images/avatars/man_avatar_3.png"/>
-                </Avatar>
-            </ShellBar>
+        <ShellBarItem icon="sys-help" text="Help" />
+        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <Avatar slot="profile">
+          <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
+        </Avatar>
+      </ShellBar>
     </>
   );
 }

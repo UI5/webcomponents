@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import DialogClass from "@ui5/webcomponents/dist/Dialog.js";
@@ -12,19 +12,19 @@ import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/value-help.js";
 import "@ui5/webcomponents-icons/dist/search.js";
 
-const Button = createComponent(ButtonClass);
-const Dialog = createComponent(DialogClass);
-const Icon = createComponent(IconClass);
-const Input = createComponent(InputClass);
-const List = createComponent(ListClass);
-const ListItemStandard = createComponent(ListItemStandardClass);
-const SuggestionItem = createComponent(SuggestionItemClass);
-const Title = createComponent(TitleClass);
+const Button = createReactComponent(ButtonClass);
+const Dialog = createReactComponent(DialogClass);
+const Icon = createReactComponent(IconClass);
+const Input = createReactComponent(InputClass);
+const List = createReactComponent(ListClass);
+const ListItemStandard = createReactComponent(ListItemStandardClass);
+const SuggestionItem = createReactComponent(SuggestionItemClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [suggestionItems, setSuggestionItems] = useState([]);
-  const [dialogListItems, setDialogListItems] = useState([]);
+  const [suggestionItems, setSuggestionItems] = useState<string[]>([]);
+  const [dialogListItems, setDialogListItems] = useState<{ name: string, productId: string }[]>([]);
   const [dialogSearchValue, setDialogSearchValue] = useState("");
   const valueHelpInputRef = useRef(null);
   const productsRef = useRef(null);
@@ -64,9 +64,11 @@ function App() {
     setDialogOpen(true);
   };
 
-  const handleDialogSearchInput = async (e: UI5CustomEvent<InputClass, "input">) => {
+  const handleDialogSearchInput = async (
+    e: UI5CustomEvent<InputClass, "input">,
+  ) => {
     const products = await loadProducts();
-    const query = e.target.value.toLowerCase();
+    const query = e.currentTarget.value.toLowerCase();
     setDialogSearchValue(query);
     const filtered = products
       .filter((p) => p.name.toLowerCase().indexOf(query) === 0)
@@ -74,7 +76,9 @@ function App() {
     setDialogListItems(filtered);
   };
 
-  const handleDialogListItemClick = (e: UI5CustomEvent<ListClass, "item-click">) => {
+  const handleDialogListItemClick = (
+    e: UI5CustomEvent<ListClass, "item-click">,
+  ) => {
     const item = e.detail.item;
     if (valueHelpInputRef.current) {
       valueHelpInputRef.current!.setAttribute("value", item.innerHTML);
@@ -88,8 +92,19 @@ function App() {
 
   return (
     <>
-      <Input ref={valueHelpInputRef} id="valueHelpInput" placeholder="Enter product" showSuggestions={true} onInput={handleValueHelpInput}>
-        <Icon id="valueHelpIcon" slot="icon" name="value-help" onClick={handleValueHelpIconClick} />
+      <Input
+        ref={valueHelpInputRef}
+        id="valueHelpInput"
+        placeholder="Enter product"
+        showSuggestions={true}
+        onInput={handleValueHelpInput}
+      >
+        <Icon
+          id="valueHelpIcon"
+          slot="icon"
+          name="value-help"
+          onClick={handleValueHelpIconClick}
+        />
         {suggestionItems.map((item) => (
           <SuggestionItem key={item} text={item} />
         ))}
@@ -108,13 +123,26 @@ function App() {
             <Icon id="dialogSearchIcon" slot="icon" name="search" />
           </Input>
         </div>
-        <List style={{ minWidth: "500px" }} id="itemsList" no-data-text="No data" onItemClick={handleDialogListItemClick}>
+        <List
+          style={{ minWidth: "500px" }}
+          id="itemsList"
+          no-data-text="No data"
+          onItemClick={handleDialogListItemClick}
+        >
           {dialogListItems.map((item) => (
-            <ListItemStandard key={item.productId} description={item.productId}>{item.name}</ListItemStandard>
+            <ListItemStandard key={item.productId} description={item.productId}>
+              {item.name}
+            </ListItemStandard>
           ))}
         </List>
         <div slot="footer" id="footer">
-          <Button design="Transparent" id="cancelButton" onClick={handleCancelClick}>Cancel</Button>
+          <Button
+            design="Transparent"
+            id="cancelButton"
+            onClick={handleCancelClick}
+          >
+            Cancel
+          </Button>
         </div>
       </Dialog>
     </>

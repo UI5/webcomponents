@@ -1,4 +1,4 @@
-import { createComponent } from "@ui5/webcomponents-base/dist/createComponent.js";
+import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { useState } from "react";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import MenuClass from "@ui5/webcomponents/dist/Menu.js";
@@ -15,44 +15,74 @@ import "@ui5/webcomponents-icons/dist/underline-text.js";
 import "@ui5/webcomponents-icons/dist/locked.js";
 import MenuItemGroupClass from "@ui5/webcomponents/dist/MenuItemGroup.js";
 
-const Button = createComponent(ButtonClass);
-const Menu = createComponent(MenuClass);
-const MenuItem = createComponent(MenuItemClass);
-const MenuSeparator = createComponent(MenuSeparatorClass);
-const MenuItemGroup = createComponent(MenuItemGroupClass);
+const Button = createReactComponent(ButtonClass);
+const Menu = createReactComponent(MenuClass);
+const MenuItem = createReactComponent(MenuItemClass);
+const MenuSeparator = createReactComponent(MenuSeparatorClass);
+const MenuItemGroup = createReactComponent(MenuItemGroupClass);
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <Button id="btnOpenGroups" onClick={() => setMenuOpen(!menuOpen)}>Open Menu</Button>
-    	<Menu open={menuOpen} opener="btnOpenGroups" id="menuGroups" headerText="My ui5-menu" onClose={() => setMenuOpen(false)}>
-    		<MenuItem text="New Paragraph" icon="add-document" />
-    		<MenuItem text="New Text" />
+      <Button id="btnOpenGroups" onClick={() => setMenuOpen(!menuOpen)}>
+        Open Menu
+      </Button>
+      <Menu
+        open={menuOpen}
+        opener="btnOpenGroups"
+        id="menuGroups"
+        headerText="My ui5-menu"
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem text="New Paragraph" icon="add-document" />
+        <MenuItem text="New Text" />
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItemGroup checkMode="Single">
-    			<MenuItem text="Left Alignment" icon="text-align-left" checked={true} />
-    			<MenuItem text="Center Alignment" icon="text-align-center" checked={true} />
-    			<MenuItem text="Right Alignment" icon="text-align-right" checked={true} />
-    		</MenuItemGroup>
+        <MenuItemGroup checkMode="Single">
+          <MenuItem
+            text="Left Alignment"
+            icon="text-align-left"
+            checked={true}
+          />
+          <MenuItem
+            text="Center Alignment"
+            icon="text-align-center"
+            checked={true}
+          />
+          <MenuItem
+            text="Right Alignment"
+            icon="text-align-right"
+            checked={true}
+          />
+        </MenuItemGroup>
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItemGroup checkMode="Multiple">
-    			<MenuItem text="Bold" icon="bold-text" checked={true}>
-    				<Button id="newLock2" slot="endContent" icon="locked" design="Transparent" />
-    			</MenuItem>
-    			<MenuItem text="Italic" icon="italic-text" additionalText="Cursive Text" checked={true} />
-    			<MenuItem text="Underline" icon="underline-text" checked={true} />
-    		</MenuItemGroup>
+        <MenuItemGroup checkMode="Multiple">
+          <MenuItem text="Bold" icon="bold-text" checked={true}>
+            <Button
+              id="newLock2"
+              slot="endContent"
+              icon="locked"
+              design="Transparent"
+            />
+          </MenuItem>
+          <MenuItem
+            text="Italic"
+            icon="italic-text"
+            additionalText="Cursive Text"
+            checked={true}
+          />
+          <MenuItem text="Underline" icon="underline-text" checked={true} />
+        </MenuItemGroup>
 
-    		<MenuSeparator />
+        <MenuSeparator />
 
-    		<MenuItem text="Exit" />
-    	</Menu>
+        <MenuItem text="Exit" />
+      </Menu>
     </>
   );
 }
