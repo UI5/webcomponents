@@ -31,6 +31,7 @@ export default function StepInputTemplate(this: StepInput) {
 					onMouseDown={this._decSpin}
 					onMouseUp={this._resetSpin}
 					onMouseOut={this._resetSpinOut}
+					hidden={this.hideStepButtons}
 					class={{
 						"inputIcon": true,
 						"ui5-step-input-icon--clickable": this._decIconClickable,
@@ -86,6 +87,7 @@ export default function StepInputTemplate(this: StepInput) {
 						onMouseUp={this._resetSpin}
 						onMouseOut={this._resetSpinOut}
 						showTooltip={true}
+						hidden={this.hideStepButtons}
 					/>
 				</div>
 			}

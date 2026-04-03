@@ -258,6 +258,9 @@ class StepInput extends UI5Element implements IFormInputElement {
 	@property()
 	accessibleNameRef?: string;
 
+	@property({ type: Boolean })
+	hideStepButtons = false;
+
 	@property({ noAttribute: true })
 	_decIconDisabled = false;
 
