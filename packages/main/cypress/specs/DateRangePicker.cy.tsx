@@ -969,3 +969,70 @@ describe("Validation inside a form", () => {
 			.should("not.exist");
 	});
 });
+
+describe("DateRangePicker relative dates rejection", () => {
+	it("typing 'today' sets error state", () => {
+		cy.mount(<DateRangePicker></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("today");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.value", "today");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("typing 'tomorrow' sets error state", () => {
+		cy.mount(<DateRangePicker></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("tomorrow");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.value", "tomorrow");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("setting value='today' as attribute sets error state", () => {
+		cy.mount(<DateRangePicker value="today"></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("valid concrete date range does not set error state", () => {
+		cy.mount(<DateRangePicker displayFormat="dd/MM/yyyy"></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/09/2020 - 10/10/2020");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "None");
+	});
+});
