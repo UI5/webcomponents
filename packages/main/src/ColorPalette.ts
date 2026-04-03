@@ -386,9 +386,12 @@ class ColorPalette extends UI5Element {
 
 		// Handle selection for items within the 'recentColorsElements'
 		if (this.recentColorsElements.includes(target)) {
-			this.recentColorsElements[0].selected = true;
-			this.recentColorsElements[0].focus();
-			this._currentlySelected = this.recentColorsElements[0];
+			const firstRecentColor = this.recentColorsElements[0];
+			if (firstRecentColor) {
+				firstRecentColor.selected = true;
+				this.focusColorElement(firstRecentColor, this._itemNavigationRecentColors);
+				this._currentlySelected = firstRecentColor;
+			}
 		} else {
 			this.allColorsInPalette.forEach(item => {
 				item.selected = item === target;
@@ -415,12 +418,6 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onDefaultColorKeyDown(e: KeyboardEvent) {
-		if (this._shouldPreventHomeEnd(e)) {
-			e.preventDefault();
-			e.stopPropagation();
-			return;
-		}
-
 		if (isTabNext(e) && this.popupMode) {
 			this._handleDefaultColorClick(e);
 		}
@@ -444,6 +441,11 @@ class ColorPalette extends UI5Element {
 				() => this._focusPaletteGridWithColumnRestore(false),
 			);
 		} else if (isEnd(e)) {
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -451,6 +453,11 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isHome(e)) {
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
 			// Default Color is the first element, Home stays here
 			e.preventDefault();
 			e.stopPropagation();
