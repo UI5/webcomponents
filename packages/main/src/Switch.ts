@@ -221,6 +221,7 @@ class Switch extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_isSpacePressed = false;
 
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -252,6 +253,60 @@ class Switch extends UI5Element implements IFormInputElement {
 		// Reset keyboard state on focus to prevent stale state from previous interactions
 		this._cancelAction = false;
 		this._isSpacePressed = false;
+
+		// If readonly, announce the readonly note via the live region so ATs read it after role/state
+		if (this.readonly) {
+			this._announceReadonly();
+		}
+	}
+
+	_onfocusout() {
+		// Clear any pending announcements and the live region when focus leaves
+		if (typeof document === "undefined") {
+			return;
+		}
+
+		const live = document.getElementById(this._staticLiveId) as HTMLElement | null;
+		if (live && live.parentNode) {
+			live.parentNode.removeChild(live);
+		}
+	}
+
+	_annOUNCE_READONLY_TEXT = "Read-only";
+
+	_annOUNCE_READONLY_CLEAR_MS = 1200;
+
+	// ID for a global live region appended to document.body. Using a global live region
+	// avoids issues with live regions inside shadow DOM not being reliably announced.
+	_staticLiveId = "ui5-switch-global-readonly-live";
+
+	_announceReadonly() {
+		if (typeof document === "undefined") {
+			return;
+		}
+
+		// Ensure the global live region exists
+		let live = document.getElementById(this._staticLiveId) as HTMLElement | null;
+		if (!live) {
+			live = document.createElement("div");
+			live.id = this._staticLiveId;
+			live.setAttribute("aria-live", "polite");
+			live.setAttribute("aria-atomic", "true");
+			// Visually hide but keep accessible
+			Object.assign(live.style as any, {
+				position: "absolute",
+				width: "1px",
+				height: "1px",
+				overflow: "hidden",
+				clip: "rect(0 0 0 0)",
+				whiteSpace: "nowrap",
+			});
+			document.body.appendChild(live);
+		}
+
+		// Announce immediately (no delay) by setting the live region content.
+		// The live region element will be removed on focusout.
+		live!.textContent = this._annOUNCE_READONLY_TEXT;
 	}
 
 	_onclick() {
@@ -355,6 +410,22 @@ class Switch extends UI5Element implements IFormInputElement {
 
 	get effectiveAriaReadonly() {
 		return this.readonly ? "true" : undefined;
+	}
+
+	/**
+	 * Returns the id of the hidden readonly description to be referenced by aria-describedby when readonly.
+	 */
+	get effectiveAriaDescribedBy() {
+		return this.readonly ? `${(this as any)._id}-readonly` : undefined;
+	}
+
+	/**
+	 * Returns the id of the hidden readonly details element to be referenced by aria-details when readonly.
+	 * Some screen readers announce aria-details after role/state which helps ensure the read-only
+	 * note is spoken last. We keep aria-describedby for compatibility and add aria-details where supported.
+	 */
+	get effectiveAriaDetails() {
+		return this.readonly ? `${(this as any)._id}-readonly-details` : undefined;
 	}
 
 	get effectiveAriaDisabled() {

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Switch - Accessibility PoC (ui5 web components)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		.group { margin: 1rem 0; }
+		table { border-collapse: collapse; font-size: .9rem; margin-bottom: .5rem; }
+		td { padding: .25rem .5rem; border: 1px solid #d9d9d9; vertical-align: top; }
+		.expected { color: #666; margin-bottom: .5rem; display: block; }
+		.ui5-container { padding: 1rem; }
+	</style>
+</head>
+<body>
+	<div class="ui5-container">
+
+		<section class="group">
+			<h2>Case 1 - Default switch with tooltip</h2>
+			<span class="expected">Expected speech: "Notifications - Turn notifications on or off - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">title</td><td>Turn notifications on or off</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw1">Notifications</ui5-label>
+			<ui5-switch id="sw1" tooltip="Turn notifications on or off (Enter)"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 2A - Switch with default handle text (On / Off)</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">title</td><td></td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw2a">Notifications</ui5-label>
+			<ui5-switch id="sw2a"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 2B - Switch with handle text (Yes / No)</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">handle text</td><td>Yes / No</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw2b">Notifications</ui5-label>
+			<ui5-switch id="sw2b" text-on="Yes" text-off="No"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 3 - Default switch with label</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">title</td><td></td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw3">Notifications</ui5-label>
+			<ui5-switch id="sw3"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 4 - Semantic switch - Accept/Reject (graphical)</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">design</td><td>Graphical</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-switch id="sw4" design="Graphical"></ui5-switch>
+			<ui5-label for="sw4">Notifications</ui5-label>
+		</section>
+
+		<section class="group">
+			<h2>Case 5 - Semantic switch - Accept/Reject (checked)</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - On"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">design</td><td>Graphical</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>true</td></tr>
+				</tbody>
+			</table>
+			<ui5-switch id="sw5" design="Graphical" checked></ui5-switch>
+			<ui5-label for="sw5">Notifications</ui5-label>
+		</section>
+
+		<section class="group">
+			<h2>Case 6 - Semantic switch with label and additional text</h2>
+			<span class="expected">Expected speech: "Settings Notifications - Switch - Off"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-labelledby</td><td>additionalText6</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label id="additionalText6">Settings</ui5-label>
+			<ui5-label for="sw6">Notifications</ui5-label>
+			<ui5-switch id="sw6" aria-labelledby="additionalText6"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 7 - Required switch with label</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - On (required)"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">required</td><td>true (label)</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>true</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw7" required>Notifications</ui5-label>
+			<ui5-switch id="sw7" checked></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 8 - Disabled switch</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - Off - Disabled"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-disabled</td><td>true</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw8">Notifications</ui5-label>
+			<ui5-switch id="sw8" disabled></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 9 - Switch with label that duplicates tooltip</h2>
+			<span class="expected">Expected speech: "Toggle Notifications - Switch - Off" (note: tooltip duplicates label)</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">title / tooltip</td><td>Toggle Notifications</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>false</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw9">Toggle Notifications</ui5-label>
+			<ui5-switch id="sw9" tooltip="Toggle Notifications"></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Case 10 - Read-only switch</h2>
+			<span class="expected">Expected speech: "Notifications - Switch - On - Readonly"</span>
+			<table>
+				<tbody>
+					<tr><td style="font-weight:bold;white-space:nowrap">role</td><td>switch</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-readonly</td><td>true</td></tr>
+					<tr><td style="font-weight:bold;white-space:nowrap">aria-checked</td><td>true</td></tr>
+				</tbody>
+			</table>
+			<ui5-label for="sw10">Notifications</ui5-label>
+			<ui5-switch id="sw10" checked readonly></ui5-switch>
+		</section>
+
+		<section class="group">
+			<h2>Interactive examples</h2>
+			<ui5-label for="counterSwitch">Click counter</ui5-label>
+			<ui5-switch id="counterSwitch"></ui5-switch>
+			<ui5-input id="counterInput" value="0"></ui5-input>
+		</section>
+
+		<script>
+			// Wire up simple behaviors
+			document.addEventListener('DOMContentLoaded', function () {
+				const counterSwitch = document.getElementById('counterSwitch');
+				const counterInput = document.getElementById('counterInput');
+				const sws = document.querySelectorAll('ui5-switch');
+
+				sws.forEach(sw => {
+					sw.addEventListener('ui5-change', (e) => {
+						// For accessibility testing we can log state changes
+						console.debug(sw.id + ' changed -> ' + (sw.checked ? 'On' : 'Off'));
+					});
+				});
+
+				if (counterSwitch && counterInput) {
+					counterSwitch.addEventListener('ui5-change', function () {
+						counterInput.value = String(Number(counterInput.value) + 1);
+					});
+				}
+			});
+		</script>
+	</div>
+</body>
+</html>

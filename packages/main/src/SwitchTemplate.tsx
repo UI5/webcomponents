@@ -6,7 +6,8 @@ import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function SwitchTemplate(this: Switch) {
 	return (
-		<div
+		<>
+			<div
 			class={{
 				"ui5-switch-root": true,
 				"ui5-switch--desktop": isDesktop(),
@@ -21,11 +22,14 @@ export default function SwitchTemplate(this: Switch) {
 			aria-checked={this.checked}
 			aria-disabled={this.effectiveAriaDisabled}
 			aria-readonly={this.effectiveAriaReadonly}
+				//aria-describedby={this.effectiveAriaDescribedBy}
+			//aria-details={this.effectiveAriaDetails}
 			aria-required={this.required}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
+			onFocusOut={this._onfocusout}
 			tabindex={this.effectiveTabIndex}
 			title={this.tooltip}
 		>
@@ -66,5 +70,7 @@ export default function SwitchTemplate(this: Switch) {
 				</div>
 			</div>
 			<input type='checkbox' checked={this.checked} class="ui5-switch-input" data-sap-no-tab-ref/>
-		</div>);
+			</div>
+		</>
+    );
 }
