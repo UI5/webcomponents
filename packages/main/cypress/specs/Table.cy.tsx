@@ -93,6 +93,28 @@ describe("Table - Rendering", () => {
 		});
 	});
 
+	it("no-data row spans the full table width with fixed-width columns", () => {
+		cy.mount(
+			<Table style="width: 600px;" id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="200px"><span>Product</span></TableHeaderCell>
+				</TableHeaderRow>
+			</Table>
+		);
+
+		cy.get("#table").shadow().find("#no-data-row").then($row => {
+			expect($row.outerWidth()).to.be.equal(600);
+		});
+
+		cy.get("[ui5-table-header-cell]").then($cell => {
+			$cell.removeAttr("width");
+		});
+
+		cy.get("#table").shadow().find("#no-data-row").then($row => {
+			expect($row.outerWidth()).to.be.equal(600);
+		});
+	});
+
 	it("columns have equal widths width default width", () => {
 		cy.mount(
 			<Table style="width: 400px;" id="table">

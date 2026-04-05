@@ -659,6 +659,15 @@ class Table extends UI5Element {
 			widths.push(`var(--_ui5_table_navigated_cell_width)`);
 		}
 
+		// When showing no-data, ensure the grid fills the full width
+		if (this.rows.length === 0) {
+			const hasFrUnit = widths.some(w => w.includes("fr"));
+			if (!hasFrUnit) {
+				const lastIndex = widths.length - 1;
+				widths[lastIndex] = `minmax(${widths[lastIndex]}, 1fr)`;
+			}
+		}
+
 		return widths.join(" ");
 	}
 
