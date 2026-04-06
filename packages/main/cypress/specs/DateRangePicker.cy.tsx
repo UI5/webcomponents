@@ -1011,11 +1011,23 @@ describe("DateRangePicker relative dates rejection", () => {
 			.should("have.attr", "value-state", "Negative");
 	});
 
-	it("setting value='today' as attribute sets error state", () => {
-		cy.mount(<DateRangePicker value="today"></DateRangePicker>);
+	it("typing 'yesterday' sets error state", () => {
+		cy.mount(<DateRangePicker></DateRangePicker>);
 
 		cy.get("[ui5-daterange-picker]")
 			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("yesterday");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.value", "yesterday");
+
+		cy.get("@dateRangePicker")
 			.should("have.attr", "value-state", "Negative");
 	});
 
