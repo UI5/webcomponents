@@ -22,6 +22,7 @@ export default function SwitchTemplate(this: Switch) {
 			aria-disabled={this.effectiveAriaDisabled}
 			aria-readonly={this.effectiveAriaReadonly}
 			aria-required={this.required}
+			aria-describedby={this.ariaDescribedBy}
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
@@ -60,6 +61,8 @@ export default function SwitchTemplate(this: Switch) {
 								}
 							</>
 						}
+
+						{this.readonly && <span class="ui5-switch-text ui5-switch-text--readonly" part="readonly" id={this.ariaDescribedBy} aria-hidden={this._textAriaHidden}>{this.ariaDescribedByText}</span>}
 
 						<span class="ui5-switch-handle" part="handle"></span>
 					</div>
