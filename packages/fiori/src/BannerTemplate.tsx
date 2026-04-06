@@ -38,17 +38,15 @@ export default function BannerTemplate(this: Banner) {
 					}}>
 						{this._hasStartContent &&
 							<div class="ui5-banner-block ui5-banner-block-start">
-								<slot name="startContent"></slot>
-							</div>
-						}
+							<slot></slot>
+						</div>
+					}
 
-						{this._hasEndContent &&
-							<div class="ui5-banner-block ui5-banner-block-end">
-								<slot name="endContent"></slot>
-							</div>
-						}
-
-						<slot></slot>
+					{this._hasEndContent &&
+						<div class="ui5-banner-block ui5-banner-block-end">
+							<slot name="endContent"></slot>
+						</div>
+					}
 					</div>
 				}
 			</div>

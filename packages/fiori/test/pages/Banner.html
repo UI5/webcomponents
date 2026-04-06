@@ -39,7 +39,7 @@
 						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
 						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
-					<div slot="startContent" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+					<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
 					<ui5-button icon="create">New Request</ui5-button>
 					<ui5-button icon="document" design="Default">Create Report</ui5-button>
 					<ui5-button icon="email" design="Default">Send Message</ui5-button>
@@ -58,7 +58,7 @@
 				salutation-text="Welcome back, Alex"
 				date-text="Thursday, March 6, 2026"
 				layout="FullWidth">
-				<ui5-input slot="startContent"
+			<ui5-input
 					placeholder="Search products, documents, reports..."
 					style="width: 100%;">
 				</ui5-input>
@@ -77,7 +77,7 @@
 				date-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
 
-				<div slot="startContent" class="kpi-card">
+				<div class="kpi-card">
 					<span class="kpi-label">Open Orders</span>
 					<span class="kpi-value">1,247</span>
 					<span class="kpi-trend">▲ 12% vs last month</span>
@@ -103,7 +103,7 @@
 				date-text="Thursday, March 6, 2026"
 				layout="TwoThirds">
 
-				<div slot="startContent" class="kpi-card">
+				<div class="kpi-card">
 					<span class="kpi-label">Pipeline Overview</span>
 					<span class="kpi-value">€12.8M</span>
 					<span class="kpi-trend">▲ 8% quarter over quarter</span>
@@ -147,7 +147,7 @@
 				date-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
 
-				<ui5-card slot="startContent">
+			<ui5-card>
 					<ui5-card-header
 						slot="header"
 						title-text="Quick Actions"
@@ -175,7 +175,7 @@
 					salutation-text="Hello, Lisa"
 					date-text="Thursday, March 6, 2026"
 					layout="FullWidth">
-					<div slot="startContent" class="kpi-card">
+					<div class="kpi-card">
 						<span class="kpi-label">Notifications</span>
 						<span class="kpi-value">23</span>
 					</div>
@@ -207,7 +207,7 @@
 				date-text="Thursday, March 12, 2026"
 				layout="FullWidth">
 
-				<div slot="startContent" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+				<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
 					<ui5-button icon="create">New Request</ui5-button>
 					<ui5-button icon="document" design="Default">Create Report</ui5-button>
 					<ui5-button icon="email" design="Default">Send Message</ui5-button>
@@ -265,7 +265,7 @@
 				<ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
 				<ui5-button slot="headerActions" icon="bell">Notifications</ui5-button>
 
-				<div slot="startContent" class="kpi-card">
+				<div class="kpi-card">
 					<span class="kpi-label">Start Block</span>
 					<span class="kpi-value">100</span>
 				</div>
@@ -286,7 +286,7 @@
 			<ui5-banner id="banner-sf"
 				layout="TwoThirds">
 				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
-				<div slot="startContent" style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
+				<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
 					<div>
 						<div style="font-family: var(--sapFontHeaderFamily); font-size: var(--sapFontHeader2Size); font-weight: bold; color: var(--_ui5_banner_text_color);">Hello, Henry</div>
 					</div>
@@ -353,13 +353,17 @@
 			document.getElementById(checkboxId).addEventListener("change", function () {
 				if (this.checked) {
 					[...slotHolder.querySelectorAll("[data-slot='" + slotName + "']")].forEach(function (el) {
-						el.setAttribute("slot", slotName);
+						el.removeAttribute("data-slot");
+						if (slotName) { el.setAttribute("slot", slotName); }
 						dynamicBanner.appendChild(el);
 					});
 				} else {
-					[...dynamicBanner.querySelectorAll("[slot='" + slotName + "']")].forEach(function (el) {
-						el.dataset.slot = slotName;
-						el.removeAttribute("slot");
+					var elements = slotName
+						? [...dynamicBanner.querySelectorAll("[slot='" + slotName + "']")]
+						: [...dynamicBanner.children].filter(function (el) { return !el.hasAttribute("slot"); });
+					elements.forEach(function (el) {
+						el.setAttribute("data-slot", slotName);
+						if (slotName) { el.removeAttribute("slot"); }
 						slotHolder.appendChild(el);
 					});
 				}
@@ -367,7 +371,7 @@
 		}
 
 		toggleSlot("chk-header-actions", "headerActions");
-		toggleSlot("chk-start", "startContent");
+		toggleSlot("chk-start", "");
 		toggleSlot("chk-end", "endContent");
 
 		// --- Layout buttons ---

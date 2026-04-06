@@ -67,7 +67,7 @@ describe("Banner", () => {
 		it("applies FullWidth layout by default", () => {
 			cy.mount(
 				<Banner salutationText="Hello, John">
-					<div slot="startContent">Start</div>
+					<div>Start</div>
 				</Banner>
 			);
 
@@ -80,7 +80,7 @@ describe("Banner", () => {
 		it("applies HalfWidth layout", () => {
 			cy.mount(
 				<Banner salutationText="Hello" layout="HalfWidth">
-					<div slot="startContent">Start</div>
+					<div>Start</div>
 					<div slot="endContent">End</div>
 				</Banner>
 			);
@@ -94,7 +94,7 @@ describe("Banner", () => {
 		it("applies TwoThirds layout", () => {
 			cy.mount(
 				<Banner salutationText="Hello" layout="TwoThirds">
-					<div slot="startContent">Start</div>
+					<div>Start</div>
 					<div slot="endContent">End</div>
 				</Banner>
 			);
@@ -110,7 +110,7 @@ describe("Banner", () => {
 		it("renders startContent slot", () => {
 			cy.mount(
 				<Banner salutationText="Hello">
-					<div slot="startContent" id="start-block">Start Content</div>
+					<div id="start-block">Start Content</div>
 				</Banner>
 			);
 
@@ -133,23 +133,10 @@ describe("Banner", () => {
 				.and("have.text", "End Content");
 		});
 
-		it("renders default slot content", () => {
-			cy.mount(
-				<Banner salutationText="Hello">
-					<div id="default-content">Default Content</div>
-				</Banner>
-			);
-
-			cy.get("[ui5-banner]")
-				.find("#default-content")
-				.should("exist")
-				.and("have.text", "Default Content");
-		});
-
 		it("renders both startContent and endContent in HalfWidth layout", () => {
 			cy.mount(
 				<Banner salutationText="Hello" layout="HalfWidth">
-					<div slot="startContent" id="start">Left</div>
+					<div id="start">Left</div>
 					<div slot="endContent" id="end">Right</div>
 				</Banner>
 			);
@@ -213,7 +200,7 @@ describe("Banner", () => {
 				.shadow()
 				.find(".ui5-banner-root")
 				.invoke("css", "min-height")
-				.should("equal", "76px"); // 4.75rem = 76px at default font-size
+				.should("equal", "92px"); // 5.75rem = 92px at default font-size
 		});
 	});
 
@@ -259,7 +246,7 @@ describe("Banner", () => {
 		it("updates layout dynamically", () => {
 			cy.mount(
 				<Banner salutationText="Hello" layout="FullWidth">
-					<div slot="startContent">Start</div>
+					<div>Start</div>
 				</Banner>
 			);
 

@@ -118,15 +118,16 @@ class Banner extends UI5Element {
 	backgroundImage?: string;
 
 	/**
-	 * Defines the first free content block of the banner.
+	 * Defines the first (default) free content block of the banner.
 	 *
-	 * This slot can contain various content types defined by the product,
-	 * including KPI cards, search components, text, and buttons.
+	 * This is the default slot — content placed directly inside `<ui5-banner>`
+	 * without a slot attribute lands here.
+	 * Can contain KPI cards, search components, text, buttons, and more.
 	 *
 	 * @public
 	 */
-	@slot()
-	startContent!: Slot<HTMLElement>;
+	@slot({ type: HTMLElement, "default": true })
+	startContent!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the second free content block of the banner.
@@ -138,17 +139,6 @@ class Banner extends UI5Element {
 	 */
 	@slot()
 	endContent!: Slot<HTMLElement>;
-
-	/**
-	 * Defines the default content of the banner.
-	 *
-	 * Used for additional content that appears below the salutation
-	 * and date area, spanning the full width of the banner.
-	 *
-	 * @public
-	 */
-	@slot({ type: HTMLElement, "default": true })
-	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines action buttons displayed to the right of the salutation and date area.
@@ -169,7 +159,7 @@ class Banner extends UI5Element {
 	}
 
 	get _hasContent() {
-		return this.startContent.length > 0 || this.endContent.length > 0 || this.content.length > 0;
+		return this.startContent.length > 0 || this.endContent.length > 0;
 	}
 
 	get _hasStartContent() {

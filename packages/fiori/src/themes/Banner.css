@@ -40,6 +40,7 @@
 .ui5-banner-header {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
@@ -49,6 +50,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+	flex: 1 1 auto;
 	min-width: 0;
 }
 
@@ -56,7 +58,7 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	flex-shrink: 0;
+	flex: 0 0 auto;
 	--sapButton_Lite_TextColor: var(--_ui5_banner_text_color);
 	--sapButton_Lite_Hover_TextColor: var(--_ui5_banner_text_color);
 	--sapButton_Lite_Active_TextColor: var(--_ui5_banner_text_color);
@@ -119,28 +121,8 @@
 	flex: 1 1 calc(33.33% - 0.5rem);
 }
 
-/* L → XS (≤1024px): stack header items top-to-bottom in spec order */
+/* L → XS (≤1024px): D – Salutation max 3 lines, truncate with ellipsis */
 @container (max-width: 1024px) {
-	.ui5-banner-header {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-
-	/* Explicit order: 1-date, 2-salutation (inside header-text), 3-header buttons */
-	.ui5-banner-header-text {
-		order: 1;
-		width: 100%;
-	}
-
-	.ui5-banner-header-actions {
-		order: 2;
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: flex-start;
-		width: 100%;
-	}
-
-	/* D – Salutation: max 3 lines, truncate with ellipsis */
 	.ui5-banner-salutation {
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
