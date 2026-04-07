@@ -59,14 +59,13 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	selected = false;
 
 	/**
-	 * Defines the tooltip of the component. If not provided, a default tooltip will be set to the color value.
+	 * Defines the tooltip of the component. When not set, the color value is used as the tooltip.
 	 *
-	 * @default ""
 	 * @public
-	 * @since 2.1x.0
+	 * @since 2.22.0
 	 */
 	@property()
-	tooltip = ""
+	tooltip?: string;
 
 	/**
 	 * Defines the tab-index of the element, helper information for the ItemNavigation.
