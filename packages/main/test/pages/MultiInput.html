@@ -276,7 +276,6 @@
 
 	<div class="sample-container">
 		<h1>Tokens + Suggestions</h1>
-
 		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-token" value-state="Information">
 			<ui5-suggestion-item text="Aute"></ui5-suggestion-item>
 			<ui5-suggestion-item text="ad"></ui5-suggestion-item>
@@ -334,7 +333,7 @@
 	<div class="sample-container">
 		<h1>Suggestions + showing wrapping</h1>
 
-		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-wrapping">
+		<ui5-multi-input show-suggestions show-value-help-icon id="suggestion-wrapping" filter="Contains">
 			<ui5-suggestion-item text="Lorem ipsum Text"></ui5-suggestion-item>
 			<ui5-suggestion-item text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id justo sed nisl consequat tincidunt. Vivamus tincidunt, sapien a tincidunt consequat, leo libero lacinia justo, a lacinia orci enim vel justo. Integer ultricies ex eu eros luctus, eu cursus nisl volutpat."></ui5-suggestion-item>
 			<ui5-suggestion-item text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></ui5-suggestion-item>
@@ -441,6 +440,15 @@
 		</ui5-multi-input>
 		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 	</form>
+
+	<h3>Capitalization suggestions</h3>
+	<ui5-multi-input id="capitalization-suggestions" show-suggestions>
+		<ui5-suggestion-item text="Apple"></ui5-suggestion-item>
+		<ui5-suggestion-item text="apple"></ui5-suggestion-item>
+		<ui5-suggestion-item text="ApplY"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Apples"></ui5-suggestion-item>
+		<ui5-suggestion-item text="application"></ui5-suggestion-item>
+	</ui5-multi-input>
 	<br><br>
 
 	<script>

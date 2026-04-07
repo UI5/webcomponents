@@ -1,6 +1,6 @@
 @import "../base/CheckBox-parameters.css";
 
-:root {
+:host {
 	--_ui5_checkbox_wrapper_padding: .6875rem;
 	--_ui5_checkbox_width_height: 2.75rem;
 	--_ui5_checkbox_icon_size: 1rem;

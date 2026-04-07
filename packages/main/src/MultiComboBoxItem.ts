@@ -16,6 +16,7 @@ import styles from "./generated/themes/MultiComboBoxItem.css.js";
 import MultiComboBoxItemTemplate from "./MultiComboBoxItemTemplate.js";
 import type { SelectionRequestEventDetail } from "./ListItem.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -43,9 +44,23 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	 * Defines the selected state of the component.
 	 * @default false
 	 * @public
+	 * @deprecated Set the `value` property on items and use the `selectedValues` property on the parent `ui5-multi-combobox` instead for programmatic selection.
 	 */
 	@property({ type: Boolean })
 	declare selected: boolean;
+
+	/**
+	 * Defines the value of the component.
+	 *
+	 * Use this property to associate a unique identifier with the item,
+	 * separate from the display text. This enables selecting items
+	 * programmatically via `selectedValues` on the parent MultiComboBox.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	value?: string;
 
 	/**
 	 * Defines whether the item is filtered
@@ -83,11 +98,7 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 	}
 }
 
-const isInstanceOfMultiComboBoxItem = (object: any): object is MultiComboBoxItem => {
-	return "isMultiComboBoxItem" in object;
-};
-
 MultiComboBoxItem.define();
 
 export default MultiComboBoxItem;
-export { isInstanceOfMultiComboBoxItem };
+export const isInstanceOfMultiComboBoxItem = createInstanceChecker<MultiComboBoxItem>("isMultiComboBoxItem");

@@ -1,4 +1,4 @@
-:root {
+:host {
     --_ui5_color_picker_slider_handle_box_shadow: inset 0 0 0 0.125rem var(--sapContent_ContrastShadowColor);
     --_ui5_color_picker_slider_handle_border: 0.125rem solid var(--sapField_BorderColor);
     --_ui5_color_picker_slider_handle_outline_hover: 0.125rem solid var(--sapButton_Hover_BorderColor);

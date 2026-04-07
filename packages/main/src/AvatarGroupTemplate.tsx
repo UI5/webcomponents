@@ -6,7 +6,14 @@ export default function AvatarGroupTemplate(this: AvatarGroup) {
 	return (
 		<div class="ui5-avatar-group-root">
 			<div
-				class="ui5-avatar-group-items"
+				class={{
+					"ui5-avatar-group-items": true,
+					"ui5-avatar-group-items-xs": this.firstAvatarSize === AvatarSize.XS,
+					"ui5-avatar-group-items-s": this.firstAvatarSize === AvatarSize.S,
+					"ui5-avatar-group-items-m": this.firstAvatarSize === AvatarSize.M,
+					"ui5-avatar-group-items-l": this.firstAvatarSize === AvatarSize.L,
+					"ui5-avatar-group-items-xl": this.firstAvatarSize === AvatarSize.XL,
+				}}
 				role={this._role}
 				tabindex={this._groupTabIndex}
 				aria-label={this._ariaLabelText}

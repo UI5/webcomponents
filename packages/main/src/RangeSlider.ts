@@ -109,7 +109,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this.tooltipStartValue = value.toString();
 	}
 
-	get startValue() {
+	get startValue(): number {
 		return this._startValue;
 	}
 
@@ -126,7 +126,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this.tooltipEndValue = value.toString();
 	}
 
-	get endValue() {
+	get endValue(): number {
 		return this._endValue;
 	}
 
@@ -1036,7 +1036,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			progress: {
 				"width": `${this._selectedRange! * 100}%`,
 				"transform-origin": `${this.directionStart} top`,
-				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,
+				[this.directionStart]: `calc(${this._firstHandlePositionFromStart!}% + var(--_ui5_slider_active_progress_left))`,
 			},
 			startHandle: {
 				[this.directionStart]: `${this._firstHandlePositionFromStart!}%`,

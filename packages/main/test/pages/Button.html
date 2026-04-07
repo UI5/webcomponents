@@ -309,6 +309,22 @@
 		<ui5-button type="Reset">Reset</ui5-button>
 	</form>
 
+	<br />
+	<br />
+	<ui5-title>Buttons with form attribute (outside form)</ui5-title>
+	<br />
+	<form id="externalForm" onsubmit="handleExternalFormSubmit(event)">
+		<ui5-label>External Form:</ui5-label>
+		<ui5-input id="externalFormInput" name="externalInput" value="External form input"></ui5-input>
+	</form>
+	<br />
+	<p>These buttons are outside the form but control it via the <code>form</code> attribute:</p>
+	<ui5-button form="externalForm" type="Submit" design="Emphasized">Submit External Form</ui5-button>
+	<ui5-button form="externalForm" type="Reset">Reset External Form</ui5-button>
+	<span id="externalFormMessage" style="color: green; display: none; margin-left: 10px;">Form submitted!</span>
+	<br />
+	<br />
+
 	<ui5-button id="openDialogButton" design="Emphasized">Show Registration Dialog</ui5-button>
 
 	<ui5-dialog id="registration-dialog" header-text="Register Form">
@@ -413,7 +429,21 @@
 		btnInLink.addEventListener("ui5-click", (e) => {
 			e.preventDefault();
 		});
+
+		function handleExternalFormSubmit(event) {
+			event.preventDefault();
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData.entries());
+			const message = document.getElementById('externalFormMessage');
+			message.textContent = 'Submitted: ' + JSON.stringify(values);
+			message.style.display = 'inline';
+			setTimeout(() => {
+				message.style.display = 'none';
+			}, 5000);
+		}
+		window.handleExternalFormSubmit = handleExternalFormSubmit;
 	</script>
+
 </body>
 
 </html>

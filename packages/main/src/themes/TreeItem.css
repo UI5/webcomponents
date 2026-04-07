@@ -65,10 +65,18 @@
 }
 
 .ui5-li-tree-toggle-icon {
-	width: var(--_ui5-tree-toggle-icon-size);
-	height: var(--_ui5-tree-toggle-icon-size);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--_ui5-tree-toggle-box-width);
+	height: var(--_ui5-tree-toggle-box-height);
 	color: var(--sapContent_IconColor);
 	cursor: pointer;
+}
+
+.ui5-li-tree-toggle-icon::part(root) {
+	width: var(--_ui5-tree-toggle-icon-size);
+	height: var(--_ui5-tree-toggle-icon-size);
 }
 
 :host([actionable]) .ui5-li-tree-toggle-icon {

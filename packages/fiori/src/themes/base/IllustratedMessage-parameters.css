@@ -1,4 +1,4 @@
-:root {
+:host {
     --sapIllus_BrandColorPrimary: var(--sapContent_Illustrative_Color1);
     --sapIllus_BrandColorSecondary: var(--sapContent_Illustrative_Color2);
     --sapIllus_StrokeDetailColor: var(--sapContent_Illustrative_Color4);

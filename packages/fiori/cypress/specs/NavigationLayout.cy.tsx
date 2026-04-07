@@ -18,7 +18,67 @@ function Sample() {
 
 			<SideNavigationGroup text="Group 1" expanded={true}>
 				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
-				<SideNavigationItem text="Item 2" href="#item2"icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
+			</SideNavigationGroup>
+
+			<SideNavigationItem
+				slot="fixedItems"
+				text="Legal"
+				href="https://www.sap.com/about/legal/impressum.html"
+				target="_blank"
+				icon={home}>
+			</SideNavigationItem>
+		</SideNavigation>
+
+		<div>
+			Content
+		</div>
+	</NavigationLayout>;
+}
+
+function SampleWithCollapsedMode() {
+	return <NavigationLayout id="nl1" mode="Collapsed">
+		<ShellBar slot="header" primaryTitle="UI5 Web Components">
+			<Button icon={menu} slot="startButton" id="startButton"></Button>
+		</ShellBar>
+
+		<SideNavigation id="sn1" slot="sideContent">
+			<SideNavigationItem text="Home" href="#home" icon={home}></SideNavigationItem>
+
+			<SideNavigationGroup text="Group 1" expanded={true}>
+				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
+			</SideNavigationGroup>
+
+			<SideNavigationItem
+				slot="fixedItems"
+				text="Legal"
+				href="https://www.sap.com/about/legal/impressum.html"
+				target="_blank"
+				icon={home}>
+			</SideNavigationItem>
+		</SideNavigation>
+
+		<div>
+			Content
+		</div>
+	</NavigationLayout>;
+}
+
+function SampleWithExpandedMode() {
+	return <NavigationLayout id="nl1" mode="Expanded">
+		<ShellBar slot="header" primaryTitle="UI5 Web Components">
+			<Button icon={menu} slot="startButton" id="startButton"></Button>
+		</ShellBar>
+
+	<SideNavigation id="sn1" slot="sideContent">
+			<SideNavigationItem text="Home" href="#home" icon={home}></SideNavigationItem>
+
+			<SideNavigationGroup text="Group 1" expanded={true}>
+				<SideNavigationItem text="Item 1" href="#item1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" href="#item2" icon={home}></SideNavigationItem>
 				<SideNavigationItem text="Item 3" href="#item3" icon={home}></SideNavigationItem>
 			</SideNavigationGroup>
 
@@ -38,11 +98,10 @@ function Sample() {
 }
 
 describe("Rendering and interaction", () => {
-	beforeEach(() => {
-		cy.mount(<Sample />);
-	});
 
 	it("tests initial rendering", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
 			.find(".ui5-nl-root")
@@ -69,36 +128,72 @@ describe("Rendering and interaction", () => {
 			.should("exist");
 	});
 
-	// it("tests collapsing", () => {
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", false);
+	it("tests collapsing", () => {
+		cy.mount(<Sample />);
 
-	// 	cy.get("[ui5-navigation-layout]")
-	// 		.invoke("prop", "mode", "Collapsed");
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", false);
 
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", true);
+		cy.get("[ui5-navigation-layout]")
+			.invoke("prop", "mode", "Collapsed");
 
-	// 	cy.get("[ui5-navigation-layout]")
-	// 		.invoke("prop", "mode", "Expanded");
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", true);
 
-	// 	cy.get("[ui5-side-navigation]")
-	// 		.should("have.prop", "collapsed", false);
-	// });
+		cy.get("[ui5-navigation-layout]")
+			.invoke("prop", "mode", "Expanded");
+
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", false);
+	});
+
+	it("tests that initial mode=Collapsed overrides default expand/collapse behavior", () => {
+		cy.mount(<SampleWithCollapsedMode />);
+
+		cy.get("[ui5-side-navigation]")
+			.should("have.prop", "collapsed", true);
+	});
+
+	it("should fire item-click event on every item click", () => {
+		cy.mount(
+			<NavigationLayout onItemClick={cy.stub().as("itemClickNavLayout")}>
+				<SideNavigation slot="sideContent" onItemClick={cy.stub().as("itemClickSideNav")}>
+					<SideNavigationItem text="Item 1" />
+					<SideNavigationItem text="Item 2" />
+				</SideNavigation>
+				<div>Main content</div>
+			</NavigationLayout>
+		);
+
+		// Click the first item
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+		
+		// Check how many times each event was fired
+		cy.get("@itemClickSideNav").should("have.been.calledOnce");
+		cy.get("@itemClickNavLayout").should("have.been.calledOnce");
+		
+		// Click the same item again
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+		
+		// Verify counts after second click
+		cy.get("@itemClickSideNav").should("have.been.calledTwice");
+		cy.get("@itemClickNavLayout").should("have.been.calledTwice");
+	});
 });
 
-describe("Navigation Layout on Phone", () => {
+describe("Navigation Layout on Small screens (599px or less)", () => {
 	beforeEach(() => {
-		cy.ui5SimulateDevice("phone");
-		cy.mount(<Sample />);
+		cy.viewport(500, 1080);
 	});
 
 	it("tests initial rendering", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.should("have.prop", "sideCollapsed", true);
 
 		cy.get("[ui5-side-navigation]")
-			.should("have.prop", "collapsed", false);
+			.should("have.prop", "collapsed", true);
 
 		cy.get("[ui5-navigation-layout]")
 			.shadow()
@@ -107,6 +202,8 @@ describe("Navigation Layout on Phone", () => {
 	});
 
 	it("tests collapsing", () => {
+		cy.mount(<Sample />);
+
 		cy.get("[ui5-navigation-layout]")
 			.invoke("prop", "mode", "Expanded");
 
@@ -122,5 +219,59 @@ describe("Navigation Layout on Phone", () => {
 			.shadow()
 			.find(".ui5-nl-aside")
 			.should("not.be.visible");
+	});
+
+	it("tests that initial mode=Expanded overrides default expand/collapse behavior", () => {
+		cy.mount(<SampleWithExpandedMode />);
+
+		cy.get("[ui5-navigation-layout]")
+			.shadow()
+			.find(".ui5-nl-aside")
+			.should("be.visible");
+	});
+
+	it("should collapse SideNavigation when mode is not Auto", () => {
+		cy.mount(<NavigationLayout mode="Expanded">
+			<SideNavigation slot="sideContent">
+				<SideNavigationItem text="Home" />
+				<SideNavigationItem text="Products" />
+				<SideNavigationItem text="Settings" />
+			</SideNavigation>
+			<div>Main content</div>
+		</NavigationLayout>);
+
+		// In Expanded mode, SideNavigation should be visible even on mobile
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
+
+		// Click on a SideNavigationItem
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", true);
+	});
+});
+
+describe("Navigation Layout on Desktop screens (600px or more)", () => {
+	beforeEach(() => {
+		cy.viewport(1200, 800);
+	});
+
+	it("should not collapse SideNavigation on desktop when item is selected", () => {
+		cy.mount(<NavigationLayout mode="Auto">
+			<SideNavigation slot="sideContent">
+				<SideNavigationItem text="Home" />
+				<SideNavigationItem text="Products" />
+				<SideNavigationItem text="Settings" />
+			</SideNavigation>
+			<div>Main content</div>
+		</NavigationLayout>);
+
+		// On desktop in Auto mode, SideNavigation should not be collapsed
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
+
+		// Click on a SideNavigationItem
+		cy.get("[ui5-side-navigation-item]").first().realClick();
+
+		// SideNavigation should remain not collapsed on desktop
+		cy.get("[ui5-side-navigation]").should("have.prop", "collapsed", false);
 	});
 });

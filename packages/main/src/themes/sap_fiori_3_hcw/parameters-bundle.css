@@ -1,7 +1,9 @@
 @import "./Avatar-parameters.css";
 @import "../base/AvatarGroup-parameters.css";
 @import "./Tag-parameters.css";
+@import "../base/Breadcrumbs-parameters.css";
 @import "./Button-parameters.css";
+@import "../base/BusyIndicator-parameters.css";
 @import "../base/ButtonBadge-parameters.css";
 @import "../base/CalendarLegend-parameters.css";
 @import "../base/CalendarLegendItem-parameters.css";
@@ -53,6 +55,8 @@
 @import "./ValueStateMessage-parameters.css";
 
 @import "./SliderBase-parameters.css";
+@import "./SliderHandle-parameters.css";
+@import "./SliderScale-parameters.css";
 @import "../base/StepInput-parameters.css";
 @import "./sizes-parameters.css";
 @import "../base/rtl-parameters.css";

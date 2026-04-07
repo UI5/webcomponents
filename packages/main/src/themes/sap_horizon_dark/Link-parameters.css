@@ -1,6 +1,6 @@
 @import "../base/Link-parameters.css";
 
-:root {
+:host {
 	--_ui5_link_text_decoration: var(--sapLink_TextDecoration);
 	--_ui5_link_hover_text_decoration: var(--sapLink_Hover_TextDecoration);
 	--_ui5_link_focused_hover_text_decoration: none;

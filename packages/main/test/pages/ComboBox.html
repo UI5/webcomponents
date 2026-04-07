@@ -39,9 +39,14 @@
 			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
 			<ui5-cb-item text="Canada"></ui5-cb-item>
 			<ui5-cb-item text="Chile"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Her Her"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Her Her"></ui5-cb-item>
 		</ui5-combobox>
 		<ui5-button id="combo-focus">Focus ComboBox</ui5-button>
 		<ui5-button id="value-set-btn">Set value</ui5-button>
+		<span id="change-event-result"></span>
+		<span id="selection-change-event-result"></span>
 
 		<ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
 			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
@@ -169,13 +174,6 @@
 		</ui5-combobox>
 	</div>
 
-	<div class="demo-section">
-		<span id="change-event-result"></span>
-		<br />
-		<span id="selection-change-event-result"></span>
-
-	</div>
-
 		<div class="demo-section">
 		<span>SelectionChange event testing</span>
 
@@ -190,6 +188,20 @@
 
 		Selected item: <span id="selection-change-placeholder"></span><br>
 		SelectionChange call count: <span id="selection-change-count">0</span><br>
+	</div>
+
+	<div class="demo-section">
+		<span>Toggle Loading State</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3"></ui5-cb-item>
+		</ui5-combobox>
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
 	</div>
 
 	<div class="demo-section">
@@ -305,6 +317,17 @@
 		<ui5-combobox class="combobox" id="same-name-suggestions-cb">
 			<ui5-cb-item text="Item that does not wrap"></ui5-cb-item>
 			<ui5-cb-item text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - items with same text but different values</span>
+		<ui5-combobox id="same-items" value="Item 1" selected-value="2">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
 		</ui5-combobox>
 	</div>
 
@@ -470,6 +493,15 @@
 			});
 		</script>
 	</div>
+	<div class="demo-section">
+		<span>ComboBox - items with lower case and upper case</span>
+		<ui5-combobox id="combo-lower-upper-case" no-typeahead>
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="item 11"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="item 22"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
 
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
@@ -579,7 +611,7 @@
 		});
 
 		document.getElementById("combo").addEventListener("ui5-selection-change", function (event) {
-			document.getElementById("selection-change-event-result").innerHTML = event.detail.item.text;
+			document.getElementById("selection-change-event-result").innerHTML = event.detail.item ? event.detail.item.text : "(cleared)";
 		});
 
 		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {
@@ -603,6 +635,11 @@
 
 		document.getElementById("combo-focus").addEventListener("click", function () {
 			document.getElementById("combo").focus();
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const combo = document.getElementById("toggle-loading-cb");
+			combo.loading = !combo.loading;
 		});
 	</script>
 

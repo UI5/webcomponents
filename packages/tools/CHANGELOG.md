@@ -3,6 +3,173 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Features
+
+* update sap/icons to v5.12 & 4.24 ([#13319](https://github.com/UI5/webcomponents/issues/13319)) ([0b16434](https://github.com/UI5/webcomponents/commit/0b164348069b96f5464eaea3425a4876097dc44d))
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
+
+
+### Features
+
+* **theming:** add OS-adaptive auto themes (sap_horizon_auto, sap_horizon_hc_auto) ([#13300](https://github.com/UI5/webcomponents/issues/13300)) ([f6ae2b5](https://github.com/UI5/webcomponents/commit/f6ae2b53ff86d0b4e1c420863535d8e43bae4ed4))
+
+
+
+
+
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
+
+
+### Bug Fixes
+
+* **ui5-illustrated-message:** add v5 loader in tnt illustrations ([#13160](https://github.com/UI5/webcomponents/issues/13160)) ([3dc4694](https://github.com/UI5/webcomponents/commit/3dc4694ecbb9ca3c2e8061fccaf917bfa211861a)), closes [#8145](https://github.com/UI5/webcomponents/issues/8145) [#8145](https://github.com/UI5/webcomponents/issues/8145)
+
+
+
+
+
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* CSS variables scoping to depend VersionInfo ([#13091](https://github.com/UI5/webcomponents/issues/13091)) ([d2e43ed](https://github.com/UI5/webcomponents/commit/d2e43ed692c63a0a36a9b14da59de354e2e7d0b0))
+
+
+
+
+
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **i18n:** handle utf-8 escape sequences in message bundle properties files ([#12784](https://github.com/UI5/webcomponents/issues/12784)) ([54a3f15](https://github.com/UI5/webcomponents/commit/54a3f15a8d23de8683db5829c78255307ef3f8b5))
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
 # [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools

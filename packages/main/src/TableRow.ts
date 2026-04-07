@@ -1,4 +1,4 @@
-import { customElement, slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -10,6 +10,7 @@ import type TableCell from "./TableCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
 } from "./generated/i18n/i18n-defaults.js";
@@ -48,11 +49,11 @@ class TableRow extends TableRowBase<TableCell> {
 		"default": true,
 		individualSlots: true,
 		invalidateOnChildChange: {
-			properties: ["_popin", "_popinHidden"],
+			properties: ["merged", "_popin", "_popinHidden"],
 			slots: false,
 		},
 	})
-	cells!: Array<TableCell>;
+	cells!: DefaultSlot<TableCell>;
 
 	/**
 	 * Defines the actions of the component.
@@ -66,7 +67,7 @@ class TableRow extends TableRowBase<TableCell> {
 		type: HTMLElement,
 		individualSlots: true,
 	})
-	actions!: Array<TableRowActionBase>;
+	actions!: Slot<TableRowActionBase>;
 
 	/**
 	 * Unique identifier of the row.
@@ -129,12 +130,27 @@ class TableRow extends TableRowBase<TableCell> {
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
+		toggleAttribute(this, "_haspopin", this._hasPopin);
 	}
 
 	async focus(focusOptions?: FocusOptions | undefined): Promise<void> {
 		this.setAttribute("tabindex", "-1");
 		HTMLElement.prototype.focus.call(this, focusOptions);
 		return Promise.resolve();
+	}
+
+	async _onpointerdown(e: PointerEvent) {
+		if (e.button !== 0 || !this._isInteractive) {
+			return;
+		}
+
+		const composedPath = e.composedPath();
+		composedPath.splice(composedPath.indexOf(this));
+		await new Promise(resolve => setTimeout(resolve)); // wait for the focus to be set
+		const activeElement = getActiveElement() as Element;
+		if (!composedPath.includes(activeElement)) {
+			this._setActive("pointerup");
+		}
 	}
 
 	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
@@ -144,7 +160,7 @@ class TableRow extends TableRowBase<TableCell> {
 		}
 
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
-			this.toggleAttribute("_active", true);
+			this._setActive("keyup");
 			this._onclick();
 		}
 	}
@@ -159,12 +175,11 @@ class TableRow extends TableRowBase<TableCell> {
 		}
 	}
 
-	_onkeyup() {
-		this.removeAttribute("_active");
-	}
-
-	_onfocusout() {
-		this.removeAttribute("_active");
+	_setActive(deactivationEvent: string) {
+		this.toggleAttribute("_active", true);
+		document.addEventListener(deactivationEvent, () => {
+			this.removeAttribute("_active");
+		}, { once: true });
 	}
 
 	_onOverflowButtonClick(e: UI5CustomEvent<Button, "click">) {
@@ -179,8 +194,12 @@ class TableRow extends TableRowBase<TableCell> {
 
 	get _isNavigable() {
 		return this._fixedActions.find(action => {
-			return action.hasAttribute("ui5-table-row-action-navigation") && !action._isInteractive;
+			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
 		}) !== undefined;
+	}
+
+	get _hasPopin() {
+		return this.cells.some(c => c._popin && !c._popinHidden);
 	}
 
 	get _rowIndex() {

@@ -115,31 +115,40 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetPopover()
 			.within(() => {
-				// Click the currently selected day and then move to the next day.
 				cy.get("[ui5-calendar]")
 					.shadow()
-					.as("calendar");
-				
-				cy.realPress("Tab"); 
-				cy.realPress("Tab"); 
-
-				cy.get("@calendar")
 					.find("[ui5-daypicker]")
 					.shadow()
 					.find(".ui5-dp-item--selected")
+					.as("selectedDay");
+
+				cy.get("[ui5-calendar]")
+					.shadow()
+					.find("[ui5-daypicker]")
+					.shadow()
+					.find('.ui5-dp-item')
+					.contains('.ui5-dp-daytext', '14')
+					.closest('.ui5-dp-item')
+					.as("nextSelectedDay");
+
+				// Click the currently selected day and move to the next day with Arrow + Right
+				cy.get("@selectedDay")
 					.realClick()
-					.should("be.focused");
+					.should("be.focused")
+					.realPress("ArrowRight");
 
-				cy.realPress("ArrowRight");
-				cy.realPress("Space");
-
-				// Confirm the change.
+				// Wait next day to be focused and then - select it with Space.
+				cy.get("@nextSelectedDay")
+					.should("be.focused")
+					.realPress("Space");
+				
+				// Confirm the new selection
 				cy.get("#ok").realClick();
 			});
 
 		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerExpectToBeClosed();
 
-		// Only the date has changed; the time remains the same.
+		// Only the date has changed - the time remains the same.
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -275,6 +284,37 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerPeriodSegmentedButtonCount()
 			.should("be.equal", expectedPeriodCount)
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerClose();
+	});
+
+	it("tests time controls with value-format HH:mm shows only hours and minutes", () => {
+		cy.mount(<DateTimePicker value-format="yyyy-MM-dd HH:mm" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.within(() => {
+				cy.get("[ui5-time-selection-clocks]")
+					.shadow()
+					.as("clocks");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="hours"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="minutes"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="seconds"]`)
+					.should("not.exist");
+			});
 
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerClose();

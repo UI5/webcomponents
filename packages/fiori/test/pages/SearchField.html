@@ -43,6 +43,10 @@
 			<ui5-button slot="filterButton" icon="filter"></ui5-button>
 	</ui5-search-field>
 	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
+		<ui5-label>Search with loading state (click search icon)</ui5-label>
+		<ui5-search-field id="search-loading" placeholder="Search..." show-clear-icon></ui5-search-field>
+	</div>
+	<div class="container" style="padding-top: 1rem; display: flex; flex-direction: column;">
 		<ui5-label>Collapsed search</ui5-label>
 		<div class="container" style="border: 1px solid black; display: flex; padding: 4px; justify-content: flex-end;">
 			<ui5-search-field accessible-name="Global Search" ></ui5-search-field>
@@ -86,6 +90,13 @@
 		});
 		scopedSearch.addEventListener('ui5-scope-change', (event) => {
 			console.log('scope-change', event.detail.scope);
+		});
+
+		const searchLoading = document.getElementById('search-loading');
+		searchLoading.addEventListener('ui5-search', async () => {
+			searchLoading.fieldLoading = true;
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			searchLoading.fieldLoading = false;
 		});
 	</script>
 </body>

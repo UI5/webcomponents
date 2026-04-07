@@ -16,6 +16,7 @@ export default function IconTemplate(this: Icon) {
 			xmlns="http://www.w3.org/2000/svg"
 			onKeyDown={this._onkeydown}
 			onKeyUp={this._onkeyup}
+			onClick={this._onclick}
 		>
 			{ this.hasIconTooltip &&
                 <title id={`${this._id}-tooltip`} > {this.effectiveAccessibleName} </title>

@@ -553,6 +553,22 @@
 
 	<br>
 	<br>
+	<ui5-title>Input with built-in filtering (Contains)</ui5-title>
+	<ui5-input filter="Contains" show-suggestions>
+		<ui5-suggestion-item-group header-text="Metals">
+			<ui5-suggestion-item text="Gold"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Silver"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Iron"></ui5-suggestion-item>
+		</ui5-suggestion-item-group>
+		<ui5-suggestion-item-group header-text="Fruits">
+			<ui5-suggestion-item text="Apple"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Banana"></ui5-suggestion-item>
+			<ui5-suggestion-item text="Orange"></ui5-suggestion-item>
+		</ui5-suggestion-item-group>
+	</ui5-input>
+
+	<br>
+	<br>
 	<h3>Input Composition</h3>
 	<ui5-label id="description">Input Composition with Korean Suggestions</ui5-label>
 	<br>
@@ -593,8 +609,17 @@
 		</ui5-input>
 		<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 	</form>
-	<br><br>
 
+	<h3>Capitalization suggestions</h3>
+	<ui5-input id="capitalization-suggestions" show-suggestions>
+		<ui5-suggestion-item text="Apple"></ui5-suggestion-item>
+		<ui5-suggestion-item text="apple"></ui5-suggestion-item>
+		<ui5-suggestion-item text="aPPle"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Apples"></ui5-suggestion-item>
+		<ui5-suggestion-item text="apples"></ui5-suggestion-item>
+	</ui5-input>
+	<br><br>
+	
 	<script>
 		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
 		const formValidationMessage = document.getElementById('formValidationMessage');

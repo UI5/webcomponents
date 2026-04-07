@@ -1,6 +1,6 @@
 @import "../base/ValueStateMessage-parameters.css";
 
-:root {
+:host {
 	--_ui5_value_state_message_border: var(--sapField_BorderWidth) solid var(--sapField_BorderColor);
 	--_ui5_value_state_header_offset: -0.1875rem;
 	--_ui5_value_state_header_box_shadow_error: inset 0 -0.125rem var(--sapField_InvalidColor);

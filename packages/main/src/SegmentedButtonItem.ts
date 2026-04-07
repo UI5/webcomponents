@@ -1,6 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { getEnableDefaultTooltips } from "@ui5/webcomponents-base/dist/config/Tooltips.js";
@@ -12,7 +13,7 @@ import {
 	getEffectiveAriaDescriptionText,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { SEGMENTEDBUTTONITEM_ARIA_DESCRIPTION } from "./generated/i18n/i18n-defaults.js";
 import type { ISegmentedButtonItem } from "./SegmentedButton.js";
@@ -175,7 +176,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Node>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -192,6 +193,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 		if (this.disabled) {
 			e.preventDefault();
 			e.stopPropagation();
+			return;
 		}
 
 		this.selected = !this.selected;

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_card_box_shadow: var(--sapContent_Shadow0);
 	--_ui5_card_hover_box_shadow: var(--_ui5_card_box_shadow);
 	--_ui5_card_border: 1px solid var(--sapTile_BorderColor);

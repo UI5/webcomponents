@@ -15,19 +15,19 @@ import "../../src/TableSelectionSingle.js";
 import * as Translations from "../../src/generated/i18n/i18n-defaults.js";
 
 const {
-	TABLE_CELL_MULTIPLE_CONTROLS: { defaultText: CONTAINS_CONTROLS },
-	TABLE_CELL_SINGLE_CONTROL: { defaultText: CONTAINS_CONTROL },
-	TABLE_ACC_STATE_READONLY: { defaultText: READONLY },
-	TABLE_ACC_STATE_DISABLED: { defaultText: DISABLED },
-	TABLE_ACC_STATE_REQUIRED: { defaultText: REQUIRED },
+	ACC_STATE_MULTIPLE_CONTROLS: { defaultText: CONTAINS_CONTROLS },
+	ACC_STATE_SINGLE_CONTROL: { defaultText: CONTAINS_CONTROL },
+	ACC_STATE_READONLY: { defaultText: READONLY },
+	ACC_STATE_DISABLED: { defaultText: DISABLED },
+	ACC_STATE_REQUIRED: { defaultText: REQUIRED },
+	ACC_STATE_EMPTY: { defaultText: EMPTY },
+	CHECKBOX_CHECKED: { defaultText: CHECKED },
+	CHECKBOX_NOT_CHECKED: { defaultText: NOT_CHECKED },
 	TABLE_ROW_SINGLE_ACTION: { defaultText: ONE_ROW_ACTION },
 	TABLE_ROW_MULTIPLE_ACTIONS: { defaultText: MULTIPLE_ACTIONS },
-	TABLE_ACC_STATE_EMPTY: { defaultText: EMPTY },
 	TABLE_GENERATED_BY_AI: { defaultText: GENERATED_BY_AI },
 	TABLE_ROW_ACTIONS: { defaultText: ROW_ACTIONS },
 	TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION: { defaultText: SELECT_ALL_CHECKBOX },
-	TABLE_COLUMNHEADER_SELECTALL_CHECKED: { defaultText: CHECKED },
-	TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED: { defaultText: NOT_CHECKED },
 	TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION: { defaultText: CLEAR_ALL_BUTTON },
 	TABLE_SELECTION: { defaultText: SELECTION },
 	TABLE_COLUMN_HEADER_ROW: { defaultText: COLUMN_HEADER_ROW },
@@ -47,7 +47,7 @@ describe("Cell Custom Announcement - More details", () => {
 						<Label required>Header1</Label>
 						<TableHeaderCellActionAI slot="action"></TableHeaderCellActionAI>
 					</TableHeaderCell>
-					<TableHeaderCell data-ui5-table-acc-text="Header2"><input/></TableHeaderCell>
+					<TableHeaderCell data-ui5-acc-text="Header2"><input /></TableHeaderCell>
 					<TableHeaderCell><div>Header3</div></TableHeaderCell>
 					<TableHeaderCell sort-indicator="Descending"></TableHeaderCell>
 				</TableHeaderRow>
@@ -84,8 +84,7 @@ describe("Cell Custom Announcement - More details", () => {
 		}
 
 		cy.get("body").then($body => {
-			debugger;
-			expect($body.find("#ui5-table-invisible-text").text()).to.equal(expectedText);
+			expect($body.find("#ui5-invisible-text").text()).to.equal(expectedText);
 		});
 	}
 
@@ -112,7 +111,7 @@ describe("Cell Custom Announcement - More details", () => {
 		cy.get("@row1Input2").invoke("removeAttr", "hidden");
 		checkAnnouncement(CONTAINS_CONTROLS, true);
 
-		cy.get("@row1Input1").invoke("attr", "data-ui5-table-acc-text", "Input with custom accessibility text");
+		cy.get("@row1Input1").invoke("attr", "data-ui5-acc-text", "Input with custom accessibility text");
 		checkAnnouncement(`Input with custom accessibility text . ${CONTAINS_CONTROLS}`, true);
 
 		cy.realPress("ArrowRight"); // third cell focused
@@ -143,7 +142,7 @@ describe("Cell Custom Announcement - More details", () => {
 		});
 		checkAnnouncement(`Button Row1Cell3Button ${REQUIRED} ${DISABLED} ${READONLY} . ${CONTAINS_CONTROL}`, true);
 
-		cy.get("@row1Button").invoke("attr", "data-ui5-table-acc-text", "Button with custom accessibility text");
+		cy.get("@row1Button").invoke("attr", "data-ui5-acc-text", "Button with custom accessibility text");
 		checkAnnouncement(`Button with custom accessibility text . ${CONTAINS_CONTROL}`, true);
 
 		cy.realPress("ArrowRight"); // Row actions cell
@@ -152,7 +151,7 @@ describe("Cell Custom Announcement - More details", () => {
 					.should("have.attr", "role", "gridcell")
 					.then($rowActionsCell => {
 						const rowActionsCell = $rowActionsCell[0];
-						const invisibleText = document.getElementById("ui5-table-invisible-text");
+						const invisibleText = document.getElementById("ui5-invisible-text");
 						expect(rowActionsCell.ariaLabelledByElements[0]).to.equal(invisibleText);
 						rowActionsCell.blur();
 						expect(rowActionsCell.ariaLabelledByElements).to.equal(null);
@@ -225,7 +224,7 @@ describe("Row Custom Announcement - Less details", () => {
 						<div style={{ display: "none" }}>H1DisplayNone</div>
 					</TableHeaderCell>
 					<TableHeaderCell minWidth="200px">
-						<div data-ui5-table-acc-text="H2">H2 Custom Text</div>
+						<div data-ui5-acc-text="H2">H2 Custom Text</div>
 					</TableHeaderCell>
 					<TableHeaderCell id="Header3" minWidth="200px">
 						<div>H3<div aria-hidden="true">H3AriaHidden</div></div>
@@ -296,7 +295,7 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 
 		cy.get("body").then($body => {
-			expect($body.find("#ui5-table-invisible-text").text())[check](expectedText);
+			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
 		});
 	}
 

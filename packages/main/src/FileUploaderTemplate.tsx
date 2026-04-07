@@ -1,5 +1,5 @@
 import Icon from "./Icon.js";
-import valueHelp from "@ui5/webcomponents-icons/dist/value-help.js";
+import browseIcon from "@ui5/webcomponents-icons/dist/browse-folder.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import Tokenizer from "./Tokenizer.js";
 import Token from "./Token.js";
@@ -86,7 +86,7 @@ export default function FileUploaderTemplate(this: FileUploader) {
 							)}
 
 							<Icon
-								name={valueHelp}
+								name={browseIcon}
 								class="ui5-file-uploader-value-help-icon inputIcon"
 								title={this.valueHelpTitle}
 							/>

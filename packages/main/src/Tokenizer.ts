@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -61,7 +62,6 @@ import type Button from "./Button.js";
 import {
 	MULTIINPUT_SHOW_MORE_TOKENS,
 	TOKENIZER_ARIA_LABEL,
-	TOKENIZER_POPOVER_REMOVE,
 	TOKENIZER_ARIA_CONTAIN_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_ONE_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS,
@@ -69,6 +69,7 @@ import {
 	TOKENIZER_CLEAR_ALL,
 	TOKENIZER_DIALOG_OK_BUTTON,
 	TOKENIZER_DIALOG_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -350,7 +351,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			slots: false,
 		},
 	})
-	tokens!: Array<Token>;
+	tokens!: DefaultSlot<Token>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -421,6 +422,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._tokens.forEach(token => {
 			token.singleToken = (tokensLength === 1) || this.multiLine;
 			token.readonly = this.readonly;
+			// Clear lastVisibleToken when expanding
+			if (this.expanded && token.lastVisibleToken) {
+				token.lastVisibleToken = false;
+			}
 		});
 	}
 
@@ -512,6 +517,27 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
+
+		// Update lastVisibleToken after rendering is complete to avoid render loops
+		renderFinished().then(() => {
+			this._updateLastVisibleTokenAttribute();
+		});
+	}
+
+	/**
+	 * Updates the lastVisibleToken property on tokens.
+	 * When collapsed with overflow, marks the last visible token for proper spacing to the n-more indicator.
+	 * @private
+	 */
+	_updateLastVisibleTokenAttribute() {
+		const tokensArray = this._tokens;
+		const hasOverflow = this._nMoreCount > 0;
+		const visibleTokens = tokensArray.filter(token => !token.overflows);
+		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
+
+		tokensArray.forEach(token => {
+			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
+		});
 	}
 
 	/**
@@ -560,6 +586,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -976,7 +1003,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
@@ -1046,15 +1073,27 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
-		const cutToClipboard = (e: ClipboardEvent) => {
-			navigator.clipboard.writeText(tokensTexts);
+		// Async clipboard API (works in secure contexts - HTTPS/localhost)
+		if (navigator.clipboard?.writeText && window.isSecureContext) {
+			navigator.clipboard.writeText(tokensTexts)?.catch(() => {
+				// Silent fallback - user can retry
+			});
+			return;
+		}
 
+		// Fallback for HTTP: use ClipboardEvent with execCommand
+		// execCommand is deprecated but it is kept for compatibility reasons, as
+		// there is no other way to write to clipboard in non-secure contexts
+		const fillClipboardHandler = (e: ClipboardEvent) => {
+			if (e.clipboardData) {
+				e.clipboardData.setData("text/plain", tokensTexts);
+			}
 			e.preventDefault();
 		};
 
-		document.addEventListener(shortcutName, cutToClipboard);
+		document.addEventListener(shortcutName, fillClipboardHandler);
 		document.execCommand(shortcutName);
-		document.removeEventListener(shortcutName, cutToClipboard);
+		document.removeEventListener(shortcutName, fillClipboardHandler);
 	}
 
 	/**
@@ -1178,7 +1217,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
+		return getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

@@ -26,8 +26,9 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				_shouldOpenValueStatePopover={!this.open}
 				onChange={this._onInputChange}
 				onInput={this._onInputInput}
-				onSubmit={this._onInputSubmit}
+				onui5-_request-submit={this._onInputRequestSubmit}
 				onKeyDown={this._onkeydown}
+				showClearIcon={this.showClearIcon}
 			>
 
 				{!this.open && this.valueStateMessage.length > 0 &&

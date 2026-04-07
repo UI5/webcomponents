@@ -1,5 +1,5 @@
 @import "../base/PopupsCommon-parameters.css";
 
-:root {
+:host {
 	--_ui5_popup_header_shadow: none;
 }

@@ -3,6 +3,167 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Bug Fixes
+
+* **ui5-tokenizer, ui5-multi-input,ui5-multi-combobox:** Improve stylisation ([#13314](https://github.com/UI5/webcomponents/issues/13314)) ([f9ff5ee](https://github.com/UI5/webcomponents/commit/f9ff5ee11510a1da15bd296bc025032af82eb7e9))
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
+
+
+### Features
+
+* **theming:** add OS-adaptive auto themes (sap_horizon_auto, sap_horizon_hc_auto) ([#13300](https://github.com/UI5/webcomponents/issues/13300)) ([f6ae2b5](https://github.com/UI5/webcomponents/commit/f6ae2b53ff86d0b4e1c420863535d8e43bae4ed4))
+
+
+
+
+
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Features
+
+* **framework:** move CSS variables to host element ([#12984](https://github.com/UI5/webcomponents/issues/12984)) ([3bd2b4a](https://github.com/UI5/webcomponents/commit/3bd2b4a78e1520c35029d001719186f3a0e3801d))
+
+
+
+
+
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-ai
+
+
+
+
+
 # [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
 
 **Note:** Version bump only for package @ui5/webcomponents-ai

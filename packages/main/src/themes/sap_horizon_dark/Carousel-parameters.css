@@ -1,5 +1,5 @@
 @import "../base/Carousel-parameters.css";
 
-:root {
+:host {
 	--ui5_carousel_navigation_button_active_box_shadow: none;
 }

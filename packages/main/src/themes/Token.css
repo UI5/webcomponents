@@ -12,6 +12,10 @@
 	margin-inline-end: var(--_ui5_token_right_margin);
 }
 
+:host([last-visible-token]) {
+	margin-inline-end: 0;
+}
+
 :host([overflows]) {
 	display: none;
 }
@@ -45,7 +49,7 @@
 	color: var(--sapContent_ContrastTextColor);
 }
 
-:host([selected]:hover) {
+:host(:not([readonly])[selected]:hover) {
 	background: var(--sapButton_Selected_Hover_Background);
 }
 

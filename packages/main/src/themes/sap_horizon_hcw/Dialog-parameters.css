@@ -1,5 +1,5 @@
 @import "../base/Dialog-parameters.css";
 
-:root {
+:host {
 	--_ui5_dialog_header_state_line_height: 0.125rem;
 }

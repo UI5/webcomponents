@@ -1,6 +1,6 @@
 @import "../base/TableGroupRow-parameters.css";
 
-:root {
+:host {
 	--ui5_table_group_row_font-weight: bold;
 	--ui5_table_border_width: 1px 0 1px 0;
 }

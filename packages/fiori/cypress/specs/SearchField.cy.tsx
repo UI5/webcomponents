@@ -507,4 +507,44 @@ describe("SearchField general interaction", () => {
 				.should("not.exist");
 		});
 	});
+
+	describe("Field Loading", () => {
+		it("shows loading indicator on button in collapsed mode", () => {
+			cy.mount(<SearchField collapsed={true} fieldLoading={true}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-button]")
+				.should("have.attr", "loading");
+		});
+
+		it("does not show loading indicator on button when fieldLoading is false in collapsed mode", () => {
+			cy.mount(<SearchField collapsed={true} fieldLoading={false}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-button]")
+				.should("not.have.attr", "loading");
+		});
+
+		it("shows BusyIndicator in expanded mode when fieldLoading is true", () => {
+			cy.mount(<SearchField fieldLoading={true}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-busy-indicator]")
+				.should("exist")
+				.should("have.attr", "active");
+		});
+
+		it("BusyIndicator is not active in expanded mode when fieldLoading is false", () => {
+			cy.mount(<SearchField fieldLoading={false}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-busy-indicator]")
+				.should("exist")
+				.should("not.have.attr", "active");
+		});
+	});
 });

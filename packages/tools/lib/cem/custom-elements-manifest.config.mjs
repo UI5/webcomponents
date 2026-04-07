@@ -17,6 +17,7 @@ import {
 	getTypeRefs,
 	normalizeDescription,
 	formatArrays,
+	formatSlotTypes,
 	isClass,
 	normalizeTagType,
 	logDocumentationError,
@@ -30,10 +31,37 @@ const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
 let aliasMap = {};
 
 const devMode = process.env.UI5_CEM_MODE === "dev";
+const isVerbose = process.env.UI5_VERBOSE === "true";
+
+/**
+ * Wraps a CEM plugin to suppress console output in quiet mode.
+ * @param {Object} plugin - The plugin to wrap
+ * @returns {Object} - Wrapped plugin with silent console during packageLinkPhase
+ */
+const wrapPluginForQuietMode = (plugin) => {
+	if (isVerbose) return plugin;
+
+	const originalPackageLinkPhase = plugin.packageLinkPhase;
+	if (!originalPackageLinkPhase) return plugin;
+
+	return {
+		...plugin,
+		packageLinkPhase(context) {
+			const originalLog = console.log;
+			console.log = () => { };
+			try {
+				return originalPackageLinkPhase.call(plugin, context);
+			} finally {
+				console.log = originalLog;
+			}
+		}
+	};
+};
+
 try {
 	aliasMap = JSON.parse(fs.readFileSync("./.ui5-cem-aliases.json"));
 } catch (e) {
-	if (devMode) {
+	if (devMode && isVerbose) {
 		console.warn("No .ui5-cem-aliases.json file found. Continuing without aliases.");
 	}
 }
@@ -107,6 +135,13 @@ function processClass(ts, classNode, moduleDoc) {
 		if (currClass.superclass?.name === "UI5Element") {
 			currClass.customElement = true;
 		}
+	} else if (currClass.customElement && classNode?.heritageClauses) {
+		// Find the extends clause (not implements)
+		const extendsClause = classNode.heritageClauses.find(clause => clause.token === ts.SyntaxKind.ExtendsKeyword);
+		if (extendsClause?.types?.[0]?.expression?.text) {
+			const extendedClass = extendsClause.types[0].expression.text;
+			logDocumentationError(moduleDoc.path, `Class extends ${extendedClass} but @extends tag is missing in JSDoc`);
+		}
 	}
 
 	if (!currClass._ui5implements.length) delete currClass._ui5implements;
@@ -168,6 +203,7 @@ function processClass(ts, classNode, moduleDoc) {
 
 			if (member.type?.text) {
 				member.type.text = formatArrays(member.type.text);
+				member.type.text = formatSlotTypes(member.type.text);
 			}
 
 			if (member.type && typeRefs.length) {
@@ -388,10 +424,10 @@ const processPublicAPI = object => {
 		return true;
 	}
 	for (const key of keys) {
-		if ((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) {
+		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && !object.customElement) {
 			return true;
 		} else if (typeof object[key] === "object") {
-			if (key === "cssParts" || key === "attributes" || key === "_ui5implements") {
+			if (key === "cssParts" || key === "cssStates" || key === "attributes" || key === "_ui5implements") {
 				continue;
 			}
 
@@ -540,7 +576,39 @@ export default {
 				}
 			}
 		},
-		generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }),
-		customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })
+		{
+			name: 'alphabetical-sort-plugin',
+			packageLinkPhase({ customElementsManifest }) {
+				const sortByName = (arr) => {
+					if (Array.isArray(arr)) {
+						arr.sort((a, b) => {
+							if (a?.name && b?.name) {
+								return a.name.localeCompare(b.name);
+							}
+							return 0;
+						});
+					}
+				};
+
+				const sortArraysInObject = (obj) => {
+					if (!obj || typeof obj !== 'object') return;
+
+					for (const key in obj) {
+						if (Array.isArray(obj[key])) {
+							sortByName(obj[key]);
+							obj[key].forEach(item => sortArraysInObject(item));
+						} else if (typeof obj[key] === 'object') {
+							sortArraysInObject(obj[key]);
+						}
+					}
+				};
+
+				customElementsManifest.modules?.forEach(moduleDoc => {
+					sortArraysInObject(moduleDoc);
+				});
+			}
+		},
+		wrapPluginForQuietMode(generateCustomData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),
+		wrapPluginForQuietMode(customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }))
 	],
 };

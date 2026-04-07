@@ -1,5 +1,7 @@
-.sideNavigation:not([collapsed]):not([is-phone]) {
+@media (width > 600px) {
+	.sideNavigation:not([collapsed]) {
     width: 18rem;
+	}
 }
 
 .mainContent {

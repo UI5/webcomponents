@@ -14,6 +14,7 @@ import SideNavigationItemBase from "./SideNavigationItemBase.js";
 import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import type { SideNavigationItemClickEventDetail } from "./SideNavigationItemBase.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type SideNavigationItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
 
@@ -58,6 +59,8 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 
 	/**
 	 * Defines the icon of the item.
+	 *
+	 * **Note:** Icons on second-level (child) navigation items are not recommended according to the design specification.
 	 *
 	 * The SAP-icons font provides numerous options.
 	 *
@@ -334,14 +337,8 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	}
 }
 
-const isInstanceOfSideNavigationSelectableItemBase = (object: any): object is SideNavigationSelectableItemBase => {
-	return "isSideNavigationSelectableItemBase" in object;
-};
-
 export default SideNavigationSelectableItemBase;
-export {
-	isInstanceOfSideNavigationSelectableItemBase,
-};
+export const isInstanceOfSideNavigationSelectableItemBase = createInstanceChecker<SideNavigationSelectableItemBase>("isSideNavigationSelectableItemBase");
 export type {
 	SideNavigationItemAccessibilityAttributes,
 };

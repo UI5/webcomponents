@@ -130,7 +130,7 @@ class Suggestions {
 	onPageDown(e: KeyboardEvent) {
 		e.preventDefault();
 
-		const items = this._getItems();
+		const items = this.visibleItems;
 
 		if (!items) {
 			return true;
@@ -302,7 +302,7 @@ class Suggestions {
 	}
 
 	_selectPreviousItem() {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const previousSelectedIdx = this.selectedItemIndex;
 
 		if (previousSelectedIdx === -1 || previousSelectedIdx === null) {
@@ -318,6 +318,7 @@ class Suggestions {
 
 			this.component.focused = true;
 			this.component.hasSuggestionItemSelected = false;
+			this.component.value = this.component.typedInValue;
 			this.selectedItemIndex -= 1;
 			return;
 		}
@@ -325,12 +326,16 @@ class Suggestions {
 		this._moveItemSelection(previousSelectedIdx, --this.selectedItemIndex);
 	}
 
+	get visibleItems() {
+		return this._getItems().filter(item => !item.hidden);
+	}
+
 	_moveItemSelection(previousIdx: number, nextIdx: number) {
-		const items = this._getItems();
+		const items = this.visibleItems;
 		const currentItem = items[nextIdx];
 		const previousItem = items[previousIdx];
 		const nonGroupItems = this._getNonGroupItems();
-		const isGroupItem = currentItem.hasAttribute("ui5-suggestion-item-group");
+		const isGroupItem = currentItem?.hasAttribute("ui5-suggestion-item-group");
 
 		if (!currentItem) {
 			return;
@@ -338,7 +343,7 @@ class Suggestions {
 
 		this.component.focused = false;
 
-		const selectedItem = this._getItems()[this.selectedItemIndex];
+		const selectedItem = this.visibleItems[this.selectedItemIndex];
 
 		this.accInfo = {
 			isGroup: isGroupItem,
@@ -383,7 +388,7 @@ class Suggestions {
 	_deselectItems() {
 		const items = this._getItems();
 		items.forEach(item => {
-			if (item.hasAttribute("ui5-suggestion-item")) {
+			if (item.hasAttribute("ui5-suggestion-item") || item.hasAttribute("ui5-suggestion-item-custom")) {
 				(item as SuggestionItem).selected = false;
 			}
 
@@ -472,7 +477,7 @@ class Suggestions {
 
 		const itemPositionText = Suggestions.i18nBundle.getText(LIST_ITEM_POSITION, this.accInfo.currentPos || 0, this.accInfo.listSize || 0);
 
-		return `${this.accInfo.additionalText} ${itemPositionText}`;
+		return `${this.accInfo.additionalText} ${itemPositionText}`.trim();
 	}
 
 	hightlightInput(text: string, input: string) {

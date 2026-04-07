@@ -1,7 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -29,6 +29,8 @@ import {
 	DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER,
 	DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER,
 } from "./generated/i18n/i18n-defaults.js";
+
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
 const SCROLL_THRESHOLD = 10; // px
@@ -156,7 +158,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: HTMLElement[];
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the title HTML Element.
@@ -164,7 +166,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageTitle })
-	titleArea!: Array<DynamicPageTitle>;
+	titleArea!: Slot<DynamicPageTitle>;
 
 	/**
 	 * Defines the header HTML Element.
@@ -172,7 +174,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: DynamicPageHeader })
-	headerArea!: Array<DynamicPageHeader>;
+	headerArea!: Slot<DynamicPageHeader>;
 
 	/**
 	 * Defines the footer HTML Element.
@@ -180,7 +182,7 @@ class DynamicPage extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	footerArea!: HTMLElement[];
+	footerArea!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -282,6 +284,10 @@ class DynamicPage extends UI5Element {
 		return this.hasHeading ? this._headerLabel : undefined;
 	}
 
+	get _hidePinButton() {
+		return this.hidePinButton || isPhone();
+	}
+
 	/**
 	 * Defines if the header is snapped.
 	 *
@@ -290,9 +296,17 @@ class DynamicPage extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	set headerSnapped(snapped: boolean) {
-		if (snapped !== this._headerSnapped) {
-			this._toggleHeader();
+		if (snapped === this._headerSnapped) {
+			return;
 		}
+
+		if (!this.scrollContainer) {
+			this._headerSnapped = snapped;
+			this.showHeaderInStickArea = snapped;
+			return;
+		}
+
+		this._toggleHeader();
 	}
 
 	snapOnScroll() {
@@ -300,7 +314,7 @@ class DynamicPage extends UI5Element {
 	}
 
 	snapTitleByScroll() {
-		if (!this.dynamicPageTitle || !this.dynamicPageHeader || this.headerPinned) {
+		if (!this.dynamicPageTitle || !this.dynamicPageHeader || this.headerPinned || !this.scrollContainer) {
 			return;
 		}
 
@@ -314,7 +328,7 @@ class DynamicPage extends UI5Element {
 			return;
 		}
 
-		const scrollTop = this.scrollContainer!.scrollTop;
+		const scrollTop = this.scrollContainer.scrollTop;
 		const headerHeight = this.dynamicPageHeader.getBoundingClientRect().height;
 		const lastHeaderSnapped = this._headerSnapped;
 
@@ -334,8 +348,8 @@ class DynamicPage extends UI5Element {
 			// If the header is snapped and the scroll is at the top, scroll down a bit
 			// to avoid ending in an endless loop of snapping and unsnapping
 			requestAnimationFrame(() => {
-				if (this.scrollContainer!.scrollTop === 0) {
-					this.scrollContainer!.scrollTop = SCROLL_THRESHOLD;
+				if (this.scrollContainer && this.scrollContainer.scrollTop === 0) {
+					this.scrollContainer.scrollTop = SCROLL_THRESHOLD;
 				}
 			});
 		} else if (shouldExpand) {
@@ -366,7 +380,7 @@ class DynamicPage extends UI5Element {
 		this.headerPinned = !this.headerPinned;
 		if (this.headerPinned) {
 			this.showHeaderInStickArea = true;
-		} else if (this.scrollContainer!.scrollTop === 0) {
+		} else if (this.scrollContainer && this.scrollContainer.scrollTop === 0) {
 			this.showHeaderInStickArea = false;
 		}
 		this.fireDecoratorEvent("pin-button-toggle");
@@ -386,8 +400,12 @@ class DynamicPage extends UI5Element {
 	}
 
 	async _toggleHeader() {
+		if (!this.scrollContainer) {
+			return;
+		}
+
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-		const currentScrollTop = this.scrollContainer!.scrollTop;
+		const currentScrollTop = this.scrollContainer.scrollTop;
 
 		if (!this._headerSnapped && this.headerPinned) {
 			this.headerPinned = false;
@@ -404,7 +422,7 @@ class DynamicPage extends UI5Element {
 			if (!this._headerSnapped) {
 				this._headerSnapped = true;
 				this.showHeaderInStickArea = true;
-				this.scrollContainer!.scrollTop = 0;
+				this.scrollContainer.scrollTop = 0;
 			} else {
 				this.showHeaderInStickArea = false;
 				this._headerSnapped = false;
@@ -412,8 +430,8 @@ class DynamicPage extends UI5Element {
 			return;
 		}
 
-		if (this.scrollContainer!.scrollTop === SCROLL_THRESHOLD) {
-			this.scrollContainer!.scrollTop = 0;
+		if (this.scrollContainer.scrollTop === SCROLL_THRESHOLD) {
+			this.scrollContainer.scrollTop = 0;
 		}
 
 		this.showHeaderInStickArea = !this.showHeaderInStickArea;
@@ -422,8 +440,8 @@ class DynamicPage extends UI5Element {
 		this.skipSnapOnScroll = true;
 
 		await renderFinished();
-		if (this._headerSnapped && this.scrollContainer!.scrollTop < SCROLL_THRESHOLD) {
-			this.scrollContainer!.scrollTop = SCROLL_THRESHOLD;
+		if (this._headerSnapped && this.scrollContainer.scrollTop < SCROLL_THRESHOLD) {
+			this.scrollContainer.scrollTop = SCROLL_THRESHOLD;
 		}
 	}
 

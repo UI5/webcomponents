@@ -1,8 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ChangeInfo, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -24,6 +24,7 @@ import BreadcrumbsDesign from "./types/BreadcrumbsDesign.js";
 import "./BreadcrumbsItem.js";
 import type BreadcrumbsItem from "./BreadcrumbsItem.js";
 import type BreadcrumbsSeparator from "./types/BreadcrumbsSeparator.js";
+import type { IToolbarItemContent } from "./ToolbarItem.js";
 
 import {
 	BREADCRUMB_ITEM_POS,
@@ -84,6 +85,7 @@ type FocusAdaptor = ITabbable & {
  * - [End] - Navigates to the last item.
  * @constructor
  * @extends UI5Element
+ * @implements {IToolbarItemContent}
  * @public
  * @since 1.0.0-rc.15
  */
@@ -109,7 +111,7 @@ type FocusAdaptor = ITabbable & {
 	bubbles: true,
 	cancelable: true,
 })
-class Breadcrumbs extends UI5Element {
+class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	eventDetails!: {
 		"item-click": BreadcrumbsItemClickEventDetail,
 	}
@@ -148,7 +150,7 @@ class Breadcrumbs extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<BreadcrumbsItem>;
+	items!: DefaultSlot<BreadcrumbsItem>;
 
 	_itemNavigation: ItemNavigation
 	_onResizeHandler: ResizeObserverCallback;
@@ -641,6 +643,9 @@ class Breadcrumbs extends UI5Element {
 
 	get _cancelButtonText() {
 		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_CANCEL_BUTTON);
+	}
+	get hasOverflow() {
+		return true;
 	}
 }
 

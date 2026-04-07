@@ -1,5 +1,5 @@
 @import "../base/UploadCollection-parameters.css";
 
-:root {
+:host {
 	--ui5_upload_collection_small_size_buttons_margin_block_start: 0.5rem;
 }
