@@ -971,64 +971,26 @@ describe("Validation inside a form", () => {
 });
 
 describe("DateRangePicker relative dates rejection", () => {
-	it("typing 'today' sets error state", () => {
-		cy.mount(<DateRangePicker></DateRangePicker>);
+	const relativeKeywords = ["today", "tomorrow", "yesterday"];
 
-		cy.get("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
+	relativeKeywords.forEach(keyword => {
+		it(`typing '${keyword}' sets error state`, () => {
+			cy.mount(<DateRangePicker></DateRangePicker>);
 
-		cy.realType("today");
-		cy.realPress("Enter");
+			cy.get("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
 
-		cy.get("@dateRangePicker")
-			.should("have.value", "today");
+			cy.realType(keyword);
+			cy.realPress("Enter");
 
-		cy.get("@dateRangePicker")
-			.should("have.attr", "value-state", "Negative");
-	});
-
-	it("typing 'tomorrow' sets error state", () => {
-		cy.mount(<DateRangePicker></DateRangePicker>);
-
-		cy.get("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realType("tomorrow");
-		cy.realPress("Enter");
-
-		cy.get("@dateRangePicker")
-			.should("have.value", "tomorrow");
-
-		cy.get("@dateRangePicker")
-			.should("have.attr", "value-state", "Negative");
-	});
-
-	it("typing 'yesterday' sets error state", () => {
-		cy.mount(<DateRangePicker></DateRangePicker>);
-
-		cy.get("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realType("yesterday");
-		cy.realPress("Enter");
-
-		cy.get("@dateRangePicker")
-			.should("have.value", "yesterday");
-
-		cy.get("@dateRangePicker")
-			.should("have.attr", "value-state", "Negative");
+			cy.get("@dateRangePicker")
+				.should("have.value", keyword)
+				.should("have.attr", "value-state", "Negative");
+		});
 	});
 
 	it("valid concrete date range does not set error state", () => {
