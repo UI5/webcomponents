@@ -1,5 +1,6 @@
 .ui5-date-picker-popover {
-	width: var(--_ui5_calendar_width);
+	width: auto;
+	min-width: var(--_ui5_calendar_width);
 	.ui5-popover-header {
 		width: 100%;
 	}
@@ -13,7 +14,7 @@
 }
 
 [ui5-calendar] {
-	width: 100%;
+	width: auto;
 	display: flex;
 	justify-content: center;
 }
