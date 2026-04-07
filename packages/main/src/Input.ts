@@ -154,6 +154,11 @@ type InputEventDetail = {
 	inputType: string;
 }
 
+// // Option 2
+// type InputChangeEventDetail = {
+// 	validity?: ValidityState;
+// }
+
 type InputSelectionChangeEventDetail = {
 	item: IInputSuggestionItem | null;
 }
@@ -297,7 +302,10 @@ type InputSuggestionScrollEventDetail = {
 
 class Input extends UI5Element implements SuggestionComponent, IFormInputElement {
 	eventDetails!: {
-		"change": InputEventDetail,
+
+		// Option 2
+		// "change": InputChangeEventDetail,
+		"change": InputEventDetail
 		"input": InputEventDetail,
 		"select": void,
 		"_request-submit": void,
@@ -539,10 +547,13 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	@property({ type: Boolean, noAttribute: true })
 	_inputIconFocused = false;
 
+	// Option 1
+	@property({ type: Boolean })
+	_isDash = false;
 
-	// // Option 1
-	// @property({ type: Boolean })
-	// _isDash = false;
+	// Option 1
+	@property({ type: Boolean })
+	_wasDash = false;
 
 	/**
 	 * Constantly updated value of texts collected from the associated labels
@@ -1156,7 +1167,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._isChangeTriggeredBySuggestion = false;
 		if (this.showClearIcon && !this._effectiveShowClearIcon) {
 			this._clearIconClicked = false;
-			this._handleChange(e, "focusout");
+			this._handleChange();
 		}
 
 		this.open = false;
@@ -1192,27 +1203,31 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 	}
 
-	_handleChange(e?: Event | undefined, where: string = "change") {
-		let validity;
-		if( this.isTypeNumber) { 
-			validity = this.nativeInput?.validity;
-		}
-
+	_handleChange() {
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
 		}
 
+		let validity = undefined;
+		if( this.isTypeNumber) { 
+			validity = this.nativeInput?.validity;
+		}
+
 		const fireChange = () => {
 			if (!this._isChangeTriggeredBySuggestion) {
+				// Option 2: Propagate native input validity state to the change event so customers will decide what to do with invalid numeric input
+				// this.fireDecoratorEvent(INPUT_EVENTS.CHANGE, { validity: validity});
 				this.fireDecoratorEvent(INPUT_EVENTS.CHANGE);
 			}
+
 			this.previousValue = this.value;
 			this.typedInValue = this.value;
 			this._isChangeTriggeredBySuggestion = false;
 		};
 
-		if (this.previousValue !== this.getInputDOMRefSync()!.value) {
+		// Option 1
+		if (this.previousValue !== this.getInputDOMRefSync()!.value || this._isDash  || this._wasDash) {
 			// if picker is open there might be a selected item, wait next tick to get the value applied
 			if (this.Suggestions?._getPicker()?.open && this._flattenItems.some(item => item.hasAttribute("ui5-suggestion-item") && (item as SuggestionItem).selected)) {
 				this._changeToBeFired = true;
@@ -1273,14 +1288,23 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._input(e, eventType);
 	}
 
-	// // Option 1
-	// get isValidNumber(){
-	// 	return this.isTypeNumber && !this._isDash;
+	// // Option 3: keep track of the dash symbol at onBeforeInput 
+	// _onBeforeInput(e: any) {
+	// 	// e.data is null when text is deleted
+	// 	// e.data is the pressed symbol otherwise
+	// 	console.log(e.data, this.getInputDOMRefSync()?.value);
 	// }
 
+	// Option 1
+	get isValidNumber(){
+		return this.isTypeNumber && !this._isDash;
+	}
+
 	_input(e: CustomEvent<InputEventDetail> | InputEvent, eventType: string) {
-		// // Option 1
-		// this._isDash = (e as InputEvent)?.data === "-" && this.nativeInput?.value.length === 0;
+		// Option 1
+		this._wasDash = (e as InputEvent)?.data === null && this._isDash && this.getInputDOMRefSync()?.value === "";
+		this._isDash = (e as InputEvent)?.data === "-" && this.getInputDOMRefSync()?.value === "";
+		
 
 		const inputDomRef = this.getInputDOMRefSync();
 
@@ -1424,7 +1448,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_confirmMobileValue(e: any) {
 		this._closePicker();
-		this._handleChange(e, "confirm mobile value");
+		this._handleChange();
 	}
 
 	_cancelMobileValue() {
@@ -1452,6 +1476,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (this._changeToBeFired && !this._isChangeTriggeredBySuggestion) {
 			this.previousValue = this.value;
+			// Option 2 
+			// this.fireDecoratorEvent(INPUT_EVENTS.CHANGE, {validity: this.nativeInput?.validity});
 			this.fireDecoratorEvent(INPUT_EVENTS.CHANGE);
 		} else {
 			this._isChangeTriggeredBySuggestion = false;
@@ -1576,6 +1602,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 			this._performTextSelection = true;
 
+
+			//Option 2
+			// this.fireDecoratorEvent(INPUT_EVENTS.CHANGE, {validity: this.nativeInput?.validity});
 			this.fireDecoratorEvent(INPUT_EVENTS.CHANGE);
 
 			this._isChangeTriggeredBySuggestion = true;

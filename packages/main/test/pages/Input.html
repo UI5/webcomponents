@@ -1235,12 +1235,16 @@
 			}
 		});
 
-		// // Option 1: Set value state based on validity of the number input
-		// document.getElementById("input-number").addEventListener("ui5-change", event => {
-		// 	const input = event.target;
+		document.getElementById("input-number").addEventListener("ui5-change", event => {
+			const input = event.target;
 			
-		// 	event.target.valueState = input.isValidNumber ? "None" : "Negative";
-		// });
+			// Option 1: Set value state based on validity of the number input
+			event.target.valueState = input.isValidNumber ? "None" : "Negative";
+
+			// // Option 2
+			// const validity  = event.detail.validity;
+			// event.target.valueState = validity.valid ? "None" : "Negative";
+		});
 	</script>
 </body>
 

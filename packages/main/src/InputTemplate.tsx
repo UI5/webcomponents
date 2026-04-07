@@ -54,6 +54,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						min={this.nativeInputAttributes.min}
 						max={this.nativeInputAttributes.max}
 						onInput={this._handleNativeInput}
+						// onBeforeInput={this._onBeforeInput}
 						onChange={this._handleChange}
 						onSelect={this._handleSelect}
 						onKeyDown={this._onkeydown}
