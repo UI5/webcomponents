@@ -199,7 +199,8 @@
 	<ui5-input id="input-required" value="This input is required" required></ui5-input>
 
 	<h3> Input type 'Number'</h3>
-	<ui5-input id="input-number" type="Number" placeholder="Numbers are allowed only ..."></ui5-input>
+	<ui5-input id="input-number" show-clear-icon type="Number" placeholder="Numbers are allowed only ...">
+	</ui5-input>
 
 	<ui5-input id="input-number2" type="Number" placeholder="Numbers are allowed only ..."></ui5-input>
 
@@ -1233,6 +1234,13 @@
 				});
 			}
 		});
+
+		// // Option 1: Set value state based on validity of the number input
+		// document.getElementById("input-number").addEventListener("ui5-change", event => {
+		// 	const input = event.target;
+			
+		// 	event.target.valueState = input.isValidNumber ? "None" : "Negative";
+		// });
 	</script>
 </body>
 

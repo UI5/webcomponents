@@ -539,6 +539,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	@property({ type: Boolean, noAttribute: true })
 	_inputIconFocused = false;
 
+
+	// // Option 1
+	// @property({ type: Boolean })
+	// _isDash = false;
+
 	/**
 	 * Constantly updated value of texts collected from the associated labels
 	 * @private
@@ -1151,7 +1156,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._isChangeTriggeredBySuggestion = false;
 		if (this.showClearIcon && !this._effectiveShowClearIcon) {
 			this._clearIconClicked = false;
-			this._handleChange();
+			this._handleChange(e, "focusout");
 		}
 
 		this.open = false;
@@ -1187,7 +1192,12 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 	}
 
-	_handleChange() {
+	_handleChange(e?: Event | undefined, where: string = "change") {
+		let validity;
+		if( this.isTypeNumber) { 
+			validity = this.nativeInput?.validity;
+		}
+
 		if (this._clearIconClicked) {
 			this._clearIconClicked = false;
 			return;
@@ -1263,7 +1273,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._input(e, eventType);
 	}
 
+	// // Option 1
+	// get isValidNumber(){
+	// 	return this.isTypeNumber && !this._isDash;
+	// }
+
 	_input(e: CustomEvent<InputEventDetail> | InputEvent, eventType: string) {
+		// // Option 1
+		// this._isDash = (e as InputEvent)?.data === "-" && this.nativeInput?.value.length === 0;
+
 		const inputDomRef = this.getInputDOMRefSync();
 
 		const allowedEventTypes = [
@@ -1404,9 +1422,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.open = false;
 	}
 
-	_confirmMobileValue() {
+	_confirmMobileValue(e: any) {
 		this._closePicker();
-		this._handleChange();
+		this._handleChange(e, "confirm mobile value");
 	}
 
 	_cancelMobileValue() {
