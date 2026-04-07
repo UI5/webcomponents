@@ -107,7 +107,8 @@ interface IComboBoxItem extends UI5Element {
 	selected?: boolean,
 	additionalText?: string,
 	_isVisible?: boolean,
-	items?: Array<IComboBoxItem>
+	items?: Array<IComboBoxItem>,
+	eventDetails: { click?: object },
 }
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;

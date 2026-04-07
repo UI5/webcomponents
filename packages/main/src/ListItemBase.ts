@@ -25,6 +25,11 @@ type ListItemBasePressEventDetail = {
 	key?: string,
 }
 
+type ListItemBaseClickEventDetail = {
+	item: ListItemBase,
+	originalEvent: Event,
+}
+
 /**
  * @class
  * A class to serve as a foundation
@@ -37,6 +42,19 @@ type ListItemBasePressEventDetail = {
 @customElement({
 	renderer: jsxRenderer,
 	styles: [styles, draggableElementStyles],
+})
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {ListItemBase} item The activated item.
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
 })
 @event("request-tabindex-change", {
 	bubbles: true,
@@ -56,6 +74,7 @@ type ListItemBasePressEventDetail = {
 })
 class ListItemBase extends UI5Element implements ITabbable {
 	eventDetails!: {
+		"click": ListItemBaseClickEventDetail,
 		"request-tabindex-change": FocusEvent,
 		"_press": ListItemBasePressEventDetail,
 		"_focused": FocusEvent,
@@ -168,6 +187,7 @@ class ListItemBase extends UI5Element implements ITabbable {
 		if (this.getFocusDomRef()!.matches(":has(:focus-within)") || this._isDisabledInteractiveContentClicked(e)) {
 			return;
 		}
+		e.stopPropagation();
 		this.fireItemPress(e);
 	}
 
@@ -233,6 +253,7 @@ class ListItemBase extends UI5Element implements ITabbable {
 		if (isEnter(e as KeyboardEvent)) {
 			e.preventDefault();
 		}
+		this.fireDecoratorEvent("click", { item: this, originalEvent: e });
 		this.fireDecoratorEvent("_press", { item: this, selected: this.selected, key: (e as KeyboardEvent).key });
 	}
 
@@ -313,4 +334,5 @@ export default ListItemBase;
 
 export type {
 	ListItemBasePressEventDetail,
+	ListItemBaseClickEventDetail,
 };

@@ -83,6 +83,7 @@ type ListItemGroupMoveEventDetail = {
 
 class ListItemGroup extends UI5Element {
 	eventDetails!: {
+		"click"?: object,
 		"move-over": ListItemGroupMoveEventDetail,
 		"move": ListItemGroupMoveEventDetail,
 	}
