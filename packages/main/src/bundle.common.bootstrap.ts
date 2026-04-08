@@ -20,7 +20,12 @@ import "@ui5/webcomponents-icons-business-suite/dist/Assets.js";
 import "@ui5/webcomponents-icons-business-suite/dist/AllIcons.js";
 
 import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
-import { addCustomCSS, removeCustomCSS, attachThemeLoaded, detachThemeLoaded } from "@ui5/webcomponents-base/dist/Theming.js";
+import {
+	addCustomCSS,
+	removeCustomCSS,
+	attachThemeLoaded,
+	detachThemeLoaded,
+} from "@ui5/webcomponents-base/dist/Theming.js";
 // import "./customI18n.js";
 
 // Calendars

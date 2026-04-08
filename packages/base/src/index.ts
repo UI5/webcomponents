@@ -101,7 +101,12 @@ import {
 } from "./Render.js";
 
 // Theming.ts
-import { addCustomCSS, removeCustomCSS, attachThemeLoaded, detachThemeLoaded } from "./Theming.js";
+import {
+	addCustomCSS,
+	removeCustomCSS,
+	attachThemeLoaded,
+	detachThemeLoaded,
+} from "./Theming.js";
 
 // UI5Element.ts
 import UI5Element from "./UI5Element.js";
