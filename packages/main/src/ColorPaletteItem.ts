@@ -116,6 +116,10 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
 	}
 
+	get getLabelText(): string {
+		return `${this.colorLabel} - ${this.index}: ${this.tooltip || this.value}`;
+	}
+
 	get classes() {
 		// Remove after deleting the hbs template, it's added in the jsx template
 		return {
