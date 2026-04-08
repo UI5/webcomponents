@@ -3,9 +3,16 @@ import getSharedResource from "../getSharedResource.js";
 import EventProvider from "../EventProvider.js";
 
 type CustomCSSChangeCallback = (tag: string) => void;
+type CustomCSSEntry = { id: string, css: string };
 
 const getEventProvider = () => getSharedResource("CustomStyle.eventProvider", new EventProvider<string, void>());
 const CUSTOM_CSS_CHANGE = "CustomCSSChange";
+
+let currentId = 0;
+const nextId = () => {
+	currentId++;
+	return `custom-css-${currentId}`;
+};
 
 const attachCustomCSSChange = (listener: CustomCSSChangeCallback) => {
 	getEventProvider().attachEvent(CUSTOM_CSS_CHANGE, listener);
@@ -19,7 +26,7 @@ const fireCustomCSSChange = (tag: string) => {
 	return getEventProvider().fireEvent(CUSTOM_CSS_CHANGE, tag);
 };
 
-const getCustomCSSFor = () => getSharedResource<Record<string, Array<string>>>("CustomStyle.customCSSFor", {});
+const getCustomCSSFor = () => getSharedResource<Record<string, Array<CustomCSSEntry>>>("CustomStyle.customCSSFor", {});
 
 // Listen to the eventProvider, in case other copies of this CustomStyle module fire this
 // event, and this copy would therefore need to reRender the ui5 webcomponents; but
@@ -31,13 +38,7 @@ attachCustomCSSChange((tag: string) => {
 	}
 });
 
-const addCustomCSS = (tag: string, css: string) => {
-	const customCSSFor = getCustomCSSFor();
-	if (!customCSSFor[tag]) {
-		customCSSFor[tag] = [];
-	}
-	customCSSFor[tag].push(css);
-
+const fireChangeAndRerender = (tag: string) => {
 	skipRerender = true;
 	try {
 		// The event is fired and the attached event listeners are all called synchronously
@@ -51,13 +52,43 @@ const addCustomCSS = (tag: string, css: string) => {
 	return reRenderAllUI5Elements({ tag });
 };
 
+const addCustomCSS = (tag: string, css: string): string => {
+	const customCSSFor = getCustomCSSFor();
+	if (!customCSSFor[tag]) {
+		customCSSFor[tag] = [];
+	}
+
+	const id = nextId();
+	customCSSFor[tag].push({ id, css });
+	fireChangeAndRerender(tag);
+
+	return id;
+};
+
+const removeCustomCSS = (tag: string, id: string) => {
+	const customCSSFor = getCustomCSSFor();
+	const entries = customCSSFor[tag];
+	if (!entries) {
+		return;
+	}
+
+	const index = entries.findIndex(entry => entry.id === id);
+	if (index === -1) {
+		return;
+	}
+
+	entries.splice(index, 1);
+	fireChangeAndRerender(tag);
+};
+
 const getCustomCSS = (tag: string) => {
 	const customCSSFor = getCustomCSSFor();
-	return customCSSFor[tag] ? customCSSFor[tag].join("") : "";
+	return customCSSFor[tag] ? customCSSFor[tag].map(entry => entry.css).join("") : "";
 };
 
 export {
 	addCustomCSS,
+	removeCustomCSS,
 	getCustomCSS,
 	attachCustomCSSChange,
 	detachCustomCSSChange,

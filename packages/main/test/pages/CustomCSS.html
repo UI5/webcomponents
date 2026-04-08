@@ -38,14 +38,32 @@
 	<br />
 	<br />
 
+	<ui5-button id="btn-remove">Remove custom css and rerender</ui5-button>
+
+	<br />
+	<br />
+
 	<script>
+		const customCSSIds = [];
+
 		const applyCustomCSSAndRerender = function() {
-			window["sap-ui-webcomponents-bundle"].addCustomCSS("ui5-select", ".ui5-select-root { background-color: red; } ");
+			const id = window["sap-ui-webcomponents-bundle"].addCustomCSS("ui5-select", ".ui5-select-root { background-color: red; } ");
+			customCSSIds.push(id);
+		};
+
+		const removeCustomCSSAndRerender = function() {
+			while (customCSSIds.length) {
+				window["sap-ui-webcomponents-bundle"].removeCustomCSS("ui5-select", customCSSIds.pop());
+			}
 		};
 
 		document
 			.getElementById("btn")
 			.addEventListener("click", applyCustomCSSAndRerender);
+
+		document
+			.getElementById("btn-remove")
+			.addEventListener("click", removeCustomCSSAndRerender);
 
 	</script>
 

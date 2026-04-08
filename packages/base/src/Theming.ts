@@ -1,4 +1,9 @@
-import { addCustomCSS } from "./theming/CustomStyle.js";
+import { addCustomCSS, removeCustomCSS } from "./theming/CustomStyle.js";
 import { attachThemeLoaded, detachThemeLoaded } from "./theming/ThemeLoaded.js";
 
-export { addCustomCSS, attachThemeLoaded, detachThemeLoaded };
+export {
+	addCustomCSS,
+	removeCustomCSS,
+	attachThemeLoaded,
+	detachThemeLoaded,
+};
