@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* **framework:** improve themeRoot validation ([#13354](https://github.com/UI5/webcomponents/issues/13354)) ([ba4a08b](https://github.com/UI5/webcomponents/commit/ba4a08bd516f1e0dbefe2dfc734a684c6af50bd8))
+* **ui5-breadcrumbs:** correct overflow icon alignment and styling ([#13341](https://github.com/UI5/webcomponents/issues/13341)) ([24a0abf](https://github.com/UI5/webcomponents/commit/24a0abfa73cb1fbccc4e54b2f73592a759b007bf)), closes [#13301](https://github.com/UI5/webcomponents/issues/13301)
+* **ui5-toolbar:** restore item spacing in Horizon High Contrast themes ([#13363](https://github.com/UI5/webcomponents/issues/13363)) ([ce59da4](https://github.com/UI5/webcomponents/commit/ce59da47eca7de6841e24de35bf7c4fdd7b06f10)), closes [#13361](https://github.com/UI5/webcomponents/issues/13361)
+
+
+### Features
+
+* **ui5-button:** introduce support for form attribute ([#13321](https://github.com/UI5/webcomponents/issues/13321)) ([c9d8f2a](https://github.com/UI5/webcomponents/commit/c9d8f2ac91d5b5320e37aeee5e60b571ff3ee07c)), closes [#7459](https://github.com/UI5/webcomponents/issues/7459)
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Bug Fixes
+
+* **ui5-avatar:** fix accessibilityInfo for decorative mode ([#13324](https://github.com/UI5/webcomponents/issues/13324)) ([0352ff0](https://github.com/UI5/webcomponents/commit/0352ff0cbd304ebdd355b470bdcfbc6b8776a5ba))
+* **ui5-datetime-picker:** ensure value state header spans full popover width ([#13294](https://github.com/UI5/webcomponents/issues/13294)) ([49f5afc](https://github.com/UI5/webcomponents/commit/49f5afc84fc54e81fa90d017420cece33c434a02))
+* **ui5-dynamic-page:** hide pin button on mobile devices ([#13335](https://github.com/UI5/webcomponents/issues/13335)) ([359fe49](https://github.com/UI5/webcomponents/commit/359fe492d8f42a1403edcbe22c79f76c5c55ccb1)), closes [#13320](https://github.com/UI5/webcomponents/issues/13320)
+* **ui5-dynamic-page:** prevent flickering when content is updated ([#13336](https://github.com/UI5/webcomponents/issues/13336)) ([31e5f0a](https://github.com/UI5/webcomponents/commit/31e5f0a5322dbf05535ecda71fd6541fa752fe4d))
+* **ui5-tokenizer, ui5-multi-input,ui5-multi-combobox:** Improve stylisation ([#13314](https://github.com/UI5/webcomponents/issues/13314)) ([f9ff5ee](https://github.com/UI5/webcomponents/commit/f9ff5ee11510a1da15bd296bc025032af82eb7e9))
+
+
+### Features
+
+* **ui5-table-cell:** merged property added ([#13297](https://github.com/UI5/webcomponents/issues/13297)) ([c5ec5f3](https://github.com/UI5/webcomponents/commit/c5ec5f33855aa712ed10bdd6331faf271a7652c1)), closes [#7238](https://github.com/UI5/webcomponents/issues/7238) [#7238](https://github.com/UI5/webcomponents/issues/7238) [#7238](https://github.com/UI5/webcomponents/issues/7238)
+* update sap/icons to v5.12 & 4.24 ([#13319](https://github.com/UI5/webcomponents/issues/13319)) ([0b16434](https://github.com/UI5/webcomponents/commit/0b164348069b96f5464eaea3425a4876097dc44d))
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+
+### Bug Fixes
+
+* **ui5-combo-box:** proper first select of an item with duplicate text ([#13302](https://github.com/UI5/webcomponents/issues/13302)) ([9434684](https://github.com/UI5/webcomponents/commit/9434684e475fadac7a30d96e1ab2c464274f9e29)), closes [#13292](https://github.com/UI5/webcomponents/issues/13292)
+* **ui5-li:** prevent item-click for disabled nested interactive controls ([#13275](https://github.com/UI5/webcomponents/issues/13275)) ([489891c](https://github.com/UI5/webcomponents/commit/489891cb448b4850eb095e4c3e158456a21cd334)), closes [#10976](https://github.com/UI5/webcomponents/issues/10976)
+* **ui5-select:** nvda announcement of the selected value ([#12774](https://github.com/UI5/webcomponents/issues/12774)) ([00bb8fe](https://github.com/UI5/webcomponents/commit/00bb8fe75e340be66aa4f7531d350ec7cde2efa4))
+
+
+### Features
+
+* **ui5-combobox:** add suggestion highlight of matching characters ([#13282](https://github.com/UI5/webcomponents/issues/13282)) ([05c1e08](https://github.com/UI5/webcomponents/commit/05c1e087cdf655f593101d7a549f5141cf9eb7cb))
+
+
+
+
+
 # [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
 
 

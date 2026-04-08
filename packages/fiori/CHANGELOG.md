@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** hide pin button on mobile devices ([#13335](https://github.com/UI5/webcomponents/issues/13335)) ([359fe49](https://github.com/UI5/webcomponents/commit/359fe492d8f42a1403edcbe22c79f76c5c55ccb1)), closes [#13320](https://github.com/UI5/webcomponents/issues/13320)
+* **ui5-dynamic-page:** prevent flickering when content is updated ([#13336](https://github.com/UI5/webcomponents/issues/13336)) ([31e5f0a](https://github.com/UI5/webcomponents/commit/31e5f0a5322dbf05535ecda71fd6541fa752fe4d))
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
 # [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
 
 

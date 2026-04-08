@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Features
+
+* **ui5-table-cell:** merged property added ([#13297](https://github.com/UI5/webcomponents/issues/13297)) ([c5ec5f3](https://github.com/UI5/webcomponents/commit/c5ec5f33855aa712ed10bdd6331faf271a7652c1)), closes [#7238](https://github.com/UI5/webcomponents/issues/7238) [#7238](https://github.com/UI5/webcomponents/issues/7238) [#7238](https://github.com/UI5/webcomponents/issues/7238)
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
 # [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
 
 **Note:** Version bump only for package @ui5/webcomponents-website
