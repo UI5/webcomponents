@@ -11,6 +11,7 @@ import {
 	isEnd,
 	isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import SliderBase from "./SliderBase.js";
 import RangeSliderTemplate from "./RangeSliderTemplate.js";
 import type SliderTooltip from "./SliderTooltip.js";
@@ -1072,6 +1073,48 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 	get _ariaLabelledByEndHandleText() {
 		return this.accessibleName ? ["ui5-slider-accName", "ui5-slider-endHandleDesc"].join(" ").trim() : "ui5-slider-endHandleDesc";
+	}
+
+	/**
+	 * Returns the aria-label for the start handle, including associated label text
+	 * from <label for="..."> elements, accessibleName, and the handle description.
+	 * @private
+	 */
+	get _ariaLabelStartHandle() {
+		const associatedLabelText = getAssociatedLabelForTexts(this);
+		const hasAccessibleName = !!this.accessibleName;
+		const handleDescription = this._ariaHandlesText.startHandleText;
+
+		let labelText = hasAccessibleName
+			? `${this.accessibleName} ${handleDescription}`
+			: handleDescription;
+
+		if (!hasAccessibleName && associatedLabelText) {
+			labelText = `${associatedLabelText} ${labelText}`;
+		}
+
+		return labelText;
+	}
+
+	/**
+	 * Returns the aria-label for the end handle, including associated label text
+	 * from <label for="..."> elements, accessibleName, and the handle description.
+	 * @private
+	 */
+	get _ariaLabelEndHandle() {
+		const associatedLabelText = getAssociatedLabelForTexts(this);
+		const hasAccessibleName = !!this.accessibleName;
+		const handleDescription = this._ariaHandlesText.endHandleText;
+
+		let labelText = hasAccessibleName
+			? `${this.accessibleName} ${handleDescription}`
+			: handleDescription;
+
+		if (!hasAccessibleName && associatedLabelText) {
+			labelText = `${associatedLabelText} ${labelText}`;
+		}
+
+		return labelText;
 	}
 
 	get _ariaLabelledByInputText() {

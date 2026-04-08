@@ -874,7 +874,7 @@ describe("Testing events", () => {
 			const startValue = rangeSlider.startValue;
 
 			cy.get("@startHandle")
-				.should("have.attr", "aria-labelledby", "ui5-slider-startHandleDesc");
+				.should("have.attr", "aria-label", "Left handle");
 
 			cy.get("@startHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -903,7 +903,7 @@ describe("Testing events", () => {
 			const endValue = rangeSlider.endValue;
 
 			cy.get("@endHandle")
-				.should("have.attr", "aria-labelledby", "ui5-slider-endHandleDesc");
+				.should("have.attr", "aria-label", "Right handle");
 
 			cy.get("@endHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -916,7 +916,7 @@ describe("Testing events", () => {
 		});
 	});
 
-	it("Aria-labelledby text is mapped correctly when values are swapped", () => {
+	it("Aria-label text is mapped correctly when values are swapped", () => {
 		cy.mount(<RangeSlider min={0} max={40} step={1} startValue={8} endValue={9} showTickmarks></RangeSlider>);
 
 		cy.get("[ui5-range-slider]").as("rangeSlider");
@@ -926,12 +926,11 @@ describe("Testing events", () => {
 			.as("startHandle");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("#ui5-slider-startHandleDesc")
-			.as("rangeSliderStartHandleSpan");
-		cy.get("@rangeSlider")
-			.shadow()
-			.find("#ui5-slider-endHandleDesc")
-			.as("rangeSliderEndHandleSpan");
+			.find("[ui5-slider-handle][handle-type='end']")
+			.as("endHandle");
+
+		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
+		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
 
 		// Drag start handle past end handle to swap values using real events
 		cy.get("@startHandle")
@@ -939,8 +938,8 @@ describe("Testing events", () => {
 			.realMouseMove(100, 0)
 			.realMouseUp();
 
-		cy.get("@rangeSliderStartHandleSpan").should("contain.text", "Left handle");
-		cy.get("@rangeSliderEndHandleSpan").should("contain.text", "Right handle");
+		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
+		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
 	});
 
 	it("Click anywhere in the Range Slider should focus the closest handle", () => {
@@ -1800,6 +1799,26 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", `${labelText} Range`);
 	});
 
+	it("should apply associated label text as aria-label on the slider handles", () => {
+		const labelText = "basic range slider";
+		cy.mount(
+			<>
+				<label for="rs">{labelText}</label>
+				<RangeSlider id="rs" min={0} max={20}></RangeSlider>
+			</>
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='start']")
+			.should("have.attr", "aria-label", `${labelText} Left handle`);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='end']")
+			.should("have.attr", "aria-label", `${labelText} Right handle`);
+	});
+
 	it("Aria attributes of the progress bar are set correctly", () => {
 		cy.mount(
 			<RangeSlider min={0} max={40} step={1} end-value={20} show-tickmarks></RangeSlider>
@@ -1818,6 +1837,13 @@ describe("Accessibility", () => {
 			const maxValue = rangeSlider.max;
 			const startValue = rangeSlider.startValue;
 			const endValue = rangeSlider.endValue;
+			const rangeSize = Math.abs(endValue - startValue);
+
+			cy.get("@sliderProgress")
+				.should("have.attr", "role", "slider");
+
+			cy.get("@sliderProgress")
+				.should("have.attr", "aria-orientation", "horizontal");
 
 			cy.get("@sliderProgress")
 				.should("have.attr", "aria-label", "Range");
@@ -1832,7 +1858,7 @@ describe("Accessibility", () => {
 				.should("have.attr", "aria-valuetext", `From ${startValue} to ${endValue}`);
 
 			cy.get("@sliderProgress")
-				.should("have.attr", "aria-valuenow", `${endValue}`);
+				.should("have.attr", "aria-valuenow", `${rangeSize}`);
 
 		});
 	});

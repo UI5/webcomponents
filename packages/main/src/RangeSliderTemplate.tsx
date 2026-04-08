@@ -29,7 +29,7 @@ const startHandle = (slider: RangeSlider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.startValue}
-				aria-labelledby={slider._ariaLabelledByStartHandleText}
+				aria-label={slider._ariaLabelStartHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
 				aria-keyshortcuts={slider._ariaKeyshortcuts}
@@ -65,7 +65,7 @@ const endHandle = (slider: RangeSlider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.endValue}
-				aria-labelledby={slider._ariaLabelledByEndHandleText}
+				aria-label={slider._ariaLabelEndHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
 				aria-keyshortcuts="F2"
@@ -132,11 +132,6 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 				onKeyDown={this._onkeydown}
 				onKeyUp={this._onkeyup}
 			>
-				{/* Hidden accessibility text for handle descriptions */}
-				<span id="ui5-slider-startHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.startHandleText}</span>
-				<span id="ui5-slider-endHandleDesc" class="ui5-hidden-text">{this._ariaHandlesText.endHandleText}</span>
-				{this.accessibleName && <span id="ui5-slider-accName" class="ui5-hidden-text">{this.accessibleName}</span>}
-
 				<SliderScale
 					startValue={this.startValue}
 					endValue={this.endValue}
