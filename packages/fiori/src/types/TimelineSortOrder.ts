@@ -1,15 +1,9 @@
 /**
  * Sort order for Timeline items.
  * @public
- * @since 2.20.0
+ * @since 2.22.0
  */
 enum TimelineSortOrder {
-	/**
-	 * No sorting applied.
-	 * @public
-	 */
-	None = "None",
-
 	/**
 	 * Ascending order (oldest first).
 	 * @public

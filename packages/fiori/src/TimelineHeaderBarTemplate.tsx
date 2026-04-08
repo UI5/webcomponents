@@ -18,7 +18,6 @@ export default function TimelineHeaderBarTemplate(this: TimelineHeaderBar) {
 		<Toolbar
 			class="ui5-timeline-header-bar-toolbar"
 			accessibleName={this._headerBarAccessibleName}
-			design="Transparent"
 		>
 			{/* Spacer pushes all controls to the end */}
 			<ToolbarSpacer />

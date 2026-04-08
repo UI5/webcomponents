@@ -456,7 +456,7 @@
 	<h2>Timeline with Sort Only</h2>
 	<p>Click the sort button to toggle between ascending (oldest first) and descending (newest first) order.</p>
 	<div style="margin-bottom: 0.5rem;">
-		<strong>Current Order:</strong> <span id="sortOrderDisplay">None</span>
+		<strong>Current Order:</strong> <span id="sortOrderDisplay">Ascending</span>
 	</div>
 	<div style="width: 600px;">
 		<ui5-timeline id="sortOnlyTimeline">
@@ -559,7 +559,7 @@
 	const fullDemoTimeline = document.getElementById("fullDemoTimeline");
 	const fullDemoEventLog = document.getElementById("fullDemoEventLog");
 	const fullDemoItemCount = document.getElementById("fullDemoItemCount");
-	const fullDemoState = { search: "", filter: "All", sort: "None" };
+	const fullDemoState = { search: "", filter: "All", sortOrder: "Ascending" };
 	let fullDemoItems;
 
 	function applyFullDemo() {
@@ -576,12 +576,10 @@
 			return searchOk && filterOk;
 		});
 
-		// 2b. Sort (if active)
-		if (fullDemoState.sort !== "None") {
-			visible.sort((a, b) => fullDemoState.sort === "Ascending"
-				? (a.dataset.date || "").localeCompare(b.dataset.date || "")
-				: (b.dataset.date || "").localeCompare(a.dataset.date || ""));
-		}
+		// 2b. Sort
+		visible.sort((a, b) => fullDemoState.sortOrder === "Ascending"
+			? (a.dataset.date || "").localeCompare(b.dataset.date || "")
+			: (b.dataset.date || "").localeCompare(a.dataset.date || ""));
 
 		// 3. Re-add matching items
 		visible.forEach(item => fullDemoTimeline.appendChild(item));
@@ -601,7 +599,7 @@
 	});
 
 	fullDemoTimeline.addEventListener("sort", (e) => {
-		fullDemoState.sort = e.detail.sortOrder;
+		fullDemoState.sortOrder = e.detail.sortOrder;
 		fullDemoEventLog.textContent = `Sort: ${e.detail.sortOrder} (by date)`;
 		applyFullDemo();
 	});
@@ -614,11 +612,11 @@
 
 	searchOnlyTimeline.addEventListener("search", (e) => {
 		if (!searchOnlyItems) searchOnlyItems = [...searchOnlyTimeline.querySelectorAll("[ui5-timeline-item]")];
-		const query = e.detail.value.toLowerCase();
+		const searchQuery = e.detail.value.toLowerCase();
 
 		searchOnlyItems.forEach(item => item.remove());
 		searchOnlyItems
-			.filter(item => !query || [item.titleText, item.name, item.subtitleText, item.textContent].join(" ").toLowerCase().includes(query))
+			.filter(item => !searchQuery || [item.titleText, item.name, item.subtitleText, item.textContent].join(" ").toLowerCase().includes(searchQuery))
 			.forEach(item => searchOnlyTimeline.appendChild(item));
 	});
 
@@ -631,10 +629,10 @@
 
 	sortOnlyTimeline.addEventListener("sort", (e) => {
 		if (!sortOnlyItems) sortOnlyItems = [...sortOnlyTimeline.querySelectorAll("[ui5-timeline-item]")];
-		const asc = e.detail.sortOrder === "Ascending";
-		sortOrderDisplay.textContent = asc ? "Oldest First ↑" : "Newest First ↓";
+		const isAscending = e.detail.sortOrder === "Ascending";
+		sortOrderDisplay.textContent = isAscending ? "Oldest First ↑" : "Newest First ↓";
 
-		sortOnlyItems.sort((a, b) => asc
+		sortOnlyItems.sort((a, b) => isAscending
 			? (a.dataset.date || "").localeCompare(b.dataset.date || "")
 			: (b.dataset.date || "").localeCompare(a.dataset.date || ""));
 		sortOnlyItems.forEach(item => sortOnlyTimeline.appendChild(item));

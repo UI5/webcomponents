@@ -125,7 +125,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  *
  * @param {string} value The search value entered by the user.
  * @public
- * @since 2.20.0
+ * @since 2.22.0
  */
 @event("search", {
 	bubbles: true,
@@ -140,7 +140,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * @param {string} filterBy The filter category.
  * @param {string[]} selectedOptions The selected filter option texts.
  * @public
- * @since 2.20.0
+ * @since 2.22.0
  */
 @event("filter", {
 	bubbles: true,
@@ -154,7 +154,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  *
  * @param {string} sortOrder The sort order ("Ascending" or "Descending").
  * @public
- * @since 2.20.0
+ * @since 2.22.0
  */
 @event("sort", {
 	bubbles: true,
@@ -244,7 +244,7 @@ class Timeline extends UI5Element {
 	 * with the header bar. The application should handle these events to filter/sort the items.
 	 *
 	 * @public
-	 * @since 2.20.0
+	 * @since 2.22.0
 	 */
 	@slot()
 	headerBar!: Slot<TimelineHeaderBar>;

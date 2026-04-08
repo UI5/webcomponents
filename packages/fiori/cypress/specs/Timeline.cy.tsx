@@ -79,10 +79,10 @@ describe("Timeline general interaction", () => {
 				$item.get(0).addEventListener("name-click", cy.stub().as("clicked"));
 			});
 
-		cy.get("ui5-timeline-item")
+		cy.get("[ui5-timeline-item]")
 			.shadow()
-			.find("ui5-link")
-			.click();
+			.find("[ui5-link]")
+			.realClick();
 
 		cy.get("@clicked").should("have.been.calledOnce");
 	});
@@ -117,7 +117,7 @@ describe("Timeline with group items interactions", () => {
 
 		cy.get("@groupItem")
 			.eq(0)
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.should("have.length", 4);
 	});
 
@@ -167,7 +167,7 @@ describe("Timeline with group items interactions", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@currentGroup")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.eq(1)
 			.should("be.focused");
 	});
@@ -244,12 +244,12 @@ describe("Timeline with growing mode", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
-			.click();
+			.realClick();
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("be.focused");
 
@@ -263,7 +263,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("be.focused");
 	});
@@ -288,7 +288,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowDown");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("not.be.focused");
 
@@ -298,7 +298,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.should("not.be.focused");
 	});
@@ -320,7 +320,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -355,7 +355,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -391,7 +391,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -445,14 +445,14 @@ describe("Accessibility", () => {
 	});
 
 	it("item with state attribute has aria-description, item without state does not", () => {
-		cy.get(`ui5-timeline-item[state="Positive"]`).each($itemWithState => {
+		cy.get(`[ui5-timeline-item][state="Positive"]`).each($itemWithState => {
 			cy.wrap($itemWithState)
 				.shadow()
 				.find(".ui5-tli-bubble")
 				.should("have.attr", "aria-description");
 		});
 
-		cy.get(`ui5-timeline-item:not([state="Positive"])`).each($itemWithoutState => {
+		cy.get(`[ui5-timeline-item]:not([state="Positive"])`).each($itemWithoutState => {
 			cy.wrap($itemWithoutState)
 				.shadow()
 				.find(".ui5-tli-bubble")

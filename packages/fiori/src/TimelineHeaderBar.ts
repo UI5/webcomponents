@@ -7,8 +7,16 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type Input from "@ui5/webcomponents/dist/Input.js";
-import type List from "@ui5/webcomponents/dist/List.js";
+import Toolbar from "@ui5/webcomponents/dist/Toolbar.js";
+import ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton.js";
+import ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer.js";
+import Input from "@ui5/webcomponents/dist/Input.js";
+import Icon from "@ui5/webcomponents/dist/Icon.js";
+import Dialog from "@ui5/webcomponents/dist/Dialog.js";
+import List from "@ui5/webcomponents/dist/List.js";
+import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
+import Bar from "@ui5/webcomponents/dist/Bar.js";
+import Button from "@ui5/webcomponents/dist/Button.js";
 import type TimelineSortOrder from "./types/TimelineSortOrder.js";
 import type TimelineFilterOption from "./TimelineFilterOption.js";
 
@@ -67,7 +75,7 @@ type TimelineHeaderBarSortEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.20.0
+ * @since 2.22.0
  */
 @customElement({
 	tag: "ui5-timeline-header-bar",
@@ -75,6 +83,18 @@ type TimelineHeaderBarSortEventDetail = {
 	renderer: jsxRenderer,
 	template: TimelineHeaderBarTemplate,
 	styles: TimelineHeaderBarCss,
+	dependencies: [
+		Toolbar,
+		ToolbarButton,
+		ToolbarSpacer,
+		Input,
+		Icon,
+		Dialog,
+		List,
+		ListItemStandard,
+		Bar,
+		Button,
+	],
 })
 
 /**
@@ -165,11 +185,11 @@ class TimelineHeaderBar extends UI5Element {
 
 	/**
 	 * The current sort order.
-	 * @default "None"
+	 * @default "Ascending"
 	 * @public
 	 */
 	@property()
-	sortOrder: `${TimelineSortOrder}` = "None";
+	sortOrder: `${TimelineSortOrder}` = "Ascending";
 
 	/**
 	 * Controls the filter dialog visibility.
@@ -279,8 +299,8 @@ class TimelineHeaderBar extends UI5Element {
 	}
 
 	_onSortClick() {
-		// Toggle sort order: None -> Descending -> Ascending -> Descending
-		if (this.sortOrder === "None" || this.sortOrder === "Ascending") {
+		// Toggle sort order: Ascending -> Descending -> Ascending
+		if (this.sortOrder === "Ascending") {
 			this.sortOrder = "Descending";
 		} else {
 			this.sortOrder = "Ascending";

@@ -680,16 +680,16 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("fullDemo");
-		const logEl = document.getElementById("fullDemoLog");
-		const countEl = document.getElementById("fullDemoCount");
-		const sortStatusEl = document.getElementById("fullDemoSortStatus");
-		const sortLabelEl = document.getElementById("fullDemoSortLabel");
+		const logElement = document.getElementById("fullDemoLog");
+		const countElement = document.getElementById("fullDemoCount");
+		const sortStatusElement = document.getElementById("fullDemoSortStatus");
+		const sortLabelElement = document.getElementById("fullDemoSortLabel");
 
-		const mgr = createItemManager(timeline);
-		const state = { search: "", filters: [], sortOrder: "None" };
+		const itemManager = createItemManager(timeline);
+		const state = { search: "", filters: [], sortOrder: "Ascending" };
 
 		function apply() {
-			const count = mgr.reconcile(item => {
+			const count = itemManager.reconcile(item => {
 				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 					.join(" ").toLowerCase();
 				const searchOk = !state.search || text.includes(state.search);
@@ -697,34 +697,32 @@
 				return searchOk && filterOk;
 			});
 
-			if (state.sortOrder !== "None") {
-				mgr.sort((a, b) => {
-					const da = new Date(a.dataset.date || 0);
-					const db = new Date(b.dataset.date || 0);
-					return state.sortOrder === "Ascending" ? da - db : db - da;
-				});
-			}
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
 
-			countEl.textContent = count;
+			countElement.textContent = count;
 		}
 
 		timeline.addEventListener("search", e => {
 			state.search = e.detail.value.toLowerCase();
-			logEl.textContent = state.search ? `search: "${e.detail.value}"` : "search cleared";
+			logElement.textContent = state.search ? `search: "${e.detail.value}"` : "search cleared";
 			apply();
 		});
 
 		timeline.addEventListener("filter", e => {
 			state.filters = e.detail.selectedOptions;
-			logEl.textContent = state.filters.length ? `filter → ${state.filters.join(", ")}` : "filter cleared";
+			logElement.textContent = state.filters.length ? `filter → ${state.filters.join(", ")}` : "filter cleared";
 			apply();
 		});
 
 		timeline.addEventListener("sort", e => {
 			state.sortOrder = e.detail.sortOrder;
-			logEl.textContent = `sort → ${state.sortOrder}`;
-			sortStatusEl.style.display = "flex";
-			sortLabelEl.textContent = state.sortOrder === "Ascending" ? "Oldest first" : "Newest first";
+			logElement.textContent = `sort → ${state.sortOrder}`;
+			sortStatusElement.style.display = "flex";
+			sortLabelElement.textContent = state.sortOrder === "Ascending" ? "Oldest first" : "Newest first";
 			apply();
 		});
 	})();
@@ -735,15 +733,15 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("searchDemo");
-		const mgr = createItemManager(timeline);
+		const itemManager = createItemManager(timeline);
 
 		timeline.addEventListener("search", e => {
-			const q = e.detail.value.toLowerCase();
-			mgr.reconcile(item => {
-				if (!q) return true;
+			const searchQuery = e.detail.value.toLowerCase();
+			itemManager.reconcile(item => {
+				if (!searchQuery) return true;
 				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 					.join(" ").toLowerCase();
-				return text.includes(q);
+				return text.includes(searchQuery);
 			});
 		});
 	})();
@@ -754,17 +752,17 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("sortDemo");
-		const orderEl = document.getElementById("sortDemoOrder");
-		const mgr = createItemManager(timeline);
+		const orderElement = document.getElementById("sortDemoOrder");
+		const itemManager = createItemManager(timeline);
 
 		timeline.addEventListener("sort", e => {
 			const order = e.detail.sortOrder;
-			orderEl.textContent = order === "Ascending" ? "Oldest first" : "Newest first";
+			orderElement.textContent = order === "Ascending" ? "Oldest first" : "Newest first";
 
-			mgr.sort((a, b) => {
-				const da = new Date(a.dataset.date || 0);
-				const db = new Date(b.dataset.date || 0);
-				return order === "Ascending" ? da - db : db - da;
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return order === "Ascending" ? dateA - dateB : dateB - dateA;
 			});
 		});
 	})();
@@ -775,11 +773,11 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("filterDemo");
-		const mgr = createItemManager(timeline);
+		const itemManager = createItemManager(timeline);
 
 		timeline.addEventListener("filter", e => {
 			const severities = e.detail.selectedOptions;
-			mgr.reconcile(item => {
+			itemManager.reconcile(item => {
 				return severities.length === 0 || severities.includes(item.dataset.severity);
 			});
 		});
@@ -791,12 +789,12 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("combinedDemo");
-		const logEl = document.getElementById("combinedLog");
-		const mgr = createItemManager(timeline);
+		const logElement = document.getElementById("combinedLog");
+		const itemManager = createItemManager(timeline);
 		const state = { search: "", types: [] };
 
 		function apply() {
-			mgr.reconcile(item => {
+			itemManager.reconcile(item => {
 				const text = [item.titleText, item.name, item.textContent]
 					.join(" ").toLowerCase();
 				const searchOk = !state.search || text.includes(state.search);
@@ -807,7 +805,7 @@
 			const parts = [];
 			if (state.types.length) parts.push(`Type: ${state.types.join(", ")}`);
 			if (state.search) parts.push(`Search: "${state.search}"`);
-			logEl.textContent = parts.length ? parts.join(" + ") : "No filters active";
+			logElement.textContent = parts.length ? parts.join(" + ") : "No filters active";
 		}
 
 		timeline.addEventListener("search", e => {
@@ -827,12 +825,12 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("horizontalDemo");
-		const mgr = createItemManager(timeline);
+		const itemManager = createItemManager(timeline);
 		let searchValue = "";
 
 		timeline.addEventListener("search", e => {
 			searchValue = e.detail.value.toLowerCase();
-			mgr.reconcile(item => {
+			itemManager.reconcile(item => {
 				if (!searchValue) return true;
 				const text = [item.titleText, item.name].join(" ").toLowerCase();
 				return text.includes(searchValue);
@@ -841,10 +839,10 @@
 
 		timeline.addEventListener("sort", e => {
 			const order = e.detail.sortOrder;
-			mgr.sort((a, b) => {
-				const da = new Date(a.dataset.date || 0);
-				const db = new Date(b.dataset.date || 0);
-				return order === "Ascending" ? da - db : db - da;
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return order === "Ascending" ? dateA - dateB : dateB - dateA;
 			});
 		});
 	})();
@@ -855,15 +853,15 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("mixedDemo");
-		const logEl = document.getElementById("mixedLog");
-		const mgr = createItemManager(timeline);
+		const logElement = document.getElementById("mixedLog");
+		const itemManager = createItemManager(timeline);
 
 		timeline.addEventListener("filter", e => {
 			const categories = e.detail.selectedOptions;
-			const count = mgr.reconcile(item => {
+			const count = itemManager.reconcile(item => {
 				return categories.length === 0 || categories.includes(item.dataset.cat);
 			});
-			logEl.textContent = categories.length === 0
+			logElement.textContent = categories.length === 0
 				? "All items visible"
 				: `Showing ${count} "${categories.join(", ")}" items`;
 		});
@@ -875,12 +873,12 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("multiFilterDemo");
-		const logEl = document.getElementById("multiFilterLog");
-		const mgr = createItemManager(timeline);
-		const state = { search: "", filters: [], sortOrder: "None" };
+		const logElement = document.getElementById("multiFilterLog");
+		const itemManager = createItemManager(timeline);
+		const state = { search: "", filters: [], sortOrder: "Ascending" };
 
 		function apply() {
-			const count = mgr.reconcile(item => {
+			const count = itemManager.reconcile(item => {
 				// Search: match against all text content
 				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 					.join(" ").toLowerCase();
@@ -894,19 +892,17 @@
 				return searchOk && filterOk;
 			});
 
-			if (state.sortOrder !== "None") {
-				mgr.sort((a, b) => {
-					const da = new Date(a.dataset.date || 0);
-					const db = new Date(b.dataset.date || 0);
-					return state.sortOrder === "Ascending" ? da - db : db - da;
-				});
-			}
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
 
 			// Update status display
 			if (state.filters.length === 0) {
-				logEl.textContent = "None (showing all)";
+				logElement.textContent = "None (showing all)";
 			} else {
-				logEl.textContent = state.filters.join(", ") + ` (${count} items)`;
+				logElement.textContent = state.filters.join(", ") + ` (${count} items)`;
 			}
 		}
 
@@ -932,14 +928,14 @@
 	// ════════════════════════════════════════════════
 	(function () {
 		const timeline = document.getElementById("emptyDemo");
-		const mgr = createItemManager(timeline);
+		const itemManager = createItemManager(timeline);
 
 		timeline.addEventListener("search", e => {
-			const q = e.detail.value.toLowerCase();
-			mgr.reconcile(item => {
-				if (!q) return true;
+			const searchQuery = e.detail.value.toLowerCase();
+			itemManager.reconcile(item => {
+				if (!searchQuery) return true;
 				const text = [item.titleText, item.name, item.textContent].join(" ").toLowerCase();
-				return text.includes(q);
+				return text.includes(searchQuery);
 			});
 		});
 	})();

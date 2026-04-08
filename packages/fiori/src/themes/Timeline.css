@@ -5,6 +5,7 @@
 /* Header bar wrapper - slotted content */
 .ui5-timeline-header-bar-wrapper {
 	flex-shrink: 0;
+	margin-block-end: 1rem;
 }
 
 .ui5-timeline-list {

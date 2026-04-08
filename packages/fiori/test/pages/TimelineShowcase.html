@@ -490,11 +490,11 @@ timeline.<span class="fn">addEventListener</span>(<span class="str">"search"</sp
 			<span class="code-lang">TypeScript</span>
 		</div>
 		<div class="code-body"><span class="fn">_onSortClick</span>() {
-  <span class="cmt">// Toggle: None -> Ascending -> Descending -> Ascending</span>
-  <span class="kw">if</span> (<span class="kw">this</span>.sortOrder === <span class="str">"None"</span> || <span class="kw">this</span>.sortOrder === <span class="str">"Descending"</span>) {
-    <span class="kw">this</span>.sortOrder = <span class="str">"Ascending"</span>;
-  } <span class="kw">else</span> {
+  <span class="cmt">// Toggle: Ascending -> Descending -> Ascending</span>
+  <span class="kw">if</span> (<span class="kw">this</span>.sortOrder === <span class="str">"Ascending"</span>) {
     <span class="kw">this</span>.sortOrder = <span class="str">"Descending"</span>;
+  } <span class="kw">else</span> {
+    <span class="kw">this</span>.sortOrder = <span class="str">"Ascending"</span>;
   }
 
   <span class="kw">this</span>.<span class="fn">fireDecoratorEvent</span>(<span class="str">"sort"</span>, {
@@ -594,7 +594,7 @@ timeline.<span class="fn">addEventListener</span>(<span class="str">"sort"</span
 			<span class="code-filename">Application handler &mdash; combined state</span>
 			<span class="code-lang">JavaScript</span>
 		</div>
-		<div class="code-body"><span class="kw">const</span> state = { search: <span class="str">""</span>, filter: <span class="str">"All"</span>, sortOrder: <span class="str">"None"</span> };
+		<div class="code-body"><span class="kw">const</span> state = { search: <span class="str">""</span>, filter: <span class="str">"All"</span>, sortOrder: <span class="str">"Ascending"</span> };
 
 <span class="kw">function</span> <span class="fn">apply</span>() {
   <span class="cmt">// 1. Filter: keep only matching items in the DOM</span>
@@ -607,13 +607,11 @@ timeline.<span class="fn">addEventListener</span>(<span class="str">"sort"</span
   });
 
   <span class="cmt">// 2. Sort: reorder remaining DOM nodes</span>
-  <span class="kw">if</span> (state.sortOrder !== <span class="str">"None"</span>) {
-    mgr.<span class="fn">sort</span>((a, b) <span class="kw">=></span> {
-      <span class="kw">const</span> da = <span class="kw">new</span> <span class="type">Date</span>(a.dataset.date);
-      <span class="kw">const</span> db = <span class="kw">new</span> <span class="type">Date</span>(b.dataset.date);
-      <span class="kw">return</span> state.sortOrder === <span class="str">"Ascending"</span> ? da - db : db - da;
-    });
-  }
+  mgr.<span class="fn">sort</span>((a, b) <span class="kw">=></span> {
+    <span class="kw">const</span> da = <span class="kw">new</span> <span class="type">Date</span>(a.dataset.date);
+    <span class="kw">const</span> db = <span class="kw">new</span> <span class="type">Date</span>(b.dataset.date);
+    <span class="kw">return</span> state.sortOrder === <span class="str">"Ascending"</span> ? da - db : db - da;
+  });
 }
 
 <span class="cmt">// 3. Wire up all three events to the same apply()</span>
@@ -794,7 +792,7 @@ const allItems = [...timeline
   TimelineGroupItem.ts        <span class="cmt">// Group: collapse/expand, child management</span>
 
 <span class="cmt">packages/fiori/src/types/</span>
-  TimelineSortOrder.ts        <span class="cmt">// Enum: None | Ascending | Descending</span>
+  TimelineSortOrder.ts        <span class="cmt">// Enum: Ascending | Descending</span>
   TimelineLayout.ts           <span class="cmt">// Enum: Vertical | Horizontal</span>
 
 <span class="cmt">packages/fiori/src/themes/</span>
@@ -951,11 +949,11 @@ function animatePipeline(eventType, detail) {
 	const timeline = document.getElementById("pipelineDemo");
 	const statusText = document.getElementById("pipelineStatusText");
 	const statusPill = document.getElementById("pipelineStatus");
-	const mgr = createItemManager(timeline);
-	const state = { search: "", filter: "All", sortOrder: "None" };
+	const itemManager = createItemManager(timeline);
+	const state = { search: "", filter: "All", sortOrder: "Ascending" };
 
 	function apply() {
-		const count = mgr.reconcile(item => {
+		const count = itemManager.reconcile(item => {
 			const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 				.join(" ").toLowerCase();
 			const searchOk = !state.search || text.includes(state.search);
@@ -963,15 +961,13 @@ function animatePipeline(eventType, detail) {
 			return searchOk && filterOk;
 		});
 
-		if (state.sortOrder !== "None") {
-			mgr.sort((a, b) => {
-				const da = new Date(a.dataset.date || 0);
-				const db = new Date(b.dataset.date || 0);
-				return state.sortOrder === "Ascending" ? da - db : db - da;
-			});
-		}
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
 
-		const total = mgr.totalCount;
+		const total = itemManager.totalCount;
 		const isFiltered = count < total;
 		statusText.textContent = `Showing ${count} of ${total} items`;
 		statusPill.classList.toggle("status-pill--filtered", isFiltered);
@@ -1002,15 +998,15 @@ function animatePipeline(eventType, detail) {
 // ──────────────────────────────────────────────
 (function () {
 	const timeline = document.getElementById("searchDemo");
-	const mgr = createItemManager(timeline);
+	const itemManager = createItemManager(timeline);
 
 	timeline.addEventListener("search", e => {
-		const q = e.detail.value.toLowerCase();
-		mgr.reconcile(item => {
-			if (!q) return true;
+		const searchQuery = e.detail.value.toLowerCase();
+		itemManager.reconcile(item => {
+			if (!searchQuery) return true;
 			const text = [item.titleText, item.name, item.subtitleText, item.textContent]
 				.join(" ").toLowerCase();
-			return text.includes(q);
+			return text.includes(searchQuery);
 		});
 	});
 })();
@@ -1021,11 +1017,11 @@ function animatePipeline(eventType, detail) {
 // ──────────────────────────────────────────────
 (function () {
 	const timeline = document.getElementById("filterDemo");
-	const mgr = createItemManager(timeline);
+	const itemManager = createItemManager(timeline);
 
 	timeline.addEventListener("filter", e => {
 		const severity = e.detail.selectedOptions[0] || "All";
-		mgr.reconcile(item => {
+		itemManager.reconcile(item => {
 			return severity === "All" || item.dataset.severity === severity;
 		});
 	});
@@ -1039,17 +1035,17 @@ function animatePipeline(eventType, detail) {
 	const timeline = document.getElementById("sortDemo");
 	const orderText = document.getElementById("sortDemoOrderText");
 	const orderPill = document.getElementById("sortDemoOrderPill");
-	const mgr = createItemManager(timeline);
+	const itemManager = createItemManager(timeline);
 
 	timeline.addEventListener("sort", e => {
 		const order = e.detail.sortOrder;
 		orderText.textContent = order === "Ascending" ? "Oldest first" : "Newest first";
 		orderPill.classList.add("status-pill--filtered");
 
-		mgr.sort((a, b) => {
-			const da = new Date(a.dataset.date || 0);
-			const db = new Date(b.dataset.date || 0);
-			return order === "Ascending" ? da - db : db - da;
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return order === "Ascending" ? dateA - dateB : dateB - dateA;
 		});
 	});
 })();
@@ -1062,11 +1058,11 @@ function animatePipeline(eventType, detail) {
 	const timeline = document.getElementById("combinedDemo");
 	const statusText = document.getElementById("combinedStatusText");
 	const statusPill = document.getElementById("combinedStatus");
-	const mgr = createItemManager(timeline);
-	const state = { search: "", type: "All", sortOrder: "None" };
+	const itemManager = createItemManager(timeline);
+	const state = { search: "", type: "All", sortOrder: "Ascending" };
 
 	function apply() {
-		mgr.reconcile(item => {
+		itemManager.reconcile(item => {
 			const text = [item.titleText, item.name, item.textContent]
 				.join(" ").toLowerCase();
 			const searchOk = !state.search || text.includes(state.search);
@@ -1074,20 +1070,18 @@ function animatePipeline(eventType, detail) {
 			return searchOk && typeOk;
 		});
 
-		if (state.sortOrder !== "None") {
-			mgr.sort((a, b) => {
-				const da = new Date(a.dataset.date || 0);
-				const db = new Date(b.dataset.date || 0);
-				return state.sortOrder === "Ascending" ? da - db : db - da;
-			});
-		}
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
 
 		const parts = [];
 		if (state.type !== "All") parts.push(`Type: ${state.type}`);
 		if (state.search) parts.push(`Search: "${state.search}"`);
-		if (state.sortOrder !== "None") parts.push(`Sort: ${state.sortOrder}`);
-		const isFiltered = parts.length > 0;
-		statusText.textContent = isFiltered ? parts.join(" + ") : "Category: All";
+		parts.push(`Sort: ${state.sortOrder}`);
+		const isFiltered = parts.length > 1 || state.type !== "All";
+		statusText.textContent = isFiltered ? parts.join(" + ") : `Sort: ${state.sortOrder}`;
 		statusPill.classList.toggle("status-pill--filtered", isFiltered);
 	}
 

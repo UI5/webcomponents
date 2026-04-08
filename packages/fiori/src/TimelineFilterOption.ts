@@ -20,7 +20,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
  * `import "@ui5/webcomponents-fiori/dist/TimelineFilterOption.js";`
  * @constructor
  * @extends UI5Element
- * @since 2.20.0
+ * @since 2.22.0
  * @public
  */
 @customElement("ui5-timeline-filter-option")
