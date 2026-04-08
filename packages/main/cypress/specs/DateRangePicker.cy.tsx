@@ -970,7 +970,7 @@ describe("Validation inside a form", () => {
 	});
 });
 
-describe("DateRangePicker relative dates rejection", () => {
+describe("DateRangePicker rejects relative dates", () => {
 	const relativeKeywords = ["today", "tomorrow", "yesterday"];
 
 	relativeKeywords.forEach(keyword => {
