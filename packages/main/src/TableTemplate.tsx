@@ -9,7 +9,8 @@ export default function TableTemplate(this: Table) {
 		<>
 			<div id="before" role="none" tabindex={0} ui5-table-dummy-focus-area></div>
 
-			<div id="table" role="grid"
+			<div id="table"
+				role={this._ariaRole}
 				style={this.styles.table}
 				aria-label={this._ariaLabel}
 				aria-description={this._ariaDescription}

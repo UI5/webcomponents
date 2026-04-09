@@ -127,6 +127,11 @@ class TableRow extends TableRowBase<TableCell> {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
+		if (this._table?._hasGroupRows) {
+			this.setAttribute("aria-level", "2");
+		} else {
+			this.removeAttribute("aria-level");
+		}
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);

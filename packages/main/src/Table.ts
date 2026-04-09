@@ -1,5 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import {
 	customElement, slotStrict as slot, property, eventStrict, i18n,
 } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -275,7 +276,7 @@ class Table extends UI5Element {
 		"default": true,
 		invalidateOnChildChange: {
 			properties: ["navigated", "position"],
-			slots: false,
+			slots: true,
 		},
 	})
 	rows!: DefaultSlot<TableRow>;
@@ -709,6 +710,14 @@ class Table extends UI5Element {
 		}
 
 		return ariaColCount;
+	}
+
+	get _hasGroupRows(): boolean {
+		return this.rows.some(row => row.hasAttribute("ui5-table-group-row"));
+	}
+
+	get _ariaRole(): AriaRole {
+		return this._hasGroupRows ? "treegrid" as AriaRole : "grid" as AriaRole;
 	}
 
 	get _ariaMultiSelectable() {

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Table Grouping POC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+		.toolbar {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: 1rem;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="toolbar">
+		<ui5-title level="H3">Table Grouping POC (Treegrid)</ui5-title>
+		<ui5-button id="toggleGrouping">Group by Country</ui5-button>
+	</div>
+
+	<ui5-table id="table" accessible-name="Cities Table">
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="cityCol" width="200px">City</ui5-table-header-cell>
+			<ui5-table-header-cell id="countryCol" width="200px">Country</ui5-table-header-cell>
+			<ui5-table-header-cell id="popCol" width="150px">Population</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+
+	<script>
+		const table = document.getElementById("table");
+		const toggleBtn = document.getElementById("toggleGrouping");
+		let isGrouped = false;
+
+		const data = [
+			{ city: "Berlin", country: "Germany", population: "3,748,148" },
+			{ city: "Munich", country: "Germany", population: "1,471,508" },
+			{ city: "Hamburg", country: "Germany", population: "1,899,160" },
+			{ city: "Paris", country: "France", population: "2,161,000" },
+			{ city: "Lyon", country: "France", population: "513,275" },
+			{ city: "Marseille", country: "France", population: "870,018" },
+			{ city: "Madrid", country: "Spain", population: "3,223,334" },
+			{ city: "Barcelona", country: "Spain", population: "1,620,343" },
+			{ city: "Seville", country: "Spain", population: "688,711" },
+		];
+
+		function clearRows() {
+			table.querySelectorAll("[ui5-table-row], [ui5-table-group-row]").forEach(el => el.remove());
+		}
+
+		function createDataRow(item, index) {
+			const row = document.createElement("ui5-table-row");
+			row.setAttribute("row-key", `row-${index}`);
+
+			const cityCell = document.createElement("ui5-table-cell");
+			const cityText = document.createElement("ui5-text");
+			cityText.textContent = item.city;
+			cityCell.append(cityText);
+
+			const countryCell = document.createElement("ui5-table-cell");
+			const countryText = document.createElement("ui5-text");
+			countryText.textContent = item.country;
+			countryCell.append(countryText);
+
+			const popCell = document.createElement("ui5-table-cell");
+			const popText = document.createElement("ui5-text");
+			popText.textContent = item.population;
+			popCell.append(popText);
+
+			row.append(cityCell);
+			row.append(countryCell);
+			row.append(popCell);
+			return row;
+		}
+
+		function renderFlat() {
+			clearRows();
+			data.forEach((item, i) => {
+				table.append(createDataRow(item, i));
+			});
+		}
+
+		function renderGrouped() {
+			clearRows();
+
+			// Group by country
+			const groups = Object.groupBy(data, item => item.country);
+
+			let rowIndex = 0;
+			Object.keys(groups).forEach(country => {
+				const groupRow = document.createElement("ui5-table-group-row");
+				groupRow.textContent = "Country: " + country;
+				table.append(groupRow);
+
+				groups[country].forEach(item => {
+					table.append(createDataRow(item, rowIndex++));
+				});
+			});
+		}
+
+		toggleBtn.addEventListener("click", () => {
+			isGrouped = !isGrouped;
+			if (isGrouped) {
+				renderGrouped();
+				toggleBtn.textContent = "Remove Grouping";
+			} else {
+				renderFlat();
+				toggleBtn.textContent = "Group by Country";
+			}
+		});
+
+		// Initial flat render
+		renderFlat();
+	</script>
+</body>
+
+</html>

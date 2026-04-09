@@ -1,0 +1,15 @@
+:host {
+	background: var(--sapList_TableGroupHeaderBackground);
+	color: var(--sapList_TableGroupHeaderTextColor);
+	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_TableGroupHeaderBorderColor);
+	font-weight: bold;
+}
+
+#group-cell {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: center;
+	padding: 0 var(--_ui5_table_cell_horizontal_padding);
+	padding-inline-start: var(--_ui5_first_table_cell_horizontal_padding);
+	min-height: inherit;
+}
