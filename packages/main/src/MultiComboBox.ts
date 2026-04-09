@@ -128,8 +128,7 @@ interface IMultiComboBoxItem extends UI5Element {
 	isGroupItem?: boolean,
 	_isVisible?: boolean,
 	items?: Array<IMultiComboBoxItem>,
-	eventDetails: { click?: object },
-}
+		eventDetails: { click?: ListItemBaseClickEventDetail },
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 type ValueStateTypeAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;

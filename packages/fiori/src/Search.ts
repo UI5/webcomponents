@@ -39,12 +39,13 @@ import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import type Select from "@ui5/webcomponents/dist/Select.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ListItemBaseClickEventDetail } from "@ui5/webcomponents/dist/ListItemBase.js";
 
 interface ISearchSuggestionItem extends UI5Element {
 	selected: boolean;
 	text: string;
 	items?: ISearchSuggestionItem[];
-	eventDetails: { click?: object };
+	eventDetails: { click?: ListItemBaseClickEventDetail };
 }
 
 type SearchEventDetails = {

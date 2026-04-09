@@ -47,7 +47,7 @@ import type Button from "./Button.js";
 import type List from "./List.js";
 import type DropIndicator from "./DropIndicator.js";
 import type Tab from "./Tab.js";
-import type { TabInStrip, TabInOverflow } from "./Tab.js";
+import type { TabInStrip, TabInOverflow, TabClickEventDetail } from "./Tab.js";
 import type { TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -111,7 +111,7 @@ interface ITab extends UI5Element {
 	receiveOverflowInfo: (arg0: TabContainerOverflowInfo) => void;
 	getDomRefInStrip: () => HTMLElement | undefined;
 	items?: Array<ITab>;
-	eventDetails: { click?: object };
+	eventDetails: { click?: TabClickEventDetail };
 }
 
 /**
