@@ -50,8 +50,8 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	 * **Note:** Only one item must be selected per <code>ui5-color-palette</code>.
 	 * If more than one item is defined as selected, the last one would be considered as the selected one.
 	 *
-	 * @public
 	 * @default false
+	 * @public
 	 * @since 2.0.0
 	 */
 	@property({ type: Boolean })
@@ -60,6 +60,7 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	/**
 	 * Defines the tooltip of the component. When not set, the color value is used as the tooltip.
 	 *
+	 * @default undefined
 	 * @public
 	 * @since 2.22.0
 	 */
