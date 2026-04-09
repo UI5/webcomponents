@@ -61,7 +61,10 @@ interface IMenuItem extends UI5Element {
 	isMenuItem?: boolean;
 	isSeparator?: boolean;
 	isGroup?: boolean;
-		eventDetails: { click?: ListItemBaseClickEventDetail };
+	eventDetails: { click?: ListItemBaseClickEventDetail };
+}
+
+type MenuItemClickEventDetail = {
 	item: MenuItem,
 	text: string,
 }

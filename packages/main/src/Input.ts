@@ -111,7 +111,8 @@ interface IInputSuggestionItem extends UI5Element {
 	focused: boolean;
 	additionalText?: string;
 	items?: IInputSuggestionItem[];
-		eventDetails: { click?: ListItemBaseClickEventDetail };
+	eventDetails: { click?: ListItemBaseClickEventDetail };
+}
 
 interface IInputSuggestionItemSelectable extends IInputSuggestionItem {
 	text?: string;
