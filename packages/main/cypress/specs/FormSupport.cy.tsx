@@ -896,9 +896,9 @@ describe("Form support", () => {
 	it("ui5-time-picker in form", () => {
 		cy.mount(<form method="get">
 			<TimePicker id="time_picker1"></TimePicker>
-			<TimePicker id="time_picker2" value="1:10:10 PM"></TimePicker>
-			<TimePicker id="time_picker3" name="time_picker3" required></TimePicker>
-			<TimePicker id="time_picker4" name="time_picker4" value="1:10:10 PM" required></TimePicker>
+			<TimePicker id="time_picker2"  value="1:10:10 PM"></TimePicker>
+			<TimePicker id="time_picker3" valueFormat="h:mm:ss a" name="time_picker3" required></TimePicker>
+			<TimePicker id="time_picker4" valueFormat="h:mm:ss a" name="time_picker4" value="1:10:10 PM" required></TimePicker>
 			<button type="submit">Submits forms</button>
 		</form>);
 
@@ -930,7 +930,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "time_picker3=1:10:10 PM&time_picker4=1:10:10 PM");
+			.should("be.equal", "time_picker3=1:10:10 PM&time_picker4=1:10:10 PM");
 	});
 
 	it("Button's click doesn't submit form on prevent default", () => {

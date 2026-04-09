@@ -46,7 +46,7 @@ import {
 	DATEPICKER_OPEN_ICON_TITLE_OPENED,
 	DATEPICKER_DATE_DESCRIPTION,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
-	INPUT_SUGGESTIONS_TITLE,
+	DATEPICKER_MOBILE_HEADER_TITLE,
 	DATEPICKER_POPOVER_ACCESSIBLE_NAME,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_INFORMATION,
@@ -366,6 +366,15 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 */
 	@property()
 	accessibleDescriptionRef?: string;
+
+	/**
+	 * Defines whether the clear icon of the input will be shown.
+	 * @default false
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property({ type: Boolean })
+	showClearIcon = false;
 
 	@property({ type: Object })
 	_respPopoverConfig?: object;
@@ -852,7 +861,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return this.ariaLabelText || DatePicker.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.ariaLabelText || DatePicker.i18nBundle.getText(DATEPICKER_MOBILE_HEADER_TITLE);
 	}
 
 	get showHeader() {

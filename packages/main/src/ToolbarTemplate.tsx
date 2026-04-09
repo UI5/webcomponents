@@ -16,9 +16,9 @@ export default function ToolbarTemplate(this: Toolbar) {
 			{this.standardItems.map(item => {
 				return (
 					<div class={{
-						"ui5-tb-item": true,
+						"ui5-tb-item": !item.hasFlexibleWidth,
 						"ui5-tb-self-overflow": item.hasOverflow,
-					}} id={item._individualSlot}>
+					}} id={item._individualSlot} style={item.isSpacer ? item.styles : undefined}>
 						<slot name={item._individualSlot}></slot>
 					</div>
 				);

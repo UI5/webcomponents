@@ -39,9 +39,14 @@
 			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
 			<ui5-cb-item text="Canada"></ui5-cb-item>
 			<ui5-cb-item text="Chile"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Her Her"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Her Her"></ui5-cb-item>
 		</ui5-combobox>
 		<ui5-button id="combo-focus">Focus ComboBox</ui5-button>
 		<ui5-button id="value-set-btn">Set value</ui5-button>
+		<span id="change-event-result"></span>
+		<span id="selection-change-event-result"></span>
 
 		<ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
 			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
@@ -167,13 +172,6 @@
 			<ui5-cb-item text="Canada" additional-text="CA"></ui5-cb-item>
 			<ui5-cb-item text="Chile" additional-text="CL"></ui5-cb-item>
 		</ui5-combobox>
-	</div>
-
-	<div class="demo-section">
-		<span id="change-event-result"></span>
-		<br />
-		<span id="selection-change-event-result"></span>
-
 	</div>
 
 		<div class="demo-section">
@@ -495,6 +493,15 @@
 			});
 		</script>
 	</div>
+	<div class="demo-section">
+		<span>ComboBox - items with lower case and upper case</span>
+		<ui5-combobox id="combo-lower-upper-case" no-typeahead>
+			<ui5-cb-item text="Item 1"></ui5-cb-item>
+			<ui5-cb-item text="item 11"></ui5-cb-item>
+			<ui5-cb-item text="Item 2"></ui5-cb-item>
+			<ui5-cb-item text="item 22"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
 
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
@@ -604,7 +611,7 @@
 		});
 
 		document.getElementById("combo").addEventListener("ui5-selection-change", function (event) {
-			document.getElementById("selection-change-event-result").innerHTML = event.detail.item.text;
+			document.getElementById("selection-change-event-result").innerHTML = event.detail.item ? event.detail.item.text : "(cleared)";
 		});
 
 		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {

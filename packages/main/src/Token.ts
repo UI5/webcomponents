@@ -13,7 +13,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { TOKEN_ARIA_DELETABLE, TOKEN_ARIA_LABEL, TOKEN_ARIA_REMOVE } from "./generated/i18n/i18n-defaults.js";
+import { TOKEN_ARIA_DELETE, TOKEN_ARIA_DELETABLE, TOKEN_ARIA_LABEL } from "./generated/i18n/i18n-defaults.js";
 
 import type { IIcon } from "./Icon.js";
 import type { IToken } from "./MultiInput.js";
@@ -128,6 +128,14 @@ class Token extends UI5Element implements IToken {
 	toBeDeleted = false;
 
 	/**
+	 * Set by the tokenizer to mark the last visible token before overflow.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	lastVisibleToken = false;
+
+	/**
 	 * Defines the tabIndex of the component.
 	 * @private
 	 */
@@ -195,7 +203,7 @@ class Token extends UI5Element implements IToken {
 	}
 
 	get tokenDeletableText() {
-		return Token.i18nBundle.getText(TOKEN_ARIA_REMOVE);
+		return Token.i18nBundle.getText(TOKEN_ARIA_DELETE);
 	}
 
 	get textDom() {

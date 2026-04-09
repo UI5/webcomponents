@@ -208,12 +208,13 @@ type FCLAccessibilityAttributes = {
 
 /**
  * Fired when the `layoutsConfiguration` changes via user interaction by dragging the separators.
+ *
+ * **Note:** The `layout-configuration-change` event is in an experimental state and is a subject to change.
  * @param {FCLLayout} layout The current layout
  * @param {MEDIA} media The current media type
  * @param {array} columnLayout The effective column layout, f.e ["67%", "33%", "0px"]
  * @public
  * @since 2.16.0
- * @experimental
  */
 @event("layout-configuration-change", {
 	bubbles: true,
@@ -288,7 +289,6 @@ class FlexibleColumnLayout extends UI5Element {
 	* @default {}
 	* @public
 	* @since 2.16.0
-	* @experimental
 	*/
 	@property({ type: Object })
 	layoutsConfiguration: LayoutConfiguration = {};
@@ -308,7 +308,7 @@ class FlexibleColumnLayout extends UI5Element {
 	* @default undefined
 	* @private
 	*/
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_columnLayout?: FlexibleColumnLayoutColumnLayout;
 
 	/**

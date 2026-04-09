@@ -13,7 +13,11 @@ import {
 	isShift,
 	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getAllAccessibleNameRefTexts,
+	registerUI5Element,
+	deregisterUI5Element,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -201,6 +205,19 @@ class Button extends UI5Element implements IButton {
 	submits = false;
 
 	/**
+	 * Associates the button with a form element by the form's `id` attribute.
+	 * When set, the button can submit or reset the specified form even if the button
+	 * is not a descendant of that form.
+	 *
+	 * **Note:** This property takes effect only when the button's "type" property is set to "Submit" or "Reset".
+	 * @default undefined
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property()
+	form?: string;
+
+	/**
 	 * Defines the tooltip of the component.
 	 *
 	 * **Note:** A tooltip attribute should be provided for icon-only buttons, in order to represent their exact meaning/function.
@@ -376,6 +393,13 @@ class Button extends UI5Element implements IButton {
 	_isSpacePressed = false;
 
 	/**
+	 * Constantly updated value of texts collected from the accessibleNameRef elements
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_accessibleNameRefTexts?: string;
+
+	/**
 	 * Defines the text of the component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
@@ -443,6 +467,12 @@ class Button extends UI5Element implements IButton {
 			this.addEventListener("click", this._onclickBound);
 			this._clickHandlerAttached = true;
 		}
+
+		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
+	}
+
+	_updateAccessibleNameRefTexts() {
+		this._accessibleNameRefTexts = getAllAccessibleNameRefTexts(this);
 	}
 
 	onExitDOM() {
@@ -454,6 +484,8 @@ class Button extends UI5Element implements IButton {
 		if (activeButton === this) {
 			activeButton = null;
 		}
+
+		deregisterUI5Element(this);
 	}
 
 	async onBeforeRendering() {
@@ -655,7 +687,8 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get ariaLabelText() {
-		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || "";
+		// Use accessibleNameRef texts (cached), then accessibleName (direct), then textContent as fallback
+		const effectiveAriaLabelText = this._accessibleNameRefTexts || this.accessibleName || "";
 		const textContent = this.textContent || "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
@@ -690,6 +723,7 @@ class Button extends UI5Element implements IButton {
 			disabled: this.disabled,
 			children: this.text,
 			type: this.effectiveAccRoleTranslation,
+			label: this.ariaLabelText,
 		};
 	}
 

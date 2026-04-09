@@ -2,6 +2,7 @@
 @import "../base/AvatarGroup-parameters.css";
 @import "./Tag-parameters.css";
 @import "./Bar-parameters.css";
+@import "./Breadcrumbs-parameters.css";
 @import "./BusyIndicator-parameters.css";
 @import "./Button-parameters.css";
 @import "../base/ButtonBadge-parameters.css";
@@ -42,6 +43,7 @@
 @import "./SplitButton-parameters.css";
 @import "./Switch-parameters.css";
 @import "./TabContainer-parameters.css";
+@import "../base/Toolbar-parameters.css";
 @import "./GrowingButton-parameters.css";
 @import "../base/Text-parameters.css";
 @import "./TextArea-parameters.css";

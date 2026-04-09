@@ -54,6 +54,10 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	 * - Submitting machine-readable values in forms
 	 * - Distinguishing between items with identical display text
 	 *
+	 * **When to use:**
+	 * - **Recommended:** Use the `value` property on items together with `selectedValue` on the ComboBox when you need unique identifiers
+	 * - Omit `value` if the display text (`text` property) is sufficient for your use case
+	 *
 	 * **Example:**
 	 * ```html
 	 * <ui5-combobox selected-value="DE">
@@ -64,7 +68,7 @@ class ComboBoxItem extends ListItemBase implements IComboBoxItem {
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.19.0
+	 * @since 2.20.0
 	 */
 	@property()
 	value?: string;

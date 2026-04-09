@@ -13,8 +13,8 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}
 					aria-colindex={ariaColIndex++}
+					data-border-merged={this._firstVisibleCell?.merged ? "" : null}
 					data-ui5-table-selection-cell
-					data-ui5-table-cell-fixed
 					data-ui5-acc-text=""
 				>
 					{ this._isMultiSelect ?
@@ -27,7 +27,6 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 						:
 						<RadioButton id="selection-component"
 							tabindex={-1}
-							name={this._tableId}
 							checked={this._isSelected}
 							onChange={this._onSelectionChange}
 							accessibleName={this._i18nRowSelector}

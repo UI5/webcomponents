@@ -78,7 +78,7 @@ describe("Properties and attributes convert to each other", () => {
 			.should("not.have.attr", "object-prop");
 	});
 
-	it("Tests that array properties have no attributes", () => {
+	it("Tests that array properties have attributes", () => {
 		cy.mount(<Generic></Generic>);
 
 		cy.get("[ui5-test-generic]")
@@ -88,7 +88,7 @@ describe("Properties and attributes convert to each other", () => {
 			.invoke("prop", "multiProp", ["a", "b"]);
 
 		cy.get("@testGeneric")
-			.should("not.have.attr", "multi-prop");
+			.should("have.attr", "multi-prop", '["a","b"]');
 	});
 
 	it("Tests that noAttribute properties have no attributes", () => {

@@ -130,6 +130,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * Fired when an item is clicked.
  *
  * @param {SideNavigationSelectableItemBase} item The clicked item.
+ * @since 2.20.0
  * @public
  */
 @event("item-click", {
@@ -204,7 +205,7 @@ class SideNavigation extends UI5Element {
 	_popoverContents!: SideNavigationPopoverContents;
 
 	@property({ type: Boolean })
-	inPopover= false;
+	inPopover = false;
 
 	@property({ type: Object })
 	_menuPopoverItems: Array<SideNavigationItem> = [];
@@ -384,10 +385,8 @@ class SideNavigation extends UI5Element {
 
 		this._selectItem(associatedItem);
 
-		setTimeout(() => {
-			this.closePicker();
-			this._popoverContents.item?.getDomRef()!.classList.add("ui5-sn-item-no-hover-effect");
-		});
+		this.closePicker();
+		this._popoverContents.item?.getDomRef()!.classList.add("ui5-sn-item-no-hover-effect");
 	}
 
 	getOverflowPopover() {
@@ -446,11 +445,11 @@ class SideNavigation extends UI5Element {
 		return this.inPopover ? "none" : undefined;
 	}
 
-	getEnabledFixedItems() : Array<ITabbable> {
+	getEnabledFixedItems(): Array<ITabbable> {
 		return this.getEnabledItems(this.fixedItems);
 	}
 
-	getEnabledFlexibleItems() : Array<ITabbable> {
+	getEnabledFlexibleItems(): Array<ITabbable> {
 		const items = this.getEnabledItems(this.items);
 
 		if (this._overflowItem) {
@@ -460,7 +459,7 @@ class SideNavigation extends UI5Element {
 		return items;
 	}
 
-	getEnabledItems(items: Array<SideNavigationItemBase>) : Array<ITabbable> {
+	getEnabledItems(items: Array<SideNavigationItemBase>): Array<ITabbable> {
 		const result = new Array<ITabbable>();
 
 		this._getFocusableItems(items).forEach(item => {
@@ -522,7 +521,7 @@ class SideNavigation extends UI5Element {
 		}
 
 		const overflowItem = this._overflowItem!;
-		const flexibleContentDomRef : HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
+		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
 		if (!overflowItem) {
 			return null;
 		}
@@ -587,33 +586,33 @@ class SideNavigation extends UI5Element {
 		this._flexibleItemNavigation._init();
 	}
 
-	_findFocusedItem(items: Array<SideNavigationItemBase>) : SideNavigationItemBase | undefined {
+	_findFocusedItem(items: Array<SideNavigationItemBase>): SideNavigationItemBase | undefined {
 		return this._getFocusableItems(items).find(item => item.forcedTabIndex === "0");
 	}
 
-	_getSelectableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationSelectableItemBase> {
+	_getSelectableItems(items: Array<SideNavigationItemBase>): Array<SideNavigationSelectableItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.selectableItems);
 		}, new Array<SideNavigationSelectableItemBase>());
 	}
 
-	_getFocusableItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+	_getFocusableItems(items: Array<SideNavigationItemBase>): Array<SideNavigationItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.focusableItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_getAllItems(items: Array<SideNavigationItemBase>) : Array<SideNavigationItemBase> {
+	_getAllItems(items: Array<SideNavigationItemBase>): Array<SideNavigationItemBase> {
 		return items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.allItems);
 		}, new Array<SideNavigationItemBase>());
 	}
 
-	_findSelectedItem(items: Array<SideNavigationItemBase>) : SideNavigationSelectableItemBase | undefined {
+	_findSelectedItem(items: Array<SideNavigationItemBase>): SideNavigationSelectableItemBase | undefined {
 		return this._getSelectableItems(items).find(item => item._selected);
 	}
 
-	get overflowItems() : Array<HTMLElement> {
+	get overflowItems(): Array<HTMLElement> {
 		return this.items.filter(instanceOfItemOrGroup).reduce((result, item) => {
 			return result.concat(item.overflowItems);
 		}, new Array<HTMLElement>());
@@ -746,7 +745,7 @@ class SideNavigation extends UI5Element {
 		return true;
 	}
 
-	captureRef(ref: HTMLElement & { associatedItem?: UI5Element} | null) {
+	captureRef(ref: HTMLElement & { associatedItem?: UI5Element } | null) {
 		if (ref) {
 			ref.associatedItem = this;
 		}
