@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
+
+
+### Features
+
+* **ui5-daterange-picker:** two months mode is implemented ([#13196](https://github.com/UI5/webcomponents/issues/13196)) ([743a7fe](https://github.com/UI5/webcomponents/commit/743a7feac690c2f6d630932ce393fc9bb4fc709c))
+
+
+
+
+
 # [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
 
 **Note:** Version bump only for package @ui5/webcomponents-website
