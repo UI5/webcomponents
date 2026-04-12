@@ -978,6 +978,39 @@ describe("DateRangePicker rejects relative dates", () => {
 			cy.mount(<DateRangePicker></DateRangePicker>);
 
 			cy.get("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realType(keyword);
+			cy.realPress("Enter");
+
+			cy.get("@dateRangePicker")
+				.should("have.value", keyword)
+				.should("have.attr", "value-state", "Negative");
+		});
+	});
+
+	it("valid concrete date range does not set error state", () => {
+		cy.mount(<DateRangePicker displayFormat="dd/MM/yyyy"></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/09/2020 - 10/10/2020");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "None");
+	});
+});
+
 describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Basic Two Calendars Display", () => {
 		it("should display two calendars when showTwoMonths is true", () => {
@@ -1011,32 +1044,6 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.realClick()
 				.should("be.focused");
 
-			cy.realType(keyword);
-			cy.realPress("Enter");
-
-			cy.get("@dateRangePicker")
-				.should("have.value", keyword)
-				.should("have.attr", "value-state", "Negative");
-		});
-	});
-
-	it("valid concrete date range does not set error state", () => {
-		cy.mount(<DateRangePicker displayFormat="dd/MM/yyyy"></DateRangePicker>);
-
-		cy.get("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realType("09/09/2020 - 10/10/2020");
-		cy.realPress("Enter");
-
-		cy.get("@dateRangePicker")
-			.should("have.attr", "value-state", "None");
-	});
-});
 			cy.realPress("F4");
 
 			cy.get<DateRangePicker>("@dateRangePicker")
@@ -1220,8 +1227,8 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should respect min/max date constraints with two calendars", () => {
 			cy.mount(
-				<DateRangePicker 
-					showTwoMonths={true} 
+				<DateRangePicker
+					showTwoMonths={true}
 					formatPattern="dd/MM/yyyy"
 					minDate="10/01/2024"
 					maxDate="28/02/2024"
@@ -1473,5 +1480,3 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 		});
 	});
 });
-
-
