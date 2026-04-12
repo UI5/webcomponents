@@ -7,7 +7,11 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import TableSelectionMode from "./types/TableSelectionMode.js";
-import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
+import {
+	isSelectionCell,
+	isHeaderSelectionCell,
+	findRowInPath,
+} from "./TableUtils.js";
 import type Table from "./Table.js";
 import type { ITableFeature } from "./Table.js";
 import type TableRow from "./TableRow.js";
@@ -143,8 +147,8 @@ class TableSelection extends UI5Element implements ITableFeature {
 		return undefined;
 	}
 
-	getRowKey(row: TableRow): string {
-		return row.rowKey || "";
+	getRowKey(row: TableRowBase): string {
+		return "rowKey" in row ? (row.rowKey as string) || "" : "";
 	}
 
 	isSelected(row: TableRowBase): boolean {
@@ -166,7 +170,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 
 		const selectedArray = this.selectedAsArray;
-		return this._table.rows.some(row => {
+		return this._table._rows.some(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedArray.includes(rowKey);
 		});
@@ -178,7 +182,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 
 		const selectedArray = this.selectedAsArray;
-		return this._table.rows.every(row => {
+		return this._table._rows.every(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedArray.includes(rowKey);
 		});
@@ -229,7 +233,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 	_selectHeaderRow(selected: boolean) {
 		const selectedSet = this.selectedAsSet;
-		this._table!.rows.forEach(row => {
+		this._table!._rows.forEach(row => {
 			const rowKey = this.getRowKey(row);
 			selectedSet[selected ? "add" : "delete"](rowKey);
 		});
@@ -312,8 +316,8 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 		if (e.shiftKey && this._rangeSelection?.isMouse) {
 			const startRow = this._rangeSelection.rows[0];
-			const startIndex = this._table.rows.indexOf(startRow);
-			const endIndex = this._table.rows.indexOf(row);
+			const startIndex = this._table._rows.indexOf(startRow);
+			const endIndex = this._table._rows.indexOf(row);
 
 			const selectionState = this.isSelected(startRow);
 
@@ -369,10 +373,11 @@ class TableSelection extends UI5Element implements ITableFeature {
 		if (shouldReverseSelection) {
 			this._reverseRangeSelection();
 		} else {
-			const rowIndex = this._table!.rows.indexOf(targetRow);
+			const rows = this._table!._rows;
+			const rowIndex = rows.indexOf(targetRow);
 			const [startIndex, endIndex] = [rowIndex, rowIndex - change].sort((a, b) => a - b);
 
-			selectionChanged = this._table?.rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
+			selectionChanged = rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
 				const isRowNotInSelection = !this._rangeSelection?.rows.includes(row);
 				const isRowSelectionDifferent = this.isSelected(row) !== this._rangeSelection!.selected;
 

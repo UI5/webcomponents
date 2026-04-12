@@ -66,6 +66,13 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 		return false;
 	}
 
+	_getRowIndex(): number {
+		if (this._table) {
+			return (this._table.rows as TableRowBase[]).indexOf(this);
+		}
+		return -1;
+	}
+
 	_onSelectionChange() {
 		const tableSelection = this._tableSelection!;
 		const selected = tableSelection.isMultiSelectable() ? !this._isSelected : true;

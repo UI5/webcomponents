@@ -156,6 +156,68 @@ describe("Table - Group Rows", () => {
 		cy.get("#dynamicGroup").should("have.attr", "aria-level", "1");
 	});
 
+	it("should set aria-rowindex on group rows and data rows", () => {
+		mountGroupedTable();
+
+		// Header row is aria-rowindex="1" (set by TableHeaderRow)
+		// group1 is rows[0] → index 0 + 2 = 2
+		cy.get("#group1").should("have.attr", "aria-rowindex", "2");
+		// row1 is rows[1] → index 1 + 2 = 3
+		cy.get("#row1").should("have.attr", "aria-rowindex", "3");
+		// row2 is rows[2] → index 2 + 2 = 4
+		cy.get("#row2").should("have.attr", "aria-rowindex", "4");
+		// group2 is rows[3] → index 3 + 2 = 5
+		cy.get("#group2").should("have.attr", "aria-rowindex", "5");
+		// row3 is rows[4] → index 4 + 2 = 6
+		cy.get("#row3").should("have.attr", "aria-rowindex", "6");
+	});
+
+	it("should reset row alternation after each group header row", () => {
+		cy.mount(
+			<Table id="table" alternateRowColors>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="200px">City</TableHeaderCell>
+					<TableHeaderCell width="200px">Country</TableHeaderCell>
+				</TableHeaderRow>
+				<TableGroupRow id="group1">
+					<Text>Country: Germany</Text>
+				</TableGroupRow>
+				<TableRow id="rowDE1" rowKey="de1">
+					<TableCell><Text>Berlin</Text></TableCell>
+					<TableCell><Text>Germany</Text></TableCell>
+				</TableRow>
+				<TableRow id="rowDE2" rowKey="de2">
+					<TableCell><Text>Munich</Text></TableCell>
+					<TableCell><Text>Germany</Text></TableCell>
+				</TableRow>
+				<TableRow id="rowDE3" rowKey="de3">
+					<TableCell><Text>Hamburg</Text></TableCell>
+					<TableCell><Text>Germany</Text></TableCell>
+				</TableRow>
+				<TableGroupRow id="group2">
+					<Text>Country: France</Text>
+				</TableGroupRow>
+				<TableRow id="rowFR1" rowKey="fr1">
+					<TableCell><Text>Paris</Text></TableCell>
+					<TableCell><Text>France</Text></TableCell>
+				</TableRow>
+				<TableRow id="rowFR2" rowKey="fr2">
+					<TableCell><Text>Lyon</Text></TableCell>
+					<TableCell><Text>France</Text></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// After group1, alternation resets: rowDE1 → alternate (0), rowDE2 → not (1), rowDE3 → alternate (2)
+		cy.get("#rowDE1").should("have.attr", "_alternate");
+		cy.get("#rowDE2").should("not.have.attr", "_alternate");
+		cy.get("#rowDE3").should("have.attr", "_alternate");
+
+		// After group2, alternation resets again: rowFR1 → alternate (0), rowFR2 → not (1)
+		cy.get("#rowFR1").should("have.attr", "_alternate");
+		cy.get("#rowFR2").should("not.have.attr", "_alternate");
+	});
+
 	it("should not throw with popin mode and group rows", () => {
 		cy.mount(
 			<Table id="table" overflowMode="Popin">

@@ -142,7 +142,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 */
 	getRowByKey(rowKey: string): TableRow | undefined {
 		if (this._table && rowKey) {
-			return this._table.rows.find(row => this.getRowKey(row) === rowKey);
+			return this._table._rows.find(row => this.getRowKey(row) === rowKey);
 		}
 	}
 

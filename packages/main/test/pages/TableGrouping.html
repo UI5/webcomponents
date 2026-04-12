@@ -25,9 +25,11 @@
 	<div class="toolbar">
 		<ui5-title level="H3">Table Grouping POC (Treegrid)</ui5-title>
 		<ui5-button id="toggleGrouping">Group by Country</ui5-button>
+		<ui5-button id="toggleAlternate">Enable Alternating Colors</ui5-button>
 	</div>
 
 	<ui5-table id="table" accessible-name="Cities Table">
+		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
 		<ui5-table-header-row slot="headerRow">
 			<ui5-table-header-cell id="cityCol" width="200px">City</ui5-table-header-cell>
 			<ui5-table-header-cell id="countryCol" width="200px">Country</ui5-table-header-cell>
@@ -35,9 +37,18 @@
 		</ui5-table-header-row>
 	</ui5-table>
 
+	<div style="margin-top: 1rem;">
+		<ui5-title level="H4">aria-rowindex and Row Alternation Reset Demo</ui5-title>
+		<p style="color: var(--sapTextColor); font-size: var(--sapFontSize)">
+			Inspect rows with DevTools to verify: group rows receive sequential <code>aria-rowindex</code>,
+			and alternating colors restart after each group header row when enabled.
+		</p>
+	</div>
+
 	<script>
 		const table = document.getElementById("table");
 		const toggleBtn = document.getElementById("toggleGrouping");
+		const alternateBtn = document.getElementById("toggleAlternate");
 		let isGrouped = false;
 
 		const data = [
@@ -115,6 +126,12 @@
 				renderFlat();
 				toggleBtn.textContent = "Group by Country";
 			}
+		});
+
+		alternateBtn.addEventListener("click", () => {
+			const enabled = table.hasAttribute("alternate-row-colors");
+			table.toggleAttribute("alternate-row-colors", !enabled);
+			alternateBtn.textContent = enabled ? "Enable Alternating Colors" : "Disable Alternating Colors";
 		});
 
 		// Initial flat render

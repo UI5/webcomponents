@@ -21,6 +21,7 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import type DropIndicator from "./DropIndicator.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 import type TableRow from "./TableRow.js";
+import type TableGroupRow from "./TableGroupRow.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { MoveEventDetail } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
@@ -279,7 +280,7 @@ class Table extends UI5Element {
 			slots: true,
 		},
 	})
-	rows!: DefaultSlot<TableRow>;
+	rows!: DefaultSlot<TableRow | TableGroupRow>;
 
 	/**
 	 * Defines the header row of the component.
@@ -456,11 +457,17 @@ class Table extends UI5Element {
 	}
 
 	onBeforeRendering(): void {
-		this._renderNavigated = this.rows.some(row => row.navigated);
-		[...this.headerRow, ...this.rows].forEach((row, index) => {
+		let alternateIndex = 0;
+		let ariaRowIndex = 2;
+		this._renderNavigated = this.rows.some(row => "navigated" in row && row.navigated);
+		[...this.headerRow, ...this.rows].forEach(row => {
 			row._renderNavigated = this._renderNavigated;
 			row._rowActionCount = this.rowActionCount;
-			row._alternate = this.alternateRowColors && index % 2 === 0;
+			row._alternate = this.alternateRowColors && alternateIndex % 2 === 0;
+			alternateIndex = row.hasAttribute("ui5-table-group-row") ? 1 : alternateIndex + 1;
+			if (!row.isHeaderRow()) {
+				row.setAttribute("aria-rowindex", `${ariaRowIndex++}`);
+			}
 		});
 
 		this.style.setProperty("--ui5_grid_sticky_top", this.stickyTop);
@@ -661,6 +668,10 @@ class Table extends UI5Element {
 		}
 
 		return widths.join(" ");
+	}
+
+	get _rows(): TableRow[] {
+		return this.rows.filter((row): row is TableRow => row.hasAttribute("ui5-table-row"));
 	}
 
 	get _isRowSelectorRequired() {

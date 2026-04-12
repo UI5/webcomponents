@@ -126,12 +126,10 @@ class TableRow extends TableRowBase<TableCell> {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
-		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
-		if (this._table?._hasGroupRows) {
-			this.setAttribute("aria-level", "2");
-		} else {
-			this.removeAttribute("aria-level");
+		if (this.position !== undefined) {
+			this.setAttribute("aria-rowindex", `${this.position + 2}`);
 		}
+		toggleAttribute(this, "aria-level", !!this._table?._hasGroupRows, "2");
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
@@ -207,14 +205,8 @@ class TableRow extends TableRowBase<TableCell> {
 		return this.cells.some(c => c._popin && !c._popinHidden);
 	}
 
-	get _rowIndex() {
-		if (this.position !== undefined) {
-			return this.position;
-		}
-		if (this._table) {
-			return this._table.rows.indexOf(this);
-		}
-		return -1;
+	override _getRowIndex(): number {
+		return this.position ?? super._getRowIndex();
 	}
 
 	get _hasOverflowActions() {

@@ -1,13 +1,13 @@
+import TableCell from "./TableCell.js";
 import type TableGroupRow from "./TableGroupRow.js";
 
 export default function TableGroupRowTemplate(this: TableGroupRow) {
 	return (
-		<div id="group-cell"
-			role="gridcell"
+		<TableCell id="group-cell"
 			aria-colindex={1}
 			aria-colspan={this._ariaColSpan}
 		>
 			<slot></slot>
-		</div>
+		</TableCell>
 	);
 }

@@ -218,7 +218,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 			return;
 		}
 
-		const firstRow = this._table.rows[0];
+		const firstRow = this._table._rows[0];
 		if (firstRow && firstRow.position !== undefined && firstRow.position > 0) {
 			const transform = firstRow.position * this.rowHeight;
 			return `translateY(${transform}px)`;
@@ -238,7 +238,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 		}
 
 		let scrollTopChange = 0;
-		const rows = this._table.rows;
+		const rows = this._table._rows;
 		const firstRow = rows[0];
 		const lastRow = rows[rows.length - 1];
 		const hasDataBeforeFirstRow = firstRow.position !== 0;
