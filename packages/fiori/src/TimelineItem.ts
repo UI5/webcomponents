@@ -70,6 +70,15 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	icon?: string;
 
 	/**
+	 * Defines the tooltip of the graphical icon.
+	 * @default undefined
+	 * @public
+	 * @since 2.10.0
+	 */
+	@property()
+	iconTooltip?: string;
+
+	/**
 	 * Defines the name of the item, displayed before the `title-text`.
 	 * @default undefined
 	 * @public
@@ -231,6 +240,10 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 
 		if (this.timelineItemStateText) {
 			parts.push(this.timelineItemStateText);
+		}
+
+		if (this.iconTooltip) {
+			parts.push(this.iconTooltip);
 		}
 
 		return parts.join(", ");

@@ -364,32 +364,32 @@
 			</div>
 		</section>
 
-<section style="width: 100%;">
-	<h2>Timeline with Various Timeline Item States</h2>
-	<div style="width: 50%; margin: 1rem;">
-		<ui5-timeline id="test-timeline">
-			<ui5-timeline-group-item group-name="Build">
-				<ui5-timeline-item title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" name="Testing suite A" state="Positive">
-					Compilation succeeded.
-				</ui5-timeline-item>
-				<ui5-timeline-item title="Lint" subtitle="Testing suite B" icon="sap-icon://message-information" name="Testing suite B" state="Information">
-					Lint completed with minor issues.
-				</ui5-timeline-item>
-			</ui5-timeline-group-item>
-			<ui5-timeline-group-item group-name="Test">
-				<ui5-timeline-item title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
-					Unit tests failed.
-				</ui5-timeline-item>
-				<ui5-timeline-item title="Integration Test" subtitle="Testing suite D" icon="sap-icon://message-warning" name="Testing suite D" state="Critical">
-					Integration tests have warnings.
-				</ui5-timeline-item>
-				<ui5-timeline-item title="E2E Test" subtitle="Testing suite E" icon="sap-icon://accept" name="Testing suite E" state="Positive">
-					End-to-end tests passed.
-				</ui5-timeline-item>
-			</ui5-timeline-group-item>
-		</ui5-timeline>
-	</div>
-</section>
+		<section style="width: 100%;">
+			<h2>Timeline with Various Timeline Item States</h2>
+			<div style="width: 50%; margin: 1rem;">
+				<ui5-timeline id="test-timeline">
+					<ui5-timeline-group-item group-name="Build">
+						<ui5-timeline-item title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" icon-tooltip="Compilation successful" name="Testing suite A" state="Positive">
+							Compilation succeeded.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="Lint" subtitle="Testing suite B" icon="sap-icon://message-information" name="Testing suite B" state="Information">
+							Lint completed with minor issues.
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="Test">
+						<ui5-timeline-item title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
+							Unit tests failed.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="Integration Test" subtitle="Testing suite D" icon="sap-icon://message-warning" name="Testing suite D" state="Critical">
+							Integration tests have warnings.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="E2E Test" subtitle="Testing suite E" icon="sap-icon://accept" name="Testing suite E" state="Positive">
+							End-to-end tests passed.
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</section>
 	</div>
 </body>
 
