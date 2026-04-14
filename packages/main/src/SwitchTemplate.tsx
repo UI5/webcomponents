@@ -62,7 +62,7 @@ export default function SwitchTemplate(this: Switch) {
 							</>
 						}
 
-						{this.readonly && <span class="ui5-switch-text ui5-switch-text--readonly" part="readonly" id={this.ariaDescribedBy} aria-hidden={this._textAriaHidden}>{this.ariaDescribedByText}</span>}
+						{this.readonly && <span class="ui5-switch-text ui5-switch-text--readonly" id={this.ariaDescribedBy} aria-hidden={this._textAriaHidden}>{this.ariaDescribedByText}</span>}
 
 						<span class="ui5-switch-handle" part="handle"></span>
 					</div>
