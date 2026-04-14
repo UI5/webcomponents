@@ -73,7 +73,7 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	 * Defines the tooltip of the graphical icon.
 	 * @default undefined
 	 * @public
-	 * @since 2.10.0
+	 * @since 2.22.0
 	 */
 	@property()
 	iconTooltip?: string;
