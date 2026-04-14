@@ -1,6 +1,6 @@
 import { getLegacyDateCalendarCustomizing } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
-import { getLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { getCalendarType } from "@ui5/webcomponents-base/dist/config/CalendarType.js";
+import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 
 const emptyFn = () => {};
 
@@ -10,7 +10,7 @@ const emptyFn = () => {};
 const Formatting = {
 	getABAPDateFormat: emptyFn,
 	getCustomIslamicCalendarData: getLegacyDateCalendarCustomizing,
-	getLanguageTag: () => getLanguage() || "en",
+	getLanguageTag: () => getLocale().toString(),
 	getCalendarType,
 	getTrailingCurrencyCode: () => true,
 	getCustomLocaleData: () => ({}),
