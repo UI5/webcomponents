@@ -158,8 +158,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * Stores the last valid value to preserve time when entering invalid values
 	 * @private
 	 */
-	@property()
-	_lastValidValue: string = "";
+	_lastValidValue = "";
 
 	@query("[ui5-time-selection-clocks]")
 	_clocks!: TimeSelectionClocks;

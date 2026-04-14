@@ -59,7 +59,7 @@
 		<ui5-table id="productsTable" accessible-name-ref="tableTitle" overflow-mode="Popin" row-action-count="2">
 			<ui5-table-selection-multi id="selection" slot="features"></ui5-table-selection-multi>
 			<ui5-table-growing id="growing" mode="Scroll" slot="features"></ui5-table-growing>
-			
+
 			<ui5-table-header-row slot="headerRow" sticky>
 				<ui5-table-header-cell id="productCol" min-width="200px" sort-indicator="None">
 					<ui5-label required>Product Name</ui5-label>
@@ -90,8 +90,8 @@
 			</ui5-table-row>
 
 			<ui5-table-row row-key="row2" navigated interactive>
-				<ui5-table-cell><div><b><ui5-text>USB-C Hub Adapter</ui5-text></b><ui5-link href="#">Product ID HB-5012</ui5-link></div></ui5-table-cell>
-				<ui5-table-cell><ui5-text>ConnectPro</ui5-text></ui5-table-cell>
+				<ui5-table-cell merged><div><b><ui5-text>USB-C Hub Adapter</ui5-text></b><ui5-link href="#">Product ID HB-5012</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ChargeIt</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-text>Connectivity</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text style="color:#b14e03" accessible-name="Warning">Low Stock</ui5-text></b></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>34.50</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
@@ -102,8 +102,8 @@
 			</ui5-table-row>
 
 			<ui5-table-row row-key="row3">
-				<ui5-table-cell><div><b><ui5-text>Bluetooth Speaker Mini</ui5-text></b><ui5-link href="#">Product ID BS-2203</ui5-link></div></ui5-table-cell>
-				<ui5-table-cell><ui5-text>SoundWave</ui5-text></ui5-table-cell>
+				<ui5-table-cell merged><div><b><ui5-text>Bluetooth Speaker Mini</ui5-text></b><ui5-link href="#">Product ID BS-2203</ui5-link></div></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ChargeIt</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-text>Audio</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>59.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
@@ -113,7 +113,7 @@
 
 			<ui5-table-row row-key="row4" interactive>
 				<ui5-table-cell><div><b><ui5-text>Wireless Mouse Pro</ui5-text></b><ui5-link href="#">Product ID MT-2001</ui5-link></div></ui5-table-cell>
-				<ui5-table-cell><ui5-text>TechGear Inc.</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ChargeIt</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-text>Accessories</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>45.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
@@ -126,7 +126,7 @@
 
 			<ui5-table-row row-key="row5">
 				<ui5-table-cell><div><b><ui5-text>4K Webcam HD</ui5-text></b><ui5-link href="#">Product ID WC-4001</ui5-link></div></ui5-table-cell>
-				<ui5-table-cell><ui5-text>VisionTech</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>ChargeIt</ui5-text></ui5-table-cell>
 				<ui5-table-cell><ui5-text>Video Devices</ui5-text></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text style="color:#126d2c" accessible-name="Success">In Stock</ui5-text></b></ui5-table-cell>
 				<ui5-table-cell><b><ui5-text>89.99</ui5-text></b><ui5-text>&nbsp;EUR</ui5-text></ui5-table-cell>
@@ -267,7 +267,7 @@
 				}
 			}
 		});
-		
+
 		let growing = document.getElementById("growing");
 		const MAX_GROW = 3;
 		let counter = 0;
@@ -332,11 +332,11 @@
 				}
 			});
 			counter = 0;
-			
+
 			if (table.querySelector("ui5-table-growing")) {
 				table.removeChild(growing);
 			}
-			
+
 			table.insertBefore(growing, table.firstChild);
 			growing.mode = e.target.value;
 		});

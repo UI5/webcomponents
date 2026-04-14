@@ -53,16 +53,6 @@ class SliderHandle extends UI5Element {
 	max = 100;
 
 	/**
-	 * Defines whether the slider handle is disabled.
-	 * <br><br>
-	 * <b>Note:</b> A disabled slider handle cannot be interacted with.
-	 * @since 2.19.0
-	 * @public
-	 */
-	@property({ type: Boolean })
-	disabled = false;
-
-	/**
 	 * Defines whether the slider handle is active.
 	 * <br><br>
 	 * <b>Note:</b> An active slider handle is currently being interacted with.

@@ -21,6 +21,7 @@
 .ui5-dynamic-page-scroll-container {
     overflow-y: auto;
     height: 100%;
+    overflow-anchor: none;
 }
 
 /* Automatically fit content that has height: 100% */

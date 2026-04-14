@@ -43,6 +43,7 @@
 @import "./Switch-parameters.css";
 @import "./TabContainer-parameters.css";
 @import "../base/Table-parameters.css";
+@import "../base/Toolbar-parameters.css";
 @import "./GrowingButton-parameters.css";
 @import "../base/Text-parameters.css";
 @import "./TextArea-parameters.css";

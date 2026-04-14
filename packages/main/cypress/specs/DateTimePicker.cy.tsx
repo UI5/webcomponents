@@ -590,6 +590,50 @@ describe("DateTimePicker general interaction", () => {
 		//The change event should not have been fired a second time.
 		cy.get("@changeStub").should("have.been.calledOnce");
 	});
+
+	it("first keystroke in input should not reset caret position", () => {
+		cy.mount(
+			<DateTimePicker
+				value="Jan 11, 2020, 11:11:11 AM"
+				displayFormat="long"
+				minDate="Jan 11, 2020, 00:00:00 AM"
+				maxDate="Jan 31, 2020, 11:59:59 PM"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]").as("dtp");
+
+		cy.get("@dtp")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.as("nativeInput");
+
+		// Click to focus the input, then move to start
+		cy.get("@nativeInput").realClick();
+		cy.realPress("Home");
+
+		// Verify caret is at position 0
+		cy.get("@nativeInput").should($input => {
+			expect(($input[0] as HTMLInputElement).selectionStart).to.equal(0);
+		});
+
+		cy.get("@nativeInput").then($input => {
+			const originalValue = ($input[0] as HTMLInputElement).value;
+
+			// Press Delete — should remove first character
+			cy.realPress("Delete");
+
+			cy.get("@nativeInput").should($input => {
+				const input = $input[0] as HTMLInputElement;
+				// The value should be different (first char removed)
+				expect(input.value, "first keystroke should modify the value").to.not.equal(originalValue);
+				// Caret should remain at position 0 after deletion
+				expect(input.selectionStart, "caret should remain at start").to.equal(0);
+			});
+		});
+	});
 });
 
 describe("Accessibility", () => {

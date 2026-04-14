@@ -13,8 +13,8 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}
 					aria-colindex={ariaColIndex++}
+					data-border-merged={this._firstVisibleCell?.merged ? "" : null}
 					data-ui5-table-selection-cell
-					data-ui5-table-cell-fixed
 					data-ui5-acc-text=""
 				>
 					{ this._isMultiSelect ?

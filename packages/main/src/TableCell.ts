@@ -1,4 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
@@ -30,6 +31,20 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 	template: TableCellTemplate,
 })
 class TableCell extends TableCellBase {
+	/**
+	 * Defines whether the cell is visually merged with the cell directly above it.
+	 *
+	 * This is useful when consecutive cells in a column have the same value and should visually appear as a single merged cell.
+	 * Although the cell is visually merged with the previous one, its content must still be provided for accessibility purposes.
+	 * **Note:** This feature is disabled when cells are rendered as popin, and should remain `false` for interactive cell content.
+	 *
+	 * @default false
+	 * @since 2.21.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	merged = false;
+
 	@query("#popin-header")
 	_popinHeader?: HTMLElement;
 
