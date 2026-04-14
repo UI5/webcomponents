@@ -580,9 +580,9 @@
 		<br />
 
 		<ui5-multi-combobox id="toggle-loading-mcb">
-			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
+			<!-- <ui5-mcb-item text="Item 1"></ui5-mcb-item>
 			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
-			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 3"></ui5-mcb-item> -->
 		</ui5-multi-combobox>
 		<br /><br />
 
@@ -891,8 +891,17 @@
 
 		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
 			const mcb = document.getElementById("toggle-loading-mcb");
-			mcb.loading = !mcb.loading;
+			mcb.loading = true;
+			setTimeout(() => {
+				mcb.appendChild(document.createElement("ui5-mcb-item")).text = "New Item";
+				mcb.appendChild(document.createElement("ui5-mcb-item")).text = "New Item 2";
+				mcb.loading = false;
+				const invisibleMessage = window["sap-ui-webcomponents-bundle"].invisibleMessage;
+				invisibleMessage.announce("2 items available", "Assertive");
+			}, 2000);
 		});
+
+		
 	</script>
 
 </body>
