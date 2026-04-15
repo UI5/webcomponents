@@ -3,6 +3,289 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* **framework:** improve themeRoot validation ([#13354](https://github.com/UI5/webcomponents/issues/13354)) ([ba4a08b](https://github.com/UI5/webcomponents/commit/ba4a08bd516f1e0dbefe2dfc734a684c6af50bd8))
+
+
+### Features
+
+* **ui5-button:** introduce support for form attribute ([#13321](https://github.com/UI5/webcomponents/issues/13321)) ([c9d8f2a](https://github.com/UI5/webcomponents/commit/c9d8f2ac91d5b5320e37aeee5e60b571ff3ee07c)), closes [#7459](https://github.com/UI5/webcomponents/issues/7459)
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Features
+
+* update sap/icons to v5.12 & 4.24 ([#13319](https://github.com/UI5/webcomponents/issues/13319)) ([0b16434](https://github.com/UI5/webcomponents/commit/0b164348069b96f5464eaea3425a4876097dc44d))
+
+
+
+
+
+# [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
+
+
+### Features
+
+* **ui5-combobox:** add suggestion highlight of matching characters ([#13282](https://github.com/UI5/webcomponents/issues/13282)) ([05c1e08](https://github.com/UI5/webcomponents/commit/05c1e087cdf655f593101d7a549f5141cf9eb7cb))
+
+
+
+
+
+# [2.21.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.1...v2.21.0-rc.2) (2026-03-19)
+
+
+### Features
+
+* **base:** propagate theme and language changes across runtimes ([#13296](https://github.com/UI5/webcomponents/issues/13296)) ([5fe24d1](https://github.com/UI5/webcomponents/commit/5fe24d1e3557c85d557139371ac6d06c274bd5cb))
+
+
+
+
+
+# [2.21.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.0...v2.21.0-rc.1) (2026-03-19)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.21.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.20.0...v2.21.0-rc.0) (2026-03-12)
+
+
+### Bug Fixes
+
+* **ui5-base:** scope all registered tags by default ([#13198](https://github.com/UI5/webcomponents/issues/13198)) ([ed08bf3](https://github.com/UI5/webcomponents/commit/ed08bf350b660c9d0a86468da03194a2c84a5622))
+
+
+### Features
+
+* **ui5-base:** store import.meta.url in runtime registration data ([#13235](https://github.com/UI5/webcomponents/issues/13235)) ([13b71d5](https://github.com/UI5/webcomponents/commit/13b71d5608f3e310684bae171f6255a0325ace62))
+
+
+
+
+
+# [2.20.0](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.3...v2.20.0) (2026-03-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.20.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.2...v2.20.0-rc.3) (2026-03-05)
+
+
+### Features
+
+* **ui5-multi-combobox:** introduce selectedValues property ([#12987](https://github.com/UI5/webcomponents/issues/12987)) ([bbe792b](https://github.com/UI5/webcomponents/commit/bbe792bc3dad9b21fdca9cb7a588a473e2ebdfff))
+
+
+
+
+
+# [2.20.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.1...v2.20.0-rc.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* CSS variables scoping to depend VersionInfo ([#13091](https://github.com/UI5/webcomponents/issues/13091)) ([d2e43ed](https://github.com/UI5/webcomponents/commit/d2e43ed692c63a0a36a9b14da59de354e2e7d0b0))
+* **DnD:** fix drag and drop in iOS Safari browser ([#13129](https://github.com/UI5/webcomponents/issues/13129)) ([849215f](https://github.com/UI5/webcomponents/commit/849215f36224f55416c8b291a7abe683dbcee44c))
+
+
+
+
+
+# [2.20.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.20.0-rc.0...v2.20.0-rc.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* **framework:** apply correct system css variables ([#13085](https://github.com/UI5/webcomponents/issues/13085)) ([123efed](https://github.com/UI5/webcomponents/commit/123efed9705ddde81aedf9f3571ce1e0b89e61c8))
+* **framework:** correct runtime compare ([#13105](https://github.com/UI5/webcomponents/issues/13105)) ([eb8cc19](https://github.com/UI5/webcomponents/commit/eb8cc1978db1f4f2352e2f0a77569d7216301c3e))
+
+
+
+
+
+# [2.20.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.19.0...v2.20.0-rc.0) (2026-02-12)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.3...v2.19.0) (2026-02-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.2...v2.19.0-rc.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **framework:** prevent redundant invalidations ([#12994](https://github.com/UI5/webcomponents/issues/12994)) ([b6c582c](https://github.com/UI5/webcomponents/commit/b6c582c93e5a260044fefc1612c8f037744aca97))
+* **input like:** correct form submission behaviour ([#12959](https://github.com/UI5/webcomponents/issues/12959)) ([cd02ead](https://github.com/UI5/webcomponents/commit/cd02ead56026bb69acc4661442d30b24ed81ff6c))
+
+
+
+
+
+# [2.19.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.1...v2.19.0-rc.2) (2026-01-22)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.19.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.19.0-rc.0...v2.19.0-rc.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **framework:** call `appyTheme` on delayed theme registration after framework `boot` ([#12787](https://github.com/UI5/webcomponents/issues/12787)) ([42611e9](https://github.com/UI5/webcomponents/commit/42611e92c2e06504a2952ce0c6574891c4971d40))
+
+
+### Features
+
+* **framework:** detect dynamically loaded OpenUI5 ([#12235](https://github.com/UI5/webcomponents/issues/12235)) ([2292ffd](https://github.com/UI5/webcomponents/commit/2292ffd404da8a59229abdc24b1edb4bf428f7cf))
+
+
+
+
+
+# [2.19.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.18.0...v2.19.0-rc.0) (2026-01-08)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.3...v2.18.0) (2026-01-05)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.2...v2.18.0-rc.3) (2026-01-01)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.1...v2.18.0-rc.2) (2025-12-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.18.0-rc.0...v2.18.0-rc.1) (2025-12-18)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.18.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.17.0...v2.18.0-rc.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* **ui5-popover:** render block layers in the correct order ([#12659](https://github.com/UI5/webcomponents/issues/12659)) ([43e545a](https://github.com/UI5/webcomponents/commit/43e545a4a5e486f19fb52ae18fe7c162680cf56e))
+
+
+
+
+
+# [2.17.0](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.5...v2.17.0) (2025-12-05)
+
+
+### Reverts
+
+* Revert "feat(framework): scope theming css variables with component packages (#12491)" (#12775) ([3385623](https://github.com/UI5/webcomponents/commit/33856235e357a3d4d0b9391eab2a83a5b3010556)), closes [#12491](https://github.com/UI5/webcomponents/issues/12491) [#12775](https://github.com/UI5/webcomponents/issues/12775)
+* Revert "feat(framework): introduce loadBaseThemingCSSVariables configuration (#12699)" (#12767) ([db375d3](https://github.com/UI5/webcomponents/commit/db375d30b9f4a7e07961fabbdcefdcdc78a93f46)), closes [#12699](https://github.com/UI5/webcomponents/issues/12699) [#12767](https://github.com/UI5/webcomponents/issues/12767)
+
+
+
+
+
+# [2.17.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.4...v2.17.0-rc.5) (2025-12-04)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix closing of sap.m.Popover with esc key ([#12730](https://github.com/UI5/webcomponents/issues/12730)) ([fae0ab8](https://github.com/UI5/webcomponents/commit/fae0ab8289baa060d5d65024c47fd4dc34c7aac0))
+* **tools:** dependencies usage ([#12716](https://github.com/UI5/webcomponents/issues/12716)) ([89bb0dd](https://github.com/UI5/webcomponents/commit/89bb0dd62322598bd1ea7ce984eaf0618546a6f2))
+
+
+### Features
+
+* **framework:** introduce loadBaseThemingCSSVariables configuration ([#12699](https://github.com/UI5/webcomponents/issues/12699)) ([f01b2eb](https://github.com/UI5/webcomponents/commit/f01b2eb6256f2032bd802d0a60c4625b0d1af5fe))
+
+
+
+
+
+# [2.17.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.3...v2.17.0-rc.4) (2025-11-27)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.17.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.2...v2.17.0-rc.3) (2025-11-20)
+
+
+### Features
+
+* **framework:** scope theming css variables with component packages ([#12491](https://github.com/UI5/webcomponents/issues/12491)) ([43ff5de](https://github.com/UI5/webcomponents/commit/43ff5defaf6e08bac848df3d2d34943de15bee83))
+
+
+
+
+
+# [2.17.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.1...v2.17.0-rc.2) (2025-11-13)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
 # [2.17.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.17.0-rc.0...v2.17.0-rc.1) (2025-11-07)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

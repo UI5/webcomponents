@@ -575,6 +575,21 @@
 	</div>
 
 	<div class="demo-section">
+		<ui5-label>Toggle Loading State:</ui5-label>
+		<br />
+		<br />
+
+		<ui5-multi-combobox id="toggle-loading-mcb">
+			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
+			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<br /><br />
+
+		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+	</div>
+
+	<div class="demo-section">
 		<span>Placeholder test</span>
 
 		<br>
@@ -613,6 +628,63 @@
 			<ui5-mcb-item selected text="Item 6"></ui5-mcb-item>
 			<ui5-mcb-item selected text="Item 7"></ui5-mcb-item>
 		</ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container">
+		<span>MultiInput with selectedValues</span>
+		<ui5-multi-combobox no-validation selected-values='["1","3"]'>
+			<ui5-mcb-item  text="Longest word in the whole universe" value="1"></ui5-mcb-item>
+			<ui5-mcb-item text="Cosy" value="2"></ui5-mcb-item>
+			<ui5-mcb-item text="Compact" value="3"></ui5-mcb-item>
+			<ui5-mcb-item text="Condensed" value="4"></ui5-mcb-item>
+			<ui5-mcb-item text="Longest word in the world" value="5"></ui5-mcb-item>
+		</ui5-multi-combobox>
+	</div>
+
+	<div class="sample-container column">
+		<span>Dynamic selectedValues test</span>
+		<div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+			<ui5-button id="btnSelectAll">Select All</ui5-button>
+			<ui5-button id="btnClearAll">Clear All</ui5-button>
+			<ui5-button id="btnSelectEurope">Select Europe</ui5-button>
+		</div>
+		<ui5-multi-combobox id="mcb-dynamic" placeholder="Select countries" style="width: 100%;">
+			<ui5-mcb-item text="Germany" value="DE"></ui5-mcb-item>
+			<ui5-mcb-item text="France" value="FR"></ui5-mcb-item>
+			<ui5-mcb-item text="Italy" value="IT"></ui5-mcb-item>
+			<ui5-mcb-item text="United States" value="US"></ui5-mcb-item>
+			<ui5-mcb-item text="Canada" value="CA"></ui5-mcb-item>
+			<ui5-mcb-item text="Japan" value="JP"></ui5-mcb-item>
+		</ui5-multi-combobox>
+		<div id="mcb-dynamic-output" style="margin-top: 0.5rem;">Selected values: []</div>
+		<script>
+			const mcbDynamic = document.getElementById("mcb-dynamic");
+			const mcbDynamicOutput = document.getElementById("mcb-dynamic-output");
+
+			function updateMcbDynamicOutput(e) {
+				const items = e ? e.detail.items : [];
+				console.log("selection-change event items:", items.map(i => ({ text: i.text, value: i.value, selected: i.selected })));
+				console.log("mcbDynamic.selectedValues:", mcbDynamic.selectedValues);
+				mcbDynamicOutput.textContent = "Selected values: " + JSON.stringify(mcbDynamic.selectedValues);
+			}
+
+			mcbDynamic.addEventListener("selection-change", updateMcbDynamicOutput);
+
+			document.getElementById("btnSelectAll").addEventListener("click", () => {
+				mcbDynamic.selectedValues = ["DE", "FR", "IT", "US", "CA", "JP"];
+				updateMcbDynamicOutput();
+			});
+
+			document.getElementById("btnClearAll").addEventListener("click", () => {
+				mcbDynamic.selectedValues = [];
+				updateMcbDynamicOutput();
+			});
+
+			document.getElementById("btnSelectEurope").addEventListener("click", () => {
+				mcbDynamic.selectedValues = ["DE", "FR", "IT"];
+				updateMcbDynamicOutput();
+			});
+		</script>
 	</div>
 
 	<div class="sample-container">
@@ -676,6 +748,47 @@
 		</form>
 		<br>
 		<span>Submit event calls: <span id="mcb-form-submit">0</span></span>
+	</div>
+
+	<div class="demo-section">
+		<ui5-title>Form validation</ui5-title>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-multi-combobox id="mcbInAForm" no-validation required>
+				<ui5-mcb-item text="Bulgaria"></ui5-mcb-item>
+				<ui5-mcb-item text="Denmark"></ui5-mcb-item>
+				<ui5-mcb-item text="England"></ui5-mcb-item>
+			</ui5-multi-combobox>
+			<br><br>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+		<script>
+			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+			const formValidationMessage = document.getElementById('formValidationMessage');
+			const comboInAForm = document.getElementById('mcbInAForm');
+
+			btnCheckFormValidity.addEventListener('click', function () {
+				checkFormValidity('mcbInAForm');
+			});
+
+			mcbInAForm.addEventListener('ui5-change', function () {
+				setTimeout(() => {
+					checkFormValidity('mcbInAForm', true);
+				}, 0);
+			});
+
+			function checkFormValidity(elementId, delayed = false) {
+				const element = document.getElementById(elementId);
+				const isValid = element.checkValidity();
+
+				element.reportValidity();
+
+				// Show result
+				formValidationMessage.hidden = false;
+				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.design = isValid ? "Positive" : "Negative";
+			}
+		</script>
 	</div>
 
 	<script>
@@ -774,6 +887,11 @@
 		document.getElementById('form').addEventListener('submit', (e) => {
 			e.preventDefault();
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
+		});
+
+		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
+			const mcb = document.getElementById("toggle-loading-mcb");
+			mcb.loading = !mcb.loading;
 		});
 	</script>
 

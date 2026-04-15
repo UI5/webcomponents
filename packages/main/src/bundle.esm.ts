@@ -30,6 +30,7 @@ import { getAllRegisteredTags } from "@ui5/webcomponents-base/dist/CustomElement
 // setDefaultIconCollection("sap_fiori_3", "my-custom-icons");
 
 import Avatar from "./Avatar.js";
+import AvatarBadge from "./AvatarBadge.js";
 import AvatarGroup from "./AvatarGroup.js";
 import Bar from "./Bar.js";
 import Breadcrumbs from "./Breadcrumbs.js";
@@ -97,6 +98,8 @@ import Select from "./Select.js";
 import Option from "./Option.js";
 import CustomOption from "./OptionCustom.js";
 import Slider from "./Slider.js";
+import SliderHandle from "./SliderHandle.js";
+import SliderScale from "./SliderScale.js";
 import SplitButton from "./SplitButton.js";
 import StepInput from "./StepInput.js";
 import RangeSlider from "./RangeSlider.js";
@@ -118,6 +121,7 @@ import Title from "./Title.js";
 import Toast from "./Toast.js";
 import ToggleButton from "./ToggleButton.js";
 import Toolbar from "./Toolbar.js";
+import ToolbarItem from "./ToolbarItem.js";
 import ToolbarButton from "./ToolbarButton.js";
 import ToolbarSeparator from "./ToolbarSeparator.js";
 import ToolbarSpacer from "./ToolbarSpacer.js";

@@ -509,3 +509,8 @@
 	-webkit-appearance: inherit;
 	margin: inherit;
 }
+
+
+[ui5-responsive-popover] [ui5-input] {
+	width: 100%;
+}

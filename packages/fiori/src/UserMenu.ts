@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, slot, eventStrict as event, property,
+	customElement, slotStrict as slot, eventStrict as event, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -57,7 +58,6 @@ type UserMenuOtherAccountClickEventDetail = {
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.5.0
  */
@@ -205,7 +205,7 @@ class UserMenu extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	menuItems!: Array<UserMenuItem>;
+	menuItems!: DefaultSlot<UserMenuItem>;
 
 	/**
 	 * Defines the user accounts.
@@ -221,7 +221,17 @@ class UserMenu extends UI5Element {
 			slots: false,
 		},
 	})
-	accounts!: Array<UserMenuAccount>;
+	accounts!: Slot<UserMenuAccount>;
+
+	/**
+	 * Defines custom footer content.
+	 *
+	 * **Note:** When provided, replaces the default "Sign Out" button. Use an empty element to hide the footer completely.
+	 * @public
+	 * @since 2.20.0
+	 */
+	@slot()
+	footer!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -278,21 +288,25 @@ class UserMenu extends UI5Element {
 	}
 
 	onAfterRendering(): void {
-		if (this._responsivePopover) {
-			const observerOptions = {
-				threshold: [0.15],
-			};
+		if (this._responsivePopover && this.open && !this._observer) {
+			this._setupObserver();
+		}
+	}
 
-			this._observer?.disconnect();
-			this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
+	_setupObserver() {
+		const observerOptions = {
+			threshold: [0.15],
+		};
 
-			if (this._selectedAccountTitleEl) {
-				this._observer.observe(this._selectedAccountTitleEl);
-			}
+		this._observer?.disconnect();
+		this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
 
-			if (this._selectedAccountManageBtn) {
-				this._observer.observe(this._selectedAccountManageBtn);
-			}
+		if (this._selectedAccountTitleEl) {
+			this._observer.observe(this._selectedAccountTitleEl);
+		}
+
+		if (this._selectedAccountManageBtn) {
+			this._observer.observe(this._selectedAccountManageBtn);
 		}
 	}
 
@@ -380,10 +394,17 @@ class UserMenu extends UI5Element {
 	}
 
 	_handlePopoverAfterOpen() {
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
+		this._setupObserver();
 		this.fireDecoratorEvent("open");
 	}
 
 	_handlePopoverAfterClose() {
+		this._observer?.disconnect();
+		this._observer = undefined;
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
 		this.open = false;
 		this.fireDecoratorEvent("close");
 	}
@@ -445,8 +466,16 @@ class UserMenu extends UI5Element {
 		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
 	}
 
+	get _hasCustomFooter(): boolean {
+		return this.footer.length > 0 && this.footer[0]?.innerHTML.trim() !== "";
+	}
+
+	get _showDefaultFooter(): boolean {
+		return this.footer.length === 0;
+	}
+
 	getAccountDescriptionText(account: UserMenuAccount) {
-		return `${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
+		return `${account.titleText} ${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
 	}
 
 	getAccountByRefId(refId: string) {

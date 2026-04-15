@@ -42,10 +42,10 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 									style={this.styles.innerInput}
 									type={this.inputNativeType}
 									inner-input
-									inner-input-with-icon={!!this.icon.length}
+									inner-input-with-icon={this.iconsCount > 0}
 									disabled={this.disabled}
 									readonly={this._readonly || this.loading}
-									value={this._innerValue}
+									value={this.value}
 									placeholder={this._placeholder}
 									maxlength={this.maxlength}
 									role={this.accInfo.role}

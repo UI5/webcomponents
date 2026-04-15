@@ -7,6 +7,7 @@ import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
+import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 import type ComboBox from "./ComboBox.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
@@ -31,9 +32,11 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				onKeyDown={this._handlePopoverKeydown}
 				onFocusOut={this._handlePopoverFocusout}
 			>
-				<BusyIndicator active={this.loading} class="ui5-combobox-busy"/>
+				{this.loading &&
+					<BusyIndicator active={true} class="ui5-combobox-busy"/>
+				}
 
-				{this._isPhone &&
+				{!this.loading && this._isPhone &&
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
@@ -51,7 +54,18 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 								onInput={this._handleMobileInput}
 								onChange={this._inputChange}
 							>
-								{ this._filteredItems.map(item => <SuggestionItem text={item.text} additional-text={item.additionalText}/>)}
+								{ this._filteredItems.flatMap(item => {
+									if (item.isGroupItem && item.items) {
+										// For group items, return all nested items
+										return item.items
+											.filter(nestedItem => !!nestedItem)
+											.map(nestedItem =>
+												<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)}/>
+											);
+									}
+									// For regular items
+									return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)}/>;
+								})}
 							</Input>
 						</div>
 					</div>
@@ -79,7 +93,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				</div>
 				}
 
-				{!!this._filteredItems.length &&
+				{!this.loading && !!this._filteredItems.length &&
 				<List
 					class="ui5-combobox-items-list"
 					separators="None"

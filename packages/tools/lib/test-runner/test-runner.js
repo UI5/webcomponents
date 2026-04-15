@@ -3,7 +3,7 @@ const { readFileSync } = require("fs");
 const path = require("path");
 const fs = require("fs");
 
-function testFn() {
+function testFn(outArgv) {
 // search for dev-server port
 // start in current folder
 // traversing upwards in case of mono repo tests and dev-server running in root folder of repository
@@ -48,15 +48,15 @@ function testFn() {
 
 // add single spec parameter if passed
 	let spec = "";
-	if (process.argv.length === 3) {
-		const specFile = process.argv[2];
+	if (outArgv.length === 3) {
+		const specFile = outArgv[2];
 		spec = `--spec ${specFile}`;
 	}
 
 // more parameters - pass them to wdio
 	let restParams = "";
-	if (process.argv.length > 3) {
-		restParams = process.argv.slice(2).join(" ");
+	if (outArgv.length > 3) {
+		restParams = outArgv.slice(2).join(" ");
 	}
 
 	let wdioConfig = "";
@@ -67,7 +67,7 @@ function testFn() {
 	}
 
 // run wdio with calculated parameters
-	const cmd = `yarn cross-env WDIO_LOG_LEVEL=error wdio ${wdioConfig} ${spec} ${baseUrl} ${restParams}`;
+	const cmd = `npx cross-env WDIO_LOG_LEVEL=error wdio ${wdioConfig} ${spec} ${baseUrl} ${restParams}`;
 	console.log(`executing: ${cmd}`);
 	child_process.execSync(cmd, {stdio: 'inherit'});
 }

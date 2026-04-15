@@ -3,16 +3,21 @@ import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import type { IconData, UnsafeIconData } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
 import IconTemplate from "./IconTemplate.js";
 import type IconDesign from "./types/IconDesign.js";
 import IconMode from "./types/IconMode.js";
+
+import { ICON_ARIA_TYPE_IMAGE, ICON_ARIA_TYPE_INTERACTIVE } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import iconCss from "./generated/themes/Icon.css.js";
@@ -84,7 +89,6 @@ const ICON_NOT_FOUND = "ICON_NOT_FOUND";
  * ### Keyboard Handling
  *
  * - [Space] / [Enter] or [Return] - Fires the `click` event if the `mode` property is set to `Interactive`.
- * - [Shift] - If [Space] / [Enter] or [Return] is pressed, pressing [Shift] releases the ui5-icon without triggering the click event.
  *
  * ### ES6 Module Import
  *
@@ -104,9 +108,10 @@ const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 	styles: iconCss,
 })
 /**
- * Fired on mouseup, `SPACE` and `ENTER`.
- * - on mouse click, the icon fires native `click` event
- * - on `SPACE` and `ENTER`, the icon fires custom `click` event
+ * Fired when the component is activated by mouse/touch, keyboard (Enter or Space),
+ * or screen reader virtual cursor activation.
+ *
+ * **Note:** The event will not be fired if the `mode` property is set to `Decorative` or `Image`.
  * @public
  * @since 2.11.0
  */
@@ -117,6 +122,10 @@ class Icon extends UI5Element implements IIcon {
 	eventDetails!: {
 		click: void
 	}
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
 	/**
 	 * Defines the component semantic design.
 	 * @default "Default"
@@ -188,7 +197,7 @@ class Icon extends UI5Element implements IIcon {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	pathData: Array<string> = [];
 
 	/**
@@ -214,6 +223,17 @@ class Icon extends UI5Element implements IIcon {
 	viewBox?: string;
 	customTemplate?: object;
 	customTemplateAsString?: string;
+
+	_onclick(e: MouseEvent) {
+		if (this.mode !== IconMode.Interactive) {
+			return;
+		}
+
+		// prevents the native browser "click" event from firing
+		e.stopImmediatePropagation();
+
+		this.fireDecoratorEvent("click");
+	}
 
 	_onkeydown(e: KeyboardEvent) {
 		if (this.mode !== IconMode.Interactive) {
@@ -326,6 +346,29 @@ class Icon extends UI5Element implements IIcon {
 
 	get hasIconTooltip() {
 		return this.showTooltip && this.effectiveAccessibleName;
+	}
+
+	_getAriaTypeDescription() {
+		switch (this.mode) {
+		case IconMode.Interactive:
+			return Icon.i18nBundle.getText(ICON_ARIA_TYPE_INTERACTIVE);
+		case IconMode.Image:
+			return Icon.i18nBundle.getText(ICON_ARIA_TYPE_IMAGE);
+		default:
+			return "";
+		}
+	}
+
+	get accessibilityInfo() {
+		if (this.mode === IconMode.Decorative) {
+			return {};
+		}
+
+		return {
+			role: this.effectiveAccessibleRole as AriaRole,
+			type: this._getAriaTypeDescription(),
+			description: this.effectiveAccessibleName,
+		};
 	}
 }
 

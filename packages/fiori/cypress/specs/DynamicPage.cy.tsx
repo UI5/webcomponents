@@ -43,6 +43,35 @@ describe("DynamicPage", () => {
 			.should("have.prop", "headerPinned", false);
 	});
 
+	it("renders correctly with initial header-snapped attribute", () => {
+		cy.mount(
+			<DynamicPage headerSnapped={true} style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+					<div slot="snappedHeading">Snapped Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					Page content with enough height to enable scrolling
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.should("have.prop", "headerSnapped", true);
+
+		cy.get("[ui5-dynamic-page-title]")
+			.should("have.prop", "snapped", true);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.should("have.prop", "_snapped", true);
+
+		cy.get("[slot='snappedHeading']")
+			.should("be.visible");
+	});
+
 	it("toggles the header-snapped state with 'headerSnapped' property", () => {
 		cy.mount(
 			<DynamicPage style={{ height: "600px" }}>

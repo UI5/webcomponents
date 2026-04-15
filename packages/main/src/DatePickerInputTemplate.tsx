@@ -14,6 +14,7 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				data-sap-focus-ref
 				id={`${this._id}-inner`}
 				class="ui5-date-picker-input"
+				part="input"
 				placeholder={this._placeholder}
 				type={this.type}
 				value={this.displayValue}
@@ -25,8 +26,9 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				_shouldOpenValueStatePopover={!this.open}
 				onChange={this._onInputChange}
 				onInput={this._onInputInput}
-				onSubmit={this._onInputSubmit}
+				onui5-_request-submit={this._onInputRequestSubmit}
 				onKeyDown={this._onkeydown}
+				showClearIcon={this.showClearIcon}
 			>
 
 				{!this.open && this.valueStateMessage.length > 0 &&

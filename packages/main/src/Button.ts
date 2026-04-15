@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
@@ -10,8 +11,13 @@ import {
 	isEnter,
 	isEscape,
 	isShift,
+	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import {
+	getAllAccessibleNameRefTexts,
+	registerUI5Element,
+	deregisterUI5Element,
+} from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type { AccessibilityAttributes, AriaRole } from "@ui5/webcomponents-base";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -29,7 +35,7 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import ButtonDesign from "./types/ButtonDesign.js";
 import ButtonType from "./types/ButtonType.js";
 import ButtonBadgeDesign from "./types/ButtonBadgeDesign.js";
-import type ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
+import ButtonAccessibleRole from "./types/ButtonAccessibleRole.js";
 import type ButtonBadge from "./ButtonBadge.js";
 import ButtonTemplate from "./ButtonTemplate.js";
 import {
@@ -39,6 +45,8 @@ import {
 	BUTTON_ARIA_TYPE_ATTENTION,
 	BUTTON_BADGE_ONE_ITEM,
 	BUTTON_BADGE_MANY_ITEMS,
+	BUTTON_ROLE_DESCRIPTION,
+	LINK_ROLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -195,6 +203,19 @@ class Button extends UI5Element implements IButton {
 	 */
 	@property({ type: Boolean })
 	submits = false;
+
+	/**
+	 * Associates the button with a form element by the form's `id` attribute.
+	 * When set, the button can submit or reset the specified form even if the button
+	 * is not a descendant of that form.
+	 *
+	 * **Note:** This property takes effect only when the button's "type" property is set to "Submit" or "Reset".
+	 * @default undefined
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property()
+	form?: string;
 
 	/**
 	 * Defines the tooltip of the component.
@@ -368,6 +389,16 @@ class Button extends UI5Element implements IButton {
 	@property({ type: Boolean, noAttribute: true })
 	_cancelAction = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_isSpacePressed = false;
+
+	/**
+	 * Constantly updated value of texts collected from the accessibleNameRef elements
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_accessibleNameRefTexts?: string;
+
 	/**
 	 * Defines the text of the component.
 	 *
@@ -375,7 +406,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Node>;
 
 	/**
 	 * Adds a badge to the button.
@@ -383,7 +414,7 @@ class Button extends UI5Element implements IButton {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true })
-	badge!: Array<ButtonBadge>;
+	badge!: Slot<ButtonBadge>;
 
 	_deactivate: () => void;
 	_onclickBound: (e: MouseEvent) => void;
@@ -391,7 +422,6 @@ class Button extends UI5Element implements IButton {
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
-
 	constructor() {
 		super();
 		this._deactivate = () => {
@@ -437,6 +467,12 @@ class Button extends UI5Element implements IButton {
 			this.addEventListener("click", this._onclickBound);
 			this._clickHandlerAttached = true;
 		}
+
+		registerUI5Element(this, this._updateAccessibleNameRefTexts.bind(this));
+	}
+
+	_updateAccessibleNameRefTexts() {
+		this._accessibleNameRefTexts = getAllAccessibleNameRefTexts(this);
 	}
 
 	onExitDOM() {
@@ -448,6 +484,8 @@ class Button extends UI5Element implements IButton {
 		if (activeButton === this) {
 			activeButton = null;
 		}
+
+		deregisterUI5Element(this);
 	}
 
 	async onBeforeRendering() {
@@ -541,9 +579,13 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		this._cancelAction = isShift(e) || isEscape(e);
+		if (isShift(e) || isEscape(e)) {
+			this._cancelAction = true;
+		} else if (isSpace(e)) {
+			this._isSpacePressed = true;
+		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			this._setActiveState(true);
 		} else if (this._cancelAction) {
 			this._setActiveState(false);
@@ -551,11 +593,23 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this._cancelAction) {
-			e.preventDefault();
+		const isSpaceKey = isSpace(e);
+		const isCancelKey = isShift(e) || isEscape(e);
+
+		if (isSpaceKey || isSpaceShift(e)) {
+			if (this._cancelAction) {
+				this._cancelAction = false;
+				this._isSpacePressed = false;
+				e.preventDefault();
+				return;
+			}
+
+			this._isSpacePressed = false;
+		} else if (isCancelKey && !this._isSpacePressed) {
+			this._cancelAction = false;
 		}
 
-		if (isSpace(e) || isEnter(e)) {
+		if ((isSpace(e) || isEnter(e))) {
 			if (this.active) {
 				this._setActiveState(false);
 			}
@@ -566,6 +620,9 @@ class Button extends UI5Element implements IButton {
 		if (this.nonInteractive) {
 			return;
 		}
+
+		this._isSpacePressed = false;
+		this._cancelAction = false;
 
 		if (this.active) {
 			this._setActiveState(false);
@@ -630,7 +687,8 @@ class Button extends UI5Element implements IButton {
 	}
 
 	get ariaLabelText() {
-		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || "";
+		// Use accessibleNameRef texts (cached), then accessibleName (direct), then textContent as fallback
+		const effectiveAriaLabelText = this._accessibleNameRefTexts || this.accessibleName || "";
 		const textContent = this.textContent || "";
 		const internalLabelText = this.effectiveBadgeDescriptionText || "";
 
@@ -656,6 +714,29 @@ class Button extends UI5Element implements IButton {
 			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
 			ariaLabel: this.accessibilityAttributes.ariaLabel || this.ariaLabelText,
 		};
+	}
+
+	get accessibilityInfo() {
+		return {
+			description: this.ariaDescriptionText,
+			role: this.effectiveAccRole,
+			disabled: this.disabled,
+			children: this.text,
+			type: this.effectiveAccRoleTranslation,
+			label: this.ariaLabelText,
+		};
+	}
+
+	get effectiveAccRoleTranslation(): string {
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Button) {
+			return Button.i18nBundle.getText(BUTTON_ROLE_DESCRIPTION);
+		}
+
+		if (this.accessibleRole as ButtonAccessibleRole === ButtonAccessibleRole.Link) {
+			return Button.i18nBundle.getText(LINK_ROLE_DESCRIPTION);
+		}
+
+		return "";
 	}
 
 	get effectiveBadgeDescriptionText() {

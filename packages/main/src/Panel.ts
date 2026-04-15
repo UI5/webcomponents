@@ -1,14 +1,16 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
 import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isSpace, isEnter, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
+import { supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
@@ -170,8 +172,8 @@ class Panel extends UI5Element {
 	 * @public
 	 * @since 1.16.0-rc.1
 	 */
-	 @property({ type: Boolean })
-	 stickyHeader = false;
+	@property({ type: Boolean })
+	stickyHeader = false;
 
 	/**
 	 * When set to `true`, the `accessibleName` property will be
@@ -195,6 +197,12 @@ class Panel extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_animationRunning = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_pendingToggle = false;
+
+	@property({ type: Boolean })
+	_touched = false;
+
 	/**
 	 * Defines the component header area.
 	 *
@@ -202,7 +210,7 @@ class Panel extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -228,6 +236,16 @@ class Panel extends UI5Element {
 		return this.noAnimation || getAnimationMode() === AnimationMode.None;
 	}
 
+	_isMobile() {
+		if (supportsTouch()) {
+			this._touched = true;
+		}
+	}
+
+	_headerFocusOut() {
+		this._touched = false;
+	}
+
 	_headerClick(e: MouseEvent) {
 		if (!this.shouldToggle(e.target as HTMLElement)) {
 			return;
@@ -248,11 +266,18 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			e.preventDefault();
+			this._toggleOpen();
 		}
 
 		if (isSpace(e)) {
 			e.preventDefault();
+			this._pendingToggle = true;
+		}
+
+		// Cancel toggle if Escape is pressed
+		if (isEscape(e) && this._pendingToggle) {
+			e.preventDefault();
+			this._pendingToggle = false;
 		}
 	}
 
@@ -262,11 +287,15 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			this._toggleOpen();
+			e.preventDefault();
 		}
 
 		if (isSpace(e)) {
-			this._toggleOpen();
+			// Only toggle if space was pressed and escape wasn't pressed to cancel
+			if (this._pendingToggle) {
+				this._toggleOpen();
+			}
+			this._pendingToggle = false;
 		}
 	}
 

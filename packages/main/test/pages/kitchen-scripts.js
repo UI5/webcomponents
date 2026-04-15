@@ -51,11 +51,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}, false);
 
 	btnCompact.addEventListener('click', function(e) {
-		if (document.body.className.includes(COMPACT_CLASS)) {
-			return document.body.className = "";
+		if (document.body.classList.contains(COMPACT_CLASS)) {
+			return document.body.classList.remove(COMPACT_CLASS);
 		}
 
-		document.body.className += COMPACT_CLASS;
+		document.body.classList.add(COMPACT_CLASS);
 	}, false);
 
 	btnTheme.addEventListener('click', function(e) {

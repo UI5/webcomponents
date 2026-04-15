@@ -25,8 +25,8 @@ import {
 	renderer: jsxRenderer,
 	styles: TableRowBaseCss,
 })
-abstract class TableRowBase extends UI5Element {
-	cells!: Array<TableCellBase>;
+abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
+	cells!: Array<TCell>;
 
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
@@ -110,6 +110,10 @@ abstract class TableRowBase extends UI5Element {
 
 	get _visibleCells() {
 		return this.cells.filter(c => !c._popin);
+	}
+
+	get _firstVisibleCell() {
+		return this.cells.find(c => !c._popin);
 	}
 
 	get _popinCells() {

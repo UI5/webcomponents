@@ -1,7 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -14,6 +14,7 @@ import type { ToolbarMinWidthChangeEventDetail } from "@ui5/webcomponents/dist/T
 import ToolbarItemOverflowBehavior from "@ui5/webcomponents/dist/types/ToolbarItemOverflowBehavior.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type Title from "@ui5/webcomponents/dist/Title.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Template
 import DynamicPageTitleTemplate from "./DynamicPageTitleTemplate.js";
@@ -135,7 +136,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	heading!: HTMLElement[];
+	heading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the heading that is shown only when the header is snapped.
@@ -143,7 +144,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	snappedHeading!: HTMLElement[];
+	snappedHeading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the snapped title on mobile devices.
@@ -159,7 +160,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @since 2.3.0
 	 */
 	@slot({ type: HTMLElement })
-	snappedTitleOnMobile!: Array<Title>;
+	snappedTitleOnMobile!: Slot<Title>;
 
 	/**
 	 * Defines the bar with actions in the Dynamic page title.
@@ -167,7 +168,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	actionsBar!: HTMLElement[];
+	actionsBar!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the bar with navigation actions in the Dynamic page title.
@@ -175,7 +176,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	navigationBar!: Array<Toolbar>;
+	navigationBar!: Slot<Toolbar>;
 
 	/**
 	 * Defines the content of the Dynamic page title.
@@ -183,7 +184,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement })
-	content!: HTMLElement[];
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the content of the title that is shown only when the header is not snapped.
@@ -191,7 +192,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	subheading!: HTMLElement[];
+	subheading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the title that is shown only when the header is snapped.
@@ -199,7 +200,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	snappedSubheading!: HTMLElement[];
+	snappedSubheading!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the content of the breadcrumbs inside Dynamic Page Title.
@@ -207,7 +208,7 @@ class DynamicPageTitle extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	breadcrumbs!: HTMLElement[];
+	breadcrumbs!: Slot<HTMLElement>;
 
 	/**
 	 * @private

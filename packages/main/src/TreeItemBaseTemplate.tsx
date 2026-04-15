@@ -2,7 +2,7 @@ import type TreeItemBase from "./TreeItemBase.js";
 import ListItemTemplate from "./ListItemTemplate.js";
 import Icon from "./Icon.js";
 import navigationDownArrow from "@ui5/webcomponents-icons/dist/navigation-down-arrow.js";
-import navigatioRightArrow from "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
+import navigationRightArrow from "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import type { ListItemHooks } from "./ListItemTemplate.js";
 
 const predefinedHooks: Partial<ListItemHooks> = {
@@ -31,7 +31,7 @@ function listItemPreContent(this: TreeItemBase) {
 				<Icon
 					part="toggle-icon"
 					class="ui5-li-tree-toggle-icon"
-					name={this.expanded ? navigationDownArrow : navigatioRightArrow}
+					name={this.expanded ? navigationDownArrow : navigationRightArrow}
 					showTooltip={true}
 					accessibleName={this.iconAccessibleName}
 					// @ts-expect-error

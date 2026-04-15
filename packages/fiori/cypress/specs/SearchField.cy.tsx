@@ -396,6 +396,48 @@ describe("SearchField general interaction", () => {
 				.should("have.length", 2);
 		});
 
+		it("preselected scope option should be applied", () => {
+			cy.mount(<SearchField scope-value="products" value="test">
+				<SearchScope text="Apps" value="apps" slot="scopes"></SearchScope>
+				<SearchScope text="Products" value="products" slot="scopes"></SearchScope>
+			</SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-select]")
+				.as("select");
+
+			cy.get("@select")
+				.should("have.prop", "value", "products");
+		});
+
+		it("changes scope-value on option select", () => {
+			cy.mount(<SearchField value="test">
+				<SearchScope text="Apps" value="apps" slot="scopes"></SearchScope>
+				<SearchScope text="Products" value="products" slot="scopes"></SearchScope>
+			</SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.as("searchfield");
+
+			cy.get("@searchfield")
+				.shadow()
+				.find("[ui5-select]")
+				.as("scope");
+
+			cy.get("@scope")
+				.realClick();
+
+			cy.get("@scope")
+				.realPress("ArrowDown");
+
+			cy.get("@scope")
+				.realPress("Enter");
+
+			cy.get("@searchfield")
+				.should("have.prop", "scopeValue", "products");
+		});
+
 		it("scope-change event should be fired, when a scope option is selected", () => {
 			cy.mount(<SearchField value="test">
 				<SearchScope text="Apps" slot="scopes"></SearchScope>
@@ -463,6 +505,46 @@ describe("SearchField general interaction", () => {
 				.shadow()
 				.find('slot[name="filterButton"]')
 				.should("not.exist");
+		});
+	});
+
+	describe("Field Loading", () => {
+		it("shows loading indicator on button in collapsed mode", () => {
+			cy.mount(<SearchField collapsed={true} fieldLoading={true}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-button]")
+				.should("have.attr", "loading");
+		});
+
+		it("does not show loading indicator on button when fieldLoading is false in collapsed mode", () => {
+			cy.mount(<SearchField collapsed={true} fieldLoading={false}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-button]")
+				.should("not.have.attr", "loading");
+		});
+
+		it("shows BusyIndicator in expanded mode when fieldLoading is true", () => {
+			cy.mount(<SearchField fieldLoading={true}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-busy-indicator]")
+				.should("exist")
+				.should("have.attr", "active");
+		});
+
+		it("BusyIndicator is not active in expanded mode when fieldLoading is false", () => {
+			cy.mount(<SearchField fieldLoading={false}></SearchField>);
+
+			cy.get("[ui5-search-field]")
+				.shadow()
+				.find("[ui5-busy-indicator]")
+				.should("exist")
+				.should("not.have.attr", "active");
 		});
 	});
 });

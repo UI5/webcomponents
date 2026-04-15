@@ -26,9 +26,9 @@
 </head>
 <body class="daterangepicker1auto">
 	<div style='width:500px;'>
-		<ui5-label for="drpLabel">Deadline</ui5-label>
+		<ui5-label for="drpLabel">Horizontal</ui5-label>
 		<ui5-daterange-picker id="drpLabel"></ui5-daterange-picker>
-
+		<ui5-daterange-picker id="daterange-picker1"></ui5-daterange-picker>
 		<div>
 			<label id='labelChange'>0</label>
 			<label id='labelDate'></label>
@@ -42,6 +42,21 @@
 		<ui5-daterange-picker id="daterange-picker3" format-pattern="dd/MM/yyyy"></ui5-daterange-picker>
 		<h3>daterange-picker with minDate 01/09/2019 and maxDate 01/11/2019</h3>
 		<ui5-daterange-picker id="daterange-picker4" format-pattern="dd/MM/yyyy" min-date="01/09/2019" max-date="01/11/2019"></ui5-daterange-picker>
+		<h3>daterange-picker with two months</h3>
+		<ui5-daterange-picker id="daterange-picker-two-months" show-two-months></ui5-daterange-picker>
+		<h3>daterange-picker with two months with primary calendar Islamic and secondary calendar Gregorian</h3>
+		<ui5-daterange-picker id="daterange-picker-two-months-islamic-gregorian" secondary-calendar-type="Gregorian" primary-calendar-type="Islamic" show-two-months></ui5-daterange-picker>
+		
+		<section class="ui5-content-density-compact">
+			<h3>daterange-picker with two months in Compact</h3>
+			<div>
+				<ui5-daterange-picker id="daterange-picker-two-months-compact" show-two-months></ui5-daterange-picker>
+			</div>
+			<h3>daterange-picker with two months with primary calendar Islamic and secondary calendar Gregorian in Compact</h3>
+			<div>
+				<ui5-daterange-picker id="daterange-picker-two-months-islamic-gregorian-compact" secondary-calendar-type="Gregorian" primary-calendar-type="Islamic" show-two-months></ui5-daterange-picker>
+			</div>
+		</section> 
 		<section class="ui5-content-density-compact">
 			<h3>daterange-picker in Compact</h3>
 			<div>
@@ -80,6 +95,9 @@
 		<ui5-daterange-picker id="daterange-picker16" value-state="Negative">
 			<div slot="valueStateMessage">Information message. This is a <a href="#">Link</a>. Extra long text used as an information message. Extra long text used as an information message - 2. Extra long text used as an information message - 3.</div>
 		</ui5-daterange-picker>
+
+		<h3>DateRangePicker with clear icon</h3>
+		<ui5-daterange-picker id="dtWithClearIcon" show-clear-icon></ui5-daterange-picker>
 
 		<section>
 			<ui5-title>Form validation</ui5-title>

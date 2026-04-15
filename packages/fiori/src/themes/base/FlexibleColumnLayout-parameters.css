@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_fcl_solid_bg: var(--sapShell_Background);
 	--_ui5_fcl_column_border: none;
 	--_ui5_fcl_decoration_top: linear-gradient(to top, var(--sapHighlightColor), transparent);

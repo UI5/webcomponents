@@ -1,6 +1,6 @@
 @import "../base/Avatar-parameters.css";
 
-:root {
+:host {
 	--ui5-avatar-hover-box-shadow-offset: 0px 0px 0px 0.0625rem var(--sapAvatar_Hover_BorderColor);
 	--_ui5_avatar_focus_offset: 0.125rem;
 	--ui5-avatar-hover-box-shadow-offset: 0px;

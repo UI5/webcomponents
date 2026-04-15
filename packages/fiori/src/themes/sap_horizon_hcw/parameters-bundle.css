@@ -15,9 +15,11 @@
 @import "../base/ShellBar-parameters.css";
 @import "./ShellBar-parameters.css";
 @import "./SearchField-parameters.css";
+@import "../base/Search-parameters.css";
 @import "../base/DynamicPage-parameters.css";
 @import "../base/DynamicPageTitle-parameters.css";
 @import "../base/DynamicPageHeader-parameters.css";
 @import "../sap_horizon/DynamicPageHeaderActions-parameters.css";
 @import "./DynamicPageTitle-parameters.css";
 @import "../sap_fiori_3/TimelineGroupItem-parameters.css";
+@import "../base/UserSettingsAppearanceViewItem-parameters.css";

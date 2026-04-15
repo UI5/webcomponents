@@ -10,10 +10,17 @@ export default function TimelineTemplate(this: Timeline) {
 	return (
 		<div class="ui5-timeline-root"
 			role="region"
-			aria-label="Timeline"
+			aria-label={this.ariaLabel}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 		>
+			{/* Header Bar Slot */}
+			{this._hasHeaderBar && (
+				<div class="ui5-timeline-header-bar-wrapper">
+					<slot name="headerBar"></slot>
+				</div>
+			)}
+
 			<BusyIndicator
 				id={`${this._id}-busyIndicator`}
 				delay={this.loadingDelay}
@@ -55,6 +62,8 @@ function moreRow(this: Timeline) {
 					onClick={this._onLoadMoreClick}
 					onKeyDown={this._onLoadMoreKeydown}
 					onKeyUp={this._onLoadMoreKeyup}
+					tooltip={this.growingButtonText}
+					accessibleName={this.growingButtonText}
 				></Button>
 			</div>
 			{this.loading &&

@@ -198,6 +198,57 @@ describe("Eventing", () => {
 
 		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
+
+	it("Should control suggestions dynamically based on threshold on mobile", () => {
+		const THRESHOLD = 3;
+		const countries = [
+			"Argentina", "Albania", "Algeria", "Angola", "Austria", "Australia",
+			"Bulgaria", "Belgium", "Brazil", "Canada", "Colombia", "Croatia"
+		];
+		
+		cy.mount(<Input id="mobile-threshold" showSuggestions />);
+
+		cy.document().then(doc => {
+			const input = doc.querySelector<Input>("#mobile-threshold")!;
+			
+			input.addEventListener("input", () => {
+				const value = input.value;
+				
+				while (input.lastChild) {
+					input.removeChild(input.lastChild);
+				}
+				
+				if (value.length >= THRESHOLD) {
+					input.showSuggestions = true;
+					
+					const filtered = countries.filter(country => 
+						country.toUpperCase().indexOf(value.toUpperCase()) === 0
+					);
+					
+					filtered.forEach(country => {
+						const item = document.createElement("ui5-suggestion-item");
+						item.setAttribute("text", country);
+						input.appendChild(item);
+					});
+				} else {
+					input.showSuggestions = false;
+				}
+			});
+		});
+
+		cy.get("#mobile-threshold")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input").shadow().find(".ui5-input-inner-phone").should("be.focused");
+		cy.get("@input").shadow().find(".ui5-input-inner-phone").realType("Bu");
+		cy.get("@input").shadow().find("ui5-suggestion-item").should("have.length", 0);
+	});
 });
 
 describe("Typeahead", () => {
@@ -221,7 +272,7 @@ describe("Typeahead", () => {
 		.ui5ResponsivePopoverOpened();
 
 		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").should("be.focused");
-		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").realType("c");
+		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").realType("C");
 		cy.get("#myInput2").shadow().find(".ui5-input-inner-phone").should("have.value", "Cozy");
 	});
 
@@ -262,7 +313,7 @@ describe("Typeahead", () => {
 		.ui5ResponsivePopoverOpened();
 
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").should("be.focused");
-		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").realType("a");
+		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").realType("A");
 		cy.get("#input-custom-flat").shadow().find(".ui5-input-inner-phone").should("have.value", "Albania");
 	});
 });

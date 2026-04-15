@@ -22,7 +22,9 @@ const generate = async (argv) => {
 	});
 
 	return Promise.all(promises).then(() => {
-		console.log("Files copied.");
+		if (process.env.UI5_VERBOSE === "true") {
+			console.log("Files copied.");
+		}
 	});
 };
 

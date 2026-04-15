@@ -1,7 +1,7 @@
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
@@ -9,10 +9,11 @@ import type Select from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
-import ToolbarItem from "./ToolbarItem.js";
-import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail;
 
@@ -29,7 +30,7 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * `import "@ui5/webcomponents/dist/ToolbarSelectOption.js";` (comes with `ui5-toolbar-select`)
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -63,12 +64,14 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * @public
  */
 @event("close")
-class ToolbarSelect extends ToolbarItem {
-	eventDetails!: ToolbarItem["eventDetails"] & {
+class ToolbarSelect extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
+		"click": ToolbarItemEventDetail;
 	}
+
 	/**
 	 * Defines the width of the select.
 	 *
@@ -91,8 +94,9 @@ class ToolbarSelect extends ToolbarItem {
 	@slot({
 		"default": true,
 		type: HTMLElement,
+		invalidateOnChildChange: true,
 	})
-	options!: Array<ToolbarSelectOption>;
+	options!: DefaultSlot<ToolbarSelectOption>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -101,7 +105,7 @@ class ToolbarSelect extends ToolbarItem {
 	 * @since 2.15.0
 	*/
 	@slot()
-	label!: Array<HTMLElement>;
+	label!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the value state of the component.
@@ -200,11 +204,7 @@ class ToolbarSelect extends ToolbarItem {
 	_syncOptions(selectedOption: HTMLElement): void {
 		const selectedOptionIndex = Number(selectedOption?.getAttribute("data-ui5-external-action-item-index"));
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
-			if (index === selectedOptionIndex) {
-				option.setAttribute("selected", "");
-			} else {
-				option.removeAttribute("selected");
-			}
+			option.selected = index === selectedOptionIndex;
 		});
 	}
 

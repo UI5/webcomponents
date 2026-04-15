@@ -21,15 +21,27 @@ function encodeURL(str) {
 
 function decodeURL(str) {
   // restore base64 format
-  const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
+  try {
+
+    const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    
+    return pako.inflate(bytes, { to: "string" });
+  } catch (e) {
+    return decodeBase64URL(str);
   }
-  
-  return pako.inflate(bytes, { to: "string" });
+}
+
+const decodeBase64URL = (str) => {
+  const base64 = str.replaceAll('-', '+').replaceAll('_', '/');
+  const binary = atob(base64);
+  const bytes = Uint8Array.from(binary, (m) => m.codePointAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
 // const testString = 'helljkh"ao⛳❤️🧀';

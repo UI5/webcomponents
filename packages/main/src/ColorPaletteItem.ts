@@ -5,7 +5,6 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScopeUtils.js";
 import type { IColorPaletteItem } from "./ColorPalette.js";
 import ColorPaletteItemTemplate from "./ColorPaletteItemTemplate.js";
 import {
@@ -51,12 +50,22 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	 * **Note:** Only one item must be selected per <code>ui5-color-palette</code>.
 	 * If more than one item is defined as selected, the last one would be considered as the selected one.
 	 *
-	 * @public
 	 * @default false
+	 * @public
 	 * @since 2.0.0
 	 */
 	@property({ type: Boolean })
 	selected = false;
+
+	/**
+	 * Defines the tooltip of the component. When not set, the color value is used as the tooltip.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	tooltip?: string;
 
 	/**
 	 * Defines the tab-index of the element, helper information for the ItemNavigation.
@@ -99,13 +108,17 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 		// since height is dynamically determined by padding-block-start
 		const itemHeight = this.offsetHeight + 4; // adding 4px for the offsets on top and bottom
-		this.style.setProperty(getScopedVarName("--_ui5_color_palette_item_height"), `${itemHeight}px`);
+		this.style.setProperty("--_ui5_color_palette_item_height", `${itemHeight}px`);
 
-		this.style.setProperty(getScopedVarName("--_ui5-color-palette-item-background-color"), `${this.value}`);
+		this.style.setProperty("--_ui5-color-palette-item-background-color", `${this.value}`);
 	}
 
 	get colorLabel() {
 		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
+	}
+
+	get getLabelText(): string {
+		return `${this.colorLabel} - ${this.index}: ${this.tooltip || this.value}`;
 	}
 
 	get classes() {

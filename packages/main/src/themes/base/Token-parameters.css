@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_token_background: var(--sapButton_TokenBackground);
 	--_ui5_token_readonly_background: var(--sapButton_TokenBackground);
 	--_ui5_token_readonly_color: var(--sapContent_LabelColor);

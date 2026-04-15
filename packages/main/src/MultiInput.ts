@@ -1,6 +1,6 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -13,13 +13,18 @@ import {
 	isHome,
 	isEnd,
 	isDown,
-	isEnter,
 
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { MULTIINPUT_ROLEDESCRIPTION_TEXT, MULTIINPUT_VALUE_HELP_LABEL, MULTIINPUT_VALUE_HELP } from "./generated/i18n/i18n-defaults.js";
+import {
+	MULTIINPUT_ROLEDESCRIPTION_TEXT,
+	MULTIINPUT_VALUE_HELP_LABEL,
+	MULTIINPUT_VALUE_HELP,
+	FORM_MIXED_TEXTFIELD_REQUIRED,
+	MULTIINPUT_FILTER_BUTTON_LABEL,
+} from "./generated/i18n/i18n-defaults.js";
 import Input from "./Input.js";
 import MultiInputTemplate from "./MultiInputTemplate.js";
 import styles from "./generated/themes/MultiInput.css.js";
@@ -27,11 +32,11 @@ import type Token from "./Token.js";
 import type Tokenizer from "./Tokenizer.js";
 import { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
-import type Icon from "./Icon.js";
 
 import type {
 	InputSelectionChangeEventDetail as MultiInputSelectionChangeEventDetail,
 } from "./Input.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 interface IToken extends UI5Element, ITabbable {
 	text?: string;
@@ -124,14 +129,34 @@ class MultiInput extends Input implements IFormInputElement {
 	declare name?: string;
 
 	/**
+	 * Indicates whether to show tokens in suggestions popover
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_showTokensInSuggestions = false;
+
+	/**
+	 * Tracks whether user has explicitly toggled the show tokens state
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_userToggledShowTokens = false;
+
+	/**
 	 * Defines the component tokens.
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true })
-	tokens!: Array<IToken>;
+	tokens!: Slot<IToken>;
 
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;
+
+	get formValidityMessage() {
+		return MultiInput.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
+	}
 
 	get formValidity(): ValidityStateFlags {
 		const tokens = (this.tokens || []);
@@ -189,11 +214,11 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	valueHelpMouseDown(e: MouseEvent) {
-		const target = e.target as Icon;
+		e.preventDefault();
+		this.focus();
 		this.closeValueStatePopover();
 		this.tokenizer.open = false;
 		this._valueHelpIconPressed = true;
-		target.focus();
 	}
 
 	_tokenizerFocusOut(e: FocusEvent) {
@@ -209,10 +234,9 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	innerFocusIn() {
+		this.focused = true;
 		this.tokenizer._scrollToEndOnExpand = true;
 		this.tokenizer.expanded = true;
-		this.focused = true;
-
 		this.tokens.forEach(token => {
 			token.selected = false;
 		});
@@ -231,10 +255,6 @@ class MultiInput extends Input implements IFormInputElement {
 		if (isHomeInBeginning) {
 			this._skipOpenSuggestions = true; // Prevent input focus when navigating through the tokens
 			return this._focusFirstToken(e);
-		}
-
-		if (isEnter(e) && !!this._internals.form) {
-			e.preventDefault();
 		}
 
 		if (isLeft(e)) {
@@ -282,14 +302,11 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	_handleBackspace(e: KeyboardEvent) {
-		const cursorPosition = this.getDomRef()!.querySelector(`input`)!.selectionStart;
-		const selectionEnd = this.getDomRef()!.querySelector(`input`)!.selectionEnd;
-		const isValueSelected = cursorPosition === 0 && selectionEnd === this.value.length;
 		const tokens = this.tokens;
 		const lastToken = tokens.length && tokens[tokens.length - 1];
 
-		// selectionStart property applies only to inputs of types text, search, URL, tel, and password
-		if ((!this.value || (this.value && cursorPosition === 0 && !isValueSelected)) && lastToken) {
+		// Only move focus to the last token if the input is empty
+		if (!this.value && lastToken) {
 			e.preventDefault();
 			lastToken.focus();
 			this.tokenizer._itemNav.setCurrentItem(lastToken);
@@ -337,12 +354,35 @@ class MultiInput extends Input implements IFormInputElement {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 		this.tokenizerAvailable = this.tokens && this.tokens.length > 0;
 
 		if (this.tokenizer) {
 			this.tokenizer.readonly = this.readonly;
+
+			// Set the CSS variable on the tokenizer element so it's available in the shadow DOM
+			this.tokenizer.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 		}
+	}
+
+	/**
+	 * Override the _handlePickerAfterOpen method to handle token display based on device type
+	 */
+	_handlePickerAfterOpen() {
+		if (this.tokens.length > 0) {
+			// On mobile: show tokens by default (for filter dialog feature)
+			// On desktop: keep showing suggestions (default behavior)
+			if (isPhone()) {
+				this._showTokensInSuggestions = true;
+			}
+			this._userToggledShowTokens = false;
+
+			// Expand tokenizer to show all tokens and prevent cut-off
+			this.tokenizer._scrollToEndOnExpand = true;
+			this.tokenizer.expanded = true;
+		}
+
+		super._handlePickerAfterOpen();
 	}
 
 	onAfterRendering() {
@@ -369,6 +409,10 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get _valueHelpText() {
 		return MultiInput.i18nBundle.getText(MULTIINPUT_VALUE_HELP);
+	}
+
+	get _filterButtonAccessibleName() {
+		return MultiInput.i18nBundle.getText(MULTIINPUT_FILTER_BUTTON_LABEL);
 	}
 
 	get _tokensCountTextId() {
@@ -418,6 +462,20 @@ class MultiInput extends Input implements IFormInputElement {
 
 	get shouldDisplayOnlyValueStateMessage() {
 		return this.hasValueStateMessage && !this.readonly && !this.open && this.focused && !this.tokenizer.open;
+	}
+
+	/**
+	 * Computes the effective state for showing tokens in suggestions.
+	 * Returns false (show suggestions) by default, true only when explicitly set.
+	 */
+	get _effectiveShowTokensInSuggestions() {
+		// If no tokens exist, always show suggestions
+		if (this.tokens.length === 0) {
+			return false;
+		}
+
+		// Return the current state (will be true on mobile after picker opens, false otherwise)
+		return this._showTokensInSuggestions;
 	}
 }
 

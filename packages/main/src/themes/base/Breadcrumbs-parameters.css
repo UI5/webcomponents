@@ -1,0 +1,4 @@
+:host {
+	--_ui5_breadcrumbs_current_location_color: var(--sapContent_LabelColor);
+	--_ui5_breadcrumbs_separator_color: var(--sapContent_LabelColor);
+}

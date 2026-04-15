@@ -12,7 +12,8 @@ export default function TimePickerTemplate(this: TimePicker) {
 					data-sap-focus-ref
 					id={`${this._id}-inner`}
 					class="ui5-time-picker-input"
-					value={this.value}
+					part="input"
+					value={this.displayValue}
 					placeholder={this._placeholder}
 					disabled={this.disabled}
 					readonly={this.readonly}
@@ -23,6 +24,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					onClick={this._handleInputClick}
 					onChange={this._handleInputChange}
 					onInput={this._handleInputLiveChange}
+					onui5-_request-submit={this._onInputRequestSubmit}
 					onFocusIn={this._onfocusin}
 					onKeyDown={this._onkeydown}
 				>
@@ -39,6 +41,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 							name={timeEntryRequest}
 							tabindex={-1}
 							showTooltip={true}
+							accessibleName={this.openIconTitle}
 							mode={this._iconMode}
 							onClick={this._togglePicker}
 							class={{
@@ -51,7 +54,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 				</DateTimeInput>
 			</div>
 
-			{ TimePickerPopoverTemplate.call(this) }
+			{TimePickerPopoverTemplate.call(this)}
 		</>
 	);
 }

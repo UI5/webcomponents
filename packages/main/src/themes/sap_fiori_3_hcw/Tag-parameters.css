@@ -1,6 +1,6 @@
 @import "../base/Tag-parameters.css";
 
-:root {
+:host {
 
 	--ui5-tag-text-shadow: none;
 	--ui5-tag-contrast-text-shadow: none;

@@ -1,6 +1,6 @@
 @import "../sap_fiori_3/DynamicPageTitle-parameters.css";
 
-:root {
+:host {
     --_ui5_dynamic_page_title_border: 0.0625rem solid transparent;
     --_ui5_dynamic_page_title_hover_border: 0.0625rem solid var(--sapObjectHeader_BorderColor);
 }

@@ -240,7 +240,7 @@ const allowedTags = {
     event: [...commonTags, "param", "native", "allowPreventDefault"],
     eventParam: [...commonTags],
     method: [...commonTags, "param", "returns", "override"],
-    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart"],
+    class: [...commonTags, "constructor", "class", "abstract", "experimental", "implements", "extends", "slot", "csspart", "cssstate", "cssState"],
     enum: [...commonTags, "experimental",],
     enumMember: [...commonTags, "experimental",],
     interface: [...commonTags, "experimental",],
@@ -330,6 +330,9 @@ const validateJSDocTag = (tag) => {
             return tag.type && tag.name && tag.description;
         case "csspart":
             return !tag.type && tag.name && tag.description;
+        case "cssState":
+        case "cssstate":
+            return !tag.type && tag.name && tag.description;
         case "since":
             return !tag.type && tag.name;
         case "returns":
@@ -360,7 +363,8 @@ const validateJSDocComment = (fieldType, jsdocComment, node, moduleDoc) => {
         }
 
         if (!isValid) {
-            logDocumentationError(moduleDoc.path, `Incorrect use of @${tag.tag}. Ensure it is part of ${fieldType} JSDoc tags.`)
+            const nodeName = node ? ` in '${node}'` : '';
+            logDocumentationError(moduleDoc.path, `Incorrect use of @${tag.tag}${nodeName}. Ensure it is part of ${fieldType} JSDoc tags.`)
         }
 
         return !!isValid;
@@ -396,7 +400,12 @@ const displayDocumentationErrors = () => {
 }
 
 const formatArrays = (typeText) => {
-    return typeText?.replaceAll(/(\S+)\[\]/g, "Array<$1>")
+    return typeText?.replaceAll(/(\S+)\[\]/g, "Array<$1>");
+}
+
+// Convert Slot<T> and DefaultSlot<T> to Array<T> (the array is built into these types)
+const formatSlotTypes = (typeText) => {
+	return typeText?.replace(/(Default)?Slot<(.+?)>/g, 'Array<$2>');
 }
 
 export {
@@ -415,6 +424,7 @@ export {
     getTypeRefs,
     normalizeDescription,
     formatArrays,
+    formatSlotTypes,
     isClass,
     normalizeTagType,
     displayDocumentationErrors,

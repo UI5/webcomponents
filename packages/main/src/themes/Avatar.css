@@ -10,22 +10,27 @@
 	opacity: .7;
 }
 
-:host([interactive]:not([disabled])) {
+:host([interactive]:not([disabled])),
+:host([mode="Interactive"]:not([disabled])) {
 	cursor: pointer;
 }
 
-:host([interactive]:not([hidden]):active) {
+:host([interactive]:not([hidden]):active),
+:host([mode="Interactive"]:not([hidden]):active) {
 	background-color: var(--sapButton_Active_Background);
 	border-color: var(--sapButton_Active_BorderColor);
 	color: var(--sapButton_Active_TextColor);
 }
 
-:host([interactive]:not([hidden]):not([disabled]):not(:active):not([focused]):hover) {
+:host([interactive]:not([hidden]):not([disabled]):not(:active):not([focused]):hover),
+:host([mode="Interactive"]:not([hidden]):not([disabled]):not(:active):not([focused]):hover) {
 	box-shadow: var(--ui5-avatar-hover-box-shadow-offset);
 }
 
 :host([interactive][desktop]:not([hidden])) .ui5-avatar-root:focus,
-:host([interactive]:not([hidden])) .ui5-avatar-root:focus-visible {
+:host([interactive]:not([hidden])) .ui5-avatar-root:focus-visible,
+:host([mode="Interactive"][desktop]:not([hidden])) .ui5-avatar-root:focus,
+:host([mode="Interactive"]:not([hidden])) .ui5-avatar-root:focus-visible {
 	outline: var(--_ui5_avatar_outline);
 	outline-offset: var(--_ui5_avatar_focus_offset);
 }
@@ -55,7 +60,6 @@
 }
 
 /* Sizes */
-:host([_size="XS"]),
 :host([size="XS"]) {
 	height: 2rem;
 	width: 2rem;
@@ -65,28 +69,24 @@
 }
 
 :host(:not([size])),
-:host([_size="S"]),
 :host([size="S"]) {
 	min-height: 3rem;
 	min-width: 3rem;
 	font-size: var(--_ui5_avatar_fontsize_S);
 }
 
-:host([_size="M"]),
 :host([size="M"]) {
 	min-height: 4rem;
 	min-width: 4rem;
 	font-size: var(--_ui5_avatar_fontsize_M);
 }
 
-:host([_size="L"]),
 :host([size="L"]) {
 	min-height: 5rem;
 	min-width: 5rem;
 	font-size: var(--_ui5_avatar_fontsize_L);
 }
 
-:host([_size="XL"]),
 :host([size="XL"]) {
 	min-height: 7rem;
 	min-width: 7rem;
@@ -100,31 +100,26 @@
 	color: inherit;
 }
 
-:host([_size="XS"]) .ui5-avatar-icon,
 :host([size="XS"]) .ui5-avatar-icon {
 	height: var(--_ui5_avatar_icon_XS);
 	width: var(--_ui5_avatar_icon_XS);
 }
 
-:host([_size="S"]) .ui5-avatar-icon,
 :host([size="S"]) .ui5-avatar-icon {
 	height: var(--_ui5_avatar_icon_S);
 	width: var(--_ui5_avatar_icon_S);
 }
 
-:host([_size="M"]) .ui5-avatar-icon,
 :host([size="M"]) .ui5-avatar-icon {
 	height: var(--_ui5_avatar_icon_M);
 	width: var(--_ui5_avatar_icon_M);
 }
 
-:host([_size="L"]) .ui5-avatar-icon,
 :host([size="L"]) .ui5-avatar-icon {
 	height: var(--_ui5_avatar_icon_L);
 	width: var(--_ui5_avatar_icon_L);
 }
 
-:host([_size="XL"]) .ui5-avatar-icon,
 :host([size="XL"]) .ui5-avatar-icon {
 	height: var(--_ui5_avatar_icon_XL);
 	width: var(--_ui5_avatar_icon_XL);
@@ -156,7 +151,9 @@
 	border-color: var(--ui5-avatar-accent6-border-color);
 }
 :host([_color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent6"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent6"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent6"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_6_Hover_Background);
 }
 
@@ -168,7 +165,9 @@
 }
 
 :host([_color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent1"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent1"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent1"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_1_Hover_Background);
 }
 
@@ -180,7 +179,9 @@
 }
 
 :host([_color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent2"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent2"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent2"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_2_Hover_Background);
 }
 
@@ -192,7 +193,9 @@
 }
 
 :host([_color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent3"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent3"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent3"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_3_Hover_Background);
 }
 
@@ -204,7 +207,9 @@
 }
 
 :host([_color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent4"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent4"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent4"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_4_Hover_Background);
 }
 
@@ -216,7 +221,9 @@
 }
 
 :host([_color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent5"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent5"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent5"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_5_Hover_Background);
 }
 
@@ -228,7 +235,9 @@
 }
 
 :host([_color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent7"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent7"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent7"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_7_Hover_Background);
 }
 
@@ -240,7 +249,9 @@
 }
 
 :host([_color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent8"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent8"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent8"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_8_Hover_Background);
 }
 
@@ -252,7 +263,9 @@
 }
 
 :host([_color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent9"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent9"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent9"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_9_Hover_Background);
 }
 
@@ -264,7 +277,9 @@
 }
 
 :host([_color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
-:host([ui5-avatar][color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover) {
+:host([ui5-avatar][color-scheme="Accent10"][interactive]:not([hidden]):not([disabled]):not(:active):hover),
+:host([_color-scheme="Accent10"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover),
+:host([ui5-avatar][color-scheme="Accent10"][mode="Interactive"]:not([hidden]):not([disabled]):not(:active):hover) {
 	background-color: var(--sapAvatar_10_Hover_Background);
 }
 
@@ -310,53 +325,50 @@
 /* Slotted Badge */
 ::slotted([slot="badge"]) {
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	inset-block-end: 0;
+	inset-inline-end: 0;
 	width: 1.125rem;
 	height: 1.125rem;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
-	color: var(--sapBackgroundColor);
 
-	--_ui5-tag-height: 1.125rem;
+	--_ui5-avatar-badge-icon-size: 0.75rem;
 }
 
 :host(:not([disabled])) ::slotted([slot="badge"]) {
 	pointer-events: initial;
 }
 
-:host([_size="L"]) ::slotted([slot="badge"]),
 :host([size="L"]) ::slotted([slot="badge"]) {
 	width: 1.25rem;
 	height: 1.25rem;
 
-	--_ui5-tag-height: 1.25rem;
-	--_ui5-tag-icon-width: 0.875rem;
+	--_ui5-avatar-badge-icon-size: 0.875rem;
 }
 
-:host([_size="XL"]) ::slotted([slot="badge"]),
 :host([size="XL"]) ::slotted([slot="badge"]) {
 	width: 1.75rem;
 	height: 1.75rem;
 
-	--_ui5-tag-height: 1.75rem;
-	--_ui5-tag-icon-width: 1rem;
+	--_ui5-avatar-badge-icon-size: 1rem;
 }
 
 /* Slotted Badge - Square Avatar Shape */
 :host([shape="Square"]) ::slotted([slot="badge"]) {
-	bottom: -0.125rem;
-	right: -0.125rem;
+	border-radius: 50%;
 }
 
-:host([_size="L"][shape="Square"]) ::slotted([slot="badge"]),
+:host([shape="Square"]) ::slotted([slot="badge"]) {
+	inset-block-end: -0.125rem;
+	inset-inline-end: -0.125rem;
+}
+
 :host([size="L"][shape="Square"]) ::slotted([slot="badge"]) {
-	bottom: -0.1875rem;
-	right: -0.1875rem;
+	inset-block-end: -0.1875rem;
+	inset-inline-end: -0.1875rem;
 }
 
-:host([_size="XL"][shape="Square"]) ::slotted([slot="badge"]),
 :host([size="XL"][shape="Square"]) ::slotted([slot="badge"]) {
-	bottom: -0.25rem;
-	right: -0.25rem;
+	inset-block-end: -0.25rem;
+	inset-inline-end: -0.25rem;
 }

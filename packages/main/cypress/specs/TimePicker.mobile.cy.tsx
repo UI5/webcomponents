@@ -75,7 +75,7 @@ describe("TimePicker on phone - general interactions", () => {
 	});
 
 	it("direct number typing", () => {
-		cy.mount(<TimePicker></TimePicker>);
+		cy.mount(<TimePicker value-format="hh:mm:ss a"></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
 			.as("timePicker")
@@ -124,6 +124,16 @@ describe("TimePicker on phone - general interactions", () => {
 		cy.get<TimePicker>("@timePicker")
 			.ui5TimePickerGetClock("seconds")
 			.should("have.prop", "valueNow", 13);
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.shadow()
+			.find("[ui5-toggle-spin-button]")
+			.first()
+			.realClick()
+			.should("be.focused");
 
 		cy.realType("092233");
 
