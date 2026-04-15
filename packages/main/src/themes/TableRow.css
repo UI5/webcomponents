@@ -117,3 +117,77 @@
 #actions-cell:has(+ #navigated-cell) {
 	inset-inline-end: var(--_ui5_table_navigated_cell_width);
 }
+
+/* highlight */
+#highlight-cell {
+	position: sticky;
+	inset-inline-start: 0;
+	z-index: 1;
+	background-color: inherit;
+	overflow: visible;
+	grid-row: 1 / -1;
+	min-width: 0;
+	padding: 0;
+}
+
+#highlight {
+	position: absolute;
+	inset: 0;
+	top: -1px;
+}
+
+:host([highlight="Negative"]) #highlight {
+	background: var(--sapErrorBorderColor);
+}
+
+:host([highlight="Critical"]) #highlight {
+	background: var(--sapWarningBorderColor);
+}
+
+:host([highlight="Positive"]) #highlight {
+	background: var(--sapSuccessBorderColor);
+}
+
+:host([highlight="Information"]) #highlight {
+	background: var(--sapInformationBorderColor);
+}
+
+:host([tabindex]:focus) #highlight {
+	transform: translateX(var(--_ui5_table_highlight_width));
+	top: 1px;
+	bottom: 2px;
+	right: -1px;
+}
+
+:host([tabindex]:focus) #highlight:dir(rtl) {
+	transform: translateX(calc(var(--_ui5_table_highlight_width) * -1));
+	left: -1px;
+}
+
+:host([tabindex]:focus) #highlight-cell {
+	clip-path: inset(var(--sapContent_FocusWidth) calc(var(--_ui5_table_highlight_width) * -1) var(--sapContent_FocusWidth) var(--sapContent_FocusWidth));
+}
+
+:host([tabindex]:focus) #highlight-cell:dir(rtl) {
+	clip-path: inset(var(--sapContent_FocusWidth) var(--sapContent_FocusWidth) var(--sapContent_FocusWidth) calc(var(--_ui5_table_highlight_width) * -1));
+}
+
+#highlight-cell + #selection-cell {
+	inset-inline-start: var(--_ui5_table_highlight_width);
+}
+
+:host([navigated]) #highlight-cell ~ #popin-cell {
+	grid-column: 2 / -2;
+}
+
+:host([navigated]) #highlight-cell ~ #selection-cell ~ #popin-cell {
+	grid-column: 3 / -2;
+}
+
+#highlight-cell ~ #popin-cell {
+	grid-column-start: 2;
+}
+
+#highlight-cell ~ #selection-cell ~ #popin-cell {
+	grid-column-start: 3;
+}

@@ -123,7 +123,10 @@ class TableSelectionMulti extends TableSelectionBase {
 
 		if (selectionChanged) {
 			this.setSelectedAsSet(selectedSet);
-			fireEvent && this.fireDecoratorEvent("change");
+			if (fireEvent) {
+				this.fireDecoratorEvent("change");
+				this._announceSelectionChange(selected);
+			}
 		}
 	}
 
@@ -332,6 +335,7 @@ class TableSelectionMulti extends TableSelectionBase {
 		}
 
 		selectionChanged && this.fireDecoratorEvent("change");
+		selectionChanged && this._announceSelectionChange(this._rangeSelection.selected);
 	}
 
 	_stopRangeSelection() {

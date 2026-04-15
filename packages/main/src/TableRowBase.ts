@@ -37,6 +37,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	@property({ type: Boolean, noAttribute: true })
 	_renderNavigated = false;
 
+	@property({ type: Boolean })
+	_hasHighlight = false;
+
 	@property({ type: Boolean, noAttribute: true })
 	_alternate = false;
 

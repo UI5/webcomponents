@@ -37,6 +37,7 @@
 	padding: 0;
 	inset-inline-start: 0;
 	min-width: auto;
+	justify-content: center;
 }
 
 #actions-cell {

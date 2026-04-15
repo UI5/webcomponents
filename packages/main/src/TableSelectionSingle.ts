@@ -52,7 +52,10 @@ class TableSelectionSingle extends TableSelectionBase {
 		const rowKey = this.getRowKey(row);
 		if (rowKey) {
 			this.selected = selected ? rowKey : undefined;
-			fireEvent && this.fireDecoratorEvent("change");
+			if (fireEvent) {
+				this.fireDecoratorEvent("change");
+				this._announceSelectionChange(selected);
+			}
 		}
 	}
 
