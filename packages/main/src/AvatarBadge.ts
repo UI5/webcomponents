@@ -72,6 +72,7 @@ class AvatarBadge extends UI5Element {
 	 * If no icon accessible name is available, a generic fallback text is used.
 	 * @default undefined
 	 * @public
+ 	 * @since 2.22.0
 	 */
 	@property()
 	accessibleName?: string;
