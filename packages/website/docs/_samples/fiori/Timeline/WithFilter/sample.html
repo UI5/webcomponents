@@ -1,0 +1,47 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
+    <!-- playground-fold-end -->
+
+    <ui5-timeline id="timeline">
+        <ui5-timeline-header-bar slot="headerBar" show-filter show-sort filter-by="Category">
+            <ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
+            <ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
+            <ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+        </ui5-timeline-header-bar>
+
+        <ui5-timeline-item data-category="Meetings" data-date="2024-03-10T09:00" title-text="Sprint Planning" subtitle-text="10.03.2024 09:00" icon="calendar" name="Sarah Chen">
+            Kick-off for Sprint 24
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Development" data-date="2024-03-10T11:30" title-text="Code Review" subtitle-text="10.03.2024 11:30" icon="developer-settings" name="James Rivera">
+            Review authentication module refactor
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Releases" data-date="2024-03-11T06:00" title-text="Deploy v2.5.1" subtitle-text="11.03.2024 06:00" icon="upload" name="DevOps Pipeline" state="Positive">
+            Staging deployment successful
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Meetings" data-date="2024-03-11T14:00" title-text="Client Call" subtitle-text="11.03.2024 14:00" icon="phone" name="Emily Watson">
+            Discussed Q2 roadmap priorities
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Development" data-date="2024-03-12T10:30" title-text="Performance Fix" subtitle-text="12.03.2024 10:30" icon="performance" name="Li Wei" state="Critical">
+            Fixed N+1 query in dashboard endpoint
+        </ui5-timeline-item>
+    </ui5-timeline>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
