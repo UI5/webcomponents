@@ -170,6 +170,8 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	lastItem = false;
 
 	/**
+	 * Used internally by TimelineGroupItem for collapse/expand mechanics.
+	 * Applications should not use this for filtering — instead, add/remove items from the DOM.
 	 * @private
 	 */
 	@property({ type: Boolean })

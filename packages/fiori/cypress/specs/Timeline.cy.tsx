@@ -1,12 +1,14 @@
 import Timeline from "../../src/Timeline.js";
+import type { TimelineSearchEventDetail, TimelineSortEventDetail } from "../../src/Timeline.js";
 import TimelineItem from "../../src/TimelineItem.js";
 import TimelineGroupItem from "../../src/TimelineGroupItem.js";
+import TimelineHeaderBar from "../../src/TimelineHeaderBar.js";
+import TimelineFilterOption from "../../src/TimelineFilterOption.js";
 import accept from "@ui5/webcomponents-icons/dist/accept.js";
 import calendar from "@ui5/webcomponents-icons/dist/calendar.js";
 import messageInformation from "@ui5/webcomponents-icons/dist/message-information.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
-import UI5Element from "@ui5/webcomponents-base";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
 
@@ -77,10 +79,10 @@ describe("Timeline general interaction", () => {
 				$item.get(0).addEventListener("name-click", cy.stub().as("clicked"));
 			});
 
-		cy.get("ui5-timeline-item")
+		cy.get("[ui5-timeline-item]")
 			.shadow()
-			.find("ui5-link")
-			.click();
+			.find("[ui5-link]")
+			.realClick();
 
 		cy.get("@clicked").should("have.been.calledOnce");
 	});
@@ -115,7 +117,7 @@ describe("Timeline with group items interactions", () => {
 
 		cy.get("@groupItem")
 			.eq(0)
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.should("have.length", 4);
 	});
 
@@ -165,7 +167,7 @@ describe("Timeline with group items interactions", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@currentGroup")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.eq(1)
 			.should("be.focused");
 	});
@@ -242,12 +244,12 @@ describe("Timeline with growing mode", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
-			.click();
+			.realClick();
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("be.focused");
 
@@ -261,7 +263,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("be.focused");
 	});
@@ -286,7 +288,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowDown");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.last()
 			.should("not.be.focused");
 
@@ -296,7 +298,7 @@ describe("Timeline with growing mode", () => {
 		cy.realPress("ArrowUp");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.should("not.be.focused");
 	});
@@ -318,7 +320,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -353,7 +355,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -389,7 +391,7 @@ describe("Keyboard interactions", () => {
 			.as("timeline");
 
 		cy.get("@timeline")
-			.find("ui5-timeline-item")
+			.find("[ui5-timeline-item]")
 			.first()
 			.as("firstItem")
 			.realClick();
@@ -443,14 +445,14 @@ describe("Accessibility", () => {
 	});
 
 	it("item with state attribute has aria-description, item without state does not", () => {
-		cy.get(`ui5-timeline-item[state="Positive"]`).each($itemWithState => {
+		cy.get(`[ui5-timeline-item][state="Positive"]`).each($itemWithState => {
 			cy.wrap($itemWithState)
 				.shadow()
 				.find(".ui5-tli-bubble")
 				.should("have.attr", "aria-description");
 		});
 
-		cy.get(`ui5-timeline-item:not([state="Positive"])`).each($itemWithoutState => {
+		cy.get(`[ui5-timeline-item]:not([state="Positive"])`).each($itemWithoutState => {
 			cy.wrap($itemWithoutState)
 				.shadow()
 				.find(".ui5-tli-bubble")
@@ -478,11 +480,12 @@ describe("Timeline - getFocusDomRef", () => {
 			</Timeline>
 		);
 
-		cy.get<UI5Element>("[ui5-timeline], #firstItem")
-			.then(($el) => {
-				const timeline = $el[0],
-					firstItem = $el[1];
-    				expect(timeline.getFocusDomRef()).to.equal(firstItem.getFocusDomRef());
+		cy.get<Timeline>("[ui5-timeline]")
+			.then(($timeline) => {
+				cy.get<TimelineItem>("#firstItem")
+					.then(($firstItem) => {
+						expect($timeline[0].getFocusDomRef()).to.equal($firstItem[0].getFocusDomRef());
+					});
 			});
 	});
 
@@ -496,17 +499,15 @@ describe("Timeline - getFocusDomRef", () => {
 		);
 
 		cy.get("[ui5-timeline]")
-			.as("timeline");
-
-		cy.get("[ui5-timeline]")
 			.find("#lastItem")
 			.realClick();
 
-		cy.get<UI5Element>("[ui5-timeline], #lastItem")
-			.then(($el) => {
-				const timeline = $el[0],
-					lastItem = $el[1];
-    				expect(timeline.getFocusDomRef()).to.equal(lastItem.getFocusDomRef());
+		cy.get<Timeline>("[ui5-timeline]")
+			.then(($timeline) => {
+				cy.get<TimelineItem>("#lastItem")
+					.then(($lastItem) => {
+						expect($timeline[0].getFocusDomRef()).to.equal($lastItem[0].getFocusDomRef());
+					});
 			});
 	});
 });
@@ -581,4 +582,305 @@ describe("TimelineItem iconTooltip", () => {
 	});
 });
 
+describe("Timeline Header Bar", () => {
+	describe("Search functionality", () => {
+		it("should show header bar when slotted", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch />
+					<TimelineItem titleText="Meeting" />
+					<TimelineItem titleText="Call" />
+				</Timeline>
+			);
 
+			cy.get("[ui5-timeline]")
+				.shadow()
+				.find(".ui5-timeline-header-bar-wrapper")
+				.should("exist");
+		});
+
+		it("should fire search event when user types in search input", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline]").then($timeline => {
+				$timeline.get(0).addEventListener("search", cy.stub().as("searchEvent"));
+			});
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-input]")
+				.realClick();
+
+			cy.realType("Meeting");
+
+			cy.get("@searchEvent").should("have.been.called");
+		});
+
+		it("should include search value in event detail", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			let searchValue = "";
+			cy.get("[ui5-timeline]").then($timeline => {
+				$timeline.get(0).addEventListener("search", (e: CustomEvent<TimelineSearchEventDetail>) => {
+					searchValue = e.detail.value;
+				});
+			});
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-input]")
+				.realClick();
+
+			cy.realType("Test");
+
+			cy.wrap(null).then(() => {
+				expect(searchValue).to.equal("Test");
+			});
+		});
+	});
+
+	describe("Filter functionality", () => {
+		it("should show filter button when showFilter is true", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<TimelineFilterOption text="Open" />
+						<TimelineFilterOption text="Closed" />
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.should("exist");
+		});
+
+		it("should fire filter event when filter selection changes", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<TimelineFilterOption text="Open" />
+						<TimelineFilterOption text="Closed" />
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline]").then($timeline => {
+				$timeline.get(0).addEventListener("filter", cy.stub().as("filterEvent"));
+			});
+
+			// Click the filter button to open the dialog
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.realClick();
+
+			// Select the first option in the dialog list
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-dialog]")
+				.find("[ui5-li]")
+				.first()
+				.realClick();
+
+			// Confirm the dialog
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-dialog]")
+				.find("[ui5-button][design='Emphasized']")
+				.realClick();
+
+			cy.get("@filterEvent").should("have.been.called");
+		});
+	});
+
+	describe("Sort functionality", () => {
+		it("should show sort button when showSort is true", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSort />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.should("exist");
+		});
+
+		it("should fire sort event when user clicks sort button", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSort />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline]").then($timeline => {
+				$timeline.get(0).addEventListener("sort", cy.stub().as("sortEvent"));
+			});
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.realClick();
+
+			cy.get("@sortEvent").should("have.been.called");
+		});
+
+		it("should toggle sort order on consecutive clicks", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSort />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			const sortOrders: string[] = [];
+			cy.get("[ui5-timeline]").then($timeline => {
+				$timeline.get(0).addEventListener("sort", (e: CustomEvent<TimelineSortEventDetail>) => {
+					sortOrders.push(e.detail.sortOrder);
+				});
+			});
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.as("sortButton");
+
+			cy.get("@sortButton").realClick();
+			cy.get("@sortButton").realClick();
+			cy.get("@sortButton").realClick();
+
+			cy.wrap(null).then(() => {
+				expect(sortOrders).to.deep.equal(["Descending", "Ascending", "Descending"]);
+			});
+		});
+	});
+
+	describe("Accessibility", () => {
+		it("should have correct ARIA role on header bar", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch showFilter showSort />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar]")
+				.shadow()
+				.find("[role='toolbar']")
+				.should("exist");
+		});
+
+		it("should have accessible name on search input", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch />
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-input]")
+				.should("have.attr", "accessible-name");
+		});
+	});
+
+	describe("Combined features", () => {
+		it("should support all features together", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showSearch showFilter showSort filterBy="Category">
+						<TimelineFilterOption text="Work" />
+						<TimelineFilterOption text="Personal" />
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Work Meeting" />
+					<TimelineItem titleText="Personal Call" />
+				</Timeline>
+			);
+
+			// Search input should exist
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-input]")
+				.should("exist");
+
+			// Toolbar buttons should exist (sort + filter = 2 buttons)
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-toolbar-button]")
+				.should("have.length", 2);
+		});
+	});
+
+	describe("Application-side filtering", () => {
+		it("application can remove items from DOM based on search event", () => {
+			cy.mount(
+				<Timeline id="appFilterTimeline">
+					<TimelineHeaderBar slot="headerBar" showSearch />
+					<TimelineItem titleText="Meeting with John" />
+					<TimelineItem titleText="Call with Jane" />
+				</Timeline>
+			);
+
+			// Application handles filtering by removing non-matching items from DOM
+			cy.get("[ui5-timeline]").then($timeline => {
+				const timeline = $timeline.get(0) as Timeline;
+				const allItems = Array.from(timeline.querySelectorAll("[ui5-timeline-item]")) as TimelineItem[];
+
+				timeline.addEventListener("search", (e: CustomEvent<TimelineSearchEventDetail>) => {
+					const searchValue = e.detail.value.toLowerCase();
+
+					if (searchValue === "") {
+						// Restore all items when search is cleared
+						allItems.forEach(item => {
+							if (!item.parentElement) {
+								timeline.appendChild(item);
+							}
+						});
+					} else {
+						// Remove non-matching items from DOM
+						allItems.forEach(item => {
+							const titleText = item.titleText?.toLowerCase() || "";
+							if (!titleText.includes(searchValue)) {
+								item.remove();
+							} else if (!item.parentElement) {
+								timeline.appendChild(item);
+							}
+						});
+					}
+				});
+			});
+
+			// Type in search
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find("[ui5-input]")
+				.realClick();
+
+			cy.realType("Meeting");
+
+			// Application filtered - only matching item remains in DOM
+			cy.get("[ui5-timeline-item]").should("have.length", 1);
+			cy.get("[ui5-timeline-item]").eq(0).should("have.attr", "title-text", "Meeting with John");
+		});
+	});
+});
