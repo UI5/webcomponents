@@ -43,6 +43,38 @@
         <ui5-group-item slot="groupItems" text="Company"></ui5-group-item>
         <ui5-group-item slot="groupItems" text="Department"></ui5-group-item>
         <ui5-group-item slot="groupItems" text="(Not Grouped)"></ui5-group-item>
+
+        <ui5-view-settings-custom-tab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings" selected>
+            <div style="padding: 0.75rem; display: grid; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                    <span>Compact mode</span>
+                    <ui5-switch id="prefCompact"></ui5-switch>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                    <span>Live updates</span>
+                    <ui5-switch id="prefLive" checked></ui5-switch>
+                </div>
+                <ui5-segmented-button id="prefDensity">
+                    <ui5-segmented-button-item selected>Cozy</ui5-segmented-button-item>
+                    <ui5-segmented-button-item>Compact</ui5-segmented-button-item>
+                </ui5-segmented-button>
+            </div>
+        </ui5-view-settings-custom-tab>
+
+        <ui5-view-settings-custom-tab slot="customTabs" title="Display" tooltip="Display" icon="palette">
+            <div style="padding: 0.75rem; display: grid; gap: 0.75rem;">
+                <ui5-segmented-button id="displayLayout">
+                    <ui5-segmented-button-item selected>List</ui5-segmented-button-item>
+                    <ui5-segmented-button-item>Grid</ui5-segmented-button-item>
+                </ui5-segmented-button>
+                <ui5-combobox id="displayTheme" placeholder="Theme">
+                    <ui5-cb-item text="Default"></ui5-cb-item>
+                    <ui5-cb-item text="High Contrast"></ui5-cb-item>
+                    <ui5-cb-item text="Compact Light"></ui5-cb-item>
+                </ui5-combobox>
+                <ui5-step-input id="displayRows" min="10" max="100" value="25"></ui5-step-input>
+            </div>
+        </ui5-view-settings-custom-tab>
     </ui5-view-settings-dialog>
     <br />
     <br />

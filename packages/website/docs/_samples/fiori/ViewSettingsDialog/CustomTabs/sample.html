@@ -1,0 +1,50 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 400px;">
+	<!-- playground-fold-end -->
+
+	<ui5-button id="btnOpenDialog">Open ViewSettingsDialog with Custom Tabs</ui5-button>
+
+	<ui5-view-settings-dialog id="vsd" enable-reset>
+		<ui5-sort-item slot="sortItems" text="Name" selected=""></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Position"></ui5-sort-item>
+		<ui5-sort-item slot="sortItems" text="Company"></ui5-sort-item>
+
+		<ui5-view-settings-custom-tab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings">
+			<div style="padding: 0.75rem; display: grid; gap: 0.75rem;">
+				<div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+					<span>Compact mode</span>
+					<ui5-switch></ui5-switch>
+				</div>
+				<div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+					<span>Live updates</span>
+					<ui5-switch checked></ui5-switch>
+				</div>
+			</div>
+		</ui5-view-settings-custom-tab>
+
+		<ui5-view-settings-custom-tab slot="customTabs" title="Display" tooltip="Display" icon="palette">
+			<div style="padding: 0.75rem; display: grid; gap: 0.75rem;">
+				<ui5-segmented-button>
+					<ui5-segmented-button-item selected>List</ui5-segmented-button-item>
+					<ui5-segmented-button-item>Grid</ui5-segmented-button-item>
+				</ui5-segmented-button>
+				<ui5-step-input min="10" max="100" value="25"></ui5-step-input>
+			</div>
+		</ui5-view-settings-custom-tab>
+	</ui5-view-settings-dialog>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
