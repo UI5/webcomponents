@@ -50,12 +50,22 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	 * **Note:** Only one item must be selected per <code>ui5-color-palette</code>.
 	 * If more than one item is defined as selected, the last one would be considered as the selected one.
 	 *
-	 * @public
 	 * @default false
+	 * @public
 	 * @since 2.0.0
 	 */
 	@property({ type: Boolean })
 	selected = false;
+
+	/**
+	 * Defines the tooltip of the component. When not set, the color value is used as the tooltip.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	tooltip?: string;
 
 	/**
 	 * Defines the tab-index of the element, helper information for the ItemNavigation.
@@ -105,6 +115,10 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 	get colorLabel() {
 		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
+	}
+
+	get getLabelText(): string {
+		return `${this.colorLabel} - ${this.index}: ${this.tooltip || this.value}`;
 	}
 
 	get classes() {
