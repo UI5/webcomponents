@@ -1,7 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 // Template
@@ -9,6 +11,8 @@ import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
 
 // Styles
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
+
+import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
@@ -62,6 +66,17 @@ class AvatarBadge extends UI5Element {
 	icon?: string;
 
 	/**
+	 * Defines the custom text alternative of the badge icon.
+	 *
+	 * **Note:** If not provided, the badge uses the icon accessible name.
+	 * If no icon accessible name is available, a generic fallback text is used.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the state of the badge, which determines its styling.
 	 *
 	 * Available options:
@@ -83,8 +98,31 @@ class AvatarBadge extends UI5Element {
 	@property({ type: Boolean })
 	invalid = false;
 
+	/**
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	effectiveAccessibleName?: string;
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
 	onBeforeRendering() {
-		this.invalid = !this.icon || !getIconDataSync(this.icon);
+		const iconData = this.icon ? getIconDataSync(this.icon) : undefined;
+		this.invalid = !this.icon || !iconData;
+
+		if (this.invalid) {
+			this.effectiveAccessibleName = undefined;
+		} else if (this.accessibleName) {
+			// User-provided accessible name takes precedence
+			this.effectiveAccessibleName = this.accessibleName;
+		} else {
+			// Derive from icon name (e.g., "edit" -> "Edit")
+			// If not possible, fall back to i18n "Avatar" text
+			this.effectiveAccessibleName = this.icon
+				? this.icon.charAt(0).toUpperCase() + this.icon.slice(1)
+				: AvatarBadge.i18nBundle.getText(AVATAR_TOOLTIP);
+		}
 	}
 }
 
