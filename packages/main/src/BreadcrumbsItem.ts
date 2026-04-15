@@ -37,7 +37,7 @@ type BreadcrumbsItemClickEventDetail = {
  * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
  * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
  * @public
- * @since 2.10.0
+ * @since 2.22.0
  */
 @eventStrict("click", {
 	bubbles: true,
