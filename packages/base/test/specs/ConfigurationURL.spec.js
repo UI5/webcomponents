@@ -53,11 +53,8 @@ describe("Some settings can be set via SAP UI URL params", () => {
 			const config = window['sap-ui-webcomponents-bundle'].configuration;
 			done(config.getThemeRoot());
 		});
-		location = await browser.executeAsync(done => {
-			done(window.location);
-		});
 
-		assert.strictEqual(res, `${location.origin}`, `Theme root is ${location.origin}`);
+		assert.strictEqual(res, `https://another-example.com`, `Theme root is https://another-example.com`);
 
 		// The origin https://another-example.com is not in allowed origins and is cross-origin,
 		// so validation fails and no link should be added to the DOM.
