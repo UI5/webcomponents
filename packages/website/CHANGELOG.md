@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
+
+
+### Features
+
+* **ui5-breadcrumbs-item:** introduce click event ([#13353](https://github.com/UI5/webcomponents/issues/13353)) ([aa36cf2](https://github.com/UI5/webcomponents/commit/aa36cf2837ad2604e1a28232d65ab619339c19af)), closes [#13330](https://github.com/UI5/webcomponents/issues/13330)
+* **ui5-color-palette-item:** introduce custom tooltips ([#12828](https://github.com/UI5/webcomponents/issues/12828)) ([506e4e8](https://github.com/UI5/webcomponents/commit/506e4e80e73d9735c5dd522e2011467cabec8b46)), closes [#444444](https://github.com/UI5/webcomponents/issues/444444)
+* **ui5-timeline:** introduce header-bar slot ([#13155](https://github.com/UI5/webcomponents/issues/13155)) ([bdb43dc](https://github.com/UI5/webcomponents/commit/bdb43dcf6100115af185c4af6a219be19270ef43))
+* **ui5-view-settings-dialog:** add custom tabs ([#13325](https://github.com/UI5/webcomponents/issues/13325)) ([52b408a](https://github.com/UI5/webcomponents/commit/52b408ab8b58d77e68b81101a1fe14e716c3dd63))
+
+
+
+
+
 # [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
 
 
