@@ -43,16 +43,11 @@ const setThemeRoot = (themeRoot: string): Promise<void> | undefined => {
 
 	currThemeRoot = themeRoot;
 
-	if (!validateThemeRoot(themeRoot)) {
-		console.warn(`The ${themeRoot} is not valid. Check the allowed origins as suggested in the "setThemeRoot" description.`); // eslint-disable-line
-		return;
-	}
-
 	return attachCustomThemeStylesToHead(getTheme());
 };
 
-const formatThemeLink = (theme: string) => {
-	return `${getThemeRoot()!}Base/baseLib/${theme}/css_variables.css`; // theme root is always set at this point.
+const formatThemeLink = (theme: string, validatedThemeRoot: string) => {
+	return `${validatedThemeRoot}Base/baseLib/${theme}/css_variables.css`;
 };
 
 const attachCustomThemeStylesToHead = async (theme: string): Promise<void> => {
@@ -62,7 +57,20 @@ const attachCustomThemeStylesToHead = async (theme: string): Promise<void> => {
 		document.head.removeChild(link);
 	}
 
-	await createLinkInHead(formatThemeLink(theme), { "sap-ui-webcomponents-theme": theme });
+	const themeRoot = getThemeRoot();
+
+	if (!themeRoot) {
+		return;
+	}
+
+	const validatedThemeRoot = validateThemeRoot(themeRoot);
+
+	if (!validatedThemeRoot) {
+		console.warn(`The ${themeRoot} is not valid. Check the allowed origins as suggested in the "setThemeRoot" description.`); // eslint-disable-line
+		return;
+	}
+
+	await createLinkInHead(formatThemeLink(theme, validatedThemeRoot), { "sap-ui-webcomponents-theme": theme });
 };
 
 export {
