@@ -78,6 +78,7 @@ type DesignCloseButtonTooltip = Record<MessageStripDesign, string>;
  */
 @customElement({
 	tag: "ui5-message-strip",
+	fastNavigation: true,
 	languageAware: true,
 	renderer: jsxRenderer,
 	template: MessageStripTemplate,
