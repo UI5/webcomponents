@@ -291,3 +291,4 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 SegmentedButtonItem.define();
 
 export default SegmentedButtonItem;
+export type { SegmentedButtonItemClickEventDetail };
