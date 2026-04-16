@@ -483,7 +483,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onButtonFocusOut() {
 		setTimeout(() => {
-			if (!this._inputFocused && !this.shadowRoot!.querySelector(":focus")) {
+			if (!this._inputFocused && !this.shadowRoot!.activeElement) {
 				this.inputOuter.removeAttribute("focused");
 			}
 		}, 0);
