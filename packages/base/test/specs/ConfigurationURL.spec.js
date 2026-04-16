@@ -35,7 +35,17 @@ describe("Some settings can be set via SAP UI URL params", () => {
 			const config = window['sap-ui-webcomponents-bundle'].configuration;
 			done(config.getThemeRoot());
 		});
-		assert.strictEqual(res, 'https://example.com/UI5/', "Theme root is https://example.com/UI5");
+		assert.strictEqual(res, 'https://example.com', "Theme root is https://example.com");
+
+		// The origin https://example.com is allowed via sap-allowedThemeOrigins meta tag,
+		// so the link should be added to the DOM.
+		let linkHref = await browser.executeAsync(done => {
+			const link = document.querySelector(`head > link[sap-ui-webcomponents-theme="sap_belize_hcb"]`);
+			done(link ? link.href : null);
+		});
+		assert.ok(linkHref, "A theme link is added to the DOM for an allowed origin");
+		assert.include(linkHref, "https://example.com", "Theme link href contains the allowed theme root");
+		assert.include(linkHref, "sap_belize_hcb/css_variables.css", "Theme link href points to the theme CSS variables file");
 
 		await browser.url("test/pages/Configuration.html?sap-ui-theme=sap_belize_hcb@https://another-example.com");
 
@@ -47,7 +57,15 @@ describe("Some settings can be set via SAP UI URL params", () => {
 			done(window.location);
 		});
 
-		assert.strictEqual(res, `${location.origin}/UI5/`, `Theme root is ${location.origin}/UI5/`);
+		assert.strictEqual(res, `${location.origin}`, `Theme root is ${location.origin}`);
+
+		// The origin https://another-example.com is not in allowed origins and is cross-origin,
+		// so validation fails and no link should be added to the DOM.
+		linkHref = await browser.executeAsync(done => {
+			const link = document.querySelector(`head > link[sap-ui-webcomponents-theme="sap_belize_hcb"]`);
+			done(link ? link.href : null);
+		});
+		assert.isNull(linkHref, "No theme link is added to the DOM for a disallowed cross-origin theme root");
 
 		await browser.url("test/pages/Configuration.html?sap-ui-theme=sap_belize_hcb@./test");
 
@@ -56,7 +74,15 @@ describe("Some settings can be set via SAP UI URL params", () => {
 			done(config.getThemeRoot());
 		});
 
-		assert.ok(res.endsWith("/test/UI5/"), `Theme root is set correctly with relative url`);
+		assert.strictEqual(res, "./test", `Theme root is ./test`);
+
+		// A relative URL is treated as same-origin, so the link should be added to the DOM.
+		linkHref = await browser.executeAsync(done => {
+			const link = document.querySelector(`head > link[sap-ui-webcomponents-theme="sap_belize_hcb"]`);
+			done(link ? link.href : null);
+		});
+		assert.ok(linkHref, "A theme link is added to the DOM for a relative theme root");
+		assert.include(linkHref, "sap_belize_hcb/css_variables.css", "Theme link href points to the theme CSS variables file");
 	});
 
 	it("Tests that animationMode is applied", async () => {
