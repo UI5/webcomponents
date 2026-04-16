@@ -15,8 +15,8 @@ import getCachedLocaleDataInstance from "../getCachedLocaleDataInstance.js";
 const convertMonthNumbersToMonthNames = (firstMonth: number, lastMonth: number, calendarType?: `${CalendarType}`) => {
 	const localeData = getCachedLocaleDataInstance(getLocale());
 	const pattern = localeData.getIntervalPattern("");
-	const secondaryMonthsNames = localeData.getMonthsStandAlone("abbreviated", calendarType) as Array<string>;
-	const secondaryMonthsNamesWide = localeData.getMonthsStandAlone("wide", calendarType) as Array<string>;
+	const secondaryMonthsNames = localeData.getMonthsStandAlone("abbreviated", calendarType);
+	const secondaryMonthsNamesWide = localeData.getMonthsStandAlone("wide", calendarType);
 
 	if (firstMonth === lastMonth) {
 		return {
