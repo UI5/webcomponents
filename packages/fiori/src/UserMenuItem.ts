@@ -60,6 +60,18 @@ class UserMenuItem extends MenuItem {
 	}
 
 	/**
+	 * Overrides the base MenuItem behavior to prevent unchecking
+	 * the currently checked item in single-select mode,
+	 * ensuring there is always a selection.
+	 */
+	_updateCheckedState() {
+		if (this._checkMode === MenuItemGroupCheckMode.Single && this.checked) {
+			return;
+		}
+		super._updateCheckedState();
+	}
+
+	/**
 	 * Returns the text of the currently checked sub-item.
 	 * Only returns text for single-select groups.
 	 */
