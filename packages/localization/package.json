@@ -39,7 +39,7 @@
     "resolve": "^1.20.0"
   },
   "dependencies": {
-    "@types/openui5": "^1.113.0",
+    "@types/openui5": "^1.146.0",
     "@ui5/webcomponents-base": "2.21.0"
   }
 }
