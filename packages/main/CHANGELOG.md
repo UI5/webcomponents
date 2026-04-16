@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.27](https://github.com/UI5/webcomponents/compare/v1.24.26...v1.24.27) (2026-04-16)
+
+
+### Bug Fixes
+
+* **ui5-button:** update aria-label when accessibleNameRef target changes ([#13241](https://github.com/UI5/webcomponents/issues/13241)) ([01ba3db](https://github.com/UI5/webcomponents/commit/01ba3db604f4f4160cc6a05a956bbb26db48b354)), closes [#13101](https://github.com/UI5/webcomponents/issues/13101)
+* **ui5-dialog:** prevent native drag behavior only for header ([#13250](https://github.com/UI5/webcomponents/issues/13250)) ([9c02c2b](https://github.com/UI5/webcomponents/commit/9c02c2bd9d8cb131cf984cef065b6ff2f822907b))
+* **ui5-select:** use accessibleName for option announcements ([#13202](https://github.com/UI5/webcomponents/issues/13202)) ([d5a574c](https://github.com/UI5/webcomponents/commit/d5a574c4b2498c1e002f202457d6a3068bd7cf00)), closes [#11809](https://github.com/UI5/webcomponents/issues/11809)
+
+
+
+
+
 ## [1.24.26](https://github.com/UI5/webcomponents/compare/v1.24.25...v1.24.26) (2026-01-19)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.27](https://github.com/UI5/webcomponents/compare/v1.24.26...v1.24.27) (2026-04-16)
+
+
+### Bug Fixes
+
+* **framework:** improve themeRoot validation ([#13403](https://github.com/UI5/webcomponents/issues/13403)) ([bbdf3ca](https://github.com/UI5/webcomponents/commit/bbdf3ca3cfb41ecbdaae0743a6e58915865c27b4))
+
+
+
+
+
 ## [1.24.26](https://github.com/UI5/webcomponents/compare/v1.24.25...v1.24.26) (2026-01-19)
 
 
