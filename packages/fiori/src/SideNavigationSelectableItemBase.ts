@@ -147,6 +147,16 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	unselectable = false;
 
 	/**
+	 * Defines the accessible ARIA name of the component.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.13.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Defines the additional accessibility attributes that will be applied to the component.
 	 * The following fields are supported:
 	 *

@@ -1,0 +1,79 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <ui5-side-navigation>
+        <!-- Navigation item with accessible name for screen readers -->
+        <ui5-side-navigation-item
+            text="Home"
+            icon="home"
+            accessible-name="Navigate to Home Dashboard">
+        </ui5-side-navigation-item>
+
+        <!-- Parent item with accessible name -->
+        <ui5-side-navigation-item
+            text="Team"
+            icon="group"
+            accessible-name="View and manage team members"
+            expanded>
+            <!-- Sub-items with descriptive accessible names -->
+            <ui5-side-navigation-sub-item
+                text="Members"
+                accessible-name="View all team members and their roles">
+            </ui5-side-navigation-sub-item>
+            <ui5-side-navigation-sub-item
+                text="Permissions"
+                accessible-name="Manage team access and permissions">
+            </ui5-side-navigation-sub-item>
+        </ui5-side-navigation-item>
+
+        <!-- Navigation item with accessibility for reporting section -->
+        <ui5-side-navigation-item
+            text="Reports"
+            icon="action"
+            accessible-name="Access reports and analytics dashboard">
+            <ui5-side-navigation-sub-item
+                text="Sales"
+                accessible-name="View sales performance reports">
+            </ui5-side-navigation-sub-item>
+            <ui5-side-navigation-sub-item
+                text="Revenue"
+                accessible-name="View revenue and financial reports">
+            </ui5-side-navigation-sub-item>
+        </ui5-side-navigation-item>
+
+        <!-- Settings with detailed accessible description -->
+        <ui5-side-navigation-item
+            slot="fixedItems"
+            text="Settings"
+            icon="action-settings"
+            accessible-name="Open application settings and preferences">
+        </ui5-side-navigation-item>
+
+        <!-- Help link with accessible context -->
+        <ui5-side-navigation-item
+            slot="fixedItems"
+            text="Help"
+            icon="sys-help"
+            href="https://help.example.com"
+            target="_blank"
+            unselectable
+            accessible-name="Open help documentation in new window">
+        </ui5-side-navigation-item>
+    </ui5-side-navigation>
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

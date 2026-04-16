@@ -1598,4 +1598,36 @@ describe("Focusable items", () => {
 			.find(".ui5-sn-item-external-link-icon")
 			.should("exist");
 	});
+
+	it("Tests accessibleName for SideNavigationItem", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" />
+				<SideNavigationItem id="item2" text="Settings">
+					<SideNavigationSubItem id="subItem1" text="Profile" accessibleName="User Profile Settings" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+
+		cy.get("#subItem1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "User Profile Settings");
+	});
+
+	it("Tests accessibleName for SideNavigationItem in collapsed mode", () => {
+		cy.mount(
+			<SideNavigation collapsed={true}>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" />
+			</SideNavigation>);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+	});
 });
