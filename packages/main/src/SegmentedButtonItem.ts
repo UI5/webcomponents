@@ -20,7 +20,14 @@ import type { ISegmentedButtonItem } from "./SegmentedButton.js";
 import SegmentedButtonItemTemplate from "./SegmentedButtonItemTemplate.js";
 
 import type { IButton } from "./Button.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.js";
+
+type SegmentedButtonItemClickEventDetail = {
+	originalEvent: Event;
+	item: SegmentedButtonItem;
+};
+
 /**
  * @class
  *
@@ -48,7 +55,26 @@ import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.j
 	template: SegmentedButtonItemTemplate,
 	styles: segmentedButtonItemCss,
 })
+
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {MouseEvent} originalEvent The original mouse event that triggered the selection
+ * @param {SegmentedButtonItem} item The segmented button item that was clicked
+ */
+@event("selection-change", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButtonItem {
+	eventDetails!: {
+		"selection-change": SegmentedButtonItemClickEventDetail,
+	}
 	/**
 	 * Defines whether the component is disabled.
 	 * A disabled component can't be selected or
@@ -193,6 +219,18 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 		if (this.disabled) {
 			e.preventDefault();
 			e.stopPropagation();
+			return;
+		}
+
+		const prevented = !this.fireDecoratorEvent("selection-change", {
+			originalEvent: e,
+			item: this,
+		});
+
+		if (prevented) {
+			// Stop the native MouseEvent from reaching the parent
+			e.stopPropagation();
+			e.preventDefault();
 			return;
 		}
 

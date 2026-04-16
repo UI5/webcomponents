@@ -567,3 +567,80 @@ describe("SegmentedButtonItem Accessibility", () => {
             .should("have.attr", "title", TOOLTIP_TEXT);
     });
 });
+
+describe("SegmentedButtonItem: selection-change event", () => {
+	it("should fire selection-change event when item is clicked", () => {
+		const selectionChangeSpy = cy.spy().as("selectionChangeSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("selection-change", selectionChangeSpy);
+			});
+
+		cy.get("#item2")
+			.ui5SegmentedButtonItemToggleSelect();
+
+		cy.get("@selectionChangeSpy").should("have.been.calledOnce");
+	});
+
+	it("should prevent selection when preventDefault is called", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("selection-change", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		// Item 1 should be selected initially
+		cy.get("#item1").should("have.attr", "selected");
+		cy.get("#item2").should("not.have.attr", "selected");
+
+		// Click item 2
+		cy.get("#item2").realClick();
+
+		// Item 2 should NOT be selected because we called preventDefault
+		cy.get("#item1").should("have.attr", "selected");
+		cy.get("#item2").should("not.have.attr", "selected");
+	});
+
+	it("should not fire selection-change event when disabled item is clicked", () => {
+		const selectionChangeSpy = cy.spy().as("selectionChangeSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2" disabled>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("selection-change", selectionChangeSpy);
+			});
+
+		// Click the disabled item directly
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.click({ force: true });
+
+		cy.get("@selectionChangeSpy").should("not.have.been.called");
+		cy.get("#item2").should("not.have.attr", "selected");
+	});
+
+});
+	
