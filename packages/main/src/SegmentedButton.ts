@@ -230,9 +230,7 @@ class SegmentedButton extends UI5Element {
 
 		switch (this.selectionMode) {
 		case SegmentedButtonSelectionMode.Multiple:
-			if (e instanceof KeyboardEvent) {
-				target.selected = !target.selected;
-			}
+			target.selected = !target.selected;
 			break;
 		default:
 			this._applySingleSelection(target as unknown as ISegmentedButtonItem);
@@ -241,7 +239,6 @@ class SegmentedButton extends UI5Element {
 		this.fireDecoratorEvent("selection-change", {
 			selectedItems: this.selectedItems,
 		});
-		console.log("parent click");
 
 		this._itemNavigation.setCurrentItem(target);
 

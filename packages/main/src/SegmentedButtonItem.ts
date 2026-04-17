@@ -24,8 +24,10 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.js";
 
 type SegmentedButtonItemClickEventDetail = {
-	originalEvent: Event;
-	item: SegmentedButtonItem;
+	altKey: boolean;
+	ctrlKey: boolean;
+	metaKey: boolean;
+	shiftKey: boolean;
 };
 
 /**
@@ -61,10 +63,12 @@ type SegmentedButtonItemClickEventDetail = {
  *
  * **Note:** The event will not be fired if the `disabled` property is set to `true`.
  *
+ * @param {boolean} altKey Returns whether the "ALT" key was pressed when the event was triggered.
+ * @param {boolean} ctrlKey Returns whether the "CTRL" key was pressed when the event was triggered.
+ * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
+ * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
  * @since 2.22.0
  * @public
- * @param {MouseEvent} originalEvent The original mouse event that triggered the selection
- * @param {SegmentedButtonItem} item The segmented button item that was clicked
  */
 @event("click", {
 	bubbles: true,
@@ -221,24 +225,28 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 			e.stopPropagation();
 			return;
 		}
-		console.log("item click");
+
+		e.stopImmediatePropagation();
+
+		const {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		} = e;
+
 		// Fire semantic click event (CustomEvent that bubbles)
 		const prevented = !this.fireDecoratorEvent("click", {
-			originalEvent: e,
-			item: this,
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
 		});
-
-		console.log("item click event fired, prevented:", prevented);
 
 		if (prevented) {
 			e.preventDefault();
 			e.stopPropagation();
-			return;
 		}
-
-		
-
-		this.selected = !this.selected;
 	}
 
 	onEnterDOM() {
