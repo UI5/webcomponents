@@ -195,6 +195,16 @@ abstract class ListItem extends ListItemBase {
 	_selectionMode: `${ListSelectionMode}` = "None";
 
 	/**
+	 * Indicates whether the list item is in edit mode.
+	 * When active, Tab cycles through internal focusable elements
+	 * instead of navigating to the next list item.
+	 * Toggled by F2 or F7.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_editMode = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @default "S"
 	 * @private
@@ -314,6 +324,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onfocusout(e: FocusEvent) {
+		if (this._editMode) {
+			const relatedTarget = e.relatedTarget as Node;
+			if (!relatedTarget || !(this.contains(relatedTarget) || this.shadowRoot!.contains(relatedTarget))) {
+				this._editMode = false;
+			}
+		}
+
 		if (e.target !== this.getFocusDomRef()) {
 			return;
 		}
@@ -518,10 +535,51 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (activeElement === focusDomRef) {
+			this._editMode = true;
 			const firstFocusable = await getFirstFocusableElement(focusDomRef);
 			firstFocusable?.focus();
 		} else {
+			this._editMode = false;
 			focusDomRef.focus();
+		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+			const nextIndex = currentIndex + 1;
+
+			if (nextIndex < focusables.length) {
+				e.preventDefault();
+				focusables[nextIndex].focus();
+			} else if (!this.fireDecoratorEvent("forward-after")) {
+				e.preventDefault();
+			}
+			return;
+		}
+
+		if (!this.fireDecoratorEvent("forward-after")) {
+			e.preventDefault();
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+
+			if (currentIndex > 0) {
+				e.preventDefault();
+				focusables[currentIndex - 1].focus();
+			} else if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
+			return;
+		}
+
+		if (!this.fireDecoratorEvent("forward-before")) {
+			e.preventDefault();
 		}
 	}
 

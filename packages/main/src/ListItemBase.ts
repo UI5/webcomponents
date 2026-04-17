@@ -53,6 +53,7 @@ type ListItemBasePressEventDetail = {
 })
 @event("forward-before", {
 	bubbles: true,
+	cancelable: true,
 })
 class ListItemBase extends UI5Element implements ITabbable {
 	eventDetails!: {
