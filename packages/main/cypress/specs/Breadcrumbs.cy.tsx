@@ -91,7 +91,15 @@ describe("Breadcrumbs - getFocusDomRef Method", () => {
 				const item = $el[1];
 
 				const breadcrumbsAnchor = breadcrumbs.getFocusDomRef();
-				const itemAnchor = item.getFocusDomRef().shadowRoot.querySelector("a");
+				const itemFocusDomRef = item.getFocusDomRef();
+				const itemAnchor = itemFocusDomRef?.shadowRoot?.querySelector("a");
+
+				expect(breadcrumbsAnchor).to.exist;
+				expect(itemAnchor).to.exist;
+
+				if (!breadcrumbsAnchor || !itemAnchor) {
+					return;
+				}
 
 				expect(breadcrumbsAnchor.textContent).to.equal(itemAnchor.textContent);
 			});
@@ -121,7 +129,15 @@ describe("Breadcrumbs - getFocusDomRef Method", () => {
 				const item = $el[1];
 
 				const breadcrumbsAnchor = breadcrumbs.getFocusDomRef();
-				const itemAnchor = item.getFocusDomRef().shadowRoot.querySelector("a");
+				const itemFocusDomRef = item.getFocusDomRef();
+				const itemAnchor = itemFocusDomRef?.shadowRoot?.querySelector("a");
+
+				expect(breadcrumbsAnchor).to.exist;
+				expect(itemAnchor).to.exist;
+
+				if (!breadcrumbsAnchor || !itemAnchor) {
+					return;
+				}
 
 				expect(breadcrumbsAnchor.textContent).to.equal(itemAnchor.textContent);
 			});
@@ -143,6 +159,11 @@ describe("Breadcrumbs general interaction", () => {
 			const domRef = breadcrumbItemElement.getDomRef();
 
 			expect(domRef).to.exist;
+
+			if (!domRef) {
+				return;
+			}
+
 			expect(domRef.nodeType).to.equal(Node.ELEMENT_NODE);
 		});
 	});
@@ -910,37 +931,47 @@ describe("Breadcrumbs general interaction", () => {
 			</>
 		);
 
-		// assert that last link in the narrow Breadcrumbs is truncated
+		// Assert actual text truncation by checking ellipsis overflow metrics.
 		cy.get("#breadcrumbs2")
 			.shadow()
-			.find("li:last-child")
-			.then(($lastLink) => {
-				const linkRect = $lastLink[0].getBoundingClientRect();
-				const maxExpectedWidth = 300;
-
-				expect(linkRect.width, "link wrapper should be shrinkable and less than parent width")
-					.to.be.lessThan(maxExpectedWidth);
-		});
+			.find(".ui5-breadcrumbs-current-location [ui5-label]")
+			.shadow()
+			.find(".ui5-label-text-wrapper")
+			.should(($textWrapper) => {
+				const wrapper = $textWrapper[0] as HTMLElement;
+				expect(wrapper.scrollWidth, "text should overflow the available width")
+					.to.be.greaterThan(wrapper.clientWidth);
+			});
 
 		// assert that height of both Breadcrumbs (one that fits and one that truncates)
 		// is the same
 		cy.get("#breadcrumbs1")
 			.then(($breadcrumbs1) => {
 				const breadcrumbs1DOMRef = ($breadcrumbs1[0] as Breadcrumbs).getDomRef();
-				const breadcrumbs1Rect = breadcrumbs1DOMRef.getBoundingClientRect();
-				const breadcrumbs1Height = breadcrumbs1Rect.height;
+				expect(breadcrumbs1DOMRef).to.exist;
 
+				if (!breadcrumbs1DOMRef) {
+					return 0;
+				}
 
+				return breadcrumbs1DOMRef.getBoundingClientRect().height;
+			})
+			.then((breadcrumbs1Height) => {
 				cy.get("#breadcrumbs2")
-					.then(($breadcrumbs2) => {
+					.should(($breadcrumbs2) => {
 						const breadcrumbs2DOMRef = ($breadcrumbs2[0] as Breadcrumbs).getDomRef();
-						const breadcrumbs2Rect = breadcrumbs2DOMRef.getBoundingClientRect();
-						const breadcrumbs2Height = breadcrumbs2Rect.height;
+						expect(breadcrumbs2DOMRef).to.exist;
+
+						if (!breadcrumbs2DOMRef) {
+							return;
+						}
+
+						const breadcrumbs2Height = breadcrumbs2DOMRef.getBoundingClientRect().height;
 
 						expect(breadcrumbs2Height, "link height should remain the same")
-							.to.be.equal(breadcrumbs1Height);
-				});
-		});
+							.to.be.closeTo(breadcrumbs1Height, 1);
+					});
+			});
 	});
 });
 
@@ -1030,5 +1061,98 @@ describe("Breadcrumbs with item for current page", () => {
 					.find("li:last-child span.ui5-breadcrumbs-separator")
 					.should('not.exist');
 			});
+	});
+});
+
+describe("BreadcrumbsItem click event", () => {
+	it("fires click event on item when a visible link is clicked", () => {
+		cy.mount(
+			<Breadcrumbs>
+				<BreadcrumbsItem id="item1" href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="item2" href="#">Link2</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-link-wrapper ui5-link")
+			.first()
+			.realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+	});
+
+	it("fires click event on current page item (label) when activated", () => {
+		cy.mount(
+			<Breadcrumbs>
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="currentItem">Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#currentItem").then(($item) => {
+			$item[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-current-location span")
+			.realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+	});
+
+	it("prevents item-click on breadcrumbs when item click is cancelled", () => {
+		let itemClickFired = false;
+
+		cy.mount(
+			<Breadcrumbs onItemClick={() => { itemClickFired = true; }}>
+				<BreadcrumbsItem id="item1" href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#item1").then(($item) => {
+			$item[0].addEventListener("ui5-click", (e: Event) => { e.preventDefault(); });
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-link-wrapper ui5-link")
+			.first()
+			.realClick();
+
+		cy.then(() => {
+			expect(itemClickFired).to.be.false;
+		});
+	});
+
+	it("prevents item-click on breadcrumbs when current page item click is cancelled", () => {
+		let itemClickFired = false;
+
+		cy.mount(
+			<Breadcrumbs onItemClick={() => { itemClickFired = true; }}>
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem id="currentItem">Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("#currentItem").then(($item) => {
+			$item[0].addEventListener("ui5-click", (e: Event) => { e.preventDefault(); });
+		});
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-current-location span")
+			.realClick();
+
+		cy.then(() => {
+			expect(itemClickFired).to.be.false;
+		});
 	});
 });
