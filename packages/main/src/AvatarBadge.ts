@@ -2,7 +2,7 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
@@ -11,6 +11,8 @@ import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+
+const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 
 /**
  * @class
@@ -83,8 +85,15 @@ class AvatarBadge extends UI5Element {
 	@property({ type: Boolean })
 	invalid = false;
 
-	onBeforeRendering() {
-		this.invalid = !this.icon || !getIconDataSync(this.icon);
+	async onBeforeRendering() {
+		const icon = this.icon;
+		if (!icon) {
+			this.invalid = true;
+			return;
+		}
+
+		const iconData = getIconDataSync(icon) || await getIconData(icon);
+		this.invalid = !iconData || iconData === ICON_NOT_FOUND;
 	}
 }
 
