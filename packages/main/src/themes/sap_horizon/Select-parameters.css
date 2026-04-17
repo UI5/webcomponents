@@ -2,6 +2,8 @@
 
 :host {
 	--_ui5_select_hover_icon_left_border: none;
-	--_ui5_select_icon_wrapper_height: calc(100% - 0.0625rem);
-	--_ui5_select_icon_wrapper_state_height: calc(100% - 0.125rem);
+	--_ui5_select_icon_wrapper_height: 100%;
+	--_ui5_select_icon_wrapper_state_height: 100%;
+	--_ui5_input_icon_hover_bg: transparent;
+	--_ui5_select_bottom_border_gradient: linear-gradient(var(--sapField_BorderColor), var(--sapField_BorderColor)) bottom / 100% var(--sapField_BorderWidth) no-repeat;
 }

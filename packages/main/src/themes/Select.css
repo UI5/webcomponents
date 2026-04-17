@@ -25,6 +25,7 @@
 	cursor: pointer;
 	overflow: hidden;
 	border-radius: var(--_ui5_input_border_radius);
+	background: var(--_ui5_select_bottom_border_gradient);
 }
 
 .ui5-select-label-root {

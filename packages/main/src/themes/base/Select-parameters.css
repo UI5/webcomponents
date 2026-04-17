@@ -3,6 +3,8 @@
 	--_ui5_select_label_color: var(--sapField_TextColor);
 	--_ui5_select_icon_width: 2.25rem;
 	--_ui5_select_icon_wrapper_height: 100%;
+	--_ui5_select_bottom_border_gradient: none;
+	--_ui5_select_icon_wrapper_state_height: calc(100% - 0.125rem);
 }
 
 @container style(--ui5_content_density: compact) {
