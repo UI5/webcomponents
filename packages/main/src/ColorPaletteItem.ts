@@ -10,9 +10,17 @@ import ColorPaletteItemTemplate from "./ColorPaletteItemTemplate.js";
 import {
 	COLORPALETTE_COLOR_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 
 // Styles
 import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
+
+type ColorPaletteItemNativeClickEventDetail = {
+	altKey: boolean;
+	ctrlKey: boolean;
+	metaKey: boolean;
+	shiftKey: boolean;
+};
 
 /**
  * @class
@@ -33,7 +41,27 @@ import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
 	template: ColorPaletteItemTemplate,
 	shadowRootOptions: { delegatesFocus: true },
 })
+
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @param {boolean} altKey Returns whether the "ALT" key was pressed when the event was triggered.
+ * @param {boolean} ctrlKey Returns whether the "CTRL" key was pressed when the event was triggered.
+ * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
+ * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
+ * @since 2.22.0
+ * @public
+ */
+@event("click", {
+	bubbles: true,
+	cancelable: true,
+})
 class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
+	eventDetails!: {
+		"click": ColorPaletteItemNativeClickEventDetail,
+	}
 	/**
 	 * Defines the colour of the component.
 	 *
@@ -129,8 +157,39 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 			},
 		};
 	}
+
+	_onClick(e: MouseEvent) {
+		if (this._disabled) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		e.stopImmediatePropagation();
+
+		const {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		} = e;
+
+		// Fire semantic click event (CustomEvent that bubbles)
+		const prevented = !this.fireDecoratorEvent("click", {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		});
+
+		if (prevented) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
 }
 
 ColorPaletteItem.define();
 
 export default ColorPaletteItem;
+export type { ColorPaletteItemNativeClickEventDetail };
