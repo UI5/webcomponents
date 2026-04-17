@@ -406,7 +406,7 @@ class Search extends SearchField {
 	}
 
 	_handleSearchIconPress() {
-		if (isPhone()) {
+		if (isPhone() && !this.open) {
 			this.open = true;
 		} else {
 			super._handleSearchIconPress();

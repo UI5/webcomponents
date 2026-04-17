@@ -284,4 +284,27 @@ describe("Search Field on mobile device", () => {
 		cy.get("[ui5-search]")
 			.should("have.prop", "value", "Item 1");
 	});
+
+	it("should fire search event when clicking search icon while dialog is open", () => {
+		cy.mount(
+			<Search open>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		cy.get("[ui5-search]")
+			.as("search")
+			.invoke("on", "ui5-search", cy.spy().as("searchSpy"));
+
+		cy.get("@search")
+			.should("have.attr", "open");
+
+		cy.get("@search")
+			.shadow()
+			.find("[ui5-icon][name='search']")
+			.click({ force: true });
+
+		cy.get("@searchSpy")
+			.should("have.been.calledOnce");
+	});
 });
