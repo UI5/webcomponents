@@ -66,14 +66,14 @@ type SegmentedButtonItemClickEventDetail = {
  * @param {MouseEvent} originalEvent The original mouse event that triggered the selection
  * @param {SegmentedButtonItem} item The segmented button item that was clicked
  */
-@event("selection-change", {
+@event("click", {
 	bubbles: true,
 	cancelable: true,
 })
 
 class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButtonItem {
 	eventDetails!: {
-		"selection-change": SegmentedButtonItemClickEventDetail,
+		"click": SegmentedButtonItemClickEventDetail,
 	}
 	/**
 	 * Defines whether the component is disabled.
@@ -221,18 +221,22 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 			e.stopPropagation();
 			return;
 		}
-
-		const prevented = !this.fireDecoratorEvent("selection-change", {
+		console.log("item click");
+		// Fire semantic click event (CustomEvent that bubbles)
+		const prevented = !this.fireDecoratorEvent("click", {
 			originalEvent: e,
 			item: this,
 		});
 
+		console.log("item click event fired, prevented:", prevented);
+
 		if (prevented) {
-			// Stop the native MouseEvent from reaching the parent
-			e.stopPropagation();
 			e.preventDefault();
+			e.stopPropagation();
 			return;
 		}
+
+		
 
 		this.selected = !this.selected;
 	}

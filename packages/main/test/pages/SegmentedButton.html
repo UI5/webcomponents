@@ -288,29 +288,29 @@
 		});
 
 		// Normal behavior - events fire, selection works
-		normalItem1.addEventListener("selection-change", function(e) {
+		normalItem1.addEventListener("click", function(e) {
 			normalEventLog.value = "Item 1 clicked - selection allowed";
 		});
 
-		normalItem2.addEventListener("selection-change", function(e) {
+		normalItem2.addEventListener("click", function(e) {
 			normalEventLog.value = "Item 2 clicked - selection allowed";
 		});
 
-		normalItem3.addEventListener("selection-change", function(e) {
+		normalItem3.addEventListener("click", function(e) {
 			normalEventLog.value = "Item 3 clicked - selection allowed";
 		});
 
 		// Blocked behavior - "Second" item prevents selection
-		blockedItem1.addEventListener("selection-change", function(e) {
+		blockedItem1.addEventListener("click", function(e) {
 			blockedEventLog.value = "Item 1 clicked - selection allowed";
 		});
 
-		blockedItem2.addEventListener("selection-change", function(e) {
+		blockedItem2.addEventListener("click", function(e) {
 			e.preventDefault();  // Block selection for this item
 			blockedEventLog.value = "Item 2 clicked - SELECTION BLOCKED!";
 		});
 
-		blockedItem3.addEventListener("selection-change", function(e) {
+		blockedItem3.addEventListener("click", function(e) {
 			blockedEventLog.value = "Item 3 clicked - selection allowed";
 		});
 
