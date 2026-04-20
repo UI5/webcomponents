@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **localization:** use correct language tag format ([#13388](https://github.com/UI5/webcomponents/issues/13388)) ([75404db](https://github.com/UI5/webcomponents/commit/75404db34cd93bd248d597f65dd61925862f4211))
+* **ui5-message-strip:** enable fast navigation ([#13381](https://github.com/UI5/webcomponents/issues/13381)) ([d0b1d63](https://github.com/UI5/webcomponents/commit/d0b1d63dde80b0b2f27f867a3dd88d838b13850c))
+
+
+### Features
+
+* **ui5-breadcrumbs-item:** introduce click event ([#13353](https://github.com/UI5/webcomponents/issues/13353)) ([aa36cf2](https://github.com/UI5/webcomponents/commit/aa36cf2837ad2604e1a28232d65ab619339c19af)), closes [#13330](https://github.com/UI5/webcomponents/issues/13330)
+* **ui5-color-palette-item:** introduce custom tooltips ([#12828](https://github.com/UI5/webcomponents/issues/12828)) ([506e4e8](https://github.com/UI5/webcomponents/commit/506e4e80e73d9735c5dd522e2011467cabec8b46)), closes [#444444](https://github.com/UI5/webcomponents/issues/444444)
+
+
+
+
+
 # [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
 
 

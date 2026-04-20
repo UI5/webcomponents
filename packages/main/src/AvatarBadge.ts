@@ -4,7 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
@@ -15,6 +15,8 @@ import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
 import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+
+const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 
 /**
  * @class
@@ -108,9 +110,16 @@ class AvatarBadge extends UI5Element {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	onBeforeRendering() {
-		const iconData = this.icon ? getIconDataSync(this.icon) : undefined;
-		this.invalid = !this.icon || !iconData;
+	async onBeforeRendering() {
+		const icon = this.icon;
+		if (!icon) {
+			this.invalid = true;
+			this.effectiveAccessibleName = undefined;
+			return;
+		}
+
+		const iconData = getIconDataSync(icon) || await getIconData(icon);
+		this.invalid = !iconData || iconData === ICON_NOT_FOUND;
 
 		if (this.invalid) {
 			this.effectiveAccessibleName = undefined;
@@ -120,8 +129,8 @@ class AvatarBadge extends UI5Element {
 		} else {
 			// Derive from icon name (e.g., "edit" -> "Edit")
 			// If not possible, fall back to i18n "Avatar" text
-			this.effectiveAccessibleName = this.icon
-				? this.icon.charAt(0).toUpperCase() + this.icon.slice(1)
+			this.effectiveAccessibleName = icon
+				? icon.charAt(0).toUpperCase() + icon.slice(1)
 				: AvatarBadge.i18nBundle.getText(AVATAR_TOOLTIP);
 		}
 	}
