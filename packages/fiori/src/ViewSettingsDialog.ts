@@ -42,6 +42,8 @@ import {
 	VSD_FILTER_TOOLTIP,
 	VSD_GROUP_TOOLTIP,
 	VSD_RESET_BUTTON_ACTION,
+	VSD_CONFIRM_BUTTON_ACTION,
+	VSD_CANCEL_BUTTON_ACTION,
 	VSD_FILTER_ITEM_LABEL_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -556,6 +558,14 @@ class ViewSettingsDialog extends UI5Element {
 		return ViewSettingsDialog.i18nBundle.getText(VSD_RESET_BUTTON_ACTION);
 	}
 
+	get _confirmButtonAction() {
+		return ViewSettingsDialog.i18nBundle.getText(VSD_CONFIRM_BUTTON_ACTION);
+	}
+
+	get _cancelButtonAction() {
+		return ViewSettingsDialog.i18nBundle.getText(VSD_CANCEL_BUTTON_ACTION);
+	}
+
 	get _isPhone() {
 		return isPhone();
 	}
@@ -819,6 +829,7 @@ class ViewSettingsDialog extends UI5Element {
 		this.open = false;
 		this._confirmedSettings = this._currentSettings;
 
+		announce(this._confirmButtonAction, InvisibleMessageMode.Assertive);
 		this.fireDecoratorEvent("confirm", this.eventsParams);
 	}
 
@@ -828,6 +839,7 @@ class ViewSettingsDialog extends UI5Element {
 	_cancelSettings() {
 		this._restoreSettings(this._confirmedSettings);
 
+		announce(this._cancelButtonAction, InvisibleMessageMode.Assertive);
 		this.fireDecoratorEvent("cancel", this.eventsParams);
 		this.open = false;
 	}
