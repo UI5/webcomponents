@@ -190,12 +190,17 @@
 	width: 100%;
 }
 
-.ui5-responsive-popover-footer .ui5-responsive-popover-close-btn {
+.ui5-responsive-popover-footer .ui5-responsive-popover-close-btn, 
+.ui5-responsive-popover-footer .ui5-responsive-popover-footer-btn {
 	margin-left: 0.5rem;
 }
 
 .ui5-responsive-popover-header .ui5-responsive-popover-close-btn {
 	position: absolute;
 	right: 1rem;
+}
+
+.ui5-responsive-popover-footer .ui5-responsive-popover-footer-btn {
+	width: 4.5rem;
 }
 

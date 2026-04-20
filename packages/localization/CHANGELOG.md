@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **localization:** use correct language tag format ([#13388](https://github.com/UI5/webcomponents/issues/13388)) ([75404db](https://github.com/UI5/webcomponents/commit/75404db34cd93bd248d597f65dd61925862f4211))
+
+
+
+
+
+# [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
 # [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization

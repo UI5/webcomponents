@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **localization:** use correct language tag format ([#13388](https://github.com/UI5/webcomponents/issues/13388)) ([75404db](https://github.com/UI5/webcomponents/commit/75404db34cd93bd248d597f65dd61925862f4211))
+* **ui5-message-strip:** enable fast navigation ([#13381](https://github.com/UI5/webcomponents/issues/13381)) ([d0b1d63](https://github.com/UI5/webcomponents/commit/d0b1d63dde80b0b2f27f867a3dd88d838b13850c))
+
+
+### Features
+
+* **ui5-breadcrumbs-item:** introduce click event ([#13353](https://github.com/UI5/webcomponents/issues/13353)) ([aa36cf2](https://github.com/UI5/webcomponents/commit/aa36cf2837ad2604e1a28232d65ab619339c19af)), closes [#13330](https://github.com/UI5/webcomponents/issues/13330)
+* **ui5-color-palette-item:** introduce custom tooltips ([#12828](https://github.com/UI5/webcomponents/issues/12828)) ([506e4e8](https://github.com/UI5/webcomponents/commit/506e4e80e73d9735c5dd522e2011467cabec8b46)), closes [#444444](https://github.com/UI5/webcomponents/issues/444444)
+* **ui5-timeline:** introduce header-bar slot ([#13155](https://github.com/UI5/webcomponents/issues/13155)) ([bdb43dc](https://github.com/UI5/webcomponents/commit/bdb43dcf6100115af185c4af6a219be19270ef43))
+* **ui5-view-settings-dialog:** add custom tabs ([#13325](https://github.com/UI5/webcomponents/issues/13325)) ([52b408a](https://github.com/UI5/webcomponents/commit/52b408ab8b58d77e68b81101a1fe14e716c3dd63))
+
+
+
+
+
+# [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* **ui5-carousel:** prevent negative values in visibleItemsIndices ([#13371](https://github.com/UI5/webcomponents/issues/13371)) ([34c5537](https://github.com/UI5/webcomponents/commit/34c5537fa53d61b7fe4790d69560276fb43a0a88)), closes [#13289](https://github.com/UI5/webcomponents/issues/13289)
+* **ui5-datetime-picker:** prevent first keystroke from resetting caret position ([#13369](https://github.com/UI5/webcomponents/issues/13369)) ([b8bc822](https://github.com/UI5/webcomponents/commit/b8bc822c473ce2876ca82fada49bc40da0cf9954))
+* **ui5-dialog:** fix unwanted animation when opening with large content ([#13121](https://github.com/UI5/webcomponents/issues/13121)) ([56f8f24](https://github.com/UI5/webcomponents/commit/56f8f2455859d965bfaed08ca4db8dc46b2412d2))
+* **ui5-slider:** remove disabled attribute from handle ([#13372](https://github.com/UI5/webcomponents/issues/13372)) ([f35ce97](https://github.com/UI5/webcomponents/commit/f35ce97e616633fa8e3c8a77736cccf36c0d794e))
+* **ui5-textarea:** set textarea wrapper padding in base theme file ([#13345](https://github.com/UI5/webcomponents/issues/13345)) ([3fb9b5c](https://github.com/UI5/webcomponents/commit/3fb9b5c53a055f42e4b29375599136c1ba9ace7a))
+
+
+### Features
+
+* **ui5-daterange-picker:** two months mode is implemented ([#13196](https://github.com/UI5/webcomponents/issues/13196)) ([743a7fe](https://github.com/UI5/webcomponents/commit/743a7feac690c2f6d630932ce393fc9bb4fc709c))
+
+
+
+
+
 # [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
 
 
