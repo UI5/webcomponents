@@ -1648,13 +1648,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		}
 
+		if (this.valueState === ValueState.Negative) {
+			this._updateValueState(this._effectiveValueState);
+		}
+
 		if (!e.detail.selectionComponentPressed && !isSpace(castedEvent) && !isSpaceCtrl(castedEvent)) {
 			this.open = false;
 			this.value = "";
-
-			if (this.valueState === ValueState.Negative) {
-				this._updateValueState(this._effectiveValueState);
-			}
 
 			// if the item (not checkbox) is clicked, call the selection change
 			if (isPhone()) {
