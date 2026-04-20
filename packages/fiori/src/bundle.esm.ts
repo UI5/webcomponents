@@ -66,6 +66,7 @@ import UserMenuAccount from "./UserMenuAccount.js";
 import UserMenuItem from "./UserMenuItem.js";
 import UserMenuItemGroup from "./UserMenuItemGroup.js";
 import ViewSettingsDialog from "./ViewSettingsDialog.js";
+import ViewSettingsDialogCustomTab from "./ViewSettingsDialogCustomTab.js";
 import Wizard from "./Wizard.js";
 
 testAssets.defaultTexts = { ...testAssets.defaultTexts, ...defaultFioriTexts };
