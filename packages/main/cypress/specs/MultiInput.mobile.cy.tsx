@@ -4,6 +4,8 @@ import SuggestionItem from "../../src/SuggestionItem.js";
 import Button from "../../src/Button.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import { INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 const createTokenFromText = (text: string): HTMLElement => {
 	const token = document.createElement("ui5-token");
@@ -211,5 +213,62 @@ describe("Multi Input on mobile device", () => {
 				.find("[ui5-li].ui5-suggestion-token-item")
 				.should("have.length", 3);
 		});
+	});
+});
+
+describe("Dialog header title", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should display label text as dialog header title when label for is used", () => {
+		cy.mount(
+			<>
+				<Label for="myMultiInput">Tags</Label>
+				<MultiInput id="myMultiInput" showSuggestions>
+					<SuggestionItem text="Item 1" />
+					<SuggestionItem text="Item 2" />
+				</MultiInput>
+			</>
+		);
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.realClick();
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", "Tags");
+	});
+
+	it("Should fallback to 'All Items' when no label is associated", () => {
+		cy.mount(
+			<MultiInput id="myMultiInput" showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</MultiInput>
+		);
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find(".ui5-input-inner")
+			.realClick();
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
 	});
 });
