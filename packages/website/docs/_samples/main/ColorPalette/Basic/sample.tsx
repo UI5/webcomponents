@@ -11,16 +11,16 @@ function App() {
       <ColorPalette>
         <ColorPaletteItem value="darkblue" />
         <ColorPaletteItem value="pink" />
-        <ColorPaletteItem value="#444444" />
-        <ColorPaletteItem value="rgb(0,200,0)" />
+        <ColorPaletteItem value="#444444" tooltip="charcoal" />
+        <ColorPaletteItem value="rgb(0,200,0)" tooltip="bright green" />
         <ColorPaletteItem value="green" />
         <ColorPaletteItem value="darkred" />
         <ColorPaletteItem value="yellow" />
         <ColorPaletteItem value="blue" />
         <ColorPaletteItem value="cyan" />
         <ColorPaletteItem value="orange" />
-        <ColorPaletteItem value="#5480e7" />
-        <ColorPaletteItem value="#ff6699" />
+        <ColorPaletteItem value="#5480e7" tooltip="periwinkle" />
+        <ColorPaletteItem value="#ff6699" tooltip="brilliant rose" />
       </ColorPalette>
     </>
   );

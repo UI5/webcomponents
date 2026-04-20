@@ -10,3 +10,7 @@
 :host(:focus-visible) {
     outline: none;
 }
+
+:host(.ui5-popup-opening) {
+    opacity: 0.1;
+}

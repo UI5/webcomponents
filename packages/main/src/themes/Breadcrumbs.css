@@ -51,7 +51,7 @@
     width: var(--sapFontSize);
     height: var(--sapFontSize);
     padding-left: .675rem;
-    vertical-align: text-top;
+    vertical-align: middle;
     color: var(--sapLinkColor);
 }
 
@@ -61,10 +61,11 @@
 
 .ui5-breadcrumbs-dropdown-arrow-link-wrapper [ui5-icon]::before {
     content: "...";
-    vertical-align: middle;
     position: absolute;
     left: 0;
-    bottom: 0;
+    top: 0.1rem;
+    line-height: 1rem;
+    vertical-align: middle;
 }
 
 .ui5-breadcrumbs-dropdown-arrow-link-wrapper [ui5-link]::part(root),
@@ -78,11 +79,11 @@
 .ui5-breadcrumbs-dropdown-arrow-link-wrapper:hover [ui5-icon]::after {
     content: "";
     position: absolute;
-    border-bottom: 0.0625rem solid;
-    top: 0;
+    height: 0.0725rem;
+    background-color: currentColor;
     left: 0;
-    bottom: 1px;
     right: 0;
+    bottom: 0.3475rem;
 }
 
 .ui5-breadcrumbs-popover {
