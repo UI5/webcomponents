@@ -145,10 +145,12 @@
 	cursor: default;
 }
 
-.ui5-switch-root.ui5-switch--checked .ui5-switch-text--off {
+.ui5-switch-root.ui5-switch--checked .ui5-switch-text--off,
+.ui5-switch-root.ui5-switch--checked .ui5-switch-text--readonly {
 	visibility: var(--_ui5_switch_text_hidden);
 }
-.ui5-switch-root:not(.ui5-switch--checked) .ui5-switch-text--on {
+.ui5-switch-root:not(.ui5-switch--checked) .ui5-switch-text--on,
+.ui5-switch-root:not(.ui5-switch--checked) .ui5-switch-text--readonly {
 	visibility: var(--_ui5_switch_text_hidden);
 }
 
