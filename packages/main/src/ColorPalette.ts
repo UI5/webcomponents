@@ -54,7 +54,7 @@ interface IColorPaletteItem extends UI5Element, ITabbable {
 	selected?: boolean,
 }
 
-type ColorPaletteNavigationItem = IColorPaletteItem | Button;
+type ColorPaletteNavigationItem = ColorPaletteItem | Button;
 
 type ColorPaletteItemClickEventDetail = {
 	color: string,
@@ -203,7 +203,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	colors!: DefaultSlot<IColorPaletteItem>;
+	colors!: DefaultSlot<ColorPaletteItem>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;
@@ -285,7 +285,7 @@ class ColorPalette extends UI5Element {
 
 		item.focus();
 
-		if (this.displayedColors.includes(item as unknown as IColorPaletteItem)) {
+		if (this.displayedColors.includes(item)) {
 			this._itemNavigation.setCurrentItem(item);
 		}
 
@@ -308,14 +308,11 @@ class ColorPalette extends UI5Element {
 		});
 	}
 
-	get effectiveColorItems() {
-		let colorItems: IColorPaletteItem[] = this.colors;
-
+	get effectiveColorItems(): ColorPaletteItem[] {
 		if (this.popupMode) {
-			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors") as unknown as IColorPaletteItem[];
+			return this.getSlottedNodes<ColorPaletteItem>("colors");
 		}
-
-		return colorItems;
+		return this.colors;
 	}
 
 	/**
@@ -323,7 +320,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_ensureSingleSelectionOrDeselectAll() {
-		let lastSelectedItem: IColorPaletteItem | ColorPaletteItem | undefined;
+		let lastSelectedItem: ColorPaletteItem | undefined;
 
 		this.allColorsInPalette.forEach(item => {
 			if (item.selected) {
@@ -337,7 +334,6 @@ class ColorPalette extends UI5Element {
 
 	_onclick(e: MouseEvent) {
 		if (e.defaultPrevented) {
-			e.preventDefault();
 			return;
 		}
 
@@ -353,7 +349,7 @@ class ColorPalette extends UI5Element {
 
 		const colorItem = target as ColorPaletteItem;
 
-		if (this.displayedColors.includes(colorItem as unknown as IColorPaletteItem)) {
+		if (this.displayedColors.includes(colorItem)) {
 			this._itemNavigation.setCurrentItem(colorItem);
 		} else if (this.recentColorsElements.includes(colorItem)) {
 			this._itemNavigationRecentColors.setCurrentItem(colorItem);
@@ -621,7 +617,7 @@ class ColorPalette extends UI5Element {
 			return false;
 		}
 
-		return this.displayedColors.includes(this._currentlySelected as unknown as IColorPaletteItem)
+		return this.displayedColors.includes(this._currentlySelected)
 			|| this.recentColorsElements.includes(this._currentlySelected);
 	}
 
@@ -646,7 +642,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_isFirstSwatchInRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target as unknown as IColorPaletteItem);
+		const index = this.displayedColors.indexOf(target);
 		return index >= 0 ? index % this.rowSize === 0 : false;
 	}
 
@@ -655,7 +651,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_isLastSwatchInRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target as unknown as IColorPaletteItem);
+		const index = this.displayedColors.indexOf(target);
 		return index >= 0 ? (index + 1) % this.rowSize === 0 || index === this.displayedColors.length - 1 : false;
 	}
 
@@ -671,7 +667,7 @@ class ColorPalette extends UI5Element {
 	 * @returns True if the swatch is the last of the last full row, false otherwise.
 	 */
 	_isLastSwatchOfLastFullRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target as unknown as IColorPaletteItem);
+		const index = this.displayedColors.indexOf(target);
 		const rowSize = this.rowSize;
 		const total = this.displayedColors.length;
 		const lastCompleteRowEndIndex = this._getLastCompleteRowEndIndex(total, rowSize);
@@ -679,7 +675,7 @@ class ColorPalette extends UI5Element {
 	}
 
 	_isSwatchInLastRow(target: ColorPaletteItem): boolean {
-		const index = this.displayedColors.indexOf(target as unknown as IColorPaletteItem);
+		const index = this.displayedColors.indexOf(target);
 		const lastRowSwatchesCount = this.displayedColors.length % this.rowSize;
 		return index >= 0 && index >= this.displayedColors.length - lastRowSwatchesCount;
 	}
@@ -804,7 +800,7 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusFirstRecentColor(): boolean {
 		if (this.hasRecentColors && this.recentColorsElements.length) {
-			this.focusColorElement(this.recentColorsElements[0] as unknown as IColorPaletteItem, this._itemNavigationRecentColors);
+			this.focusColorElement(this.recentColorsElements[0], this._itemNavigationRecentColors);
 			return true;
 		}
 		return false;
@@ -816,7 +812,7 @@ class ColorPalette extends UI5Element {
 	 */
 	_focusLastRecentColor(): boolean {
 		if (this.hasRecentColors && this.recentColorsElements.length) {
-			this.focusColorElement(this.recentColorsElements[this.recentColorsElements.length - 1] as unknown as IColorPaletteItem, this._itemNavigationRecentColors);
+			this.focusColorElement(this.recentColorsElements[this.recentColorsElements.length - 1], this._itemNavigationRecentColors);
 			return true;
 		}
 		return false;
@@ -901,8 +897,8 @@ class ColorPalette extends UI5Element {
 		return this._selectedColor;
 	}
 
-	get displayedColors(): Array<IColorPaletteItem> {
-		const colors = this.getSlottedNodes<IColorPaletteItem>("colors");
+	get displayedColors(): Array<ColorPaletteItem> {
+		const colors = this.getSlottedNodes<ColorPaletteItem>("colors");
 		return colors.filter(item => item.value).slice(0, 15);
 	}
 

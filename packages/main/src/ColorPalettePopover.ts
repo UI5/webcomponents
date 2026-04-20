@@ -204,7 +204,7 @@ class ColorPalettePopover extends UI5Element {
 		}
 
 		// since height is dynamically determined by padding-block-start
-		(colorPalette.allColorsInPalette as unknown as Array<IColorPaletteItem>).forEach((item: IColorPaletteItem) => {
+		(colorPalette.allColorsInPalette).forEach((item: ColorPaletteItem) => {
 			const itemHeight = item.offsetHeight + 4; // adding 4px for the offsets on top and bottom
 			item.style.setProperty("--_ui5_color_palette_item_height", `${itemHeight}px`);
 		});
