@@ -57,6 +57,8 @@ import UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js"
 import UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
 import Timeline from "./Timeline.js";
 import TimelineGroupItem from "./TimelineGroupItem.js";
+import TimelineHeaderBar from "./TimelineHeaderBar.js";
+import TimelineFilterOption from "./TimelineFilterOption.js";
 import NavigationLayout from "./NavigationLayout.js";
 import UploadCollection from "./UploadCollection.js";
 import UploadCollectionItem from "./UploadCollectionItem.js";
@@ -65,6 +67,7 @@ import UserMenuAccount from "./UserMenuAccount.js";
 import UserMenuItem from "./UserMenuItem.js";
 import UserMenuItemGroup from "./UserMenuItemGroup.js";
 import ViewSettingsDialog from "./ViewSettingsDialog.js";
+import ViewSettingsDialogCustomTab from "./ViewSettingsDialogCustomTab.js";
 import Wizard from "./Wizard.js";
 
 testAssets.defaultTexts = { ...testAssets.defaultTexts, ...defaultFioriTexts };
