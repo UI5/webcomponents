@@ -52,9 +52,7 @@ export default function ToolbarTemplate(this: Toolbar) {
 		>
 			<div class={{
 				"ui5-overflow-list": true
-			}}
-			onKeyDown={this._onoverflowkeydown}
-			>
+			}}>
 				{this.overflowItems.map(item => {
 					return (
 						<div class= {{

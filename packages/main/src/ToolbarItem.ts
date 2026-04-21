@@ -147,6 +147,14 @@ class ToolbarItem extends ToolbarItemBase {
 	get hasOverflow(): boolean {
 		return this.item[0]?.hasOverflow ?? false;
 	}
+
+	getFocusDomRef(): HTMLElement | undefined {
+		const child = this.item[0];
+		if (child && typeof (child as HTMLElement & { getFocusDomRef?: () => HTMLElement }).getFocusDomRef === "function") {
+			return (child as HTMLElement & { getFocusDomRef: () => HTMLElement }).getFocusDomRef() || child;
+		}
+		return child || super.getFocusDomRef();
+	}
 }
 
 export type {

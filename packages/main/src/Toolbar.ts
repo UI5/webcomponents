@@ -16,8 +16,6 @@ import {
 	isHome,
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -42,14 +40,10 @@ import type ToolbarSeparator from "./ToolbarSeparator.js";
 
 import type Button from "./Button.js";
 import type Popover from "./Popover.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
-};
-
-type ToolbarNavigationItem = {
-	item?: ToolbarItemBase,
-	focusRef: HTMLElement,
 };
 
 function calculateCSSREMValue(styleSet: CSSStyleDeclaration, propertyName: string): number {
@@ -71,10 +65,9 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
- * - The control is not interactive, but can contain of interactive elements
  * - [Left]/[Right]/[Up]/[Down] - navigate among toolbar items
  * - [Home]/[End] - move to first/last toolbar item
- * - [Tab] / [Shift] + [Tab] - move through toolbar items and exit at edges
+ * - [Tab] / [Shift]+[Tab] - exit the toolbar
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/Toolbar.js";`
@@ -179,8 +172,6 @@ class Toolbar extends UI5Element {
 	itemsWidth = 0;
 	minContentWidth = 0;
 	_lastFocusedItem?: HTMLElement;
-	_hasFocusHistory = false;
-	_isFocusRedirecting = false;
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -310,11 +301,10 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const lastItem = this._getNavigationItems().at(-1)?.focusRef;
+			const items = this._getFocusableItems();
+			const lastItem = items.at(-1);
 			if (lastItem) {
 				this._lastFocusedItem = lastItem;
-				this._hasFocusHistory = true;
-				this._updateRovingTabIndex(lastItem);
 				lastItem.focus();
 			}
 		}
@@ -328,7 +318,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
-		this._updateRovingTabIndex(this._lastFocusedItem);
+		this._applyRovingTabIndex();
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
@@ -565,342 +555,122 @@ class Toolbar extends UI5Element {
 		return this.ITEMS_WIDTH_MAP.get(id);
 	}
 
-	_getItemFocusRef(item: ToolbarItemBase): HTMLElement | null {
-		const slottedItem = (item as { item?: Array<HTMLElement> }).item?.[0];
-		if (slottedItem) {
-			const slottedItemFocusRef = (slottedItem as HTMLElement & { getFocusDomRef?: () => HTMLElement | null })?.getFocusDomRef?.();
-			if (slottedItemFocusRef) {
-				const isFocusableSelfRef = slottedItemFocusRef !== slottedItem
-					|| slottedItemFocusRef.tabIndex > -1
-					|| slottedItemFocusRef.matches("a[href], button, input, select, textarea, [tabindex]");
+	/**
+	 * Keyboard Navigation
+	 */
 
-				if (isFocusableSelfRef) {
-					return slottedItemFocusRef;
-				}
-			}
+	_getFocusableItems(): Array<HTMLElement> {
+		const items: Array<HTMLElement> = [];
 
-			if (slottedItem.tabIndex > -1 || slottedItem.matches("a[href], button, input, select, textarea")) {
-				return slottedItem;
-			}
-
-			const firstTabbable = getTabbableElements(slottedItem)[0];
-			return firstTabbable || null;
-		}
-
-		const itemFocusRef = item.getFocusDomRef() as HTMLElement | null;
-		if (itemFocusRef && itemFocusRef !== item) {
-			return itemFocusRef;
-		}
-
-		return itemFocusRef;
-	}
-
-	_getNavigationItems(): Array<ToolbarNavigationItem> {
-		const itemFocusRefs = this._getNavigationItemsFromItems(this.standardItems);
-
-		if (!this.hideOverflowButton && this.overflowButtonDOM) {
-			const overflowButtonFocusRef = this.overflowButtonDOM.getFocusDomRef() as HTMLElement;
-			if (overflowButtonFocusRef && this._isVisible(overflowButtonFocusRef)) {
-				itemFocusRefs.push({
-					focusRef: overflowButtonFocusRef,
-				});
-			}
-		}
-
-		return itemFocusRefs;
-	}
-
-	_getNavigationItemsFromItems(items: Array<ToolbarItemBase>): Array<ToolbarNavigationItem> {
-		const itemFocusRefs: Array<ToolbarNavigationItem> = [];
-
-		items
-			.filter(item => {
-				if (!item.isInteractive || item.hidden || item.isOverflowed) {
-					return false;
-				}
-				return !("disabled" in item && (item as { disabled?: boolean }).disabled);
-			})
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
+				&& !("disabled" in item && (item as { disabled?: boolean }).disabled))
 			.forEach(item => {
-				const focusRef = this._getItemFocusRef(item);
-				if (!focusRef || !this._isVisible(focusRef)) {
-					return;
+				const focusRef = item.getFocusDomRef();
+				if (focusRef) {
+					items.push(focusRef);
 				}
-
-				itemFocusRefs.push({
-					item,
-					focusRef,
-				});
 			});
 
-		return itemFocusRefs;
+		const overflowRef = this.overflowButtonDOM?.getFocusDomRef();
+		if (!this.hideOverflowButton && overflowRef) {
+			items.push(overflowRef);
+		}
+
+		return items;
 	}
 
-	_updateRovingTabIndex(currentItem?: HTMLElement) {
-		const items = this._getNavigationItems().map(item => item.focusRef);
-		if (!items.length) {
-			return;
+	_findCurrentIndex(items: Array<HTMLElement>): number {
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			return -1;
 		}
-		const targetItem = currentItem && items.includes(currentItem) ? currentItem : items[0];
-		items.forEach(item => {
-			item.tabIndex = item === targetItem ? 0 : -1;
+
+		return items.findIndex(item => item === active || item.contains(active)
+			|| (item.shadowRoot?.contains(active) ?? false));
+	}
+
+	_findToolbarItem(focusRef: HTMLElement): ToolbarItemBase | undefined {
+		return this.standardItems.find(item => {
+			const ref = item.getFocusDomRef();
+			return ref === focusRef || item === focusRef || item.contains(focusRef);
 		});
 	}
 
-	_isVisible(element: HTMLElement): boolean {
-		const style = getComputedStyle(element);
-		return style.display !== "none"
-			&& style.visibility !== "hidden";
-	}
-
-	_shouldItemHandleOwnNavigation(item: ToolbarItemBase | undefined, e: KeyboardEvent): boolean {
-		return !!item?.shouldHandleOwnKeyboardNavigation(e);
-	}
-
-	_shouldChildHandleNavigation(element: HTMLElement, e: KeyboardEvent): boolean {
-		if (element.isContentEditable) {
-			return isLeft(e) || isRight(e) || isHome(e) || isEnd(e) || isUp(e) || isDown(e);
-		}
-
-		// If element is an input or textarea, preserve native text/caret behavior.
-		if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-			const input = element as HTMLInputElement | HTMLTextAreaElement;
-			const cursorPos = input.selectionStart || 0;
-			const textLength = input.value.length;
-
-			// Let input handle left arrow if cursor is not at start
-			if (isLeft(e) && cursorPos > 0) {
-				return true;
-			}
-
-			// Let input handle right arrow if cursor is not at end
-			if (isRight(e) && cursorPos < textLength) {
-				return true;
-			}
-
-			if (isHome(e) && cursorPos > 0) {
-				return true;
-			}
-
-			if (isEnd(e) && cursorPos < textLength) {
-				return true;
-			}
-
-			if (element.tagName === "TEXTAREA" && (isUp(e) || isDown(e))) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	_getCurrentItemIndex(items: Array<ToolbarNavigationItem>, activeElement: HTMLElement): number {
-		return items.findIndex(itemInfo => {
-			const item = itemInfo.focusRef;
-			const toolbarItem = itemInfo.item;
-
-			if (item === activeElement || item.contains(activeElement)) {
-				return true;
-			}
-
-			if (item.shadowRoot && item.shadowRoot.contains(activeElement)) {
-				return true;
-			}
-
-			if (toolbarItem && (toolbarItem === activeElement || toolbarItem.contains(activeElement))) {
-				return true;
-			}
-
-			if (toolbarItem?.shadowRoot && toolbarItem.shadowRoot.contains(activeElement)) {
-				return true;
-			}
-
-			return false;
-		});
-	}
-
-	_getCurrentItemFromEvent(items: Array<ToolbarNavigationItem>, e: FocusEvent): HTMLElement | undefined {
-		const path = e.composedPath().filter((node): node is HTMLElement => node instanceof HTMLElement);
-		const currentItem = items.find(itemInfo => {
-			const item = itemInfo.focusRef;
-			const toolbarItem = itemInfo.item;
-
-			if (path.includes(item)) {
-				return true;
-			}
-
-			if (item.shadowRoot && path.some(node => item.shadowRoot!.contains(node))) {
-				return true;
-			}
-
-			if (toolbarItem && path.includes(toolbarItem)) {
-				return true;
-			}
-
-			if (toolbarItem?.shadowRoot && path.some(node => toolbarItem.shadowRoot!.contains(node))) {
-				return true;
-			}
-
-			return path.some(node => item.contains(node));
-		});
-
-		return currentItem?.focusRef;
-	}
-
-	_onfocusin(e: FocusEvent) {
-		const root = e.currentTarget as HTMLElement | null;
-		if (!root || this._isFocusRedirecting) {
-			this._isFocusRedirecting = false;
-			return;
-		}
-
-		const relatedTarget = e.relatedTarget as HTMLElement | null;
-		const isEntering = !relatedTarget || !root.contains(relatedTarget);
-
-		const navigationItems = this._getNavigationItems();
-		const items = navigationItems.map(item => item.focusRef);
+	_applyRovingTabIndex() {
+		const items = this._getFocusableItems();
 		if (!items.length) {
 			return;
 		}
 
-		const target = e.target as HTMLElement;
-		const activeElement = (getActiveElement() || target) as HTMLElement;
-		const currentItem = this._getCurrentItemFromEvent(navigationItems, e) || items[this._getCurrentItemIndex(navigationItems, activeElement)];
-		const currentIndex = currentItem ? items.indexOf(currentItem) : -1;
-
-		if (currentIndex !== -1) {
-			this._lastFocusedItem = items[currentIndex];
-			this._hasFocusHistory = true;
-			this._updateRovingTabIndex(this._lastFocusedItem);
-		}
-
-		if (!isEntering || currentIndex !== -1) {
-			return;
-		}
-
-		const desiredItem = (this._hasFocusHistory && this._lastFocusedItem && items.includes(this._lastFocusedItem))
+		const current = (this._lastFocusedItem && items.includes(this._lastFocusedItem))
 			? this._lastFocusedItem
 			: items[0];
 
-		if (desiredItem && desiredItem !== target && !desiredItem.contains(target)) {
-			this._isFocusRedirecting = true;
-			this._updateRovingTabIndex(desiredItem);
-			desiredItem.focus();
-		}
+		items.forEach(item => {
+			item.tabIndex = item === current ? 0 : -1;
+		});
 	}
 
-	_onoverflowkeydown(e: KeyboardEvent) {
-		const isNavigationKey = isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e);
-		if (!isNavigationKey) {
+	_onfocusin() {
+		const items = this._getFocusableItems();
+		if (!items.length) {
 			return;
 		}
 
-		const activeElement = getActiveElement();
-		if (!activeElement) {
-			return;
+		const idx = this._findCurrentIndex(items);
+		if (idx !== -1) {
+			this._lastFocusedItem = items[idx];
+			this._applyRovingTabIndex();
 		}
-
-		const navigationItems = this._getNavigationItemsFromItems(this.overflowItems);
-		const currentIndex = this._getCurrentItemIndex(navigationItems, activeElement as HTMLElement);
-		if (currentIndex === -1) {
-			return;
-		}
-
-		const currentNavigationItem = navigationItems[currentIndex];
-		if (this._shouldItemHandleOwnNavigation(currentNavigationItem?.item, e)) {
-			return;
-		}
-
-		if (this._shouldChildHandleNavigation(activeElement as HTMLElement, e)) {
-			return;
-		}
-
-		// Prevent page scrolling only when toolbar should consume the key.
-		e.preventDefault();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		const isNavigationKey = isLeft(e) || isRight(e) || isUp(e) || isDown(e) || isHome(e) || isEnd(e);
-		const isTabKey = e.key === "Tab";
-
-		// Only handle navigation keys or Tab
-		if (!isNavigationKey && !isTabKey) {
+		if (!isLeft(e) && !isRight(e) && !isUp(e) && !isDown(e) && !isHome(e) && !isEnd(e)) {
 			return;
 		}
 
-		const activeElement = getActiveElement();
-		if (!activeElement) {
+		// A child control already handled this key
+		if (e.defaultPrevented) {
 			return;
 		}
 
-		const navigationItems = this._getNavigationItems();
-		const items = navigationItems.map(item => item.focusRef);
-		const currentIndex = this._getCurrentItemIndex(navigationItems, activeElement as HTMLElement);
+		// Preserve native text cursor behavior in input/textarea elements
+		const active = getActiveElement() as HTMLElement | null;
+		if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+			return;
+		}
 
-		// Not on a toolbar item, don't handle
+		const items = this._getFocusableItems();
+		const currentIndex = this._findCurrentIndex(items);
 		if (currentIndex === -1) {
 			return;
 		}
 
-		const currentNavigationItem = navigationItems[currentIndex];
-		if (isNavigationKey && this._shouldItemHandleOwnNavigation(currentNavigationItem?.item, e)) {
+		// Let the toolbar item handle its own navigation (e.g. ToolbarSelect up/down)
+		const toolbarItem = this._findToolbarItem(items[currentIndex]);
+		if (toolbarItem?.shouldHandleOwnKeyboardNavigation(e)) {
 			return;
 		}
 
-		// Check if the active element's child should handle navigation
-		if (isNavigationKey && this._shouldChildHandleNavigation(activeElement as HTMLElement, e)) {
-			return;
-		}
-
-		if (isNavigationKey) {
-			e.preventDefault();
-			this._navigateToItem(items, currentIndex, e);
-		} else if (isTabKey) {
-			// Handle Tab/Shift+Tab as toolbar navigation
-			const nextIndex = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
-			const shouldNavigate = e.shiftKey ? currentIndex > 0 : currentIndex < items.length - 1;
-
-			if (shouldNavigate) {
-				e.preventDefault();
-				const nextItem = items[nextIndex];
-				this._focusItem(nextItem);
-			}
-			// else: at edges, let browser handle Tab/Shift+Tab to exit
-		}
-	}
-
-	_navigateToItem(items: HTMLElement[], currentIndex: number, e: KeyboardEvent): void {
+		let nextIndex = currentIndex;
 		const isRTL = this.effectiveDir === "rtl";
-		const shouldMovePrevious = isUp(e) || (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
-		const shouldMoveNext = isDown(e) || (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
 
-		if (shouldMovePrevious) {
-			this._focusPrevious(items, currentIndex);
-		} else if (shouldMoveNext) {
-			this._focusNext(items, currentIndex);
+		if ((isRight(e) && !isRTL) || (isLeft(e) && isRTL) || isDown(e)) {
+			nextIndex = Math.min(currentIndex + 1, items.length - 1);
+		} else if ((isLeft(e) && !isRTL) || (isRight(e) && isRTL) || isUp(e)) {
+			nextIndex = Math.max(currentIndex - 1, 0);
 		} else if (isHome(e)) {
-			this._updateRovingTabIndex(items[0]);
-			items[0]?.focus();
+			nextIndex = 0;
 		} else if (isEnd(e)) {
-			const lastItem = items[items.length - 1];
-			this._updateRovingTabIndex(lastItem);
-			lastItem?.focus();
+			nextIndex = items.length - 1;
 		}
-	}
 
-	_focusItem(item: HTMLElement): void {
-		this._updateRovingTabIndex(item);
-		item.focus();
-	}
-
-	_focusPrevious(items: HTMLElement[], currentIndex: number): void {
-		if (currentIndex > 0) {
-			this._focusItem(items[currentIndex - 1]);
-		}
-	}
-
-	_focusNext(items: HTMLElement[], currentIndex: number): void {
-		if (currentIndex < items.length - 1) {
-			this._focusItem(items[currentIndex + 1]);
+		if (nextIndex !== currentIndex) {
+			e.preventDefault();
+			this._lastFocusedItem = items[nextIndex];
+			this._applyRovingTabIndex();
+			items[nextIndex].focus();
 		}
 	}
 }
