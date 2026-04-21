@@ -209,7 +209,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_focusableDay!: HTMLElement;
 
 	_autoFocus?: boolean;
-	_weekNumberFormat?: DateFormat;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -368,16 +367,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_calculateWeekNumber(date: Date): number {
-		// Cache DateFormat instance for week number calculation
-		if (!this._weekNumberFormat) {
-			this._weekNumberFormat = DateFormat.getDateInstance({ 
-				pattern: "w", 
-				calendarType: this.primaryCalendarType, 
-				calendarWeekNumbering: this.calendarWeekNumbering 
-			});
-		}
-		
-		const weekNumber = this._weekNumberFormat.format(date);
+		const oDateFormat = DateFormat.getDateInstance({ pattern: "w", calendarType: this.primaryCalendarType, calendarWeekNumbering: this.calendarWeekNumbering });
+		const weekNumber = oDateFormat.format(date);
 
 		return Number(weekNumber);
 	}
