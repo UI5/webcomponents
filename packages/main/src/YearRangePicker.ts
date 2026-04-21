@@ -126,6 +126,8 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	_currentYearRange?: CalendarYearRangeT;
 
 	_gridStartYear?: number;
+	_yearFormatPrimary?: DateFormat;
+	_yearFormatSecondary?: DateFormat;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -199,8 +201,16 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_getYearRanges() {
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
-		const yearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+		// Cache DateFormat instances
+		if (!this._yearFormatPrimary) {
+			this._yearFormatPrimary = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
+		}
+		if (!this._yearFormatSecondary) {
+			this._yearFormatSecondary = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+		}
+		
+		const yearFormat = this._yearFormatPrimary;
+		const yearFormatInSecType = this._yearFormatSecondary;
 
 		const pageSize = this._getPageSize();
 		const rowSize = this._getRowSize();
