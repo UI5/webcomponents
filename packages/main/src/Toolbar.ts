@@ -15,6 +15,8 @@ import {
 	isDown,
 	isHome,
 	isEnd,
+	isTabNext,
+	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
@@ -590,11 +592,40 @@ class Toolbar extends UI5Element {
 			|| (item.shadowRoot?.contains(active) ?? false));
 	}
 
-	_findToolbarItem(focusRef: HTMLElement): ToolbarItemBase | undefined {
+	_findToolbarItem(focusRef: HTMLElement, active?: HTMLElement | null): ToolbarItemBase | undefined {
 		return this.standardItems.find(item => {
 			const ref = item.getFocusDomRef();
-			return ref === focusRef || item === focusRef || item.contains(focusRef);
+			const focusMatches = ref === focusRef
+				|| item === focusRef
+				|| item.contains(focusRef)
+				|| !!(ref && (ref.contains(focusRef)
+					|| focusRef.contains(ref)
+					|| ref.shadowRoot?.contains(focusRef)));
+
+			if (focusMatches) {
+				return true;
+			}
+
+			if (!active) {
+				return false;
+			}
+
+			return item === active
+				|| item.contains(active)
+				|| !!(ref && (ref === active
+					|| ref.contains(active)
+					|| active.contains(ref)
+					|| ref.shadowRoot?.contains(active)));
 		});
+	}
+
+	_findToolbarItemFromEvent(e: KeyboardEvent): ToolbarItemBase | undefined {
+		const path = e.composedPath();
+		return this.standardItems.find(item => path.includes(item));
+	}
+
+	_isGenericToolbarItem(item?: ToolbarItemBase): boolean {
+		return item?.tagName === "UI5-TOOLBAR-ITEM";
 	}
 
 	_applyRovingTabIndex() {
@@ -626,6 +657,43 @@ class Toolbar extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
+		const active = getActiveElement() as HTMLElement | null;
+
+		if (isTabNext(e) || isTabPrevious(e)) {
+			const items = this._getFocusableItems();
+			const currentIndex = this._findCurrentIndex(items);
+			const eventToolbarItem = this._findToolbarItemFromEvent(e);
+			const currentToolbarItem = eventToolbarItem
+				|| (currentIndex !== -1 ? this._findToolbarItem(items[currentIndex], active) : undefined);
+
+			if (!currentToolbarItem) {
+				return;
+			}
+
+			if (!this._isGenericToolbarItem(currentToolbarItem)) {
+				return;
+			}
+
+			const resolvedCurrentIndex = currentIndex !== -1
+				? currentIndex
+				: items.findIndex(item => this._findToolbarItem(item, active) === currentToolbarItem);
+
+			if (resolvedCurrentIndex === -1) {
+				return;
+			}
+
+			const nextIndex = isTabNext(e) ? resolvedCurrentIndex + 1 : resolvedCurrentIndex - 1;
+			if (nextIndex < 0 || nextIndex >= items.length) {
+				return;
+			}
+
+			e.preventDefault();
+			this._lastFocusedItem = items[nextIndex];
+			this._applyRovingTabIndex();
+			items[nextIndex].focus();
+			return;
+		}
+
 		if (!isLeft(e) && !isRight(e) && !isUp(e) && !isDown(e) && !isHome(e) && !isEnd(e)) {
 			return;
 		}
@@ -636,7 +704,6 @@ class Toolbar extends UI5Element {
 		}
 
 		// Preserve native text cursor behavior in input/textarea elements
-		const active = getActiveElement() as HTMLElement | null;
 		if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
 			return;
 		}
@@ -648,7 +715,11 @@ class Toolbar extends UI5Element {
 		}
 
 		// Let the toolbar item handle its own navigation (e.g. ToolbarSelect up/down)
-		const toolbarItem = this._findToolbarItem(items[currentIndex]);
+		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
+		if (this._isGenericToolbarItem(toolbarItem)) {
+			return;
+		}
+
 		if (toolbarItem?.shouldHandleOwnKeyboardNavigation(e)) {
 			return;
 		}

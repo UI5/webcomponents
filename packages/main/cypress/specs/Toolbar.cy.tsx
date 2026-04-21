@@ -5,6 +5,8 @@ import ToolbarSelectOption from "../../src/ToolbarSelectOption.js";
 import ToolbarSeparator from "../../src/ToolbarSeparator.js";
 import ToolbarSpacer from "../../src/ToolbarSpacer.js";
 import ToolbarItem from "../../src/ToolbarItem.js";
+import CheckBox from "../../src/CheckBox.js";
+import Input from "../../src/Input.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
@@ -335,7 +337,7 @@ describe("Toolbar general interaction", () => {
 			.should("not.be.focused");
 	});
 
-	it("Should navigate toolbar-item wrapped controls with arrows", () => {
+	it("Should keep arrow navigation inside toolbar-item wrapped controls", () => {
 		cy.mount(
 			<Toolbar>
 				<ToolbarItem><Button>First</Button></ToolbarItem>
@@ -353,12 +355,62 @@ describe("Toolbar general interaction", () => {
 
 		cy.realPress("ArrowRight");
 		cy.get("ui5-button")
-			.eq(1)
+			.first()
 			.should("be.focused");
 
 		cy.realPress("ArrowRight");
 		cy.get("ui5-button")
+			.first()
+			.should("be.focused");
+	});
+
+	it("Should move focus to next toolbar item with Tab from generic toolbar-item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+					<CheckBox text="Checkbox 2" checked></CheckBox>
+					<CheckBox text="Checkbox 3"></CheckBox>
+				</ToolbarItem>
+				<ToolbarItem>
+					<Input placeholder="Enter text"></Input>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-checkbox")
 			.eq(2)
+			.realClick();
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-input")
+			.shadow()
+			.find("input")
+			.should("be.focused");
+	});
+
+	it("Should move focus to previous toolbar item with Shift+Tab from generic toolbar-item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+				</ToolbarItem>
+				<ToolbarItem>
+					<Input placeholder="Enter text"></Input>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-input")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("ui5-checkbox")
+			.first()
 			.should("be.focused");
 	});
 
