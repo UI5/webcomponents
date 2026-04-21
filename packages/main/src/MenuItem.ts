@@ -435,12 +435,19 @@ class MenuItem extends ListItem implements IMenuItem {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
-		const siblingsWithIcon = this._allMenuItems.some(menuItem => !!menuItem.icon);
+		const menuItems = this._allMenuItems;
+		const siblingsWithIcon = menuItems.some(menuItem => !!menuItem.icon);
+		const setsize = menuItems.length;
 
 		this._setupItemNavigation();
 
-		this._allMenuItems.forEach(item => {
+		menuItems.forEach((item, index) => {
 			item._siblingsWithIcon = siblingsWithIcon;
+			item.accessibilityAttributes = {
+				...item.accessibilityAttributes,
+				ariaPosinset: index + 1,
+				ariaSetsize: setsize,
+			};
 		});
 	}
 

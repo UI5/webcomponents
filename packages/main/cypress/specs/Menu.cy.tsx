@@ -1199,6 +1199,71 @@ describe("Menu interaction", () => {
 
 			cy.get("@items").last().should("be.focused");
 		});
+
+		it("Menu items have correct aria-posinset and aria-setsize", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu opener="btnOpen">
+						<MenuItem text="Item 1" icon={openFolder}>
+							<MenuItem text="Sub 1.1"></MenuItem>
+							<MenuItem text="Sub 1.2"></MenuItem>
+						</MenuItem>
+						<MenuItem text="Item 2"></MenuItem>
+						<MenuItem text="Item 3"></MenuItem>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu]")
+				.ui5MenuOpen();
+
+			cy.get("[ui5-menu] > [ui5-menu-item]")
+				.as("items");
+
+			cy.get("@items")
+				.eq(0)
+				.shadow()
+				.find("li")
+				.should("have.attr", "aria-posinset", "1")
+				.and("have.attr", "aria-setsize", "3");
+
+			cy.get("@items")
+				.eq(1)
+				.shadow()
+				.find("li")
+				.should("have.attr", "aria-posinset", "2")
+				.and("have.attr", "aria-setsize", "3");
+
+			cy.get("@items")
+				.eq(2)
+				.shadow()
+				.find("li")
+				.should("have.attr", "aria-posinset", "3")
+				.and("have.attr", "aria-setsize", "3");
+
+			// Open sub-menu and verify sub-items
+			cy.get("@items")
+				.eq(0)
+				.ui5MenuItemClick();
+
+			cy.get("[ui5-menu-item][text='Item 1'] > [ui5-menu-item]")
+				.as("subItems");
+
+			cy.get("@subItems")
+				.eq(0)
+				.shadow()
+				.find("li")
+				.should("have.attr", "aria-posinset", "1")
+				.and("have.attr", "aria-setsize", "2");
+
+			cy.get("@subItems")
+				.eq(1)
+				.shadow()
+				.find("li")
+				.should("have.attr", "aria-posinset", "2")
+				.and("have.attr", "aria-setsize", "2");
+		});
 	});
 });
 
