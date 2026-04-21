@@ -20,7 +20,8 @@ import {
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
 	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import "@ui5/webcomponents/dist/Tag.js";
 
 // Templates
 import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
@@ -80,6 +81,16 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
 	items!: DefaultSlot<SideNavigationSubItem>;
+
+	/**
+	 * Defines the tag to be displayed.
+	 * Only `ui5-tag` component should be used.
+	 *
+	 * @public
+	 * @since 2.7.0
+	 */
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -183,9 +194,21 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	get _describedBy() {
-		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
-			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? "");
+		const parts: string[] = [];
+
+		if (this.hasTag) {
+			parts.push(this._tagId);
 		}
+
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			parts.push(SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? ""));
+		}
+
+		return parts.length > 0 ? parts.join(" ") : undefined;
+	}
+
+	get hasTag() {
+		return !!this.tag.length;
 	}
 
 	get classesArray() {

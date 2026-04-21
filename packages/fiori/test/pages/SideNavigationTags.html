@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation - Indication Tags PoC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			background: var(--sapBackgroundColor);
+		}
+		.page-header {
+			padding: 2rem;
+			background: var(--sapPageHeader_Background);
+			border-bottom: 1px solid var(--sapPageHeader_BorderColor);
+		}
+		.page-header h1 {
+			margin: 0 0 0.5rem 0;
+		}
+		.page-header p {
+			margin: 0;
+			color: var(--sapContent_LabelColor);
+		}
+		.test-sections {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+			padding: 2rem;
+		}
+		.test-section {
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			border-radius: 0.5rem;
+			overflow: hidden;
+			background: var(--sapGroup_ContentBackground);
+		}
+		.section-content {
+			display: flex;
+			height: 600px;
+		}
+		.side-nav-wrapper {
+			flex-shrink: 0;
+		}
+		.controls-wrapper {
+			flex: 1;
+			padding: 1.5rem;
+			display: flex;
+			align-items: flex-start;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="page-header">
+		<h1>Side Navigation Indication Tags - PoC</h1>
+	</div>
+
+	<div class="test-sections">
+		<div class="test-section">
+			<div class="section-content">
+				<div class="side-nav-wrapper">
+					<ui5-side-navigation id="sn-expanded" accessible-name="Expanded Navigation">
+						<ui5-side-navigation-item text="Home" icon="home" selected></ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Dashboard" icon="bar-chart">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Reports" icon="document" expanded>
+							<ui5-side-navigation-sub-item text="Sales Reports"></ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Financial Reports">
+								<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>New</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Custom Reports">
+								<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Alpha</ui5-tag>
+							</ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Analytics" icon="business-objects-experience">
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Workflows" unselectable icon="workflow-tasks">
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>RC</ui5-tag>
+							<ui5-side-navigation-sub-item text="Data Management" icon="database"></ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="AI Insights" icon="action">
+								<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Preview</ui5-tag>
+							</ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Legacy Tools" icon="chain-link">
+							<ui5-tag slot="tag" design="Set2" color-scheme="10" hide-state-icon>Deprecated</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<!-- Fixed Items -->
+						<ui5-side-navigation-item slot="fixedItems" text="Settings" icon="action-settings"></ui5-side-navigation-item>
+						<ui5-side-navigation-item slot="fixedItems" text="Help Center" icon="sys-help">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+						</ui5-side-navigation-item>
+					</ui5-side-navigation>
+				</div>
+				<div class="controls-wrapper">
+					<ui5-button id="toggle-sn-expanded">Toggle Collapsed</ui5-button>
+				</div>
+			</div>
+		</div>
+
+		<div class="test-section">
+			<div class="section-content collapsed-test">
+				<div class="side-nav-wrapper">
+					<ui5-side-navigation id="sn-collapsed" collapsed accessible-name="Collapsed Navigation">
+						<ui5-side-navigation-item text="Projects" icon="project-definition-triangle" selected></ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Tasks" icon="task">
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>Beta</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Calendar" icon="calendar">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Team" icon="group" expanded>
+							<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Canary</ui5-tag>
+							<ui5-side-navigation-sub-item text="Members"></ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Roles">
+								<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Alpha</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Permissions">
+								<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>Beta</ui5-tag>
+							</ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Notifications" icon="bell"></ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Messages" icon="email">
+							<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Dev</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Documents" icon="document">
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>Beta</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Analytics" icon="business-objects-experience">
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Alpha</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Reports" icon="chart-table-view">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Workflows" icon="workflow-tasks">
+							<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Experimental</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Data Sources" icon="database">
+							<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Preview</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Archives" icon="save">
+							<ui5-tag slot="tag" design="Set2" color-scheme="10" hide-state-icon>Sunset</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<!-- Fixed Items -->
+						<ui5-side-navigation-item slot="fixedItems" text="Profile" icon="employee"></ui5-side-navigation-item>
+						<ui5-side-navigation-item slot="fixedItems" text="Feedback" icon="feedback">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+						</ui5-side-navigation-item>
+					</ui5-side-navigation>
+				</div>
+				<div class="controls-wrapper">
+					<ui5-button id="toggle-sn-collapsed">Toggle Expanded</ui5-button>
+				</div>
+			</div>
+		</div>
+
+		<div class="test-section">
+			<div class="section-content">
+				<div class="side-nav-wrapper">
+					<ui5-side-navigation id="sn-wrapping" accessible-name="Wrapping Test Navigation">
+						<ui5-side-navigation-item text="Short Item" icon="hint"></ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Customer Relationship Management System" icon="customer">
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon wrapping-type="Normal">Beta Version</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Analytics and Business Intelligence Platform" icon="business-objects-experience">
+							<ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon wrapping-type="Normal">Experimental Phase</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Data Warehouse and ETL Processing Tools" icon="database" expanded>
+							<ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon wrapping-type="Normal">Alpha Release</ui5-tag>
+							<ui5-side-navigation-sub-item text="Extract Transform Load Pipeline">
+								<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon wrapping-type="Normal">New Feature</ui5-tag>
+							</ui5-side-navigation-sub-item>
+							<ui5-side-navigation-sub-item text="Data Quality Management and Governance System">
+								<ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon wrapping-type="Normal">Preview Build</ui5-tag>
+							</ui5-side-navigation-sub-item>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Enterprise Resource Planning Integration Suite" icon="manager-insight">
+							<ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon wrapping-type="Normal">Beta Testing</ui5-tag>
+						</ui5-side-navigation-item>
+
+						<ui5-side-navigation-item text="Settings" icon="action-settings"></ui5-side-navigation-item>
+
+						<!-- Fixed Items -->
+						<ui5-side-navigation-item slot="fixedItems" text="Documentation and Knowledge Base Portal" icon="doc-attachment">
+							<ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon wrapping-type="Normal">New Content</ui5-tag>
+						</ui5-side-navigation-item>
+					</ui5-side-navigation>
+				</div>
+				<div class="controls-wrapper">
+					<ui5-button id="toggle-sn-wrapping">Toggle Collapsed</ui5-button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('toggle-sn-expanded').addEventListener('click', () => {
+			const sn = document.getElementById('sn-expanded');
+			sn.collapsed = !sn.collapsed;
+		});
+
+		document.getElementById('toggle-sn-collapsed').addEventListener('click', () => {
+			const sn = document.getElementById('sn-collapsed');
+			sn.collapsed = !sn.collapsed;
+		});
+
+		document.getElementById('toggle-sn-wrapping').addEventListener('click', () => {
+			const sn = document.getElementById('sn-wrapping');
+			sn.collapsed = !sn.collapsed;
+		});
+
+		['sn-expanded', 'sn-collapsed', 'sn-wrapping'].forEach(id => {
+			document.getElementById(id).addEventListener('selection-change', (e) => {
+				console.log(`[${id}] Selection changed to:`, e.detail.item.text);
+			});
+		});
+	</script>
+</body>
+</html>
