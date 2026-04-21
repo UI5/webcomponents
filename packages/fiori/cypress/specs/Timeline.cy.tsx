@@ -813,4 +813,90 @@ describe("Timeline Header Bar", () => {
 			cy.get("[ui5-timeline-item]").eq(0).should("have.attr", "title-text", "Meeting with John");
 		});
 	});
+
+	describe("Filter Info Bar slot", () => {
+		it("should render filter info bar when slot content is provided", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<div slot="filterInfoBar" id="my-filter-bar">Filtered by: Open</div>
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find(".ui5-timeline-filter-info-bar")
+				.should("exist");
+
+			cy.get("[ui5-timeline-header-bar]")
+				.find("#my-filter-bar")
+				.should("exist");
+		});
+
+		it("should not render filter info bar wrapper when slot is empty", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<TimelineFilterOption text="Open" />
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find(".ui5-timeline-filter-info-bar")
+				.should("not.exist");
+		});
+
+		it("should show filter info bar when content is dynamically added", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<TimelineFilterOption text="Open" />
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find(".ui5-timeline-filter-info-bar")
+				.should("not.exist");
+
+			cy.get("[ui5-timeline-header-bar]").then($headerBar => {
+				const infoDiv = document.createElement("div");
+				infoDiv.slot = "filterInfoBar";
+				infoDiv.id = "dynamic-filter-bar";
+				infoDiv.textContent = "Filtered by: Open";
+				$headerBar[0].appendChild(infoDiv);
+			});
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find(".ui5-timeline-filter-info-bar")
+				.should("exist");
+		});
+
+		it("should render filter info bar between toolbar and dialog", () => {
+			cy.mount(
+				<Timeline>
+					<TimelineHeaderBar slot="headerBar" showFilter filterBy="Status">
+						<TimelineFilterOption text="Open" />
+						<div slot="filterInfoBar">Filtered by: Open</div>
+					</TimelineHeaderBar>
+					<TimelineItem titleText="Meeting" />
+				</Timeline>
+			);
+
+			cy.get("[ui5-timeline-header-bar]")
+				.shadow()
+				.find(".ui5-timeline-filter-info-bar")
+				.should("exist")
+				.prev("[ui5-toolbar]")
+				.should("exist");
+		});
+	});
 });

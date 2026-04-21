@@ -205,6 +205,18 @@ class TimelineHeaderBar extends UI5Element {
 	@slot({ type: HTMLElement, "default": true, invalidateOnChildChange: true })
 	filterOptions!: Slot<TimelineFilterOption>;
 
+	/**
+	 * Defines the content displayed below the toolbar as a filter info bar.
+	 *
+	 * Use this slot to show active filter summary information
+	 * along with a clear action. The application controls the content entirely.
+	 *
+	 * @public
+	 * @since 2.23.0
+	 */
+	@slot({ type: HTMLElement })
+	filterInfoBar!: Slot<HTMLElement>;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -253,6 +265,10 @@ class TimelineHeaderBar extends UI5Element {
 
 	get _filterDialogCancelText() {
 		return TimelineHeaderBar.i18nBundle.getText(TIMELINE_FILTER_DIALOG_CANCEL);
+	}
+
+	get _hasFilterInfoBar(): boolean {
+		return !!this.filterInfoBar.length;
 	}
 
 	_onSearchInput(e: CustomEvent) {

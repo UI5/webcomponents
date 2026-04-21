@@ -59,6 +59,12 @@ export default function TimelineHeaderBarTemplate(this: TimelineHeaderBar) {
 			)}
 		</Toolbar>
 
+		{this._hasFilterInfoBar && (
+			<div class="ui5-timeline-filter-info-bar">
+				<slot name="filterInfoBar"></slot>
+			</div>
+		)}
+
 		{/* Filter Dialog */}
 		{this.showFilter && (
 			<Dialog

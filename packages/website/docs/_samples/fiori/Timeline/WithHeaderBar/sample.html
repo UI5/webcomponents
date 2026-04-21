@@ -16,6 +16,11 @@
             <ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
             <ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
             <ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+
+            <div slot="filterInfoBar" id="filter-info-bar" style="display: none; align-items: center; gap: 0.5rem;">
+                <ui5-text id="filter-info-text" style="flex: 1;"></ui5-text>
+                <ui5-button id="clear-filters" icon="decline" design="Transparent" tooltip="Clear filters"></ui5-button>
+            </div>
         </ui5-timeline-header-bar>
 
         <ui5-timeline-item data-category="Meetings" data-date="2024-03-10T09:00" title-text="Sprint Planning" subtitle-text="10.03.2024 09:00" icon="calendar" name="Sarah Chen">
