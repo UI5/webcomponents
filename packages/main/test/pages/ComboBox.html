@@ -197,11 +197,8 @@
 		<br />
 
 		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
-			<ui5-cb-item text="Item 1"></ui5-cb-item>
-			<ui5-cb-item text="Item 2"></ui5-cb-item>
-			<ui5-cb-item text="Item 3"></ui5-cb-item>
 		</ui5-combobox>
-		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+		<ui5-button id="btn-clear">Clear items</ui5-button>
 	</div>
 
 	<div class="demo-section">
@@ -637,9 +634,33 @@
 			document.getElementById("combo").focus();
 		});
 
-		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
-			const combo = document.getElementById("toggle-loading-cb");
-			combo.loading = !combo.loading;
+		const cbLazyLoad = document.getElementById("toggle-loading-cb"); 
+
+		document.getElementById("btn-clear").addEventListener("click", () => {
+			while (cbLazyLoad.firstChild) {
+				cbLazyLoad.removeChild(cbLazyLoad.firstChild);
+			}
+		});
+
+		const createItem = (cb, text) => {
+			const item = document.createElement("ui5-cb-item");
+			item.text = text;
+			cb.appendChild(item);
+		};
+
+		cbLazyLoad.addEventListener("open", (e) => {
+			if(!cbLazyLoad.items.length){
+				const invisibleMessage = window["sap-ui-webcomponents-bundle"].invisibleMessage;
+				cbLazyLoad.loading = true;
+				invisibleMessage.announce("Loading data", "Assertive");
+				createItem(cbLazyLoad, `Item 1`);
+				createItem(cbLazyLoad, `Item 2`);
+				createItem(cbLazyLoad, `Item 3`);
+				setTimeout(() => {
+					cbLazyLoad.loading = false;
+					invisibleMessage.announce("Data loaded. 3 results are available", "Assertive");
+				}, 3000);
+			}
 		});
 	</script>
 
