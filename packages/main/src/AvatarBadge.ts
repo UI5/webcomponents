@@ -46,6 +46,7 @@ const ICON_NOT_FOUND = "ICON_NOT_FOUND";
  */
 @customElement({
 	tag: "ui5-avatar-badge",
+	languageAware: true,
 	renderer: jsxRenderer,
 	styles: AvatarBadgeCss,
 	template: AvatarBadgeTemplate,
