@@ -1,18 +1,15 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
 
 // Styles
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
-
-import { AVATAR_TOOLTIP } from "./generated/i18n/i18n-defaults.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
@@ -107,9 +104,6 @@ class AvatarBadge extends UI5Element {
 	@property({ noAttribute: true })
 	effectiveAccessibleName?: string;
 
-	@i18n("@ui5/webcomponents")
-	static i18nBundle: I18nBundle;
-
 	async onBeforeRendering() {
 		const icon = this.icon;
 		if (!icon) {
@@ -126,12 +120,17 @@ class AvatarBadge extends UI5Element {
 		} else if (this.accessibleName) {
 			// User-provided accessible name takes precedence
 			this.effectiveAccessibleName = this.accessibleName;
+		} else if (iconData && iconData !== ICON_NOT_FOUND && iconData.accData) {
+			// Use the icon's registered i18n label (e.g., message-error -> "Error")
+			if (iconData.packageName) {
+				const i18nBundle = await getI18nBundle(iconData.packageName);
+				this.effectiveAccessibleName = i18nBundle.getText(iconData.accData) || undefined;
+			} else {
+				this.effectiveAccessibleName = iconData.accData.defaultText || undefined;
+			}
 		} else {
 			// Derive from icon name (e.g., "edit" -> "Edit")
-			// If not possible, fall back to i18n "Avatar" text
-			this.effectiveAccessibleName = icon
-				? icon.charAt(0).toUpperCase() + icon.slice(1)
-				: AvatarBadge.i18nBundle.getText(AVATAR_TOOLTIP);
+			this.effectiveAccessibleName = icon.charAt(0).toUpperCase() + icon.slice(1);
 		}
 	}
 }
