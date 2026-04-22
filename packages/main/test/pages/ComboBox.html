@@ -331,6 +331,20 @@
 		</ui5-combobox>
 	</div>
 
+	<div class="demo-section">
+		<span>ComboBox - selectedValue</span>
+		<ui5-combobox id="selected-value-cb">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 4" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 5" value="5"></ui5-cb-item>
+		</ui5-combobox>
+		<br>
+		<span>Value: <strong id="cb-value"></strong></span><br>
+		<span>Selected Value: <strong id="cb-selected-value"></strong></span><br>
+	</div>
+
 	<section>
 		<h3>ComboBox Composition</h3>
 
@@ -640,6 +654,12 @@
 		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
 			const combo = document.getElementById("toggle-loading-cb");
 			combo.loading = !combo.loading;
+		});
+
+		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
+			const combo = event.target;
+			document.getElementById("cb-value").innerHTML = combo.value || "(empty)";
+			document.getElementById("cb-selected-value").innerHTML = combo.selectedValue || "(none)";
 		});
 	</script>
 
