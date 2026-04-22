@@ -35,7 +35,7 @@ class DateFormat extends DateFormatWrapped {
 	 * @private
 	 */
 	private static _cache = new Map<string, DateFormat>();
-	
+
 	private static _stats = {
 		totalCalls: 0,
 		cacheHits: 0,
@@ -55,7 +55,7 @@ class DateFormat extends DateFormatWrapped {
 			console.log(`  ${index + 1}. ${key}`);
 		});
 		console.log("=========================================\n");
-		
+
 		return {
 			totalCalls: DateFormat._stats.totalCalls,
 			cacheHits: DateFormat._stats.cacheHits,
@@ -69,11 +69,11 @@ class DateFormat extends DateFormatWrapped {
 	static getDateInstance(oLocale?: LocaleWrapped): DateFormat;
 	static getDateInstance(oFormatOptionsOrLocale?: DateFormatOptions | LocaleWrapped, oLocale?: LocaleWrapped): DateFormat {
 		DateFormat._stats.totalCalls++;
-		
+
 		if (oFormatOptionsOrLocale instanceof LocaleWrapped) {
-         return DateFormatWrapped.getDateInstance(undefined, oFormatOptionsOrLocale);
+			return DateFormatWrapped.getDateInstance(undefined, oFormatOptionsOrLocale);
 		}
-		
+
 		const nativeLocale = oLocale ?? new LocaleWrapped(getLocale().toString());
 		const cacheKey = `date:${JSON.stringify(oFormatOptionsOrLocale || {})}:${nativeLocale.toString()}`;
 		
@@ -87,7 +87,7 @@ class DateFormat extends DateFormatWrapped {
 			DateFormat._stats.cacheHits++;
 			console.log(`[DateFormat CACHE HIT #${DateFormat._stats.cacheHits}] Reusing CACHED date instance`);
 		}
-		
+
 		return DateFormat._cache.get(cacheKey)!;
 	}
 
@@ -95,14 +95,14 @@ class DateFormat extends DateFormatWrapped {
 	static getTimeInstance(oLocale?: LocaleWrapped): DateFormat;
 	static getTimeInstance(oFormatOptionsOrLocale?: DateFormatOptions | LocaleWrapped, oLocale?: LocaleWrapped): DateFormat {
 		DateFormat._stats.totalCalls++;
-		
+
 		if (oFormatOptionsOrLocale instanceof LocaleWrapped) {
-         return DateFormatWrapped.getTimeInstance(undefined, oFormatOptionsOrLocale);
+			return DateFormatWrapped.getTimeInstance(undefined, oFormatOptionsOrLocale);
 		}
-		
+
 		const nativeLocale = oLocale ?? new LocaleWrapped(getLocale().toString());
 		const cacheKey = `time:${JSON.stringify(oFormatOptionsOrLocale || {})}:${nativeLocale.toString()}`;
-		
+
 		if (!DateFormat._cache.has(cacheKey)) {
 			DateFormat._stats.cacheMisses++;
 			console.log(`[DateFormat CACHE MISS #${DateFormat._stats.cacheMisses}] Creating NEW time instance | Total instances: ${DateFormat._cache.size + 1}`);
@@ -113,7 +113,7 @@ class DateFormat extends DateFormatWrapped {
 			DateFormat._stats.cacheHits++;
 			console.log(`[DateFormat CACHE HIT #${DateFormat._stats.cacheHits}] Reusing CACHED time instance`);
 		}
-		
+
 		return DateFormat._cache.get(cacheKey)!;
 	}
 
@@ -121,14 +121,14 @@ class DateFormat extends DateFormatWrapped {
 	static getDateTimeInstance(oLocale?: LocaleWrapped): DateFormat;
 	static getDateTimeInstance(oFormatOptionsOrLocale?: DateFormatOptions | LocaleWrapped, oLocale?: LocaleWrapped): DateFormat {
 		DateFormat._stats.totalCalls++;
-		
+
 		if (oFormatOptionsOrLocale instanceof LocaleWrapped) {
-         return DateFormatWrapped.getDateTimeInstance(undefined, oFormatOptionsOrLocale);
+			return DateFormatWrapped.getDateTimeInstance(undefined, oFormatOptionsOrLocale);
 		}
-		
+
 		const nativeLocale = oLocale ?? new LocaleWrapped(getLocale().toString());
 		const cacheKey = `datetime:${JSON.stringify(oFormatOptionsOrLocale || {})}:${nativeLocale.toString()}`;
-		
+
 		if (!DateFormat._cache.has(cacheKey)) {
 			DateFormat._stats.cacheMisses++;
 			console.log(`[DateFormat CACHE MISS #${DateFormat._stats.cacheMisses}] Creating NEW datetime instance | Total instances: ${DateFormat._cache.size + 1}`);
@@ -139,23 +139,24 @@ class DateFormat extends DateFormatWrapped {
 			DateFormat._stats.cacheHits++;
 			console.log(`[DateFormat CACHE HIT #${DateFormat._stats.cacheHits}] Reusing CACHED datetime instance`);
 		}
-		
+
 		return DateFormat._cache.get(cacheKey)!;
 	}
 }
 
 // @ts-ignore
-if (typeof window !== "undefined") {
-	// @ts-ignore
-	window.DateFormatStats = {
-		log: () => DateFormat.logCacheStats(),
-		get: () => ({
-			totalCalls: DateFormat["_stats"].totalCalls,
-			cacheHits: DateFormat["_stats"].cacheHits,
-			cacheMisses: DateFormat["_stats"].cacheMisses,
-			uniqueInstances: DateFormat["_cache"].size,
-		}),
-	};
-}
+window.DateFormatStats = {
+	log: () => DateFormat.logCacheStats(),
+	get: () => ({
+		// @ts-ignore
+		totalCalls: DateFormat._stats.totalCalls,
+		// @ts-ignore
+		cacheHits: DateFormat._stats.cacheHits,
+		// @ts-ignore
+		cacheMisses: DateFormat._stats.cacheMisses,
+		// @ts-ignore
+		uniqueInstances: DateFormat._cache.size,
+	}),
+};
 
 export default DateFormat;
