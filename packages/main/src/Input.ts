@@ -170,7 +170,7 @@ type InputSuggestionScrollEventDetail = {
  * The `ui5-input` component allows the user to enter and edit text or numeric values in one line.
  *
  * Additionally, you can provide `suggestionItems`,
- * that are displayed in a popover right under the input.
+ * that are displayed in a popover right under the input. Keep in mind that `ui5-input` with type `Number` does not support suggestions.
  *
  * The text field can be editable or read-only (`readonly` property),
  * and it can be enabled or disabled (`disabled` property).
@@ -376,6 +376,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * and the current language settings, especially for type `Number`.
 	 * - The property is mostly intended to be used with touch devices
 	 * that use different soft keyboard layouts depending on the given input type.
+	 * - Type `Number` does not support suggestions.
 	 * @default "Text"
 	 * @public
 	 */
@@ -587,6 +588,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * property is set to `true`.
 	 *
 	 * **Note:** The `<ui5-suggestion-item>`, `<ui5-suggestion-item-group>` and `ui5-suggestion-item-custom` are recommended to be used as suggestion items.
+	 *
+	 * **Note:** Input with type `Number` does not support suggestions.
 	 *
 	 * @public
 	 */
