@@ -169,7 +169,7 @@ type InputSuggestionScrollEventDetail = {
  *
  * The `ui5-input` component allows the user to enter and edit text or numeric values in one line.
  *
- * Additionally, you can provide `suggestionItems`,
+ * Additionally, you can provide `suggestionItems`
  * that are displayed in a popover right under the input. Keep in mind that `ui5-input` with type `Number` does not support suggestions.
  *
  * The text field can be editable or read-only (`readonly` property),
