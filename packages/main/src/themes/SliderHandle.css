@@ -10,7 +10,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 2;
+	z-index: 5;
 	top: 0;
 	cursor: pointer;
 	margin-inline-start: calc(var(--_ui5_slider_handle_width) / -2 );
@@ -21,6 +21,7 @@
 :host(:focus) {
 	outline: var(--ui5_slider_handle_outline);
 	outline-offset: var(--ui5_slider_handle_outline_offset);
+	z-index: 6;
 }
 
 :host(:hover) {
@@ -64,6 +65,5 @@
 }
 
 :host([orientation="Vertical"]) {
-	/* rotate */
 	transform: rotate(90deg);
 }

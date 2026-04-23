@@ -26,7 +26,3 @@
 	cursor: default;
 	pointer-events: none;
 }
-
-[ui5-slider-handle] {
-	z-index: 5;
-}

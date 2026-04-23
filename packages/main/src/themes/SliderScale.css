@@ -63,7 +63,6 @@
 	border-radius: .25rem;
 }
 
-/* Progress bar focus styling - used by RangeSlider for selected range */
 .ui5-slider-scale-progress:focus {
 	outline: none;
 }
@@ -83,7 +82,6 @@
 	box-sizing: border-box;
 }
 
-/* Legacy progress focus styling (for backward compatibility) */
 .ui5-slider-scale-progress:focus::before,
 .ui5-slider-scale-progress.ui5-slider-progress--focused::before {
 	display: var(--_ui5_range_slider_legacy_progress_focus_display);
