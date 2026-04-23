@@ -51,6 +51,7 @@
 :host([active][actionable]:not([data-moving])),
 :host([active][actionable][selected]:not([data-moving])) {
 	background-color: var(--sapList_Active_Background);
+	border-bottom-color: var(--sapList_Active_Background);
 }
 
 /* focused */
