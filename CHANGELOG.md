@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.1...v2.22.0-rc.2) (2026-04-23)
+
+
+### Bug Fixes
+
+* **ui5-avatar-badge:** handle delayed icon collection loading ([#13405](https://github.com/UI5/webcomponents/issues/13405)) ([e4fba6a](https://github.com/UI5/webcomponents/commit/e4fba6a4618104a53728e06bf88d91775d6f4e7c)), closes [#13401](https://github.com/UI5/webcomponents/issues/13401)
+* **ui5-combobox:** set selectedValue correctly on change ([#13426](https://github.com/UI5/webcomponents/issues/13426)) ([fe51b7d](https://github.com/UI5/webcomponents/commit/fe51b7dc9255bb5b2e30f1be61374187c2abfbf0))
+* **ui5-input:** enhance documentation ([#13424](https://github.com/UI5/webcomponents/issues/13424)) ([eae39b1](https://github.com/UI5/webcomponents/commit/eae39b178716c47bf31325127070b0b0f5198131))
+* **ui5-multi-combobox:** clear value state error on item selection ([#13404](https://github.com/UI5/webcomponents/issues/13404)) ([d40fff6](https://github.com/UI5/webcomponents/commit/d40fff65cf637b48a0a2c56fc3e9c1d36e244b18)), closes [#13385](https://github.com/UI5/webcomponents/issues/13385)
+* **ui5-select:** correct focus styling for read-only state ([#13400](https://github.com/UI5/webcomponents/issues/13400)) ([4ac0d74](https://github.com/UI5/webcomponents/commit/4ac0d7484206721ee302dbba5ebfdf014341bcc4)), closes [#13309](https://github.com/UI5/webcomponents/issues/13309)
+* **ui5-shellbar-search:** fire search on mobile devices on search icon press ([#13410](https://github.com/UI5/webcomponents/issues/13410)) ([4de2083](https://github.com/UI5/webcomponents/commit/4de208302675ab036ba72ee8e6dce3a07c4a02bf))
+* **ui5-step-input:** adjust z-index and fix focus issues ([#13391](https://github.com/UI5/webcomponents/issues/13391)) ([df9a5da](https://github.com/UI5/webcomponents/commit/df9a5dac97d561c9c7434d75a94d0411d1845c81)), closes [#7709](https://github.com/UI5/webcomponents/issues/7709)
+
+
+### Features
+
+* **ui5-avatar-badge:** add accessibleName property for custom tooltip ([#13390](https://github.com/UI5/webcomponents/issues/13390)) ([4f1f6f0](https://github.com/UI5/webcomponents/commit/4f1f6f0bebe5b990edc0a648bf70c3888e040f7c))
+* **ui5-switch:** accessibility is enhanced for readonly state. ([#13367](https://github.com/UI5/webcomponents/issues/13367)) ([b43f56e](https://github.com/UI5/webcomponents/commit/b43f56eb4aad113e4672b461d8d8a14c19bfc536))
+* **ui5-timeline-item:** introduce iconTooltip property ([#13387](https://github.com/UI5/webcomponents/issues/13387)) ([663fc51](https://github.com/UI5/webcomponents/commit/663fc5121215d4944eb9e86c188c8afd99ff8552)), closes [#12238](https://github.com/UI5/webcomponents/issues/12238)
+
+
+
+
+
 # [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
 
 
