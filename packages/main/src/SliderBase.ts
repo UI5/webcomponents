@@ -765,10 +765,6 @@ abstract class SliderBase extends UI5Element {
 		return this.disabled ? -1 : 0;
 	}
 
-	get _ariaKeyshortcuts() {
-		return this.editableTooltip ? "F2" : undefined;
-	}
-
 	get _ariaDescribedByHandleText() {
 		return this.editableTooltip ? "ui5-slider-InputDesc" : undefined;
 	}

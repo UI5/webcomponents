@@ -31,7 +31,6 @@ const startHandle = (slider: RangeSlider) => {
 				aria-label={slider._ariaLabelStartHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
-				aria-keyshortcuts={slider._ariaKeyshortcuts}
 				onFocusIn={slider._onfocusin}
 				onFocusOut={slider._onfocusout}
 				style={{
@@ -66,7 +65,6 @@ const endHandle = (slider: RangeSlider) => {
 				aria-label={slider._ariaLabelEndHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
-				aria-keyshortcuts={slider._ariaKeyshortcuts}
 				onFocusIn={slider._onfocusin}
 				onFocusOut={slider._onfocusout}
 				style={{
