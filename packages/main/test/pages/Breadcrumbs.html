@@ -200,6 +200,25 @@
 		</ui5-breadcrumbs>
 	</div>
 
+	<h2>BreadcrumbsItem click event</h2>
+	<p>Each item fires its own <code>ui5-click</code> event. The log below shows which item was clicked.</p>
+
+	<ui5-breadcrumbs id="breadcrumbsClickEvent">
+		<ui5-breadcrumbs-item id="clickItem1" href="#">Products</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item id="clickItem2" href="#">Laptops</ui5-breadcrumbs-item>
+		<ui5-breadcrumbs-item id="clickItem3">ThinkPad X1</ui5-breadcrumbs-item>
+	</ui5-breadcrumbs>
+
+	<p>Last item click: <span id="itemClickResult">-</span></p>
+
+	<script>
+		document.querySelectorAll("#breadcrumbsClickEvent ui5-breadcrumbs-item").forEach((item) => {
+			item.addEventListener("ui5-click", (e) => {
+				document.getElementById("itemClickResult").textContent = item.innerText.trim();
+			});
+		});
+	</script>
+
 	<script>
 		// HCB button
 		var btn = document.getElementById('myBtn');

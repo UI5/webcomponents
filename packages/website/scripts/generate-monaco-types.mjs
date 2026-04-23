@@ -237,6 +237,8 @@ const COMPONENTS = [
   { name: "Timeline", package: "fiori", tag: "ui5-timeline" },
   { name: "TimelineItem", package: "fiori", tag: "ui5-timeline-item" },
   { name: "TimelineGroupItem", package: "fiori", tag: "ui5-timeline-group-item" },
+  { name: "TimelineHeaderBar", package: "fiori", tag: "ui5-timeline-header-bar" },
+  { name: "TimelineFilterOption", package: "fiori", tag: "ui5-timeline-filter-option" },
   { name: "Page", package: "fiori", tag: "ui5-page" },
   { name: "DynamicPage", package: "fiori", tag: "ui5-dynamic-page" },
   { name: "DynamicPageTitle", package: "fiori", tag: "ui5-dynamic-page-title" },

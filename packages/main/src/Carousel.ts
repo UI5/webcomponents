@@ -785,7 +785,7 @@ class Carousel extends UI5Element {
 		}
 
 		if (newItemIndex > items.length - effectiveItemsPerPage) {
-			newItemIndex = items.length	 - effectiveItemsPerPage;
+			newItemIndex = Math.max(0, items.length - effectiveItemsPerPage);
 		}
 		const lastItemIndex = newItemIndex + effectiveItemsPerPage;
 

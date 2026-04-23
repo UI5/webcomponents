@@ -281,3 +281,34 @@ describe("Color Palette - getFocusDomRef", () => {
 			});
 	});
 });
+
+describe("Color Palette Item - tooltip", () => {
+	it("should display the color value as tooltip when no custom tooltip is set", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="no-tooltip" value="darkblue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#no-tooltip")
+			.shadow()
+			.find(".ui5-cp-item")
+			.should("have.attr", "title")
+			.and("contain", "darkblue");
+	});
+
+	it("should display the custom tooltip when tooltip property is set", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="custom-tooltip" value="#d60d5a" tooltip="Raspberry"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#custom-tooltip")
+			.shadow()
+			.find(".ui5-cp-item")
+			.should("have.attr", "title")
+			.and("contain", "Raspberry")
+			.and("not.contain", "#d60d5a");
+	});
+});

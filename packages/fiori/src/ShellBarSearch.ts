@@ -39,6 +39,11 @@ class ShellBarSearch extends Search {
 	autoOpen = false;
 
 	_handleSearchIconPress() {
+		if (isPhone() && this.open) {
+			this._handleSearchEvent();
+			return;
+		}
+
 		super._handleSearchIconPress();
 
 		if (this.collapsed) {

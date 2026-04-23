@@ -234,14 +234,14 @@ function App() {
         <div className="content">
           <div className="guidedPromptForm">
             <div className="guidedPromptFormGroup">
-              <Label>Structure:</Label>
+              <Label showColon={true}>Structure</Label>
               <Select onChange={handleStructureChange}>
                 <Option value="paragraph">Paragraph</Option>
                 <Option value="bulleted"> Bullet list</Option>
               </Select>
             </div>
             <div className="guidedPromptFormGroup">
-              <Label>Length:</Label>
+              <Label showColon={true}>Length</Label>
               <RangeSlider
                 min={50}
                 max={150}
@@ -251,14 +251,14 @@ function App() {
               />
             </div>
             <div className="guidedPromptFormGroup">
-              <Label>Language:</Label>
+              <Label showColon={true}>Language</Label>
               <Select onChange={handleLanguageChange}>
                 <Option value="en">English</Option>
                 <Option value="de">German</Option>
               </Select>
             </div>
             <div className="guidedPromptFormGroup">
-              <Label>Tone Of Voice:</Label>
+              <Label showColon={true}>Tone Of Voice</Label>
               <SegmentedButton onSelectionChange={handleToneOfVoiceChange}>
                 <SegmentedButtonItem>Formal</SegmentedButtonItem>
                 <SegmentedButtonItem selected={true}>
@@ -291,7 +291,7 @@ function App() {
           />
         </CardHeader>
         <section className="guidedPromptSection">
-          <Label required={true}>To: </Label>
+          <Label showColon={true} required={true}>To</Label>
           <div style={{ display: "flex", gap: "0.125rem" }}>
             <Token
               style={{ width: "fit-content", marginBlockEnd: "1rem" }}
@@ -300,8 +300,8 @@ function App() {
             />
           </div>
           <div className="guidedPromptLblBtn">
-            <Label style={{ alignSelf: "flex-end" }} required={true}>
-              Offer:{" "}
+            <Label showColon={true} style={{ alignSelf: "flex-end" }} required={true}>
+              Offer
             </Label>
             <AIButton
               state={aiButtonState}

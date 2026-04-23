@@ -92,6 +92,19 @@ function _getSplitButtonItems(this: ViewSettingsDialog) {
 		);
 	}
 
+	if (this.shouldBuildCustomTabs) {
+		this._renderableCustomTabs.forEach(customTab => {
+			buttonItems.push(
+				<SegmentedButtonItem
+					selected={this.isCurrentCustomTabMode(customTab)}
+					data-mode={this._customTabMode(customTab)}
+					tooltip={customTab.tooltip}
+					icon={customTab.icon}
+				/>
+			);
+		});
+	}
+
 	return buttonItems;
 }
 
@@ -114,6 +127,24 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 			{this.shouldBuildGroup && this.isModeGroup && (
 				ViewSettingsDialogSortAndGroupTemplate.call(this, false)
 			)}
+
+			{this.isModeCustom && this._selectedCustomTab && (
+				<div class="ui5-vsd-custom-tab-content">
+					{this._selectedCustomTab.title && (
+						<div class="ui5-vsd-custom-tab-title">{this._selectedCustomTab.title}</div>
+					)}
+					<slot class="ui5-vsd-custom-tab-slot" name={this._selectedCustomTab._individualSlot}></slot>
+				</div>
+			)}
+
+			{/* Hidden slots for non-active custom tabs to prevent content leaking */}
+			<div class="ui5-vsd-hidden-tabs">
+				{this.customTabs
+					.filter(tab => tab !== this._selectedCustomTab)
+					.map(tab => (
+						<slot name={tab._individualSlot}></slot>
+					))}
+			</div>
 
 		</div>
 	);
@@ -164,6 +195,7 @@ function ViewSettingsDialogFilterTemplate(this: ViewSettingsDialog) {
 				<List
 					selectionMode="Multiple"
 					onSelectionChange={this._handleFilterValueItemClick} // checkboxes to select/deselect - use selectionChange
+					filter-options=""
 					accessibleNameRef={`${this._id}-label`}
 				>
 					{this._currentSettings.filters.filter(item => item.selected).map(item => (<>
@@ -177,6 +209,7 @@ function ViewSettingsDialogFilterTemplate(this: ViewSettingsDialog) {
 			) : ( // else
 				<List
 					onItemClick={this._changeCurrentFilter} // list item to drill down into the second-level menu - use click
+					filter-list=""
 					accessibleNameRef={`${this._id}-label`}
 				>
 					<ListItemGroup headerText={this._filterByLabel}>

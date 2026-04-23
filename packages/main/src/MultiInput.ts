@@ -32,7 +32,6 @@ import type Token from "./Token.js";
 import type Tokenizer from "./Tokenizer.js";
 import { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
-import type Icon from "./Icon.js";
 
 import type {
 	InputSelectionChangeEventDetail as MultiInputSelectionChangeEventDetail,
@@ -215,11 +214,11 @@ class MultiInput extends Input implements IFormInputElement {
 	}
 
 	valueHelpMouseDown(e: MouseEvent) {
-		const target = e.target as Icon;
+		e.preventDefault();
+		this.focus();
 		this.closeValueStatePopover();
 		this.tokenizer.open = false;
 		this._valueHelpIconPressed = true;
-		target.focus();
 	}
 
 	_tokenizerFocusOut(e: FocusEvent) {
@@ -360,6 +359,9 @@ class MultiInput extends Input implements IFormInputElement {
 
 		if (this.tokenizer) {
 			this.tokenizer.readonly = this.readonly;
+
+			// Set the CSS variable on the tokenizer element so it's available in the shadow DOM
+			this.tokenizer.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 		}
 	}
 

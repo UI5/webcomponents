@@ -1,0 +1,51 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
+    <!-- playground-fold-end -->
+
+    <ui5-timeline id="timeline">
+        <ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Category">
+            <ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
+            <ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
+            <ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+        </ui5-timeline-header-bar>
+
+        <ui5-timeline-item data-category="Meetings" data-date="2024-03-10T09:00" title-text="Sprint Planning" subtitle-text="10.03.2024 09:00" icon="calendar" name="Sarah Chen">
+            Kick-off for Sprint 24. Estimated velocity: 42 story points.
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Development" data-date="2024-03-10T11:30" title-text="Code Review Session" subtitle-text="10.03.2024 11:30" icon="developer-settings" name="James Rivera">
+            Review pull request for authentication module
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Meetings" data-date="2024-03-10T14:00" title-text="Client Requirements Call" subtitle-text="10.03.2024 14:00" icon="phone" name="Emily Watson">
+            Discussed Q2 roadmap priorities
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Development" data-date="2024-03-10T16:00" title-text="API Documentation Update" subtitle-text="10.03.2024 16:00" icon="document" name="Arun Patel">
+            Added OpenAPI specs for new endpoints
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Releases" data-date="2024-03-11T06:00" title-text="Deploy v2.5.1 to Staging" subtitle-text="11.03.2024 06:00" icon="upload" name="DevOps Pipeline" state="Positive">
+            Staging deployment successful. Smoke tests passed.
+        </ui5-timeline-item>
+
+        <ui5-timeline-item data-category="Meetings" data-date="2024-03-12T09:00" title-text="Post-Release Retrospective" subtitle-text="12.03.2024 09:00" icon="group" name="Full Team">
+            Key takeaway: improve staging parity with prod.
+        </ui5-timeline-item>
+    </ui5-timeline>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

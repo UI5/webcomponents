@@ -7,6 +7,11 @@
 	--_ui5_calendar_header_height: 3rem;
 	--_ui5_calendar_header_arrow_button_width: 2.5rem;
 	--_ui5_calendar_header_padding: 0.25rem 0;
+	--_ui5_calendar_multiple_layout: row;
+	--_ui5_calendar_multiple_gap: 1rem;
+	--_ui5_calendar_multiple_width: calc((var(--_ui5_calendar_width) * 2) + (var(--_ui5_calendar_left_right_padding) * 2));
+	--_ui5_calendar_overlay_top: 57%;
+	--_ui5_calendar_overlay_width: 16rem;
 
 	--_ui5_checkbox_root_side_padding: .6875rem;
 	--_ui5_checkbox_icon_size: 1rem;
@@ -26,6 +31,7 @@
 	--_ui5_daypicker_item_now_selected_two_calendar_focus_secondary_text_padding_block: 0 0.5rem;
 	--_ui5_daypicker_two_calendar_item_selected_focus_margin_bottom: 0;
 	--_ui5_daypicker_two_calendar_item_selected_focus_padding_right: 0.4375rem;
+	--_ui5_calendar_multiple_months_height: var(--_ui5_calendar_height);
 
 	/* CalendarLegend */
 	--_ui5-calendar-legend-item-root-focus-offset: -0.125rem;
@@ -74,7 +80,8 @@
 	--_ui5_input_inner_padding: 0 0.625rem;
 	--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.625rem;
 	--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-	--_ui5_input_inner_space_to_n_more_text: 0.1875rem;
+	--_ui5_input_inner_space_to_n_more_text: 0.3125rem;
+	--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.3125rem;
 	--_ui5_list_no_data_height: 3rem;
 	--_ui5_list_item_cb_margin_right: 0;
 	--_ui5_list_item_title_size: var(--sapFontLargeSize);
@@ -103,7 +110,7 @@
 	--_ui5_popup_default_header_height: 2.75rem;
 
 	--_ui5_year_picker_item_height: 3rem;
-	--_ui5_tokenizer_padding: 0.25rem;
+	--_ui5_tokenizer_padding: 0.3125rem;
 	--_ui5_token_height: 1.625rem;
 	--_ui5_token_icon_size: .75rem;
 	--_ui5_token_icon_padding: 0.25rem 0.5rem;
@@ -176,6 +183,12 @@
 		--_ui5_calendar_header_height: 2rem;
 		--_ui5_calendar_header_arrow_button_width: 2rem;
 		--_ui5_calendar_header_padding: 0;
+		--_ui5_calendar_multiple_layout: column;
+		--_ui5_calendar_multiple_gap: 0.5rem;
+		--_ui5_calendar_multiple_width: var(--_ui5_calendar_width);
+		--_ui5_calendar_overlay_top: 54%;
+		--_ui5_calendar_overlay_width: 100%;
+		--_ui5_calendar_multiple_months_height: calc(2 * var(--_ui5_calendar_height));
 
 		/* Calendar Legend */
 		--_ui5-calendar-legend-root-padding: 0.5rem;
@@ -267,10 +280,12 @@
 		/* Input */
 		--_ui5_input_height: var(--sapElement_Compact_Height);
 		--_ui5_input_inner_padding: 0 0.5rem;
-		--_ui5_input_inner_padding_with_icon: 0 0.2rem 0 0.5rem;
+		--_ui5_input_inner_padding_with_icon: 0 0.25rem 0 0.5rem;
 		--_ui5_input_inner_space_to_tokenizer: 0.125rem;
-		--_ui5_input_inner_space_to_n_more_text: 0.125rem;
+		--_ui5_input_inner_space_to_n_more_text: 0.25rem;
+		--_ui5_input_inner_with_tokenizer_padding_inline_end: 0.25rem;
 		--_ui5_input_icon_min_width: var(--_ui5_input_compact_min_width);
+		--_ui5_input_min_width_tokenizer_available: 2rem;
 
 		/* Menu */
 		--_ui5_menu_item_padding: 0 0.75rem 0 0.5rem;
@@ -349,6 +364,9 @@
 		--_ui5-tree-toggle-box-width: 2rem;
 		--_ui5-tree-toggle-box-height: 1.5rem;
 		--_ui5-tree-toggle-icon-size: 0.8125rem;
+
+		/* Tokenizer */
+		--_ui5_tokenizer_padding: 0.25rem;
 
 		/* Toolbar */
 		--_ui5-toolbar-separator-height: 1.5rem;
