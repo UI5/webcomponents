@@ -173,6 +173,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	_lastValidStartValue: string;
 	_lastValidEndValue: string;
 	_areInputValuesSwapped = false;
+	_onDocumentClickBound: (e: MouseEvent) => void;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -196,15 +197,15 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		this._stateStorage.endValue = undefined;
 		this._lastValidStartValue = this.min.toString();
 		this._lastValidEndValue = this.max.toString();
-		this._onDocumentClick = this._onDocumentClick.bind(this);
+		this._onDocumentClickBound = this._onDocumentClick.bind(this);
 	}
 
 	onEnterDOM() {
-		document.addEventListener("mousedown", this._onDocumentClick, true);
+		document.addEventListener("mousedown", this._onDocumentClickBound, true);
 	}
 
 	onExitDOM() {
-		document.removeEventListener("mousedown", this._onDocumentClick, true);
+		document.removeEventListener("mousedown", this._onDocumentClickBound, true);
 	}
 
 	/**
@@ -212,7 +213,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_onDocumentClick(e: MouseEvent) {
-		const target = e.target as HTMLElement;
 		const clickedInside = e.composedPath().includes(this);
 
 		if (!clickedInside) {

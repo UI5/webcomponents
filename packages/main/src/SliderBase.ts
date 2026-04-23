@@ -300,7 +300,14 @@ abstract class SliderBase extends UI5Element {
 
 		if (isF2(e) && isHandleFocused) {
 			const handleType = target.getAttribute("handle-type");
-			const tooltipSelector = handleType === "Start" ? "[data-sap-ui-start-value]" : handleType === "End" ? "[data-sap-ui-end-value]" : "[ui5-slider-tooltip]";
+			let tooltipSelector: string;
+			if (handleType === "Start") {
+				tooltipSelector = "[data-sap-ui-start-value]";
+			} else if (handleType === "End") {
+				tooltipSelector = "[data-sap-ui-end-value]";
+			} else {
+				tooltipSelector = "[ui5-slider-tooltip]";
+			}
 			const tooltip = this.shadowRoot!.querySelector<HTMLElement>(tooltipSelector);
 			tooltip?.focus();
 			return;
