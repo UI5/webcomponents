@@ -349,6 +349,22 @@ class Slider extends SliderBase implements IFormInputElement {
 		return Slider.i18nBundle.getText(SLIDER_ARIA_DESCRIPTION);
 	}
 
+	get tickmarksObject() {
+		const count = this._tickmarksCount;
+		const arr = [];
+
+		if (this._hiddenTickmarks) {
+			return [false, false];
+		}
+
+		for (let i = 0; i <= count; i++) {
+			const tickValue = this._effectiveMin + (i * this.step);
+			arr.push(tickValue <= this.value);
+		}
+
+		return arr;
+	}
+
 	get _ariaDescribedByInputText() {
 		return Slider.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_DESCRIPTION);
 	}
