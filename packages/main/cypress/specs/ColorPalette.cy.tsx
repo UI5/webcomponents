@@ -401,17 +401,19 @@ describe("Color Palette Item: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					// Check that event detail contains modifier keys
-					expect(e.detail).to.have.property("altKey");
-					expect(e.detail).to.have.property("ctrlKey");
-					expect(e.detail).to.have.property("metaKey");
-					expect(e.detail).to.have.property("shiftKey");
+					// Check that event detail contains item and originalEvent
+					expect(e.detail).to.have.property("item");
+					expect(e.detail).to.have.property("originalEvent");
 					
-					// Initially all should be false
-					expect(e.detail.altKey).to.be.false;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
-					expect(e.detail.shiftKey).to.be.false;
+					// Check item properties
+					expect(e.detail.item.value).to.equal("blue");
+					
+					// Check modifier keys from originalEvent
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.altKey).to.be.false;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
+					expect(originalEvent.shiftKey).to.be.false;
 				}).as("clickSpy"));
 			});
 
@@ -458,10 +460,12 @@ describe("Color Palette Item: click event", () => {
 		cy.then(() => eventDetail)
 			.then((detail) => {
 				expect(detail, "event detail should exist").to.exist;
-				expect(detail.ctrlKey, "ctrlKey should be true").to.be.true;
-				expect(detail.altKey, "altKey should be false").to.be.false;
-				expect(detail.metaKey, "metaKey should be false").to.be.false;
-				expect(detail.shiftKey, "shiftKey should be false").to.be.false;
+				expect(detail.item.value, "item value should be blue").to.equal("blue");
+				const originalEvent = detail.originalEvent;
+				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
+				expect(originalEvent.altKey, "altKey should be false").to.be.false;
+				expect(originalEvent.metaKey, "metaKey should be false").to.be.false;
+				expect(originalEvent.shiftKey, "shiftKey should be false").to.be.false;
 			});
 	});
 
@@ -476,10 +480,11 @@ describe("Color Palette Item: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					expect(e.detail.altKey).to.be.true;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
-					expect(e.detail.shiftKey).to.be.false;
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.altKey).to.be.true;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
+					expect(originalEvent.shiftKey).to.be.false;
 				}).as("clickSpyAlt"));
 			});
 
@@ -501,10 +506,11 @@ describe("Color Palette Item: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					expect(e.detail.shiftKey).to.be.true;
-					expect(e.detail.altKey).to.be.false;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.shiftKey).to.be.true;
+					expect(originalEvent.altKey).to.be.false;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
 				}).as("clickSpyShift"));
 			});
 
@@ -551,10 +557,12 @@ describe("Color Palette Item: click event", () => {
 		cy.then(() => eventDetail)
 			.then((detail) => {
 				expect(detail, "event detail should exist").to.exist;
-				expect(detail.ctrlKey, "ctrlKey should be true").to.be.true;
-				expect(detail.shiftKey, "shiftKey should be true").to.be.true;
-				expect(detail.altKey, "altKey should be false").to.be.false;
-				expect(detail.metaKey, "metaKey should be false").to.be.false;
+				expect(detail.item.value, "item value should be blue").to.equal("blue");
+				const originalEvent = detail.originalEvent;
+				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
+				expect(originalEvent.shiftKey, "shiftKey should be true").to.be.true;
+				expect(originalEvent.altKey, "altKey should be false").to.be.false;
+				expect(originalEvent.metaKey, "metaKey should be false").to.be.false;
 			});
 	});
 });

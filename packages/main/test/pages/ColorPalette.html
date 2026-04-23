@@ -175,14 +175,15 @@
 		// Sample 1: Individual item click events with modifier keys
 		[item1, item2, item3, item4, item5].forEach(function(item) {
 			item.addEventListener("click", function(event) {
+				const originalEvent = event.detail.originalEvent;
 				const modifiers = [];
-				if (event.detail.altKey) modifiers.push("Alt");
-				if (event.detail.ctrlKey) modifiers.push("Ctrl");
-				if (event.detail.metaKey) modifiers.push("Meta");
-				if (event.detail.shiftKey) modifiers.push("Shift");
+				if (originalEvent.altKey) modifiers.push("Alt");
+				if (originalEvent.ctrlKey) modifiers.push("Ctrl");
+				if (originalEvent.metaKey) modifiers.push("Meta");
+				if (originalEvent.shiftKey) modifiers.push("Shift");
 				
 				const modifierText = modifiers.length > 0 ? " with " + modifiers.join("+") : "";
-				itemClickEventResult.value = "Clicked " + item.value + modifierText;
+				itemClickEventResult.value = "Clicked item: " + item.value + " (event.detail.item.value: " + event.detail.item.value + ")" + modifierText;
 			});
 		});
 

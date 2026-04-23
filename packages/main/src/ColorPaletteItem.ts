@@ -16,10 +16,8 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
 
 type ColorPaletteItemNativeClickEventDetail = {
-	altKey: boolean;
-	ctrlKey: boolean;
-	metaKey: boolean;
-	shiftKey: boolean;
+	item: ColorPaletteItem,
+	originalEvent: Event;
 };
 
 /**
@@ -47,10 +45,8 @@ type ColorPaletteItemNativeClickEventDetail = {
  *
  * **Note:** The event will not be fired if the `disabled` property is set to `true`.
  *
- * @param {boolean} altKey Returns whether the "ALT" key was pressed when the event was triggered.
- * @param {boolean} ctrlKey Returns whether the "CTRL" key was pressed when the event was triggered.
- * @param {boolean} metaKey Returns whether the "META" key was pressed when the event was triggered.
- * @param {boolean} shiftKey Returns whether the "SHIFT" key was pressed when the event was triggered.
+ * @param {ColorPaletteItem} item The color palette item that was clicked.
+ * @param {Event} originalEvent The original DOM event that triggered the click. Use this to access modifier keys (altKey, ctrlKey, metaKey, shiftKey) and other native event properties.
  * @since 2.22.0
  * @public
  */
@@ -167,19 +163,10 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 
 		e.stopImmediatePropagation();
 
-		const {
-			altKey,
-			ctrlKey,
-			metaKey,
-			shiftKey,
-		} = e;
-
 		// Fire semantic click event (CustomEvent that bubbles)
 		const prevented = !this.fireDecoratorEvent("click", {
-			altKey,
-			ctrlKey,
-			metaKey,
-			shiftKey,
+			item: this,
+			originalEvent: e,
 		});
 
 		if (prevented) {
