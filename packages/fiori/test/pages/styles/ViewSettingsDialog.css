@@ -1,3 +1,30 @@
 .viewsettingsdialog1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+.vsd-custom-tab-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: var(--sapFontFamily);
+    color: var(--sapTextColor);
+}
+
+.vsd-custom-tab-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.vsd-custom-tab-state {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    background: var(--sapField_Background);
+    border: 1px solid var(--sapField_BorderColor);
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin: 0.5rem 0 0.75rem;
+    max-width: 32rem;
+}
