@@ -664,7 +664,7 @@ describe("SegmentedButtonItem: click event", () => {
 		cy.get("#item2").should("not.have.attr", "selected");
 	});
 
-	it("should provide correct modifier keys in click event detail", () => {
+	it("should provide item and originalEvent in click event detail", () => {
 		cy.mount(
 			<SegmentedButton>
 				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
@@ -675,17 +675,17 @@ describe("SegmentedButtonItem: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					// Check that event detail contains modifier keys
-					expect(e.detail).to.have.property("altKey");
-					expect(e.detail).to.have.property("ctrlKey");
-					expect(e.detail).to.have.property("metaKey");
-					expect(e.detail).to.have.property("shiftKey");
-					
-					// Initially all should be false
-					expect(e.detail.altKey).to.be.false;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
-					expect(e.detail.shiftKey).to.be.false;
+					// Check that event detail contains item and originalEvent
+					expect(e.detail).to.have.property("item");
+					expect(e.detail).to.have.property("originalEvent");
+
+					// Check item reference and properties
+					expect(e.detail.item).to.equal($el[0]);
+					expect(e.detail.item.id).to.equal("item2");
+					expect(e.detail.item.slotTextContent).to.equal("Second");
+
+					// Check originalEvent is a MouseEvent
+					expect(e.detail.originalEvent).to.be.instanceOf(MouseEvent);
 				}).as("clickSpy"));
 			});
 
@@ -694,142 +694,6 @@ describe("SegmentedButtonItem: click event", () => {
 
 		cy.get("@clickSpy")
 			.should("have.been.calledOnce");
-	});
-
-	it("should provide correct modifier keys when Ctrl is pressed", () => {
-		let eventDetail: any;
-
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
-				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
-
-		cy.get("#item2")
-			.then($el => {
-				$el[0].addEventListener("click", (e: Event) => {
-					eventDetail = (e as CustomEvent).detail;
-				});
-			});
-
-		// Manually dispatch a MouseEvent with ctrlKey
-		cy.get("#item2")
-			.shadow()
-			.find("li")
-			.then($li => {
-				const mouseEvent = new MouseEvent('click', {
-					bubbles: true,
-					cancelable: true,
-					ctrlKey: true,
-					altKey: false,
-					metaKey: false,
-					shiftKey: false
-				});
-				$li[0].dispatchEvent(mouseEvent);
-			});
-
-		cy.then(() => eventDetail)
-			.then((detail) => {
-				expect(detail, "event detail should exist").to.exist;
-				expect(detail.ctrlKey, "ctrlKey should be true").to.be.true;
-				expect(detail.altKey, "altKey should be false").to.be.false;
-				expect(detail.metaKey, "metaKey should be false").to.be.false;
-				expect(detail.shiftKey, "shiftKey should be false").to.be.false;
-			});
-	});
-
-	it("should provide correct modifier keys when Alt is pressed", () => {
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
-				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
-
-		cy.get("#item2")
-			.then($el => {
-				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					expect(e.detail.altKey).to.be.true;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
-					expect(e.detail.shiftKey).to.be.false;
-				}).as("clickSpyAlt"));
-			});
-
-		cy.get("#item2")
-			.realClick({ altKey: true });
-
-		cy.get("@clickSpyAlt")
-			.should("have.been.calledOnce");
-	});
-
-	it("should provide correct modifier keys when Shift is pressed", () => {
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
-				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
-
-		cy.get("#item2")
-			.then($el => {
-				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					expect(e.detail.shiftKey).to.be.true;
-					expect(e.detail.altKey).to.be.false;
-					expect(e.detail.ctrlKey).to.be.false;
-					expect(e.detail.metaKey).to.be.false;
-				}).as("clickSpyShift"));
-			});
-
-		cy.get("#item2")
-			.realClick({ shiftKey: true });
-
-		cy.get("@clickSpyShift")
-			.should("have.been.calledOnce");
-	});
-
-	it("should provide correct modifier keys when multiple modifiers are pressed", () => {
-		let eventDetail: any;
-
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
-				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
-
-		cy.get("#item2")
-			.then($el => {
-				$el[0].addEventListener("click", (e: Event) => {
-					eventDetail = (e as CustomEvent).detail;
-				});
-			});
-
-		// Manually dispatch a MouseEvent with multiple modifier keys
-		cy.get("#item2")
-			.shadow()
-			.find("li")
-			.then($li => {
-				const mouseEvent = new MouseEvent('click', {
-					bubbles: true,
-					cancelable: true,
-					ctrlKey: true,
-					altKey: false,
-					metaKey: false,
-					shiftKey: true
-				});
-				$li[0].dispatchEvent(mouseEvent);
-			});
-
-		cy.then(() => eventDetail)
-			.then((detail) => {
-				expect(detail, "event detail should exist").to.exist;
-				expect(detail.ctrlKey, "ctrlKey should be true").to.be.true;
-				expect(detail.shiftKey, "shiftKey should be true").to.be.true;
-				expect(detail.altKey, "altKey should be false").to.be.false;
-				expect(detail.metaKey, "metaKey should be false").to.be.false;
-			});
 	});
 });
 	
