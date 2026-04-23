@@ -8,7 +8,9 @@ export default function AvatarBadgeTemplate(this: AvatarBadge) {
 				<Icon
 					name={this.icon}
 					class="ui5-avatar-badge-icon"
-					mode="Decorative"
+					accessibleName={this.effectiveAccessibleName}
+					showTooltip={true}
+					mode="Image"
 				></Icon>
 			)}
 		</>
