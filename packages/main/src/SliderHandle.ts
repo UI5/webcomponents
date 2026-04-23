@@ -7,6 +7,27 @@ import styles from "./generated/themes/SliderHandle.css.js";
 import type { SliderScaleOrientation } from "./SliderScale.js";
 
 /**
+ * Handle types for the slider handle component.
+ * @private
+ */
+enum SliderHandleType {
+	/**
+	 * Start handle (left handle in LTR mode).
+	 */
+	Start = "Start",
+
+	/**
+	 * End handle (right handle in LTR mode).
+	 */
+	End = "End",
+
+	/**
+	 * Single handle (used by regular Slider).
+	 */
+	Single = "Single",
+}
+
+/**
  * @class
  * The <code>ui5-slider-handle</code> component represents the handle of the <code>ui5-slider</code> component.
  *
@@ -27,7 +48,6 @@ class SliderHandle extends UI5Element {
 	 * <br><br>
 	 * <b>Note:</b> The value should be between the <code>min</code> and <code>max</code> properties of the parent <code>ui5-slider</code>.
 	 * @since 2.19.0
-	 * @public
 	 */
 	@property({ type: Number })
 	value = 0;
@@ -37,7 +57,6 @@ class SliderHandle extends UI5Element {
 	 * <br><br>
 	 * <b>Note:</b> The value should be less than the <code>max</code> property of the parent <code>ui5-slider</code>.
 	 * @since 2.19.0
-	 * @public
 	 */
 	@property({ type: Number })
 	min = 0;
@@ -47,27 +66,15 @@ class SliderHandle extends UI5Element {
 	 * <br><br>
 	 * <b>Note:</b> The value should be greater than the <code>min</code> property of the parent <code>ui5-slider</code>.
 	 * @since 2.19.0
-	 * @public
 	 */
 	@property({ type: Number })
 	max = 100;
-
-	/**
-	 * Defines whether the slider handle is disabled.
-	 * <br><br>
-	 * <b>Note:</b> A disabled slider handle cannot be interacted with.
-	 * @since 2.19.0
-	 * @public
-	 */
-	@property({ type: Boolean })
-	disabled = false;
 
 	/**
 	 * Defines whether the slider handle is active.
 	 * <br><br>
 	 * <b>Note:</b> An active slider handle is currently being interacted with.
 	 * @since 2.19.0
-	 * @public
 	 */
 	@property({ type: Boolean })
 	active = false;
@@ -87,7 +94,7 @@ class SliderHandle extends UI5Element {
 	 * @private
 	 */
 	@property()
-	handleType: "start" | "end" | "single" = "single";
+	handleType: `${SliderHandleType}` = "Single";
 
 	getFocusDomRef(): HTMLElement | undefined {
 		return this;
@@ -97,3 +104,4 @@ class SliderHandle extends UI5Element {
 SliderHandle.define();
 
 export default SliderHandle;
+export { SliderHandleType };

@@ -19,9 +19,8 @@ const startHandle = (slider: RangeSlider) => {
 				min={slider.min}
 				max={slider.max}
 				tabIndex={slider._tabIndex}
-				disabled={slider.disabled}
 				active={slider.rangePressed}
-				handleType="start"
+				handleType="Start"
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
@@ -55,9 +54,8 @@ const endHandle = (slider: RangeSlider) => {
 				min={slider.min}
 				max={slider.max}
 				tabIndex={slider._tabIndex}
-				disabled={slider.disabled}
 				active={slider.rangePressed}
-				handleType="end"
+				handleType="End"
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
@@ -68,7 +66,7 @@ const endHandle = (slider: RangeSlider) => {
 				aria-label={slider._ariaLabelEndHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
-				aria-keyshortcuts="F2"
+				aria-keyshortcuts={slider._ariaKeyshortcuts}
 				onFocusIn={slider._onfocusin}
 				onFocusOut={slider._onfocusout}
 				style={{
@@ -96,6 +94,7 @@ const startTooltip = (slider: RangeSlider) => (
 		onFocusChange={slider._onTooltipFocusChange}
 		onOpen={slider._onTooltipOpen}
 		onInput={slider._onTooltipInput}
+		aria-keyshortcuts="F2"
 	>
 	</SliderTooltip>
 );
@@ -115,6 +114,7 @@ const endTooltip = (slider: RangeSlider) => (
 		onFocusChange={slider._onTooltipFocusChange}
 		onOpen={slider._onTooltipOpen}
 		onInput={slider._onTooltipInput}
+		aria-keyshortcuts="F2"
 	>
 	</SliderTooltip>
 );
@@ -149,8 +149,8 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 					progressAriaDisabled={this._ariaDisabled}
 					progressPressed={this.rangePressed}
 					progressFocused={this._progressFocused}
-					onProgressFocusIn={this._onfocusin}
-					onProgressFocusOut={this._onfocusout}
+					onFocusIn={this._onfocusin}
+					onFocusOut={this._onfocusout}
 					part="scale"
 					exportparts="inner: scale-inner, progress: progress-bar"
 				>

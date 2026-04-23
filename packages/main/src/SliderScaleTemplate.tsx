@@ -43,8 +43,6 @@ export default function SliderScaleTemplate(this: SliderScale) {
 				aria-valuetext={this.progressAriaValueText}
 				aria-label={this.progressAriaLabel}
 				aria-disabled={this.progressAriaDisabled}
-				onFocusIn={this.onProgressFocusIn}
-				onFocusOut={this.onProgressFocusOut}
 			></div>
 			<slot></slot>
 		</div>

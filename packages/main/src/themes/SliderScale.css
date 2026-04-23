@@ -55,7 +55,7 @@
 	position: absolute;
 	top: var(--_ui5_slider_scale_progress_top);
 	height: var(--_ui5_slider_scale_progress_height);
-	background-color: var(--sapSlider_Selected_Background);
+	background-color: var(--_ui5_slider_scale_progress_background, var(--sapSlider_Selected_Background));
 	border: var(--_ui5_slider_scale_progress_border);
 	border-left: none;
 	box-sizing: border-box;
@@ -70,8 +70,8 @@
 
 .ui5-slider-scale-progress:focus::after,
 .ui5-slider-scale-progress.ui5-slider-progress--focused::after {
-	border: 0.125rem solid var(--sapContent_FocusColor);
-	border-radius: 0.5rem;
+	border: var(--_ui5_range_slider_progress_focus_border);
+	border-radius: var(--_ui5_range_slider_progress_focus_border_radius, 0.5rem);
 	content: "";
 	display: var(--_ui5_range_slider_progress_focus_display);
 	position: absolute;

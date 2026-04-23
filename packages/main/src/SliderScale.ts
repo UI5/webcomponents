@@ -178,19 +178,6 @@ class SliderScale extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	progressFocused = false;
-
-	/**
-	 * Event handler for focusin on the progress bar.
-	 * @private
-	 */
-	onProgressFocusIn?: (e: FocusEvent) => void;
-
-	/**
-	 * Event handler for focusout on the progress bar.
-	 * @private
-	 */
-	onProgressFocusOut?: (e: FocusEvent) => void;
-
 	/**
 	 * @private
 	 */

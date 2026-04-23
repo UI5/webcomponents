@@ -216,9 +216,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const clickedInside = e.composedPath().includes(this);
 
 		if (!clickedInside) {
-			if (this._progressFocused) {
-				this._progressFocused = false;
-			}
 			if (this._tooltipsOpen) {
 				this._tooltipsOpen = false;
 			}
@@ -449,7 +446,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this._setAffectedValue("endValue");
 		}
 
-		if (this.shadowRoot!.activeElement === this._progressBar) {
+		// Progress bar is inside SliderScale's shadow DOM, so check the nested activeElement
+		const sliderScale = this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-scale]");
+		if (sliderScale?.shadowRoot?.activeElement === this._progressBar) {
 			this._setAffectedValue(undefined);
 		}
 
@@ -521,10 +520,12 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const pageX = ctor.getPageXValueFromEvent(e);
 		const tempValue = ctor.getValueFromInteraction(e, this._effectiveStep, this._effectiveMin, this._effectiveMax, this.getBoundingClientRect(), this.directionStart);
 		const isInRange = tempValue >= this.startValue && tempValue <= this.endValue;
-		const startHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='start']");
-		const endHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='end']");
+		const startHandle = this._startHandle;
+		const endHandle = this._endHandle;
 		const inStartHandle = startHandle && pageX >= startHandle.getBoundingClientRect().left && pageX <= startHandle.getBoundingClientRect().right;
 		const inEndHandle = endHandle && pageX >= endHandle.getBoundingClientRect().left && pageX <= endHandle.getBoundingClientRect().right;
+
+		const newValue = this.handleDownBase(e);
 
 		if (isInRange && !inStartHandle && !inEndHandle) {
 			this._setIsPressInCurrentRange(true);
@@ -534,8 +535,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this._progressFocused = false;
 			this.rangePressed = false;
 		}
-
-		const newValue = this.handleDownBase(e);
 
 		this._saveInteractionStartData(e, newValue);
 
@@ -657,8 +656,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_pressTargetAndAffectedValue(clientX: number, value: number) {
-		const startHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='start']")!;
-		const endHandle = this.shadowRoot!.querySelector("[ui5-slider-handle][handle-type='end']")!;
+		const startHandle = this._startHandle;
+		const endHandle = this._endHandle;
 
 		// Check if the press point is in the bounds of any of the Range Slider handles
 		const handleStartDomRect = startHandle.getBoundingClientRect();
@@ -1055,11 +1054,11 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	get _startHandle() {
-		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='start']")!;
+		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='Start']")!;
 	}
 
 	get _endHandle() {
-		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='end']")!;
+		return this.shadowRoot!.querySelector<HTMLElement>("[ui5-slider-handle][handle-type='End']")!;
 	}
 
 	get _progressBar() {
@@ -1076,35 +1075,22 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	/**
-	 * Returns the aria-label for the start handle, including associated label text
-	 * from <label for="..."> elements, accessibleName, and the handle description.
 	 * @private
 	 */
 	get _ariaLabelStartHandle() {
-		const associatedLabelText = getAssociatedLabelForTexts(this);
-		const hasAccessibleName = !!this.accessibleName;
-		const handleDescription = this._ariaHandlesText.startHandleText;
-
-		let labelText = hasAccessibleName
-			? `${this.accessibleName} ${handleDescription}`
-			: handleDescription;
-
-		if (!hasAccessibleName && associatedLabelText) {
-			labelText = `${associatedLabelText} ${labelText}`;
-		}
-
-		return labelText;
+		return this._getAriaLabelHandle(this._ariaHandlesText.startHandleText || "");
 	}
 
 	/**
-	 * Returns the aria-label for the end handle, including associated label text
-	 * from <label for="..."> elements, accessibleName, and the handle description.
 	 * @private
 	 */
 	get _ariaLabelEndHandle() {
+		return this._getAriaLabelHandle(this._ariaHandlesText.endHandleText || "");
+	}
+
+	_getAriaLabelHandle(handleDescription: string) {
 		const associatedLabelText = getAssociatedLabelForTexts(this);
 		const hasAccessibleName = !!this.accessibleName;
-		const handleDescription = this._ariaHandlesText.endHandleText;
 
 		let labelText = hasAccessibleName
 			? `${this.accessibleName} ${handleDescription}`

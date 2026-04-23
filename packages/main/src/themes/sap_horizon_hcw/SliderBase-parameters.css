@@ -1,8 +1,1 @@
-@import "../base/SliderBase-parameters.css";
-
-:host {
-	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapField_BorderColor);
-	--_ui5_range_slider_handle_background: var(--sapSlider_RangeHandleBackground);
-	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
-	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
-}
+@import "../sap_horizon_hcb/SliderBase-parameters.css";

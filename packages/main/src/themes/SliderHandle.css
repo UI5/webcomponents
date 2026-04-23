@@ -52,7 +52,15 @@
 	}
 
 	background-color: var(--_ui5_slider_handle_background_focus);
+}
+
+:host(:focus),
+:host(:active) {
 	border: var(--_ui5_slider_handle_focus_border);
+}
+
+:host([active]) {
+	border: var(--_ui5_slider_handle_active_border, var(--_ui5_slider_handle_focus_border));
 }
 
 :host([orientation="Vertical"]) {

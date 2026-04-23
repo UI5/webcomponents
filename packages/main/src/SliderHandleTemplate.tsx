@@ -7,8 +7,8 @@ export default function SliderHandleTemplate(this: SliderHandle) {
 		<div class={{
 			"ui5-slider-handle-container": true,
 			"ui5-slider-handle": true,
-			"ui5-slider-handle--start": this.handleType === "start",
-			"ui5-slider-handle--end": this.handleType === "end",
+			"ui5-slider-handle--start": this.handleType === "Start",
+			"ui5-slider-handle--end": this.handleType === "End",
 		}}>
 			<Icon name={directionArrows}
 				mode="Decorative"

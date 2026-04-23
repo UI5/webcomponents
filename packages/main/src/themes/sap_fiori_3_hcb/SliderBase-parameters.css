@@ -1,14 +1,1 @@
-@import "../base/SliderBase-parameters.css";
-
-:host {
-	--_ui5_slider_handle_width: 1.875rem;
-	--_ui5_slider_handle_height: 1.875rem;
-	--_ui5_range_slider_handle_background: transparent;
-}
-
-@container style(--ui5_content_density: compact) {
-	:host {
-		--_ui5_slider_handle_width: 1.5rem;
-		--_ui5_slider_handle_height: 1.5rem;
-	}
-}
+@import "../sap_fiori_3/SliderBase-parameters.css";

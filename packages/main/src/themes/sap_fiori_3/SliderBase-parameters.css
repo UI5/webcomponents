@@ -3,6 +3,7 @@
 :host {
 	--_ui5_slider_handle_width: 1.875rem;
 	--_ui5_slider_handle_height: 1.875rem;
+	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapSlider_Active_HandleBorderColor);
 	--_ui5_range_slider_handle_background: transparent;
 	--_ui5_range_slider_root_hover_handle_bg: transparent;
 	--_ui5_range_slider_handle_active_background: transparent;

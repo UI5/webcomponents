@@ -7,7 +7,7 @@ describe("Testing Range Slider interactions", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		// Initially if no value is set, the Range Slider start-handle is at the beginning
@@ -34,7 +34,7 @@ describe("Testing Range Slider interactions", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		// Check initial endValue (default should be 100, but with max=40, it should be 40)
@@ -114,7 +114,7 @@ describe("Testing Range Slider interactions", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		// Get initial values
@@ -390,7 +390,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("rangeSliderHandle");
 
 		cy.get("@rangeSlider")
@@ -433,12 +433,12 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@startHandle").realClick();
@@ -474,13 +474,13 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 		// Start value handle and input
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		// End value handle and input
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@startHandle").realClick();
@@ -523,7 +523,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 		// Start value handle and input
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		cy.get("@rangeSlider")
@@ -536,7 +536,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 		// End value handle and input
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@rangeSlider")
@@ -582,7 +582,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 		// End value handle
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		// Set end value to 1
@@ -611,7 +611,7 @@ describe("Range Slider elements - tooltip, step, tickmarks, labels", () => {
 
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@endHandle").realClick();
@@ -663,7 +663,7 @@ describe("Properties synchronization and normalization", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@rangeSlider").should("have.attr", "step", "-7");
@@ -754,7 +754,7 @@ describe("Testing events", () => {
 		// Start value handle and input
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		cy.get("@startHandle")
@@ -776,7 +776,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("firstHandle");
 
 		cy.get("@rangeSlider")
@@ -800,7 +800,7 @@ describe("Testing events", () => {
 			.as("rangeSliderProgressBar");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("firstHandle");
 
 		cy.get("@rangeSlider")
@@ -839,7 +839,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		cy.get("@rangeSlider")
@@ -864,7 +864,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 
 		cy.get("@rangeSlider").then(($el) => {
@@ -893,7 +893,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@rangeSlider").then(($el) => {
@@ -922,11 +922,11 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
@@ -956,13 +956,13 @@ describe("Testing events", () => {
 		// Test that handles can be focused when clicked directly
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.realClick()
 			.should("have.focus");
 
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.realClick()
 			.should("have.focus");
 	});
@@ -1007,7 +1007,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("rangeSliderStartHandle");
 
 		// Focus the progress bar first
@@ -1023,7 +1023,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("rangeSliderEndHandle");
 
 		// Focus the first handle first
@@ -1074,7 +1074,7 @@ describe("Testing events", () => {
 		cy.get("#basic-range-slider").as("previousRangeSlider");
 		cy.get("@previousRangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("previousRangeSliderEndHandle");
 
 		// Focus the second slider first
@@ -1096,7 +1096,7 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("rangeSliderStartHandle");
 
 		// Focus the second handle first
@@ -1158,11 +1158,11 @@ describe("Testing events", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		// Focus the start handle and move it past the end handle using keyboard
@@ -1667,11 +1667,11 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
 		// Initially start-handle should be 0% from the start side (inset-inline-start)
@@ -1695,11 +1695,11 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("[ui5-range-slider]").as("rangeSlider");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.as("startHandle");
 		cy.get("@rangeSlider")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 		cy.get("@rangeSlider")
 			.shadow()
@@ -1810,12 +1810,12 @@ describe("Accessibility", () => {
 
 		cy.get("[ui5-range-slider]")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='start']")
+			.find("[ui5-slider-handle][handle-type='Start']")
 			.should("have.attr", "aria-label", `${labelText} Left handle`);
 
 		cy.get("[ui5-range-slider]")
 			.shadow()
-			.find("[ui5-slider-handle][handle-type='end']")
+			.find("[ui5-slider-handle][handle-type='End']")
 			.should("have.attr", "aria-label", `${labelText} Right handle`);
 	});
 
