@@ -20,11 +20,6 @@
 	right: var(--_ui5_input_focus_offset);
 }
 
-:host([focused][readonly]) .ui5-input-focusable-element::after {
-	display: none;
-}
-
-
 :host([value-state="Negative"][opened]:not([readonly])) .ui5-input-focusable-element:after {
 	border-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
 }
