@@ -7,6 +7,7 @@ import Link from "../../src/Link.js";
 
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
+import { INPUT_SUGGESTIONS_EXPANDED, INPUT_SUGGESTIONS_COLLAPSED, INPUT_SUGGESTIONS_MORE_HITS } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Input Tests", () => {
 	it("test input event prevention", () => {
@@ -1361,6 +1362,71 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("span#accessibleDescription")
 			.should("have.text", "This is an input");
+	});
+});
+
+describe("Suggestions expanded/collapsed announcement", () => {
+	it("Should include 'Expanded' in suggestions count when popover opens", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("contain.text", INPUT_SUGGESTIONS_EXPANDED.defaultText);
+	});
+
+	it("Should announce 'Collapsed' when suggestions popover closes", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("have.text", INPUT_SUGGESTIONS_COLLAPSED.defaultText);
 	});
 });
 
