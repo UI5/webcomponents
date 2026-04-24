@@ -1681,4 +1681,48 @@ describe("Focusable items", () => {
 			.find("ul.ui5-sn-item-ul[role='group']")
 			.should("have.attr", "aria-label", "Settings");
 	});
+
+	it("Tests accessibleName for SideNavigationGroup", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationGroup id="group1" text="Products" accessibleName="Product Categories and Items" expanded>
+					<SideNavigationItem text="Laptops" />
+					<SideNavigationItem text="Phones" />
+				</SideNavigationGroup>
+			</SideNavigation>);
+
+		// Verify group item uses accessibleName
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-group")
+			.should("have.attr", "aria-label", "Product Categories and Items");
+
+		// Verify group <ul> uses accessibleName (not just text)
+		cy.get("#group1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "Product Categories and Items");
+	});
+
+	it("Tests that SideNavigationGroup falls back to text when accessibleName is not provided", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationGroup id="group1" text="Products" expanded>
+					<SideNavigationItem text="Laptops" />
+					<SideNavigationItem text="Phones" />
+				</SideNavigationGroup>
+			</SideNavigation>);
+
+		// Verify group item has no aria-label (falls back to text content)
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-group")
+			.should("not.have.attr", "aria-label");
+
+		// Verify group <ul> uses text property
+		cy.get("#group1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "Products");
+	});
 });
