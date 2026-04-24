@@ -1105,6 +1105,7 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
+				"margin-top": "var(--sapField_BorderWidth)",
 			},
 		};
 	}

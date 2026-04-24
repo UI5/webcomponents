@@ -5,6 +5,7 @@
 	--_ui5_select_icon_wrapper_height: 100%;
 	--_ui5_select_icon_wrapper_state_height: 100%;
 	--_ui5_input_icon_hover_bg: transparent;
+	--_ui5_input_icon_pressed_bg: transparent;
 	--_ui5_select_bottom_border_gradient: linear-gradient(var(--sapField_BorderColor), var(--sapField_BorderColor)) bottom / 100% var(--sapField_BorderWidth) no-repeat;
 	--_ui5_input_focus_outline_color: var(--sapContent_FocusColor);
 	--_ui5_input_readonly_focus_border_radius: 0;

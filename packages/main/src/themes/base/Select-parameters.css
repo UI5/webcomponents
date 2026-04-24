@@ -4,7 +4,7 @@
 	--_ui5_select_icon_width: 2.25rem;
 	--_ui5_select_icon_wrapper_height: 100%;
 	--_ui5_select_bottom_border_gradient: none;
-	--_ui5_select_icon_wrapper_state_height: calc(100% - 0.125rem);
+	--_ui5_select_icon_wrapper_state_height: 100%;
 }
 
 @container style(--ui5_content_density: compact) {
