@@ -19,13 +19,13 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 			tooltip={item._tooltip}
 			ref={(el: HTMLElement | null) => {
 				if (el && item.tag.length > 0) {
-					if (!el.hasAttribute('data-tags-appended')) {
+					const existingTags = Array.from(el.children).filter(child => child.getAttribute('slot') === 'endContent');
+					if (existingTags.length === 0) {
 						item.tag.forEach((tagEl) => {
 							const clonedTag = tagEl.cloneNode(true) as HTMLElement;
 							clonedTag.slot = 'endContent';
 							el.appendChild(clonedTag);
 						});
-						el.setAttribute('data-tags-appended', 'true');
 					}
 				}
 				this.captureRef.bind(item)(el as any);
@@ -44,13 +44,13 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					tooltip={item._tooltip}
 					ref={(el: HTMLElement | null) => {
 						if (el && item.tag.length > 0) {
-							if (!el.hasAttribute('data-tags-appended')) {
+							const existingTags = el.querySelectorAll('[slot="endContent"]');
+							if (existingTags.length === 0) {
 								item.tag.forEach((tagEl) => {
 									const clonedTag = tagEl.cloneNode(true) as HTMLElement;
 									clonedTag.slot = 'endContent';
 									el.appendChild(clonedTag);
 								});
-								el.setAttribute('data-tags-appended', 'true');
 							}
 						}
 						this.captureRef.bind(item)(el as any);
@@ -105,14 +105,13 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 						onui5-click={this.handlePopupItemClick}
 						ref={(el: HTMLElement | null) => {
 							if (el && this._popoverContents.item.tag.length > 0) {
-								// Only append if the element doesn't have our marker
-								if (!el.hasAttribute('data-tags-appended')) {
+								const existingTags = Array.from(el.children).filter(child => child.getAttribute('slot') === 'tag');
+								if (existingTags.length === 0) {
 									this._popoverContents.item.tag.forEach((tagEl) => {
 										const clonedTag = tagEl.cloneNode(true) as HTMLElement;
 										clonedTag.slot = 'tag';
 										el.appendChild(clonedTag);
 									});
-									el.setAttribute('data-tags-appended', 'true');
 								}
 							}
 							this.captureRef.bind(this._popoverContents.item)(el as SideNavigationItem | null);
@@ -132,14 +131,13 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 								onui5-click={this.handlePopupItemClick}
 								ref={(el: HTMLElement | null) => {
 									if (el && item.tag.length > 0) {
-										// Only append if the element doesn't have our marker
-										if (!el.hasAttribute('data-tags-appended')) {
+										const existingTags = Array.from(el.children).filter(child => child.getAttribute('slot') === 'tag');
+										if (existingTags.length === 0) {
 											item.tag.forEach((tagEl) => {
 												const clonedTag = tagEl.cloneNode(true) as HTMLElement;
 												clonedTag.slot = 'tag';
 												el.appendChild(clonedTag);
 											});
-											el.setAttribute('data-tags-appended', 'true');
 										}
 									}
 									this.captureRef.bind(item)(el as SideNavigationSubItem | null);
