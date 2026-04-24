@@ -190,7 +190,6 @@ class DynamicPage extends UI5Element {
 	skipSnapOnScroll = false;
 	showHeaderInStickArea = false;
 	isToggled = false;
-	_skipContentScrollOnFocus = false;
 
 	@property({ type: Boolean })
 	_headerSnapped = false;
@@ -224,10 +223,18 @@ class DynamicPage extends UI5Element {
 		return this.showFooter ? this.footerWrapper?.getBoundingClientRect().height || 0 : 0;
 	}
 
-	get topAreaHeight() {
+	get scrollPaddingTop() {
 		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-		return this._headerSnapped ? titleHeight : headerHeight + titleHeight;
+
+		if (this._headerSnapped) {
+			return titleHeight;
+		}
+
+		const fullHeight = headerHeight + titleHeight;
+		const scrollTop = this.scrollContainer?.scrollTop || 0;
+
+		return Math.max(titleHeight, fullHeight - scrollTop);
 	}
 
 	get dynamicPageTitle(): DynamicPageTitle | null {
@@ -457,22 +464,9 @@ class DynamicPage extends UI5Element {
 		this.dynamicPageTitle?.removeAttribute("hovered");
 	}
 
-	onContentPointerDown() {
-		this._skipContentScrollOnFocus = true;
-
-		requestAnimationFrame(() => {
-			this._skipContentScrollOnFocus = false;
-		});
-	}
-
 	onContentFocusIn(e: FocusEvent) {
 		const target = e.target as HTMLElement;
-		this.setScrollPadding({ start: this.topAreaHeight, end: this.endAreaHeight });
-
-		if (this._skipContentScrollOnFocus) {
-			this._skipContentScrollOnFocus = false;
-			return;
-		}
+		this.setScrollPadding({ start: this.scrollPaddingTop, end: this.endAreaHeight });
 
 		// textareas and similar elements appear "in view" even when partially
 		// hidden behind sticky header/footer.

@@ -36,7 +36,6 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				<div
 					part="content"
 					class="ui5-dynamic-page-content"
-					onPointerDown={this.onContentPointerDown}
 					onFocusIn={this.onContentFocusIn}
 					onFocusOut={this.onContentFocusOut}
 				>
