@@ -1065,6 +1065,7 @@ class List extends UI5Element {
 		const activeElement = getActiveElement();
 
 		e.preventDefault();
+		e.stopPropagation();
 
 		if (activeElement === listItemDomRef) {
 			listItem._editMode = true;
@@ -1425,8 +1426,8 @@ class List extends UI5Element {
 			const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : undefined;
 
 			if (prevItem) {
-				const focusables = prevItem._getFocusableElements();
 				prevItem._editMode = true;
+				const focusables = prevItem._getFocusableElements();
 				prevItem._focusInternalElement(focusables.length - 1);
 				this._lastFocusedElementIndex = focusables.length - 1;
 				this.setPreviouslyFocusedItem(prevItem);

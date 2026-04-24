@@ -5,7 +5,6 @@ import {
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -201,7 +200,6 @@ abstract class ListItem extends ListItemBase {
 	 * Toggled by F2 or F7.
 	 * @private
 	 */
-	@property({ type: Boolean, noAttribute: true })
 	_editMode = false;
 
 	/**
@@ -525,19 +523,18 @@ abstract class ListItem extends ListItemBase {
 		return this.shadowRoot!.querySelector("li");
 	}
 
-	async _handleF2() {
+	_handleF2() {
 		const focusDomRef = this.getFocusDomRef()!;
 		const activeElement = getActiveElement();
 
-		const focusables = this._getFocusableElements().length > 0;
-		if (!focusables) {
-			return;
-		}
-
 		if (activeElement === focusDomRef) {
 			this._editMode = true;
-			const firstFocusable = await getFirstFocusableElement(focusDomRef);
-			firstFocusable?.focus();
+			const focusables = this._getFocusableElements();
+			if (!focusables.length) {
+				this._editMode = false;
+				return;
+			}
+			focusables[0].focus();
 		} else {
 			this._editMode = false;
 			focusDomRef.focus();
@@ -547,7 +544,7 @@ abstract class ListItem extends ListItemBase {
 	_handleTabNext(e: KeyboardEvent) {
 		if (this._editMode) {
 			const focusables = this._getFocusableElements();
-			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
+			const currentIndex = this._indexOfActiveElement(focusables);
 			const nextIndex = currentIndex + 1;
 
 			if (nextIndex < focusables.length) {
@@ -567,8 +564,7 @@ abstract class ListItem extends ListItemBase {
 	_handleTabPrevious(e: KeyboardEvent) {
 		if (this._editMode) {
 			const focusables = this._getFocusableElements();
-			const currentIndex = focusables.indexOf(getActiveElement() as HTMLElement);
-
+			const currentIndex = this._indexOfActiveElement(focusables);
 			if (currentIndex > 0) {
 				e.preventDefault();
 				focusables[currentIndex - 1].focus();
@@ -588,10 +584,16 @@ abstract class ListItem extends ListItemBase {
 		return getTabbableElements(focusDomRef);
 	}
 
-	_getFocusedElementIndex(): number {
-		const focusables = this._getFocusableElements();
+	_indexOfActiveElement(focusables: HTMLElement[]): number {
 		const activeElement = getActiveElement() as HTMLElement;
-		return focusables.indexOf(activeElement);
+		return focusables.findIndex(el =>
+			el === activeElement
+			|| (el.shadowRoot !== null && el.shadowRoot.contains(activeElement)),
+		);
+	}
+
+	_getFocusedElementIndex(): number {
+		return this._indexOfActiveElement(this._getFocusableElements());
 	}
 
 	_hasFocusableElements(): boolean {
@@ -599,9 +601,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_isFocusOnInternalElement(): boolean {
-		const focusables = this._getFocusableElements();
-		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
-		return currentElementIndex !== -1;
+		return this._indexOfActiveElement(this._getFocusableElements()) !== -1;
 	}
 
 	_focusInternalElement(targetIndex: number) {
