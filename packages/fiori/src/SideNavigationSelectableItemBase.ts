@@ -151,7 +151,7 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.20.0
+	 * @since 2.21.0
 	 */
 	@property()
 	accessibleName?: string;
