@@ -1416,7 +1416,7 @@ class List extends UI5Element {
 	onForwardBefore(e: CustomEvent) {
 		const listItem = e.target as ListItemBase;
 
-		if ("_editMode" in listItem && (listItem as ListItem)._editMode) {
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
 			const allItems = this.getItems().filter(node => {
 				return "hasConfigurableMode" in node && node.hasConfigurableMode
 					&& (node as ListItem)._hasFocusableElements();
@@ -1447,7 +1447,7 @@ class List extends UI5Element {
 	onForwardAfter(e: CustomEvent) {
 		const listItem = e.target as ListItemBase;
 
-		if ("_editMode" in listItem && (listItem as ListItem)._editMode) {
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
 			const allItems = this.getItems().filter(node => {
 				return "hasConfigurableMode" in node && node.hasConfigurableMode
 					&& (node as ListItem)._hasFocusableElements();

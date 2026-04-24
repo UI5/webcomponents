@@ -197,7 +197,7 @@ abstract class ListItem extends ListItemBase {
 	 * Indicates whether the list item is in edit mode.
 	 * When active, Tab cycles through internal focusable elements
 	 * instead of navigating to the next list item.
-	 * Toggled by F2 or F7.
+	 * Toggled by F2; also set by the parent List on F7.
 	 * @private
 	 */
 	_editMode = false;
