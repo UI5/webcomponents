@@ -525,15 +525,13 @@ abstract class ListItem extends ListItemBase {
 
 	_handleF2() {
 		const focusDomRef = this.getFocusDomRef()!;
-		const activeElement = getActiveElement();
 
-		if (activeElement === focusDomRef) {
-			this._editMode = true;
+		if (getActiveElement() === focusDomRef) {
 			const focusables = this._getFocusableElements();
 			if (!focusables.length) {
-				this._editMode = false;
 				return;
 			}
+			this._editMode = true;
 			focusables[0].focus();
 		} else {
 			this._editMode = false;
@@ -586,10 +584,7 @@ abstract class ListItem extends ListItemBase {
 
 	_indexOfActiveElement(focusables: HTMLElement[]): number {
 		const activeElement = getActiveElement() as HTMLElement;
-		return focusables.findIndex(el =>
-			el === activeElement
-			|| (el.shadowRoot !== null && el.shadowRoot.contains(activeElement)),
-		);
+		return focusables.findIndex(el => el === activeElement || (el.shadowRoot !== null && el.shadowRoot.contains(activeElement)));
 	}
 
 	_getFocusedElementIndex(): number {

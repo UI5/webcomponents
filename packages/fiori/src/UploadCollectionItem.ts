@@ -237,6 +237,7 @@ class UploadCollectionItem extends ListItem {
 	async onDetailClick() {
 		super.onDetailClick();
 		this._editing = true;
+		this._editMode = true;
 
 		await this._initInputField();
 	}
@@ -300,6 +301,7 @@ class UploadCollectionItem extends ListItem {
 		this.fireDecoratorEvent("rename");
 
 		this._editing = false;
+		this._editMode = false;
 		this._focus();
 	}
 
@@ -311,6 +313,7 @@ class UploadCollectionItem extends ListItem {
 
 	async _onRenameCancel(e: KeyboardEvent | UI5CustomEvent<Button, "click">) {
 		this._editing = false;
+		this._editMode = false;
 
 		if (isEscape(e as KeyboardEvent)) {
 			await renderFinished();
@@ -323,6 +326,29 @@ class UploadCollectionItem extends ListItem {
 	_onRenameCancelKeyup(e: KeyboardEvent) {
 		if (isSpace(e)) {
 			this._onRenameCancel(e);
+		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			return super._handleTabNext(e);
+		}
+
+		if (this.shouldForwardTabAfter()) {
+			if (!this.fireDecoratorEvent("forward-after")) {
+				e.preventDefault();
+			}
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			return super._handleTabPrevious(e);
+		}
+
+		const target = e.target as HTMLElement;
+		if (this.shouldForwardTabBefore(target)) {
+			this.fireDecoratorEvent("forward-before");
 		}
 	}
 
