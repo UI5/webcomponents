@@ -3271,3 +3271,246 @@ describe("Edit mode (F2) with Delete selection mode", () => {
 		cy.get("#before").should("be.focused");
 	});
 });
+
+describe("Edit mode edge cases", () => {
+	it("F2 is a no-op on items with no focusable elements", () => {
+		cy.mount(
+			<div>
+				<List>
+					<ListItemStandard>Item 1</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F7 is a no-op on items with no focusable elements", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li]").first().should("be.focused");
+	});
+
+	it("Tab from last item in edit mode focuses growing button when growing=Button", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete" growing="Button">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").last().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").last()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-list]")
+			.shadow()
+			.find("[id$='growing-btn']")
+			.should("be.focused");
+	});
+
+	it("Shift+Tab from first item's first inner element exits the list", () => {
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#before").should("be.focused");
+	});
+
+	it("F2 is a no-op in Single selection mode (radio button has tabindex=-1)", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Single">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F2 is a no-op in Multiple selection mode (checkbox has tabindex=-1)", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Multiple">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F7 position memory clamps when navigating to item with fewer elements", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemCustom>
+					<Button id="btn1">Action 1</Button>
+					<Button id="btn2">Action 2</Button>
+				</ListItemCustom>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li-custom]").realClick();
+		cy.realPress("F7");
+		cy.get("#btn1").should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
+
+	it("edit mode is cleared after focusout and re-entering the list restores navigation mode", () => {
+		cy.mount(
+			<div>
+				<button id="outside">Outside</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.get("#outside").realClick();
+		cy.get("#outside").should("be.focused");
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("Arrow Down from item level uses standard navigation, not edit mode transfer", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+				<ListItemStandard>Item 3</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(1).should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2).should("be.focused");
+	});
+
+	it("Tab chains across items and source item returns to navigation mode after focusout", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+});
