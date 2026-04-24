@@ -337,7 +337,7 @@ describe("Toolbar general interaction", () => {
 			.should("not.be.focused");
 	});
 
-	it("Should keep arrow navigation inside toolbar-item wrapped controls", () => {
+	it("Should navigate between toolbar-item wrapped controls with arrow keys", () => {
 		cy.mount(
 			<Toolbar>
 				<ToolbarItem><Button>First</Button></ToolbarItem>
@@ -355,51 +355,56 @@ describe("Toolbar general interaction", () => {
 
 		cy.realPress("ArrowRight");
 		cy.get("ui5-button")
-			.first()
+			.eq(1)
 			.should("be.focused");
 
 		cy.realPress("ArrowRight");
 		cy.get("ui5-button")
-			.first()
+			.last()
 			.should("be.focused");
 	});
 
-	it("Should move focus to next toolbar item with Tab from generic toolbar-item", () => {
+	it("Should exit toolbar with Tab from generic toolbar-item", () => {
 		cy.mount(
-			<Toolbar>
-				<ToolbarItem>
-					<CheckBox text="Checkbox 1"></CheckBox>
-					<CheckBox text="Checkbox 2" checked></CheckBox>
-					<CheckBox text="Checkbox 3"></CheckBox>
-				</ToolbarItem>
-				<ToolbarItem>
-					<Input placeholder="Enter text"></Input>
-				</ToolbarItem>
-			</Toolbar>
+			<div>
+				<Toolbar>
+					<ToolbarItem>
+						<CheckBox text="Checkbox 1"></CheckBox>
+						<CheckBox text="Checkbox 2" checked></CheckBox>
+						<CheckBox text="Checkbox 3"></CheckBox>
+					</ToolbarItem>
+					<ToolbarItem>
+						<Input placeholder="Enter text"></Input>
+					</ToolbarItem>
+				</Toolbar>
+				<input data-testid="after-toolbar" />
+			</div>
 		);
-
-		cy.get("ui5-checkbox")
-			.eq(2)
-			.realClick();
-
-		cy.realPress("Tab");
 
 		cy.get("ui5-input")
 			.shadow()
 			.find("input")
+			.realClick();
+
+		cy.realPress("Tab");
+
+		cy.get("[data-testid='after-toolbar']")
 			.should("be.focused");
 	});
 
-	it("Should move focus to previous toolbar item with Shift+Tab from generic toolbar-item", () => {
+	it("Should exit toolbar with Shift+Tab from generic toolbar-item", () => {
 		cy.mount(
-			<Toolbar>
-				<ToolbarItem>
-					<CheckBox text="Checkbox 1"></CheckBox>
-				</ToolbarItem>
-				<ToolbarItem>
-					<Input placeholder="Enter text"></Input>
-				</ToolbarItem>
-			</Toolbar>
+			<div>
+				<input data-testid="before-toolbar" />
+				<Toolbar>
+					<ToolbarItem>
+						<CheckBox text="Checkbox 1"></CheckBox>
+					</ToolbarItem>
+					<ToolbarItem>
+						<Input placeholder="Enter text"></Input>
+					</ToolbarItem>
+				</Toolbar>
+			</div>
 		);
 
 		cy.get("ui5-input")
@@ -409,8 +414,7 @@ describe("Toolbar general interaction", () => {
 
 		cy.realPress(["Shift", "Tab"]);
 
-		cy.get("ui5-checkbox")
-			.first()
+		cy.get("[data-testid='before-toolbar']")
 			.should("be.focused");
 	});
 
@@ -459,6 +463,156 @@ describe("Toolbar general interaction", () => {
 		cy.realPress("ArrowLeft");
 		cy.get("ui5-toolbar-button")
 			.eq(1)
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+	});
+
+	it("Should exit input at end boundary with ArrowRight to next toolbar item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<Input id="inp1" value="hello"></Input>
+				</ToolbarItem>
+				<ToolbarButton id="after-btn" text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#inp1").shadow().find("input")
+			.realClick()
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(input.value.length, input.value.length);
+			});
+
+		cy.realPress("ArrowRight");
+
+		cy.get("#after-btn")
+			.should("be.focused");
+	});
+
+	it("Should NOT exit input when ArrowRight is pressed and caret is not at end", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<Input id="inp2" value="hello"></Input>
+				</ToolbarItem>
+				<ToolbarButton id="after-btn2" text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#inp2").shadow().find("input")
+			.realClick()
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(1, 1);
+			});
+
+		cy.realPress("ArrowRight");
+
+		cy.get("#inp2").shadow().find("input")
+			.should("be.focused");
+	});
+
+	it("Should exit input at start boundary with ArrowLeft to previous toolbar item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton id="before-btn" text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<Input id="inp3" value="hello"></Input>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("#inp3").shadow().find("input")
+			.realClick()
+			.then($input => {
+				const input = $input[0] as HTMLInputElement;
+				input.setSelectionRange(0, 0);
+			});
+
+		cy.realPress("ArrowLeft");
+
+		cy.get("#before-btn")
+			.should("be.focused");
+	});
+
+	it("Should wrap from last to first item with ArrowRight", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-button").last().shadow().find("ui5-button")
+			.realClick().should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-button").first().shadow().find("ui5-button")
+			.should("be.focused");
+	});
+
+	it("Should wrap from first to last item with ArrowLeft", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-button").first().shadow().find("ui5-button")
+			.realClick().should("be.focused");
+
+		cy.realPress("ArrowLeft");
+		cy.get("ui5-toolbar-button").last().shadow().find("ui5-button")
+			.should("be.focused");
+	});
+
+	it("Should use Home/End for toolbar navigation when ToolbarSelect is closed", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarSelect>
+					<ToolbarSelectOption>One</ToolbarSelectOption>
+					<ToolbarSelectOption selected>Two</ToolbarSelectOption>
+				</ToolbarSelect>
+				<ToolbarButton text="Last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-select").shadow().find("ui5-select").realClick();
+
+		cy.realPress("Home");
+		cy.get("ui5-toolbar-button").first()
+			.should("be.focused");
+	});
+
+	it("Should mark disabled toolbar items with aria-disabled and exclude from tab order", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Enabled"></ToolbarButton>
+				<ToolbarButton text="Disabled" disabled></ToolbarButton>
+				<ToolbarButton text="Also Enabled"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-button[text='Disabled']")
+			.shadow()
+			.find("ui5-button")
+			.should("have.attr", "aria-disabled", "true")
+			.and("have.prop", "tabIndex", -1);
+
+		cy.get("ui5-toolbar-button[text='Enabled']")
+			.shadow()
+			.find("ui5-button")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-button[text='Also Enabled']")
 			.shadow()
 			.find("ui5-button")
 			.should("be.focused");

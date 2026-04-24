@@ -15,8 +15,6 @@ import {
 	isDown,
 	isHome,
 	isEnd,
-	isTabNext,
-	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
@@ -131,6 +129,11 @@ class Toolbar extends UI5Element {
 
 	/**
 	 * Defines the accessible ARIA name of the component.
+	 *
+	 * **Note:** It is strongly recommended to always set this property or `accessibleNameRef`
+	 * when the toolbar has `role="toolbar"` (i.e. when it contains more than one interactive item).
+	 * Without an accessible name, screen readers will announce the toolbar without any context,
+	 * making it harder for keyboard-only and AT users to understand its purpose.
 	 * @default undefined
 	 * @public
 	 */
@@ -139,6 +142,9 @@ class Toolbar extends UI5Element {
 
 	/**
 	 * Receives id(or many ids) of the elements that label the input.
+	 *
+	 * **Note:** When the toolbar has `role="toolbar"`, at least one of `accessibleName` or
+	 * `accessibleNameRef` should be provided to satisfy WCAG 2.1 success criterion 4.1.2.
 	 * @default undefined
 	 * @public
 	 */
@@ -582,14 +588,47 @@ class Toolbar extends UI5Element {
 		return items;
 	}
 
-	_findCurrentIndex(items: Array<HTMLElement>): number {
+	/**
+	 * Ensures disabled interactive items are removed from the natural tab order
+	 * and annotated with aria-disabled so assistive technologies can perceive them.
+	 * Called alongside _applyRovingTabIndex.
+	 */
+	_applyDisabledItemsAccessibility() {
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
+				&& "disabled" in item && (item as { disabled?: boolean }).disabled)
+			.forEach(item => {
+				const focusRef = item.getFocusDomRef();
+				if (focusRef) {
+					focusRef.tabIndex = -1;
+					focusRef.setAttribute("aria-disabled", "true");
+				}
+			});
+	}
+
+	_findCurrentIndex(items: Array<HTMLElement>, e?: Event): number {
 		const active = getActiveElement() as HTMLElement | null;
 		if (!active) {
+			if (!e) {
+				return -1;
+			}
+			const path = e.composedPath();
+			return items.findIndex(item => path.includes(item));
+		}
+
+		const activeIndex = items.findIndex(item => item === active || item.contains(active)
+			|| (item.shadowRoot?.contains(active) ?? false));
+
+		if (activeIndex !== -1) {
+			return activeIndex;
+		}
+
+		if (!e) {
 			return -1;
 		}
 
-		return items.findIndex(item => item === active || item.contains(active)
-			|| (item.shadowRoot?.contains(active) ?? false));
+		const path = e.composedPath();
+		return items.findIndex(item => path.includes(item));
 	}
 
 	_findToolbarItem(focusRef: HTMLElement, active?: HTMLElement | null): ToolbarItemBase | undefined {
@@ -619,15 +658,6 @@ class Toolbar extends UI5Element {
 		});
 	}
 
-	_findToolbarItemFromEvent(e: KeyboardEvent): ToolbarItemBase | undefined {
-		const path = e.composedPath();
-		return this.standardItems.find(item => path.includes(item));
-	}
-
-	_isGenericToolbarItem(item?: ToolbarItemBase): boolean {
-		return item?.tagName === "UI5-TOOLBAR-ITEM";
-	}
-
 	_applyRovingTabIndex() {
 		const items = this._getFocusableItems();
 		if (!items.length) {
@@ -641,6 +671,8 @@ class Toolbar extends UI5Element {
 		items.forEach(item => {
 			item.tabIndex = item === current ? 0 : -1;
 		});
+
+		this._applyDisabledItemsAccessibility();
 	}
 
 	_onfocusin() {
@@ -659,86 +691,75 @@ class Toolbar extends UI5Element {
 	_onkeydown(e: KeyboardEvent) {
 		const active = getActiveElement() as HTMLElement | null;
 
-		if (isTabNext(e) || isTabPrevious(e)) {
-			const items = this._getFocusableItems();
-			const currentIndex = this._findCurrentIndex(items);
-			const eventToolbarItem = this._findToolbarItemFromEvent(e);
-			const currentToolbarItem = eventToolbarItem
-				|| (currentIndex !== -1 ? this._findToolbarItem(items[currentIndex], active) : undefined);
-
-			if (!currentToolbarItem) {
-				return;
-			}
-
-			if (!this._isGenericToolbarItem(currentToolbarItem)) {
-				return;
-			}
-
-			const resolvedCurrentIndex = currentIndex !== -1
-				? currentIndex
-				: items.findIndex(item => this._findToolbarItem(item, active) === currentToolbarItem);
-
-			if (resolvedCurrentIndex === -1) {
-				return;
-			}
-
-			const nextIndex = isTabNext(e) ? resolvedCurrentIndex + 1 : resolvedCurrentIndex - 1;
-			if (nextIndex < 0 || nextIndex >= items.length) {
-				return;
-			}
-
-			e.preventDefault();
-			this._lastFocusedItem = items[nextIndex];
-			this._applyRovingTabIndex();
-			items[nextIndex].focus();
-			return;
-		}
-
 		if (!isLeft(e) && !isRight(e) && !isUp(e) && !isDown(e) && !isHome(e) && !isEnd(e)) {
 			return;
 		}
 
-		// A child control already handled this key
-		if (e.defaultPrevented) {
-			return;
+		const isRTL = this.effectiveDir === "rtl";
+		const isHorizontal = isLeft(e) || isRight(e);
+
+		// Left/Right are reserved for toolbar navigation.
+		// Exception: inside an input or textarea, allow native caret movement
+		// but only exit to the next/prev toolbar item when the caret is already at the boundary.
+		if (isHorizontal && active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+			const input = active as HTMLInputElement | HTMLTextAreaElement;
+			const atStart = input.selectionStart === 0;
+			const atEnd = input.selectionStart === (input.value?.length ?? 0);
+			const textSelected = input.selectionStart !== input.selectionEnd;
+			const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+
+			if (textSelected || (movingForward && !atEnd) || (!movingForward && !atStart)) {
+				return; // caret not at boundary ? let the input handle it
+			}
+			// caret is at boundary ? fall through to toolbar roving
 		}
 
-		// Preserve native text cursor behavior in input/textarea elements
-		if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+		// For Up/Down: respect if a child control already handled the key
+		// (e.g. Select uses Up/Down to open the dropdown).
+		// Left/Right and Home/End are claimed by the toolbar.
+		if ((isUp(e) || isDown(e)) && e.defaultPrevented) {
 			return;
 		}
 
 		const items = this._getFocusableItems();
-		const currentIndex = this._findCurrentIndex(items);
+		let currentIndex = this._findCurrentIndex(items, e);
 		if (currentIndex === -1) {
-			return;
+			if (isHome(e)) {
+				currentIndex = 0;
+			} else if (isEnd(e)) {
+				currentIndex = items.length - 1;
+			} else if (this._lastFocusedItem && items.includes(this._lastFocusedItem)) {
+				currentIndex = items.indexOf(this._lastFocusedItem);
+			} else {
+				return;
+			}
 		}
 
-		// Let the toolbar item handle its own navigation (e.g. ToolbarSelect up/down)
+		// Let a toolbar item handle its own navigation for the keys it explicitly owns
+		// (e.g. ToolbarSelect claims Up/Down/Home/End via shouldHandleOwnKeyboardNavigation).
 		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
-		if (this._isGenericToolbarItem(toolbarItem)) {
-			return;
-		}
-
 		if (toolbarItem?.shouldHandleOwnKeyboardNavigation(e)) {
 			return;
 		}
 
 		let nextIndex = currentIndex;
-		const isRTL = this.effectiveDir === "rtl";
 
 		if ((isRight(e) && !isRTL) || (isLeft(e) && isRTL) || isDown(e)) {
-			nextIndex = Math.min(currentIndex + 1, items.length - 1);
+			nextIndex = (currentIndex + 1) % items.length;
 		} else if ((isLeft(e) && !isRTL) || (isRight(e) && isRTL) || isUp(e)) {
-			nextIndex = Math.max(currentIndex - 1, 0);
+			nextIndex = (currentIndex - 1 + items.length) % items.length;
 		} else if (isHome(e)) {
 			nextIndex = 0;
 		} else if (isEnd(e)) {
 			nextIndex = items.length - 1;
 		}
 
-		if (nextIndex !== currentIndex) {
-			e.preventDefault();
+		// Always prevent default once the toolbar has committed to handling this key,
+		// so that Up/Down/Home/End do not scroll the page even when focus is already
+		// at the first or last item.
+		e.preventDefault();
+
+		if (isHome(e) || isEnd(e) || nextIndex !== currentIndex) {
 			this._lastFocusedItem = items[nextIndex];
 			this._applyRovingTabIndex();
 			items[nextIndex].focus();
