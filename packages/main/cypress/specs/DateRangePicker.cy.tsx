@@ -1398,6 +1398,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerGetCalendar()
 				.shadow()
 				.find(".ui5-cal-overlay-container")
+				.should("exist")
 				.should("not.have.class", "ui5-cal-overlay-hidden");
 		});
 	});
