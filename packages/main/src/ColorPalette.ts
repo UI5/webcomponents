@@ -629,12 +629,12 @@ class ColorPalette extends UI5Element {
 		return isDown(e) || isRight(e);
 	}
 
-	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem> | Array<ColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[0] === (target as any);
+	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[0] === (target);
 	}
 
-	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem> | Array<ColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === (target as any);
+	_isLastSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === (target);
 	}
 
 	/**
