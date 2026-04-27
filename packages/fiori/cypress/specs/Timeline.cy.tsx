@@ -512,6 +512,76 @@ describe("Timeline - getFocusDomRef", () => {
 	});
 });
 
+describe("TimelineItem iconTooltip", () => {
+	it("should render tooltip on the icon when iconTooltip is set", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemWithTooltip"
+					titleText="Deployment"
+					icon={accept}
+					iconTooltip="Success"
+				>
+					Deployed successfully.
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("#itemWithTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("have.attr", "show-tooltip")
+			.and("exist");
+
+		cy.get("#itemWithTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("have.attr", "accessible-name", "Success");
+	});
+
+	it("should not render tooltip on icon when iconTooltip is not set", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemWithoutTooltip"
+					titleText="Deployment"
+					icon={accept}
+				>
+					Deployed successfully.
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("#itemWithoutTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("not.have.attr", "show-tooltip");
+	});
+
+	it("should include iconTooltip in the accessible label of the bubble", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemAccLabel"
+					titleText="Build"
+					subtitleText="Step 1"
+					icon={accept}
+					iconTooltip="Passed"
+					name="CI Pipeline"
+				>
+					Build completed.
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("#itemAccLabel")
+			.shadow()
+			.find(".ui5-tli-bubble")
+			.should("have.attr", "aria-label")
+			.and("include", "Passed");
+	});
+});
+
 describe("Timeline Header Bar", () => {
 	describe("Search functionality", () => {
 		it("should show header bar when slotted", () => {

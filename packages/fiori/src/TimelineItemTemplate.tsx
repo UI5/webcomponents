@@ -19,7 +19,13 @@ export default function TimelineItemTemplate(this: TimelineItem) {
 				<div class="ui5-tli-icon-outer">
 					{
 						this.icon ?
-							<Icon class="ui5-tli-icon" name={this.icon} mode="Decorative"/>
+							<Icon
+								class="ui5-tli-icon"
+								name={this.icon}
+								mode="Decorative"
+								showTooltip={!!this.iconTooltip}
+								accessibleName={this.iconTooltip}
+							/>
 							:
 							<div class="ui5-tli-dummy-icon-container"></div>
 					}
