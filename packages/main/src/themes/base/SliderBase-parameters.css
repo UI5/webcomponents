@@ -1,6 +1,7 @@
 :host {
 	--_ui5_slider_handle_height: 1.5rem;
 	--_ui5_slider_handle_width: 2rem;
+	--_ui5_slider_inner_min_width: 4rem;
 	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapContent_FocusColor);
 	--_ui5_slider_progress_border_width: 0.0625rem;
 	--_ui5_slider_disabled_opacity: 0.4;

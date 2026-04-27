@@ -55,12 +55,12 @@
 	position: absolute;
 	top: var(--_ui5_slider_scale_progress_top);
 	height: var(--_ui5_slider_scale_progress_height);
-	background-color: var(--_ui5_slider_scale_progress_background, var(--sapSlider_Selected_Background));
+	background-color: var(--_ui5_slider_scale_progress_background);
 	border: var(--_ui5_slider_scale_progress_border);
 	border-left: none;
 	box-sizing: border-box;
 	z-index: 4;
-	border-radius: .25rem;
+	border-radius: var(--_ui5_slider_scale_progress_border_radius);
 }
 
 .ui5-slider-scale-progress:focus {
