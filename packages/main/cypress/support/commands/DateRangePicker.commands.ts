@@ -90,6 +90,7 @@ Cypress.Commands.add("ui5DateRangePickerClickDateInCalendar", { prevSubject: tru
 Cypress.Commands.add("ui5DateRangePickerVerifySelectedDatesInCalendar", { prevSubject: true }, (subject: JQuery<DateRangePicker>, calendarIndex: number) => {
 	cy.wrap(subject)
 		.ui5DateRangePickerGetDayPicker(calendarIndex)
+		.should("exist")
 		.shadow()
 		.find(".ui5-dp-item--selected")
 		.should("exist");
