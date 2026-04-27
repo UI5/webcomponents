@@ -1,7 +1,8 @@
-import { SHOW_SELECTED_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { SHOW_SELECTED_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
+import Label from "../../src/Label.js";
 
 describe("MultiComboBox mobile general interaction", () => {
     beforeEach(() => {
@@ -873,5 +874,62 @@ describe("Accessibility", () => {
             .find("[ui5-toggle-button]")
             .should("have.attr", "accessible-name", SHOW_SELECTED_BUTTON.defaultText);
 
+    });
+});
+
+describe("Dialog header title", () => {
+    beforeEach(() => {
+        cy.ui5SimulateDevice("phone");
+    });
+
+    it("Should display label text as dialog header title when label for is used", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" />
+                    <MultiComboBoxItem text="Item 2" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
+    });
+
+    it("Should fallback to 'All Items' when no label is associated", () => {
+        cy.mount(
+            <MultiComboBox id="myMCB">
+                <MultiComboBoxItem text="Item 1" />
+                <MultiComboBoxItem text="Item 2" />
+            </MultiComboBox>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
     });
 });

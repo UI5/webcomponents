@@ -1533,7 +1533,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {
