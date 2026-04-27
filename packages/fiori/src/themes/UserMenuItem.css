@@ -1,47 +1,46 @@
 :host {
-    height: 40px;
-    min-height: 40px;
+	height: 2.5rem;
+	min-height: 2.5rem;
 	border: none;
 }
 
-/* Ensure inner li matches host height for proper focus outline */
 .ui5-li-root {
-    min-height: 40px;
+	min-height: 2.5rem;
 }
 
 :host(:last-of-type) {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 :host(:first-of-type) {
-    margin-top: 0;
+	margin-top: 0;
 }
 
-/* Allow taller items when showing selection text */
-:host([show-selection-text]) {
-    height: auto;
-    min-height: 40px;
+:host([show-selection]) {
+	height: 3.25rem;
+	min-height: 3.25rem;
 }
 
-/* Wrapper for two-line layout (text + selected sub-item) */
+:host([show-selection]) .ui5-li-root {
+	min-height: 3.25rem;
+	padding-block: 0.5rem;
+}
+
 .ui5-user-menu-item-text-wrapper {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex: 1;
-    min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	overflow: hidden;
+	flex: 1;
+	min-width: 0;
 }
 
-/* Second line showing selected sub-item text */
 .ui5-user-menu-item-selection-text {
-    font-size: var(--sapFontSize);
-    color: var(--sapContent_LabelColor);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Checkmark spacing in sub-menu popover: 2rem gap between text and checkmark */
-.ui5-menu-item-checked {
-    padding-inline-start: 2rem;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	font-weight: normal;
+	color: var(--sapContent_LabelColor);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

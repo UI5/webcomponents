@@ -24,7 +24,7 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuIte
 	const currentHooks = { ...predefinedHooks, ...hooks };
 
 	if (!hooks?.listItemContent) {
-		currentHooks.listItemContent = function(this: MenuItem) {
+		currentHooks.listItemContent = function listItemContent(this: MenuItem) {
 			return (<>
 				{currentHooks.menuItemTextContent!.call(this)}
 
