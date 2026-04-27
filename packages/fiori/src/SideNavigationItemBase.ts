@@ -63,6 +63,16 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	@property()
 	tooltip?: string;
 
+	/**
+	 * Defines the accessible ARIA name of the component.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property()
+	accessibleName?: string;
+
 	@property({ noAttribute: true })
 	forcedTabIndex = "-1";
 
