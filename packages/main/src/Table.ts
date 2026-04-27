@@ -457,8 +457,9 @@ class Table extends UI5Element {
 	onBeforeRendering(): void {
 		this._renderNavigated = this.rows.some(row => row.navigated);
 		[...this.headerRow, ...this.rows].forEach((row, index) => {
-			row._renderNavigated = this._renderNavigated;
 			row._rowActionCount = this.rowActionCount;
+			row._renderNavigated = this._renderNavigated;
+			row._renderDummyCell = !this._hasFlexibleColumns;
 			row._alternate = this.alternateRowColors && index % 2 === 0;
 		});
 
@@ -649,6 +650,14 @@ class Table extends UI5Element {
 			return width;
 		}));
 
+		// Dummy Cell Width (before actions when popin, after navigated otherwise)
+		const dummyColumnWidth = !this._hasFlexibleColumns ? "minmax(0, 1fr)" : "";
+		const hasPopinCells = this.headerRow[0]._popinCells.length > 0;
+
+		if (dummyColumnWidth && hasPopinCells) {
+			widths.push(dummyColumnWidth);
+		}
+
 		// Row Action Cell Width
 		if (this.rowActionCount > 0) {
 			widths.push(`calc(var(--_ui5_button_base_min_width) * ${this.rowActionCount} + var(--_ui5_table_row_actions_gap) * ${this.rowActionCount - 1} + var(--_ui5_table_cell_horizontal_padding) * 2)`);
@@ -659,7 +668,15 @@ class Table extends UI5Element {
 			widths.push(`var(--_ui5_table_navigated_cell_width)`);
 		}
 
+		if (dummyColumnWidth && !hasPopinCells) {
+			widths.push(dummyColumnWidth);
+		}
+
 		return widths.join(" ");
+	}
+
+	get _hasFlexibleColumns(): boolean {
+		return this.headerRow?.[0]?._visibleCells.some(cell => !isValidColumnWidth(cell.width));
 	}
 
 	get _isRowSelectorRequired() {

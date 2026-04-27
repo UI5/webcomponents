@@ -47,6 +47,12 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
+			{ this._renderDummyCell && this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="">
+				</TableCell>
+			}
+
 			{ this._rowActionCount > 0 &&
 				<TableCell id="actions-cell"
 					aria-colindex={ariaColIndex++}
@@ -77,6 +83,12 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					role="none"
 				>
 					<div id="navigated"></div>
+				</TableCell>
+			}
+
+			{ this._renderDummyCell && !this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="nofocus">
 				</TableCell>
 			}
 

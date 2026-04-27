@@ -54,9 +54,30 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
+			{ this._renderDummyCell && this._popinCells.length > 0 &&
+				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
+					data-excluded-from-navigation="">
+				</TableHeaderCell>
+			}
+
 			{ this._rowActionCount > 0 &&
 				<TableHeaderCell id="actions-cell" aria-colindex={ariaColIndex++}>
 					<div id="actions-cell-content">{this._i18nRowActions}</div>
+				</TableHeaderCell>
+			}
+
+			{ this._renderNavigated &&
+				<TableHeaderCell id="navigated-cell"
+					data-excluded-from-navigation
+					aria-hidden={true}
+					role="none"
+				>
+				</TableHeaderCell>
+			}
+
+			{ this._renderDummyCell && this._popinCells.length === 0 &&
+				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
+					data-excluded-from-navigation="nofocus">
 				</TableHeaderCell>
 			}
 

@@ -40,6 +40,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	@property({ type: Boolean, noAttribute: true })
 	_alternate = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_renderDummyCell = false;
+
 	@query("#selection-cell")
 	_selectionCell?: HTMLElement;
 

@@ -33,6 +33,14 @@
 	z-index: 1;
 }
 
+#dummy-cell {
+	border-inline-start: var(--sapList_TableFixedColumnBorderWidth) solid var(--sapList_TableFixedBorderColor);
+}
+
+:host([_haspopin]) #dummy-cell {
+	border-inline-start: none;
+}
+
 #selection-cell {
 	padding: 0;
 	inset-inline-start: 0;

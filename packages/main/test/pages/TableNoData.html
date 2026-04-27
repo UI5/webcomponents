@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Table - No Data</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<script type="module">
+		import "@ui5/webcomponents-fiori/dist/IllustratedMessage.js";
+		import "@ui5/webcomponents-fiori/dist/illustrations/NoData.js";
+		import "@ui5/webcomponents/dist/TableRowAction.js";
+		import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
+	</script>
+
+	<style>
+		ui5-table {
+			margin: 1rem;
+		}
+	</style>
+</head>
+
+<body class="sapUiSizeCompact">
+	<h3>Single column - no data (column should cover full width)</h3>
+	<ui5-table id="table1">
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell width="200px">Product</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+
+	<br>
+	<h3>Single column (width:40%) - no data with custom noData slot</h3>
+	<div style="display: flex; gap: 0.5rem;">
+		<ui5-button id="addRow2" icon="add">Add Row</ui5-button>
+		<ui5-button id="removeRow2" icon="delete" design="Negative">Remove Row</ui5-button>
+	</div>
+	<ui5-table id="table2">
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell width="40%">Product</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<div slot="noData">
+			<ui5-illustrated-message name="NoData"></ui5-illustrated-message>
+		</div>
+	</ui5-table>
+
+	<script>
+		let rowCount2 = 0;
+		const table2 = document.getElementById("table2");
+
+		document.getElementById("addRow2").addEventListener("click", () => {
+			rowCount2++;
+			const row = document.createElement("ui5-table-row");
+			const cell = document.createElement("ui5-table-cell");
+			const text = document.createElement("ui5-text");
+			text.textContent = "Product " + rowCount2;
+			cell.appendChild(text);
+			row.appendChild(cell);
+			table2.appendChild(row);
+		});
+
+		document.getElementById("removeRow2").addEventListener("click", () => {
+			const rows = table2.querySelectorAll("[ui5-table-row]");
+			if (rows.length > 0) {
+				rows[rows.length - 1].remove();
+			}
+		});
+	</script>
+
+	<br>
+	<h3>Multiple columns (width:200px each) - no data</h3>
+	<div style="display: flex; gap: 0.5rem;">
+		<ui5-button id="addRow3" icon="add">Add Row</ui5-button>
+		<ui5-button id="removeRow3" icon="delete" design="Negative">Remove Row</ui5-button>
+	</div>
+	<ui5-table id="table3">
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell width="200px">Product</ui5-table-header-cell>
+			<ui5-table-header-cell width="200px">Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell width="200px">Price</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+
+	<script>
+		let rowCount3 = 0;
+		const table3 = document.getElementById("table3");
+
+		document.getElementById("addRow3").addEventListener("click", () => {
+			rowCount3++;
+			const row = document.createElement("ui5-table-row");
+			["Product " + rowCount3, "Supplier " + rowCount3, rowCount3 * 100 + " EUR"].forEach(value => {
+				const cell = document.createElement("ui5-table-cell");
+				const text = document.createElement("ui5-text");
+				text.textContent = value;
+				cell.appendChild(text);
+				row.appendChild(cell);
+			});
+			table3.appendChild(row);
+		});
+
+		document.getElementById("removeRow3").addEventListener("click", () => {
+			const rows = table3.querySelectorAll("[ui5-table-row]");
+			if (rows.length > 0) {
+				rows[rows.length - 1].remove();
+			}
+		});
+	</script>
+
+	<br>
+	<h3>Popin - 4 columns (shrink below 1000px to see popin columns)</h3>
+	<div style="display: flex; gap: 0.5rem;">
+		<ui5-button id="addRow4" icon="add">Add Row</ui5-button>
+		<ui5-button id="removeRow4" icon="delete" design="Negative">Remove Row</ui5-button>
+	</div>
+	<ui5-table id="table4" overflow-mode="Popin" row-action-count="3">
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell width="250px">Product</ui5-table-header-cell>
+			<ui5-table-header-cell width="250px">Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell width="250px">Dimensions</ui5-table-header-cell>
+			<ui5-table-header-cell width="250px">Price</ui5-table-header-cell>
+		</ui5-table-header-row>
+		<div slot="noData">
+			<ui5-illustrated-message name="NoData"></ui5-illustrated-message>
+		</div>
+	</ui5-table>
+
+	<script>
+		let rowCount4 = 0;
+		const table4 = document.getElementById("table4");
+
+		document.getElementById("addRow4").addEventListener("click", () => {
+			rowCount4++;
+			const row = document.createElement("ui5-table-row");
+			["Product " + rowCount4, "Supplier " + rowCount4, "30 x 18 x 3 cm", rowCount4 * 100 + " EUR"].forEach(value => {
+				const cell = document.createElement("ui5-table-cell");
+				const text = document.createElement("ui5-text");
+				text.textContent = value;
+				cell.appendChild(text);
+				row.appendChild(cell);
+			});
+
+			const editAction = document.createElement("ui5-table-row-action");
+			editAction.setAttribute("slot", "actions");
+			editAction.setAttribute("icon", "edit");
+			editAction.setAttribute("text", "Edit");
+			row.appendChild(editAction);
+
+			const deleteAction = document.createElement("ui5-table-row-action");
+			deleteAction.setAttribute("slot", "actions");
+			deleteAction.setAttribute("icon", "delete");
+			deleteAction.setAttribute("text", "Delete");
+			row.appendChild(deleteAction);
+
+			const navAction = document.createElement("ui5-table-row-action-navigation");
+			navAction.setAttribute("slot", "actions");
+			navAction.setAttribute("interactive", "");
+			row.appendChild(navAction);
+
+			if (rowCount4 === 2) {
+				row.setAttribute("navigated", "");
+			}
+
+			table4.appendChild(row);
+		});
+
+		document.getElementById("removeRow4").addEventListener("click", () => {
+			const rows = table4.querySelectorAll("[ui5-table-row]");
+			if (rows.length > 0) {
+				rows[rows.length - 1].remove();
+			}
+		});
+	</script>
+</body>
+
+</html>
