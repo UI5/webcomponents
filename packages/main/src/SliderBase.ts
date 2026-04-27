@@ -8,6 +8,7 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isEscape, isHome, isEnd, isUp, isDown, isRight, isLeft, isUpCtrl, isDownCtrl, isRightCtrl, isLeftCtrl, isPlus, isMinus, isPageUp, isPageDown, isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { SliderHandleType } from "./SliderHandle.js";
 
 // Styles
 import sliderBaseStyles from "./generated/themes/SliderBase.css.js";
@@ -301,9 +302,9 @@ abstract class SliderBase extends UI5Element {
 		if (isF2(e) && isHandleFocused) {
 			const handleType = target.getAttribute("handle-type");
 			let tooltipSelector: string;
-			if (handleType === "Start") {
+			if (handleType === SliderHandleType.Start) {
 				tooltipSelector = "[data-sap-ui-start-value]";
-			} else if (handleType === "End") {
+			} else if (handleType === SliderHandleType.End) {
 				tooltipSelector = "[data-sap-ui-end-value]";
 			} else {
 				tooltipSelector = "[ui5-slider-tooltip]";

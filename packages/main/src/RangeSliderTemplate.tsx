@@ -1,6 +1,6 @@
 import type RangeSlider from "./RangeSlider.js";
 import SliderTooltip from "./SliderTooltip.js";
-import SliderHandle from "./SliderHandle.js";
+import SliderHandle, { SliderHandleType } from "./SliderHandle.js";
 import SliderScale from "./SliderScale.js";
 
 const _handlePosition = (min: number, max: number, value: number) => {
@@ -20,7 +20,7 @@ const startHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				active={slider.rangePressed}
-				handleType="Start"
+				handleType={SliderHandleType.Start}
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
@@ -54,7 +54,7 @@ const endHandle = (slider: RangeSlider) => {
 				max={slider.max}
 				tabIndex={slider._tabIndex}
 				active={slider.rangePressed}
-				handleType="End"
+				handleType={SliderHandleType.End}
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
