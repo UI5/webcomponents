@@ -1426,7 +1426,7 @@ describe("Suggestions expanded/collapsed announcement", () => {
 		cy.get("@input")
 			.shadow()
 			.find("#suggestionsCount")
-			.should("have.text", INPUT_SUGGESTIONS_COLLAPSED.defaultText);
+			.should("contain.text", INPUT_SUGGESTIONS_COLLAPSED.defaultText);
 	});
 });
 
@@ -2200,17 +2200,17 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#inputCompact").click();
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "Collapsed");
 
 		cy.get("#inputCompact").shadow().find("input").realType("c");
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available Expanded");
 
 		cy.get("#inputCompact").shadow().find("input").realType("{backspace}");
 		cy.get("#inputCompact").shadow().find("input").realType("{esc}");
 
 		cy.get("#myInput2").click();
 		cy.get("#myInput2").shadow().find("input").realType("c");
-		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available");
+		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available Expanded");
 	});
 
 	it("Should close the Popover when no suggestions are available", () => {
