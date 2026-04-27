@@ -645,7 +645,7 @@ describe("Dialog header title", () => {
 
 		cy.get("#myCB")
 			.shadow()
-			.find("[ui5-responsive-popover] .ui5-responsive-popover-header .row span")
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
 			.should("have.text", "Country");
 	});
 
@@ -666,7 +666,7 @@ describe("Dialog header title", () => {
 
 		cy.get("#myCB")
 			.shadow()
-			.find("[ui5-responsive-popover] .ui5-responsive-popover-header .row span")
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
 			.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
 	});
 });
