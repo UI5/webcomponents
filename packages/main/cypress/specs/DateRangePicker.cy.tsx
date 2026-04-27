@@ -1015,7 +1015,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Basic Two Calendars Display", () => {
 		it("should display two calendars when showTwoMonths is true", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 1, 2024 - Jan 31, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-31" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1034,7 +1034,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should display one calendar when showTwoMonths is false", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={false} value="Jan 1, 2024 - Jan 31, 2024" />
+				<DateRangePicker showTwoMonths={false} value="2024-01-01 - 2024-01-31" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1056,7 +1056,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should show consecutive months in two calendars mode", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Mar 15, 2024 - Mar 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1081,7 +1081,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should dynamically toggle showTwoMonths after initial render", () => {
 			cy.mount(
-				<DateRangePicker value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1184,7 +1184,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should highlight selection across both calendars", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 20, 2024 - Feb 10, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-20 - 2024-02-10" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1202,7 +1202,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should update value when selecting new range", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 1, 2024 - Jan 5, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-05" />
 			);
 
 			const changeSpy = cy.spy().as("changeSpy");
@@ -1265,7 +1265,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Navigation in Two Calendars Mode", () => {
 		it("should navigate both calendars forward", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1286,7 +1286,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should navigate both calendars backward", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Mar 15, 2024 - Mar 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1309,7 +1309,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Picker Overlays", () => {
 		it("should show month picker overlay when clicking month button", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1338,7 +1338,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should show year picker overlay when clicking year button", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1360,7 +1360,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 
 		it("should return to day pickers after selecting from month picker", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1397,7 +1397,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Keyboard Navigation", () => {
 		it("should allow keyboard navigation through header buttons", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
@@ -1454,7 +1454,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 	describe("Edge Cases", () => {
 		it("should handle year boundary correctly", () => {
 			cy.mount(
-				<DateRangePicker showTwoMonths={true} value="Dec 15, 2025 - Dec 20, 2025" />
+				<DateRangePicker showTwoMonths={true} value="2025-12-15 - 2025-12-20" />
 			);
 
 			cy.get<DateRangePicker>("[ui5-daterange-picker]")
