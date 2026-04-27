@@ -2,5 +2,4 @@
 
 :host {
 	--ui5_slider_handle_outline_offset: 3px;
-	--_ui5_slider_handle_hover_border: var(--_ui5_slider_handle_border);
 }

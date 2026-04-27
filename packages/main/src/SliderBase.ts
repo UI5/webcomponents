@@ -392,21 +392,7 @@ abstract class SliderBase extends UI5Element {
 
 		if (this.labelInterval <= 0 || this._hiddenTickmarks) {
 			this._labelsOverlapping = true;
-			return;
 		}
-
-		// Check if there are any overlapping labels.
-		// If so - only the first and the last one should be visible
-
-		const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // calculate 1 rem in pixels
-		const childWidthPx = 2 * remInPx; // as specified label must be 2 rems so calculate one child width in pixels
-
-		const labelItemsParent = this.shadowRoot!.querySelector(".ui5-slider-labels") as HTMLElement;
-
-		const labelItemsSumWidth = this._labels.length * childWidthPx; // all labels width
-		const labelItemsParentWidth = labelItemsParent && labelItemsParent.clientWidth; // label parent width
-
-		this._labelsOverlapping = labelItemsParentWidth < labelItemsSumWidth;
 	}
 	/**
 	 * Called when the user starts interacting with the slider.

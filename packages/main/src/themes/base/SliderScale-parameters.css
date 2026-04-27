@@ -1,5 +1,5 @@
 :host {
-	--ui5_slider_scale_background: var(--sapSlider_Background);
+	--_ui5_slider_scale_background: var(--sapSlider_Background);
 	--_ui5_slider_scale_progress_background: var(--sapSlider_Selected_Background);
 	--_ui5_slider_scale_progress_border: none;
 	--_ui5_slider_scale_dots_distance: -1rem;

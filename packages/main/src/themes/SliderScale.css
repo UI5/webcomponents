@@ -15,7 +15,7 @@
 	border-radius: 0.25rem;
 	width: 100%;
 	position: relative;
-	background: var(--ui5_slider_scale_background);
+	background: var(--_ui5_slider_scale_background);
 	border: var(--_ui5_slider_scale_border);
 }
 
