@@ -38,10 +38,10 @@
 
 			<!-- Items -->
 			<ui5-side-navigation-item slot="fixedItems" text="External Link _top" icon="chain-link" href="https://sap.com" target="_top"></ui5-side-navigation-item>
-			<ui5-side-navigation-item id="item1" text="Home" icon="home" tooltip="Home tooltip"></ui5-side-navigation-item>
-			<ui5-side-navigation-item id="item2" text="People" expanded icon="group">
-				<ui5-side-navigation-sub-item id="item21" text="From My Team" icon="employee-approvals" tooltip="From My Team tooltip"></ui5-side-navigation-sub-item>
-				<ui5-side-navigation-sub-item id="item22" text="From Other Teams" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-item id="item1" text="Home" icon="home" tooltip="Home tooltip" accessible-name="Navigate to Home Dashboard"></ui5-side-navigation-item>
+			<ui5-side-navigation-item id="item2" text="People" expanded icon="group" accessible-name="View and manage team members">
+				<ui5-side-navigation-sub-item id="item21" text="From My Team" icon="employee-approvals" tooltip="From My Team tooltip" accessible-name="View all team members and their roles"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item id="item22" text="From Other Teams" icon="employee-rejections" accessible-name="View members from other teams"></ui5-side-navigation-sub-item>
 			</ui5-side-navigation-item>
 			<ui5-side-navigation-item text="Locations" icon="locate-me" selected></ui5-side-navigation-item>
 			<ui5-side-navigation-item id="item3" text="Events lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="calendar">
