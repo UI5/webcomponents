@@ -239,6 +239,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	get _ariaLabel() {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+
 		if (this.isOverflow) {
 			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL);
 		}
