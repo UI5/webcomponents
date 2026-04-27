@@ -3529,6 +3529,31 @@ describe("SelectedValue API", () => {
 		// Verify the second item is selected
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "selected", true);
 	});
+
+	it("should have selectedValue available in change event on first selection", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+		cy.mount(
+			<ComboBox onChange={changeSpy}>
+				<ComboBoxItem text="Cozy1" value="c1"></ComboBoxItem>
+				<ComboBoxItem text="Cozy2" value="c2"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		// Open dropdown
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		// Select first item
+		cy.get("[ui5-cb-item]").eq(0).realClick();
+
+		// Verify change event was called with correct selectedValue
+		cy.get("@changeSpy").should("have.been.calledOnce");
+		cy.get("@combo").should("have.prop", "value", "Cozy1");
+		cy.get("@combo").should("have.prop", "selectedValue", "c1");
+	});
 });
 
 describe("Case-Insensitive Selection", () => {

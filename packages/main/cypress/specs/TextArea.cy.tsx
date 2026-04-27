@@ -965,3 +965,192 @@ describe("Validation inside a form", () => {
 			.should("have.been.calledOnce");
 	});
 });
+
+describe("TextArea Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<TextArea
+				id="textarea-composition-korean"
+				placeholder="Type in Korean ..."
+			/>
+		);
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick();
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.as("nativeTextarea")
+			.focus();
+
+		cy.get("@nativeTextarea").trigger("compositionstart", { data: "" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionend", { data: "사랑" });
+
+		cy.get("@nativeTextarea")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", false);
+
+		cy.get("@textarea").should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<TextArea
+				id="textarea-composition-japanese"
+				placeholder="Type in Japanese ..."
+			/>
+		);
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick();
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.as("nativeTextarea")
+			.focus();
+
+		cy.get("@nativeTextarea").trigger("compositionstart", { data: "" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionend", { data: "ありがとう" });
+
+		cy.get("@nativeTextarea")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", false);
+
+		cy.get("@textarea").should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<TextArea
+				id="textarea-composition-chinese"
+				placeholder="Type in Chinese ..."
+			/>
+		);
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick();
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.as("nativeTextarea")
+			.focus();
+
+		cy.get("@nativeTextarea").trigger("compositionstart", { data: "" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionend", { data: "谢谢" });
+
+		cy.get("@nativeTextarea")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", false);
+
+		cy.get("@textarea").should("have.attr", "value", "谢谢");
+	});
+
+	it("should not revert value on Escape during composition", () => {
+		cy.mount(
+			<TextArea
+				id="textarea-composition-escape"
+				value="initial"
+			/>
+		);
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick();
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.as("nativeTextarea")
+			.focus();
+
+		cy.get("@nativeTextarea").trigger("compositionstart", { data: "" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeTextarea").trigger("compositionupdate", { data: "테스트" });
+
+		cy.get("@nativeTextarea")
+			.invoke("val", "initial테스트")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@nativeTextarea").trigger("keydown", { key: "Escape", keyCode: 27 });
+
+		cy.get("@textarea").should("have.attr", "value", "initial테스트");
+
+		cy.get("@nativeTextarea").trigger("compositionend", { data: "테스트" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", false);
+
+		cy.get("@textarea").should("have.attr", "value", "initial테스트");
+	});
+
+	it("should revert value on Escape after composition ends", () => {
+		cy.mount(
+			<TextArea
+				id="textarea-composition-escape-after"
+				value="initial"
+			/>
+		);
+
+		cy.get("[ui5-textarea]")
+			.as("textarea")
+			.realClick();
+
+		cy.get("@textarea")
+			.shadow()
+			.find("textarea")
+			.as("nativeTextarea")
+			.focus();
+
+		cy.get("@nativeTextarea").trigger("compositionstart", { data: "" });
+
+		cy.get("@nativeTextarea").trigger("compositionupdate", { data: "완료" });
+
+		cy.get("@nativeTextarea")
+			.invoke("val", "initial완료")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@nativeTextarea").trigger("compositionend", { data: "완료" });
+
+		cy.get("@textarea").should("have.prop", "_isComposing", false);
+
+		cy.get("@textarea").should("have.attr", "value", "initial완료");
+
+		cy.get("@nativeTextarea").realPress("Escape");
+
+		cy.get("@textarea").should("have.attr", "value", "initial");
+	});
+});

@@ -2,7 +2,8 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 // Template
 import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
@@ -11,6 +12,8 @@ import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+
+const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 
 /**
  * @class
@@ -43,6 +46,7 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
  */
 @customElement({
 	tag: "ui5-avatar-badge",
+	languageAware: true,
 	renderer: jsxRenderer,
 	styles: AvatarBadgeCss,
 	template: AvatarBadgeTemplate,
@@ -60,6 +64,18 @@ class AvatarBadge extends UI5Element {
 	 */
 	@property()
 	icon?: string;
+
+	/**
+	 * Defines the custom text alternative of the badge icon.
+	 *
+	 * **Note:** If not provided, the badge uses the icon accessible name.
+	 * If no icon accessible name is available, a generic fallback text is used.
+	 * @default undefined
+	 * @public
+ 	 * @since 2.22.0
+	 */
+	@property()
+	accessibleName?: string;
 
 	/**
 	 * Defines the state of the badge, which determines its styling.
@@ -83,8 +99,40 @@ class AvatarBadge extends UI5Element {
 	@property({ type: Boolean })
 	invalid = false;
 
-	onBeforeRendering() {
-		this.invalid = !this.icon || !getIconDataSync(this.icon);
+	/**
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	effectiveAccessibleName?: string;
+
+	async onBeforeRendering() {
+		const icon = this.icon;
+		if (!icon) {
+			this.invalid = true;
+			this.effectiveAccessibleName = undefined;
+			return;
+		}
+
+		const iconData = getIconDataSync(icon) || await getIconData(icon);
+		this.invalid = !iconData || iconData === ICON_NOT_FOUND;
+
+		if (this.invalid) {
+			this.effectiveAccessibleName = undefined;
+		} else if (this.accessibleName) {
+			// User-provided accessible name takes precedence
+			this.effectiveAccessibleName = this.accessibleName;
+		} else if (iconData && iconData !== ICON_NOT_FOUND && iconData.accData) {
+			// Use the icon's registered i18n label (e.g., message-error -> "Error")
+			if (iconData.packageName) {
+				const i18nBundle = await getI18nBundle(iconData.packageName);
+				this.effectiveAccessibleName = i18nBundle.getText(iconData.accData) || undefined;
+			} else {
+				this.effectiveAccessibleName = iconData.accData.defaultText || undefined;
+			}
+		} else {
+			// Derive from icon name (e.g., "edit" -> "Edit")
+			this.effectiveAccessibleName = icon.charAt(0).toUpperCase() + icon.slice(1);
+		}
 	}
 }
 
