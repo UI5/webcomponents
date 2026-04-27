@@ -1397,6 +1397,13 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 			cy.get<DateRangePicker>("@dateRangePicker")
 				.ui5DateRangePickerGetCalendar()
 				.shadow()
+				.find("[ui5-monthpicker]")
+				.should("exist")
+				.should("not.have.attr", "hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
 				.find(".ui5-cal-overlay-container")
 				.should("exist")
 				.should("not.have.class", "ui5-cal-overlay-hidden");
