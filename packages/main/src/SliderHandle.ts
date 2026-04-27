@@ -80,6 +80,15 @@ class SliderHandle extends UI5Element {
 	active = false;
 
 	/**
+	 * Defines whether the slider handle should appear hovered.
+	 * <br><br>
+	 * <b>Note:</b> Used when the progress bar is hovered to show both handles as hovered.
+	 * @since 2.19.0
+	 */
+	@property({ type: Boolean })
+	hovered = false;
+
+	/**
 	 * Defines the orientation of the slider handle.
 	 *
 	 * @private

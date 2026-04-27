@@ -43,6 +43,14 @@ export default function SliderScaleTemplate(this: SliderScale) {
 				aria-valuetext={this.progressAriaValueText}
 				aria-label={this.progressAriaLabel}
 				aria-disabled={this.progressAriaDisabled}
+				onMouseEnter={this._onProgressMouseEnter}
+				onMouseLeave={this._onProgressMouseLeave}
+			></div>
+			<div
+				class="ui5-slider-scale-progress-hover-area"
+				style={this._progressStyle}
+				onMouseEnter={this._onProgressMouseEnter}
+				onMouseLeave={this._onProgressMouseLeave}
 			></div>
 			<slot></slot>
 		</div>

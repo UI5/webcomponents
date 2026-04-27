@@ -1,5 +1,1 @@
 @import "../sap_horizon/SliderBase-parameters.css";
-
-:host {
-	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
-}

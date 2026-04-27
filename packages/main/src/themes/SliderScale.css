@@ -63,6 +63,15 @@
 	border-radius: var(--_ui5_slider_scale_progress_border_radius);
 }
 
+.ui5-slider-scale-progress-hover-area {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	height: 2rem;
+	z-index: 3;
+	cursor: pointer;
+}
+
 .ui5-slider-scale-progress:focus {
 	outline: none;
 }

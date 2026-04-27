@@ -1,4 +1,9 @@
 :host {
+	--_ui5_slider_handle_height: 1.5rem;
+	--_ui5_slider_handle_width: 2rem;
+	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapContent_FocusColor);
+	--_ui5_range_slider_root_hover_handle_bg: var(--sapSlider_Hover_RangeHandleBackground);
+	--_ui5_range_slider_handle_active_background: var(--sapSlider_Active_RangeHandleBackground);
 	--ui5_slider_handle_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--ui5_slider_handle_outline_offset: 0.0625rem;
 	--_ui5_slider_handle_background: var(--sapSlider_HandleBackground);
@@ -15,6 +20,7 @@
 
 @container style(--ui5_content_density: compact) {
 	:host {
-		--_ui5_slider_handle_icon_size: 0.875rem;
+		--_ui5_slider_handle_height: 1.25rem;
+		--_ui5_slider_handle_width: 1.5rem;
 	}
 }

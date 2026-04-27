@@ -24,7 +24,8 @@
 	z-index: 6;
 }
 
-:host(:hover) {
+:host(:hover),
+:host([hovered]) {
 	background: var(--_ui5_slider_handle_hover_background);
 	border: var(--_ui5_slider_handle_hover_border);
 }
@@ -61,7 +62,7 @@
 }
 
 :host([active]) {
-	border: var(--_ui5_slider_handle_active_border, var(--_ui5_slider_handle_focus_border));
+	border: var(--_ui5_slider_handle_focus_border);
 }
 
 :host([orientation="Vertical"]) {

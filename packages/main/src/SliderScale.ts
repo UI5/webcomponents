@@ -178,6 +178,14 @@ class SliderScale extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	progressFocused = false;
+
+	/**
+	 * Indicates that the progress bar is being hovered.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressHovered = false;
 	/**
 	 * @private
 	 */
@@ -285,6 +293,20 @@ class SliderScale extends UI5Element {
 			: this.getBoundingClientRect().height;
 
 		return containerSize / tickmarksCount;
+	}
+
+	_onProgressMouseEnter() {
+		this.progressHovered = true;
+		this.handles.forEach(handle => {
+			handle.hovered = true;
+		});
+	}
+
+	_onProgressMouseLeave() {
+		this.progressHovered = false;
+		this.handles.forEach(handle => {
+			handle.hovered = false;
+		});
 	}
 
 	get _tickmarksCount() {

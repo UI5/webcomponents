@@ -1,5 +1,6 @@
 @import "../sap_horizon/SliderHandle-parameters.css";
 
 :host {
+	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
 	--ui5_slider_handle_outline_offset: 3px;
 }
