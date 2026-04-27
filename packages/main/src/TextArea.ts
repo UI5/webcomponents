@@ -18,6 +18,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
+import type InputComposition from "./features/InputComposition.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -327,6 +328,14 @@ class TextArea extends UI5Element implements IFormInputElement {
 	_width?: number;
 
 	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
+
+	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
 	 * The value state message slot should contain only one root element.
    	 *
@@ -347,9 +356,11 @@ class TextArea extends UI5Element implements IFormInputElement {
 	_keyDown?: boolean;
 	previousValue: string;
 	valueStatePopover?: Popover;
+	_composition?: InputComposition;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
 		if (this.formValidity.valueMissing) {
@@ -387,10 +398,12 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._fnOnResize);
+		this._enableComposition();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._fnOnResize);
+		this._composition?.removeEventListeners();
 	}
 
 	onBeforeRendering() {
@@ -425,6 +438,10 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	_onkeydown(e: KeyboardEvent) {
 		this._keyDown = true;
+
+		if (this._isComposing) {
+			return;
+		}
 
 		if (isEscape(e)) {
 			const nativeTextArea = this.getInputDomRef();
@@ -573,6 +590,31 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return {
 			exceededText, leftCharactersCount, calcedMaxLength,
 		};
+	}
+
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+
+		const setup = (FeatureClass: typeof InputComposition) => {
+			this._composition = new FeatureClass({
+				getInputEl: () => this.getInputDomRef(),
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (TextArea.composition) {
+			setup(TextArea.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				TextArea.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
+		}
 	}
 
 	get classes() {
