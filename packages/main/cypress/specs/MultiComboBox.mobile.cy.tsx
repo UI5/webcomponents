@@ -932,4 +932,34 @@ describe("Dialog header title", () => {
             .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
             .should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
     });
+
+    it("Should display label text as dialog header title when opened via n-more", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" selected />
+                    <MultiComboBoxItem text="Item 2" selected />
+                    <MultiComboBoxItem text="Item 3" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
+    });
 });
