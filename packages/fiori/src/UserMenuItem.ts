@@ -61,11 +61,15 @@ class UserMenuItem extends MenuItem {
 
 	/**
 	 * Overrides the base MenuItem behavior to prevent unchecking
-	 * the currently checked item in single-select mode,
-	 * ensuring there is always a selection.
+	 * the currently checked item in single-select mode when
+	 * the parent item uses showSelection, ensuring there is always
+	 * a visible selection.
 	 */
 	_updateCheckedState() {
-		if (this._checkMode === MenuItemGroupCheckMode.Single && this.checked) {
+		const parentItem = this.parentElement?.parentElement;
+		const hasShowSelection = parentItem instanceof UserMenuItem && parentItem.showSelection;
+
+		if (hasShowSelection && this._checkMode === MenuItemGroupCheckMode.Single && this.checked) {
 			return;
 		}
 		super._updateCheckedState();

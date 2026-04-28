@@ -1243,6 +1243,30 @@ describe("UserMenuItem", () => {
 			cy.get("[ui5-user-menu-item][text='Light']")
 				.should("have.attr", "checked");
 		});
+
+		it("allows unchecking in single-select mode when showSelection is false", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Options">
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Opt A" checked={true}></UserMenuItem>
+								<UserMenuItem text="Opt B"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Options']").as("parentItem");
+			cy.get("@parentItem").click();
+
+			cy.get("[ui5-user-menu-item][text='Opt A']").click();
+
+			cy.get("[ui5-user-menu-item][text='Opt A']")
+				.should("not.have.attr", "checked");
+		});
 	});
 
 	describe("UserMenuItemGroup", () => {
