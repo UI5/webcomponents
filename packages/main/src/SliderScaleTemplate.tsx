@@ -34,7 +34,7 @@ export default function SliderScaleTemplate(this: SliderScale) {
 				}}
 				part="progress"
 				style={this._progressStyle}
-				tabIndex={this.progressFocusable ? this.progressTabIndex : undefined}
+				tabIndex={this.progressTabIndex}
 				role={this.progressRole as AriaRole | undefined}
 				aria-orientation={this.progressRole ? "horizontal" : undefined}
 				aria-valuemin={this.progressRole ? this.min : undefined}

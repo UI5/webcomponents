@@ -92,7 +92,6 @@ const startTooltip = (slider: RangeSlider) => (
 		onFocusChange={slider._onTooltipFocusChange}
 		onOpen={slider._onTooltipOpen}
 		onInput={slider._onTooltipInput}
-		aria-keyshortcuts="F2"
 	>
 	</SliderTooltip>
 );
@@ -112,7 +111,6 @@ const endTooltip = (slider: RangeSlider) => (
 		onFocusChange={slider._onTooltipFocusChange}
 		onOpen={slider._onTooltipOpen}
 		onInput={slider._onTooltipInput}
-		aria-keyshortcuts="F2"
 	>
 	</SliderTooltip>
 );
@@ -138,7 +136,6 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 					step={this._effectiveStep}
 					showTickmarks={this.showTickmarks}
 					labelInterval={this.labelInterval}
-					progressFocusable={true}
 					progressTabIndex={this._tabIndex}
 					progressRole="slider"
 					progressAriaValueNow={this._ariaValueNow}

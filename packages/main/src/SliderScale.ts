@@ -110,16 +110,7 @@ class SliderScale extends UI5Element {
 	labelInterval = 0;
 
 	/**
-	 * Enables focus capability on the progress bar.
-	 * Used by RangeSlider for range selection dragging.
-	 * @default false
-	 * @private
-	 */
-	@property({ type: Boolean })
-	progressFocusable = false;
-
-	/**
-	 * Tab index for the progress bar when focusable.
+	 * Tab index for the progress bar.
 	 * @default -1
 	 * @private
 	 */
@@ -298,7 +289,9 @@ class SliderScale extends UI5Element {
 	_onProgressMouseEnter() {
 		this.progressHovered = true;
 		this.handles.forEach(handle => {
-			handle.hovered = true;
+			if (!handle.active) {
+				handle.hovered = true;
+			}
 		});
 	}
 

@@ -33,7 +33,7 @@ enum SliderHandleType {
  *
  * @constructor
  * @extends UI5Element
- * @since 2.19.0
+ * @since 2.22.0
  * @private
  */
 @customElement({
@@ -47,7 +47,7 @@ class SliderHandle extends UI5Element {
 	 * Defines the value of the slider handle.
 	 * <br><br>
 	 * <b>Note:</b> The value should be between the <code>min</code> and <code>max</code> properties of the parent <code>ui5-slider</code>.
-	 * @since 2.19.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Number })
 	value = 0;
@@ -56,7 +56,7 @@ class SliderHandle extends UI5Element {
 	 * Defines the minimum value of the slider handle.
 	 * <br><br>
 	 * <b>Note:</b> The value should be less than the <code>max</code> property of the parent <code>ui5-slider</code>.
-	 * @since 2.19.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Number })
 	min = 0;
@@ -65,7 +65,7 @@ class SliderHandle extends UI5Element {
 	 * Defines the maximum value of the slider handle.
 	 * <br><br>
 	 * <b>Note:</b> The value should be greater than the <code>min</code> property of the parent <code>ui5-slider</code>.
-	 * @since 2.19.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Number })
 	max = 100;
@@ -74,7 +74,7 @@ class SliderHandle extends UI5Element {
 	 * Defines whether the slider handle is active.
 	 * <br><br>
 	 * <b>Note:</b> An active slider handle is currently being interacted with.
-	 * @since 2.19.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
 	active = false;
@@ -83,7 +83,7 @@ class SliderHandle extends UI5Element {
 	 * Defines whether the slider handle should appear hovered.
 	 * <br><br>
 	 * <b>Note:</b> Used when the progress bar is hovered to show both handles as hovered.
-	 * @since 2.19.0
+	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
 	hovered = false;
