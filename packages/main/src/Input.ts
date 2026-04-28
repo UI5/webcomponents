@@ -89,6 +89,8 @@ import {
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_EXPANDED,
+	INPUT_SUGGESTIONS_COLLAPSED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -169,8 +171,8 @@ type InputSuggestionScrollEventDetail = {
  *
  * The `ui5-input` component allows the user to enter and edit text or numeric values in one line.
  *
- * Additionally, you can provide `suggestionItems`,
- * that are displayed in a popover right under the input.
+ * Additionally, you can provide `suggestionItems`
+ * that are displayed in a popover right under the input. Keep in mind that `ui5-input` with type `Number` does not support suggestions.
  *
  * The text field can be editable or read-only (`readonly` property),
  * and it can be enabled or disabled (`disabled` property).
@@ -376,6 +378,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * and the current language settings, especially for type `Number`.
 	 * - The property is mostly intended to be used with touch devices
 	 * that use different soft keyboard layouts depending on the given input type.
+	 * - Type `Number` does not support suggestions.
 	 * @default "Text"
 	 * @public
 	 */
@@ -587,6 +590,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 * property is set to `true`.
 	 *
 	 * **Note:** The `<ui5-suggestion-item>`, `<ui5-suggestion-item-group>` and `ui5-suggestion-item-custom` are recommended to be used as suggestion items.
+	 *
+	 * **Note:** Input with type `Number` does not support suggestions.
 	 *
 	 * @public
 	 */
@@ -1984,20 +1989,22 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	get availableSuggestionsCount() {
 		if (this.showSuggestions && (this.value || this.Suggestions?.isOpened())) {
 			const nonGroupItems = this._selectableItems;
+			const isOpened = this.Suggestions?.isOpened();
+			const stateText = isOpened ? Input.i18nBundle.getText(INPUT_SUGGESTIONS_EXPANDED) : Input.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED);
 
 			switch (nonGroupItems.length) {
 			case 0:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT)} ${stateText}`;
 
 			case 1:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT)} ${stateText}`;
 
 			default:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length)} ${stateText}`;
 			}
 		}
 
-		return undefined;
+		return this.showSuggestions ? Input.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED) : undefined;
 	}
 
 	get step() {

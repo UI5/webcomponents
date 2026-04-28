@@ -127,6 +127,35 @@
 		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
 		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
 	</ui5-color-palette>
+
+	<br/>
+	<br/>
+	<br/>
+	<h3>ColorPaletteItem Click Event Demo</h3>
+	<p>Sample 1: Listen to click event on individual items (with modifier keys)</p>
+	<ui5-input id="itemClickEventResult" value="No item clicked yet" style="width: 400px;"></ui5-input>
+	<br/>
+	<ui5-color-palette id="cp5">
+		<ui5-color-palette-item id="item1" value="red"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item2" value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item3" value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item4" value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item5" value="orange"></ui5-color-palette-item>
+	</ui5-color-palette>
+
+	<br/>
+	<br/>
+	<br/>
+	<p>Sample 2: preventDefault on item click prevents parent's item-click event</p>
+	<ui5-input id="preventDefaultResult" value="Click an item below" style="width: 400px;"></ui5-input>
+	<br/>
+	<ui5-color-palette id="cp6">
+		<ui5-color-palette-item id="normalItem" value="purple"></ui5-color-palette-item>
+		<ui5-color-palette-item id="preventItem" value="brown"></ui5-color-palette-item>
+		<ui5-color-palette-item id="anotherNormalItem" value="pink"></ui5-color-palette-item>
+	</ui5-color-palette>
+	<p><small>The middle item (brown) calls preventDefault and parent's item-click will not fire</small></p>
+
 </body>
 
 	<script>
@@ -141,6 +170,42 @@
 
 		btnClose.addEventListener("click", function(event) {
 			respPopover.open = false;
+		});
+
+		// Sample 1: Individual item click events with modifier keys
+		[item1, item2, item3, item4, item5].forEach(function(item) {
+			item.addEventListener("click", function(event) {
+				const originalEvent = event.detail.originalEvent;
+				const modifiers = [];
+				if (originalEvent.altKey) modifiers.push("Alt");
+				if (originalEvent.ctrlKey) modifiers.push("Ctrl");
+				if (originalEvent.metaKey) modifiers.push("Meta");
+				if (originalEvent.shiftKey) modifiers.push("Shift");
+				
+				const modifierText = modifiers.length > 0 ? " with " + modifiers.join("+") : "";
+				itemClickEventResult.value = "Clicked item: " + item.value + " (event.detail.item.value: " + event.detail.item.value + ")" + modifierText;
+			});
+		});
+
+		// Sample 2: preventDefault demonstration
+		cp6.addEventListener("ui5-item-click", function(event) {
+			preventDefaultResult.value = "Parent received item-click: " + event.detail.color;
+		});
+
+		// Normal items - let the event bubble to parent
+		normalItem.addEventListener("click", function(event) {
+			console.log("Normal item clicked, event will bubble to parent");
+		});
+
+		anotherNormalItem.addEventListener("click", function(event) {
+			console.log("Another normal item clicked, event will bubble to parent");
+		});
+
+		// This item prevents default - parent's item-click will NOT fire
+		preventItem.addEventListener("click", function(event) {
+			event.preventDefault();
+			preventDefaultResult.value = "Item click prevented! Parent's item-click did NOT fire";
+			console.log("preventDefault called on item, parent will not receive item-click event");
 		});
 	</script>
 </html>
