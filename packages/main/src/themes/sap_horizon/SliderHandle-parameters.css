@@ -2,6 +2,5 @@
 
 :host {
 	--ui5_slider_handle_outline: none;
-	--_ui5_slider_handle_box_sizing: border-box;
 	--_ui5_slider_handle_icon_display: inline-block;
 }

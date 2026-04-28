@@ -17,7 +17,7 @@
 	height: 100%;
 	display: flex;
 	align-items: center;
-	padding: var(--_slider_root_side_padding);
+	padding: var(--_ui5_slider_root_side_padding);
 	box-sizing: border-box;
 	min-width: var(--_ui5_slider_inner_min_width);
 }
