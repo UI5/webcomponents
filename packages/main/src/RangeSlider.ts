@@ -880,6 +880,12 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	_onTooltipChange(e: CustomEvent) {
+		// Skip if this is a focusout change event triggered by the swap focus change
+		if (this._areInputValuesSwapped) {
+			this._areInputValuesSwapped = false;
+			return;
+		}
+
 		const tooltip = e.target as SliderTooltip;
 		const isStart = tooltip.hasAttribute("data-sap-ui-start-value");
 		const inputValue = parseFloat(e.detail.value as string);
@@ -899,9 +905,11 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const clampedValue = Math.min(this.max, Math.max(this.min, inputValue));
 
 		if (isStart) {
+			this.tooltipStartValueState = ValueState.None;
 			this.startValue = clampedValue;
 			this._lastValidStartValue = clampedValue.toString();
 		} else {
+			this.tooltipEndValueState = ValueState.None;
 			this.endValue = clampedValue;
 			this._lastValidEndValue = clampedValue.toString();
 		}
