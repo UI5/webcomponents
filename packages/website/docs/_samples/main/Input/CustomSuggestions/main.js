@@ -35,7 +35,7 @@ const fillInput = (data, value) => {
 	
 		item.innerHTML = `
 			<div class='item-content'>
-				<ui5-icon name="globe"></ui5-icon>
+				<ui5-icon name="globe" aria-hidden="true"></ui5-icon>
 				<div class='item-titles'>
 					<span>${generateHighlightedMarkup(country, value)}</span>
 					<small>EU</small>
@@ -51,5 +51,5 @@ const fillInput = (data, value) => {
 input.addEventListener("ui5-selection-change", e => {
 	const text = e.detail.item?.text;
 
-	announce(text, "Polite");
+	announce(text + " EU", "Polite");
 })
