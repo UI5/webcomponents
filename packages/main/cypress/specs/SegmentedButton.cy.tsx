@@ -567,3 +567,133 @@ describe("SegmentedButtonItem Accessibility", () => {
             .should("have.attr", "title", TOOLTIP_TEXT);
     });
 });
+
+describe("SegmentedButtonItem: click event", () => {
+	it("should fire selection change event when item is clicked", () => {
+		const clickSpy = cy.spy().as("clickSpy");
+		const selectionChangeSpy = cy.spy().as("selectionChangeSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1" selected>First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get<SegmentedButton>("[ui5-segmented-button]")
+			.then($el => {
+				$el[0].addEventListener("selection-change", selectionChangeSpy);
+			});
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", clickSpy);
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+
+		cy.get("@selectionChangeSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should prevent selection when preventDefault is called", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get<SegmentedButton>("[ui5-segmented-button]")
+			.then($el => {
+				$el[0].addEventListener("selection-change", cy.spy().as("selectionChangeSpy"));
+			})
+
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		cy.get("#item2")
+			.realClick();
+
+		// Item 2 should NOT be selected because we called preventDefault
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		cy.get("@selectionChangeSpy")
+			.should("not.have.been.called");
+	});
+
+	it("should not fire click event when disabled item is clicked", () => {
+		const clickSpy = cy.spy().as("clickSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2" disabled>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", clickSpy);
+			});
+
+		// Click the disabled item directly
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.click({ force: true });
+
+		cy.get("@clickSpy").should("not.have.been.called");
+		cy.get("#item2").should("not.have.attr", "selected");
+	});
+
+	it("should provide item and originalEvent in click event detail", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
+					// Check that event detail contains item and originalEvent
+					expect(e.detail).to.have.property("item");
+					expect(e.detail).to.have.property("originalEvent");
+
+					// Check item reference and properties
+					expect(e.detail.item).to.equal($el[0]);
+					expect(e.detail.item.id).to.equal("item2");
+					expect(e.detail.item.slotTextContent).to.equal("Second");
+
+					// Check originalEvent is a MouseEvent
+					expect(e.detail.originalEvent).to.be.instanceOf(MouseEvent);
+				}).as("clickSpy"));
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+	});
+});
+	
