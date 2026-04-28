@@ -89,6 +89,8 @@ import {
 	INPUT_AVALIABLE_VALUES,
 	INPUT_SUGGESTIONS_OK_BUTTON,
 	INPUT_SUGGESTIONS_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_EXPANDED,
+	INPUT_SUGGESTIONS_COLLAPSED,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -1987,20 +1989,22 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	get availableSuggestionsCount() {
 		if (this.showSuggestions && (this.value || this.Suggestions?.isOpened())) {
 			const nonGroupItems = this._selectableItems;
+			const isOpened = this.Suggestions?.isOpened();
+			const stateText = isOpened ? Input.i18nBundle.getText(INPUT_SUGGESTIONS_EXPANDED) : Input.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED);
 
 			switch (nonGroupItems.length) {
 			case 0:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_NO_HIT)} ${stateText}`;
 
 			case 1:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_ONE_HIT)} ${stateText}`;
 
 			default:
-				return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length);
+				return `${Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, nonGroupItems.length)} ${stateText}`;
 			}
 		}
 
-		return undefined;
+		return this.showSuggestions ? Input.i18nBundle.getText(INPUT_SUGGESTIONS_COLLAPSED) : undefined;
 	}
 
 	get step() {
