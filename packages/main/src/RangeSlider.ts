@@ -948,10 +948,15 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	_onTooltipOpen() {
+		if (!this.startValue || !this.endValue) {
+			return;
+		}
+
 		const ctor = this.constructor as typeof RangeSlider;
 		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		this.tooltipStartValue = this.startValue.toFixed(stepPrecision);
-		this.tooltipEndValue = this.endValue.toFixed(stepPrecision);
+
+		this.tooltipStartValue = this.startValue ? this.startValue.toFixed(stepPrecision) : this.endValue.toFixed(stepPrecision);
+		this.tooltipEndValue = this.endValue ? this.endValue.toFixed(stepPrecision) : this.startValue.toFixed(stepPrecision);
 	}
 
 	_onTooltipInput(e: CustomEvent) {
