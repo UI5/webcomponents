@@ -38,6 +38,8 @@ import {
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
@@ -70,6 +72,8 @@ import {
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
 	ARIA_LABEL_LIST_DELETABLE,
+	LIST_ITEM_SELECTED,
+	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
@@ -917,6 +921,12 @@ class List extends UI5Element {
 			});
 			if (changePrevented) {
 				this._revertSelection(previouslySelectedItems);
+			} else {
+				const item = e.detail.item;
+				const selectedText = item.selected
+					? List.i18nBundle.getText(LIST_ITEM_SELECTED)
+					: List.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
+				announce(selectedText, InvisibleMessageMode.Polite);
 			}
 		}
 	}

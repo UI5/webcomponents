@@ -457,6 +457,64 @@ describe("List - Accessibility", () => {
 					});
 			});
 	});
+
+	it("announces 'Selected' when an item is selected in Single mode", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard id="item1">Argentina</ListItemStandard>
+				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("#item1").realClick();
+		cy.get("@liveRegion").should("contain.text", "Selected");
+	});
+
+	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1">Argentina</ListItemStandard>
+				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("#item1").realClick();
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.get("#item1").realClick();
+		cy.get("@liveRegion").should("contain.text", "Not Selected");
+	});
+
+	it("does not announce selection when selectionMode is None", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard id="item1">Argentina</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("#item1").realClick();
+		cy.get("@liveRegion").should("have.text", "");
+	});
+
+	it("does not announce selection when selection-change event is prevented", () => {
+		cy.mount(
+			<List selectionMode="Single" onSelectionChange={(e: CustomEvent) => e.preventDefault()}>
+				<ListItemStandard id="item1">Argentina</ListItemStandard>
+				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("#item1").realClick();
+		cy.get("@liveRegion").should("have.text", "");
+	});
 });
 
 describe("List - Wrapping Behavior", () => {
