@@ -248,6 +248,34 @@ describe("Dialog header title", () => {
 			.should("have.text", "Tags");
 	});
 
+	it("Should display label text as n-more tokenizer popover title", () => {
+		cy.mount(
+			<>
+				<Label for="myMultiInput">Tags</Label>
+				<MultiInput id="myMultiInput" showSuggestions>
+					<Token slot="tokens" text="Token 1" />
+					<Token slot="tokens" text="Token 2" />
+					<Token slot="tokens" text="Token 3" />
+				</MultiInput>
+			</>
+		);
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.realClick();
+
+		cy.get("#myMultiInput")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-header-text")
+			.should("have.text", "Tags");
+	});
+
 	it("Should fallback to 'All Items' when no label is associated", () => {
 		cy.mount(
 			<MultiInput id="myMultiInput" showSuggestions>

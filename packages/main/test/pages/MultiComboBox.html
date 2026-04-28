@@ -78,7 +78,7 @@
 	</div>
 
 	<div class="demo-section">
-		<ui5-label id="mcbLabel">Validating input and predefined</ui5-label>
+		<ui5-label for="mcb-predefined-value">Validating input and predefined</ui5-label>
 
 		<br>
 		<ui5-multi-combobox id="mcb-predefined-value" value="com" accessible-name-ref="mcbLabel">
@@ -894,6 +894,14 @@
 			mcb.loading = !mcb.loading;
 		});
 	</script>
+
+	<h1>Dialog Header Title from Label</h1>
+	<ui5-label for="labeled-mcb">Country</ui5-label>
+	<ui5-multi-combobox id="labeled-mcb">
+		<ui5-mcb-item text="Albania" selected></ui5-mcb-item>
+		<ui5-mcb-item text="Argentina" selected></ui5-mcb-item>
+		<ui5-mcb-item text="Austria"></ui5-mcb-item>
+	</ui5-multi-combobox>
 
 </body>
 
