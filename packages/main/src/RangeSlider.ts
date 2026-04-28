@@ -956,6 +956,10 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	}
 
 	_onTooltipOpen() {
+		if (this._areInputValuesSwapped) {
+			return;
+		}
+
 		if (!this.startValue || !this.endValue) {
 			return;
 		}
