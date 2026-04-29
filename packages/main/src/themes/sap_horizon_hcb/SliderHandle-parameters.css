@@ -2,5 +2,6 @@
 
 :host {
 	--_ui5_range_slider_root_hover_handle_bg: var(--sapButton_Hover_Background);
-	--ui5_slider_handle_outline_offset: 3px;
+	--ui5_slider_handle_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	--ui5_slider_handle_outline_offset: 0.0625rem;
 }

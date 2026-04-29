@@ -1,5 +1,1 @@
 @import "../sap_fiori_3/SliderHandle-parameters.css";
-
-:host {
-	--_ui5_slider_handle_hover_background: var(--sapButton_Hover_Background);
-}
