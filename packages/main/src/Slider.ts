@@ -161,7 +161,7 @@ class Slider extends SliderBase implements IFormInputElement {
 	_snapToNearestTickmark(rawValue: number): number {
 		const values = this.tickmarks.map(t => t.value);
 		return values.reduce((prev, curr) =>
-			Math.abs(curr - rawValue) < Math.abs(prev - rawValue) ? curr : prev
+			(Math.abs(curr - rawValue) < Math.abs(prev - rawValue) ? curr : prev)
 		);
 	}
 
