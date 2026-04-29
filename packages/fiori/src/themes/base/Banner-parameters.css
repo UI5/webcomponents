@@ -4,5 +4,5 @@
 	--_ui5_banner_border_radius: var(--sapTile_BorderCornerRadius);
 	--_ui5_banner_border: 0.0625rem solid var(--sapTile_BorderColor);
 	--_ui5_banner_box_shadow: var(--sapContent_Shadow0);
-	--_ui5_banner_background_image: linear-gradient(135deg, rgba(0, 0, 0, 0.00) 45%, rgba(0, 0, 0, 0.45) 75%);
+	--_ui5_banner_background_image: var(--sapShell_HeroBanner_BackgroundImage);
 }
