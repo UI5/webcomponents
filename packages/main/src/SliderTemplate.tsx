@@ -10,23 +10,24 @@ const _handlePosition = (min: number, max: number, value: number) => {
 };
 
 const handle = (slider: Slider) => {
-	const position = _handlePosition(slider.min, slider.max, slider.value);
+	const position = _handlePosition(slider._effectiveMin, slider._effectiveMax, slider.value);
 
 	return (
 		<>
 			<SliderHandle
 				data-sap-focus-ref
 				value={slider.value}
-				min={slider.min}
-				max={slider.max}
+				min={slider._effectiveMin}
+				max={slider._effectiveMax}
 				tabIndex={slider.disabled ? -1 : 0}
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
 				role="slider"
-				aria-valuemin={slider.min}
-				aria-valuemax={slider.max}
+				aria-valuemin={slider._effectiveMin}
+				aria-valuemax={slider._effectiveMax}
 				aria-valuenow={slider.value}
+				aria-valuetext={slider._ariaValueText}
 				aria-label={slider._ariaLabel}
 				aria-disabled={slider._ariaDisabled}
 				aria-keyshortcuts={slider._ariaKeyshortcuts}
@@ -45,9 +46,9 @@ const tooltip = (slider: Slider) => (
 	<SliderTooltip
 		open={slider._tooltipsOpen}
 		value={slider.tooltipValue}
-		min={slider.min}
-		max={slider.max}
-		editable={slider.editableTooltip}
+		min={slider._effectiveMin}
+		max={slider._effectiveMax}
+		editable={slider.editableTooltip && !slider._isCustomValuesMode}
 		followRef={slider.shadowRoot?.querySelector("[ui5-slider-handle]") as HTMLElement}
 		valueState={slider.tooltipValueState}
 		onChange={slider._onTooltipChange}
@@ -74,12 +75,13 @@ export default function SliderTemplate(this: Slider) {
 			>
 				<SliderScale
 					endValue={this.value}
-					min={this.min}
-					max={this.max}
+					min={this._effectiveMin}
+					max={this._effectiveMax}
 					step={this.step}
-					startValue={this.min}
-					showTickmarks={this.showTickmarks}
-					labelInterval={this.labelInterval}
+					startValue={this._effectiveMin}
+					showTickmarks={this.showTickmarks || this._isCustomValuesMode}
+					labelInterval={this._isCustomValuesMode ? 1 : this.labelInterval}
+					tickmarks={this.tickmarks}
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
 					part="scale"

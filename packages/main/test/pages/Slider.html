@@ -78,6 +78,17 @@
 		</section>
 
 		<section class="group">
+			<h2>Custom Values - Temperature</h2>
+			<ui5-slider id="custom-values-temp" value="25" show-tooltip></ui5-slider>
+
+			<h2>Custom Values - Skill Level</h2>
+			<ui5-slider id="custom-values-skill" value="2" show-tooltip></ui5-slider>
+
+			<h2>Custom Values - Timeline</h2>
+			<ui5-slider id="custom-values-timeline" value="1" show-tooltip></ui5-slider>
+		</section>
+
+		<section class="group">
 			<h2>Event Testing Slider</h2>
 			<ui5-slider id="test-slider" min="0" max="10"></ui5-slider>
 			<h2>Event Testing Result Slider</h2>
@@ -124,18 +135,41 @@
 			densityButtons.forEach(button => {
 				button.addEventListener('click', () => {
 					const density = button.getAttribute('data-density');
-					
+
 					if (density === 'compact') {
 						document.body.classList.add('ui5-content-density-compact');
 					} else {
 						document.body.classList.remove('ui5-content-density-compact');
 					}
-					
+
 					// Update active state
 					densityButtons.forEach(btn => btn.classList.remove('active'));
 					button.classList.add('active');
 				});
 			});
+
+			// Custom Values demos
+			document.getElementById("custom-values-temp").tickmarks = [
+				{ value: 0, label: "Freezing" },
+				{ value: 25, label: "Room Temp" },
+				{ value: 50, label: "Warm" },
+				{ value: 75, label: "Hot" },
+				{ value: 100, label: "Boiling" }
+			];
+
+			document.getElementById("custom-values-skill").tickmarks = [
+				{ value: 0, label: "Beginner" },
+				{ value: 1, label: "Elementary" },
+				{ value: 2, label: "Intermediate" },
+				{ value: 3, label: "Advanced" },
+				{ value: 4, label: "Expert" }
+			];
+
+			document.getElementById("custom-values-timeline").tickmarks = [
+				{ value: 0, label: "Past" },
+				{ value: 1, label: "Present" },
+				{ value: 2, label: "Future" }
+			];
 		</script>
 	</body>
 </html>

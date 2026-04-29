@@ -1058,3 +1058,172 @@ describe("Testing resize handling and RTL support", () => {
 		cy.get("@slider").should("have.value", 1);
 	});
 });
+
+describe("Custom Values", () => {
+	const customTickmarks = [
+		{ value: 0, label: "Freezing" },
+		{ value: 25, label: "Room Temp" },
+		{ value: 50, label: "Warm" },
+		{ value: 100, label: "Boiling" },
+	];
+
+	beforeEach(() => {
+		cy.get('[data-cy-root]')
+			.invoke('css', 'padding', '100px');
+	});
+
+	it("Renders custom labels on tickmarks", () => {
+		cy.mount(
+			<Slider value={0} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.should("have.length", 4);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(0)
+			.should("have.text", "Freezing");
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(3)
+			.should("have.text", "Boiling");
+	});
+
+	it("Snaps value to nearest tickmark on click", () => {
+		cy.mount(
+			<Slider value={0} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		// Click roughly in the middle should snap to 50 (Warm)
+		cy.get("@slider").realClick({ position: "center" });
+
+		cy.get("@slider").should("have.value", 50);
+	});
+
+	it("Arrow key navigates to next/previous custom value", () => {
+		cy.mount(
+			<Slider value={0} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").realClick({ position: "left" });
+		cy.get("@slider").should("have.value", 0);
+
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 25);
+
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 50);
+
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 100);
+
+		// Should not go beyond max
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 100);
+
+		cy.get("@slider").realPress("ArrowLeft");
+		cy.get("@slider").should("have.value", 50);
+	});
+
+	it("Home/End keys jump to first/last custom value", () => {
+		cy.mount(
+			<Slider value={50} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").realClick();
+
+		cy.get("@slider").realPress("Home");
+		cy.get("@slider").should("have.value", 0);
+
+		cy.get("@slider").realPress("End");
+		cy.get("@slider").should("have.value", 100);
+	});
+
+	it("Handle position is correct for non-uniform tickmark spacing", () => {
+		cy.mount(
+			<Slider value={25} tickmarks={customTickmarks} />
+		);
+
+		// value=25, min=0, max=100 → position should be 25%
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "style", "inset-inline-start: clamp(0%, 25%, 100%);");
+	});
+
+	it("aria-valuetext reflects the custom label", () => {
+		cy.mount(
+			<Slider value={25} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "aria-valuetext", "Room Temp");
+	});
+
+	it("Tooltip shows custom label", () => {
+		cy.mount(
+			<Slider value={25} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip]")
+			.should("have.attr", "value", "Room Temp");
+	});
+
+	it("min and max are auto-derived from tickmarks", () => {
+		cy.mount(
+			<Slider value={0} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("have.attr", "aria-valuemin", "0")
+			.should("have.attr", "aria-valuemax", "100");
+	});
+
+	it("Tickmarks auto-show without showTickmarks attribute", () => {
+		cy.mount(
+			<Slider value={0} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark")
+			.should("have.length.at.least", 4);
+	});
+
+	it("Backward compatibility - slider without tickmarks works as before", () => {
+		cy.mount(<Slider min={0} max={10} step={1} value={5} />);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").realClick();
+
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 6);
+	});
+});
