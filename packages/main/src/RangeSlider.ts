@@ -782,7 +782,11 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const ctor = this.constructor as typeof RangeSlider;
 		startValue = ctor.clipValue(startValue, min, max - selectedRange);
 
-		return [startValue, startValue + selectedRange];
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
+		const endValue = Number((startValue + selectedRange).toFixed(stepPrecision));
+		startValue = Number(startValue.toFixed(stepPrecision));
+
+		return [startValue, endValue];
 	}
 
 	/**
