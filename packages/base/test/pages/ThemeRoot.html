@@ -106,9 +106,9 @@
 		// ❌ await bundle.configuration.setThemeRoot("//example2.com/themes/") // inherits current page protocol (e.g. http://example2.com/) — no meta tag present, blocked
 		// ❌ await bundle.configuration.setThemeRoot("//example:9090.com/themes/") // inherits current page protocol (e.g. http://example:9090.com/) — no meta tag present, blocked
 		// ❌ await bundle.configuration.setThemeRoot("//example.com/themes/") // inherits current page protocol (e.g. http://example.com/) — no meta tag present, blocked
-		// ✅ await bundle.configuration.setThemeRoot("/themes/") // resolves to current page's origin — same-origin, no meta tag present, blocked
-		// ✅ await bundle.configuration.setThemeRoot("./themes/") // resolves relative to current page's URL — same-origin, no meta tag present, blocked
-		// ✅ await bundle.configuration.setThemeRoot("../themes/") // resolves relative to current page's URL — same-origin, no meta tag present, blocked
+		// ✅ await bundle.configuration.setThemeRoot("/themes/") // resolves to current page's origin — same-origin, always allowed
+		// ✅ await bundle.configuration.setThemeRoot("./themes/") // resolves relative to current page's URL — same-origin, always allowed
+		// ✅ await bundle.configuration.setThemeRoot("../themes/") // resolves relative to current page's URL — same-origin, always allowed
 	</script>
 </body>
 
