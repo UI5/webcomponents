@@ -916,6 +916,123 @@ describe("Responsiveness", () => {
 		});
 });
 
+describe("Submenu hover behavior", () => {
+	it("should open submenu on hover over item with subitems", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.eq(1)
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+	});
+
+	it("should close submenu when hover moves to another item", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.eq(1)
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("submenuPopover");
+
+		cy.get("@submenuPopover")
+			.should("have.attr", "open");
+
+		cy.get("@items")
+			.eq(0)
+			.should("be.visible")
+			.as("otherItem");
+
+		cy.get("@otherItem").realHover();
+
+		cy.get("@submenuPopover")
+			.should("not.have.attr", "open");
+	});
+
+	it("should not move focus to submenu when opened via hover", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.first()
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@parentItem")
+			.should("be.focused");
+
+		cy.get("[ui5-user-menu-item] > [ui5-user-menu-item]")
+			.first()
+			.should("not.be.focused");
+	});
+});
+
 describe("Footer configuration", () => {
 	it("tests default footer with Sign Out button", () => {
 		cy.mount(
