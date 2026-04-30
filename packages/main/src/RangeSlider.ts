@@ -418,13 +418,14 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 		// Update a single value if one of the handles is focused or the range if not already at min or max
 		const ctor = this.constructor as typeof RangeSlider;
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
 		if (affectedValue && !this._isPressInCurrentRange) {
 			const propValue = this[affectedValue as keyof RangeSlider] as number;
 			const newValue = ctor.clipValue(newValueOffset + propValue, min, max);
 			this.update(affectedValue, newValue, undefined);
 		} else if ((newValueOffset < 0 && this.startValue > min) || (newValueOffset > 0 && this.endValue < max)) {
-			const newStartValue = ctor.clipValue(newValueOffset + this.startValue, min, max);
-			const newEndValue = ctor.clipValue(newValueOffset + this.endValue, min, max);
+			const newStartValue = Number(ctor.clipValue(newValueOffset + this.startValue, min, max).toFixed(stepPrecision));
+			const newEndValue = Number(ctor.clipValue(newValueOffset + this.endValue, min, max).toFixed(stepPrecision));
 			this.update(affectedValue, newStartValue, newEndValue);
 		}
 
@@ -463,8 +464,9 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	_homeEndForSelectedRange(e: KeyboardEvent, affectedValue: string, min: number, max: number) {
 		const newValueOffset = this._handleActionKeyPressBase(e, affectedValue);
 		const ctor = this.constructor as typeof RangeSlider;
-		const newStartValue = ctor.clipValue(newValueOffset + this.startValue, min, max);
-		const newEndValue = ctor.clipValue(newValueOffset + this.endValue, min, max);
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
+		const newStartValue = Number(ctor.clipValue(newValueOffset + this.startValue, min, max).toFixed(stepPrecision));
+		const newEndValue = Number(ctor.clipValue(newValueOffset + this.endValue, min, max).toFixed(stepPrecision));
 
 		this.update(undefined, newStartValue, newEndValue);
 	}
