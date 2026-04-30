@@ -964,9 +964,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			return;
 		}
 
-		const ctor = this.constructor as typeof RangeSlider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-
 		this.tooltipStartValue = this.startValue.toString();
 		this.tooltipEndValue = this.endValue.toString();
 	}

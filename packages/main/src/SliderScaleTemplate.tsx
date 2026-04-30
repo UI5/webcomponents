@@ -1,5 +1,4 @@
 import type SliderScale from "./SliderScale.js";
-import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 
 export default function SliderScaleTemplate(this: SliderScale) {
 	return (
