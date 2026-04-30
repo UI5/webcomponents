@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.2...v2.22.0-rc.3) (2026-04-30)
+
+
+### Bug Fixes
+
+* **ui5-suggestion-item-custom:** improve accessibility of custom sugg… ([#13436](https://github.com/UI5/webcomponents/issues/13436)) ([a923725](https://github.com/UI5/webcomponents/commit/a92372594c1e4675740477bc7fbfd7b3e5bb2055))
+
+
+### Features
+
+* **ui5-segmented-button-item:** introduce semantic click event ([#13396](https://github.com/UI5/webcomponents/issues/13396)) ([f47c28e](https://github.com/UI5/webcomponents/commit/f47c28e6690defce89d115855ab85f0911f473f6))
+
+
+
+
+
 # [2.22.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.1...v2.22.0-rc.2) (2026-04-23)
 
 
