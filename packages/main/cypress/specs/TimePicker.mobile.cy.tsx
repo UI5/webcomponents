@@ -12,7 +12,7 @@ describe("TimePicker on phone - general interactions", () => {
 		})
 	});
 
-	it.skip("opening of popover with numeric inputs", () => {
+	it("opening of popover with numeric inputs", () => {
 		cy.mount(<TimePicker format-pattern="HH:mm:ss" value="11:12:13"></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
