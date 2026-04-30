@@ -421,7 +421,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
 		if (affectedValue && !this._isPressInCurrentRange) {
 			const propValue = this[affectedValue as keyof RangeSlider] as number;
-			const newValue = ctor.clipValue(newValueOffset + propValue, min, max);
+			const newValue = Number(ctor.clipValue(newValueOffset + propValue, min, max).toFixed(stepPrecision));
 			this.update(affectedValue, newValue, undefined);
 		} else if ((newValueOffset < 0 && this.startValue > min) || (newValueOffset > 0 && this.endValue < max)) {
 			const newStartValue = Number(ctor.clipValue(newValueOffset + this.startValue, min, max).toFixed(stepPrecision));
