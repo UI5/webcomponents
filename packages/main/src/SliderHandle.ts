@@ -75,6 +75,8 @@ class SliderHandle extends UI5Element {
 	 * <br><br>
 	 * <b>Note:</b> An active slider handle is currently being interacted with.
 	 * @since 2.22.0
+	 *
+	 * @private
 	 */
 	@property({ type: Boolean })
 	active = false;
@@ -84,6 +86,8 @@ class SliderHandle extends UI5Element {
 	 * <br><br>
 	 * <b>Note:</b> Used when the progress bar is hovered to show both handles as hovered.
 	 * @since 2.22.0
+	 *
+	 * @private
 	 */
 	@property({ type: Boolean })
 	hovered = false;

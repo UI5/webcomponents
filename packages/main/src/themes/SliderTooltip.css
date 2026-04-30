@@ -12,7 +12,7 @@
 	padding: 0 0.5rem;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
-	color: var(--sapContent_LabelColor);
+	color: var(--_ui5_slider_tooltip_color);
 	display: flex;
 	justify-content: center;
 	align-items: center;
