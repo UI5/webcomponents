@@ -2,3 +2,9 @@
 	height: var(--_ui5_list_item_dropdown_base_height);
 	--_ui5_list_item_title_size: var(--sapFontSize);
 }
+
+:host(:active[actionable]:not([data-moving])),
+:host(:active[actionable][selected]:not([data-moving])) {
+	background-color: var(--sapList_Active_Background);
+	border-bottom-color: var(--sapList_Active_Background);
+}

@@ -3,12 +3,7 @@ import ListItemBaseTemplate from "./ListItemBaseTemplate.js";
 import type Option from "./Option.js";
 
 export default function OptionTemplate(this: Option) {
-	return ListItemBaseTemplate.call(this, { listItemContent }, {
-		role: "option",
-		title: this.tooltip,
-		onMouseDown: this._onmousedown,
-		onTouchStart: this._onmousedown,
-	});
+	return ListItemBaseTemplate.call(this, { listItemContent }, { role: "option", title: this.tooltip });
 }
 
 function listItemContent(this: Option) {

@@ -34,16 +34,16 @@
 }
 
 /* hovered */
-:host([actionable]:not([active]):not([selected]):not([ui5-li-group-header]):hover) {
+:host([actionable]:not([active]):not(:active):not([selected]):not([ui5-li-group-header]):hover) {
     background-color: var(--sapList_Hover_Background);
 }
 
-:host([actionable]:not([active]):not([selected]):not([ui5-li-group-header]):hover) .ui5-li-additional-text {
+:host([actionable]:not([active]):not(:active):not([selected]):not([ui5-li-group-header]):hover) .ui5-li-additional-text {
 	text-shadow: var(--sapContent_TextShadow);
 }
 
 /* selected and hovered */
-:host([actionable][selected]:not([active], [data-moving]):hover) {
+:host([actionable][selected]:not([active]):not(:active):not([data-moving]):hover) {
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
 

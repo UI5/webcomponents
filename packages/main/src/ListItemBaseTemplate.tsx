@@ -4,8 +4,6 @@ import type { AriaRole, JsxTemplate } from "@ui5/webcomponents-base/";
 export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listItemContent: JsxTemplate }, injectedProps?: {
 	role?: AriaRole,
 	title?: string,
-	onMouseDown?: (e: MouseEvent) => void,
-	onTouchStart?: (e: TouchEvent) => void,
 }) {
 	const listItemContent = hooks?.listItemContent || defaultListItemContent;
 
@@ -22,8 +20,6 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
 			onClick={this._onclick}
-			onMouseDown={injectedProps?.onMouseDown}
-			onTouchStart={injectedProps?.onTouchStart}
 		>
 			{ listItemContent.call(this) as JSX.Element }
 		</li>

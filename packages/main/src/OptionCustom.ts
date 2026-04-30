@@ -40,30 +40,6 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 class OptionCustom extends ListItemBase implements IOption {
 	eventDetails!: ListItemBase["eventDetails"];
 
-	// Note: same active state logic exists in Option.
-	deactivate: () => void;
-
-	constructor() {
-		super();
-		this.deactivate = () => {
-			if (this.active) {
-				this.active = false;
-			}
-		};
-	}
-
-	onEnterDOM() {
-		super.onEnterDOM();
-		document.addEventListener("mouseup", this.deactivate);
-		document.addEventListener("touchend", this.deactivate);
-	}
-
-	onExitDOM() {
-		super.onExitDOM();
-		document.removeEventListener("mouseup", this.deactivate);
-		document.removeEventListener("touchend", this.deactivate);
-	}
-
 	/**
 	 * Defines the text, displayed inside the `ui5-select` input filed
 	 * when the option gets selected.
@@ -107,17 +83,6 @@ class OptionCustom extends ListItemBase implements IOption {
 
 	get effectiveDisplayText() {
 		return this.displayText || this.textContent || "";
-	}
-
-	/**
-	 * Indicates if the option is active (pressed down).
-	 * @private
-	 */
-	@property({ type: Boolean })
-	active = false;
-
-	_onmousedown() {
-		this.active = true;
 	}
 }
 

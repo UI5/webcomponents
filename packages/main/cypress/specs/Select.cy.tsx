@@ -1915,7 +1915,7 @@ describe("Select general interaction", () => {
 });
 
 describe("Select - active/down state", () => {
-	it("sets active attribute on ui5-option while mouse is pressed", () => {
+	it("applies active background on ui5-option while mouse is pressed", () => {
 		cy.mount(
 			<Select>
 				<Option>Option 1</Option>
@@ -1930,16 +1930,19 @@ describe("Select - active/down state", () => {
 			.find("[ui5-option]")
 			.eq(0)
 			.realMouseDown()
-			.should("have.attr", "active");
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
 
 		cy.get("[ui5-select]")
 			.find("[ui5-option]")
 			.eq(0)
-			.realMouseUp()
-			.should("not.have.attr", "active");
+			.realMouseUp();
 	});
 
-	it("sets active attribute on ui5-option-custom while mouse is pressed", () => {
+	it("applies active background on ui5-option-custom while mouse is pressed", () => {
 		cy.mount(
 			<Select>
 				<OptionCustom>Option 1</OptionCustom>
@@ -1954,12 +1957,15 @@ describe("Select - active/down state", () => {
 			.find("[ui5-option-custom]")
 			.eq(0)
 			.realMouseDown()
-			.should("have.attr", "active");
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
 
 		cy.get("[ui5-select]")
 			.find("[ui5-option-custom]")
 			.eq(0)
-			.realMouseUp()
-			.should("not.have.attr", "active");
+			.realMouseUp();
 	});
 });
