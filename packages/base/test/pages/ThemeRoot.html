@@ -70,13 +70,15 @@
 		const bundle = window["sap-ui-webcomponents-bundle"];
 
 		if (window.location.search.includes("sap-ui-theme")) {
-			await bundle.boot();
-			const link = document.head.querySelector('link[sap-ui-webcomponents-theme]');
-			if (link) {
-				alert(`✅ Link created: ${link.href}`);
-			} else {
-				alert("❌ Blocked — no link element created");
-			}
+			(async () => {
+				await bundle.boot();
+				const link = document.head.querySelector('link[sap-ui-webcomponents-theme]');
+				if (link) {
+					alert(`✅ Link created: ${link.href}`);
+				} else {
+					alert("❌ Blocked — no link element created");
+				}
+			})();
 		}
 
 		window.testSetThemeRoot = async (themeRoot, btn) => {
