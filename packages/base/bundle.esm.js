@@ -30,6 +30,7 @@ import { _getRegisteredNames as getIconNames } from  "./dist/asset-registries/Ic
 import applyDirection from "./dist/locale/applyDirection.js";
 import { getCurrentRuntimeIndex } from "./dist/Runtimes.js";
 import LegacyDateFormats from "./dist/features/LegacyDateFormats.js";
+import { boot } from "./dist/Boot.js";
 
 window["sap-ui-webcomponents-bundle"] = {
 	configuration : {
@@ -53,6 +54,7 @@ window["sap-ui-webcomponents-bundle"] = {
 	parseProperties,
 	registerI18nLoader,
 	getI18nBundle,
+	boot,
 	renderFinished,
 	applyDirection,
 	EventProvider,
