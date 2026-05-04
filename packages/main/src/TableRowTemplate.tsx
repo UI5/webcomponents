@@ -92,7 +92,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				</TableCell>
 			}
 
-			{ this._popinCells.length > 0 &&
+			{ this._hasPopin &&
 				<TableCell id="popin-cell"
 					data-ui5-table-popin-cell
 					aria-colindex={ariaColIndex++}

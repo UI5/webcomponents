@@ -54,7 +54,7 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
-			{ this._renderDummyCell && this._popinCells.length > 0 &&
+			{ this._renderDummyCell && this._hasPopin &&
 				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
 					data-excluded-from-navigation="">
 				</TableHeaderCell>
@@ -72,16 +72,17 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 					aria-hidden={true}
 					role="none"
 				>
+					<div id="navigated"></div>
 				</TableHeaderCell>
 			}
 
-			{ this._renderDummyCell && this._popinCells.length === 0 &&
+			{ this._renderDummyCell && !this._hasPopin &&
 				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
 					data-excluded-from-navigation="nofocus">
 				</TableHeaderCell>
 			}
 
-			{ this._popinCells.length > 0 &&
+			{ this._hasPopin &&
 				<TableHeaderCell id="popin-cell" aria-colindex={ariaColIndex++} data-excluded-from-navigation>
 					<div id="popin-cell-content">{this._i18nRowPopin}</div>
 				</TableHeaderCell>

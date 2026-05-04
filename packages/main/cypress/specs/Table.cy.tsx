@@ -430,8 +430,6 @@ describe("Table - Popin Mode", () => {
 		cy.get("ui5-table").then($table => {
 			$table.css("width", "150px");
 		});
-
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
 		cy.get("ui5-table").then($table => {
@@ -1145,7 +1143,7 @@ describe("Table - Cell Merging", () => {
 		cy.wait(50);
 
 		// Merged cell border should fall back to normal border color (not transparent)
-		cy.get("#row2").should("have.attr", "_haspopin");
+		cy.get("#row2").should("have.attr", "_has-popin");
 		cy.get("#r2cA").should("not.have.css", "border-top-color", TRANSPARENT);
 		cy.get("#row2").shadow().find("#selection-cell").should("not.have.css", "border-top-color", TRANSPARENT);
 
@@ -1283,42 +1281,38 @@ describe("Table - Dummy Cell", () => {
 			const dummyCell = $shadow.find("#dummy-cell")[0];
 			const actionsCell = $shadow.find("#actions-cell")[0];
 			const position = dummyCell.compareDocumentPosition(actionsCell);
-			// eslint-disable-next-line no-bitwise
 			expect(position & Node.DOCUMENT_POSITION_PRECEDING).to.be.greaterThan(0);
 		});
 		cy.get("[ui5-table-header-row]").shadow().then($shadow => {
 			const dummyCell = $shadow.find("#dummy-cell")[0];
 			const actionsCell = $shadow.find("#actions-cell")[0];
 			const position = dummyCell.compareDocumentPosition(actionsCell);
-			// eslint-disable-next-line no-bitwise
 			expect(position & Node.DOCUMENT_POSITION_PRECEDING).to.be.greaterThan(0);
 		});
 
 		// Shrink to trigger popin: dummy cell moves before actions cell
 		cy.get("ui5-table").invoke("css", "width", "250px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
-		cy.get("#row1").should("have.attr", "_haspopin");
+		cy.get("#row1").should("have.attr", "_has-popin");
 		cy.get("#row1").shadow().then($shadow => {
 			const dummyCell = $shadow.find("#dummy-cell")[0];
 			const actionsCell = $shadow.find("#actions-cell")[0];
 			const position = dummyCell.compareDocumentPosition(actionsCell);
-			// eslint-disable-next-line no-bitwise
 			expect(position & Node.DOCUMENT_POSITION_FOLLOWING).to.be.greaterThan(0);
 		});
 		cy.get("[ui5-table-header-row]").shadow().then($shadow => {
 			const dummyCell = $shadow.find("#dummy-cell")[0];
 			const actionsCell = $shadow.find("#actions-cell")[0];
 			const position = dummyCell.compareDocumentPosition(actionsCell);
-			// eslint-disable-next-line no-bitwise
 			expect(position & Node.DOCUMENT_POSITION_FOLLOWING).to.be.greaterThan(0);
 		});
 	});
 
-	it("should adapt dummy cell border and navigation attribute when row has popin", () => {
+	it("should adapt dummy cell border, navigation attribute, and custom focus outline with popin", () => {
 		cy.mount(
 			<Table id="table" overflowMode="Popin">
+				<TableSelectionMulti slot="features" />
 				<TableHeaderRow slot="headerRow">
 					<TableHeaderCell width="200px" minWidth="200px">Product</TableHeaderCell>
 					<TableHeaderCell width="200px" minWidth="200px">Supplier</TableHeaderCell>
@@ -1337,12 +1331,20 @@ describe("Table - Dummy Cell", () => {
 		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
 			.should("have.attr", "data-excluded-from-navigation", "nofocus");
 
-		// Shrink to trigger popin
+		// Focus row - custom outline should be applied
+		cy.get("#row1").should("have.attr", "_render-dummy-cell");
+		cy.get("#row1").should("not.have.attr", "_has-popin");
+		cy.realPress("Tab");
+		cy.get("#row1").shadow().find("[data-ui5-custom-outline='start']").should("exist");
+		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("not.have.attr", "data-ui5-custom-outline");
+
+		// Shrink to trigger popin to test custom outline is removed
 		cy.get("ui5-table").invoke("css", "width", "250px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
-		cy.get("#row1").should("have.attr", "_haspopin");
+		cy.get("#row1").should("have.attr", "_has-popin");
 
 		// Left border removed, data-excluded-from-navigation without nofocus
 		cy.get("#row1").shadow().find("#dummy-cell")
@@ -1351,16 +1353,17 @@ describe("Table - Dummy Cell", () => {
 		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
 			.should("have.attr", "data-excluded-from-navigation", "");
 
-		// Expand again, border and nofocus should return
+		// Expand back - border and nofocus should return, custom outline reapplied via onAfterRendering
 		cy.get("ui5-table").invoke("css", "width", "800px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
-		cy.get("#row1").should("not.have.attr", "_haspopin");
+		cy.get("#row1").should("not.have.attr", "_has-popin");
 		cy.get("#row1").shadow().find("#dummy-cell")
 			.should("not.have.css", "border-inline-start-width", "0px")
 			.should("have.attr", "data-excluded-from-navigation", "nofocus");
 		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
 			.should("have.attr", "data-excluded-from-navigation", "nofocus");
+		cy.get("#row1").shadow().find("[data-ui5-custom-outline='start']").should("exist");
+		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
 	});
 });

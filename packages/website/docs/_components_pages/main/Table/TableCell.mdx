@@ -19,21 +19,21 @@ Please note that the behavior of `horizontalAlign` depends on where you set it:
    Changes the horizontal alignment of the `TableHeaderCell` and its corresponding `TableCell`.
 - `horizontalAlign` is set on `TableCell` level only<br />
    The horizontal alignment is only changed for this one `TableCell`
-- `horizontalAlign` is set on `TableHeaderCell` and `TableCell` level<br />
-   Changing the `horizontalAlign` property on `TableHeaderCell` level changes only the `TableHeaderCell` itself and those `TableCell` without a `horizontalAlign` property.
+- `horizontalAlign` is set at the `TableHeaderCell` and `TableCell` level<br />
+   Changing the `horizontalAlign` property at the `TableHeaderCell` level changes only the `TableHeaderCell` itself and those `TableCell` properties without a `horizontalAlign` property.
 
 <HAlign />
 
 ## Merged cells
 
-Set the `merged` property on a `TableCell` to visually merge it with the cell directly above it in the same column. When a cell is merged,
+Set the `merged` property on a `TableCell` to visually merge it with the cell directly above it in the same column. If a cell is merged,
 its content is hidden and the border becomes transparent, giving the appearance of a single spanning cell.
-This is useful when consecutive rows share the same value in a column.
+This is useful if consecutive rows share the same value in a column.
 
 To ensure usability, merged cell styling is automatically disabled in these cases:
-- **Popin mode:** When the table is narrow and cells are rendered in the popin area, merged styling is removed so each row's content remains visible.
+- **Popin mode:** If the table is narrow, and cells are rendered in the pop-in area, merged styling is removed so each row's content remains visible.
 - **Hover and focus:** When the user hovers over or focuses within the row, merged styling is temporarily removed, making the merged content visible.
 
-**Note:** Avoid using `merged` on cells that contain interactive content (e.g., buttons, or inputs).
+**Note:** Avoid using `merged` on cells that contain interactive content (for example, buttons, or inputs).
 
 <MergedCells />

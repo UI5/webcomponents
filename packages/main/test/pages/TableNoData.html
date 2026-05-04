@@ -14,6 +14,7 @@
 		import "@ui5/webcomponents-fiori/dist/illustrations/NoData.js";
 		import "@ui5/webcomponents/dist/TableRowAction.js";
 		import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
+		import "@ui5/webcomponents/dist/TableSelectionMulti.js";
 	</script>
 
 	<style>
@@ -115,6 +116,7 @@
 		<ui5-button id="removeRow4" icon="delete" design="Negative">Remove Row</ui5-button>
 	</div>
 	<ui5-table id="table4" overflow-mode="Popin" row-action-count="3">
+		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
 		<ui5-table-header-row slot="headerRow">
 			<ui5-table-header-cell width="250px">Product</ui5-table-header-cell>
 			<ui5-table-header-cell width="250px">Supplier</ui5-table-header-cell>
