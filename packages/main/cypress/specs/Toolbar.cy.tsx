@@ -661,7 +661,7 @@ describe("Toolbar general interaction", () => {
 						<Input placeholder="Enter text"></Input>
 					</ToolbarItem>
 
-					<ToolbarItem>
+					<ToolbarItem overflowPriority="AlwaysOverflow">
 						<ComboBox placeholder="Select an option">
 							<ComboBoxItem text="Option 1"></ComboBoxItem>
 							<ComboBoxItem text="Option 2"></ComboBoxItem>
@@ -669,7 +669,7 @@ describe("Toolbar general interaction", () => {
 						</ComboBox>
 					</ToolbarItem>
 
-					<ToolbarItem>
+					<ToolbarItem overflowPriority="AlwaysOverflow">
 						<MultiComboBox placeholder="Select an option">
 							<MultiComboBoxItem text="Option 1"></MultiComboBoxItem>
 							<MultiComboBoxItem text="Option 2"></MultiComboBoxItem>
@@ -677,11 +677,11 @@ describe("Toolbar general interaction", () => {
 						</MultiComboBox>
 					</ToolbarItem>
 
-					<ToolbarItem>
+					<ToolbarItem overflowPriority="AlwaysOverflow">
 						<Switch textOn="On" textOff="Off"></Switch>
 					</ToolbarItem>
 
-					<ToolbarItem>
+					<ToolbarItem overflowPriority="AlwaysOverflow">
 						<DatePicker placeholder="Select a date"></DatePicker>
 					</ToolbarItem>
 				</Toolbar>
