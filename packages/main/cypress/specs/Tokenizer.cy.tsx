@@ -1824,6 +1824,52 @@ describe("Clipboard Operations", () => {
 		// Only the selected token should be copied
 		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected");
 	});
+
+	it("should copy focused token text when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Focused"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		// Tab into the tokenizer to focus the first token without selecting it
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", false);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Focused");
+	});
+
+	it("should not cut token in readonly mode", () => {
+		cy.mount(
+			<Tokenizer readonly={true}>
+				<Token text="ReadonlyToken"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Should copy but not delete in readonly mode
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "ReadonlyToken");
+		cy.get("[ui5-token]").should("have.length", 2);
+	});
 });
 
 describe("Tokenizer - getFocusDomRef Method", () => {

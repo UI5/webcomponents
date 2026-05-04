@@ -720,10 +720,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			e.preventDefault();
 
 			const isCut = e.key.toLowerCase() === "x" || isDeleteShift(e);
-			const selectedTokens = this._tokens.filter(token => token.selected);
-			const focusedToken = selectedTokens.find(token => token.focused);
+			let selectedTokens = this._tokens.filter(token => token.selected);
+			const focusedToken = this._tokens.find(token => token.focused);
 
-			if (isCut) {
+			if (!selectedTokens.length && focusedToken) {
+				selectedTokens = [focusedToken];
+			}
+
+			if (isCut && !this.readonly) {
 				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, selectedTokens);
 
 				focusedToken && this.deleteToken(focusedToken);
@@ -1079,7 +1083,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
-		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
+		const tokensTexts = tokens.map(token => token.text).join("\r\n");
 
 		// Async clipboard API (works in secure contexts - HTTPS/localhost)
 		if (navigator.clipboard?.writeText && window.isSecureContext) {
