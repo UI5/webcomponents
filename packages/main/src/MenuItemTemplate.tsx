@@ -1,3 +1,4 @@
+import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import type MenuItem from "./MenuItem.js";
 import PopoverPlacement from "./types/PopoverPlacement.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -12,7 +13,7 @@ import ListItemTemplate from "./ListItemTemplate.js";
 import type { ListItemHooks } from "./ListItemTemplate.js";
 
 export type MenuItemHooks = ListItemHooks & {
-	menuItemTextContent: (this: any) => JSX.Element;
+	menuItemTextContent: JsxTemplate;
 }
 
 const predefinedHooks: Partial<MenuItemHooks> = {
