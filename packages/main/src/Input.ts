@@ -1765,7 +1765,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	get _headerTitleText() {
-		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this._associatedLabelsTexts || Input.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _suggestionsOkButtonText() {

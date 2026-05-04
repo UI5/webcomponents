@@ -9,6 +9,7 @@ export default function ColorPaletteItemTemplate(this: ColorPaletteItem) {
 			aria-label={this.getLabelText}
 			aria-pressed={this.selected}
 			title={this.getLabelText}
+			onClick={this._onClick}
 		></div>
 	);
 }
