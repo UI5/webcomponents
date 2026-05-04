@@ -689,11 +689,20 @@ describe("Toolbar general interaction", () => {
 		);
 
 		cy.get("[ui5-toolbar]")
+			.as("toolbar");
+
+		cy.get("@toolbar")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
 			.realClick();
 
+		cy.get("@toolbar")
+			.shadow()
+			.find("[ui5-popover]")
+			.should("have.prop", "open", true);
+
 		cy.get("ui5-combobox[placeholder='Select an option']")
+			.realClick()
 			.should("be.focused");
 
 		cy.realPress("Tab");
@@ -1449,7 +1458,7 @@ describe("ToolbarButton", () => {
 			const toolbar = $toolbar[0] as Toolbar;
 			const addButton = document.getElementById("add-btn") as ToolbarButton;
 
-			expect(toolbar.itemsToOverflow.includes(addButton)).to.be.true;
+			expect(toolbar.itemsToOverflow.some(item => item.id === addButton.id)).to.be.true;
 
 			const initialOverflowCount = toolbar.itemsToOverflow.length;
 			const initialItemsWidth = toolbar.itemsWidth;
