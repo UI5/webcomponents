@@ -7,6 +7,7 @@ import ToolbarSpacer from "../../src/ToolbarSpacer.js";
 import ToolbarItem from "../../src/ToolbarItem.js";
 import CheckBox from "../../src/CheckBox.js";
 import Input from "../../src/Input.js";
+import RadioButton from "../../src/RadioButton.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
@@ -337,6 +338,183 @@ describe("Toolbar general interaction", () => {
 			.should("not.be.focused");
 	});
 
+	it("Should keep selected radio when moving to next toolbar item with ArrowRight", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<RadioButton name="group1" text="Option 1" />
+					<RadioButton name="group1" text="Option 2" />
+					<RadioButton name="group1" text="Option 3" checked />
+				</ToolbarItem>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-radio-button[text='Option 3']")
+			.realClick()
+			.should("be.focused")
+			.and("have.prop", "checked", true);
+
+		cy.realPress("ArrowRight");
+
+		cy.get("ui5-checkbox[text='Checkbox 1']")
+			.should("be.focused");
+
+		cy.get("ui5-radio-button[text='Option 3']")
+			.should("have.prop", "checked", true);
+		cy.get("ui5-radio-button[text='Option 1']")
+			.should("have.prop", "checked", false);
+	});
+
+	it("Should navigate within radio group before moving to next toolbar item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<RadioButton name="group1" text="Option 1" checked />
+					<RadioButton name="group1" text="Option 2" />
+					<RadioButton name="group1" text="Option 3" />
+				</ToolbarItem>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-radio-button[text='Option 1']")
+			.realClick()
+			.should("be.focused")
+			.and("have.prop", "checked", true);
+
+		cy.realPress("ArrowRight");
+
+		cy.get("ui5-radio-button[text='Option 2']")
+			.and("have.prop", "checked", true);
+		cy.get("ui5-radio-button[text='Option 1']")
+			.should("have.prop", "checked", false);
+
+		cy.get("ui5-checkbox[text='Checkbox 1']")
+			.should("not.be.focused");
+	});
+
+	it("Should select last radio when entering radio group backwards", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<RadioButton name="group1" text="Option 1" checked />
+					<RadioButton name="group1" text="Option 2" />
+					<RadioButton name="group1" text="Option 3" />
+				</ToolbarItem>
+				<ToolbarItem>
+					<Input placeholder="Next input" />
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowLeft");
+
+		cy.get("ui5-radio-button[text='Option 3']")
+			.should("have.prop", "checked", true)
+			.and("be.focused");
+		cy.get("ui5-radio-button[text='Option 1']")
+			.should("have.prop", "checked", false);
+	});
+
+	it("Should keep navigation inside radio group from middle item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<RadioButton name="group1" text="Option 1" />
+					<RadioButton name="group1" text="Option 2" checked />
+					<RadioButton name="group1" text="Option 3" />
+				</ToolbarItem>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-radio-button[text='Option 2']")
+			.realClick()
+			.should("be.focused")
+			.and("have.prop", "checked", true);
+
+		cy.realPress("ArrowRight");
+
+		cy.get("ui5-radio-button[text='Option 3']")
+			.should("be.focused")
+			.and("have.prop", "checked", true);
+
+		cy.get("ui5-checkbox[text='Checkbox 1']")
+			.should("not.be.focused");
+	});
+
+	it("Should navigate within checkbox group before moving to next toolbar item", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1" />
+					<CheckBox text="Checkbox 2" />
+					<CheckBox text="Checkbox 3" />
+				</ToolbarItem>
+				<ToolbarItem>
+					<Input placeholder="Next input" />
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-checkbox[text='Checkbox 1']")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-checkbox[text='Checkbox 2']")
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-checkbox[text='Checkbox 3']")
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-input")
+			.shadow()
+			.find("input")
+			.should("be.focused");
+	});
+
+	it("Should enter checkbox group from the end when navigating backwards", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1" />
+					<CheckBox text="Checkbox 2" />
+					<CheckBox text="Checkbox 3" />
+				</ToolbarItem>
+				<ToolbarItem>
+					<Input placeholder="Next input" />
+				</ToolbarItem>
+			</Toolbar>
+		);
+
+		cy.get("ui5-input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowLeft");
+
+		cy.get("ui5-checkbox[text='Checkbox 3']")
+			.should("be.focused");
+	});
+
 	it("Should navigate between toolbar-item wrapped controls with arrow keys", () => {
 		cy.mount(
 			<Toolbar>
@@ -583,10 +761,15 @@ describe("Toolbar general interaction", () => {
 			</Toolbar>
 		);
 
-		cy.get("ui5-toolbar-select").shadow().find("ui5-select").realClick();
+		cy.get("ui5-toolbar-button").first().shadow().find("ui5-button")
+			.realClick().should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("ui5-toolbar-select").shadow().find("ui5-select")
+			.should("be.focused");
 
 		cy.realPress("Home");
-		cy.get("ui5-toolbar-button").first()
+		cy.get("ui5-toolbar-button").first().shadow().find("ui5-button")
 			.should("be.focused");
 	});
 

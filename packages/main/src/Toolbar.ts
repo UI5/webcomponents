@@ -714,15 +714,17 @@ class Toolbar extends UI5Element {
 			// caret is at boundary ? fall through to toolbar roving
 		}
 
-		// For Up/Down: respect if a child control already handled the key
-		// (e.g. Select uses Up/Down to open the dropdown).
-		// Left/Right and Home/End are claimed by the toolbar.
-		if ((isUp(e) || isDown(e)) && e.defaultPrevented) {
-			return;
-		}
-
 		const items = this._getFocusableItems();
 		let currentIndex = this._findCurrentIndex(items, e);
+		if (currentIndex === -1) {
+			const path = e.composedPath();
+			const toolbarItemFromPath = this.standardItems.find(item => path.includes(item));
+			const pathFocusRef = toolbarItemFromPath?.getFocusDomRef();
+			if (pathFocusRef && items.includes(pathFocusRef)) {
+				currentIndex = items.indexOf(pathFocusRef);
+			}
+		}
+
 		if (currentIndex === -1) {
 			if (isHome(e)) {
 				currentIndex = 0;
@@ -735,18 +737,31 @@ class Toolbar extends UI5Element {
 			}
 		}
 
+		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
+		const itemHandlesKey = toolbarItem?.shouldHandleOwnKeyboardNavigation(e) ?? false;
+
+		// If a child already prevented default, only allow toolbar handling for items
+		// that explicitly opt into key-level delegation and currently do not own the key
+		// (e.g. ToolbarSelect with closed picker and Home/End).
+		if (e.defaultPrevented) {
+			if (!toolbarItem?.handlesOwnKeyboardNavigation || itemHandlesKey) {
+				return;
+			}
+		}
+
 		// Let a toolbar item handle its own navigation for the keys it explicitly owns
 		// (e.g. ToolbarSelect claims Up/Down/Home/End via shouldHandleOwnKeyboardNavigation).
-		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
-		if (toolbarItem?.shouldHandleOwnKeyboardNavigation(e)) {
+		if (itemHandlesKey) {
 			return;
 		}
 
 		let nextIndex = currentIndex;
+		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL) || isDown(e);
+		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL) || isUp(e);
 
-		if ((isRight(e) && !isRTL) || (isLeft(e) && isRTL) || isDown(e)) {
+		if (movingForward) {
 			nextIndex = (currentIndex + 1) % items.length;
-		} else if ((isLeft(e) && !isRTL) || (isRight(e) && isRTL) || isUp(e)) {
+		} else if (movingBackward) {
 			nextIndex = (currentIndex - 1 + items.length) % items.length;
 		} else if (isHome(e)) {
 			nextIndex = 0;
@@ -760,8 +775,17 @@ class Toolbar extends UI5Element {
 		e.preventDefault();
 
 		if (isHome(e) || isEnd(e) || nextIndex !== currentIndex) {
+			const nextToolbarItem = this._findToolbarItem(items[nextIndex]);
+			const directionForEntry = movingForward || isHome(e);
+
 			this._lastFocusedItem = items[nextIndex];
 			this._applyRovingTabIndex();
+
+			if (nextToolbarItem && "handleNavigationEntry" in nextToolbarItem && typeof nextToolbarItem.handleNavigationEntry === "function") {
+				nextToolbarItem.handleNavigationEntry(directionForEntry);
+				return;
+			}
+
 			items[nextIndex].focus();
 		}
 	}
