@@ -348,7 +348,9 @@ class UploadCollectionItem extends ListItem {
 
 		const target = e.target as HTMLElement;
 		if (this.shouldForwardTabBefore(target)) {
-			this.fireDecoratorEvent("forward-before");
+			if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
 		}
 	}
 
