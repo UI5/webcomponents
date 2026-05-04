@@ -2,11 +2,13 @@ import Icon from "./Icon.js";
 import Button from "./Button.js";
 import List from "./List.js";
 import Input from "./Input.js";
+import Title from "./Title.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
+import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 import type ComboBox from "./ComboBox.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
@@ -39,7 +41,13 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
-							<span>{this._headerTitleText}</span>
+							<Title
+								level="H1"
+								wrappingType="None"
+								class="ui5-responsive-popover-header-text"
+							>
+								{this._headerTitleText}
+							</Title>
 						</div>
 
 						<div class="row">
@@ -53,7 +61,18 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 								onInput={this._handleMobileInput}
 								onChange={this._inputChange}
 							>
-								{ this._filteredItems.map(item => <SuggestionItem text={item.text} additional-text={item.additionalText}/>)}
+								{ this._filteredItems.flatMap(item => {
+									if (item.isGroupItem && item.items) {
+										// For group items, return all nested items
+										return item.items
+											.filter(nestedItem => !!nestedItem)
+											.map(nestedItem =>
+												<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)}/>
+											);
+									}
+									// For regular items
+									return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)}/>;
+								})}
 							</Input>
 						</div>
 					</div>

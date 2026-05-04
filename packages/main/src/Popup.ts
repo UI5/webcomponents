@@ -369,6 +369,11 @@ abstract class Popup extends UI5Element {
 
 		this._addOpenedPopup();
 
+		this.classList.add("ui5-popup-opening");
+		setTimeout(() => {
+			this.classList.remove("ui5-popup-opening");
+		}, 50);
+
 		this.open = true;
 
 		// initial focus, if focused element is statically created

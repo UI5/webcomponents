@@ -10,9 +10,15 @@ import ColorPaletteItemTemplate from "./ColorPaletteItemTemplate.js";
 import {
 	COLORPALETTE_COLOR_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 
 // Styles
 import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
+
+type ColorPaletteItemNativeClickEventDetail = {
+	item: ColorPaletteItem,
+	originalEvent: Event;
+};
 
 /**
  * @class
@@ -33,7 +39,25 @@ import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
 	template: ColorPaletteItemTemplate,
 	shadowRootOptions: { delegatesFocus: true },
 })
+
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @param {ColorPaletteItem} item The color palette item that was clicked.
+ * @param {Event} originalEvent The original DOM event that triggered the click. Use this to access modifier keys (altKey, ctrlKey, metaKey, shiftKey) and other native event properties.
+ * @since 2.22.0
+ * @public
+ */
+@event("click", {
+	bubbles: true,
+	cancelable: true,
+})
 class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
+	eventDetails!: {
+		"click": ColorPaletteItemNativeClickEventDetail,
+	}
 	/**
 	 * Defines the colour of the component.
 	 *
@@ -50,12 +74,22 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 	 * **Note:** Only one item must be selected per <code>ui5-color-palette</code>.
 	 * If more than one item is defined as selected, the last one would be considered as the selected one.
 	 *
-	 * @public
 	 * @default false
+	 * @public
 	 * @since 2.0.0
 	 */
 	@property({ type: Boolean })
 	selected = false;
+
+	/**
+	 * Defines the tooltip of the component. When not set, the color value is used as the tooltip.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	tooltip?: string;
 
 	/**
 	 * Defines the tab-index of the element, helper information for the ItemNavigation.
@@ -107,6 +141,10 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
 	}
 
+	get getLabelText(): string {
+		return `${this.colorLabel} - ${this.index}: ${this.tooltip || this.value}`;
+	}
+
 	get classes() {
 		// Remove after deleting the hbs template, it's added in the jsx template
 		return {
@@ -115,8 +153,30 @@ class ColorPaletteItem extends UI5Element implements IColorPaletteItem {
 			},
 		};
 	}
+
+	_onClick(e: MouseEvent) {
+		if (this._disabled) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		e.stopImmediatePropagation();
+
+		// Fire semantic click event (CustomEvent that bubbles)
+		const prevented = !this.fireDecoratorEvent("click", {
+			item: this,
+			originalEvent: e,
+		});
+
+		if (prevented) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
 }
 
 ColorPaletteItem.define();
 
 export default ColorPaletteItem;
+export type { ColorPaletteItemNativeClickEventDetail };

@@ -1,5 +1,1 @@
-@import "../base/SliderHandle-parameters.css";
-
-:host {
-	--ui5_slider_handle_outline: none;
-}
+@import "../sap_horizon/SliderHandle-parameters.css";

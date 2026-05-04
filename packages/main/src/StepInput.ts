@@ -308,6 +308,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_languageChanged?: boolean = false;
 
+	_delimiter?: string;
+
+	_groupSeparator?: string;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -422,6 +426,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 		this._languageChangeHandler = () => {
 			this._formatter = undefined;
 			this._languageChanged = true;
+			this._delimiter = undefined;
+			this._groupSeparator = undefined;
 
 			return Promise.resolve();
 		};
@@ -445,6 +451,24 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return this._formatter;
 	}
 
+	get delimiter() {
+		if (!this._delimiter) {
+			const localeData = getCachedLocaleDataInstance(getLocale());
+			this._delimiter = localeData.getNumberSymbol("decimal") || ".";
+		}
+
+		return this._delimiter;
+	}
+
+	get groupSeparator() {
+		if (!this._groupSeparator) {
+			const localeData = getCachedLocaleDataInstance(getLocale());
+			this._groupSeparator = localeData.getNumberSymbol("group") || ",";
+		}
+
+		return this._groupSeparator;
+	}
+
 	get input(): Input {
 		return this.shadowRoot!.querySelector<Input>("[ui5-input]")!;
 	}
@@ -459,7 +483,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onButtonFocusOut() {
 		setTimeout(() => {
-			if (!this._inputFocused) {
+			if (!this._inputFocused && !this.shadowRoot!.activeElement) {
 				this.inputOuter.removeAttribute("focused");
 			}
 		}, 0);
@@ -483,13 +507,11 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	_onMouseWheel(e: WheelEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || !this._isFocused) {
 			return;
 		}
 
-		if (this._isFocused) {
-			e.preventDefault();
-		}
+		e.preventDefault();
 
 		const isScrollUp = e.deltaY < 0;
 		const modifier = isScrollUp ? this.step : -this.step;
@@ -603,9 +625,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	get _isValueWithCorrectPrecision() {
-		const localeData = getCachedLocaleDataInstance(getLocale());
-		// gets either "." or "," as delimiter which is based on locale, and splits the number by it
-		const delimiter = localeData.getNumberSymbol("decimal") || ".";
+		const delimiter = this.delimiter;
 		// check if the value will be displayed with correct precision
 		// _displayValue has special formatting logic
 		if (this.valuePrecision === 0 && !this.input?.value.includes(delimiter) && ((this.value === 0) || (Number.isInteger(this.value)))) {
@@ -620,7 +640,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onInputChange() {
 		this._setDefaultInputValueIfNeeded();
-		const inputValue = this._parseNumber(this.input.value);
+		const updatedValue = this._removeGroupSeparators(this.input.value);
+		const inputValue = this._parseNumber(updatedValue);
 		if (this._isValueChanged(inputValue)) {
 			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
 			this.innerInput.value = this.input.value;
@@ -730,22 +751,39 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	_getValueOnkeyDown(e: KeyboardEvent, inputValue: string, cursorPosition?: number) {
-		return `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		const typedValue = `${inputValue.substring(0, cursorPosition)}${e.key}${inputValue.substring(cursorPosition!)}`;
+		const updatedValue = this._removeGroupSeparators(typedValue);
+		return updatedValue;
+	}
+
+	_removeGroupSeparators(value: string) {
+		const groupSeparator = this.groupSeparator;
+		return value.replaceAll(groupSeparator, "");
 	}
 
 	_isInputValueValid(typedValue: string, parsedValue: number) {
 		return !Number.isNaN(parsedValue) && !/, {2,}/.test(typedValue);
 	}
 
-	_decSpin() {
+	_decSpin(e: MouseEvent) {
+		if (this._isFocused || this._decIconDisabled) {
+			e.preventDefault();
+		}
 		if (!this._decIconDisabled) {
 			this._spinValue(false, true);
+		} else {
+			this.input.focus();
 		}
 	}
 
-	_incSpin() {
+	_incSpin(e: MouseEvent) {
+		if (this._isFocused || this._incIconDisabled) {
+			e.preventDefault();
+		}
 		if (!this._incIconDisabled) {
 			this._spinValue(true, true);
+		} else {
+			this.input.focus();
 		}
 	}
 

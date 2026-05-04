@@ -24,7 +24,7 @@ describe("TimePicker Tests", () => {
 
 		cy.get<TimePicker>("@timePicker")
 			.ui5TimePickerGetInnerInput()
-			.should("have.value", "3:16:16 ч.");
+			.should("have.value", "3:16:16");
 
 		cy.wrap({ setLanguage })
 			.then(api => {

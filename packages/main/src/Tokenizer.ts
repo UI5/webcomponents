@@ -306,6 +306,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	popoverMinWidth?: number;
 
 	/**
+	 * Sets the title of the nMore Popover on mobile.
+	 * **Note:** Used inside MultiInput component.
+	 * @private
+	 */
+	@property()
+	popoverTitle?: string;
+
+	/**
 	 * Prevents tokens to be part of the tab chain.
 	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
@@ -422,6 +430,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._tokens.forEach(token => {
 			token.singleToken = (tokensLength === 1) || this.multiLine;
 			token.readonly = this.readonly;
+			// Clear lastVisibleToken when expanding
+			if (this.expanded && token.lastVisibleToken) {
+				token.lastVisibleToken = false;
+			}
 		});
 	}
 
@@ -513,6 +525,27 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		this._scrollToEndIfNeeded();
 		this._tokenDeleting = false;
+
+		// Update lastVisibleToken after rendering is complete to avoid render loops
+		renderFinished().then(() => {
+			this._updateLastVisibleTokenAttribute();
+		});
+	}
+
+	/**
+	 * Updates the lastVisibleToken property on tokens.
+	 * When collapsed with overflow, marks the last visible token for proper spacing to the n-more indicator.
+	 * @private
+	 */
+	_updateLastVisibleTokenAttribute() {
+		const tokensArray = this._tokens;
+		const hasOverflow = this._nMoreCount > 0;
+		const visibleTokens = tokensArray.filter(token => !token.overflows);
+		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
+
+		tokensArray.forEach(token => {
+			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
+		});
 	}
 
 	/**
@@ -561,6 +594,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -977,7 +1011,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
@@ -1191,7 +1225,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

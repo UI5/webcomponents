@@ -2,7 +2,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type LocaleT from "sap/ui/core/Locale";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	isEnter,
@@ -145,7 +144,7 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_shouldShowOneColumn() {
-		const locale = getLocale() as unknown as LocaleT;
+		const locale = getLocale();
 		const language = locale.getLanguage();
 		const longLanguages = ["zh", "ja", "ko", "bg", "mk", "ru"];
 
@@ -200,9 +199,8 @@ class YearRangePicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_getYearRanges() {
-		const locale = getLocale() as unknown as LocaleT;
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType }, locale);
-		const yearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType }, locale);
+		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
+		const yearFormatInSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
 
 		const pageSize = this._getPageSize();
 		const rowSize = this._getRowSize();

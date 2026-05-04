@@ -103,7 +103,7 @@ class UserMenuAccount extends UI5Element {
 	loading = false;
 
 	get _initials() {
-		return this.avatarInitials || "undefined";
+		return this.avatarInitials || undefined;
 	}
 }
 
