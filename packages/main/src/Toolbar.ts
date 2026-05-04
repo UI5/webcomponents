@@ -180,6 +180,7 @@ class Toolbar extends UI5Element {
 	itemsWidth = 0;
 	minContentWidth = 0;
 	_lastFocusedItem?: HTMLElement;
+	_originalTabIndexes = new WeakMap<HTMLElement, string | null>();
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -327,6 +328,7 @@ class Toolbar extends UI5Element {
 			this.addItemsAdditionalProperties(item);
 		});
 		this._applyRovingTabIndex();
+		this._restoreOverflowTabOrder();
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
@@ -511,6 +513,7 @@ class Toolbar extends UI5Element {
 
 	onOverflowPopoverOpened() {
 		this.popoverOpen = true;
+		this._restoreOverflowTabOrder();
 	}
 
 	onResize() {
@@ -588,6 +591,55 @@ class Toolbar extends UI5Element {
 		return items;
 	}
 
+	_getOverflowTabTargets(item: ToolbarItemBase): Array<HTMLElement> {
+		if (item.handlesOwnKeyboardNavigation) {
+			const targets = (item as unknown as { _getNavigationTargets?: () => HTMLElement[] })._getNavigationTargets?.();
+			if (targets?.length) {
+				return targets;
+			}
+		}
+
+		const focusRef = item.getFocusDomRef();
+		return focusRef ? [focusRef] : [];
+	}
+
+	_storeOriginalTabIndex(target: HTMLElement) {
+		if (!this._originalTabIndexes.has(target)) {
+			this._originalTabIndexes.set(target, target.getAttribute("tabindex"));
+		}
+	}
+
+	_restoreOriginalTabIndex(target: HTMLElement) {
+		const originalTabIndex = this._originalTabIndexes.get(target);
+
+		if (originalTabIndex === undefined || originalTabIndex === null) {
+			target.removeAttribute("tabindex");
+			return;
+		}
+
+		target.setAttribute("tabindex", originalTabIndex);
+	}
+
+	_restoreOverflowTabOrder() {
+		this.overflowItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				const isDisabled = "disabled" in item && !!(item as { disabled?: boolean }).disabled;
+				const targets = this._getOverflowTabTargets(item);
+
+				targets.forEach(target => {
+					if (isDisabled) {
+						target.tabIndex = -1;
+						target.setAttribute("aria-disabled", "true");
+						return;
+					}
+
+					this._restoreOriginalTabIndex(target);
+					target.removeAttribute("aria-disabled");
+				});
+			});
+	}
+
 	/**
 	 * Ensures disabled interactive items are removed from the natural tab order
 	 * and annotated with aria-disabled so assistive technologies can perceive them.
@@ -600,6 +652,7 @@ class Toolbar extends UI5Element {
 			.forEach(item => {
 				const focusRef = item.getFocusDomRef();
 				if (focusRef) {
+					this._storeOriginalTabIndex(focusRef);
 					focusRef.tabIndex = -1;
 					focusRef.setAttribute("aria-disabled", "true");
 				}
@@ -669,10 +722,52 @@ class Toolbar extends UI5Element {
 			: items[0];
 
 		items.forEach(item => {
+			this._storeOriginalTabIndex(item);
 			item.tabIndex = item === current ? 0 : -1;
 		});
 
+		this._applySingleTabStopToGroups(current);
 		this._applyDisabledItemsAccessibility();
+	}
+
+	/**
+	 * For ToolbarItem groups (handlesOwnKeyboardNavigation), ensures only
+	 * the active child is tabbable so Tab exits the toolbar instead of
+	 * moving between children within the same group.
+	 */
+	_applySingleTabStopToGroups(current: HTMLElement) {
+		this.standardItems
+			.filter(item => item.handlesOwnKeyboardNavigation && !item.isOverflowed && !item.hidden)
+			.forEach(item => {
+				const targets = (item as unknown as { _getNavigationTargets?: () => HTMLElement[] })._getNavigationTargets?.() || [];
+				if (targets.length <= 1) {
+					return;
+				}
+
+				targets.forEach(target => {
+					this._storeOriginalTabIndex(target);
+				});
+
+				// If this group's primary ref is not the current roving tab item,
+				// all its children should be untabbable
+				const primaryRef = item.getFocusDomRef();
+				if (primaryRef !== current) {
+					targets.forEach(t => { t.tabIndex = -1; });
+					return;
+				}
+
+				// This is the active group - only the focused child should be tabbable
+				const activeEl = getActiveElement() as HTMLElement | null;
+				const activeTarget = activeEl
+					? targets.find(t => t === activeEl || t.contains(activeEl) || !!t.shadowRoot?.contains(activeEl))
+					: null;
+
+				const focusedTarget = activeTarget || targets[0];
+
+				targets.forEach(t => {
+					t.tabIndex = t === focusedTarget ? 0 : -1;
+				});
+			});
 	}
 
 	_onfocusin() {
@@ -681,7 +776,23 @@ class Toolbar extends UI5Element {
 			return;
 		}
 
-		const idx = this._findCurrentIndex(items);
+		let idx = this._findCurrentIndex(items);
+
+		// If not found directly, check if active element is inside a grouped ToolbarItem
+		if (idx === -1) {
+			const active = getActiveElement() as HTMLElement | null;
+			if (active) {
+				const groupItem = this.standardItems.find(item => item.handlesOwnKeyboardNavigation
+					&& !item.isOverflowed
+					&& !item.hidden
+					&& (item === active || item.contains(active)));
+				if (groupItem) {
+					const ref = groupItem.getFocusDomRef();
+					idx = ref ? items.indexOf(ref) : -1;
+				}
+			}
+		}
+
 		if (idx !== -1) {
 			this._lastFocusedItem = items[idx];
 			this._applyRovingTabIndex();

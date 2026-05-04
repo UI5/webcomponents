@@ -8,6 +8,12 @@ import ToolbarItem from "../../src/ToolbarItem.js";
 import CheckBox from "../../src/CheckBox.js";
 import Input from "../../src/Input.js";
 import RadioButton from "../../src/RadioButton.js";
+import ComboBox from "../../src/ComboBox.js";
+import ComboBoxItem from "../../src/ComboBoxItem.js";
+import MultiComboBox from "../../src/MultiComboBox.js";
+import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
+import Switch from "../../src/Switch.js";
+import DatePicker from "../../src/DatePicker.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
@@ -593,6 +599,121 @@ describe("Toolbar general interaction", () => {
 		cy.realPress(["Shift", "Tab"]);
 
 		cy.get("[data-testid='before-toolbar']")
+			.should("be.focused");
+	});
+
+	it("Should support vertical Tab navigation in overflow popover", () => {
+		cy.viewport(220, 800);
+
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Button 1" overflowPriority="AlwaysOverflow"></ToolbarButton>
+				<ToolbarButton text="Button 2" overflowPriority="AlwaysOverflow"></ToolbarButton>
+				<ToolbarButton text="Button 3" overflowPriority="AlwaysOverflow"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		// Popover opens with focus on first item
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-toolbar-button][text='Button 2']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-toolbar-button][text='Button 3']")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
+
+	it("Should keep natural Tab order for dynamically overflowed form controls", () => {
+		cy.viewport(1040, 800);
+
+		cy.mount(
+			<div style={{ width: "1040px" }}>
+				<Toolbar>
+					<ToolbarItem>
+						<RadioButton name="group1" text="Option 1" checked></RadioButton>
+						<RadioButton name="group1" text="Option 2"></RadioButton>
+						<RadioButton name="group1" text="Option 3"></RadioButton>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<CheckBox text="Checkbox 1"></CheckBox>
+						<CheckBox text="Checkbox 2" checked></CheckBox>
+						<CheckBox text="Checkbox 3"></CheckBox>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<Input placeholder="Enter text"></Input>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<ComboBox placeholder="Select an option">
+							<ComboBoxItem text="Option 1"></ComboBoxItem>
+							<ComboBoxItem text="Option 2"></ComboBoxItem>
+							<ComboBoxItem text="Option 3"></ComboBoxItem>
+						</ComboBox>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<MultiComboBox placeholder="Select an option">
+							<MultiComboBoxItem text="Option 1"></MultiComboBoxItem>
+							<MultiComboBoxItem text="Option 2"></MultiComboBoxItem>
+							<MultiComboBoxItem text="Option 3"></MultiComboBoxItem>
+						</MultiComboBox>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<Switch textOn="On" textOff="Off"></Switch>
+					</ToolbarItem>
+
+					<ToolbarItem>
+						<DatePicker placeholder="Select a date"></DatePicker>
+					</ToolbarItem>
+				</Toolbar>
+			</div>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		cy.get("ui5-combobox[placeholder='Select an option']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-multi-combobox[placeholder='Select an option']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-switch")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-date-picker[placeholder='Select a date']")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-combobox[placeholder='Select an option']")
 			.should("be.focused");
 	});
 
@@ -1416,5 +1537,6 @@ describe("ToolbarButton", () => {
 			.find("[ui5-button]")
 			.should("contain.text", "Decline Item");
 	});
+
 });
 
