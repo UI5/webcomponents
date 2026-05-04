@@ -1,0 +1,5 @@
+@import "../base/SliderTooltip-parameters.css";
+
+:host {
+	--_ui5_slider_tooltip_color: var(--sapContent_LabelColor);
+}
