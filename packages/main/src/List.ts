@@ -1065,7 +1065,7 @@ class List extends UI5Element {
 		const activeElement = getActiveElement();
 
 		e.preventDefault();
-		e.stopPropagation();
+		e.stopPropagation(); // Prevent Tokenizer's F7 handler from undoing the focus change set by this handler.
 
 		if (activeElement === listItemDomRef) {
 			listItem._editMode = true;
