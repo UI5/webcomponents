@@ -4371,6 +4371,29 @@ describe("Keyboard Handling", () => {
 			.should("have.length", 3);
 	});
 
+	it("Should open overflow popover on Enter when MCB is readonly", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} readonly={true}>
+				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("Enter");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+	});
+
 	it("Should open/close popover on keyboard combination ctrl + i", () => {
 		cy.mount(
 			<MultiComboBox noValidation={true}>
