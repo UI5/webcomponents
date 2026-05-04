@@ -307,7 +307,7 @@
 
 	<section>
 		<h3>Avatar Badge - Tooltip Behavior</h3>
-		<p>The badge tooltip is shown by default from the icon semantic text. You can override it with <code>accessible-name</code>.</p>
+		<p>The badge tooltip is shown by default from the icon semantic text. You can override it with <code>tooltip</code>.</p>
 		<div style="display: flex; flex-direction: row; align-items: end; column-gap: 0.5rem;">
 			<div style="text-align: center;">
 				<ui5-avatar size="M" initials="DF" color-scheme="Accent6">
@@ -317,9 +317,9 @@
 			</div>
 			<div style="text-align: center;">
 				<ui5-avatar size="M" initials="CT" color-scheme="Accent8">
-					<ui5-avatar-badge icon="edit" accessible-name="Open profile editor" slot="badge"></ui5-avatar-badge>
+					<ui5-avatar-badge icon="edit" tooltip="Open profile editor" slot="badge"></ui5-avatar-badge>
 				</ui5-avatar>
-				<p style="font-size: 0.75rem;">Custom tooltip (accessible-name)</p>
+				<p style="font-size: 0.75rem;">Custom tooltip (tooltip)</p>
 			</div>
 		</div>
 	</section>

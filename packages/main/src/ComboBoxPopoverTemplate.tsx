@@ -2,6 +2,7 @@ import Icon from "./Icon.js";
 import Button from "./Button.js";
 import List from "./List.js";
 import Input from "./Input.js";
+import Title from "./Title.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -40,7 +41,13 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
-							<span>{this._headerTitleText}</span>
+							<Title
+								level="H1"
+								wrappingType="None"
+								class="ui5-responsive-popover-header-text"
+							>
+								{this._headerTitleText}
+							</Title>
 						</div>
 
 						<div class="row">
