@@ -187,6 +187,21 @@ describe("General Interaction", () => {
 		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
 	});
 
+	it("shows focus outline on list item mousedown", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One" />
+				<ComboBoxItem text="Two" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
+		cy.get("[ui5-combobox]").shadow().find("[ui5-responsive-popover]").should("have.attr", "open");
+
+		cy.get("[ui5-cb-item]").first().shadow().find("li").realMouseDown();
+		cy.get("[ui5-cb-item]").first().should("have.prop", "focused", true);
+	});
+
 	it("tests Combo with two-column layout", () => {
 		cy.mount(
 			<ComboBox>
