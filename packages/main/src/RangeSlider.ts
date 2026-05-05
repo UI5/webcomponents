@@ -15,6 +15,7 @@ import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/Ac
 import SliderBase from "./SliderBase.js";
 import RangeSliderTemplate from "./RangeSliderTemplate.js";
 import type SliderTooltip from "./SliderTooltip.js";
+import type { Tickmark } from "./SliderScale.js";
 
 // Texts
 import {
@@ -107,7 +108,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set startValue(value: number) {
 		this._startValue = value;
-		this.tooltipStartValue = value?.toString() ?? "";
+		this.tooltipStartValue = this._getCustomLabel(value) || (value?.toString() ?? "");
 	}
 
 	get startValue(): number {
@@ -124,7 +125,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	set endValue(value: number) {
 		this._endValue = value;
-		this.tooltipEndValue = value?.toString() ?? "";
+		this.tooltipEndValue = this._getCustomLabel(value) || (value?.toString() ?? "");
 	}
 
 	get endValue(): number {
@@ -142,6 +143,24 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 	@property()
 	tooltipEndValueState: `${ValueState}` = "None";
+
+	/**
+	 * Defines custom tickmarks with labels on the slider scale.
+	 * Each tickmark object has a numeric `value` and an optional `label` string.
+	 * Tickmarks are purely visual — they display labeled markers at specific positions
+	 * but do not affect the slider's movement behavior. The slider still moves
+	 * according to `min`, `max`, and `step`.
+	 *
+	 * When the current value matches a tickmark value, the tickmark's label
+	 * is shown in the tooltip and announced via `aria-valuetext`.
+	 *
+	 * **Note:** When `tickmarks` is provided, the scale is automatically shown
+	 * (equivalent to `showTickmarks`).
+	 * @default []
+	 * @public
+	 */
+	@property({ type: Array })
+	tickmarks: Array<Tickmark> = [];
 
 	@property({ type: Boolean })
 	rangePressed = false;
@@ -224,6 +243,22 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 
 	get _ariaDisabled() {
 		return this.disabled || undefined;
+	}
+
+	get _hasCustomTickmarks(): boolean {
+		return this.tickmarks.length > 0;
+	}
+
+	_getCustomLabel(value: number): string | undefined {
+		return this.tickmarks.find(t => t.value === value)?.label;
+	}
+
+	get _ariaValueTextStart(): string | undefined {
+		return this._getCustomLabel(this.startValue) || undefined;
+	}
+
+	get _ariaValueTextEnd(): string | undefined {
+		return this._getCustomLabel(this.endValue) || undefined;
 	}
 
 	get _ariaLabelledByText() {
@@ -429,8 +464,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			this.update(affectedValue, newStartValue, newEndValue);
 		}
 
-		this.tooltipStartValue = this.startValue.toString();
-		this.tooltipEndValue = this.endValue.toString();
+		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
 	}
 
 	/**
@@ -597,8 +632,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		// Updates UI and state when dragging of the whole selected range
 		this._updateValueOnRangeDrag(e);
 
-		this.tooltipStartValue = this.startValue.toString();
-		this.tooltipEndValue = this.endValue.toString();
+		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
 	}
 
 	/**
@@ -966,8 +1001,8 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 			return;
 		}
 
-		this.tooltipStartValue = this.startValue.toString();
-		this.tooltipEndValue = this.endValue.toString();
+		this.tooltipStartValue = this._getCustomLabel(this.startValue) || this.startValue.toString();
+		this.tooltipEndValue = this._getCustomLabel(this.endValue) || this.endValue.toString();
 	}
 
 	_onTooltipInput(e: CustomEvent) {

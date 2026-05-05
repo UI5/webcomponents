@@ -27,6 +27,7 @@ const handle = (slider: Slider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.value}
+				aria-valuetext={slider._ariaValueText}
 				aria-label={slider._ariaLabel}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
@@ -77,8 +78,9 @@ export default function SliderTemplate(this: Slider) {
 					max={this.max}
 					step={this.step}
 					startValue={this.min}
-					showTickmarks={this.showTickmarks}
-					labelInterval={this.labelInterval}
+					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
+					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
+					tickmarks={this.tickmarks}
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
 					part="scale"

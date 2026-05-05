@@ -28,6 +28,7 @@ const startHandle = (slider: RangeSlider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.startValue}
+				aria-valuetext={slider._ariaValueTextStart}
 				aria-label={slider._ariaLabelStartHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
@@ -62,6 +63,7 @@ const endHandle = (slider: RangeSlider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.endValue}
+				aria-valuetext={slider._ariaValueTextEnd}
 				aria-label={slider._ariaLabelEndHandle}
 				aria-disabled={slider._ariaDisabled}
 				aria-describedby={slider._ariaDescribedByHandleText}
@@ -134,8 +136,9 @@ export default function RangeSliderTemplate(this: RangeSlider) {
 					min={this.min}
 					max={this.max}
 					step={this._effectiveStep}
-					showTickmarks={this.showTickmarks}
-					labelInterval={this.labelInterval}
+					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
+					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
+					tickmarks={this.tickmarks}
 					progressTabIndex={this._tabIndex}
 					progressAriaValueNow={this._ariaValueNow}
 					progressAriaValueText={`From ${this.startValue} to ${this.endValue}`}

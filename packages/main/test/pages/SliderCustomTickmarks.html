@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Slider Custom Tickmarks - Design Questions</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			padding: 2rem;
+			background: var(--sapBackgroundColor, #f5f6f7);
+			color: var(--sapTextColor, #32363a);
+		}
+
+		.question-card {
+			background: var(--sapGroup_ContentBackground, #fff);
+			border: 1px solid var(--sapGroup_ContentBorderColor, #d9d9d9);
+			border-radius: 0.5rem;
+			padding: 1.5rem;
+			margin-bottom: 2rem;
+		}
+
+		.question-card h2 {
+			margin-top: 0;
+			font-size: 1.1rem;
+			color: var(--sapTitleColor, #32363a);
+		}
+
+		.question-card .question {
+			background: var(--sapInformationBackground, #e8f0fa);
+			border-left: 4px solid var(--sapInformativeColor, #0a6ed1);
+			padding: 0.75rem 1rem;
+			margin: 1rem 0;
+			border-radius: 0 0.25rem 0.25rem 0;
+			font-size: 0.9rem;
+		}
+
+		.question-card .instruction {
+			font-size: 0.85rem;
+			color: var(--sapContent_LabelColor, #6a6d70);
+			margin-bottom: 0.75rem;
+		}
+
+		ui5-slider, ui5-range-slider {
+			margin: 1rem 0;
+		}
+
+		h1 {
+			border-bottom: 2px solid var(--sapHighlightColor, #0a6ed1);
+			padding-bottom: 0.5rem;
+		}
+
+		code {
+			background: var(--sapShell_InteractiveBackground, #eee);
+			padding: 0.1rem 0.3rem;
+			border-radius: 3px;
+			font-size: 0.85rem;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Slider Custom Tickmarks — Design Review</h1>
+	<p>Interactive examples for the open design questions. Try each slider with mouse, keyboard (Arrow, Ctrl+Arrow, Home/End), and observe the tooltip behavior.</p>
+
+	<!-- Question 1 -->
+	<div class="question-card">
+		<h2>1. Tooltip for in-between values</h2>
+		<div class="instruction">Drag the handle between labeled tickmarks. The tooltip shows the raw number (e.g. "26") when not on a tickmark, and the label (e.g. "Room Temp") when exactly on one.</div>
+		<ui5-slider id="q1-slider" min="0" max="100" step="1" value="25" show-tooltip></ui5-slider>
+		<div class="question">
+			<strong>Question:</strong> When the handle is between labeled positions (e.g. value=30, between "Room Temp" at 25 and "Warm" at 50), showing the raw number is correct? Or should we show the nearest label, both neighbors, or something else?
+		</div>
+	</div>
+
+	<!-- Question 2 -->
+	<div class="question-card">
+		<h2>2. Snap / magnetic tickmarks</h2>
+		<div class="instruction">Drag the handle freely — it moves by step=1 with no snapping. Compare with the second slider where step matches tickmark spacing (effectively snapping).</div>
+		<p><strong>Free movement (step=1, 100 positions):</strong></p>
+		<ui5-slider id="q2-slider-free" min="0" max="100" step="1" value="33" show-tooltip></ui5-slider>
+		<p><strong>Effectively snapping (step=33, only lands on tickmarks):</strong></p>
+		<ui5-slider id="q2-slider-snap" min="0" max="99" step="33" value="33" show-tooltip></ui5-slider>
+		<div class="question">
+			<strong>Question:</strong> Should there be a subtle "magnetic" snap zone (e.g. within 2-3px of a tickmark) that pulls the handle to the labeled value for easier selection? Or is free movement preferred with the app controlling step to achieve snap-like behavior?
+		</div>
+	</div>
+
+	<!-- Question 3 -->
+	<div class="question-card">
+		<h2>3. Keyboard large-step behavior (Ctrl+Arrow)</h2>
+		<div class="instruction">Focus the slider and press <code>Ctrl+Right Arrow</code>. Currently it jumps by 10 (1/10th of range). The tickmarks are at 0, 33, 66, 100.</div>
+		<ui5-slider id="q3-slider" min="0" max="100" step="1" value="0" show-tooltip></ui5-slider>
+		<div class="question">
+			<strong>Question:</strong> Should <code>Ctrl+Arrow</code> jump to the next/previous tickmark value instead (0→33→66→100)? That would make labeled points reachable in one keystroke. Or keep the standard 1/10th jump?
+		</div>
+	</div>
+
+	<!-- Question 4 -->
+	<div class="question-card">
+		<h2>4. Minor ticks between labeled tickmarks</h2>
+		<div class="instruction">First slider: only custom tickmarks render. Second slider: <code>showTickmarks</code> is also set, but step-based ticks don't show alongside custom ones.</div>
+		<p><strong>Custom tickmarks only:</strong></p>
+		<ui5-slider id="q4-slider-custom" min="0" max="1000" step="10" value="250" show-tooltip></ui5-slider>
+		<p><strong>With <code>show-tickmarks</code> also set:</strong></p>
+		<ui5-slider id="q4-slider-both" min="0" max="1000" step="10" value="250" show-tooltip show-tickmarks></ui5-slider>
+		<div class="question">
+			<strong>Question:</strong> When custom labeled tickmarks are defined with a fine step, should step-based minor ticks also be visible between the labeled major ticks? Or are only the labeled positions shown?
+		</div>
+	</div>
+
+	<!-- Question 5 -->
+	<div class="question-card">
+		<h2>5. Label density and overflow</h2>
+		<div class="instruction">This slider has many tickmarks with long labels. Resize the browser window narrower to see how labels behave when space is limited.</div>
+		<ui5-slider id="q5-slider" min="0" max="100" step="1" value="50" show-tooltip></ui5-slider>
+		<div class="question">
+			<strong>Question:</strong> When labels overlap, the current behavior hides them (only first/last remain). Is this acceptable? Should we truncate, rotate, or apply other responsive rules?
+		</div>
+	</div>
+
+	<!-- Question 6 -->
+	<div class="question-card">
+		<h2>6. Range Slider: in-range label emphasis</h2>
+		<div class="instruction">The tickmarks between the two handles get "in-range" coloring on the tick line. Observe the labels — they have no visual change.</div>
+		<ui5-range-slider id="q6-range" min="0" max="100" step="1" start-value="25" end-value="75" show-tooltip></ui5-range-slider>
+		<div class="question">
+			<strong>Question:</strong> Should tickmark labels within the selected range get visual emphasis (bold, different color) to reinforce the selection? Or keep them neutral?
+		</div>
+	</div>
+
+	<script>
+		// Question 1: Temperature with fine step
+		document.getElementById("q1-slider").tickmarks = [
+			{ value: 0, label: "Freezing" },
+			{ value: 25, label: "Room Temp" },
+			{ value: 50, label: "Warm" },
+			{ value: 75, label: "Hot" },
+			{ value: 100, label: "Boiling" }
+		];
+
+		// Question 2: Free vs snap comparison
+		document.getElementById("q2-slider-free").tickmarks = [
+			{ value: 0, label: "Off" },
+			{ value: 33, label: "Low" },
+			{ value: 66, label: "Medium" },
+			{ value: 100, label: "High" }
+		];
+		document.getElementById("q2-slider-snap").tickmarks = [
+			{ value: 0, label: "Off" },
+			{ value: 33, label: "Low" },
+			{ value: 66, label: "Medium" },
+			{ value: 99, label: "High" }
+		];
+
+		// Question 3: Large-step keyboard
+		document.getElementById("q3-slider").tickmarks = [
+			{ value: 0, label: "Off" },
+			{ value: 33, label: "Low" },
+			{ value: 66, label: "Medium" },
+			{ value: 100, label: "High" }
+		];
+
+		// Question 4: Minor ticks
+		document.getElementById("q4-slider-custom").tickmarks = [
+			{ value: 0, label: "$0" },
+			{ value: 250, label: "$250" },
+			{ value: 500, label: "$500" },
+			{ value: 750, label: "$750" },
+			{ value: 1000, label: "$1000" }
+		];
+		document.getElementById("q4-slider-both").tickmarks = [
+			{ value: 0, label: "$0" },
+			{ value: 250, label: "$250" },
+			{ value: 500, label: "$500" },
+			{ value: 750, label: "$750" },
+			{ value: 1000, label: "$1000" }
+		];
+
+		// Question 5: Label overflow
+		document.getElementById("q5-slider").tickmarks = [
+			{ value: 0, label: "Very Cold" },
+			{ value: 10, label: "Cold" },
+			{ value: 20, label: "Cool" },
+			{ value: 30, label: "Mild" },
+			{ value: 40, label: "Comfortable" },
+			{ value: 50, label: "Room Temperature" },
+			{ value: 60, label: "Warm" },
+			{ value: 70, label: "Hot" },
+			{ value: 80, label: "Very Hot" },
+			{ value: 90, label: "Extremely Hot" },
+			{ value: 100, label: "Boiling" }
+		];
+
+		// Question 6: Range slider in-range emphasis
+		document.getElementById("q6-range").tickmarks = [
+			{ value: 0, label: "Freezing" },
+			{ value: 25, label: "Cool" },
+			{ value: 50, label: "Warm" },
+			{ value: 75, label: "Hot" },
+			{ value: 100, label: "Boiling" }
+		];
+	</script>
+</body>
+</html>
