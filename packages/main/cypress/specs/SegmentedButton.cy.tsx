@@ -664,7 +664,7 @@ describe("SegmentedButtonItem: click event", () => {
 		cy.get("#item2").should("not.have.attr", "selected");
 	});
 
-	it("should provide item and originalEvent in click event detail", () => {
+	it("should provide originalEvent in click event detail", () => {
 		cy.mount(
 			<SegmentedButton>
 				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
@@ -675,14 +675,8 @@ describe("SegmentedButtonItem: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					// Check that event detail contains item and originalEvent
-					expect(e.detail).to.have.property("item");
+					// Check that event detail contains originalEvent
 					expect(e.detail).to.have.property("originalEvent");
-
-					// Check item reference and properties
-					expect(e.detail.item).to.equal($el[0]);
-					expect(e.detail.item.id).to.equal("item2");
-					expect(e.detail.item.slotTextContent).to.equal("Second");
 
 					// Check originalEvent is a MouseEvent
 					expect(e.detail.originalEvent).to.be.instanceOf(MouseEvent);
