@@ -60,6 +60,13 @@ class TableCell extends TableCellBase {
 			this.style.textAlign = `var(--halign-${this._headerCell._id})`;
 			this.style.justifyContent = `var(--halign-${this._headerCell._id})`;
 		}
+
+		if (this._headerCell) {
+			const newRole = this._headerCell.identifier ? "rowheader" : this.ariaRole;
+			if (this.getAttribute("role") !== newRole) {
+				this.setAttribute("role", newRole);
+			}
+		}
 	}
 
 	_injectHeaderNodes(ref: HTMLElement | null) {

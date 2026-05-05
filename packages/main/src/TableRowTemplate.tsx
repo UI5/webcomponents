@@ -9,6 +9,16 @@ import type TableRow from "./TableRow.js";
 export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 1) {
 	return (
 		<>
+			{ this._hasHighlight &&
+				<TableCell id="highlight-cell"
+					data-excluded-from-navigation
+					aria-hidden={true}
+					role="none"
+				>
+					<div id="highlight"></div>
+				</TableCell>
+			}
+
 			{ this._hasSelector &&
 				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}

@@ -172,6 +172,19 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 			this._table.headerRow.forEach(row => row._invalidate++);
 		}
 	}
+
+	/**
+	 * Announces the selection state change via the table's custom announcement extension.
+	 * @param isSelected Whether the row was selected or deselected
+	 */
+	protected _announceSelectionChange(isSelected: boolean) {
+		if (!this._table) {
+			return;
+		}
+		const selectedCount = this._table.rows.filter(r => r._isSelected).length;
+		const customAnnouncement = this._table._tableCustomAnnouncement;
+		customAnnouncement?.announceSelectionChange(selectedCount, isSelected);
+	}
 }
 
 export default TableSelectionBase;

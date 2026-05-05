@@ -35,6 +35,18 @@ const {
 	TABLE_ROW_NAVIGABLE: { defaultText: NAVIGABLE },
 	TABLE_ROW_NAVIGATED: { defaultText: NAVIGATED },
 	TABLE_ROW_ACTIVE: { defaultText: ACTIVE },
+	TABLE_ROW_ACTION: { defaultText: ACTION_TEMPLATE },
+	TABLE_ROW_ACTIONS_LIST: { defaultText: ACTIONS_LIST_TEMPLATE },
+	TABLE_ROW_MORE_ACTIONS: { defaultText: MORE_ACTIONS },
+	TABLE_ENTERING: { defaultText: ENTERING_TEMPLATE },
+	TABLE_ENTERING_MULTI_SELECTABLE: { defaultText: MULTI_SELECTABLE },
+	TABLE_ENTERING_SELECTED: { defaultText: ENTERING_SELECTED_TEMPLATE },
+	TABLE_ROW_SELECTED_LIVE: { defaultText: SELECTED_LIVE_TEMPLATE },
+	TABLE_ROW_NOT_SELECTED_LIVE: { defaultText: NOT_SELECTED_LIVE_TEMPLATE },
+	TABLE_HIGHLIGHT_NEGATIVE: { defaultText: HIGHLIGHT_NEGATIVE },
+	TABLE_HIGHLIGHT_CRITICAL: { defaultText: HIGHLIGHT_CRITICAL },
+	TABLE_HIGHLIGHT_POSITIVE: { defaultText: HIGHLIGHT_POSITIVE },
+	TABLE_HIGHLIGHT_INFORMATION: { defaultText: HIGHLIGHT_INFORMATION },
 } = Translations;
 
 describe("Cell Custom Announcement - More details", () => {
@@ -301,28 +313,23 @@ describe("Row Custom Announcement - Less details", () => {
 
 	it("should announce table rows", () => {
 		cy.get("@row1").realClick();
-		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${NAVIGABLE} . H1`);
-		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`);
-		checkAnnouncement(ONE_ROW_ACTION);
-		cy.focused().should("have.attr", "aria-rowindex", "2")
-					.should("have.attr", "role", "row");
+		// No identifier column → legacy format: Row → position → selected → navigable/active → cells → actions → navigated
+		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${NAVIGABLE} . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${ONE_ROW_ACTION} . ${NAVIGATED}`);
 
 		cy.get("#selection").invoke("attr", "selected", "");
-		checkAnnouncement(`Row . 2 of 2 . ${NAVIGABLE}`, true);
+		checkAnnouncement(`Row . 2 of 2 . ${NAVIGABLE} . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${ONE_ROW_ACTION} . ${NAVIGATED}`, true);
 
 		cy.get("#row1-nav-action").invoke("prop", "interactive", true);
-		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE} . H1`, true);
-		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
+		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE} . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${MULTIPLE_ACTIONS.replace("{0}", 2)} . ${NAVIGATED}`, true);
 
 		cy.get("@row1").invoke("prop", "interactive", false);
-		checkAnnouncement(`Row . 2 of 2 . H1`, true);
+		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${MULTIPLE_ACTIONS.replace("{0}", 2)} . ${NAVIGATED}`, true);
 
 		cy.get("#table0").invoke("css", "width", "301px");
-		checkAnnouncement(`Row . 2 of 2 . H1`, true);
-		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4Popin . C4 Button C4Button`);
+		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4Popin . C4 Button C4Button . ${MULTIPLE_ACTIONS.replace("{0}", 2)} . ${NAVIGATED}`, true);
 
 		cy.get("#Header3").invoke("prop", "popinHidden", true);
-		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button`, true);
+		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button . ${MULTIPLE_ACTIONS.replace("{0}", 2)} . ${NAVIGATED}`, true);
 
 		cy.get("#row1-nav-action").invoke("remove");
 		cy.get("#row1-add-action").invoke("remove");
@@ -421,5 +428,221 @@ describe("Row Custom Announcement - Less details", () => {
 			cy.wrap($cell).should("have.attr", "role", "columnheader");
 			cy.wrap($cell).should("have.attr", "aria-colindex", `${index + 2}`);
 		});
+	});
+});
+
+describe("Identifier Column Announcement", () => {
+	function checkAnnouncement(expectedText: string, check = "equal") {
+		cy.get("body").then($body => {
+			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+		});
+	}
+
+	it("should announce only identifier column when set", () => {
+		cy.mount(
+			<Table id="table0">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="docNumHeader" identifier>Document Number</TableHeaderCell>
+					<TableHeaderCell>Company</TableHeaderCell>
+					<TableHeaderCell>City</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow rowKey="Row1">
+					<TableCell>305382373</TableCell>
+					<TableCell>SAP SE</TableCell>
+					<TableCell>Walldorf</TableCell>
+				</TableRow>
+				<TableRow rowKey="Row2">
+					<TableCell>123456789</TableCell>
+					<TableCell>Acme Corp</TableCell>
+					<TableCell>Berlin</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// First focus on row1 — entering text + identifier + Row + position
+		cy.get("[ui5-table-row]").first().realClick();
+		checkAnnouncement("with 2 rows", "contains");
+		checkAnnouncement("Document Number 305382373 . Row . 2 of 3", "contains");
+
+		// Focus row2 — no entering announcement
+		cy.realPress("ArrowDown");
+		checkAnnouncement("Document Number 123456789 . Row . 3 of 3");
+
+		// Remove identifier — fallback to legacy format (Row first)
+		cy.get("#docNumHeader").invoke("prop", "identifier", false);
+		cy.realPress("ArrowUp");
+		cy.realPress("ArrowDown");
+		checkAnnouncement("Row . 3 of 3 . Document Number . 123456789 . Company . Acme Corp . City . Berlin");
+	});
+
+	it("should set role=rowheader on identifier column cells", () => {
+		cy.mount(
+			<Table id="table0">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell identifier>ID</TableHeaderCell>
+					<TableHeaderCell>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow rowKey="Row1">
+					<TableCell id="idCell">001</TableCell>
+					<TableCell id="nameCell">Alice</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#idCell").should("have.attr", "role", "rowheader");
+		cy.get("#nameCell").should("have.attr", "role", "gridcell");
+	});
+});
+
+describe("Row Highlight Announcement", () => {
+	function checkAnnouncement(expectedText: string, focusAgain = false, check = "equal") {
+		if (focusAgain) {
+			cy.realPress("ArrowUp");
+			cy.realPress("ArrowDown");
+		}
+
+		cy.get("body").then($body => {
+			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+		});
+	}
+
+	it("should announce highlight state and text", () => {
+		cy.mount(
+			<Table id="table0">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell identifier>Order</TableHeaderCell>
+					<TableHeaderCell>Status</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1" rowKey="Row1" highlight="Negative" highlightText="Cancelled">
+					<TableCell>12345</TableCell>
+					<TableCell>Cancelled</TableCell>
+				</TableRow>
+				<TableRow id="row2" rowKey="Row2" highlight="Critical" highlightText="Return Initiated">
+					<TableCell>67890</TableCell>
+					<TableCell>Pending</TableCell>
+				</TableRow>
+				<TableRow id="row3" rowKey="Row3" highlight="Positive">
+					<TableCell>11111</TableCell>
+					<TableCell>Complete</TableCell>
+				</TableRow>
+				<TableRow id="row4" rowKey="Row4" highlight="Information" highlightText="Unread">
+					<TableCell>22222</TableCell>
+					<TableCell>New</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// Row 1: Negative + "Cancelled" (first focus includes entering text)
+		cy.get("#row1").realClick();
+		checkAnnouncement(`Order 12345 . Row . ${HIGHLIGHT_NEGATIVE} . Cancelled . 2 of 5`, false, "contains");
+
+		// Row 2: Critical + "Return Initiated"
+		cy.realPress("ArrowDown");
+		checkAnnouncement(`Order 67890 . Row . ${HIGHLIGHT_CRITICAL} . Return Initiated . 3 of 5`);
+
+		// Row 3: Positive, no text
+		cy.realPress("ArrowDown");
+		checkAnnouncement(`Order 11111 . Row . ${HIGHLIGHT_POSITIVE} . 4 of 5`);
+
+		// Row 4: Information + "Unread"
+		cy.realPress("ArrowDown");
+		checkAnnouncement(`Order 22222 . Row . ${HIGHLIGHT_INFORMATION} . Unread . 5 of 5`);
+
+		// Change highlight to None — no highlight announcement
+		cy.get("#row4").invoke("prop", "highlight", "None");
+		checkAnnouncement("Order 22222 . Row . 5 of 5", true);
+	});
+});
+
+describe("Entering-the-Table Announcement", () => {
+	function checkAnnouncement(expectedText: string, check = "contains") {
+		cy.get("body").then($body => {
+			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+		});
+	}
+
+	it("should announce table info on first focus only", () => {
+		cy.mount(
+			<Table id="table0">
+				<TableSelectionMulti slot="features" selected="Row1"></TableSelectionMulti>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell identifier>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow rowKey="Row1">
+					<TableCell>Alice</TableCell>
+				</TableRow>
+				<TableRow rowKey="Row2">
+					<TableCell>Bob</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// Add an external button to allow focusing outside the table
+		cy.document().then(doc => {
+			const btn = doc.createElement("button");
+			btn.id = "outside-btn";
+			btn.textContent = "Outside";
+			doc.body.appendChild(btn);
+		});
+
+		// First focus — entering announcement is part of the custom announcement
+		cy.get("[ui5-table-row]").first().realClick();
+		cy.focused().should("have.attr", "ui5-table-row");
+		checkAnnouncement(`with 2 rows`);
+		checkAnnouncement(`${MULTI_SELECTABLE}`);
+		checkAnnouncement(`1 rows selected`);
+		checkAnnouncement(`Name Alice . Row . 2 of 3`);
+
+		// Navigate to next row — no entering announcement, just row content
+		cy.realPress("ArrowDown");
+		checkAnnouncement("Name Bob . Row . 3 of 3", "equal");
+
+		// Focus outside the table and back — entering announcement appears again
+		cy.get("#outside-btn").realClick();
+		cy.get("[ui5-table-row]").first().realClick();
+		cy.focused().should("have.attr", "ui5-table-row");
+		checkAnnouncement(`with 2 rows`);
+		checkAnnouncement(`${MULTI_SELECTABLE}`);
+	});
+});
+
+describe("Row Actions Announcement Format", () => {
+	function checkAnnouncement(expectedText: string, focusAgain = false, check = "contains") {
+		if (focusAgain) {
+			cy.realPress("ArrowUp");
+			cy.realPress("ArrowDown");
+		}
+
+		cy.get("body").then($body => {
+			expect($body.find("#ui5-invisible-text").text())[check](expectedText);
+		});
+	}
+
+	it("should announce action text in row announcement", () => {
+		cy.mount(
+			<Table id="table0" rowActionCount={3}>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell identifier>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1" rowKey="Row1">
+					<TableCell>Alice</TableCell>
+					<TableRowActionNavigation slot="actions" interactive></TableRowActionNavigation>
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+					<TableRowAction slot="actions" icon={edit} text="Edit"></TableRowAction>
+				</TableRow>
+			</Table>
+		);
+
+		// Multiple actions
+		cy.get("#row1").realClick();
+		checkAnnouncement(`${ACTIONS_LIST_TEMPLATE.replace("{0}", "Add, Edit, Navigation")}`);
+
+		// Remove an action — format changes
+		cy.get("#row1").find("[ui5-table-row-action]").last().invoke("remove");
+		checkAnnouncement(`${ACTIONS_LIST_TEMPLATE.replace("{0}", "Add, Navigation")}`, true);
+
+		// Remove another — single action
+		cy.get("#row1").find("[ui5-table-row-action]").first().invoke("remove");
+		checkAnnouncement(`${ACTION_TEMPLATE.replace("{0}", "Navigation")}`, true);
 	});
 });

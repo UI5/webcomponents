@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Advanced Accessibility Test Page for Table</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			padding: 1rem;
+		}
+		.section {
+			margin-bottom: 2rem;
+		}
+		.controls {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+			align-items: end;
+			margin-bottom: 1rem;
+			padding: 1rem;
+			background: var(--sapGroup_ContentBackground);
+			border-radius: 0.5rem;
+		}
+		.control-group {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+		.ann-box {
+			padding: 0.5rem 1rem;
+			margin: 0.5rem 0;
+			border-radius: 0.375rem;
+			font-family: monospace;
+			font-size: 0.9rem;
+			line-height: 1.4;
+			word-break: break-word;
+		}
+		#announcement-display {
+			background: var(--sapInformationBackground, #e8f0fe);
+			border: 1px solid var(--sapInformationBorderColor, #0070f2);
+		}
+		#live-region-display {
+			background: var(--sapWarningBackground, #fff8e0);
+			border: 1px solid var(--sapWarningBorderColor, #e76500);
+		}
+		.ann-box .label {
+			font-weight: bold;
+			color: var(--sapTitleColor);
+		}
+		.ann-box .value {
+			color: var(--sapTextColor);
+		}
+		.identifier-marker {
+			color: var(--sapCriticalTextColor);
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<ui5-title level="H1">Advanced ACC Test Page - Custom Announcements</ui5-title>
+
+	<!-- ============================================================ -->
+	<!-- Controls -->
+	<!-- ============================================================ -->
+	<div class="controls">
+		<div class="control-group">
+			<ui5-label id="selModeLabel" for="selModeSelect">Selection Mode</ui5-label>
+			<ui5-select id="selModeSelect" accessible-name-ref="selModeLabel">
+				<ui5-option selected>Multi (SelectAll)</ui5-option>
+				<ui5-option>Multi (ClearAll)</ui5-option>
+				<ui5-option>Single</ui5-option>
+				<ui5-option>None</ui5-option>
+			</ui5-select>
+		</div>
+		<div class="control-group">
+			<ui5-label id="identLabel" for="identToggle">Identifier Column</ui5-label>
+			<ui5-toggle-button id="identToggle" pressed>Enabled</ui5-toggle-button>
+		</div>
+		<div class="control-group">
+			<ui5-label id="highlightLabel" for="highlightSelect">Row Highlights</ui5-label>
+			<ui5-select id="highlightSelect" accessible-name-ref="highlightLabel">
+				<ui5-option selected>Mixed</ui5-option>
+				<ui5-option>All None</ui5-option>
+				<ui5-option>All Positive</ui5-option>
+				<ui5-option>All Critical</ui5-option>
+				<ui5-option>All Negative</ui5-option>
+				<ui5-option>All Information</ui5-option>
+			</ui5-select>
+		</div>
+		<div class="control-group">
+			<ui5-label id="actionsLabel" for="actionsSelect">Row Actions</ui5-label>
+			<ui5-select id="actionsSelect" accessible-name-ref="actionsLabel">
+				<ui5-option selected>Mixed</ui5-option>
+				<ui5-option>None</ui5-option>
+				<ui5-option>Nav Only</ui5-option>
+				<ui5-option>Edit + Nav</ui5-option>
+				<ui5-option>Edit + Delete + Nav</ui5-option>
+				<ui5-option>Edit + Delete + Copy + Nav</ui5-option>
+			</ui5-select>
+		</div>
+		<div class="control-group">
+			<ui5-label id="actionCountLabel" for="actionCountInput">Row Action Count</ui5-label>
+			<ui5-step-input id="actionCountInput" value="2" min="0" max="5" step="1" accessible-name-ref="actionCountLabel"></ui5-step-input>
+		</div>
+		<div class="control-group">
+			<ui5-label id="interactiveLabel" for="interactiveSelect">Interactive Rows</ui5-label>
+			<ui5-select id="interactiveSelect" accessible-name-ref="interactiveLabel">
+				<ui5-option selected>Mixed (original)</ui5-option>
+				<ui5-option>All Interactive</ui5-option>
+				<ui5-option>None Interactive</ui5-option>
+			</ui5-select>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- Table -->
+	<!-- ============================================================ -->
+	<ui5-bar design="Header">
+		<ui5-title tabindex="0" aria-level="2" role="heading" id="tableTitle" slot="startContent">Sales Orders (6)</ui5-title>
+	</ui5-bar>
+
+	<div class="section" style="height: 400px; overflow: auto;">
+		<ui5-table id="mainTable" accessible-name-ref="tableTitle" overflow-mode="Popin" row-action-count="2">
+			<ui5-table-selection-multi id="selection" slot="features"></ui5-table-selection-multi>
+
+			<ui5-table-header-row slot="headerRow" sticky>
+				<ui5-table-header-cell id="docNumCol" identifier min-width="200px"><span id="docNumText">Document Number</span><span id="identMarker" class="identifier-marker"> *</span></ui5-table-header-cell>
+				<ui5-table-header-cell id="companyCol" min-width="150px">Company</ui5-table-header-cell>
+				<ui5-table-header-cell id="cityCol" min-width="120px" importance="-1">City</ui5-table-header-cell>
+				<ui5-table-header-cell id="contactCol" min-width="150px">Contact Person</ui5-table-header-cell>
+				<ui5-table-header-cell id="amountCol" min-width="150px" horizontal-align="End">Net Amount</ui5-table-header-cell>
+			</ui5-table-header-row>
+
+			<!-- Row 1: No highlight, nav action, interactive -->
+			<ui5-table-row id="row1" row-key="SO-001" interactive>
+				<ui5-table-cell><ui5-text>305382373556494</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>SAP SE</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Walldorf</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Max Mustermann</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>1,250.00 EUR</ui5-text></ui5-table-cell>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<!-- Row 2: Negative + "Cancelled", delete + nav, interactive -->
+			<ui5-table-row id="row2" row-key="SO-002" interactive highlight="Negative" highlight-text="Cancelled">
+				<ui5-table-cell><ui5-text>482910374829103</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Acme Corp</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>New York</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>John Smith</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>3,780.50 USD</ui5-text></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<!-- Row 3: Critical + "Return Initiated", edit + delete + nav (overflow with count=2), interactive -->
+			<ui5-table-row id="row3" row-key="SO-003" interactive highlight="Critical" highlight-text="Return Initiated">
+				<ui5-table-cell><ui5-text>938271649382716</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>TechGlobal Ltd</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>London</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Jane Williams</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>890.00 GBP</ui5-text></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit"></ui5-table-row-action>
+				<ui5-table-row-action slot="actions" icon="delete" text="Delete"></ui5-table-row-action>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+
+			<!-- Row 4: Positive + "Delivered", no actions, not interactive -->
+			<ui5-table-row id="row4" row-key="SO-004" highlight="Positive" highlight-text="Delivered">
+				<ui5-table-cell><ui5-text>112233445566778</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>DataSoft GmbH</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Berlin</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Hans Weber</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>5,200.00 EUR</ui5-text></ui5-table-cell>
+			</ui5-table-row>
+
+			<!-- Row 5: Information + "Under Review", edit action, interactive -->
+			<ui5-table-row id="row5" row-key="SO-005" interactive highlight="Information" highlight-text="Under Review">
+				<ui5-table-cell><ui5-text>776655443322110</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>CloudFirst Inc</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>San Francisco</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Alice Johnson</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>12,340.00 USD</ui5-text></ui5-table-cell>
+				<ui5-table-row-action slot="actions" icon="edit" text="Edit"></ui5-table-row-action>
+			</ui5-table-row>
+
+			<!-- Row 6: No highlight, navigated, nav action, interactive -->
+			<ui5-table-row id="row6" row-key="SO-006" interactive navigated>
+				<ui5-table-cell><ui5-text>554433221100998</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>OmniTech SA</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Paris</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>Pierre Dupont</ui5-text></ui5-table-cell>
+				<ui5-table-cell><ui5-text>2,100.75 EUR</ui5-text></ui5-table-cell>
+				<ui5-table-row-action-navigation slot="actions" interactive></ui5-table-row-action-navigation>
+			</ui5-table-row>
+		</ui5-table>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- Live Announcement Display -->
+	<!-- ============================================================ -->
+	<div id="announcement-display" class="ann-box">
+		<span class="label">Custom Announcement (ariaLabelledBy): </span><span class="value" id="announcement-value">—</span>
+	</div>
+	<div id="live-region-display" class="ann-box">
+		<span class="label">Live Region (InvisibleMessage): </span><span class="value" id="live-region-value">—</span>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- Expected Announcements Reference -->
+	<!-- ============================================================ -->
+	<ui5-panel header-text="Expected Announcements Reference (for manual testing)" collapsed>
+		<div style="padding: 1rem; font-family: monospace; font-size: 0.85rem; line-height: 1.8;">
+			<p><b>First focus on any row (entering text prepended to custom announcement):</b></p>
+			<p style="color: var(--sapPositiveTextColor);">"Table Sales Orders (6) with 6 rows , multiselectable . Document Number ... . Row . ... . X of 7"</p>
+			<br>
+			<p><b>Row 1 (no highlight, nav action):</b></p>
+			<p>"Document Number 305382373556494 . Row . Action: Navigate to Details . 2 of 7"</p>
+			<br>
+			<p><b>Row 2 (Error + "Cancelled", delete + nav):</b></p>
+			<p>"Document Number 482910374829103 . Row . Error . Cancelled . Actions: Delete, Navigate to Details . 3 of 7"</p>
+			<br>
+			<p><b>Row 3 (Warning + "Return Initiated", edit + delete + nav = overflow with count=2):</b></p>
+			<p>"Document Number 938271649382716 . Row . Warning . Return Initiated . Actions: Edit, More, Navigate to Details . 4 of 7"</p>
+			<br>
+			<p><b>Row 4 (Success + "Delivered", no actions, not interactive):</b></p>
+			<p>"Document Number 112233445566778 . Row . Success . Delivered . 5 of 7"</p>
+			<br>
+			<p><b>Row 5 (Information + "Under Review", edit action):</b></p>
+			<p>"Document Number 776655443322110 . Row . Information . Under Review . Action: Edit . 6 of 7"</p>
+			<br>
+			<p><b>Row 6 (navigated, nav action):</b></p>
+			<p>"Document Number 554433221100998 . Row . Action: Navigate to Details . 7 of 7"</p>
+			<br>
+			<p><b>Selection toggle (InvisibleMessage):</b></p>
+			<p>"Selected. 1 rows selected" / "Not Selected. 0 rows selected"</p>
+		</div>
+	</ui5-panel>
+
+	<script>
+		const table = document.getElementById("mainTable");
+		const docNumCol = document.getElementById("docNumCol");
+		const identMarker = document.getElementById("identMarker");
+
+		// ============================================================
+		// Live Announcement Display
+		// ============================================================
+		const announcementValue = document.getElementById("announcement-value");
+		const liveRegionValue = document.getElementById("live-region-value");
+		let observersStarted = false;
+
+		function updateAnnouncementDisplay() {
+			const invisibleText = document.getElementById("ui5-invisible-text");
+			announcementValue.textContent = invisibleText ? (invisibleText.textContent || "—") : "— (element not found)";
+		}
+
+		function updateLiveRegionDisplay() {
+			const polite = document.querySelector(".ui5-invisiblemessage-polite");
+			const assertive = document.querySelector(".ui5-invisiblemessage-assertive");
+			const parts = [];
+			if (polite && polite.textContent) parts.push("[Polite] " + polite.textContent);
+			if (assertive && assertive.textContent) parts.push("[Assertive] " + assertive.textContent);
+			liveRegionValue.textContent = parts.length ? parts.join(" | ") : "—";
+		}
+
+		const observer = new MutationObserver(() => {
+			updateAnnouncementDisplay();
+			updateLiveRegionDisplay();
+		});
+
+		function startObserving() {
+			if (observersStarted) return;
+			const targets = [
+				document.getElementById("ui5-invisible-text"),
+				document.querySelector(".ui5-invisiblemessage-polite"),
+				document.querySelector(".ui5-invisiblemessage-assertive"),
+			].filter(Boolean);
+
+			if (targets.length > 0) {
+				targets.forEach(t => observer.observe(t, { childList: true, characterData: true, subtree: true }));
+				observersStarted = true;
+			} else {
+				setTimeout(startObserving, 500);
+			}
+		}
+
+		document.addEventListener("focusin", () => {
+			requestAnimationFrame(() => {
+				updateAnnouncementDisplay();
+				updateLiveRegionDisplay();
+				startObserving();
+			});
+		});
+		setTimeout(startObserving, 1000);
+
+		// ============================================================
+		// Selection Mode
+		// ============================================================
+		document.getElementById("selModeSelect").addEventListener("change", (e) => {
+			const existing = document.getElementById("selection");
+			if (existing) existing.remove();
+
+			const mode = e.target.selectedOption.textContent;
+			if (mode === "None") return;
+
+			let selection;
+			if (mode === "Single") {
+				selection = document.createElement("ui5-table-selection-single");
+			} else {
+				selection = document.createElement("ui5-table-selection-multi");
+				if (mode === "Multi (ClearAll)") {
+					selection.setAttribute("header-selector", "ClearAll");
+				}
+			}
+			selection.setAttribute("id", "selection");
+			selection.setAttribute("slot", "features");
+			table.insertBefore(selection, table.firstChild);
+		});
+
+		// ============================================================
+		// Identifier Column Toggle
+		// ============================================================
+		const identToggle = document.getElementById("identToggle");
+		identToggle.addEventListener("click", () => {
+			const pressed = identToggle.pressed;
+			identToggle.textContent = pressed ? "Enabled" : "Disabled";
+			docNumCol.identifier = pressed;
+			identMarker.style.display = pressed ? "" : "none";
+		});
+
+		// ============================================================
+		// Highlight Mode
+		// ============================================================
+		// Store original highlight data as simple strings
+		const hlData = {};
+		table.querySelectorAll("ui5-table-row").forEach(row => {
+			hlData[row.id] = {
+				highlight: row.getAttribute("highlight") || "None",
+				highlightText: row.getAttribute("highlight-text") || "",
+			};
+		});
+
+		document.getElementById("highlightSelect").addEventListener("change", (e) => {
+			const mode = e.target.selectedOption.textContent;
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				if (mode === "Mixed") {
+					row.setAttribute("highlight", hlData[row.id].highlight);
+					if (hlData[row.id].highlightText) {
+						row.setAttribute("highlight-text", hlData[row.id].highlightText);
+					} else {
+						row.removeAttribute("highlight-text");
+					}
+				} else if (mode === "All None") {
+					row.setAttribute("highlight", "None");
+					row.removeAttribute("highlight-text");
+				} else {
+					const highlight = mode.replace("All ", "");
+					const textMap = { Positive: "Completed", Critical: "Pending Review", Negative: "Rejected", Information: "In Progress" };
+					row.setAttribute("highlight", highlight);
+					row.setAttribute("highlight-text", textMap[highlight]);
+				}
+			});
+		});
+
+		// ============================================================
+		// Row Action Count
+		// ============================================================
+		document.getElementById("actionCountInput").addEventListener("change", (e) => {
+			table.rowActionCount = e.target.value;
+		});
+
+		// ============================================================
+		// Actions Mode
+		// ============================================================
+		// Store original actions config per row (type + attributes)
+		const actionsConfig = {};
+		table.querySelectorAll("ui5-table-row").forEach(row => {
+			actionsConfig[row.id] = [];
+			row.querySelectorAll("[slot^='actions']").forEach(a => {
+				if (a.hasAttribute("ui5-table-row-action-navigation")) {
+					actionsConfig[row.id].push({ type: "nav", interactive: a.hasAttribute("interactive") });
+				} else {
+					actionsConfig[row.id].push({ type: "action", icon: a.getAttribute("icon"), text: a.getAttribute("text") });
+				}
+			});
+		});
+
+		function clearActions() {
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				Array.from(row.querySelectorAll("[slot^='actions']")).forEach(a => a.remove());
+			});
+		}
+
+		function appendAction(row, icon, text) {
+			const a = document.createElement("ui5-table-row-action");
+			a.slot = "actions";
+			a.icon = icon;
+			a.text = text;
+			row.appendChild(a);
+		}
+
+		function appendNavAction(row) {
+			const a = document.createElement("ui5-table-row-action-navigation");
+			a.slot = "actions";
+			a.interactive = true;
+			row.appendChild(a);
+		}
+
+		function applyActionsPreset(preset) {
+			clearActions();
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				if (preset === "mixed") {
+					// Restore original config
+					(actionsConfig[row.id] || []).forEach(cfg => {
+						if (cfg.type === "nav") {
+							appendNavAction(row);
+						} else {
+							appendAction(row, cfg.icon, cfg.text);
+						}
+					});
+				} else if (preset === "none") {
+					// nothing
+				} else if (preset === "nav") {
+					appendNavAction(row);
+				} else if (preset === "edit-nav") {
+					appendAction(row, "edit", "Edit");
+					appendNavAction(row);
+				} else if (preset === "edit-delete-nav") {
+					appendAction(row, "edit", "Edit");
+					appendAction(row, "delete", "Delete");
+					appendNavAction(row);
+				} else if (preset === "edit-delete-copy-nav") {
+					appendAction(row, "edit", "Edit");
+					appendAction(row, "delete", "Delete");
+					appendAction(row, "copy", "Copy");
+					appendNavAction(row);
+				}
+			});
+		}
+
+		const presetMap = {
+			"Mixed": "mixed",
+			"None": "none",
+			"Nav Only": "nav",
+			"Edit + Nav": "edit-nav",
+			"Edit + Delete + Nav": "edit-delete-nav",
+			"Edit + Delete + Copy + Nav": "edit-delete-copy-nav",
+		};
+
+		document.getElementById("actionsSelect").addEventListener("change", (e) => {
+			const label = e.target.selectedOption.textContent;
+			applyActionsPreset(presetMap[label] || "none");
+		});
+
+		// ============================================================
+		// Interactive Rows
+		// ============================================================
+		const origInteractive = {};
+		table.querySelectorAll("ui5-table-row").forEach(row => {
+			origInteractive[row.id] = row.hasAttribute("interactive");
+		});
+
+		document.getElementById("interactiveSelect").addEventListener("change", (e) => {
+			const mode = e.target.selectedOption.textContent;
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				if (mode === "All Interactive") {
+					row.interactive = true;
+				} else if (mode === "None Interactive") {
+					row.interactive = false;
+				} else {
+					row.interactive = origInteractive[row.id];
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

@@ -7,12 +7,16 @@ import TableRowTemplate from "./TableRowTemplate.js";
 import TableRowBase from "./TableRowBase.js";
 import TableRowCss from "./generated/themes/TableRow.css.js";
 import type TableCell from "./TableCell.js";
+import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type Highlight from "./types/Highlight.js";
 import {
 	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
+	TABLE_ROW_ACTION, TABLE_ROW_ACTIONS_LIST, TABLE_ROW_MORE_ACTIONS,
+	TABLE_HIGHLIGHT_NEGATIVE, TABLE_HIGHLIGHT_CRITICAL, TABLE_HIGHLIGHT_POSITIVE, TABLE_HIGHLIGHT_INFORMATION,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -109,6 +113,28 @@ class TableRow extends TableRowBase<TableCell> {
 	navigated = false;
 
 	/**
+	 * Defines the highlight state of the row.
+	 *
+	 * @default "None"
+	 * @since 2.23.0
+	 * @public
+	 */
+	@property()
+	highlight: `${Highlight}` = "None";
+
+	/**
+	 * Defines the text associated with the highlight state of the row.
+	 *
+	 * This text is announced by the screen reader together with the highlight state.
+	 *
+	 * @default undefined
+	 * @since 2.23.0
+	 * @public
+	 */
+	@property()
+	highlightText?: string;
+
+	/**
 	 * Defines whether the row is movable.
 	 *
 	 * @default false
@@ -196,6 +222,71 @@ class TableRow extends TableRowBase<TableCell> {
 		return this._fixedActions.find(action => {
 			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
 		}) !== undefined;
+	}
+
+	get _identifierCell(): TableCell | undefined {
+		if (!this._table) {
+			return undefined;
+		}
+		const headerRow = this._table.headerRow[0];
+		if (!headerRow) {
+			return undefined;
+		}
+		const identifierIndex = headerRow.cells.findIndex(cell => cell.identifier);
+		if (identifierIndex === -1) {
+			return undefined;
+		}
+		return this.cells[identifierIndex];
+	}
+
+	get _identifierHeaderCell(): TableHeaderCell | undefined {
+		if (!this._table) {
+			return undefined;
+		}
+		const headerRow = this._table.headerRow[0];
+		return headerRow?.cells.find(cell => cell.identifier);
+	}
+
+	get _actionDescriptionText(): string | undefined {
+		const actionTexts: string[] = [];
+		const fixedActions = this._fixedActions.filter(a => !a.invisible && a._isInteractive);
+		const flexibleActions = this._flexibleActions.filter(a => !a.invisible && a._isInteractive);
+
+		// Collect texts from visible interactive actions
+		[...flexibleActions, ...fixedActions].forEach(action => {
+			actionTexts.push(action._text);
+		});
+
+		// Add "more actions" if overflow exists
+		if (this._hasOverflowActions) {
+			actionTexts.push(TableRowBase.i18nBundle.getText(TABLE_ROW_MORE_ACTIONS));
+		}
+
+		if (actionTexts.length === 0) {
+			return undefined;
+		}
+
+		if (actionTexts.length === 1) {
+			return TableRowBase.i18nBundle.getText(TABLE_ROW_ACTION, actionTexts[0]);
+		}
+
+		return TableRowBase.i18nBundle.getText(TABLE_ROW_ACTIONS_LIST, actionTexts.join(", "));
+	}
+
+	get _highlightDescription(): string | undefined {
+		if (this.highlight === "None") {
+			return undefined;
+		}
+
+		const highlightI18nMap: Record<string, typeof TABLE_HIGHLIGHT_NEGATIVE> = {
+			Negative: TABLE_HIGHLIGHT_NEGATIVE,
+			Critical: TABLE_HIGHLIGHT_CRITICAL,
+			Positive: TABLE_HIGHLIGHT_POSITIVE,
+			Information: TABLE_HIGHLIGHT_INFORMATION,
+		};
+
+		const i18nKey = highlightI18nMap[this.highlight];
+		return i18nKey ? TableRowBase.i18nBundle.getText(i18nKey) : undefined;
 	}
 
 	get _hasPopin() {

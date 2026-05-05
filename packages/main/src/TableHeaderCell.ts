@@ -113,6 +113,24 @@ class TableHeaderCell extends TableCellBase {
 	popinHidden: boolean = false;
 
 	/**
+	 * Defines whether the column is the identifier column of the table.
+	 *
+	 * The identifier column is the primary column that identifies each row.
+	 * When a row receives focus, the screen reader will announce the identifier cell value
+	 * instead of all cell values, providing a concise row description.
+	 *
+	 * Cells in the identifier column will have the `rowheader` role for better accessibility.
+	 *
+	 * **Note:** Only one column should be marked as identifier per table.
+	 *
+	 * @default false
+	 * @since 2.23.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	identifier = false;
+
+	/**
 	 * Defines the action of the column.
 	 *
 	 * **Note:** While multiple actions are technically possible, this is not supported.

@@ -401,6 +401,9 @@ class Table extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_renderNavigated = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_renderHighlight = false;
+
 	@query("[ui5-drop-indicator]")
 	dropIndicatorDOM!: DropIndicator;
 
@@ -456,8 +459,10 @@ class Table extends UI5Element {
 
 	onBeforeRendering(): void {
 		this._renderNavigated = this.rows.some(row => row.navigated);
+		this._renderHighlight = this.rows.some(row => row.highlight !== "None");
 		[...this.headerRow, ...this.rows].forEach((row, index) => {
 			row._renderNavigated = this._renderNavigated;
+			row._hasHighlight = this._renderHighlight;
 			row._rowActionCount = this.rowActionCount;
 			row._alternate = this.alternateRowColors && index % 2 === 0;
 		});
@@ -633,6 +638,11 @@ class Table extends UI5Element {
 
 		const widths = [];
 		const visibleHeaderCells = this.headerRow[0]._visibleCells;
+
+		// Highlight Cell Width
+		if (this._renderHighlight) {
+			widths.push("var(--_ui5_table_highlight_width)");
+		}
 
 		// Selection Cell Width
 		if (this._isRowSelectorRequired) {
