@@ -38,7 +38,7 @@ type DynamicSideContentLayoutChangeEventDetail = {
 	sideContentVisible: boolean,
 }
 
-type DynamicSideContentAriaAccessibilityAttributes = Pick<AccessibilityAttributes, "ariaLabel">;
+type DynamicSideContentAriaAccessibilityAttributes = Pick<AccessibilityAttributes, "ariaLabel" | "role">;
 type DynamicSideContentAccessibilityAttributes = {
 	mainContent?: DynamicSideContentAriaAccessibilityAttributes,
 	sideContent?: DynamicSideContentAriaAccessibilityAttributes,
@@ -373,9 +373,11 @@ class DynamicSideContent extends UI5Element {
 		return {
 			mainContent: {
 				ariaLabel: this.accessibilityAttributes.mainContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+				role: this.accessibilityAttributes.mainContent?.role || "main",
 			},
 			sideContent: {
 				ariaLabel: this.accessibilityAttributes.sideContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+				role: this.accessibilityAttributes.sideContent?.role || "complementary",
 			},
 		};
 	}
