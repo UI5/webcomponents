@@ -545,7 +545,7 @@ abstract class ListItem extends ListItemBase {
 			const currentIndex = this._indexOfActiveElement(focusables);
 			const nextIndex = currentIndex + 1;
 
-			if (nextIndex < focusables.length) {
+			if (currentIndex !== -1 && nextIndex < focusables.length) {
 				e.preventDefault();
 				focusables[nextIndex].focus();
 			} else if (!this.fireDecoratorEvent("forward-after")) {
