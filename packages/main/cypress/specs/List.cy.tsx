@@ -458,61 +458,111 @@ describe("List - Accessibility", () => {
 			});
 	});
 
-	it("announces 'Selected' when an item is selected in Single mode", () => {
+	it("announces 'Selected' when an item is selected in Single mode via mouse click", () => {
 		cy.mount(
 			<List selectionMode="Single">
-				<ListItemStandard id="item1">Argentina</ListItemStandard>
-				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
 			</List>
 		);
 
 		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
 
-		cy.get("#item1").realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
 		cy.get("@liveRegion").should("contain.text", "Selected");
 	});
 
-	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode", () => {
+	it("announces 'Selected' when an item is selected in Single mode via Space key", () => {
 		cy.mount(
-			<List selectionMode="Multiple">
-				<ListItemStandard id="item1">Argentina</ListItemStandard>
-				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+			<List selectionMode="Single">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
 			</List>
 		);
 
 		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
 
-		cy.get("#item1").realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
 		cy.get("@liveRegion").should("contain.text", "Selected");
 
-		cy.get("#item1").realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").eq(1).click();
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Selected");
+	});
+
+	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode via mouse click", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("contain.text", "Not Selected");
+	});
+
+	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode via Space key", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().click();
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.realPress("Space");
 		cy.get("@liveRegion").should("contain.text", "Not Selected");
 	});
 
 	it("does not announce selection when selectionMode is None", () => {
 		cy.mount(
 			<List selectionMode="None">
-				<ListItemStandard id="item1">Argentina</ListItemStandard>
+				<ListItemStandard>Argentina</ListItemStandard>
 			</List>
 		);
 
-		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
 
-		cy.get("#item1").realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("have.text", "");
+	});
+
+	it("does not announce selection when selectionMode is Delete", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Argentina</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().click();
+		cy.realPress("Delete");
 		cy.get("@liveRegion").should("have.text", "");
 	});
 
 	it("does not announce selection when selection-change event is prevented", () => {
 		cy.mount(
 			<List selectionMode="Single" onSelectionChange={(e: CustomEvent) => e.preventDefault()}>
-				<ListItemStandard id="item1">Argentina</ListItemStandard>
-				<ListItemStandard id="item2">Bulgaria</ListItemStandard>
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
 			</List>
 		);
 
-		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
 
-		cy.get("#item1").realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
 		cy.get("@liveRegion").should("have.text", "");
 	});
 });
