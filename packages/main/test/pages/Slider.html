@@ -79,13 +79,13 @@
 
 		<section class="group">
 			<h2>Custom Values - Temperature</h2>
-			<ui5-slider id="custom-values-temp" value="25" show-tooltip></ui5-slider>
+			<ui5-slider id="custom-values-temp" min="0" max="10" step="0.5" value="2.5" show-tooltip></ui5-slider>
 
 			<h2>Custom Values - Skill Level</h2>
-			<ui5-slider id="custom-values-skill" value="2" show-tooltip></ui5-slider>
+			<ui5-slider id="custom-values-skill" min="0" max="4" step="1" value="2" show-tooltip></ui5-slider>
 
 			<h2>Custom Values - Timeline</h2>
-			<ui5-slider id="custom-values-timeline" value="1" show-tooltip></ui5-slider>
+			<ui5-slider id="custom-values-timeline" min="0" max="2" step="1" value="1" show-tooltip></ui5-slider>
 		</section>
 
 		<section class="group">
@@ -151,12 +151,11 @@
 			// Custom Values demos
 			document.getElementById("custom-values-temp").tickmarks = [
 				{ value: 0, label: "Freezing" },
-				{ value: 25, label: "Room Temp" },
-				{ value: 50, label: "Warm" },
-				{ value: 75, label: "Hot" },
-				{ value: 100, label: "Boiling" }
+				{ value: 2.5, label: "Room Temp" },
+				{ value: 5, label: "Warm" },
+				{ value: 7.5, label: "Hot" },
+				{ value: 10, label: "Boiling" }
 			];
-
 			document.getElementById("custom-values-skill").tickmarks = [
 				{ value: 0, label: "Beginner" },
 				{ value: 1, label: "Elementary" },

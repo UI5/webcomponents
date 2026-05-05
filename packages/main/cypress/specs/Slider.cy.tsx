@@ -1052,7 +1052,7 @@ describe("Custom Values", () => {
 
 	it("Renders custom labels on tickmarks", () => {
 		cy.mount(
-			<Slider value={0} tickmarks={customTickmarks} />
+			<Slider value={0} min={0} max={100} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]")
@@ -1079,22 +1079,24 @@ describe("Custom Values", () => {
 			.should("have.text", "Boiling");
 	});
 
-	it("Snaps value to nearest tickmark on click", () => {
+	it("Allows free movement based on step, not snapping to tickmarks", () => {
 		cy.mount(
-			<Slider value={0} tickmarks={customTickmarks} />
+			<Slider value={0} min={0} max={100} step={1} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").realClick({ position: "left" });
 
-		// Click roughly in the middle should snap to 50 (Warm)
-		cy.get("@slider").realClick({ position: "center" });
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 1);
 
-		cy.get("@slider").should("have.value", 50);
+		cy.get("@slider").realPress("ArrowRight");
+		cy.get("@slider").should("have.value", 2);
 	});
 
-	it("Arrow key navigates to next/previous custom value", () => {
+	it("Arrow key moves by step value", () => {
 		cy.mount(
-			<Slider value={0} tickmarks={customTickmarks} />
+			<Slider value={0} min={0} max={100} step={5} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]").as("slider");
@@ -1102,25 +1104,15 @@ describe("Custom Values", () => {
 		cy.get("@slider").should("have.value", 0);
 
 		cy.get("@slider").realPress("ArrowRight");
-		cy.get("@slider").should("have.value", 25);
+		cy.get("@slider").should("have.value", 5);
 
 		cy.get("@slider").realPress("ArrowRight");
-		cy.get("@slider").should("have.value", 50);
-
-		cy.get("@slider").realPress("ArrowRight");
-		cy.get("@slider").should("have.value", 100);
-
-		// Should not go beyond max
-		cy.get("@slider").realPress("ArrowRight");
-		cy.get("@slider").should("have.value", 100);
-
-		cy.get("@slider").realPress("ArrowLeft");
-		cy.get("@slider").should("have.value", 50);
+		cy.get("@slider").should("have.value", 10);
 	});
 
-	it("Home/End keys jump to first/last custom value", () => {
+	it("Home/End keys jump to min/max", () => {
 		cy.mount(
-			<Slider value={50} tickmarks={customTickmarks} />
+			<Slider value={50} min={0} max={100} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]").as("slider");
@@ -1135,7 +1127,7 @@ describe("Custom Values", () => {
 
 	it("Handle position is correct for non-uniform tickmark spacing", () => {
 		cy.mount(
-			<Slider value={25} tickmarks={customTickmarks} />
+			<Slider value={25} min={0} max={100} tickmarks={customTickmarks} />
 		);
 
 		// value=25, min=0, max=100 → position should be 25%
@@ -1145,9 +1137,9 @@ describe("Custom Values", () => {
 			.should("have.attr", "style", "inset-inline-start: clamp(0%, 25%, 100%);");
 	});
 
-	it("aria-valuetext reflects the custom label", () => {
+	it("aria-valuetext reflects the custom label when value matches a tickmark", () => {
 		cy.mount(
-			<Slider value={25} tickmarks={customTickmarks} />
+			<Slider value={25} min={0} max={100} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]")
@@ -1156,9 +1148,20 @@ describe("Custom Values", () => {
 			.should("have.attr", "aria-valuetext", "Room Temp");
 	});
 
-	it("Tooltip shows custom label", () => {
+	it("aria-valuetext is absent when value does not match a tickmark", () => {
 		cy.mount(
-			<Slider value={25} tickmarks={customTickmarks} showTooltip />
+			<Slider value={30} min={0} max={100} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("not.have.attr", "aria-valuetext");
+	});
+
+	it("Tooltip shows custom label when value matches a tickmark", () => {
+		cy.mount(
+			<Slider value={25} min={0} max={100} tickmarks={customTickmarks} showTooltip />
 		);
 
 		cy.get("[ui5-slider]").as("slider");
@@ -1170,21 +1173,9 @@ describe("Custom Values", () => {
 			.should("have.attr", "value", "Room Temp");
 	});
 
-	it("min and max are auto-derived from tickmarks", () => {
-		cy.mount(
-			<Slider value={0} tickmarks={customTickmarks} />
-		);
-
-		cy.get("[ui5-slider]")
-			.shadow()
-			.find("[ui5-slider-handle]")
-			.should("have.attr", "aria-valuemin", "0")
-			.should("have.attr", "aria-valuemax", "100");
-	});
-
 	it("Tickmarks auto-show without showTickmarks attribute", () => {
 		cy.mount(
-			<Slider value={0} tickmarks={customTickmarks} />
+			<Slider value={0} min={0} max={100} tickmarks={customTickmarks} />
 		);
 
 		cy.get("[ui5-slider]")

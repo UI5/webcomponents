@@ -1863,3 +1863,147 @@ describe("Accessibility", () => {
 		});
 	});
 });
+
+describe("Custom Tickmarks", () => {
+	const customTickmarks = [
+		{ value: 0, label: "Freezing" },
+		{ value: 25, label: "Cool" },
+		{ value: 50, label: "Warm" },
+		{ value: 75, label: "Hot" },
+		{ value: 100, label: "Boiling" },
+	];
+
+	beforeEach(() => {
+		cy.get('[data-cy-root]')
+			.invoke('css', 'padding', '100px');
+	});
+
+	it("Renders custom labels on tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={20} endValue={80} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.should("have.length", 5);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(0)
+			.should("have.text", "Freezing");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(4)
+			.should("have.text", "Boiling");
+	});
+
+	it("Allows free movement based on step, not snapping to tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} step={1} startValue={0} endValue={50} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realPress("ArrowRight");
+
+		cy.get("@slider").should("have.attr", "start-value", "1");
+	});
+
+	it("Arrow key moves by step value for end handle", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} step={5} startValue={10} endValue={50} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realClick();
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realPress("ArrowRight");
+
+		cy.get("@slider").should("have.attr", "end-value", "55");
+	});
+
+	it("aria-valuetext reflects the custom label when value matches a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={75} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='Start']")
+			.should("have.attr", "aria-valuetext", "Cool");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='End']")
+			.should("have.attr", "aria-valuetext", "Hot");
+	});
+
+	it("aria-valuetext is absent when value does not match a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={10} endValue={60} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='Start']")
+			.should("not.have.attr", "aria-valuetext");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='End']")
+			.should("not.have.attr", "aria-valuetext");
+	});
+
+	it("Tooltip shows custom label when value matches a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={75} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "value", "Cool");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("have.attr", "value", "Hot");
+	});
+
+	it("Tickmarks auto-show without showTickmarks attribute", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={20} endValue={80} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark")
+			.should("have.length.at.least", 5);
+	});
+
+	it("Backward compatibility - range slider without tickmarks works as before", () => {
+		cy.mount(<RangeSlider min={0} max={10} step={1} startValue={3} endValue={7} />);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realClick();
+
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realPress("ArrowRight");
+		cy.get("@slider").should("have.attr", "end-value", "8");
+	});
+});
