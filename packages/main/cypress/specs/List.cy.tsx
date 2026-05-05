@@ -482,10 +482,11 @@ describe("List - Accessibility", () => {
 
 		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
 
-		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("[ui5-list]").find("[ui5-li]").first().shadow().find("li").focus();
+		cy.realPress("Space");
 		cy.get("@liveRegion").should("contain.text", "Selected");
 
-		cy.get("[ui5-list]").find("[ui5-li]").eq(1).click();
+		cy.get("[ui5-list]").find("[ui5-li]").eq(1).shadow().find("li").focus();
 		cy.realPress("Space");
 		cy.get("@liveRegion").should("contain.text", "Selected");
 	});
@@ -517,7 +518,7 @@ describe("List - Accessibility", () => {
 
 		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
 
-		cy.get("[ui5-list]").find("[ui5-li]").first().click();
+		cy.get("[ui5-list]").find("[ui5-li]").first().shadow().find("li").focus();
 		cy.realPress("Space");
 		cy.get("@liveRegion").should("contain.text", "Selected");
 
