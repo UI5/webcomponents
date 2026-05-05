@@ -56,6 +56,8 @@ function renderPrevButton(this: Calendar, isFirst: boolean, isMultiple: boolean)
 			part="calendar-header-arrow-button"
 			role="button"
 			onMouseDown={this.onPrevButtonClick}
+			onKeyDown={this.onPrevButtonKeyDown}
+			onKeyUp={this.onPrevButtonKeyUp}
 			tabindex={this._previousButtonDisabled ? -1 : 0}
 			title={this.accInfo.tooltipPrevButton}
 			aria-label={this.accInfo.ariaLabelPrevButton}
@@ -162,6 +164,8 @@ function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isM
 				part="calendar-header-arrow-button"
 				role="button"
 				onMouseDown={this.onNextButtonClick}
+				onKeyDown={this.onNextButtonKeyDown}
+				onKeyUp={this.onNextButtonKeyUp}
 				tabindex={this._nextButtonDisabled ? -1 : 0}
 				title={this.accInfo.tooltipNextButton}
 				aria-label={this.accInfo.ariaLabelNextButton}
