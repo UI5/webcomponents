@@ -1,0 +1,44 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <!-- Menu: list role="menu", items inherit role="menuitem" -->
+    <ui5-list accessible-role="Menu" header-text="Actions">
+        <ui5-li icon="create">New Document</ui5-li>
+        <ui5-li icon="save">Save</ui5-li>
+        <ui5-li icon="delete">Delete</ui5-li>
+    </ui5-list>
+
+    <br>
+
+    <!-- ListBox: list role="listbox", items inherit role="option" -->
+    <ui5-list accessible-role="ListBox" header-text="Select a Country">
+        <ui5-li>Argentina</ui5-li>
+        <ui5-li>Bulgaria</ui5-li>
+        <ui5-li>China</ui5-li>
+    </ui5-list>
+
+    <br>
+
+    <!-- Explicit accessible-role on ui5-li overrides the inherited role -->
+    <ui5-list accessible-role="Menu" header-text="Mixed Roles (override)">
+        <ui5-li icon="create">Inherits menuitem</ui5-li>
+        <ui5-li icon="filter" accessible-role="None">Separator-like (role=none)</ui5-li>
+        <ui5-li icon="save">Inherits menuitem</ui5-li>
+    </ui5-list>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

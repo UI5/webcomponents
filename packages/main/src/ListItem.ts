@@ -180,16 +180,22 @@ abstract class ListItem extends ListItemBase {
 
 	/**
 	 * Used to define the role of the list item.
-	 * @private
-	 * @default "ListItem"
-	 * @since 1.3.0
 	 *
+	 * **Note:** If not set, the role is automatically inherited from the parent `ui5-list` based on its `accessible-role` property
+	 * (e.g. `Menu` -> `MenuItem`, `Tree` -> `TreeItem`, `ListBox` -> `Option`).
+	 * An explicitly set `accessible-role` on the list item takes precedence over the inherited role.
+	 * @default "ListItem"
+	 * @public
+	 * @since 1.3.0
 	 */
 	@property()
-	accessibleRole: `${ListItemAccessibleRole}` = "ListItem";
+	accessibleRole?: `${ListItemAccessibleRole}`;
 
 	@property()
 	_forcedAccessibleRole?: string;
+
+	@property({ noAttribute: true })
+	_inheritedAccessibleRole?: string;
 
 	@property()
 	_selectionMode: `${ListSelectionMode}` = "None";
@@ -436,7 +442,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get listItemAccessibleRole() {
-		return (this._forcedAccessibleRole || this.accessibleRole.toLowerCase()) as AriaRole | undefined;
+		if (this._forcedAccessibleRole) {
+			return this._forcedAccessibleRole as AriaRole;
+		}
+		if (this.accessibleRole) {
+			return this.accessibleRole.toLowerCase() as AriaRole;
+		}
+		return (this._inheritedAccessibleRole || "listitem") as AriaRole;
 	}
 
 	get ariaSelectedText() {

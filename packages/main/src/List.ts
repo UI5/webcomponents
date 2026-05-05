@@ -80,6 +80,13 @@ const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
 const PAGE_UP_DOWN_SIZE = 10;
 
+// Maps the List's accessible-role to the expected child item ARIA role (lowercase)
+const LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE: Partial<Record<`${ListAccessibleRole}`, string>> = {
+	Menu: "menuitem",
+	Tree: "treeitem",
+	ListBox: "option",
+};
+
 // ListItemBase-based events
 type ListItemFocusEventDetail = {
 	item: ListItemBase,
@@ -843,6 +850,7 @@ class List extends UI5Element {
 
 	prepareListItems() {
 		const slottedItems = this.getItemsForProcessing();
+		const inheritedItemRole = LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE[this.accessibleRole];
 
 		slottedItems.forEach((item, key) => {
 			const isLastChild = key === slottedItems.length - 1;
@@ -851,6 +859,7 @@ class List extends UI5Element {
 
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
+				(item as ListItem)._inheritedAccessibleRole = inheritedItemRole;
 			}
 			item.hasBorder = showBottomBorder;
 
