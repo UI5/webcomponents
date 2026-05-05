@@ -72,6 +72,6 @@ describe("Vertical Alignment", () => {
 		cy.get("#container").should("have.css", "height", "44px");
 		cy.get("#container2").should("have.css", "height", "44px");
 		cy.get("#container3").should("have.css", "height", "48px");
-		cy.get("#container4").should("have.css", "height", "53px");
+		cy.get("#container4").should("have.css", "height", "44px");
 	});
 });

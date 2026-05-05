@@ -220,10 +220,6 @@ class Slider extends SliderBase implements IFormInputElement {
 		this.tooltip?.repositionTooltip();
 	}
 
-	_handleResize() {
-		// TODO: Remove after refactoring Base and RangeSlider
-	}
-
 	/**
 	 * Called when the user starts interacting with the slider
 	 * @private
@@ -518,17 +514,28 @@ class Slider extends SliderBase implements IFormInputElement {
 		return Slider.i18nBundle.getText(SLIDER_ARIA_DESCRIPTION);
 	}
 
+	get tickmarksObject() {
+		const count = this._tickmarksCount;
+		const arr = [];
+
+		if (this._hiddenTickmarks) {
+			return [false, false];
+		}
+
+		for (let i = 0; i <= count; i++) {
+			const tickValue = this._effectiveMin + (i * this.step);
+			arr.push(tickValue <= this.value);
+		}
+
+		return arr;
+	}
+
 	get _ariaDescribedByInputText() {
 		return Slider.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_DESCRIPTION);
 	}
 
 	get _ariaLabelledByInputText() {
 		return Slider.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_LABEL);
-	}
-
-	// TODO: Refactor these methods after RangeSlider is refactored
-	get tickmarksObject() {
-		return [];
 	}
 
 	_onkeydown(e: KeyboardEvent) {
