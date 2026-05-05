@@ -1,5 +1,22 @@
 @import "../base/SliderHandle-parameters.css";
 
 :host {
+	--_ui5_slider_handle_height: 1.875rem;
+	--_ui5_slider_handle_width: 1.875rem;
+	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapButton_Active_BorderColor);
 	--ui5_slider_handle_outline_offset: 1px;
+	--_ui5_slider_handle_background: transparent;
+	--_ui5_slider_handle_border: 0.125rem solid var(--sapField_BorderColor);
+	--_ui5_slider_handle_border_radius: 1rem;
+	--_ui5_slider_handle_hover_background: transparent;
+	--_ui5_slider_handle_hover_border: 0.125rem solid var(--sapSlider_Hover_HandleBorderColor);
+	--_ui5_slider_handle_active_border: 0.125rem solid var(--sapContent_FocusColor);
 }
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_handle_width: 1.5rem;
+		--_ui5_slider_handle_height: 1.5rem;
+	}
+}
+
