@@ -53,6 +53,7 @@ import {
 	LIST_ITEM_POSITION,
 	SELECT_ROLE_DESCRIPTION,
 	FORM_SELECTABLE_REQUIRED,
+	SELECT_OPTIONS_IN_GROUPS,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
 import ResponsivePopover from "./ResponsivePopover.js";
@@ -60,6 +61,7 @@ import Popover from "./Popover.js";
 import Icon from "./Icon.js";
 import Button from "./Button.js";
 import type ListItemBase from "./ListItemBase.js";
+import OptionGroup, { isInstanceOfOptionGroup } from "./OptionGroup.js";
 
 // Templates
 import SelectTemplate from "./SelectTemplate.js";
@@ -81,6 +83,18 @@ interface IOption extends ListItemBase {
 	additionalText?: string,
 	focused: boolean,
 	effectiveDisplayText: string,
+	_forcedSetsize?: number,
+	_forcedPosinset?: number,
+}
+
+/**
+ * Interface for group containers slotted inside `ui5-select`
+ * @public
+ */
+interface IOptionGroup {
+	isOptionGroup: boolean,
+	items: Array<IOption>,
+	headerText?: string,
 }
 
 type SelectChangeEventDetail = {
@@ -170,6 +184,7 @@ const isPrintableCharacter = (e: KeyboardEvent) => {
 		List,
 		Icon,
 		Button,
+		OptionGroup,
 	],
 })
 /**
@@ -394,16 +409,62 @@ class Select extends UI5Element implements IFormInputElement {
 	_valueStorage: string | undefined;
 
 	/**
+	 * Returns only the selectable IOption elements, flattened out of any groups.
+	 * All internal selection/navigation logic uses this instead of `this.options`.
+	 * @private
+	 */
+	get _flatOptions(): Array<IOption> {
+		return this.options.flatMap(item => {
+			if (isInstanceOfOptionGroup(item as OptionGroup)) {
+				return (item as IOptionGroup).items;
+			}
+			return [item as IOption];
+		});
+	}
+
+	get hasGroups(): boolean {
+		return this.options.some(item => isInstanceOfOptionGroup(item as OptionGroup));
+	}
+
+	get _groupCountMessageId(): string {
+		return `${this._id}-groupCountDesc`;
+	}
+
+	get _groupCountText(): string {
+		if (!this.hasGroups) {
+			return "";
+		}
+		const groups = this.options.filter(item => isInstanceOfOptionGroup(item as OptionGroup)) as Array<IOptionGroup>;
+		return Select.i18nBundle.getText(SELECT_OPTIONS_IN_GROUPS, this._flatOptions.length, groups.length);
+	}
+
+	_applyGroupAriaPositions() {
+		if (!this.hasGroups) {
+			return;
+		}
+		this.options
+			.filter(item => isInstanceOfOptionGroup(item as OptionGroup))
+			.forEach(item => {
+				const group = item as IOptionGroup;
+				group.items.forEach((option, idx) => {
+					option._forcedSetsize = group.items.length;
+					option._forcedPosinset = idx + 1;
+				});
+			});
+	}
+
+	/**
 	 * Defines the component options.
 	 *
 	 * **Note:** Only one selected option is allowed.
 	 * If more than one option is defined as selected, the last one would be considered as the selected one.
 	 *
 	 * **Note:** Use the `ui5-option` component to define the desired options.
+	 * Use the `ui5-option-group` component to group options.
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	options!: DefaultSlot<IOption>;
+	options!: DefaultSlot<IOption | IOptionGroup>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -472,7 +533,7 @@ class Select extends UI5Element implements IFormInputElement {
 
 	onBeforeRendering() {
 		this._applySelection();
-
+		this._applyGroupAriaPositions();
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
@@ -506,8 +567,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 */
 	_applySelectionByValue(value: string) {
 		if (value !== (this.selectedOption?.value || this.selectedOption?.textContent)) {
-			const options = Array.from(this.children) as Array<IOption>;
-			options.forEach(option => {
+			this._flatOptions.forEach(option => {
 				option.selected = !!((option.getAttribute("value") || option.textContent) === value);
 			});
 		}
@@ -518,10 +578,10 @@ class Select extends UI5Element implements IFormInputElement {
 	 * or selects the last option if multiple options are selected.
 	 */
 	_applyAutoSelection() {
-		let selectedIndex = this.options.findLastIndex(option => option.selected);
+		let selectedIndex = this._flatOptions.findLastIndex(option => option.selected);
 		selectedIndex = selectedIndex === -1 ? 0 : selectedIndex;
-		for (let i = 0; i < this.options.length; i++) {
-			this.options[i].selected = selectedIndex === i;
+		for (let i = 0; i < this._flatOptions.length; i++) {
+			this._flatOptions[i].selected = selectedIndex === i;
 			if (selectedIndex === i) {
 				break;
 			}
@@ -585,7 +645,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _selectedIndex() {
-		return this.options.findIndex(option => option.selected);
+		return this._flatOptions.findIndex(option => option.selected);
 	}
 
 	/**
@@ -594,7 +654,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @default undefined
 	 */
 	get selectedOption(): IOption | undefined {
-		return this.options.find(option => option.selected);
+		return this._flatOptions.find(option => option.selected);
 	}
 
 	/**
@@ -748,7 +808,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_searchNextItemByText(text: string) {
-		let orderedOptions = this.options.slice(0);
+		let orderedOptions = this._flatOptions.slice(0);
 		const optionsAfterSelected = orderedOptions.splice(this._selectedIndex + 1, orderedOptions.length - this._selectedIndex);
 		const optionsBeforeSelected = orderedOptions.splice(0, orderedOptions.length - 1);
 
@@ -774,7 +834,7 @@ class Select extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		const lastIndex = this.options.length - 1;
+		const lastIndex = this._flatOptions.length - 1;
 		this._changeSelectedItem(this._selectedIndex, lastIndex);
 	}
 
@@ -789,19 +849,19 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_getItemIndex(item: IOption) {
-		return this.options.indexOf(item);
+		return this._flatOptions.indexOf(item);
 	}
 
 	_select(index: number) {
 		const selectedIndex = this._selectedIndex;
-		if (index < 0 || index >= this.options.length || this.options.length === 0) {
+		if (index < 0 || index >= this._flatOptions.length || this._flatOptions.length === 0) {
 			return;
 		}
-		if (this.options[selectedIndex]) {
-			this.options[selectedIndex].selected = false;
+		if (this._flatOptions[selectedIndex]) {
+			this._flatOptions[selectedIndex].selected = false;
 		}
 
-		const selectedOption = this.options[index];
+		const selectedOption = this._flatOptions[index];
 		if (selectedIndex !== index) {
 			this.fireDecoratorEvent("live-change", { selectedOption });
 		}
@@ -887,7 +947,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_changeSelectedItem(oldIndex: number, newIndex: number) {
-		const options: Array<IOption> = this.options;
+		const options: Array<IOption> = this._flatOptions;
 
 		// Normalize: first navigation with Up when nothing selected -> last item
 		if (oldIndex === -1 && newIndex < 0 && options.length) {
@@ -927,7 +987,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_getNextOptionIndex() {
-		return this._selectedIndex === (this.options.length - 1) ? this._selectedIndex : (this._selectedIndex + 1);
+		return this._selectedIndex === (this._flatOptions.length - 1) ? this._selectedIndex : (this._selectedIndex + 1);
 	}
 
 	_getPreviousOptionIndex() {
@@ -936,7 +996,7 @@ class Select extends UI5Element implements IFormInputElement {
 
 	_beforeOpen() {
 		this._selectedIndexBeforeOpen = this._selectedIndex;
-		this._lastSelectedOption = this.options[this._selectedIndex];
+		this._lastSelectedOption = this._flatOptions[this._selectedIndex];
 	}
 
 	_afterOpen() {
@@ -948,11 +1008,9 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_applyFocusToSelectedItem() {
-		this.options.forEach(option => {
+		this._flatOptions.forEach(option => {
 			option.focused = option.selected;
 			if (option.focused) {
-				// move focus to the selected option so screen readers
-				// can announce it when the popover opens
 				option.focus();
 			}
 		});
@@ -966,9 +1024,9 @@ class Select extends UI5Element implements IFormInputElement {
 		if (this._escapePressed) {
 			this._select(this._selectedIndexBeforeOpen);
 			this._escapePressed = false;
-		} else if (this._lastSelectedOption !== this.options[this._selectedIndex]) {
-			this._fireChangeEvent(this.options[this._selectedIndex]);
-			this._lastSelectedOption = this.options[this._selectedIndex];
+		} else if (this._lastSelectedOption !== this._flatOptions[this._selectedIndex]) {
+			this._fireChangeEvent(this._flatOptions[this._selectedIndex]);
+			this._lastSelectedOption = this._flatOptions[this._selectedIndex];
 		}
 		this.fireDecoratorEvent("close");
 	}
@@ -1050,7 +1108,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _currentlySelectedOption() {
-		return this.options[this._selectedIndex];
+		return this._flatOptions[this._selectedIndex];
 	}
 
 	get _effectiveTabIndex() {
@@ -1099,8 +1157,8 @@ class Select extends UI5Element implements IFormInputElement {
 				"display": "block",
 			},
 			responsivePopoverHeader: {
-				"display": this.options.length && this._listWidth === 0 ? "none" : "inline-block",
-				"width": `${this.options.length ? this._listWidth : this.offsetWidth}px`,
+				"display": this._flatOptions.length && this._listWidth === 0 ? "none" : "inline-block",
+				"width": `${this._flatOptions.length ? this._listWidth : this.offsetWidth}px`,
 				"max-width": "100%",
 			},
 			responsivePopover: {
@@ -1136,7 +1194,7 @@ class Select extends UI5Element implements IFormInputElement {
 
 	itemSelectionAnnounce() {
 		let text;
-		const optionsCount = this.options.length;
+		const optionsCount = this._flatOptions.length;
 		const itemPositionText = Select.i18nBundle.getText(LIST_ITEM_POSITION, this._selectedIndex + 1, optionsCount);
 
 		if (this.focused && this._currentlySelectedOption) {
@@ -1179,7 +1237,11 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get ariaDescribedByIds() {
-		const ids = [this.valueStateTextId, this.ariaDescriptionTextId].filter(Boolean);
+		const ids = [
+			this.valueStateTextId,
+			this.ariaDescriptionTextId,
+			this.hasGroups ? this._groupCountMessageId : undefined,
+		].filter(Boolean);
 		return ids.length ? ids.join(" ") : undefined;
 	}
 
@@ -1209,6 +1271,7 @@ Select.define();
 export default Select;
 export type {
 	IOption,
+	IOptionGroup,
 	SelectChangeEventDetail,
 	SelectLiveChangeEventDetail,
 };

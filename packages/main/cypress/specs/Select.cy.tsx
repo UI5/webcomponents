@@ -1,5 +1,6 @@
 import Option from "../../src/Option.js";
 import OptionCustom from "../../src/OptionCustom.js";
+import OptionGroup from "../../src/OptionGroup.js";
 import Select from "../../src/Select.js";
 import download from "@ui5/webcomponents-icons/dist/download.js";
 
@@ -1911,5 +1912,281 @@ describe("Select general interaction", () => {
 		// so that screen readers like NVDA can announce the selected value
 		cy.get("@select")
 			.should("be.focused");
+	});
+});
+
+describe("Select - OptionGroup", () => {
+	it("renders group headers and options within groups", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup id="group1" headerText="Oceania">
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup id="group2" headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-option-group-header")
+			.should("have.text", "Oceania");
+
+		cy.get("#group2")
+			.shadow()
+			.find(".ui5-option-group-header")
+			.should("have.text", "Europe");
+
+		cy.get("[ui5-option]").should("have.length", 4);
+	});
+
+	it("fires change event when selecting an option inside a group", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel")
+			.as("select")
+			.then(($select) => {
+				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
+			});
+
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("[ui5-option]").eq(2).realClick();
+
+		cy.get("@changeStub").should("have.been.calledOnce");
+		cy.get("@select").should("have.prop", "value", "fr");
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "France");
+	});
+
+	it("ArrowDown navigation skips group headers crossing group boundary", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au" selected>Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		// ArrowDown: Australia → New Zealand
+		cy.get("@select").realPress("ArrowDown");
+		// ArrowDown: New Zealand → France (group header is not focusable)
+		cy.get("@select").realPress("ArrowDown");
+		cy.get("@select").realPress("Enter");
+
+		cy.get("@select").should("have.prop", "value", "fr");
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "France");
+	});
+
+	it("ArrowUp navigation skips group headers moving backwards", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr" selected>France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		// ArrowUp: France → New Zealand (group header is not focusable)
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		cy.get("@select").should("have.prop", "value", "nz");
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "New Zealand");
+	});
+
+	it("group container has role=group and aria-label in shadow DOM", () => {
+		const GROUP_HEADER = "Oceania";
+
+		cy.mount(
+			<Select>
+				<OptionGroup id="group1" headerText={GROUP_HEADER}>
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-option-group-root")
+			.should("have.attr", "role", "group")
+			.should("have.attr", "aria-label", GROUP_HEADER);
+	});
+
+	it("group header div is aria-hidden", () => {
+		cy.mount(
+			<Select>
+				<OptionGroup id="group1" headerText="Oceania">
+					<Option value="au">Australia</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-option-group-header")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("sets per-group aria-setsize and aria-posinset on options", () => {
+		cy.mount(
+			<Select>
+				<OptionGroup headerText="Oceania">
+					<Option id="opt1" value="au">Australia</Option>
+					<Option id="opt2" value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option id="opt3" value="fr">France</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		// Group 1 has 2 items: setsize=2, posinset 1 and 2
+		cy.get("#opt1")
+			.shadow()
+			.find("li.ui5-li-root")
+			.should("have.attr", "aria-setsize", "2")
+			.should("have.attr", "aria-posinset", "1");
+
+		cy.get("#opt2")
+			.shadow()
+			.find("li.ui5-li-root")
+			.should("have.attr", "aria-setsize", "2")
+			.should("have.attr", "aria-posinset", "2");
+
+		// Group 2 has 1 item: setsize=1, posinset 1
+		cy.get("#opt3")
+			.shadow()
+			.find("li.ui5-li-root")
+			.should("have.attr", "aria-setsize", "1")
+			.should("have.attr", "aria-posinset", "1");
+	});
+
+	it("trigger aria-describedby references group count message span when groups are present", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "-groupCountDesc");
+
+		// 4 options in 2 groups
+		cy.get("#sel")
+			.shadow()
+			.find("[id$='-groupCountDesc']")
+			.should("contain.text", "4")
+			.should("contain.text", "2");
+	});
+
+	it("trigger does not have group count span for flat (non-grouped) Select", () => {
+		cy.mount(
+			<Select id="sel">
+				<Option value="a">Option A</Option>
+				<Option value="b">Option B</Option>
+			</Select>
+		);
+
+		cy.get("#sel")
+			.shadow()
+			.find("[id$='-groupCountDesc']")
+			.should("not.exist");
+	});
+
+	it("Home key navigates to first option across groups", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au">Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de" selected>Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("Home");
+		cy.get("@select").realPress("Enter");
+
+		cy.get("@select").should("have.prop", "value", "au");
+	});
+
+	it("End key navigates to last option across groups", () => {
+		cy.mount(
+			<Select id="sel">
+				<OptionGroup headerText="Oceania">
+					<Option value="au" selected>Australia</Option>
+					<Option value="nz">New Zealand</Option>
+				</OptionGroup>
+				<OptionGroup headerText="Europe">
+					<Option value="fr">France</Option>
+					<Option value="de">Germany</Option>
+				</OptionGroup>
+			</Select>
+		);
+
+		cy.get("#sel").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("End");
+		cy.get("@select").realPress("Enter");
+
+		cy.get("@select").should("have.prop", "value", "de");
 	});
 });
