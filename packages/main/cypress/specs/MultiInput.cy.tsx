@@ -1502,6 +1502,145 @@ describe("Keyboard handling", () => {
 		cy.get("@changeSpy")
 			.should("have.been.calledOnce");
 	});
+
+	it("should focus last token on ArrowLeft at start of input, keep suggestions open, and not fire change event", () => {
+		cy.mount(
+			<MultiInput showSuggestions>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.get("[ui5-multi-input]")
+			.then(multiInput => {
+				multiInput[0].addEventListener("ui5-change", changeSpy);
+			});
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("a");
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowLeft"); // cursor: pos 1 → pos 0
+		cy.realPress("ArrowLeft"); // cursor at pos 0 → focuses last token
+
+		cy.get("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@changeSpy")
+			.should("not.have.been.called");
+	});
+
+	it("should fire change event when returning from tokenizer to input via ArrowRight and pressing Tab", () => {
+		cy.mount(
+			<MultiInput showSuggestions>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.get("[ui5-multi-input]")
+			.then(multiInput => {
+				multiInput[0].addEventListener("ui5-change", changeSpy);
+			});
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("a");
+
+		// focus last token
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		// return to input
+		cy.realPress("ArrowRight");
+
+		cy.get("[ui5-multi-input]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("@changeSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should fire change event when returning from tokenizer to input via Tab and pressing Enter", () => {
+		cy.mount(
+			<MultiInput showSuggestions noTypeahead>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.get("[ui5-multi-input]")
+			.then(multiInput => {
+				multiInput[0].addEventListener("ui5-change", changeSpy);
+			});
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("b");
+
+		// focus last token
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		// return to input
+		cy.realPress("Tab");
+
+		cy.get("[ui5-multi-input]")
+			.should("be.focused");
+
+		cy.realPress("Enter");
+
+		cy.get("@changeSpy")
+			.should("have.been.calledOnce");
+	});
 });
 
 describe("MultiInput Composition", () => {
