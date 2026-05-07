@@ -370,14 +370,17 @@ class DynamicSideContent extends UI5Element {
 	}
 
 	get accInfo(): DynamicSideContentAccessibilityAttributes {
+		const hasMainRole = Object.prototype.hasOwnProperty.call(this.accessibilityAttributes.mainContent || {}, "role");
+		const hasSideRole = Object.prototype.hasOwnProperty.call(this.accessibilityAttributes.sideContent || {}, "role");
+
 		return {
 			mainContent: {
 				ariaLabel: this.accessibilityAttributes.mainContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
-				role: this.accessibilityAttributes.mainContent?.role || "main",
+				role: hasMainRole ? this.accessibilityAttributes.mainContent?.role : "main",
 			},
 			sideContent: {
 				ariaLabel: this.accessibilityAttributes.sideContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
-				role: this.accessibilityAttributes.sideContent?.role || "complementary",
+				role: hasSideRole ? this.accessibilityAttributes.sideContent?.role : "complementary",
 			},
 		};
 	}
