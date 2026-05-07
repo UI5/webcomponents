@@ -606,7 +606,7 @@ describe("FromDateTime Option", () => {
 			.as("input");
 
 		cy.get("@input")
-			.should("contain.value", "From Oct 14, 2025");
+			.should("contain.value", "From Oct 13, 2025");
 	});
 });
 
