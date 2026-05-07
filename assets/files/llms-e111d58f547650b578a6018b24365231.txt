@@ -1,0 +1,828 @@
+# UI5 Web Components
+
+> Enterprise-grade, framework-agnostic web components library implementing SAP Fiori design
+
+Version: 2.21.1
+Website: https://ui5.github.io/webcomponents/
+GitHub: https://github.com/SAP/ui5-webcomponents
+
+## Overview
+
+UI5 Web Components is a comprehensive library of reusable UI elements designed for building modern web applications. Based on web standards, these components work with any framework (React, Angular, Vue) or vanilla JavaScript.
+
+### Key Features
+
+- **Framework-agnostic**: Works with React, Angular, Vue, or plain JavaScript
+- **Enterprise-ready**: Production-tested components following SAP Fiori design guidelines
+- **Accessible**: WCAG 2.1 compliant with full keyboard navigation and screen reader support
+- **Themable**: Multiple built-in themes with customization options
+- **TypeScript support**: Full type definitions included
+- **i18n**: Multi-language support with 40+ locales
+
+### Quick Start
+
+```bash
+npm install @ui5/webcomponents
+```
+
+```javascript
+import "@ui5/webcomponents/dist/Button.js";
+```
+
+```html
+<ui5-button>Click Me</ui5-button>
+```
+
+## Components
+
+### Main Components
+
+#### [Avatar](https://ui5.github.io/webcomponents/components/Avatar/)
+  - tag: `ui5-avatar`
+  - description: An image-like component that has different display options for representing images and icons
+
+#### [AvatarBadge](https://ui5.github.io/webcomponents/components/AvatarBadge/)
+  - tag: `ui5-avatar-badge`
+  - description: The ui5-avatar-badge component is used to display a badge on top of ui5-avatar component.
+
+#### [AvatarGroup](https://ui5.github.io/webcomponents/components/AvatarGroup/)
+  - tag: `ui5-avatar-group`
+  - description: Displays a group of avatars arranged horizontally. It is useful to visually
+
+#### [Bar](https://ui5.github.io/webcomponents/components/Bar/)
+  - tag: `ui5-bar`
+  - description: The Bar is a container which is primarily used to hold titles, buttons and input elements
+
+#### [Breadcrumbs](https://ui5.github.io/webcomponents/components/Breadcrumbs/)
+  - tag: `ui5-breadcrumbs`
+  - description: Enables users to navigate between items by providing a list of links to previous steps in the user's navigation path.
+
+#### [BreadcrumbsItem](https://ui5.github.io/webcomponents/components/BreadcrumbsItem/)
+  - tag: `ui5-breadcrumbs-item`
+  - description: The ui5-breadcrumbs-item component defines the content of an item in ui5-breadcrumbs.
+
+#### [BusyIndicator](https://ui5.github.io/webcomponents/components/BusyIndicator/)
+  - tag: `ui5-busy-indicator`
+  - description: The ui5-busy-indicator signals that some operation is going on and that the
+
+#### [Button](https://ui5.github.io/webcomponents/components/Button/)
+  - tag: `ui5-button`
+  - description: The ui5-button component represents a simple push button.
+
+#### [ButtonBadge](https://ui5.github.io/webcomponents/components/ButtonBadge/)
+  - tag: `ui5-button-badge`
+  - description: The ui5-button-badge component defines a badge that appears in the ui5-button.
+
+#### [Calendar](https://ui5.github.io/webcomponents/components/Calendar/)
+  - tag: `ui5-calendar`
+  - description: The ui5-calendar component allows users to select one or more dates.
+
+#### [CalendarDate](https://ui5.github.io/webcomponents/components/CalendarDate/)
+  - tag: `ui5-date`
+  - description: The ui5-date component defines a calendar date to be used inside ui5-calendar
+
+#### [CalendarDateRange](https://ui5.github.io/webcomponents/components/CalendarDateRange/)
+  - tag: `ui5-date-range`
+  - description: The ui5-date-range component defines a range of dates to be used inside ui5-calendar
+
+#### [CalendarLegend](https://ui5.github.io/webcomponents/components/CalendarLegend/)
+  - tag: `ui5-calendar-legend`
+  - description: The ui5-calendar-legend component is designed for use within the ui5-calendar to display a legend.
+
+#### [CalendarLegendItem](https://ui5.github.io/webcomponents/components/CalendarLegendItem/)
+  - tag: `ui5-calendar-legend-item`
+  - description: Each ui5-calendar-legend-item represents a legend item, displaying a color with a label.
+
+#### [Card](https://ui5.github.io/webcomponents/components/Card/)
+  - tag: `ui5-card`
+  - description: The ui5-card is a component that represents information in the form of a
+
+#### [CardHeader](https://ui5.github.io/webcomponents/components/CardHeader/)
+  - tag: `ui5-card-header`
+  - description: The ui5-card-header is a component, meant to be used as a header of the ui5-card component.
+
+#### [Carousel](https://ui5.github.io/webcomponents/components/Carousel/)
+  - tag: `ui5-carousel`
+  - description: The Carousel allows the user to browse through a set of items.
+
+#### [CheckBox](https://ui5.github.io/webcomponents/components/CheckBox/)
+  - tag: `ui5-checkbox`
+  - description: Allows the user to set a binary value, such as true/false or yes/no for an item.
+
+#### [ColorPalette](https://ui5.github.io/webcomponents/components/ColorPalette/)
+  - tag: `ui5-color-palette`
+  - description: The ui5-color-palette provides the users with a range of predefined colors. The colors are fixed and do not change with the theme.
+
+#### [ColorPaletteItem](https://ui5.github.io/webcomponents/components/ColorPaletteItem/)
+  - tag: `ui5-color-palette-item`
+  - description: The ui5-color-palette-item component represents a color in the the ui5-color-palette.
+
+#### [ColorPalettePopover](https://ui5.github.io/webcomponents/components/ColorPalettePopover/)
+  - tag: `ui5-color-palette-popover`
+  - description: Represents a predefined range of colors for easier selection.
+
+#### [ColorPicker](https://ui5.github.io/webcomponents/components/ColorPicker/)
+  - tag: `ui5-color-picker`
+  - description: The ui5-color-picker allows users to choose any color and provides different input options for selecting colors.
+
+#### [ComboBox](https://ui5.github.io/webcomponents/components/ComboBox/)
+  - tag: `ui5-combobox`
+  - description: The ui5-combobox component represents a drop-down menu with a list of the available options and a text input field to narrow down the options.
+
+#### [ComboBoxItem](https://ui5.github.io/webcomponents/components/ComboBoxItem/)
+  - tag: `ui5-cb-item`
+  - description: The ui5-cb-item represents the item for a ui5-combobox.
+
+#### [ComboBoxItemGroup](https://ui5.github.io/webcomponents/components/ComboBoxItemGroup/)
+  - tag: `ui5-cb-item-group`
+  - description: The ui5-cb-group-item is type of suggestion item,
+
+#### [DatePicker](https://ui5.github.io/webcomponents/components/DatePicker/)
+  - tag: `ui5-date-picker`
+  - description: The ui5-date-picker component provides an input field with assigned calendar which opens on user action.
+
+#### [DateRangePicker](https://ui5.github.io/webcomponents/components/DateRangePicker/)
+  - tag: `ui5-daterange-picker`
+  - description: The DateRangePicker enables the users to enter a localized date range using touch, mouse, keyboard input, or by selecting a date range in the calendar...
+
+#### [DateTimePicker](https://ui5.github.io/webcomponents/components/DateTimePicker/)
+  - tag: `ui5-datetime-picker`
+  - description: The DateTimePicker component alows users to select both date (day, month and year) and time (hours, minutes and seconds)
+
+#### [Dialog](https://ui5.github.io/webcomponents/components/Dialog/)
+  - tag: `ui5-dialog`
+  - description: The ui5-dialog component is used to temporarily display some information in a
+
+#### [DynamicDateRange](https://ui5.github.io/webcomponents/components/DynamicDateRange/)
+  - tag: `ui5-dynamic-date-range`
+  - description: The ui5-dynamic-date-range component provides a flexible interface to define date ranges using a combination of absolute dates, relative intervals, an...
+
+#### [ExpandableText](https://ui5.github.io/webcomponents/components/ExpandableText/)
+  - tag: `ui5-expandable-text`
+  - description: The ui5-expandable-text component allows displaying a large body of text in a small space. It provides an "expand/collapse" functionality, which shows...
+
+#### [FileUploader](https://ui5.github.io/webcomponents/components/FileUploader/)
+  - tag: `ui5-file-uploader`
+  - description: The ui5-file-uploader opens a file explorer dialog and enables users to upload files.
+
+#### [Form](https://ui5.github.io/webcomponents/components/Form/)
+  - tag: `ui5-form`
+  - description: The Form is a layout component that arranges labels and form fields (like input fields) pairs
+
+#### [FormGroup](https://ui5.github.io/webcomponents/components/FormGroup/)
+  - tag: `ui5-form-group`
+  - description: The FormGroup (ui5-form-group) represents a group inside the Form (ui5-form) component
+
+#### [FormItem](https://ui5.github.io/webcomponents/components/FormItem/)
+  - tag: `ui5-form-item`
+  - description: The FormItem (ui5-form-item) represents pair of a label and
+
+#### [Icon](https://ui5.github.io/webcomponents/components/Icon/)
+  - tag: `ui5-icon`
+  - description: The ui5-icon component represents an SVG icon.
+
+#### [Input](https://ui5.github.io/webcomponents/components/Input/)
+  - tag: `ui5-input`
+  - description: The ui5-input component allows the user to enter and edit text or numeric values in one line.
+
+#### [Label](https://ui5.github.io/webcomponents/components/Label/)
+  - tag: `ui5-label`
+  - description: The ui5-label is a component used to represent a label for elements like input, textarea, select.
+
+#### [Link](https://ui5.github.io/webcomponents/components/Link/)
+  - tag: `ui5-link`
+  - description: The ui5-link is a hyperlink component that is used to navigate to other
+
+#### [List](https://ui5.github.io/webcomponents/components/List/)
+  - tag: `ui5-list`
+  - description: The ui5-list component allows displaying a list of items, advanced keyboard
+
+#### [ListItemCustom](https://ui5.github.io/webcomponents/components/ListItemCustom/)
+  - tag: `ui5-li-custom`
+  - description: A component to be used as custom list item within the ui5-list
+
+#### [ListItemGroup](https://ui5.github.io/webcomponents/components/ListItemGroup/)
+  - tag: `ui5-li-group`
+  - description: The ui5-li-group is a special list item, used only to create groups of list items.
+
+#### [ListItemStandard](https://ui5.github.io/webcomponents/components/ListItemStandard/)
+  - tag: `ui5-li`
+  - description: The ui5-li represents the simplest type of item for a ui5-list.
+
+#### [Menu](https://ui5.github.io/webcomponents/components/Menu/)
+  - tag: `ui5-menu`
+  - description: ui5-menu component represents a hierarchical menu structure.
+
+#### [MenuItem](https://ui5.github.io/webcomponents/components/MenuItem/)
+  - tag: `ui5-menu-item`
+  - description: ui5-menu-item is the item to use inside a ui5-menu.
+
+#### [MenuItemGroup](https://ui5.github.io/webcomponents/components/MenuItemGroup/)
+  - tag: `ui5-menu-item-group`
+  - description: The ui5-menu-item-group component represents a group of items designed for use inside a ui5-menu.
+
+#### [MenuSeparator](https://ui5.github.io/webcomponents/components/MenuSeparator/)
+  - tag: `ui5-menu-separator`
+  - description: The ui5-menu-separator represents a horizontal line to separate menu items inside a ui5-menu.
+
+#### [MessageStrip](https://ui5.github.io/webcomponents/components/MessageStrip/)
+  - tag: `ui5-message-strip`
+  - description: The ui5-message-strip component allows for the embedding of application-related messages.
+
+#### [MultiComboBox](https://ui5.github.io/webcomponents/components/MultiComboBox/)
+  - tag: `ui5-multi-combobox`
+  - description: The ui5-multi-combobox component consists of a list box with items and a text field allowing the user to either type a value directly into the text fi...
+
+#### [MultiComboBoxItem](https://ui5.github.io/webcomponents/components/MultiComboBoxItem/)
+  - tag: `ui5-mcb-item`
+  - description: The ui5-mcb-item represents the item for a ui5-multi-combobox.
+
+#### [MultiComboBoxItemGroup](https://ui5.github.io/webcomponents/components/MultiComboBoxItemGroup/)
+  - tag: `ui5-mcb-item-group`
+  - description: The ui5-mcb-item-group is type of suggestion item,
+
+#### [MultiInput](https://ui5.github.io/webcomponents/components/MultiInput/)
+  - tag: `ui5-multi-input`
+  - description: A ui5-multi-input field allows the user to enter multiple values, which are displayed as ui5-token.
+
+#### [Option](https://ui5.github.io/webcomponents/components/Option/)
+  - tag: `ui5-option`
+  - description: The ui5-option component defines the content of an option in the ui5-select.
+
+#### [OptionCustom](https://ui5.github.io/webcomponents/components/OptionCustom/)
+  - tag: `ui5-option-custom`
+  - description: The ui5-option-custom component defines a custom content of an option in the ui5-select.
+
+#### [Panel](https://ui5.github.io/webcomponents/components/Panel/)
+  - tag: `ui5-panel`
+  - description: The ui5-panel component is a container which has a header and a
+
+#### [Popover](https://ui5.github.io/webcomponents/components/Popover/)
+  - tag: `ui5-popover`
+  - description: The ui5-popover component displays additional information for an object
+
+#### [ProgressIndicator](https://ui5.github.io/webcomponents/components/ProgressIndicator/)
+  - tag: `ui5-progress-indicator`
+  - description: Shows the progress of a process in a graphical way. To indicate the progress,
+
+#### [RadioButton](https://ui5.github.io/webcomponents/components/RadioButton/)
+  - tag: `ui5-radio-button`
+  - description: The ui5-radio-button component enables users to select a single option from a set of options.
+
+#### [RangeSlider](https://ui5.github.io/webcomponents/components/RangeSlider/)
+  - tag: `ui5-range-slider`
+  - description: Represents a numerical interval and two handles (grips) to select a sub-range within it.
+
+#### [RatingIndicator](https://ui5.github.io/webcomponents/components/RatingIndicator/)
+  - tag: `ui5-rating-indicator`
+  - description: The Rating Indicator is used to display a specific number of icons that are used to rate an item.
+
+#### [ResponsivePopover](https://ui5.github.io/webcomponents/components/ResponsivePopover/)
+  - tag: `ui5-responsive-popover`
+  - description: The ui5-responsive-popover acts as a Popover on desktop and tablet, while on phone it acts as a Dialog.
+
+#### [SegmentedButton](https://ui5.github.io/webcomponents/components/SegmentedButton/)
+  - tag: `ui5-segmented-button`
+  - description: The ui5-segmented-button shows a group of items. When the user clicks or taps
+
+#### [SegmentedButtonItem](https://ui5.github.io/webcomponents/components/SegmentedButtonItem/)
+  - tag: `ui5-segmented-button-item`
+  - description: Users can use the ui5-segmented-button-item as part of a ui5-segmented-button.
+
+#### [Select](https://ui5.github.io/webcomponents/components/Select/)
+  - tag: `ui5-select`
+  - description: The ui5-select component is used to create a drop-down list.
+
+#### [Slider](https://ui5.github.io/webcomponents/components/Slider/)
+  - tag: `ui5-slider`
+  - description: The Slider component represents a numerical range and a handle (grip).
+
+#### [SpecialCalendarDate](https://ui5.github.io/webcomponents/components/SpecialCalendarDate/)
+  - tag: `ui5-special-date`
+  - description: The ui5-special-date component defines a special calendar date to be used inside ui5-calendar,
+
+#### [SplitButton](https://ui5.github.io/webcomponents/components/SplitButton/)
+  - tag: `ui5-split-button`
+  - description: ui5-split-button enables users to trigger actions. It is constructed of two separate actions -
+
+#### [StepInput](https://ui5.github.io/webcomponents/components/StepInput/)
+  - tag: `ui5-step-input`
+  - description: The ui5-step-input consists of an input field and buttons with icons to increase/decrease the value
+
+#### [SuggestionItem](https://ui5.github.io/webcomponents/components/SuggestionItem/)
+  - tag: `ui5-suggestion-item`
+  - description: The ui5-suggestion-item represents the suggestion item of the ui5-input.
+
+#### [SuggestionItemCustom](https://ui5.github.io/webcomponents/components/SuggestionItemCustom/)
+  - tag: `ui5-suggestion-item-custom`
+  - description: The ui5-suggestion-item-custom is type of suggestion item,
+
+#### [SuggestionItemGroup](https://ui5.github.io/webcomponents/components/SuggestionItemGroup/)
+  - tag: `ui5-suggestion-item-group`
+  - description: The ui5-suggestion-item-group is type of suggestion item,
+
+#### [Switch](https://ui5.github.io/webcomponents/components/Switch/)
+  - tag: `ui5-switch`
+  - description: The ui5-switch component is used for changing between binary states.
+
+#### [Tab](https://ui5.github.io/webcomponents/components/Tab/)
+  - tag: `ui5-tab`
+  - description: The ui5-tab represents a selectable item inside a ui5-tabcontainer.
+
+#### [TabContainer](https://ui5.github.io/webcomponents/components/TabContainer/)
+  - tag: `ui5-tabcontainer`
+  - description: The ui5-tabcontainer represents a collection of tabs with associated content.
+
+#### [Table](https://ui5.github.io/webcomponents/components/Table/)
+  - tag: `ui5-table`
+  - description: The ui5-table component provides a set of sophisticated features for displaying and dealing with vast amounts of data in a responsive manner.
+
+#### [TableCell](https://ui5.github.io/webcomponents/components/TableCell/)
+  - tag: `ui5-table-cell`
+  - description: The ui5-table-cell represents a cell inside of a ui5-table.
+
+#### [TableGrowing](https://ui5.github.io/webcomponents/components/TableGrowing/)
+  - tag: `ui5-table-growing`
+  - description: The ui5-table-growing component is used inside the ui5-table to add a growing/data loading functionalities
+
+#### [TableHeaderCell](https://ui5.github.io/webcomponents/components/TableHeaderCell/)
+  - tag: `ui5-table-header-cell`
+  - description: The ui5-table-header-cell component represents a column in the ui5-table.
+
+#### [TableHeaderCellActionAI](https://ui5.github.io/webcomponents/components/TableHeaderCellActionAI/)
+  - tag: `ui5-table-header-cell-action-ai`
+  - description: The ui5-table-header-cell-action-ai component defines a dedicated AI action for the table column.
+
+#### [TableHeaderRow](https://ui5.github.io/webcomponents/components/TableHeaderRow/)
+  - tag: `ui5-table-header-row`
+  - description: The ui5-table-header-row component represents the table headers of a ui5-table.
+
+#### [TableRow](https://ui5.github.io/webcomponents/components/TableRow/)
+  - tag: `ui5-table-row`
+  - description: The ui5-table-row component represents a row in the ui5-table.
+
+#### [TableRowAction](https://ui5.github.io/webcomponents/components/TableRowAction/)
+  - tag: `ui5-table-row-action`
+  - description: The ui5-table-row-action component defines an action for table rows.
+
+#### [TableRowActionNavigation](https://ui5.github.io/webcomponents/components/TableRowActionNavigation/)
+  - tag: `ui5-table-row-action-navigation`
+  - description: The ui5-table-row-action-navigation component defines a navigation action for table rows.
+
+#### [TableSelection](https://ui5.github.io/webcomponents/components/TableSelection/)
+  - tag: `ui5-table-selection`
+  - description: The ui5-table-selection component is used inside the ui5-table to add key-based selection capabilities to the ui5-table.
+
+#### [TableSelectionMulti](https://ui5.github.io/webcomponents/components/TableSelectionMulti/)
+  - tag: `ui5-table-selection-multi`
+  - description: The ui5-table-selection-multi component is used inside the ui5-table to add multi-selection capabilities to the ui5-table.
+
+#### [TableSelectionSingle](https://ui5.github.io/webcomponents/components/TableSelectionSingle/)
+  - tag: `ui5-table-selection-single`
+  - description: The ui5-table-selection-single component is used inside the ui5-table to add single selection capabilities to the ui5-table.
+
+#### [TableVirtualizer](https://ui5.github.io/webcomponents/components/TableVirtualizer/)
+  - tag: `ui5-table-virtualizer`
+  - description: The ui5-table-virtualizer component is used inside the ui5-table to virtualize the table rows, if the overflowMode property of the table is set to 'Sc...
+
+#### [TabSeparator](https://ui5.github.io/webcomponents/components/TabSeparator/)
+  - tag: `ui5-tab-separator`
+  - description: The ui5-tab-separator represents a vertical line to separate tabs inside a ui5-tabcontainer.
+
+#### [Tag](https://ui5.github.io/webcomponents/components/Tag/)
+  - tag: `ui5-tag`
+  - description: The ui5-tag is a component which serves
+
+#### [Text](https://ui5.github.io/webcomponents/components/Text/)
+  - tag: `ui5-text`
+  - description: The ui5-text component displays text that can be used in any content area of an application.
+
+#### [TextArea](https://ui5.github.io/webcomponents/components/TextArea/)
+  - tag: `ui5-textarea`
+  - description: The ui5-textarea component is used to enter multiple rows of text.
+
+#### [TimePicker](https://ui5.github.io/webcomponents/components/TimePicker/)
+  - tag: `ui5-time-picker`
+  - description: The ui5-time-picker component provides an input field with assigned clocks which are opened on user action.
+
+#### [Title](https://ui5.github.io/webcomponents/components/Title/)
+  - tag: `ui5-title`
+  - description: The ui5-title component is used to display titles inside a page.
+
+#### [Toast](https://ui5.github.io/webcomponents/components/Toast/)
+  - tag: `ui5-toast`
+  - description: The ui5-toast is a small, non-disruptive popup for success or information messages that
+
+#### [ToggleButton](https://ui5.github.io/webcomponents/components/ToggleButton/)
+  - tag: `ui5-toggle-button`
+  - description: The ui5-toggle-button component is an enhanced ui5-button
+
+#### [Token](https://ui5.github.io/webcomponents/components/Token/)
+  - tag: `ui5-token`
+  - description: Tokens are small items of information (similar to tags) that mainly serve to visualize previously selected items.
+
+#### [Tokenizer](https://ui5.github.io/webcomponents/components/Tokenizer/)
+  - tag: `ui5-tokenizer`
+  - description: A ui5-tokenizer is an invisible container for ui5-tokens that supports keyboard navigation and token selection.
+
+#### [Toolbar](https://ui5.github.io/webcomponents/components/Toolbar/)
+  - tag: `ui5-toolbar`
+  - description: The ui5-toolbar component is used to create a horizontal layout with items.
+
+#### [ToolbarButton](https://ui5.github.io/webcomponents/components/ToolbarButton/)
+  - tag: `ui5-toolbar-button`
+  - description: The ui5-toolbar-button represents an abstract action,
+
+#### [ToolbarItem](https://ui5.github.io/webcomponents/components/ToolbarItem/)
+  - tag: `ui5-toolbar-item`
+  - description: The ui5-toolbar-item is a wrapper component used to integrate UI5 Web Components into the ui5-toolbar.
+
+#### [ToolbarSelect](https://ui5.github.io/webcomponents/components/ToolbarSelect/)
+  - tag: `ui5-toolbar-select`
+  - description: The ui5-toolbar-select component is used to create a toolbar drop-down list.
+
+#### [ToolbarSelectOption](https://ui5.github.io/webcomponents/components/ToolbarSelectOption/)
+  - tag: `ui5-toolbar-select-option`
+  - description: The ui5-toolbar-select-option component defines the content of an option in the ui5-toolbar-select.
+
+#### [ToolbarSeparator](https://ui5.github.io/webcomponents/components/ToolbarSeparator/)
+  - tag: `ui5-toolbar-separator`
+  - description: The ui5-toolbar-separator is an element, used for visual separation between two elements.
+
+#### [ToolbarSpacer](https://ui5.github.io/webcomponents/components/ToolbarSpacer/)
+  - tag: `ui5-toolbar-spacer`
+  - description: The ui5-toolbar-spacer is an element, used for taking needed space for toolbar items to take 100% width.
+
+#### [Tree](https://ui5.github.io/webcomponents/components/Tree/)
+  - tag: `ui5-tree`
+  - description: The ui5-tree component provides a tree structure for displaying data in a hierarchy.
+
+#### [TreeItem](https://ui5.github.io/webcomponents/components/TreeItem/)
+  - tag: `ui5-tree-item`
+  - description: The ui5-tree-item represents a node in a tree structure, shown as a ui5-list.
+
+#### [TreeItemCustom](https://ui5.github.io/webcomponents/components/TreeItemCustom/)
+  - tag: `ui5-tree-item-custom`
+  - description: The ui5-tree-item-custom represents a node in a tree structure, shown as a ui5-list.
+
+### Fiori Components
+
+#### [BarcodeScannerDialog](https://ui5.github.io/webcomponents/nightly/components/fiori/BarcodeScannerDialog/)
+  - tag: `ui5-barcode-scanner-dialog`
+  - description: The BarcodeScannerDialog component provides barcode scanning functionality for all devices that support the MediaDevices.getUserMedia() native API.
+
+#### [DynamicPage](https://ui5.github.io/webcomponents/nightly/components/fiori/DynamicPage/)
+  - tag: `ui5-dynamic-page`
+  - description: A layout component, representing a web page, consisting of a title, header with dynamic behavior, a content area, and an optional floating footer.
+
+#### [DynamicPageHeader](https://ui5.github.io/webcomponents/nightly/components/fiori/DynamicPageHeader/)
+  - tag: `ui5-dynamic-page-header`
+  - description: Header of the DynamicPage.
+
+#### [DynamicPageTitle](https://ui5.github.io/webcomponents/nightly/components/fiori/DynamicPageTitle/)
+  - tag: `ui5-dynamic-page-title`
+  - description: Title of the DynamicPage.
+
+#### [DynamicSideContent](https://ui5.github.io/webcomponents/nightly/components/fiori/DynamicSideContent/)
+  - tag: `ui5-dynamic-side-content`
+  - description: The DynamicSideContent (ui5-dynamic-side-content) is a layout component that allows additional content
+
+#### [FilterItem](https://ui5.github.io/webcomponents/nightly/components/fiori/FilterItem/)
+  - tag: `ui5-filter-item`
+  - description: The ui5-filter-item component defines the filtering criteria for data in ui5-view-settings-dialog.
+
+#### [FilterItemOption](https://ui5.github.io/webcomponents/nightly/components/fiori/FilterItemOption/)
+  - tag: `ui5-filter-item-option`
+  - description: The ui5-filter-item-option component defines individual filter values within a ui5-filter-item.
+
+#### [FlexibleColumnLayout](https://ui5.github.io/webcomponents/nightly/components/fiori/FlexibleColumnLayout/)
+  - tag: `ui5-flexible-column-layout`
+  - description: The FlexibleColumnLayout implements the list-detail-detail paradigm by displaying up to three pages in separate columns.
+
+#### [GroupItem](https://ui5.github.io/webcomponents/nightly/components/fiori/GroupItem/)
+  - tag: `ui5-group-item`
+  - description: The ui5-group-item component defines the grouping criteria for data in ui5-view-settings-dialog.
+
+#### [IllustratedMessage](https://ui5.github.io/webcomponents/nightly/components/fiori/IllustratedMessage/)
+  - tag: `ui5-illustrated-message`
+  - description: An IllustratedMessage is a recommended combination of a solution-oriented message, an engaging
+
+#### [MediaGallery](https://ui5.github.io/webcomponents/nightly/components/fiori/MediaGallery/)
+  - tag: `ui5-media-gallery`
+  - description: The ui5-media-gallery component allows the user to browse through multimedia items. Currently,
+
+#### [MediaGalleryItem](https://ui5.github.io/webcomponents/nightly/components/fiori/MediaGalleryItem/)
+  - tag: `ui5-media-gallery-item`
+  - description: The ui5-media-gallery-item web component represents the items displayed in the
+
+#### [NavigationLayout](https://ui5.github.io/webcomponents/nightly/components/fiori/NavigationLayout/)
+  - tag: `ui5-navigation-layout`
+  - description: The ui5-navigation-layout is a container component that can be used to
+
+#### [NotificationList](https://ui5.github.io/webcomponents/nightly/components/fiori/NotificationList/)
+  - tag: `ui5-notification-list`
+  - description: The ui5-notification-list web component represents
+
+#### [NotificationListGroupItem](https://ui5.github.io/webcomponents/nightly/components/fiori/NotificationListGroupItem/)
+  - tag: `ui5-li-notification-group`
+  - description: The ui5-li-notification-group is a special type of list item,
+
+#### [NotificationListItem](https://ui5.github.io/webcomponents/nightly/components/fiori/NotificationListItem/)
+  - tag: `ui5-li-notification`
+  - description: The ui5-li-notification is a type of list item, meant to display notifications.
+
+#### [Page](https://ui5.github.io/webcomponents/nightly/components/fiori/Page/)
+  - tag: `ui5-page`
+  - description: The ui5-page is a container component that holds one whole screen of an application.
+
+#### [ProductSwitch](https://ui5.github.io/webcomponents/nightly/components/fiori/ProductSwitch/)
+  - tag: `ui5-product-switch`
+  - description: The ui5-product-switch is an SAP Fiori specific web component that is used in ui5-shellbar
+
+#### [ProductSwitchItem](https://ui5.github.io/webcomponents/nightly/components/fiori/ProductSwitchItem/)
+  - tag: `ui5-product-switch-item`
+  - description: The ui5-product-switch-item web component represents the items displayed in the
+
+#### [Search](https://ui5.github.io/webcomponents/nightly/components/fiori/Search/)
+  - tag: `ui5-search`
+  - description: A ui5-search is an input with suggestions, used for user search.
+
+#### [SearchItem](https://ui5.github.io/webcomponents/nightly/components/fiori/SearchItem/)
+  - tag: `ui5-search-item`
+  - description: A ui5-search-item is a list item, used for displaying search suggestions
+
+#### [SearchItemGroup](https://ui5.github.io/webcomponents/nightly/components/fiori/SearchItemGroup/)
+  - tag: `ui5-search-item-group`
+  - description: The ui5-search-item-group is type of suggestion item,
+
+#### [SearchItemShowMore](https://ui5.github.io/webcomponents/nightly/components/fiori/SearchItemShowMore/)
+  - tag: `ui5-search-item-show-more`
+  - description: A ui5-search-item-show-more is a special type of ui5-li that acts as a button to progressively reveal additional (overflow) items within a group.
+
+#### [SearchMessageArea](https://ui5.github.io/webcomponents/nightly/components/fiori/SearchMessageArea/)
+  - tag: `ui5-search-message-area`
+  - description: import "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
+
+#### [SearchScope](https://ui5.github.io/webcomponents/nightly/components/fiori/SearchScope/)
+  - tag: `ui5-search-scope`
+  - description: The ui5-search-scope represents the options for the scope in ui5-search.
+
+#### [ShellBar](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBar/)
+  - tag: `ui5-shellbar`
+  - description: The ui5-shellbar is meant to serve as an application header
+
+#### [ShellBarBranding](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBarBranding/)
+  - tag: `ui5-shellbar-branding`
+  - description: The ui5-shellbar-branding component is intended to be placed inside the branding slot of the
+
+#### [ShellBarItem](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBarItem/)
+  - tag: `ui5-shellbar-item`
+  - description: The ui5-shellbar-item represents a custom item for ui5-shellbar.
+
+#### [ShellBarSearch](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBarSearch/)
+  - tag: `ui5-shellbar-search`
+  - description: Search field for the ShellBar component.
+
+#### [ShellBarSpacer](https://ui5.github.io/webcomponents/nightly/components/fiori/ShellBarSpacer/)
+  - tag: `ui5-shellbar-spacer`
+  - description: The ui5-shellbar-spacer is an element, used for visual separation between the two content parts of the ui5-shellbar.
+
+#### [SideNavigation](https://ui5.github.io/webcomponents/nightly/components/fiori/SideNavigation/)
+  - tag: `ui5-side-navigation`
+  - description: The SideNavigation is used as a standard menu in applications.
+
+#### [SideNavigationGroup](https://ui5.github.io/webcomponents/nightly/components/fiori/SideNavigationGroup/)
+  - tag: `ui5-side-navigation-group`
+  - description: Represents a group of navigation actions within ui5-side-navigation.
+
+#### [SideNavigationItem](https://ui5.github.io/webcomponents/nightly/components/fiori/SideNavigationItem/)
+  - tag: `ui5-side-navigation-item`
+  - description: Represents a navigation action. It can provide sub items.
+
+#### [SideNavigationSubItem](https://ui5.github.io/webcomponents/nightly/components/fiori/SideNavigationSubItem/)
+  - tag: `ui5-side-navigation-sub-item`
+  - description: Represents a single navigation action within ui5-side-navigation-item.
+
+#### [SortItem](https://ui5.github.io/webcomponents/nightly/components/fiori/SortItem/)
+  - tag: `ui5-sort-item`
+  - description: The ui5-sort-item component defines the sorting criteria for data in ui5-view-settings-dialog.
+
+#### [Timeline](https://ui5.github.io/webcomponents/nightly/components/fiori/Timeline/)
+  - tag: `ui5-timeline`
+  - description: The ui5-timeline component shows entries (such as objects, events, or posts) in chronological order.
+
+#### [TimelineGroupItem](https://ui5.github.io/webcomponents/nightly/components/fiori/TimelineGroupItem/)
+  - tag: `ui5-timeline-group-item`
+  - description: An entry posted on the timeline.
+
+#### [TimelineItem](https://ui5.github.io/webcomponents/nightly/components/fiori/TimelineItem/)
+  - tag: `ui5-timeline-item`
+  - description: An entry posted on the timeline.
+
+#### [UploadCollection](https://ui5.github.io/webcomponents/nightly/components/fiori/UploadCollection/)
+  - tag: `ui5-upload-collection`
+  - description: This component allows you to represent files before uploading them to a server, with the help of ui5-upload-collection-item.
+
+#### [UploadCollectionItem](https://ui5.github.io/webcomponents/nightly/components/fiori/UploadCollectionItem/)
+  - tag: `ui5-upload-collection-item`
+  - description: A component to be used within the ui5-upload-collection.
+
+#### [UserMenu](https://ui5.github.io/webcomponents/nightly/components/fiori/UserMenu/)
+  - tag: `ui5-user-menu`
+  - description: The ui5-user-menu is an SAP Fiori specific web component that is used in ui5-shellbar
+
+#### [UserMenuAccount](https://ui5.github.io/webcomponents/nightly/components/fiori/UserMenuAccount/)
+  - tag: `ui5-user-menu-account`
+  - description: The ui5-user-menu-account represents an account in the ui5-user-menu.
+
+#### [UserMenuItem](https://ui5.github.io/webcomponents/nightly/components/fiori/UserMenuItem/)
+  - tag: `ui5-user-menu-item`
+  - description: ui5-user-menu-item is the item to use inside a ui5-user-menu.
+
+#### [UserMenuItemGroup](https://ui5.github.io/webcomponents/nightly/components/fiori/UserMenuItemGroup/)
+  - tag: `ui5-user-menu-item-group`
+  - description: The ui5-user-menu-item-group component represents a group of items designed for use inside a ui5-user-menu.
+
+#### [UserSettingsAccountView](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsAccountView/)
+  - tag: `ui5-user-settings-account-view`
+  - description: The ui5-user-settings-account-view represents a view displayed in the ui5-user-settings-item.
+
+#### [UserSettingsAppearanceView](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsAppearanceView/)
+  - tag: `ui5-user-settings-appearance-view`
+  - description: The ui5-user-settings-appearance-view represents a view displayed in the ui5-user-settings-item.
+
+#### [UserSettingsAppearanceViewGroup](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsAppearanceViewGroup/)
+  - tag: `ui5-user-settings-appearance-view-group`
+  - description: The ui5-user-settings-appearance-view-group is a special list item group used to group appearance view items.
+
+#### [UserSettingsAppearanceViewItem](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsAppearanceViewItem/)
+  - tag: `ui5-user-settings-appearance-view-item`
+  - description: The ui5-user-settings-appearance-view-item represents a theme/appearance option item
+
+#### [UserSettingsDialog](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsDialog/)
+  - tag: `ui5-user-settings-dialog`
+  - description: The ui5-user-settings-dialog is an SAP Fiori-specific web component used in the ui5-user-menu.
+
+#### [UserSettingsItem](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsItem/)
+  - tag: `ui5-user-settings-item`
+  - description: The ui5-user-settings-item represents an item in the ui5-user-settings-dialog.
+
+#### [UserSettingsView](https://ui5.github.io/webcomponents/nightly/components/fiori/UserSettingsView/)
+  - tag: `ui5-user-settings-view`
+  - description: The ui5-user-settings-view represents a view displayed in the ui5-user-settings-item.
+
+#### [ViewSettingsDialog](https://ui5.github.io/webcomponents/nightly/components/fiori/ViewSettingsDialog/)
+  - tag: `ui5-view-settings-dialog`
+  - description: The ui5-view-settings-dialog component helps the user to sort data within a list or a table.
+
+#### [Wizard](https://ui5.github.io/webcomponents/nightly/components/fiori/Wizard/)
+  - tag: `ui5-wizard`
+  - description: The ui5-wizard helps users to complete a complex task by dividing it into sections and guiding them through it.
+
+#### [WizardStep](https://ui5.github.io/webcomponents/nightly/components/fiori/WizardStep/)
+  - tag: `ui5-wizard-step`
+  - description: A component that represents a logical step as part of the ui5-wizard.
+
+### Compat Components
+
+#### [Table](https://ui5.github.io/webcomponents/nightly/components/compat/Table/)
+  - tag: `ui5-table`
+  - description: The ui5-table component provides a set of sophisticated and convenient functions for responsive table design.
+
+#### [TableCell](https://ui5.github.io/webcomponents/nightly/components/compat/TableCell/)
+  - tag: `ui5-table-cell`
+  - description: The ui5-table-cell component defines the structure of the data in a single ui5-table cell.
+
+#### [TableColumn](https://ui5.github.io/webcomponents/nightly/components/compat/TableColumn/)
+  - tag: `ui5-table-column`
+  - description: The ui5-table-column component allows to define column specific properties that are applied
+
+#### [TableGroupRow](https://ui5.github.io/webcomponents/nightly/components/compat/TableGroupRow/)
+  - tag: `ui5-table-group-row`
+  - description: The ui5-table-group-row component represents a group row in the ui5-table.
+
+#### [TableRow](https://ui5.github.io/webcomponents/nightly/components/compat/TableRow/)
+  - tag: `ui5-table-row`
+  - description: The ui5-table-row component represents a row in the ui5-table.
+
+### AI Components
+
+#### [Button](https://ui5.github.io/webcomponents/nightly/components/ai/Button/)
+  - tag: `ui5-ai-button`
+  - description: The ui5-ai-button component serves as a button for AI-related scenarios. Users can trigger actions by clicking or tapping the ui5-ai-button
+
+#### [ButtonState](https://ui5.github.io/webcomponents/nightly/components/ai/ButtonState/)
+  - tag: `ui5-ai-button-state`
+  - description: ui5-ai-button-state is the item to use for defining states of ui5-ai-button components.
+
+#### [Input](https://ui5.github.io/webcomponents/nightly/components/ai/Input/)
+  - tag: `ui5-ai-input`
+  - description: The ui5-ai-input component extends the standard ui5-input with **AI Writing Assistant** capabilities.
+
+#### [PromptInput](https://ui5.github.io/webcomponents/nightly/components/ai/PromptInput/)
+  - tag: `ui5-ai-prompt-input`
+  - description: The ui5-ai-prompt-input component allows the user to write custom instructions in natural language, so that AI is guided to generate content tailored...
+
+#### [TextArea](https://ui5.github.io/webcomponents/nightly/components/ai/TextArea/)
+  - tag: `ui5-ai-textarea`
+  - description: The ui5-ai-textarea component extends the standard TextArea with Writing Assistant capabilities.
+
+## Documentation
+
+### Getting Started
+
+- [First Steps](https://ui5.github.io/webcomponents/docs/getting-started/first-steps/)
+- [Components Packages](https://ui5.github.io/webcomponents/docs/getting-started/components-packages/)
+- [Components APIs](https://ui5.github.io/webcomponents/docs/getting-started/components-APIs/)
+
+### Advanced
+
+- [Configuration](https://ui5.github.io/webcomponents/docs/advanced/configuration/)
+- [RTL & Compact Mode](https://ui5.github.io/webcomponents/docs/advanced/RTL-and-compact-mode/)
+- [Using Icons](https://ui5.github.io/webcomponents/docs/advanced/using-icons/)
+- [Using Assets](https://ui5.github.io/webcomponents/docs/advanced/using-assets/)
+- [Using Features](https://ui5.github.io/webcomponents/docs/advanced/using-features/)
+- [Scoping](https://ui5.github.io/webcomponents/docs/advanced/scoping/)
+- [OpenUI5 Integration](https://ui5.github.io/webcomponents/docs/advanced/OpenUI/integration/)
+- [i18n for Apps](https://ui5.github.io/webcomponents/docs/advanced/using-i18n-for-apps/)
+- [Accessibility](https://ui5.github.io/webcomponents/docs/advanced/accessibility/)
+- [Scrollbars Customization](https://ui5.github.io/webcomponents/docs/advanced/scrollbars-customization/)
+- [Styling](https://ui5.github.io/webcomponents/docs/advanced/styles/)
+- [UI Theme Designer](https://ui5.github.io/webcomponents/docs/advanced/theming/)
+- [Custom Themes](https://ui5.github.io/webcomponents/docs/advanced/theming-part2/)
+- [Fonts](https://ui5.github.io/webcomponents/docs/advanced/fonts/)
+- [Using the Framework](https://ui5.github.io/webcomponents/docs/advanced/other-framework-level-APIs/)
+- [TypeScript Support](https://ui5.github.io/webcomponents/docs/advanced/typescript-support/)
+- [Drag and Drop](https://ui5.github.io/webcomponents/docs/advanced/drag-and-drop/)
+- [Using Custom Illustrations](https://ui5.github.io/webcomponents/docs/advanced/using-custom-illustrations/)
+
+### Development
+
+- [Create UI5 Web Components Project (Package)](https://ui5.github.io/webcomponents/docs/development/package/)
+- [Define Web Component](https://ui5.github.io/webcomponents/docs/development/component/)
+- [Properties](https://ui5.github.io/webcomponents/docs/development/properties/)
+- [Slots](https://ui5.github.io/webcomponents/docs/development/slots/)
+- [Events](https://ui5.github.io/webcomponents/docs/development/events/)
+- [Lifecycle Methods](https://ui5.github.io/webcomponents/docs/development/lifecycle-hooks/)
+- [Styles](https://ui5.github.io/webcomponents/docs/development/styling/)
+- [JSX Templates](https://ui5.github.io/webcomponents/docs/development/templates/)
+- [Internationalization](https://ui5.github.io/webcomponents/docs/development/internationalization/)
+- [Testing](https://ui5.github.io/webcomponents/docs/development/testing/)
+- [Deep dive and best practices](https://ui5.github.io/webcomponents/docs/development/deep-dive-and-best-practices/)
+
+### Contributing
+
+- [Development Workflow](https://ui5.github.io/webcomponents/docs/contributing/development-workflow/)
+- [Conventions and Guidelines](https://ui5.github.io/webcomponents/docs/contributing/conventions-and-guidelines/)
+- [Definition of Done](https://ui5.github.io/webcomponents/docs/contributing/DoD/)
+- [Running the Website](https://ui5.github.io/webcomponents/docs/contributing/website/)
+
+### Migration Guides
+
+- [Migration to UI5 Web Components 2.0](https://ui5.github.io/webcomponents/docs/migration-guides/to-version-2/)
+
+### General
+
+- [CLI](https://ui5.github.io/webcomponents/docs/CLI/)
+- [MCP Server](https://ui5.github.io/webcomponents/docs/MCP-Server/)
+- [Skills](https://ui5.github.io/webcomponents/docs/Skills/)
+- [Releases](https://ui5.github.io/webcomponents/docs/Releases/)
+- [Frequently Asked Questions](https://ui5.github.io/webcomponents/docs/FAQ/)
+
+## Additional Resources
+
+- [Component Catalog](https://ui5.github.io/webcomponents/components/)
+- [Icon Explorer](https://ui5.github.io/webcomponents/icons/)
+- [Playground](https://ui5.github.io/webcomponents/play/)
+- [API Reference](https://ui5.github.io/webcomponents/components/main/)
+- [Changelog](https://github.com/SAP/ui5-webcomponents/releases)
+- [FAQ](https://ui5.github.io/webcomponents/docs/FAQ/)
+
+## Common Patterns
+
+### Importing Components
+
+```javascript
+// Main components
+import "@ui5/webcomponents/dist/Button.js";
+import "@ui5/webcomponents/dist/Input.js";
+
+// Fiori components
+import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+
+// Icons (always use dist path)
+import "@ui5/webcomponents-icons/dist/add.js";
+```
+
+## Important Notes for AI Assistants
+
+- Always import from `/dist/` path, not from package root
+- Component tags use lowercase with hyphens (e.g., `ui5-button`, not `UI5Button`)
+- Icons must be imported separately: `import "@ui5/webcomponents-icons/dist/icon-name.js"`
+- Use attribute selectors in CSS: `[ui5-button]`, not `ui5-button`
+- Events are native DOM events, use standard `.addEventListener()`
+- For TypeScript, import types from package root: `import Button from "@ui5/webcomponents/dist/Button.js"`
+
+---
+
+Generated: 2026-04-29T12:34:54.961Z

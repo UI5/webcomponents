@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "add-product";
+const pathData = "M4.668 2.077a.75.75 0 0 1 .727.035l5.25 3.25A.75.75 0 0 1 11 6v1.25a.75.75 0 0 1-1.5 0v-.833L5.022 3.646 2.5 5.392v5.682L8 14.375l.445-.267a.75.75 0 1 1 .772 1.287l-.831.499a.75.75 0 0 1-.772 0l-6.25-3.75A.751.751 0 0 1 1 11.5V5a.75.75 0 0 1 .323-.616l3.345-2.307ZM12.5 9a.75.75 0 0 1 .75.75v2l2.077.004a.75.75 0 0 1 0 1.492l-2.077.004v2a.75.75 0 0 1-1.5 0v-2h-2a.75.75 0 0 1 0-1.5h2v-2A.75.75 0 0 1 12.5 9Zm-8.405-.114a.75.75 0 0 1 1.02-.291l2.25 1.25a.75.75 0 1 1-.73 1.31l-2.25-1.25a.75.75 0 0 1-.29-1.02ZM7.1.375A.75.75 0 0 1 8.125.101l6.5 3.75A.75.75 0 0 1 15 4.5v2.75a.75.75 0 0 1-1.5 0V4.933L7.375 1.399A.75.75 0 0 1 7.101.375Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/add-product";
+export { pathData, ltr, viewBox, accData };

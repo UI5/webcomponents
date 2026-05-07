@@ -1,0 +1,2 @@
+declare const _default: ":host{display:block;--_ui5_timeline_header_bar_search_max_width: 16rem;--_ui5_timeline_filter_dialog_min_width: 20rem}.ui5-timeline-header-bar-search{max-width:var(--_ui5_timeline_header_bar_search_max_width)}.ui5-timeline-filter-dialog{min-width:var(--_ui5_timeline_filter_dialog_min_width)}.ui5-timeline-filter-list{width:100%}\n";
+export default _default;

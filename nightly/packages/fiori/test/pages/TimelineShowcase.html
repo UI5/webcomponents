@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Timeline Architecture Showcase</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-CRo7ZKCw.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/TimelineShowcase-Bn-H3u5L.css">
+</head>
+
+<body class="showcase-page">
+
+<!-- ════════════════════════════════════════════
+     Hero
+     ════════════════════════════════════════════ -->
+<div class="hero">
+	<span class="hero-tag">Architecture Showcase</span>
+	<h1><strong>ui5-timeline</strong> Header Bar</h1>
+	<p class="hero-sub">
+		Search, filter, and sort for Timeline. This page walks through every layer of the
+		architecture: how components communicate, how events flow, and how the application
+		drives the DOM. Every demo is live and interactive.
+	</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     Table of Contents
+     ════════════════════════════════════════════ -->
+<nav class="toc">
+	<div class="toc-inner">
+		<span class="toc-label">Contents</span>
+		<div class="toc-links">
+			<a href="#architecture">Architecture</a>
+			<a href="#event-pipeline">Event Pipeline</a>
+			<a href="#search">Search</a>
+			<a href="#filter">Filter</a>
+			<a href="#sort">Sort</a>
+			<a href="#combined">Combined</a>
+			<a href="#code">Code Patterns</a>
+		</div>
+	</div>
+</nav>
+
+
+<div class="content">
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 1 — Architecture Overview
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="architecture">
+	<span class="chapter-number">Chapter 1</span>
+	<h2>Architecture Overview</h2>
+	<p class="chapter-lead">
+		The Timeline does not filter, sort, or search anything. It renders whatever items
+		exist in the DOM. All data operations are the application's responsibility. The header bar
+		is a thin UI layer that fires events.
+	</p>
+
+	<p class="prose">
+		This is a deliberate design choice. Web Components follow the <strong>platform convention</strong>:
+		a <code>&lt;select&gt;</code> element doesn't fetch its own data, and neither does a
+		<code>&lt;ui5-timeline&gt;</code>. The application owns the data; the component owns the rendering.
+	</p>
+
+	<!-- Architecture flow diagram -->
+	<div class="arch-diagram reveal">
+		<div class="arch-flow">
+			<div class="arch-box arch-box--user">
+				<div class="arch-box-label">User</div>
+				<div class="arch-box-name">Types / Clicks</div>
+			</div>
+			<div class="arch-arrow">
+				<span class="arch-arrow-line">&#8594;</span>
+				<span class="arch-arrow-label">interaction</span>
+			</div>
+			<div class="arch-box arch-box--header">
+				<div class="arch-box-label">Component</div>
+				<div class="arch-box-name">TimelineHeaderBar</div>
+			</div>
+			<div class="arch-arrow">
+				<span class="arch-arrow-line">&#8594;</span>
+				<span class="arch-arrow-label">fires event</span>
+			</div>
+			<div class="arch-box arch-box--timeline">
+				<div class="arch-box-label">Parent</div>
+				<div class="arch-box-name">Timeline</div>
+			</div>
+			<div class="arch-arrow">
+				<span class="arch-arrow-line">&#8594;</span>
+				<span class="arch-arrow-label">bubbles up</span>
+			</div>
+			<div class="arch-box arch-box--app">
+				<div class="arch-box-label">Handler</div>
+				<div class="arch-box-name">Application</div>
+			</div>
+			<div class="arch-arrow">
+				<span class="arch-arrow-line">&#8594;</span>
+				<span class="arch-arrow-label">mutates DOM</span>
+			</div>
+			<div class="arch-box arch-box--dom">
+				<div class="arch-box-label">Result</div>
+				<div class="arch-box-name">Re-render</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Component anatomy -->
+	<div class="anatomy reveal-stagger">
+		<div class="anatomy-item anatomy-item--search">
+			<h4>Search Input</h4>
+			<p>Fires <code>search</code> event with <code>{value: string}</code> on every keystroke. The application matches items against the value and removes non-matching items from the DOM.</p>
+		</div>
+		<div class="anatomy-item anatomy-item--filter">
+			<h4>Filter Select</h4>
+			<p>Fires <code>filter</code> event with <code>{filterBy, selectedOptions[]}</code>. Options are defined declaratively via <code>&lt;ui5-timeline-filter-option&gt;</code> children.</p>
+		</div>
+		<div class="anatomy-item anatomy-item--sort">
+			<h4>Sort Button</h4>
+			<p>Toggles between Ascending and Descending. Fires <code>sort</code> event with <code>{sortOrder}</code>. The application reorders DOM nodes via <code>appendChild</code>.</p>
+		</div>
+		<div class="anatomy-item anatomy-item--app">
+			<h4>Application Logic</h4>
+			<p>The glue. Listens to events, decides which items match, and reconciles the DOM. The Timeline re-renders automatically when its children change.</p>
+		</div>
+	</div>
+
+	<div class="concepts reveal-stagger">
+		<div class="concept">
+			<h4>Declarative Slot</h4>
+			<p>The header bar lives in a named <code>headerBar</code> slot. The Timeline detects it via <code>_hasHeaderBar</code> and renders a wrapper div.</p>
+		</div>
+		<div class="concept">
+			<h4>Event Bubbling</h4>
+			<p>Events from the header bar bubble through the Timeline to the application. <code>bubbles: true</code> means you listen on the Timeline, not the header bar.</p>
+		</div>
+		<div class="concept">
+			<h4>DOM Reconciliation</h4>
+			<p>Items removed from the DOM disappear instantly. Items added back trigger the Timeline's <code>onBeforeRendering</code> which recalculates layout, lines, and roles.</p>
+		</div>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 2 — Event Pipeline (Live)
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="event-pipeline">
+	<span class="chapter-number">Chapter 2</span>
+	<h2>Event Pipeline &mdash; Live</h2>
+	<p class="chapter-lead">
+		Interact with the timeline below. Every event is logged in real time, and the pipeline
+		diagram highlights each step as it executes. This is the actual component running.
+	</p>
+
+	<!-- Pipeline visualization -->
+	<div class="pipeline reveal">
+		<div class="pipeline-header">Event flow</div>
+		<div class="pipeline-steps" id="pipelineSteps">
+			<div class="pipeline-step" id="pipe-1">
+				<div class="pipeline-step-num">1</div>
+				<div class="pipeline-step-name">User Input</div>
+				<div class="pipeline-step-detail">keystroke / click</div>
+			</div>
+			<div class="pipeline-step" id="pipe-2">
+				<div class="pipeline-step-num">2</div>
+				<div class="pipeline-step-name">HeaderBar</div>
+				<div class="pipeline-step-detail">fires event</div>
+			</div>
+			<div class="pipeline-step" id="pipe-3">
+				<div class="pipeline-step-num">3</div>
+				<div class="pipeline-step-name">Timeline</div>
+				<div class="pipeline-step-detail">bubbles up</div>
+			</div>
+			<div class="pipeline-step" id="pipe-4">
+				<div class="pipeline-step-num">4</div>
+				<div class="pipeline-step-name">App Handler</div>
+				<div class="pipeline-step-detail">filter logic</div>
+			</div>
+			<div class="pipeline-step" id="pipe-5">
+				<div class="pipeline-step-num">5</div>
+				<div class="pipeline-step-name">DOM Update</div>
+				<div class="pipeline-step-detail">remove / append</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Live event stream -->
+	<div class="event-stream" id="eventStream">
+		<div class="event-stream-label">Event Log (live)</div>
+	</div>
+
+	<!-- Status -->
+	<div class="status-pill" id="pipelineStatus">
+		<span class="dot"></span>
+		<span id="pipelineStatusText">Showing 8 of 8 items</span>
+	</div>
+
+	<!-- Live demo -->
+	<div class="demo-card">
+		<div class="demo-label"><span class="dot"></span> Live Demo &mdash; Project Activity Feed</div>
+		<div class="demo-body">
+			<ui5-timeline id="pipelineDemo" accessible-name="Project Activity Feed">
+				<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Category">
+					<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+				</ui5-timeline-header-bar>
+
+				<ui5-timeline-item data-category="Meetings" data-date="2025-03-10T09:00"
+					title-text="Sprint Planning" subtitle-text="10.03.2025 09:00"
+					icon="calendar" name="Sarah Chen" name-clickable>
+					Kick-off for Sprint 24. Estimated velocity: 42 story points.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Development" data-date="2025-03-10T11:30"
+					title-text="PR #487 &mdash; Auth Module Refactor" subtitle-text="10.03.2025 11:30"
+					icon="developer-settings" name="James Rivera">
+					Replaced legacy session handling with JWT tokens. All 127 tests green.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Meetings" data-date="2025-03-10T14:00"
+					title-text="Client Requirements Call" subtitle-text="10.03.2025 14:00"
+					icon="phone" name="Emily Watson" name-clickable>
+					Discussed Q2 roadmap priorities. Action items documented in Confluence.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Development" data-date="2025-03-10T16:00"
+					title-text="API Documentation Update" subtitle-text="10.03.2025 16:00"
+					icon="document" name="Arun Patel">
+					Added OpenAPI specs for /payments and /webhooks endpoints.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Releases" data-date="2025-03-11T06:00"
+					title-text="Deploy v2.5.1 to Staging" subtitle-text="11.03.2025 06:00"
+					icon="upload" name="DevOps Pipeline" state="Positive">
+					Staging deployment successful. Smoke tests passed in 3m 22s.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Development" data-date="2025-03-11T10:30"
+					title-text="Performance Regression Fix" subtitle-text="11.03.2025 10:30"
+					icon="performance" name="Li Wei" state="Critical">
+					Fixed N+1 query in dashboard endpoint. Latency p99 dropped from 1.2s to 180ms.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Releases" data-date="2025-03-11T18:00"
+					title-text="Deploy v2.5.1 to Production" subtitle-text="11.03.2025 18:00"
+					icon="shipping-status" name="DevOps Pipeline" state="Positive">
+					Production deploy complete. Zero-downtime rolling update across 12 pods.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-category="Meetings" data-date="2025-03-12T09:00"
+					title-text="Post-Release Retrospective" subtitle-text="12.03.2025 09:00"
+					icon="group" name="Full Team">
+					Retro on v2.5.1 cycle. Key takeaway: improve staging parity with prod.
+				</ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+	</div>
+
+	<div class="scenario">
+		<div class="scenario-title">Try it</div>
+		<p>
+			Type <code>deploy</code> in the search field, then select <strong>Releases</strong>
+			from the filter. Watch the pipeline animate step by step and the event log fill up.
+			Then click the sort button to reverse chronological order.
+		</p>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 3 — Search Deep Dive
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="search">
+	<span class="chapter-number">Chapter 3</span>
+	<h2>Search &mdash; Real-Time Text Matching</h2>
+	<p class="chapter-lead">
+		The search input fires on every keystroke. The application removes non-matching items
+		from the DOM entirely. No CSS <code>display: none</code>, no <code>hidden</code> attribute.
+		Items are removed and re-added.
+	</p>
+
+	<p class="prose">
+		This matters because the Timeline recalculates connector lines, item roles, and
+		<code>firstItemInTimeline</code> flags in <code>onBeforeRendering</code> every time
+		its children change. Hiding items with CSS would leave stale layout data.
+	</p>
+
+	<!-- Code: how search works internally -->
+	<div class="code-block reveal">
+		<div class="code-header">
+			<span class="code-filename">TimelineHeaderBar.ts &mdash; search handler</span>
+			<span class="code-lang">TypeScript</span>
+		</div>
+		<div class="code-body"><span class="cmt">// Inside TimelineHeaderBar</span>
+<span class="fn">_onSearchInput</span>(<span class="attr">e</span>: CustomEvent) {
+  <span class="kw">const</span> value = (e.target <span class="kw">as</span> <span class="type">Input</span>).value;
+  <span class="kw">this</span>.searchValue = value;
+  <span class="kw">this</span>.<span class="fn">fireDecoratorEvent</span>(<span class="str">"search"</span>, { value });
+}
+
+<span class="cmt">// The event bubbles through the Timeline to your listener:</span>
+timeline.<span class="fn">addEventListener</span>(<span class="str">"search"</span>, e <span class="kw">=></span> {
+  <span class="kw">const</span> query = e.detail.value.toLowerCase();
+  items.<span class="fn">forEach</span>(item <span class="kw">=></span> {
+    <span class="kw">const</span> text = item.titleText.toLowerCase();
+    <span class="kw">if</span> (text.<span class="fn">includes</span>(query)) timeline.<span class="fn">appendChild</span>(item);
+    <span class="kw">else</span> item.<span class="fn">remove</span>();
+  });
+});</div>
+	</div>
+
+	<!-- Live demo: Support Tickets -->
+	<div class="demo-card">
+		<div class="demo-label"><span class="dot"></span> Live Demo &mdash; Support Ticket History</div>
+		<div class="demo-body">
+			<ui5-timeline id="searchDemo" accessible-name="Support Ticket History">
+				<ui5-timeline-header-bar slot="headerBar" show-search></ui5-timeline-header-bar>
+
+				<ui5-timeline-item data-date="2025-03-14T09:15"
+					title-text="TICKET-1042: Login failure on Safari" subtitle-text="14.03.2025 09:15"
+					icon="error" name="Customer: Acme Corp" state="Negative">
+					Users report 403 errors when authenticating via Safari 17.2 with SSO enabled.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-14T10:30"
+					title-text="TICKET-1043: Payment timeout" subtitle-text="14.03.2025 10:30"
+					icon="money-bills" name="Customer: Globex Inc" state="Critical">
+					Stripe webhook responses exceeding 30s timeout under peak load.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-14T11:00"
+					title-text="TICKET-1044: CSV export missing columns" subtitle-text="14.03.2025 11:00"
+					icon="excel-attachment" name="Customer: Initech" state="Information">
+					Export report omits custom fields added after v2.4 migration.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-14T13:45"
+					title-text="TICKET-1045: Auth token refresh loop" subtitle-text="14.03.2025 13:45"
+					icon="locked" name="Customer: Umbrella Ltd" state="Negative">
+					JWT refresh endpoint returns 401, causing infinite retry in the client SDK.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-14T15:00"
+					title-text="TICKET-1046: Dashboard chart rendering" subtitle-text="14.03.2025 15:00"
+					icon="bar-chart" name="Customer: Soylent Corp">
+					Bar chart overlaps axis labels when dataset exceeds 50 entries.
+				</ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+	</div>
+
+	<div class="scenario">
+		<div class="scenario-title">Try it</div>
+		<p>
+			Type <code>auth</code> to see only authentication-related tickets.
+			Type <code>payment</code> to isolate the payment timeout issue.
+			Clear the search to restore all tickets in their original order.
+		</p>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 4 — Filter Deep Dive
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="filter">
+	<span class="chapter-number">Chapter 4</span>
+	<h2>Filter &mdash; Category Selection with Groups</h2>
+	<p class="chapter-lead">
+		Filter options are declared as child elements. When the user selects a category,
+		the application removes non-matching items. If all items in a group are removed,
+		the group element itself is removed from the DOM.
+	</p>
+
+	<p class="prose">
+		The <code>TimelineFilterOption</code> component is minimal: just <code>text</code>
+		and <code>selected</code> properties. The header bar reads them to populate a
+		<code>&lt;ui5-select&gt;</code> dropdown. This keeps filter options declarative and
+		serializable in HTML.
+	</p>
+
+	<!-- Code: filter options declaration -->
+	<div class="code-block reveal">
+		<div class="code-header">
+			<span class="code-filename">Declaring filter options in HTML</span>
+			<span class="code-lang">HTML</span>
+		</div>
+		<div class="code-body"><span class="tag">&lt;ui5-timeline-header-bar</span> <span class="attr">slot</span>=<span class="val">"headerBar"</span>
+  <span class="attr">show-filter</span> <span class="attr">filter-by</span>=<span class="val">"Severity"</span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;ui5-timeline-filter-option</span> <span class="attr">text</span>=<span class="val">"All"</span> <span class="attr">selected</span><span class="tag">&gt;&lt;/ui5-timeline-filter-option&gt;</span>
+  <span class="tag">&lt;ui5-timeline-filter-option</span> <span class="attr">text</span>=<span class="val">"Critical"</span><span class="tag">&gt;&lt;/ui5-timeline-filter-option&gt;</span>
+  <span class="tag">&lt;ui5-timeline-filter-option</span> <span class="attr">text</span>=<span class="val">"Warning"</span><span class="tag">&gt;&lt;/ui5-timeline-filter-option&gt;</span>
+
+<span class="tag">&lt;/ui5-timeline-header-bar&gt;</span></div>
+	</div>
+
+	<!-- Live demo: Incident Response with Groups -->
+	<div class="demo-card">
+		<div class="demo-label"><span class="dot"></span> Live Demo &mdash; Incident Response Log (with Groups)</div>
+		<div class="demo-body">
+			<ui5-timeline id="filterDemo" accessible-name="Incident Response Log">
+				<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Severity">
+					<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Critical"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Warning"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Info"></ui5-timeline-filter-option>
+				</ui5-timeline-header-bar>
+
+				<ui5-timeline-group-item id="filterGroupToday" group-name="Today &mdash; 15 March">
+					<ui5-timeline-item data-severity="Critical"
+						title-text="Database failover triggered" subtitle-text="15.03.2025 02:14"
+						icon="alert" name="PagerDuty" state="Negative">
+						Primary DB node unresponsive. Automatic failover to replica completed in 8s.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-severity="Warning"
+						title-text="API latency spike" subtitle-text="15.03.2025 06:30"
+						icon="response" name="Datadog" state="Critical">
+						p99 latency exceeded 2s threshold for /search endpoint (3.1s observed).
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-severity="Info"
+						title-text="Auto-scaling event" subtitle-text="15.03.2025 07:00"
+						icon="add" name="AWS CloudWatch" state="Information">
+						Scaled from 8 to 12 pods in us-east-1 due to traffic surge.
+					</ui5-timeline-item>
+				</ui5-timeline-group-item>
+
+				<ui5-timeline-group-item id="filterGroupYesterday" group-name="Yesterday &mdash; 14 March">
+					<ui5-timeline-item data-severity="Critical"
+						title-text="SSL certificate expiry" subtitle-text="14.03.2025 09:00"
+						icon="locked" name="Cert Monitor" state="Negative">
+						Wildcard cert for *.api.example.com expires in 72 hours. Auto-renewal failed.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-severity="Warning"
+						title-text="Disk usage threshold" subtitle-text="14.03.2025 14:00"
+						icon="database" name="Infrastructure" state="Critical">
+						/var/log partition at 87% capacity on worker-node-03.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-severity="Info"
+						title-text="Dependency update merged" subtitle-text="14.03.2025 16:30"
+						icon="sys-enter-2" name="Dependabot">
+						Updated lodash from 4.17.20 to 4.17.21 (security patch).
+					</ui5-timeline-item>
+				</ui5-timeline-group-item>
+			</ui5-timeline>
+		</div>
+	</div>
+
+	<div class="scenario">
+		<div class="scenario-title">Try it</div>
+		<p>
+			Select <strong>Critical</strong> from the dropdown. Both groups remain because each has
+			at least one critical item. Select <strong>Info</strong> &mdash; both groups still show,
+			each with one info item. Select <strong>All</strong> to restore everything.
+		</p>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 5 — Sort Deep Dive
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="sort">
+	<span class="chapter-number">Chapter 5</span>
+	<h2>Sort &mdash; Chronological Reordering</h2>
+	<p class="chapter-lead">
+		Sort reorders existing DOM nodes via <code>appendChild</code>. Moving a node
+		does not destroy or recreate it &mdash; event listeners and component state survive.
+		The Timeline recalculates connector lines on every render.
+	</p>
+
+	<p class="prose">
+		The sort button cycles through <strong>Ascending</strong> (oldest first) and
+		<strong>Descending</strong> (newest first). The icon changes to reflect the current order.
+		Internally, the header bar tracks <code>sortOrder</code> as a property and toggles it
+		in <code>_onSortClick</code>.
+	</p>
+
+	<!-- Code: sort toggle logic -->
+	<div class="code-block reveal">
+		<div class="code-header">
+			<span class="code-filename">TimelineHeaderBar.ts &mdash; sort toggle</span>
+			<span class="code-lang">TypeScript</span>
+		</div>
+		<div class="code-body"><span class="fn">_onSortClick</span>() {
+  <span class="cmt">// Toggle: Ascending -> Descending -> Ascending</span>
+  <span class="kw">if</span> (<span class="kw">this</span>.sortOrder === <span class="str">"Ascending"</span>) {
+    <span class="kw">this</span>.sortOrder = <span class="str">"Descending"</span>;
+  } <span class="kw">else</span> {
+    <span class="kw">this</span>.sortOrder = <span class="str">"Ascending"</span>;
+  }
+
+  <span class="kw">this</span>.<span class="fn">fireDecoratorEvent</span>(<span class="str">"sort"</span>, {
+    sortOrder: <span class="kw">this</span>.sortOrder,
+  });
+}
+
+<span class="cmt">// Application handler:</span>
+timeline.<span class="fn">addEventListener</span>(<span class="str">"sort"</span>, e <span class="kw">=></span> {
+  <span class="kw">const</span> order = e.detail.sortOrder;
+  <span class="kw">const</span> sorted = [...items].<span class="fn">sort</span>((a, b) <span class="kw">=></span> {
+    <span class="kw">const</span> da = <span class="kw">new</span> <span class="type">Date</span>(a.dataset.date);
+    <span class="kw">const</span> db = <span class="kw">new</span> <span class="type">Date</span>(b.dataset.date);
+    <span class="kw">return</span> order === <span class="str">"Ascending"</span> ? da - db : db - da;
+  });
+  sorted.<span class="fn">forEach</span>(item <span class="kw">=></span> timeline.<span class="fn">appendChild</span>(item));
+});</div>
+	</div>
+
+	<!-- Live demo: Build Pipeline -->
+	<div id="sortDemoOrderPill" class="status-pill reveal">
+		<span class="dot"></span>
+		<span id="sortDemoOrderText">Default order</span>
+	</div>
+
+	<div class="demo-card">
+		<div class="demo-label"><span class="dot"></span> Live Demo &mdash; Build Pipeline Log</div>
+		<div class="demo-body">
+			<ui5-timeline id="sortDemo" accessible-name="Build Pipeline Log">
+				<ui5-timeline-header-bar slot="headerBar" show-sort></ui5-timeline-header-bar>
+
+				<ui5-timeline-item data-date="2025-03-15T08:00"
+					title-text="Build #1201 &mdash; Compile" subtitle-text="15.03.2025 08:00"
+					icon="accept" name="CI Runner" state="Positive">
+					TypeScript compilation succeeded in 47s. Zero errors.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-15T08:02"
+					title-text="Build #1201 &mdash; Lint" subtitle-text="15.03.2025 08:02"
+					icon="message-information" name="CI Runner" state="Information">
+					ESLint passed with 3 warnings (no-unused-vars).
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-15T08:05"
+					title-text="Build #1201 &mdash; Unit Tests" subtitle-text="15.03.2025 08:05"
+					icon="accept" name="CI Runner" state="Positive">
+					1,247 tests passed. Coverage: 94.2% (+0.3%).
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-15T08:12"
+					title-text="Build #1201 &mdash; Integration Tests" subtitle-text="15.03.2025 08:12"
+					icon="decline" name="CI Runner" state="Negative">
+					2 failures in /api/webhooks suite. Retry scheduled.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-15T08:18"
+					title-text="Build #1201 &mdash; Integration Retry" subtitle-text="15.03.2025 08:18"
+					icon="accept" name="CI Runner" state="Positive">
+					Retry succeeded. Flaky test isolated and quarantined.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-date="2025-03-15T08:20"
+					title-text="Build #1201 &mdash; Deploy to Staging" subtitle-text="15.03.2025 08:20"
+					icon="upload" name="CI Runner" state="Positive">
+					Deployed to staging cluster. Health checks green.
+				</ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+	</div>
+
+	<div class="scenario">
+		<div class="scenario-title">Try it</div>
+		<p>
+			Click the sort button once &mdash; items reorder oldest-first (Ascending).
+			Click again &mdash; newest-first (Descending). Notice the connector lines remain
+			correct because the Timeline recalculates layout on every render cycle.
+		</p>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 6 — Combined: Everything Together
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="combined">
+	<span class="chapter-number">Chapter 6</span>
+	<h2>Combined &mdash; Search + Filter + Sort Together</h2>
+	<p class="chapter-lead">
+		All three mechanisms compose naturally. The application maintains a state object with
+		<code>search</code>, <code>filter</code>, and <code>sortOrder</code> fields. Every
+		event triggers a single <code>apply()</code> function that reconciles the DOM.
+	</p>
+
+	<!-- Code: combined handler pattern -->
+	<div class="code-block reveal">
+		<div class="code-header">
+			<span class="code-filename">Application handler &mdash; combined state</span>
+			<span class="code-lang">JavaScript</span>
+		</div>
+		<div class="code-body"><span class="kw">const</span> state = { search: <span class="str">""</span>, filter: <span class="str">"All"</span>, sortOrder: <span class="str">"Ascending"</span> };
+
+<span class="kw">function</span> <span class="fn">apply</span>() {
+  <span class="cmt">// 1. Filter: keep only matching items in the DOM</span>
+  mgr.<span class="fn">reconcile</span>(item <span class="kw">=></span> {
+    <span class="kw">const</span> text = item.titleText.toLowerCase();
+    <span class="kw">const</span> searchOk = !state.search || text.<span class="fn">includes</span>(state.search);
+    <span class="kw">const</span> filterOk = state.filter === <span class="str">"All"</span>
+      || item.dataset.category === state.filter;
+    <span class="kw">return</span> searchOk && filterOk;
+  });
+
+  <span class="cmt">// 2. Sort: reorder remaining DOM nodes</span>
+  mgr.<span class="fn">sort</span>((a, b) <span class="kw">=></span> {
+    <span class="kw">const</span> da = <span class="kw">new</span> <span class="type">Date</span>(a.dataset.date);
+    <span class="kw">const</span> db = <span class="kw">new</span> <span class="type">Date</span>(b.dataset.date);
+    <span class="kw">return</span> state.sortOrder === <span class="str">"Ascending"</span> ? da - db : db - da;
+  });
+}
+
+<span class="cmt">// 3. Wire up all three events to the same apply()</span>
+timeline.<span class="fn">addEventListener</span>(<span class="str">"search"</span>, e <span class="kw">=></span> {
+  state.search = e.detail.value.toLowerCase();
+  <span class="fn">apply</span>();
+});
+timeline.<span class="fn">addEventListener</span>(<span class="str">"filter"</span>, e <span class="kw">=></span> {
+  state.filter = e.detail.selectedOptions[<span class="num">0</span>] || <span class="str">"All"</span>;
+  <span class="fn">apply</span>();
+});
+timeline.<span class="fn">addEventListener</span>(<span class="str">"sort"</span>, e <span class="kw">=></span> {
+  state.sortOrder = e.detail.sortOrder;
+  <span class="fn">apply</span>();
+});</div>
+	</div>
+
+	<!-- Status -->
+	<div class="status-pill" id="combinedStatus">
+		<span class="dot"></span>
+		<span id="combinedStatusText">Category: All</span>
+	</div>
+
+	<!-- Live demo: Team Activity Stream -->
+	<div class="demo-card">
+		<div class="demo-label"><span class="dot"></span> Live Demo &mdash; Team Activity Stream</div>
+		<div class="demo-body">
+			<ui5-timeline id="combinedDemo" accessible-name="Team Activity Stream">
+				<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Type">
+					<ui5-timeline-filter-option text="All" selected></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Code"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Review"></ui5-timeline-filter-option>
+					<ui5-timeline-filter-option text="Deploy"></ui5-timeline-filter-option>
+				</ui5-timeline-header-bar>
+
+				<ui5-timeline-item data-type="Code" data-date="2025-03-15T09:15"
+					title-text="feat: Add user preferences API" subtitle-text="Today 09:15"
+					icon="developer-settings" name="Sarah Chen">
+					New REST endpoints for user preference storage. Includes rate limiting.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Review" data-date="2025-03-15T10:00"
+					title-text="PR #512 Review &mdash; Payment retry logic" subtitle-text="Today 10:00"
+					icon="inspect" name="James Rivera">
+					Approved with minor suggestions on error handling.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Code" data-date="2025-03-15T11:30"
+					title-text="fix: Resolve memory leak in WebSocket handler" subtitle-text="Today 11:30"
+					icon="wrench" name="Li Wei" state="Critical">
+					Event listeners were not being cleaned up on disconnect.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Deploy" data-date="2025-03-15T13:00"
+					title-text="Deploy canary &mdash; v2.6.0-rc.1" subtitle-text="Today 13:00"
+					icon="shipping-status" name="CD Pipeline" state="Positive">
+					Canary at 5% traffic. Error rate: 0.02% (baseline: 0.03%).
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Review" data-date="2025-03-15T14:30"
+					title-text="PR #515 Review &mdash; Dashboard redesign" subtitle-text="Today 14:30"
+					icon="inspect" name="Emily Watson">
+					Requested changes: accessibility contrast ratios need adjustment.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Deploy" data-date="2025-03-15T16:00"
+					title-text="Promote canary to 100%" subtitle-text="Today 16:00"
+					icon="accept" name="CD Pipeline" state="Positive">
+					v2.6.0 fully rolled out. All health checks passing.
+				</ui5-timeline-item>
+
+				<ui5-timeline-item data-type="Code" data-date="2025-03-15T17:00"
+					title-text="refactor: Extract auth middleware" subtitle-text="Today 17:00"
+					icon="source-code" name="Arun Patel">
+					Moved auth logic to shared middleware. Reduced duplication across 14 routes.
+				</ui5-timeline-item>
+			</ui5-timeline>
+		</div>
+	</div>
+
+	<div class="scenario">
+		<div class="scenario-title">Try it</div>
+		<p>
+			Select <strong>Code</strong> from the filter, then type <code>auth</code> in search.
+			Only the auth middleware refactor remains. Click sort to flip the order. Clear search
+			and select <strong>All</strong> to restore the full timeline.
+		</p>
+	</div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     CHAPTER 7 — Code Patterns & Best Practices
+     ════════════════════════════════════════════════════════════════ -->
+<section class="chapter reveal" id="code">
+	<span class="chapter-number">Chapter 7</span>
+	<h2>Code Patterns &amp; Best Practices</h2>
+	<p class="chapter-lead">
+		Key patterns to follow when implementing Timeline header bar functionality.
+	</p>
+
+	<div class="compare-grid reveal-stagger">
+		<div class="compare-card compare-card--do">
+			<h4>Do: Remove items from DOM</h4>
+			<pre>// Items not matching the filter
+// are fully removed from the DOM.
+item.remove();
+
+// Re-add when they match again.
+timeline.appendChild(item);</pre>
+		</div>
+		<div class="compare-card compare-card--dont">
+			<h4>Don't: Hide items with CSS</h4>
+			<pre>// This leaves stale layout data
+// and breaks connector lines.
+item.style.display = "none";
+
+// The Timeline still counts hidden
+// items in onBeforeRendering.</pre>
+		</div>
+	</div>
+
+	<div class="compare-grid reveal-stagger">
+		<div class="compare-card compare-card--do">
+			<h4>Do: Listen on the Timeline</h4>
+			<pre>// Events bubble up from the
+// header bar through the Timeline.
+timeline.addEventListener("search",
+  e => { /* handle */ });</pre>
+		</div>
+		<div class="compare-card compare-card--dont">
+			<h4>Don't: Listen on the HeaderBar</h4>
+			<pre>// You'd need to reach into the
+// Timeline's slot to get the ref.
+// Events bubble anyway.
+headerBar.addEventListener("search",
+  e => { /* fragile */ });</pre>
+		</div>
+	</div>
+
+	<div class="compare-grid reveal-stagger">
+		<div class="compare-card compare-card--do">
+			<h4>Do: Preserve original order</h4>
+			<pre>// Store items on first use, then
+// always remove all + re-add matching
+// in original document order.
+const allItems = [...timeline
+  .querySelectorAll("[ui5-timeline-item]")
+];</pre>
+		</div>
+		<div class="compare-card compare-card--dont">
+			<h4>Don't: Toggle items individually</h4>
+			<pre>// Items already in the DOM stay at
+// their current position. Restored
+// items get appended at the end.
+// Result: wrong order after filter
+// clear.</pre>
+		</div>
+	</div>
+
+	<!-- Component file structure -->
+	<p class="prose" style="margin-top: 1.5rem;">
+		The header bar feature spans these files. Each has a single, focused responsibility:
+	</p>
+
+	<div class="code-block reveal">
+		<div class="code-header">
+			<span class="code-filename">Component file structure</span>
+			<span class="code-lang">Files</span>
+		</div>
+		<div class="code-body"><span class="cmt">packages/fiori/src/</span>
+  Timeline.ts                 <span class="cmt">// Parent: fires events, owns headerBar slot</span>
+  TimelineTemplate.tsx        <span class="cmt">// Template: renders slot wrapper when present</span>
+  TimelineHeaderBar.ts        <span class="cmt">// Header: search/filter/sort UI + event firing</span>
+  TimelineHeaderBarTemplate.tsx <span class="cmt">// Template: Input, Select, Button composition</span>
+  TimelineFilterOption.ts     <span class="cmt">// Minimal: text + selected properties</span>
+  TimelineItem.ts             <span class="cmt">// Item: titleText, name, icon, state, etc.</span>
+  TimelineGroupItem.ts        <span class="cmt">// Group: collapse/expand, child management</span>
+
+<span class="cmt">packages/fiori/src/types/</span>
+  TimelineSortOrder.ts        <span class="cmt">// Enum: Ascending | Descending</span>
+  TimelineLayout.ts           <span class="cmt">// Enum: Vertical | Horizontal</span>
+
+<span class="cmt">packages/fiori/src/themes/</span>
+  Timeline.css                <span class="cmt">// Root layout, scroll container</span>
+  TimelineHeaderBar.css       <span class="cmt">// Toolbar flex layout, spacing</span></div>
+	</div>
+</section>
+
+</div><!-- /.content -->
+
+
+<!-- ════════════════════════════════════════════
+     Footer
+     ════════════════════════════════════════════ -->
+<footer class="page-footer">
+	<p>UI5 Web Components &mdash; Timeline Header Bar Architecture Showcase</p>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     Scripts
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+// ──────────────────────────────────────────────
+// Scroll-reveal observer
+// ──────────────────────────────────────────────
+(function () {
+	const observer = new IntersectionObserver(entries => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				entry.target.classList.add("visible");
+			}
+		});
+	}, { threshold: 0.1 });
+
+	document.querySelectorAll(".reveal, .reveal-stagger").forEach(el => observer.observe(el));
+})();
+
+
+// ──────────────────────────────────────────────
+// Shared item manager (same as TimelineHeaderBar.html)
+// ──────────────────────────────────────────────
+function createItemManager(timelineEl) {
+	let initialized = false;
+	let allItems, allGroups, itemParentMap, groupParentMap, timelineChildOrder;
+
+	function init() {
+		if (initialized) return;
+		initialized = true;
+
+		allItems = Array.from(timelineEl.querySelectorAll("[ui5-timeline-item]"));
+		allGroups = Array.from(timelineEl.querySelectorAll("[ui5-timeline-group-item]"));
+
+		itemParentMap = new Map();
+		allItems.forEach(item => itemParentMap.set(item, item.parentElement));
+
+		groupParentMap = new Map();
+		allGroups.forEach(group => groupParentMap.set(group, group.parentElement));
+
+		timelineChildOrder = Array.from(timelineEl.children).filter(child =>
+			child.matches("[ui5-timeline-item], [ui5-timeline-group-item]")
+		);
+	}
+
+	return {
+		get totalCount() { init(); return allItems.length; },
+
+		reconcile(filterFn) {
+			init();
+			const matching = new Set(allItems.filter(filterFn));
+
+			allItems.forEach(item => { if (item.parentElement) item.remove(); });
+			allGroups.forEach(group => { if (group.parentElement) group.remove(); });
+
+			allItems.forEach(item => {
+				if (matching.has(item) && itemParentMap.get(item) !== timelineEl) {
+					itemParentMap.get(item).appendChild(item);
+				}
+			});
+
+			timelineChildOrder.forEach(child => {
+				if (child.matches("[ui5-timeline-group-item]")) {
+					const hasChildren = allItems.some(
+						item => itemParentMap.get(item) === child && matching.has(item)
+					);
+					if (hasChildren) timelineEl.appendChild(child);
+				} else {
+					if (matching.has(child)) timelineEl.appendChild(child);
+				}
+			});
+
+			return matching.size;
+		},
+
+		sort(compareFn) {
+			init();
+			const visibleItems = allItems.filter(item => item.parentElement);
+			visibleItems.sort(compareFn);
+			visibleItems.forEach(item => timelineEl.appendChild(item));
+		}
+	};
+}
+
+
+// ──────────────────────────────────────────────
+// Pipeline animation helper
+// ──────────────────────────────────────────────
+function animatePipeline(eventType, detail) {
+	const steps = document.querySelectorAll("#pipelineSteps .pipeline-step");
+	steps.forEach(s => { s.classList.remove("active", "done"); });
+
+	const delays = [0, 120, 240, 360, 480];
+	steps.forEach((step, i) => {
+		setTimeout(() => {
+			steps.forEach(s => s.classList.remove("active"));
+			step.classList.add("active");
+			if (i > 0) steps[i - 1].classList.add("done");
+		}, delays[i]);
+
+		if (i === steps.length - 1) {
+			setTimeout(() => {
+				step.classList.remove("active");
+				step.classList.add("done");
+			}, delays[i] + 250);
+		}
+	});
+
+	// Add to event stream
+	const stream = document.getElementById("eventStream");
+	const entry = document.createElement("div");
+	entry.classList.add("event-stream-entry");
+	const ts = new Date().toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+	const payload = JSON.stringify(detail).replace(/"/g, "");
+	entry.innerHTML = `<span class="ts">${ts}</span> <span class="ev">${eventType}</span> <span class="payload">${payload}</span>`;
+
+	// Insert after label
+	const label = stream.querySelector(".event-stream-label");
+	if (label.nextSibling) {
+		stream.insertBefore(entry, label.nextSibling);
+	} else {
+		stream.appendChild(entry);
+	}
+
+	// Cap entries
+	const entries = stream.querySelectorAll(".event-stream-entry");
+	if (entries.length > 15) entries[entries.length - 1].remove();
+}
+
+
+// ──────────────────────────────────────────────
+// Chapter 2: Pipeline Demo
+// ──────────────────────────────────────────────
+(function () {
+	const timeline = document.getElementById("pipelineDemo");
+	const statusText = document.getElementById("pipelineStatusText");
+	const statusPill = document.getElementById("pipelineStatus");
+	const itemManager = createItemManager(timeline);
+	const state = { search: "", filter: "All", sortOrder: "Ascending" };
+
+	function apply() {
+		const count = itemManager.reconcile(item => {
+			const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+				.join(" ").toLowerCase();
+			const searchOk = !state.search || text.includes(state.search);
+			const filterOk = state.filter === "All" || item.dataset.category === state.filter;
+			return searchOk && filterOk;
+		});
+
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
+
+		const total = itemManager.totalCount;
+		const isFiltered = count < total;
+		statusText.textContent = `Showing ${count} of ${total} items`;
+		statusPill.classList.toggle("status-pill--filtered", isFiltered);
+	}
+
+	timeline.addEventListener("search", e => {
+		state.search = e.detail.value.toLowerCase();
+		animatePipeline("search", e.detail);
+		apply();
+	});
+
+	timeline.addEventListener("filter", e => {
+		state.filter = e.detail.selectedOptions[0] || "All";
+		animatePipeline("filter", e.detail);
+		apply();
+	});
+
+	timeline.addEventListener("sort", e => {
+		state.sortOrder = e.detail.sortOrder;
+		animatePipeline("sort", e.detail);
+		apply();
+	});
+})();
+
+
+// ──────────────────────────────────────────────
+// Chapter 3: Search Demo
+// ──────────────────────────────────────────────
+(function () {
+	const timeline = document.getElementById("searchDemo");
+	const itemManager = createItemManager(timeline);
+
+	timeline.addEventListener("search", e => {
+		const searchQuery = e.detail.value.toLowerCase();
+		itemManager.reconcile(item => {
+			if (!searchQuery) return true;
+			const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+				.join(" ").toLowerCase();
+			return text.includes(searchQuery);
+		});
+	});
+})();
+
+
+// ──────────────────────────────────────────────
+// Chapter 4: Filter Demo (with groups)
+// ──────────────────────────────────────────────
+(function () {
+	const timeline = document.getElementById("filterDemo");
+	const itemManager = createItemManager(timeline);
+
+	timeline.addEventListener("filter", e => {
+		const severity = e.detail.selectedOptions[0] || "All";
+		itemManager.reconcile(item => {
+			return severity === "All" || item.dataset.severity === severity;
+		});
+	});
+})();
+
+
+// ──────────────────────────────────────────────
+// Chapter 5: Sort Demo
+// ──────────────────────────────────────────────
+(function () {
+	const timeline = document.getElementById("sortDemo");
+	const orderText = document.getElementById("sortDemoOrderText");
+	const orderPill = document.getElementById("sortDemoOrderPill");
+	const itemManager = createItemManager(timeline);
+
+	timeline.addEventListener("sort", e => {
+		const order = e.detail.sortOrder;
+		orderText.textContent = order === "Ascending" ? "Oldest first" : "Newest first";
+		orderPill.classList.add("status-pill--filtered");
+
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return order === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
+	});
+})();
+
+
+// ──────────────────────────────────────────────
+// Chapter 6: Combined Demo
+// ──────────────────────────────────────────────
+(function () {
+	const timeline = document.getElementById("combinedDemo");
+	const statusText = document.getElementById("combinedStatusText");
+	const statusPill = document.getElementById("combinedStatus");
+	const itemManager = createItemManager(timeline);
+	const state = { search: "", type: "All", sortOrder: "Ascending" };
+
+	function apply() {
+		itemManager.reconcile(item => {
+			const text = [item.titleText, item.name, item.textContent]
+				.join(" ").toLowerCase();
+			const searchOk = !state.search || text.includes(state.search);
+			const typeOk = state.type === "All" || item.dataset.type === state.type;
+			return searchOk && typeOk;
+		});
+
+		itemManager.sort((a, b) => {
+			const dateA = new Date(a.dataset.date || 0);
+			const dateB = new Date(b.dataset.date || 0);
+			return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+		});
+
+		const parts = [];
+		if (state.type !== "All") parts.push(`Type: ${state.type}`);
+		if (state.search) parts.push(`Search: "${state.search}"`);
+		parts.push(`Sort: ${state.sortOrder}`);
+		const isFiltered = parts.length > 1 || state.type !== "All";
+		statusText.textContent = isFiltered ? parts.join(" + ") : `Sort: ${state.sortOrder}`;
+		statusPill.classList.toggle("status-pill--filtered", isFiltered);
+	}
+
+	timeline.addEventListener("search", e => {
+		state.search = e.detail.value.toLowerCase();
+		apply();
+	});
+
+	timeline.addEventListener("filter", e => {
+		state.type = e.detail.selectedOptions[0] || "All";
+		apply();
+	});
+
+	timeline.addEventListener("sort", e => {
+		state.sortOrder = e.detail.sortOrder;
+		apply();
+	});
+})();
+</script>
+
+</body>
+</html>

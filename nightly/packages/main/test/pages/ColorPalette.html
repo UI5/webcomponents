@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Color Palette</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+
+
+
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-D6c8Uze9.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/ColorPalette-BpzXBWPb.css">
+</head>
+
+<body class="colorpalette1auto">
+
+	<ui5-color-palette id="cp1SelectedTest">
+		<ui5-color-palette-item value="darkblue" selected></ui5-color-palette-item>
+		<ui5-color-palette-item value="pink" selected></ui5-color-palette-item>
+		<ui5-color-palette-item value="#444444" tooltip="charcoal" selected></ui5-color-palette-item>
+		<ui5-color-palette-item value="rgb(0,200,0)" tooltip="bright green" selected></ui5-color-palette-item>
+		<ui5-color-palette-item value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#ff6699" tooltip="brilliant rose"></ui5-color-palette-item>
+	</ui5-color-palette>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+	<ui5-color-palette id="cp1">
+		<ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="pink"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+		<ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+		<ui5-color-palette-item value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
+	</ui5-color-palette>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<ui5-input id="itemClickResult" value="Nothing selected"></ui5-input>
+	<br>
+	<ui5-button id="colorPaletteBtn" >Open ColorPalette</ui5-button>
+	<ui5-responsive-popover id="respPopover">
+		<div id="respPopoverHeader" slot="header">
+			<ui5-title>Color Palette Popover</ui5-title>
+		</div>
+
+		<ui5-color-palette id="cp2">
+			<ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+			<ui5-color-palette-item value="pink"></ui5-color-palette-item>
+			<ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+			<ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+			<ui5-color-palette-item value="green"></ui5-color-palette-item>
+			<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+			<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+			<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+			<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+			<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+			<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+			<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
+			<ui5-color-palette-item value="invalidColor"></ui5-color-palette-item>
+			<ui5-color-palette-item value="gray"></ui5-color-palette-item>
+			<ui5-color-palette-item value="white"></ui5-color-palette-item>
+			<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		</ui5-color-palette>
+
+		<div slot="footer" class="popover-footer">
+			<ui5-button id="btnClose" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-responsive-popover>
+
+	<br/>
+	<br/>
+	<br/>
+
+	<ui5-color-palette id="cp3" show-more-colors show-recent-colors>
+		<ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="pink"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+		<ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+		<ui5-color-palette-item value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
+	</ui5-color-palette>
+
+	<ui5-color-palette id="cp4" show-more-colors show-recent-colors>
+		<ui5-color-palette-item value="pink"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+		<ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+		<ui5-color-palette-item value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
+	</ui5-color-palette>
+
+	<br/>
+	<br/>
+	<br/>
+	<h3>ColorPaletteItem Click Event Demo</h3>
+	<p>Sample 1: Listen to click event on individual items (with modifier keys)</p>
+	<ui5-input id="itemClickEventResult" value="No item clicked yet" style="width: 400px;"></ui5-input>
+	<br/>
+	<ui5-color-palette id="cp5">
+		<ui5-color-palette-item id="item1" value="red"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item2" value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item3" value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item4" value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item id="item5" value="orange"></ui5-color-palette-item>
+	</ui5-color-palette>
+
+	<br/>
+	<br/>
+	<br/>
+	<p>Sample 2: preventDefault on item click prevents parent's item-click event</p>
+	<ui5-input id="preventDefaultResult" value="Click an item below" style="width: 400px;"></ui5-input>
+	<br/>
+	<ui5-color-palette id="cp6">
+		<ui5-color-palette-item id="normalItem" value="purple"></ui5-color-palette-item>
+		<ui5-color-palette-item id="preventItem" value="brown"></ui5-color-palette-item>
+		<ui5-color-palette-item id="anotherNormalItem" value="pink"></ui5-color-palette-item>
+	</ui5-color-palette>
+	<p><small>The middle item (brown) calls preventDefault and parent's item-click will not fire</small></p>
+
+</body>
+
+	<script>
+		cp1.addEventListener("ui5-item-click", function(event) {
+			itemClickResult.value = event.detail.color;
+		});
+
+		colorPaletteBtn.addEventListener("click", function(event) {
+			respPopover.opener = colorPaletteBtn;
+			respPopover.open = true;
+		});
+
+		btnClose.addEventListener("click", function(event) {
+			respPopover.open = false;
+		});
+
+		// Sample 1: Individual item click events with modifier keys
+		[item1, item2, item3, item4, item5].forEach(function(item) {
+			item.addEventListener("click", function(event) {
+				const originalEvent = event.detail.originalEvent;
+				const modifiers = [];
+				if (originalEvent.altKey) modifiers.push("Alt");
+				if (originalEvent.ctrlKey) modifiers.push("Ctrl");
+				if (originalEvent.metaKey) modifiers.push("Meta");
+				if (originalEvent.shiftKey) modifiers.push("Shift");
+				
+				const modifierText = modifiers.length > 0 ? " with " + modifiers.join("+") : "";
+				itemClickEventResult.value = "Clicked item: " + item.value + modifierText;
+			});
+		});
+
+		// Sample 2: preventDefault demonstration
+		cp6.addEventListener("ui5-item-click", function(event) {
+			preventDefaultResult.value = "Parent received item-click: " + event.detail.color;
+		});
+
+		// Normal items - let the event bubble to parent
+		normalItem.addEventListener("click", function(event) {
+			console.log("Normal item clicked, event will bubble to parent");
+		});
+
+		anotherNormalItem.addEventListener("click", function(event) {
+			console.log("Another normal item clicked, event will bubble to parent");
+		});
+
+		// This item prevents default - parent's item-click will NOT fire
+		preventItem.addEventListener("click", function(event) {
+			event.preventDefault();
+			preventDefaultResult.value = "Item click prevented! Parent's item-click did NOT fire";
+			console.log("preventDefault called on item, parent will not receive item-click event");
+		});
+	</script>
+</html>

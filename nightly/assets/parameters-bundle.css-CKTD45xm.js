@@ -1,0 +1,25 @@
+const _=`:host{
+    --ui5_table_focus_outline_offset: .125rem;
+    --ui5_table_bottom_border: 1px solid var(--sapList_BorderColor);
+    --ui5_table_header_row_outline_width: .125rem;
+    --ui5_table_multiselect_column_width: 2.75rem;
+    --ui5_table_header_row_font_weight: normal;
+    --ui5_table_header_row_font_family: var(--sapFontFamily);
+    --ui5_table_header_row_border_bottom_color: var(--sapList_BorderColor);
+    --ui5_table_header_row_border_width: 1px;
+    --_ui5_table_load_more_border-bottom: none;
+    --ui5_table_row_outline_width: .125rem;
+    --ui5_table_multiselect_popin_row_padding: 3.25rem;
+    --ui5_table_group_row_font-weight: normal;
+    --ui5_table_border_width: 0 0 1px 0;
+    --_ui5_load_more_padding: .25rem;
+    --_ui5_load_more_border: 1px solid var(--sapButton_BorderColor);
+    --_ui5_load_more_border_radius: .375rem;
+    --_ui5_load_more_outline_width: .125rem;
+    --_ui5_load_more_text_height: var(--_ui5-compact-size, 2.625rem)  var(--_ui5-cozy-size, 2.75rem);
+    --_ui5_load_more_text_font_size: var(--_ui5-compact-size, var(--sapFontSize))  var(--_ui5-cozy-size, var(--sapFontMediumSize));
+    --_ui5_load_more_desc_padding: var(--_ui5-compact-size, 0 2rem .875rem 2rem)  var(--_ui5-cozy-size, .375rem 2rem .875rem 2rem);
+    --ui5_table_header_row_height: var(--_ui5-compact-size, 2rem)  var(--_ui5-cozy-size, 2.75rem);
+    --ui5_table_row_height: var(--_ui5-compact-size, 2rem)  var(--_ui5-cozy-size, 2.75rem);
+    --ui5_table_group_row_height: 2rem}
+`;export{_ as default};
