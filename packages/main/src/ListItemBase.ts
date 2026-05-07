@@ -53,6 +53,7 @@ type ListItemBasePressEventDetail = {
 })
 @event("forward-before", {
 	bubbles: true,
+	cancelable: true,
 })
 class ListItemBase extends UI5Element implements ITabbable {
 	eventDetails!: {
@@ -248,7 +249,9 @@ class ListItemBase extends UI5Element implements ITabbable {
 		const target = e.target as HTMLElement;
 
 		if (this.shouldForwardTabBefore(target)) {
-			this.fireDecoratorEvent("forward-before");
+			if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
 		}
 	}
 

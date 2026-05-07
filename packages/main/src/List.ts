@@ -1065,12 +1065,15 @@ class List extends UI5Element {
 		const activeElement = getActiveElement();
 
 		e.preventDefault();
+		e.stopPropagation(); // Prevent Tokenizer's F7 handler from undoing the focus change set by this handler.
 
 		if (activeElement === listItemDomRef) {
+			listItem._editMode = true;
 			listItem._focusInternalElement(this._lastFocusedElementIndex ?? 0);
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
 		} else {
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
+			listItem._editMode = false;
 			listItemDomRef.focus();
 		}
 	}
@@ -1270,6 +1273,7 @@ class List extends UI5Element {
 			return false;
 		}
 
+		nextNode._editMode = listItem._editMode;
 		const focusedIndex = nextNode._focusInternalElement(targetInternalElementIndex);
 		if (focusedIndex !== undefined) {
 			this._lastFocusedElementIndex = focusedIndex;
@@ -1410,13 +1414,63 @@ class List extends UI5Element {
 	}
 
 	onForwardBefore(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : undefined;
+
+			if (prevItem) {
+				prevItem._editMode = true;
+				const focusables = prevItem._getFocusableElements();
+				prevItem._focusInternalElement(focusables.length - 1);
+				this._lastFocusedElementIndex = focusables.length - 1;
+				this.setPreviouslyFocusedItem(prevItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 		this.focusBeforeElement();
 		e.stopPropagation();
 	}
 
 	onForwardAfter(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const nextItem = currentIndex >= 0 && currentIndex < allItems.length - 1
+				? allItems[currentIndex + 1] : undefined;
+
+			if (nextItem) {
+				nextItem._editMode = true;
+				nextItem._focusInternalElement(0);
+				this._lastFocusedElementIndex = 0;
+				this.setPreviouslyFocusedItem(nextItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 
 		if (!this.growsWithButton) {
 			this.focusAfterElement();

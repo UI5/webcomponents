@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List Edit Mode - Keyboard Navigation Test</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 2rem;
+			font-family: "72", "72full", Arial, sans-serif;
+			background: var(--sapBackgroundColor, #f5f6f7);
+		}
+
+		h2 {
+			margin-top: 2rem;
+		}
+
+		.instructions {
+			padding: 1rem;
+			margin-bottom: 2rem;
+			border: 1px solid var(--sapField_BorderColor, #89919a);
+			background: var(--sapInformationBackground, #f5faff);
+			border-radius: 4px;
+		}
+
+		.instructions kbd {
+			display: inline-block;
+			padding: 2px 6px;
+			font-size: 0.85em;
+			font-family: monospace;
+			background: var(--sapButton_Background, #fff);
+			border: 1px solid var(--sapButton_BorderColor, #bcc3ca);
+			border-radius: 3px;
+			box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+		}
+
+		.test-section {
+			margin-bottom: 2rem;
+			max-width: 600px;
+		}
+
+		.buttons-row {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+		}
+
+		.focus-log {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: var(--sapShell_Background, #354a5f);
+			color: var(--sapShell_TextColor, #fff);
+			padding: 0.5rem 1rem;
+			font-family: monospace;
+			font-size: 0.85em;
+			z-index: 999;
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+		}
+
+		.focus-log span {
+			opacity: 0.6;
+		}
+
+		.focus-log strong {
+			opacity: 1;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>List Edit Mode - Keyboard Navigation</h1>
+
+	<div class="instructions">
+		<strong>Navigation Mode (default):</strong> <kbd>Arrow Up/Down</kbd> between items, <kbd>Tab</kbd> forwards out of list.
+		<br><br>
+		<strong>Edit Mode:</strong> Press <kbd>F2</kbd> or <kbd>F7</kbd> to enter. <kbd>Tab</kbd> moves through internal elements, then flows to the next item's elements. <kbd>Shift+Tab</kbd> moves backward, flowing to the previous item's last element. Press <kbd>F2</kbd> / <kbd>F7</kbd> again to exit.
+		<br><br>
+		<strong>Arrow navigation in edit mode:</strong> <kbd>Arrow Up/Down</kbd> moves to the same-index element in adjacent items.
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>1. Delete Mode - ListItemStandard</h2>
+	<p>Expected: <kbd>F2</kbd> &rarr; focus on delete button &rarr; <kbd>Tab</kbd> flows to next item's delete button &rarr; continues until exiting list</p>
+
+	<div class="test-section">
+		<ui5-button id="before-1">Before</ui5-button>
+		<ui5-list id="list-delete-standard" selection-mode="Delete" header-text="Delete Mode - Standard Items">
+			<ui5-li>Laptop HP</ui5-li>
+			<ui5-li>Monitor Dell 27"</ui5-li>
+			<ui5-li>Keyboard Mechanical</ui5-li>
+		</ui5-list>
+		<ui5-button id="after-1">After</ui5-button>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>2. Delete Mode - ListItemCustom (multiple interactive elements)</h2>
+	<p>Expected: <kbd>F2</kbd> &rarr; focus on first button &rarr; <kbd>Tab</kbd> through buttons, link, delete button &rarr; flows to next item's first element</p>
+
+	<div class="test-section">
+		<ui5-button id="before-2">Before</ui5-button>
+		<ui5-list id="list-delete-custom" selection-mode="Delete" header-text="Delete Mode - Custom Items">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Edit</ui5-button>
+					<ui5-link href="#">Details</ui5-link>
+					<ui5-button design="Negative">Archive</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>View</ui5-button>
+					<ui5-input placeholder="Comment" style="width: 140px;"></ui5-input>
+					<ui5-button design="Emphasized">Submit</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="after-2">After</ui5-button>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>3. Delete Mode - Custom Delete Button Slot</h2>
+	<p>Expected: <kbd>F2</kbd> &rarr; focus on custom delete button &rarr; <kbd>Tab</kbd> flows to next item</p>
+
+	<div class="test-section">
+		<ui5-list id="list-delete-custom-btn" selection-mode="Delete" header-text="Delete Mode - Custom Delete Button">
+			<ui5-li>Standard delete button</ui5-li>
+			<ui5-li>
+				Custom delete button
+				<div slot="deleteButton">
+					<ui5-button design="Negative" icon="delete">Remove</ui5-button>
+				</div>
+			</ui5-li>
+		</ui5-list>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>4. Delete Mode - Mixed Item Types</h2>
+	<p>Expected: <kbd>Arrow Down/Up</kbd> in edit mode transfers edit mode to the adjacent item. Focus index clamped to available elements.</p>
+
+	<div class="test-section">
+		<ui5-list id="list-delete-mixed" selection-mode="Delete" header-text="Delete Mode - Mixed Items">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Action A</ui5-button>
+					<ui5-button>Action B</ui5-button>
+					<ui5-button>Action C</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li>Standard item (only delete button)</ui5-li>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-input placeholder="Search" style="width: 140px;"></ui5-input>
+					<ui5-button icon="search">Go</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>5. SingleEnd Mode - ListItemCustom</h2>
+	<p>Expected: <kbd>Tab</kbd> forwards (does NOT enter interactive elements). <kbd>F2</kbd>/<kbd>F7</kbd> required to access buttons.</p>
+
+	<div class="test-section">
+		<ui5-button id="before-5">Before</ui5-button>
+		<ui5-list id="list-single-custom" selection-mode="SingleEnd" header-text="SingleEnd - Custom Items">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Press me</ui5-button>
+					<ui5-link href="#">Go to SAP</ui5-link>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Another button</ui5-button>
+					<ui5-link href="#">Another link</ui5-link>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="after-5">After</ui5-button>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>6. Multiple Mode - ListItemCustom</h2>
+	<p>Expected: Same edit mode behavior. <kbd>Tab</kbd> forwards in navigation mode, <kbd>F2</kbd> to enter edit mode, <kbd>Tab</kbd> flows across items.</p>
+
+	<div class="test-section">
+		<ui5-list id="list-multi-custom" selection-mode="Multiple" header-text="Multiple - Custom Items">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Edit</ui5-button>
+					<ui5-button>Delete</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom selected>
+				<div class="buttons-row">
+					<ui5-button>View</ui5-button>
+					<ui5-button>Share</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>7. None Mode - ListItemCustom</h2>
+	<p>Expected: <kbd>Tab</kbd> forwards out. <kbd>F2</kbd>/<kbd>F7</kbd> to enter internal elements.</p>
+
+	<div class="test-section">
+		<ui5-button id="before-7">Before</ui5-button>
+		<ui5-list id="list-none-custom" header-text="None Mode - Custom Items">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Action 1</ui5-button>
+					<ui5-button>Action 2</ui5-button>
+					<ui5-input placeholder="Type here" style="width: 120px;"></ui5-input>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Action 3</ui5-button>
+					<ui5-link href="#">Link</ui5-link>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="after-7">After</ui5-button>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>8. Detail Type with Delete Mode</h2>
+	<p>Expected: <kbd>F2</kbd> &rarr; <kbd>Tab</kbd> flows through detail button and delete button, then to next item.</p>
+
+	<div class="test-section">
+		<ui5-list id="list-detail-delete" selection-mode="Delete" header-text="Detail + Delete">
+			<ui5-li type="Detail">Detail item with delete</ui5-li>
+			<ui5-li type="Detail">Another detail item</ui5-li>
+		</ui5-list>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>9. Focus-out Clears Edit Mode</h2>
+	<p>Expected: Enter edit mode &rarr; click outside &rarr; edit mode cleared &rarr; <kbd>Tab</kbd> forwards again.</p>
+
+	<div class="test-section">
+		<ui5-list id="list-focusout" selection-mode="Delete" header-text="Focus-out Test">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Inside Button</ui5-button>
+					<ui5-link href="#">Inside Link</ui5-link>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="outside-btn">Click me to move focus outside</ui5-button>
+	</div>
+
+	<!-- ============================================================ -->
+	<h2>10. Growing Button + Delete Mode</h2>
+	<p>Expected: <kbd>Tab</kbd> from item goes to growing button (not internal elements).</p>
+
+	<div class="test-section">
+		<ui5-list id="list-growing-delete" selection-mode="Delete" growing="Button" header-text="Growing + Delete">
+			<ui5-li>Item 1</ui5-li>
+			<ui5-li>Item 2</ui5-li>
+			<ui5-li>Item 3</ui5-li>
+		</ui5-list>
+	</div>
+
+	<!-- Focus tracker bar -->
+	<div class="focus-log" id="focusLog">
+		<span>Focus:</span>
+		<strong id="focusTarget">-</strong>
+		<span>|</span>
+		<span>Edit mode:</span>
+		<strong id="editModeStatus">-</strong>
+		<span>|</span>
+		<span>Last key:</span>
+		<strong id="lastKey">-</strong>
+	</div>
+
+	<script>
+		const focusTarget = document.getElementById('focusTarget');
+		const editModeStatus = document.getElementById('editModeStatus');
+		const lastKey = document.getElementById('lastKey');
+
+		function getLabel(el) {
+			if (!el) return '-';
+			const tag = el.tagName?.toLowerCase() || '?';
+
+			if (tag === 'ui5-li-custom' || tag === 'ui5-li') {
+				const list = el.closest('ui5-list');
+				const items = list ? [...list.querySelectorAll('ui5-li, ui5-li-custom')] : [];
+				const idx = items.indexOf(el);
+				return `${tag} [item ${idx + 1}]`;
+			}
+
+			const text = el.textContent?.trim().substring(0, 25) || el.placeholder || '';
+			return `${tag}${text ? ': "' + text + '"' : ''}`;
+		}
+
+		document.addEventListener('focusin', function (e) {
+			focusTarget.textContent = getLabel(e.target);
+
+			// Check edit mode on the closest list item
+			const listItem = e.target.closest?.('ui5-li, ui5-li-custom');
+			if (listItem) {
+				editModeStatus.textContent = listItem._editMode ? 'ON' : 'OFF';
+			}
+		});
+
+		document.addEventListener('keydown', function (e) {
+			const special = ['F2', 'F7', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
+			if (special.includes(e.key)) {
+				lastKey.textContent = (e.shiftKey ? 'Shift+' : '') + e.key;
+			}
+
+			// Update edit mode status after a tick (state changes on keydown)
+			setTimeout(() => {
+				const active = document.activeElement;
+				const listItem = active?.closest?.('ui5-li, ui5-li-custom');
+				if (listItem) {
+					editModeStatus.textContent = listItem._editMode ? 'ON' : 'OFF';
+				}
+			}, 50);
+		});
+	</script>
+</body>
+
+</html>
