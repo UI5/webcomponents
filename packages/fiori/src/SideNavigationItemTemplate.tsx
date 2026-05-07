@@ -52,6 +52,9 @@ function ItemTemplate(this: SideNavigationItem) {
 					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
 				<div class="ui5-sn-item-text">{this.text}</div>
+				{this.hasTag &&
+					<slot name="tag" id={this._tagId} class="ui5-sn-item-tag-slot"></slot>
+				}
 				{this.sideNavCollapsed ?
 					!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"

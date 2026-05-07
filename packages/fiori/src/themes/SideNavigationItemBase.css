@@ -357,6 +357,41 @@ and there is an additional border that appears on hover. */
 	padding-inline-end: 0.375rem;
 }
 
+.ui5-sn-item-tag-slot {
+	padding-inline-start: 0.5rem;
+	padding-inline-end: 0.375rem;
+	display: inline-flex;
+	align-items: center;
+}
+
+.ui5-sn-item-tag-slot:has(+ .ui5-sn-item-toggle-icon),
+.ui5-sn-item-tag-slot:has(+ .ui5-sn-item-external-link-icon) {
+	padding-inline-end: 0;
+}
+
+.ui5-sn-item-tag-slot + .ui5-sn-item-toggle-icon,
+.ui5-sn-item-tag-slot + .ui5-sn-item-external-link-icon {
+	margin-inline-start: 0.375rem;
+}
+
+:host([side-nav-collapsed]) .ui5-sn-item-tag-slot {
+	display: none;
+}
+
+:host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):hover .ui5-sn-item-tag-slot,
+:host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):focus .ui5-sn-item-tag-slot {
+	display: inline-flex;
+	max-width: 4rem;
+}
+
+:host([in-popover]) .ui5-sn-item-tag-slot {
+	display: inline-flex;
+}
+
+.ui5-sn-item-tag-slot::slotted([ui5-tag]) {
+	max-width: 4rem;
+}
+
 :host([side-nav-collapsed]) .ui5-sn-item-with-expander .ui5-sn-item-icon::after {
 	display: var(--_ui5_side_navigation_triangle_display);
 	content: "";
