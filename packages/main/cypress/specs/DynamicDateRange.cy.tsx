@@ -324,7 +324,11 @@ describe("DynamicDateRange Last/Next Options", () => {
 		cy.get("@ddr")
 			.ui5DynamicDateRangeSubmit();
 
-		cy.get("@innerInput")
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
 			.should("have.value", "Last 7 Days");
 	});
 
@@ -538,6 +542,72 @@ describe("FromDateTime Option", () => {
 		cy.get("@input")
 			.should("contain.value", "From Oct 13, 2025");
 	});
+
+	it("should allow selecting a new date when a previous FromDateTime value exists", () => {
+		const mockOptions: Array<IDynamicDateRangeOption> = [
+			new FromDateTime(),
+		];
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSetInput("Oct 1, 2025, 0:30:00 PM")
+			.ui5DynamicDateRangeSelectOption();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("popover");
+		
+		cy.get("@popover")
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find(".ui5-dp-daytext")
+			.eq(15)
+			.realClick(); // Select day 13
+		
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
+
+		 cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("contain.value", "From Oct 13, 2025");
+
+		cy.get("@ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption();
+
+		cy.get("@popover")
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("ui5-daypicker")
+			.shadow()
+			.find(".ui5-dp-daytext")
+			.eq(16)
+			.realClick(); // Select day 13
+		
+		cy.get("@ddr")
+			.ui5DynamicDateRangeSubmit();
+
+		 cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.as("input");
+
+		cy.get("@input")
+			.should("contain.value", "From Oct 14, 2025");
+	});
 });
 
 describe("ToDateTime Option", () => {
@@ -748,5 +818,35 @@ describe("DynamicDateRange DateTimeRange Option", () => {
 
 		cy.get("@toInput")
 			.should("have.value", "Feb 26, 2025, 11:59:00 PM");
+	});
+
+	it("should allow picking new dates when a previous DateTimeRange value exists", () => {
+		// Commit an initial value
+		cy.get("[ui5-dynamic-date-range]")
+			.as("ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+			.ui5DynamicDateRangeSetDateTime("from-picker", "Jan 1, 2024, 8:00:00 AM")
+			.ui5DynamicDateRangeSetDateTime("to-picker", "Jan 2, 2024, 9:00:00 AM")
+			.ui5DynamicDateRangeSubmit();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.should("contain.value", "Jan 1, 2024");
+
+		// Reopen and pick different dates — set to-picker first to avoid auto-swap
+		cy.get("@ddr")
+			.ui5DynamicDateRangeOpen()
+			.ui5DynamicDateRangeSelectOption()
+			.ui5DynamicDateRangeSetDateTime("to-picker", "Mar 6, 2025, 11:00:00 AM")
+			.ui5DynamicDateRangeSetDateTime("from-picker", "Mar 5, 2025, 10:00:00 AM")
+			.ui5DynamicDateRangeSubmit();
+
+		cy.get("@ddr")
+			.shadow()
+			.find("[ui5-input]")
+			.should("contain.value", "Mar 5, 2025")
+			.and("contain.value", "Mar 6, 2025");
 	});
 });
