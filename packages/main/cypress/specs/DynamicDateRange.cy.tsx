@@ -595,7 +595,7 @@ describe("FromDateTime Option", () => {
 			.shadow()
 			.find(".ui5-dp-daytext")
 			.eq(16)
-			.realClick(); // Select day 13
+			.realClick(); // Select day 14
 		
 		cy.get("@ddr")
 			.ui5DynamicDateRangeSubmit();
