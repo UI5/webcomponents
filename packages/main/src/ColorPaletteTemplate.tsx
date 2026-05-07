@@ -18,13 +18,14 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 				onMouseDown={this._onmousedown}
 			>
 				{this.showDefaultColor &&
-					<div class="ui5-cp-default-color-button-wrapper">
+					<div class="ui5-cp-default-color-button-wrapper"
+						onKeyDown={this._onDefaultColorKeyDown}
+						onKeyUp={this._onDefaultColorKeyUp}
+					>
 						<Button
 							class="ui5-cp-default-color-button"
 							design="Transparent"
 							onClick={this._onDefaultColorClick}
-							onKeyUp={this._onDefaultColorKeyUp}
-							onKeyDown={this._onDefaultColorKeyDown}
 						>
 							{this.colorPaletteDefaultColorText}
 						</Button>
@@ -42,13 +43,14 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 				</div>
 
 				{this.showMoreColors &&
-					<div class="ui5-cp-more-colors-wrapper">
+					<div class="ui5-cp-more-colors-wrapper"
+						onKeyDown={this._onMoreColorsKeyDown}
+					>
 						<div class="ui5-cp-separator"></div>
 						<Button
 							design="Transparent"
 							class="ui5-cp-more-colors"
 							onClick={this._openMoreColorsDialog}
-							onKeyDown={this._onMoreColorsKeyDown}
 						>
 							{this.colorPaletteMoreColorsText}
 						</Button>
