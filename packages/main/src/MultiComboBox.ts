@@ -1648,6 +1648,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		}
 
+		if (this.valueState === ValueState.Negative) {
+			this._updateValueState(this._effectiveValueState);
+		}
+
 		if (!e.detail.selectionComponentPressed && !isSpace(castedEvent) && !isSpaceCtrl(castedEvent)) {
 			this.open = false;
 			this.value = "";
@@ -2259,7 +2263,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {

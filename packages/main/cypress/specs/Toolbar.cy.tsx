@@ -831,3 +831,32 @@ describe("ToolbarButton", () => {
 	});
 });
 
+describe("Toolbar overflow button accessible name", () => {
+	it("should use the default i18n accessible name when overflowButtonAccessibleName is not set", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarButton text="Add" icon="add" overflow-priority="AlwaysOverflow"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
+			.should("have.attr", "accessible-name", "Additional Options");
+	});
+
+	it("should use the custom accessible name when overflowButtonAccessibleName is set", () => {
+		cy.mount(
+			<Toolbar overflow-button-accessible-name="More actions for Opportunity 123">
+				<ToolbarButton text="Add" icon="add" overflow-priority="AlwaysOverflow"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
+			.should("have.attr", "accessible-name", "More actions for Opportunity 123");
+	});
+});

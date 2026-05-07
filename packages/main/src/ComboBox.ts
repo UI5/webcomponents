@@ -1406,8 +1406,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._useSelectedValue = true;
 		}
 
-		if (this._useSelectedValue) {
+		// Always set selectedValue when the item has a value property, regardless of _useSelectedValue state
+		if (item.value !== undefined) {
 			this.selectedValue = item.value;
+		} else if (this._useSelectedValue) {
+			// Only clear selectedValue if we were using it before
+			this.selectedValue = undefined;
 		}
 
 		if (!item.selected) {
@@ -1533,7 +1537,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {

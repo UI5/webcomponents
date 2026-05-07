@@ -79,6 +79,7 @@ export default function UserMenuTemplate(this: UserMenu) {
 						accessibleRole="Menu"
 						accessibleName={this._ariaLabelledByActions}
 						onItemClick={this._handleMenuItemClick}
+						onMouseOver={this._itemMouseOver}
 						onui5-close-menu={this._handleMenuItemClose}
 					>
 						<slot></slot>

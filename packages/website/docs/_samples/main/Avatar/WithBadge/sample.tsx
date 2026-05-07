@@ -12,9 +12,17 @@ const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
 function App() {
   return (
-    <>
+    <div style={{ display: 'flex', alignItems: 'center', columnGap: '0.5rem' }}>
       <Avatar mode="Interactive" size="M" initials="JD" colorScheme="Accent5">
         <AvatarBadge icon="edit" state="None" slot="badge"></AvatarBadge>
+      </Avatar>
+
+      <Avatar mode="Interactive" size="M" initials="TT" colorScheme="Accent7">
+        <AvatarBadge
+          icon="edit"
+          tooltip="Open profile editor"
+          slot="badge"
+        ></AvatarBadge>
       </Avatar>
 
       <Avatar
@@ -39,7 +47,7 @@ function App() {
         <img src="/images/avatars/woman_avatar_5.png" alt="Woman Avatar 5" />
         <AvatarBadge icon="error" state="Negative" slot="badge"></AvatarBadge>
       </Avatar>
-    </>
+    </div>
   );
 }
 

@@ -245,6 +245,28 @@
 		<span id="accRefText">accessible ref text</span>
 	</section>
 
+	<section>
+		<h3>selection-change Event Demo</h3>
+		<p>Normal behavior - selection works:</p>
+		<ui5-segmented-button id="eventTestSB1">
+			<ui5-segmented-button-item id="normalItem1" selected>First</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="normalItem2">Second</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="normalItem3">Third</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<br><br>
+		<ui5-input id="normalEventLog" readonly value="No event yet"></ui5-input>
+		<br><br>
+
+		<p>With preventDefault - "Second" item blocks selection:</p>
+		<ui5-segmented-button id="eventTestSB2">
+			<ui5-segmented-button-item id="blockedItem1" selected>First</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="blockedItem2">Second (Blocked)</ui5-segmented-button-item>
+			<ui5-segmented-button-item id="blockedItem3">Third</ui5-segmented-button-item>
+		</ui5-segmented-button>
+		<br><br>
+		<ui5-input id="blockedEventLog" readonly value="No event yet"></ui5-input>
+	</section>
+
 	<script>
 
 		progSetButton1.addEventListener("click", function() {
@@ -263,6 +285,33 @@
 
 		progSetButton4.addEventListener("click", function() {
 			segButtonProg.items[0].selected = true;
+		});
+
+		// Normal behavior - events fire, selection works
+		normalItem1.addEventListener("click", function(e) {
+			normalEventLog.value = "Item 1 clicked - selection allowed";
+		});
+
+		normalItem2.addEventListener("click", function(e) {
+			normalEventLog.value = "Item 2 clicked - selection allowed";
+		});
+
+		normalItem3.addEventListener("click", function(e) {
+			normalEventLog.value = "Item 3 clicked - selection allowed";
+		});
+
+		// Blocked behavior - "Second" item prevents selection
+		blockedItem1.addEventListener("click", function(e) {
+			blockedEventLog.value = "Item 1 clicked - selection allowed";
+		});
+
+		blockedItem2.addEventListener("click", function(e) {
+			e.preventDefault();  // Block selection for this item
+			blockedEventLog.value = "Item 2 clicked - SELECTION BLOCKED!";
+		});
+
+		blockedItem3.addEventListener("click", function(e) {
+			blockedEventLog.value = "Item 3 clicked - selection allowed";
 		});
 
 	</script>

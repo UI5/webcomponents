@@ -135,6 +135,17 @@ class Toolbar extends UI5Element {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessible ARIA name of the overflow button of the component.
+	 *
+	 * **Note:** When not set, the built-in translation for "Additional Options" is used.
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	overflowButtonAccessibleName?: string;
+
+	/**
 	 * Defines the toolbar design.
 	 * @public
 	 * @default "Solid"
@@ -242,7 +253,7 @@ class Toolbar extends UI5Element {
 				accessibleName: this.ariaLabelText,
 			},
 			overflowButton: {
-				accessibleName: Toolbar.i18nBundle.getText(TOOLBAR_OVERFLOW_BUTTON_ARIA_LABEL),
+				accessibleName: this.overflowButtonAccessibleName || Toolbar.i18nBundle.getText(TOOLBAR_OVERFLOW_BUTTON_ARIA_LABEL),
 				tooltip: Toolbar.i18nBundle.getText(TOOLBAR_OVERFLOW_BUTTON_ARIA_LABEL),
 				accessibilityAttributes: {
 					expanded: this.popoverOpen,

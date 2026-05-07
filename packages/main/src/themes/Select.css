@@ -7,6 +7,31 @@
 	width: var(--_ui5_button_base_min_width);
 }
 
+:host([opened]) .ui5-input-focusable-element::after {
+	content: var(--ui5_input_focus_pseudo_element_content);
+	position: absolute;
+	pointer-events: none;
+	z-index: 2;
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--_ui5_input_focus_outline_color);
+	border-radius: var(--_ui5_input_focus_border_radius);
+	top: var(--_ui5_input_focus_offset);
+	bottom: var(--_ui5_input_focus_offset);
+	left: var(--_ui5_input_focus_offset);
+	right: var(--_ui5_input_focus_offset);
+}
+
+:host([value-state="Negative"][opened]:not([readonly])) .ui5-input-focusable-element:after {
+	border-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+}
+
+:host([value-state="Critical"][opened]:not([readonly])) .ui5-input-focusable-element:after {
+	border-color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+}
+
+:host([value-state="Positive"][opened]:not([readonly])) .ui5-input-focusable-element:after {
+	border-color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
+}
+
 :host([icon]) .ui5-select-root {
 	min-width: var(--_ui5_button_base_min_width);
 }
