@@ -10,6 +10,8 @@ export default function ToolbarTemplate(this: Toolbar) {
 				"ui5-tb-items": true,
 				"ui5-tb-items-full-width": this.hasFlexibleSpacers,
 			}}
+			onKeyDown={this._onkeydown}
+			onFocusIn={this._onfocusin}
 			role={this.accInfo.root.role}
 			aria-label={this.accInfo.root.accessibleName}
 		>

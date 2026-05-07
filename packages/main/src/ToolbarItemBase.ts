@@ -48,6 +48,33 @@ class ToolbarItemBase extends UI5Element {
 	@property({ type: Boolean })
 	preventOverflowClosing = false;
 
+	/**
+	 * Defines if the toolbar item should keep arrow key navigation for itself.
+	 *
+	 * When set to `true`, the toolbar does not process keys that are expected
+	 * to be handled by the item itself.
+	 * @default false
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	handlesOwnKeyboardNavigation = false;
+
+	/**
+	 * Defines whether the toolbar item handles keyboard navigation for a given key.
+	 *
+	 * Override this method in complex toolbar items that need to preserve
+	 * specific key handling.
+	 * @public
+	 * @since 2.22.0
+	 */
+	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
+		if (e.defaultPrevented) {
+			return this.handlesOwnKeyboardNavigation;
+		}
+		return this.handlesOwnKeyboardNavigation;
+	}
+
 	_isOverflowed: boolean = false;
 
 	get isOverflowed(): boolean {
