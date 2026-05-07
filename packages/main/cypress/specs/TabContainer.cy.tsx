@@ -1287,3 +1287,103 @@ describe("TabContainer popover", () => {
 		cy.get("@list").find(".ui5-tab-overflow-itemContent-wrapper").eq(3).should("have.css", "padding-left", "24px");
 	});
 });
+
+describe("Tab semantic click event", () => {
+	it("fires click event on tab when clicked", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.tab).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event on tab when activated with Enter key", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+		cy.realPress("Enter");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("fires click event on tab when activated with Space key", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+		cy.realPress("Space");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("does not fire click event on disabled tab", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products" disabled></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").click({ force: true });
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("fires both click on Tab and tab-select on TabContainer", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("tabClickStub"));
+		});
+
+		cy.get("#tc1").then(($tc) => {
+			$tc[0].addEventListener("ui5-tab-select", cy.stub().as("tabSelectStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+
+		cy.get("@tabClickStub").should("have.been.calledOnce");
+		cy.get("@tabSelectStub").should("have.been.calledOnce");
+	});
+});

@@ -47,7 +47,7 @@ import type Button from "./Button.js";
 import type List from "./List.js";
 import type DropIndicator from "./DropIndicator.js";
 import type Tab from "./Tab.js";
-import type { TabInStrip, TabInOverflow } from "./Tab.js";
+import type { TabInStrip, TabInOverflow, TabClickEventDetail } from "./Tab.js";
 import type { TabSeparatorInStrip } from "./TabSeparator.js";
 import type { ListItemClickEventDetail, ListMoveEventDetail } from "./List.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -111,6 +111,7 @@ interface ITab extends UI5Element {
 	receiveOverflowInfo: (arg0: TabContainerOverflowInfo) => void;
 	getDomRefInStrip: () => HTMLElement | undefined;
 	items?: Array<ITab>;
+	eventDetails: { click?: TabClickEventDetail };
 }
 
 /**
@@ -745,7 +746,7 @@ class TabContainer extends UI5Element {
 			return;
 		}
 
-		this._onHeaderItemSelect(tab);
+		this._onHeaderItemSelect(tab, e);
 	}
 
 	async _onTabExpandButtonClick(e: Event) {
@@ -772,7 +773,7 @@ class TabContainer extends UI5Element {
 
 		// if clicked between the expand button and the tab
 		if (!tabInstance) {
-			this._onHeaderItemSelect(opener.parentElement as HTMLElement);
+			this._onHeaderItemSelect(opener.parentElement as HTMLElement, e);
 			return;
 		}
 
@@ -827,7 +828,7 @@ class TabContainer extends UI5Element {
 			if (tab.realTabReference.isSingleClickArea) {
 				this._onTabStripClick(e);
 			} else {
-				this._onHeaderItemSelect(tab);
+				this._onHeaderItemSelect(tab, e);
 			}
 		}
 
@@ -856,21 +857,21 @@ class TabContainer extends UI5Element {
 			if (tab.realTabReference.isSingleClickArea) {
 				this._onTabStripClick(e);
 			} else {
-				this._onHeaderItemSelect(tab);
+				this._onHeaderItemSelect(tab, e);
 			}
 		}
 	}
 
-	_onHeaderItemSelect(tab: HTMLElement) {
+	_onHeaderItemSelect(tab: HTMLElement, originalEvent?: Event) {
 		if (!tab.hasAttribute("disabled")) {
-			this._onItemSelect(tab.id);
+			this._onItemSelect(tab.id, originalEvent);
 		}
 	}
 
 	async _onOverflowListItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		e.preventDefault(); // cancel the item selection
 
-		this._onItemSelect(e.detail.item.id.slice(0, -3)); // strip "-li" from end of id
+		this._onItemSelect(e.detail.item.id.slice(0, -3), e); // strip "-li" from end of id
 		this._closePopover();
 		await renderFinished();
 
@@ -901,13 +902,17 @@ class TabContainer extends UI5Element {
 		return result;
 	}
 
-	_onItemSelect(selectedTabId: string) {
+	_onItemSelect(selectedTabId: string, originalEvent?: Event) {
 		const selectedTabIndex = this._itemsFlat.findIndex(item => item.__id === selectedTabId);
 		const selectedTab = this._itemsFlat[selectedTabIndex] as Tab;
 
 		const selectionSuccessful = this.selectTab(selectedTab, selectedTabIndex);
 		if (!selectionSuccessful) {
 			return;
+		}
+
+		if (originalEvent) {
+			selectedTab.fireDecoratorEvent("click", { tab: selectedTab, originalEvent });
 		}
 
 		// update selected property on all items

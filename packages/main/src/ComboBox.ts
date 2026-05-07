@@ -90,6 +90,7 @@ import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
+import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import type InputComposition from "./features/InputComposition.js";
 
 const SKIP_ITEMS_SIZE = 10;
@@ -107,7 +108,8 @@ interface IComboBoxItem extends UI5Element {
 	selected?: boolean,
 	additionalText?: string,
 	_isVisible?: boolean,
-	items?: Array<IComboBoxItem>
+	items?: Array<IComboBoxItem>,
+	eventDetails: { click?: ListItemBaseClickEventDetail },
 }
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;

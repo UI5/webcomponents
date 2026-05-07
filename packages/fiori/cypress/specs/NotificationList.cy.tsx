@@ -1131,3 +1131,82 @@ describe("Notification List Item Without a Group", () => {
 	});
 	  
 });
+
+describe("NotificationListItem semantic click event", () => {
+	it("fires click event when clicked", () => {
+		cy.mount(
+			<NotificationList id="nl1">
+				<NotificationListItem id="nli1">Item 1</NotificationListItem>
+			</NotificationList>
+		);
+
+		cy.get("#nli1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#nli1").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.item).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event when activated with Enter key", () => {
+		cy.mount(
+			<NotificationList>
+				<NotificationListItem id="nli1">Item 1</NotificationListItem>
+			</NotificationList>
+		);
+
+		cy.get("#nli1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#nli1").realClick();
+		cy.realPress("Enter");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("fires click event when activated with Space key", () => {
+		cy.mount(
+			<NotificationList>
+				<NotificationListItem id="nli1">Item 1</NotificationListItem>
+			</NotificationList>
+		);
+
+		cy.get("#nli1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#nli1").realClick();
+		cy.realPress("Space");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("fires both click on item and item-click on NotificationList", () => {
+		cy.mount(
+			<NotificationList id="nl1">
+				<NotificationListItem id="nli1">Item 1</NotificationListItem>
+			</NotificationList>
+		);
+
+		cy.get("#nli1").then(($item) => {
+			$item[0].addEventListener("click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#nl1").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("listItemClickStub"));
+		});
+
+		cy.get("#nli1").realClick();
+
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+		cy.get("@listItemClickStub").should("have.been.calledOnce");
+	});
+});
