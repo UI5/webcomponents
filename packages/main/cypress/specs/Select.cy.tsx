@@ -1913,3 +1913,59 @@ describe("Select general interaction", () => {
 			.should("be.focused");
 	});
 });
+
+describe("Select - active/down state", () => {
+	it("applies active background on ui5-option while mouse is pressed", () => {
+		cy.mount(
+			<Select>
+				<Option>Option 1</Option>
+				<Option>Option 2</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.realMouseDown()
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.realMouseUp();
+	});
+
+	it("applies active background on ui5-option-custom while mouse is pressed", () => {
+		cy.mount(
+			<Select>
+				<OptionCustom>Option 1</OptionCustom>
+				<OptionCustom>Option 2</OptionCustom>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option-custom]")
+			.eq(0)
+			.realMouseDown()
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option-custom]")
+			.eq(0)
+			.realMouseUp();
+	});
+});
