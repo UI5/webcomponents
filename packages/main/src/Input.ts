@@ -631,8 +631,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	previousValue: string;
 	firstRendering: boolean;
 	typedInValue: string;
-	lastConfirmedValue: string
-	isTyping: boolean
+	lastConfirmedValue: string;
+	isTyping: boolean;
 	_handleResizeBound: ResizeObserverCallback;
 	_shouldAutocomplete?: boolean;
 	_enterKeyDown?: boolean;

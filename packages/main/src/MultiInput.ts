@@ -13,7 +13,8 @@ import {
 	isHome,
 	isEnd,
 	isDown,
-
+	isEnter,
+	isTabNext,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -153,6 +154,8 @@ class MultiInput extends Input implements IFormInputElement {
 
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;
+	_focusInTokenizer: boolean;
+	_returningFromTokenizer: boolean;
 
 	get formValidityMessage() {
 		return MultiInput.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
@@ -188,6 +191,8 @@ class MultiInput extends Input implements IFormInputElement {
 		// Prevent suggestions' opening.
 		this._skipOpenSuggestions = false;
 		this._valueHelpIconPressed = false;
+		this._focusInTokenizer = false;
+		this._returningFromTokenizer = false;
 	}
 
 	valueHelpPress() {
@@ -225,6 +230,10 @@ class MultiInput extends Input implements IFormInputElement {
 		if (!this.contains(e.relatedTarget as HTMLElement) && !this.shadowRoot!.contains(e.relatedTarget as HTMLElement)) {
 			this.tokenizer._tokens.forEach(token => { token.selected = false; });
 		}
+		if (this.shadowRoot!.contains(e.relatedTarget as HTMLElement)) {
+			this._returningFromTokenizer = true;
+		}
+		this._focusInTokenizer = false;
 	}
 
 	valueHelpMouseUp() {
@@ -248,6 +257,7 @@ class MultiInput extends Input implements IFormInputElement {
 
 	_onkeydown(e: KeyboardEvent) {
 		!this._isComposing && super._onkeydown(e);
+		this._isKeyNavigation = true;
 
 		const target = e.target as HTMLInputElement;
 		const isHomeInBeginning = isHome(e) && target.selectionStart === 0;
@@ -269,9 +279,16 @@ class MultiInput extends Input implements IFormInputElement {
 
 		this._skipOpenSuggestions = false;
 
+		if ((isEnter(e) || isTabNext(e)) && this.previousValue !== this.value) {
+			this._handleChange();
+			return;
+		}
+
 		if (isShow(e)) {
 			this.valueHelpPress();
 		}
+
+		this._isKeyNavigation = false;
 	}
 
 	_onTokenizerKeydown(e: KeyboardEvent) {
@@ -281,6 +298,7 @@ class MultiInput extends Input implements IFormInputElement {
 			const lastTokenIndex = this.tokens.length - 1;
 
 			if (e.target === this.tokens[lastTokenIndex] && this.tokens[lastTokenIndex] === document.activeElement) {
+				this._returningFromTokenizer = true;
 				setTimeout(() => {
 					this.focus();
 				}, 0);
@@ -296,9 +314,25 @@ class MultiInput extends Input implements IFormInputElement {
 		// selectionStart property applies only to inputs of types text, search, URL, tel, and password
 		if (((cursorPosition === null && !this.value) || cursorPosition === 0) && lastToken) {
 			e.preventDefault();
-			lastToken.focus();
-			this.tokenizer._itemNav.setCurrentItem(lastToken);
+			this._focusToken(lastToken);
 		}
+	}
+
+	_focusToken(tokenToFocus: IToken) {
+		this._focusInTokenizer = true;
+		tokenToFocus.focus();
+		this.tokenizer._itemNav.setCurrentItem(tokenToFocus);
+	}
+
+	/**
+	 * @override
+	 */
+	_handleChange() {
+		if (this._focusInTokenizer) {
+			return;
+		}
+
+		super._handleChange();
 	}
 
 	_handleBackspace(e: KeyboardEvent) {
@@ -308,8 +342,7 @@ class MultiInput extends Input implements IFormInputElement {
 		// Only move focus to the last token if the input is empty
 		if (!this.value && lastToken) {
 			e.preventDefault();
-			lastToken.focus();
-			this.tokenizer._itemNav.setCurrentItem(lastToken);
+			this._focusToken(lastToken);
 		}
 	}
 
@@ -319,9 +352,7 @@ class MultiInput extends Input implements IFormInputElement {
 
 		if (firstToken) {
 			e.preventDefault();
-
-			firstToken.focus();
-			this.tokenizer._itemNav.setCurrentItem(firstToken);
+			this._focusToken(firstToken);
 		}
 	}
 
@@ -347,7 +378,15 @@ class MultiInput extends Input implements IFormInputElement {
 		const inputDomRef = this.getInputDOMRef();
 
 		if (e.target === inputDomRef) {
-			super._onfocusin(e);
+			if (this._returningFromTokenizer) {
+				this._returningFromTokenizer = false;
+				this.focused = true;
+				this.open = true;
+				this._inputIconFocused = false;
+				this._focusedAfterClear = false;
+			} else {
+				super._onfocusin(e);
+			}
 		}
 	}
 
