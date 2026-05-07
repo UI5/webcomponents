@@ -1435,6 +1435,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleEnter() {
+		if (this.readonly) {
+			this._tokenizer.open = true;
+			return;
+		}
+
 		const lowerCaseValue = this.value.toLowerCase();
 		const matchingItem = this._getItems().find(item => (!item.isGroupItem && item.text!.toLowerCase() === lowerCaseValue));
 		const oldValueState = this.valueState;
