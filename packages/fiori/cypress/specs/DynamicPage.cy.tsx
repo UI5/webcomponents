@@ -305,6 +305,160 @@ describe("DynamicPage", () => {
 
 		cy.get("[data-testid='bottom-input']").should("be.visible");
 	});
+
+	it("does not scroll content when a button is clicked while the header is partially hidden", () => {
+		let clickCount = 0;
+
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<Button data-testid="content-button" onClick={() => { clickCount += 1; }}>test</Button>
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const initialScrollTop = $container[0].scrollTop;
+
+				cy.get("[data-testid='content-button']")
+					.realClick();
+
+				cy.then(() => {
+					expect(clickCount).to.equal(1);
+				});
+
+				cy.get("[ui5-dynamic-page]")
+					.shadow()
+					.find(".ui5-dynamic-page-scroll-container")
+					.should(($updatedContainer) => {
+						expect($updatedContainer[0].scrollTop).to.be.closeTo(initialScrollTop, 1);
+					});
+			});
+	});
+
+	it("does not scroll content when a visible button receives keyboard focus while the header is partially hidden", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<button data-testid="first-content-button">first</button>
+				<Button data-testid="content-button">test</Button>
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[data-testid='first-content-button']")
+			.focus()
+			.should("be.focused");
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const initialScrollTop = $container[0].scrollTop;
+
+				cy.realPress("Tab");
+
+				cy.get("[data-testid='content-button']")
+					.should("be.focused");
+
+				cy.get("[ui5-dynamic-page]")
+					.shadow()
+					.find(".ui5-dynamic-page-scroll-container")
+					.should(($updatedContainer) => {
+						expect($updatedContainer[0].scrollTop).to.be.closeTo(initialScrollTop, 1);
+					});
+			});
+	});
+
+	it("scrolls a partially clipped textarea into view when focused via Tab", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<button data-testid="before-textarea">Before</button>
+				<textarea data-testid="target-textarea" style={{ display: "block", marginTop: "8px", height: "120px" }} />
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[data-testid='before-textarea']")
+			.focus()
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[data-testid='target-textarea']")
+			.should("be.focused");
+
+		cy.get("[ui5-dynamic-page]")
+			.then(($dp) => {
+				const dp = $dp[0] as DynamicPage;
+				const containerRect = dp.scrollContainer!.getBoundingClientRect();
+				const contentRect = dp.contentArea!.getBoundingClientRect();
+				const targetRect = (dp.querySelector("[data-testid='target-textarea']") as HTMLTextAreaElement).getBoundingClientRect();
+				const visibleTop = Math.max(containerRect.top, contentRect.top);
+				const visibleBottom = containerRect.bottom - dp.endAreaHeight;
+
+				expect(targetRect.top).to.be.at.least(visibleTop);
+				expect(targetRect.bottom).to.be.at.most(visibleBottom);
+			});
+	});
 });
 
 describe("Scroll", () => {
