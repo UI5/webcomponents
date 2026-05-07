@@ -46,11 +46,15 @@ class UserMenuItem extends MenuItem {
 	declare items: DefaultSlot<UserMenuItem>;
 
 	/**
-	 * When set, a second line appears below the menu item text
-	 * showing the text of the currently selected (checked) sub-item.
+	 * When set, a second line appears below the menu item text showing the text
+	 * of the currently selected sub-item. Intended for use with a single-select
+	 * ui5-menu-item-group (check-mode="Single").
+	 * When enabled, the checked sub-item cannot be unchecked,
+	 * ensuring the selection text is always displayed.
 	 *
 	 * @default false
 	 * @public
+	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
 	showSelection = false;
