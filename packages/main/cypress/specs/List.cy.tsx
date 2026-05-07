@@ -2797,3 +2797,94 @@ describe("List sticky header", () => {
 			});
 	});
 });
+
+describe("List - ListItem accessible role inheritance", () => {
+	it("list items inherit 'menuitem' role when ui5-list has accessible-role='Menu'", () => {
+		cy.mount(
+			<List accessibleRole="Menu">
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+	});
+
+	it("list items inherit 'option' role when ui5-list has accessible-role='ListBox'", () => {
+		cy.mount(
+			<List accessibleRole="ListBox">
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option");
+	});
+
+	it("list items keep 'listitem' role when ui5-list has default accessible-role='List'", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem");
+	});
+
+	it("explicit accessible-role on ui5-li takes precedence over inherited role from ui5-list", () => {
+		cy.mount(
+			<List accessibleRole="Menu">
+				<ListItemStandard id="explicit" accessibleRole="TreeItem">Item 1</ListItemStandard>
+				<ListItemStandard id="inherited">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#explicit")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "treeitem");
+
+		cy.get("#inherited")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+	});
+
+	it("list items can have an explicit accessible-role set without a parent ui5-list role", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1" accessibleRole="MenuItem">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem");
+	});
+});
