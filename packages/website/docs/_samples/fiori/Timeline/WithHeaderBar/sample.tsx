@@ -5,17 +5,22 @@ import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import TimelineHeaderBarClass from "@ui5/webcomponents-fiori/dist/TimelineHeaderBar.js";
 import TimelineFilterOptionClass from "@ui5/webcomponents-fiori/dist/TimelineFilterOption.js";
+import ButtonClass from "@ui5/webcomponents/dist/Button.js";
+import TextClass from "@ui5/webcomponents/dist/Text.js";
 import "@ui5/webcomponents-icons/dist/calendar.js";
 import "@ui5/webcomponents-icons/dist/developer-settings.js";
 import "@ui5/webcomponents-icons/dist/phone.js";
 import "@ui5/webcomponents-icons/dist/document.js";
 import "@ui5/webcomponents-icons/dist/upload.js";
 import "@ui5/webcomponents-icons/dist/group.js";
+import "@ui5/webcomponents-icons/dist/decline.js";
 
 const Timeline = createReactComponent(TimelineClass);
 const TimelineItem = createReactComponent(TimelineItemClass);
 const TimelineHeaderBar = createReactComponent(TimelineHeaderBarClass);
 const TimelineFilterOption = createReactComponent(TimelineFilterOptionClass);
+const Button = createReactComponent(ButtonClass);
+const Text = createReactComponent(TextClass);
 
 const allItems = [
 	{ titleText: "Sprint Planning", subtitleText: "10.03.2024 09:00", icon: "calendar", name: "Sarah Chen", category: "Meetings", date: "2024-03-10T09:00", content: "Kick-off for Sprint 24. Estimated velocity: 42 story points." },
@@ -58,13 +63,24 @@ function App() {
 		setSortOrder(event.detail.sortOrder);
 	};
 
+	const handleClearFilters = () => {
+		setSelectedCategories([]);
+	};
+
 	return (
 		<>
 			<Timeline onSearch={handleSearch} onFilter={handleFilter} onSort={handleSort}>
 				<TimelineHeaderBar slot="headerBar" showSearch={true} showFilter={true} showSort={true} filterBy="Category">
-					<TimelineFilterOption text="Meetings" />
-					<TimelineFilterOption text="Development" />
-					<TimelineFilterOption text="Releases" />
+					<TimelineFilterOption text="Meetings" selected={selectedCategories.includes("Meetings")} />
+					<TimelineFilterOption text="Development" selected={selectedCategories.includes("Development")} />
+					<TimelineFilterOption text="Releases" selected={selectedCategories.includes("Releases")} />
+
+					{selectedCategories.length > 0 && (
+						<div slot="filterInfoBar" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+							<Text style={{ flex: 1 }}>Filtered By: {selectedCategories.join(", ")}</Text>
+							<Button icon="decline" design="Transparent" tooltip="Clear filters" onClick={handleClearFilters} />
+						</div>
+					)}
 				</TimelineHeaderBar>
 
 				{visibleItems.map((item, index) => (
