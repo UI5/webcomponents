@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Banner</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<link rel="stylesheet" type="text/css" href="./styles/Banner.css">
+</head>
+
+<body>
+	<div class="showcase">
+
+		<!-- ====================================== -->
+		<!-- 1. Basic Banner: Salutation Only       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>1. Basic Banner (Salutation Only)</h2>
+			<p>The simplest banner with only the mandatory salutation text.</p>
+
+			<ui5-banner id="banner-basic"
+				salutation-text="Hello, John">
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 2. Banner with Date                    -->
+		<!-- ====================================== -->
+		<section>
+			<h2>2. Banner with Date</h2>
+			<p>A banner combining salutation and date text.</p>
+
+			<ui5-banner id="banner-date"
+				salutation-text="Good Morning, Jane"
+				date-text="Thursday, March 6, 2026">
+				<ui5-card slot="headerActions" style="width: 300px;">
+						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
+						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
+					</ui5-card>
+					<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+					<ui5-button icon="create">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 3. FullWidth Layout with Content       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>3. FullWidth Layout</h2>
+			<p>Banner with a full-width search field below the salutation.</p>
+
+			<ui5-banner id="banner-fullwidth"
+				salutation-text="Welcome back, Alex"
+				date-text="Thursday, March 6, 2026"
+				layout="FullWidth">
+			<ui5-input
+					placeholder="Search products, documents, reports..."
+					style="width: 100%;">
+				</ui5-input>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 4. HalfWidth Layout (50/50 Split)      -->
+		<!-- ====================================== -->
+		<section>
+			<h2>4. HalfWidth Layout (50/50 Split)</h2>
+			<p>Two KPI cards side by side in a 50/50 layout.</p>
+
+			<ui5-banner id="banner-half"
+				salutation-text="Hello, Maria"
+				date-text="Thursday, March 6, 2026"
+				layout="HalfWidth">
+
+				<div class="kpi-card">
+					<span class="kpi-label">Open Orders</span>
+					<span class="kpi-value">1,247</span>
+					<span class="kpi-trend">▲ 12% vs last month</span>
+				</div>
+
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">Revenue YTD</span>
+					<span class="kpi-value">€4.2M</span>
+					<span class="kpi-trend negative">▼ 3% vs target</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 5. TwoThirds Layout (2/3 + 1/3)       -->
+		<!-- ====================================== -->
+		<section>
+			<h2>5. TwoThirds Layout (2/3 + 1/3)</h2>
+			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
+
+			<ui5-banner id="banner-twothirds"
+				salutation-text="Good Afternoon, Thomas"
+				date-text="Thursday, March 6, 2026"
+				layout="TwoThirds">
+
+				<div class="kpi-card">
+					<span class="kpi-label">Pipeline Overview</span>
+					<span class="kpi-value">€12.8M</span>
+					<span class="kpi-trend">▲ 8% quarter over quarter</span>
+					<div style="margin-top: 0.5rem;">
+						<ui5-button design="Emphasized">View Details</ui5-button>
+						<ui5-button design="Transparent">Export</ui5-button>
+					</div>
+				</div>
+
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">Tasks Due Today</span>
+					<span class="kpi-value">7</span>
+					<span class="kpi-trend negative">▼ 2 overdue</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 6. Banner with Background Image        -->
+		<!-- ====================================== -->
+		<section>
+			<h2>6. Banner with Background Image</h2>
+			<p>A banner with a custom background image applied to the canvas.</p>
+
+			<ui5-banner id="banner-bg"
+				salutation-text="Welcome, Sarah"
+				date-text="Thursday, March 6, 2026"
+				background-image="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg">
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 7. Banner with Interactive Elements    -->
+		<!-- ====================================== -->
+		<section>
+			<h2>7. Banner with Interactive Elements</h2>
+			<p>The banner itself is non-interactive, but slotted content like buttons and cards follow their own interactive states.</p>
+
+			<ui5-banner background-image="https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg" id="banner-interactive"
+				salutation-text="Hello, David"
+				date-text="Thursday, March 6, 2026"
+				layout="HalfWidth">
+
+			<ui5-card>
+					<ui5-card-header
+						slot="header"
+						title-text="Quick Actions"
+						subtitle-text="Frequently used">
+					</ui5-card-header>
+					<div style="padding: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+						<ui5-button icon="create" design="Default">New Order</ui5-button>
+						<ui5-button icon="document" design="Default">Create Report</ui5-button>
+						<ui5-button icon="email" design="Default">Send Message</ui5-button>
+					</div>
+				</ui5-card>
+				<div slot="endContent"></div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 8. Scroll-Away Behavior Demo           -->
+		<!-- ====================================== -->
+		<section>
+			<h2>8. Scroll-Away Behavior</h2>
+			<p>The banner scrolls away with the page content. It is not sticky. Scroll the container below to see the behavior.</p>
+
+			<div class="scroll-container">
+				<ui5-banner id="banner-scroll"
+					salutation-text="Hello, Lisa"
+					date-text="Thursday, March 6, 2026"
+					layout="FullWidth">
+					<div class="kpi-card">
+						<span class="kpi-label">Notifications</span>
+						<span class="kpi-value">23</span>
+					</div>
+				</ui5-banner>
+
+				<div class="filler-content">
+					<p>↓ Scroll down to see the banner scroll away ↓</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 9. Buttons and Cards                   -->
+		<!-- ====================================== -->
+		<section>
+			<h2>9. Buttons and Cards</h2>
+			<p>The start slot contains 3 action buttons; the end slot contains 4 summary cards.</p>
+
+			<ui5-banner id="banner-buttons-cards"
+				salutation-text="Hello, Emma"
+				date-text="Thursday, March 12, 2026"
+				layout="FullWidth">
+
+				<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+					<ui5-button icon="create">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
+				</div>
+
+				<div slot="endContent" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
+						<div style="padding: 0.75rem; color: red; text-align: start; font-size: 1.5rem; font-weight: bold;">42</div>
+					</ui5-card>
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Resolved" subtitle-text="This week"></ui5-card-header>
+						<div style="padding: 0.75rem; color: green; text-align: start; font-size: 1.5rem; font-weight: bold;">118</div>
+					</ui5-card>
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
+						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
+					</ui5-card>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 10. Interactive Controls               -->
+		<!-- ====================================== -->
+		<section>
+			<h2>10. Interactive Controls</h2>
+			<p>All banner options can be toggled on/off. The salutation is mandatory and cannot be hidden.</p>
+
+			<div class="controls-panel">
+				<div class="controls-row">
+					<span class="controls-label">Toggle Options:</span>
+					<label class="toggle-label"><input type="checkbox" id="chk-date" checked> Date Text</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-bg"> Background Image</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-header-actions" checked> Header Actions</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-start" checked> Start Content</label>
+					<label class="toggle-label"><input type="checkbox" id="chk-end" checked> End Content</label>
+				</div>
+				<div class="controls-row">
+					<span class="controls-label">Salutation:</span>
+					<ui5-button id="btn-change-salutation">Cycle Name</ui5-button>
+					<span class="controls-separator">|</span>
+					<span class="controls-label">Layout:</span>
+					<ui5-button id="btn-layout-full">FullWidth</ui5-button>
+					<ui5-button id="btn-layout-half">HalfWidth</ui5-button>
+					<ui5-button id="btn-layout-twothirds">TwoThirds</ui5-button>
+				</div>
+			</div>
+
+			<ui5-banner id="banner-dynamic"
+				salutation-text="Hello, User"
+				date-text="Thursday, March 6, 2026"
+				layout="FullWidth">
+
+				<ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
+				<ui5-button slot="headerActions" icon="bell">Notifications</ui5-button>
+
+				<div class="kpi-card">
+					<span class="kpi-label">Start Block</span>
+					<span class="kpi-value">100</span>
+				</div>
+				<div slot="endContent" class="kpi-card">
+					<span class="kpi-label">End Block</span>
+					<span class="kpi-value">200</span>
+				</div>
+			</ui5-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 11. SuccessFactors-Style Header Banner -->
+		<!-- ====================================== -->
+		<section>
+			<h2>11. SuccessFactors-Style Header Banner</h2>
+			<p>The blue home page header as seen in SAP SuccessFactors: a personalized greeting with quick-action shortcuts on the left and a carousel of alert cards on the right.</p>
+
+			<ui5-banner id="banner-sf"
+				layout="TwoThirds">
+				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
+				<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
+					<div>
+						<div style="font-family: var(--sapFontHeaderFamily); font-size: var(--sapFontHeader2Size); font-weight: bold; color: var(--_ui5_banner_text_color);">Hello, Henry</div>
+					</div>
+					<div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+						<ui5-button icon="heart" design="Default">Appreciate a Colleague</ui5-button>
+						<ui5-button icon="group" design="Default">Create Team</ui5-button>
+						<ui5-button icon="email" design="Default">Email</ui5-button>
+						<ui5-button icon="time-entry-request" design="Default">Clock In/Out</ui5-button>
+					</div>
+				</div>
+
+				<!-- End Content (1/3): carousel of alert/attention cards -->
+				<ui5-carousel slot="endContent" style="width: 100%;">
+					<div class="kpi-card">
+						<span class="kpi-label">Needs Attention</span>
+						<span class="kpi-value" style="font-size: var(--sapFontHeader4Size);">PTO Leave</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapTextColor);">Debra Labade</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapContent_LabelColor);">Oct 10 – Oct 17, 2024 · Annual Leave</span>
+						<ui5-link style="margin-top: 0.25rem;" href="#">View All (4)</ui5-link>
+					</div>
+					<div class="kpi-card">
+						<span class="kpi-label">Needs Attention</span>
+						<span class="kpi-value" style="font-size: var(--sapFontHeader4Size);">Information Security</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapTextColor);">Overdue Learning Assignment</span>
+						<span style="font-size: var(--sapFontSmallSize); color: var(--sapContent_LabelColor);">Online · 30 Hours</span>
+						<ui5-button design="Emphasized" style="margin-top: 0.5rem;">Take Course Now</ui5-button>
+					</div>
+				</ui5-carousel>
+
+			</ui5-banner>
+		</section>
+
+	</div>
+
+	<!-- Hidden holder for toggled-off slotted elements -->
+	<div id="slot-holder" style="display: none;"></div>
+
+	<script>
+		var dynamicBanner = document.getElementById("banner-dynamic");
+		var slotHolder = document.getElementById("slot-holder");
+		var names = ["John", "Maria", "Thomas", "Lisa", "Alex", "Sarah", "David"];
+		var nameIndex = 0;
+
+		// --- Salutation (mandatory: cycle through names, never hidden) ---
+		document.getElementById("btn-change-salutation").addEventListener("click", function () {
+			nameIndex = (nameIndex + 1) % names.length;
+			dynamicBanner.salutationText = "Hello, " + names[nameIndex];
+		});
+
+		// --- Date Text toggle ---
+		document.getElementById("chk-date").addEventListener("change", function () {
+			dynamicBanner.dateText = this.checked ? "Thursday, March 6, 2026" : "";
+		});
+
+		// --- Background Image toggle ---
+		document.getElementById("chk-bg").addEventListener("change", function () {
+			dynamicBanner.backgroundImage = this.checked
+				? "https://wallpapershome.com/images/pages/pic_h/17796.jpg"
+				: undefined;
+		});
+
+		// --- Slot toggle helper: moves elements between the banner and the hidden holder ---
+		function toggleSlot(checkboxId, slotName) {
+			document.getElementById(checkboxId).addEventListener("change", function () {
+				if (this.checked) {
+					[...slotHolder.querySelectorAll("[data-slot='" + slotName + "']")].forEach(function (el) {
+						el.removeAttribute("data-slot");
+						if (slotName) { el.setAttribute("slot", slotName); }
+						dynamicBanner.appendChild(el);
+					});
+				} else {
+					var elements = slotName
+						? [...dynamicBanner.querySelectorAll("[slot='" + slotName + "']")]
+						: [...dynamicBanner.children].filter(function (el) { return !el.hasAttribute("slot"); });
+					elements.forEach(function (el) {
+						el.setAttribute("data-slot", slotName);
+						if (slotName) { el.removeAttribute("slot"); }
+						slotHolder.appendChild(el);
+					});
+				}
+			});
+		}
+
+		toggleSlot("chk-header-actions", "headerActions");
+		toggleSlot("chk-start", "");
+		toggleSlot("chk-end", "endContent");
+
+		// --- Layout buttons ---
+		document.getElementById("btn-layout-full").addEventListener("click", function () {
+			dynamicBanner.layout = "FullWidth";
+		});
+		document.getElementById("btn-layout-half").addEventListener("click", function () {
+			dynamicBanner.layout = "HalfWidth";
+		});
+		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
+			dynamicBanner.layout = "TwoThirds";
+		});
+	</script>
+</body>
+</html>

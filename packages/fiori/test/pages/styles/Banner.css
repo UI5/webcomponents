@@ -1,0 +1,127 @@
+html, body {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background-color: var(--sapBackgroundColor);
+	font-family: var(--sapFontFamily);
+}
+
+.showcase {
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.showcase h2 {
+	font-family: var(--sapFontHeaderFamily);
+	color: var(--sapTextColor);
+	font-size: var(--sapFontHeader3Size);
+	margin: 0.5rem 0;
+	border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+	padding-bottom: 0.5rem;
+}
+
+.showcase p {
+	font-size: var(--sapFontSize);
+	color: var(--sapContent_LabelColor);
+	margin: 0 0 1rem 0;
+}
+
+/* KPI card styling for demo */
+.kpi-card {
+	background: var(--sapTile_Background);
+	border-radius: 0.75rem;
+	padding: 1rem;
+	box-shadow: var(--sapContent_Shadow0);
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.kpi-card .kpi-label {
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapContent_LabelColor);
+}
+
+.kpi-card .kpi-value {
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader2Size);
+	font-weight: bold;
+	color: var(--sapTextColor);
+}
+
+.kpi-card .kpi-trend {
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapPositiveColor);
+}
+
+.kpi-card .kpi-trend.negative {
+	color: var(--sapNegativeColor);
+}
+
+.controls-bar {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	padding: 0.5rem 0;
+}
+
+/* Interactive Controls panel (Section 10) */
+.controls-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	background: var(--sapGroup_ContentBackground);
+	border: 1px solid var(--sapGroup_TitleBorderColor);
+	border-radius: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.controls-row {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.controls-label {
+	font-size: var(--sapFontSize);
+	font-weight: bold;
+	color: var(--sapContent_LabelColor);
+	white-space: nowrap;
+}
+
+.toggle-label {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: var(--sapFontSize);
+	color: var(--sapTextColor);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.controls-separator {
+	color: var(--sapGroup_TitleBorderColor);
+	font-size: 1.2rem;
+}
+
+/* Scrollable content for scroll-away demo */
+.scroll-container {
+	height: 500px;
+	overflow-y: auto;
+	border: 1px solid var(--sapGroup_TitleBorderColor);
+	border-radius: 0.5rem;
+	padding: 1rem;
+}
+
+.filler-content {
+	padding: 1rem 0;
+	color: var(--sapContent_LabelColor);
+	font-size: var(--sapFontSize);
+	line-height: 1.6;
+}

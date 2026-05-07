@@ -1,0 +1,4 @@
+:host {
+	--_ui5_banner_background: var(--sapShell_Banner_Background, var(--sapHighlightColor));
+	--_ui5_banner_text_color: var(--sapShell_Banner_TextColor, var(--sapContent_ContrastTextColor));
+}
