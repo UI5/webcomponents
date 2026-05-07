@@ -4,6 +4,8 @@ import type { AriaRole } from "@ui5/webcomponents-base/";
 export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listItemContent: () => void }, injectedProps?: {
 	role?: AriaRole,
 	title?: string,
+	ariaSetsize?: number,
+	ariaPosinset?: number,
 }) {
 	const listItemContent = hooks?.listItemContent || defaultListItemContent;
 
@@ -16,6 +18,8 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			draggable={this.movable}
 			role={injectedProps?.role}
 			title={injectedProps?.title}
+			{...(injectedProps?.ariaSetsize !== undefined && { "aria-setsize": injectedProps.ariaSetsize })}
+			{...(injectedProps?.ariaPosinset !== undefined && { "aria-posinset": injectedProps.ariaPosinset })}
 			onFocusIn={this._onfocusin}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}

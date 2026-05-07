@@ -103,6 +103,20 @@ class Option extends ListItemBase implements IOption {
 		return !!this.icon;
 	}
 
+	/**
+	 * Per-group aria-setsize, set by Select when options are inside an OptionGroup.
+	 * @private
+	 */
+	@property({ type: Number, noAttribute: true })
+	_forcedSetsize?: number;
+
+	/**
+	 * Per-group aria-posinset, set by Select when options are inside an OptionGroup.
+	 * @private
+	 */
+	@property({ type: Number, noAttribute: true })
+	_forcedPosinset?: number;
+
 	get effectiveDisplayText() {
 		return this.textContent || "";
 	}
