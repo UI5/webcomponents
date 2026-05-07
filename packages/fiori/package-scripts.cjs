@@ -18,6 +18,7 @@ const options = {
 	dev: true,
 	fioriPackage: true,
 	noWatchTS: true,
+	standalone: false,
 	internal: {
 		cypress_code_coverage: false,
 	},
