@@ -5,6 +5,7 @@ const options = {
 	portStep: 2,
 	aiPackage: true,
 	noWatchTS: true,
+	standalone: false,
 	cssVariablesTarget: "host",
 	dev: true,
 	internal: {
