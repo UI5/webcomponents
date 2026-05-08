@@ -190,12 +190,16 @@ type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettings
 /**
  * Fired when the Reset button is clicked.
  *
- * **Note:** Use this event to reset the state of custom tab content,
- * as the component cannot detect changes within custom tabs.
+ * **Note:** This event is particularly relevant when the dialog contains custom tabs.
+ * By default, the Reset button resets all built-in settings (sort, filter, group) to their
+ * initial values. However, the component has no knowledge of the content or state inside
+ * custom tabs — it cannot detect what has changed or what the "default" values are.
+ * Therefore, when this event is fired, it is the application developer's responsibility
+ * to listen for it and manually reset the custom tab content to its initial state.
  * @since 2.22.0
  * @public
  */
-@event("reset-click", {
+@event("reset", {
 	bubbles: true,
 })
 class ViewSettingsDialog extends UI5Element {
@@ -205,7 +209,7 @@ class ViewSettingsDialog extends UI5Element {
 		"before-open": void,
 		"open": void,
 		"close": void,
-		"reset-click": void,
+		"reset": void,
 	}
 	/**
 	 * Defines the initial sort order.
@@ -234,18 +238,23 @@ class ViewSettingsDialog extends UI5Element {
 	open = false;
 
 	/**
-	 * Defines whether the Reset button is always enabled.
+	 * Controls whether the Reset button is always enabled.
 	 *
-	 * **Note:** By default, the Reset button is only enabled when the dialog settings
-	 * differ from their initial state. Set this property to `true` to keep the Reset
-	 * button always enabled, which is useful when working with custom tabs
-	 * whose internal state changes cannot be detected by the component.
+	 * By default, the Reset button is enabled only when the built-in settings (Sort, Filter, Group)
+	 * differ from their initial state — the component can detect these changes automatically.
+	 * However, when the dialog contains custom tabs, the component has no way to detect
+	 * whether the custom tab content has been modified by the user.
+	 *
+	 * Set this property to `true` when the user has made changes inside a custom tab, so that
+	 * the Reset button becomes enabled and the user can trigger a reset.
+	 * Set it back to `false` once the custom tab content is back to its initial state
+	 * (e.g. after the user confirms or after a reset is applied).
 	 * @default false
 	 * @public
 	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
-	enableReset = false;
+	resetEnabled = false;
 
 	/**
 	 * Keeps recently focused list in order to focus it on next dialog open.
@@ -441,14 +450,7 @@ class ViewSettingsDialog extends UI5Element {
 	}
 
 	get shouldBuildCustomTabs() {
-		return !!this._renderableCustomTabs.length;
-	}
-
-	/**
-	 * Returns only custom tabs that have an icon defined and can be rendered.
-	 */
-	get _renderableCustomTabs() {
-		return this.customTabs.filter(tab => tab.icon);
+		return !!this.customTabs.length;
 	}
 
 	get hasPagination() {
@@ -457,7 +459,7 @@ class ViewSettingsDialog extends UI5Element {
 			.length;
 
 		if (this.shouldBuildCustomTabs) {
-			return builtInTabsCount + this._renderableCustomTabs.length > 1;
+			return builtInTabsCount + this.customTabs.length > 1;
 		}
 
 		return builtInTabsCount > 1;
@@ -477,7 +479,7 @@ class ViewSettingsDialog extends UI5Element {
 		}
 
 		if (this.shouldBuildCustomTabs) {
-			return this._customTabMode(this._renderableCustomTabs[0]);
+			return this._customTabMode(this.customTabs[0]);
 		}
 
 		return ViewSettingsDialogMode.Sort;
@@ -488,7 +490,7 @@ class ViewSettingsDialog extends UI5Element {
 			return;
 		}
 
-		return this._renderableCustomTabs.find(tab => this._customTabMode(tab) === this._currentMode);
+		return this.customTabs.find(tab => this._customTabMode(tab) === this._currentMode);
 	}
 
 	get _filterByTitle() {
@@ -574,7 +576,7 @@ class ViewSettingsDialog extends UI5Element {
 	 * Determines disabled state of the `Reset` button.
 	 */
 	get _disableResetButton() {
-		if (this.enableReset) {
+		if (this.resetEnabled) {
 			return false;
 		}
 
@@ -903,7 +905,7 @@ class ViewSettingsDialog extends UI5Element {
 		this._recentlyFocused = this._sortOrder!;
 		this._focusRecentlyUsedControl();
 		announce(this._resetButtonAction, InvisibleMessageMode.Assertive);
-		this.fireDecoratorEvent("reset-click");
+		this.fireDecoratorEvent("reset");
 	}
 
 	/**
@@ -936,7 +938,7 @@ class ViewSettingsDialog extends UI5Element {
 		}
 
 		if (this._isCustomMode(mode)) {
-			return this._renderableCustomTabs.some(tab => this._customTabMode(tab) === mode);
+			return this.customTabs.some(tab => this._customTabMode(tab) === mode);
 		}
 
 		return false;
