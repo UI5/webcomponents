@@ -160,6 +160,14 @@ class TimelineHeaderBar extends UI5Element {
 	showSort = false;
 
 	/**
+	 * Shows the filter by date option.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showFilterByDate = false;
+
+	/**
 	 * The current filter category label.
 	 * @default ""
 	 * @public
