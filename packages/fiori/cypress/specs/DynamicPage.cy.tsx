@@ -1121,4 +1121,79 @@ describe("ARIA attributes", () => {
 			.find(".ui5-dynamic-page-header-root")
 			.should("have.attr", "aria-label", "Header Expanded");
 	});
+
+	it("supports customizing header role and label via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			header: { role: "none", name: "Custom Header" },
+		});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-title-header-wrapper")
+			.should("have.attr", "role", "none")
+			.should("have.attr", "aria-label", "Custom Header");
+	});
+
+	it("supports customizing headerContent label via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			headerContent: { name: "Custom Region Label" },
+		});
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
+			.should("have.attr", "aria-label", "Custom Region Label");
+	});
+
+	it("supports customizing content and footer roles via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			content: { role: "main", name: "Page Content" },
+			footer: { role: "contentinfo", name: "Page Footer" },
+		});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-content")
+			.should("have.attr", "role", "main")
+			.should("have.attr", "aria-label", "Page Content");
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-footer")
+			.should("have.attr", "role", "contentinfo")
+			.should("have.attr", "aria-label", "Page Footer");
+	});
 });

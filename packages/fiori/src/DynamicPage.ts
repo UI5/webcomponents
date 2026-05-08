@@ -10,6 +10,7 @@ import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { AriaLandmarkRole } from "@ui5/webcomponents-base";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
@@ -31,6 +32,14 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+
+type DynamicPageAccessibilityAttributes = {
+	root?: { role?: AriaLandmarkRole; name?: string };
+	header?: { role?: AriaLandmarkRole; name?: string };
+	headerContent?: { name?: string };
+	content?: { role?: AriaLandmarkRole; name?: string };
+	footer?: { role?: AriaLandmarkRole; name?: string };
+};
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
 const SCROLL_THRESHOLD = 10; // px
@@ -184,6 +193,23 @@ class DynamicPage extends UI5Element {
 	@slot({ type: HTMLElement })
 	footerArea!: Slot<HTMLElement>;
 
+	/**
+	 * Defines the accessibility attributes for DynamicPage sections.
+	 *
+	 * Accepted fields per section — `root`, `header`, `content`, `footer`:
+	 * - `role` {AriaLandmarkRole} - Overrides the ARIA landmark role. Set `header.role = "none"` to remove the banner landmark when a ShellBar is already present on the page.
+	 * - `name` {string} - Sets `aria-label` on the section.
+	 *
+	 * Accepted fields for `headerContent`:
+	 * - `name` {string} - Sets `aria-label` on the DynamicPageHeader region (overrides the default "Header Expanded"/"Header Snapped" text).
+	 *
+	 * @public
+	 * @since 2.23.0
+	 * @default {}
+	 */
+	@property({ type: Object })
+	accessibilityAttributes: DynamicPageAccessibilityAttributes = {};
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -213,6 +239,7 @@ class DynamicPage extends UI5Element {
 		}
 		if (this.dynamicPageHeader) {
 			this.dynamicPageHeader._snapped = this._headerSnapped;
+			this.dynamicPageHeader._accessibleName = this.accessibilityAttributes.headerContent?.name;
 		}
 	}
 
@@ -281,8 +308,16 @@ class DynamicPage extends UI5Element {
 	}
 
 	get headerAriaLabel() {
-		return this.hasHeading ? this._headerLabel : undefined;
+		return this.accessibilityAttributes.header?.name || (this.hasHeading ? this._headerLabel : undefined);
 	}
+
+	get _headerRole() { return this.accessibilityAttributes.header?.role; }
+	get _rootRole() { return this.accessibilityAttributes.root?.role; }
+	get _rootAriaLabel() { return this.accessibilityAttributes.root?.name; }
+	get _contentRole() { return this.accessibilityAttributes.content?.role; }
+	get _contentAriaLabel() { return this.accessibilityAttributes.content?.name; }
+	get _footerRole() { return this.accessibilityAttributes.footer?.role; }
+	get _footerAriaLabel() { return this.accessibilityAttributes.footer?.name; }
 
 	get _hidePinButton() {
 		return this.hidePinButton || isPhone();
@@ -480,3 +515,5 @@ class DynamicPage extends UI5Element {
 DynamicPage.define();
 
 export default DynamicPage;
+
+export type { DynamicPageAccessibilityAttributes };
