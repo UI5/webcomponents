@@ -450,7 +450,8 @@ describe("DynamicPage", () => {
 			.then(($dp) => {
 				const dp = $dp[0] as DynamicPage;
 				const containerRect = dp.scrollContainer!.getBoundingClientRect();
-				const contentRect = dp.contentArea!.getBoundingClientRect();
+				const contentEl = dp.shadowRoot!.querySelector<HTMLElement>(".ui5-dynamic-page-content")!;
+				const contentRect = contentEl.getBoundingClientRect();
 				const targetRect = (dp.querySelector("[data-testid='target-textarea']") as HTMLTextAreaElement).getBoundingClientRect();
 				const visibleTop = Math.max(containerRect.top, contentRect.top);
 				const visibleBottom = containerRect.bottom - dp.endAreaHeight;

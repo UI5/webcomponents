@@ -197,9 +197,6 @@ class DynamicPage extends UI5Element {
 	@query(".ui5-dynamic-page-scroll-container")
 	scrollContainer?: HTMLElement;
 
-	@query(".ui5-dynamic-page-content")
-	contentArea?: HTMLElement;
-
 	@query("[ui5-dynamic-page-header-actions]")
 	headerActions?: DynamicPageHeaderActions;
 
@@ -473,10 +470,6 @@ class DynamicPage extends UI5Element {
 		// manual scroll brings them fully into view.
 		// another issue is that browsers do not reflect dynamic changes of scroll-padding
 		requestAnimationFrame(() => {
-			if (!this.isContentElementClipped(target)) {
-				return;
-			}
-
 			target.scrollIntoView({ behavior: "smooth", block: "nearest" });
 		});
 	}
@@ -490,20 +483,6 @@ class DynamicPage extends UI5Element {
 	setScrollPadding(padding: { start: number, end: number }) {
 		this.scrollContainer?.style.setProperty("scroll-padding-top", `${padding.start}px`);
 		this.scrollContainer?.style.setProperty("scroll-padding-bottom", `${padding.end}px`);
-	}
-
-	isContentElementClipped(target: HTMLElement) {
-		if (!this.scrollContainer || !target?.getBoundingClientRect) {
-			return false;
-		}
-
-		const targetRect = target.getBoundingClientRect();
-		const containerRect = this.scrollContainer.getBoundingClientRect();
-		const contentRect = this.contentArea?.getBoundingClientRect();
-		const visibleTop = Math.max(containerRect.top, contentRect?.top || containerRect.top);
-		const visibleBottom = containerRect.bottom - this.endAreaHeight;
-
-		return targetRect.top < visibleTop || targetRect.bottom > visibleBottom;
 	}
 }
 
