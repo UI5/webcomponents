@@ -1082,6 +1082,7 @@ class Calendar extends CalendarPart {
 
 	onYearButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
+			e.preventDefault();
 			this.switchToYearPicker();
 			this.fireDecoratorEvent("show-year-view");
 		}
@@ -1100,12 +1101,13 @@ class Calendar extends CalendarPart {
 
 	onYearRangeButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
+			e.preventDefault();
 			this.switchToYearRangePicker();
 			this.fireDecoratorEvent("show-year-range-view");
 		}
 	}
 
-	_handleNavigationButtonKeyDown(e: MouseEvent, isDisabled: boolean, action: () => void) {
+	_handleNavigationButtonClick(e: MouseEvent, isDisabled: boolean, action: () => void) {
 		if (isDisabled) {
 			e.preventDefault();
 			return;
@@ -1119,12 +1121,56 @@ class Calendar extends CalendarPart {
 		e.preventDefault();
 	}
 
+	_handlePrevNextButtonKeyDown(e: KeyboardEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
+			e.preventDefault();
+			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
+		}
+
+		if (isEnter(e)) {
+			action();
+			e.preventDefault();
+		}
+	}
+
+	_handlePrevNextButtonKeyUp(e: KeyboardEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
+			e.preventDefault();
+			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
+			action();
+		}
+	}
+
 	onPrevButtonClick(e: MouseEvent) {
-		this._handleNavigationButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+		this._handleNavigationButtonClick(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
 	}
 
 	onNextButtonClick(e: MouseEvent) {
-		this._handleNavigationButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+		this._handleNavigationButtonClick(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+	}
+
+	onPrevButtonKeyDown(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
+
+	onPrevButtonKeyUp(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyUp(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
+
+	onNextButtonKeyDown(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+	}
+
+	onNextButtonKeyUp(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyUp(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
 	}
 
 	/**

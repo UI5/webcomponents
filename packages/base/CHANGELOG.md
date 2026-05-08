@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* validate correctly protocol relative urls ([#13447](https://github.com/UI5/webcomponents/issues/13447)) ([c765630](https://github.com/UI5/webcomponents/commit/c7656304d7a3ad74c2c58d6937163262c4f40177))
+
+
+
+
+
 # [2.22.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.2...v2.22.0-rc.3) (2026-04-30)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

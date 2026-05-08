@@ -840,46 +840,33 @@ describe("Avatar with Badge", () => {
 		cy.get("#avatar-with-default-badge-tooltip [ui5-avatar-badge]")
 			.shadow()
 			.find(".ui5-avatar-badge-icon")
-			.then(($icon) => {
-				cy.wrap($icon[0])
-					.invoke("prop", "_id")
-					.then((iconId) => {
-						cy.get("#avatar-with-default-badge-tooltip [ui5-avatar-badge]")
-							.shadow()
-							.find(".ui5-avatar-badge-icon")
-							.shadow()
-							.find(`#${iconId}-tooltip`)
-							.should("contain.text", "Edit");
-					});
-			});
+			.should("have.attr", "title", "Edit");
 	});
 
-	it("uses accessibleName as tooltip text when provided", () => {
+	it("uses tooltip as tooltip text when provided", () => {
 		const customTooltip = "Open profile editor";
 
 		cy.mount(
 			<Avatar id="avatar-with-custom-badge-tooltip" initials="AB" size="M">
-				<AvatarBadge slot="badge" icon="edit" accessibleName={customTooltip}></AvatarBadge>
+				<AvatarBadge slot="badge" icon="edit" tooltip={customTooltip}></AvatarBadge>
 			</Avatar>
 		);
 
 		cy.get("#avatar-with-custom-badge-tooltip [ui5-avatar-badge]")
 			.shadow()
 			.find(".ui5-avatar-badge-icon")
-			.shadow()
-			.find("title")
-			.should("contain.text", customTooltip);
+			.should("have.attr", "title", customTooltip);
 	});
 
 	it("does not set badge-level accessible text when icon is invalid", () => {
 		cy.document().then(doc => {
-			const badge = doc.createElement("ui5-avatar-badge") as AvatarBadge & { effectiveAccessibleName?: string };
+			const badge = doc.createElement("ui5-avatar-badge") as AvatarBadge & { effectiveTooltip?: string };
 			badge.id = "badge-fallback-tooltip";
 			badge.icon = "non-existent-icon-xyz";
 			doc.body.appendChild(badge);
 
 			cy.wait(100).then(() => {
-				expect(badge.effectiveAccessibleName).to.be.undefined;
+				expect(badge.effectiveTooltip).to.be.undefined;
 				expect(badge.hasAttribute("invalid")).to.be.true;
 				badge.remove();
 			});
