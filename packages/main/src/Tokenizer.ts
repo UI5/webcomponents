@@ -306,6 +306,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	popoverMinWidth?: number;
 
 	/**
+	 * Sets the title of the nMore Popover on mobile.
+	 * **Note:** Used inside MultiInput component.
+	 * @private
+	 */
+	@property()
+	popoverTitle?: string;
+
+	/**
 	 * Prevents tokens to be part of the tab chain.
 	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
@@ -1217,7 +1225,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

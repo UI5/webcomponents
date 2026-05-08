@@ -5,6 +5,7 @@ import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
+import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/message-error.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import "@ui5/webcomponents-icons/dist/ai.js";
@@ -827,6 +828,49 @@ describe("Avatar with Badge", () => {
 			.shadow()
 			.find(".ui5-avatar-badge-icon")
 			.should("have.css", "width", "16px");
+	});
+
+	it("shows default tooltip from icon accessible name", () => {
+		cy.mount(
+			<Avatar id="avatar-with-default-badge-tooltip" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="edit"></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-with-default-badge-tooltip [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.attr", "title", "Edit");
+	});
+
+	it("uses tooltip as tooltip text when provided", () => {
+		const customTooltip = "Open profile editor";
+
+		cy.mount(
+			<Avatar id="avatar-with-custom-badge-tooltip" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="edit" tooltip={customTooltip}></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-with-custom-badge-tooltip [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.attr", "title", customTooltip);
+	});
+
+	it("does not set badge-level accessible text when icon is invalid", () => {
+		cy.document().then(doc => {
+			const badge = doc.createElement("ui5-avatar-badge") as AvatarBadge & { effectiveTooltip?: string };
+			badge.id = "badge-fallback-tooltip";
+			badge.icon = "non-existent-icon-xyz";
+			doc.body.appendChild(badge);
+
+			cy.wait(100).then(() => {
+				expect(badge.effectiveTooltip).to.be.undefined;
+				expect(badge.hasAttribute("invalid")).to.be.true;
+				badge.remove();
+			});
+		});
 	});
 
 	it("hides badge when icon is invalid and shows when valid", () => {

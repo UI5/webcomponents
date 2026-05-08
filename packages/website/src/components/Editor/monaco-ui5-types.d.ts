@@ -2281,7 +2281,6 @@ interface TimelineHeaderBarProps extends UI5BaseProps {
   showSearch?: boolean;
   showFilter?: boolean;
   showSort?: boolean;
-  showFilterByDate?: boolean;
   filterBy?: string;
   searchValue?: string;
   sortOrder?: "Ascending" | "Descending";

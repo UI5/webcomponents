@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* **ui5-timeline-header-bar:** remove unused property ([#13451](https://github.com/UI5/webcomponents/issues/13451)) ([18da0e5](https://github.com/UI5/webcomponents/commit/18da0e57c1c50bb75badb3a9cfb49e8faadd8842))
+
+
+
+
+
+# [2.22.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.2...v2.22.0-rc.3) (2026-04-30)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.22.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.1...v2.22.0-rc.2) (2026-04-23)
+
+
+### Bug Fixes
+
+* **ui5-shellbar-search:** fire search on mobile devices on search icon press ([#13410](https://github.com/UI5/webcomponents/issues/13410)) ([4de2083](https://github.com/UI5/webcomponents/commit/4de208302675ab036ba72ee8e6dce3a07c4a02bf))
+
+
+### Features
+
+* **ui5-timeline-item:** introduce iconTooltip property ([#13387](https://github.com/UI5/webcomponents/issues/13387)) ([663fc51](https://github.com/UI5/webcomponents/commit/663fc5121215d4944eb9e86c188c8afd99ff8552)), closes [#12238](https://github.com/UI5/webcomponents/issues/12238)
+
+
+
+
+
 # [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
 
 
