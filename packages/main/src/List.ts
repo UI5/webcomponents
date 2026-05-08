@@ -742,7 +742,7 @@ class List extends UI5Element {
 	get ariaDescriptionText() {
 		const parts = [];
 
-		if (this.accessibleRole === ListAccessibleRole.List) {
+		if (this.accessibleRole === ListAccessibleRole.List && this._hasInteractiveItems) {
 			parts.push(this.defaultAriaDescriptionText);
 		}
 		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
@@ -761,6 +761,16 @@ class List extends UI5Element {
 
 	get defaultAriaDescriptionText() {
 		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
+	}
+
+	get _hasInteractiveItems() {
+		if (this.selectionMode === ListSelectionMode.Delete) {
+			return true;
+		}
+
+		return this.getItems().some(item => {
+			return item.getAttribute("type") === "Detail" || item.hasAttribute("ui5-li-custom");
+		});
 	}
 
 	get growingButtonAriaLabel() {
