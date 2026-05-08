@@ -534,10 +534,10 @@ describe("ViewSettingsDialog Tests", () => {
 					<FilterItemOption slot="values" text="A"></FilterItemOption>
 				</FilterItem>
 				<GroupItem slot="groupItems" text="Department"></GroupItem>
-				<ViewSettingsDialogCustomTab slot="customTabs" title="Advanced Settings" tooltip="Advanced" icon="action-settings">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="Advanced Settings" tooltip="Advanced" icon="action-settings">
 					<div id="advanced-tab-content">Advanced settings</div>
 				</ViewSettingsDialogCustomTab>
-				<ViewSettingsDialogCustomTab slot="customTabs" title="Metrics Panel" tooltip="Metrics" icon="table-view">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="Metrics Panel" tooltip="Metrics" icon="table-view">
 					<div id="metrics-tab-content">Metrics settings</div>
 				</ViewSettingsDialogCustomTab>
 			</ViewSettingsDialog>
@@ -601,10 +601,10 @@ describe("ViewSettingsDialog Tests", () => {
 	it("should render only custom tabs when no built-in tabs are provided", () => {
 		cy.mount(
 			<ViewSettingsDialog id="vsdCustomOnly">
-				<ViewSettingsDialogCustomTab slot="customTabs" title="General Settings" tooltip="General" icon="action-settings">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="General Settings" tooltip="General" icon="action-settings">
 					<div id="general-tab-content">General content</div>
 				</ViewSettingsDialogCustomTab>
-				<ViewSettingsDialogCustomTab slot="customTabs" title="Extra Settings" tooltip="Extra" icon="table-view">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="Extra Settings" tooltip="Extra" icon="table-view">
 					<div id="extra-tab-content">Extra content</div>
 				</ViewSettingsDialogCustomTab>
 			</ViewSettingsDialog>
@@ -663,9 +663,9 @@ describe("ViewSettingsDialog Tests", () => {
 			.should("have.attr", "disabled");
 	});
 
-	it("should keep Reset button always enabled when enableReset is set", () => {
+	it("should keep Reset button always enabled when resetEnabled is set", () => {
 		cy.mount(
-			<ViewSettingsDialog id="vsd" enableReset={true}>
+			<ViewSettingsDialog id="vsd" resetEnabled={true}>
 				<SortItem slot="sortItems" text="Name"></SortItem>
 				<SortItem slot="sortItems" text="Position"></SortItem>
 			</ViewSettingsDialog>
@@ -681,9 +681,9 @@ describe("ViewSettingsDialog Tests", () => {
 			.should("not.have.attr", "disabled");
 	});
 
-	it("should fire reset-click event when Reset button is clicked", () => {
+	it("should fire reset event when Reset button is clicked", () => {
 		cy.mount(
-			<ViewSettingsDialog id="vsd" enableReset={true} onResetClick={cy.stub().as("resetClick")}>
+			<ViewSettingsDialog id="vsd" resetEnabled={true} onReset={cy.stub().as("resetClick")}>
 				<SortItem slot="sortItems" text="Name"></SortItem>
 				<SortItem slot="sortItems" text="Position"></SortItem>
 			</ViewSettingsDialog>
@@ -707,9 +707,9 @@ describe("ViewSettingsDialog Tests", () => {
 			.should("have.been.calledOnce");
 	});
 
-	it("should reset built-in settings and fire reset-click when Reset is clicked", () => {
+	it("should reset built-in settings and fire reset event when Reset is clicked", () => {
 		cy.mount(
-			<ViewSettingsDialog id="vsd" enableReset={true} onResetClick={cy.stub().as("resetClick")}>
+			<ViewSettingsDialog id="vsd" resetEnabled={true} onReset={cy.stub().as("resetClick")}>
 				<SortItem slot="sortItems" text="Name"></SortItem>
 				<SortItem slot="sortItems" text="Position"></SortItem>
 			</ViewSettingsDialog>
