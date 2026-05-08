@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Timeline Header Bar - Application-Driven Filtering</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/TimelineHeaderBar.css">
+</head>
+
+<body class="timeline-header-bar-page">
+
+	<header class="page-header">
+		<h1>ui5-timeline-header-bar</h1>
+		<p>Application-driven search, filter, and sort — the Timeline renders whatever items are in the DOM.</p>
+	</header>
+
+	<!-- ═══════════════════════════════════════════
+		 1. FULL DEMO — Search + Filter + Sort
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Full Demo</span>
+		<h2 class="section-title">Project Activity Feed</h2>
+		<p class="section-desc">
+			A real-world project tracker. The application stores all items in memory and
+			re-renders only the matching subset into the DOM on every search, filter, or sort interaction.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Last action</span>
+			<span class="event-log-value" id="fullDemoLog">—</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="status-bar">
+				<div class="status-item">
+					<span class="status-dot"></span>
+					<span>Showing <strong class="status-count" id="fullDemoCount">8</strong> of 8 items</span>
+				</div>
+				<div class="status-item" id="fullDemoSortStatus" style="display: none;">
+					<span class="status-dot--filtered status-dot"></span>
+					<span id="fullDemoSortLabel">—</span>
+				</div>
+			</div>
+
+			<div class="scenario-note">
+				Try searching <code>deploy</code>, filtering by <strong>Development</strong>, or sorting by date.
+				Items are added and removed from the DOM — no <code>hidden</code> attribute is used.
+			</div>
+
+			<div class="timeline-container">
+				<ui5-timeline id="fullDemo" accessible-name="Project Activity Feed">
+					<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Category">
+						<ui5-timeline-filter-option text="Meetings"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Development"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Releases"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-category="Meetings" data-date="2024-03-10T09:00"
+						title-text="Sprint Planning" subtitle-text="10.03.2024 09:00"
+						icon="calendar" name="Sarah Chen" name-clickable>
+						Kick-off for Sprint 24. Estimated velocity: 42 story points.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Development" data-date="2024-03-10T11:30"
+						title-text="PR #487 — Auth Module Refactor" subtitle-text="10.03.2024 11:30"
+						icon="developer-settings" name="James Rivera">
+						Replaced legacy session handling with JWT tokens. All 127 tests green.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Meetings" data-date="2024-03-10T14:00"
+						title-text="Client Requirements Call" subtitle-text="10.03.2024 14:00"
+						icon="phone" name="Emily Watson" name-clickable>
+						Discussed Q2 roadmap priorities. Action items documented in Confluence.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Development" data-date="2024-03-10T16:00"
+						title-text="API Documentation Update" subtitle-text="10.03.2024 16:00"
+						icon="document" name="Arun Patel">
+						Added OpenAPI specs for /payments and /webhooks endpoints.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Releases" data-date="2024-03-11T06:00"
+						title-text="Deploy v2.5.1 to Staging" subtitle-text="11.03.2024 06:00"
+						icon="upload" name="DevOps Pipeline" state="Positive">
+						Staging deployment successful. Smoke tests passed in 3m 22s.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Development" data-date="2024-03-11T10:30"
+						title-text="Performance Regression Fix" subtitle-text="11.03.2024 10:30"
+						icon="performance" name="Li Wei" state="Critical">
+						Fixed N+1 query in dashboard endpoint. Latency p99 dropped from 1.2s to 180ms.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Releases" data-date="2024-03-11T18:00"
+						title-text="Deploy v2.5.1 to Production" subtitle-text="11.03.2024 18:00"
+						icon="shipping-status" name="DevOps Pipeline" state="Positive">
+						Production deploy complete. Zero-downtime rolling update across 12 pods.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-category="Meetings" data-date="2024-03-12T09:00"
+						title-text="Post-Release Retrospective" subtitle-text="12.03.2024 09:00"
+						icon="group" name="Full Team">
+						Retro on v2.5.1 cycle. Key takeaway: improve staging parity with prod.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 2. SEARCH ONLY — Real-Time Filtering
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Search</span>
+		<h2 class="section-title">Support Ticket History</h2>
+		<p class="section-desc">
+			Search removes non-matching items from the DOM and restores them when cleared.
+			Try typing <code>auth</code> or <code>payment</code>.
+		</p>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="searchDemo" accessible-name="Support Ticket History">
+					<ui5-timeline-header-bar slot="headerBar" show-search></ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-date="2024-03-14T09:15"
+						title-text="TICKET-1042: Login failure on Safari" subtitle-text="14.03.2024 09:15"
+						icon="error" name="Customer: Acme Corp" state="Negative">
+						Users report 403 errors when authenticating via Safari 17.2 with SSO enabled.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-14T10:30"
+						title-text="TICKET-1043: Payment timeout" subtitle-text="14.03.2024 10:30"
+						icon="money-bills" name="Customer: Globex Inc" state="Critical">
+						Stripe webhook responses exceeding 30s timeout under peak load.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-14T11:00"
+						title-text="TICKET-1044: CSV export missing columns" subtitle-text="14.03.2024 11:00"
+						icon="excel-attachment" name="Customer: Initech" state="Information">
+						Export report omits custom fields added after v2.4 migration.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-14T13:45"
+						title-text="TICKET-1045: Auth token refresh loop" subtitle-text="14.03.2024 13:45"
+						icon="locked" name="Customer: Umbrella Ltd" state="Negative">
+						JWT refresh endpoint returns 401, causing infinite retry in the client SDK.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-14T15:00"
+						title-text="TICKET-1046: Dashboard chart rendering" subtitle-text="14.03.2024 15:00"
+						icon="bar-chart" name="Customer: Soylent Corp">
+						Bar chart overlaps axis labels when dataset exceeds 50 entries.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 3. SORT ONLY — Chronological Reordering
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Sort</span>
+		<h2 class="section-title">Build Pipeline Log</h2>
+		<p class="section-desc">
+			Sort reorders items in the DOM via <code>appendChild</code>. The connector lines
+			remain intact because the Timeline recalculates layout on every render.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Sort order</span>
+			<span class="event-log-value" id="sortDemoOrder">Default</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="sortDemo" accessible-name="Build Pipeline Log">
+					<ui5-timeline-header-bar slot="headerBar" show-sort></ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-date="2024-03-15T08:00"
+						title-text="Build #1201 — Compile" subtitle-text="15.03.2024 08:00"
+						icon="accept" name="CI Runner" state="Positive">
+						TypeScript compilation succeeded in 47s. Zero errors.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:02"
+						title-text="Build #1201 — Lint" subtitle-text="15.03.2024 08:02"
+						icon="message-information" name="CI Runner" state="Information">
+						ESLint passed with 3 warnings (no-unused-vars).
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:05"
+						title-text="Build #1201 — Unit Tests" subtitle-text="15.03.2024 08:05"
+						icon="accept" name="CI Runner" state="Positive">
+						1,247 tests passed. Coverage: 94.2% (+0.3%).
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:12"
+						title-text="Build #1201 — Integration Tests" subtitle-text="15.03.2024 08:12"
+						icon="decline" name="CI Runner" state="Negative">
+						2 failures in /api/webhooks suite. Retry scheduled.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:18"
+						title-text="Build #1201 — Integration Retry" subtitle-text="15.03.2024 08:18"
+						icon="accept" name="CI Runner" state="Positive">
+						Retry succeeded. Flaky test isolated and quarantined.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:20"
+						title-text="Build #1201 — Deploy to Staging" subtitle-text="15.03.2024 08:20"
+						icon="upload" name="CI Runner" state="Positive">
+						Deployed to staging cluster. Health checks green.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 4. FILTER ONLY — Category Filter with Groups
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Filter</span>
+		<h2 class="section-title">Incident Response Log</h2>
+		<p class="section-desc">
+			Filter by severity. When all items in a group are filtered out, the entire
+			group is removed from the DOM — not hidden.
+		</p>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="filterDemo" accessible-name="Incident Response Log">
+					<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Severity">
+						<ui5-timeline-filter-option text="Critical"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Warning"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Info"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<ui5-timeline-group-item id="filterGroupToday" group-name="Today — 15 March">
+						<ui5-timeline-item data-severity="Critical"
+							title-text="Database failover triggered" subtitle-text="15.03.2024 02:14"
+							icon="alert" name="PagerDuty" state="Negative">
+							Primary DB node unresponsive. Automatic failover to replica completed in 8s.
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-severity="Warning"
+							title-text="API latency spike" subtitle-text="15.03.2024 06:30"
+							icon="latency" name="Datadog" state="Critical">
+							p99 latency exceeded 2s threshold for /search endpoint (3.1s observed).
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-severity="Info"
+							title-text="Auto-scaling event" subtitle-text="15.03.2024 07:00"
+							icon="add" name="AWS CloudWatch" state="Information">
+							Scaled from 8 to 12 pods in us-east-1 due to traffic surge.
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+
+					<ui5-timeline-group-item id="filterGroupYesterday" group-name="Yesterday — 14 March">
+						<ui5-timeline-item data-severity="Critical"
+							title-text="SSL certificate expiry" subtitle-text="14.03.2024 09:00"
+							icon="locked" name="Cert Monitor" state="Negative">
+							Wildcard cert for *.api.example.com expires in 72 hours. Auto-renewal failed.
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-severity="Warning"
+							title-text="Disk usage threshold" subtitle-text="14.03.2024 14:00"
+							icon="hard-drive" name="Infrastructure" state="Critical">
+							/var/log partition at 87% capacity on worker-node-03.
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-severity="Info"
+							title-text="Dependency update merged" subtitle-text="14.03.2024 16:30"
+							icon="sys-enter-2" name="Dependabot">
+							Updated lodash from 4.17.20 to 4.17.21 (security patch).
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 5. COMBINED — Search + Filter Together
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Combined</span>
+		<h2 class="section-title">Team Activity Stream</h2>
+		<p class="section-desc">
+			Both criteria apply simultaneously. An item must match the search text <em>and</em>
+			the selected filter to remain in the DOM.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Active filters</span>
+			<span class="event-log-value" id="combinedLog">Category: All</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="combinedDemo" accessible-name="Team Activity Stream">
+					<ui5-timeline-header-bar slot="headerBar" show-search show-filter filter-by="Type">
+						<ui5-timeline-filter-option text="Code"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Review"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Deploy"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-type="Code"
+						title-text="feat: Add user preferences API" subtitle-text="Today 09:15"
+						icon="developer-settings" name="Sarah Chen">
+						New REST endpoints for user preference storage. Includes rate limiting.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Review"
+						title-text="PR #512 Review — Payment retry logic" subtitle-text="Today 10:00"
+						icon="inspect" name="James Rivera">
+						Approved with minor suggestions on error handling.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Code"
+						title-text="fix: Resolve memory leak in WebSocket handler" subtitle-text="Today 11:30"
+						icon="wrench" name="Li Wei" state="Critical">
+						Event listeners were not being cleaned up on disconnect.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Deploy"
+						title-text="Deploy canary — v2.6.0-rc.1" subtitle-text="Today 13:00"
+						icon="shipping-status" name="CD Pipeline" state="Positive">
+						Canary at 5% traffic. Error rate: 0.02% (baseline: 0.03%).
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Review"
+						title-text="PR #515 Review — Dashboard redesign" subtitle-text="Today 14:30"
+						icon="inspect" name="Emily Watson">
+						Requested changes: accessibility contrast ratios need adjustment.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Deploy"
+						title-text="Promote canary to 100%" subtitle-text="Today 16:00"
+						icon="accept" name="CD Pipeline" state="Positive">
+						v2.6.0 fully rolled out. All health checks passing.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-type="Code"
+						title-text="refactor: Extract auth middleware" subtitle-text="Today 17:00"
+						icon="source-code" name="Arun Patel">
+						Moved auth logic to shared middleware. Reduced duplication across 14 routes.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 6. EDGE CASE — Horizontal Layout
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Edge Case</span>
+		<h2 class="section-title">Horizontal Timeline — Search + Sort</h2>
+		<p class="section-desc">
+			Validates that connector lines render correctly in horizontal layout after
+			items are removed and re-added. Try searching <code>deploy</code> then clearing.
+		</p>
+
+		<div class="demo-card">
+			<div class="timeline-container" style="overflow-x: auto;">
+				<ui5-timeline id="horizontalDemo" layout="Horizontal" accessible-name="Horizontal Deploy Pipeline">
+					<ui5-timeline-header-bar slot="headerBar" show-search show-sort></ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-date="2024-03-15T06:00"
+						title-text="Build triggered" subtitle-text="06:00"
+						icon="wrench" name="CI" state="Positive">
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T06:05"
+						title-text="Tests passed" subtitle-text="06:05"
+						icon="accept" name="CI" state="Positive">
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T06:10"
+						title-text="Deploy to staging" subtitle-text="06:10"
+						icon="upload" name="CD" state="Information">
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T07:00"
+						title-text="QA sign-off" subtitle-text="07:00"
+						icon="inspect" name="QA Team" state="Positive">
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-date="2024-03-15T08:00"
+						title-text="Deploy to production" subtitle-text="08:00"
+						icon="shipping-status" name="CD" state="Positive">
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 7. EDGE CASE — Mixed Flat Items + Groups
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Edge Case</span>
+		<h2 class="section-title">Mixed Layout — Flat Items + Groups Interleaved</h2>
+		<p class="section-desc">
+			Tests ordering preservation when flat items and groups are interleaved.
+			Filter by category, then clear all filters — items must return to their original positions.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Status</span>
+			<span class="event-log-value" id="mixedLog">All items visible</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="mixedDemo" accessible-name="Mixed Layout Demo">
+					<ui5-timeline-header-bar slot="headerBar" show-filter filter-by="Category">
+						<ui5-timeline-filter-option text="Alert"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Change"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<!-- Flat item BEFORE a group -->
+					<ui5-timeline-item data-cat="Alert"
+						title-text="1. System alert (flat, before groups)" subtitle-text="08:00"
+						icon="alert" name="Monitor" state="Negative">
+						This flat item should always appear first.
+					</ui5-timeline-item>
+
+					<!-- First group -->
+					<ui5-timeline-group-item id="mixedGroupMorning" group-name="Morning Shift">
+						<ui5-timeline-item data-cat="Change"
+							title-text="2. Config update (in Morning)" subtitle-text="09:00"
+							icon="action-settings" name="Admin">
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-cat="Alert"
+							title-text="3. CPU spike (in Morning)" subtitle-text="09:30"
+							icon="performance" name="Monitor" state="Critical">
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+
+					<!-- Flat item BETWEEN groups -->
+					<ui5-timeline-item data-cat="Change"
+						title-text="4. Maintenance window (flat, between groups)" subtitle-text="12:00"
+						icon="wrench" name="Ops">
+						This flat item should stay between the two groups.
+					</ui5-timeline-item>
+
+					<!-- Second group -->
+					<ui5-timeline-group-item id="mixedGroupAfternoon" group-name="Afternoon Shift">
+						<ui5-timeline-item data-cat="Alert"
+							title-text="5. Memory warning (in Afternoon)" subtitle-text="14:00"
+							icon="message-warning" name="Monitor" state="Critical">
+						</ui5-timeline-item>
+
+						<ui5-timeline-item data-cat="Change"
+							title-text="6. Deploy hotfix (in Afternoon)" subtitle-text="15:00"
+							icon="upload" name="DevOps" state="Positive">
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+
+					<!-- Flat item AFTER groups -->
+					<ui5-timeline-item data-cat="Alert"
+						title-text="7. Incident resolved (flat, after groups)" subtitle-text="17:00"
+						icon="accept" name="On-Call" state="Positive">
+						This flat item should always appear last.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 9. MULTI-SELECT FILTER — Dialog with Checkboxes
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Multi-Select Filter</span>
+		<h2 class="section-title">Deployment Pipeline — Multi-Tag Filter</h2>
+		<p class="section-desc">
+			Click the filter icon to open a dialog with checkboxes. Select one or more tags.
+			An item is shown if it matches <strong>any</strong> selected tag.
+			If nothing is selected, all items are shown.
+		</p>
+
+		<div class="event-log">
+			<span class="event-log-label">Active filters</span>
+			<span class="event-log-value" id="multiFilterLog">None (showing all)</span>
+		</div>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="multiFilterDemo" accessible-name="Deployment Pipeline">
+					<ui5-timeline-header-bar slot="headerBar" show-search show-filter show-sort filter-by="Tags">
+						<ui5-timeline-filter-option text="Frontend"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Backend"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Infra"></ui5-timeline-filter-option>
+						<ui5-timeline-filter-option text="Security"></ui5-timeline-filter-option>
+					</ui5-timeline-header-bar>
+
+					<ui5-timeline-item data-tags="Frontend" data-date="2024-03-18T09:00"
+						title-text="UI component library v3.2" subtitle-text="18.03.2024 09:00"
+						icon="palette" name="Design System Team" state="Positive">
+						Published 12 new components. Bundle size reduced by 8%.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Backend,Security" data-date="2024-03-18T10:30"
+						title-text="Auth service — rate limiting" subtitle-text="18.03.2024 10:30"
+						icon="locked" name="Platform Team">
+						Added per-IP rate limiting to /login and /token endpoints. Threshold: 10 req/min.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Infra" data-date="2024-03-18T11:00"
+						title-text="Kubernetes cluster upgrade" subtitle-text="18.03.2024 11:00"
+						icon="cloud" name="SRE Team" state="Information">
+						Upgraded from 1.28 to 1.29. Rolling restart completed with zero downtime.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Frontend,Backend" data-date="2024-03-18T13:00"
+						title-text="GraphQL schema v2 migration" subtitle-text="18.03.2024 13:00"
+						icon="synchronize" name="API Team" state="Critical">
+						Breaking change: deprecated Query.users field removed. 3 consumer apps updated.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Security" data-date="2024-03-18T14:30"
+						title-text="Dependency audit — CVE patches" subtitle-text="18.03.2024 14:30"
+						icon="shield" name="Security Team" state="Negative">
+						Patched 2 critical CVEs in openssl and libcurl across all base images.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Infra,Security" data-date="2024-03-18T16:00"
+						title-text="WAF rule update" subtitle-text="18.03.2024 16:00"
+						icon="firewall" name="SRE Team">
+						Added geo-blocking rules for 14 high-risk regions. False-positive rate: 0.01%.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Backend" data-date="2024-03-18T17:00"
+						title-text="Database connection pooling" subtitle-text="18.03.2024 17:00"
+						icon="database" name="Platform Team" state="Positive">
+						Switched to PgBouncer. Connection count dropped from 850 to 120.
+					</ui5-timeline-item>
+
+					<ui5-timeline-item data-tags="Frontend" data-date="2024-03-18T18:00"
+						title-text="Performance audit — Core Web Vitals" subtitle-text="18.03.2024 18:00"
+						icon="performance" name="Frontend Team" state="Positive">
+						LCP improved from 2.8s to 1.4s. CLS reduced to 0.02.
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════
+		 8. EDGE CASE — No Results
+		 ═══════════════════════════════════════════ -->
+	<section class="demo-section">
+		<span class="section-label">Edge Case</span>
+		<h2 class="section-title">Empty State — No Matching Results</h2>
+		<p class="section-desc">
+			Search for <code>xyznonexistent</code> to remove all items. The timeline
+			should be empty without errors. Clear search to restore all items in order.
+		</p>
+
+		<div class="demo-card">
+			<div class="timeline-container">
+				<ui5-timeline id="emptyDemo" accessible-name="Empty State Demo">
+					<ui5-timeline-header-bar slot="headerBar" show-search></ui5-timeline-header-bar>
+
+					<ui5-timeline-item title-text="Item Alpha" subtitle-text="First" icon="calendar" name="User A">
+						Content A
+					</ui5-timeline-item>
+
+					<ui5-timeline-item title-text="Item Beta" subtitle-text="Second" icon="phone" name="User B">
+						Content B
+					</ui5-timeline-item>
+
+					<ui5-timeline-item title-text="Item Gamma" subtitle-text="Third" icon="email" name="User C">
+						Content C
+					</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</div>
+	</section>
+
+<script>
+	// ════════════════════════════════════════════════
+	// Helper: DOM-based item management (lazy init)
+	// ════════════════════════════════════════════════
+	// Items are collected on first use — NOT at script parse time —
+	// because custom elements haven't been upgraded yet when the
+	// inline script runs (the module bundle loads asynchronously).
+	//
+	// IMPORTANT: reconcile always removes all items first, then
+	// re-adds matching ones in original document order. This prevents
+	// an ordering bug where items that were already in the DOM
+	// stay at their current position while restored items get
+	// appended after them (e.g. filter → clear → wrong order).
+
+	function createItemManager(timelineEl) {
+		let initialized = false;
+		let allItems, allGroups, itemParentMap, groupParentMap;
+		// Original order of timeline's direct children (items + groups interleaved)
+		let timelineChildOrder;
+
+		function init() {
+			if (initialized) return;
+			initialized = true;
+
+			allItems = Array.from(timelineEl.querySelectorAll("[ui5-timeline-item]"));
+			allGroups = Array.from(timelineEl.querySelectorAll("[ui5-timeline-group-item]"));
+
+			itemParentMap = new Map();
+			allItems.forEach(item => itemParentMap.set(item, item.parentElement));
+
+			groupParentMap = new Map();
+			allGroups.forEach(group => groupParentMap.set(group, group.parentElement));
+
+			// Capture the original interleaved order of direct children
+			timelineChildOrder = Array.from(timelineEl.children).filter(child =>
+				child.matches("[ui5-timeline-item], [ui5-timeline-group-item]")
+			);
+		}
+
+		return {
+			get totalCount() { init(); return allItems.length; },
+
+			reconcile(filterFn) {
+				init();
+				const matching = new Set(allItems.filter(filterFn));
+
+				// Phase 1: Remove ALL managed elements from the DOM
+				allItems.forEach(item => { if (item.parentElement) item.remove(); });
+				allGroups.forEach(group => { if (group.parentElement) group.remove(); });
+
+				// Phase 2: Re-add matching items into their group parents (preserves within-group order)
+				allItems.forEach(item => {
+					if (matching.has(item) && itemParentMap.get(item) !== timelineEl) {
+						itemParentMap.get(item).appendChild(item);
+					}
+				});
+
+				// Phase 3: Re-add timeline direct children in original interleaved order
+				timelineChildOrder.forEach(child => {
+					if (child.matches("[ui5-timeline-group-item]")) {
+						// Group: only re-add if it has visible children inside it
+						const hasChildren = allItems.some(
+							item => itemParentMap.get(item) === child && matching.has(item)
+						);
+						if (hasChildren) {
+							timelineEl.appendChild(child);
+						}
+					} else {
+						// Flat item: only re-add if it matches
+						if (matching.has(child)) {
+							timelineEl.appendChild(child);
+						}
+					}
+				});
+
+				return matching.size;
+			},
+
+			sort(compareFn) {
+				init();
+				const visibleItems = allItems.filter(item => item.parentElement);
+				visibleItems.sort(compareFn);
+				visibleItems.forEach(item => timelineEl.appendChild(item));
+			}
+		};
+	}
+
+
+	// ════════════════════════════════════════════════
+	// 1. FULL DEMO — Search + Filter + Sort
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("fullDemo");
+		const logElement = document.getElementById("fullDemoLog");
+		const countElement = document.getElementById("fullDemoCount");
+		const sortStatusElement = document.getElementById("fullDemoSortStatus");
+		const sortLabelElement = document.getElementById("fullDemoSortLabel");
+
+		const itemManager = createItemManager(timeline);
+		const state = { search: "", filters: [], sortOrder: "Ascending" };
+
+		function apply() {
+			const count = itemManager.reconcile(item => {
+				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+					.join(" ").toLowerCase();
+				const searchOk = !state.search || text.includes(state.search);
+				const filterOk = state.filters.length === 0 || state.filters.includes(item.dataset.category);
+				return searchOk && filterOk;
+			});
+
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
+
+			countElement.textContent = count;
+		}
+
+		timeline.addEventListener("search", e => {
+			state.search = e.detail.value.toLowerCase();
+			logElement.textContent = state.search ? `search: "${e.detail.value}"` : "search cleared";
+			apply();
+		});
+
+		timeline.addEventListener("filter", e => {
+			state.filters = e.detail.selectedOptions;
+			logElement.textContent = state.filters.length ? `filter → ${state.filters.join(", ")}` : "filter cleared";
+			apply();
+		});
+
+		timeline.addEventListener("sort", e => {
+			state.sortOrder = e.detail.sortOrder;
+			logElement.textContent = `sort → ${state.sortOrder}`;
+			sortStatusElement.style.display = "flex";
+			sortLabelElement.textContent = state.sortOrder === "Ascending" ? "Oldest first" : "Newest first";
+			apply();
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 2. SEARCH ONLY
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("searchDemo");
+		const itemManager = createItemManager(timeline);
+
+		timeline.addEventListener("search", e => {
+			const searchQuery = e.detail.value.toLowerCase();
+			itemManager.reconcile(item => {
+				if (!searchQuery) return true;
+				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+					.join(" ").toLowerCase();
+				return text.includes(searchQuery);
+			});
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 3. SORT ONLY
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("sortDemo");
+		const orderElement = document.getElementById("sortDemoOrder");
+		const itemManager = createItemManager(timeline);
+
+		timeline.addEventListener("sort", e => {
+			const order = e.detail.sortOrder;
+			orderElement.textContent = order === "Ascending" ? "Oldest first" : "Newest first";
+
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return order === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 4. FILTER ONLY (with Groups)
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("filterDemo");
+		const itemManager = createItemManager(timeline);
+
+		timeline.addEventListener("filter", e => {
+			const severities = e.detail.selectedOptions;
+			itemManager.reconcile(item => {
+				return severities.length === 0 || severities.includes(item.dataset.severity);
+			});
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 5. COMBINED — Search + Filter
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("combinedDemo");
+		const logElement = document.getElementById("combinedLog");
+		const itemManager = createItemManager(timeline);
+		const state = { search: "", types: [] };
+
+		function apply() {
+			itemManager.reconcile(item => {
+				const text = [item.titleText, item.name, item.textContent]
+					.join(" ").toLowerCase();
+				const searchOk = !state.search || text.includes(state.search);
+				const typeOk = state.types.length === 0 || state.types.includes(item.dataset.type);
+				return searchOk && typeOk;
+			});
+
+			const parts = [];
+			if (state.types.length) parts.push(`Type: ${state.types.join(", ")}`);
+			if (state.search) parts.push(`Search: "${state.search}"`);
+			logElement.textContent = parts.length ? parts.join(" + ") : "No filters active";
+		}
+
+		timeline.addEventListener("search", e => {
+			state.search = e.detail.value.toLowerCase();
+			apply();
+		});
+
+		timeline.addEventListener("filter", e => {
+			state.types = e.detail.selectedOptions;
+			apply();
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 6. HORIZONTAL LAYOUT — Search + Sort
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("horizontalDemo");
+		const itemManager = createItemManager(timeline);
+		let searchValue = "";
+
+		timeline.addEventListener("search", e => {
+			searchValue = e.detail.value.toLowerCase();
+			itemManager.reconcile(item => {
+				if (!searchValue) return true;
+				const text = [item.titleText, item.name].join(" ").toLowerCase();
+				return text.includes(searchValue);
+			});
+		});
+
+		timeline.addEventListener("sort", e => {
+			const order = e.detail.sortOrder;
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return order === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 7. MIXED FLAT + GROUPS — Order Preservation
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("mixedDemo");
+		const logElement = document.getElementById("mixedLog");
+		const itemManager = createItemManager(timeline);
+
+		timeline.addEventListener("filter", e => {
+			const categories = e.detail.selectedOptions;
+			const count = itemManager.reconcile(item => {
+				return categories.length === 0 || categories.includes(item.dataset.cat);
+			});
+			logElement.textContent = categories.length === 0
+				? "All items visible"
+				: `Showing ${count} "${categories.join(", ")}" items`;
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 9. MULTI-SELECT FILTER — Dialog with Checkboxes
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("multiFilterDemo");
+		const logElement = document.getElementById("multiFilterLog");
+		const itemManager = createItemManager(timeline);
+		const state = { search: "", filters: [], sortOrder: "Ascending" };
+
+		function apply() {
+			const count = itemManager.reconcile(item => {
+				// Search: match against all text content
+				const text = [item.titleText, item.name, item.subtitleText, item.textContent]
+					.join(" ").toLowerCase();
+				const searchOk = !state.search || text.includes(state.search);
+
+				// Filter: item matches if ANY of its tags is in the selected set
+				const itemTags = (item.dataset.tags || "").split(",");
+				const filterOk = state.filters.length === 0
+					|| itemTags.some(tag => state.filters.includes(tag));
+
+				return searchOk && filterOk;
+			});
+
+			itemManager.sort((a, b) => {
+				const dateA = new Date(a.dataset.date || 0);
+				const dateB = new Date(b.dataset.date || 0);
+				return state.sortOrder === "Ascending" ? dateA - dateB : dateB - dateA;
+			});
+
+			// Update status display
+			if (state.filters.length === 0) {
+				logElement.textContent = "None (showing all)";
+			} else {
+				logElement.textContent = state.filters.join(", ") + ` (${count} items)`;
+			}
+		}
+
+		timeline.addEventListener("search", e => {
+			state.search = e.detail.value.toLowerCase();
+			apply();
+		});
+
+		timeline.addEventListener("filter", e => {
+			state.filters = e.detail.selectedOptions;
+			apply();
+		});
+
+		timeline.addEventListener("sort", e => {
+			state.sortOrder = e.detail.sortOrder;
+			apply();
+		});
+	})();
+
+
+	// ════════════════════════════════════════════════
+	// 8. EMPTY STATE — No Results
+	// ════════════════════════════════════════════════
+	(function () {
+		const timeline = document.getElementById("emptyDemo");
+		const itemManager = createItemManager(timeline);
+
+		timeline.addEventListener("search", e => {
+			const searchQuery = e.detail.value.toLowerCase();
+			itemManager.reconcile(item => {
+				if (!searchQuery) return true;
+				const text = [item.titleText, item.name, item.textContent].join(" ").toLowerCase();
+				return text.includes(searchQuery);
+			});
+		});
+	})();
+</script>
+
+</body>
+</html>

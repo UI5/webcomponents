@@ -18,6 +18,7 @@ export default function SideNavigationSubItemTemplate(this: SideNavigationSubIte
 						  tabIndex={this.effectiveTabIndex}
 						  aria-current={this._ariaCurrent}
 						  aria-selected={this._ariaSelected}
+						  aria-label={this.accessibleName || undefined}
 						  title={this._tooltip}
 						  aria-disabled={this.effectiveDisabled}
 						  href={this._href}

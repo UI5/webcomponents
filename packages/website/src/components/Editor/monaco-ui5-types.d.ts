@@ -2241,12 +2241,17 @@ interface TimelineProps extends UI5BaseProps {
   loadingDelay?: number;
   growing?: "Button" | "Scroll" | "None";
   items?: React.ReactNode;
+  headerBar?: React.ReactNode;
   eventDetails?: any;
+  timelineEndMarker?: HTMLElement | string;
   growingButton?: HTMLElement | string;
   growingIntersectionObserver?: IntersectionObserver | null;
   timeLineEndObserved?: boolean;
   initialIntersection?: boolean;
   onLoadMore?: (event: UI5CustomEvent<TimelineProps>) => void;
+  onSearch?: (event: UI5CustomEvent<TimelineProps>) => void;
+  onFilter?: (event: UI5CustomEvent<TimelineProps>) => void;
+  onSort?: (event: UI5CustomEvent<TimelineProps>) => void;
 }
 
 /** TimelineItem component props */
@@ -2269,6 +2274,27 @@ interface TimelineGroupItemProps extends UI5BaseProps {
   items?: React.ReactNode;
   eventDetails?: any;
   onToggle?: (event: UI5CustomEvent<TimelineGroupItemProps>) => void;
+}
+
+/** TimelineHeaderBar component props */
+interface TimelineHeaderBarProps extends UI5BaseProps {
+  showSearch?: boolean;
+  showFilter?: boolean;
+  showSort?: boolean;
+  filterBy?: string;
+  searchValue?: string;
+  sortOrder?: "Ascending" | "Descending";
+  filterOptions?: React.ReactNode;
+  eventDetails?: any;
+  onSearch?: (event: UI5CustomEvent<TimelineHeaderBarProps>) => void;
+  onFilter?: (event: UI5CustomEvent<TimelineHeaderBarProps>) => void;
+  onSort?: (event: UI5CustomEvent<TimelineHeaderBarProps>) => void;
+}
+
+/** TimelineFilterOption component props */
+interface TimelineFilterOptionProps extends UI5BaseProps {
+  text?: string;
+  selected?: boolean;
 }
 
 /** Page component props */
@@ -3832,7 +3858,6 @@ declare module "@ui5/webcomponents/dist/ToolbarSeparator.js" {
     static _jsxProps: ToolbarSeparatorProps;
     _jsxProps: ToolbarSeparatorProps;
     eventDetails: {
-      "click": { targetRef: any };
       "close-overflow": void;
     };
   }
@@ -4463,9 +4488,6 @@ declare module "@ui5/webcomponents-fiori/dist/UploadCollection.js" {
     eventDetails: {
       "item-delete": { item: any };
       "selection-change": { selectedItems: any };
-      "rename": void;
-      "retry": void;
-      "terminate": void;
     };
   }
   export default UploadCollection;
@@ -4530,6 +4552,9 @@ declare module "@ui5/webcomponents-fiori/dist/Timeline.js" {
     _jsxProps: TimelineProps;
     eventDetails: {
       "load-more": void;
+      "search": any;
+      "filter": any;
+      "sort": any;
     };
   }
   export default Timeline;
@@ -4555,6 +4580,28 @@ declare module "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js" {
     };
   }
   export default TimelineGroupItem;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/TimelineHeaderBar.js" {
+  class TimelineHeaderBar {
+    static _jsxProps: TimelineHeaderBarProps;
+    _jsxProps: TimelineHeaderBarProps;
+    eventDetails: {
+      "search": { value: string };
+      "filter": { filterBy: string; selectedOptions: any[] };
+      "sort": { sortOrder: string };
+    };
+  }
+  export default TimelineHeaderBar;
+}
+
+declare module "@ui5/webcomponents-fiori/dist/TimelineFilterOption.js" {
+  class TimelineFilterOption {
+    static _jsxProps: TimelineFilterOptionProps;
+    _jsxProps: TimelineFilterOptionProps;
+    eventDetails: {};
+  }
+  export default TimelineFilterOption;
 }
 
 declare module "@ui5/webcomponents-fiori/dist/Page.js" {
@@ -5224,6 +5271,8 @@ declare function IllustratedMessage(props: IllustratedMessageProps): JSX.Element
 declare function Timeline(props: TimelineProps): JSX.Element;
 declare function TimelineItem(props: TimelineItemProps): JSX.Element;
 declare function TimelineGroupItem(props: TimelineGroupItemProps): JSX.Element;
+declare function TimelineHeaderBar(props: TimelineHeaderBarProps): JSX.Element;
+declare function TimelineFilterOption(props: TimelineFilterOptionProps): JSX.Element;
 declare function Page(props: PageProps): JSX.Element;
 declare function DynamicPage(props: DynamicPageProps): JSX.Element;
 declare function DynamicPageTitle(props: DynamicPageTitleProps): JSX.Element;

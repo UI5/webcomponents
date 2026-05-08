@@ -14,6 +14,13 @@ export default function TimelineTemplate(this: Timeline) {
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
 		>
+			{/* Header Bar Slot */}
+			{this._hasHeaderBar && (
+				<div class="ui5-timeline-header-bar-wrapper">
+					<slot name="headerBar"></slot>
+				</div>
+			)}
+
 			<BusyIndicator
 				id={`${this._id}-busyIndicator`}
 				delay={this.loadingDelay}

@@ -1953,6 +1953,53 @@ describe("Validation & Value State", () => {
 			.find(".ui5-valuestatemessage--warning")
 			.should("not.exist");
 	});
+
+	it("Value state resets when selecting an item after invalid input", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.realType("Item");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@mcb")
+			.find("[ui5-mcb-item]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+	});
 });
 
 describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", () => {

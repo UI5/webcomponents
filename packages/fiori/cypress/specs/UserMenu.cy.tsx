@@ -916,6 +916,123 @@ describe("Responsiveness", () => {
 		});
 });
 
+describe("Submenu hover behavior", () => {
+	it("should open submenu on hover over item with subitems", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.eq(1)
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+	});
+
+	it("should close submenu when hover moves to another item", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.as("items");
+
+		cy.get("@items")
+			.eq(1)
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("submenuPopover");
+
+		cy.get("@submenuPopover")
+			.should("have.attr", "open");
+
+		cy.get("@items")
+			.eq(0)
+			.should("be.visible")
+			.as("otherItem");
+
+		cy.get("@otherItem").realHover();
+
+		cy.get("@submenuPopover")
+			.should("not.have.attr", "open");
+	});
+
+	it("should not move focus to submenu when opened via hover", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Legal Information">
+						<UserMenuItem text="Privacy Policy" data-id="privacy-policy"></UserMenuItem>
+						<UserMenuItem text="Terms of Use" data-id="terms-of-use"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu")
+			.find("> [ui5-user-menu-item]")
+			.first()
+			.should("be.visible")
+			.as("parentItem");
+
+		cy.get("@parentItem").realHover();
+
+		cy.get("@parentItem")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@parentItem")
+			.should("be.focused");
+
+		cy.get("[ui5-user-menu-item] > [ui5-user-menu-item]")
+			.first()
+			.should("not.be.focused");
+	});
+});
+
 describe("Footer configuration", () => {
 	it("tests default footer with Sign Out button", () => {
 		cy.mount(
@@ -986,5 +1103,354 @@ describe("Footer configuration", () => {
 
 		cy.get("@userMenu").shadow().find(".ui5-user-menu-sign-out-btn").click();
 		cy.get("@signOutClicked").should("have.been.calledOnce");
+	});
+});
+
+describe("UserMenuItem", () => {
+	describe("showSelection property", () => {
+		it("renders two-line layout when showSelection is true and sub-item is checked", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+								<UserMenuItem text="Dark"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Theme']").as("themeItem");
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-text-wrapper")
+				.should("exist");
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("exist")
+				.and("contain.text", "Light");
+		});
+
+		it("does not render selection text when showSelection is false", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Settings">
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Option A" checked={true}></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Settings']").as("settingsItem");
+			cy.get("@settingsItem")
+				.shadow()
+				.find(".ui5-user-menu-item-text-wrapper")
+				.should("not.exist");
+			cy.get("@settingsItem")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("not.exist");
+		});
+
+		it("does not render selection text when no sub-item is checked", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light"></UserMenuItem>
+								<UserMenuItem text="Dark"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Theme']").as("themeItem");
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-text-wrapper")
+				.should("exist");
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("not.exist");
+		});
+
+		it("updates selection text when a different sub-item is checked", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+								<UserMenuItem text="Dark"></UserMenuItem>
+								<UserMenuItem text="High Contrast"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Theme']").as("themeItem");
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("contain.text", "Light");
+
+			cy.get("@themeItem").click();
+
+			cy.get("[ui5-user-menu-item][text='Dark']").click();
+
+			cy.get("@themeItem")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("contain.text", "Dark");
+		});
+	});
+
+	describe("Single-select behavior", () => {
+		it("prevents unchecking the only checked item in single-select mode", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+								<UserMenuItem text="Dark"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Theme']").as("themeItem");
+			cy.get("@themeItem").click();
+
+			cy.get("[ui5-user-menu-item][text='Light']").click();
+
+			cy.get("[ui5-user-menu-item][text='Light']")
+				.should("have.attr", "checked");
+		});
+
+		it("allows unchecking in single-select mode when showSelection is false", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Options">
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Opt A" checked={true}></UserMenuItem>
+								<UserMenuItem text="Opt B"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Options']").as("parentItem");
+			cy.get("@parentItem").click();
+
+			cy.get("[ui5-user-menu-item][text='Opt A']").click();
+
+			cy.get("[ui5-user-menu-item][text='Opt A']")
+				.should("not.have.attr", "checked");
+		});
+	});
+
+	describe("UserMenuItemGroup", () => {
+		it("renders items within a group with Single check mode", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItemGroup checkMode="Single">
+							<UserMenuItem text="Option 1" checked={true}></UserMenuItem>
+							<UserMenuItem text="Option 2"></UserMenuItem>
+						</UserMenuItemGroup>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item-group]").should("exist");
+			cy.get("[ui5-user-menu-item-group]").should("have.attr", "check-mode", "Single");
+			cy.get("[ui5-user-menu-item]").should("have.length", 2);
+		});
+
+		it("renders items within a group with Multiple check mode", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItemGroup checkMode="Multiple">
+							<UserMenuItem text="Feature A" checked={true}></UserMenuItem>
+							<UserMenuItem text="Feature B" checked={true}></UserMenuItem>
+							<UserMenuItem text="Feature C"></UserMenuItem>
+						</UserMenuItemGroup>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item-group]").should("exist");
+			cy.get("[ui5-user-menu-item-group]").should("have.attr", "check-mode", "Multiple");
+			cy.get("[ui5-user-menu-item]").should("have.length", 3);
+			cy.get("[ui5-user-menu-item][text='Feature A']").should("have.attr", "checked");
+			cy.get("[ui5-user-menu-item][text='Feature B']").should("have.attr", "checked");
+			cy.get("[ui5-user-menu-item][text='Feature C']").should("not.have.attr", "checked");
+		});
+
+		it("fires ui5-check event when item is checked in a group", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItemGroup checkMode="Single">
+							<UserMenuItem text="Item 1"></UserMenuItem>
+							<UserMenuItem text="Item 2"></UserMenuItem>
+						</UserMenuItemGroup>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").as("userMenu");
+			cy.get("@userMenu")
+				.then($userMenu => {
+					$userMenu.get(0).addEventListener("ui5-check", cy.stub().as("checked"));
+				});
+
+			cy.get("[ui5-user-menu-item]").first().click();
+
+			cy.get("@checked").should("have.been.calledOnce");
+		});
+	});
+
+	describe("CSS styling", () => {
+		it("has show-selection attribute when showSelection is true", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+								<UserMenuItem text="Dark"></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu-item][text='Theme']")
+				.should("have.attr", "show-selection");
+		});
+
+		it("does not have show-selection attribute when showSelection is false", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Settings"></UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu-item][text='Settings']")
+				.should("not.have.attr", "show-selection");
+		});
+
+		it("selection text has correct styling", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu-item][text='Theme']")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("have.css", "font-weight", "400")
+				.and("have.css", "white-space", "nowrap")
+				.and("have.css", "overflow", "hidden")
+				.and("have.css", "text-overflow", "ellipsis");
+		});
+
+		it("text wrapper has column layout with gap", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Theme" showSelection={true}>
+							<UserMenuItemGroup checkMode="Single">
+								<UserMenuItem text="Light" checked={true}></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu-item][text='Theme']")
+				.shadow()
+				.find(".ui5-user-menu-item-text-wrapper")
+				.should("have.css", "flex-direction", "column")
+				.and("have.css", "gap", "4px");
+		});
+	});
+
+	describe("Nested submenu items", () => {
+		it("renders nested UserMenuItem hierarchy", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Legal Information">
+							<UserMenuItem text="Privacy Policy"></UserMenuItem>
+							<UserMenuItem text="Terms of Use"></UserMenuItem>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu]").find("[ui5-user-menu-item][text='Legal Information']").as("parentItem");
+			cy.get("@parentItem").find("[ui5-user-menu-item]").should("have.length", 2);
+		});
+
+		it("does not show selection text for non-single-select groups", () => {
+			cy.mount(
+				<>
+					<Button id="openUserMenuBtn">Open User Menu</Button>
+					<UserMenu open={true} opener="openUserMenuBtn">
+						<UserMenuItem text="Features" showSelection={true}>
+							<UserMenuItemGroup checkMode="Multiple">
+								<UserMenuItem text="Feature A" checked={true}></UserMenuItem>
+								<UserMenuItem text="Feature B" checked={true}></UserMenuItem>
+							</UserMenuItemGroup>
+						</UserMenuItem>
+					</UserMenu>
+				</>
+			);
+
+			cy.get("[ui5-user-menu-item][text='Features']")
+				.shadow()
+				.find(".ui5-user-menu-item-selection-text")
+				.should("not.exist");
+		});
 	});
 });

@@ -1,0 +1,178 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+}
+
+body.timeline-header-bar-page {
+	background-color: var(--sapBackgroundColor, #f5f6f7);
+	font-family: "72", "72full", Arial, Helvetica, sans-serif;
+	color: var(--sapTextColor, #32363a);
+	padding-bottom: 4rem;
+}
+
+/* ── Page header ── */
+.page-header {
+	background: var(--sapShell_Background, #354a5f);
+	padding: 1.5rem 2.5rem;
+	border-bottom: 2px solid var(--sapShell_BorderColor, #2c3e50);
+}
+
+.page-header h1 {
+	font-size: 1.5rem;
+	font-weight: 400;
+	color: var(--sapShell_TextColor, #fff);
+	letter-spacing: 0.02em;
+	font-family: "72", "72full", Arial, Helvetica, sans-serif;
+}
+
+.page-header p {
+	font-size: 0.8125rem;
+	color: var(--sapShell_InteractiveTextColor, #d1e8ff);
+	margin-top: 0.25rem;
+	font-family: "72", "72full", Arial, Helvetica, sans-serif;
+	opacity: 0.85;
+}
+
+/* ── Section layout ── */
+.demo-section {
+	max-width: 56rem;
+	margin: 2rem auto;
+	padding: 0 2rem;
+}
+
+.demo-section + .demo-section {
+	margin-top: 2.5rem;
+}
+
+.section-label {
+	display: inline-block;
+	font-size: 0.6875rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sapContent_LabelColor, #6a6d70);
+	margin-bottom: 0.375rem;
+}
+
+.section-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: var(--sapTitleColor, #32363a);
+	margin-bottom: 0.25rem;
+}
+
+.section-desc {
+	font-size: 0.8125rem;
+	color: var(--sapContent_LabelColor, #6a6d70);
+	line-height: 1.5;
+	margin-bottom: 1.25rem;
+}
+
+/* ── Card container for each demo ── */
+.demo-card {
+	background: var(--sapGroup_ContentBackground, #fff);
+	border: 1px solid var(--sapGroup_ContentBorderColor, #d9d9d9);
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.demo-card-body {
+	padding: 1rem;
+}
+
+/* ── Event log ── */
+.event-log {
+	background: var(--sapList_Background, #fff);
+	border: 1px solid var(--sapGroup_ContentBorderColor, #d9d9d9);
+	border-radius: 0.5rem;
+	padding: 0.625rem 0.875rem;
+	margin-bottom: 1rem;
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	min-height: 2.25rem;
+}
+
+.event-log-label {
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--sapContent_LabelColor, #6a6d70);
+	white-space: nowrap;
+}
+
+.event-log-value {
+	font-size: 0.8125rem;
+	color: var(--sapTextColor, #32363a);
+	font-family: "72Mono", "72Monofull", "Courier New", monospace;
+}
+
+/* ── Status bar ── */
+.status-bar {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.625rem 1rem;
+	background: var(--sapObjectHeader_Background, #f7f7f7);
+	border-bottom: 1px solid var(--sapGroup_ContentBorderColor, #d9d9d9);
+	font-size: 0.8125rem;
+}
+
+.status-item {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+}
+
+.status-dot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--sapPositiveColor, #256f3a);
+}
+
+.status-dot--filtered {
+	background: var(--sapInformativeColor, #0a6ed1);
+}
+
+.status-count {
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Scenario description inside card ── */
+.scenario-note {
+	padding: 0.75rem 1rem;
+	background: var(--sapInformationBackground, #e8f0fa);
+	border-bottom: 1px solid var(--sapInformativeColor, #0a6ed1);
+	font-size: 0.8125rem;
+	color: var(--sapTextColor, #32363a);
+	line-height: 1.5;
+}
+
+.scenario-note code {
+	font-family: "72Mono", "72Monofull", "Courier New", monospace;
+	font-size: 0.75rem;
+	background: rgba(0, 0, 0, 0.06);
+	padding: 0.1em 0.35em;
+	border-radius: 3px;
+}
+
+/* ── Timeline container constraint ── */
+.timeline-container {
+	padding: 1rem;
+}
+
+.timeline-container--scroll {
+	max-height: 28rem;
+	overflow-y: auto;
+}

@@ -70,6 +70,15 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	icon?: string;
 
 	/**
+	 * Defines the tooltip of the graphical icon.
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	iconTooltip?: string;
+
+	/**
 	 * Defines the name of the item, displayed before the `title-text`.
 	 * @default undefined
 	 * @public
@@ -161,6 +170,8 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 	lastItem = false;
 
 	/**
+	 * Used internally by TimelineGroupItem for collapse/expand mechanics.
+	 * Applications should not use this for filtering — instead, add/remove items from the DOM.
 	 * @private
 	 */
 	@property({ type: Boolean })
@@ -231,6 +242,10 @@ class TimelineItem extends UI5Element implements ITimelineItem {
 
 		if (this.timelineItemStateText) {
 			parts.push(this.timelineItemStateText);
+		}
+
+		if (this.iconTooltip) {
+			parts.push(this.iconTooltip);
 		}
 
 		return parts.join(", ");

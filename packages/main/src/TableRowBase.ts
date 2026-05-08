@@ -40,6 +40,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	@property({ type: Boolean, noAttribute: true })
 	_alternate = false;
 
+	@property({ type: Boolean })
+	_renderDummyCell = false;
+
 	@query("#selection-cell")
 	_selectionCell?: HTMLElement;
 
@@ -49,6 +52,10 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
+	isHeaderRow(): boolean {
+		return false;
+	}
+
 	onEnterDOM() {
 		!this.role && this.setAttribute("role", "row");
 		this.toggleAttribute("ui5-table-row-base", true);
@@ -56,14 +63,40 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	onBeforeRendering() {
 		toggleAttribute(this, "aria-selected", this._isSelectable, `${this._isSelected}`);
+		toggleAttribute(this, "_has-popin", this._hasPopin);
+	}
+
+	onAfterRendering() {
+		this._handleCustomFocusOutline();
 	}
 
 	getFocusDomRef() {
 		return this;
 	}
 
-	isHeaderRow(): boolean {
-		return false;
+	async focus(focusOptions?: FocusOptions | undefined): Promise<void> {
+		this.setAttribute("tabindex", "-1");
+		HTMLElement.prototype.focus.call(this, focusOptions);
+		this._handleCustomFocusOutline();
+		return Promise.resolve();
+	}
+
+	_handleCustomFocusOutline() {
+		if (this._renderDummyCell && !this._hasPopin && document.activeElement === this) {
+			const cells = [...this.shadowRoot!.children].flatMap(element => {
+				return element.localName === "slot" ? (element as HTMLSlotElement).assignedElements() : [element];
+			});
+			const customOutlineAttribute = "data-ui5-custom-outline";
+			cells.forEach(cell => cell.removeAttribute(customOutlineAttribute));
+			const firstVisibleCell = cells.at(0);
+			const lastVisibleCell = cells.at(-2);
+			if (firstVisibleCell === lastVisibleCell) {
+				firstVisibleCell?.setAttribute(customOutlineAttribute, "startend");
+			} else {
+				firstVisibleCell?.setAttribute(customOutlineAttribute, "start");
+				lastVisibleCell?.setAttribute(customOutlineAttribute, "end");
+			}
+		}
 	}
 
 	_onSelectionChange() {
@@ -118,6 +151,10 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	get _popinCells() {
 		return this.cells.filter(c => c._popin && !c._popinHidden);
+	}
+
+	get _hasPopin() {
+		return (this._table?.rows.length ?? 0) > 0 && this.cells.some(c => c._popin && !c._popinHidden);
 	}
 
 	get _stickyCells() {
