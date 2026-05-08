@@ -95,6 +95,14 @@
 	color: inherit;
 }
 
+:host([value-state]:not([value-state="None"])) .ui5-select-root {
+	background: none;
+}
+
+:host([readonly]) .ui5-select-root {
+	background: none;
+}
+
 :host([value-state]:not([value-state="None"], [value-state="Positive"])) .ui5-select-icon-root {
 	height: var(--_ui5_select_icon_wrapper_state_height);
 }
