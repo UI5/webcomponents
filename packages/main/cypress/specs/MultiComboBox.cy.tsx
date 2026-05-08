@@ -3430,6 +3430,54 @@ describe("Keyboard Handling", () => {
 			.should("have.value", "I");
 	});
 
+	it("should deselect all tokens on [Escape] key when focus is on tokenizer", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Andora"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Canada"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 3);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.last()
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Home"]);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("have.attr", "selected");
+			});
+
+		cy.realPress("Escape");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("not.have.attr", "selected");
+			});
+	});
+
 	it("Selects an item when enter is pressed and value matches a text of an item in the list", () => {
 		cy.mount(
 			<>
