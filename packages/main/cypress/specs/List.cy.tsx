@@ -378,7 +378,7 @@ describe("List - Accessibility", () => {
 
 	it("has default aria-description for accessibleRole List when no accessibleDescription is set", () => {
 		cy.mount(
-			<List>
+			<List selectionMode="Delete">
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
@@ -413,7 +413,7 @@ describe("List - Accessibility", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
-			<List accessibleDescription={customDescription}>
+			<List selectionMode="Delete" accessibleDescription={customDescription}>
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
