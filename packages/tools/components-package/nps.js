@@ -82,7 +82,9 @@ const getScripts = (options) => {
 			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 		},
-generate: {
+		lint: ``,
+		lintfix: ``,
+		generate: {
 			default: `ui5nps prepare.all`,
 			all: `ui5nps-p build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
