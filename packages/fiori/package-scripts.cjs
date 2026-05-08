@@ -13,7 +13,6 @@ const filterOut = [
 ];
 
 const options = {
-	cssVariablesTarget: "host",
 	portStep: 2,
 	dev: true,
 	fioriPackage: true,

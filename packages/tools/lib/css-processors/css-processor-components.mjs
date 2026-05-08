@@ -4,18 +4,15 @@ import * as fs from "fs";
 import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import chokidar from "chokidar";
-import scopeVariables from "./scope-variables.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
 import { pathToFileURL } from "url";
 
 
 const generate = async (argv) => {
-    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
     const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
-    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     const inputFilesGlob = "src/themes/*.css";
     const restArgs = argv.slice(2);
@@ -27,14 +24,7 @@ const generate = async (argv) => {
 
             build.onEnd(result => {
                 result.outputFiles.forEach(async f => {
-                    let newText
-
-                    if (CSS_VARIABLES_TARGET) {
-                        newText = f.text;
-                    } else {
-                        // scoping
-                        newText = scopeVariables(f.text, basePackageJSON);
-                    }
+                    let newText = f.text;
 
                     newText = newText.replaceAll(/\\/g, "\\\\"); // Escape backslashes as they might appear in css rules
                     await mkdir(path.dirname(f.path), { recursive: true });

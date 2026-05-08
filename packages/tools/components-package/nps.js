@@ -37,7 +37,7 @@ const getScripts = (options) => {
 	});
 
 
-	const tsOption = !!(!options.legacy || options.jsx);
+	const tsOption = options.typescript !== false;
 	const tsCommandOld = tsOption ? "tsc" : "";
 	let tsWatchCommandStandalone = tsOption ? "tsc --watch" : "";
 	// this command is only used for standalone projects. monorepo projects get their watch from vite, so opt-out here
@@ -70,7 +70,6 @@ const getScripts = (options) => {
 		__ui5envs: {
 			UI5_CEM_MODE: typeof options.dev === "boolean" ? (options.dev ? "dev" : undefined) : options.dev,
 			UI5_TS: `${tsOption}`,
-			CSS_VARIABLES_TARGET: options.cssVariablesTarget ?? "root",
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
 		},
 		clean: {
@@ -82,18 +81,17 @@ const getScripts = (options) => {
 		lintfix: `ui5nps-script "${LIB}eslint/eslint.js" --fix`,
 		generate: {
 			default: `ui5nps prepare.all`,
-			all: `ui5nps-p build.templates build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
+			all: `ui5nps-p build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
 			default: `ui5nps clean prepare.all copy copyProps prepare.typescript`,
-			all: `ui5nps-p build.templates build.i18n prepare.styleRelated build.illustrations`, // concurently
+			all: `ui5nps-p build.i18n prepare.styleRelated build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
 		},
 		build: {
 			default: "ui5nps prepare lint build.bundle", // build.bundle2
-			templates: options.legacy ? `node "${LIB}hbs2ui5/index.js" -d src/ -o src/generated/templates` : "",
 			styles: {
 				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
 				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
@@ -123,14 +121,14 @@ const getScripts = (options) => {
 		copyPropsWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/ --watch --safe --skip-initial-copy`,
 		copySrcWithWatch: `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/ --watch --safe --skip-initial-copy`,
 		copy: {
-			default: options.legacy ? "ui5nps copy.src copy.props" : "",
-			src: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/` : "",
-			props: options.legacy ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/` : "",
+			default: !tsOption ? "ui5nps copy.src copy.props" : "",
+			src: !tsOption ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/**/*.{js,json}" dist/` : "",
+			props: !tsOption ? `ui5nps-script "${LIB}copy-and-watch/index.js" --silent "src/i18n/*.properties" dist/` : "",
 		},
 		watch: {
-			default: `ui5nps-p watch.templates watch.typescript watch.src watch.styles watch.i18n watch.props`, // concurently
+			default: `ui5nps-p watch.typescript watch.src watch.styles watch.i18n watch.props`, // concurently
 			devServer: 'ui5nps-p watch.default watch.bundle', // concurently
-			src: options.legacy ? 'ui5nps copySrcWithWatch' : "",
+			src: !tsOption ? 'ui5nps copySrcWithWatch' : "",
 			typescript: tsWatchCommandStandalone,
 			props: 'ui5nps copyPropsWithWatch',
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
@@ -139,11 +137,9 @@ const getScripts = (options) => {
 				themes: 'ui5nps build.styles.themesWithWatch',
 				components: `ui5nps build.styles.componentsWithWatch`,
 			},
-			templates: options.legacy ? `ui5nps-script "${LIB}chokidar/chokidar.js" "src/**/*.hbs" "ui5nps build.templates"` : "",
 			i18n: `ui5nps-script "${LIB}chokidar/chokidar.js" "src/i18n/messagebundle.properties" "ui5nps build.i18n.defaultsjs"`
 		},
 		start: "ui5nps prepare watch.devServer",
-		test: `ui5nps-script "${LIB}/test-runner/test-runner.js"`,
 		"test-cy-ci": `cypress run --component --browser chrome`,
 		"test-cy-ci-suite-1": `cypress run --component --browser chrome --spec "**/specs/[A-C]*.cy.{js,jsx,ts,tsx},**/specs/[^D-Z]*.cy.{js,jsx,ts,tsx}"`,
 		"test-cy-ci-suite-2": `cypress run --component --browser chrome --spec "**/specs/[D-L]*.cy.{js,jsx,ts,tsx}"`,
@@ -161,7 +157,7 @@ const getScripts = (options) => {
 				replace: `ui5nps-script "${LIB}scoping/scope-test-pages.js" test/pages/scoped demo`,
 			},
 			watchWithBundle: 'ui5nps-p scope.watch scope.bundle', // concurently
-			watch: 'ui5nps-p watch.templates watch.props watch.styles', // concurently
+			watch: 'ui5nps-p watch.props watch.styles', // concurently
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {

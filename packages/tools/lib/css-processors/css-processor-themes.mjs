@@ -7,7 +7,6 @@ import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
 import postcssPlugin from "./postcss-plugin.mjs";
 import { writeFileIfChanged, getFileContent } from "./shared.mjs";
-import scopeVariables from "./scope-variables.mjs";
 import { mergeLightDark } from "./merge-light-dark.mjs";
 import { pathToFileURL } from "url";
 
@@ -21,12 +20,10 @@ const AUTO_THEME_PAIRS = [
 ];
 
 const generate = async (argv) => {
-    const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
     const tsMode = process.env.UI5_TS === "true";
     const extension = tsMode ? ".css.ts" : ".css.js";
 
     const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
-    const basePackageJSON = (await import("@ui5/webcomponents-base/package.json", { with: { type: "json" } })).default;
 
     const allInputFiles = await globby([
         "src/**/parameters-bundle.css",
@@ -73,21 +70,12 @@ const generate = async (argv) => {
     };
 
     const processComponentPackageFile = async (f) => {
-        if (CSS_VARIABLES_TARGET) {
-            const result = await postcss([
-                combineDuplicatedSelectors,
-                postcssPlugin
-            ]).process(f.text, { from: undefined });
-
-            return { css: result.css };
-        }
-
-
-        const combined = await postcss([
+        const result = await postcss([
             combineDuplicatedSelectors,
+            postcssPlugin
         ]).process(f.text, { from: undefined });
 
-        return { css: scopeVariables(combined.css, basePackageJSON, f.path) };
+        return { css: result.css };
     }
 
     /**

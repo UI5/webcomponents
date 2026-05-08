@@ -5,8 +5,6 @@ const assets = require("../../assets-meta.js");
 const isTypeScript = process.env.UI5_TS;
 const ext = isTypeScript ? 'ts' : 'js';
 
-const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
-
 const generate = async (argv) => {
 	const inputFolder = path.normalize(argv[2]);
 	const outputFileDynamic = path.normalize(`${argv[3]}/Themes.${ext}`);
@@ -51,7 +49,7 @@ const loadAndCheck = async (themeName) => {
 };
 
 ${availableThemesArray}
-  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck${CSS_VARIABLES_TARGET ? ', "host"' : ''}));
+  .forEach(themeName => registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, themeName, loadAndCheck));
 `;
 	}
 

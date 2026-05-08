@@ -5,7 +5,6 @@ const options = {
 	portStep: 2,
 	noWatchTS: true,
 	dev: true,
-	cssVariablesTarget: "host",
 	internal: {
 		cypress_code_coverage: false,
 	},

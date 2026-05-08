@@ -5,17 +5,15 @@ import { fireThemeRegistered } from "../theming/ThemeRegistered.js";
 type ThemeData = string;
 type ThemeLoader = (themeName: string) => Promise<string>;
 
-type CSSVariablesTarget = "root" | "host";
-
 const themeStyles = new Map<string, string>();
 const loaders = new Map<string, ThemeLoader>();
 const customLoaders = new Map<string, ThemeLoader>();
-const registeredPackages = new Map<string, { cssVariablesTarget: CSSVariablesTarget }>();
+const registeredPackages = new Set<string>();
 const registeredThemes = new Set<string>();
 
-const registerThemePropertiesLoader = (packageName: string, themeName: string, loader: ThemeLoader, cssVariablesTarget: CSSVariablesTarget = "root") => {
+const registerThemePropertiesLoader = (packageName: string, themeName: string, loader: ThemeLoader) => {
 	loaders.set(`${packageName}/${themeName}`, loader);
-	registeredPackages.set(packageName, { cssVariablesTarget });
+	registeredPackages.add(packageName);
 	registeredThemes.add(themeName);
 	fireThemeRegistered(themeName);
 };
