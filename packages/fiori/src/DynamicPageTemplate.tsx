@@ -44,7 +44,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 
 function titleHeaderWrapper(this: DynamicPage) {
 	const commonProps = {
-		class: "ui5-dynamic-page-title-header-wrapper",
+		"class": "ui5-dynamic-page-title-header-wrapper",
 		id: `${this._id}-header`,
 		"aria-label": this.headerAriaLabel,
 		"onui5-toggle-title": this.onToggleTitle,
