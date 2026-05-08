@@ -98,3 +98,48 @@ CSS custom properties (`--ui5-*`) are no longer scoped with the package version 
 >
 > If you relied on versioned variable names for multi-version isolation, you will need to implement an alternative strategy (e.g. CSS layer scoping or shadow DOM containment).
 
+---
+
+### ESLint support removed
+
+The built-in ESLint runner and shared ESLint configuration have been removed from `@ui5/webcomponents-tools`. The following are no longer provided:
+
+| Removed item | Details |
+|---|---|
+| `lib/eslint/eslint.cjs` | ESLint runner script |
+| `components-package/eslint.cjs` | Shared ESLint configuration (airbnb-base + TypeScript overrides) |
+| NPS script `lint` | Ran ESLint on the package source |
+| NPS script `lintfix` | Ran ESLint with `--fix` |
+| `eslint`, `eslint-config-airbnb-base`, `eslint-plugin-import`, `eslint-plugin-jsx-no-leaked-values` | ESLint npm dependencies |
+| `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser` | TypeScript ESLint dependencies |
+
+> **What to do:** Set up ESLint directly in your project. Remove any `.eslintrc.cjs` file that extended `@ui5/webcomponents-tools/components-package/eslint.js` — it is no longer available.
+>
+> For guidance on setting up ESLint with TypeScript support in a web components project, refer to the [ESLint documentation](https://eslint.org/docs/latest/) and the [@typescript-eslint getting started guide](https://typescript-eslint.io/getting-started/).
+
+---
+
+### Package converted to native ESM (`"type": "module"`)
+
+`@ui5/webcomponents-tools` is now a native ES module package. All files use ESM syntax (`import`/`export`) and the package has `"type": "module"` in its `package.json`.
+
+**`package-scripts.cjs` must be renamed and converted to ESM**
+
+If your package has a `package-scripts.cjs` file, rename it to `package-scripts.js` and convert it to ESM syntax:
+
+```js
+// Before (package-scripts.cjs — CommonJS)
+const getScripts = require("@ui5/webcomponents-tools/components-package/nps.js");
+module.exports = { scripts: getScripts({ ... }) };
+```
+
+```js
+// After (package-scripts.js — ESM)
+import getScripts from "@ui5/webcomponents-tools/components-package/nps.js";
+export default { scripts: getScripts({ ... }) };
+```
+
+**`.mjs` entry points renamed to `.js`**
+
+All files that were previously published with a `.mjs` extension are now `.js`. If you imported any of these directly (e.g. from `lib/css-processors/` or `lib/dev-server/`), update the extension in your imports.
+

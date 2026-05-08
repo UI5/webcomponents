@@ -29,7 +29,6 @@ const scripts = {
 		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
-	lint: `ui5nps-script "${LIB}/eslint/eslint.cjs"`,
 	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
 	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
