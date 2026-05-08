@@ -450,7 +450,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		if (value === "") {
 			return true;
 		}
-		return this.isValidValue(value);
+		return this.isValidValue(value) && this.isInValidRange(value);
 	}
 
 	getSelectedDateTime() {
@@ -520,6 +520,16 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 			});
 		}
 		return this._isoFormatInstance;
+	}
+
+	/**
+	 * @override
+	 */
+	_getCalendarDateFromString(value: string) {
+		const jsDate = this.getValueFormat().parse(value) as Date;
+		if (jsDate) {
+			return CalendarDate.fromTimestamp(jsDate.getTime(), this._primaryCalendarType);
+		}
 	}
 
 	/**

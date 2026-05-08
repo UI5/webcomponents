@@ -718,6 +718,154 @@ describe("Accessibility", () => {
 });
 
 
+describe("Min/Max date validation", () => {
+	describe("using format-pattern", () => {
+		it("sets Negative value state when typed value exceeds maxDate", () => {
+			cy.mount(
+				<DateTimePickerTemplate
+					formatPattern="dd/MM/yyyy, HH:mm:ss"
+					minDate="12/05/2026, 08:00:00"
+					maxDate="14/05/2026, 18:00:00"
+					value="13/05/2026, 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+		});
+
+		it("sets Negative value state when typed value is below minDate", () => {
+			cy.mount(
+				<DateTimePickerTemplate
+					formatPattern="dd/MM/yyyy, HH:mm:ss"
+					minDate="12/05/2026, 08:00:00"
+					maxDate="14/05/2026, 18:00:00"
+					value="13/05/2026, 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("11/05/2026, 10:00:00", "Negative");
+		});
+
+		it("sets Negative value state when time exceeds maxDate on same day", () => {
+			cy.mount(
+				<DateTimePickerTemplate
+					formatPattern="dd/MM/yyyy, HH:mm:ss"
+					minDate="12/05/2026, 08:00:00"
+					maxDate="14/05/2026, 18:00:00"
+					value="14/05/2026, 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("14/05/2026, 19:00:00", "Negative");
+		});
+
+		it("clears Negative value state when typed value is within range", () => {
+			cy.mount(
+				<DateTimePickerTemplate
+					formatPattern="dd/MM/yyyy, HH:mm:ss"
+					minDate="12/05/2026, 08:00:00"
+					maxDate="14/05/2026, 18:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("13/05/2026, 12:00:00", "None");
+		});
+	});
+
+	describe("using display-format and value-format", () => {
+		it("sets Negative value state when typed value exceeds maxDate", () => {
+			cy.mount(
+				<DateTimePicker
+					displayFormat="dd/MM/yyyy, HH:mm:ss"
+					valueFormat="yyyy-MM-dd HH:mm:ss"
+					minDate="2026-05-12 08:00:00"
+					maxDate="2026-05-14 18:00:00"
+					value="2026-05-13 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+		});
+
+		it("sets Negative value state when typed value is below minDate", () => {
+			cy.mount(
+				<DateTimePicker
+					displayFormat="dd/MM/yyyy, HH:mm:ss"
+					valueFormat="yyyy-MM-dd HH:mm:ss"
+					minDate="2026-05-12 08:00:00"
+					maxDate="2026-05-14 18:00:00"
+					value="2026-05-13 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("11/05/2026, 10:00:00", "Negative");
+		});
+
+		it("sets Negative value state when time exceeds maxDate on same day", () => {
+			cy.mount(
+				<DateTimePicker
+					displayFormat="dd/MM/yyyy, HH:mm:ss"
+					valueFormat="yyyy-MM-dd HH:mm:ss"
+					minDate="2026-05-12 08:00:00"
+					maxDate="2026-05-14 18:00:00"
+					value="2026-05-14 10:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("14/05/2026, 19:00:00", "Negative");
+		});
+
+		it("clears Negative value state when typed value is within range", () => {
+			cy.mount(
+				<DateTimePicker
+					displayFormat="dd/MM/yyyy, HH:mm:ss"
+					valueFormat="yyyy-MM-dd HH:mm:ss"
+					minDate="2026-05-12 08:00:00"
+					maxDate="2026-05-14 18:00:00"
+				/>
+			);
+
+			cy.get("[ui5-datetime-picker]")
+				.as("dtp");
+
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+			cy.get("@dtp")
+				.ui5DateTimePickerTypeAndExpectValueState("13/05/2026, 12:00:00", "None");
+		});
+	});
+});
+
 describe("Validation inside a form", () => {
 	it("has correct validity for valueMissing", () => {
 		cy.mount(
