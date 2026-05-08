@@ -130,8 +130,8 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 *
 	 * @param row The row instance
 	 */
-	getRowKey(row: TableRow): string {
-		return row.rowKey || "";
+	getRowKey(row: TableRowBase): string {
+		return row.getAttribute("row-key") || "";
 	}
 
 	/**
@@ -140,7 +140,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 * @param rowKey The row key
 	 * @public
 	 */
-	getRowByKey(rowKey: string): TableRow | undefined {
+	getRowByKey(rowKey: string): TableRowBase | undefined {
 		if (this._table && rowKey) {
 			return this._table.rows.find(row => this.getRowKey(row) === rowKey);
 		}

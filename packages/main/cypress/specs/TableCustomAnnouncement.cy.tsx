@@ -301,24 +301,24 @@ describe("Row Custom Announcement - Less details", () => {
 
 	it("should announce table rows", () => {
 		cy.get("@row1").realClick();
-		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${NAVIGABLE} . H1`);
+		checkAnnouncement(`Row . 1 of 1 . ${SELECTED} . ${NAVIGABLE} . H1`);
 		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`);
 		checkAnnouncement(ONE_ROW_ACTION);
 		cy.focused().should("have.attr", "aria-rowindex", "2")
 					.should("have.attr", "role", "row");
 
 		cy.get("#selection").invoke("attr", "selected", "");
-		checkAnnouncement(`Row . 2 of 2 . ${NAVIGABLE}`, true);
+		checkAnnouncement(`Row . 1 of 1 . ${NAVIGABLE}`, true);
 
 		cy.get("#row1-nav-action").invoke("prop", "interactive", true);
-		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE} . H1`, true);
+		checkAnnouncement(`Row . 1 of 1 . ${ACTIVE} . H1`, true);
 		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
 
 		cy.get("@row1").invoke("prop", "interactive", false);
-		checkAnnouncement(`Row . 2 of 2 . H1`, true);
+		checkAnnouncement(`Row . 1 of 1 . H1`, true);
 
 		cy.get("#table0").invoke("css", "width", "301px");
-		checkAnnouncement(`Row . 2 of 2 . H1`, true);
+		checkAnnouncement(`Row . 1 of 1 . H1`, true);
 		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4Popin . C4 Button C4Button`);
 
 		cy.get("#Header3").invoke("prop", "popinHidden", true);
@@ -326,7 +326,7 @@ describe("Row Custom Announcement - Less details", () => {
 
 		cy.get("#row1-nav-action").invoke("remove");
 		cy.get("#row1-add-action").invoke("remove");
-		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
+		checkAnnouncement(`Row . 1 of 1 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H4Popin . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
 
 		cy.realPress("ArrowRight"); // selection cell focused
 		checkAnnouncement("");
@@ -359,7 +359,7 @@ describe("Row Custom Announcement - Less details", () => {
 		cy.realPress("Home"); // row focused
 
 		cy.get("#table0").invoke("css", "width", "1000px");
-		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
+		checkAnnouncement(`Row . 1 of 1 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button . ${NAVIGATED}`, true, "equal");
 		cy.get("@row1Cells").each(($cell, index) => {
 			cy.wrap($cell).should("not.have.attr", "_popin");
 			cy.wrap($cell).should("have.attr", "role", "gridcell");
@@ -370,7 +370,7 @@ describe("Row Custom Announcement - Less details", () => {
 														.should("have.attr", "aria-hidden", "true");
 
 		cy.get("@row1").invoke("prop", "navigated", false);
-		checkAnnouncement(`Row . 2 of 2 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`, true, "equal");
+		checkAnnouncement(`Row . 1 of 1 . H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`, true, "equal");
 
 		cy.realPress("ArrowUp"); // header row focused
 		cy.get("@row1").invoke("remove");

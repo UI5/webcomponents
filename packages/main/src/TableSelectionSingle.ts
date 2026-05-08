@@ -1,6 +1,6 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
-import type TableRow from "./TableRow.js";
+import type TableRowBase from "./TableRowBase.js";
 
 /**
  * @class
@@ -43,12 +43,12 @@ class TableSelectionSingle extends TableSelectionBase {
 	@property()
 	selected?: string;
 
-	isSelected(row: TableRow): boolean {
+	isSelected(row: TableRowBase): boolean {
 		const rowKey = this.getRowKey(row);
 		return rowKey ? this.selected === rowKey : false;
 	}
 
-	setSelected(row: TableRow, selected: boolean, fireEvent: boolean = false) {
+	setSelected(row: TableRowBase, selected: boolean, fireEvent: boolean = false) {
 		const rowKey = this.getRowKey(row);
 		if (rowKey) {
 			this.selected = selected ? rowKey : undefined;
@@ -61,7 +61,7 @@ class TableSelectionSingle extends TableSelectionBase {
 	 *
 	 * @public
 	 */
-	getSelectedRow(): TableRow | undefined {
+	getSelectedRow(): TableRowBase | undefined {
 		return this._table?.rows.find(row => this.isSelected(row));
 	}
 }

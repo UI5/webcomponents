@@ -20,6 +20,7 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import type DropIndicator from "./DropIndicator.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 import type TableRow from "./TableRow.js";
+import type TableGroupRow from "./TableGroupRow.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { MoveEventDetail } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
@@ -278,7 +279,7 @@ class Table extends UI5Element {
 			slots: false,
 		},
 	})
-	rows!: DefaultSlot<TableRow>;
+	rows!: DefaultSlot<TableRow | TableGroupRow>;
 
 	/**
 	 * Defines the header row of the component.
@@ -455,12 +456,20 @@ class Table extends UI5Element {
 	}
 
 	onBeforeRendering(): void {
-		this._renderNavigated = this.rows.some(row => row.navigated);
-		[...this.headerRow, ...this.rows].forEach((row, index) => {
-			row._rowActionCount = this.rows.length > 0 ? this.rowActionCount : 0;
+		let alternateIndex = 0;
+		const rowActionCount = this.rowActionCount > 0 && this.rows.length > 0 ? this.rowActionCount : 0;
+		this._renderNavigated = this.rows.some(row => "navigated" in row && row.navigated);
+		[...this.headerRow, ...this.rows].forEach(row => {
 			row._renderNavigated = this._renderNavigated;
 			row._renderDummyCell = !this._hasFlexibleColumns;
-			row._alternate = this.alternateRowColors && index % 2 === 0;
+			if (!row.isGroupRow()) {
+				row._rowActionCount = rowActionCount;
+				row._alternate = this.alternateRowColors && alternateIndex++ % 2 === 0;
+			} else {
+				row._rowActionCount = 0;
+				row._alternate = false;
+				alternateIndex = 1;
+			}
 		});
 
 		this.style.setProperty("--ui5_grid_sticky_top", this.stickyTop);
@@ -587,6 +596,9 @@ class Table extends UI5Element {
 		headerCell._popin = inPopin && this.overflowMode === TableOverflowMode.Popin;
 		headerCell._popinWidth = popinWidth;
 		this.rows.forEach(row => {
+			if (row.isGroupRow()) {
+				return;
+			}
 			const cell = row.cells[headerIndex];
 			if (cell) {
 				row.cells[headerIndex]._popinHidden = headerCell.popinHidden;

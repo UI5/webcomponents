@@ -132,7 +132,7 @@ class TableSelectionMulti extends TableSelectionBase {
 	 *
 	 * @public
 	 */
-	getSelectedRows(): TableRow[] {
+	getSelectedRows(): TableRowBase[] {
 		return this._table ? this._table.rows.filter(row => this.isSelected(row)) : [];
 	}
 
@@ -145,7 +145,7 @@ class TableSelectionMulti extends TableSelectionBase {
 		}
 
 		const selectedSet = this.getSelectedAsSet();
-		return this._table.rows.every(row => {
+		return this._table.rows.filter(row => row._isSelectable).every(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedSet.has(rowKey);
 		});
@@ -199,14 +199,20 @@ class TableSelectionMulti extends TableSelectionBase {
 		}
 
 		const focusedElement = getActiveElement(); // Assumption: The focused element is always the "next" row after navigation.
+		const isRow = focusedElement?.hasAttribute("ui5-table-row");
+		const isGroupRow = focusedElement?.hasAttribute("ui5-table-group-row");
 
-		if (!(focusedElement?.hasAttribute("ui5-table-row") || this._rangeSelection?.isMouse)) {
+		if (!(isRow || isGroupRow || this._rangeSelection?.isMouse)) {
 			this._stopRangeSelection();
 			return;
 		}
 
-		if (!this._rangeSelection) {
-			// If no range selection is active, start one
+		if (isGroupRow) {
+			if (this._rangeSelection && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+				const change = isUpShift(e) ? -1 : 1;
+				this._handleRangeSelection(focusedElement as unknown as TableRow, change);
+			}
+		} else if (!this._rangeSelection) {
 			const row = focusedElement as TableRow;
 			this._startRangeSelection(row, this.isSelected(row));
 		} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -224,8 +230,8 @@ class TableSelectionMulti extends TableSelectionBase {
 			return;
 		}
 
-		if (!eventOrigin.hasAttribute("ui5-table-row") || !this._rangeSelection || !e.shiftKey) {
-			// Stop range selection if a) Shift is relased or b) the event target is not a row
+		const isTableRow = eventOrigin.hasAttribute("ui5-table-row") || eventOrigin.hasAttribute("ui5-table-group-row");
+		if (!isTableRow || !this._rangeSelection || !e.shiftKey) {
 			this._stopRangeSelection();
 		}
 
@@ -302,6 +308,10 @@ class TableSelectionMulti extends TableSelectionBase {
 			return;
 		}
 
+		if (targetRow.isGroupRow()) {
+			return;
+		}
+
 		const isUp = change > 0;
 		this._rangeSelection.isUp ??= isUp;
 
@@ -310,20 +320,25 @@ class TableSelectionMulti extends TableSelectionBase {
 
 		if (shouldReverseSelection) {
 			this._reverseRangeSelection();
-		} else {
+		} else if (!this._rangeSelection.rows.includes(targetRow)) {
 			const rowIndex = this._table!.rows.indexOf(targetRow);
 			const [startIndex, endIndex] = [rowIndex, rowIndex - change].sort((a, b) => a - b);
 			const selectedSet = this.getSelectedAsSet();
 
 			selectionChanged = this._table?.rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
-				const isRowNotInSelection = !this._rangeSelection?.rows.includes(row);
+				if (row.isGroupRow()) {
+					return changed;
+				}
+
+				const tableRow = row as TableRow;
+				const isRowNotInSelection = !this._rangeSelection?.rows.includes(tableRow);
 				const isRowSelectionDifferent = this.isSelected(row) !== this._rangeSelection!.selected;
 
 				if (isRowNotInSelection) {
-					this._rangeSelection?.rows.push(row);
+					this._rangeSelection?.rows.push(tableRow);
 				}
 
-				selectedSet[this._rangeSelection!.selected ? "add" : "delete"](this.getRowKey(row));
+				selectedSet[this._rangeSelection!.selected ? "add" : "delete"](this.getRowKey(tableRow));
 
 				return changed || isRowSelectionDifferent;
 			}, selectionChanged) || false;

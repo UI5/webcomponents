@@ -21,6 +21,7 @@ import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableE
 import { throttle } from "./TableUtils.js";
 import type { ITableFeature } from "./Table.js";
 import type Table from "./Table.js";
+import type TableRow from "./TableRow.js";
 
 enum TabBlocking {
 	None = 0,
@@ -52,6 +53,7 @@ type RangeChangeEventDetail = {
  * This allows large numbers of rows to exist, but maintain high performance by only paying the cost for those that are currently visible.
  *
  * **Note:** The maximum number of virtualized rows is limited by browser constraints, specifically the maximum supported height for a DOM element.
+ * **Note:** Tables with `ui5-table-group-row` are not supported by the virtualizer.
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/TableVirtualizer.js";`
@@ -179,6 +181,10 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 		return this._table!.shadowRoot!.getElementById("rows")!;
 	}
 
+	get tableRows(): TableRow[] {
+		return this._table!.rows.filter(row => !row.isGroupRow()) as TableRow[];
+	}
+
 	_onScroll(): void {
 		const headerRow = this._table!.headerRow[0];
 		const headerHeight = headerRow.offsetHeight;
@@ -218,7 +224,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 			return;
 		}
 
-		const firstRow = this._table.rows[0];
+		const firstRow = this.tableRows[0];
 		if (firstRow && firstRow.position !== undefined && firstRow.position > 0) {
 			const transform = firstRow.position * this.rowHeight;
 			return `translateY(${transform}px)`;
@@ -238,7 +244,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 		}
 
 		let scrollTopChange = 0;
-		const rows = this._table.rows;
+		const rows = this.tableRows;
 		const firstRow = rows[0];
 		const lastRow = rows[rows.length - 1];
 		const hasDataBeforeFirstRow = firstRow.position !== 0;

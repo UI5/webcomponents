@@ -2,6 +2,7 @@ import TableExtension from "./TableExtension.js";
 import { getCustomAnnouncement, applyCustomAnnouncement } from "./CustomAnnouncement.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
+import type TableGroupRow from "./TableGroupRow.js";
 import type TableCell from "./TableCell.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 import {
@@ -12,6 +13,7 @@ import {
 	TABLE_ROW_NAVIGABLE,
 	TABLE_ROW_NAVIGATED,
 	TABLE_COLUMN_HEADER_ROW,
+	TABLE_GROUP_ROW,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -22,7 +24,7 @@ import {
  */
 class TableCustomAnnouncement extends TableExtension {
 	_table: Table;
-	_tableAttributes = ["ui5-table-header-row", "ui5-table-header-cell", "ui5-table-row", "ui5-table-cell"];
+	_tableAttributes = ["ui5-table-header-row", "ui5-table-header-cell", "ui5-table-group-row", "ui5-table-row", "ui5-table-cell"];
 
 	constructor(table: Table) {
 		super();
@@ -80,6 +82,15 @@ class TableCustomAnnouncement extends TableExtension {
 		applyCustomAnnouncement(headerRow, descriptions);
 	}
 
+	_handleTableGroupRowFocusin(groupRow: TableGroupRow) {
+		const descriptions = [
+			this.i18nBundle.getText(TABLE_GROUP_ROW),
+			groupRow.textContent || "",
+		];
+
+		applyCustomAnnouncement(groupRow, descriptions);
+	}
+
 	_handleTableRowFocusin(row: TableRow) {
 		if (!row._table) {
 			return;
@@ -89,6 +100,11 @@ class TableCustomAnnouncement extends TableExtension {
 			this.i18nBundle.getText(TABLE_ROW),
 			this.i18nBundle.getText(TABLE_ROW_INDEX, row.ariaRowIndex!, this._table._ariaRowCount),
 		];
+
+		const precedingGroupRow = this._getPrecedingGroupRow(row);
+		if (precedingGroupRow) {
+			descriptions.push(precedingGroupRow.textContent || "");
+		}
 
 		if (row._isSelected) {
 			descriptions.push(this.i18nBundle.getText(TABLE_ROW_SELECTED));
@@ -117,6 +133,16 @@ class TableCustomAnnouncement extends TableExtension {
 		}
 
 		applyCustomAnnouncement(row, descriptions);
+	}
+
+	_getPrecedingGroupRow(row: TableRow): TableGroupRow | undefined {
+		const rows = this._table.rows;
+		const rowIndex = rows.indexOf(row);
+		for (let i = rowIndex - 1; i >= 0; i--) {
+			if (rows[i].isGroupRow()) {
+				return rows[i] as TableGroupRow;
+			}
+		}
 	}
 
 	_handleTableCellFocusin(cell: TableCell) {

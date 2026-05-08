@@ -46,10 +46,15 @@
 
 #dummy-cell {
 	border-inline-start: 1px solid var(--sapList_TableFixedBorderColor);
+	background: var(--sapList_Background);
 }
 
 :host([_has-popin]) #dummy-cell {
 	border-inline-start: none;
+}
+
+:host(:not([_has-popin])) #dummy-cell {
+	border-top: none;
 }
 
 :host([tabindex]:focus) {
