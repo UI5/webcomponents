@@ -13,7 +13,7 @@ import {
 	normalizeDescription,
 	normalizeTagType,
 	logDocumentationError
-} from "./utils.mjs";
+} from "./utils.js";
 
 const jsDocRegExp = /\/\*\*(.|\n)+?\s+\*\//;
 const ASTFalseKeywordCode = 94;

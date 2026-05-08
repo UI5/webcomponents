@@ -1,5 +1,5 @@
 import { parse } from "comment-parser";
-import processEvent from "./event.mjs";
+import processEvent from "./event.js";
 import path from "path";
 import fs from 'fs';
 import {
@@ -23,7 +23,7 @@ import {
 	logDocumentationError,
 	displayDocumentationErrors,
 	toKebabCase
-} from "./utils.mjs";
+} from "./utils.js";
 import { generateCustomData } from "cem-plugin-vs-code-custom-data-generator";
 import { customElementJetBrainsPlugin } from "custom-element-jet-brains-integration";
 

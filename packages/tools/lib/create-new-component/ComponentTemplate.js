@@ -9,4 +9,4 @@ export default function ${componentName}Template(this: ${componentName}) {
 `;
 };
 
-module.exports = ComponentTemplate;
+export default ComponentTemplate;

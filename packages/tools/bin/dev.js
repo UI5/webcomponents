@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-const child_process = require("child_process");
-const { comma } = require("postcss/lib/list");
+import child_process from "child_process";
+import list from "postcss/lib/list";
+
+const { comma } = list;
 
 // Check for verbose flag
 const hasVerbose = process.argv.includes("--verbose") || process.argv.includes("-v");

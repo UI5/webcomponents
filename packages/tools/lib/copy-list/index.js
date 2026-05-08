@@ -1,16 +1,17 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { createRequire } from "module";
+import { pathToFileURL } from "url";
+
+const require = createRequire(import.meta.url);
 
 const generate = async (argv) => {
 	const fileList = argv[2];
 	const dest = argv[3];
 	const src = "@openui5/sap.ui.core/src/";
 	const filesToCopy = (await fs.readFile(fileList)).toString();
-	// console.log(filesToCopy);
 
-	// Support full-line comments starting with # in the used-modules.txt file
 	const shouldCopy = file => file.length && !file.startsWith("#");
-
 	const trimFile = file => file.trim();
 
 	const promises = filesToCopy.split("\n").map(trimFile).filter(shouldCopy).map(async moduleName => {
@@ -28,9 +29,13 @@ const generate = async (argv) => {
 	});
 };
 
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
 
-if (require.main === module) {
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

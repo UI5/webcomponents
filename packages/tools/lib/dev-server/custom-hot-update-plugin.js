@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 /**
  * A change is observed on MacOS since 13.5, where the build generates a large amount
@@ -36,4 +36,4 @@ const customHotUpdate = async () => {
 	}
 };
 
-module.exports = customHotUpdate;
+export default customHotUpdate;

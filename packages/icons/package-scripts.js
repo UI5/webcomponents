@@ -1,4 +1,4 @@
-const getScripts = require("@ui5/webcomponents-tools/icons-collection/nps.js");
+import getScripts from "@ui5/webcomponents-tools/icons-collection/nps.js";
 
 const options = {
 	collectionName: "SAP-icons",
@@ -7,6 +7,6 @@ const options = {
 
 const scripts = getScripts(options);
 
-module.exports = {
+export default {
 	scripts
 };

@@ -1,8 +1,8 @@
-const fs = require("fs");
-const prompts = require("prompts");
-const Component = require("./Component.js");
-const ComponentTemplate= require("./ComponentTemplate.js");
-const dotenv = require('dotenv');
+import fs from "fs";
+import prompts from "prompts";
+import Component from "./Component.js";
+import ComponentTemplate from "./ComponentTemplate.js";
+import dotenv from "dotenv";
 dotenv.config();
 
 /**

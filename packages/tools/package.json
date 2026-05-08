@@ -2,6 +2,7 @@
   "name": "@ui5/webcomponents-tools",
   "version": "2.22.0-rc.4",
   "description": "UI5 Web Components: webcomponents.tools",
+  "type": "module",
   "author": "SAP SE (https://www.sap.com)",
   "license": "Apache-2.0",
   "keywords": [

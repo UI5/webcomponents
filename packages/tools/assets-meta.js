@@ -153,4 +153,4 @@ const assetsMeta = {
   }
 };
 
-module.exports = assetsMeta;
+export default assetsMeta;

@@ -1,5 +1,6 @@
-const fs = require("fs").promises;
-const path = require('path');
+import fs from "fs/promises";
+import path from "path";
+import { pathToFileURL } from "url";
 
 const isTypeScript = process.env.UI5_TS;
 const ext = isTypeScript ? 'ts' : 'js';
@@ -19,7 +20,7 @@ const importMessageBundle = async (localeId) => {
 const importAndCheck = async (localeId) => {
 	const data = await importMessageBundle(localeId);
 	if (typeof data === "string" && data.endsWith(".json")) {
-		throw new Error(\`[i18n] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the \"Assets\" documentation for more information.\`);
+		throw new Error(\`[i18n] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the "Assets" documentation for more information.\`);
 	}
 	return data;
 }
@@ -86,8 +87,13 @@ const generate = async (argv) => {
 	});
 }
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

@@ -1,5 +1,10 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { globby } from "globby";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+
 const basePath = process.argv[2];
 const babelCore = require("@babel/core");
 const babelParser = require("@babel/parser");
@@ -25,7 +30,6 @@ const checkFile = async (filePath) => {
 }
 
 const checkAll = async () => {
-	const { globby } = await import("globby");
 	const fileNames = await globby(basePath.replace(/\\/g, "/") + "**/*.js");
 	return Promise.all(fileNames.map(checkFile).filter(x => !!x));
 };

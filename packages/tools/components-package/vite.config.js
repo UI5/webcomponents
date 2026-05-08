@@ -1,7 +1,7 @@
 // vite.config.js
-const virtualIndex = require('../lib/dev-server/virtual-index-html-plugin.js');
+import virtualIndex from '../lib/dev-server/virtual-index-html-plugin.js';
 
-module.exports = {
+export default {
 	build: {
 		emptyOutDir: false,
 	},

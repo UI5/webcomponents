@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import chokidar from "chokidar";
-import { writeFileIfChanged, getFileContent } from "./shared.mjs";
+import { writeFileIfChanged, getFileContent } from "./shared.js";
 import { pathToFileURL } from "url";
 
 

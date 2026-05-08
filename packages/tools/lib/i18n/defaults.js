@@ -1,10 +1,11 @@
-const fs = require('fs').promises;
-const path = require('path');
-const PropertiesReader = require('properties-reader');
-const assets = require('../../assets-meta.js');
+import fs from "fs/promises";
+import path from "path";
+import PropertiesReader from "properties-reader";
+import assetsMeta from "../../assets-meta.js";
+import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
-	const defaultLanguage = assets.languages.default;
+	const defaultLanguage = assetsMeta.languages.default;
 
 	const messageBundle = path.normalize(`${argv[2]}/messagebundle.properties`);
 	const messageBundleDefaultLanguage = path.normalize(`${argv[2]}/messagebundle_${defaultLanguage}.properties`);
@@ -77,14 +78,18 @@ export {${textKeys.join()}};`;
 	await fs.mkdir(path.dirname(outputFile), { recursive: true });
 	await fs.writeFile(outputFile, getOutputFileContent(properties, defaultLanguageProperties));
 
-
 	if (process.env.UI5_VERBOSE === "true") {
 		console.log("i18n default file generated.");
 	}
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

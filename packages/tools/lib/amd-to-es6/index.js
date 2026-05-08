@@ -1,9 +1,13 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { createRequire } from "module";
+import { pathToFileURL } from "url";
+
+const require = createRequire(import.meta.url);
 const babelCore = require("@babel/core");
 const babelParser = require("@babel/parser");
 const babelGenerator = require("@babel/generator").default;
-const replaceAsync = require('replace-in-file');
+const replaceAsync = require("replace-in-file");
 
 const convertSAPUIDefineToDefine = async (filePath) => {
 	return replaceAsync({
@@ -11,14 +15,14 @@ const convertSAPUIDefineToDefine = async (filePath) => {
 		processor: (input) => {
 			return input.replace("sap.ui.define", "define").replace(", /* bExport= */ false", "").replace(", /* bExport= */ true", "");
 		}
-	})
-}
+	});
+};
 
 const convertAmdToEs6 = async (code) => {
 	return (await babelCore.transformAsync(code, {
 		plugins: [['babel-plugin-amd-to-esm', {}]]
 	})).code;
-}
+};
 
 const convertAbsImportsToRelative = (filePath, code, basePath) => {
 	let changed = false;
@@ -41,7 +45,7 @@ const convertAbsImportsToRelative = (filePath, code, basePath) => {
 			if (importee.startsWith(".")) {
 				// add .js extension if missing
 				if (!importee.endsWith(".js")) {
-					node.source.value += ".js"
+					node.source.value += ".js";
 					changed = true;
 				}
 				return;
@@ -50,12 +54,11 @@ const convertAbsImportsToRelative = (filePath, code, basePath) => {
 			let importeeFile = path.basename(importee);
 			let relativePath = path.relative(importerDir, importeeDir);
 			if (relativePath.length === 0) {
-				relativePath = "."
+				relativePath = ".";
 			}
 			if (!relativePath.startsWith(".")) {
 				relativePath = "./" + relativePath;
 			}
-
 			relativePath = relativePath.replace(/\\/g, "/"); // the browser expects unix paths
 			let relativeImport = `${relativePath}/${importeeFile}.js`;
 			// console.log(importee + " --> " + relativeImport);
@@ -65,14 +68,13 @@ const convertAbsImportsToRelative = (filePath, code, basePath) => {
 	});
 
 	return changed ? babelGenerator(tree).code : code;
-}
+};
 
 const replaceGlobalCoreUsage = (filePath, code) => {
 	if (!filePath.includes("Configuration")) {
 		const replaced = code.replace(/sap\.ui\.getCore\(\)/g, `Core`);
 		return code !== replaced ? `import Core from 'sap/ui/core/Core';${replaced}` : code;
 	}
-
 	return code;
 };
 
@@ -82,13 +84,11 @@ const transformAmdToES6Module = async (filePath, basePath) => {
 	let code = (await fs.readFile(filePath)).toString();
 
 	code = await convertAmdToEs6(code);
-
 	code = replaceGlobalCoreUsage(filePath, code);
-
 	code = convertAbsImportsToRelative(filePath, code, basePath);
 
 	return fs.writeFile(filePath, code);
-}
+};
 
 const transformAmdToES6Modules = async (argv) => {
 	const basePath = argv[2];
@@ -102,8 +102,11 @@ const transformAmdToES6Modules = async (argv) => {
 		});
 };
 
-if (require.main === module) {
-	transformAmdToES6Modules(process.argv)
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	transformAmdToES6Modules(process.argv);
 }
 
-exports._ui5mainFn = transformAmdToES6Modules;
+export default { _ui5mainFn: transformAmdToES6Modules };

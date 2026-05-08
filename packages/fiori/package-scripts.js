@@ -1,4 +1,4 @@
-const getScripts = require("@ui5/webcomponents-tools/components-package/nps.js");
+import getScripts from "@ui5/webcomponents-tools/components-package/nps.js";
 
 const filterOut = [
 	"sapIllus-Dot",
@@ -78,6 +78,6 @@ const options = {
 
 const scripts = getScripts(options);
 
-module.exports = {
+export default {
 	scripts
 };

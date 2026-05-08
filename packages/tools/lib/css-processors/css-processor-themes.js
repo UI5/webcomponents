@@ -5,9 +5,9 @@ import * as path from "path";
 import { writeFile, mkdir } from "fs/promises";
 import postcss from "postcss";
 import combineDuplicatedSelectors from "../postcss-combine-duplicated-selectors/index.js"
-import postcssPlugin from "./postcss-plugin.mjs";
-import { writeFileIfChanged, getFileContent } from "./shared.mjs";
-import { mergeLightDark } from "./merge-light-dark.mjs";
+import postcssPlugin from "./postcss-plugin.js";
+import { writeFileIfChanged, getFileContent } from "./shared.js";
+import { mergeLightDark } from "./merge-light-dark.js";
 import { pathToFileURL } from "url";
 
 /**

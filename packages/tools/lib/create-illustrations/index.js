@@ -1,5 +1,6 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { pathToFileURL } from "url";
 
 const generate = async (argv) => {
 	if (argv.length < 7) {
@@ -239,8 +240,13 @@ export { dialogSvg, sceneSvg, spotSvg, dotSvg };`
 		});
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

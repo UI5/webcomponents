@@ -1,6 +1,7 @@
-const fs = require("fs").promises;
-const path = require('path');
-const assets = require("../../assets-meta.js");
+import fs from "fs/promises";
+import path from "path";
+import assetsMeta from "../../assets-meta.js";
+import { pathToFileURL } from "url";
 
 const isTypeScript = process.env.UI5_TS;
 const ext = isTypeScript ? 'ts' : 'js';
@@ -12,7 +13,7 @@ const generate = async (argv) => {
 	const outputFileFetchMetaResolve = path.normalize(`${argv[3]}/Themes-fetch.${ext}`);
 
 	// All supported optional themes
-	const allThemes = assets.themes.all;
+	const allThemes = assetsMeta.themes.all;
 
 	// All themes present in the file system
 	const dirs = await fs.readdir(inputFolder);
@@ -43,7 +44,7 @@ ${lines}
 const loadAndCheck = async (themeName) => {
 	const data = await loadThemeProperties(themeName);
 	if (typeof data === "string" && data.endsWith(".json")) {
-		throw new Error(\`[themes] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the \"Assets\" documentation for more information.\`);
+		throw new Error(\`[themes] Invalid bundling detected - dynamic JSON imports bundled as URLs. Switch to inlining JSON files from the build. Check the "Assets" documentation for more information.\`);
 	}
 	return data;
 };
@@ -66,8 +67,13 @@ ${availableThemesArray}
 		})
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

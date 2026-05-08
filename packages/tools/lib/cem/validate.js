@@ -1,9 +1,14 @@
-const fs = require('fs');
-const Ajv = require('ajv');
-const path = require('path');
-// Load your JSON schema
-const extenalSchema = require('./schema.json');
-const internalSchema = require('./schema-internal.json');
+import fs from "fs";
+import { createRequire } from "module";
+import path from "path";
+import { fileURLToPath } from "url";
+import Ajv from "ajv";
+import { pathToFileURL } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const extenalSchema = require("./schema.json");
+const internalSchema = require("./schema-internal.json");
 
 const isVerbose = () => process.env.UI5_VERBOSE === "true";
 
@@ -74,8 +79,13 @@ const validateFn = async () => {
 	}
 }
 
-if (require.main === module) {
-	validateFn()
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	validateFn(process.argv)
 }
 
-exports._ui5mainFn = validateFn;
+export default {
+	_ui5mainFn: validateFn
+}

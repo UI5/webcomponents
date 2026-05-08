@@ -1,5 +1,7 @@
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from "url";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LIB = path.join(__dirname, `../lib/`);
 
 const createIconImportsCommand = (options) => {
@@ -16,7 +18,7 @@ const createIconImportsCommand = (options) => {
 	return command;
 }
 
-const hashesCheck = cmd => `(node "${LIB}/icons-hash/icons-hash.mjs" check) || (${cmd} && node "${LIB}/icons-hash/icons-hash.mjs" save)`;
+const hashesCheck = cmd => `(node "${LIB}/icons-hash/icons-hash.js" check) || (${cmd} && node "${LIB}/icons-hash/icons-hash.js" save)`;
 
 const copyIconAssetsCommand = (options) => {
 	if (!options.versions) {
@@ -77,4 +79,4 @@ const getScripts = (options) => {
 	return scripts;
 };
 
-module.exports = getScripts;
+export default getScripts;

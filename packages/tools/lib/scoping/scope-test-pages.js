@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const glob = require("glob");
-const getAllTags = require("./get-all-tags.js");
+import fs from "fs";
+import path from "path";
+import glob from "glob";
+import getAllTags from "./get-all-tags.js";
 
 const root = process.argv[2];
 const suffix = process.argv[3];

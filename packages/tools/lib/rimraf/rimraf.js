@@ -1,5 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from "fs";
+import path from "path";
+
+import { pathToFileURL } from "url";
 
 const rimraf = dir => {
 	if (fs.existsSync(dir)) {
@@ -24,8 +26,13 @@ const main = argv => {
 	rimraf(dir);
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	main(process.argv)
 }
 
-exports._ui5mainFn = main;
+export default {
+	_ui5mainFn: main
+}

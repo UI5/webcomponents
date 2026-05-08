@@ -1,5 +1,10 @@
-const path = require("path");
-const fs = require("fs");
+import path from "path";
+import fs from "fs";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 const LIB = path.join(__dirname, `../lib/`);
 let websiteBaseUrl = "/";
 
@@ -77,8 +82,8 @@ const getScripts = (options) => {
 			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 		},
-		lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
-		lintfix: `ui5nps-script "${LIB}eslint/eslint.js" --fix`,
+		lint: `ui5nps-script "${LIB}eslint/eslint.cjs"`,
+		lintfix: `ui5nps-script "${LIB}eslint/eslint.cjs" --fix`,
 		generate: {
 			default: `ui5nps prepare.all`,
 			all: `ui5nps-p build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently
@@ -94,10 +99,10 @@ const getScripts = (options) => {
 			default: "ui5nps prepare lint build.bundle", // build.bundle2
 			styles: {
 				default: `ui5nps-p build.styles.themes build.styles.components`, // concurently
-				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs"`,
-				themesWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-themes.mjs" -w`,
-				components: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs"`,
-				componentsWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-components.mjs" -w`,
+				themes: `ui5nps-script "${LIB}css-processors/css-processor-themes.js"`,
+				themesWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-themes.js" -w`,
+				components: `ui5nps-script "${LIB}css-processors/css-processor-components.js"`,
+				componentsWithWatch: `ui5nps-script "${LIB}css-processors/css-processor-components.js" -w`,
 			},
 			i18n: {
 				default: "ui5nps build.i18n.defaultsjs build.i18n.json",
@@ -113,7 +118,7 @@ const getScripts = (options) => {
 				default: "ui5nps build.jsImports.illustrationsLoaders",
 				illustrationsLoaders: createIllustrationsLoadersScript,
 			},
-			bundle: `ui5nps-script "${LIB}vite-bundler/vite-bundler.mjs" ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
+			bundle: `ui5nps-script "${LIB}vite-bundler/vite-bundler.js" ${viteConfig} --mode testing --base ${websiteBaseUrl}`,
 			bundle2: ``,
 			illustrations: createIllustrationsJSImportsScript,
 		},
@@ -131,7 +136,7 @@ const getScripts = (options) => {
 			src: !tsOption ? 'ui5nps copySrcWithWatch' : "",
 			typescript: tsWatchCommandStandalone,
 			props: 'ui5nps copyPropsWithWatch',
-			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
+			bundle: `ui5nps-script ${LIB}dev-server/dev-server.js ${viteConfig}`,
 			styles: {
 				default: 'ui5nps-p watch.styles.themes watch.styles.components', // concurently
 				themes: 'ui5nps build.styles.themesWithWatch',
@@ -158,16 +163,16 @@ const getScripts = (options) => {
 			},
 			watchWithBundle: 'ui5nps-p scope.watch scope.bundle', // concurently
 			watch: 'ui5nps-p watch.props watch.styles', // concurently
-			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
+			bundle: `ui5nps-script ${LIB}dev-server/dev-server.js ${viteConfig}`,
 		},
 		generateAPI: {
-			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
+			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.js"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
-			mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
+			mergeCEM: `ui5nps-script "${LIB}cem/merge.js"`,
 		},
 	};
 
 	return scripts;
 };
 
-module.exports = getScripts;
+export default getScripts;

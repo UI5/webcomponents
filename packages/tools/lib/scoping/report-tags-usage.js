@@ -1,7 +1,6 @@
-const fs = require("fs");
-const glob = require("glob");
-const path = require("path");
-const process = require("process");
+import fs from "fs";
+import glob from "glob";
+import path from "path";
 
 // gather all tags from all files
 const tags = new Set();

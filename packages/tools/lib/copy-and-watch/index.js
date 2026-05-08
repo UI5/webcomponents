@@ -22,11 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-const fs = require('fs');
-const path = require('path');
-const chokidar = require('chokidar');
-const glob = require('glob');
-const globParent = require('glob-parent');
+import fs from "fs";
+import path from "path";
+import chokidar from "chokidar";
+import glob from "glob";
+import globParent from "glob-parent";
+import { pathToFileURL } from "url";
 
 /* CODE */
 
@@ -151,8 +152,13 @@ const copyAndWatchFn = async (argv) => {
 	}
 }
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	copyAndWatchFn(process.argv)
 }
 
-exports._ui5mainFn = copyAndWatchFn;
+export default {
+	_ui5mainFn: copyAndWatchFn
+}

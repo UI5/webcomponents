@@ -1,6 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const glob = require("glob");
+import fs from "fs";
+import path from "path";
+import glob from "glob";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 
 const getTag = file => {
 	const fileContent = String(fs.readFileSync(file)).replace(/\n/g, "");
@@ -41,4 +44,4 @@ const getAllTags = (packageDir) => {
 	return getPackageTags(packageDir).concat(getDepComponentPackages(packageDir).flatMap(getPackageTags));
 };
 
-module.exports = getAllTags;
+export default getAllTags;

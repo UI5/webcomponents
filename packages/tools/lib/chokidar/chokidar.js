@@ -1,5 +1,6 @@
-const chokidar = require('chokidar');
-const { exec } = require("child_process");
+import chokidar from "chokidar";
+import { exec } from "child_process";
+import { pathToFileURL } from "url";
 
 const main = async (argv) => {
 	if (argv.length < 4) {
@@ -21,8 +22,13 @@ const main = async (argv) => {
 	});
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	main(process.argv)
 }
 
-exports._ui5mainFn = main;
+export default {
+	_ui5mainFn: main
+}

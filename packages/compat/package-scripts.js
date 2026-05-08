@@ -1,9 +1,9 @@
-const getScripts = require("@ui5/webcomponents-tools/components-package/nps.js");
+import getScripts from "@ui5/webcomponents-tools/components-package/nps.js";
 
 const options = {
 	port: 8082,
 	portStep: 2,
-	aiPackage: true,
+	compatPackage: true,
 	noWatchTS: true,
 	dev: true,
 	internal: {
@@ -13,6 +13,6 @@ const options = {
 
 const scripts = getScripts(options);
 
-module.exports = {
+export default {
 	scripts,
 };

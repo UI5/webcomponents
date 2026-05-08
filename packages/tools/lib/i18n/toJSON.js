@@ -7,17 +7,19 @@
  * The 1st param '../../src/assets/i18n' is the location of messagebundle_*.properties files
  * The 2nd param './../dist/generated/assets/i18n' is where the JSON files would be written to.
  */
-const path = require("path");
-const PropertiesReader = require('properties-reader');
-const fs = require('fs').promises;
-const assets = require('../../assets-meta.js');
+import path from "path";
+import PropertiesReader from "properties-reader";
+import fs from "fs/promises";
+import assetsMeta from "../../assets-meta.js";
+import { globby } from "globby";
+import { pathToFileURL } from "url";
 
-const allLanguages = assets.languages.all;
+const allLanguages = assetsMeta.languages.all;
 
 /**
  * The translation system has a configuration whether to return UTF-8 sequences
  * or the actual characters. This function inlines UTF-8 sequences to actual characters.
- * 
+ *
  * For example, it converts "Keine Produkte erf\u00FCgbar" to "Keine Produkte verfügbar"
  * This makes the JSON files more readable and smaller.
  */
@@ -47,11 +49,9 @@ const convertToJSON = async (file, distPath) => {
 	const outputFile = path.normalize(`${distPath}/${filename}.json`);
 
 	return fs.writeFile(outputFile, JSON.stringify(properties));
-	// console.log(`[i18n]: "${filename}.json" has been generated!`);
 };
 
 const generate = async (agrv) => {
-	const { globby } = await import("globby");
 	const messagesBundles = path.normalize(`${agrv[2]}/messagebundle_*.properties`);
 	const messagesJSONDist = path.normalize(`${agrv[3]}`);
 	await fs.mkdir(messagesJSONDist, { recursive: true });
@@ -64,8 +64,13 @@ const generate = async (agrv) => {
 		});
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generate(process.argv)
 }
 
-exports._ui5mainFn = generate;
+export default {
+	_ui5mainFn: generate
+}

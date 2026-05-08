@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
-"use strict";
-
-const fs = require("fs");
-const path = require("path");
-const { exec } = require("child_process");
-var { parseArgsStringToArgv } = require('string-argv');
+import fs from "fs";
+import path from "path";
+import { exec } from "child_process";
+import { parseArgsStringToArgv } from "string-argv";
 
 const SCRIPT_NAMES = [
 	"package-scripts.js",
@@ -40,8 +38,8 @@ class Parser {
 	parsedScripts = new Map();
 	resolvedScripts = new Map();
 
-	constructor() {
-		const { scripts, envs } = this.getScripts();
+	async init() {
+		const { scripts, envs } = await this.getScripts();
 
 		this.scripts = scripts;
 		this.envs = envs;
@@ -125,7 +123,7 @@ class Parser {
 	 * Loads and validates package-scripts file
 	 * @returns {Object} Object containing scripts and environment variables
 	 */
-	getScripts() {
+	async getScripts() {
 		let packageScriptPath;
 
 		for (const scriptName of SCRIPT_NAMES) {
@@ -142,15 +140,8 @@ class Parser {
 			process.exit(1);
 		}
 
-		const packageScript = require(packageScriptPath);
-		let scripts;
-		let envs;
-
-		if (packageScript.__esModule) {
-			scripts = packageScript.default.scripts;
-		} else {
-			scripts = packageScript.scripts;
-		}
+		const packageScript = await import(packageScriptPath);
+		const scripts = packageScript.default.scripts;
 
 		// Package-script should provide default export with scripts object
 		if (!scripts || typeof scripts !== "object") {
@@ -158,7 +149,7 @@ class Parser {
 			process.exit(1);
 		}
 
-		envs = JSON.parse(JSON.stringify(scripts.__ui5envs || {}));
+		let envs = JSON.parse(JSON.stringify(scripts.__ui5envs || {}));
 
 		Object.entries(envs).forEach(([key, value]) => {
 			envs[key] = String(value);
@@ -188,14 +179,8 @@ class Parser {
 					}
 
 					const importPath = argv[1];
-					const importedContent = require(importPath);
-					let _ui5mainFn;
-
-					if (importedContent.__esModule) {
-						_ui5mainFn = importedContent.default._ui5mainFn;
-					} else {
-						_ui5mainFn = importedContent._ui5mainFn;
-					}
+					const importedContent = await import(importPath);
+					const _ui5mainFn = importedContent.default?._ui5mainFn;
 
 					if (!_ui5mainFn) {
 						return reject(new Error(`No valid _ui5mainFn function exported from ${importPath} tried to be executed with ui5nps-script. Either provide a valid _ui5mainFn function or use another way to execute the script (via node).`));
@@ -261,8 +246,6 @@ class Parser {
 	}
 }
 
-const parser = new Parser();
-
 // Basic input validation
 const commands = process.argv.slice(2).filter(arg => arg !== "--verbose" && arg !== "-v");
 const verbose = process.argv.includes("--verbose") || process.argv.includes("-v");
@@ -278,18 +261,21 @@ if (commands.length === 0) {
 	process.exit(1);
 }
 
-if (commands.includes("--help") || commands.includes("-h")) {
-	console.log("Usage: ui5nps [--verbose|-v] <command> [command2] [command3] ...");
-	console.log("\nOptions:");
-	console.log("  --verbose, -v    Show detailed output (default: quiet, errors only)");
-	console.log("\nAvailable commands:");
-	for (const [key, value] of parser.parsedScripts.entries()) {
-		console.log(`  - ${key}: ${value}`);
-	}
-	process.exit(0);
-}
-
 (async () => {
+	const parser = new Parser();
+	await parser.init();
+
+	if (commands.includes("--help") || commands.includes("-h")) {
+		console.log("Usage: ui5nps [--verbose|-v] <command> [command2] [command3] ...");
+		console.log("\nOptions:");
+		console.log("  --verbose, -v    Show detailed output (default: quiet, errors only)");
+		console.log("\nAvailable commands:");
+		for (const [key, value] of parser.parsedScripts.entries()) {
+			console.log(`  - ${key}: ${value}`);
+		}
+		process.exit(0);
+	}
+
 	process.env = { ...process.env, ...parser.envs };
 
 	for (const commandName of commands) {

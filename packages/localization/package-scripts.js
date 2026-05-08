@@ -1,5 +1,10 @@
+import { createRequire } from "module";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 const resolve = require("resolve");
-const path = require("path");
 
 const LIB = path.join(__dirname, `../tools/lib/`);
 const copyUsedModules = resolve.sync("@ui5/webcomponents-tools/lib/copy-list/index.js");
@@ -13,7 +18,7 @@ const scripts = {
 		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
-	lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
+	lint: `ui5nps-script "${LIB}eslint/eslint.cjs"`,
 	generate: "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports",
 	build: {
 		"default": "ui5nps clean copy.used-modules copy.cldr copy.overlay build.amd-to-es6 build.jsonImports build.typescript build.no-remaining-require",
@@ -30,6 +35,6 @@ const scripts = {
 	},
 };
 
-module.exports = {
+export default {
 	scripts,
 };

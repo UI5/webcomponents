@@ -1,9 +1,10 @@
+import path from "path";
+import { globby } from "globby";
+
 const virtualIndexPlugin = () => {
 	return {
 		name: 'virtual-index-html',
 		async config() {
-			const path = (await import("path")).default;
-			const globby = (await import("globby")).globby;
 			const files = await globby(["test/pages/**/*.html", "packages/*/test/pages/**/*.html"]);
 
 			const rollupInput = {};
@@ -21,8 +22,6 @@ const virtualIndexPlugin = () => {
 			}
 		},
 		async configureServer(server) {
-			const path = (await import("path")).default;
-			const globby = (await import("globby")).globby;
 			const files = await globby(["test/pages/**/*.html", "packages/*/test/pages/**/*.html"]);
 
 			const pagesPerFolder = {};
@@ -53,4 +52,4 @@ const virtualIndexPlugin = () => {
 	}
 };
 
-module.exports = virtualIndexPlugin;
+export default virtualIndexPlugin;

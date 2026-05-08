@@ -1,5 +1,6 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { pathToFileURL } from "url";
 
 const iconTemplate = (name, pathData, ltr, viewBox, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
@@ -70,6 +71,17 @@ const svgTemplate = (pathData, viewBox) => `<svg xmlns="http://www.w3.org/2000/s
 	<path d="${pathData}"/>
 </svg>`;
 
+const isDefaultCollection = collectionName => collectionName === "SAP-icons-v4" || collectionName === "SAP-icons-v5";
+const getUnversionedFullIconName = (name, collection) => `${getUnversionedCollectionName(collection)}/${name}`;
+const getUnversionedCollectionName = collectionName => CollectionVersionedToUnversionedMap[collectionName] || collectionName;
+
+const CollectionVersionedToUnversionedMap = {
+	"tnt-v2": "tnt",
+	"tnt-v3": "tnt",
+	"business-suite-v1": "business-suite",
+	"business-suite-v2": "business-suite",
+};
+
 const createIcons = async (argv) => {
 	const collectionName = argv[2] || "SAP-icons-v4";
 	const collectionVersion = argv[3];
@@ -118,19 +130,13 @@ const createIcons = async (argv) => {
 		});
 };
 
-const isDefaultCollection = collectionName => collectionName === "SAP-icons-v4" || collectionName === "SAP-icons-v5";
-const getUnversionedFullIconName = (name, collection) => `${getUnversionedCollectionName(collection)}/${name}`;
-const getUnversionedCollectionName = collectionName => CollectionVersionedToUnversionedMap[collectionName] || collectionName;
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
 
-const CollectionVersionedToUnversionedMap = {
-	"tnt-v2": "tnt",
-	"tnt-v3": "tnt",
-	"business-suite-v1": "business-suite",
-	"business-suite-v2": "business-suite",
-};
-
-if (require.main === module) {
+if (import.meta.url === fileUrl) {
 	createIcons(process.argv)
 }
 
-exports._ui5mainFn = createIcons;
+export default {
+	_ui5mainFn: createIcons
+}

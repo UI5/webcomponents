@@ -1,5 +1,6 @@
-const fs = require("fs").promises;
-const path = require("path");
+import fs from "fs/promises";
+import path from "path";
+import { pathToFileURL } from "url";
 
 const generateDynamicImportLines = async (fileNames, location, exclusionPatterns = []) => {
 	const packageName = JSON.parse(await fs.readFile("package.json")).name;
@@ -80,8 +81,13 @@ const generateIllustrations = async (argv) => {
 	}
 };
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	generateIllustrations(process.argv)
 }
 
-exports._ui5mainFn = generateIllustrations;
+export default {
+	_ui5mainFn: generateIllustrations
+}

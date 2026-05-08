@@ -71,4 +71,4 @@ export default ${componentName};
 `;
 };
 
-module.exports = Component;
+export default Component;

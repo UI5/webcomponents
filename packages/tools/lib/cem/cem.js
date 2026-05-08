@@ -1,4 +1,5 @@
-const cemCLI = require("./patch/@custom-elements-manifest/analyzer/cli.js")
+import * as cemCLI from "./patch/@custom-elements-manifest/analyzer/cli.js";
+import { pathToFileURL } from "url";
 
 const main = async argv => {
 	const patchedArgv = argv.slice(2);
@@ -9,8 +10,13 @@ const main = async argv => {
 	await cemCLI.cli({ argv: patchedArgv, cwd: process.cwd(), noWrite: false });
 }
 
-if (require.main === module) {
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
 	main(process.argv)
 }
 
-exports._ui5mainFn = main;
+export default {
+	_ui5mainFn: main
+}
