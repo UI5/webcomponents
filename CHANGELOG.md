@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.4](https://github.com/UI5/webcomponents/compare/v2.20.3...v2.20.4) (2026-05-11)
+
+
+### Bug Fixes
+
+* **framework:** improve themeRoot validation ([#13354](https://github.com/UI5/webcomponents/issues/13354)) ([014ea66](https://github.com/UI5/webcomponents/commit/014ea66d82955e2da44ba7ae0b248d868a24d8f5))
+* validate correctly protocol relative urls ([#13447](https://github.com/UI5/webcomponents/issues/13447)) ([4c8b7aa](https://github.com/UI5/webcomponents/commit/4c8b7aa838824bb889e989e56e420bebf0ac417f))
+
+
+
+
+
 ## [2.20.3](https://github.com/UI5/webcomponents/compare/v2.20.2...v2.20.3) (2026-04-16)
 
 
