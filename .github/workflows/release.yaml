@@ -293,9 +293,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-        
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -308,6 +305,9 @@ jobs:
                 --yes \
                 --exact \
                 --create-release github
+
+      - name: Build
+        run: yarn ci:releasebuild
 
       - name: Publish
         run: |
