@@ -87,6 +87,7 @@ import icon3dv1 from "@ui5/webcomponents-icons-business-suite/dist/v1/3d.js";
 import icon3dv2 from "@ui5/webcomponents-icons-business-suite/dist/v2/3d.js";
 import { setUseLinks, setPackageCSSRoot } from "@ui5/webcomponents-base/dist/CSP.js";
 import * as defaultTexts from "./generated/i18n/i18n-defaults.js";
+import { boot } from "@ui5/webcomponents-base/dist/Boot.js";
 
 // The SAP Icons V4 icon collection is set by default in sap_fiori_3,
 // but it's configurable:
@@ -197,6 +198,7 @@ ignoreCustomElements("my-");
 const icons = [accept, acceptv4, acceptv5, actor, actorv2, actorv3, icon3d, icon3dv1, icon3dv2];
 
 const testAssets = {
+	boot,
 	configuration: {
 		getAnimationMode,
 		setAnimationMode,
