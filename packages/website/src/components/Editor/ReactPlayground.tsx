@@ -209,8 +209,6 @@ import IllustratedMessageClass from "@ui5/webcomponents-fiori/dist/IllustratedMe
 import TimelineClass from "@ui5/webcomponents-fiori/dist/Timeline.js";
 import TimelineItemClass from "@ui5/webcomponents-fiori/dist/TimelineItem.js";
 import TimelineGroupItemClass from "@ui5/webcomponents-fiori/dist/TimelineGroupItem.js";
-import TimelineHeaderBarClass from "@ui5/webcomponents-fiori/dist/TimelineHeaderBar.js";
-import TimelineFilterOptionClass from "@ui5/webcomponents-fiori/dist/TimelineFilterOption.js";
 import PageClass from "@ui5/webcomponents-fiori/dist/Page.js";
 import DynamicPageClass from "@ui5/webcomponents-fiori/dist/DynamicPage.js";
 import DynamicPageTitleClass from "@ui5/webcomponents-fiori/dist/DynamicPageTitle.js";
@@ -321,7 +319,6 @@ const ComponentClasses: Record<string, any> = {
   SideNavigationSubItemClass, SideNavigationGroupClass, NotificationListClass, NotificationListItemClass,
   NotificationListGroupItemClass, UploadCollectionClass, UploadCollectionItemClass, WizardClass,
   WizardStepClass, IllustratedMessageClass, TimelineClass, TimelineItemClass, TimelineGroupItemClass,
-  TimelineHeaderBarClass, TimelineFilterOptionClass,
   PageClass, DynamicPageClass, DynamicPageTitleClass, DynamicPageHeaderClass, DynamicSideContentClass,
   FlexibleColumnLayoutClass, MediaGalleryClass, MediaGalleryItemClass, ProductSwitchClass,
   ProductSwitchItemClass, ViewSettingsDialogClass, ViewSettingsDialogCustomTabClass, SortItemClass, FilterItemClass, FilterItemOptionClass,

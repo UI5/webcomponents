@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** next and previous header buttons are triggered by Space and Enter ([#13435](https://github.com/UI5/webcomponents/issues/13435)) ([f7468e1](https://github.com/UI5/webcomponents/commit/f7468e1e3d9082fcabfe03629f2cb795a45f736a))
+* **ui5-color-palette-item, ui5-segmented-button-item:** provide correct click event details ([#13458](https://github.com/UI5/webcomponents/issues/13458)) ([2286f10](https://github.com/UI5/webcomponents/commit/2286f1002a723d1a5a7fd2795ac52a4e7181ed92))
+* **ui5-timeline-header-bar:** remove unused property ([#13451](https://github.com/UI5/webcomponents/issues/13451)) ([18da0e5](https://github.com/UI5/webcomponents/commit/18da0e57c1c50bb75badb3a9cfb49e8faadd8842))
+* validate correctly protocol relative urls ([#13447](https://github.com/UI5/webcomponents/issues/13447)) ([c765630](https://github.com/UI5/webcomponents/commit/c7656304d7a3ad74c2c58d6937163262c4f40177))
+
+
+### Features
+
+* **ui5-avatar-badge:** rename accessibleName to tooltip and simplify tooltip rendering ([#13442](https://github.com/UI5/webcomponents/issues/13442)) ([c8e0c4a](https://github.com/UI5/webcomponents/commit/c8e0c4adec21da1f7a8b107fa4e6fedcae1cd51e))
+* **ui5-toolbar:** introduce overflowButtonAccessibleName property ([#13416](https://github.com/UI5/webcomponents/issues/13416)) ([c597536](https://github.com/UI5/webcomponents/commit/c597536079dcd889703c9b4ef9168f3eda0827a2)), closes [#11968](https://github.com/UI5/webcomponents/issues/11968)
+
+
+
+
+
 # [2.22.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.2...v2.22.0-rc.3) (2026-04-30)
 
 
