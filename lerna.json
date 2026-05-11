@@ -31,5 +31,6 @@
       "preid": "rc"
     }
   },
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

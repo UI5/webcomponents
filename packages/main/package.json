@@ -64,7 +64,7 @@
   "devDependencies": {
     "@ui5/cypress-internal": "0.0.0",
     "@ui5/webcomponents-tools": "2.10.0",
-    "chromedriver": "^135.0.0",
+    "chromedriver": "^147.0.0",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",
     "vitest": "^3.0.2"
