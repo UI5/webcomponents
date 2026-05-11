@@ -328,6 +328,7 @@ class Wizard extends UI5Element {
 
 		if (this.previouslySelectedStepIndex !== this.selectedStepIndex) {
 			this.scrollToSelectedStep();
+			this.announceStepChange();
 		}
 
 		this.attachStepsResizeObserver();
@@ -923,6 +924,24 @@ class Wizard extends UI5Element {
 			this.scrollToContentItem(this.selectedStepIndex);
 		}
 		this.selectionRequestedByScroll = false;
+	}
+
+	/**
+	 * Announces the current step change to screen readers by focusing the new step content.
+	 * @private
+	 */
+	async announceStepChange() {
+		const stepToSelect = this.slottedSteps[this.selectedStepIndex];
+		if (stepToSelect && !stepToSelect.disabled) {
+			// Focus the first focusable element in the new step to announce the change
+			// This matches the behavior when clicking wizard step headers
+			const firstElementChild = stepToSelect.firstElementChild as HTMLElement;
+			const firstFocusableElement = await getFirstFocusableElement(firstElementChild);
+
+			if (firstFocusableElement) {
+				firstFocusableElement.focus();
+			}
+		}
 	}
 
 	/**
