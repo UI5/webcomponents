@@ -231,15 +231,9 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	_getEventOriginIndex(e: KeyboardEvent, targets: HTMLElement[]): number {
-		for (const node of e.composedPath()) {
-			if (node instanceof HTMLElement) {
-				const idx = targets.findIndex(target => this._matchesNavigationTarget(target, node));
-				if (idx !== -1) {
-					return idx;
-				}
-			}
-		}
-		return -1;
+		const path = e.composedPath().filter((node): node is HTMLElement => node instanceof HTMLElement);
+		const match = path.find(node => targets.some(target => this._matchesNavigationTarget(target, node)));
+		return match ? targets.findIndex(target => this._matchesNavigationTarget(target, match)) : -1;
 	}
 
 	_isRadioGroupTargets(targets: HTMLElement[]) {

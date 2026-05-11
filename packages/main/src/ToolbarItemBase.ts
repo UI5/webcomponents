@@ -68,7 +68,7 @@ class ToolbarItemBase extends UI5Element {
 	 * @public
 	 * @since 2.22.0
 	 */
-	shouldHandleOwnKeyboardNavigation(_e: KeyboardEvent): boolean {
+	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
 		return this.handlesOwnKeyboardNavigation;
 	}
 
@@ -77,7 +77,7 @@ class ToolbarItemBase extends UI5Element {
 		return ref ? [ref] : [];
 	}
 
-	handleNavigationEntry(_forward: boolean): void {
+	handleNavigationEntry(forward: boolean): void { // eslint-disable-line @typescript-eslint/no-unused-vars
 		this.getFocusDomRef()?.focus();
 	}
 
