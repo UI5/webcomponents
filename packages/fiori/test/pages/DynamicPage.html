@@ -183,8 +183,6 @@
             const cancelEdit = document.querySelector("#cancel-edit");
             const saveEdit = document.querySelector("#save-edit");
 
-            // ShellBar already provides the banner landmark, so remove it from
-            // DynamicPage to avoid duplicate banner regions flagged by Axe.
             dynamicPage.accessibilityAttributes = {
                 header: { role: "none" },
                 content: { role: "main" },
