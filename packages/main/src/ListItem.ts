@@ -184,12 +184,12 @@ abstract class ListItem extends ListItemBase {
 	 * **Note:** If not set, the role is automatically inherited from the parent `ui5-list` based on its `accessible-role` property
 	 * (e.g. `Menu` -> `MenuItem`, `Tree` -> `TreeItem`, `ListBox` -> `Option`).
 	 * An explicitly set `accessible-role` on the list item takes precedence over the inherited role.
-	 * @default "ListItem"
+	 * @default undefined
 	 * @public
 	 * @since 1.3.0
 	 */
 	@property()
-	accessibleRole?: `${ListItemAccessibleRole}`;
+	accessibleRole?: `${Exclude<ListItemAccessibleRole, ListItemAccessibleRole.Group>}`;
 
 	@property()
 	_forcedAccessibleRole?: string;
