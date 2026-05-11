@@ -197,11 +197,11 @@ class DynamicPage extends UI5Element {
 	 * Defines the accessibility attributes for DynamicPage sections.
 	 *
 	 * Accepted fields per section — `root`, `header`, `content`, `footer`:
-	 * - `role` {AriaLandmarkRole} - Overrides the ARIA landmark role. Set `header.role = "none"` to remove the banner landmark when a ShellBar is already present on the page.
-	 * - `name` {string} - Sets `aria-label` on the section.
+	 * - `role`: Overrides the ARIA landmark role. Accepts the following string values: `"none"`, `"banner"`, `"main"`, `"region"`, `"navigation"`, `"search"`, `"complementary"`, `"form"`, `"contentinfo"`.
+	 * - `name`: Sets `aria-label` on the section. Accepts any string.
 	 *
 	 * Accepted fields for `headerContent`:
-	 * - `name` {string} - Sets `aria-label` on the DynamicPageHeader region (overrides the default "Header Expanded"/"Header Snapped" text).
+	 * - `name`: Sets `aria-label` on the DynamicPageHeader region (overrides the default "Header Expanded"/"Header Snapped" text). Accepts any string.
 	 *
 	 * @public
 	 * @since 2.23.0
