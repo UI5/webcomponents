@@ -2000,6 +2000,161 @@ describe("Validation & Value State", () => {
 			.find("[ui5-token]")
 			.should("have.length", 1);
 	});
+
+	it("Clears invalid/incomplete values on focus out when noValidation is not set", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox>
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+	});
+
+	it("Does not clear invalid values on focus out when noValidation is set", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox noValidation>
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+	});
+
+	it("Does not clear valid/matching values on focus out", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox>
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("Item");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "Item 1");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "Item 1");
+	});
+
+	it("Preserves selected tokens when clearing invalid input on focus out", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox>
+					<MultiComboBoxItem text="Item 1" selected></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("@mcb")
+			.realClick();
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+	});
 });
 
 describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", () => {
