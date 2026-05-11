@@ -66,7 +66,7 @@ type Locale = {
 };
 
 class OpenUI5Support {
-	static isAtLeastVersion116() {
+	static isAtLeastVersion(minor: number) {
 		if (!window.sap.ui!.version) {
 			return true; // sap.ui.version will be removed in newer OpenUI5 versions
 		}
@@ -75,7 +75,7 @@ class OpenUI5Support {
 		if (!parts || parts.length < 2) {
 			return false;
 		}
-		return parseInt(parts[0]) > 1 || parseInt(parts[1]) >= 116;
+		return parseInt(parts[0]) > 1 || parseInt(parts[1]) >= minor;
 	}
 
 	static isOpenUI5Detected() {
@@ -91,7 +91,7 @@ class OpenUI5Support {
 			window.sap.ui.require(["sap/ui/core/Core"], async (Core: OpenUI5Core) => {
 				const callback = () => {
 					let deps: Array<string> = ["sap/ui/core/Popup", "sap/ui/core/LocaleData"];
-					if (OpenUI5Support.isAtLeastVersion116()) { // for versions since 1.116.0 and onward, use the modular core
+					if (OpenUI5Support.isAtLeastVersion(116)) { // for versions since 1.116.0 and onward, use the modular core
 						deps = [
 							...deps,
 							"sap/base/i18n/Formatting",
@@ -107,7 +107,7 @@ class OpenUI5Support {
 						resolve();
 					});
 				};
-				if (OpenUI5Support.isAtLeastVersion116()) {
+				if (OpenUI5Support.isAtLeastVersion(116)) {
 					await Core.ready();
 					callback();
 				} else {
@@ -122,7 +122,7 @@ class OpenUI5Support {
 			return {};
 		}
 
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const ControlBehavior = window.sap.ui.require("sap/ui/core/ControlBehavior") as ControlBehavior;
 			const Localization = window.sap.ui.require("sap/base/i18n/Localization") as Localization;
 			const Theming = window.sap.ui.require("sap/ui/core/Theming") as Theming;
@@ -171,7 +171,7 @@ class OpenUI5Support {
 
 		const LocaleData = window.sap.ui.require("sap/ui/core/LocaleData") as LocaleData;
 
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const Localization = window.sap.ui.require("sap/base/i18n/Localization") as Localization;
 			return LocaleData.getInstance(Localization.getLanguageTag())._get();
 		}
@@ -182,7 +182,7 @@ class OpenUI5Support {
 	}
 
 	static _listenForThemeChange() {
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const Theming: Theming = window.sap.ui.require("sap/ui/core/Theming");
 			Theming.attachApplied(() => {
 				setTheme(Theming.getTheme());
@@ -214,7 +214,11 @@ class OpenUI5Support {
 			return false;
 		}
 
-		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
+		if (OpenUI5Support.isAtLeastVersion(127)) {
+			return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
+		}
+
+		return !!link.href.match(/\/css(-|_)variables\.css/);
 	}
 
 	static getNextZIndex() {
