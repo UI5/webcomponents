@@ -956,6 +956,12 @@ describe("Toolbar general interaction", () => {
 			($btn[0] as ToolbarButton).disabled = true;
 		});
 
+		// Wait for async re-render to reassign tabIndex=0 to the first enabled item
+		cy.get("ui5-toolbar-button[text='First']")
+			.shadow()
+			.find("ui5-button")
+			.should("have.prop", "tabIndex", 0);
+
 		cy.realPress(["Shift", "Tab"]);
 		cy.get("ui5-toolbar-button[text='First']")
 			.shadow()
