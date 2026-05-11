@@ -6,6 +6,7 @@ import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import "./Assets.js";
 
 // Icons
+import { boot } from "@ui5/webcomponents-base/dist/Boot.js";
 import "@ui5/webcomponents-icons/dist/Assets.js";
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
 
@@ -197,6 +198,7 @@ ignoreCustomElements("my-");
 const icons = [accept, acceptv4, acceptv5, actor, actorv2, actorv3, icon3d, icon3dv1, icon3dv2];
 
 const testAssets = {
+	boot,
 	configuration: {
 		getAnimationMode,
 		setAnimationMode,
