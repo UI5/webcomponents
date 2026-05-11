@@ -6,6 +6,7 @@ import "@ui5/webcomponents-base/dist/features/OpenUI5Support.js";
 import "./Assets.js";
 
 // Icons
+import { boot } from "@ui5/webcomponents-base/dist/Boot.js";
 import "@ui5/webcomponents-icons/dist/Assets.js";
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
 
@@ -87,7 +88,6 @@ import icon3dv1 from "@ui5/webcomponents-icons-business-suite/dist/v1/3d.js";
 import icon3dv2 from "@ui5/webcomponents-icons-business-suite/dist/v2/3d.js";
 import { setUseLinks, setPackageCSSRoot } from "@ui5/webcomponents-base/dist/CSP.js";
 import * as defaultTexts from "./generated/i18n/i18n-defaults.js";
-import { boot } from "@ui5/webcomponents-base/dist/Boot.js";
 
 // The SAP Icons V4 icon collection is set by default in sap_fiori_3,
 // but it's configurable:
