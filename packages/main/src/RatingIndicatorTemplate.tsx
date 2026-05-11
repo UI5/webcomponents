@@ -52,13 +52,13 @@ function starLi(this: RatingIndicator, star: Star) {
 	} if (this.readonly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.ratedIcon} />
+				<Icon data-ui5-value={star.index} name={this.unratedIcon} />
 			</li>
 		);
 	} if (this.disabled) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.ratedIcon} />
+				<Icon data-ui5-value={star.index} name={this.unratedIcon} />
 			</li>
 		);
 	}
@@ -70,5 +70,5 @@ function starLi(this: RatingIndicator, star: Star) {
 }
 
 function halfStarIconName(this: RatingIndicator) {
-	return this.disabled || this.readonly ? this.ratedIcon : this.unratedIcon;
+	return this.disabled || this.readonly ? (this.halfUnratedIcon || this.unratedIcon) : this.unratedIcon;
 }

@@ -160,6 +160,44 @@
 	<br>
 	<br>
 
+	<h3>Half-star readonly (default icons)</h3>
+	<ui5-rating-indicator value="2.5" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Half-star readonly with custom halfUnratedIcon (hearts)</h3>
+	<ui5-rating-indicator value="2.5" rated-icon="heart" unrated-icon="heart" half-unrated-icon="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Half-star disabled with custom halfUnratedIcon (hearts)</h3>
+	<ui5-rating-indicator value="2.5" rated-icon="heart" unrated-icon="heart" half-unrated-icon="heart-2" disabled></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Half-star readonly without halfUnratedIcon (falls back to unratedIcon)</h3>
+	<ui5-rating-indicator value="3.5" rated-icon="heart" unrated-icon="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Half-star readonly - different sizes</h3>
+	<ui5-rating-indicator value="2.5" size="S" readonly></ui5-rating-indicator>
+	<br>
+	<ui5-rating-indicator value="2.5" size="M" readonly></ui5-rating-indicator>
+	<br>
+	<ui5-rating-indicator value="2.5" size="L" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
+	<h3>Half-star readonly with custom icons - different sizes</h3>
+	<ui5-rating-indicator value="2.5" size="S" rated-icon="heart" unrated-icon="heart-2" half-unrated-icon="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<ui5-rating-indicator value="2.5" size="M" rated-icon="heart" unrated-icon="heart-2" half-unrated-icon="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<ui5-rating-indicator value="2.5" size="L" rated-icon="heart" unrated-icon="heart-2" half-unrated-icon="heart-2" readonly></ui5-rating-indicator>
+	<br>
+	<br>
+
 	<script>
 		var changeCount = 0;
 		var ratingIndicator4 = document.getElementById("rating-indicator4");
