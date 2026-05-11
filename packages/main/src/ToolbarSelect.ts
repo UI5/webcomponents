@@ -75,12 +75,8 @@ class ToolbarSelect extends ToolbarItemBase {
 	handlesOwnKeyboardNavigation = true;
 
 	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
-		// Up/Down are always owned ? they open the dropdown or navigate options.
-		if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-			return true;
-		}
 		// Home/End are only owned while the dropdown is open; otherwise the toolbar
-		// should use them to jump to the first/last item (APG requirement).
+		// should use them to jump to the first/last item.
 		if (e.key === "Home" || e.key === "End") {
 			return !!(this.select?._isPickerOpen);
 		}

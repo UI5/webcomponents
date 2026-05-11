@@ -68,11 +68,17 @@ class ToolbarItemBase extends UI5Element {
 	 * @public
 	 * @since 2.22.0
 	 */
-	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
-		if (e.defaultPrevented) {
-			return this.handlesOwnKeyboardNavigation;
-		}
+	shouldHandleOwnKeyboardNavigation(_e: KeyboardEvent): boolean {
 		return this.handlesOwnKeyboardNavigation;
+	}
+
+	_getNavigationTargets(): HTMLElement[] {
+		const ref = this.getFocusDomRef();
+		return ref ? [ref] : [];
+	}
+
+	handleNavigationEntry(_forward: boolean): void {
+		this.getFocusDomRef()?.focus();
 	}
 
 	_isOverflowed: boolean = false;

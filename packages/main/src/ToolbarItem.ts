@@ -4,8 +4,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import {
 	isLeft,
 	isRight,
-	isUp,
-	isDown,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
@@ -233,15 +231,15 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	_getEventOriginIndex(e: KeyboardEvent, targets: HTMLElement[]): number {
-		return e.composedPath()
-			.filter((node): node is HTMLElement => node instanceof HTMLElement)
-			.reduce((foundIdx, node) => {
-				if (foundIdx !== -1) {
-					return foundIdx;
+		for (const node of e.composedPath()) {
+			if (node instanceof HTMLElement) {
+				const idx = targets.findIndex(target => this._matchesNavigationTarget(target, node));
+				if (idx !== -1) {
+					return idx;
 				}
-
-				return targets.findIndex(target => this._matchesNavigationTarget(target, node));
-			}, -1);
+			}
+		}
+		return -1;
 	}
 
 	_isRadioGroupTargets(targets: HTMLElement[]) {
@@ -318,8 +316,8 @@ class ToolbarItem extends ToolbarItemBase {
 		}
 
 		const isRTL = this.effectiveDir === "rtl";
-		const isForward = isDown(e) || (!isRTL && isRight(e)) || (isRTL && isLeft(e));
-		const isBackward = isUp(e) || (!isRTL && isLeft(e)) || (isRTL && isRight(e));
+		const isForward = (!isRTL && isRight(e)) || (isRTL && isLeft(e));
+		const isBackward = (!isRTL && isLeft(e)) || (isRTL && isRight(e));
 
 		if (!isForward && !isBackward) {
 			return false;

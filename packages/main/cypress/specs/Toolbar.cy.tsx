@@ -931,6 +931,38 @@ describe("Toolbar general interaction", () => {
 			.should("be.focused");
 	});
 
+	it("Should focus first enabled item when last focused item becomes disabled", () => {
+		cy.mount(
+			<div>
+				<input data-testid="before" />
+				<Toolbar>
+					<ToolbarButton text="First"></ToolbarButton>
+					<ToolbarButton id="second-btn" text="Second"></ToolbarButton>
+					<ToolbarButton text="Third"></ToolbarButton>
+				</Toolbar>
+				<input data-testid="after" />
+			</div>
+		);
+
+		cy.get("ui5-toolbar-button[text='Second']")
+			.shadow()
+			.find("ui5-button")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("ui5-toolbar-button[text='Second']").then($btn => {
+			($btn[0] as ToolbarButton).disabled = true;
+		});
+
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("ui5-toolbar-button[text='First']")
+			.shadow()
+			.find("ui5-button")
+			.should("be.focused");
+	});
+
 	it("Should move button with alwaysOverflow priority to overflow popover", () => {
 
 		cy.mount(

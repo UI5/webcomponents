@@ -11,8 +11,6 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isLeft,
 	isRight,
-	isUp,
-	isDown,
 	isHome,
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -65,7 +63,7 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
- * - [Left]/[Right]/[Up]/[Down] - navigate among toolbar items
+ * - [Left]/[Right] - navigate among toolbar items
  * - [Home]/[End] - move to first/last toolbar item
  * - [Tab] / [Shift]+[Tab] - exit the toolbar
  *
@@ -589,7 +587,7 @@ class Toolbar extends UI5Element {
 				&& !("disabled" in item && (item as { disabled?: boolean }).disabled))
 			.forEach(item => {
 				const focusRef = item.getFocusDomRef();
-				if (focusRef) {
+				if (focusRef && !focusRef.hasAttribute("disabled")) {
 					items.push(focusRef);
 				}
 			});
@@ -603,15 +601,7 @@ class Toolbar extends UI5Element {
 	}
 
 	_getOverflowTabTargets(item: ToolbarItemBase): Array<HTMLElement> {
-		if (item.handlesOwnKeyboardNavigation) {
-			const targets = (item as unknown as { _getNavigationTargets?: () => HTMLElement[] })._getNavigationTargets?.();
-			if (targets?.length) {
-				return targets;
-			}
-		}
-
-		const focusRef = item.getFocusDomRef();
-		return focusRef ? [focusRef] : [];
+		return item._getNavigationTargets();
 	}
 
 	_storeOriginalTabIndex(target: HTMLElement) {
@@ -651,11 +641,6 @@ class Toolbar extends UI5Element {
 			});
 	}
 
-	/**
-	 * Ensures disabled interactive items are removed from the natural tab order
-	 * and annotated with aria-disabled so assistive technologies can perceive them.
-	 * Called alongside _applyRovingTabIndex.
-	 */
 	_applyDisabledItemsAccessibility() {
 		this.standardItems
 			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
@@ -722,8 +707,19 @@ class Toolbar extends UI5Element {
 		});
 	}
 
-	_applyRovingTabIndex() {
-		const items = this._getFocusableItems();
+	_applyRovingTabIndex(items = this._getFocusableItems()) {
+		// Reset all non-overflowed items first so no stale tabIndex=0 survives
+		// when an item becomes disabled while _lastFocusedItem is null or stale.
+		this.standardItems
+			.filter(item => !item.isOverflowed && !item.hidden)
+			.forEach(item => {
+				const ref = item.getFocusDomRef();
+				if (ref) {
+					this._storeOriginalTabIndex(ref);
+					ref.tabIndex = -1;
+				}
+			});
+
 		if (!items.length) {
 			return;
 		}
@@ -750,7 +746,7 @@ class Toolbar extends UI5Element {
 		this.standardItems
 			.filter(item => item.handlesOwnKeyboardNavigation && !item.isOverflowed && !item.hidden)
 			.forEach(item => {
-				const targets = (item as unknown as { _getNavigationTargets?: () => HTMLElement[] })._getNavigationTargets?.() || [];
+				const targets = item._getNavigationTargets();
 				if (targets.length <= 1) {
 					return;
 				}
@@ -781,7 +777,7 @@ class Toolbar extends UI5Element {
 			});
 	}
 
-	_onfocusin() {
+	_onfocusin(e: FocusEvent) {
 		const items = this._getFocusableItems();
 		if (!items.length) {
 			return;
@@ -789,41 +785,34 @@ class Toolbar extends UI5Element {
 
 		let idx = this._findCurrentIndex(items);
 
-		// If not found directly, check if active element is inside a grouped ToolbarItem
 		if (idx === -1) {
-			const active = getActiveElement() as HTMLElement | null;
-			if (active) {
-				const groupItem = this.standardItems.find(item => item.handlesOwnKeyboardNavigation
-					&& !item.isOverflowed
-					&& !item.hidden
-					&& (item === active || item.contains(active)));
-				if (groupItem) {
-					const ref = groupItem.getFocusDomRef();
-					idx = ref ? items.indexOf(ref) : -1;
-				}
+			const path = e.composedPath();
+			const matchedItem = this.standardItems.find(item => !item.isOverflowed && !item.hidden && path.includes(item));
+			if (matchedItem) {
+				const ref = matchedItem.getFocusDomRef();
+				idx = ref ? items.indexOf(ref) : -1;
 			}
 		}
 
 		if (idx !== -1) {
 			this._lastFocusedItem = items[idx];
-			this._applyRovingTabIndex();
+			this._applyRovingTabIndex(items);
 		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {
 		const active = getActiveElement() as HTMLElement | null;
 
-		if (!isLeft(e) && !isRight(e) && !isUp(e) && !isDown(e) && !isHome(e) && !isEnd(e)) {
+		if (!isLeft(e) && !isRight(e) && !isHome(e) && !isEnd(e)) {
 			return;
 		}
 
 		const isRTL = this.effectiveDir === "rtl";
-		const isHorizontal = isLeft(e) || isRight(e);
 
 		// Left/Right are reserved for toolbar navigation.
 		// Exception: inside an input or textarea, allow native caret movement
 		// but only exit to the next/prev toolbar item when the caret is already at the boundary.
-		if (isHorizontal && active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+		if ((isLeft(e) || isRight(e)) && active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
 			const input = active as HTMLInputElement | HTMLTextAreaElement;
 			const atStart = input.selectionStart === 0;
 			const atEnd = input.selectionStart === (input.value?.length ?? 0);
@@ -831,9 +820,8 @@ class Toolbar extends UI5Element {
 			const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
 
 			if (textSelected || (movingForward && !atEnd) || (!movingForward && !atStart)) {
-				return; // caret not at boundary ? let the input handle it
+				return;
 			}
-			// caret is at boundary ? fall through to toolbar roving
 		}
 
 		const items = this._getFocusableItems();
@@ -878,8 +866,8 @@ class Toolbar extends UI5Element {
 		}
 
 		let nextIndex = currentIndex;
-		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL) || isDown(e);
-		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL) || isUp(e);
+		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
 
 		if (movingForward) {
 			nextIndex = (currentIndex + 1) % items.length;
@@ -901,9 +889,9 @@ class Toolbar extends UI5Element {
 			const directionForEntry = movingForward || isHome(e);
 
 			this._lastFocusedItem = items[nextIndex];
-			this._applyRovingTabIndex();
+			this._applyRovingTabIndex(items);
 
-			if (nextToolbarItem && "handleNavigationEntry" in nextToolbarItem && typeof nextToolbarItem.handleNavigationEntry === "function") {
+			if (nextToolbarItem) {
 				nextToolbarItem.handleNavigationEntry(directionForEntry);
 				return;
 			}
