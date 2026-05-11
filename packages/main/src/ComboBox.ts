@@ -1383,6 +1383,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_itemMousedown(e: MouseEvent) {
 		e.preventDefault();
+
+		const target = e.target as HTMLElement;
+		const listItem = target.closest<ComboBoxItem>("[ui5-cb-item], [ui5-cb-item-group]");
+
+		if (listItem) {
+			this._clearFocus();
+			listItem.focused = true;
+		}
 	}
 
 	_selectItem(e: CustomEvent<ListItemClickEventDetail>) {
