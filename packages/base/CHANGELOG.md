@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.1](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0...v2.14.1) (2026-05-11)
+
+
+### Bug Fixes
+
+* **framework:** improve themeRoot validation ([#13354](https://github.com/SAP/ui5-webcomponents/issues/13354)) ([d6ab616](https://github.com/SAP/ui5-webcomponents/commit/d6ab6161be749677e6c264faa49f2ec44424b878))
+* validate correctly protocol relative urls ([#13447](https://github.com/SAP/ui5-webcomponents/issues/13447)) ([4305b49](https://github.com/SAP/ui5-webcomponents/commit/4305b497b05a97300aca38b04132179ffef63331))
+
+
+
+
+
 # [2.14.0](https://github.com/SAP/ui5-webcomponents/compare/v2.14.0-rc.7...v2.14.0) (2025-09-04)
 
 **Note:** Version bump only for package @ui5/webcomponents-base
