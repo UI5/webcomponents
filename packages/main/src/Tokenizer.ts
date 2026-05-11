@@ -722,7 +722,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			const isCut = e.key.toLowerCase() === "x" || isDeleteShift(e);
 			const selectedTokens = this._tokens.filter(token => token.selected);
 			const focusedToken = this._tokens.find(token => token.focused);
-			const tokensToCopy = selectedTokens.length ? selectedTokens : (focusedToken ? [focusedToken] : []);
+			let tokensToCopy = selectedTokens;
+			if (!tokensToCopy.length && focusedToken) {
+				tokensToCopy = [focusedToken];
+			}
 
 			if (isCut && !this.readonly && tokensToCopy.length) {
 				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, tokensToCopy);
