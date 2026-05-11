@@ -24,7 +24,6 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import segmentedButtonItemCss from "./generated/themes/SegmentedButtonItem.css.js";
 
 type SegmentedButtonItemClickEventDetail = {
-	item: SegmentedButtonItem,
 	originalEvent: Event,
 };
 
@@ -61,7 +60,6 @@ type SegmentedButtonItemClickEventDetail = {
  *
  * **Note:** The event will not be fired if the `disabled` property is set to `true`.
  *
- * @param {SegmentedButtonItem} item The segmented button item that was clicked.
  * @param {Event} originalEvent The original DOM event that triggered the click. Use this to access modifier keys (altKey, ctrlKey, metaKey, shiftKey) and other native event properties.
  * @since 2.22.0
  * @public
@@ -226,7 +224,6 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 
 		// Fire semantic click event (CustomEvent that bubbles)
 		const prevented = !this.fireDecoratorEvent("click", {
-			item: this,
 			originalEvent: e,
 		});
 
