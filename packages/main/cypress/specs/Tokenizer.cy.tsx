@@ -1870,6 +1870,62 @@ describe("Clipboard Operations", () => {
 		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "ReadonlyToken");
 		cy.get("[ui5-token]").should("have.length", 2);
 	});
+
+	it("should cut only selected tokens when there are both selected and focused tokens", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Selected1" selected></Token>
+				<Token text="Selected2" selected></Token>
+				<Token text="NotSelected"></Token>
+			</Tokenizer>
+		);
+
+		// Focus the third token via keyboard without selecting it
+		cy.realPress("Tab");
+		cy.realPress("ArrowRight");
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-token]").eq(2).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(2).should("have.prop", "selected", false);
+		// First two remain selected
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-token]").eq(1).should("have.prop", "selected", true);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Should cut the selected tokens, not the focused one
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected1\r\nSelected2");
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "text", "NotSelected");
+	});
+
+	it("should cut focused token when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Focused"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", false);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Focused");
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "text", "Other");
+	});
 });
 
 describe("Tokenizer - getFocusDomRef Method", () => {
