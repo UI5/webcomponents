@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.28](https://github.com/UI5/webcomponents/compare/v1.24.27...v1.24.28) (2026-05-11)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** css variables detection ([#13491](https://github.com/UI5/webcomponents/issues/13491)) ([24a15ae](https://github.com/UI5/webcomponents/commit/24a15ae9c1bc946df7aa8ac99279651eadcadf14))
+* validate correctly protocol relative urls ([#13492](https://github.com/UI5/webcomponents/issues/13492)) ([a202563](https://github.com/UI5/webcomponents/commit/a202563e680265abb96618d71fc1e93b46f7f5eb))
+
+
+
+
+
 ## [1.24.27](https://github.com/UI5/webcomponents/compare/v1.24.26...v1.24.27) (2026-04-16)
 
 
