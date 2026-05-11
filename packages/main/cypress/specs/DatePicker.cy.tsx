@@ -4,7 +4,6 @@ import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
 
 describe("Date Picker Tests", () => {
-
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -34,7 +33,7 @@ describe("Date Picker Tests", () => {
 
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
 
@@ -318,7 +317,7 @@ describe("Date Picker Tests", () => {
 
 	it("respect first day of the week - monday", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
 
