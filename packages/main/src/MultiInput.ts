@@ -155,7 +155,6 @@ class MultiInput extends Input implements IFormInputElement {
 	_skipOpenSuggestions: boolean;
 	_valueHelpIconPressed: boolean;
 	_focusInTokenizer: boolean;
-	_returningFromTokenizer: boolean;
 
 	get formValidityMessage() {
 		return MultiInput.i18nBundle.getText(FORM_MIXED_TEXTFIELD_REQUIRED);
@@ -192,7 +191,6 @@ class MultiInput extends Input implements IFormInputElement {
 		this._skipOpenSuggestions = false;
 		this._valueHelpIconPressed = false;
 		this._focusInTokenizer = false;
-		this._returningFromTokenizer = false;
 	}
 
 	valueHelpPress() {
@@ -229,9 +227,6 @@ class MultiInput extends Input implements IFormInputElement {
 	_tokenizerFocusOut(e: FocusEvent) {
 		if (!this.contains(e.relatedTarget as HTMLElement) && !this.shadowRoot!.contains(e.relatedTarget as HTMLElement)) {
 			this.tokenizer._tokens.forEach(token => { token.selected = false; });
-		}
-		if (this.shadowRoot!.contains(e.relatedTarget as HTMLElement)) {
-			this._returningFromTokenizer = true;
 		}
 		this._focusInTokenizer = false;
 	}
@@ -298,7 +293,6 @@ class MultiInput extends Input implements IFormInputElement {
 			const lastTokenIndex = this.tokens.length - 1;
 
 			if (e.target === this.tokens[lastTokenIndex] && this.tokens[lastTokenIndex] === document.activeElement) {
-				this._returningFromTokenizer = true;
 				setTimeout(() => {
 					this.focus();
 				}, 0);
@@ -376,10 +370,10 @@ class MultiInput extends Input implements IFormInputElement {
 	 */
 	_onfocusin(e: FocusEvent) {
 		const inputDomRef = this.getInputDOMRef();
+		const wasTokenFocused = e.relatedTarget instanceof HTMLElement && e.relatedTarget.hasAttribute("ui5-token");
 
 		if (e.target === inputDomRef) {
-			if (this._returningFromTokenizer) {
-				this._returningFromTokenizer = false;
+			if (wasTokenFocused) {
 				this.focused = true;
 				this.open = true;
 				this._inputIconFocused = false;
