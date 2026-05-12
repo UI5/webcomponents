@@ -8,7 +8,7 @@ import "@ui5/webcomponents-icons/dist/palette.js";
 
 import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
 import "@ui5/webcomponents-fiori/dist/SortItem.js";
-import "@ui5/webcomponents-fiori/dist/ViewSettingsCustomTab.js";
+import "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";
 
 btnOpenDialog.addEventListener("click", function () {
 	vsd.open = true;

@@ -1590,6 +1590,104 @@ describe("Keyboard Handling", () => {
 			.eq(1)
 			.should("have.attr", "selected");
 	});
+
+	it("should deselect all tokens on [Escape] key", () => {
+		cy.get("[ui5-token]")
+			.eq(0)
+			.as("firstToken");
+
+		cy.get("[ui5-token]")
+			.eq(1)
+			.as("secondToken");
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("thirdToken");
+
+		cy.get("@firstToken")
+			.realClick();
+
+		cy.realPress(["Shift", "End"]);
+
+		cy.get("@firstToken")
+			.should("have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("have.attr", "selected");
+
+		cy.realPress("Escape");
+
+		cy.get("@firstToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("not.have.attr", "selected");
+	});
+
+	it("should fire selection-change event on [Escape] when tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("have.been.calledOnce");
+
+		cy.get("@selectionChange")
+			.its("firstCall.args.0.detail.tokens")
+			.should("have.length", 0);
+	});
+
+	it("should not fire selection-change on [Escape] when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Space");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("not.have.attr", "selected");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("not.have.been.called");
+	});
 });
 
 describe("Clipboard Operations", () => {

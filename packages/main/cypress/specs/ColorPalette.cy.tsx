@@ -401,12 +401,8 @@ describe("Color Palette Item: click event", () => {
 		cy.get("#item2")
 			.then($el => {
 				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
-					// Check that event detail contains item and originalEvent
-					expect(e.detail).to.have.property("item");
+					// Check that event detail contains originalEvent
 					expect(e.detail).to.have.property("originalEvent");
-					
-					// Check item properties
-					expect(e.detail.item.value).to.equal("blue");
 					
 					// Check modifier keys from originalEvent
 					const originalEvent = e.detail.originalEvent;
@@ -460,7 +456,6 @@ describe("Color Palette Item: click event", () => {
 		cy.then(() => eventDetail)
 			.then((detail) => {
 				expect(detail, "event detail should exist").to.exist;
-				expect(detail.item.value, "item value should be blue").to.equal("blue");
 				const originalEvent = detail.originalEvent;
 				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
 				expect(originalEvent.altKey, "altKey should be false").to.be.false;
@@ -557,7 +552,6 @@ describe("Color Palette Item: click event", () => {
 		cy.then(() => eventDetail)
 			.then((detail) => {
 				expect(detail, "event detail should exist").to.exist;
-				expect(detail.item.value, "item value should be blue").to.equal("blue");
 				const originalEvent = detail.originalEvent;
 				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
 				expect(originalEvent.shiftKey, "shiftKey should be true").to.be.true;

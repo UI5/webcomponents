@@ -183,7 +183,7 @@
 				if (originalEvent.shiftKey) modifiers.push("Shift");
 				
 				const modifierText = modifiers.length > 0 ? " with " + modifiers.join("+") : "";
-				itemClickEventResult.value = "Clicked item: " + item.value + " (event.detail.item.value: " + event.detail.item.value + ")" + modifierText;
+				itemClickEventResult.value = "Clicked item: " + item.value + modifierText;
 			});
 		});
 
