@@ -10,7 +10,10 @@ export default function BannerTemplate(this: Banner) {
 			part="canvas"
 			style={this._backgroundImageStyle}
 		>
-			<div class="ui5-banner-content" part="content">
+			<div class={{
+				"ui5-banner-content": true,
+				[`ui5-banner-layout-${this.layout}`]: true,
+			}} part="content">
 				<div class="ui5-banner-header">
 					<div class="ui5-banner-header-text">
 						{this.dateText &&
@@ -31,22 +34,15 @@ export default function BannerTemplate(this: Banner) {
 					</div>
 				</div>
 
-				{this._hasContent &&
-					<div class={{
-						"ui5-banner-blocks": true,
-						[`ui5-banner-layout-${this.layout}`]: true,
-					}}>
-						{this._hasStartContent &&
-							<div class="ui5-banner-block ui5-banner-block-start">
-							<slot></slot>
-						</div>
-					}
+				{this._hasStartContent &&
+					<div class="ui5-banner-block ui5-banner-block-start">
+						<slot></slot>
+					</div>
+				}
 
-					{this._hasEndContent &&
-						<div class="ui5-banner-block ui5-banner-block-end">
-							<slot name="endContent"></slot>
-						</div>
-					}
+				{this._hasEndContent &&
+					<div class="ui5-banner-block ui5-banner-block-end">
+						<slot name="endContent"></slot>
 					</div>
 				}
 			</div>

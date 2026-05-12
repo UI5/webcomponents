@@ -1,0 +1,49 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+        <ui5-banner
+            salutation-text="Hello, Emma"
+            date-text="Thursday, March 6, 2026"
+            layout="FullWidth">
+
+            <ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
+            <ui5-button slot="headerActions" icon="bell">Notifications</ui5-button>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                <ui5-button icon="create">New Request</ui5-button>
+                <ui5-button icon="document" design="Default">Create Report</ui5-button>
+                <ui5-button icon="email" design="Default">Send Message</ui5-button>
+            </div>
+
+            <div slot="endContent" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                <ui5-card>
+                    <ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
+                    <div style="padding: 0.75rem; text-align: start; font-size: 1.5rem; font-weight: bold;">42</div>
+                </ui5-card>
+                <ui5-card>
+                    <ui5-card-header slot="header" title-text="Resolved" subtitle-text="This week"></ui5-card-header>
+                    <div style="padding: 0.75rem; text-align: start; font-size: 1.5rem; font-weight: bold;">118</div>
+                </ui5-card>
+                <ui5-card>
+                    <ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
+                    <div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
+                </ui5-card>
+            </div>
+        </ui5-banner>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

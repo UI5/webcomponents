@@ -1,0 +1,64 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+        <h4>FullWidth Layout</h4>
+        <ui5-banner
+            salutation-text="Welcome back, Alex"
+            date-text="Thursday, March 6, 2026"
+            layout="FullWidth">
+            <ui5-input
+                placeholder="Search products, documents, reports..."
+                style="width: 100%;">
+            </ui5-input>
+        </ui5-banner>
+
+        <br>
+
+        <h4>HalfWidth Layout (50/50)</h4>
+        <ui5-banner
+            salutation-text="Hello, Maria"
+            date-text="Thursday, March 6, 2026"
+            layout="HalfWidth">
+            <ui5-card>
+                <ui5-card-header slot="header" title-text="Open Orders" subtitle-text="This Week"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">1,247</div>
+            </ui5-card>
+            <ui5-card slot="endContent">
+                <ui5-card-header slot="header" title-text="Revenue YTD" subtitle-text="Target"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€4.2M</div>
+            </ui5-card>
+        </ui5-banner>
+
+        <br>
+
+        <h4>TwoThirds Layout (2/3 + 1/3)</h4>
+        <ui5-banner
+            salutation-text="Good Afternoon, Thomas"
+            date-text="Thursday, March 6, 2026"
+            layout="TwoThirds">
+            <ui5-card>
+                <ui5-card-header slot="header" title-text="Pipeline Overview" subtitle-text="Q1 2026"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€12.8M</div>
+            </ui5-card>
+            <ui5-card slot="endContent">
+                <ui5-card-header slot="header" title-text="Tasks Due" subtitle-text="Today"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">7</div>
+            </ui5-card>
+        </ui5-banner>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

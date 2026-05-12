@@ -319,6 +319,43 @@
 			</ui5-banner>
 		</section>
 
+		<!-- ====================================== -->
+		<!-- 12. HalfWidth with Top-Aligned Card    -->
+		<!-- ====================================== -->
+		<section>
+			<h2>12. HalfWidth with Top-Aligned Carousel</h2>
+			<p>A 50/50 layout with salutation, date, action buttons in the start slot and a carousel of cards top-aligned with the date text in the end slot.</p>
+
+			<ui5-banner id="banner-top-aligned-card"
+				salutation-text="Good Morning, John"
+				date-text="Monday, May 12, 2026"
+				layout="HalfWidth">
+
+				<!-- Start Content: action buttons -->
+				<div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start;">
+					<ui5-button icon="create" design="Default">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
+				</div>
+
+				<!-- End Content: carousel top-aligned with date text -->
+				<ui5-carousel slot="endContent" style="width: 100%;">
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
+						<div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">42</div>
+					</ui5-card>
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Resolved" subtitle-text="This week"></ui5-card-header>
+						<div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">118</div>
+					</ui5-card>
+					<ui5-card>
+						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
+						<div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">1.4h</div>
+					</ui5-card>
+				</ui5-carousel>
+			</ui5-banner>
+		</section>
+
 	</div>
 
 	<!-- Hidden holder for toggled-off slotted elements -->
