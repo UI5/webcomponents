@@ -2077,42 +2077,7 @@ describe("Validation & Value State", () => {
 			.should("have.value", "xyz");
 	});
 
-	it("Does not clear valid/matching values on focus out", () => {
-		cy.mount(
-			<>
-				<Button id="btn">Focus target</Button>
-				<MultiComboBox>
-					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
-					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
-				</MultiComboBox>
-			</>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.realClick();
-
-		cy.get("@mcb")
-			.should("be.focused");
-
-		cy.realType("Item");
-
-		cy.get("@mcb")
-			.shadow()
-			.find("input")
-			.should("have.value", "Item 1");
-
-		cy.get("#btn")
-			.realClick()
-			.should("be.focused");
-
-		cy.get("@mcb")
-			.shadow()
-			.find("input")
-			.should("have.value", "Item 1");
-	});
-
-	it("Preserves selected tokens when clearing invalid input on focus out", () => {
+	it("Preserves selected tokens when clearing input on focus out", () => {
 		cy.mount(
 			<>
 				<Button id="btn">Focus target</Button>

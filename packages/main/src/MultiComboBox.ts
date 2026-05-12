@@ -2037,13 +2037,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.focused = false;
 
 			if (!this.noValidation && this.value) {
-				const hasMatchingItem = this._filterItems(this.value).length > 0;
-				if (!hasMatchingItem) {
-					this.value = "";
-					this._lastValue = "";
-					if (this.valueState === ValueState.Negative) {
-						this._updateValueState(this._effectiveValueState);
-					}
+				this.value = "";
+				this._lastValue = "";
+				if (this.valueState === ValueState.Negative) {
+					this._updateValueState(this._effectiveValueState);
 				}
 			}
 
