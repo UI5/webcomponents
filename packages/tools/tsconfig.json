@@ -11,7 +11,7 @@
 		"sourceMap": true,
 		"inlineSources": true,
 		"strict": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
 		"jsxImportSource": "@ui5/webcomponents-base",
 	}

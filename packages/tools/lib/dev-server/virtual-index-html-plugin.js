@@ -15,7 +15,7 @@ const virtualIndexPlugin = () => {
 
 			return {
 				build: {
-					rollupOptions: {
+					rolldownOptions: {
 						input: rollupInput
 					}
 				}

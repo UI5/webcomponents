@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "src",
     "target": "ES2015",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "declaration": true,
     "lib": ["ES6"],
     "esModuleInterop": true,
