@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -48,6 +49,11 @@ const DESIGN_DESCRIPTIONS = {
 	[SemanticColor.Critical]: TAB_ARIA_DESIGN_CRITICAL,
 };
 
+type TabClickEventDetail = {
+	tab: Tab,
+	originalEvent: Event,
+};
+
 interface TabInStrip extends HTMLElement {
 	realTabReference: Tab;
 }
@@ -74,7 +80,21 @@ interface TabInOverflow extends ListItemCustom {
 	template: TabTemplate,
 	styles: css,
 })
+/**
+ * Fired when the tab is selected either with a mouse/tap or by using the Enter or Space key.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {Tab} tab The selected tab.
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
 class Tab extends UI5Element implements ITabbable, ITab {
+	eventDetails!: {
+		click: TabClickEventDetail,
+	}
 	/**
 	 * The text to be displayed for the item.
 	 * @default undefined
@@ -527,4 +547,5 @@ export default Tab;
 export type {
 	TabInStrip,
 	TabInOverflow,
+	TabClickEventDetail,
 };
