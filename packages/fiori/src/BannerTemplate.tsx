@@ -7,6 +7,8 @@ export default function BannerTemplate(this: Banner) {
 				"ui5-banner-root": true,
 				"ui5-banner--has-bg-image": !!this.backgroundImage,
 			}}
+			role="region"
+			aria-label={this.salutationText || "Banner"}
 			part="canvas"
 			style={this._backgroundImageStyle}
 		>

@@ -16,7 +16,7 @@
 	background-image: var(--_ui5_banner_background_image);
 	background-repeat: no-repeat;
 	background-position: top;
-    background-size: cover;
+	background-size: cover;
 	box-shadow: var(--_ui5_banner_box_shadow);
 	border: var(--_ui5_banner_border);
 	overflow: hidden;
@@ -75,7 +75,7 @@
 .ui5-banner-salutation {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader3Size);
-	text-align: left;
+	text-align: start;
 	color: var(--_ui5_banner_text_color);
 	line-height: 1.4;
 }
@@ -83,7 +83,7 @@
 .ui5-banner-date {
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
-	text-align: left;
+	text-align: start;
 	color: var(--_ui5_banner_text_color);
 	line-height: 1.4;
 }

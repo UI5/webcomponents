@@ -44,11 +44,9 @@ import BannerCss from "./generated/themes/Banner.css.js";
  *
  * ### Responsive Behavior
  *
- * The banner adapts to different screen sizes with responsive horizontal padding:
- * - **XS/S** (up to 599px): 1.5rem padding
- * - **M/L** (600px - 1439px): 2rem horizontal padding
- * - **XL/MAX** (1440px - 2559px): 3rem horizontal padding
- * - **4K** (2560px+): 4rem horizontal padding
+ * The banner adapts to different screen sizes:
+ * - On small screens (≤599px), split layouts (`HalfWidth`, `TwoThirds`) collapse to a single stacked column.
+ * - On screens ≤1024px, the salutation text is truncated to a maximum of 3 lines.
  *
  * ### ES6 Module Import
  *
@@ -153,13 +151,11 @@ class Banner extends UI5Element {
 
 	get _backgroundImageStyle(): Record<string, string> | undefined {
 		if (this.backgroundImage) {
-			return { "--_ui5_banner_user_image": `url('${this.backgroundImage}')` };
+			// Sanitize URL to prevent CSS injection via quote-breaking
+			const sanitized = this.backgroundImage.replace(/['\\/()]/g, "");
+			return { "--_ui5_banner_user_image": `url('${sanitized}')` };
 		}
 		return undefined;
-	}
-
-	get _hasContent() {
-		return this.startContent.length > 0 || this.endContent.length > 0;
 	}
 
 	get _hasStartContent() {
