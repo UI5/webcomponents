@@ -716,6 +716,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_onkeydown(e: KeyboardEvent) {
 		const isCtrl = !!(e.metaKey || e.ctrlKey);
 
+		if (isEscape(e)) {
+			return this._deselectAllTokens();
+		}
+
 		if ((isCtrl && ["c", "x"].includes(e.key.toLowerCase())) || isDeleteShift(e) || isInsertCtrl(e)) {
 			e.preventDefault();
 
@@ -1066,6 +1070,17 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 			this.fireDecoratorEvent("selection-change", {
 				tokens: this._selectedTokens,
+			});
+		}
+	}
+
+	_deselectAllTokens() {
+		const hadSelection = this._selectedTokens.length > 0;
+		this._tokens.forEach(token => { token.selected = false; });
+
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				tokens: [],
 			});
 		}
 	}
