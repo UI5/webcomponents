@@ -196,7 +196,8 @@
 		<br />
 		<br />
 
-		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
+		<ui5-combobox id="toggle-loading-cb" class="combobox2auto" value-state="Negative">
+			<div slot="valueStateMessage">Custom error value state message.</div>
 		</ui5-combobox>
 		<ui5-button id="btn-clear">Clear items</ui5-button>
 	</div>
@@ -655,29 +656,41 @@
 
 		const cbLazyLoad = document.getElementById("toggle-loading-cb"); 
 
-		document.getElementById("btn-clear").addEventListener("click", () => {
-			while (cbLazyLoad.firstChild) {
-				cbLazyLoad.removeChild(cbLazyLoad.firstChild);
-			}
-		});
-
 		const createItem = (cb, text) => {
 			const item = document.createElement("ui5-cb-item");
 			item.text = text;
 			cb.appendChild(item);
 		};
 
-		cbLazyLoad.addEventListener("open", (e) => {
-			if(!cbLazyLoad.items.length){
-				cbLazyLoad.loading = true;
-				createItem(cbLazyLoad, `Item 1`);
-				createItem(cbLazyLoad, `Item 2`);
-				createItem(cbLazyLoad, `Item 3`);
+		const fnClearItems = (control) => {
+			const itemSelector = "ui5-cb-item";
+			let allClear = control.querySelectorAll(itemSelector).length === 0;
+			while (!allClear) {
+				const child = control.querySelector(itemSelector);
+				control.removeChild(child);
+				allClear = control.querySelectorAll(itemSelector).length === 0;
+			}
+			control.value = "";
+		} 
+
+		const fnLoadItems = (control) => { 
+			const { value, items } = control;
+			if(!items || !items.length){
+				control.loading = true;
 				setTimeout(() => {
-					cbLazyLoad.loading = false;
+					createItem(control, `Item 1 ${value}`);
+					createItem(control, `Item 2 ${value}`);
+					createItem(control, `Item 3 ${value}`);
+					createItem(control, `Option ${value}`);
+					control.loading = false;
 				}, 3000);
 			}
-		});
+		};
+
+		document.getElementById("btn-clear").addEventListener("click", () => fnClearItems(cbLazyLoad));
+
+		cbLazyLoad.addEventListener("open", e => fnLoadItems(e.target));
+		cbLazyLoad.addEventListener("input", e => fnLoadItems(e.target));
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;

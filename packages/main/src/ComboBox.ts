@@ -1001,19 +1001,17 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		const allItems = this._getItems();
 
-		if(allItems.length){
-			const currentItem = allItems[indexOfItem];
-			const isLastItem = indexOfItem === allItems.length - 1;
+		const currentItem = allItems[indexOfItem];
+		const isLastItem = indexOfItem === allItems.length - 1;
 
-			// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
-			if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
-				return;
-			}
-
-			const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
-
-			this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
+		// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
+		if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
+			return;
 		}
+
+		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
+
+		this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
@@ -1076,7 +1074,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._autocomplete = !(isBackSpace(e) || isDelete(e));
 		this._isKeyNavigation = false;
 
-		if (isNavKey && !this.readonly) {
+		if (isNavKey && !this.readonly && allItems.length) {
 			this.handleNavKeyPress(e);
 		}
 
