@@ -1,3 +1,4 @@
+import Button from "../../src/Button.js";
 import Label from "../../src/Label.js";
 import Panel from "../../src/Panel.js";
 import Title from "../../src/Title.js";
@@ -723,5 +724,141 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-panel-root")
 			.should("have.attr", "aria-label", accessibleNamePanel);
+	});
+});
+
+describe("Scrollable Content Focus", () => {
+	function addPageStyles(styles: string) {
+		cy.document().then((doc) => {
+			const style = doc.createElement("style");
+			style.id = "panel-focus-styles";
+			style.innerHTML = styles;
+			doc.head.appendChild(style);
+		});
+	}
+	function clearPageStyles() {
+		cy.window()
+			.then($el => {
+				const styleTag = $el.document.head.querySelector("style[id='panel-focus-styles']");
+				styleTag?.remove();
+			});
+	}
+
+	it("Scrollable content with no focusable children is focusable", () => {
+		addPageStyles(`
+			#panel-scroll::part(content) {
+				max-height: 50px;
+			}
+		`);
+
+		const longText = "Lorem ipsum dolor sit amet. ".repeat(20);
+
+		cy.mount(
+			<Panel headerText="Scrollable Panel" id="panel-scroll">
+				<div>{longText}</div>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content-wrapper")
+			.as("wrapper");
+
+		cy.wait(100);
+
+		cy.get("@content")
+			.should($el => {
+				expect($el[0].scrollHeight).to.be.greaterThan($el[0].clientHeight);
+			});
+
+		cy.get("@content")
+			.should("have.attr", "tabindex", "0");
+
+		cy.get("@wrapper")
+			.should("have.class", "ui5-panel-content-focusable");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.focus()
+			.realPress("Tab");
+
+		cy.get("@content")
+			.should("be.focused");
+
+		clearPageStyles();
+	});
+
+	it("Scrollable content with focusable children is NOT focusable", () => {
+		addPageStyles(`
+			#panel-button::part(content) {
+				max-height: 50px;
+			}
+		`);
+
+		const longText = "Lorem ipsum dolor sit amet. ".repeat(10);
+
+		cy.mount(
+			<Panel headerText="Panel with Button" id="panel-button">
+				<div>{longText}</div>
+				<Button>Click me</Button>
+				<div>{longText}</div>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content-wrapper")
+			.as("wrapper");
+
+		cy.wait(100);
+
+		cy.get("@content")
+			.should("not.have.attr", "tabindex");
+
+		cy.get("@wrapper")
+			.should("not.have.class", "ui5-panel-content-focusable");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.focus()
+			.realPress("Tab");
+
+		cy.get("[ui5-button]")
+			.should("be.focused");
+
+		clearPageStyles();
+	});
+
+	it("Non-scrollable content is NOT focusable", () => {
+		cy.mount(
+			<Panel headerText="Short Content Panel">
+				<Label>Short text</Label>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("@content")
+			.should($el => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].clientHeight);
+			});
+
+		cy.get("@content")
+			.should("not.have.attr", "tabindex");
 	});
 });

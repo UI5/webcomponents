@@ -42,6 +42,7 @@ const getScripts = (options) => {
 	});
 
 
+	const standalone = options.standalone ?? true;
 	const tsOption = options.typescript !== false;
 	const tsCommandOld = tsOption ? "tsc" : "";
 	let tsWatchCommandStandalone = tsOption ? "tsc --watch" : "";
@@ -71,6 +72,17 @@ const getScripts = (options) => {
 		viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-package/vite.config.js")}"`;
 	}
 
+
+	const getPrepareDefault = () => {
+		let result = `ui5nps clean prepare.all copy copyProps prepare.typescript`
+
+		if (standalone) {
+			result = `${result} generateAPI`;
+		}
+
+		return result;
+	}
+
 	const scripts = {
 		__ui5envs: {
 			UI5_CEM_MODE: typeof options.dev === "boolean" ? (options.dev ? "dev" : undefined) : options.dev,
@@ -90,7 +102,7 @@ const getScripts = (options) => {
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
-			default: `ui5nps clean prepare.all copy copyProps prepare.typescript`,
+			default: getPrepareDefault(),
 			all: `ui5nps-p build.i18n prepare.styleRelated build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
@@ -166,6 +178,7 @@ const getScripts = (options) => {
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.js ${viteConfig}`,
 		},
 		generateAPI: {
+			"default": tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM generateAPI.mergeCEM" : "",
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.js"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
 			mergeCEM: `ui5nps-script "${LIB}cem/merge.js"`,

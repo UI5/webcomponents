@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<title>ui5-list / ui5-li - accessible-role inheritance</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			padding: 1rem 2rem;
+			font-family: var(--sapFontFamily);
+		}
+		section {
+			margin-bottom: 2rem;
+		}
+	</style>
+</head>
+<body>
+
+	<ui5-title level="H2">List accessible-role ? child role inheritance</ui5-title>
+	<br/>
+
+	<!-- 1. Default (no role set) -->
+	<section>
+		<ui5-title level="H4">Default: accessible-role="List" (default) ? children get role="listitem"</ui5-title>
+		<ui5-list id="listDefault" header-text="Default List">
+			<ui5-li id="li-default-1">Item 1</ui5-li>
+			<ui5-li id="li-default-2">Item 2</ui5-li>
+			<ui5-li id="li-default-3">Item 3</ui5-li>
+		</ui5-list>
+	</section>
+
+	<!-- 2. Menu role -->
+	<section>
+		<ui5-title level="H4">accessible-role="Menu" ? children inherit role="menuitem"</ui5-title>
+		<ui5-list id="listMenu" accessible-role="Menu" header-text="Menu List">
+			<ui5-li id="li-menu-1">Open</ui5-li>
+			<ui5-li id="li-menu-2">Save</ui5-li>
+			<ui5-li id="li-menu-3">Save As?</ui5-li>
+			<ui5-li id="li-menu-4">Close</ui5-li>
+		</ui5-list>
+	</section>
+
+	<!-- 3. ListBox role -->
+	<section>
+		<ui5-title level="H4">accessible-role="ListBox" ? children inherit role="option"</ui5-title>
+		<ui5-list id="listBox" accessible-role="ListBox" header-text="ListBox">
+			<ui5-li id="li-listbox-1">Option A</ui5-li>
+			<ui5-li id="li-listbox-2">Option B</ui5-li>
+			<ui5-li id="li-listbox-3">Option C</ui5-li>
+		</ui5-list>
+	</section>
+
+	<!-- 4. Tree role -->
+	<section>
+		<ui5-title level="H4">accessible-role="Tree" ? children inherit role="treeitem"</ui5-title>
+		<ui5-list id="listTree" accessible-role="Tree" header-text="Tree List">
+			<ui5-li id="li-tree-1">Node 1</ui5-li>
+			<ui5-li id="li-tree-2">Node 2</ui5-li>
+			<ui5-li id="li-tree-3">Node 3</ui5-li>
+		</ui5-list>
+	</section>
+
+	<!-- 5. Explicit accessible-role on ui5-li overrides inherited -->
+	<section>
+		<ui5-title level="H4">Explicit accessible-role on ui5-li overrides inherited role from ui5-list</ui5-title>
+		<ui5-list id="listMenuOverride" accessible-role="Menu" header-text="Menu with override">
+			<ui5-li id="li-override-1">Inherits menuitem from list</ui5-li>
+			<ui5-li id="li-override-2" accessible-role="Option">Explicitly set to "option"</ui5-li>
+			<ui5-li id="li-override-3">Inherits menuitem from list</ui5-li>
+		</ui5-list>
+	</section>
+
+	<!-- 6. Standalone explicit accessible-role on ui5-li -->
+	<section>
+		<ui5-title level="H4">Explicit accessible-role="MenuItem" set directly on ui5-li (no list role)</ui5-title>
+		<ui5-list id="listStandalone" header-text="Standard list with explicit item role">
+			<ui5-li id="li-standalone-1" accessible-role="MenuItem">Explicit menuitem</ui5-li>
+			<ui5-li id="li-standalone-2">Default listitem</ui5-li>
+			<ui5-li id="li-standalone-3">Default listitem</ui5-li>
+		</ui5-list>
+	</section>
+
+</body>
+</html>
