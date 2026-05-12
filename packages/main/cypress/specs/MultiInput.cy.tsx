@@ -1474,6 +1474,39 @@ describe("Keyboard handling", () => {
 			.should("have.been.calledOnce");
 	});
 
+	it("should deselect all tokens on [Escape] key", () => {
+		cy.mount(
+			<MultiInput>
+				<Token slot="tokens" text="Andora"></Token>
+				<Token slot="tokens" text="Bulgaria"></Token>
+				<Token slot="tokens" text="Canada"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("Home");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("be.focused");
+
+		cy.realPress(["Shift", "End"]);
+
+		cy.get("[ui5-token]").each($token => {
+			cy.wrap($token).should("have.attr", "selected");
+		});
+
+		cy.realPress("Escape");
+
+		cy.get("[ui5-token]").each($token => {
+			cy.wrap($token).should("not.have.attr", "selected");
+		});
+	});
+
 	it("should focus last token on ArrowLeft at start of input, keep suggestions open, and not fire change event", () => {
 		const changeSpy = cy.stub().as("changeSpy");
 
