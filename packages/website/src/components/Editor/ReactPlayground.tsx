@@ -134,6 +134,7 @@ import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
+import TableGroupRowClass from "@ui5/webcomponents/dist/TableGroupRow.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
 import TreeItemCustomClass from "@ui5/webcomponents/dist/TreeItemCustom.js";
@@ -260,7 +261,7 @@ import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
-import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
+import CompatTableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 
 // Import icons commonly used in samples
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
@@ -301,7 +302,7 @@ const ComponentClasses: Record<string, any> = {
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
   StepInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
-  TableRowClass, TableCellClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
+  TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,
   ToolbarSelectOptionClass, SegmentedButtonClass, SegmentedButtonItemClass, ComboBoxClass,
   ComboBoxItemClass, ComboBoxItemGroupClass, MultiComboBoxClass, MultiComboBoxItemClass,
@@ -331,7 +332,7 @@ const ComponentClasses: Record<string, any> = {
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package
-  CompatTableClass, TableColumnClass, CompatTableRowClass, CompatTableCellClass, TableGroupRowClass,
+  CompatTableClass, TableColumnClass, CompatTableRowClass, CompatTableCellClass, CompatTableGroupRowClass,
 };
 
 interface ReactPlaygroundProps {
