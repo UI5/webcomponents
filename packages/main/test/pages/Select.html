@@ -214,6 +214,34 @@
 	</section>
 
 	<section>
+		<h2>Select with option groups</h2>
+		<ui5-select id="selectWithOptionGroups">
+			<ui5-option-group id="oceaniaGroup" header-text="Oceania">
+				<ui5-option value="au">Australia</ui5-option>
+				<ui5-option value="nz">New Zealand</ui5-option>
+			</ui5-option-group>
+			<ui5-option-group id="europeGroup" header-text="Europe">
+				<ui5-option value="fr">France</ui5-option>
+				<ui5-option value="de" selected>Germany</ui5-option>
+			</ui5-option-group>
+		</ui5-select>
+	</section>
+
+	<section>
+		<h2>Select with option groups and additional text</h2>
+		<ui5-select id="selectWithOptionGroupsAndAdditionalText">
+			<ui5-option-group header-text="Asia Pacific">
+				<ui5-option value="au" additional-text="AU">Australia</ui5-option>
+				<ui5-option value="jp" additional-text="JP">Japan</ui5-option>
+			</ui5-option-group>
+			<ui5-option-group header-text="Europe">
+				<ui5-option value="bg" additional-text="BG">Bulgaria</ui5-option>
+				<ui5-option value="pt" additional-text="PT" selected>Portugal</ui5-option>
+			</ui5-option-group>
+		</ui5-select>
+	</section>
+
+	<section>
 		<h2>Select "value" property</h2>
 		<ui5-select id="mySelect7">
 			<ui5-option>Item1</ui5-option>
