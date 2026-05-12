@@ -3515,7 +3515,7 @@ describe("Keyboard Handling", () => {
 		cy.mount(
 			<>
 				<Button id="btn"></Button>
-				<MultiComboBox style="width: 100%" noTypeahead={true}>
+				<MultiComboBox style="width: 100%" noTypeahead={true} noValidation={true}>
 					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
 					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
 				</MultiComboBox>
