@@ -515,7 +515,7 @@
 	</div>
 
 	<script type="module">
-		document.getElementById("lazy").addEventListener("ui5-input", async event => {
+		document.getElementById("lazy").addEventListener("input", async event => {
 			const { value } = event.target;
 
 			// set busy state
@@ -526,26 +526,31 @@
 			}
 
 			// load data
-			const items = (await (await fetch(`https://restcountries.com/v3.1/name/${value}`)).json());
+			try {
+				while (document.getElementById("lazy").firstChild) {
+					document.getElementById("lazy").removeChild(document.getElementById("lazy").firstChild);
+				}
 
-			// cleanup old items
-			while (document.getElementById("lazy").firstChild) {
-				document.getElementById("lazy").removeChild(document.getElementById("lazy").firstChild);
+				const response = await fetch(`https://restcountries.com/v3.1/name/${value}`);
+				const items = await response.json();
+				// cleanup old items
+
+				// fill new items
+				if (Array.isArray(items)) {
+					items.map(data => {
+						const element = document.createElement("ui5-cb-item");
+						element.setAttribute("text", data.name.common);
+
+						document.getElementById("lazy").appendChild(element);
+					});
+				}
+			} catch {
+
+			} finally {
+				// remove busy state
+				event.target.loading = false;
 			}
-
-			// fill new items
-			items.map(data => {
-				const element = document.createElement("ui5-cb-item");
-				element.setAttribute("text", data.name.common);
-
-				document.getElementById("lazy").appendChild(element);
-			});
-
-			// remove busy state
-			event.target.loading = false;
-
-			// load the items once or turn off filtering
-		}, { once: true });
+		});
 	</script>
 
 	<script type="module">
@@ -664,15 +669,12 @@
 
 		cbLazyLoad.addEventListener("open", (e) => {
 			if(!cbLazyLoad.items.length){
-				const invisibleMessage = window["sap-ui-webcomponents-bundle"].invisibleMessage;
 				cbLazyLoad.loading = true;
-				invisibleMessage.announce("Loading data", "Assertive");
 				createItem(cbLazyLoad, `Item 1`);
 				createItem(cbLazyLoad, `Item 2`);
 				createItem(cbLazyLoad, `Item 3`);
 				setTimeout(() => {
 					cbLazyLoad.loading = false;
-					invisibleMessage.announce("Data loaded. 3 results are available", "Assertive");
 				}, 3000);
 			}
 		});
