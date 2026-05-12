@@ -12,7 +12,7 @@ import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/ut
 import type ComboBox from "./ComboBox.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
-	const loadingOnDesktopWithValueState = this.loading && !this._isPhone && this.hasValueStateText;
+	const loadingOnDesktopWithValueState = this.loading && !this._isPhone && this.hasValueState;
 	const loadingDelay = 100;
 	return (
 		<>
@@ -98,7 +98,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					</div>
 				}
 
-				{(this._isPhone || !this.hasValueStateText) && this.loading && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+				{(this._isPhone || !this.hasValueState) && this.loading && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
 				{((!this.loading && !!this._filteredItems.length) || loadingOnDesktopWithValueState) &&
 					<List
 						class="ui5-combobox-items-list"
@@ -108,10 +108,9 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 						onItemClick={this._selectItem}
 						onItemFocused={this._onItemFocus}
 						onMouseDown={this._itemMousedown}
-						loading={loadingOnDesktopWithValueState}
-						loadingDelay={loadingDelay}
 					>
-						{this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
 					</List>
 				}
 

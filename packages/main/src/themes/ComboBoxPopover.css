@@ -20,6 +20,6 @@
 }
 
 
-.ui5-combobox-items-list[loading] {
+.ui5-combobox-items-list:has(.ui5-combobox-busy[active]) {
   	min-height: 1.6rem;
 }

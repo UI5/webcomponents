@@ -191,7 +191,7 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Toggle Loading State</span>
+		<span>Loading State</span>
 
 		<br />
 		<br />
@@ -662,8 +662,15 @@
 			cb.appendChild(item);
 		};
 
+		const createGroupItem = (cb, text) => {
+			const item = document.createElement("ui5-cb-item-group");
+			item.headerText = text;
+			cb.appendChild(item);
+			return item;
+		}
+
 		const fnClearItems = (control) => {
-			const itemSelector = "ui5-cb-item";
+			const itemSelector = "ui5-cb-item, ui5-cb-item-group";
 			let allClear = control.querySelectorAll(itemSelector).length === 0;
 			while (!allClear) {
 				const child = control.querySelector(itemSelector);
@@ -678,10 +685,13 @@
 			if(!items || !items.length){
 				control.loading = true;
 				setTimeout(() => {
-					createItem(control, `Item 1 ${value}`);
-					createItem(control, `Item 2 ${value}`);
-					createItem(control, `Item 3 ${value}`);
-					createItem(control, `Option ${value}`);
+					const group = createGroupItem(control, 'Group 1');
+					createItem(group, `Child Item 1 ${value}`);
+					createItem(group, `Chidl Item 2 ${value}`);
+					// createItem(control, `Item 1 ${value}`);
+					// createItem(control, `Item 2 ${value}`);
+					// createItem(control, `Item 3 ${value}`);
+					// createItem(control, `Option ${value}`);
 					control.loading = false;
 				}, 3000);
 			}

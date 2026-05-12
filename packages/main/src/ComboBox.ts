@@ -503,8 +503,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
-	_prevLoading = false;
-	_announceLoading?: boolean | undefined;
+	_prevLoading: boolean;
+	_announceLoading?: boolean;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -550,6 +550,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		// when an initial value is set it should be considered as a _lastValue
 		this._lastValue = this.getAttribute("value") || "";
+		this._prevLoading = this.loading;
 	}
 
 	onBeforeRendering() {
@@ -633,15 +634,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this._announceLoading) {
 			announce(ComboBox.i18nBundle.getText(COMBOBOX_LOADING), InvisibleMessageMode.Polite);
 		} else if (this._announceLoading === false) {
-			let count = 0;
-			this._filteredItems.forEach(item => {
-				if (isInstanceOfComboBoxItemGroup(item)) {
-					count += item.items?.filter(i => i._isVisible).length || 0;
-				} else {
-					count++;
-				}
-			});
-
+			const count = this._getItems().filter(item => !item.isGroupItem && item._isVisible).length;
 			const itemsLoadedMessage = count === 1 ? ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM) : ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count);
 			announce(`${ComboBox.i18nBundle.getText(COMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
 		}
@@ -1000,7 +993,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		const allItems = this._getItems();
-
 		const currentItem = allItems[indexOfItem];
 		const isLastItem = indexOfItem === allItems.length - 1;
 
@@ -1074,7 +1066,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._autocomplete = !(isBackSpace(e) || isDelete(e));
 		this._isKeyNavigation = false;
 
-		if (isNavKey && !this.readonly && allItems.length) {
+		if (isNavKey && !this.readonly && this._filteredItems.length) {
 			this.handleNavKeyPress(e);
 		}
 
