@@ -995,7 +995,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	async _handlePaste(e: ClipboardEvent) {
+	_handlePaste(e: ClipboardEvent) {
 		if (this.readonly) {
 			return;
 		}
