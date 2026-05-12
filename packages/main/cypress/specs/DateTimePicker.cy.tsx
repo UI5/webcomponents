@@ -733,7 +733,7 @@ describe("Min/Max date validation", () => {
 		cy.get("[ui5-datetime-picker]")
 			.as("dtp");
 
-		cy.get("@dtp")
+		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
 	});
 
@@ -751,7 +751,7 @@ describe("Min/Max date validation", () => {
 		cy.get("[ui5-datetime-picker]")
 			.as("dtp");
 
-		cy.get("@dtp")
+		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerTypeAndExpectValueState("11/05/2026, 10:00:00", "Negative");
 	});
 
@@ -769,7 +769,7 @@ describe("Min/Max date validation", () => {
 		cy.get("[ui5-datetime-picker]")
 			.as("dtp");
 
-		cy.get("@dtp")
+		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerTypeAndExpectValueState("14/05/2026, 19:00:00", "Negative");
 	});
 
@@ -786,9 +786,9 @@ describe("Min/Max date validation", () => {
 		cy.get("[ui5-datetime-picker]")
 			.as("dtp");
 
-		cy.get("@dtp")
+		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
-		cy.get("@dtp")
+		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerTypeAndExpectValueState("13/05/2026, 12:00:00", "None");
 	});
 });
