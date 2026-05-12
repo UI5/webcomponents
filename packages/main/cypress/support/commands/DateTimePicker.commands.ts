@@ -78,8 +78,9 @@ Cypress.Commands.add("ui5DateTimePickerTypeAndExpectValueState", { prevSubject: 
 	cy.wrap(subject)
 		.ui5DatePickerGetInnerInput()
 		.clear()
-		.realType(displayValue)
-		.realPress("Enter");
+		.realType(displayValue);
+	
+	cy.realPress("Enter");
 
 	cy.wrap(subject)
 		.shadow()
@@ -118,6 +119,7 @@ declare global {
 				this: Chainable<JQuery<DateTimePicker>>
 			): Chainable<number>;
 			ui5DateTimePickerTypeAndExpectValueState(
+				this: Chainable<JQuery<DateTimePicker>>,
 				displayValue: string,
 				expectedState: "Negative" | "None"
 			): Chainable<void>;
