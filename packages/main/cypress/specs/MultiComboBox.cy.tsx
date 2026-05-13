@@ -3430,6 +3430,54 @@ describe("Keyboard Handling", () => {
 			.should("have.value", "I");
 	});
 
+	it("should deselect all tokens on [Escape] key when focus is on tokenizer", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Andora"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Canada"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 3);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.last()
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Home"]);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("have.attr", "selected");
+			});
+
+		cy.realPress("Escape");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("not.have.attr", "selected");
+			});
+	});
+
 	it("Selects an item when enter is pressed and value matches a text of an item in the list", () => {
 		cy.mount(
 			<>
@@ -4422,13 +4470,20 @@ describe("Keyboard Handling", () => {
 	});
 
 	describe("Copy/Cut/Paste keyboard shortcuts", () => {
-		const dispatchPasteEvent = () => {
+		const dispatchPasteEvent = (pastedText?: string) => {
 			cy.get("@input").then($input => {
 				const input = $input.get(0) as HTMLInputElement;
+
+				// Create clipboardData with the pasted text
+				const dataTransfer = new DataTransfer();
+				if (pastedText) {
+					dataTransfer.setData("text/plain", pastedText);
+				}
 
 				const pasteEvent = new ClipboardEvent("paste", {
 					bubbles: true,
 					cancelable: true,
+					clipboardData: dataTransfer,
 				});
 
 				input.dispatchEvent(pasteEvent);
@@ -4472,28 +4527,18 @@ describe("Keyboard Handling", () => {
 				</MultiComboBox>
 			</>)
 
-			cy.window().then(win => {
-				cy.stub(win.navigator.clipboard, "readText")
-					.as("clipboardRead")
-					.returns("22222");
-			});
-
 			cy.get("[ui5-multi-combobox]").as("mcb2");
 			cy.get("@mcb2").shadow().find("input").as("input");
 
 			cy.get("@input").realClick();
 			cy.get("@input").should("be.focused");
 
-			dispatchPasteEvent();
-
-			cy.get("@clipboardRead").should("have.been.calledOnce");
+			dispatchPasteEvent("22222");
 
 			cy.get("@input").should("have.value", "22222");
 			cy.get("@mcb2").should("have.prop", "open", true);
 
-			dispatchPasteEvent();
-
-			cy.get("@clipboardRead").should("have.been.calledTwice");
+			dispatchPasteEvent("22222");
 
 			cy.get("@input").should("have.value", "2222222222");
 		});

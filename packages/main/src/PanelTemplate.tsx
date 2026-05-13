@@ -89,15 +89,22 @@ export default function PanelTemplate(this: Panel) {
 
 			{/* content area */}
 			<div
-				class="ui5-panel-content"
-				id={ `${this._id}-content` }
-				tabindex={ -1 }
+				class={{
+					"ui5-panel-content-wrapper": true,
+					"ui5-panel-content-focusable": this._contentFocusable,
+				}}
 				style={{
 					display: this._contentExpanded ? "block" : "none",
 				}}
-				part="content"
 			>
-				<slot></slot>
+				<div
+					class="ui5-panel-content"
+					id={ `${this._id}-content` }
+					tabindex={ this._contentTabIndex }
+					part="content"
+				>
+					<slot></slot>
+				</div>
 			</div>
 		</div>
 	</>);
