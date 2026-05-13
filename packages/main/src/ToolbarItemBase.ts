@@ -54,11 +54,12 @@ class ToolbarItemBase extends UI5Element {
 	 * When set to `true`, the toolbar does not process keys that are expected
 	 * to be handled by the item itself.
 	 * @default false
-	 * @public
+	 * @protected
 	 * @since 2.22.0
 	 */
-	@property({ type: Boolean })
-	handlesOwnKeyboardNavigation = false;
+	get handlesOwnKeyboardNavigation(): boolean {
+		return false;
+	}
 
 	/**
 	 * Defines whether the toolbar item handles keyboard navigation for a given key.

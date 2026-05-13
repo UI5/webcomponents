@@ -72,7 +72,9 @@ class ToolbarSelect extends ToolbarItemBase {
 		"click": ToolbarItemEventDetail;
 	}
 
-	handlesOwnKeyboardNavigation = true;
+	get handlesOwnKeyboardNavigation(): boolean {
+		return true;
+	}
 
 	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
 		// Home/End are only owned while the dropdown is open; otherwise the toolbar

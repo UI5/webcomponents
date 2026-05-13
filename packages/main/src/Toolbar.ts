@@ -336,6 +336,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
+		this._refreshOriginalTabIndexes();
 		this._applyRovingTabIndex();
 		this._restoreOverflowTabOrder();
 	}
@@ -608,6 +609,29 @@ class Toolbar extends UI5Element {
 		if (!this._originalTabIndexes.has(target)) {
 			this._originalTabIndexes.set(target, target.getAttribute("tabindex"));
 		}
+	}
+
+	_refreshOriginalTabIndexes() {
+		this._originalTabIndexes = new WeakMap<HTMLElement, string | null>();
+
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				const focusRef = item.getFocusDomRef();
+				if (focusRef) {
+					this._storeOriginalTabIndex(focusRef);
+				}
+
+				if (item.handlesOwnKeyboardNavigation) {
+					item._getNavigationTargets().forEach(target => this._storeOriginalTabIndex(target));
+				}
+			});
+
+		this.overflowItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				this._getOverflowTabTargets(item).forEach(target => this._storeOriginalTabIndex(target));
+			});
 	}
 
 	_restoreOriginalTabIndex(target: HTMLElement) {

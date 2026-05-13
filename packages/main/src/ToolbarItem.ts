@@ -9,8 +9,6 @@ import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import RadioButtonGroup from "./RadioButtonGroup.js";
-import type RadioButton from "./RadioButton.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
 /**
@@ -60,8 +58,11 @@ interface IToolbarItemContent extends HTMLElement {
 class ToolbarItem extends ToolbarItemBase {
 	_maxWidth = 0;
 	_wrapperChecked = false;
-	handlesOwnKeyboardNavigation = true;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
+
+	get handlesOwnKeyboardNavigation(): boolean {
+		return true;
+	}
 
 	closeOverflowSet = {
 		"ui5-button": ["click"],
@@ -185,31 +186,28 @@ class ToolbarItem extends ToolbarItemBase {
 	_handleNavigationTarget(target: HTMLElement) {
 		const hostTarget = this._resolveNavigationHost(target);
 
-		if (hostTarget.tagName === "UI5-RADIO-BUTTON") {
+		if (this._isRadioButtonHost(hostTarget)) {
 			const radio = hostTarget as HTMLElement & {
 				disabled?: boolean;
 				readonly?: boolean;
 				checked?: boolean;
-				name?: string;
 				click: () => void;
 			};
 
-			if (!radio.disabled && !radio.readonly && !radio.checked) {
-				if (radio.name) {
-					RadioButtonGroup.selectItem(radio as unknown as RadioButton, radio.name);
-					return;
-				}
+			hostTarget.focus();
 
+			if (!radio.disabled && !radio.readonly && !radio.checked) {
 				radio.click();
-				return;
 			}
+
+			return;
 		}
 
 		hostTarget.focus();
 	}
 
 	_resolveNavigationHost(target: HTMLElement): HTMLElement {
-		if (target.tagName.startsWith("UI5-")) {
+		if (this._isUI5Host(target)) {
 			return target;
 		}
 
@@ -219,6 +217,15 @@ class ToolbarItem extends ToolbarItemBase {
 		}
 
 		return target;
+	}
+
+	_isUI5Host(target: HTMLElement): boolean {
+		const ctor = target.constructor as { getMetadata?: () => unknown };
+		return typeof ctor.getMetadata === "function";
+	}
+
+	_isRadioButtonHost(target: HTMLElement): boolean {
+		return target.hasAttribute("ui5-radio-button");
 	}
 
 	_matchesNavigationTarget(target: HTMLElement, candidate: HTMLElement): boolean {
@@ -244,7 +251,7 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	_isRadioGroupTargets(targets: HTMLElement[]) {
-		return targets.length > 1 && targets.every(target => this._resolveNavigationHost(target).tagName === "UI5-RADIO-BUTTON");
+		return targets.length > 1 && targets.every(target => this._isRadioButtonHost(this._resolveNavigationHost(target)));
 	}
 
 	_restoreRadioBoundarySelection(targets: HTMLElement[], isForward: boolean) {
