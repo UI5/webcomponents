@@ -2120,6 +2120,44 @@ describe("Validation & Value State", () => {
 			.find("[ui5-token]")
 			.should("have.length", 1);
 	});
+
+	it("Preserves initial Negative value state when clearing input on focus out", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox valueState="Negative">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.realClick();
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+	});
 });
 
 describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", () => {
