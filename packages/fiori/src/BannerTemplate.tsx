@@ -7,8 +7,7 @@ export default function BannerTemplate(this: Banner) {
 				"ui5-banner-root": true,
 				"ui5-banner--has-bg-image": !!this.backgroundImage,
 			}}
-			role="region"
-			aria-label={this.salutationText || "Banner"}
+			role="banner"
 			part="canvas"
 			style={this._backgroundImageStyle}
 		>
@@ -31,9 +30,11 @@ export default function BannerTemplate(this: Banner) {
 						}
 					</div>
 
-					<div class="ui5-banner-header-actions">
-						<slot name="headerActions"></slot>
-					</div>
+					{this._hasHeaderActions &&
+						<div class="ui5-banner-header-actions">
+							<slot name="headerActions"></slot>
+						</div>
+					}
 				</div>
 
 				{this._hasStartContent &&

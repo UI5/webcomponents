@@ -159,6 +159,39 @@ describe("Banner", () => {
 				.find(".ui5-banner-block-end")
 				.should("exist");
 		});
+
+		it("renders headerActions slot", () => {
+			cy.mount(
+				<Banner salutationText="Hello">
+					<div slot="headerActions" id="action1">Action 1</div>
+					<div slot="headerActions" id="action2">Action 2</div>
+				</Banner>
+			);
+
+			cy.get("[ui5-banner]")
+				.find("#action1")
+				.should("exist");
+
+			cy.get("[ui5-banner]")
+				.find("#action2")
+				.should("exist");
+
+			cy.get("[ui5-banner]")
+				.shadow()
+				.find(".ui5-banner-header-actions")
+				.should("exist");
+		});
+
+		it("does not render headerActions wrapper when no headerActions are provided", () => {
+			cy.mount(
+				<Banner salutationText="Hello"></Banner>
+			);
+
+			cy.get("[ui5-banner]")
+				.shadow()
+				.find(".ui5-banner-header-actions")
+				.should("not.exist");
+		});
 	});
 
 	describe("Background Image", () => {
@@ -201,6 +234,19 @@ describe("Banner", () => {
 				.find(".ui5-banner-root")
 				.invoke("css", "min-height")
 				.should("equal", "92px"); // 5.75rem = 92px at default font-size
+		});
+	});
+
+	describe("Accessibility", () => {
+		it("has role banner on the root element", () => {
+			cy.mount(
+				<Banner salutationText="Hello, John"></Banner>
+			);
+
+			cy.get("[ui5-banner]")
+				.shadow()
+				.find(".ui5-banner-root")
+				.should("have.attr", "role", "banner");
 		});
 	});
 
