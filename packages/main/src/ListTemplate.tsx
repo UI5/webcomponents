@@ -48,12 +48,15 @@ export default function ListTemplate(this: List) {
 
 						<span id={`${this._id}-modeLabel`} class="ui5-hidden-text">{this.ariaLabelModeText}</span>
 
+						{this.ariaDescriptionText &&
+							<span id={`${this._id}-list-description`} class="ui5-hidden-text">{this.ariaDescriptionText}</span>
+						}
 						<ul id={`${this._id}-listUl`}
 							class="ui5-list-ul"
 							role={this.listAccessibleRole}
 							aria-label={this.ariaLabelTxt}
 							aria-labelledby={this.ariaLabelledBy}
-							aria-description={this.ariaDescriptionText || undefined}
+							aria-describedby={this.ariaDescriptionText ? `${this._id}-list-description` : undefined}
 						>
 							<slot></slot>
 

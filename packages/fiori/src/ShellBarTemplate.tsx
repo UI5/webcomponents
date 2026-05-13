@@ -62,7 +62,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 							<div
 								class="ui5-shellbar-content-area ui5-shellbar-content-items"
 								role={this.contentRole}
-								aria-label={this.texts.contentItems}
+								aria-label={this.contentRole ? this.texts.contentItems : undefined}
 							>
 								{/* Start separator */}
 								{this.separatorConfig.showStartSeparator && (
@@ -234,6 +234,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 				placement="Bottom"
 				hideArrow={true}
 				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
+				accessibleName={this.texts.overflow}
 			>
 				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
