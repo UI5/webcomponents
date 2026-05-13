@@ -151,8 +151,8 @@ class Banner extends UI5Element {
 
 	get _backgroundImageStyle(): Record<string, string> | undefined {
 		if (this.backgroundImage) {
-			// Sanitize URL to prevent CSS injection via quote-breaking
-			const sanitized = this.backgroundImage.replace(/['\\/()]/g, "");
+			// Sanitize: strip characters that can break out of CSS url('...')
+			const sanitized = this.backgroundImage.replace(/['"()\\]/g, "");
 			return { "--_ui5_banner_user_image": `url('${sanitized}')` };
 		}
 		return undefined;

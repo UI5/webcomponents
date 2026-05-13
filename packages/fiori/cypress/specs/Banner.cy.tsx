@@ -208,7 +208,7 @@ describe("Banner", () => {
 				.find(".ui5-banner-root")
 				.should("have.class", "ui5-banner--has-bg-image")
 				.and("have.attr", "style")
-				.and("include", "background-image");
+				.and("include", "url");
 		});
 
 		it("does not apply background image class when not set", () => {
