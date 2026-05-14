@@ -57,22 +57,22 @@ function App() {
           labelSpan="S12 M12 L12 XL12"
         >
           <FormItem columnSpan={2}>
-            <Label required={true} for="nameInp" slot="labelContent">
-              Name:
+            <Label required={true} for="nameInp" slot="labelContent" showColon={true}>
+              Name
             </Label>
             <Input id="nameInp" />
           </FormItem>
 
           <FormItem>
-            <Label for="addressInp" slot="labelContent">
-              Address:
+            <Label for="addressInp" slot="labelContent" showColon={true}>
+              Address
             </Label>
             <Input id="addressInp" />
           </FormItem>
 
           <FormItem>
-            <Label required={true} for="countryInp" slot="labelContent">
-              Country:
+            <Label required={true} for="countryInp" slot="labelContent" showColon={true}>
+              Country
             </Label>
             <Select id="countryInp">
               <Option selected={true}>Argentina</Option>
@@ -82,8 +82,8 @@ function App() {
           </FormItem>
 
           <FormItem columnSpan={2}>
-            <Label for="additionalCommentsInp" slot="labelContent">
-              Additional Comments:
+            <Label for="additionalCommentsInp" slot="labelContent" showColon={true}>
+              Additional Comments
             </Label>
             <TextArea
               id="additionalCommentsInp"

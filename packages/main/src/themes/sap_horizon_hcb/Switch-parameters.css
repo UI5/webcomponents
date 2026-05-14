@@ -121,6 +121,10 @@
 
 	--_ui5_switch_icon_width: 1rem;
 	--_ui5_switch_icon_height: 1rem;
+
+	/* readonly - solid borders for high contrast */
+	--_ui5_switch_readonly_track_border_style: solid;
+	--_ui5_switch_readonly_handle_border_style: solid;
 }
 
 @container style(--ui5_content_density: compact) {

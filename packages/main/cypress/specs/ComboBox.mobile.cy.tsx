@@ -2,7 +2,8 @@ import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
 import ComboBoxItemGroup from "../../src/ComboBoxItemGroup.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
-import { COMBOBOX_DIALOG_OK_BUTTON, COMBOBOX_DIALOG_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { COMBOBOX_DIALOG_OK_BUTTON, COMBOBOX_DIALOG_CANCEL_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 describe("Basic mobile picker rendering and interaction", () => {
 	beforeEach(() => {
@@ -541,5 +542,131 @@ describe("Value state header", () => {
 			.shadow()
 			.find("[ui5-responsive-popover] .ui5-valuestatemessage-header")
 			.should("be.visible");
+	});
+});
+
+describe("Mobile Highlighting", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should highlight suggestions in mobile mode", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina" />
+				<ComboBoxItem text="South Africa" />
+				<ComboBoxItem text="Bulgaria" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Type in mobile input
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+
+		// Check that SuggestionItems are highlighted
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+	});
+
+	it("Should highlight grouped items in mobile mode", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemGroup header-text="Group A">
+					<ComboBoxItem text="Argentina" />
+					<ComboBoxItem text="Australia" />
+				</ComboBoxItemGroup>
+				<ComboBoxItemGroup header-text="Group B">
+					<ComboBoxItem text="South Africa" />
+					<ComboBoxItem text="Brazil" />
+				</ComboBoxItemGroup>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Type in mobile input
+		cy.get("@popover").find("[ui5-input]").shadow().find("input").realType("A");
+
+		// Check that the first three suggestion items are highlighted (Argentina, Australia, South Africa)
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(0)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(1)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+
+		cy.get("@popover").find("[ui5-input]").find("[ui5-suggestion-item]").eq(2)
+			.shadow().find(".ui5-li-title")
+			.should("contain.html", "<b>A</b>");
+	});
+});
+
+describe("Dialog header title", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should display label text as dialog header title when label for is used", () => {
+		cy.mount(
+			<>
+				<Label for="myCB">Country</Label>
+				<ComboBox id="myCB">
+					<ComboBoxItem text="Algeria" />
+					<ComboBoxItem text="Argentina" />
+				</ComboBox>
+			</>
+		);
+
+		cy.get("#myCB").realClick();
+
+		cy.get("#myCB")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myCB")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", "Country");
+	});
+
+	it("Should fallback to 'All Items' when no label is associated", () => {
+		cy.mount(
+			<ComboBox id="myCB">
+				<ComboBoxItem text="Algeria" />
+				<ComboBoxItem text="Argentina" />
+			</ComboBox>
+		);
+
+		cy.get("#myCB").realClick();
+
+		cy.get("#myCB")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myCB")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
 	});
 });

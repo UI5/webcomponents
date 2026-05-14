@@ -16,6 +16,11 @@
 	color: var(--_ui5_shellbar_button_active_color);
 }
 
+.ui5-shellbar-action-button > [ui5-button-badge][slot="badge"][design="OverlayText"] {
+	top: var(--_ui5-shellbar-badge-offset, 0);
+	margin: var(--_ui5-shellbar-badge-margin, -0.5rem);
+}
+
 [ui5-li]:after {
 	position: relative;
 	width: fit-content;

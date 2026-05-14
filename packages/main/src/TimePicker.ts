@@ -263,7 +263,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
-	 * @since 2.20.0
+	 * @since 2.21.0
 	 * @public
 	 */
 	@property()
@@ -272,7 +272,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	/**
 	 * Determines the format, used for the value attribute.
 	 * @default undefined
-	 * @since 2.20.0
+	 * @since 2.21.0
 	 * @public
 	 */
 	@property()
@@ -880,6 +880,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 * **Note:** an empty string is considered as valid value.
 	 * @param value The value to be tested against the value format
 	 * @public
+	 * @since 2.21.0
 	 */
 	isValidValue(value: string | undefined): boolean {
 		if (value === "") {

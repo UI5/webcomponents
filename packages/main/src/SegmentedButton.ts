@@ -223,14 +223,17 @@ class SegmentedButton extends UI5Element {
 			return;
 		}
 
+		// Check if preventDefault was called on the native event (e.g., by item's semantic click handler)
+		if (e.defaultPrevented) {
+			return;
+		}
+
 		switch (this.selectionMode) {
 		case SegmentedButtonSelectionMode.Multiple:
-			if (e instanceof KeyboardEvent) {
-				target.selected = !target.selected;
-			}
+			target.selected = !target.selected;
 			break;
 		default:
-			this._applySingleSelection(target);
+			this._applySingleSelection(target as unknown as ISegmentedButtonItem);
 		}
 
 		this.fireDecoratorEvent("selection-change", {
@@ -256,7 +259,7 @@ class SegmentedButton extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isEnter(e)) {
-			this._selectItem(e); // Enter key behavior remains unaffected
+			this._selectItem(e);
 		} else if (isSpace(e)) {
 			e.preventDefault(); // Prevent scrolling
 			this._isSpacePressed = true;

@@ -233,8 +233,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType) as Array<string>;
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) as Array<string> : [];
+		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
+		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
@@ -385,12 +385,12 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		let dayOfTheWeek;
 
-		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType) as Array<string>;
-		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType) as Array<string>;
+		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType);
+		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType);
 		let dayName;
 
 		if (this.namesTooLong(aDayNamesAbbreviated)) {
-			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType) as Array<string>;
+			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType);
 		}
 
 		this._dayNames = [];

@@ -40,7 +40,7 @@ function App() {
   return (
     <>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Label>Selection Behavior: </Label>
+        <Label showColon={true}>Selection Behavior</Label>
         <span
           id="selectionBehavior"
           role="radiogroup"

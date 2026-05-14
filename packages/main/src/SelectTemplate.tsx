@@ -38,7 +38,6 @@ export default function SelectTemplate(this: Select) {
 					aria-expanded={this._isPickerOpen}
 					aria-roledescription={this._ariaRoleDescription}
 					onKeyDown={this._onkeydown}
-					onKeyPress={this._handleKeyboardNavigation}
 					onKeyUp={this._onkeyup}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}

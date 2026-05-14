@@ -296,10 +296,9 @@ import "@ui5/webcomponents/dist/Button.js";
             }
 
             // Show description if it's meaningful (not empty)
-            const description = component.description ? ` - ${component.description}` : '';
-            content += `- [${component.name}](${url})${description}\n`;
+            const description = component.description ? `\n  - description: ${component.description}` : '';
+            content += `#### [${component.name}](${url})\n  - tag: \`${component.tagName}\`${description}\n\n`;
         });
-        content += '\n';
     });
 
     content += `## Documentation

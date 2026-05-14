@@ -11,7 +11,7 @@ const Label = createReactComponent(LabelClass);
 function App() {
   return (
     <>
-      <Label for="button-only-uploader">Choose file:</Label>
+      <Label showColon={true} for="button-only-uploader">Choose file</Label>
       <FileUploader id="button-only-uploader" hideInput={true}>
         <Button icon="upload" tabIndex={-1}>
           Upload

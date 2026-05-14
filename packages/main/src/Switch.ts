@@ -19,6 +19,7 @@ import {
 	FORM_CHECKABLE_REQUIRED,
 	SWITCH_ON,
 	SWITCH_OFF,
+	ACC_STATE_READONLY,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -97,10 +98,22 @@ class Switch extends UI5Element implements IFormInputElement {
 	design: `${SwitchDesign}` = "Textual";
 
 	/**
+	 * Defines whether the component is in readonly state.
+	 *
+	 * **Note:** A readonly switch cannot be toggled by user interaction,
+	 * but can still be focused and its value read programmatically.
+	 * @default false
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property({ type: Boolean })
+	readonly = false;
+
+	/**
 	 * Defines if the component is checked.
 	 *
 	 * **Note:** The property can be changed with user interaction,
-	 * either by cliking the component, or by pressing the `Enter` or `Space` key.
+	 * either by clicking the component, or by pressing the `Enter` or `Space` key.
 	 * @default false
 	 * @formEvents change
 	 * @formProperty
@@ -236,13 +249,29 @@ class Switch extends UI5Element implements IFormInputElement {
 		return this.checked ? "accept" : "less";
 	}
 
+	_onfocusin() {
+		// Reset keyboard state on focus to prevent stale state from previous interactions
+		this._cancelAction = false;
+		this._isSpacePressed = false;
+	}
+
 	_onclick() {
+		if (this.readonly) {
+			return;
+		}
 		this.toggle();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isSpace(e)) {
 			e.preventDefault();
+		}
+
+		if (this.readonly) {
+			return;
+		}
+
+		if (isSpace(e)) {
 			this._isSpacePressed = true;
 		} else if (isShift(e) || isEscape(e)) {
 			this._cancelAction = true;
@@ -254,6 +283,10 @@ class Switch extends UI5Element implements IFormInputElement {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
+		if (this.readonly) {
+			return;
+		}
+
 		const isSpaceKey = isSpace(e);
 		const isCancelKey = isShift(e) || isEscape(e);
 
@@ -275,7 +308,7 @@ class Switch extends UI5Element implements IFormInputElement {
 	}
 
 	toggle() {
-		if (!this.disabled) {
+		if (!this.disabled && !this.readonly) {
 			this.checked = !this.checked;
 			const changePrevented = !this.fireDecoratorEvent("change");
 			// Angular two way data binding;
@@ -321,12 +354,24 @@ class Switch extends UI5Element implements IFormInputElement {
 		return this.disabled ? undefined : 0;
 	}
 
+	get effectiveAriaReadonly() {
+		return this.readonly ? "true" : undefined;
+	}
+
 	get effectiveAriaDisabled() {
 		return this.disabled ? "true" : undefined;
 	}
 
 	get ariaLabelText() {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined;
+	}
+
+	get ariaDescribedBy() {
+		return this.readonly ? `${this._id}-readonly-desc` : undefined;
+	}
+
+	get ariaDescribedByText() {
+		return this.readonly ? Switch.i18nBundle.getText(ACC_STATE_READONLY) : "";
 	}
 }
 

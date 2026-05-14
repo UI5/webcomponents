@@ -98,6 +98,11 @@
 		<br>
 		<br>
 		<ui5-button id="native-dnd-open">Open draggable dialog with native DnD</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="open-big-dynamic-content">Open dynamic dialog with big content</ui5-button>
+		<br>
+		<br>
 	</div>
 	<ui5-block-layer></ui5-block-layer>
 
@@ -1158,6 +1163,72 @@
 			e.preventDefault();
 			const data = e.dataTransfer.getData("text");
 			dropZone.textContent = `Dropped: ${data}`;
+		});
+
+		document.getElementById("open-big-dynamic-content").addEventListener("click", function () {
+			const dialog = document.createElement("ui5-dialog");
+			const child1 = `
+				<div slot="header" design="Header">
+					<h3>Random Title</h3>
+				</div>
+			`;
+
+			const child2 = `
+				<div>
+					<div>
+						<div>
+							<div>
+								<div>
+									<img width="60" height="60" src="./img/man_avatar_1.png">
+								</div>
+							</div>
+							<div>
+								<div>Contact RANDOM CORP</div>
+								<div>Some subtitle</div>
+							</div>
+						</div>
+					</div>
+					<form>
+						<div>
+							<div>
+								<p>Subscribe to our newsletter</p>
+								<small>No spam, only updates.</small>
+							</div>
+						</div>
+						<div>
+							<small>Hint: Use a valid code</small>
+						</div>
+						<div>Your Info</div>
+						<div>
+							<div>
+							</div>
+							<div>
+							</div>
+						</div>
+						<div>Company Info</div>
+						<div>
+							<div>
+							</div>
+							<div>
+							</div>
+						</div>
+						<div></div>
+						<div>
+							<div>
+								<span>
+									I agree to the random terms and conditions.
+										Read Privacy Policy.
+								</span>
+							</div>
+						</div>
+						<div></div>
+					</form>
+				</div>
+			`;
+
+			dialog.innerHTML = child1 + child2;
+			document.body.appendChild(dialog);
+			dialog.open = true;
 		});
 	</script>
 </body>

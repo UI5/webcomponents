@@ -16,7 +16,6 @@
 	--_ui5_textarea_readonly_focus_offset: 1px;
 	--_ui5_textarea_focus_outline_color: var(--sapField_Active_BorderColor);
 	--_ui5_textarea_value_state_focus_offset: 1px;
-	--_ui5_textarea_wrapper_padding: 0.0625rem;
 	--_ui5_textarea_success_wrapper_padding: 0.0625rem;
 	--_ui5_textarea_warning_error_wrapper_padding: 0.0625rem 0.0625rem 0.125rem 0.0625rem;
 	--_ui5_textarea_information_wrapper_padding: 0.0625rem 0.0625rem 0.125rem 0.0625rem;

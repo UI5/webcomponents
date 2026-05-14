@@ -1,6 +1,6 @@
 :host {
 	background: var(--sapList_HeaderBackground);
-	border-top: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+	border-top: var(--sapList_BorderWidth) solid var(--sapList_HeaderBorderColor);
 	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_HeaderBorderColor);
 	grid-template-rows: auto 0px;
 }

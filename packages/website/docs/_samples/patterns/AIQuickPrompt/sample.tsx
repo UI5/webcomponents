@@ -313,7 +313,7 @@ function App() {
           />
         </CardHeader>
         <section className="quickPromptSection">
-          <Label required={true}>To: </Label>
+          <Label showColon={true} required={true}>To</Label>
           <div style={{ display: "flex", gap: "0.125rem" }}>
             <Token
               style={{ width: "fit-content", marginBlockEnd: "1rem" }}
@@ -327,8 +327,8 @@ function App() {
             />
           </div>
           <div className="quickPromptLblBtn">
-            <Label style={{ alignSelf: "flex-end" }} required={true}>
-              Offer:{" "}
+            <Label showColon={true} style={{ alignSelf: "flex-end" }} required={true}>
+              Offer
             </Label>
             <AIButton
               ref={aiButtonRef}

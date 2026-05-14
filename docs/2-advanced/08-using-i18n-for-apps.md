@@ -10,7 +10,7 @@ None of the code below implies or requires the usage of UI5 Web Components, and 
 The `@ui5/webcomponents-base` package allows the usage of `i18n` functionality not just for UI5 Web Components,
 but for apps as well.
 
-*Note:* This section is dedicated to apps. For information on how to set up `i18n` for your custom components, please see [Developing Web Components](../4-development/01-package.md).
+*Note:* This section is dedicated to apps. For information on how to set up `i18n` for your custom components, please see [Developing Web Components](../07-development/01-package.md).
 
 ## Step-by-Step Tutorial
 

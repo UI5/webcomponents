@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Panel - Scrollable Content Focus Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			background-color: var(--sapBackgroundColor);
+			padding: 1rem;
+			font-family: var(--sapFontFamily);
+		}
+
+		h2 {
+			color: var(--sapTitleColor);
+			margin-top: 2rem;
+			margin-bottom: 0.5rem;
+			border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+			padding-bottom: 0.5rem;
+		}
+
+		.test-case {
+			margin-bottom: 1.5rem;
+			padding: 1rem;
+			border: 1px solid var(--sapGroup_ContentBorderColor);
+			border-radius: 0.5rem;
+		}
+
+		.test-case h3 {
+			margin: 0 0 0.5rem 0;
+			color: var(--sapTitleColor);
+			font-size: 1rem;
+		}
+
+		.test-case p {
+			margin: 0 0 1rem 0;
+			color: var(--sapContent_LabelColor);
+			font-size: 0.875rem;
+		}
+
+		.scrollable-panel::part(content) {
+			max-height: 120px;
+		}
+
+		.horizontal-scroll-panel::part(content) {
+			max-height: 80px;
+			max-width: 300px;
+		}
+
+		.wide-content {
+			white-space: nowrap;
+			width: 600px;
+		}
+
+		.fixed-height-container {
+			height: 200px;
+		}
+
+		.fixed-height-container ui5-panel {
+			height: 100%;
+		}
+
+		.status {
+			margin-top: 0.5rem;
+			padding: 0.5rem;
+			background: var(--sapInformationBackground);
+			border-radius: 0.25rem;
+			font-size: 0.75rem;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>Panel - Scrollable Content Focus Test Page</h1>
+
+	<h2>1. Scrollable Content</h2>
+
+	<div class="test-case">
+		<h3>Vertical scroll with text only</h3>
+		<ui5-panel id="panel-scrollable-static" class="scrollable-panel" header-text="Scrollable with static content">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+				Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+				Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<h2>2. Scrollable Content - WITH Focusable Children</h2>
+
+	<div class="test-case">
+		<ui5-panel id="panel-scrollable-button" class="scrollable-panel" header-text="Scrollable with button">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+			</div>
+			<ui5-button>Click me</ui5-button>
+			<div>
+				More text after the button. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<div class="test-case">
+		<h3>Scrollable with input inside</h3>
+		<ui5-panel id="panel-scrollable-input" class="scrollable-panel" header-text="Scrollable with input">
+			<ui5-label for="test-input">Enter value:</ui5-label>
+			<ui5-input id="test-input" placeholder="Type here..."></ui5-input>
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<div class="test-case">
+		<h3>Scrollable with link inside</h3>
+		<ui5-panel id="panel-scrollable-link" class="scrollable-panel" header-text="Scrollable with link">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				Visit <ui5-link href="#">this link</ui5-link> for more information.
+				Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<h2>3. Non-Scrollable Content</h2>
+
+	<div class="test-case">
+		<ui5-panel id="panel-no-scroll" header-text="Non-scrollable panel">
+			<ui5-label>Short content that fits without scrolling.</ui5-label>
+		</ui5-panel>
+	</div>
+
+	<h2>4. Collapsed Panel</h2>
+
+	<div class="test-case">
+		<ui5-panel id="panel-collapsed" class="scrollable-panel" collapsed header-text="Collapsed panel (click to expand)">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<h2>5. Sticky Header Panel</h2>
+
+	<div class="test-case">
+		<ui5-panel id="panel-sticky" class="scrollable-panel" sticky-header header-text="Sticky header panel">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<h2>6. Horizontal Scroll</h2>
+
+	<div class="test-case">
+		<ui5-panel id="panel-horizontal" class="horizontal-scroll-panel" header-text="Horizontal scroll">
+			<div class="wide-content">
+				This is a very long line of text that will cause horizontal scrolling. It keeps going and going to ensure the content overflows horizontally. More text here to make it even wider.
+			</div>
+		</ui5-panel>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const dynamicContent = document.getElementById("dynamic-content");
+			const panelDynamic = document.getElementById("panel-dynamic");
+
+			document.getElementById("btn-add-content").addEventListener("click", function() {
+				const text = document.createElement("p");
+				text.textContent = "Additional paragraph of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ";
+				dynamicContent.appendChild(text);
+			});
+
+			document.getElementById("btn-add-button").addEventListener("click", function() {
+				const btn = document.createElement("ui5-button");
+				btn.textContent = "Dynamic Button";
+				dynamicContent.appendChild(btn);
+			});
+
+			document.getElementById("btn-clear").addEventListener("click", function() {
+				dynamicContent.innerHTML = "Initial content - short text.";
+			});
+		});
+	</script>
+
+</body>
+
+</html>

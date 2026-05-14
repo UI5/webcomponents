@@ -204,7 +204,7 @@ class UserSettingsItem extends UI5Element {
 	}
 
 	get ariaLabelledByText() {
-		return `${this.text} ${this.accessibleName}`.trim();
+		return `${this.text} ${this.accessibleName || ""}`.trim();
 	}
 
 	get _tooltip() {

@@ -39,9 +39,14 @@
 			<ui5-cb-item text="Bulgaria"></ui5-cb-item>
 			<ui5-cb-item text="Canada"></ui5-cb-item>
 			<ui5-cb-item text="Chile"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Herzegovina"></ui5-cb-item>
+			<ui5-cb-item text="Her Her"></ui5-cb-item>
+			<ui5-cb-item text="Bosna and Her Her"></ui5-cb-item>
 		</ui5-combobox>
 		<ui5-button id="combo-focus">Focus ComboBox</ui5-button>
 		<ui5-button id="value-set-btn">Set value</ui5-button>
+		<span id="change-event-result"></span>
+		<span id="selection-change-event-result"></span>
 
 		<ui5-combobox id="combo2" class="combobox2auto" accessible-name="Select destination:">
 			<ui5-cb-item text="Algeria" id="cbi"></ui5-cb-item>
@@ -167,13 +172,6 @@
 			<ui5-cb-item text="Canada" additional-text="CA"></ui5-cb-item>
 			<ui5-cb-item text="Chile" additional-text="CL"></ui5-cb-item>
 		</ui5-combobox>
-	</div>
-
-	<div class="demo-section">
-		<span id="change-event-result"></span>
-		<br />
-		<span id="selection-change-event-result"></span>
-
 	</div>
 
 		<div class="demo-section">
@@ -331,6 +329,20 @@
 			<ui5-cb-item text="Item 1" value="4"></ui5-cb-item>
 			<ui5-cb-item text="Item 1" value="5"></ui5-cb-item>
 		</ui5-combobox>
+	</div>
+
+	<div class="demo-section">
+		<span>ComboBox - selectedValue</span>
+		<ui5-combobox id="selected-value-cb">
+			<ui5-cb-item text="Item 1" value="1"></ui5-cb-item>
+			<ui5-cb-item text="Item 2" value="2"></ui5-cb-item>
+			<ui5-cb-item text="Item 3" value="3"></ui5-cb-item>
+			<ui5-cb-item text="Item 4" value="4"></ui5-cb-item>
+			<ui5-cb-item text="Item 5" value="5"></ui5-cb-item>
+		</ui5-combobox>
+		<br>
+		<span>Value: <strong id="cb-value"></strong></span><br>
+		<span>Selected Value: <strong id="cb-selected-value"></strong></span><br>
 	</div>
 
 	<section>
@@ -613,7 +625,7 @@
 		});
 
 		document.getElementById("combo").addEventListener("ui5-selection-change", function (event) {
-			document.getElementById("selection-change-event-result").innerHTML = event.detail.item.text;
+			document.getElementById("selection-change-event-result").innerHTML = event.detail.item ? event.detail.item.text : "(cleared)";
 		});
 
 		document.getElementById("change-cb").addEventListener("ui5-change", function (event) {
@@ -643,7 +655,21 @@
 			const combo = document.getElementById("toggle-loading-cb");
 			combo.loading = !combo.loading;
 		});
+
+		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
+			const combo = event.target;
+			document.getElementById("cb-value").innerHTML = combo.value || "(empty)";
+			document.getElementById("cb-selected-value").innerHTML = combo.selectedValue || "(none)";
+		});
 	</script>
+
+	<h1>Dialog Header Title from Label</h1>
+	<ui5-label for="labeled-cb">Country</ui5-label>
+	<ui5-combobox id="labeled-cb">
+		<ui5-cb-item text="Albania"></ui5-cb-item>
+		<ui5-cb-item text="Argentina"></ui5-cb-item>
+		<ui5-cb-item text="Austria"></ui5-cb-item>
+	</ui5-combobox>
 
 </body>
 

@@ -55,91 +55,91 @@ function App() {
         >
           <FormGroup headerText="Address - columnSpan=1" columnSpan={1}>
             <FormItem>
-              <Label slot="labelContent">Name:</Label>
+              <Label slot="labelContent" showColon={true}>Name</Label>
               <Text>Red Point Stores</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">ZIP Code/City:</Label>
+              <Label slot="labelContent" showColon={true}>ZIP Code/City</Label>
               <Text>411 Maintown</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Street:</Label>
+              <Label slot="labelContent" showColon={true}>Street</Label>
               <Text>Main St 1618</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Country:</Label>
+              <Label slot="labelContent" showColon={true}>Country</Label>
               <Text>Germany</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">WebSite:</Label>
+              <Label slot="labelContent" showColon={true}>WebSite</Label>
               <Link href="sap.com">sap.com</Link>
             </FormItem>
           </FormGroup>
 
           <FormGroup headerText="Contact - columnSpan=2" columnSpan={2}>
             <FormItem>
-              <Label slot="labelContent">Name:</Label>
+              <Label slot="labelContent" showColon={true}>Name</Label>
               <Text>Red Point Stores</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">ZIP Code/City:</Label>
+              <Label slot="labelContent" showColon={true}>ZIP Code/City</Label>
               <Text>411 Maintown</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Street:</Label>
+              <Label slot="labelContent" showColon={true}>Street</Label>
               <Text>Main St 1618</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Country:</Label>
+              <Label slot="labelContent" showColon={true}>Country</Label>
               <Text>Germany</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">WebSite:</Label>
+              <Label slot="labelContent" showColon={true}>WebSite</Label>
               <Link href="sap.com">sap.com</Link>
             </FormItem>
           </FormGroup>
 
           <FormGroup headerText="Other Info - columnSpan=2" columnSpan={2}>
             <FormItem>
-              <Label slot="labelContent">Twitter:</Label>
+              <Label slot="labelContent" showColon={true}>Twitter</Label>
               <Text>@sap</Text>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Email:</Label>
+              <Label slot="labelContent" showColon={true}>Email</Label>
               <Link>john.smith@sap.com</Link>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Tel:</Label>
+              <Label slot="labelContent" showColon={true}>Tel</Label>
               <Link>+49 6227 747474</Link>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">SMS:</Label>
+              <Label slot="labelContent" showColon={true}>SMS</Label>
               <Link>+49 6227 747474</Link>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Mobile:</Label>
+              <Label slot="labelContent" showColon={true}>Mobile</Label>
               <Link href="sap.com">+49 6227 747474</Link>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Pager:</Label>
+              <Label slot="labelContent" showColon={true}>Pager</Label>
               <Link href="sap.com">+49 6227 747474</Link>
             </FormItem>
 
             <FormItem>
-              <Label slot="labelContent">Fax:</Label>
+              <Label slot="labelContent" showColon={true}>Fax</Label>
               <Link href="sap.com">+49 6227 747474</Link>
             </FormItem>
           </FormGroup>

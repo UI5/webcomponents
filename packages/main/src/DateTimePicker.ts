@@ -158,8 +158,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * Stores the last valid value to preserve time when entering invalid values
 	 * @private
 	 */
-	@property()
-	_lastValidValue: string = "";
+	_lastValidValue = "";
 
 	@query("[ui5-time-selection-clocks]")
 	_clocks!: TimeSelectionClocks;
@@ -442,18 +441,6 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		}
 	}
 
-	/**
-	 * Checks if the provided value is valid and within valid range.
-	 * @override
-	 * @param value
-	 */
-	_checkValueValidity(value: string): boolean {
-		if (value === "") {
-			return true;
-		}
-		return this.isValidValue(value);
-	}
-
 	getSelectedDateTime() {
 		const selectedDate = this.getValueFormat().parse(this._calendarSelectedDates[0]) as Date;
 		const selectedTime = this.getValueFormat().parse(this._timeSelectionValue) as Date;
@@ -521,6 +508,16 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 			});
 		}
 		return this._isoFormatInstance;
+	}
+
+	/**
+	 * @override
+	 */
+	_getCalendarDateFromString(value: string) {
+		const jsDate = this.getValueFormat().parse(value) as Date;
+		if (jsDate) {
+			return CalendarDate.fromTimestamp(jsDate.getTime(), this._primaryCalendarType);
+		}
 	}
 
 	/**

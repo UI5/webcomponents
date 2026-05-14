@@ -77,7 +77,9 @@ export default function UserMenuTemplate(this: UserMenu) {
 						selectionMode="None"
 						separators="None"
 						accessibleRole="Menu"
+						accessibleName={this._ariaLabelledByActions}
 						onItemClick={this._handleMenuItemClick}
+						onMouseOver={this._itemMouseOver}
 						onui5-close-menu={this._handleMenuItemClose}
 					>
 						<slot></slot>
@@ -103,16 +105,18 @@ function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
-				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
-					{this._selectedAccount.avatarSrc &&
-						<img src={this._selectedAccount.avatarSrc} title={this.showEditButton ? this._editAvatarTooltip : undefined	}/>
-					}
-					{this.showEditButton &&
-					<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" >
-						<Icon slot="icon" name={edit}></Icon>
-					</Tag>
-					}
-				</Avatar>
+				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
+					<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
+						{this._selectedAccount.avatarSrc &&
+							<img src={this._selectedAccount.avatarSrc}/>
+						}
+						{this.showEditButton &&
+						<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" >
+							<Icon slot="icon" name={edit}></Icon>
+						</Tag>
+						}
+					</Avatar>
+				</span>
 				{this._selectedAccount.titleText &&
 					<Text id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
 				}
@@ -137,7 +141,7 @@ function headerContent(this: UserMenu) {
 
 function otherAccountsContent(this: UserMenu) {
 	return (<>
-		<Panel collapsed={true} class="ui5-user-menu-other-accounts" aria-label={this._otherAccountsButtonText}>
+		<Panel collapsed={true} class="ui5-user-menu-other-accounts">
 			<div slot="header" class="ui5-user-menu-account-header">
 				<Title slot="header" level="H4" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
 				{this.showEditAccounts &&
@@ -155,7 +159,8 @@ function otherAccountsContent(this: UserMenu) {
 
 function otherAccountsList(this: UserMenu) {
 	return (<>
-		<List onItemClick={this._handleAccountSwitch} aria-label={this._ariaLabelledByActions} loadingDelay={0}
+		<List onItemClick={this._handleAccountSwitch} loadingDelay={0}
+			accessibleName={`${this._otherAccountsButtonText} (${this._otherAccounts.length})`}
 			  loading={this._otherAccounts.some(account => account.loading === true)}>
 			{this._otherAccounts.map((account, index) =>
 				<ListItemCustom
@@ -164,7 +169,7 @@ function otherAccountsList(this: UserMenu) {
 						"ariaPosinset": index + 1,
 						"ariaSetsize": this._otherAccounts.length
 					}}
-					aria-label={account.titleText}
+					accessibleName={this.getAccountDescriptionText(account)}
 				>
 					<div class="ui5-user-menu-other-accounts-content">
 						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder} colorScheme={account.avatarColorScheme}>
