@@ -12,6 +12,7 @@ import ListItemCustomTemplate from "./ListItemCustomTemplate.js";
 import { getCustomAnnouncement, applyCustomAnnouncement } from "./CustomAnnouncement.js";
 import {
 	LISTITEMCUSTOM_TYPE_TEXT,
+	LIST_ITEM_ACTIVE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -92,6 +93,25 @@ class ListItemCustom extends ListItem {
 		return `${this._id}-invisibleText`;
 	}
 
+	get ariaLabelledByText(): string {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+
+		// Populate shadow span at all times, not only on focus.
+		const childTexts: string[] = [];
+		this.childNodes.forEach(child => {
+			const text = getCustomAnnouncement(child, {}, false);
+			if (text) {
+				childTexts.push(text);
+			}
+		});
+
+		const type = ListItemCustom.i18nBundle.getText(LISTITEMCUSTOM_TYPE_TEXT);
+		const activeText = this.typeActive ? ListItemCustom.i18nBundle.getText(LIST_ITEM_ACTIVE) : undefined;
+		return [type, ...childTexts, activeText].filter(Boolean).join(" ");
+	}
+
 	_onfocusin(e: FocusEvent) {
 		super._onfocusin(e);
 		// Skip updating invisible text during drag operations
@@ -102,8 +122,10 @@ class ListItemCustom extends ListItem {
 
 	_onfocusout(e: FocusEvent) {
 		super._onfocusout(e);
-		// Skip clearing invisible text during drag operations
-		if (!this._isDragging() && !this.accessibleName) {
+		// Skip clearing invisible text during drag operations or when focus
+		// moves to a child element within the same list item (e.g. "Show More" link).
+		const focusMovedToChild = this.contains(e.relatedTarget as Node);
+		if (!this._isDragging() && !this.accessibleName && !focusMovedToChild) {
 			this._clearInvisibleTextContent();
 		}
 	}
@@ -137,8 +159,13 @@ class ListItemCustom extends ListItem {
 			return;
 		}
 
-		// Clear the announcement by passing empty text
+		// Save the static aria-labelledby before clearing, because applyCustomAnnouncement
+		// sets ariaLabelledByElements = null which removes the attribute from the DOM entirely.
+		const ariaLabelledBy = listItem.getAttribute("aria-labelledby");
 		applyCustomAnnouncement(listItem, "");
+		if (ariaLabelledBy && !listItem.getAttribute("aria-labelledby")) {
+			listItem.setAttribute("aria-labelledby", ariaLabelledBy);
+		}
 	}
 
 	/**
