@@ -799,4 +799,44 @@ describe("Carousel general interaction", () => {
 				expect(indices.every(i => i >= 0), "visibleItemsIndices should not contain negative values").to.be.true;
 			});
 	});
+
+	it("items should remain reachable after resizing increases items per page", () => {
+		const navigateStub = cy.stub().as("navigateStub");
+
+		cy.viewport(800, 500);
+
+		cy.mount(
+			<Carousel id="resizeCarousel" itemsPerPage="S2 M2 L3 XL3" onNavigate={navigateStub}>
+				<Button>Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+			</Carousel>
+		);
+
+		// At M breakpoint (800px): 2 items per page, navigate right to show items 2 and 3
+		cy.get("#resizeCarousel")
+			.trigger("mouseover")
+			.shadow()
+			.find(".ui5-carousel-navigation-arrows .ui5-carousel-navigation-button:not(.ui5-carousel-navigation-button--hidden)")
+			.last()
+			.realClick();
+
+		cy.get("#resizeCarousel").should("have.prop", "_currentPageIndex", 1);
+		cy.get("@navigateStub").should("have.been.calledOnce");
+
+		// Resize to L breakpoint (1200px): 3 items per page, all items should fit
+		cy.viewport(1200, 500);
+
+		// Page index should be clamped to 0 since all 3 items fit on one page
+		cy.get("#resizeCarousel").should("have.prop", "_currentPageIndex", 0);
+
+		// Navigate event should fire when page index changes due to resize
+		cy.get("@navigateStub").should("have.been.calledTwice");
+
+		// All items should be visible
+		cy.get("#resizeCarousel")
+			.shadow()
+			.find(".ui5-carousel-item:not(.ui5-carousel-item--hidden)")
+			.should("have.length", 3);
+	});
 });

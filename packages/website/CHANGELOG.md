@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0-rc.5) (2026-05-14)
+
+
+### Features
+
+* **ui5-list:** inherit list item aria roles from accessibleRole ([#13463](https://github.com/UI5/webcomponents/issues/13463)) ([37e9fef](https://github.com/UI5/webcomponents/commit/37e9fef1528e449e65d2e065b8f44e324423c20f)), closes [#13264](https://github.com/UI5/webcomponents/issues/13264)
+
+
+### Reverts
+
+* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([eca1480](https://github.com/UI5/webcomponents/commit/eca148013bf11022f7a5d2a15fa595314afef677)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
+
+
+
+
+
 # [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
 
 
