@@ -312,7 +312,7 @@ Failing to do so will result in a warning in the console and the theme root will
 
 This configuration option controls whether URL parameters (e.g. `sap-ui-theme`, `sap-ui-language`, `sap-ui-animationMode`) are processed during framework initialization.
 
-By default, the framework reads `sap-*` and `sap-ui-*` URL parameters and uses them to override the configuration script settings. While useful during development and testing, this behavior can be a security concern in production environments since URL parameters are user-controlled input that can be manipulated through crafted links.
+By default, the framework reads `sap-*` and `sap-ui-*` URL parameters and uses them to override the configuration script settings. While useful during development and testing, production applications may prefer to disable this behavior to ensure consistent and predictable configuration.
 
 When set to `true`, all URL parameter processing is skipped and only the configuration script and module imports are used.
 
