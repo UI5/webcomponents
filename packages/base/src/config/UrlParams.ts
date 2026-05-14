@@ -5,7 +5,7 @@ let _ignoreUrlParams: boolean;
 /**
  * Returns if the "ignoreUrlParams" configuration is set.
  * @public
- * @since 2.22.0
+ * @since 2.23.0
  * @returns { boolean }
  */
 const getIgnoreUrlParams = (): boolean => {
@@ -24,7 +24,7 @@ const getIgnoreUrlParams = (): boolean => {
  * - When set to "false" (default), URL parameters are processed normally.
  *
  * @public
- * @since 2.22.0
+ * @since 2.23.0
  * @param { boolean } ignoreUrlParams
  */
 const setIgnoreUrlParams = (ignoreUrlParams: boolean) => {
