@@ -1,4 +1,5 @@
 import { isSpace, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -21,6 +22,7 @@ import {
  * @since 1.0.0-rc.8
  * @public
  */
+@customElement({})
 class NotificationListItemBase extends ListItemBase {
 	eventDetails!: ListItemBase["eventDetails"];
 	/**

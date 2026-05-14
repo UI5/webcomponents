@@ -14,6 +14,7 @@ import DragAndDrop from "../../../_samples/main/List/DragAndDrop/DragAndDrop.md"
 import MultipleDrag from "../../../_samples/main/List/MultipleDrag/MultipleDrag.md";
 import WrappingBehavior from "../../../_samples/main/List/WrappingBehavior/WrappingBehavior.md";
 import StickyHeader from "../../../_samples/main/List/StickyHeader/StickyHeader.md";
+import AccessibleRole from "../../../_samples/main/List/AccessibleRole/AccessibleRole.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -87,3 +88,11 @@ The `<ui5-li-custom>` is intentionally designed as a generic container to provid
 Use the <b>stickyHeader</b> property to keep the header visible during scrolling.
 
 <StickyHeader/>
+
+### Accessible Role
+Use the <b>accessibleRole</b> property on `ui5-list` to set the ARIA role of the list element.
+Child `ui5-li` items automatically inherit the matching ARIA role - `menuitem` for `Menu`, `option` for `ListBox`, and `treeitem` for `Tree` - so you do not need to set it manually on every item.
+
+Setting an explicit `accessible-role` attribute on an individual `ui5-li` takes precedence over the role inherited from the parent list.
+
+<AccessibleRole />
