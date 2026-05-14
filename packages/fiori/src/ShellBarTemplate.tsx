@@ -61,8 +61,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 						{this.enabledFeatures.content && (
 							<div
 								class="ui5-shellbar-content-area ui5-shellbar-content-items"
-								role={this.contentRole}
-								aria-label={this.contentRole ? this.texts.contentItems : undefined}
+								{...(this.contentRole ? { role: this.contentRole, "aria-label": this.texts.contentItems } : {})}
 							>
 								{/* Start separator */}
 								{this.separatorConfig.showStartSeparator && (

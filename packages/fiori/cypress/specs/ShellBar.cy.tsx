@@ -1525,7 +1525,7 @@ describe("Keyboard Navigation", () => {
 				.shadow()
 				.find("input")
 				.then($input => {
-					const inputLength = $input.val().toString().length;
+					const inputLength = ($input.val() ?? "").toString().length;
 					$input[0].setSelectionRange(inputLength, inputLength);
 				});
 		}
@@ -1534,7 +1534,7 @@ describe("Keyboard Navigation", () => {
 				.shadow()
 				.find("input")
 				.then($input => {
-					const inputLength = $input.val().toString().length;
+					const inputLength = ($input.val() ?? "").toString().length;
 					const middlePosition = Math.floor(inputLength / 2);
 					$input[0].setSelectionRange(middlePosition, middlePosition);
 				});
@@ -1648,7 +1648,7 @@ describe("Component Behavior", () => {
 
 		cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
 			expect($shellbar[0].actionsAccessibilityInfo.profile.title).to.equal(PROFILE_BTN_CUSTOM_TOOLTIP);
-			expect($shellbar[0].legacyAdaptor.logoAriaLabel).to.equal(LOGO_CUSTOM_TOOLTIP);
+			expect($shellbar[0].legacyAdaptor?.logoAriaLabel).to.equal(LOGO_CUSTOM_TOOLTIP);
 		});
 	});
 
@@ -1682,6 +1682,80 @@ describe("Component Behavior", () => {
 				.shadow()
 				.find("button")
 				.should("have.attr", "aria-haspopup", NOTIFICATIONS_BTN_ARIA_HASPOPUP);
+		});
+
+		it("overflow popover has an accessible name (aria-label on role=dialog)", () => {
+			cy.mount(
+				<ShellBar primaryTitle="Product Title">
+					<ShellBarItem icon={activities} text="Action 1"></ShellBarItem>
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "accessible-name")
+				.and("not.be.empty");
+		});
+
+		it("content-area aria-label is absent when items overflow (visibleItemsCount drops to ≤1 while content.length stays >1)", () => {
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar id="shellbar-content-aria" primaryTitle="Product Title">
+					<Button slot="content">Item 1</Button>
+					<Button slot="content">Item 2</Button>
+					<Button slot="content">Item 3</Button>
+					<Button slot="content">Item 4</Button>
+				</ShellBar>
+			);
+
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// At wide viewport all items are visible: role="group" and aria-label must both be set
+			cy.get("#shellbar-content-aria")
+				.shadow()
+				.find(".ui5-shellbar-content-area")
+				.should("have.attr", "role", "group")
+				.and("have.attr", "aria-label")
+				.and("not.be.empty");
+
+			// Shrink to force ALL items into overflow (visibleItemsCount drops to 0)
+			cy.viewport(100, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// After shrinking, the content area should not exist at all (or if it does, it should have no role/aria-label)
+			cy.get("#shellbar-content-aria").shadow().find(".ui5-shellbar-content-area").should($el => {
+				if ($el.length) {
+					expect($el).to.not.have.attr("role");
+					expect($el).to.not.have.attr("aria-label");
+				} else {
+					expect($el.length).to.eq(0);
+				}
+			});
+
+			// Restore viewport so subsequent tests are not affected
+			cy.viewport(1920, 1080);
+		});
+
+		it("content-area has role=group and aria-label when multiple content items are visible", () => {
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar primaryTitle="Product Title">
+					<Button slot="content">Item 1</Button>
+					<Button slot="content">Item 2</Button>
+				</ShellBar>
+			);
+
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-content-area")
+				.should("have.attr", "role", "group")
+				.and("have.attr", "aria-label")
+				.and("not.be.empty");
 		});
 	});
 

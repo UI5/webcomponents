@@ -376,7 +376,7 @@ describe("List - Accessibility", () => {
 		});
 	});
 
-	it("has default aria-description for accessibleRole List when no accessibleDescription is set", () => {
+	it("uses aria-describedby (not aria-description) for default accessible description on role List", () => {
 		cy.mount(
 			<List>
 				<ListItemStandard>Item 1</ListItemStandard>
@@ -387,29 +387,33 @@ describe("List - Accessibility", () => {
 		cy.get("[ui5-list]")
 			.shadow()
 			.find(".ui5-list-ul")
-			.should("have.attr", "aria-description")
-			.and("not.be.empty");
-
-		cy.get("[ui5-list]")
-			.should(($list) => {
-				const defaultText = $list.prop("defaultAriaDescriptionText") as string;
-				expect(defaultText).to.not.be.empty;
-			});
+			.should("not.have.attr", "aria-description");
 
 		cy.get("[ui5-list]")
 			.shadow()
 			.find(".ui5-list-ul")
-			.invoke("attr", "aria-description")
-			.then((ariaDesc) => {
+			.should("have.attr", "aria-describedby");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-describedby")
+			.then((describedById) => {
 				cy.get("[ui5-list]")
-					.should(($list) => {
-						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
-						expect(ariaDesc).to.equal(defaultText);
+					.shadow()
+					.find(`#${describedById}`)
+					.invoke("text")
+					.then((text) => {
+						cy.get("[ui5-list]")
+							.should(($list) => {
+								const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+								expect(text).to.equal(defaultText);
+							});
 					});
 			});
 	});
 
-	it("combines default aria-description with user-provided accessibleDescription for accessibleRole List", () => {
+	it("combines default and custom description for role List via aria-describedby hidden span", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
@@ -422,19 +426,35 @@ describe("List - Accessibility", () => {
 		cy.get("[ui5-list]")
 			.shadow()
 			.find(".ui5-list-ul")
-			.invoke("attr", "aria-description")
-			.then((ariaDesc) => {
+			.should("not.have.attr", "aria-description");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("have.attr", "aria-describedby");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-describedby")
+			.then((describedById) => {
 				cy.get("[ui5-list]")
-					.should(($list) => {
-						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
-						expect(ariaDesc).to.include(defaultText);
-						expect(ariaDesc).to.include(customDescription);
-						expect(ariaDesc).to.equal(`${defaultText} ${customDescription}`);
+					.shadow()
+					.find(`#${describedById}`)
+					.invoke("text")
+					.then((text) => {
+						cy.get("[ui5-list]")
+							.should(($list) => {
+								const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+								expect(text).to.include(defaultText);
+								expect(text).to.include(customDescription);
+								expect(text).to.equal(`${defaultText} ${customDescription}`);
+							});
 					});
 			});
 	});
 
-	it("does not prepend default aria-description for accessibleRole ListBox", () => {
+	it("does not prepend default description for role ListBox — custom description uses aria-describedby", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
@@ -447,13 +467,29 @@ describe("List - Accessibility", () => {
 		cy.get("[ui5-list]")
 			.shadow()
 			.find(".ui5-list-ul")
-			.invoke("attr", "aria-description")
-			.then((ariaDesc) => {
+			.should("not.have.attr", "aria-description");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("have.attr", "aria-describedby");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-describedby")
+			.then((describedById) => {
 				cy.get("[ui5-list]")
-					.should(($list) => {
-						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
-						expect(ariaDesc).to.equal(customDescription);
-						expect(ariaDesc).to.not.include(defaultText);
+					.shadow()
+					.find(`#${describedById}`)
+					.invoke("text")
+					.then((text) => {
+						cy.get("[ui5-list]")
+							.should(($list) => {
+								const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+								expect(text).to.equal(customDescription);
+								expect(text).to.not.include(defaultText);
+							});
 					});
 			});
 	});
@@ -2377,10 +2413,10 @@ describe("List Tests", () => {
 });
 
 describe("List - Drag and Drop", () => {
-	const compareItemsOrder = (listSelector, expectedOrder) => {
+	const compareItemsOrder = (listSelector: string, expectedOrder: Array<string | HTMLElement>) => {
 		return cy.get(listSelector).find("[ui5-li]").then($items => {
 			const actualOrder = Array.from($items);
-			return expectedOrder.every((expectedEl, index) => {
+			return expectedOrder.every((expectedEl: string | HTMLElement, index: number) => {
 				const expectedId = typeof expectedEl === 'string' ? expectedEl : expectedEl.id;
 				return actualOrder[index] && actualOrder[index].id === expectedId;
 			});
@@ -2414,15 +2450,17 @@ describe("List - Drag and Drop", () => {
 
 		cy.get("[ui5-list]").first().then(($list) => {
 			const list = $list[0];
-			const handleMoveOver = (e) => {
-				const { destination, source } = e.detail;
+			const handleMoveOver = (e: Event) => {
+				const moveEvent = e as CustomEvent<{ destination: any; source: any }>;
+				const { destination, source } = moveEvent.detail;
 				if (!list.contains(source.element)) return;
 				if (destination.placement === "Before" || destination.placement === "After") {
-					e.preventDefault();
+					moveEvent.preventDefault();
 				}
 			};
-			const handleMove = (e) => {
-				const { destination, source } = e.detail;
+			const handleMove = (e: Event) => {
+				const moveEvent = e as CustomEvent<{ destination: any; source: any }>;
+				const { destination, source } = moveEvent.detail;
 				switch (destination.placement) {
 					case "Before": destination.element.before(source.element); break;
 					case "After": destination.element.after(source.element); break;
@@ -2435,17 +2473,19 @@ describe("List - Drag and Drop", () => {
 
 		cy.get("[ui5-list]").eq(1).then(($list) => {
 			const list = $list[0];
-			const handleMoveOver = (e) => {
-				const { destination, source } = e.detail;
+			const handleMoveOver = (e: Event) => {
+				const moveEvent = e as CustomEvent<{ destination: any; source: any }>;
+				const { destination, source } = moveEvent.detail;
 				if (destination.placement === "Before" || destination.placement === "After") {
-					e.preventDefault();
+					moveEvent.preventDefault();
 				}
 				if (destination.placement === "On" && "allowsNesting" in destination.element.dataset) {
-					e.preventDefault();
+					moveEvent.preventDefault();
 				}
 			};
-			const handleMove = (e) => {
-				const { destination, source } = e.detail;
+			const handleMove = (e: Event) => {
+				const moveEvent = e as CustomEvent<{ destination: any; source: any }>;
+				const { destination, source } = moveEvent.detail;
 				switch (destination.placement) {
 					case "Before": destination.element.before(source.element); break;
 					case "After": destination.element.after(source.element); break;
