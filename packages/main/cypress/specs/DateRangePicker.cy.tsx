@@ -1421,7 +1421,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.should("have.length.greaterThan", 0);
 		});
 
-		it.only("should activate buttons with Space key", () => {
+		it("should activate buttons with Space key", () => {
 			cy.mount(
 				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
 			);
