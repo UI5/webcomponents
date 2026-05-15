@@ -524,7 +524,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 
 		this._scrollToEndIfNeeded();
-		this._tokenDeleting = false;
+
+		// Only reset _tokenDeleting if no token is currently marked for deletion
+		// This prevents resetting the flag before the actual deletion logic executes
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!hasTokenToBeDeleted) {
+			this._tokenDeleting = false;
+		}
 
 		// Update lastVisibleToken after rendering is complete to avoid render loops
 		renderFinished().then(() => {
@@ -578,7 +585,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_tokenClickDelete(e: CustomEvent<TokenDeleteEventDetail>, token: Token) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const target = e.target as Token;
 		const deletedTokenIndex = token ? tokens.indexOf(token) : tokens.indexOf(target); // The index of the token that just got deleted
 		const nextTokenIndex = deletedTokenIndex === tokens.length - 1 ? deletedTokenIndex - 1 : deletedTokenIndex + 1; // The index of the next token that needs to be focused next due to the deletion
@@ -607,7 +614,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @param forwardFocusToPrevious Indicates whether the focus will be forwarded to previous or next token after deletion.
 	 */
 	deleteToken(token: Token, forwardFocusToPrevious?: boolean) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const deletedTokenIndex = tokens.indexOf(token);
 		let nextTokenIndex = (deletedTokenIndex === tokens.length - 1) ? deletedTokenIndex - 1 : deletedTokenIndex + 1;
 		const notSelectedTokens = tokens.filter(t => !t.selected);
