@@ -220,6 +220,7 @@ import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryIte
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import ViewSettingsDialogClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
+import ViewSettingsDialogCustomTabClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";
 import SortItemClass from "@ui5/webcomponents-fiori/dist/SortItem.js";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
@@ -320,7 +321,7 @@ const ComponentClasses: Record<string, any> = {
   WizardStepClass, IllustratedMessageClass, TimelineClass, TimelineItemClass, TimelineGroupItemClass,
   PageClass, DynamicPageClass, DynamicPageTitleClass, DynamicPageHeaderClass, DynamicSideContentClass,
   FlexibleColumnLayoutClass, MediaGalleryClass, MediaGalleryItemClass, ProductSwitchClass,
-  ProductSwitchItemClass, ViewSettingsDialogClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
+  ProductSwitchItemClass, ViewSettingsDialogClass, ViewSettingsDialogCustomTabClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
   SearchClass, SearchItemClass, SearchMessageAreaClass, UserMenuClass, UserMenuItemClass,
   UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,

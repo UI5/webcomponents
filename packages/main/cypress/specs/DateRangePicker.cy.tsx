@@ -969,3 +969,522 @@ describe("Validation inside a form", () => {
 			.should("not.exist");
 	});
 });
+
+describe("DateRangePicker rejects relative dates", () => {
+	const relativeKeywords = ["today", "tomorrow", "yesterday"];
+
+	relativeKeywords.forEach(keyword => {
+		it(`typing '${keyword}' sets error state`, () => {
+			cy.mount(<DateRangePicker></DateRangePicker>);
+
+			cy.get("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realType(keyword);
+			cy.realPress("Enter");
+
+			cy.get("@dateRangePicker")
+				.should("have.value", keyword)
+				.should("have.attr", "value-state", "Negative");
+		});
+	});
+
+	it("valid concrete date range does not set error state", () => {
+		cy.mount(<DateRangePicker displayFormat="dd/MM/yyyy"></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/09/2020 - 10/10/2020");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "None");
+	});
+});
+
+describe("DateRangePicker - Two Calendars Feature", () => {
+	describe("Basic Two Calendars Display", () => {
+		it("should display two calendars when showTwoMonths is true", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-31" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen()
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
+
+		it("should display one calendar when showTwoMonths is false", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={false} value="2024-01-01 - 2024-01-31" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetMonthContainers()
+				.should("not.exist");
+		});
+
+		it("should show consecutive months in two calendars mode", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-calheader-middlebtn")
+				.should("have.length", 6);
+		});
+
+		it("should dynamically toggle showTwoMonths after initial render", () => {
+			cy.mount(
+				<DateRangePicker value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Initially should show single calendar (no month containers in multi-month mode)
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Enable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = true;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should now show two calendars
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("have.length", 2);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Disable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = false;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should be back to single calendar
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+		});
+	});
+
+	describe("Date Range Selection with Two Calendars", () => {
+		it("should allow selecting range across both calendars", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Select start date in first calendar
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 14);
+
+			// Select end date in second calendar
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 9);
+
+			cy.get("@dateRangePicker")
+				.invoke("attr", "value")
+				.should("exist")
+				.and("not.be.empty");
+		});
+
+		it("should highlight selection across both calendars", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-20 - 2024-02-10" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// First calendar should have selected dates
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(0);
+
+			// Second calendar should have selected dates
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(1);
+		});
+
+		it("should update value when selecting new range", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-05" />
+			);
+
+			const changeSpy = cy.spy().as("changeSpy");
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.then($drp => {
+					$drp[0].addEventListener("change", changeSpy);
+				})
+				.ui5DateRangePickerOpen();
+
+			// Select new start date
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 9);
+
+			// Select new end date
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 14);
+
+			cy.get("@changeSpy").should("have.been.called");
+		});
+
+		it("should respect min/max date constraints with two calendars", () => {
+			cy.mount(
+				<DateRangePicker
+					showTwoMonths={true}
+					formatPattern="dd/MM/yyyy"
+					minDate="10/01/2024"
+					maxDate="28/02/2024"
+					value="15/01/2024 - 20/01/2024"
+				/>
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Both calendars should show months within the valid range (Jan and Feb 2024)
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+
+			// Check that dates before minDate are disabled (e.g., Jan 5, 2024)
+			// Jan 5, 2024 = timestamp 1704412800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1704412800']")
+				.should("have.class", "ui5-dp-item--disabled");
+
+			// Check that dates within valid range are NOT disabled (e.g., Jan 15, 2024)
+			// Jan 15, 2024 = timestamp 1705276800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1705276800']")
+				.should("not.have.class", "ui5-dp-item--disabled");
+		});
+	});
+
+	describe("Navigation in Two Calendars Mode", () => {
+		it("should navigate both calendars forward", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("next");
+
+			// First calendar should show February
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
+
+			// Second calendar should show March
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
+		});
+
+		it("should navigate both calendars backward", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("prev");
+
+			// First calendar should show February
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
+
+			// Second calendar should show March
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
+		});
+	});
+
+	describe("Picker Overlays", () => {
+		it("should show month picker overlay when clicking month button", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.should("not.have.attr", "hidden");
+		});
+
+		it("should show year picker overlay when clicking year button", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-year]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+		});
+
+		it("should return to day pickers after selecting from month picker", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.first()
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
+	});
+
+	describe("Keyboard Navigation", () => {
+		it("should allow keyboard navigation through header buttons", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.should("have.length.greaterThan", 0);
+		});
+
+		it("should activate buttons with Space key", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("Space");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find("[ui5-monthpicker]")
+				.should("exist")
+				.should("not.have.attr", "hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("exist")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+		});
+	});
+
+	describe("Edge Cases", () => {
+		it("should handle year boundary correctly", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2025-12-15 - 2025-12-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.should("have.length.greaterThan", 0);
+		});
+
+		it("should handle empty initial value", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
+	});
+});

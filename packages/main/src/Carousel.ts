@@ -406,15 +406,27 @@ class Carousel extends UI5Element {
 		// Change transitively effectiveItemsPerPage by modifying _width
 		this._width = this.offsetWidth;
 		this._itemWidth = Math.floor(this._width / this.effectiveItemsPerPage);
-		this._updateVisibleItems(this._currentPageIndex);
 
-		// Items per page did not change or the current,
+		// Items per page did not change,
 		// therefore page index does not need to be re-adjusted
 		if (this.effectiveItemsPerPage === previousItemsPerPage) {
+			this._updateVisibleItems(this._currentPageIndex);
 			return;
 		}
 
-		this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentPageIndex, this.items.length - this.effectiveItemsPerPage);
+		// When items per page changes, clamp page index to the valid range
+		// to prevent items from becoming unreachable (e.g. when resizing
+		// from showing 2 to 3 items while on page 1 with only 3 items total).
+		const maxPageIndex = Math.max(0, this.items.length - this.effectiveItemsPerPage);
+		const newPageIndex = clamp(this._currentPageIndex, 0, maxPageIndex);
+
+		if (this._currentPageIndex !== newPageIndex) {
+			this._currentPageIndex = newPageIndex;
+			this.fireDecoratorEvent("navigate", { selectedIndex: newPageIndex });
+		}
+
+		this._updateVisibleItems(this._currentPageIndex);
+		this._focusedItemIndex = clamp(this._focusedItemIndex, this._currentPageIndex, this._currentPageIndex + this.effectiveItemsPerPage - 1);
 	}
 
 	_updateScrolling(e: ScrollEnablementEventListenerParam) {
@@ -785,7 +797,7 @@ class Carousel extends UI5Element {
 		}
 
 		if (newItemIndex > items.length - effectiveItemsPerPage) {
-			newItemIndex = items.length	 - effectiveItemsPerPage;
+			newItemIndex = Math.max(0, items.length - effectiveItemsPerPage);
 		}
 		const lastItemIndex = newItemIndex + effectiveItemsPerPage;
 

@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0-rc.5) (2026-05-14)
+
+
+### Bug Fixes
+
+* **CEM:** generation for 3rd party packages ([#13477](https://github.com/UI5/webcomponents/issues/13477)) ([c714873](https://github.com/UI5/webcomponents/commit/c714873bea5fe6b84a227429ac36d73f1c4e8360))
+* **ui5-search:** update filter icon's styling on hover ([#13505](https://github.com/UI5/webcomponents/issues/13505)) ([e52f1b9](https://github.com/UI5/webcomponents/commit/e52f1b9b476cda56ed50757a317146906e7752d6))
+* **ui5-shellbar:** correct tooltip for user avatar button ([#13475](https://github.com/UI5/webcomponents/issues/13475)) ([68ee01c](https://github.com/UI5/webcomponents/commit/68ee01cbdfb4953c9dcf1491fdf196b2477a850c))
+* **ui5-wizard:** focus first visible element after pressing next/prev button ([#13502](https://github.com/UI5/webcomponents/issues/13502)) ([ce09f44](https://github.com/UI5/webcomponents/commit/ce09f446756be4a959c71feb531eafe02e7bc7fb))
+
+
+### Features
+
+* **ui5-notification-list-item, ui5-tab:** add semantic click event ([#13373](https://github.com/UI5/webcomponents/issues/13373)) ([be19e59](https://github.com/UI5/webcomponents/commit/be19e596a343473658a0104df64345e3ea915e48)), closes [#13315](https://github.com/UI5/webcomponents/issues/13315) [#13328](https://github.com/UI5/webcomponents/issues/13328)
+
+
+### Reverts
+
+* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([eca1480](https://github.com/UI5/webcomponents/commit/eca148013bf11022f7a5d2a15fa595314afef677)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
+
+
+
+
+
+# [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* **ui5-timeline-header-bar:** remove unused property ([#13451](https://github.com/UI5/webcomponents/issues/13451)) ([18da0e5](https://github.com/UI5/webcomponents/commit/18da0e57c1c50bb75badb3a9cfb49e8faadd8842))
+
+
+
+
+
+# [2.22.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.2...v2.22.0-rc.3) (2026-04-30)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.22.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.1...v2.22.0-rc.2) (2026-04-23)
+
+
+### Bug Fixes
+
+* **ui5-shellbar-search:** fire search on mobile devices on search icon press ([#13410](https://github.com/UI5/webcomponents/issues/13410)) ([4de2083](https://github.com/UI5/webcomponents/commit/4de208302675ab036ba72ee8e6dce3a07c4a02bf))
+
+
+### Features
+
+* **ui5-timeline-item:** introduce iconTooltip property ([#13387](https://github.com/UI5/webcomponents/issues/13387)) ([663fc51](https://github.com/UI5/webcomponents/commit/663fc5121215d4944eb9e86c188c8afd99ff8552)), closes [#12238](https://github.com/UI5/webcomponents/issues/12238)
+
+
+
+
+
+# [2.22.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.0...v2.22.0-rc.1) (2026-04-16)
+
+
+### Features
+
+* **ui5-timeline:** introduce header-bar slot ([#13155](https://github.com/UI5/webcomponents/issues/13155)) ([bdb43dc](https://github.com/UI5/webcomponents/commit/bdb43dcf6100115af185c4af6a219be19270ef43))
+* **ui5-view-settings-dialog:** add custom tabs ([#13325](https://github.com/UI5/webcomponents/issues/13325)) ([52b408a](https://github.com/UI5/webcomponents/commit/52b408ab8b58d77e68b81101a1fe14e716c3dd63))
+
+
+
+
+
+# [2.22.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.21.0...v2.22.0-rc.0) (2026-04-09)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.21.0](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.4...v2.21.0) (2026-04-07)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.21.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.3...v2.21.0-rc.4) (2026-04-02)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** hide pin button on mobile devices ([#13335](https://github.com/UI5/webcomponents/issues/13335)) ([359fe49](https://github.com/UI5/webcomponents/commit/359fe492d8f42a1403edcbe22c79f76c5c55ccb1)), closes [#13320](https://github.com/UI5/webcomponents/issues/13320)
+* **ui5-dynamic-page:** prevent flickering when content is updated ([#13336](https://github.com/UI5/webcomponents/issues/13336)) ([31e5f0a](https://github.com/UI5/webcomponents/commit/31e5f0a5322dbf05535ecda71fd6541fa752fe4d))
+
+
+
+
+
 # [2.21.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.21.0-rc.2...v2.21.0-rc.3) (2026-03-26)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

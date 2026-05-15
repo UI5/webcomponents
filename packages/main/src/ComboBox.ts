@@ -90,6 +90,7 @@ import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
+import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import type InputComposition from "./features/InputComposition.js";
 
 const SKIP_ITEMS_SIZE = 10;
@@ -107,7 +108,8 @@ interface IComboBoxItem extends UI5Element {
 	selected?: boolean,
 	additionalText?: string,
 	_isVisible?: boolean,
-	items?: Array<IComboBoxItem>
+	items?: Array<IComboBoxItem>,
+	eventDetails: { click?: ListItemBaseClickEventDetail },
 }
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
@@ -1383,6 +1385,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_itemMousedown(e: MouseEvent) {
 		e.preventDefault();
+
+		const target = e.target as HTMLElement;
+		const listItem = target.closest<ComboBoxItem>("[ui5-cb-item], [ui5-cb-item-group]");
+
+		if (listItem) {
+			this._clearFocus();
+			listItem.focused = true;
+		}
 	}
 
 	_selectItem(e: CustomEvent<ListItemClickEventDetail>) {
@@ -1406,8 +1416,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._useSelectedValue = true;
 		}
 
-		if (this._useSelectedValue) {
+		// Always set selectedValue when the item has a value property, regardless of _useSelectedValue state
+		if (item.value !== undefined) {
 			this.selectedValue = item.value;
+		} else if (this._useSelectedValue) {
+			// Only clear selectedValue if we were using it before
+			this.selectedValue = undefined;
 		}
 
 		if (!item.selected) {
@@ -1533,7 +1547,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {

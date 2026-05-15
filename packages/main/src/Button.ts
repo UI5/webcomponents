@@ -205,6 +205,19 @@ class Button extends UI5Element implements IButton {
 	submits = false;
 
 	/**
+	 * Associates the button with a form element by the form's `id` attribute.
+	 * When set, the button can submit or reset the specified form even if the button
+	 * is not a descendant of that form.
+	 *
+	 * **Note:** This property takes effect only when the button's "type" property is set to "Submit" or "Reset".
+	 * @default undefined
+	 * @public
+	 * @since 2.21.0
+	 */
+	@property()
+	form?: string;
+
+	/**
 	 * Defines the tooltip of the component.
 	 *
 	 * **Note:** A tooltip attribute should be provided for icon-only buttons, in order to represent their exact meaning/function.
