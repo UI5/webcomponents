@@ -25,12 +25,12 @@ function App() {
 		<>
 			<Button onClick={() => setVsdOpen(true)}>Open ViewSettingsDialog with Custom Tabs</Button>
 
-			<ViewSettingsDialog open={vsdOpen} enableReset={true} onClose={() => setVsdOpen(false)}>
+			<ViewSettingsDialog open={vsdOpen} resetEnabled={true} onClose={() => setVsdOpen(false)}>
 				<SortItem slot="sortItems" text="Name" selected={true} />
 				<SortItem slot="sortItems" text="Position" />
 				<SortItem slot="sortItems" text="Company" />
 
-				<ViewSettingsDialogCustomTab slot="customTabs" title="Preferences" tooltip="Preferences" icon="action-settings">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="Preferences" tooltip="Preferences" icon="action-settings">
 					<div style={{ padding: "0.75rem", display: "grid", gap: "0.75rem" }}>
 						<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem" }}>
 							<span>Compact mode</span>
@@ -43,7 +43,7 @@ function App() {
 					</div>
 				</ViewSettingsDialogCustomTab>
 
-				<ViewSettingsDialogCustomTab slot="customTabs" title="Display" tooltip="Display" icon="palette">
+				<ViewSettingsDialogCustomTab slot="customTabs" titleText="Display" tooltip="Display" icon="palette">
 					<div style={{ padding: "0.75rem", display: "grid", gap: "0.75rem" }}>
 						<SegmentedButton>
 							<SegmentedButtonItem selected={true}>List</SegmentedButtonItem>
