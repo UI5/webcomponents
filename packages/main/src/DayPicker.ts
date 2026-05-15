@@ -593,6 +593,20 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		this.selectedDates = this.selectedDates.filter(value => value !== timestamp);
 	}
 
+	_onmousedown(e: MouseEvent) {
+		let target = e.target as HTMLElement;
+
+		if (!target.hasAttribute("data-sap-timestamp")) {
+			target = target.parentNode as HTMLElement;
+		}
+
+		if (!this._isDayPressed(target)) {
+			return;
+		}
+
+		this._safelySetTimestamp(this._getTimestampFromDom(target));
+	}
+
 	/**
 	 * Called when at least one day is selected and the user presses "Shift".
 	 * @param timestamp
