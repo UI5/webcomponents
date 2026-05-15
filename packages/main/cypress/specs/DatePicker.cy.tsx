@@ -57,7 +57,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-item--selected");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("custom formatting", () => {
@@ -337,7 +337,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-wday6");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
