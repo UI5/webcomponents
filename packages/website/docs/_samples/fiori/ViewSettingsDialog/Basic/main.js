@@ -14,7 +14,7 @@ import "@ui5/webcomponents-fiori/dist/GroupItem.js";
 import "@ui5/webcomponents-fiori/dist/SortItem.js";
 import "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
-import "@ui5/webcomponents-fiori/dist/ViewSettingsCustomTab.js";
+import "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";
 
 var vsdResults = document.getElementById("vsdResults");
 

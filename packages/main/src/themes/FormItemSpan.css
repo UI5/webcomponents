@@ -11,7 +11,7 @@
 	--ui5-form-item-label-padding-internal: 0.625rem 0.25rem 0 0.25rem;
 }
 
-@container (max-width: 600px) {
+@container (max-width: 599px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-S);
@@ -24,7 +24,7 @@
 	}
 }
 
-@container (width > 600px) and (width <= 1024px) {
+@container (min-width: 600px) and (max-width: 1023px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-M);
@@ -37,7 +37,7 @@
 	}
 }
 
-@container (width > 1024px) and (width <= 1440px) {
+@container (min-width: 1024px) and (max-width: 1439px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-L);
@@ -50,7 +50,7 @@
 	}
 }
 
-@container (min-width: 1441px) {
+@container (min-width: 1440px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-XL);

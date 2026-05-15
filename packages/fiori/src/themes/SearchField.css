@@ -126,7 +126,7 @@
 	border: var(--_ui5_search_filter_button_border);
 }
 
-::slotted([slot="filterButton"]:hover) {
+::slotted([slot="filterButton"]:not([active]):not(:focus-within):hover) {
 	background-color: var(--sapShell_Hover_Background);
 	border: var(--_ui5_seach_filter_button_border_hover);
 }
