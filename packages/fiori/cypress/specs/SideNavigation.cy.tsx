@@ -1005,7 +1005,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.visible");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("#sideNav")
@@ -1027,7 +1026,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.focused");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("@overflowMenu")
