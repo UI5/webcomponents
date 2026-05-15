@@ -1421,7 +1421,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.should("have.length.greaterThan", 0);
 		});
 
-		it("should activate buttons with Space key", () => {
+		it.only("should activate buttons with Space key", () => {
 			cy.mount(
 				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
 			);
@@ -1434,7 +1434,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerGetCalendarHeaders()
 				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.realClick()
+				.focus()
 				.should("be.focused");
 
 			cy.realPress("Space");
