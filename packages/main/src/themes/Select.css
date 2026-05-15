@@ -95,7 +95,9 @@
 	color: inherit;
 }
 
-:host([value-state]:not([value-state="None"])) .ui5-select-root {
+:host([value-state]:not([value-state="None"])) .ui5-select-root,
+:host([value-state="None"]:not([readonly]):not([disabled]):hover) .ui5-select-root,
+:host(:not([value-state]):not([readonly]):not([disabled]):hover) .ui5-select-root {
 	background: none;
 }
 
