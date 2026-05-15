@@ -2,6 +2,7 @@ import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
+import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Date Picker Tests", () => {
 
@@ -1994,7 +1995,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("picker popover accessible name", () => {
@@ -2010,7 +2011,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("accessibleDescription property", () => {
