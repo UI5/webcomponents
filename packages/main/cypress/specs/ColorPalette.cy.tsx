@@ -312,3 +312,251 @@ describe("Color Palette Item - tooltip", () => {
 			.and("not.contain", "#d60d5a");
 	});
 });
+
+describe("Color Palette Item: click event", () => {
+	it("should fire item-click event when item is clicked", () => {
+		const clickSpy = cy.spy().as("clickSpy");
+		const itemClickSpy = cy.spy().as("itemClickSpy");
+		
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red" selected></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get<ColorPalette>("[ui5-color-palette]")
+			.then($el => {
+				$el[0].addEventListener("item-click", itemClickSpy);
+			});
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", clickSpy);
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+
+		cy.get("@itemClickSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should prevent selection when preventDefault is called", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get<ColorPalette>("[ui5-color-palette]")
+			.then($el => {
+				$el[0].addEventListener("item-click", cy.spy().as("itemClickSpy"));
+			});
+
+		// First, select item1
+		cy.get("#item1")
+			.realClick();
+
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		// Now add preventDefault to item2
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		// Try to click item2 with preventDefault
+		cy.get("#item2")
+			.realClick();
+
+		// Item1 should still be selected because we called preventDefault on item2
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		// The item-click event on ColorPalette should only have been called once (for item1)
+		cy.get("@itemClickSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should provide correct modifier keys in click event detail", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
+					// Check that event detail contains originalEvent
+					expect(e.detail).to.have.property("originalEvent");
+					
+					// Check modifier keys from originalEvent
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.altKey).to.be.false;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
+					expect(originalEvent.shiftKey).to.be.false;
+				}).as("clickSpy"));
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should provide correct modifier keys when Ctrl is pressed", () => {
+		let eventDetail: any;
+
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", (e: Event) => {
+					eventDetail = (e as CustomEvent).detail;
+				});
+			});
+
+		// Manually dispatch a MouseEvent with ctrlKey
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-cp-item")
+			.then($item => {
+				const mouseEvent = new MouseEvent('click', {
+					bubbles: true,
+					cancelable: true,
+					ctrlKey: true,
+					altKey: false,
+					metaKey: false,
+					shiftKey: false
+				});
+				$item[0].dispatchEvent(mouseEvent);
+			});
+
+		cy.then(() => eventDetail)
+			.then((detail) => {
+				expect(detail, "event detail should exist").to.exist;
+				const originalEvent = detail.originalEvent;
+				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
+				expect(originalEvent.altKey, "altKey should be false").to.be.false;
+				expect(originalEvent.metaKey, "metaKey should be false").to.be.false;
+				expect(originalEvent.shiftKey, "shiftKey should be false").to.be.false;
+			});
+	});
+
+	it("should provide correct modifier keys when Alt is pressed", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.altKey).to.be.true;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
+					expect(originalEvent.shiftKey).to.be.false;
+				}).as("clickSpyAlt"));
+			});
+
+		cy.get("#item2")
+			.realClick({ altKey: true });
+
+		cy.get("@clickSpyAlt")
+			.should("have.been.calledOnce");
+	});
+
+	it("should provide correct modifier keys when Shift is pressed", () => {
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
+					const originalEvent = e.detail.originalEvent;
+					expect(originalEvent.shiftKey).to.be.true;
+					expect(originalEvent.altKey).to.be.false;
+					expect(originalEvent.ctrlKey).to.be.false;
+					expect(originalEvent.metaKey).to.be.false;
+				}).as("clickSpyShift"));
+			});
+
+		cy.get("#item2")
+			.realClick({ shiftKey: true });
+
+		cy.get("@clickSpyShift")
+			.should("have.been.calledOnce");
+	});
+
+	it("should provide correct modifier keys when multiple modifiers are pressed", () => {
+		let eventDetail: any;
+
+		cy.mount(
+			<ColorPalette>
+				<ColorPaletteItem id="item1" value="red"></ColorPaletteItem>
+				<ColorPaletteItem id="item2" value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", (e: Event) => {
+					eventDetail = (e as CustomEvent).detail;
+				});
+			});
+
+		// Manually dispatch a MouseEvent with multiple modifier keys
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-cp-item")
+			.then($item => {
+				const mouseEvent = new MouseEvent('click', {
+					bubbles: true,
+					cancelable: true,
+					ctrlKey: true,
+					altKey: false,
+					metaKey: false,
+					shiftKey: true
+				});
+				$item[0].dispatchEvent(mouseEvent);
+			});
+
+		cy.then(() => eventDetail)
+			.then((detail) => {
+				expect(detail, "event detail should exist").to.exist;
+				const originalEvent = detail.originalEvent;
+				expect(originalEvent.ctrlKey, "ctrlKey should be true").to.be.true;
+				expect(originalEvent.shiftKey, "shiftKey should be true").to.be.true;
+				expect(originalEvent.altKey, "altKey should be false").to.be.false;
+				expect(originalEvent.metaKey, "metaKey should be false").to.be.false;
+			});
+	});
+});

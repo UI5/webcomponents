@@ -54,7 +54,7 @@ interface IColorPaletteItem extends UI5Element, ITabbable {
 	selected?: boolean,
 }
 
-type ColorPaletteNavigationItem = IColorPaletteItem | Button;
+type ColorPaletteNavigationItem = ColorPaletteItem | Button;
 
 type ColorPaletteItemClickEventDetail = {
 	color: string,
@@ -203,7 +203,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-	colors!: DefaultSlot<IColorPaletteItem>;
+	colors!: DefaultSlot<ColorPaletteItem>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;
@@ -308,14 +308,11 @@ class ColorPalette extends UI5Element {
 		});
 	}
 
-	get effectiveColorItems() {
-		let colorItems: IColorPaletteItem[] = this.colors;
-
+	get effectiveColorItems(): ColorPaletteItem[] {
 		if (this.popupMode) {
-			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");
+			return this.getSlottedNodes<ColorPaletteItem>("colors");
 		}
-
-		return colorItems;
+		return this.colors;
 	}
 
 	/**
@@ -323,7 +320,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_ensureSingleSelectionOrDeselectAll() {
-		let lastSelectedItem: IColorPaletteItem;
+		let lastSelectedItem: ColorPaletteItem | undefined;
 
 		this.allColorsInPalette.forEach(item => {
 			if (item.selected) {
@@ -336,6 +333,10 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onclick(e: MouseEvent) {
+		if (e.defaultPrevented) {
+			return;
+		}
+
 		this.handleSelection(e.target as ColorPaletteItem);
 	}
 
@@ -628,12 +629,12 @@ class ColorPalette extends UI5Element {
 		return isDown(e) || isRight(e);
 	}
 
-	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[0] === target;
+	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[0] === (target);
 	}
 
-	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === target;
+	_isLastSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === (target);
 	}
 
 	/**
@@ -896,8 +897,8 @@ class ColorPalette extends UI5Element {
 		return this._selectedColor;
 	}
 
-	get displayedColors(): Array<IColorPaletteItem> {
-		const colors = this.getSlottedNodes<IColorPaletteItem>("colors");
+	get displayedColors(): Array<ColorPaletteItem> {
+		const colors = this.getSlottedNodes<ColorPaletteItem>("colors");
 		return colors.filter(item => item.value).slice(0, 15);
 	}
 

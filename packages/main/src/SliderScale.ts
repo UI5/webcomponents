@@ -110,6 +110,74 @@ class SliderScale extends UI5Element {
 	labelInterval = 0;
 
 	/**
+	 * Tab index for the progress bar.
+	 * @default -1
+	 * @private
+	 */
+	@property({ type: Number })
+	progressTabIndex = -1;
+
+	/**
+	 * ARIA role for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressRole?: string;
+
+	/**
+	 * ARIA aria-valuenow for the progress bar.
+	 * @private
+	 */
+	@property({ type: Number })
+	progressAriaValueNow?: number;
+
+	/**
+	 * ARIA aria-valuetext for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressAriaValueText?: string;
+
+	/**
+	 * ARIA aria-label for the progress bar.
+	 * @private
+	 */
+	@property()
+	progressAriaLabel?: string;
+
+	/**
+	 * ARIA aria-disabled for the progress bar.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressAriaDisabled?: boolean;
+
+	/**
+	 * Indicates that the progress bar is being pressed/dragged.
+	 * Used to show the focus outline during mouse interaction.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressPressed = false;
+
+	/**
+	 * Indicates that the progress bar should show as focused.
+	 * Set by parent component (RangeSlider) when the progress bar has focus.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressFocused = false;
+
+	/**
+	 * Indicates that the progress bar is being hovered.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	progressHovered = false;
+	/**
 	 * @private
 	 */
 	@property({ type: Number })
@@ -216,6 +284,22 @@ class SliderScale extends UI5Element {
 			: this.getBoundingClientRect().height;
 
 		return containerSize / tickmarksCount;
+	}
+
+	_onProgressMouseEnter() {
+		this.progressHovered = true;
+		this.handles.forEach(handle => {
+			if (!handle.active) {
+				handle.hovered = true;
+			}
+		});
+	}
+
+	_onProgressMouseLeave() {
+		this.progressHovered = false;
+		this.handles.forEach(handle => {
+			handle.hovered = false;
+		});
 	}
 
 	get _tickmarksCount() {
