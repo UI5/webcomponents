@@ -28,6 +28,9 @@ on:
         - '!**/*.test.ts'
         - '!**/test/**'
 
+permissions:
+  contents: read
+
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest

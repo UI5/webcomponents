@@ -12,6 +12,9 @@ on:
         required: true
         default: 'v1'
 
+permissions:
+  contents: read
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
