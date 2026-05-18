@@ -10,7 +10,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
-	padding-block: 0.25rem;
+	padding-block: 0.125rem;
 	padding-inline: 0.25rem 0.5rem;
 	box-sizing: border-box;
 	cursor: pointer;
@@ -55,7 +55,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
-	padding: .25rem .5rem .25rem .25rem;
+	padding: 0.125rem 0.5rem 0.125rem 0.25rem;
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--sapButton_Lite_Background);
@@ -67,6 +67,7 @@
 
 ::slotted([slot="logo"]) {
 	max-height: 2rem;
+	width: auto;
 	padding-inline: 0.25rem;
 	vertical-align: middle;
 }
