@@ -191,6 +191,30 @@ describe("General accesibility attributes", () => {
 		cy.get("[ui5-switch]")
 			.ui5SwitchCheckAttributeInShadowDomRoot("aria-required", "false");
 	});
+
+	it("Should have 'aria-describedby' attribute when readonly", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.then($switch => {
+				const switchId = ($switch.get(0) as Switch)._id;
+				const expectedDescribedBy = `${switchId}-readonly-desc`;
+				
+				cy.wrap($switch)
+					.ui5SwitchCheckAttributeInShadowDomRoot("aria-describedby", expectedDescribedBy);
+			});
+	});
+
+	it("Should not have 'aria-describedby' attribute when not readonly", () => {
+		cy.mount(<Switch></Switch>);
+
+		cy.mount(<Switch></Switch>);
+
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("not.have.attr", "aria-describedby");
+	});
 });
 
 describe("General interactions in form", () => {

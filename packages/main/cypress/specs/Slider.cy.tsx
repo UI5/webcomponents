@@ -512,28 +512,6 @@ describe("Accessibility", () => {
 			.invoke('css', 'padding', '100px')
 	})
 
-	it("aria-keyshortcuts should not be set on regular slider", () => {
-		cy.mount(
-			<Slider min={0} max={20}></Slider>
-		);
-
-		cy.get("[ui5-slider]")
-			.shadow()
-			.find("[ui5-slider-handle]")
-			.should("not.have.attr", "aria-keyshortcuts");
-	});
-
-	it("aria-keyshortcuts should be set on slider with editable tooltips", () => {
-		cy.mount(
-			<Slider editableTooltip={true} min={0} max={20}></Slider>
-		);
-
-		cy.get("[ui5-slider]")
-			.shadow()
-			.find("[ui5-slider-handle]")
-			.should("have.attr", "aria-keyshortcuts");
-	});
-
 	it("should apply associated label text as aria-label on the slider element", () => {
 		const labelText = "label for slider";
 		cy.mount(

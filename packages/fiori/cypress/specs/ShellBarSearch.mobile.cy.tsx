@@ -95,4 +95,33 @@ describe("Mobile Behaviour", () => {
 		cy.get("[ui5-shellbar-search]")
 			.should("have.prop", "collapsed", true);
 	});
+
+	it("should fire search event when search icon is pressed in open dialog", () => {
+		cy.mount(
+			<ShellBarSearch showClearIcon={true} onSearch={cy.stub().as("search")}>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</ShellBarSearch>
+		);
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick();
+
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "open", true);
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] header input")
+			.type("test");
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-shell-search-field-search-icon")
+			.realClick();
+
+		cy.get("@search").should("have.been.calledOnce");
+	});
 });
