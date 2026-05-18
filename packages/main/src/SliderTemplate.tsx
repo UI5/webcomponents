@@ -29,7 +29,6 @@ const handle = (slider: Slider) => {
 				aria-valuenow={slider.value}
 				aria-label={slider._ariaLabel}
 				aria-disabled={slider._ariaDisabled}
-				aria-keyshortcuts={slider._ariaKeyshortcuts}
 				aria-describedby={slider._ariaDescribedByHandleText}
 				style={{
 					"inset-inline-start": `clamp(0%, ${position}%, 100%)`,

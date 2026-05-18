@@ -27,6 +27,7 @@
 			<ui5-label id="selectionModeLabel">Selection Mode:</ui5-label>
 			<ui5-select id="selectionModeSelect" accessible-name-ref="selectionModeLabel">
 				<ui5-option selected>Multi</ui5-option>
+				<ui5-option>Multi ClearAll</ui5-option>
 				<ui5-option>Single</ui5-option>
 				<ui5-option>None</ui5-option>
 			</ui5-select>
@@ -223,6 +224,12 @@
 				selection = document.createElement("ui5-table-selection-multi");
 				selection.setAttribute("id", "selection");
 				selection.setAttribute("slot", "features");
+				table.insertBefore(selection, table.firstChild);
+			} else if (e.target.selectedOption.textContent === "Multi ClearAll") {
+				selection = document.createElement("ui5-table-selection-multi");
+				selection.setAttribute("id", "selection");
+				selection.setAttribute("slot", "features");
+				selection.setAttribute("header-selector", "ClearAll");
 				table.insertBefore(selection, table.firstChild);
 			}
 		});

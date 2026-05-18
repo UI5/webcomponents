@@ -33,6 +33,7 @@ function preContent(this: MultiInput) {
 				class="ui5-multi-input-tokenizer"
 				opener={this.morePopoverOpener}
 				popoverMinWidth={this._inputWidth}
+				popoverTitle={this._headerTitleText}
 				hidePopoverArrow={true}
 				expanded={this.tokenizerExpanded}
 				onKeyDown={this._onTokenizerKeydown}

@@ -335,4 +335,34 @@ describe("Card Accessibility", () => {
 				.should("have.attr", "aria-labelledby", `${headerId2}-title ${headerId2}-subtitle`);
 		});
 	});
+
+	it("Tests that subtitle text is not cut off for languages requiring more vertical space", () => {
+		cy.mount(
+			<Card>
+				<CardHeader
+					slot="header"
+					id="headerHindi"
+					titleText="Title"
+					subtitleText="आपके डिवाइस या फ़ाइल सर्वर से फ़ाइल">
+				</CardHeader>
+			</Card>
+		);
+
+		// Verify the subtitle element's scrollHeight equals its offsetHeight (no clipping)
+		cy.get("#headerHindi")
+			.shadow()
+			.find(".ui5-card-header-subtitle")
+			.then($subtitle => {
+				expect($subtitle[0].scrollHeight).to.be.lte($subtitle[0].offsetHeight + 1);
+			});
+
+		// Verify no max-height is set on the subtitle
+		cy.get("#headerHindi")
+			.shadow()
+			.find(".ui5-card-header-subtitle")
+			.should($el => {
+				const maxHeight = getComputedStyle($el[0]).maxHeight;
+				expect(maxHeight).to.equal("none");
+			});
+	});
 });

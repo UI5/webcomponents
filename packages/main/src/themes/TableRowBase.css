@@ -7,14 +7,19 @@
 	overflow: clip;
 }
 
-:host([tabindex]:focus) {
-	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
+#selection-cell,
+#actions-cell,
+#navigated-cell {
+	background-color: inherit;
+ 	position: sticky;
+	z-index: 1;
 }
 
-:host([tabindex]:focus) #selection-cell,
-:host([tabindex]:focus) #actions-cell {
-	clip-path: inset(var(--sapContent_FocusWidth)); /* focus outline should not overlap sticky cells */
+#selection-cell {
+	padding: 0;
+	inset-inline-start: 0;
+	min-width: auto;
+	justify-content: center;
 }
 
 ::slotted([ui5-table-cell-base]:first-of-type) {
@@ -25,25 +30,79 @@
 	padding-inline-start: var(--_ui5_table_cell_horizontal_padding);
 }
 
-#selection-cell,
-#actions-cell {
-	background-color: inherit;
-	clip-path: inset(0px 0px 1px 0px); /* selection border should not overlap with sticky cells */
- 	position: sticky;
-	z-index: 1;
-}
-
-#selection-cell {
-	padding: 0;
-	inset-inline-start: 0;
-	min-width: auto;
-}
-
 #actions-cell {
 	inset-inline-end: 0;
 }
 
-#selection-cell[tabindex]:focus,
-#actions-cell[tabindex]:focus {
-	clip-path: inset(0px);
+#actions-cell:has(+ #navigated-cell) {
+	inset-inline-end: var(--_ui5_table_navigated_cell_width);
+}
+
+#navigated-cell {
+	inset-inline-end: 0;
+	min-width: 0;
+	padding: 0;
+}
+
+#dummy-cell {
+	border-inline-start: 1px solid var(--sapList_TableFixedBorderColor);
+}
+
+:host([_has-popin]) #dummy-cell {
+	border-inline-start: none;
+}
+
+:host([tabindex]:focus) {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
+
+	#selection-cell,
+	#actions-cell{
+		clip-path: inset(var(--sapContent_FocusWidth)); /* focus outline should not overlap sticky cells */
+	}
+
+	#navigated-cell {
+		clip-path: inset(3px 4px 3px -4px);
+	}
+	#navigated-cell:dir(rtl) {
+		clip-path: inset(3px -4px 3px 4px);
+	}
+}
+
+:host([tabindex][_render-dummy-cell]:not([_has-popin]):focus) {
+	outline: none;
+
+	--_ui5_table_cell_custom_outline_block: inset 0 var(--sapContent_FocusWidth) 0 0 var(--sapContent_FocusColor), inset 0 calc(-1 * var(--sapContent_FocusWidth)) 0 0 var(--sapContent_FocusColor);
+	--_ui5_table_cell_custom_outline_inline-start: inset var(--sapContent_FocusWidth) 0 0 0 var(--sapContent_FocusColor);
+	--_ui5_table_cell_custom_outline_inline-end: inset calc(-1 * var(--sapContent_FocusWidth)) 0 0 0 var(--sapContent_FocusColor);
+	:dir(rtl) {
+		--_ui5_table_cell_custom_outline_inline-start: inset calc(-1 * var(--sapContent_FocusWidth)) 0 0 0 var(--sapContent_FocusColor);
+		--_ui5_table_cell_custom_outline_inline-end: inset var(--sapContent_FocusWidth) 0 0 0 var(--sapContent_FocusColor);
+	}
+
+	[ui5-table-cell-base], ::slotted([ui5-table-cell-base]) {
+		box-shadow: var(--_ui5_table_cell_custom_outline_block);
+	}
+	[data-ui5-custom-outline="start"], ::slotted([data-ui5-custom-outline="start"]) {
+		box-shadow: var(--_ui5_table_cell_custom_outline_block), var(--_ui5_table_cell_custom_outline_inline-start);
+	}
+	[data-ui5-custom-outline="end"], ::slotted([data-ui5-custom-outline="end"]) {
+		box-shadow: var(--_ui5_table_cell_custom_outline_block), var(--_ui5_table_cell_custom_outline_inline-end);
+	}
+	[data-ui5-custom-outline="startend"], ::slotted([data-ui5-custom-outline="startend"]) {
+		box-shadow: var(--_ui5_table_cell_custom_outline_block), var(--_ui5_table_cell_custom_outline_inline-start), var(--_ui5_table_cell_custom_outline_inline-end);
+	}
+	#dummy-cell {
+		box-shadow: none;
+	}
+
+	#selection-cell,
+	#actions-cell,
+	#navigated-cell {
+		clip-path: none;
+	}
+
+	#navigated {
+		top: 3px;
+	}
 }
