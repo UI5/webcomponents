@@ -85,17 +85,29 @@
 	background-color: var(--_ui5-search-elements-background);
 	height: var(--_ui5-search-select-height);
 	--_ui5_select_label_color: var(--sapShell_TextColor);
+	/* Remove Select's default focus outline without affecting dropdown items */
+	--_ui5_input_focus_outline_color: transparent;
 }
 
-[ui5-select]:hover,
-.ui5-search-field-select::part(icon-wrapper):hover  {
+[ui5-select]:hover:not(:active):not(:focus-within) {
 	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
 }
 
+[ui5-select]:not(:active):not(:focus-within)::part(icon-wrapper):hover {
+	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
+}
+
+/* Active state for select - only shadow, no background */
 [ui5-select]:active,
-.ui5-search-field-select:active::part(icon-wrapper) {
+[ui5-select]:focus-within {
+	box-shadow: var(--_ui5-search_input_scope_active_shadow);
+}
+
+[ui5-select]:active::part(icon-wrapper),
+[ui5-select]:focus-within::part(icon-wrapper) {
 	box-shadow: var(--_ui5-search_input_scope_active_shadow);
 	background: var(--sapShell_Active_Background);
+	color: var(--sapShell_Active_TextColor);
 }
 
 [ui5-select]::part(icon) {
@@ -165,12 +177,10 @@
 	padding-inline-start: 0.875rem;
 }
 
-[ui5-select]:hover,
 .ui5-search-field-inner-input:hover {
 	background-color: var(--_ui5-search-elements-hover-background);
 }
 
-[ui5-select]:focus-within,
 .ui5-search-field-inner-input:focus-within {
 	background-color: var(--_ui5-search-elements-active-background);
 }
@@ -278,11 +288,6 @@
 
 .ui5-search-field-select {
 	--_ui5_input_focus_border_radius: var(--_ui5_search_input_border_radius);
-}
-
-.ui5-search-field-select:hover,
-.ui5-search-field-select[focused] {
-	background: var(--_ui5-search-wrapper-hover-background-color);
 }
 
 .ui5-search-field-select::part(icon-wrapper) {
