@@ -58,6 +58,9 @@ import BannerCss from "./generated/themes/Banner.css.js";
  * @since 2.12.0
  * @csspart canvas - Used to style the banner canvas container
  * @csspart content - Used to style the content area of the banner
+ * @csspart header - Used to style the header area (salutation, date, header actions)
+ * @csspart startContent - Used to style the start (default) content block
+ * @csspart endContent - Used to style the end content block
  */
 @customElement({
 	tag: "ui5-banner",
