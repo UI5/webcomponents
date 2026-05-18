@@ -201,13 +201,13 @@ class DynamicSideContent extends UI5Element {
 	*
 	* The accessibilityAttributes object has the following fields:
 	*
-	*  - **mainContent**:
-	* `mainContent.ariaLabel` defines the aria-label of the main content area. Accepts any string.
-	* `mainContent.role` defines the role of the main content area. When not set, defaults to `"main"`. Set to `undefined` to remove the role attribute.
+	* - **mainContent**:
+	*   - **ariaLabel**: defines the aria-label of the main content area. Accepts any string.
+	*   - **role**: defines the role of the main content area. When not set, defaults to `"main"`. Set to `undefined` to remove the role attribute.
 	*
-	*  - **sideContent**:
-	* `sideContent.ariaLabel` defines the aria-label of the side content area. Accepts any string.
-	* `sideContent.role` defines the role of the side content area. When not set, defaults to `"complementary"`. Set to `undefined` to remove the role attribute.
+	* - **sideContent**:
+	*   - **ariaLabel**: defines the aria-label of the side content area. Accepts any string.
+	*   - **role**: defines the role of the side content area. When not set, defaults to `"complementary"`. Set to `undefined` to remove the role attribute.
 	*
 	* @default {}
 	* @public
@@ -375,17 +375,19 @@ class DynamicSideContent extends UI5Element {
 	}
 
 	get accInfo(): DynamicSideContentAccessibilityAttributes {
-		const hasMainRole = Object.prototype.hasOwnProperty.call(this.accessibilityAttributes.mainContent || {}, "role");
-		const hasSideRole = Object.prototype.hasOwnProperty.call(this.accessibilityAttributes.sideContent || {}, "role");
+		const mainContentAttr = this.accessibilityAttributes.mainContent || {};
+		const sideContentAttr = this.accessibilityAttributes.sideContent || {};
+		const hasMainRole = "role" in mainContentAttr;
+		const hasSideRole = "role" in sideContentAttr;
 
 		return {
 			mainContent: {
-				ariaLabel: this.accessibilityAttributes.mainContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
-				role: hasMainRole ? this.accessibilityAttributes.mainContent?.role : "main",
+				ariaLabel: mainContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+				role: hasMainRole ? mainContentAttr.role : "main",
 			},
 			sideContent: {
-				ariaLabel: this.accessibilityAttributes.sideContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
-				role: hasSideRole ? this.accessibilityAttributes.sideContent?.role : "complementary",
+				ariaLabel: sideContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+				role: hasSideRole ? sideContentAttr.role : "complementary",
 			},
 		};
 	}
