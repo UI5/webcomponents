@@ -24,6 +24,7 @@ type InitialConfig = {
 	fetchDefaultLanguage: boolean,
 	defaultFontLoading: boolean,
 	enableDefaultTooltips: boolean,
+	ignoreUrlParams: boolean,
 };
 
 let initialConfig: InitialConfig = {
@@ -40,6 +41,7 @@ let initialConfig: InitialConfig = {
 	fetchDefaultLanguage: false,
 	defaultFontLoading: true,
 	enableDefaultTooltips: true,
+	ignoreUrlParams: false,
 };
 
 /* General settings */
@@ -86,6 +88,11 @@ const getDefaultFontLoading = () => {
 const getEnableDefaultTooltips = () => {
 	initConfiguration();
 	return initialConfig.enableDefaultTooltips;
+};
+
+const getIgnoreUrlParams = () => {
+	initConfiguration();
+	return initialConfig.ignoreUrlParams;
 };
 
 /**
@@ -226,7 +233,9 @@ const resetConfiguration = (testEnv?: boolean) => {
 	parseConfigurationScript();
 
 	// 2. URL parameters overwrite configuration script parameters
-	parseURLParameters();
+	if (!initialConfig.ignoreUrlParams) {
+		parseURLParameters();
+	}
 
 	// 3. If OpenUI5 is detected, it has the highest priority
 	applyOpenUI5Configuration();
@@ -246,4 +255,5 @@ export {
 	getDefaultFontLoading,
 	resetConfiguration,
 	getEnableDefaultTooltips,
+	getIgnoreUrlParams,
 };

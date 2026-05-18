@@ -7,7 +7,7 @@
 */
 
 /* S - 1 column */
-@container (max-width: 600px) {
+@container (max-width: 599px) {
 	.ui5-form-layout {
 		grid-template-columns: repeat(var(--ui5-form-columns-s), 1fr);
 	}
@@ -30,7 +30,7 @@
 }
 
 /* M  - 1 column by default, up to 2 columns */
-@container (width > 600px) and (width <=1024px) {
+@container (min-width: 600px) and (max-width: 1023px) {
 	.ui5-form-layout {
 		grid-template-columns: repeat(var(--ui5-form-columns-m), 1fr);
 	}
@@ -45,7 +45,8 @@
 }
 
 /* L - 2 columns by default, up to 3 columns */
-@container (width > 1024px) and (width <=1440px) {
+@container (min-width: 1024px) and (max-width: 1439px) {
+
 	.ui5-form-layout {
 		grid-template-columns: repeat(var(--ui5-form-columns-l), 1fr);
 	}
@@ -60,7 +61,7 @@
 }
 
 /* XL - 3 columns by default, up to 6 */
-@container (min-width: 1441px) {
+@container (min-width: 1440px) {
 	.ui5-form-layout {
 		grid-template-columns: repeat(var(--ui5-form-columns-xl), 1fr);
 	}
