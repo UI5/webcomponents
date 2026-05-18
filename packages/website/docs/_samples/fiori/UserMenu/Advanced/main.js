@@ -21,7 +21,7 @@ const menu = document.getElementById("userMenu");
 
 shellbar.addEventListener("ui5-profile-click", (event) => {
 	menu.opener = event.detail.targetRef;
-	menu.open = true;
+	menu.open = !menu.open;
 });
 
 menu.addEventListener("item-click", function (event) {
