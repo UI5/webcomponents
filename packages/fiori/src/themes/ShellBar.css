@@ -99,7 +99,9 @@
 }
 
 .ui5-shellbar-action-button:hover {
-	color: var(--sapShell_TextColor);
+	background: var(--sapShell_Hover_Background);
+	border-color: var(--sapButton_Lite_Hover_BorderColor);
+	color: var(--sapShell_InteractiveTextColor);
 }
 
 .ui5-shellbar-action-button[active] {
