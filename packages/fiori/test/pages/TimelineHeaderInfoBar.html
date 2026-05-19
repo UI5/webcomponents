@@ -195,14 +195,14 @@
 			</div>
 		</article>
 
-		<!-- Scenario 3: scrollable=false → ancestor scroll -->
+		<!-- Scenario 3: noScrollContainer → ancestor scroll -->
 		<article class="scenario">
 			<div class="scenario-header">
-				<h2>3. <code>scrollable=false</code> + ancestor scroll container</h2>
+				<h2>3. <code>noScrollContainer</code> + ancestor scroll container</h2>
 				<p>The ancestor (dashed border) owns scrolling. The Timeline's sticky header sticks to the ancestor — common when a Timeline is embedded in a <code>DynamicPage</code>.</p>
 			</div>
 			<div class="ancestor-scroll">
-				<ui5-timeline id="ancestorScrollTimeline" sticky-header scrollable="false">
+				<ui5-timeline id="ancestorScrollTimeline" sticky-header no-scroll-container>
 					<ui5-bar slot="header" design="Subheader">
 						<ui5-label slot="startContent">Header sticks to the ancestor</ui5-label>
 						<ui5-button slot="endContent" icon="add" id="ancestorAddBtn">Add row</ui5-button>

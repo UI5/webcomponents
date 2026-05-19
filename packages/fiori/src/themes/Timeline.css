@@ -59,20 +59,20 @@
 	margin-inline-start: var(--_ui5_tl_li_margin_bottom);
 }
 
-/* Scroll container — opt-in via [scrollable] host attribute (default) */
-:host([scrollable][layout="Horizontal"]) .ui5-timeline-scroll-container {
+/* Scroll container — Timeline owns scrolling by default; opt out with [no-scroll-container] */
+:host(:not([no-scroll-container])[layout="Horizontal"]) .ui5-timeline-scroll-container {
 	overflow: auto;
 	/* The padding values of the parent container are added to the size of scroll container */
 	width: calc(100% + var(--_ui5_timeline_scroll_container_offset));
 }
 
-:host([scrollable][layout="Vertical"]) .ui5-timeline-scroll-container {
+:host(:not([no-scroll-container])[layout="Vertical"]) .ui5-timeline-scroll-container {
 	height: 100%;
 	width: 100%;
 	overflow: auto;
 }
 
-/* When scrollable is off, the scroll container is a transparent flex layer:
+/* When [no-scroll-container] is set, the scroll container is a transparent flex layer:
    no overflow, no clipping. The application owns scrolling on an ancestor. */
 .ui5-timeline-scroll-container {
 	display: flex;

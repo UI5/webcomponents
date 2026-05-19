@@ -85,8 +85,8 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * applied sort, current search query). Typically contains tokens, labels, or a `ui5-bar`.
  *
  * Either slot can be made sticky using `stickyHeader` and `stickyInfoBar`. Sticky behavior
- * applies relative to the Timeline's internal scroll container when `scrollable` is set, and
- * relative to the nearest ancestor scroll container when `scrollable={false}`.
+ * applies relative to the Timeline's internal scroll container by default, and relative
+ * to the nearest ancestor scroll container when `noScrollContainer` is set.
  * @constructor
  * @extends UI5Element
  * @public
@@ -171,24 +171,24 @@ class Timeline extends UI5Element {
 	growing: `${TimelineGrowingMode}` = "None";
 
 	/**
-	 * Defines whether the Timeline provides its own scroll container for the items area.
+	 * Defines whether the Timeline relinquishes its internal scroll container.
 	 *
-	 * When `true` (default), the Timeline scrolls internally and any sticky header or info bar
-	 * sticks to the top of the Timeline. When `false`, the Timeline does not clip or scroll its
-	 * content — the application is expected to provide a scroll container on an ancestor element,
-	 * and sticky slots will stick to that ancestor instead.
+	 * By default the Timeline scrolls internally; sticky header and info bar stick to the
+	 * top of the Timeline. When set to `true`, the Timeline does not clip or scroll its
+	 * content — the application is expected to provide a scroll container on an ancestor
+	 * element, and sticky slots will stick to that ancestor instead.
 	 *
 	 * **Note:** When the layout is `Horizontal`, items scroll horizontally inside the Timeline
-	 * by default. Setting `scrollable={false}` in horizontal layout means the application must
+	 * by default. Setting `noScrollContainer` in horizontal layout means the application must
 	 * also provide horizontal scrolling on an ancestor; otherwise items will overflow without a
 	 * scrollbar.
 	 *
-	 * @default true
+	 * @default false
 	 * @public
 	 * @since 2.22.0
 	 */
 	@property({ type: Boolean })
-	scrollable = true;
+	noScrollContainer = false;
 
 	/**
 	 * Defines whether the content of the `header` slot remains visible when the user scrolls the Timeline.
