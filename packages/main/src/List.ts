@@ -75,6 +75,7 @@ import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+import { isInstanceOfListItemCustom } from "./ListItemCustom.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -769,7 +770,7 @@ class List extends UI5Element {
 		}
 
 		return this.getItems().some(item => {
-			return item.getAttribute("type") === "Detail" || item.hasAttribute("ui5-li-custom");
+			return item.getAttribute("type") === "Detail" || isInstanceOfListItemCustom(item);
 		});
 	}
 
