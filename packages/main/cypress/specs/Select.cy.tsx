@@ -1969,3 +1969,48 @@ describe("Select - active/down state", () => {
 			.realMouseUp();
 	});
 });
+
+describe("Select - popover max-width", () => {
+	it("applies default max-width of 100rem to the responsive popover when an option has very long text", () => {
+		const longText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ".repeat(5);
+
+		cy.mount(
+			<Select>
+				<Option value="desktop" icon="laptop">{longText}</Option>
+				<Option value="short">Short option</Option>
+			</Select>
+		);
+
+		// Open the picker
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// The responsive popover should have max-width capped at 100rem
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should($el => {
+				const maxWidth = $el[0].style.maxWidth;
+				expect(maxWidth).to.equal("100rem");
+			});
+	});
+
+	it("ensures the popover width does not exceed 100rem style property by default", () => {
+		cy.mount(
+			<Select>
+				<Option value="short">Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should($el => {
+				const maxWidth = $el[0].style.maxWidth;
+				expect(maxWidth).to.equal("100rem");
+			});
+	});
+});

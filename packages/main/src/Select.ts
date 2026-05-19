@@ -1105,6 +1105,7 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
+				"max-width": "100rem",
 			},
 		};
 	}
