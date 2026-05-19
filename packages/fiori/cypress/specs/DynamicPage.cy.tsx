@@ -165,7 +165,7 @@ describe("DynamicPage", () => {
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
-			.find("header.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
+			.find("div.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
 			.should("not.exist");
 
 		cy.get("[ui5-dynamic-page]")
@@ -178,7 +178,7 @@ describe("DynamicPage", () => {
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
-			.find("header.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
+			.find("div.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
 			.should("exist");
 
 		cy.get("[ui5-dynamic-page]")
@@ -1146,7 +1146,26 @@ describe("ARIA attributes", () => {
 			.should("have.attr", "aria-label", "Custom Header");
 	});
 
-	it("supports customizing headerContent label via accessibilityAttributes", () => {
+	it("supports customizing headerContent label via accessibleName on DynamicPageHeader", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea" accessibleName="Custom Region Label">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
+			.should("have.attr", "aria-label", "Custom Region Label");
+	});
+
+	it("renders default banner role when only header.name is set", () => {
 		cy.mount(
 			<DynamicPage style={{ height: "600px" }}>
 				<DynamicPageTitle slot="titleArea">
@@ -1160,13 +1179,15 @@ describe("ARIA attributes", () => {
 		);
 
 		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
-			headerContent: { name: "Custom Region Label" },
+			header: { name: "Custom Header Label" },
 		});
 
-		cy.get("[ui5-dynamic-page-header]")
+		cy.get("[ui5-dynamic-page]")
 			.shadow()
-			.find(".ui5-dynamic-page-header-root")
-			.should("have.attr", "aria-label", "Custom Region Label");
+			.find("div.ui5-dynamic-page-title-header-wrapper")
+			.should("exist")
+			.should("have.attr", "role", "banner")
+			.should("have.attr", "aria-label", "Custom Header Label");
 	});
 
 	it("supports customizing content and footer roles via accessibilityAttributes", () => {

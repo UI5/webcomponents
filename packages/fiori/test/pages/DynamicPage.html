@@ -183,10 +183,6 @@
             const cancelEdit = document.querySelector("#cancel-edit");
             const saveEdit = document.querySelector("#save-edit");
 
-            dynamicPage.accessibilityAttributes = {
-                header: { role: "none" },
-                content: { role: "main" },
-            };
 
             editButton.addEventListener("click", () => {
                 dynamicPage.setAttribute("show-footer", true);

@@ -33,12 +33,16 @@ import {
 
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
+type DynamicPageHeaderRoles  = Extract<AriaLandmarkRole, "none" | "banner" | "region">;
+type DynamicPageContentRoles = Extract<AriaLandmarkRole, "none" | "main" | "region" | "form">;
+type DynamicPageFooterRoles  = Extract<AriaLandmarkRole, "none" | "contentinfo" | "region">;
+type DynamicPageRootRoles    = Extract<AriaLandmarkRole, "none" | "main" | "region">;
+
 type DynamicPageAccessibilityAttributes = {
-	root?: { role?: AriaLandmarkRole; name?: string };
-	header?: { role?: AriaLandmarkRole; name?: string };
-	headerContent?: { name?: string };
-	content?: { role?: AriaLandmarkRole; name?: string };
-	footer?: { role?: AriaLandmarkRole; name?: string };
+	root?:    { role?: DynamicPageRootRoles;    name?: string };
+	header?:  { role?: DynamicPageHeaderRoles;  name?: string };
+	content?: { role?: DynamicPageContentRoles; name?: string };
+	footer?:  { role?: DynamicPageFooterRoles;  name?: string };
 };
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
@@ -194,19 +198,32 @@ class DynamicPage extends UI5Element {
 	footerArea!: Slot<HTMLElement>;
 
 	/**
-	 * Defines the accessibility attributes for DynamicPage sections.
-	 *
-	 * Accepted fields per section — `root`, `header`, `content`, `footer`:
-	 * - `role`: Overrides the ARIA landmark role. Accepts the following string values: `"none"`, `"banner"`, `"main"`, `"region"`, `"navigation"`, `"search"`, `"complementary"`, `"form"`, `"contentinfo"`.
-	 * - `name`: Sets `aria-label` on the section. Accepts any string.
-	 *
-	 * Accepted fields for `headerContent`:
-	 * - `name`: Sets `aria-label` on the DynamicPageHeader region (overrides the default "Header Expanded"/"Header Snapped" text). Accepts any string.
-	 *
-	 * @public
-	 * @since 2.23.0
-	 * @default {}
-	 */
+	* Defines additional accessibility attributes on different areas of the component.
+	*
+	* The accessibilityAttributes object has the following fields,
+	* where each field is an object supporting one or more accessibility attributes:
+	*
+	*  - **root**: `root.role` and `root.name`.
+	*  - **header**: `header.role` and `header.name`.
+	*  - **content**: `content.role` and `content.name`.
+	*  - **footer**: `footer.role` and `footer.name`.
+	*
+	* The accessibility attributes support the following values:
+	*
+	* - **role**: Defines the accessible ARIA landmark role of the area.
+	* Accepts the following values per section:
+	* `root` — `none`, `main`, `region`;
+	* `header` — `none`, `banner`, `region`;
+	* `content` — `none`, `main`, `region`, `form`;
+	* `footer` — `none`, `contentinfo`, `region`.
+	*
+	* - **name**: Defines the accessible ARIA name of the area.
+	* Accepts any string.
+	*
+	* @default {}
+	* @public
+	* @since 2.23.0
+	*/
 	@property({ type: Object })
 	accessibilityAttributes: DynamicPageAccessibilityAttributes = {};
 
@@ -239,7 +256,6 @@ class DynamicPage extends UI5Element {
 		}
 		if (this.dynamicPageHeader) {
 			this.dynamicPageHeader._snapped = this._headerSnapped;
-			this.dynamicPageHeader._accessibleName = this.accessibilityAttributes.headerContent?.name;
 		}
 	}
 

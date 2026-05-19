@@ -7,7 +7,22 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 			<div class="ui5-dynamic-page-scroll-container"
 				onScroll={this.snapOnScroll}
 			>
-				{titleHeaderWrapper.call(this)}
+				<div
+					class="ui5-dynamic-page-title-header-wrapper"
+					id={`${this._id}-header`}
+					role={this._headerRole || "banner"}
+					aria-label={this.headerAriaLabel}
+					onui5-toggle-title={this.onToggleTitle}
+				>
+					<slot name="titleArea"></slot>
+					{this.headerInTitle &&
+						<slot tabIndex={this.headerTabIndex}
+							aria-hidden={this.headerAriaHidden}
+							name="headerArea"
+						></slot>
+					}
+					{this.actionsInTitle && headerActions.call(this)}
+				</div>
 
 				{this.headerInContent &&
 					<slot tabIndex={this.headerTabIndex}
@@ -39,40 +54,6 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				<slot name="footerArea"></slot>
 			</div>
 		</div>
-	);
-}
-
-function titleHeaderWrapper(this: DynamicPage) {
-	const commonProps = {
-		"class": "ui5-dynamic-page-title-header-wrapper",
-		id: `${this._id}-header`,
-		"aria-label": this.headerAriaLabel,
-		"onui5-toggle-title": this.onToggleTitle,
-	};
-
-	return this._headerRole ? (
-		<div {...commonProps} role={this._headerRole}>
-			{titleHeaderContent.call(this)}
-		</div>
-	) : (
-		<header {...commonProps}>
-			{titleHeaderContent.call(this)}
-		</header>
-	);
-}
-
-function titleHeaderContent(this: DynamicPage) {
-	return (
-		<>
-			<slot name="titleArea"></slot>
-			{this.headerInTitle &&
-				<slot tabIndex={this.headerTabIndex}
-					aria-hidden={this.headerAriaHidden}
-					name="headerArea"
-				></slot>
-			}
-			{this.actionsInTitle && headerActions.call(this)}
-		</>
 	);
 }
 
