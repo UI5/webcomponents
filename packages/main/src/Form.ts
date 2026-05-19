@@ -152,23 +152,7 @@ type ItemsInfo = {
  *
  * ### Navigation flow
  *
- * The Form component supports two layout options for keyboard navigation:
- *
- * #### Simple form
- *
- * In this "simple form" layout, each `ui5-form-item` acts as a standalone group
- * with one item, so focus moves horizontally across the grid from one `ui5-form-item` to the next.
- * This layout is ideal for simpler forms and supports custom arrangements, e.g.,
- *
- * ```
- * | 1 | 2 |
- * |   3   |
- * | 4 | 5 |
- * ```
- *
- * #### Complex form
- *
- * In this layout, items are grouped into `ui5-form-group` elements, allowing more complex configurations:
+ * Items are grouped into `ui5-form-group` elements, allowing the following navigation:
  *
  * - **Single-Column Group**: Focus moves vertically down from one item to the next.
  *   ```
@@ -344,7 +328,7 @@ class Form extends UI5Element {
 	 * **Note:** Mixing FormGroups and standalone FormItems (not belonging to a group) is not supported.
 	 * Either use FormGroups and make sure all FormItems are part of a FormGroup, or use just FormItems without any FormGroups.
 	 *
-	 * **Note:** As of version 2.21.0 the support for standalone FormItems (not belonging to a group) is deprecated.
+	 * **Note:** As of version 2.23.0 the support for standalone FormItems (not belonging to a group) is deprecated.
 	 * We recommend using FormGroups, as they provide better accessibility and layout options.
 	 *
 	 * @public
