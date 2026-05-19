@@ -74,6 +74,20 @@ Cypress.Commands.add("ui5DateTimePickerPeriodSegmentedButtonCount", { prevSubjec
 		.its("length");
 });
 
+Cypress.Commands.add("ui5DateTimePickerTypeAndExpectValueState", { prevSubject: true }, (subject: JQuery<DateTimePicker>, displayValue: string, expectedState: "Negative" | "None") => {
+	cy.wrap(subject)
+		.ui5DatePickerGetInnerInput()
+		.clear()
+		.realType(displayValue);
+	
+	cy.realPress("Enter");
+
+	cy.wrap(subject)
+		.shadow()
+		.find("[ui5-datetime-input]")
+		.should("have.attr", "value-state", expectedState);
+});
+
 declare global {
 	namespace Cypress {
 		interface Chainable {
@@ -104,6 +118,11 @@ declare global {
 			ui5DateTimePickerPeriodSegmentedButtonCount(
 				this: Chainable<JQuery<DateTimePicker>>
 			): Chainable<number>;
+			ui5DateTimePickerTypeAndExpectValueState(
+				this: Chainable<JQuery<DateTimePicker>>,
+				displayValue: string,
+				expectedState: "Negative" | "None"
+			): Chainable<void>;
 		}
 	}
 }

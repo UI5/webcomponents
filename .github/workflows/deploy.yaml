@@ -17,6 +17,9 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
 
+permissions:
+  contents: write
+
 jobs:
   deploy-nightly:
     if: ${{ github.event.inputs.deploy_type == 'nightly' || github.event_name == 'schedule' }}

@@ -2,9 +2,9 @@ import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
+import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Date Picker Tests", () => {
-
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -34,7 +34,7 @@ describe("Date Picker Tests", () => {
 
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
 
@@ -58,7 +58,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-item--selected");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("custom formatting", () => {
@@ -318,7 +318,7 @@ describe("Date Picker Tests", () => {
 
 	it("respect first day of the week - monday", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
 
@@ -338,7 +338,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-wday6");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
@@ -1994,7 +1994,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("picker popover accessible name", () => {
@@ -2010,7 +2010,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("accessibleDescription property", () => {
