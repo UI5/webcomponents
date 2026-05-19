@@ -97,10 +97,10 @@ type ItemsInfo = {
  *
  * The Form component reacts and changes its layout on predefined breakpoints.
  * Depending on its size, the Form content (FormGroups and FormItems) gets divided into one or more columns as follows:
- * - **S** (< 600px) – 1 column is recommended (default: 1)
- * - **M** (600px - 1022px) – up to 2 columns are recommended (default: 1)
- * - **L** (1023px - 1439px) - up to 3 columns are recommended (default: 2)
- * - **XL** (> 1439px) – up to 6 columns are recommended (default: 3)
+ * - **S** (0 - 599px) – 1 column is recommended (default: 1)
+ * - **M** (600px - 1023px) – up to 2 columns are recommended (default: 1)
+ * - **L** (1024px - 1439px) - up to 3 columns are recommended (default: 2)
+ * - **XL** (>= 1440px) – up to 6 columns are recommended (default: 3)
  *
  * To change the layout, use the `layout` property - f.e. layout="S1 M2 L3 XL6".
  *
@@ -687,10 +687,10 @@ class Form extends UI5Element {
 				containerQuery = `@container (max-width: 599px) {`;
 			} else if (step === "M") {
 				supporedColumnsNumber = StepColumn.M;
-				containerQuery = `@container (width > 599px) and (width < 1024px) {`;
+				containerQuery = `@container (min-width: 600px) and (max-width: 1023px) {`;
 			} else if (step === "L") {
 				supporedColumnsNumber = StepColumn.L;
-				containerQuery = `@container (width > 1023px) and (width < 1439px) {`;
+				containerQuery = `@container (min-width: 1024px) and (max-width: 1439px) {`;
 			} else if (step === "XL") {
 				containerQuery = `@container (min-width: 1440px) {`;
 				supporedColumnsNumber = StepColumn.XL;

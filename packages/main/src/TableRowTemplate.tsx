@@ -47,6 +47,12 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
+			{ this._renderDummyCell && this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="">
+				</TableCell>
+			}
+
 			{ this._rowActionCount > 0 &&
 				<TableCell id="actions-cell"
 					aria-colindex={ariaColIndex++}
@@ -80,7 +86,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				</TableCell>
 			}
 
-			{ this._popinCells.length > 0 &&
+			{ this._renderDummyCell && !this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="nofocus">
+				</TableCell>
+			}
+
+			{ this._hasPopin &&
 				<TableCell id="popin-cell"
 					data-ui5-table-popin-cell
 					aria-colindex={ariaColIndex++}

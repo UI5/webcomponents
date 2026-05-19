@@ -1,8 +1,8 @@
 @import "./InvisibleTextStyles.css";
 
 :host {
-	min-width: 20rem;
-	min-height: 6rem;
+	min-width: min(20rem, 90vw);
+	min-height: min(6rem, 90vh);
 	max-height: 94%;
 	max-width: 90%;
 	flex-direction: column;

@@ -130,13 +130,6 @@ class TableRow extends TableRowBase<TableCell> {
 		toggleAttribute(this, "draggable", this.movable, "true");
 		toggleAttribute(this, "_interactive", this._isInteractive);
 		toggleAttribute(this, "_alternate", this._alternate);
-		toggleAttribute(this, "_haspopin", this._hasPopin);
-	}
-
-	async focus(focusOptions?: FocusOptions | undefined): Promise<void> {
-		this.setAttribute("tabindex", "-1");
-		HTMLElement.prototype.focus.call(this, focusOptions);
-		return Promise.resolve();
 	}
 
 	async _onpointerdown(e: PointerEvent) {
@@ -196,10 +189,6 @@ class TableRow extends TableRowBase<TableCell> {
 		return this._fixedActions.find(action => {
 			return action.hasAttribute("ui5-table-row-action-navigation") && !action.invisible && !action._isInteractive;
 		}) !== undefined;
-	}
-
-	get _hasPopin() {
-		return this.cells.some(c => c._popin && !c._popinHidden);
 	}
 
 	get _rowIndex() {

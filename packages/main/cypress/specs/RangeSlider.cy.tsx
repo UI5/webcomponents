@@ -1,4 +1,5 @@
 import RangeSlider from "../../src/RangeSlider.js";
+import { RANGE_SLIDER_START_HANDLE_DESCRIPTION, RANGE_SLIDER_END_HANDLE_DESCRIPTION } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Testing Range Slider interactions", () => {
 	it("Changing the current startValue is reflected", () => {
@@ -874,7 +875,7 @@ describe("Testing events", () => {
 			const startValue = rangeSlider.startValue;
 
 			cy.get("@startHandle")
-				.should("have.attr", "aria-label", "Left handle");
+				.should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
 
 			cy.get("@startHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -903,7 +904,7 @@ describe("Testing events", () => {
 			const endValue = rangeSlider.endValue;
 
 			cy.get("@endHandle")
-				.should("have.attr", "aria-label", "Right handle");
+				.should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 
 			cy.get("@endHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -929,8 +930,8 @@ describe("Testing events", () => {
 			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
-		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
-		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
+		cy.get("@startHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
+		cy.get("@endHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 
 		// Drag start handle past end handle to swap values using real events
 		cy.get("@startHandle")
@@ -938,8 +939,8 @@ describe("Testing events", () => {
 			.realMouseMove(100, 0)
 			.realMouseUp();
 
-		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
-		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
+		cy.get("@startHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
+		cy.get("@endHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 	});
 
 	it("Click anywhere in the Range Slider should focus the closest handle", () => {
@@ -1811,12 +1812,12 @@ describe("Accessibility", () => {
 		cy.get("[ui5-range-slider]")
 			.shadow()
 			.find("[ui5-slider-handle][handle-type='Start']")
-			.should("have.attr", "aria-label", `${labelText} Left handle`);
+			.should("have.attr", "aria-label", `${labelText} ${RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION)}`);
 
 		cy.get("[ui5-range-slider]")
 			.shadow()
 			.find("[ui5-slider-handle][handle-type='End']")
-			.should("have.attr", "aria-label", `${labelText} Right handle`);
+			.should("have.attr", "aria-label", `${labelText} ${RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION)}`);
 	});
 
 	it("Aria attributes of the progress bar are set correctly", () => {
