@@ -39,7 +39,7 @@ class DateFormat extends DateFormatWrapped {
 			return DateFormatWrapped.getDateInstance(undefined, oFormatOptionsOrLocale);
 		}
 
-		const cacheKey = `${JSON.stringify(oFormatOptionsOrLocale ?? {})}__${locale.toString()}`;
+		const cacheKey = `${JSON.stringify(oFormatOptionsOrLocale ?? {})}__${String(locale)}`;
 		let instance = _dateFormatCache.get(cacheKey);
 		if (!instance) {
 			instance = DateFormatWrapped.getDateInstance(oFormatOptionsOrLocale, locale);
