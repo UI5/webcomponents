@@ -11,14 +11,11 @@
 	height: .25rem;
 	top: 50%;
 	transform: translateY(-50%);
-}
-
-.ui5-slider-scale-root {
 	box-sizing: var(--_ui5_slider_scale_root_box_sizing);
 	border-radius: 0.25rem;
 	width: 100%;
 	position: relative;
-	background: var(--ui5_slider_scale_background);
+	background: var(--_ui5_slider_scale_background);
 	border: var(--_ui5_slider_scale_border);
 }
 
@@ -58,12 +55,54 @@
 	position: absolute;
 	top: var(--_ui5_slider_scale_progress_top);
 	height: var(--_ui5_slider_scale_progress_height);
-	background-color: var(--sapSlider_Selected_Background);
+	background-color: var(--_ui5_slider_scale_progress_background);
 	border: var(--_ui5_slider_scale_progress_border);
 	border-left: none;
 	box-sizing: border-box;
 	z-index: 4;
-	border-radius: .25rem;
+	border-radius: var(--_ui5_slider_scale_progress_border_radius);
+}
+
+.ui5-slider-scale-progress-hover-area {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	height: 2rem;
+	z-index: 3;
+	cursor: pointer;
+}
+
+.ui5-slider-scale-progress:focus {
+	outline: none;
+}
+
+.ui5-slider-scale-progress:focus::after,
+.ui5-slider-scale-progress.ui5-slider-progress--focused::after {
+	border: var(--_ui5_range_slider_progress_focus_border);
+	border-radius: var(--_ui5_range_slider_progress_focus_border_radius, 0.5rem);
+	content: "";
+	display: var(--_ui5_range_slider_progress_focus_display);
+	position: absolute;
+	top: var(--_ui5_range_slider_progress_focus_top);
+	left: var(--_ui5_range_slider_progress_focus_left);
+	right: var(--_ui5_range_slider_progress_focus_right);
+	padding: var(--_ui5_range_slider_progress_focus_padding);
+	height: var(--_ui5_range_slider_progress_focus_height);
+	box-sizing: border-box;
+}
+
+.ui5-slider-scale-progress:focus::before,
+.ui5-slider-scale-progress.ui5-slider-progress--focused::before {
+	display: var(--_ui5_range_slider_legacy_progress_focus_display);
+	content: '';
+	position: absolute;
+	width: var(--_ui5_range_slider_focus_outline_width);
+	border: var(--_ui5_slider_progress_outline);
+	border-radius: var(--_ui5_range_slider_focus_outline_radius);
+	top: var(--_ui5_slider_progress_outline_offset);
+	height: var(--_ui5_slider_outer_height);
+	box-sizing: border-box;
+	left: var(--_ui5_slider_progress_outline_offset_left);
 }
 
 .ui5-slider-scale-root::before {

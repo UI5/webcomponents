@@ -7,6 +7,7 @@ import Link from "../../src/Link.js";
 
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
+import { INPUT_SUGGESTIONS_EXPANDED, INPUT_SUGGESTIONS_COLLAPSED, INPUT_SUGGESTIONS_MORE_HITS } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Input Tests", () => {
 	it("test input event prevention", () => {
@@ -1364,6 +1365,71 @@ describe("Accessibility", () => {
 	});
 });
 
+describe("Suggestions expanded/collapsed announcement", () => {
+	it("Should include 'Expanded' in suggestions count when popover opens", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("contain.text", INPUT_SUGGESTIONS_EXPANDED.defaultText);
+	});
+
+	it("Should announce 'Collapsed' when suggestions popover closes", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("contain.text", INPUT_SUGGESTIONS_COLLAPSED.defaultText);
+	});
+});
+
 describe("Attribute propagation", () => {
 	it("Should change the placeholder of the inner input", () => {
 		const placeholder = "New placeholder text";
@@ -2134,17 +2200,17 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#inputCompact").click();
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "Collapsed");
 
 		cy.get("#inputCompact").shadow().find("input").realType("c");
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available Expanded");
 
 		cy.get("#inputCompact").shadow().find("input").realType("{backspace}");
 		cy.get("#inputCompact").shadow().find("input").realType("{esc}");
 
 		cy.get("#myInput2").click();
 		cy.get("#myInput2").shadow().find("input").realType("c");
-		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available");
+		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available Expanded");
 	});
 
 	it("Should close the Popover when no suggestions are available", () => {

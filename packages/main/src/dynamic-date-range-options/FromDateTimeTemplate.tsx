@@ -8,7 +8,7 @@ import type FromDateTimeOption from "./FromDateTime.js";
 
 export default function FromDateTime(this: DynamicDateRange) {
 	const currentOption = this._currentOption as FromDateTimeOption;
-	const currentValue = this.value?.values ? this.value.values[0] as Date : undefined;
+	const currentValue = (this.currentValue?.values ?? this.value?.values)?.[0] as Date | undefined;
 	return (
 		<div class="ui5-dynamic-date-range-option-datetime-container">
 			<div class="ui5-dt-picker-header">
