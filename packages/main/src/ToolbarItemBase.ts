@@ -143,6 +143,44 @@ class ToolbarItemBase extends UI5Element {
 	get styles() {
 		return {};
 	}
+
+	/**
+	 * ITabbable implementation for ItemNavigation roving tabindex.
+	 */
+	@property({ noAttribute: true })
+	forcedTabIndex = "0";
+
+	/**
+	 * Number of navigable sub-items. Override for multi-target items.
+	 * @protected
+	 */
+	get toolbarNavigationItemCount(): number {
+		return 1;
+	}
+
+	/**
+	 * Index of currently focused sub-item. Override for multi-target items.
+	 * @protected
+	 */
+	get toolbarNavigationCurrentIndex(): number {
+		return 0;
+	}
+
+	/**
+	 * Focus the sub-item at the given index.
+	 * @protected
+	 */
+	focusToolbarNavigationItem(_index: number): void { // eslint-disable-line @typescript-eslint/no-unused-vars
+		this.getFocusDomRef()?.focus();
+	}
+
+	/**
+	 * Called when toolbar navigation enters this item from outside.
+	 * @protected
+	 */
+	handleToolbarNavigationEntry(_forward: boolean): void { // eslint-disable-line @typescript-eslint/no-unused-vars
+		this.getFocusDomRef()?.focus();
+	}
 }
 
 export type {
