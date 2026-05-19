@@ -47,18 +47,24 @@ function iconBegin(this: NavigationMenuItem) {
 }
 
 function iconEnd(this: NavigationMenuItem) {
-	if (this.hasSubmenu) {
-		return <Icon
-			part="icon"
-			name={slimArrowRightIcon}
-			class="ui5-menu-item-icon-end"
-		/>;
-	}
-
-	if (this.isExternalLink) {
-		return <Icon
-			class="ui5-sn-item-external-link-icon"
-			name={arrowRightIcon}
-		/>;
-	}
+	return (<>
+		{this.hasEndContent &&
+			<span class="ui5-navmenu-item-tag-container">
+				<slot name="endContent"></slot>
+			</span>
+		}
+		{this.hasSubmenu &&
+			<Icon
+				part="icon"
+				name={slimArrowRightIcon}
+				class="ui5-menu-item-icon-end"
+			/>
+		}
+		{!this.hasSubmenu && this.isExternalLink &&
+			<Icon
+				class="ui5-sn-item-external-link-icon"
+				name={arrowRightIcon}
+			/>
+		}
+	</>);
 }

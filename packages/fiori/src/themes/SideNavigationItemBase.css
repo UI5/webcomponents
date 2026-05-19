@@ -381,15 +381,11 @@ and there is an additional border that appears on hover. */
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):not(.ui5-sn-item-disabled):hover .ui5-sn-item-tag-slot,
 :host([side-nav-collapsed]) .ui5-sn-item:not(.ui5-sn-item-active):not(.ui5-sn-item-no-hover-effect):focus .ui5-sn-item-tag-slot {
 	display: inline-flex;
-	max-width: 4rem;
 }
 
 :host([in-popover]) .ui5-sn-item-tag-slot {
 	display: inline-flex;
-}
-
-.ui5-sn-item-tag-slot::slotted([ui5-tag]) {
-	max-width: 4rem;
+	padding-inline-end: 0.5rem;
 }
 
 :host([side-nav-collapsed]) .ui5-sn-item-with-expander .ui5-sn-item-icon::after {

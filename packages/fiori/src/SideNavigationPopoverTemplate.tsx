@@ -31,7 +31,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 				this.captureRef.bind(item)(el);
 			}}
 		>
-			{item.children.length > 0 && !item.unselectable &&
+			{(item as SideNavigationItem).items?.length > 0 && !item.unselectable &&
 				(<NavigationMenuItem
 					class="ui5-navigation-menu-item-root-parent"
 					accessibilityAttributes={item.accessibilityAttributes}
