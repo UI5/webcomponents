@@ -52,13 +52,13 @@ function starLi(this: RatingIndicator, star: Star) {
 	} if (this.readonly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.unratedIcon} />
+				<Icon data-ui5-value={star.index} name={this.ratedIcon} />
 			</li>
 		);
 	} if (this.disabled) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
-				<Icon data-ui5-value={star.index} name={this.unratedIcon} />
+				<Icon data-ui5-value={star.index} name={this.ratedIcon} />
 			</li>
 		);
 	}
