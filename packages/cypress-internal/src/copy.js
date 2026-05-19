@@ -7,4 +7,6 @@ const eslintOutputPath = path.join(dirname, "../dist/eslint.cjs");
 
 await mkdir(path.dirname(eslintOutputPath), {recursive: true});
 await copyFile(eslintInputPath, eslintOutputPath)
-console.log("eslint.cjs copied successfully")
+if (process.env.UI5_VERBOSE === "true") {
+	console.log("eslint.cjs copied successfully");
+}

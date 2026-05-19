@@ -42,6 +42,11 @@ const copyAndWatchFn = async (argv) => {
 		}
 	});
 
+	// Default to silent mode unless verbose is enabled
+	if (process.env.UI5_VERBOSE !== "true") {
+		options.silent = true;
+	}
+
 	if (args.length < 2) {
 		console.error('Not enough arguments: copy-and-watch [options] <sources> <target>');
 		process.exit(1);

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Button</title>
+	<script>
+		// delete Document.prototype.adoptedStyleSheets
+	</script>
+
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<link rel="stylesheet" type="text/css" href="./styles/Button.css">
+
+</head>
+
+<body class="button1auto">
+	<h1>Combinations</h1>
+	<div>
+		<h2>Normal button</h2>
+		<p>Should be red</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+
+	<div>
+		<h2>Cozy</h2>
+		<p>Should be red</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+	<div data-ui5-compact-size>
+		<h2>Compact with data-ui5-compact-size</h2>
+		<p>Should be lightblue</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+	<div class="ui5-content-density-compact">
+		<h2>Compact with .ui5-content-density-compact</h2>
+		<p>Should be lightblue</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+	<div class="sapUiSizeCompact">
+		<h2>Compact with .sapUiSizeCompact</h2>
+		<p>Should be lightblue</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+	<div dir="ltr">
+		<h2>LTR</h2>
+		<p>Should be red</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+	<div dir="rtl">
+		<h2>RTL</h2>
+		<p>Should be green</p>
+		<ui5-button>Click me</ui5-button>
+	</div>
+</body>
+
+</html>

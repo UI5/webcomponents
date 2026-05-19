@@ -154,8 +154,6 @@ function selectionElement(this: ListItem) {
 						) : (
 							<Button
 								part="delete-button"
-								tabindex={-1}
-								data-sap-no-tab-ref
 								id={`${this._id}-deleteSelectionElement`}
 								design="Transparent"
 								icon={declineIcon}

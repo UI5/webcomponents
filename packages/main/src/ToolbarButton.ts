@@ -4,8 +4,10 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type { ButtonAccessibilityAttributes } from "./Button.js";
 import type ButtonDesign from "./types/ButtonDesign.js";
+import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
-import ToolbarItem from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import ToolbarButtonTemplate from "./ToolbarButtonTemplate.js";
 import ToolbarButtonCss from "./generated/themes/ToolbarButton.css.js";
 
@@ -22,7 +24,7 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
  * `import "@ui5/webcomponents/dist/ToolbarButton.js";`
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -45,7 +47,30 @@ type ToolbarButtonAccessibilityAttributes = ButtonAccessibilityAttributes;
 	bubbles: true,
 	cancelable: true,
 })
-class ToolbarButton extends ToolbarItem {
+
+class ToolbarButton extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
+		click: ToolbarItemEventDetail,
+	}
+
+	/**
+	* Property used to define the access of the item to the overflow Popover. If "NeverOverflow" option is set,
+	* the item never goes in the Popover, if "AlwaysOverflow" - it never comes out of it.
+	* @public
+	* @default "Default"
+	*/
+	@property()
+	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
+
+	/**
+	 * Defines if the toolbar overflow popup should close upon interaction with the item.
+	 * It will close by default.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	preventOverflowClosing = false;
+
 	/**
 	 * Defines if the action is disabled.
 	 *
@@ -146,6 +171,21 @@ class ToolbarButton extends ToolbarItem {
 	text?: string;
 
 	/**
+	 * Defines whether the button text should only be displayed in the overflow popover.
+	 *
+	 * When set to `true`, the button appears as icon-only in the main toolbar,
+	 * but shows both icon and text when moved to the overflow popover.
+	 *
+	 * **Note:** This property only takes effect when the `text` property is also set.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.17.0
+	 */
+	@property({ type: Boolean })
+	showOverflowText = false;
+
+	/**
 	 * Defines the width of the button.
 	 *
 	 * **Note:** all CSS sizes are supported - 'percentage', 'px', 'rem', 'auto', etc.
@@ -160,6 +200,23 @@ class ToolbarButton extends ToolbarItem {
 			width: this.width,
 			display: this.hidden ? "none" : "inline-block",
 		};
+	}
+
+	/**
+	 * Returns the effective text to display based on overflow state and showOverflowText property.
+	 *
+	 * When showOverflowText is true:
+	 * - Normal state: returns empty string (icon-only)
+	 * - Overflow state: returns text
+	 *
+	 * When showOverflowText is false:
+	 * - Returns text in both states (normal behavior)
+	 */
+	get effectiveText(): string | undefined {
+		if (this.showOverflowText) {
+			return this.isOverflowed ? this.text : "";
+		}
+		return this.text;
 	}
 
 	onClick(e: Event) {

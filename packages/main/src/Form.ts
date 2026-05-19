@@ -1,10 +1,14 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+
 // Template
 import FormTemplate from "./FormTemplate.js";
 
@@ -12,9 +16,9 @@ import FormTemplate from "./FormTemplate.js";
 import FormCss from "./generated/themes/Form.css.js";
 
 import type FormItemSpacing from "./types/FormItemSpacing.js";
+import type FormAccessibleMode from "./types/FormAccessibleMode.js";
 import type FormGroup from "./FormGroup.js";
 import type TitleLevel from "./types/TitleLevel.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 import { FORM_ACCESSIBLE_NAME } from "./generated/i18n/i18n-defaults.js";
 
@@ -47,13 +51,17 @@ interface IFormItem extends UI5Element {
 	columnSpan?: number;
 	headerText?: string;
 	headerLevel?: `${TitleLevel}`;
+	accessibleMode?: `${FormAccessibleMode}`;
 }
 
 type GroupItemsInfo = {
 	groupItem: IFormItem,
 	items: Array<ItemsInfo>,
-	accessibleNameRef: string | undefined,
 	accessibleName: string | undefined,
+	accessibleNameInner: string | undefined,
+	accessibleNameRef: string | undefined,
+	accessibleNameRefInner: string | undefined,
+	role: AriaRole | undefined,
 }
 
 type ItemsInfo = {
@@ -89,10 +97,10 @@ type ItemsInfo = {
  *
  * The Form component reacts and changes its layout on predefined breakpoints.
  * Depending on its size, the Form content (FormGroups and FormItems) gets divided into one or more columns as follows:
- * - **S** (< 600px) – 1 column is recommended (default: 1)
- * - **M** (600px - 1022px) – up to 2 columns are recommended (default: 1)
- * - **L** (1023px - 1439px) - up to 3 columns are recommended (default: 2)
- * - **XL** (> 1439px) – up to 6 columns are recommended (default: 3)
+ * - **S** (0 - 599px) – 1 column is recommended (default: 1)
+ * - **M** (600px - 1023px) – up to 2 columns are recommended (default: 1)
+ * - **L** (1024px - 1439px) - up to 3 columns are recommended (default: 2)
+ * - **XL** (>= 1440px) – up to 6 columns are recommended (default: 3)
  *
  * To change the layout, use the `layout` property - f.e. layout="S1 M2 L3 XL6".
  *
@@ -223,6 +231,32 @@ class Form extends UI5Element {
 	accessibleName?: string;
 
 	/**
+	 * Defines id (or many ids) of the element (or elements) that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
+	 * Defines the accessibility mode of the component in "edit" and "display" use-cases.
+	 *
+	 * Based on the mode, the component renders different HTML elements and ARIA attributes,
+	 * which are appropriate for the use-case.
+	 *
+	 * **Usage:**
+	 * - Set this property to "Display", when the form consists of non-editable (e.g. texts) form items.
+	 * - Set this property to "Edit", when the form consists of editable (e.g. input fields) form items.
+	 *
+	 * @default "Display"
+	 * @since 2.16.0
+	 * @public
+	 */
+	@property()
+	accessibleMode: `${FormAccessibleMode}` = "Display";
+
+	/**
 	 * Defines the number of columns to distribute the form content by breakpoint.
 	 *
 	 * Supported values:
@@ -294,9 +328,9 @@ class Form extends UI5Element {
 	/**
 	 * Defines the vertical spacing between form items.
 	 *
-	 * **Note:** If the Form is meant to be switched between "non-edit" and "edit" modes,
-	 * we recommend using "Large" item spacing in "non-edit" mode, and "Normal" - for "edit" mode,
-	 * to avoid "jumping" effect, caused by the hight difference between texts in "non-edit" mode and the input fields in "edit" mode.
+	 * **Note:** If the Form is meant to be switched between "display"("non-edit") and "edit" modes,
+	 * we recommend using "Large" item spacing in "display"("non-edit") mode, and "Normal" - for "edit" mode,
+	 * to avoid "jumping" effect, caused by the hight difference between texts in "display"("non-edit") mode and the input fields in "edit" mode.
 	 *
 	 * @default "Normal"
 	 * @public
@@ -310,8 +344,8 @@ class Form extends UI5Element {
 	 * **Note:** When a `header` is provided, the `headerText` property is ignored.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the component content - FormGroups or FormItems.
@@ -326,7 +360,7 @@ class Form extends UI5Element {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<IFormItem>;
+	items!: DefaultSlot<IFormItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -373,7 +407,7 @@ class Form extends UI5Element {
 		this.setGroupsColSpan();
 
 		// Set item spacing
-		this.setItemSpacing();
+		this.setItemsState();
 	}
 
 	onAfterRendering() {
@@ -451,11 +485,11 @@ class Form extends UI5Element {
 		].forEach(layout => {
 			if (this.isValidFormItemLayout(layout.labelSpan, layout.emptySpan)) {
 				const formItemLayout = layout.labelSpan === MAX_FORM_ITEM_CELLS ? `1fr` : `${layout.labelSpan}fr ${MAX_FORM_ITEM_CELLS - (layout.labelSpan + layout.emptySpan)}fr ${layout.emptySpan}fr`;
-				this.style.setProperty(getScopedVarName(`--ui5-form-item-layout-${layout.breakpoint}`), formItemLayout);
+				this.style.setProperty(`--ui5-form-item-layout-${layout.breakpoint}`, formItemLayout);
 			} else {
 				// eslint-disable-next-line
 				console.warn(`Form :: invalid usage of emptySpan and/or labelSpan in ${layout.breakpoint} size. The labelSpan must be <=12 and when emptySpace is used - their combined values must not exceed 11.`)
-				this.style.setProperty(getScopedVarName(`--ui5-form-item-layout-${layout.breakpoint}`), layout.breakpoint === "S" ? DEFAULT_FORM_ITEM_LAYOUT_S : DEFAULT_FORM_ITEM_LAYOUT);
+				this.style.setProperty(`--ui5-form-item-layout-${layout.breakpoint}`, layout.breakpoint === "S" ? DEFAULT_FORM_ITEM_LAYOUT_S : DEFAULT_FORM_ITEM_LAYOUT);
 			}
 		});
 	}
@@ -521,9 +555,10 @@ class Form extends UI5Element {
 		return index === 0 ? MIN_COL_SPAN + (delta - groups) + 1 : MIN_COL_SPAN + 1;
 	}
 
-	setItemSpacing() {
+	setItemsState() {
 		this.items.forEach((item: IFormItem) => {
 			item.itemSpacing = this.itemSpacing;
+			item.accessibleMode = this.accessibleMode;
 		});
 	}
 
@@ -544,13 +579,18 @@ class Form extends UI5Element {
 	}
 
 	get effectiveAccessibleName() {
-		if (this.accessibleName) {
-			return this.accessibleName;
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this);
 		}
+
 		return this.hasHeader ? undefined : Form.i18nBundle.getText(FORM_ACCESSIBLE_NAME);
 	}
 
 	get effectiveАccessibleNameRef(): string | undefined {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return;
+		}
+
 		return this.hasHeaderText && !this.hasCustomHeader ? `${this._id}-header-text` : undefined;
 	}
 
@@ -577,16 +617,21 @@ class Form extends UI5Element {
 						continue;
 					}
 
-					items[currentItem].item.style.setProperty(getScopedVarName(`--ui5-form-item-order-${breakpoint}`), `${column + row * cols}`);
+					items[currentItem].item.style.setProperty(`--ui5-form-item-order-${breakpoint}`, `${column + row * cols}`);
 					currentItem++;
 				}
 			});
 
+			const accessibleNameRef = (groupItem as FormGroup).effectiveAccessibleNameRef;
+
 			return {
 				groupItem,
-				accessibleName: (groupItem as FormGroup).getEffectiveAccessibleName(index),
-				accessibleNameRef: (groupItem as FormGroup).effectiveАccessibleNameRef,
+				accessibleName: this.accessibleMode === "Edit" ? (groupItem as FormGroup).getEffectiveAccessibleName(index) : undefined,
+				accessibleNameInner: this.accessibleMode === "Edit" ? undefined : (groupItem as FormGroup).getEffectiveAccessibleName(index),
+				accessibleNameRef: this.accessibleMode === "Edit" ? accessibleNameRef : undefined,
+				accessibleNameRefInner: this.accessibleMode === "Edit" ? undefined : accessibleNameRef,
 				items: this.getItemsInfo((Array.from(groupItem.children) as Array<IFormItem>)),
+				role: this.accessibleMode === "Edit" ? "form" : undefined,
 			};
 		});
 	}
@@ -642,10 +687,10 @@ class Form extends UI5Element {
 				containerQuery = `@container (max-width: 599px) {`;
 			} else if (step === "M") {
 				supporedColumnsNumber = StepColumn.M;
-				containerQuery = `@container (width > 599px) and (width < 1024px) {`;
+				containerQuery = `@container (min-width: 600px) and (max-width: 1023px) {`;
 			} else if (step === "L") {
 				supporedColumnsNumber = StepColumn.L;
-				containerQuery = `@container (width > 1023px) and (width < 1439px) {`;
+				containerQuery = `@container (min-width: 1024px) and (max-width: 1439px) {`;
 			} else if (step === "XL") {
 				containerQuery = `@container (min-width: 1440px) {`;
 				supporedColumnsNumber = StepColumn.XL;

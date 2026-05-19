@@ -1,5 +1,5 @@
 @import "../base/FileUploader-parameters.css";
 
-:root {
+:host {
 	--_ui5_file_uploader_value_state_error_hover_background_color: var(--sapField_InvalidBackground);
 }

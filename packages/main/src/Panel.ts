@@ -1,17 +1,20 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
 import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
-import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isSpace, isEnter, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
+import { supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type TitleLevel from "./types/TitleLevel.js";
 import type Button from "./Button.js";
 import type PanelAccessibleRole from "./types/PanelAccessibleRole.js";
@@ -170,8 +173,8 @@ class Panel extends UI5Element {
 	 * @public
 	 * @since 1.16.0-rc.1
 	 */
-	 @property({ type: Boolean })
-	 stickyHeader = false;
+	@property({ type: Boolean })
+	stickyHeader = false;
 
 	/**
 	 * When set to `true`, the `accessibleName` property will be
@@ -195,6 +198,20 @@ class Panel extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_animationRunning = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_pendingToggle = false;
+
+	@property({ type: Boolean })
+	_touched = false;
+
+	/**
+	 * Indicates whether the content area should be focusable.
+	 * This is true when content is scrollable and has no focusable children.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_contentFocusable = false;
+
 	/**
 	 * Defines the component header area.
 	 *
@@ -202,7 +219,7 @@ class Panel extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -216,6 +233,10 @@ class Panel extends UI5Element {
 		this._hasHeader = !!this.header.length;
 	}
 
+	onAfterRendering() {
+		this._updateContentFocusable();
+	}
+
 	shouldToggle(element: HTMLElement): boolean {
 		const customContent = this.header.length;
 		if (customContent) {
@@ -226,6 +247,16 @@ class Panel extends UI5Element {
 
 	get shouldNotAnimate() {
 		return this.noAnimation || getAnimationMode() === AnimationMode.None;
+	}
+
+	_isMobile() {
+		if (supportsTouch()) {
+			this._touched = true;
+		}
+	}
+
+	_headerFocusOut() {
+		this._touched = false;
 	}
 
 	_headerClick(e: MouseEvent) {
@@ -248,11 +279,18 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			e.preventDefault();
+			this._toggleOpen();
 		}
 
 		if (isSpace(e)) {
 			e.preventDefault();
+			this._pendingToggle = true;
+		}
+
+		// Cancel toggle if Escape is pressed
+		if (isEscape(e) && this._pendingToggle) {
+			e.preventDefault();
+			this._pendingToggle = false;
 		}
 	}
 
@@ -262,11 +300,15 @@ class Panel extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			this._toggleOpen();
+			e.preventDefault();
 		}
 
 		if (isSpace(e)) {
-			this._toggleOpen();
+			// Only toggle if space was pressed and escape wasn't pressed to cancel
+			if (this._pendingToggle) {
+				this._toggleOpen();
+			}
+			this._pendingToggle = false;
 		}
 	}
 
@@ -304,6 +346,50 @@ class Panel extends UI5Element {
 
 	_headerOnTarget(target: HTMLElement) {
 		return target.classList.contains("sapMPanelWrappingDiv");
+	}
+
+	/**
+	 * Updates the focusability of the content area.
+	 * Content becomes focusable when:
+	 * - Panel is expanded (not collapsed)
+	 * - Content is scrollable (scrollHeight > clientHeight or scrollWidth > clientWidth)
+	 * - No focusable children exist inside
+	 * @private
+	 */
+	_updateContentFocusable() {
+		// Not focusable when collapsed
+		if (this.collapsed) {
+			this._contentFocusable = false;
+			return;
+		}
+
+		const contentDom = this.shadowRoot?.querySelector(".ui5-panel-content") as HTMLElement | null;
+		if (!contentDom) {
+			this._contentFocusable = false;
+			return;
+		}
+
+		// Check if scrollable (vertical OR horizontal)
+		const isScrollable = contentDom.scrollHeight > contentDom.clientHeight
+			|| contentDom.scrollWidth > contentDom.clientWidth;
+
+		if (!isScrollable) {
+			this._contentFocusable = false;
+			return;
+		}
+
+		// Check for focusable children (synchronous)
+		const tabbables = getTabbableElements(contentDom);
+		this._contentFocusable = tabbables.length === 0;
+	}
+
+	/**
+	 * Returns the tabindex for the content area.
+	 * Returns 0 when content should be focusable, undefined otherwise (removes attribute).
+	 * @private
+	 */
+	get _contentTabIndex(): number | undefined {
+		return this._contentFocusable ? 0 : undefined;
 	}
 
 	get toggleButtonTitle() {

@@ -6,13 +6,27 @@ describe("Mobile Behaviour", () => {
 		cy.ui5SimulateDevice();
 	});
 
-	it("Test self-collapsible search is expanded and collapsed by the show-search-field property", () => {
+	it("Test self-collapsible search is not auto-opened on initial load", () => {
 		cy.mount(
 			<ShellBar id="shellbar" showSearchField={true}>
 				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
 			</ShellBar>
 		);
 
+		// On initial load, search should stay collapsed even with showSearchField=true
+		// to prevent the full-screen search dialog from appearing unexpectedly
+		cy.get("#search").should("have.prop", "open", false);
+	});
+
+	it("Test self-collapsible search opens when user clicks the search field", () => {
+		cy.mount(
+			<ShellBar id="shellbar">
+				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+			</ShellBar>
+		);
+
+		// Click search field to open search dialog
+		cy.get("#search").click();
 		cy.get("#search").should("have.prop", "open", true);
 	});
 

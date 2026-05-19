@@ -93,7 +93,7 @@ abstract class TableRowActionBase extends UI5Element {
 	abstract getRenderInfo(): {
 		text: string;
 		icon: string;
-		interactive: boolean;
+		interactive?: boolean;
 	};
 
 	isFixedAction() {

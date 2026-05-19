@@ -38,7 +38,7 @@ export default function UserSettingsItemTemplate(this: UserSettingsItem) {
 
 	return (
 		<div class="ui5-user-settings-item">
-			<header class="ui5-user-settings-item-header-container" tabindex={0}>
+			<header class="ui5-user-settings-item-header-container">
 				<div class="ui5-user-settings-item-header">
 					<Button icon="nav-back" design="Transparent" onClick={this._handleBackButtonClick} class="ui5-user-settings-item-collapse-btn" style={{ display: this._shouldShowBackButton ? "block" : "" }}></Button>
 

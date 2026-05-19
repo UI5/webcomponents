@@ -291,7 +291,7 @@ class Link extends UI5Element implements ITabbable {
 	}
 
 	onBeforeRendering() {
-		const needsNoReferrer = this.target !== "_self"
+		const needsNoReferrer = this.target === "_blank"
 			&& this.href
 			&& this._isCrossOrigin(this.href);
 
@@ -311,7 +311,7 @@ class Link extends UI5Element implements ITabbable {
 			return Number.parseInt(this.forcedTabIndex);
 		}
 
-		return (this.disabled || !this.textContent?.length) ? -1 : 0;
+		return this.disabled ? -1 : 0;
 	}
 
 	get ariaLabelText() {

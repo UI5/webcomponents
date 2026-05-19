@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Illustrated Message Custom</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 1.5rem;
+			font-family: "72", "72full", Arial, sans-serif;
+			background: var(--sapBackgroundColor, #f7f7f7);
+			color: var(--sapTextColor, #1a1a1a);
+		}
+
+		.grid-container {
+			display: grid;
+			gap: 2rem;
+			grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		}
+
+		section {
+			display: flex;
+			flex-direction: column;
+			background: var(--sapTile_Background, #fff);
+			border-radius: 0.75rem;
+			box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+			padding: 1.5rem;
+		}
+
+		section h2 {
+			margin-top: 0;
+			margin-bottom: 0.5rem;
+			font-size: 1.25rem;
+		}
+
+		section p {
+			margin-top: 0;
+			margin-bottom: 1.5rem;
+			color: var(--sapContent_LabelColor, #6a6d70);
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Custom Illustration Playground</h1>
+	<p>
+		This page showcases both safe (<code>registerIllustration</code>) and unsafe
+		(<code>unsafeRegisterIllustration</code>) APIs for registering custom illustrations with
+		<code>ui5-illustrated-message</code>.
+	</p>
+
+	<div class="grid-container">
+		<section>
+			<h2>Safe registration (templates)</h2>
+			<p>SVG rendered via JSX templates registered through <code>registerIllustration</code>.</p>
+			<ui5-illustrated-message name="custom/CustomFigure" design="Auto" title-text="Templates keep you safe"
+				subtitle-text="No raw strings were harmed.">
+				<ui5-button design="Emphasized">Primary Action</ui5-button>
+				<ui5-button>Secondary Action</ui5-button>
+			</ui5-illustrated-message>
+		</section>
+
+		<section>
+			<h2>Unsafe registration (raw strings)</h2>
+			<p>SVG sourced from <code>assets/</code> via <code>unsafeRegisterIllustration</code>.</p>
+			<ui5-illustrated-message name="custom/EmptyCart" design="Auto" title-text="Handle with care"
+				subtitle-text="Raw SVG strings require your validation." decorative>
+				<ui5-button design="Transparent">Learn more</ui5-button>
+			</ui5-illustrated-message>
+		</section>
+	</div>
+
+	<script type="module">
+		import { registerIllustration, unsafeRegisterIllustration } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
+		import { jsx } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
+
+		import sceneSvg from "./assets/Custom-Scene-EmptyCart.js";
+		import dialogSvg from "./assets/Custom-Dialog-EmptyCart.js";
+		import spotSvg from "./assets/Custom-Spot-EmptyCart.js";
+		import dotSvg from "./assets/Custom-Dot-EmptyCart.js";
+
+		// Safe: Register illustration using JSX via jsx() function
+		// Note: JSX syntax (<svg>...</svg>) only works in projects scaffolded with npm init @ui5/webcomponents-package
+		registerIllustration("CustomFigure", {
+			set: "custom",
+			title: "Custom illustration with templates",
+			subtitle: "Registered via template-based API",
+			sceneTemplate: () => jsx("svg", {
+				width: "320",
+				height: "200",
+				viewBox: "0 0 320 200",
+				fill: "none",
+				children: [
+					jsx("rect", { width: "320", height: "200", rx: "14", fill: "var(--sapContent_Illustrative_Color7)" }),
+					jsx("circle", { cx: "160", cy: "100", r: "50", fill: "var(--sapContent_Illustrative_Color1)" }),
+					jsx("path", { d: "M130 120 L190 120 L185 160 L135 160 Z", fill: "var(--sapContent_Illustrative_Color3)" })
+				]
+			}),
+			dialogTemplate: () => jsx("svg", {
+				width: "160",
+				height: "160",
+				viewBox: "0 0 160 160",
+				fill: "none",
+				children: [
+					jsx("rect", { width: "160", height: "160", rx: "12", fill: "var(--sapContent_Illustrative_Color7)" }),
+					jsx("circle", { cx: "80", cy: "80", r: "30", fill: "var(--sapContent_Illustrative_Color1)" }),
+					jsx("path", { d: "M65 90 L95 90 L92 110 L68 110 Z", fill: "var(--sapContent_Illustrative_Color3)" })
+				]
+			}),
+			spotTemplate: () => jsx("svg", {
+				width: "120",
+				height: "120",
+				viewBox: "0 0 120 120",
+				fill: "none",
+				children: [
+					jsx("rect", { width: "120", height: "120", rx: "8", fill: "var(--sapContent_Illustrative_Color7)" }),
+					jsx("circle", { cx: "60", cy: "60", r: "20", fill: "var(--sapContent_Illustrative_Color1)" }),
+					jsx("path", { d: "M50 65 L70 65 L68 80 L52 80 Z", fill: "var(--sapContent_Illustrative_Color3)" })
+				]
+			}),
+			dotTemplate: () => jsx("svg", {
+				width: "60",
+				height: "60",
+				viewBox: "0 0 60 60",
+				fill: "none",
+				children: [
+					jsx("rect", { width: "60", height: "60", rx: "6", fill: "var(--sapContent_Illustrative_Color7)" }),
+					jsx("circle", { cx: "30", cy: "30", r: "10", fill: "var(--sapContent_Illustrative_Color1)" })
+				]
+			}),
+		});
+
+		// Unsafe: Register illustration using raw SVG strings
+		unsafeRegisterIllustration("EmptyCart", {
+			set: "custom",
+			title: "Your unsafe cart is empty",
+			subtitle: "Registered with raw SVG strings",
+			sceneSvg,
+			dialogSvg,
+			spotSvg,
+			dotSvg,
+		});
+	</script>
+</body>
+
+</html>

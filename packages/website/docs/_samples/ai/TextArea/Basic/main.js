@@ -47,7 +47,7 @@ function animateTextGeneration(text) {
 function completeGeneration() {
 	versionHistory.push({
 		value: textarea.value,
-		actionText: "Generated text",
+		promptDescription: "Generated text",
 		timestamp: new Date().toISOString()
 	});
 
@@ -57,11 +57,11 @@ function completeGeneration() {
 }
 
 function updateComponentState() {
-	textarea.currentVersionIndex = currentVersionIndex + 1;
+	textarea.currentVersion = currentVersionIndex + 1;
 	textarea.totalVersions = versionHistory.length;
 	
 	if (versionHistory[currentVersionIndex]) {
-		textarea.actionText = versionHistory[currentVersionIndex].actionText;
+		textarea.promptDescription = versionHistory[currentVersionIndex].promptDescription;
 	}
 }
 
@@ -75,7 +75,7 @@ async function executeGeneration() {
 
 	// Set loading state
 	textarea.loading = true;
-	textarea.actionText = "Generating text...";
+	textarea.promptDescription = "Generating text...";
 
 	try {
 		// Simulate processing delay
@@ -92,7 +92,7 @@ async function executeGeneration() {
 	} catch (error) {
 		console.error('Generation failed:', error);
 		textarea.loading = false;
-		textarea.actionText = 'Generation failed';
+		textarea.promptDescription = 'Generation failed';
 	}
 }
 
@@ -107,7 +107,7 @@ function stopGeneration() {
 	if (textarea.value.trim()) {
 		versionHistory.push({
 			value: textarea.value,
-			actionText: "Generated text (stopped)",
+			promptDescription: "Generated text (stopped)",
 			timestamp: new Date().toISOString()
 		});
 

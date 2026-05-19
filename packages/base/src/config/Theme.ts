@@ -5,11 +5,20 @@ import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
 import { DEFAULT_THEME, SUPPORTED_THEMES } from "../generated/AssetParameters.js";
 import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
+import { fireConfigChange, attachConfigChange, getSharedValue } from "./ConfigurationSync.js";
 
 let curTheme: string | undefined;
+let curBaseTheme: string | undefined;
 
 attachConfigurationReset(() => {
 	curTheme = undefined;
+});
+
+attachConfigChange("theme", (theme: string) => {
+	curTheme = theme;
+	if (isBooted()) {
+		applyTheme(curTheme).then(() => reRenderAllUI5Elements({ themeAware: true }));
+	}
 });
 
 /**
@@ -19,7 +28,7 @@ attachConfigurationReset(() => {
  */
 const getTheme = (): string => {
 	if (curTheme === undefined) {
-		curTheme = getConfiguredTheme();
+		curTheme = getSharedValue<string>("theme") ?? getConfiguredTheme();
 	}
 
 	return curTheme;
@@ -37,6 +46,8 @@ const setTheme = async (theme: string): Promise<void> => {
 	}
 
 	curTheme = theme;
+
+	fireConfigChange("theme", theme);
 
 	if (isBooted()) {
 		// Update CSS Custom Properties
@@ -91,6 +102,24 @@ const isLegacyThemeFamilyAsync = async () => {
 
 const isKnownTheme = (theme: string) => SUPPORTED_THEMES.includes(theme);
 
+/**
+ * Returns the base theme of external theme.
+ * @private
+ * @returns {string | undefined} the base theme name
+ */
+const getBaseTheme = (): string | undefined => {
+	return curBaseTheme;
+};
+
+/**
+ * Sets the base theme of the current external theme.
+ * @param { string | undefined } theme the name of the new base theme
+ * @private
+ */
+const setBaseTheme = (theme: string | undefined): void => {
+	curBaseTheme = theme;
+};
+
 export {
 	getTheme,
 	setTheme,
@@ -98,4 +127,6 @@ export {
 	isLegacyThemeFamily,
 	isLegacyThemeFamilyAsync,
 	getDefaultTheme,
+	getBaseTheme,
+	setBaseTheme,
 };

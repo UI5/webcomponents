@@ -5,8 +5,7 @@
 Provides web components implementing AI-related visual and interaction.
 
 
-**Note:** The package is available since 2.0 and experimental
-
+**Note:** The package is available since 2.0. It's under active development and considered experimental. Component APIs are subject to change. Furthermore, the package supports **Horizon** themes only.
 
 ## Provided components
 
@@ -23,7 +22,7 @@ Provides web components implementing AI-related visual and interaction.
 
 | Assets | Module | Notes
 |------------|-----------|-----------
-| `i18n`, `themes` | `@ui5/webcomponents-ai/dist/Assets.js` | Theming parameters and translations for the components
+| `i18n`, `themes` | `@ui5/webcomponents-ai/dist/Assets.js` | Theming parameters (Horizon themes only) and translations for the components
 
 
 ## Resources

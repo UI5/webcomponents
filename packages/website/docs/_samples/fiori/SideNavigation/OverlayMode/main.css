@@ -21,3 +21,7 @@
 	box-shadow: none;
 	border-inline-end: none;
 }
+
+ui5-page::part(content) {
+	padding: 0;
+}

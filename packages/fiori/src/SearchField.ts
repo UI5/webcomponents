@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -28,7 +29,7 @@ import {
  */
 interface ISearchScope extends UI5Element {
 	text?: string,
-	selected: boolean,
+	value?: string,
 	stableDomRef: string,
 }
 
@@ -102,6 +103,15 @@ class SearchField extends UI5Element {
 	}
 
 	/**
+	 * Indicates whether a loading indicator should be shown in the input field.
+	 * @default false
+	 * @since 2.19.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	fieldLoading = false
+
+	/**
 	 * Defines whether the clear icon of the search will be shown.
 	 * @default false
 	 * @public
@@ -154,11 +164,25 @@ class SearchField extends UI5Element {
 	accessibleDescription?: string;
 
 	/**
+	 * Defines the value of the component:
+	 *
+	 * Applications are responsible for setting the correct scope value.
+	 *
+	 * **Note:** If the given value does not match any existing scopes,
+	 * no scope will be selected and the SearchField scope component will be displayed as empty.
+	 * @public
+	 * @default ""
+	 * @since 2.18.0
+	 */
+	@property()
+	scopeValue?: string;
+
+	/**
 	 * Defines the component scope options.
 	 * @public
 	 */
 	@slot({ type: HTMLElement, individualSlots: true, invalidateOnChildChange: true })
-	scopes!: Array<ISearchScope>;
+	scopes!: Slot<ISearchScope>;
 
 	/**
 	 * Defines the filter button slot, used to display an additional filtering button.
@@ -169,7 +193,7 @@ class SearchField extends UI5Element {
 	 * @since 2.11.0
 	 */
 	@slot()
-	filterButton!: Array<Button>;
+	filterButton!: Slot<Button>;
 
 	/**
 	 * @private
@@ -241,6 +265,12 @@ class SearchField extends UI5Element {
 
 	_handleScopeChange(e: CustomEvent<SelectChangeEventDetail>) {
 		const item = e.detail.selectedOption as IOption & { scopeOption: ISearchScope };
+
+		// Set the scopeValue property if the selected scope has a value defined
+		if (item.value) {
+			this.scopeValue = item.value;
+		}
+
 		this.fireDecoratorEvent("scope-change", {
 			scope: item.scopeOption,
 		});

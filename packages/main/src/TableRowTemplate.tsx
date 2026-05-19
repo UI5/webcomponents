@@ -13,9 +13,9 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				<TableCell id="selection-cell"
 					aria-selected={this._isSelected}
 					aria-colindex={ariaColIndex++}
+					data-border-merged={this._firstVisibleCell?.merged ? "" : null}
 					data-ui5-table-selection-cell
-					data-ui5-table-cell-fixed
-					data-ui5-table-acc-text=""
+					data-ui5-acc-text=""
 				>
 					{ this._isMultiSelect ?
 						<CheckBox id="selection-component"
@@ -27,7 +27,6 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 						:
 						<RadioButton id="selection-component"
 							tabindex={-1}
-							name={this._tableId}
 							checked={this._isSelected}
 							onChange={this._onSelectionChange}
 							accessibleName={this._i18nRowSelector}
@@ -48,10 +47,16 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
+			{ this._renderDummyCell && this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="">
+				</TableCell>
+			}
+
 			{ this._rowActionCount > 0 &&
 				<TableCell id="actions-cell"
 					aria-colindex={ariaColIndex++}
-					data-ui5-table-acc-text={this._actionCellAccText}
+					data-ui5-acc-text={this._actionCellAccText}
 				>
 					{ this._flexibleActions.map(action => (
 						<slot name={action._individualSlot}></slot>
@@ -81,7 +86,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 				</TableCell>
 			}
 
-			{ this._popinCells.length > 0 &&
+			{ this._renderDummyCell && !this._hasPopin &&
+				<TableCell id="dummy-cell" role="none" aria-hidden={true} data-border-merged=""
+					data-excluded-from-navigation="nofocus">
+				</TableCell>
+			}
+
+			{ this._hasPopin &&
 				<TableCell id="popin-cell"
 					data-ui5-table-popin-cell
 					aria-colindex={ariaColIndex++}

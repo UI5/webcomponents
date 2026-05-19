@@ -1,6 +1,6 @@
 @import "../base/ProgressIndicator-parameters.css";
 
-:root {
+:host {
     --_ui5_progress_indicator_value_state_none: var(--sapHighlightColor);
     --_ui5_progress_indicator_value_state_error: var(--sapHighlightColor);
     --_ui5_progress_indicator_value_state_warning: var(--sapHighlightColor);

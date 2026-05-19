@@ -23,6 +23,9 @@ html,body {
     width: 100%
 }
 
+#tpLabel::part(input) {
+    text-align: right;
+}
 form ui5-time-picker:invalid {
     outline: 2px solid var(--sapNegativeColor);
 }

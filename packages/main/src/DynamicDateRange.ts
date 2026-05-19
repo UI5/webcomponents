@@ -19,6 +19,7 @@ import {
 	DYNAMIC_DATE_RANGE_SELECTED_TEXT,
 	DYNAMIC_DATE_RANGE_EMPTY_SELECTED_TEXT,
 	DYNAMIC_DATE_RANGE_NAVIGATION_ICON_TOOLTIP,
+	DYNAMIC_DATE_RANGE_POPOVER_ACCESSIBLE_NAME,
 } from "./generated/i18n/i18n-defaults.js";
 
 // default calendar for bundling
@@ -132,6 +133,7 @@ interface IDynamicDateRangeOption {
 @customElement({
 	tag: "ui5-dynamic-date-range",
 	languageAware: true,
+	cldr: true,
 	template: DynamicDateRangeTemplate,
 	renderer: jsxRenderer,
 	styles: [
@@ -287,6 +289,10 @@ class DynamicDateRange extends UI5Element {
 		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_NAVIGATION_ICON_TOOLTIP);
 	}
 
+	get popoverAccessibleName() {
+		return DynamicDateRange.i18nBundle.getText(DYNAMIC_DATE_RANGE_POPOVER_ACCESSIBLE_NAME);
+	}
+
 	_togglePicker(): void {
 		if (this.open) {
 			this._close();
@@ -407,7 +413,7 @@ class DynamicDateRange extends UI5Element {
 		this.open = false;
 	}
 
-	onPopoverOpen() {
+	onPopoverBeforeOpen() {
 		if (this.currentValue !== this.value) {
 			this.currentValue = this.value;
 		}

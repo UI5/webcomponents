@@ -33,6 +33,22 @@ Cypress.Commands.add("ui5MenuOpened", { prevSubject: true }, subject => {
 		.and("have.attr", "open");
 });
 
+Cypress.Commands.add("ui5MenuClosed", { prevSubject: true }, subject => {
+	cy.wrap(subject)
+		.as("menu");
+
+	cy.get("@menu")
+		.should("not.have.attr", "open");
+
+	cy.get("@menu")
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.should($rp => {
+			expect($rp.is(":popover-open")).to.be.false;
+		})
+		.and("not.have.attr", "open");
+});
+
 Cypress.Commands.add("ui5MenuItemClick", { prevSubject: true }, subject => {
 	cy.get(subject)
 		.as("item")
@@ -104,6 +120,7 @@ declare global {
 		interface Chainable {
 			ui5MenuOpen(options?: { opener?: string }): Chainable<void>
 			ui5MenuOpened(): Chainable<void>
+			ui5MenuClosed(): Chainable<void>
 			ui5MenuItemClick(): Chainable<void>
 			ui5MenuItemPress(key: any): Chainable<void>
 			ui5MenuItemCheckShiftClickAndPress(menuItem: string, shouldStatement: string): Chainable<void>

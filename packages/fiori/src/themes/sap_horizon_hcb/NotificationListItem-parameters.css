@@ -1,6 +1,6 @@
 @import "../base/NotificationListItem-parameters.css";
 
-:root {
+:host {
 	--_ui5-notification_item-border-radius: var(--sapTile_BorderCornerRadius);
 	--_ui5-notification_group_header-border-bottom-width: 0;
 	--_ui5-notification_group_header-padding: 0.5rem;

@@ -136,7 +136,6 @@
 	font-weight: normal;
 	color: var(--sapTile_TextColor);
 	margin-top: var(--_ui5_card_header_subtitle_margin_top);
-	max-height: 2.1rem;
 }
 
 .ui5-card-header .ui5-card-header-text .ui5-card-header-title,

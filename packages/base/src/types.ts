@@ -1,9 +1,15 @@
 import type { JSX } from "./jsx-runtime.d.ts";
+import type { Slot, DefaultSlot } from "./UI5Element.js";
 
 // General utils
 export type LowercaseString<T> = T extends string ? Lowercase<T> : never;
 
 // Core Framework types
+export type {
+	Slot,
+	DefaultSlot,
+};
+
 export type PromiseResolve = (value: void | PromiseLike<void>) => void;
 export type Timeout = ReturnType<typeof setTimeout>;
 export type Interval = ReturnType<typeof setInterval>;
@@ -34,8 +40,11 @@ export type AccessibilityInfo = {
 	// A translated text that represents the component type.
 	type?: string,
 
-	// A translated text that represents relevant component description/state - value, placeholder, label, etc.
+	// A translated text that represents relevant component description/state - value, placeholder, etc.
 	description?: string,
+
+	// Label of the component, e.g. `accessible-name` or `accessible-name-ref` for form elements.
+	label?: string,
 
 	// Disabled state of the component.
 	disabled?: boolean,

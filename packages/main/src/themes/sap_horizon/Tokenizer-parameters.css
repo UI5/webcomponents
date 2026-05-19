@@ -1,5 +1,5 @@
 @import "../base/Tokenizer-parameters.css";
 
-:root {
+:host {
 	--_ui5_tokenizer_n_more_text_color: var(--sapLinkColor);
 }

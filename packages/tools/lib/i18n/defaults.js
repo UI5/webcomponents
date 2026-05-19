@@ -78,7 +78,9 @@ export {${textKeys.join()}};`;
 	await fs.writeFile(outputFile, getOutputFileContent(properties, defaultLanguageProperties));
 
 
-	console.log("i18n default file generated.")
+	if (process.env.UI5_VERBOSE === "true") {
+		console.log("i18n default file generated.");
+	}
 };
 
 if (require.main === module) {

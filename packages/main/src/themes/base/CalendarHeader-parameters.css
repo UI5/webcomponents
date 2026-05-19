@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_calendar_header_arrow_button_border: none;
 	--_ui5_calendar_header_arrow_button_border_radius: 0.25rem;
 	--_ui5_calendar_header_middle_button_width: 6.25rem;
@@ -16,4 +16,13 @@
 	--_ui5_calendar_header_middle_button_focus_active_outline: none;
 	--_ui5_calendar_header_middle_button_focus_active_background: var(--sapButton_Active_Background);
 	--_ui5_calendar_header_middle_button_focus_after_border: 1px dotted var(--sapContent_FocusColor);
+	--_ui5_calendar_header_midcontainer_gap: 0.5rem;
+	--_ui5_calendar_header_arrow_button_flex_shrink: 0;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_calendar_header_midcontainer_gap: 0;
+		--_ui5_calendar_header_arrow_button_flex_shrink: 1;
+	}
 }

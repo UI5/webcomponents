@@ -15,7 +15,7 @@ export default class TableDragAndDrop extends TableExtension {
 	}
 
 	_ondragstart(e: DragEvent) {
-		DragRegistry.setDraggedElement(e.target as HTMLElement);
+		DragRegistry.setDraggedElement(e.target as HTMLElement, e);
 	}
 
 	_ondragend() {

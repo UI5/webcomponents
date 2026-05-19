@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_monthpicker_item_margin: 0.0625rem;
 	--_ui5_monthpicker_item_border: 0.0625rem solid var(--sapButton_Lite_BorderColor);
 	--_ui5_monthpicker_item_border_radius: 0;

@@ -1,6 +1,7 @@
 import Label from "../../../src/Label.js";
 import Input from "../../../src/Input.js";
 import List from "../../../src/List.js";
+import Button from "../../../src/Button.js";
 
 describe("AccessibilityTextsHelper", () => {
 	it("Label-for tests", () => {
@@ -464,5 +465,43 @@ describe("AccessibilityTextsHelper", () => {
 		// assert
 		cy.get("@list")
 			.should("have.attr", "aria-description", "Desc3");
+	});
+
+	it("Button accessibleNameRef Tests", () => {
+		cy.mount(
+			<>
+				<Label id="lblCounter">Counter value is 0</Label>
+				<Button id="btn1" accessibleNameRef="lblCounter">Increment</Button>
+				<Button id="btn2" accessibleNameRef="lblCounter">Reset</Button>
+			</>
+		);
+
+		// assert - both buttons should have the same aria-label
+		cy.get("#btn1")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Counter value is 0");
+
+		cy.get("#btn2")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Counter value is 0");
+
+		// act - update text of referenced label (simulating counter increment)
+		cy.get("#lblCounter")
+			.then($el => {
+				$el.get(0).innerHTML = "Counter value is 3";
+			});
+
+		// assert - both buttons should update their aria-label
+		cy.get("#btn1")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Counter value is 3");
+
+		cy.get("#btn2")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-label", "Counter value is 3");
 	});
 });

@@ -36,7 +36,7 @@
 	z-index: initial;
 }
 
-::slotted([ui5-segmented-button-item]:hover) {
+::slotted([ui5-segmented-button-item]:not([disabled]):hover) {
 	z-index: 2;
 	box-shadow: var(--_ui5_segmented_btn_hover_box_shadow);
 	border-color: var(--sapButton_Hover_BorderColor);
@@ -79,7 +79,7 @@
 	border-color: var(--sapButton_Selected_BorderColor);
 }
 
-::slotted([ui5-segmented-button-item]:active) {
+::slotted([ui5-segmented-button-item]:not([disabled]):active) {
 	background-color: var(--sapButton_Active_Background);
 }
 

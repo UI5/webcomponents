@@ -5,10 +5,10 @@ import Button from "./Button.js";
 export default function SplitButtonTemplate(this: SplitButton) {
 	return (
 		<div
-			role={this._hideArrowButton ? "button" : "group"}
+			role={this._hideArrowButton ? "presentation" : "group"}
 			class="ui5-split-button-root"
 			tabindex={this._tabIndex}
-			aria-labelledby={`${this._id}-invisibleTextDefault ${this._id}-invisibleText`}
+			aria-labelledby={!this._hideArrowButton ? `${this._id}-invisibleTextDefault ${this._id}-invisibleText` : undefined}
 			aria-haspopup={this._computedAccessibilityAttributes?.root?.hasPopup}
 			aria-roledescription={this._computedAccessibilityAttributes?.root?.roleDescription}
 			aria-label={this._computedAccessibilityAttributes?.root?.title}

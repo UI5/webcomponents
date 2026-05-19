@@ -1,5 +1,5 @@
-:root {
-	--_ui5_panel_focus_border:   var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+:host {
+	--_ui5_panel_focus_border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_panel_header_height: 2.75rem;
 	--_ui5_panel_button_root_width: 2.75rem;
 	--_ui5_panel_button_root_height: 2.75rem;
@@ -13,11 +13,12 @@
 	--_ui5_panel_focus_offset: 1px;
 	--_ui5_panel_focus_bottom_offset: var(--_ui5_panel_focus_offset);
 	--_ui5_panel_content_padding: 0.625rem 1rem 1.375rem 1rem;
+	--_ui5_panel_content_focus_offset: -0.1875rem;
 	--_ui5_panel_header_background_color: var(--sapBackgroundColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_panel_header_button_wrapper_padding: .1875rem .25rem;
+	}
 }

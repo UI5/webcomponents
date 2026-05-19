@@ -2,9 +2,9 @@ import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
+import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Date Picker Tests", () => {
-
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -34,7 +34,7 @@ describe("Date Picker Tests", () => {
 
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
 
@@ -58,7 +58,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-item--selected");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("custom formatting", () => {
@@ -98,6 +98,23 @@ describe("Date Picker Tests", () => {
 
 		cy.get("@datePicker")
 			.should("have.attr", "value", "2018-05-05");
+	});
+
+	it("default valueFormat is ISO format (yyyy-MM-dd)", () => {
+		cy.mount(<DatePicker></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 1995")
+			.realPress("Enter");
+
+		cy.get("@datePicker")
+			.should("have.attr", "value", "1995-03-31");
 	});
 
 	it("value state", () => {
@@ -184,7 +201,38 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "test placeholder");
 	});
 
+	it("clear icon", () => {
+		cy.mount(<DatePicker showClearIcon={true} value="Jan 1, 2020" formatPattern="MMM d, y"></DatePicker>);
 
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("exist");
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon-wrapper")
+			.click();
+
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("ui5-datetime-input")
+			.shadow()
+			.find(".ui5-input-clear-icon")
+			.should("not.exist");
+
+		cy.realPress("Tab");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "");
+	});
 
 	it("Selected date from daypicker is the same as datepicker date", () => {
 		cy.mount(<DatePicker value="Jan 29, 2019" formatPattern="MMM d, y"></DatePicker>);
@@ -216,7 +264,7 @@ describe("Date Picker Tests", () => {
 			.realPress("Tab");
 
 		cy.get<DatePicker>("@datePicker")
-			.should("have.attr", "value", "Jan 1, 1999");
+			.should("have.attr", "value", "1999-01-01");
 	});
 
 	it("Select a date from the picker popover", () => {
@@ -270,7 +318,7 @@ describe("Date Picker Tests", () => {
 
 	it("respect first day of the week - monday", () => {
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "bg");
+			.then(api => api.setLanguage("bg"));
 
 		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
 
@@ -290,7 +338,7 @@ describe("Date Picker Tests", () => {
 			.should("have.class", "ui5-dp-wday6");
 
 		cy.wrap({ setLanguage })
-			.invoke("setLanguage", "en");
+			.then(api => api.setLanguage("en"));
 	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
@@ -917,7 +965,7 @@ describe("Date Picker Tests", () => {
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
 			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "e.g. Dec 31, 2025");
+			.should("have.attr", "placeholder", `e.g. Dec 31, ${new Date().getFullYear()}`);
 
 		cy.get<DatePicker>("@datePicker")
 			.should("not.have.attr", "placeholder");
@@ -1442,6 +1490,33 @@ describe("Date Picker Tests", () => {
 			});
 	});
 
+	it("change event fires with value in correct valueFormat", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" valueFormat="yyyy-MM-dd"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.then($datePicker => {
+				$datePicker.on("change", cy.stub().as("changeHandler"));
+			});
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("Mar 31, 2024")
+			.realPress("Enter");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.value", "2024-03-31");
+
+		cy.get("@changeHandler")
+			.should("have.been.calledOnce")
+			.its("firstCall.args.0.detail")
+			.should("deep.include", {
+				value: "2024-03-31"
+			});
+	});
+
 	it("DatePicker's formatter has strict parsing enabled", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 
@@ -1640,6 +1715,77 @@ describe("Date Picker Tests", () => {
 		cy.get("[ui5-date-picker]")
 			.ui5DatePickerGetInnerInput()
 			.should("have.value", "0202-12-01");
+	});
+
+	it("DatePicker icon tooltip changes when toggling picker", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get("@datePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("DatePicker icon tooltip changes when using keyboard shortcuts", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerGetInnerInput()
+			.as("input")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@input")
+			.realPress("F4");
+
+		cy.get("@datePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("ui5-calendar")
+			.realPress("Escape");
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
 	});
 });
 
@@ -1848,7 +1994,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("picker popover accessible name", () => {
@@ -1864,7 +2010,7 @@ describe("Accessibility", () => {
 		cy.get<DatePicker>("@datePicker")
 			.shadow()
 			.find("ui5-responsive-popover")
-			.should("have.attr", "accessible-name", `Choose Date for ${LABEL}`);
+			.should("have.attr", "accessible-name", DatePicker.i18nBundle.getText(DATEPICKER_POPOVER_ACCESSIBLE_NAME, LABEL));
 	});
 
 	it("accessibleDescription property", () => {
@@ -1908,5 +2054,16 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("span#descr")
 			.should("have.text", DESCRIPTION);
+	});
+});
+
+describe("CSS Parts", () => {
+	it("DatePicker exposes input CSS part through DateTimeInput", () => {
+		cy.mount(<DatePicker />);
+
+		cy.get<DatePicker>("[ui5-date-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.should("have.attr", "part", "input");
 	});
 });

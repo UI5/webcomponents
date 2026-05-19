@@ -1,7 +1,8 @@
-import { SHOW_SELECTED_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { SHOW_SELECTED_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
+import Label from "../../src/Label.js";
 
 describe("MultiComboBox mobile general interaction", () => {
     beforeEach(() => {
@@ -197,7 +198,7 @@ describe("Typeahead", () => {
             .find("[ui5-input]")
             .as("respPopoverInput")
             .realClick()
-            .realType("c");
+            .realType("C");
 
         cy.get("@respPopoverInput")
             .should("have.value", "Cosy");
@@ -570,6 +571,130 @@ describe("Items selection", () => {
             .find<ResponsivePopover>("[ui5-responsive-popover]")
             .ui5ResponsivePopoverOpened();
     });
+
+    it("Should disable the toggle button when there are no selected items", () => {
+        cy.mount(
+            <MultiComboBox>
+                <MultiComboBoxItem text="Cosy"></MultiComboBoxItem>
+                <MultiComboBoxItem text="Compact"></MultiComboBoxItem>
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "disabled");
+    });
+
+    it("Should enable the toggle button when there is selected item", () => {
+        cy.mount(
+            <MultiComboBox>
+                <MultiComboBoxItem text="Cosy" selected></MultiComboBoxItem>
+                <MultiComboBoxItem text="Compact"></MultiComboBoxItem>
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("not.have.attr", "disabled");
+    });
+
+    it("Should show only selected items on n-more click and toggle the button", () => {
+        cy.mount(
+            <MultiComboBox placeholder="Select options">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" selected />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 3);
+    });
+
+    it("Shows all items matching 'I' after clicking N-more and typing in the popover input", () => {
+        cy.mount(
+            <MultiComboBox placeholder="Select options">
+                <MultiComboBoxItem text="Item 1" selected />
+                <MultiComboBoxItem text="Item 2" />
+                <MultiComboBoxItem text="Item 3" />
+                <MultiComboBoxItem text="Item 4" selected />
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .as("respPopover")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 2);
+
+        cy.get("@respPopover")
+            .find("[ui5-input]")
+            .realClick()
+            .realType("I");
+
+        cy.get("@respPopover")
+            .find("[ui5-toggle-button]")
+            .should("not.have.attr", "pressed");
+
+        cy.get("@respPopover")
+            .find("[ui5-list]")
+            .find("slot")
+            .should("have.length", 4);
+    });
 });
 
 describe("Value state header", () => {
@@ -749,5 +874,92 @@ describe("Accessibility", () => {
             .find("[ui5-toggle-button]")
             .should("have.attr", "accessible-name", SHOW_SELECTED_BUTTON.defaultText);
 
+    });
+});
+
+describe("Dialog header title", () => {
+    beforeEach(() => {
+        cy.ui5SimulateDevice("phone");
+    });
+
+    it("Should display label text as dialog header title when label for is used", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" />
+                    <MultiComboBoxItem text="Item 2" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
+    });
+
+    it("Should fallback to 'All Items' when no label is associated", () => {
+        cy.mount(
+            <MultiComboBox id="myMCB">
+                <MultiComboBoxItem text="Item 1" />
+                <MultiComboBoxItem text="Item 2" />
+            </MultiComboBox>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
+    });
+
+    it("Should display label text as dialog header title when opened via n-more", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" selected />
+                    <MultiComboBoxItem text="Item 2" selected />
+                    <MultiComboBoxItem text="Item 3" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
     });
 });

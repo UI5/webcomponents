@@ -1,10 +1,11 @@
 import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
-import { getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
+import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import DOMReferenceConverter from "@ui5/webcomponents-base/dist/converters/DOMReference.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
@@ -13,12 +14,15 @@ import PopoverPlacement from "./types/PopoverPlacement.js";
 import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
 import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import { addOpenedPopover, removeOpenedPopover } from "./popup-utils/PopoverRegistry.js";
+import PopoverResize from "./PopoverResize.js";
+import type { ResizeHandlePlacement } from "./PopoverResize.js";
 
 // Template
 import PopoverTemplate from "./PopoverTemplate.js";
 // Styles
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 const ARROW_SIZE = 8;
 
@@ -32,11 +36,25 @@ type ArrowPosition = {
 	y: number;
 }
 
+enum PopoverActualHorizontalAlign {
+	Center = "Center",
+	Left = "Left",
+	Right = "Right",
+	Stretch = "Stretch",
+}
+
+enum PopoverActualPlacement {
+	Left = "Left",
+	Right = "Right",
+	Top = "Top",
+	Bottom = "Bottom",
+}
+
 type CalculatedPlacement = {
 	arrow: ArrowPosition,
 	top: number,
 	left: number,
-	placement: `${PopoverPlacement}`,
+	actualPlacement: `${PopoverActualPlacement}`,
 }
 
 /**
@@ -121,7 +139,7 @@ class Popover extends Popup {
 
 	/**
 	 * Defines whether the component should close when
-	 * clicking/tapping outside of the popover.
+	 * clicking/tapping outside the popover.
 	 * If enabled, it blocks any interaction with the background.
 	 * @default false
 	 * @public
@@ -148,6 +166,16 @@ class Popover extends Popup {
 	allowTargetOverlap = false;
 
 	/**
+	 * Determines whether the component is resizable.
+	 * **Note:** This property is effective only on desktop devices.
+	 * @default false
+	 * @public
+	 * @since 2.19.0
+	 */
+	@property({ type: Boolean })
+	resizable = false;
+
+	/**
 	 * Sets the X translation of the arrow
 	 * @private
 	 */
@@ -166,7 +194,7 @@ class Popover extends Popup {
 	 * @private
 	 */
 	@property()
-	actualPlacement: `${PopoverPlacement}` = "End";
+	actualPlacement: `${PopoverActualPlacement}` = "Right";
 
 	@property({ type: Number, noAttribute: true })
 	_maxHeight?: number;
@@ -174,19 +202,22 @@ class Popover extends Popup {
 	@property({ type: Number, noAttribute: true })
 	_maxWidth?: number;
 
+	@property({ noAttribute: true })
+	_resizeHandlePlacement?: `${ResizeHandlePlacement}`;
+
 	/**
 	 * Defines the header HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	@slot()
+	header!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the footer HTML Element.
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	footer!: Array<HTMLElement>;
+	@slot()
+	footer!: Slot<HTMLElement>;
 
 	_opener?: HTMLElement | string | null | undefined;
 	_openerRect?: DOMRect;
@@ -196,6 +227,12 @@ class Popover extends Popup {
 	_oldPlacement?: CalculatedPlacement;
 	_width?: string;
 	_height?: string;
+	_openerIntersectionObserver?: IntersectionObserver | null;
+
+	_popoverResize: PopoverResize;
+
+	_initialWidth?: string;
+	_initialHeight?: string;
 
 	static get VIEWPORT_MARGIN() {
 		return 10; // px
@@ -203,6 +240,8 @@ class Popover extends Popup {
 
 	constructor() {
 		super();
+
+		this._popoverResize = new PopoverResize(this);
 	}
 
 	/**
@@ -248,9 +287,27 @@ class Popover extends Popup {
 			return;
 		}
 
+		this._initialWidth = this.style.width;
+		this._initialHeight = this.style.height;
+
 		this._openerRect = opener.getBoundingClientRect();
+		this._observeOpenerVisibility();
 
 		await super.openPopup();
+	}
+
+	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false) : void {
+		this._unobserveOpenerVisibility();
+
+		Object.assign(this.style, {
+			width: this._initialWidth,
+			height: this._initialHeight,
+		});
+
+		this._popoverResize.reset();
+		delete this._resizeHandlePlacement;
+
+		super.closePopup(escPressed, preventRegistryUpdate, preventFocusRestore);
 	}
 
 	isOpenerClicked(e: MouseEvent) {
@@ -270,6 +327,17 @@ class Popover extends Popup {
 		}
 
 		return e.composedPath().indexOf(opener) > -1;
+	}
+
+	isClicked(e: MouseEvent) {
+		if (this._showResizeHandle) {
+			const resizeHandle = this.shadowRoot!.querySelector(".ui5-popover-resize-handle");
+			if (resizeHandle === e.composedPath()[0]) {
+				return true;
+			}
+		}
+
+		return isClickInRect(e, this.getBoundingClientRect());
 	}
 
 	/**
@@ -299,6 +367,10 @@ class Popover extends Popup {
 
 		let rootNode = this.getRootNode();
 
+		if (!rootNode) {
+			return null;
+		}
+
 		if (rootNode === this) {
 			rootNode = document;
 		}
@@ -316,11 +388,11 @@ class Popover extends Popup {
 		return openerHTMLElement;
 	}
 
-	shouldCloseDueToOverflow(placement: `${PopoverPlacement}`, openerRect: DOMRect): boolean {
+	shouldCloseDueToOverflow(placement: `${PopoverActualPlacement}`, openerRect: DOMRect): boolean {
 		const threshold = 32;
 		const limits = {
-			"Start": openerRect.right,
-			"End": openerRect.left,
+			"Left": openerRect.right,
+			"Right": openerRect.left,
 			"Top": openerRect.top,
 			"Bottom": openerRect.bottom,
 		};
@@ -364,8 +436,16 @@ class Popover extends Popup {
 		}
 	}
 
+	get _viewportMargin() {
+		return Popover.VIEWPORT_MARGIN;
+	}
+
 	reposition() {
 		this._show();
+
+		if (this.resizable) {
+			this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
+		}
 	}
 
 	async _show() {
@@ -416,7 +496,7 @@ class Popover extends Popup {
 		}
 
 		this._oldPlacement = placement;
-		this.actualPlacement = placement.placement;
+		this.actualPlacement = placement.actualPlacement;
 
 		let left = clamp(
 			this._left!,
@@ -424,7 +504,7 @@ class Popover extends Popup {
 			document.documentElement.clientWidth - popoverSize.width - Popover.VIEWPORT_MARGIN,
 		);
 
-		if (this.actualPlacement === PopoverPlacement.End) {
+		if (this.actualPlacement === PopoverActualPlacement.Right) {
 			left = Math.max(left, this._left!);
 		}
 
@@ -434,7 +514,7 @@ class Popover extends Popup {
 			document.documentElement.clientHeight - popoverSize.height - Popover.VIEWPORT_MARGIN,
 		);
 
-		if (this.actualPlacement === PopoverPlacement.Bottom) {
+		if (this.actualPlacement === PopoverActualPlacement.Bottom) {
 			top = Math.max(top, this._top!);
 		}
 
@@ -447,6 +527,10 @@ class Popover extends Popup {
 			top: `${top}px`,
 			left: `${left}px`,
 		});
+
+		if (this._popoverResize.isResized) {
+			return;
+		}
 
 		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && this._width) {
 			this.style.width = this._width;
@@ -472,6 +556,46 @@ class Popover extends Popup {
 		const actualTop = Math.ceil(this.getBoundingClientRect().top);
 
 		return top + (Number.parseInt(this.style.top || "0") - actualTop);
+	}
+
+	/**
+	 * Callback invoked when the opener element's intersection status changes.
+	 * Closes the popover when the opener is no longer visible.
+	 * @private
+	 */
+	_onOpenerIntersection(entries: Array<IntersectionObserverEntry>): void {
+		if (this.open && !entries[0]?.isIntersecting) {
+			this.closePopup();
+		}
+	}
+
+	/**
+	 * Starts observing the opener element's visibility in the viewport.
+	 * @private
+	 */
+	_observeOpenerVisibility(): void {
+		this._unobserveOpenerVisibility();
+
+		const opener = this.getOpenerHTMLElement(this.opener);
+
+		if (!opener) {
+			return;
+		}
+
+		this._openerIntersectionObserver = new IntersectionObserver(this._onOpenerIntersection.bind(this));
+
+		this._openerIntersectionObserver.observe(opener);
+	}
+
+	/**
+	 * Stops observing the opener element and cleans up the IntersectionObserver instance.
+	 * @private
+	 */
+	_unobserveOpenerVisibility(): void {
+		if (this._openerIntersectionObserver) {
+			this._openerIntersectionObserver.disconnect();
+			this._openerIntersectionObserver = null;
+		}
 	}
 
 	getPopoverSize(calcScrollHeight: boolean = false): PopoverSize {
@@ -532,26 +656,28 @@ class Popover extends Popup {
 		let maxHeight = clientHeight;
 		let maxWidth = clientWidth;
 
-		const placement = this.getActualPlacement(targetRect);
+		const actualPlacement = this.getActualPlacement(targetRect);
 
-		this._preventRepositionAndClose = this.shouldCloseDueToNoOpener(targetRect) || this.shouldCloseDueToOverflow(placement, targetRect);
+		this._preventRepositionAndClose = this.shouldCloseDueToNoOpener(targetRect) || this.shouldCloseDueToOverflow(actualPlacement, targetRect);
 
-		const isVertical = placement === PopoverPlacement.Top
-			|| placement === PopoverPlacement.Bottom;
+		const isVertical = actualPlacement === PopoverActualPlacement.Top
+			|| actualPlacement === PopoverActualPlacement.Bottom;
 
-		if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
-			popoverSize.width = targetRect.width;
-			this._width = `${targetRect.width}px`;
-		} else if (this.verticalAlign === PopoverVerticalAlign.Stretch && !isVertical) {
-			popoverSize.height = targetRect.height;
-			this._height = `${targetRect.height}px`;
+		if (!this._popoverResize.isResized) {
+			if (this.horizontalAlign === PopoverHorizontalAlign.Stretch && isVertical) {
+				popoverSize.width = targetRect.width;
+				this._width = `${targetRect.width}px`;
+			} else if (this.verticalAlign === PopoverVerticalAlign.Stretch && !isVertical) {
+				popoverSize.height = targetRect.height;
+				this._height = `${targetRect.height}px`;
+			}
 		}
 
 		const arrowOffset = this.hideArrow ? 0 : ARROW_SIZE;
 
 		// calc popover positions
-		switch (placement) {
-		case PopoverPlacement.Top:
+		switch (actualPlacement) {
+		case PopoverActualPlacement.Top:
 			left = this.getVerticalLeft(targetRect, popoverSize);
 			top = Math.max(targetRect.top - popoverSize.height - arrowOffset, 0);
 
@@ -559,7 +685,7 @@ class Popover extends Popup {
 				maxHeight = targetRect.top - arrowOffset;
 			}
 			break;
-		case PopoverPlacement.Bottom:
+		case PopoverActualPlacement.Bottom:
 			left = this.getVerticalLeft(targetRect, popoverSize);
 			top = targetRect.bottom + arrowOffset;
 
@@ -569,7 +695,7 @@ class Popover extends Popup {
 				maxHeight = clientHeight - targetRect.bottom - arrowOffset;
 			}
 			break;
-		case PopoverPlacement.Start:
+		case PopoverActualPlacement.Left:
 			left = Math.max(targetRect.left - popoverSize.width - arrowOffset, 0);
 			top = this.getHorizontalTop(targetRect, popoverSize);
 
@@ -577,7 +703,7 @@ class Popover extends Popup {
 				maxWidth = targetRect.left - arrowOffset;
 			}
 			break;
-		case PopoverPlacement.End:
+		case PopoverActualPlacement.Right:
 			left = targetRect.left + targetRect.width + arrowOffset;
 			top = this.getHorizontalTop(targetRect, popoverSize);
 
@@ -624,8 +750,12 @@ class Popover extends Popup {
 			arrow: arrowPos,
 			top: this._top,
 			left: this._left,
-			placement,
+			actualPlacement,
 		};
+	}
+
+	get isVertical() : boolean {
+		return this.placement === PopoverPlacement.Top || this.placement === PopoverPlacement.Bottom;
 	}
 
 	getRTLCorrectionLeft() {
@@ -644,14 +774,14 @@ class Popover extends Popup {
 	 * @returns  Arrow's coordinates
 	 */
 	getArrowPosition(targetRect: DOMRect, popoverSize: PopoverSize, left: number, top: number, isVertical: boolean, borderRadius: number): ArrowPosition {
-		const horizontalAlign = this._actualHorizontalAlign;
-		let arrowXCentered = horizontalAlign === PopoverHorizontalAlign.Center || horizontalAlign === PopoverHorizontalAlign.Stretch;
+		const actualHorizontalAlign = this._actualHorizontalAlign;
+		let arrowXCentered = actualHorizontalAlign === PopoverActualHorizontalAlign.Center || actualHorizontalAlign === PopoverActualHorizontalAlign.Stretch;
 
-		if (horizontalAlign === PopoverHorizontalAlign.End && left <= targetRect.left) {
+		if (actualHorizontalAlign === PopoverActualHorizontalAlign.Right && left <= targetRect.left) {
 			arrowXCentered = true;
 		}
 
-		if (horizontalAlign === PopoverHorizontalAlign.Start && left + popoverSize.width >= targetRect.left + targetRect.width) {
+		if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left && left + popoverSize.width >= targetRect.left + targetRect.width) {
 			arrowXCentered = true;
 		}
 
@@ -691,61 +821,75 @@ class Popover extends Popup {
 	 * Fallbacks to new placement, prioritizing `Left` and `Right` placements.
 	 * @private
 	 */
-	fallbackPlacement(clientWidth: number, clientHeight: number, targetRect: DOMRect, popoverSize: PopoverSize): PopoverPlacement | undefined {
+	fallbackPlacement(clientWidth: number, clientHeight: number, targetRect: DOMRect, popoverSize: PopoverSize): PopoverActualPlacement | undefined {
 		if (targetRect.left > popoverSize.width) {
-			return PopoverPlacement.Start;
+			return PopoverActualPlacement.Left;
 		}
 
 		if (clientWidth - targetRect.right > targetRect.left) {
-			return PopoverPlacement.End;
+			return PopoverActualPlacement.Right;
 		}
 
 		if (clientHeight - targetRect.bottom > popoverSize.height) {
-			return PopoverPlacement.Bottom;
+			return PopoverActualPlacement.Bottom;
 		}
 
 		if (clientHeight - targetRect.bottom < targetRect.top) {
-			return PopoverPlacement.Top;
+			return PopoverActualPlacement.Top;
 		}
 	}
 
-	getActualPlacement(targetRect: DOMRect): `${PopoverPlacement}` {
+	getActualPlacement(targetRect: DOMRect): `${PopoverActualPlacement}` {
 		const placement = this.placement;
-		let actualPlacement = placement;
-		const isVertical = placement === PopoverPlacement.Top
-			|| placement === PopoverPlacement.Bottom;
 		const popoverSize = this.getPopoverSize(!this.allowTargetOverlap);
+
+		let actualPlacement: PopoverActualPlacement = PopoverActualPlacement.Right;
+
+		switch (placement) {
+		case PopoverPlacement.Start:
+			actualPlacement = this.isRtl ? PopoverActualPlacement.Right : PopoverActualPlacement.Left;
+			break;
+		case PopoverPlacement.End:
+			actualPlacement = this.isRtl ? PopoverActualPlacement.Left : PopoverActualPlacement.Right;
+			break;
+		case PopoverPlacement.Top:
+			actualPlacement = PopoverActualPlacement.Top;
+			break;
+		case PopoverPlacement.Bottom:
+			actualPlacement = PopoverActualPlacement.Bottom;
+			break;
+		}
 
 		const clientWidth = document.documentElement.clientWidth;
 		let clientHeight = document.documentElement.clientHeight;
 		let popoverHeight = popoverSize.height;
 
-		if (isVertical) {
+		if (this.isVertical) {
 			popoverHeight += this.hideArrow ? 0 : ARROW_SIZE;
 			clientHeight -= Popover.VIEWPORT_MARGIN;
 		}
 
-		switch (placement) {
-		case PopoverPlacement.Top:
+		switch (actualPlacement) {
+		case PopoverActualPlacement.Top:
 			if (targetRect.top < popoverHeight
 				&& targetRect.top < clientHeight - targetRect.bottom) {
-				actualPlacement = PopoverPlacement.Bottom;
+				actualPlacement = PopoverActualPlacement.Bottom;
 			}
 			break;
-		case PopoverPlacement.Bottom:
+		case PopoverActualPlacement.Bottom:
 			if (clientHeight - targetRect.bottom < popoverHeight
 				&& clientHeight - targetRect.bottom < targetRect.top) {
-				actualPlacement = PopoverPlacement.Top;
+				actualPlacement = PopoverActualPlacement.Top;
 			}
 			break;
-		case PopoverPlacement.Start:
+		case PopoverActualPlacement.Left:
 			if (targetRect.left < popoverSize.width) {
-				actualPlacement = this.fallbackPlacement(clientWidth, clientHeight, targetRect, popoverSize) || placement;
+				actualPlacement = this.fallbackPlacement(clientWidth, clientHeight, targetRect, popoverSize) || actualPlacement;
 			}
 			break;
-		case PopoverPlacement.End:
+		case PopoverActualPlacement.Right:
 			if (clientWidth - targetRect.right < popoverSize.width) {
-				actualPlacement = this.fallbackPlacement(clientWidth, clientHeight, targetRect, popoverSize) || placement;
+				actualPlacement = this.fallbackPlacement(clientWidth, clientHeight, targetRect, popoverSize) || actualPlacement;
 			}
 			break;
 		}
@@ -754,18 +898,19 @@ class Popover extends Popup {
 	}
 
 	getVerticalLeft(targetRect: DOMRect, popoverSize: PopoverSize): number {
-		const horizontalAlign = this._actualHorizontalAlign;
+		const actualHorizontalAlign = this._actualHorizontalAlign;
 		let left = Popover.VIEWPORT_MARGIN;
 
-		switch (horizontalAlign) {
-		case PopoverHorizontalAlign.Center:
-		case PopoverHorizontalAlign.Stretch:
+		switch (actualHorizontalAlign) {
+		case PopoverActualHorizontalAlign.Center:
+		case PopoverActualHorizontalAlign.Stretch:
 			left = targetRect.left - (popoverSize.width - targetRect.width) / 2;
+			left = this._popoverResize.getCorrectedLeft(left);
 			break;
-		case PopoverHorizontalAlign.Start:
+		case PopoverActualHorizontalAlign.Left:
 			left = targetRect.left;
 			break;
-		case PopoverHorizontalAlign.End:
+		case PopoverActualHorizontalAlign.Right:
 			left = targetRect.right - popoverSize.width;
 			break;
 		}
@@ -780,6 +925,7 @@ class Popover extends Popup {
 		case PopoverVerticalAlign.Center:
 		case PopoverVerticalAlign.Stretch:
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
+			top = this._popoverResize.getCorrectedTop(top);
 			break;
 		case PopoverVerticalAlign.Top:
 			top = targetRect.top;
@@ -820,6 +966,11 @@ class Popover extends Popup {
 	get classes() {
 		const allClasses = super.classes;
 		allClasses.root["ui5-popover-root"] = true;
+		allClasses.root["ui5-popover-rtl"] = this.isRtl;
+
+		if (this.resizable) {
+			this._popoverResize.setCorrectResizeHandleClass(allClasses);
+		}
 
 		return allClasses;
 	}
@@ -838,27 +989,43 @@ class Popover extends Popup {
 		return true;
 	}
 
-	get _actualHorizontalAlign() {
-		if (this.effectiveDir === "rtl") {
-			if (this.horizontalAlign === PopoverHorizontalAlign.Start) {
-				return PopoverHorizontalAlign.End;
-			}
-
-			if (this.horizontalAlign === PopoverHorizontalAlign.End) {
-				return PopoverHorizontalAlign.Start;
-			}
-		}
-
-		return this.horizontalAlign;
+	get isRtl() {
+		return this.effectiveDir === "rtl";
 	}
-}
 
-const instanceOfPopover = (object: any): object is Popover => {
-	return "opener" in object;
-};
+	get _actualHorizontalAlign() : PopoverActualHorizontalAlign {
+		switch (this.horizontalAlign) {
+		case PopoverHorizontalAlign.Start:
+			return this.isRtl ? PopoverActualHorizontalAlign.Right : PopoverActualHorizontalAlign.Left;
+		case PopoverHorizontalAlign.End:
+			return this.isRtl ? PopoverActualHorizontalAlign.Left : PopoverActualHorizontalAlign.Right;
+		case PopoverHorizontalAlign.Stretch:
+			return PopoverActualHorizontalAlign.Stretch;
+		case PopoverHorizontalAlign.Center:
+		default:
+			return PopoverActualHorizontalAlign.Center;
+		}
+	}
+
+	get _showResizeHandle() {
+		return this.resizable && this.onDesktop;
+	}
+
+	get resizeHandlePlacement() {
+		return this._resizeHandlePlacement;
+	}
+
+	_onResizeMouseDown(e: MouseEvent) {
+		this._popoverResize.onResizeMouseDown(e);
+		this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
+	}
+
+	// for instance checks
+	readonly isPopover = true;
+}
 
 Popover.define();
 
 export default Popover;
-
-export { instanceOfPopover };
+export const instanceOfPopover = createInstanceChecker<Popover>("isPopover");
+export { PopoverActualPlacement, PopoverActualHorizontalAlign };

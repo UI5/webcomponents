@@ -1,3 +1,4 @@
+import Button from "../../src/Button.js";
 import Label from "../../src/Label.js";
 import Panel from "../../src/Panel.js";
 import Title from "../../src/Title.js";
@@ -323,6 +324,252 @@ describe("Events", () => {
 	});
 });
 
+describe("Keyboard Interactions", () => {
+	it("Enter key down expands/collapses panel", () => {
+		cy.mount(<Panel headerText="Panel" onToggle={cy.stub().as("toggleEvent")}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Initial state - expanded
+		cy.get("@content")
+			.should("be.visible");
+
+		// Press Enter - should trigger toggle immediately
+		cy.get("@header")
+			.focus()
+			.realPress("Enter");
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(50);
+
+		// Content should be collapsed after Enter
+		cy.get("@content")
+			.should("not.be.visible");
+
+		cy.get("@toggleEvent")
+			.should("have.been.calledOnce");
+
+		// Press Enter again - should toggle back to expanded
+		cy.get("@header")
+			.realPress("Enter");
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(50);
+
+		// Content should be visible again
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("have.been.calledTwice");
+	});
+
+	it("Space key with Escape cancellation prevents toggle", () => {
+		cy.mount(<Panel headerText="Panel" onToggle={cy.stub().as("toggleEvent")}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Initial state - expanded
+		cy.get("@content")
+			.should("be.visible");
+
+		// Press and hold Space - this should set pending toggle but not execute yet
+		cy.get("@header")
+			.focus()
+			.realPress(["Space", "Escape"]);
+
+		// Content should still be visible (toggle was canceled by Escape)
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("not.have.been.called");
+
+		// Verify panel is still in expanded state
+		cy.get("[ui5-panel]")
+			.should("not.have.attr", "collapsed");
+	});
+
+	it("Space key without Escape executes toggle", () => {
+		cy.mount(<Panel headerText="Panel" onToggle={cy.stub().as("toggleEvent")}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Initial state - expanded
+		cy.get("@content")
+			.should("be.visible");
+
+		// Press Space - should execute the toggle
+		cy.get("@header")
+			.focus()
+			.realPress("Space");
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(50);
+
+		// Content should now be collapsed
+		cy.get("@content")
+			.should("not.be.visible");
+
+		cy.get("@toggleEvent")
+			.should("have.been.calledOnce");
+
+		// Verify panel is in collapsed state
+		cy.get("[ui5-panel]")
+			.should("have.attr", "collapsed");
+	});
+
+	it("Space key interrupted by Escape does not toggle", () => {
+		cy.mount(<Panel headerText="Panel" onToggle={cy.stub().as("toggleEvent")}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Test the Space + Escape cancellation behavior
+		cy.get("@header")
+			.focus()
+			.realPress(["Space", "Escape"]);
+
+		// Should not have toggled because Escape canceled the Space action
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("not.have.been.called");
+	});
+
+	it("Fixed panel (should not toggle)", () => {
+		cy.mount(<Panel headerText="Fixed Panel" fixed={true} onToggle={cy.stub().as("toggleEvent")}>
+			<Title level={TitleLevel.H4}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Content should be visible
+		cy.get("@content")
+			.should("be.visible");
+
+		// Try Enter - should not toggle fixed panel
+		cy.get("@header")
+			.focus()
+			.realPress("Enter");
+
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("not.have.been.called");
+
+		// Try Space - should not toggle fixed panel
+		cy.get("@header")
+			.realPress("Space");
+
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("not.have.been.called");
+	});
+
+	it("Custom header (only button should work)", () => {
+		cy.mount(<Panel onToggle={cy.stub().as("toggleEvent")}>
+			<div slot="header">
+				<Title level={TitleLevel.H2}>Custom Header</Title>
+            </div>
+			<Title level={TitleLevel.H3}>Content</Title>
+		</Panel>);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.as("header");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header-button")
+			.as("toggleButton");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		// Enter on custom header area should not toggle
+		cy.get("@header")
+			.focus()
+			.realPress("Enter");
+
+		cy.get("@content")
+			.should("be.visible");
+
+		cy.get("@toggleEvent")
+			.should("not.have.been.called");
+
+		// Enter on toggle button should work
+		cy.get("@toggleButton")
+			.shadow()
+			.find(".ui5-button-root")
+			.focus()
+			.realPress("Enter");
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(50);
+
+		cy.get("@content")
+			.should("not.be.visible");
+
+		cy.get("@toggleEvent")
+			.should("have.been.calledOnce");
+	});
+});
+
 describe("Accessibility", () => {
 	it("Aria attributes on default header", () => {
 		cy.mount(<Panel headerText="Panel" headerLevel={TitleLevel.H3}>
@@ -477,5 +724,141 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-panel-root")
 			.should("have.attr", "aria-label", accessibleNamePanel);
+	});
+});
+
+describe("Scrollable Content Focus", () => {
+	function addPageStyles(styles: string) {
+		cy.document().then((doc) => {
+			const style = doc.createElement("style");
+			style.id = "panel-focus-styles";
+			style.innerHTML = styles;
+			doc.head.appendChild(style);
+		});
+	}
+	function clearPageStyles() {
+		cy.window()
+			.then($el => {
+				const styleTag = $el.document.head.querySelector("style[id='panel-focus-styles']");
+				styleTag?.remove();
+			});
+	}
+
+	it("Scrollable content with no focusable children is focusable", () => {
+		addPageStyles(`
+			#panel-scroll::part(content) {
+				max-height: 50px;
+			}
+		`);
+
+		const longText = "Lorem ipsum dolor sit amet. ".repeat(20);
+
+		cy.mount(
+			<Panel headerText="Scrollable Panel" id="panel-scroll">
+				<div>{longText}</div>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content-wrapper")
+			.as("wrapper");
+
+		cy.wait(100);
+
+		cy.get("@content")
+			.should($el => {
+				expect($el[0].scrollHeight).to.be.greaterThan($el[0].clientHeight);
+			});
+
+		cy.get("@content")
+			.should("have.attr", "tabindex", "0");
+
+		cy.get("@wrapper")
+			.should("have.class", "ui5-panel-content-focusable");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.focus()
+			.realPress("Tab");
+
+		cy.get("@content")
+			.should("be.focused");
+
+		clearPageStyles();
+	});
+
+	it("Scrollable content with focusable children is NOT focusable", () => {
+		addPageStyles(`
+			#panel-button::part(content) {
+				max-height: 50px;
+			}
+		`);
+
+		const longText = "Lorem ipsum dolor sit amet. ".repeat(10);
+
+		cy.mount(
+			<Panel headerText="Panel with Button" id="panel-button">
+				<div>{longText}</div>
+				<Button>Click me</Button>
+				<div>{longText}</div>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content-wrapper")
+			.as("wrapper");
+
+		cy.wait(100);
+
+		cy.get("@content")
+			.should("not.have.attr", "tabindex");
+
+		cy.get("@wrapper")
+			.should("not.have.class", "ui5-panel-content-focusable");
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.focus()
+			.realPress("Tab");
+
+		cy.get("[ui5-button]")
+			.should("be.focused");
+
+		clearPageStyles();
+	});
+
+	it("Non-scrollable content is NOT focusable", () => {
+		cy.mount(
+			<Panel headerText="Short Content Panel">
+				<Label>Short text</Label>
+			</Panel>
+		);
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-content")
+			.as("content");
+
+		cy.get("@content")
+			.should($el => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].clientHeight);
+			});
+
+		cy.get("@content")
+			.should("not.have.attr", "tabindex");
 	});
 });

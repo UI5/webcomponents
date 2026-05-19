@@ -1,6 +1,7 @@
 @import "./InvisibleTextStyles.css";
 @import "./InputIcon.css";
 @import "./InputSharedStyles.css";
+@import "./FormComponents.css";
 
 :host(:not([hidden])) {
 	display: inline-block;
@@ -40,7 +41,6 @@
 }
 
 :host .ui5-date-picker-input {
-	width: 100%;
 	color: inherit;
 	background-color: inherit;
 	border-radius: inherit;
@@ -63,3 +63,4 @@
 .ui5-date-picker-popover::part(header) {
 	padding: 0;
 }
+

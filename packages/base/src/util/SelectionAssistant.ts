@@ -90,7 +90,7 @@ const getElementSelection = (element: HTMLElement) => {
 	copiedElement.textContent = innerElement!.value;
 
 	if (innerElement) {
-		copyAndApplyStyles(innerElement, copiedElement)!;
+		copyAndApplyStyles(innerElement, copiedElement);
 	}
 
 	return getSelectionCoordinates(innerElement!, copiedElement as HTMLDivElement);

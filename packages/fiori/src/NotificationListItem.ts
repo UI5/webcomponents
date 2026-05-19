@@ -5,7 +5,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -18,6 +18,7 @@ import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.j
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import NotificationListItemImportance from "./types/NotificationListItemImportance.js";
 import NotificationListItemBase from "./NotificationListItemBase.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Icons
 import iconSysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -55,6 +56,11 @@ type NotificationListItemCloseEventDetail = {
 
 type NotificationListItemPressEventDetail = {
 	item: NotificationListItem,
+};
+
+type NotificationListItemClickEventDetail = {
+	item: NotificationListItem,
+	originalEvent: Event,
 };
 
 type Footnote = Record<string, any>;
@@ -141,6 +147,18 @@ const ICON_PER_STATUS_DESIGN = {
 })
 
 /**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {NotificationListItem} item The activated item.
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
+
+/**
  * Fired when the `Close` button is pressed.
  * @param {HTMLElement} item the closed item.
  * @public
@@ -159,6 +177,7 @@ const ICON_PER_STATUS_DESIGN = {
 class NotificationListItem extends NotificationListItemBase {
 	eventDetails!: NotificationListItemBase["eventDetails"] & {
 		_press: NotificationListItemPressEventDetail,
+		click: NotificationListItemClickEventDetail,
 		close: NotificationListItemCloseEventDetail,
 		_close: NotificationListItemCloseEventDetail,
 	}
@@ -225,7 +244,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	avatar!: Array<HTMLElement>;
+	avatar!: Slot<HTMLElement>;
 
 	/**
 	* Defines the menu, displayed in the `ui5-li-notification`.
@@ -236,14 +255,14 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot()
-	menu!: Array<HTMLElement>;
+	menu!: Slot<HTMLElement>;
 
 	/**
 	* Defines the elements, displayed in the footer of the of the component.
 	* @public
 	*/
 	@slot({ type: HTMLElement, individualSlots: true })
-	footnotes!: Array<HTMLElement>;
+	footnotes!: Slot<HTMLElement>;
 
 	/**
 	* Defines the content of the `ui5-li-notification`,
@@ -253,7 +272,7 @@ class NotificationListItem extends NotificationListItemBase {
 	* @public
 	*/
 	@slot({ type: Node, "default": true })
-	description!: Array<Node>;
+	description!: DefaultSlot<Node>;
 
 	@query(".ui5-nli-title-text")
 	titleTextDOM?: HTMLElement;
@@ -477,8 +496,9 @@ class NotificationListItem extends NotificationListItemBase {
 	/**
 	 * Event handlers
 	 */
-	_onclick() {
-		this.fireItemPress();
+	_onclick(e: MouseEvent) {
+		e.stopPropagation();
+		this.fireItemPress(e);
 	}
 
 	_onShowMoreClick(e: UI5CustomEvent<Link, "click">) {
@@ -548,7 +568,7 @@ class NotificationListItem extends NotificationListItemBase {
 	/**
 	 * Private
 	 */
-	fireItemPress() {
+	fireItemPress(e: Event) {
 		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
 			return;
 		}
@@ -556,6 +576,7 @@ class NotificationListItem extends NotificationListItemBase {
 		// NotificationListItem will never be assigned to a variable of type ListItemBase
 		// typescipt complains here, if that is the case, the parameter to the _press event handler could be a ListItemBase item,
 		// but this is never the case, all components are used by their class and never assigned to a variable with a type of ListItemBase
+		this.fireDecoratorEvent("click", { item: this, originalEvent: e });
 		this.fireDecoratorEvent("_press", { item: this });
 	}
 
@@ -590,5 +611,6 @@ NotificationListItem.define();
 export default NotificationListItem;
 export type {
 	NotificationListItemPressEventDetail,
+	NotificationListItemClickEventDetail,
 	NotificationListItemCloseEventDetail,
 };

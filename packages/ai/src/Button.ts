@@ -1,10 +1,11 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import { i18n } from "@ui5/webcomponents-base/dist/decorators.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type SplitButton from "@ui5/webcomponents/dist/SplitButton.js";
@@ -57,7 +58,8 @@ type AIButtonAccessibilityAttributes = { root?: AIButtonRootAccessibilityAttribu
  * @extends UI5Element
  * @since 2.0.0
  * @public
- * @experimental The Button and ButtonState web components are availabe since 2.0 under an experimental flag and their API and behaviour are subject to change.
+ * @experimental The **@ui5/webcomponents-ai** package (including Button and ButtonState) is under active development and considered experimental. Component APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  */
 
 @customElement({
@@ -182,7 +184,7 @@ class Button extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	states!: Array<ButtonState>;
+	states!: DefaultSlot<ButtonState>;
 
 	@query("[ui5-split-button]")
 	_splitButton?: SplitButton;

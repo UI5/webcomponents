@@ -60,7 +60,7 @@ abstract class TableHeaderCellActionBase extends UI5Element {
 
 	_onClick(e: UI5CustomEvent<Button, "click">) {
 		// Retrieve the real action (if parent is header cell this instance is fine, otherwise retrieve it from the header cell)
-		const action = this.parentElement?.hasAttribute("ui5-table-header-cell") ? this : ((this.getRootNode() as ShadowRoot).host as TableCell)._headerCell.action[0] as this;
+		const action = this.parentElement?.hasAttribute("ui5-table-header-cell") ? this : ((this.getRootNode() as ShadowRoot).host as TableCell)._headerCell!.action[0] as this;
 		action.fireDecoratorEvent("click", { targetRef: e.target as HTMLElement });
 		e.stopPropagation();
 	}

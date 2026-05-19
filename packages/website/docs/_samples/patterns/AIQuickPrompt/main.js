@@ -163,7 +163,6 @@ function startTextGeneration(button, state, predefinedTexts) {
 
 function stopBusyIndicatorAndGenerateText(button, predefinedTexts, textKey) {
 	setTimeout(() => {
-		quickPromptBusyIndicator.active = false;
 		generateText(predefinedTexts[translationKey][textKey || currentTextKey], button);
 	}, 2000);
 	startQuickPromptGeneration(button);
@@ -229,6 +228,7 @@ function generateText(text, button) {
 			clearInterval(generationId);
 			sendButton.disabled = false;
 			output.disabled = false;
+			quickPromptBusyIndicator.active = false;
 		}
 	}, 75);
 }

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_toast_vertical_offset: 3rem;
 	--_ui5_toast_horizontal_offset: 2rem;
 	--_ui5_toast_background: var(--sapIndicationColor_9_Background);

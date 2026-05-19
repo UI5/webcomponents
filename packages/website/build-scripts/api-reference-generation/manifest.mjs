@@ -124,6 +124,9 @@ const parseTypeAsString = (typeObj) => {
         return typeObj;
     }
 
+    // Store enum references for linking in docs
+    typeObj._enumReferences = [];
+
     typeObj.references.forEach(reference => {
         const foundReference = findDeclaration(reference);
 
@@ -135,6 +138,12 @@ const parseTypeAsString = (typeObj) => {
 
             const regexp = new RegExp(`\\b${foundReference.name}\\b`, "g");
             typeObj.text = typeObj.text.replaceAll(regexp, enumFields);
+
+            // Preserve enum reference for doc generation
+            typeObj._enumReferences.push({
+                name: foundReference.name,
+                package: foundReference._ui5package,
+            });
         }
     })
 }
@@ -169,7 +178,14 @@ const resolveTypes = declaration => {
 // Load manifests for each package, merge child + parent classes to fulfill missing properties and transform enumaration values to strings.
 const loadManifests = () => {
     getPackages().forEach(packageName => {
-        const currentLoadedManifest = JSON.parse(fs.readFileSync(path.resolve(`./../${packageName}/dist/custom-elements-internal.json`), { encoding: "utf-8" }))
+        const manifestPath = path.resolve(`./../${packageName}/dist/custom-elements-internal.json`);
+
+        // Skip packages that don't have a manifest (e.g., base package)
+        if (!fs.existsSync(manifestPath)) {
+            return;
+        }
+
+        const currentLoadedManifest = JSON.parse(fs.readFileSync(manifestPath, { encoding: "utf-8" }))
 
         _manifest.modules = [
             ..._manifest.modules,

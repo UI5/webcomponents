@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -244,7 +245,7 @@ class Wizard extends UI5Element {
 	 * Stores references to the grouped steps.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_groupedTabs: Array<WizardTab> = [];
 
 	/**
@@ -259,7 +260,7 @@ class Wizard extends UI5Element {
 		"individualSlots": true,
 		invalidateOnChildChange: true,
 	})
-	steps!: Array<WizardStep>
+	steps!: DefaultSlot<WizardStep>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -327,6 +328,7 @@ class Wizard extends UI5Element {
 
 		if (this.previouslySelectedStepIndex !== this.selectedStepIndex) {
 			this.scrollToSelectedStep();
+			this.focusFirstElementInCurrentStep();
 		}
 
 		this.attachStepsResizeObserver();
@@ -694,6 +696,10 @@ class Wizard extends UI5Element {
 		return contentHeight;
 	}
 
+	getFocusDomRef() {
+		return this._itemNavigation._getCurrentItem();
+	}
+
 	getStepAriaLabelText(step: WizardStep, ariaLabel: string) {
 		return Wizard.i18nBundle.getText(WIZARD_STEP_ARIA_LABEL, ariaLabel);
 	}
@@ -918,6 +924,25 @@ class Wizard extends UI5Element {
 			this.scrollToContentItem(this.selectedStepIndex);
 		}
 		this.selectionRequestedByScroll = false;
+	}
+
+	/**
+	 * Focuses the first focusable element in the currently selected step.
+	 * This helps screen readers announce the step change.
+	 * @private
+	 */
+	async focusFirstElementInCurrentStep() {
+		const currentStep = this.slottedSteps[this.selectedStepIndex];
+		if (!currentStep || currentStep.disabled) {
+			return;
+		}
+
+		const firstElementChild = currentStep.firstElementChild as HTMLElement;
+		const firstFocusableElement = await getFirstFocusableElement(firstElementChild);
+
+		if (firstFocusableElement) {
+			firstFocusableElement.focus();
+		}
 	}
 
 	/**

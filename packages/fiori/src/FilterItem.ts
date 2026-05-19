@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type FilterItemOption from "./FilterItemOption.js";
 
@@ -49,7 +50,7 @@ class FilterItem extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	values!: Array<FilterItemOption>;
+	values!: Slot<FilterItemOption>;
 }
 
 FilterItem.define();

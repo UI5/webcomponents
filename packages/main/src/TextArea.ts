@@ -1,7 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -17,7 +18,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import type InputComposition from "./features/InputComposition.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -33,6 +34,7 @@ import {
 	TEXTAREA_CHARACTERS_LEFT,
 	TEXTAREA_CHARACTERS_EXCEEDED,
 	FORM_TEXTFIELD_REQUIRED,
+	TEXTAREA_EXCEEDS_MAXLENGTH,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -311,7 +313,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_mirrorText: IndexedTokenizedText = [];
 
 	/**
@@ -327,6 +329,14 @@ class TextArea extends UI5Element implements IFormInputElement {
 	_width?: number;
 
 	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
+
+	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
 	 * The value state message slot should contain only one root element.
    	 *
@@ -338,7 +348,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	_fnOnResize: ResizeObserverCallback;
 	_firstRendering: boolean;
@@ -347,16 +357,27 @@ class TextArea extends UI5Element implements IFormInputElement {
 	_keyDown?: boolean;
 	previousValue: string;
 	valueStatePopover?: Popover;
+	_composition?: InputComposition;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
-		return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		if (this.formValidity.valueMissing) {
+			return TextArea.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
+		}
+
+		if (this.formValidity.tooLong) {
+			return TextArea.i18nBundle.getText(TEXTAREA_EXCEEDS_MAXLENGTH, this.value.length - (this.maxlength ?? 0));
+		}
 	}
 
 	get formValidity(): ValidityStateFlags {
-		return { valueMissing: this.required && !this.value };
+		return {
+			valueMissing: this.required && !this.value,
+			tooLong: this.showExceededText && (this.value.length > (this.maxlength ?? 0)),
+		};
 	}
 
 	async formElementAnchor() {
@@ -378,6 +399,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._fnOnResize);
+		this._enableComposition();
 		if (this.hasAttribute("autofocus")) {
 			this.focus();
 		}
@@ -385,6 +407,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._fnOnResize);
+		this._composition?.removeEventListeners();
 	}
 
 	onBeforeRendering() {
@@ -401,7 +424,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	onAfterRendering() {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (this.rows === 1) {
 			nativeTextArea.setAttribute("rows", "1");
@@ -419,6 +442,10 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	_onkeydown(e: KeyboardEvent) {
 		this._keyDown = true;
+
+		if (this._isComposing) {
+			return;
+		}
 
 		if (isEscape(e)) {
 			const nativeTextArea = this.getInputDomRef();
@@ -468,7 +495,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	}
 
 	_oninput(e: InputEvent) {
-		const nativeTextArea = this.getInputDomRef()!;
+		const nativeTextArea = this.getInputDomRef();
 
 		if (e.target === nativeTextArea) {
 			// stop the native event, as the semantic "input" would be fired.
@@ -569,6 +596,31 @@ class TextArea extends UI5Element implements IFormInputElement {
 		};
 	}
 
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+
+		const setup = (FeatureClass: typeof InputComposition) => {
+			this._composition = new FeatureClass({
+				getInputEl: () => this.getInputDomRef(),
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (TextArea.composition) {
+			setup(TextArea.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				TextArea.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
+		}
+	}
+
 	get classes() {
 		return {
 			root: {
@@ -660,10 +712,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	get hasValueState() {
 		return this.valueState === ValueState.Negative || this.valueState === ValueState.Critical || this.valueState === ValueState.Information;
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? "Start" : "End";
 	}
 
 	get valueStateTextMappings() {

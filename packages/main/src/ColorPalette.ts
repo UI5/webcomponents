@@ -1,12 +1,14 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
@@ -52,7 +54,7 @@ interface IColorPaletteItem extends UI5Element, ITabbable {
 	selected?: boolean,
 }
 
-type ColorPaletteNavigationItem = IColorPaletteItem | Button;
+type ColorPaletteNavigationItem = ColorPaletteItem | Button;
 
 type ColorPaletteItemClickEventDetail = {
 	color: string,
@@ -133,6 +135,24 @@ class ColorPalette extends UI5Element {
 	defaultColor?: string;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
 	 * Defines the selected color, only valid CSS color values accepted
 	 * @private
 	 */
@@ -183,8 +203,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-
-	colors!: Array<IColorPaletteItem>;
+	colors!: DefaultSlot<ColorPaletteItem>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;
@@ -289,14 +308,11 @@ class ColorPalette extends UI5Element {
 		});
 	}
 
-	get effectiveColorItems() {
-		let colorItems = this.colors;
-
+	get effectiveColorItems(): ColorPaletteItem[] {
 		if (this.popupMode) {
-			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");
+			return this.getSlottedNodes<ColorPaletteItem>("colors");
 		}
-
-		return colorItems;
+		return this.colors;
 	}
 
 	/**
@@ -304,7 +320,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_ensureSingleSelectionOrDeselectAll() {
-		let lastSelectedItem: IColorPaletteItem;
+		let lastSelectedItem: ColorPaletteItem | undefined;
 
 		this.allColorsInPalette.forEach(item => {
 			if (item.selected) {
@@ -317,6 +333,10 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onclick(e: MouseEvent) {
+		if (e.defaultPrevented) {
+			return;
+		}
+
 		this.handleSelection(e.target as ColorPaletteItem);
 	}
 
@@ -352,12 +372,6 @@ class ColorPalette extends UI5Element {
 
 		if (isSpace(e)) {
 			e.preventDefault();
-		}
-
-		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
-		if (!this.popupMode && (isHome(e) || isEnd(e))) {
-			e.preventDefault();
-			e.stopPropagation();
 		}
 	}
 
@@ -410,9 +424,11 @@ class ColorPalette extends UI5Element {
 		}
 
 		if (this._isNext(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstDisplayedColor();
 		} else if (isLeft(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastRecentColor(),
@@ -420,6 +436,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isUp(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastRecentColor(),
@@ -428,6 +445,13 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isEnd(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -438,15 +462,18 @@ class ColorPalette extends UI5Element {
 
 	_onMoreColorsKeyDown(e: KeyboardEvent) {
 		if (isLeft(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
 		} else if (isUp(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusLastSwatchOfLastFullRow(),
 				() => this._focusLastDisplayedColor(),
 			);
 		} else if (this._isNext(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusFirstRecentColor(),
@@ -454,17 +481,41 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (isHome(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
+		} else if (isEnd(e)) {
+			// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+			if (this._shouldPreventHomeEnd(e)) {
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+			// More Colors button is typically the last element, so END key stays here
+			e.preventDefault();
+			e.stopPropagation();
 		}
 	}
 
 	_onColorContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
 		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(target, this.displayedColors);
+
+		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
 
 		if (this._isUpOrDownNavigatableColorPaletteItem(e)) {
 			this._currentlySelected = undefined;
@@ -476,6 +527,7 @@ class ColorPalette extends UI5Element {
 		}
 
 		if (this._isPrevious(e) && this._isFirstSwatch(target, this.displayedColors)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
@@ -487,6 +539,7 @@ class ColorPalette extends UI5Element {
 		} else if ((isRight(e) && this._isLastSwatch(target, this.displayedColors))
 			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(target) || isLastSwatchInSingleRow))
 		) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -494,19 +547,24 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isHome(e) && this._isFirstSwatch(target, this.displayedColors)) {
+		} else if (isHome(e) && this._isFirstSwatchInRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
 				() => this._focusMoreColors(),
+				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isEnd(e) && this._isLastSwatch(target, this.displayedColors)) {
+		} else if (isEnd(e) && this._isLastSwatchInRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
 				() => this._focusDefaultColor(),
+				() => this._focusLastDisplayedColor(),
 			);
 		} else if (isEnd(e) && this._isSwatchInLastRow(target)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
 		}
@@ -515,11 +573,19 @@ class ColorPalette extends UI5Element {
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
 		const target = e.target as ColorPaletteItem;
 
+		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
+		if (this._shouldPreventHomeEnd(e)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
 		if (this._isUpOrDownNavigatableColorPaletteItem(e)) {
 			this._currentlySelected = undefined;
 		}
 
 		if (this._isNext(e) && this._isLastSwatch(target, this.recentColorsElements)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusDefaultColor(),
@@ -527,6 +593,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusFirstDisplayedColor(),
 			);
 		} else if (this._isPrevious(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
 				() => this._focusMoreColors(),
@@ -535,6 +602,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 			);
 		} else if (isEnd(e)) {
+			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastRecentColor();
 		}
@@ -561,12 +629,30 @@ class ColorPalette extends UI5Element {
 		return isDown(e) || isRight(e);
 	}
 
-	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[0] === target;
+	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[0] === (target);
 	}
 
-	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === target;
+	_isLastSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === (target);
+	}
+
+	/**
+	 * Checks if the target swatch is the first swatch in its row.
+	 * @private
+	 */
+	_isFirstSwatchInRow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		return index >= 0 ? index % this.rowSize === 0 : false;
+	}
+
+	/**
+	 * Checks if the target swatch is the last swatch in its row.
+	 * @private
+	 */
+	_isLastSwatchInRow(target: ColorPaletteItem): boolean {
+		const index = this.displayedColors.indexOf(target);
+		return index >= 0 ? (index + 1) % this.rowSize === 0 || index === this.displayedColors.length - 1 : false;
 	}
 
 	/**
@@ -592,6 +678,17 @@ class ColorPalette extends UI5Element {
 		const index = this.displayedColors.indexOf(target);
 		const lastRowSwatchesCount = this.displayedColors.length % this.rowSize;
 		return index >= 0 && index >= this.displayedColors.length - lastRowSwatchesCount;
+	}
+
+	/**
+	 * Checks if HOME/END navigation should be prevented in embedded mode.
+	 * In embedded mode, HOME/END keys are blocked as they only work in popup mode per design.
+	 * @private
+	 * @param e The keyboard event to check
+	 * @returns True if the event should be prevented, false otherwise
+	 */
+	_shouldPreventHomeEnd(e: KeyboardEvent): boolean {
+		return !this.popupMode && (isHome(e) || isEnd(e));
 	}
 
 	/**
@@ -800,13 +897,16 @@ class ColorPalette extends UI5Element {
 		return this._selectedColor;
 	}
 
-	get displayedColors(): Array<IColorPaletteItem> {
-		const colors = this.getSlottedNodes<IColorPaletteItem>("colors");
+	get displayedColors(): Array<ColorPaletteItem> {
+		const colors = this.getSlottedNodes<ColorPaletteItem>("colors");
 		return colors.filter(item => item.value).slice(0, 15);
 	}
 
 	get colorContainerLabel() {
-		return ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
+		const effectiveLabel = getEffectiveAriaLabelText(this);
+		return effectiveLabel
+			? `${ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL)} ${effectiveLabel}`
+			: ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
 	}
 
 	get colorPaletteMoreColorsText() {

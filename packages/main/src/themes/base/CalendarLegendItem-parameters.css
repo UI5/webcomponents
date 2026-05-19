@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5-calendar-legend-item-box-margin: 0.25rem 0.5rem 0.25rem 0.25rem;
 	--_ui5-calendar-legend-item-root-focus-border: var(--sapContent_FocusWidth) dotted var(--sapContent_FocusColor);
 	--_ui5-calendar-legend-item-root-focus-border-radius: 0;

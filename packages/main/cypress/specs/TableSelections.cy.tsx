@@ -10,13 +10,13 @@ import type TableSelectionBase from "../../src/TableSelectionBase.js";
 import * as Translations from "../../src/generated/i18n/i18n-defaults.js";
 
 const {
-	TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION: { defaultText: SELECT_ALL_CHECKBOX },
-	TABLE_COLUMNHEADER_SELECTALL_CHECKED: { defaultText: CHECKED },
-	TABLE_COLUMNHEADER_SELECTALL_NOT_CHECKED: { defaultText: NOT_CHECKED },
+	ACC_STATE_DISABLED: { defaultText: DISABLED },
+	CHECKBOX_CHECKED: { defaultText: CHECKED },
+	CHECKBOX_NOT_CHECKED: { defaultText: NOT_CHECKED },
 	TABLE_SELECT_ALL_ROWS: { defaultText: SELECT_ALL_ROWS },
 	TABLE_DESELECT_ALL_ROWS: { defaultText: DESELECT_ALL_ROWS },
   	TABLE_COLUMNHEADER_CLEARALL_DESCRIPTION: { defaultText: CLEAR_ALL_BUTTON },
-	TABLE_ACC_STATE_DISABLED: { defaultText: DISABLED }
+	TABLE_COLUMNHEADER_SELECTALL_DESCRIPTION: { defaultText: SELECT_ALL_CHECKBOX },
 } = Translations;
 
 function mountTestpage(selectionMode: string) {
@@ -111,7 +111,7 @@ const testConfig = {
 			},
 			"ARROWS_BOX": {
 				"arrow_initial": "0",
-				"arrow_down": "1",
+				"arrow_down": "0",
 				"arrow_up": "0",
 			},
 			"MOUSE": {
@@ -257,13 +257,11 @@ Object.entries(testConfig).forEach(([mode, testConfigEntry]) => {
 
 			cy.realPress("ArrowDown");
 			checkSelection(testConfigEntry.cases.ARROWS_BOX.arrow_down);
-			let callCount = mode === "Single" ? 2 : 1;
-			checkSelectionChangeSpy(callCount);
+			checkSelectionChangeSpy(1);
 
 			cy.realPress("ArrowUp");
 			checkSelection(testConfigEntry.cases.ARROWS_BOX.arrow_up);
-			callCount = mode === "Single" ? 3 : 1;
-			checkSelectionChangeSpy(callCount);
+			checkSelectionChangeSpy(1);
 		});
 
 		it("select row via mouse", () => {

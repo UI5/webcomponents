@@ -2,7 +2,7 @@
 
 In this tutorial, you will learn how to use `UI5 Web Components` in an Angular application. In the second part, we will introduce `UI5 Web Components for Angular` - wrapper library for UI5 Web Components, improving their integration with Angular.
 
-**Note:** To get the best development experience, we recommend using the [UI5 Web Components for Angular](https://ui5-webcomponents-ngx.netlify.app). The library removes the need for `CUSTOM_ELEMENTS_SCHEMA` and `NO_ERRORS_SCHEMA` schemas, and supports all Angular-specific features out-of-the-box.
+**Note:** To get the best development experience, we recommend using the [UI5 Web Components for Angular](https://sap.github.io/fundamental-ngx/). The library removes the need for `CUSTOM_ELEMENTS_SCHEMA` and `NO_ERRORS_SCHEMA` schemas, and supports all Angular-specific features out-of-the-box.
 
 ## UI5 Web Components
 

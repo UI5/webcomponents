@@ -34,8 +34,8 @@ class ToolbarLabel extends ToolbarItem {
 	text = "";
 
 	/**
-	 * @override
 	 * ToolbarLabel is not interactive.
+	 * @override
 	 */
 	get isInteractive(): boolean {
 		return false;

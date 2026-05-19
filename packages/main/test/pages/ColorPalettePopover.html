@@ -131,7 +131,7 @@
 		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
 		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
 		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
-		<ui5-color-palette-item value="cyan"></ui5-color-palette-item> 
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
 		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
 		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
 		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
@@ -205,6 +205,34 @@
 		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
 	</ui5-color-palette-popover>
 
+	<ui5-title level="H5">placement</ui5-title>
+
+	<ui5-select id="placementSelect">
+		<ui5-option value="Top">Top</ui5-option>
+		<ui5-option value="Bottom" selected>Bottom</ui5-option>
+		<ui5-option value="Start">Start</ui5-option>
+		<ui5-option value="End">End</ui5-option>
+	</ui5-select>
+
+	<div style="margin: 2rem 25rem; text-align: center;">
+		<ui5-button id="btnColPop5">Open</ui5-button>
+	</div>
+
+	<ui5-color-palette-popover id="ColPop5" show-recent-colors show-more-colors show-default-color default-color="green" opener="btnColPop5">
+		<ui5-color-palette-item value="pink"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkblue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#444444"></ui5-color-palette-item>
+		<ui5-color-palette-item value="rgb(0,200,0)"></ui5-color-palette-item>
+		<ui5-color-palette-item value="green"></ui5-color-palette-item>
+		<ui5-color-palette-item value="darkred"></ui5-color-palette-item>
+		<ui5-color-palette-item value="yellow"></ui5-color-palette-item>
+		<ui5-color-palette-item value="blue"></ui5-color-palette-item>
+		<ui5-color-palette-item value="cyan"></ui5-color-palette-item>
+		<ui5-color-palette-item value="orange"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#5480e7"></ui5-color-palette-item>
+		<ui5-color-palette-item value="#ff6699"></ui5-color-palette-item>
+	</ui5-color-palette-popover>
+
 	<script>
 		// Usage of "open" and "opener"
 		btnColPop1.addEventListener("click", function(event) {
@@ -221,6 +249,10 @@
 
 		btnColPop4.addEventListener("click", function(event) {
 			ColPop4.open = !ColPop4.open;
+		});
+
+		btnColPop5.addEventListener("click", function(event) {
+			ColPop5.open = !ColPop5.open;
 		});
 
 		// Tests - default color btn should be on focus after open
@@ -255,6 +287,10 @@
 		let openChangeCounter = 0;
 		colorPalettePopoverTest6.addEventListener("ui5-close", function(event) {
 			inpOpenChangeCounter.value = `${++openChangeCounter}`;
+		});
+
+		placementSelect.addEventListener("change", function(event) {
+			ColPop5.placement = placementSelect.value;
 		});
 	</script>
 </html>

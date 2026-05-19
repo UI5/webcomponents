@@ -1,5 +1,5 @@
 @import "../base/YearPicker-parameters.css";
 
-:root {
+:host {
 	--_ui5_yearpicker_item_border_radius: 0.5rem;
 }

@@ -1,7 +1,7 @@
 
 @import "../base/CheckBox-parameters.css";
 
-:root {
+:host {
 --_ui5_checkbox_inner_border_radius: 0;
 --_ui5_checkbox_checkmark_color: var(--sapContent_IconColor);
 --_ui5_checkbox_inner_error_border: 0.125rem dashed var(--sapField_InvalidColor);

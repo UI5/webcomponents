@@ -1,7 +1,7 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
 	isEscape,
@@ -9,6 +9,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import BaseInput from "@ui5/webcomponents/dist/Input.js";
 import type Menu from "@ui5/webcomponents/dist/Menu.js";
+import type { MenuItemClickEventDetail } from "@ui5/webcomponents/dist/Menu.js";
 import type Button from "./Button.js";
 
 // styles
@@ -20,11 +21,18 @@ import ValueStateMessageCss from "@ui5/webcomponents/dist/generated/themes/Value
 // templates
 import InputTemplate from "./InputTemplate.js";
 import {
-	VERSIONING_NEXT_BUTTON_TEXT,
-	VERSIONING_PREVIOUS_BUTTON_TEXT,
-	INPUT_WRITING_ASSISTANT_LABEL,
+	INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP,
+	INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP,
+	INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP,
 	WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT,
 } from "./generated/i18n/i18n-defaults.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+
+type InputVersionChangeEventDetail = {
+	backwards: boolean,
+};
+
+type InputItemClickEventDetail = MenuItemClickEventDetail;
 
 /**
  * @class
@@ -57,6 +65,7 @@ import {
  * @extends BaseInput
  * @since 2.16.0
  * @experimental The **@ui5/webcomponents-ai** package is under active development and considered experimental. Component APIs are subject to change.
+ * Furthermore, the package supports **Horizon** themes only.
  * @public
  */
 @customElement({
@@ -80,6 +89,13 @@ import {
 	cancelable: true,
 })
 
+/** Fired when an item from the AI actions menu is clicked.
+ * @param { HTMLElement } item The currently clicked menu item.
+ * @param { string } text The text of the currently clicked menu item.
+ * @public
+ */
+@event("item-click")
+
 /**
  * Fired when the user selects the "Stop" button to stop ongoing AI text generation.
  * @public
@@ -89,18 +105,17 @@ import {
 /**
  * Fired when the user selects the version navigation buttons.
  *
- * @param {boolean} backwards - Indicates if navigation is backwards (true) or forwards (false, default)
+ * @param { boolean } backwards The text of the currently clicked menu item.
  * @public
  */
 @event("version-change")
 
 class Input extends BaseInput {
 	eventDetails!: BaseInput["eventDetails"] & {
-		"version-change": {
-			backwards: boolean;
-		};
-		"stop-generation": object;
-		"button-click": object;
+		"version-change": InputVersionChangeEventDetail;
+		"stop-generation": void;
+		"button-click": void;
+		"item-click": InputItemClickEventDetail;
 	};
 
 	/**
@@ -150,7 +165,7 @@ class Input extends BaseInput {
 		type: HTMLElement,
 		invalidateOnChildChange: true,
 	})
-	actions!: Array<HTMLElement>;
+	actions!: Slot<HTMLElement>;
 
 	_previousCurrentStep = 0;
 	_previousTotalSteps = 0;
@@ -219,9 +234,9 @@ class Input extends BaseInput {
 	/**
 	 * Handles the version change event from the versioning component.
 	 *
-	 * @param {CustomEvent} e - The version change event
+	 * @param e - The version change event
 	 */
-	_handleVersionChange(e: CustomEvent<{ backwards: boolean }>) {
+	_handleVersionChange(e: CustomEvent<InputVersionChangeEventDetail>): void {
 		this.fireDecoratorEvent("version-change", {
 			backwards: e.detail.backwards,
 		});
@@ -246,15 +261,8 @@ class Input extends BaseInput {
 		this._handleVersionChange(new CustomEvent("version-change", { detail: { backwards: false } }));
 	}
 
-	_onMenuIconClick(): void {
-		this.menu?.addEventListener("item-click", (e: Event) => {
-			const customEvent = e as CustomEvent;
-			this.dispatchEvent(new CustomEvent("item-click", {
-				detail: customEvent.detail,
-				bubbles: true,
-				composed: true,
-			}));
-		});
+	_onMenuIconClick(e: CustomEvent<InputItemClickEventDetail>): void {
+		this.fireDecoratorEvent("item-click", e.detail);
 	}
 
 	/**
@@ -293,7 +301,7 @@ class Input extends BaseInput {
 	}
 
 	get ariaLabel() {
-		return this.accessibleName || !this.loading ? Input.i18nBundle.getText(INPUT_WRITING_ASSISTANT_LABEL) : Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
+		return this.accessibleName || !this.loading ? Input.i18nBundle.getText(INPUT_WRITING_ASSISTANT_BUTTON_TOOLTIP) : Input.i18nBundle.getText(WRITING_ASSISTANT_GENERATING_ANNOUNCEMENT);
 	}
 
 	get stopGeneratingTooltip() {
@@ -301,18 +309,22 @@ class Input extends BaseInput {
 	}
 
 	get nextButtonAccessibleName() {
-		return Input.i18nBundle.getText(VERSIONING_NEXT_BUTTON_TEXT);
+		return Input.i18nBundle.getText(INPUT_VERSIONING_NEXT_BUTTON_TOOLTIP);
 	}
 
 	get previousButtonAccessibleName() {
-		return Input.i18nBundle.getText(VERSIONING_PREVIOUS_BUTTON_TEXT);
+		return Input.i18nBundle.getText(INPUT_VERSIONING_PREVIOUS_BUTTON_TOOLTIP);
 	}
 
 	get menu() {
-		return this.shadowRoot?.querySelector("ui5-menu") as Menu;
+		return this.shadowRoot?.querySelector("[ui5-menu]") as Menu;
 	}
 }
 
 Input.define();
 
+export type {
+	InputVersionChangeEventDetail,
+	InputItemClickEventDetail,
+};
 export default Input;

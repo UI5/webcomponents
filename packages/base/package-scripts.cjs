@@ -24,7 +24,7 @@ const scripts = {
 		"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 		"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 	},
-	lint: `eslint .`,
+	lint: `ui5nps-script "${LIB}/eslint/eslint.js"`,
 	generate: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace build.jsonImports",
 	prepare: "ui5nps clean build.i18n integrate copy generateAssetParameters generateVersionInfo generateStyles generateFontFace typescript integrate.no-remaining-require build.jsonImports",
 	typescript: "tsc -b",
@@ -41,7 +41,7 @@ const scripts = {
 	},
 	build: {
 		default: `ui5nps prepare`,
-		bundle: `vite build ${viteConfig}`,
+		bundle: `ui5nps-script "${LIB}/vite-bundler/vite-bundler.mjs" ${viteConfig}`,
 		i18n: {
 			default: "ui5nps build.i18n.defaultsjs build.i18n.json",
 			defaultsjs: `ui5nps-script "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
@@ -70,19 +70,19 @@ const scripts = {
 			"ui5": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/sap/**/*" dist/prod/sap/`,
 			"preact": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/thirdparty/preact/**/*.js" dist/prod/thirdparty/preact/`,
 			"assets": `ui5nps-script "${LIB}copy-and-watch/index.js" "dist/generated/assets/**/*.json" dist/prod/generated/assets/`,
-	}
-},
+		}
+	},
 	generateAPI: {
-		default: "ui5nps generateAPI.generateCEM generateAPI.validateCEM",
 		generateCEM: `ui5nps-script "${LIB}/cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 		validateCEM: `ui5nps-script "${LIB}/cem/validate.js"`,
+		mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,
 	},
 	watch: {
 		default: 'ui5nps-p watch.src watch.styles', // concurently
 		withBundle: 'ui5nps-p watch.src watch.bundle watch.styles', // concurently
 		src: 'ui5nps copy.srcWithWatch',
 		bundle: `ui5nps-script ${LIB}/dev-server/dev-server.mjs ${viteConfig}`,
-		styles: 'chokidar "src/css/*.css" -c "ui5nps generateStyles"'
+		styles: `ui5nps-script "${LIB}/chokidar/chokidar.js" "src/css/*.css" "ui5nps generateStyles"`
 	},
 	test: {
 		default: 'ui5nps-p test.ssr test.ssr2 test.test-cy-ci', // concurently

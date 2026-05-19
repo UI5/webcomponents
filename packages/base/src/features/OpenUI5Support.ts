@@ -6,11 +6,12 @@ import {
 	removeOpenedPopup,
 	getTopmostPopup,
 } from "./patchPopup.js";
-import type { OpenUI5Popup, OpenUI5PopupBasedControl, PopupInfo } from "./patchPopup.js";
+import type { OpenUI5PopupClass, OpenUI5DialogClass, PopupInfo } from "./patchPopup.js";
 import { registerFeature } from "../FeaturesRegistry.js";
 import { setTheme } from "../config/Theme.js";
 import type { CLDRData } from "../asset-registries/LocaleData.js";
 import type { LegacyDateCalendarCustomizing } from "../features/LegacyDateFormats.js";
+import { secondaryBoot } from "../Boot.js";
 
 type OpenUI5Core = {
 	attachInit: (callback: () => void) => void,
@@ -71,8 +72,12 @@ type Locale = {
 	_get: () => CLDRData,
 };
 
+const OPENUI5_POLLING_INTERVAL = 100;
+
 class OpenUI5Support {
-	static isAtLeastVersion116() {
+	static enablePolling = false; // set to true for old OpenUI5 versions
+
+	static isAtLeastVersion(minor: number) {
 		if (!window.sap.ui!.version) {
 			return true; // sap.ui.version will be removed in newer OpenUI5 versions
 		}
@@ -81,7 +86,7 @@ class OpenUI5Support {
 		if (!parts || parts.length < 2) {
 			return false;
 		}
-		return parseInt(parts[0]) > 1 || parseInt(parts[1]) >= 116;
+		return parseInt(parts[0]) > 1 || parseInt(parts[1]) >= minor;
 	}
 
 	static isOpenUI5Detected() {
@@ -90,17 +95,40 @@ class OpenUI5Support {
 
 	static initPromise?: Promise<void>;
 
+	/**
+	 * Important - if OpenUI5 is loaded after UI5 Web Components, configuration is not synchronized and it's up to the app to initialize OpenUI5 with the same settings as UI5 Web Components for consistency.
+	 */
+	static OpenUI5DelayedInit = async () => {
+		OpenUI5Support.init(); // This ensures patchPopover and patchPatcher are called; and from this point OpenUI5 CSS vars start being detected
+		await secondaryBoot(); // Re-run the parts of boot that were skipped due to OpenUI5 not having been loaded
+	}
+
+	static awaitForOpenUI5() {
+		if (OpenUI5Support.enablePolling) {
+			const interval = setInterval(() => {
+				if (OpenUI5Support.isOpenUI5Detected()) {
+					clearInterval(interval);
+					OpenUI5Support.OpenUI5DelayedInit();
+				}
+			}, OPENUI5_POLLING_INTERVAL);
+		} else {
+			document.addEventListener("sap-ui-core-ready", () => {
+				OpenUI5Support.OpenUI5DelayedInit();
+			});
+		}
+	}
+
 	static init() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return Promise.resolve();
+			return OpenUI5Support.awaitForOpenUI5();
 		}
 
 		if (!OpenUI5Support.initPromise) {
 			OpenUI5Support.initPromise = new Promise<void>(resolve => {
 				window.sap.ui.require(["sap/ui/core/Core"], async (Core: OpenUI5Core) => {
 					const callback = () => {
-						let deps: Array<string> = ["sap/ui/core/Popup", "sap/m/Dialog", "sap/m/Popover", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
-						if (OpenUI5Support.isAtLeastVersion116()) { // for versions since 1.116.0 and onward, use the modular core
+						let deps: Array<string> = ["sap/ui/core/Popup", "sap/m/Dialog", "sap/ui/core/Patcher", "sap/ui/core/LocaleData"];
+						if (OpenUI5Support.isAtLeastVersion(116)) { // for versions since 1.116.0 and onward, use the modular core
 							deps = [
 								...deps,
 								"sap/base/i18n/Formatting",
@@ -110,13 +138,13 @@ class OpenUI5Support {
 								"sap/ui/core/date/CalendarUtils",
 							];
 						}
-						window.sap.ui.require(deps, (Popup: OpenUI5Popup, Dialog: OpenUI5PopupBasedControl, Popover: OpenUI5PopupBasedControl, Patcher: OpenUI5Patcher) => {
+						window.sap.ui.require(deps, (Popup: OpenUI5PopupClass, Dialog: OpenUI5DialogClass, Patcher: OpenUI5Patcher) => {
 							patchPatcher(Patcher);
-							patchPopup(Popup, Dialog, Popover);
+							patchPopup(Popup, Dialog);
 							resolve();
 						});
 					};
-					if (OpenUI5Support.isAtLeastVersion116()) {
+					if (OpenUI5Support.isAtLeastVersion(116)) {
 						await Core.ready();
 						callback();
 					} else {
@@ -134,7 +162,7 @@ class OpenUI5Support {
 			return {};
 		}
 
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const ControlBehavior = window.sap.ui.require("sap/ui/core/ControlBehavior") as ControlBehavior;
 			const Localization = window.sap.ui.require("sap/base/i18n/Localization") as Localization;
 			const Theming = window.sap.ui.require("sap/ui/core/Theming") as Theming;
@@ -152,7 +180,7 @@ class OpenUI5Support {
 				formatSettings: {
 					firstDayOfWeek: CalendarUtils.getWeekConfigurationValues().firstDayOfWeek,
 					legacyDateCalendarCustomizing: Formatting.getCustomIslamicCalendarData?.()
-												?? Formatting.getLegacyDateCalendarCustomizing?.(),
+						?? Formatting.getLegacyDateCalendarCustomizing?.(),
 				},
 			};
 		}
@@ -165,9 +193,9 @@ class OpenUI5Support {
 			animationMode: config.getAnimationMode(),
 			language: config.getLanguage(),
 			theme: config.getTheme(),
-			themeRoot: config.getThemeRoot(),
+			themeRoot: typeof config.getThemeRoot === "function" ? config.getThemeRoot() : undefined,
 			rtl: config.getRTL(),
-			timezone: config.getTimezone(),
+			timezone: typeof config.getTimezone === "function" ? config.getTimezone() : undefined,
 			calendarType: config.getCalendarType(),
 			formatSettings: {
 				firstDayOfWeek: LocaleData ? LocaleData.getInstance(config.getLocale()).getFirstDayOfWeek() : undefined,
@@ -183,7 +211,7 @@ class OpenUI5Support {
 
 		const LocaleData = window.sap.ui.require("sap/ui/core/LocaleData") as LocaleData;
 
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const Localization = window.sap.ui.require("sap/base/i18n/Localization") as Localization;
 			return LocaleData.getInstance(Localization.getLanguageTag())._get();
 		}
@@ -194,7 +222,7 @@ class OpenUI5Support {
 	}
 
 	static _listenForThemeChange() {
-		if (OpenUI5Support.isAtLeastVersion116()) {
+		if (OpenUI5Support.isAtLeastVersion(116)) {
 			const Theming: Theming = window.sap.ui.require("sap/ui/core/Theming");
 			Theming.attachApplied(() => {
 				setTheme(Theming.getTheme());
@@ -210,10 +238,11 @@ class OpenUI5Support {
 
 	static attachListeners() {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
-			return;
+			return false;
 		}
 
 		OpenUI5Support._listenForThemeChange();
+		return true;
 	}
 
 	static cssVariablesLoaded() {
@@ -227,7 +256,11 @@ class OpenUI5Support {
 		}
 
 		// The file name is "css_variables.css" until 1.127 and "library.css" from 1.127 onwards
-		return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
+		if (OpenUI5Support.isAtLeastVersion(127)) {
+			return !!link.href.match(/\/css(-|_)variables\.css/) || !!link.href.match(/\/library\.css/);
+		}
+
+		return !!link.href.match(/\/css(-|_)variables\.css/);
 	}
 
 	static addOpenedPopup(popupInfo: PopupInfo) {
