@@ -33,16 +33,27 @@ import {
 
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
-type DynamicPageHeaderRoles  = Extract<AriaLandmarkRole, "none" | "banner" | "region">;
+type DynamicPageHeaderRoles = Extract<AriaLandmarkRole, "none" | "banner" | "region">;
 type DynamicPageContentRoles = Extract<AriaLandmarkRole, "none" | "main" | "region" | "form">;
-type DynamicPageFooterRoles  = Extract<AriaLandmarkRole, "none" | "contentinfo" | "region">;
-type DynamicPageRootRoles    = Extract<AriaLandmarkRole, "none" | "main" | "region">;
-
+type DynamicPageFooterRoles = Extract<AriaLandmarkRole, "none" | "contentinfo" | "region">;
+type DynamicPageRootRoles = Extract<AriaLandmarkRole, "none" | "main" | "region">;
 type DynamicPageAccessibilityAttributes = {
-	root?:    { role?: DynamicPageRootRoles;    name?: string };
-	header?:  { role?: DynamicPageHeaderRoles;  name?: string };
-	content?: { role?: DynamicPageContentRoles; name?: string };
-	footer?:  { role?: DynamicPageFooterRoles;  name?: string };
+	root?: {
+		role?: DynamicPageRootRoles,
+		name?: string,
+	},
+	header?: {
+		role?: DynamicPageHeaderRoles,
+		name?: string,
+	},
+	content?: {
+		role?: DynamicPageContentRoles,
+		name?: string,
+	},
+	footer?: {
+		role?: DynamicPageFooterRoles,
+		name?: string,
+	},
 };
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
