@@ -59,10 +59,24 @@
 	margin-inline-start: var(--_ui5_tl_li_margin_bottom);
 }
 
-:host([layout="Horizontal"]) .ui5-timeline-scroll-container {
+/* Scroll container — opt-in via [scrollable] host attribute (default) */
+:host([scrollable][layout="Horizontal"]) .ui5-timeline-scroll-container {
 	overflow: auto;
 	/* The padding values of the parent container are added to the size of scroll container */
 	width: calc(100% + var(--_ui5_timeline_scroll_container_offset));
+}
+
+:host([scrollable][layout="Vertical"]) .ui5-timeline-scroll-container {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
+/* When scrollable is off, the scroll container is a transparent flex layer:
+   no overflow, no clipping. The application owns scrolling on an ancestor. */
+.ui5-timeline-scroll-container {
+	display: flex;
+	flex-direction: column;
 }
 
 :host([loading]) .ui5-timeline-growing-button-busy-indicator:not([_is-busy]) {
@@ -77,12 +91,41 @@
 	box-sizing: border-box;
 }
 
-:host([layout="Vertical"]) .ui5-timeline-scroll-container {
-	height: 100%;
-	width: 100%;
-}
-
 :host([growing="Scroll"]) .ui5-timeline-end-marker {
 	/* Ensure the list-end-marker has a block property to always be stretched and "visible" on the screen */
 	display: inline-block;
+}
+
+/* Header and info-bar slots — render above the items area inside the scroll container,
+   so they participate in the same scroll context (required for position: sticky to work). */
+.ui5-timeline-header,
+.ui5-timeline-info-bar {
+	flex-shrink: 0;
+	background: var(--sapBackgroundColor);
+}
+
+.ui5-timeline-header {
+	margin-block-end: 0.5rem;
+}
+
+/* Sticky behavior — opt-in via host attributes; CSS-only, no JS measurement.
+   When both are sticky, normal stacking + flex layout keeps them in order:
+   the header sticks at top:0, the info-bar sticks just below it because the
+   header occupies the top portion of the scroll container's viewport. */
+:host([sticky-header]) .ui5-timeline-header {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+:host([sticky-info-bar]) .ui5-timeline-info-bar {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+:host([sticky-header][sticky-info-bar]) .ui5-timeline-info-bar {
+	/* When both are sticky, info-bar must rest below the header.
+	   Apps can override this CSS variable to match their header's height. */
+	top: var(--_ui5_timeline_sticky_header_height, 3rem);
 }

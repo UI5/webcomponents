@@ -1,0 +1,52 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
+    <!-- playground-fold-end -->
+
+    <ui5-timeline id="filterableTimeline" sticky-header sticky-info-bar style="height: 22rem;">
+        <ui5-bar slot="header" design="Subheader">
+            <ui5-input slot="startContent" id="searchInput" placeholder="Search by author or title"></ui5-input>
+            <ui5-button slot="endContent" id="sortButton" icon="sort">Sort: Ascending</ui5-button>
+            <ui5-button slot="endContent" id="filterButton" icon="filter">Filter</ui5-button>
+        </ui5-bar>
+
+        <ui5-bar slot="infoBar" design="Subheader">
+            <ui5-label slot="startContent" id="activeStateLabel">Sort: Ascending &middot; No filters &middot; No search</ui5-label>
+        </ui5-bar>
+
+        <ui5-timeline-item title-text="Project kickoff" subtitle-text="20.02.2017 09:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Design review" subtitle-text="22.02.2017 11:30" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Sprint planning" subtitle-text="24.02.2017 14:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Backlog grooming" subtitle-text="26.02.2017 10:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Demo to stakeholders" subtitle-text="28.02.2017 15:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Retrospective" subtitle-text="01.03.2017 16:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Release planning" subtitle-text="03.03.2017 09:30" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Deployment" subtitle-text="05.03.2017 12:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+    </ui5-timeline>
+
+    <ui5-dialog id="filterDialog" header-text="Filter by author">
+        <ui5-list id="filterList" selection-mode="Multiple">
+            <ui5-li>Stanislava Baltova</ui5-li>
+            <ui5-li>Sarah Kerrigan</ui5-li>
+            <ui5-li>John Smith</ui5-li>
+        </ui5-list>
+        <div slot="footer" style="display: flex; justify-content: flex-end; padding: 0.5rem; gap: 0.5rem;">
+            <ui5-button id="filterDialogApply" design="Emphasized">Apply</ui5-button>
+            <ui5-button id="filterDialogCancel">Cancel</ui5-button>
+        </div>
+    </ui5-dialog>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

@@ -581,4 +581,156 @@ describe("TimelineItem iconTooltip", () => {
 	});
 });
 
+describe("Timeline header and info-bar slots", () => {
+	it("renders the header slot when content is provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="header-content" data-testid="header">Controls</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("exist");
+
+		cy.get("#header-content").should("be.visible");
+	});
+
+	it("renders the info-bar slot when content is provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="infoBar" id="info-bar-content">Active filters: 2</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("exist");
+
+		cy.get("#info-bar-content").should("be.visible");
+	});
+
+	it("does not render header or info-bar wrappers when slots are empty", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("not.exist");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("not.exist");
+	});
+
+	it("renders both slots side by side when both are provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="hdr">Search/Filter/Sort</div>
+				<div slot="infoBar" id="ifb">Status: 3 items</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("exist");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("exist");
+
+		cy.get("#hdr").should("be.visible");
+		cy.get("#ifb").should("be.visible");
+	});
+
+	it("reflects stickyHeader as the [sticky-header] host attribute and applies sticky positioning", () => {
+		cy.mount(
+			<Timeline stickyHeader={true}>
+				<div slot="header" id="hdr">Header</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("have.attr", "sticky-header");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("have.css", "position", "sticky");
+	});
+
+	it("reflects stickyInfoBar as the [sticky-info-bar] host attribute and applies sticky positioning", () => {
+		cy.mount(
+			<Timeline stickyInfoBar={true}>
+				<div slot="infoBar" id="ifb">Info</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("have.attr", "sticky-info-bar");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("have.css", "position", "sticky");
+	});
+
+	it("does not apply sticky positioning when stickyHeader is false (default)", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="hdr">Header</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("not.have.attr", "sticky-header");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("not.have.css", "position", "sticky");
+	});
+
+	it("scrollable defaults to true and the host reflects the [scrollable] attribute", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("have.attr", "scrollable");
+	});
+
+	it("removes overflow:auto from the scroll container when scrollable is set to false", () => {
+		cy.mount(
+			<Timeline scrollable={false}>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("not.have.attr", "scrollable");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-scroll-container")
+			.should("not.have.css", "overflow-y", "auto");
+	});
+});
 
