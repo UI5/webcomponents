@@ -74,16 +74,28 @@ function groupedItemsLayout(this: Form) {
 }
 
 function standaloneItemsLayout(this: Form) {
-	return (
-		this.accessibleMode === "Edit" ?
-			<div class="ui5-form-layout" part="layout">
+	const column = <div
+		class="ui5-form-column"
+		style={{
+			"--ui5-form-column-span-s": this.columnsS,
+			"--ui5-form-column-span-m": this.columnsM,
+			"--ui5-form-column-span-l": this.columnsL,
+			"--ui5-form-column-span-xl": this.columnsXl,
+		}}
+		part="column"
+	>
+		{this.accessibleMode === "Edit" ?
+			<div class="ui5-form-group-layout">
 				{standaloneItemsLayoutContent.call(this)}
 			</div>
 			:
-			<dl class="ui5-form-layout" part="layout">
+			<dl class="ui5-form-group-layout">
 				{standaloneItemsLayoutContent.call(this)}
 			</dl>
-	);
+		}
+	</div>;
+
+	return <div class="ui5-form-layout" part="layout">{column}</div>;
 }
 
 function standaloneItemsLayoutContent(this: Form) {
