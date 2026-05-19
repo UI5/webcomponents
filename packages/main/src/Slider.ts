@@ -141,6 +141,16 @@ class Slider extends SliderBase implements IFormInputElement {
 		return this.tickmarks.length > 0;
 	}
 
+	get _isTooltipVisible(): boolean {
+		if (!this._tooltipsOpen) {
+			return false;
+		}
+		if (!this._hasCustomTickmarks) {
+			return true;
+		}
+		return this._getCustomLabel(this.value) !== undefined;
+	}
+
 	get _ariaValueText(): string | undefined {
 		const label = this._getCustomLabel(this.value);
 		return label || undefined;

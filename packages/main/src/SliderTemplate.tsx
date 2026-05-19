@@ -43,7 +43,7 @@ const handle = (slider: Slider) => {
 
 const tooltip = (slider: Slider) => (
 	<SliderTooltip
-		open={slider._tooltipsOpen}
+		open={slider._isTooltipVisible}
 		value={slider.tooltipValue}
 		min={slider.min}
 		max={slider.max}

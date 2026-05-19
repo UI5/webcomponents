@@ -249,6 +249,26 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		return this.tickmarks.length > 0;
 	}
 
+	get _isStartTooltipVisible(): boolean {
+		if (!this._tooltipsOpen) {
+			return false;
+		}
+		if (!this._hasCustomTickmarks) {
+			return true;
+		}
+		return this._getCustomLabel(this.startValue) !== undefined;
+	}
+
+	get _isEndTooltipVisible(): boolean {
+		if (!this._tooltipsOpen) {
+			return false;
+		}
+		if (!this._hasCustomTickmarks) {
+			return true;
+		}
+		return this._getCustomLabel(this.endValue) !== undefined;
+	}
+
 	_getCustomLabel(value: number): string | undefined {
 		return this.tickmarks.find(t => t.value === value)?.label;
 	}

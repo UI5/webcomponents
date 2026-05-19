@@ -81,7 +81,7 @@ const endHandle = (slider: RangeSlider) => {
 
 const startTooltip = (slider: RangeSlider) => (
 	<SliderTooltip
-		open={slider._tooltipsOpen}
+		open={slider._isStartTooltipVisible}
 		value={slider.tooltipStartValue}
 		valueState={slider.tooltipStartValueState}
 		min={slider.min}
@@ -100,7 +100,7 @@ const startTooltip = (slider: RangeSlider) => (
 
 const endTooltip = (slider: RangeSlider) => (
 	<SliderTooltip
-		open={slider._tooltipsOpen}
+		open={slider._isEndTooltipVisible}
 		value={slider.tooltipEndValue}
 		valueState={slider.tooltipEndValueState}
 		min={slider.min}

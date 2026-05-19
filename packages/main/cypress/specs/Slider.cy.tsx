@@ -1173,6 +1173,48 @@ describe("Custom Values", () => {
 			.should("have.attr", "value", "Room Temp");
 	});
 
+	it("Tooltip is hidden when value is between custom tickmarks", () => {
+		cy.mount(
+			<Slider value={30} min={0} max={100} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip]")
+			.should("not.have.attr", "open");
+	});
+
+	it("Tooltip is shown when value lands exactly on a custom tickmark", () => {
+		cy.mount(
+			<Slider value={50} min={0} max={100} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip]")
+			.should("have.attr", "open");
+	});
+
+	it("Tooltip is shown for any value when no custom tickmarks are defined", () => {
+		cy.mount(
+			<Slider value={37} min={0} max={100} showTooltip />
+		);
+
+		cy.get("[ui5-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle]").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip]")
+			.should("have.attr", "open");
+	});
+
 	it("Tickmarks auto-show without showTickmarks attribute", () => {
 		cy.mount(
 			<Slider value={0} min={0} max={100} tickmarks={customTickmarks} />

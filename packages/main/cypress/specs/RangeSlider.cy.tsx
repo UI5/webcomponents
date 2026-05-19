@@ -1985,6 +1985,63 @@ describe("Custom Tickmarks", () => {
 			.should("have.attr", "value", "Hot");
 	});
 
+	it("Tooltips are hidden when both handle values are between custom tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={30} endValue={60} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("not.have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("not.have.attr", "open");
+	});
+
+	it("Tooltip visibility is independent per handle when custom tickmarks are defined", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={60} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("not.have.attr", "open");
+	});
+
+	it("Tooltips are shown for any value when no custom tickmarks are defined", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={17} endValue={63} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("have.attr", "open");
+	});
+
 	it("Tickmarks auto-show without showTickmarks attribute", () => {
 		cy.mount(
 			<RangeSlider min={0} max={100} startValue={20} endValue={80} tickmarks={customTickmarks} />
