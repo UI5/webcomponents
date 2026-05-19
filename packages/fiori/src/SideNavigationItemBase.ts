@@ -68,7 +68,7 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	 *
 	 * @default undefined
 	 * @public
-	 * @since 2.21.0
+	 * @since 2.22.0
 	 */
 	@property()
 	accessibleName?: string;
