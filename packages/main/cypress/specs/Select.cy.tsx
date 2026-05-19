@@ -1971,11 +1971,11 @@ describe("Select - active/down state", () => {
 });
 
 describe("Select - popover max-width", () => {
-	it("applies default max-width of 100rem to the responsive popover when an option has very long text", () => {
+	it("applies a max-width of 40rem to the responsive popover when the select is narrow and an option has very long text", () => {
 		const longText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ".repeat(5);
 
 		cy.mount(
-			<Select>
+			<Select style="width: 200px;">
 				<Option value="desktop" icon="laptop">{longText}</Option>
 				<Option value="short">Short option</Option>
 			</Select>
@@ -1985,19 +1985,19 @@ describe("Select - popover max-width", () => {
 		cy.get("[ui5-select]").realClick();
 		cy.get("[ui5-select]").should("have.attr", "opened");
 
-		// The responsive popover should have max-width capped at 100rem
+		// When the select offsetWidth / remSize <= 40, max-width should be 40rem
 		cy.get("[ui5-select]")
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.should($el => {
 				const maxWidth = $el[0].style.maxWidth;
-				expect(maxWidth).to.equal("100rem");
+				expect(maxWidth).to.equal("40rem");
 			});
 	});
 
-	it("ensures the popover width does not exceed 100rem style property by default", () => {
+	it("caps max-width to the component's own width in pixels when the select is wider than 40rem", () => {
 		cy.mount(
-			<Select>
+			<Select style="width: 1000px;">
 				<Option value="short">Short</Option>
 			</Select>
 		);
@@ -2005,12 +2005,13 @@ describe("Select - popover max-width", () => {
 		cy.get("[ui5-select]").realClick();
 		cy.get("[ui5-select]").should("have.attr", "opened");
 
+		// When offsetWidth / remSize > 40, max-width should be the component's width in px
 		cy.get("[ui5-select]")
 			.shadow()
 			.find("[ui5-responsive-popover]")
-			.should($el => {
-				const maxWidth = $el[0].style.maxWidth;
-				expect(maxWidth).to.equal("100rem");
+			.then($popover => {
+				const maxWidth = $popover[0].style.maxWidth;
+				expect(maxWidth).to.match(/^\d+px$/);
 			});
 	});
 });

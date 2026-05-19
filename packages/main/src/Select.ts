@@ -1094,6 +1094,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get styles() {
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			popoverHeader: {
 				"display": "block",
@@ -1105,7 +1106,7 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
-				"max-width": "100rem",
+				"max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
 			},
 		};
 	}
