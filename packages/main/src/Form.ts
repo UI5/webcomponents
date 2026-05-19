@@ -38,6 +38,7 @@ interface IFormItem extends UI5Element {
 	colsL?: number;
 	colsM?: number;
 	colsS?: number;
+	colSpan?: string;
 	columnSpan?: number;
 	headerText?: string;
 	headerLevel?: `${TitleLevel}`;
@@ -483,10 +484,10 @@ class Form extends UI5Element {
 		});
 
 		sortedItems.forEach((item: IFormItem, idx: number) => {
-			item.colsXl = getGroupsColSpan(this.columnsXl, itemsCount, idx, item);
-			item.colsL = getGroupsColSpan(this.columnsL, itemsCount, idx, item);
-			item.colsM = getGroupsColSpan(this.columnsM, itemsCount, idx, item);
-			item.colsS = getGroupsColSpan(this.columnsS, itemsCount, idx, item);
+			item.colsXl = getGroupsColSpan(this.columnsXl, itemsCount, idx, item, "XL");
+			item.colsL = getGroupsColSpan(this.columnsL, itemsCount, idx, item, "L");
+			item.colsM = getGroupsColSpan(this.columnsM, itemsCount, idx, item, "M");
+			item.colsS = getGroupsColSpan(this.columnsS, itemsCount, idx, item, "S");
 		});
 	}
 

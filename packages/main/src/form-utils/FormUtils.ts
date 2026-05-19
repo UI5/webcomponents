@@ -20,10 +20,18 @@ function isValidFormItemLayout(labelSpan: number, emptySpan: number) {
 	return emptySpan === 0 ? labelSpan <= MAX_FORM_ITEM_CELLS : labelSpan + emptySpan <= MAX_FORM_ITEM_CELLS - 1;
 }
 
-function getGroupsColSpan(cols: number, groups: number, index: number, group: IFormItem): number {
+function getGroupsColSpan(cols: number, groups: number, index: number, group: IFormItem, breakpoint: Breakpoint): number {
 	// Case 0: column span is set from outside.
 	if (group.columnSpan) {
 		return group.columnSpan;
+	}
+
+	const colSpanForBreakpoint = group.colSpan?.split(" ").find((bp: string) => bp.startsWith(breakpoint));
+
+	if (colSpanForBreakpoint) {
+		const value = parseInt(colSpanForBreakpoint.slice(breakpoint.length));
+
+		return value;
 	}
 
 	// CASE 1: The number of available columns match the number of groups, or only 1 column is available - each group takes 1 column.
