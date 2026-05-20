@@ -152,6 +152,10 @@ type MultiComboBoxValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
 }
 
+type MultiComboBoxLoadingStart = {
+	shouldOpenPicker: boolean;
+}
+
 /**
  * @class
  *
@@ -266,6 +270,13 @@ type MultiComboBoxValueStateChangeEventDetail = {
 	cancelable: true,
 })
 
+/*
+ * @public
+ */
+@event("load-started", {
+	bubbles: true,
+})
+
 /**
  * Fired before the value state of the component is updated internally.
  * The event is preventable, meaning that if it's default action is
@@ -285,6 +296,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		input: void,
 		open: void,
 		close: void,
+		"load-started": MultiComboBoxLoadingStart,
 		"selection-change": MultiComboBoxSelectionChangeEventDetail,
 		"value-state-change": MultiComboBoxValueStateChangeEventDetail,
 	}
@@ -728,6 +740,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	togglePopoverByDropdownIcon() {
+		if (!this.open && !this.loading && this._getItems().length === 0 ) {
+			this.fireDecoratorEvent("load-started", {shouldOpenPicker: false});
+		}
 		this._shouldFilterItems = false;
 		this.open = !this.open;
 		this.tokenizerOpen = false;
@@ -762,6 +777,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._suppressNextLiveChange = false;
 			return;
 		}
+
+		this.fireDecoratorEvent("load-started",  {shouldOpenPicker: true});
 
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
@@ -801,7 +818,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.value = input.value;
 		this._filteredItems = filteredItems;
 
-		if (!isPhone()) {
+		if (!isPhone() && !this.loading) {
 			if (filteredItems.length === 0) {
 				this.open = false;
 			} else {
@@ -1697,6 +1714,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_click() {
 		if (isPhone() && !this.readonly && !this._showMorePressed && !this._deleting) {
 			this.open = true;
+			if (this._getItems().length === 0) {
+				this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+			}
 		}
 
 		this._showMorePressed = false;
@@ -2398,6 +2418,7 @@ export default MultiComboBox;
 
 export type {
 	IMultiComboBoxItem,
+	MultiComboBoxLoadingStart,
 	MultiComboBoxSelectionChangeEventDetail,
 	MultiComboBoxValueStateChangeEventDetail,
 };

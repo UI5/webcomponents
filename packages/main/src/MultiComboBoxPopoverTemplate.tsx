@@ -86,18 +86,24 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 					{this.open && valueStateMessage.call(this)}
 				</div>
 			}
+			{this.loading && (this._isPhone || !this.hasValueState) && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
 			{selectAllWrapper.call(this)}
-			{(this._isPhone || !this.hasValueState) && this.loading && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
 			{((!this.loading && this.filterSelected ) || loadingOnDesktopWithValueState) ?
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
-					{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
-					{!this.loading && this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
+				<>
+					
+					<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
+					</List>
+				</>
 				: (!this.loading || loadingOnDesktopWithValueState) &&
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>
-					{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
-					{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
+					<>
+					{selectAllWrapper.call(this)}
+					<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+					</List>
+				</>
 			}
 
 			{this._isPhone &&
