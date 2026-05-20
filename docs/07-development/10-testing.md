@@ -257,7 +257,11 @@ Notes:
 
 ### Code coverage
 
-Cypress tests automatically run with instrumentation switched on. To see the code coverage report, run the following commands:
+Cypress tests do not run with instrumentation by default. To enable it, check the package's `package-scripts.cjs` for the relevant flag.
+
+**Note:** This flag is intended for local development only and is specific to the `@ui5/webcomponents` project internals. It must not be committed to the repository and must not be used in third-party packages.
+
+To see the code coverage report, run the following commands:
 ```sh
 # build the project
 yarn build
@@ -267,3 +271,5 @@ yarn test:cypress
 # start a static server in the `coverage` folder and inspect the results in the browser
 http-server coverage
 ```
+
+**Note:** The coverage report is generated automatically once the test command finishes. When running the full suite with `yarn test:cypress`, this may take a while.
