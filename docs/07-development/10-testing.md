@@ -257,7 +257,7 @@ Notes:
 
 ### Code coverage
 
-Cypress tests do not run with instrumentation by default. To enable it, check the package's `package-scripts.cjs` for the relevant flag.
+Cypress tests do not run with instrumentation by default. To enable it, check the package's `package-scripts` for the relevant flag.
 
 **Note:** This flag is intended for local development only and is specific to the `@ui5/webcomponents` project internals. It must not be committed to the repository and must not be used in third-party packages.
 
