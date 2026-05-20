@@ -45,7 +45,6 @@ function ShellBarSearchButton(this: ShellBar) {
 					design="Transparent"
 					onClick={this.handleSearchButtonClick}
 					tooltip={this.actionsAccessibilityInfo.search.title}
-					aria-expanded={this.showSearchField}
 					accessibilityAttributes={this.actionsAccessibilityInfo.search.accessibilityAttributes}
 				/>
 			)}

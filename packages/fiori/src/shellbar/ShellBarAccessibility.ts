@@ -43,9 +43,10 @@ class ShellBarAccessibility {
 		params: {
 			accessibilityAttributes: ShellBarAccessibilityAttributes;
 			overflowPopoverOpen: boolean;
+			showSearchField: boolean;
 		},
 	): ShellBarAccessibilityInfo {
-		const { overflowPopoverOpen, accessibilityAttributes } = params;
+		const { overflowPopoverOpen, accessibilityAttributes, showSearchField } = params;
 		const overflowExpanded = accessibilityAttributes.overflow?.expanded;
 
 		return {
@@ -74,6 +75,7 @@ class ShellBarAccessibility {
 				title: defaultTexts.search,
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.search?.hasPopup,
+					expanded: accessibilityAttributes.search?.expanded !== undefined ? accessibilityAttributes.search.expanded : showSearchField,
 				},
 			},
 			overflow: {
