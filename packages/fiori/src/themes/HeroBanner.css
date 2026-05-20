@@ -1,4 +1,4 @@
-/* Banner Component Styles */
+/* HeroBanner Component Styles */
 
 :host(:not([hidden])) {
 	display: block;
@@ -75,9 +75,12 @@
 .ui5-banner-salutation {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader3Size);
+	font-weight: normal;
 	text-align: start;
 	color: var(--_ui5_banner_text_color);
 	line-height: 1.4;
+	margin: 0;
+	padding: 0;
 }
 
 .ui5-banner-date {

@@ -1,10 +1,10 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
-import BannerClass from "@ui5/webcomponents-fiori/dist/Banner.js";
+import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 
-const Banner = createReactComponent(BannerClass);
+const HeroBanner = createReactComponent(HeroBannerClass);
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
 const Input = createReactComponent(InputClass);
@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <h4>FullWidth Layout</h4>
-      <Banner
+      <HeroBanner
         salutationText="Welcome back, Alex"
         dateText="Thursday, March 6, 2026"
         layout="FullWidth"
@@ -22,12 +22,12 @@ function App() {
           placeholder="Search products, documents, reports..."
           style={{ width: "100%" }}
         />
-      </Banner>
+      </HeroBanner>
 
       <br />
 
       <h4>HalfWidth Layout (50/50)</h4>
-      <Banner
+      <HeroBanner
         salutationText="Hello, Maria"
         dateText="Thursday, March 6, 2026"
         layout="HalfWidth"
@@ -40,12 +40,12 @@ function App() {
           <CardHeader slot="header" titleText="Revenue YTD" subtitleText="Target" />
           <div style={{ padding: "0.75rem", fontSize: "1.5rem", fontWeight: "bold" }}>€4.2M</div>
         </Card>
-      </Banner>
+      </HeroBanner>
 
       <br />
 
       <h4>TwoThirds Layout (2/3 + 1/3)</h4>
-      <Banner
+      <HeroBanner
         salutationText="Good Afternoon, Thomas"
         dateText="Thursday, March 6, 2026"
         layout="TwoThirds"
@@ -58,7 +58,7 @@ function App() {
           <CardHeader slot="header" titleText="Tasks Due" subtitleText="Today" />
           <div style={{ padding: "0.75rem", fontSize: "1.5rem", fontWeight: "bold" }}>7</div>
         </Card>
-      </Banner>
+      </HeroBanner>
     </>
   );
 }

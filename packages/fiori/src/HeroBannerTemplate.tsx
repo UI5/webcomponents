@@ -1,6 +1,6 @@
-import type Banner from "./Banner.js";
+import type HeroBanner from "./HeroBanner.js";
 
-export default function BannerTemplate(this: Banner) {
+export default function HeroBannerTemplate(this: HeroBanner) {
 	return (
 		<div
 			class={{
@@ -24,9 +24,9 @@ export default function BannerTemplate(this: Banner) {
 						}
 
 						{this.salutationText &&
-							<div class="ui5-banner-salutation">
+							<h2 class="ui5-banner-salutation">
 								{this.salutationText}
-							</div>
+							</h2>
 						}
 					</div>
 

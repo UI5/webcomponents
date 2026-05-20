@@ -3,11 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Banner</title>
+	<title>HeroBanner</title>
 
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
-	<link rel="stylesheet" type="text/css" href="./styles/Banner.css">
+	<link rel="stylesheet" type="text/css" href="./styles/HeroBanner.css">
 </head>
 
 <body>
@@ -20,9 +20,9 @@
 			<h2>1. Basic Banner (Salutation Only)</h2>
 			<p>The simplest banner with only the mandatory salutation text.</p>
 
-			<ui5-banner id="banner-basic"
+			<ui5-hero-banner id="hero-banner-basic"
 				salutation-text="Hello, John">
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -32,7 +32,7 @@
 			<h2>2. Banner with Date</h2>
 			<p>A banner combining salutation and date text.</p>
 
-			<ui5-banner id="banner-date"
+			<ui5-hero-banner id="hero-banner-date"
 				salutation-text="Good Morning, Jane"
 				date-text="Thursday, March 6, 2026">
 				<ui5-card slot="headerActions" style="width: 300px;">
@@ -44,7 +44,7 @@
 					<ui5-button icon="document" design="Default">Create Report</ui5-button>
 					<ui5-button icon="email" design="Default">Send Message</ui5-button>
 				</div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -54,7 +54,7 @@
 			<h2>3. FullWidth Layout</h2>
 			<p>Banner with a full-width search field below the salutation.</p>
 
-			<ui5-banner id="banner-fullwidth"
+			<ui5-hero-banner id="hero-banner-fullwidth"
 				salutation-text="Welcome back, Alex"
 				date-text="Thursday, March 6, 2026"
 				layout="FullWidth">
@@ -62,7 +62,7 @@
 					placeholder="Search products, documents, reports..."
 					style="width: 100%;">
 				</ui5-input>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -72,7 +72,7 @@
 			<h2>4. HalfWidth Layout (50/50 Split)</h2>
 			<p>Two KPI cards side by side in a 50/50 layout.</p>
 
-			<ui5-banner id="banner-half"
+			<ui5-hero-banner id="hero-banner-half"
 				salutation-text="Hello, Maria"
 				date-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
@@ -88,7 +88,7 @@
 					<span class="kpi-value">€4.2M</span>
 					<span class="kpi-trend negative">▼ 3% vs target</span>
 				</div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -98,7 +98,7 @@
 			<h2>5. TwoThirds Layout (2/3 + 1/3)</h2>
 			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
 
-			<ui5-banner id="banner-twothirds"
+			<ui5-hero-banner id="hero-banner-twothirds"
 				salutation-text="Good Afternoon, Thomas"
 				date-text="Thursday, March 6, 2026"
 				layout="TwoThirds">
@@ -118,7 +118,7 @@
 					<span class="kpi-value">7</span>
 					<span class="kpi-trend negative">▼ 2 overdue</span>
 				</div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -128,11 +128,11 @@
 			<h2>6. Banner with Background Image</h2>
 			<p>A banner with a custom background image applied to the canvas.</p>
 
-			<ui5-banner id="banner-bg"
+			<ui5-hero-banner id="hero-banner-bg"
 				salutation-text="Welcome, Sarah"
 				date-text="Thursday, March 6, 2026"
 				background-image="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg">
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -142,7 +142,7 @@
 			<h2>7. Banner with Interactive Elements</h2>
 			<p>The banner itself is non-interactive, but slotted content like buttons and cards follow their own interactive states.</p>
 
-			<ui5-banner background-image="https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg" id="banner-interactive"
+			<ui5-hero-banner background-image="https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg" id="hero-banner-interactive"
 				salutation-text="Hello, David"
 				date-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
@@ -160,7 +160,7 @@
 					</div>
 				</ui5-card>
 				<div slot="endContent"></div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -171,7 +171,7 @@
 			<p>The banner scrolls away with the page content. It is not sticky. Scroll the container below to see the behavior.</p>
 
 			<div class="scroll-container">
-				<ui5-banner id="banner-scroll"
+				<ui5-hero-banner id="hero-banner-scroll"
 					salutation-text="Hello, Lisa"
 					date-text="Thursday, March 6, 2026"
 					layout="FullWidth">
@@ -179,7 +179,7 @@
 						<span class="kpi-label">Notifications</span>
 						<span class="kpi-value">23</span>
 					</div>
-				</ui5-banner>
+				</ui5-hero-banner>
 
 				<div class="filler-content">
 					<p>↓ Scroll down to see the banner scroll away ↓</p>
@@ -202,7 +202,7 @@
 			<h2>9. Buttons and Cards</h2>
 			<p>The start slot contains 3 action buttons; the end slot contains 4 summary cards.</p>
 
-			<ui5-banner id="banner-buttons-cards"
+			<ui5-hero-banner id="hero-banner-buttons-cards"
 				salutation-text="Hello, Emma"
 				date-text="Thursday, March 12, 2026"
 				layout="FullWidth">
@@ -227,7 +227,7 @@
 						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
 				</div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -257,7 +257,7 @@
 				</div>
 			</div>
 
-			<ui5-banner id="banner-dynamic"
+			<ui5-hero-banner id="hero-banner-dynamic"
 				salutation-text="Hello, User"
 				date-text="Thursday, March 6, 2026"
 				layout="FullWidth">
@@ -273,7 +273,7 @@
 					<span class="kpi-label">End Block</span>
 					<span class="kpi-value">200</span>
 				</div>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -283,7 +283,7 @@
 			<h2>11. SuccessFactors-Style Header Banner</h2>
 			<p>The blue home page header as seen in SAP SuccessFactors: a personalized greeting with quick-action shortcuts on the left and a carousel of alert cards on the right.</p>
 
-			<ui5-banner id="banner-sf"
+			<ui5-hero-banner id="hero-banner-sf"
 				layout="TwoThirds">
 				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
 				<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
@@ -316,7 +316,7 @@
 					</div>
 				</ui5-carousel>
 
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 		<!-- ====================================== -->
@@ -326,7 +326,7 @@
 			<h2>12. HalfWidth with Top-Aligned Carousel</h2>
 			<p>A 50/50 layout with salutation, date, action buttons in the start slot and a carousel of cards top-aligned with the date text in the end slot.</p>
 
-			<ui5-banner id="banner-top-aligned-card"
+			<ui5-hero-banner id="hero-banner-top-aligned-card"
 				salutation-text="Good Morning, John"
 				date-text="Monday, May 12, 2026"
 				layout="HalfWidth">
@@ -353,7 +353,7 @@
 						<div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
 				</ui5-carousel>
-			</ui5-banner>
+			</ui5-hero-banner>
 		</section>
 
 	</div>

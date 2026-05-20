@@ -1,11 +1,11 @@
 /**
- * Available Banner layout options.
+ * Available HeroBanner layout options.
  *
- * Defines how the free content blocks are arranged within the banner.
+ * Defines how the free content blocks are arranged within the hero banner.
  * @public
  * @since 2.12.0
  */
-enum BannerLayout {
+enum HeroBannerLayout {
 	/**
 	 * Full width bottom-half free slot layout.
 	 * The free content blocks span the entire width below the salutation.
@@ -28,4 +28,4 @@ enum BannerLayout {
 	TwoThirds = "TwoThirds",
 }
 
-export default BannerLayout;
+export default HeroBannerLayout;

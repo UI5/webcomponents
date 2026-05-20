@@ -111,11 +111,11 @@ html, body {
 }
 
 /* Sample 12: top-align end content with the header */
-#banner-top-aligned-card::part(header) {
+#hero-banner-top-aligned-card::part(header) {
 	grid-column: 1;
 }
 
-#banner-top-aligned-card::part(endContent) {
+#hero-banner-top-aligned-card::part(endContent) {
 	grid-row: 1 / -1;
 	align-self: start;
 }

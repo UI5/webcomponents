@@ -9,7 +9,7 @@ import "./Assets.js";
 import "./illustrations/AllIllustrations.js";
 
 // FIORI components
-import Banner from "./Banner.js";
+import HeroBanner from "./HeroBanner.js";
 import BarcodeScannerDialog from "./BarcodeScannerDialog.js";
 import DynamicPage from "./DynamicPage.js";
 import DynamicPageHeader from "./DynamicPageHeader.js";

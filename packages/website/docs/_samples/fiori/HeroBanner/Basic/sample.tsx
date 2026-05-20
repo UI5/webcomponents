@@ -1,12 +1,12 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
-import BannerClass from "@ui5/webcomponents-fiori/dist/Banner.js";
+import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 
-const Banner = createReactComponent(BannerClass);
+const HeroBanner = createReactComponent(HeroBannerClass);
 
 function App() {
   return (
     <>
-      <Banner
+      <HeroBanner
         salutationText="Hello, John"
         dateText="Thursday, March 6, 2026"
       />

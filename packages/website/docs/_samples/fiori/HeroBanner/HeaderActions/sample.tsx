@@ -1,5 +1,5 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
-import BannerClass from "@ui5/webcomponents-fiori/dist/Banner.js";
+import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
@@ -9,7 +9,7 @@ import "@ui5/webcomponents-icons/dist/create.js";
 import "@ui5/webcomponents-icons/dist/document.js";
 import "@ui5/webcomponents-icons/dist/email.js";
 
-const Banner = createReactComponent(BannerClass);
+const HeroBanner = createReactComponent(HeroBannerClass);
 const Button = createReactComponent(ButtonClass);
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
@@ -17,7 +17,7 @@ const CardHeader = createReactComponent(CardHeaderClass);
 function App() {
   return (
     <>
-      <Banner
+      <HeroBanner
         salutationText="Hello, Emma"
         dateText="Thursday, March 6, 2026"
         layout="FullWidth"
@@ -45,7 +45,7 @@ function App() {
             <div style={{ padding: "0.75rem", textAlign: "end", fontSize: "1.5rem", fontWeight: "bold" }}>1.4h</div>
           </Card>
         </div>
-      </Banner>
+      </HeroBanner>
     </>
   );
 }

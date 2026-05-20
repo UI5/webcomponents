@@ -5,52 +5,52 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
-import type BannerLayout from "./types/BannerLayout.js";
+import type HeroBannerLayout from "./types/HeroBannerLayout.js";
 
 // Template
-import BannerTemplate from "./BannerTemplate.js";
+import HeroBannerTemplate from "./HeroBannerTemplate.js";
 
 // Styles
-import BannerCss from "./generated/themes/Banner.css.js";
+import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
 
 /**
  * @class
  *
  * ### Overview
  *
- * The `ui5-banner` is the main visual element that unifies all product homepages.
+ * The `ui5-hero-banner` is the main visual element that unifies all product homepages.
  * It is a flexible card designed to accommodate various elements depending on product needs.
- * The banner is a mandatory out-of-the-box element for product landing pages.
+ * The hero banner is a mandatory out-of-the-box element for product landing pages.
  *
  * ### Structure
  *
- * The Banner consists of the following building blocks:
+ * The HeroBanner consists of the following building blocks:
  *
  * - **Banner Canvas** - the visual base with a background color, optional background image and shadow.
  * - **Date** (optional) - contextual text at the top, typically showing the current date.
  * - **Salutation** (mandatory) - the main greeting header below the date, e.g. "Hello, John".
  * - **Free Blocks** (optional) - customizable content areas that can contain KPI cards, search components, text, buttons, etc.
  *
- * The banner scrolls away below the shell navigation when the user scrolls down the page. It is not sticky.
+ * The hero banner scrolls away below the shell navigation when the user scrolls down the page. It is not sticky.
  *
  * ### Usage
  *
- * Use the `ui5-banner` at the top of a product homepage to provide a personalized greeting
+ * Use the `ui5-hero-banner` at the top of a product homepage to provide a personalized greeting
  * and quick access to key information or actions.
  *
- * The banner itself is non-interactive. However, interactive elements such as buttons, cards,
+ * The hero banner itself is non-interactive. However, interactive elements such as buttons, cards,
  * or search fields can be placed inside the free content slots and will follow their own
  * interactive states.
  *
  * ### Responsive Behavior
  *
- * The banner adapts to different screen sizes:
+ * The hero banner adapts to different screen sizes:
  * - On small screens (≤599px), split layouts (`HalfWidth`, `TwoThirds`) collapse to a single stacked column.
  * - On screens ≤1024px, the salutation text is truncated to a maximum of 3 lines.
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents-fiori/dist/Banner.js";`
+ * `import "@ui5/webcomponents-fiori/dist/HeroBanner.js";`
  *
  * @constructor
  * @extends UI5Element
@@ -63,14 +63,14 @@ import BannerCss from "./generated/themes/Banner.css.js";
  * @csspart endContent - Used to style the end content block
  */
 @customElement({
-	tag: "ui5-banner",
+	tag: "ui5-hero-banner",
 	renderer: jsxRenderer,
-	styles: BannerCss,
-	template: BannerTemplate,
+	styles: HeroBannerCss,
+	template: HeroBannerTemplate,
 })
-class Banner extends UI5Element {
+class HeroBanner extends UI5Element {
 	/**
-	 * Defines the salutation text displayed in the banner.
+	 * Defines the salutation text displayed in the hero banner.
 	 *
 	 * This is the main greeting header, typically a personalized message
 	 * such as "Hello, John".
@@ -94,7 +94,7 @@ class Banner extends UI5Element {
 	dateText?: string;
 
 	/**
-	 * Defines the layout of the free content blocks inside the banner.
+	 * Defines the layout of the free content blocks inside the hero banner.
 	 *
 	 * Available options are:
 	 * - `FullWidth` - Content spans the full width below the salutation.
@@ -105,12 +105,12 @@ class Banner extends UI5Element {
 	 * @public
 	 */
 	@property()
-	layout: `${BannerLayout}` = "FullWidth";
+	layout: `${HeroBannerLayout}` = "FullWidth";
 
 	/**
-	 * Defines the URL of the background image for the banner canvas.
+	 * Defines the URL of the background image for the hero banner canvas.
 	 *
-	 * When set, the image is displayed as a cover background on the banner.
+	 * When set, the image is displayed as a cover background on the hero banner.
 	 *
 	 * @default undefined
 	 * @public
@@ -119,9 +119,9 @@ class Banner extends UI5Element {
 	backgroundImage?: string;
 
 	/**
-	 * Defines the first (default) free content block of the banner.
+	 * Defines the first (default) free content block of the hero banner.
 	 *
-	 * This is the default slot — content placed directly inside `<ui5-banner>`
+	 * This is the default slot — content placed directly inside `<ui5-hero-banner>`
 	 * without a slot attribute lands here.
 	 * Can contain KPI cards, search components, text, buttons, and more.
 	 *
@@ -131,7 +131,7 @@ class Banner extends UI5Element {
 	startContent!: DefaultSlot<HTMLElement>;
 
 	/**
-	 * Defines the second free content block of the banner.
+	 * Defines the second free content block of the hero banner.
 	 *
 	 * Used alongside `startContent` in split layouts (`HalfWidth`, `TwoThirds`).
 	 * Can contain cards, buttons, and other interactive elements.
@@ -145,7 +145,7 @@ class Banner extends UI5Element {
 	 * Defines action buttons displayed to the right of the salutation and date area.
 	 *
 	 * Can contain buttons, links, or other interactive elements that provide
-	 * quick access to relevant actions directly from the banner header.
+	 * quick access to relevant actions directly from the hero banner header.
 	 *
 	 * @public
 	 */
@@ -174,6 +174,6 @@ class Banner extends UI5Element {
 	}
 }
 
-Banner.define();
+HeroBanner.define();
 
-export default Banner;
+export default HeroBanner;
