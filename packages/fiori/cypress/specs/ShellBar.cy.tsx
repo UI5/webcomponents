@@ -1847,3 +1847,16 @@ describe("Component Behavior", () => {
 		});
 	});
 });
+
+describe("Start button spacing", () => {
+	it("8px gap between multiple startButton elements", () => {
+		cy.mount(
+			<ShellBar>
+				<Button id="hamburger-btn" icon="menu2" slot="startButton"></Button>
+				<Button id="nav-back-btn" icon={navBack} slot="startButton"></Button>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-start-button").should("have.css", "gap", "8px");
+	});
+});
