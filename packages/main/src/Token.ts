@@ -180,14 +180,10 @@ class Token extends UI5Element implements IToken {
 	}
 
 	_onmousedown(e: MouseEvent) {
-		const target = e.currentTarget as HTMLElement;
-
-		if (target === this.shadowRoot?.querySelector("[ui5-icon]")) {
-			e.preventDefault(); // Prevent focus changes during deletion
-			this.toBeDeleted = true;
-			// Fire the delete event immediately to avoid losing it due to DOM changes
-			this.fireDecoratorEvent("delete");
-		}
+		e.preventDefault(); // Prevent focus changes during deletion
+		this.toBeDeleted = true;
+		// Fire the delete event immediately to avoid losing it due to DOM changes
+		this.fireDecoratorEvent("delete");
 	}
 
 	_keydown(e: KeyboardEvent) {
