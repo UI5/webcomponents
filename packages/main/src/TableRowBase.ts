@@ -56,6 +56,10 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 		return false;
 	}
 
+	isGroupRow(): boolean {
+		return false;
+	}
+
 	onEnterDOM() {
 		!this.role && this.setAttribute("role", "row");
 		this.toggleAttribute("ui5-table-row-base", true);
