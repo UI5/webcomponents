@@ -67,6 +67,7 @@ export default function SelectPopoverTemplate(this: Select) {
 						separators="None"
 						onMouseDown={this._itemMousedown}
 						onItemClick={this._handleItemPress}
+						data-ui5-no-listbox-group-description={this.hasGroups}
 						accessibleRole="ListBox"
 					>
 						<slot></slot>
