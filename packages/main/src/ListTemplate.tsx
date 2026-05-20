@@ -58,7 +58,7 @@ export default function ListTemplate(this: List) {
 							<slot></slot>
 
 							{this.showNoDataText &&
-								<li tabindex={0} id={`${this._id}-nodata`} class="ui5-list-nodata" role="listitem">
+								<li tabindex={0} id={`${this._id}-nodata`} class="ui5-list-nodata" role={this.noDataItemRole as any}>
 									<div id={`${this._id}-nodata-text`} class="ui5-list-nodata-text">
 										{this.noDataText}
 									</div>
