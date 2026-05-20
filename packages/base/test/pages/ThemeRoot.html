@@ -20,48 +20,61 @@
 	<ul>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@http://example2.com/themes/">?sap-ui-theme=sap_horizon@http://example2.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=http://example2.com/themes/">?sap-ui-themeRoot=http://example2.com/themes/</a>
 			<br /> http://example2.com/ — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('http://example2.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@https://example.com/themes/">?sap-ui-theme=sap_horizon@https://example.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=https://example.com/themes/">?sap-ui-themeRoot=https://example.com/themes/</a>
 			<br /> https://example.com/ — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('https://example.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@http://example:9090.com/themes/">?sap-ui-theme=sap_horizon@http://example:9090.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=http://example:9090.com/themes/">?sap-ui-themeRoot=http://example:9090.com/themes/</a>
 			<br /> http://example:9090.com/ — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('http://example:9090.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@http://example.com/themes/">?sap-ui-theme=sap_horizon@http://example.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=http://example.com/themes/">?sap-ui-themeRoot=http://example.com/themes/</a>
 			<br /> http://example.com/ — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('http://example.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@//example2.com/themes/">?sap-ui-theme=sap_horizon@//example2.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=//example2.com/themes/">?sap-ui-themeRoot=//example2.com/themes/</a>
 			<br /> //example2.com/ — inherits current page protocol (e.g. http://example2.com/) — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('//example2.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@//example:9090.com/themes/">?sap-ui-theme=sap_horizon@//example:9090.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=//example:9090.com/themes/">?sap-ui-themeRoot=//example:9090.com/themes/</a>
 			<br /> //example:9090.com/ — inherits current page protocol (e.g. http://example:9090.com/) — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('//example:9090.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
 		<li>❌ <a
 				href="?sap-ui-theme=sap_horizon@//example.com/themes/">?sap-ui-theme=sap_horizon@//example.com/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=//example.com/themes/">?sap-ui-themeRoot=//example.com/themes/</a>
 			<br /> //example.com/ — inherits current page protocol (e.g. http://example.com/) — no meta tag present, blocked
 			<br /> <button onclick="testSetThemeRoot('//example.com/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
-		<li>✅ <a href="?sap-ui-theme=sap_horizon@/themes/">?sap-ui-theme=sap_horizon@/themes/</a><br /> /themes/
+		<li>✅ <a href="?sap-ui-theme=sap_horizon@/themes/">?sap-ui-theme=sap_horizon@/themes/</a>
+			<br /><a href="?sap-ui-themeRoot=/themes/">?sap-ui-themeRoot=/themes/</a>
+			<br /> /themes/
 			<br /> (resolves to the current page's origin, e.g. http://localhost:8080/themes/) <br /> Same-origin — expected link element
 			<br /> <button onclick="testSetThemeRoot('/themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
-		<li>✅ <a href="?sap-ui-theme=sap_horizon@./themes/">?sap-ui-theme=sap_horizon@./themes/</a><br /> ./themes/
+		<li>✅ <a href="?sap-ui-theme=sap_horizon@./themes/">?sap-ui-theme=sap_horizon@./themes/</a>
+			<br /><a href="?sap-ui-themeRoot=./themes/">?sap-ui-themeRoot=./themes/</a>
+			<br /> ./themes/
 			<br /> (resolves relative to the current page's URL, e.g. http://localhost:8080/test/pages/themes/) <br /> Same-origin — expected link element
 			<br /> <button onclick="testSetThemeRoot('./themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
-		<li>✅ <a href="?sap-ui-theme=sap_horizon@../themes/">?sap-ui-theme=sap_horizon@../themes/</a><br /> ../themes/
+		<li>✅ <a href="?sap-ui-theme=sap_horizon@../themes/">?sap-ui-theme=sap_horizon@../themes/</a>
+			<br /><a href="?sap-ui-themeRoot=../themes/">?sap-ui-themeRoot=../themes/</a>
+			<br /> ../themes/
 			<br /> (resolves relative to the current page's URL, e.g. http://localhost:8080/test/themes/) <br /> Same-origin — expected link element
 			<br /> <button onclick="testSetThemeRoot('../themes/', this)">Test setThemeRoot</button> <span class="result"></span>
 		</li>
