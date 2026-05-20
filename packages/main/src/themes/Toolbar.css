@@ -5,9 +5,9 @@
 	align-items: center;
 	justify-content: flex-end;
 	box-sizing: border-box;
-	border-bottom: 0.0625rem solid var(--sapGroup_ContentBorderColor);
+	border-bottom: var(--sapGroup_TitleBorderWidth) solid var(--sapGroup_TitleBorderColor);
 	padding: 0 var(--_ui5-toolbar-padding-left) 0 var(--_ui5-toolbar-padding-right);
-	background-color: var(--sapList_HeaderBackground);
+	background-color: var(--sapToolbar_Background);
 }
 
 :host([align-content="Start"]) {

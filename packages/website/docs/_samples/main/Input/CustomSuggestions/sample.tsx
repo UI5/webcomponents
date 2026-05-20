@@ -4,6 +4,7 @@ import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import InputClass from "@ui5/webcomponents/dist/Input.js";
 import SuggestionItemCustomClass from "@ui5/webcomponents/dist/SuggestionItemCustom.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import "@ui5/webcomponents/dist/features/InputSuggestions.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 
@@ -26,6 +27,11 @@ const countries = [
 function App() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+
+  const handleSelectionChange = (e: UI5CustomEvent<InputClass, "selection-change">) => {
+    const text = (e.detail as any).item?.text;
+    announce(text + " EU", "Polite");
+  };
 
   const handleInput = (e: UI5CustomEvent<InputClass, "input">) => {
     const value = e.currentTarget.value;
@@ -63,11 +69,12 @@ function App() {
         placeholder="Type something ..."
         showSuggestions={true}
         onInput={handleInput}
+        onSelectionChange={handleSelectionChange}
       >
         {suggestions.map((country) => (
           <SuggestionItemCustom key={country} text={country}>
             <div className="item-content">
-              <Icon name="globe" />
+              <Icon name="globe" aria-hidden="true" />
               <div className="item-titles">
                 <span>{country}</span>
                 <small>EU</small>

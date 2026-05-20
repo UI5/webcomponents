@@ -1,17 +1,17 @@
 import type NavigationMenuItem from "./NavigationMenuItem.js";
 import MenuItemTemplate from "@ui5/webcomponents/dist/MenuItemTemplate.js";
+import type { MenuItemHooks } from "@ui5/webcomponents/dist/MenuItemTemplate.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import slimArrowRightIcon from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import arrowRightIcon from "@ui5/webcomponents-icons/dist/arrow-right.js";
-import type { ListItemHooks } from "@ui5/webcomponents/dist/ListItemTemplate.js";
 
-const predefinedHooks: Partial<ListItemHooks> = {
+const predefinedHooks: Partial<MenuItemHooks> = {
 	listItemContent,
 	iconBegin,
 	iconEnd,
 };
 
-export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hooks?: Partial<ListItemHooks>) {
+export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hooks?: Partial<MenuItemHooks>) {
 	const currentHooks = { ...predefinedHooks, ...hooks, };
 
 	return <>

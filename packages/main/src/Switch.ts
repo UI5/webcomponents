@@ -19,6 +19,7 @@ import {
 	FORM_CHECKABLE_REQUIRED,
 	SWITCH_ON,
 	SWITCH_OFF,
+	ACC_STATE_READONLY,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -363,6 +364,14 @@ class Switch extends UI5Element implements IFormInputElement {
 
 	get ariaLabelText() {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined;
+	}
+
+	get ariaDescribedBy() {
+		return this.readonly ? `${this._id}-readonly-desc` : undefined;
+	}
+
+	get ariaDescribedByText() {
+		return this.readonly ? Switch.i18nBundle.getText(ACC_STATE_READONLY) : "";
 	}
 }
 

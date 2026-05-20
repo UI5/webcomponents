@@ -18,6 +18,7 @@
 	box-sizing: border-box;
 	height: var(--_ui5_input_height);
 	position: relative;
+	isolation: isolate;
 	margin: var(--_ui5_input_margin_top_bottom) 0;
 	min-width: var(--_ui5_step_input_min_width);
 	text-align: right;
@@ -99,7 +100,7 @@
 	pointer-events: none;
 	border-radius: var(--sapField_BorderCornerRadius);
 	border-style: var(--_ui5_input_error_warning_border_style);
-	z-index: 1;
+	z-index: 0;
 	border-width: 0px;
 }
 

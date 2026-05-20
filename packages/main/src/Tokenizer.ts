@@ -306,6 +306,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	popoverMinWidth?: number;
 
 	/**
+	 * Sets the title of the nMore Popover on mobile.
+	 * **Note:** Used inside MultiInput component.
+	 * @private
+	 */
+	@property()
+	popoverTitle?: string;
+
+	/**
 	 * Prevents tokens to be part of the tab chain.
 	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
@@ -708,6 +716,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_onkeydown(e: KeyboardEvent) {
 		const isCtrl = !!(e.metaKey || e.ctrlKey);
 
+		if (isEscape(e)) {
+			return this._deselectAllTokens();
+		}
+
 		if ((isCtrl && ["c", "x"].includes(e.key.toLowerCase())) || isDeleteShift(e) || isInsertCtrl(e)) {
 			e.preventDefault();
 
@@ -1062,6 +1074,17 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	_deselectAllTokens() {
+		const hadSelection = this._selectedTokens.length > 0;
+		this._tokens.forEach(token => { token.selected = false; });
+
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				tokens: [],
+			});
+		}
+	}
+
 	get hasTokens() {
 		return this._tokens.length > 0;
 	}
@@ -1217,7 +1240,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

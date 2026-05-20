@@ -671,6 +671,16 @@
 			multiInput.appendChild(token);
 		});
 	</script>
+
+	<h1 class="sample-container-title">Dialog Header Title from Label</h1>
+	<ui5-label for="labeled-mi">Tags</ui5-label>
+	<ui5-multi-input id="labeled-mi" show-suggestions>
+		<ui5-token slot="tokens" text="Token 1"></ui5-token>
+		<ui5-token slot="tokens" text="Token 2"></ui5-token>
+		<ui5-token slot="tokens" text="Token 3"></ui5-token>
+		<ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
+		<ui5-suggestion-item text="Brazil"></ui5-suggestion-item>
+	</ui5-multi-input>
 </body>
 
 </html>

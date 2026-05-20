@@ -6,6 +6,7 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 import getTodayUTCTimestamp from "@ui5/webcomponents-localization/dist/dates/getTodayUTCTimestamp.js";
+import type DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
@@ -42,7 +43,10 @@ const DEFAULT_DELIMITER = "-";
  * ### Usage
  * The user can enter a date by:
  * Using the calendar that opens in a popup or typing it in directly in the input field (not available for mobile devices).
- * For the `ui5-daterange-picker`
+ * For the `ui5-daterange-picker`:
+ *
+ * **Note:** Relative date values such as "today", "yesterday", or "tomorrow" are not supported.
+ * Entering a relative date sets the component to an error state.
  * ### ES6 Module Import
  *
  * `import "@ui5/webcomponents/dist/DateRangePicker.js";`
@@ -153,6 +157,27 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	constructor() {
 		super();
 		this._prevDelimiter = null;
+	}
+
+	/**
+	 * Checks if a date string is a relative date (e.g. "today", "tomorrow")
+	 * that would be resolved by DateFormat.parseRelative().
+	 * Relative dates are not supported in DateRangePicker.
+	 * @private
+	 */
+	_isRelativeValue(dateString: string, format: DateFormat): boolean {
+		const trimmed = dateString.trim();
+		if (!trimmed) {
+			return false;
+		}
+
+		const parsed = format.parse(trimmed);
+		if (!parsed) {
+			return false;
+		}
+
+		const formatted = format.format(parsed);
+		return formatted !== trimmed;
 	}
 
 	/**
@@ -329,6 +354,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	isValid(value: string): boolean {
 		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getFormat()))) {
+			return false;
+		}
+
 		return parts.length <= 2 && parts.every(dateString => super.isValid(dateString)); // must be at most 2 dates and each must be valid
 	}
 
@@ -340,6 +369,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	isValidValue(value: string): boolean {
 		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getValueFormat()))) {
+			return false;
+		}
+
 		return parts.length <= 2 && parts.every(dateString => super.isValidValue(dateString)); // must be at most 2 dates and each must be valid
 	}
 
@@ -350,6 +383,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 */
 	isValidDisplayValue(value: string): boolean {
 		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getDisplayFormat()))) {
+			return false;
+		}
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidDisplayValue(dateString)); // must be at most 2 dates and each must be valid
 	}

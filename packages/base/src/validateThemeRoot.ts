@@ -31,7 +31,7 @@ const validateThemeRoot = (themeRoot: string) => {
 	let isSameOrigin = false;
 
 	try {
-		if (themeRoot.startsWith(".") || themeRoot.startsWith("/")) {
+		if (themeRoot.startsWith(".") || (themeRoot.startsWith("/") && !themeRoot.startsWith("//"))) {
 			// Handle relative url
 			// new URL("/newExmPath", "http://example.com/exmPath") => http://example.com/newExmPath
 			// new URL("./newExmPath", "http://example.com/exmPath") => http://example.com/exmPath/newExmPath
@@ -39,7 +39,8 @@ const validateThemeRoot = (themeRoot: string) => {
 			resultUrl = new URL(themeRoot, getLocationHref()).toString();
 			isSameOrigin = true;
 		} else {
-			const themeRootURL = new URL(themeRoot);
+			// Protocol-relative URLs (//host/path) need a base to resolve the protocol
+			const themeRootURL = themeRoot.startsWith("//") ? new URL(themeRoot, getLocationHref()) : new URL(themeRoot);
 			const origin = themeRootURL.origin;
 			const currentOrigin = new URL(getLocationHref()).origin;
 

@@ -1,5 +1,5 @@
-import { getLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { getTimezone as getConfigTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
+import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 
 const M_ISO639_OLD_TO_NEW = {
 	"iw": "he",
@@ -12,7 +12,7 @@ const getModernLanguage = (sLanguage: string) => {
 
 const Localization = {
 	getModernLanguage,
-	getLanguageTag: () => getLanguage() || "en",
+	getLanguageTag: () => getLocale().toString(),
 	getTimezone: () => getConfigTimezone() || Intl.DateTimeFormat().resolvedOptions().timeZone,
 	setTimezone: () => {},
 };

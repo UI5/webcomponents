@@ -112,6 +112,7 @@ import type ComboBoxFilter from "./types/ComboBoxFilter.js";
 import CheckBox from "./CheckBox.js";
 import Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
+import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import SuggestionItem from "./SuggestionItem.js";
 import type InputComposition from "./features/InputComposition.js";
 
@@ -128,6 +129,7 @@ interface IMultiComboBoxItem extends UI5Element {
 	isGroupItem?: boolean,
 	_isVisible?: boolean,
 	items?: Array<IMultiComboBoxItem>,
+	eventDetails: { click?: ListItemBaseClickEventDetail },
 }
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
@@ -646,6 +648,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResizeBound);
 		this._enableComposition();
+		this._effectiveValueState = this.valueState;
 	}
 
 	onExitDOM() {
@@ -995,28 +998,29 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	async _handlePaste(e: ClipboardEvent) {
+	_handlePaste(e: ClipboardEvent) {
 		if (this.readonly) {
 			return;
 		}
 
 		e.preventDefault();
 
-		const pastedText = await navigator.clipboard.readText();
-		document.execCommand("insertText", true, pastedText ?? "");
-		const inputEvent = new Event("input", {
-			bubbles: true,
-			cancelable: true,
-		});
+		// Get pasted text from clipboardData - more reliable than navigator.clipboard
+		const pastedText = e.clipboardData?.getData("text/plain") || "";
 
-		// Dispatch it
-		this._innerInput.dispatchEvent(inputEvent);
+		if (pastedText) {
+			// Use deprecated but still functional document.execCommand for cursor handling
+			document.execCommand("insertText", true, pastedText);
 
-		if (!pastedText) {
-			return;
+			// Dispatch input event to ensure the component updates
+			const inputEvent = new Event("input", {
+				bubbles: true,
+				cancelable: true,
+			});
+			this._innerInput.dispatchEvent(inputEvent);
+
+			this._handleTokenCreationUponPaste(pastedText, e);
 		}
-
-		this._handleTokenCreationUponPaste(pastedText, e);
 	}
 
 	_handleTokenCreationUponPaste(pastedText: string, e: KeyboardEvent | ClipboardEvent) {
@@ -1033,23 +1037,30 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (this.readonly || isFirefox()) {
 			return;
 		}
-		e.preventDefault();
 
-		const pastedText = await navigator.clipboard.readText();
-		document.execCommand("insertText", true, pastedText ?? "");
-		const inputEvent = new Event("input", {
-			bubbles: true,
-			cancelable: true,
-		});
+		// For Shift+Insert, try to use navigator.clipboard API
+		// If it fails due to permissions, the browser's native paste will be blocked
+		try {
+			e.preventDefault();
+			const pastedText = await navigator.clipboard.readText();
 
-		// Dispatch it
-		this._innerInput.dispatchEvent(inputEvent);
+			if (pastedText) {
+				// Use deprecated but still functional document.execCommand for cursor handling
+				document.execCommand("insertText", true, pastedText);
 
-		if (!pastedText) {
-			return;
+				// Dispatch input event to ensure the component updates
+				const inputEvent = new Event("input", {
+					bubbles: true,
+					cancelable: true,
+				});
+				this._innerInput.dispatchEvent(inputEvent);
+
+				this._handleTokenCreationUponPaste(pastedText, e);
+			}
+		} catch (err) {
+			// If clipboard API fails, silently ignore
+			// Native paste won't work since we already prevented default
 		}
-
-		this._handleTokenCreationUponPaste(pastedText, e);
 	}
 
 	_handleShow(e: KeyboardEvent) {
@@ -1648,6 +1659,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		}
 
+		if (this.valueState === ValueState.Negative) {
+			this._updateValueState(this._effectiveValueState);
+		}
+
 		if (!e.detail.selectionComponentPressed && !isSpace(castedEvent) && !isSpaceCtrl(castedEvent)) {
 			this.open = false;
 			this.value = "";
@@ -2032,6 +2047,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if ((!this.shadowRoot!.contains(e.relatedTarget as Node) || focusIsGoingInPopover) && !this._deleting && !this._clearingValue) {
 			this.focused = false;
 
+			if (!this.noValidation && this.value) {
+				this.value = "";
+				this._lastValue = "";
+				if (this.valueState === ValueState.Negative && this._effectiveValueState !== ValueState.Negative) {
+					this._updateValueState(this._effectiveValueState);
+				}
+			}
+
 			if (this._lastValue !== this.value) {
 				this._inputChange();
 			}
@@ -2259,7 +2282,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || MultiComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {
