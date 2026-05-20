@@ -391,6 +391,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	showClearIcon = false;
 
 	/**
+	 * When enabled, typing does not auto-select matching items.
+	 * Selection only occurs on explicit user action (arrow up/down navigation key or click).
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	noAutoSelection = false;
+
+	/**
 	 * Indicates whether the input is focused
 	 * @private
 	 */
@@ -1047,6 +1056,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (isEnter(e)) {
+			this._selectionPerformed = true;
 			let focusedItem: IComboBoxItem | undefined;
 
 			this._filteredItems.forEach(item => {
@@ -1329,6 +1339,21 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		// When selectedValue matched an item but value is empty (initial render), populate value from the item's text
 		if (itemToBeSelected && this._initialRendering && this.value === "") {
 			this.value = itemToBeSelected.text || "";
+		}
+
+		const isExplicitAction = this._selectionPerformed || this._isKeyNavigation;
+		if (this.noAutoSelection && !isExplicitAction && !this._initialRendering) {
+			this._filteredItems = this._filteredItems.map(item => {
+				if (!isInstanceOfComboBoxItemGroup(item)) {
+					item.selected = false;
+				} else {
+					item.items?.forEach(groupItem => {
+						groupItem.selected = false;
+					});
+				}
+				return item;
+			});
+			return;
 		}
 
 		this._filteredItems = this._filteredItems.map(item => {
