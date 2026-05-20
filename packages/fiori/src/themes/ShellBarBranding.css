@@ -10,6 +10,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
+	height: 2.25rem;
 	padding-block: 0.125rem;
 	padding-inline: 0.25rem 0.5rem;
 	box-sizing: border-box;
@@ -19,7 +20,7 @@
 	color: var(--sapShell_TextColor);
 	/* fix cutting of the focus outline */
 	margin-inline-start: 0.125rem;
-	margin-inline-end: .5rem;
+	margin-inline-end: 0.5rem;
 }
 
 .ui5-shellbar-branding-root:focus {
@@ -55,7 +56,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
-	padding: 0.125rem 0.5rem 0.125rem 0.25rem;
+	padding: 0.125rem 0.25rem 0.125rem 0.25rem;
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--sapButton_Lite_Background);
@@ -66,8 +67,9 @@
 }
 
 ::slotted([slot="logo"]) {
-	max-height: 2rem;
+	max-height: 1.875rem;
 	width: auto;
+	padding-block: 0.0625rem;
 	padding-inline: 0.25rem;
 	vertical-align: middle;
 }
