@@ -705,7 +705,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleAfterClose() {
 		this.open = false;
-		this._preventCollapse = false;
+		// Don't reset _preventCollapse if we're in the middle of deleting a token
+		if (!this._tokenDeleting) {
+			this._preventCollapse = false;
+		}
 		this._focusedElementBeforeOpen = null;
 	}
 
@@ -1014,6 +1017,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	_onfocusout(e: FocusEvent) {
 		const relatedTarget = e.relatedTarget as HTMLElement;
+		const tokenLosingFocus = e.target as Token;
+
+		// If the token losing focus is being deleted, prevent collapse
+		if (tokenLosingFocus?.toBeDeleted) {
+			this._preventCollapse = true;
+		}
 
 		this._tokens.forEach(token => {
 			token.forcedTabIndex = "-1";
@@ -1028,7 +1037,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			this._skipTabIndex = false;
 		}
 
-		if (!this._tokenDeleting && !this._preventCollapse) {
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!this._tokenDeleting && !this._preventCollapse && !hasTokenToBeDeleted) {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
