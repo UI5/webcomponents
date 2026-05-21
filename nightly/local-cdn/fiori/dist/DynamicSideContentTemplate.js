@@ -6,9 +6,9 @@ export default function DynamicSideContentTemplate() {
                 _jsxs(_Fragment, { children: [mainContent.call(this), sideContent.call(this)] }) }));
 }
 function mainContent() {
-    return (_jsx("div", { role: "main", "aria-label": this.accInfo.mainContent?.ariaLabel, class: this.classes.main, style: this.styles.main, children: _jsx("slot", {}) }));
+    return (_jsx("div", { role: this.accInfo.mainContent?.role, "aria-label": this.accInfo.mainContent?.ariaLabel, class: this.classes.main, style: this.styles.main, children: _jsx("slot", {}) }));
 }
 function sideContent() {
-    return (_jsx("aside", { role: "complementary", "aria-label": this.accInfo.sideContent?.ariaLabel, class: this.classes.side, style: this.styles.side, children: _jsx("slot", { name: "sideContent" }) }));
+    return (_jsx("aside", { role: this.accInfo.sideContent?.role, "aria-label": this.accInfo.sideContent?.ariaLabel, class: this.classes.side, style: this.styles.side, children: _jsx("slot", { name: "sideContent" }) }));
 }
 //# sourceMappingURL=DynamicSideContentTemplate.js.map

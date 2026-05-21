@@ -441,8 +441,8 @@ export default `:host {
     --_ui5_input_icon_padding: var(--_ui5-compact-size, .3125rem .5rem .25rem .5rem)  var(--_ui5-cozy-size, .625rem .625rem .5625rem .625rem);
     --_ui5_input_icon_color: var(--sapField_TextColor);
     --_ui5_input_icon_pressed_color: var(--sapButton_Active_TextColor);
-    --_ui5_input_icon_pressed_bg: var(--sapField_Hover_Background);
-    --_ui5_input_icon_hover_bg: var(--sapField_Focus_Background);
+    --_ui5_input_icon_pressed_bg: transparent;
+    --_ui5_input_icon_hover_bg: transparent;
     --_ui5_input_icon_border_radius: var(--sapField_BorderCornerRadius);
     --_ui5_input_icon_box_shadow: var(--sapField_Hover_Shadow);
     --_ui5_input_icon_border: none;
@@ -757,8 +757,9 @@ export default `:host {
     --_ui5_select_hover_icon_left_border: none;
     --_ui5_select_label_color: var(--sapField_TextColor);
     --_ui5_select_icon_width: var(--_ui5-compact-size, 2rem)  var(--_ui5-cozy-size, 2.25rem);
-    --_ui5_select_icon_wrapper_height: calc(100% - .0625rem) ;
-    --_ui5_select_icon_wrapper_state_height: calc(100% - .125rem) ;
+    --_ui5_select_icon_wrapper_height: 100%;
+    --_ui5_select_bottom_border_gradient: linear-gradient(var(--sapField_BorderColor), var(--sapField_BorderColor)) bottom / 100% var(--sapField_BorderWidth) no-repeat;
+    --_ui5_select_icon_wrapper_state_height: 100%;
     --_ui5_split_button_focused_border: .125rem solid var(--sapContent_FocusColor);
     --_ui5_split_button_focused_border_radius: .375rem;
     --_ui5_split_button_middle_separator_left: -.0625rem;

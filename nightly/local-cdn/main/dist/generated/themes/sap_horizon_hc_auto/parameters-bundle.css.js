@@ -659,6 +659,8 @@ export default `:host {
     --_ui5_select_label_color: var(--sapField_TextColor);
     --_ui5_select_icon_width: var(--_ui5-compact-size, 2rem)  var(--_ui5-cozy-size, 2.25rem);
     --_ui5_select_icon_wrapper_height: 100%;
+    --_ui5_select_bottom_border_gradient: none;
+    --_ui5_select_icon_wrapper_state_height: 100%;
     --_ui5_split_button_focused_border: .125rem dotted var(--sapContent_FocusColor);
     --_ui5_split_button_focused_border_radius: .375rem;
     --_ui5_split_button_middle_separator_left: -.0625rem;

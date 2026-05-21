@@ -412,6 +412,8 @@ declare class Select extends UI5Element implements IFormInputElement {
         };
         responsivePopover: {
             "min-width": string;
+            "max-width": string;
+            "margin-top": string;
         };
     };
     get ariaLabelText(): string | undefined;

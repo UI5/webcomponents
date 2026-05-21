@@ -64,7 +64,7 @@
       "attributes": [
         {
           "name": "accessibility-attributes",
-          "description": "Defines additional accessibility attributes on different areas of the component.\n\nThe accessibilityAttributes object has the following fields:\n\n - **mainContent**: `mainContent.ariaLabel` defines the aria-label of the main content area. Accepts any string.\n - **sideContent**: `sideContent.ariaLabel` defines the aria-label of the side content area. Accepts any string.",
+          "description": "Defines additional accessibility attributes on different areas of the component.\n\nThe accessibilityAttributes object has the following fields:\n\n- **mainContent**:\n  - **ariaLabel**: defines the aria-label of the main content area. Accepts any string.\n  - **role**: defines the role of the main content area. When not set, defaults to `\"main\"`. Set to `undefined` to remove the role attribute.\n\n- **sideContent**:\n  - **ariaLabel**: defines the aria-label of the side content area. Accepts any string.\n  - **role**: defines the role of the side content area. When not set, defaults to `\"complementary\"`. Set to `undefined` to remove the role attribute.",
           "values": [{ "name": "DynamicSideContentAccessibilityAttributes" }]
         },
         {

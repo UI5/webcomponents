@@ -709,6 +709,7 @@ let Select = Select_1 = class Select extends UI5Element {
         };
     }
     get styles() {
+        const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
         return {
             popoverHeader: {
                 "display": "block",
@@ -720,6 +721,8 @@ let Select = Select_1 = class Select extends UI5Element {
             },
             responsivePopover: {
                 "min-width": `${this.offsetWidth}px`,
+                "max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
+                "margin-top": "var(--sapField_BorderWidth)",
             },
         };
     }

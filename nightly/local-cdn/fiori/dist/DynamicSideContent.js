@@ -153,8 +153,13 @@ let DynamicSideContent = DynamicSideContent_1 = class DynamicSideContent extends
         *
         * The accessibilityAttributes object has the following fields:
         *
-        *  - **mainContent**: `mainContent.ariaLabel` defines the aria-label of the main content area. Accepts any string.
-        *  - **sideContent**: `sideContent.ariaLabel` defines the aria-label of the side content area. Accepts any string.
+        * - **mainContent**:
+        *   - **ariaLabel**: defines the aria-label of the main content area. Accepts any string.
+        *   - **role**: defines the role of the main content area. When not set, defaults to `"main"`. Set to `undefined` to remove the role attribute.
+        *
+        * - **sideContent**:
+        *   - **ariaLabel**: defines the aria-label of the side content area. Accepts any string.
+        *   - **role**: defines the role of the side content area. When not set, defaults to `"complementary"`. Set to `undefined` to remove the role attribute.
         *
         * @default {}
         * @public
@@ -279,12 +284,18 @@ let DynamicSideContent = DynamicSideContent_1 = class DynamicSideContent extends
         };
     }
     get accInfo() {
+        const mainContentAttr = this.accessibilityAttributes.mainContent || {};
+        const sideContentAttr = this.accessibilityAttributes.sideContent || {};
+        const hasMainRole = "role" in mainContentAttr;
+        const hasSideRole = "role" in sideContentAttr;
         return {
             mainContent: {
-                ariaLabel: this.accessibilityAttributes.mainContent?.ariaLabel || DynamicSideContent_1.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+                ariaLabel: mainContentAttr.ariaLabel || DynamicSideContent_1.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+                role: hasMainRole ? mainContentAttr.role : "main",
             },
             sideContent: {
-                ariaLabel: this.accessibilityAttributes.sideContent?.ariaLabel || DynamicSideContent_1.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+                ariaLabel: sideContentAttr.ariaLabel || DynamicSideContent_1.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+                role: hasSideRole ? sideContentAttr.role : "complementary",
             },
         };
     }
