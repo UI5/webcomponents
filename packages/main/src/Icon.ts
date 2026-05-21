@@ -210,7 +210,7 @@ class Icon extends UI5Element implements IIcon {
 	 * </ui5-icon>
 	 * ```
 	 * @public
-	 * @since 2.12.0
+	 * @since 2.23.0
 	 */
 	@slot({ type: HTMLElement })
 	symbol!: Slot<HTMLElement>;
