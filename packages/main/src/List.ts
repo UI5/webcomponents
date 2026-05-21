@@ -796,7 +796,7 @@ class List extends UI5Element {
 		if (this._groupCount > 0) {
 			if (this.accessibleRole === ListAccessibleRole.List) {
 				description = List.i18nBundle.getText(LIST_ROLE_LIST_GROUP_DESCRIPTION, this._groupCount, this._groupItemCount);
-			} else if (this.accessibleRole === ListAccessibleRole.ListBox) {
+			} else if (this.accessibleRole === ListAccessibleRole.ListBox && !this.hasAttribute("data-ui5-no-listbox-group-description")) {
 				description = List.i18nBundle.getText(LIST_ROLE_LISTBOX_GROUP_DESCRIPTION, this._groupCount);
 			}
 		}

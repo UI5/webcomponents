@@ -1,0 +1,28 @@
+:host {
+	display: block;
+}
+
+.ui5-option-group-root {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+.ui5-option-group-header {
+	display: flex;
+	align-items: center;
+	height: var(--_ui5_group_header_list_item_height);
+	padding: 0 1rem;
+	box-sizing: border-box;
+	background: var(--sapList_GroupHeaderBackground);
+	color: var(--sapList_TableGroupHeaderTextColor);
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader6Size);
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	pointer-events: none;
+	user-select: none;
+}
