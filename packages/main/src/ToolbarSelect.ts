@@ -72,6 +72,19 @@ class ToolbarSelect extends ToolbarItemBase {
 		"click": ToolbarItemEventDetail;
 	}
 
+	get handlesOwnKeyboardNavigation(): boolean {
+		return true;
+	}
+
+	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
+		// Home/End are only owned while the dropdown is open; otherwise the toolbar
+		// should use them to jump to the first/last item.
+		if (e.key === "Home" || e.key === "End") {
+			return !!(this.select?._isPickerOpen);
+		}
+		return false;
+	}
+
 	/**
 	 * Defines the width of the select.
 	 *

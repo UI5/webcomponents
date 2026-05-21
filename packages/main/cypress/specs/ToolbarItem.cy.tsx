@@ -419,50 +419,53 @@ describe("Toolbar Item Closing Events - closeOverflowSet functionality", () => {
 			</Toolbar>
 		);
 
-		// Open overflow popover
 		cy.get("#toolbar-multiple-components")
+			.as("toolbar");
+
+		// Open overflow popover
+		cy.get("@toolbar")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
 			.realClick();
 
 		// Verify popover is open
-		cy.get("#toolbar-multiple-components")
+		cy.get("@toolbar")
 			.shadow()
 			.find("[ui5-popover]")
 			.should("have.prop", "open", true);
 
 		// Toggle the switch (fires 'change' event)
-		cy.get("[ui5-toolbar-item]")
-			.find("[ui5-switch]")
+		cy.get("#multiSwitch")
 			.shadow()
 			.find(".ui5-switch-root")
 			.realClick();
 
 		// Verify popover is closed
-		cy.get("#toolbar-multiple-components")
+		cy.get("@toolbar")
 			.shadow()
 			.find("[ui5-popover]")
 			.should("have.prop", "open", false);
 
 		// Re-open overflow popover
-		cy.get("#toolbar-multiple-components")
+		cy.get("@toolbar")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
+			.should("be.visible")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
 			.realClick();
 
 		// Verify popover is open again
-		cy.get("#toolbar-multiple-components")
+		cy.get("@toolbar")
 			.shadow()
 			.find("[ui5-popover]")
 			.should("have.prop", "open", true);
 
 		// Click the button (fires 'click' event)
-		cy.get("[ui5-toolbar-item]")
-			.find("[ui5-button]")
+		cy.get("#multiButton1")
 			.realClick();
 
 		// Verify popover is closed
-		cy.get("#toolbar-multiple-components")
+		cy.get("@toolbar")
 			.shadow()
 			.find("[ui5-popover]")
 			.should("have.prop", "open", false);
