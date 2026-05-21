@@ -56,6 +56,33 @@ const getCurrentRuntimeIndex = () => {
 };
 
 /**
+ * Compares two VersionInfo objects and returns 1 if the first is bigger, -1 if the second is bigger, and 0 if equal.
+ */
+const compareVersions = (v1: VersionInfo, v2: VersionInfo): number => {
+	if (v1.isNext || v2.isNext) {
+		return v1.buildTime - v2.buildTime;
+	}
+
+	const majorDiff = v1.major - v2.major;
+	if (majorDiff) {
+		return majorDiff;
+	}
+
+	const minorDiff = v1.minor - v2.minor;
+	if (minorDiff) {
+		return minorDiff;
+	}
+
+	const patchDiff = v1.patch - v2.patch;
+	if (patchDiff) {
+		return patchDiff;
+	}
+
+	const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+	return collator.compare(v1.suffix, v2.suffix);
+};
+
+/**
  * Compares two runtimes and returns 1 if the first is of a bigger version, -1 if the second is of a bigger version, and 0 if equal
  * @param index1 The index of the first runtime to compare
  * @param index2 The index of the second runtime to compare
@@ -74,33 +101,7 @@ const compareRuntimes = (index1: number, index2: number) => {
 		throw new Error("Invalid runtime index supplied");
 	}
 
-	// If any of the two is a next version, bigger buildTime wins
-	if (runtime1.isNext || runtime2.isNext) {
-		return runtime1.buildTime - runtime2.buildTime;
-	}
-
-	// If major versions differ, bigger one wins
-	const majorDiff = runtime1.major - runtime2.major;
-	if (majorDiff) {
-		return majorDiff;
-	}
-
-	// If minor versions differ, bigger one wins
-	const minorDiff = runtime1.minor - runtime2.minor;
-	if (minorDiff) {
-		return minorDiff;
-	}
-
-	// If patch versions differ, bigger one wins
-	const patchDiff = runtime1.patch - runtime2.patch;
-	if (patchDiff) {
-		return patchDiff;
-	}
-
-	// Bigger suffix wins, f.e. rc10 > rc9
-	// Important: suffix is alphanumeric, must use natural compare
-	const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-	const result = collator.compare(runtime1.suffix, runtime2.suffix);
+	const result = compareVersions(runtime1, runtime2);
 
 	compareCache.set(cacheIndex, result);
 	return result;
@@ -122,6 +123,7 @@ export {
 	getCurrentRuntimeIndex,
 	registerCurrentRuntime,
 	compareRuntimes,
+	compareVersions,
 	setRuntimeAlias,
 	getAllRuntimes,
 };
