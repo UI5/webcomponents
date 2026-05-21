@@ -198,7 +198,7 @@ class Icon extends UI5Element implements IIcon {
 
 	/**
 	 * Defines the font icon to be used as an icon.
-	 * Intended for font-based icon libraries (e.g. Font Awesome, Material Icons) where
+	 * Intended for font-based icon libraries where
 	 * the application loads the font and provides a slotted element with the unicode character.
 	 * When this slot is used, the component renders a `<span>` instead of an `<svg>`.
 	 * Accessibility is fully delegated to the application — set `accessible-name` and `mode` explicitly.
