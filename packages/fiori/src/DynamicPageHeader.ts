@@ -75,6 +75,16 @@ class DynamicPageHeader extends UI5Element {
 	@property({ type: Boolean })
 	_snapped = false;
 
+	/**
+	 * Defines the accessible ARIA label for the header region.
+	 * Overrides the default "Header Expanded" / "Header Snapped" text.
+	 * @public
+	 * @default undefined
+	 * @since 2.23.0
+	 */
+	@property()
+	accessibleName?: string;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -83,6 +93,9 @@ class DynamicPageHeader extends UI5Element {
 	 * @internal
 	 */
 	get _headerRegionAriaLabel(): string {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
 		const defaultText = this._snapped
 			? DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER
 			: DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER;

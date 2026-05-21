@@ -3,13 +3,14 @@ import DynamicPageHeaderActions from "./DynamicPageHeaderActions.js";
 
 export default function DynamicPageTemplate(this: DynamicPage) {
 	return (
-		<div class="ui5-dynamic-page-root">
+		<div class="ui5-dynamic-page-root" role={this._rootRole} aria-label={this._rootAriaLabel}>
 			<div class="ui5-dynamic-page-scroll-container"
 				onScroll={this.snapOnScroll}
 			>
-				<header
+				<div
 					class="ui5-dynamic-page-title-header-wrapper"
 					id={`${this._id}-header`}
+					role={this._headerRole || "banner"}
 					aria-label={this.headerAriaLabel}
 					onui5-toggle-title={this.onToggleTitle}
 				>
@@ -20,9 +21,8 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 							name="headerArea"
 						></slot>
 					}
-
 					{this.actionsInTitle && headerActions.call(this)}
-				</header>
+				</div>
 
 				{this.headerInContent &&
 					<slot tabIndex={this.headerTabIndex}
@@ -36,6 +36,8 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				<div
 					part="content"
 					class="ui5-dynamic-page-content"
+					role={this._contentRole}
+					aria-label={this._contentAriaLabel}
 					onFocusIn={this.onContentFocusIn}
 					onFocusOut={this.onContentFocusOut}
 				>
@@ -48,7 +50,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				</div>
 			</div>
 
-			<div class="ui5-dynamic-page-footer" part="footer">
+			<div class="ui5-dynamic-page-footer" part="footer" role={this._footerRole} aria-label={this._footerAriaLabel}>
 				<slot name="footerArea"></slot>
 			</div>
 		</div>
