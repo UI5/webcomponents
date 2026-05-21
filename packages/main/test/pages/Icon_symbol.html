@@ -67,6 +67,19 @@
 			height: 1.5rem;
 		}
 	</style>
+	<!-- SAP Icons font (application-hosted) -->
+	<style>
+		@font-face {
+			font-family: "SAP-icons-font";
+			src: url("https://cdn.jsdelivr.net/npm/@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/SAP-icons.woff2") format("woff2");
+			font-weight: normal;
+			font-style: normal;
+		}
+
+		.sap-icon-font {
+			font-family: "SAP-icons-font";
+		}
+	</style>
 </head>
 
 <body>
@@ -78,6 +91,7 @@
 			<tr>
 				<th>Scenario</th>
 				<th>SAP Icons (SVG)</th>
+				<th>SAP Icons (font)</th>
 				<th>Material Symbols</th>
 				<th>Font Awesome</th>
 				<th>Bootstrap Icons</th>
@@ -88,6 +102,11 @@
 			<tr>
 				<td>Decorative (default)</td>
 				<td><ui5-icon name="accept"></ui5-icon></td>
+				<td>
+					<ui5-icon>
+						<span slot="symbol" class="sap-icon-font">&#xe05b;</span>
+					</ui5-icon>
+				</td>
 				<td>
 					<ui5-icon>
 						<span slot="symbol" class="material-symbols-outlined">check_circle</span>
@@ -114,6 +133,11 @@
 				<td><ui5-icon name="home" mode="Image" accessible-name="Home"></ui5-icon></td>
 				<td>
 					<ui5-icon mode="Image" accessible-name="Home">
+						<span slot="symbol" class="sap-icon-font">&#xe070;</span>
+					</ui5-icon>
+				</td>
+				<td>
+					<ui5-icon mode="Image" accessible-name="Home">
 						<span slot="symbol" class="material-symbols-outlined">home</span>
 					</ui5-icon>
 				</td>
@@ -136,6 +160,11 @@
 			<tr>
 				<td>Interactive mode</td>
 				<td><ui5-icon name="add" mode="Interactive" accessible-name="Add"></ui5-icon></td>
+				<td>
+					<ui5-icon mode="Interactive" accessible-name="Add">
+						<span slot="symbol" class="sap-icon-font">&#xe058;</span>
+					</ui5-icon>
+				</td>
 				<td>
 					<ui5-icon mode="Interactive" accessible-name="Add">
 						<span slot="symbol" class="material-symbols-outlined">add_circle</span>
@@ -162,6 +191,11 @@
 				<td><ui5-icon name="accept" design="Positive"></ui5-icon></td>
 				<td>
 					<ui5-icon design="Positive">
+						<span slot="symbol" class="sap-icon-font">&#xe05b;</span>
+					</ui5-icon>
+				</td>
+				<td>
+					<ui5-icon design="Positive">
 						<span slot="symbol" class="material-symbols-outlined">check_circle</span>
 					</ui5-icon>
 				</td>
@@ -184,6 +218,11 @@
 			<tr>
 				<td>design="Negative"</td>
 				<td><ui5-icon name="error" design="Negative"></ui5-icon></td>
+				<td>
+					<ui5-icon design="Negative">
+						<span slot="symbol" class="sap-icon-font">&#xe1ec;</span>
+					</ui5-icon>
+				</td>
 				<td>
 					<ui5-icon design="Negative">
 						<span slot="symbol" class="material-symbols-outlined">cancel</span>
@@ -210,6 +249,11 @@
 				<td><ui5-icon name="alert" design="Critical"></ui5-icon></td>
 				<td>
 					<ui5-icon design="Critical">
+						<span slot="symbol" class="sap-icon-font">&#xe053;</span>
+					</ui5-icon>
+				</td>
+				<td>
+					<ui5-icon design="Critical">
 						<span slot="symbol" class="material-symbols-outlined">warning</span>
 					</ui5-icon>
 				</td>
@@ -232,6 +276,11 @@
 			<tr>
 				<td>3rem size</td>
 				<td><ui5-icon name="settings" style="width:3rem;height:3rem"></ui5-icon></td>
+				<td>
+					<ui5-icon style="width:3rem;height:3rem">
+						<span slot="symbol" class="sap-icon-font">&#xe00c;</span>
+					</ui5-icon>
+				</td>
 				<td>
 					<ui5-icon style="width:3rem;height:3rem">
 						<span slot="symbol" class="material-symbols-outlined">settings</span>
@@ -258,6 +307,11 @@
 				<td><ui5-icon name="settings" style="width:5rem;height:5rem; font-size: 2rem;"></ui5-icon></td>
 				<td>
 					<ui5-icon style="width:5rem;height:5rem">
+						<span slot="symbol" class="sap-icon-font" style="font-size:2rem">&#xe00c;</span>
+					</ui5-icon>
+				</td>
+				<td>
+					<ui5-icon style="width:5rem;height:5rem">
 						<span slot="symbol" class="material-symbols-outlined" style="font-size:2rem">settings</span>
 					</ui5-icon>
 				</td>
@@ -280,6 +334,11 @@
 			<tr>
 				<td>Custom color</td>
 				<td><ui5-icon name="settings" style="color: red;"></ui5-icon></td>
+				<td>
+					<ui5-icon style="color: red;">
+						<span slot="symbol" class="sap-icon-font">&#xe00c;</span>
+					</ui5-icon>
+				</td>
 				<td>
 					<ui5-icon style="color: red;">
 						<span slot="symbol" class="material-symbols-outlined">settings</span>
