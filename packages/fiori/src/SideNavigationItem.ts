@@ -20,7 +20,8 @@ import {
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
 	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
-import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import "@ui5/webcomponents/dist/Tag.js";
 
 // Templates
 import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
@@ -80,6 +81,21 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
 	items!: DefaultSlot<SideNavigationSubItem>;
+
+	/**
+	 * Defines the tag to be displayed.
+	 *
+	 * **Note:** Only one `ui5-tag` is allowed. The tag should use `design="Set2"`, `hide-state-icon`,
+	 * and `colorScheme` values 5-10 to avoid confusion with semantic colors (1-4).
+	 *
+	 * **Note:** It is recommended to limit tag width to 64px (4rem). If tag text exceeds this,
+	 * use shortened forms or abbreviations (e.g., "Experimental" → "Exp").
+	 *
+	 * @public
+	 * @since 2.7.0
+	 */
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -183,9 +199,43 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	get _describedBy() {
+		const parts: string[] = [];
+
+		if (this.hasTag) {
+			parts.push(this._tagId);
+		}
+
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			parts.push(this._selectableItemDescriptionId);
+		}
+
+		return parts.length > 0 ? parts.join(" ") : undefined;
+	}
+
+	get _selectableItemDescriptionId() {
+		return `${this._id}-selectable-description`;
+	}
+
+	get _selectableItemDescriptionText() {
 		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
 			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? "");
 		}
+		return undefined;
+	}
+
+	get hasTag() {
+		return !!this.tag.length;
+	}
+
+	get _textId() {
+		return `${this._id}-text`;
+	}
+
+	get _textAriaLabelledBy() {
+		if (this.hasTag) {
+			return `${this._textId} ${this._tagId}`;
+		}
+		return undefined;
 	}
 
 	get classesArray() {

@@ -51,7 +51,12 @@ function ItemTemplate(this: SideNavigationItem) {
 					:
 					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text">{this.text}</div>
+				<div class="ui5-sn-item-text" id={this._textId} aria-labelledby={this._textAriaLabelledBy}>{this.text}</div>
+				{this.hasTag &&
+					<div id={this._tagId} class="ui5-sn-item-tag-slot">
+						<slot name="tag"></slot>
+					</div>
+				}
 				{this.sideNavCollapsed ?
 					!!this.items.length &&
 					<Icon class="ui5-sn-item-toggle-icon"
@@ -80,6 +85,9 @@ function ItemTemplate(this: SideNavigationItem) {
 				>
 					<slot></slot>
 				</ul>
+			}
+			{this._selectableItemDescriptionText &&
+				<span id={this._selectableItemDescriptionId} class="ui5-hidden-text">{this._selectableItemDescriptionText}</span>
 			}
 		</>
 	);
