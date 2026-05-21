@@ -447,7 +447,7 @@ class Calendar extends CalendarPart {
 	_getHeaderTextForMonth(monthTimestamp: number): { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } {
 		const calendarDate = CalendarDateComponent.fromTimestamp(monthTimestamp * 1000, this._primaryCalendarType);
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
+		const yearFormat = this._primaryYearFormat;
 
 		const monthText = localeData.getMonthsStandAlone("wide", this._primaryCalendarType)[calendarDate.getMonth()];
 		const localDate = calendarDate.toLocalJSDate();
@@ -463,7 +463,7 @@ class Calendar extends CalendarPart {
 			const secondaryCalendarDate = secondaryDate.firstDate || secondaryDate.lastDate;
 			const secondaryLocaleData = getCachedLocaleDataInstance(getLocale());
 			result.secondMonthText = secondaryLocaleData.getMonthsStandAlone("wide", this._secondaryCalendarType)[secondaryCalendarDate.getMonth()];
-			const secondaryYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+			const secondaryYearFormat = this._secondaryYearFormat;
 			result.secondYearText = String(secondaryYearFormat.format(secondaryCalendarDate.toLocalJSDate(), true));
 		}
 
@@ -641,11 +641,12 @@ class Calendar extends CalendarPart {
 	}
 
 	async onAfterRendering() {
+		console.log(`[Calendar ${this._id}] ===== RENDER CYCLE =====`);
 		await renderFinished(); // Await for the current picker to render and then ask if it has previous/next pages
 		this._previousButtonDisabled = !this._currentPickerDOM._hasPreviousPage();
 		this._nextButtonDisabled = !this._currentPickerDOM._hasNextPage();
 
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
+		const yearFormat = this._primaryYearFormat;
 		const localeData = getCachedLocaleDataInstance(getLocale());
 		this._headerMonthButtonText = localeData.getMonthsStandAlone("wide", this.primaryCalendarType)[this._calendarDate.getMonth()];
 		this._headerYearButtonText = String(yearFormat.format(this._localDate, true));
@@ -724,6 +725,14 @@ class Calendar extends CalendarPart {
 		return this.shadowRoot!.querySelector(`[ui5-${this._currentPicker}picker]`)! as unknown as ICalendarPicker;
 	}
 
+	get _primaryYearFormat() {
+		return DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
+	}
+
+	get _secondaryYearFormat() {
+		return DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+	}
+
 	/**
 	 * Returns the focusable element inside the Calendar (the current picker)
 	 * @override
@@ -747,7 +756,7 @@ class Calendar extends CalendarPart {
 	}
 
 	_setSecondaryCalendarTypeButtonText() {
-		const yearFormatSecType = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+		const yearFormatSecType = this._secondaryYearFormat;
 		this._headerYearButtonTextSecType = String(yearFormatSecType.format(this._localDate, true));
 
 		const currentYearRange = this._currentYearRange;
@@ -767,7 +776,7 @@ class Calendar extends CalendarPart {
 		}
 
 		const localDate = UI5Date.getInstance(this._timestamp * 1000);
-		const secondYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+		const secondYearFormat = this._secondaryYearFormat;
 		const dateInSecType = transformDateToSecondaryType(this._primaryCalendarType, this._secondaryCalendarType, this._timestamp);
 		const secondMonthInfo = convertMonthNumbersToMonthNames(dateInSecType.firstDate.getMonth(), dateInSecType.lastDate.getMonth(), this._secondaryCalendarType);
 		const secondYearText = secondYearFormat.format(localDate);
@@ -1035,7 +1044,7 @@ class Calendar extends CalendarPart {
 	 * @private
 	 */
 	_formatYearRangeText(yearRange: CalendarYearRangeT) {
-		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this.primaryCalendarType });
+		const yearFormat = this._primaryYearFormat
 		const { rangeStart, rangeEnd } = this._createYearRangeDates(yearRange, this.primaryCalendarType);
 
 		const rangeStartText = yearFormat.format(rangeStart.toLocalJSDate());
