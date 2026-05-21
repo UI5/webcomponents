@@ -1,7 +1,7 @@
 import type Icon from "./Icon.js";
 
 export default function IconTemplate(this: Icon) {
-	if (this.hasSymbol) {
+	if (this.hasFontIcon) {
 		return (
 			<span
 				class="ui5-icon-root"
@@ -14,7 +14,7 @@ export default function IconTemplate(this: Icon) {
 				onKeyUp={this._onkeyup}
 				onClick={this._onclick}
 			>
-				<slot name="symbol"></slot>
+				<slot name="fontIcon"></slot>
 			</span>
 		);
 	}

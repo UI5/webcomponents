@@ -197,7 +197,7 @@ class Icon extends UI5Element implements IIcon {
 	mode: `${IconMode}` = "Decorative";
 
 	/**
-	 * Defines the symbol to be used as an icon.
+	 * Defines the font icon to be used as an icon.
 	 * Intended for font-based icon libraries (e.g. Font Awesome, Material Icons) where
 	 * the application loads the font and provides a slotted element with the unicode character.
 	 * When this slot is used, the component renders a `<span>` instead of an `<svg>`.
@@ -206,14 +206,14 @@ class Icon extends UI5Element implements IIcon {
 	 * **Example:**
 	 * ```html
 	 * <ui5-icon mode="Image" accessible-name="Home">
-	 *   <i class="fa fa-home" slot="symbol"></i>
+	 *   <i class="fa fa-home" slot="fontIcon"></i>
 	 * </ui5-icon>
 	 * ```
 	 * @public
 	 * @since 2.23.0
 	 */
 	@slot({ type: HTMLElement })
-	symbol!: Slot<HTMLElement>;
+	fontIcon!: Slot<HTMLElement>;
 
 	/**
 	 * @private
@@ -309,7 +309,7 @@ class Icon extends UI5Element implements IIcon {
 	}
 
 	async onBeforeRendering() {
-		if (this.symbol.length) {
+		if (this.fontIcon.length) {
 			// Font-based icon via slot — skip registry, accessibility is app's responsibility
 			if (!this.accessibleName) {
 				this.effectiveAccessibleName = undefined;
@@ -375,8 +375,8 @@ class Icon extends UI5Element implements IIcon {
 		}
 	}
 
-	get hasSymbol() {
-		return this.symbol.length > 0;
+	get hasFontIcon() {
+		return this.fontIcon.length > 0;
 	}
 
 	get hasIconTooltip() {

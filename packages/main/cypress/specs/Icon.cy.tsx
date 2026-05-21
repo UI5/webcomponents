@@ -344,11 +344,11 @@ describe("Icon general interaction", () => {
     });
 });
 
-describe("Icon symbol slot", () => {
-    it("renders a span root instead of svg when symbol slot is used", () => {
+describe("Icon fontIcon slot", () => {
+    it("renders a span root instead of svg when fontIcon slot is used", () => {
         cy.mount(
             <Icon>
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
@@ -359,7 +359,7 @@ describe("Icon symbol slot", () => {
     it("Decorative mode: span root has role=presentation and aria-hidden=true", () => {
         cy.mount(
             <Icon>
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
@@ -371,7 +371,7 @@ describe("Icon symbol slot", () => {
     it("Image mode: span root has role=img and aria-label", () => {
         cy.mount(
             <Icon mode="Image" accessibleName="Star">
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
@@ -384,7 +384,7 @@ describe("Icon symbol slot", () => {
     it("Interactive mode: span root has role=button and tabindex=0", () => {
         cy.mount(
             <Icon mode="Interactive" accessibleName="Add">
-                <span slot="symbol">＋</span>
+                <span slot="fontIcon">＋</span>
             </Icon>
         );
 
@@ -397,7 +397,7 @@ describe("Icon symbol slot", () => {
     it("Interactive mode: fires ui5-click on mouse click", () => {
         cy.mount(
             <Icon mode="Interactive" accessibleName="Add">
-                <span slot="symbol">＋</span>
+                <span slot="fontIcon">＋</span>
             </Icon>
         );
 
@@ -412,7 +412,7 @@ describe("Icon symbol slot", () => {
     it("Interactive mode: fires ui5-click on Enter key", () => {
         cy.mount(
             <Icon mode="Interactive" accessibleName="Add">
-                <span slot="symbol">＋</span>
+                <span slot="fontIcon">＋</span>
             </Icon>
         );
 
@@ -428,7 +428,7 @@ describe("Icon symbol slot", () => {
     it("Interactive mode: fires ui5-click on Space key", () => {
         cy.mount(
             <Icon mode="Interactive" accessibleName="Add">
-                <span slot="symbol">＋</span>
+                <span slot="fontIcon">＋</span>
             </Icon>
         );
 
@@ -444,7 +444,7 @@ describe("Icon symbol slot", () => {
     it("Decorative mode: does not fire ui5-click on click", () => {
         cy.mount(
             <Icon>
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
@@ -459,7 +459,7 @@ describe("Icon symbol slot", () => {
     it("no accessible-name: aria-label is not set", () => {
         cy.mount(
             <Icon mode="Image">
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
@@ -470,7 +470,7 @@ describe("Icon symbol slot", () => {
     it("accessible-name takes effect when set", () => {
         cy.mount(
             <Icon mode="Image" accessibleName="Initial">
-                <span slot="symbol">★</span>
+                <span slot="fontIcon">★</span>
             </Icon>
         );
 
