@@ -1,0 +1,8 @@
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/sap_horizon/parameters-bundle.css.js";
+import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s", "sap_horizon", async () => defaultTheme, "host");
+export default `.ui5-mcb-select-all-header{width:100%;height:44px;border-bottom:.0625rem solid var(--sapGroup_TitleBorderColor);display:flex;align-items:center;font-family:var(--sapFontFamily);position:sticky;top:0;z-index:2;background:var(--sapPageHeader_Background)}.ui5-mcb-select-all-checkbox{width:100%;font-family:var(--sapFontBoldFamily)}.ui5-mcb-select-all-checkbox::part(root):focus:before{border:var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);border-radius:0;inset:0 2px}.ui5-mcb-select-all-checkbox::part(label){font-family:var(--sapFontBoldFamily)}:host([readonly]) ::slotted([ui5-mcb-item]){cursor:auto}[ui5-responsive-popover] .ui5-valuestatemessage-header,[ui5-popover] .ui5-valuestatemessage-header{max-width:inherit}.ui5-multi-combobox-busy{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:42;display:flex;justify-content:center;align-items:center;pointer-events:all;width:100%}.ui5-multi-combobox-busy:not([active]){display:none}[ui5-responsive-popover] [ui5-input]{width:100%}
+`;
+//# sourceMappingURL=MultiComboBoxPopover.css.js.map

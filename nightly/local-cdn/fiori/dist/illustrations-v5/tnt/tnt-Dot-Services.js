@@ -1,0 +1,14 @@
+export default `<svg id="tnt-Dot-Services" xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="none" viewBox="0 0 45 45">
+  <path fill="var(--sapContent_Illustrative_Color22)" d="M7.997 24.572c.068-.127.232-.123.368.01.135.133.192.344.125.472L3.102 35.309l11.634 1.117c.146.014.297.174.337.357.041.184-.045.322-.19.308L2.764 35.928c-.146-.014-.297-.175-.338-.359-.028-.125.003-.228.072-.277a.343.343 0 0 1 .005-.262l5.493-10.458Z"/>
+  <path fill="var(--sapContent_Illustrative_Color25)" d="m6.708 27.615-1.75-3.031c7.361-4.25 11.227.446 11.727 1.312-1.866-1.232-7.712-.359-9.977 1.719Z"/>
+  <ellipse cx="2.602" cy="35.5" fill="var(--sapContent_Illustrative_Color11)" rx="1.434" ry="1.485" transform="rotate(-26.688 2.602 35.5)"/>
+  <path fill="var(--sapContent_Illustrative_Color1)" d="M3.051 34.112c.346.126.65.382.832.743.368.733.092 1.615-.615 1.97-.708.356-1.58.051-1.949-.681l-.006-.012c.357.13.76.12 1.118-.06.704-.355.98-1.23.62-1.96Z"/>
+  <path fill="var(--sapContent_Illustrative_Color22)" d="m24.796 14.979.866-.5 7.01 12.14-.866.5z"/>
+  <path fill="var(--sapContent_Illustrative_Color24)" d="M35.33 11.225a1 1 0 0 1 1.366.367l4 6.927a1 1 0 0 1-.366 1.367l-17.32 10a1 1 0 0 1-1.366-.367l-1.5-2.598-1.77 1.022a9.346 9.346 0 0 1-4.504 12.109L4.387 23.629c.111-.071.224-.142.34-.208 4.322-2.496 9.831-1.232 12.668 2.778l1.748-1.01-1.5-2.597a1 1 0 0 1 .367-1.367l17.32-10Z"/>
+  <rect width="16" height="10" x="25.743" y="30.618" fill="var(--sapContent_Illustrative_Color11)" rx="1" transform="rotate(-30 25.743 30.618)"/>
+  <rect width="14" height="6" x="25.743" y="30.618" fill="var(--sapContent_Illustrative_Color1)" rx="1" transform="rotate(-30 25.743 30.618)"/>
+  <rect width="16" height="10" x="13.743" y="9.833" fill="var(--sapContent_Illustrative_Color11)" rx="1" transform="rotate(-30 13.743 9.833)"/>
+  <path fill="var(--sapContent_Illustrative_Color25)" d="m17.645 22.591 19.053-11 1.5 2.598-19.053 11z"/>
+  <rect width="14" height="3" x="17.242" y="15.896" fill="var(--sapContent_Illustrative_Color1)" rx="1" transform="rotate(-30 17.242 15.896)"/>
+</svg>
+`;

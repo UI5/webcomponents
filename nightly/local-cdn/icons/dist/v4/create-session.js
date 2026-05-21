@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "create-session";
+const pathData = "M0 14V2c0-.27.094-.505.281-.703A.947.947 0 0 1 1 1h12c.27 0 .505.099.703.297A.961.961 0 0 1 14 2v7h-1V5H1v9h7v1H1a.973.973 0 0 1-.719-.281A.974.974 0 0 1 0 14Zm9.188-2h2.593l.813-2.469.812 2.469H16l-2.125 1.531.813 2.469-2.094-1.531L10.469 16l.812-2.469L9.187 12Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/create-session";
+export { pathData, ltr, viewBox, accData };

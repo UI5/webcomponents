@@ -1,0 +1,8 @@
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/sap_horizon/parameters-bundle.css.js";
+import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s" + "-" + "f" + "i" + "o" + "r" + "i", "sap_horizon", async () => defaultTheme, "host");
+export default `.ui5-user-settings-account{display:flex;align-items:center;flex-direction:column}.ui5-user-settings-account-avatar{display:flex;max-width:7rem;max-height:7rem;justify-content:center;align-items:center;gap:.625rem}.ui5-user-settings-account-title{text-align:center;margin-top:.25rem;font-family:var(--sapFontFamily);font-size:var(--sapFontLargeSize);color:var(--sapTextColor)}.ui5-user-settings-account-subtitleText,.ui5-user-settings-account-description{text-align:center;margin-bottom:.25rem;font-family:var(--sapFontFamily);font-size:var(--sapFontSize);color:var(--sapContent_LabelColor);overflow:hidden;text-overflow:ellipsis}.ui5-user-settings-account-btn{display:flex;justify-content:center;align-items:center;gap:.625rem;border-radius:var(--sapButton_BorderCornerRadius);border:var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);background:var(--sapButton_Background)}.ui5-user-settings-account-btn::part(button){padding:.375rem}
+`;
+//# sourceMappingURL=UserSettingsAccountView.css.js.map

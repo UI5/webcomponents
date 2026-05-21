@@ -1,0 +1,2 @@
+"use strict";import t from"../features/LegacyDateFormats.js";import{getFormatSettings as a}from"../InitialConfiguration.js";import{getFeature as r}from"../FeaturesRegistry.js";import{attachConfigurationReset as o}from"./ConfigurationReset.js";let e;o(()=>{e=void 0});const n=()=>(e===void 0&&(e=a()),e.firstDayOfWeek),i=r("LegacyDateFormats"),m=i?t.getLegacyDateCalendarCustomizing:()=>[];export{n as getFirstDayOfWeek,m as getLegacyDateCalendarCustomizing};
+//# sourceMappingURL=FormatSettings.js.map
