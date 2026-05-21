@@ -71,19 +71,16 @@ function App() {
     <>
       <Table id="table" ref={tableRef}>
         <TableHeaderRow slot="headerRow">
-          <TableHeaderCell id="produtCol" width="300px">
+          <TableHeaderCell id="produtCol">
             <span>Product</span>
           </TableHeaderCell>
-          <TableHeaderCell id="supplierCol" width="200px">
+          <TableHeaderCell id="supplierCol">
             Supplier
           </TableHeaderCell>
-          <TableHeaderCell id="dimensionsCol" width="300px">
+          <TableHeaderCell id="dimensionsCol">
             Dimensions
           </TableHeaderCell>
-          <TableHeaderCell id="weightCol" width="100px">
-            Weight
-          </TableHeaderCell>
-          <TableHeaderCell id="priceCol" width="220px">
+          <TableHeaderCell id="priceCol">
             Price
           </TableHeaderCell>
         </TableHeaderRow>
@@ -100,11 +97,6 @@ function App() {
           </TableCell>
           <TableCell>
             <Label>30 x 18 x 3 cm</Label>
-          </TableCell>
-          <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
-              <b>4.2</b> KG
-            </Label>
           </TableCell>
           <TableCell>
             <Label>
@@ -127,11 +119,6 @@ function App() {
             <Label>29 x 17 x 3.1 cm</Label>
           </TableCell>
           <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
-              <b>4.5</b> KG
-            </Label>
-          </TableCell>
-          <TableCell>
             <Label>
               <b>1249</b> EUR
             </Label>
@@ -150,11 +137,6 @@ function App() {
           </TableCell>
           <TableCell>
             <Label>32 x 21 x 4 cm</Label>
-          </TableCell>
-          <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
-              <b>3.7</b> KG
-            </Label>
           </TableCell>
           <TableCell>
             <Label>
