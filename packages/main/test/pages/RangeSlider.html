@@ -49,6 +49,14 @@
 		</section>
 
 		<section class="group">
+			<h2>Custom Tickmarks - Temperature Range</h2>
+			<ui5-range-slider id="custom-tickmarks-temp" min="0" max="100" step="1" start-value="20" end-value="75" show-tooltip></ui5-range-slider>
+
+			<h2>Custom Tickmarks - Price Range</h2>
+			<ui5-range-slider id="custom-tickmarks-price" min="0" max="1000" step="50" start-value="200" end-value="800" show-tooltip></ui5-range-slider>
+		</section>
+
+		<section class="group">
 			<h2>Event Testing Slider</h2>
 			<ui5-range-slider id="test-slider" min="0" max="10"  start-value="1" end-value="2"></ui5-range-slider>
 			<div>
@@ -72,6 +80,23 @@
 		</section>
 
 		<script>
+			// Custom Tickmarks demos
+			document.getElementById("custom-tickmarks-temp").tickmarks = [
+				{ value: 0, label: "Freezing" },
+				{ value: 25, label: "Cool" },
+				{ value: 50, label: "Warm" },
+				{ value: 75, label: "Hot" },
+				{ value: 100, label: "Boiling" }
+			];
+
+			document.getElementById("custom-tickmarks-price").tickmarks = [
+				{ value: 0, label: "$0" },
+				{ value: 250, label: "$250" },
+				{ value: 500, label: "$500" },
+				{ value: 750, label: "$750" },
+				{ value: 1000, label: "$1000" }
+			];
+
 			const eventTargetSlider = document.getElementById("test-slider");
 			const eventResultSlider = document.getElementById("test-result-slider");
 			const inputTooltipSlider = document.getElementById("range-slider-tickmarks-labels");
