@@ -306,6 +306,68 @@ describe("Color Picker general interaction tests", () => {
 	});
 });
 
+describe("Color Picker font-size scaling (regression for #13521)", () => {
+	// The picker box is sized in rem, so it scales with root font-size. The pointer
+	// math used to assume 16rem === 256px and broke at any other root font-size.
+	// afterEach runs even on assertion failure, so the document state is always restored.
+	afterEach(() => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "";
+		});
+	});
+
+	it("should select white at bottom-right corner with 14px root font-size", () => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "14px";
+		});
+
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]").as("colorPicker");
+
+		// Use position to avoid hardcoding pixel coordinates that depend on font-size.
+		cy.get<ColorPicker>("@colorPicker")
+			.shadow()
+			.find(".ui5-color-picker-main-color")
+			.realClick({ position: "bottomRight" });
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerToggleColorMode();
+
+		// Bottom-right corner = white => saturation 0%, lightness 100%.
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#saturation", "0");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#light", "100");
+	});
+
+	it("should select black at top-left corner with 20px root font-size", () => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "20px";
+		});
+
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]").as("colorPicker");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.shadow()
+			.find(".ui5-color-picker-main-color")
+			.realClick({ position: "topLeft" });
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerToggleColorMode();
+
+		// Top-left corner = full saturation, zero lightness (black at full saturation).
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#saturation", "100");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#light", "0");
+	});
+});
+
 describe("Color Picker accessibility tests", () => {
 	it("should show correct accessibility info for RGB inputs", () => {
 		cy.mount(<ColorPicker></ColorPicker>);
