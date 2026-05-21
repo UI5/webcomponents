@@ -19,9 +19,13 @@ function Logo(props: { colorMode: string }) {
 function HomepageHeader() {
   const { colorMode } = useColorMode();
 
+  const now = new Date();
+  const dateString = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div  className={clsx('container', styles.container)}>
+        <p className={styles.heroDate}>{dateString}</p>
         <Logo colorMode={colorMode} />
         <Heading as="h1" className={clsx('hero__title', styles.heroTitle)}>
           <span className={styles.heroTitle__UI5}>UI5</span> Web Components

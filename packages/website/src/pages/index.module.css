@@ -3,16 +3,30 @@
  * and scoped locally.
  */
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+  padding: 1.5rem;
+  text-align: left;
   position: relative;
   overflow: hidden;
+  min-height: 5.75rem;
+  box-shadow: var(--sapContent_Shadow0);
+  border-radius: var(--sapTile_BorderCornerRadius);
+  border: 0.0625rem solid var(--sapTile_BorderColor);
+  background-image: var(--sapShell_HeroBanner_BackgroundImage);
+  background-color: var(--sapShell_HeroBanner_Background);
 }
 
 .heroTitle,
 .heroSubtitle  {
   word-wrap: normal;
-  color: var(--ifm-font-color-base);
+  color: var(--sapShell_HeroBanner_TextColor);
+}
+
+.heroDate {
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  text-align: left;
+  color: var(--sapShell_HeroBanner_TextColor);
+  margin-bottom: 0.5rem;
 }
 
 .heroTitle__UI5 {
@@ -22,8 +36,8 @@
 .buttons {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 2rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .buttonSecondary {
@@ -35,15 +49,34 @@
   height: 9rem;
 }
 
+@media (min-width: 600px) {
+  .heroTitle {
+    font-weight: normal;
+    font-family: var(--sapFontHeaderFamily);
+    font-size: var(--sapFontHeader3Size);
+  }
+}
+
 @media (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
   }
-}
 
-@media (min-width: 600px) {
   .heroTitle {
-    font-weight: normal;
-    font-size: 5.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .buttons {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .buttonSecondary {
+    margin-inline-start: 0;
   }
 }
