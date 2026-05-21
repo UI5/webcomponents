@@ -926,7 +926,9 @@ let TabContainer = TabContainer_1 = class TabContainer extends UI5Element {
             return [];
         }
         const focusableRefs = [];
-        if (!this._getStartOverflow().hasAttribute("hidden")) {
+        const startOverflow = this._getStartOverflow();
+        const endOverflow = this._getEndOverflow();
+        if (startOverflow && !startOverflow.hasAttribute("hidden")) {
             focusableRefs.push(this.startOverflowButton[0] || this._getStartOverflowBtnDOM());
         }
         this._getTabs().forEach(tab => {
@@ -936,7 +938,7 @@ let TabContainer = TabContainer_1 = class TabContainer extends UI5Element {
                 focusableRefs.push(tab);
             }
         });
-        if (!this._getEndOverflow().hasAttribute("hidden")) {
+        if (endOverflow && !endOverflow.hasAttribute("hidden")) {
             focusableRefs.push(this.overflowButton[0] || this._getEndOverflowBtnDOM());
         }
         return focusableRefs;

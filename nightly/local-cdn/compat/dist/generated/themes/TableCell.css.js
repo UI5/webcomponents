@@ -3,6 +3,6 @@ import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/s
 import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
 registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
 registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s" + "-" + "c" + "o" + "m" + "p" + "a" + "t", "sap_horizon", async () => defaultTheme, "host");
-export default `:host{display:table-cell;font-family:var(--sapFontFamily);font-size:.875rem;height:var(--ui5_table_row_height);box-sizing:border-box;color:var(--sapList_TextColor);word-break:break-word;vertical-align:middle}td{display:contents}:host([popined]){padding-left:0;padding-top:.25rem}:host([_popined-inline]){padding-top:0}::slotted([ui5-label]){color:inherit}
+export default `:host{display:table-cell;font-family:var(--sapFontFamily);font-size:.875rem;height:var(--ui5_table_row_height);box-sizing:border-box;color:var(--sapList_TextColor);vertical-align:middle;overflow:hidden;max-width:0}td{display:contents}.ui5-table-cell-content{display:block;width:100%;overflow:hidden}::slotted(*){max-width:100%;width:100%}:host([popined]){padding-left:0;padding-top:.25rem}:host([_popined-inline]){padding-top:0}::slotted([ui5-label]){color:inherit}
 `;
 //# sourceMappingURL=TableCell.css.js.map
