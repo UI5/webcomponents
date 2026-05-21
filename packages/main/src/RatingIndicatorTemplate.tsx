@@ -70,5 +70,5 @@ function starLi(this: RatingIndicator, star: Star) {
 }
 
 function halfStarIconName(this: RatingIndicator) {
-	return this.disabled || this.readonly ? this.ratedIcon : this.unratedIcon;
+	return this.disabled || this.readonly ? (this.halfUnratedIcon || this.unratedIcon) : this.unratedIcon;
 }
