@@ -12,6 +12,8 @@ import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/ut
 import type ComboBox from "./ComboBox.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
+	const loadingOnDesktopWithValueState = this.loading && !this._isPhone && this.hasValueState;
+	const loadingDelay = 100;
 	return (
 		<>
 			<ResponsivePopover
@@ -33,11 +35,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				onKeyDown={this._handlePopoverKeydown}
 				onFocusOut={this._handlePopoverFocusout}
 			>
-				{this.loading &&
-					<BusyIndicator active={true} class="ui5-combobox-busy"/>
-				}
-
-				{!this.loading && this._isPhone &&
+				{this._isPhone &&
 				<>
 					<div slot="header" class="ui5-responsive-popover-header">
 						<div class="row">
@@ -61,7 +59,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 								onInput={this._handleMobileInput}
 								onChange={this._inputChange}
 							>
-								{ this._filteredItems.flatMap(item => {
+								{!this.loading && this._filteredItems.flatMap(item => {
 									if (item.isGroupItem && item.items) {
 										// For group items, return all nested items
 										return item.items
@@ -87,64 +85,66 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				}
 
 				{!this._isPhone && this.hasValueStateText &&
-				<div
-					slot="header"
-					class={{
-						"ui5-responsive-popover-header": true,
-						...this.classes.popoverValueState,
-					}}
-					style={this.styles.suggestionPopoverHeader}
-				>
-					<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
-					{ this.open && valueStateMessage.call(this) }
-				</div>
+					<div
+						slot="header"
+						class={{
+							"ui5-responsive-popover-header": true,
+							...this.classes.popoverValueState,
+						}}
+						style={this.styles.suggestionPopoverHeader}
+					>
+						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
+						{ this.open && valueStateMessage.call(this) }
+					</div>
 				}
 
-				{!this.loading && !!this._filteredItems.length &&
-				<List
-					class="ui5-combobox-items-list"
-					separators="None"
-					accessibleRole="ListBox"
-					selectionMode="Single"
-					onItemClick={this._selectItem}
-					onItemFocused={this._onItemFocus}
-					onMouseDown={this._itemMousedown}
-				>
-					{ this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
+				{(this._isPhone || !this.hasValueState) && this.loading && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+				{((!this.loading && !!this._filteredItems.length) || loadingOnDesktopWithValueState) &&
+					<List
+						class="ui5-combobox-items-list"
+						separators="None"
+						accessibleRole="ListBox"
+						selectionMode="Single"
+						onItemClick={this._selectItem}
+						onItemFocused={this._onItemFocus}
+						onMouseDown={this._itemMousedown}
+					>
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+					</List>
 				}
 
 				{this._isPhone &&
-			<div slot="footer" class="ui5-responsive-popover-footer">
-				<Button
-					design="Emphasized"
-					onClick={this._closeRespPopover}
-				>{this._dialogOkButtonText}</Button>
-				<Button
-					class="ui5-responsive-popover-close-btn"
-					design="Transparent"
-					onClick={this._closeRespPopover}
-				>
-					{this._dialogCancelButtonText}
-				</Button>
-			</div>
+					<div slot="footer" class="ui5-responsive-popover-footer">
+						<Button
+							design="Emphasized"
+							onClick={this._closeRespPopover}
+						>{this._dialogOkButtonText}</Button>
+						<Button
+							class="ui5-responsive-popover-close-btn"
+							design="Transparent"
+							onClick={this._closeRespPopover}
+						>
+							{this._dialogCancelButtonText}
+						</Button>
+					</div>
 				}
 			</ResponsivePopover>
 
 			{this.shouldOpenValueStateMessagePopover &&
-		<Popover
-			preventFocusRestore={true}
-			preventInitialFocus={true}
-			hideArrow={true}
-			tabindex={-1}
-			class="ui5-valuestatemessage-popover"
-			horizontalAlign={PopoverHorizontalAlign.Start}
-			placement="Bottom"
-			opener={this}
-			open={this.valueStateOpen}
-			onClose={this._handleValueStatePopoverAfterClose}
-			onFocusOut={this._handleValueStatePopoverFocusout}
-		>
+				<Popover
+					preventFocusRestore={true}
+					preventInitialFocus={true}
+					hideArrow={true}
+					tabindex={-1}
+					class="ui5-valuestatemessage-popover"
+					horizontalAlign={PopoverHorizontalAlign.Start}
+					placement="Bottom"
+					opener={this}
+					open={this.valueStateOpen}
+					onClose={this._handleValueStatePopoverAfterClose}
+					onFocusOut={this._handleValueStatePopoverFocusout}
+				>
 			<div slot="header" class={this.classes.popoverValueState}>
 				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
 				{ valueStateMessage.call(this) }

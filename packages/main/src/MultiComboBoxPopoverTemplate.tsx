@@ -14,6 +14,8 @@ import Title from "./Title.js";
 import BusyIndicator from "./BusyIndicator.js";
 
 export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
+	const loadingDelay = 100;
+	const loadingOnDesktopWithValueState = this.loading && !this._isPhone && this.hasValueState;
 	return (<>
 		<ResponsivePopover
 			placement="Bottom"
@@ -33,11 +35,8 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			open={this.open}
 			opener={this}
 		>
-			{this.loading &&
-				<BusyIndicator active={true} class="ui5-multi-combobox-busy"/>
-			}
-
-			{!this.loading && this._isPhone && <>
+			{this._isPhone && 
+			<>
 				<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
 					<div class="row">
 						<Title
@@ -72,35 +71,39 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 							accessibleName={this._showSelectedButtonAccessibleNameText}
 						></ToggleButton>
 					</div>
-				</div>				{this.hasValueStateMessage &&
+				</div>
+				{this.hasValueStateMessage &&
 					<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
 						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
 						{this.open && valueStateMessage.call(this)}
 					</div>
 				}
-
-				{selectAllWrapper.call(this)}
 			</>}
 
-			{!this.loading && !this._isPhone && <>
-				{this.hasValueStateMessage &&
-					<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
-						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
-						{this.open && valueStateMessage.call(this)}
-					</div>
-				}
-
-				{selectAllWrapper.call(this)}
-			</>}
-
-			{!this.loading && this.filterSelected ?
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
-					{this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
-				: !this.loading &&
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>
-					{this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
+			{!this._isPhone && this.hasValueStateMessage &&
+				<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
+					<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
+					{this.open && valueStateMessage.call(this)}
+				</div>
+			}
+			{this.loading && (this._isPhone || !this.hasValueState) && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
+			{selectAllWrapper.call(this)}
+			{((!this.loading && this.filterSelected ) || loadingOnDesktopWithValueState) ?
+				<>
+					
+					<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
+					</List>
+				</>
+				: (!this.loading || loadingOnDesktopWithValueState) &&
+					<>
+					{selectAllWrapper.call(this)}
+					<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={loadingDelay}/>}
+						{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+					</List>
+				</>
 			}
 
 			{this._isPhone &&

@@ -575,18 +575,13 @@
 	</div>
 
 	<div class="demo-section">
-		<ui5-label>Toggle Loading State:</ui5-label>
+		<ui5-label>Loading State:</ui5-label>
 		<br />
 		<br />
 
-		<ui5-multi-combobox id="toggle-loading-mcb">
-			<ui5-mcb-item text="Item 1"></ui5-mcb-item>
-			<ui5-mcb-item text="Item 2"></ui5-mcb-item>
-			<ui5-mcb-item text="Item 3"></ui5-mcb-item>
+		<ui5-multi-combobox id="toggle-loading-mcb"  show-select-all>
 		</ui5-multi-combobox>
 		<br /><br />
-
-		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
 	</div>
 
 	<div class="demo-section">
@@ -889,10 +884,18 @@
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
 		});
 
-		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
-			const mcb = document.getElementById("toggle-loading-mcb");
-			mcb.loading = !mcb.loading;
+		document.getElementById("toggle-loading-mcb").addEventListener("load-started", (e) => {
+			const mcbControl = e.target;
+			mcbControl.loading = true;
+			mcbControl.open = e.detail.shouldOpenPicker;
+			setTimeout(() => {
+				mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item";
+				mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item 2";
+				mcbControl.loading = false;
+			}, 3000);
 		});
+
+		
 	</script>
 
 	<h1>Dialog Header Title from Label</h1>

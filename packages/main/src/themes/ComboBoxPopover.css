@@ -18,3 +18,8 @@
 [ui5-responsive-popover] [ui5-input] {
 	width: 100%;
 }
+
+
+.ui5-combobox-items-list:has(.ui5-combobox-busy[active]) {
+  	min-height: 1.6rem;
+}

@@ -60,6 +60,10 @@ import {
 	COMBOBOX_AVAILABLE_OPTIONS,
 	COMBOBOX_DIALOG_OK_BUTTON,
 	COMBOBOX_DIALOG_CANCEL_BUTTON,
+	COMBOBOX_LOADING,
+	COMBOBOX_LOADED,
+	COMBOBOX_LOADED_ITEMS,
+	COMBOBOX_LOADED_ITEM,
 	SELECT_OPTIONS,
 	LIST_ITEM_POSITION,
 	LIST_ITEM_GROUP_HEADER,
@@ -501,6 +505,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
+	_prevLoading: boolean;
+	_announceLoading?: boolean;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -546,6 +552,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		// when an initial value is set it should be considered as a _lastValue
 		this._lastValue = this.getAttribute("value") || "";
+		this._prevLoading = this.loading;
 	}
 
 	onBeforeRendering() {
@@ -596,6 +603,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 
 		this._selectMatchingItem();
+
+		if (!this._initialRendering) {
+			if (!this._prevLoading && this.loading) {
+				this._announceLoading = true;
+			} else if (this._prevLoading && !this.loading) {
+				this._announceLoading = false;
+			}
+		}
+
+		this._prevLoading = this.loading;
 		this._initialRendering = false;
 
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
@@ -615,6 +632,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.storeResponsivePopoverWidth();
+
+		if (this._announceLoading) {
+			announce(ComboBox.i18nBundle.getText(COMBOBOX_LOADING), InvisibleMessageMode.Polite);
+		} else if (this._announceLoading === false) {
+			const count = this._getItems().filter(item => !item.isGroupItem && item._isVisible).length;
+			const itemsLoadedMessage = count === 1 ? ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM) : ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count);
+			announce(`${ComboBox.i18nBundle.getText(COMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
+		}
+		this._announceLoading = undefined;
 
 		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
 			this._removeLinksEventListeners();
