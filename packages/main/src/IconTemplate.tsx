@@ -1,6 +1,24 @@
 import type Icon from "./Icon.js";
 
 export default function IconTemplate(this: Icon) {
+	if (this.hasSymbol) {
+		return (
+			<span
+				class="ui5-icon-root"
+				part="root"
+				tabindex={this._tabIndex}
+				role={this.effectiveAccessibleRole}
+				aria-label={this.effectiveAccessibleName}
+				aria-hidden={this.effectiveAriaHidden}
+				onKeyDown={this._onkeydown}
+				onKeyUp={this._onkeyup}
+				onClick={this._onclick}
+			>
+				<slot name="symbol"></slot>
+			</span>
+		);
+	}
+
 	return (
 		<svg
 			class="ui5-icon-root"
