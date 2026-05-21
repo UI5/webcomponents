@@ -1794,4 +1794,62 @@ describe("MultiInput Composition", () => {
 
 		cy.get("@multiinput").should("have.attr", "value", "谢谢");
 	});
+
+	it("should handle token deletion by clicking icon when token is not focused", () => {
+		cy.mount(
+			<MultiInput style="width: 250px;">
+				<Token slot="tokens" text="Albania"></Token>
+				<Token slot="tokens" text="Argentina"></Token>
+				<Token slot="tokens" text="Bulgaria"></Token>
+				<Token slot="tokens" text="England"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiinput")
+			.then(multiInput => {
+				multiInput[0].addEventListener("ui5-token-delete", handleTokenDelete);
+			});
+
+		// Verify initial state: 4 tokens
+		cy.get("[ui5-token]")
+			.should("have.length", 4);
+
+		// Click the input field to focus it
+		cy.get("@multiinput")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick();
+
+		// Navigate to Albania token (last token) with ArrowLeft
+		cy.realPress("ArrowLeft");
+
+		// Store reference to Albania token (now focused)
+		cy.get("[ui5-token]")
+			.eq(3)
+			.as("albaniaToken")
+			.should("have.attr", "focused");
+
+		// Move focus away from Albania to Argentina with ArrowRight
+		cy.realPress("ArrowRight");
+
+		// Verify Albania is no longer focused
+		cy.get("@albaniaToken")
+			.should("not.have.attr", "focused");
+
+		// Click delete icon on Albania token (which is not focused)
+		cy.get("@albaniaToken")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		// Verify Albania token was deleted
+		cy.get("[ui5-token]")
+			.should("have.length", 3);
+
+		// Verify Albania is no longer present
+		cy.get("[ui5-token]")
+			.should("not.contain.text", "Albania");
+	});
 });

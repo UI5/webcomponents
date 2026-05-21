@@ -8,6 +8,6 @@ const table = document.getElementById("table");
 const toast = document.getElementById("message");
 
 table.addEventListener("row-click", (e) => {
-	toast.textContent = `Row with key "${e.detail.row.key}" was pressed!`;
+	toast.textContent = `Row with key "${e.detail.row.rowKey}" was pressed!`;
 	toast.open = true;
 });

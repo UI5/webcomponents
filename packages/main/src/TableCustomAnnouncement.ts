@@ -4,6 +4,7 @@ import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableCell from "./TableCell.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
+import type TableGroupRow from "./TableGroupRow.js";
 import {
 	TABLE_ROW,
 	TABLE_ROW_INDEX,
@@ -12,6 +13,7 @@ import {
 	TABLE_ROW_NAVIGABLE,
 	TABLE_ROW_NAVIGATED,
 	TABLE_COLUMN_HEADER_ROW,
+	TABLE_GROUP_ROW,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -86,9 +88,15 @@ class TableCustomAnnouncement extends TableExtension {
 		}
 
 		const descriptions = [
-			this.i18nBundle.getText(TABLE_ROW),
+			this.i18nBundle.getText(row.isGroupRow() ? TABLE_GROUP_ROW : TABLE_ROW),
 			this.i18nBundle.getText(TABLE_ROW_INDEX, row.ariaRowIndex!, this._table._ariaRowCount),
 		];
+
+		const groupRow = this._findGroupRow(row);
+		if (groupRow) {
+			const groupDescription = getCustomAnnouncement(groupRow._groupCell, { lessDetails: true });
+			descriptions.push(groupDescription);
+		}
 
 		if (row._isSelected) {
 			descriptions.push(this.i18nBundle.getText(TABLE_ROW_SELECTED));
@@ -131,6 +139,17 @@ class TableCustomAnnouncement extends TableExtension {
 		} else {
 			this._handleTableElementFocusin(cell);
 		}
+	}
+
+	private _findGroupRow(row: TableRow): TableGroupRow | undefined {
+		const rows = this._table.rows;
+		const rowIndex = rows.indexOf(row);
+		for (let i = rowIndex; i >= 0; i--) {
+			if (rows[i].isGroupRow()) {
+				return rows[i] as TableGroupRow;
+			}
+		}
+		return undefined;
 	}
 }
 

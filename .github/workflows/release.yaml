@@ -178,6 +178,15 @@ jobs:
 
       - name: Push Changes
         run: |
+          # Rebase the local lerna version-bump commit onto the latest remote
+          # branch in case other commits landed during the build, then re-point
+          # the tag(s) lerna created so they reference the rebased commit.
+          NEW_TAGS=$(git tag --points-at HEAD)
+          git fetch origin ${{ github.ref_name }}
+          git rebase origin/${{ github.ref_name }}
+          for tag in $NEW_TAGS; do
+            git tag -f "$tag" HEAD
+          done
           git push origin HEAD
           git push origin --tags
 

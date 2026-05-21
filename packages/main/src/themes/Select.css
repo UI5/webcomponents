@@ -50,6 +50,7 @@
 	cursor: pointer;
 	overflow: hidden;
 	border-radius: var(--_ui5_input_border_radius);
+	background: var(--_ui5_select_bottom_border_gradient);
 }
 
 .ui5-select-label-root {
@@ -92,6 +93,16 @@
 
 .ui5-select-icon {
 	color: inherit;
+}
+
+:host([value-state]:not([value-state="None"])) .ui5-select-root,
+:host([value-state="None"]:not([readonly]):not([disabled]):hover) .ui5-select-root,
+:host(:not([value-state]):not([readonly]):not([disabled]):hover) .ui5-select-root {
+	background: none;
+}
+
+:host([readonly]) .ui5-select-root {
+	background: none;
 }
 
 :host([value-state]:not([value-state="None"], [value-state="Positive"])) .ui5-select-icon-root {
