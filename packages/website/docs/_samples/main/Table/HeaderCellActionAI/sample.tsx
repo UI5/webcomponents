@@ -91,77 +91,77 @@ function App() {
         </TableHeaderRow>
         <TableRow rowKey="0">
           <TableCell>
-            <Label>
+            <Text>
               <b>Notebook Basic 17</b>
               <br />
               HT-1001
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>Smartcards</Label>
+            <Text>Smartcards</Text>
           </TableCell>
           <TableCell>
-            <Label>29 x 17 x 3.1 cm</Label>
+            <Text>29 x 17 x 3.1 cm</Text>
           </TableCell>
           <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
+            <Text style={{ color: "#2b7c2b" }}>
               <b>4.5</b> KG
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>
+            <Text>
               <b>1249</b> EUR
-            </Label>
+            </Text>
           </TableCell>
         </TableRow>
         <TableRow rowKey="1">
           <TableCell>
-            <Label>
+            <Text>
               <b>Notebook Basic 15</b>
               <br />
               HT-1000
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>Very Best Screens</Label>
+            <Text>Very Best Screens</Text>
           </TableCell>
           <TableCell>
-            <Label>30 x 18 x 3 cm</Label>
+            <Text>30 x 18 x 3 cm</Text>
           </TableCell>
           <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
+            <Text style={{ color: "#2b7c2b" }}>
               <b>4.2</b> KG
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>
+            <Text>
               <b>956</b> EUR
-            </Label>
+            </Text>
           </TableCell>
         </TableRow>
         <TableRow rowKey="2">
           <TableCell>
-            <Label>
+            <Text>
               <b>Notebook Basic 18</b>
               <br />
               HT-1002
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>Technocom</Label>
+            <Text>Technocom</Text>
           </TableCell>
           <TableCell>
-            <Label>32 x 21 x 4 cm</Label>
+            <Text>32 x 21 x 4 cm</Text>
           </TableCell>
           <TableCell>
-            <Label style={{ color: "#2b7c2b" }}>
+            <Text style={{ color: "#2b7c2b" }}>
               <b>3.7</b> KG
-            </Label>
+            </Text>
           </TableCell>
           <TableCell>
-            <Label>
+            <Text>
               <b>290</b> EUR
-            </Label>
+            </Text>
           </TableCell>
         </TableRow>
       </Table>
