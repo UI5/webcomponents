@@ -101,13 +101,28 @@ class NavigationMenuItem extends MenuItem {
 		return (!this.disabled && this.href) ? this.href : undefined;
 	}
 
+	get _tagContainerId() {
+		return `${this._id}-tag-container`;
+	}
+
+	get _ariaDescribedByIds() {
+		const ids = [
+			`${this._id}-invisibleText-describedby`,
+		];
+
+		if (this.hasEndContent) {
+			ids.push(this._tagContainerId);
+		}
+
+		return ids.filter(Boolean).join(" ");
+	}
+
 	get _accInfo() {
 		const accInfo = super._accInfo;
 
 		accInfo.role = "none";
 
 		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
-			// For the menu item on first level (parent item)
 			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundleFiori.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT);
 		}
 

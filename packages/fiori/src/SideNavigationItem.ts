@@ -206,14 +206,36 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		}
 
 		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
-			parts.push(SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? ""));
+			parts.push(this._selectableItemDescriptionId);
 		}
 
 		return parts.length > 0 ? parts.join(" ") : undefined;
 	}
 
+	get _selectableItemDescriptionId() {
+		return `${this._id}-selectable-description`;
+	}
+
+	get _selectableItemDescriptionText() {
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? "");
+		}
+		return undefined;
+	}
+
 	get hasTag() {
 		return !!this.tag.length;
+	}
+
+	get _textId() {
+		return `${this._id}-text`;
+	}
+
+	get _textAriaLabelledBy() {
+		if (this.hasTag) {
+			return `${this._textId} ${this._tagId}`;
+		}
+		return undefined;
 	}
 
 	get classesArray() {

@@ -52,6 +52,17 @@ class SideNavigationSubItem extends SideNavigationSelectableItemBase {
 		return !!this.tag.length;
 	}
 
+	get _textId() {
+		return `${this._id}-text`;
+	}
+
+	get _textAriaLabelledBy() {
+		if (this.hasTag) {
+			return `${this._textId} ${this._tagId}`;
+		}
+		return undefined;
+	}
+
 	get _describedBy() {
 		return this.hasTag ? this._tagId : undefined;
 	}

@@ -29,9 +29,11 @@ export default function SideNavigationSubItemTemplate(this: SideNavigationSubIte
 				{this.icon &&
 					<Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text">{this.text}</div>
+				<div class="ui5-sn-item-text" id={this._textId} aria-labelledby={this._textAriaLabelledBy}>{this.text}</div>
 				{this.hasTag &&
-					<slot name="tag" id={this._tagId} class="ui5-sn-item-tag-slot"></slot>
+					<div id={this._tagId} class="ui5-sn-item-tag-slot">
+						<slot name="tag"></slot>
+					</div>
 				}
 				{this.isExternalLink &&
 					<Icon class="ui5-sn-item-external-link-icon"
