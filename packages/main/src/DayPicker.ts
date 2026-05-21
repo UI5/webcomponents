@@ -499,9 +499,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Selects/deselects a day.
 	 * @param e
 	 * @param isShift true if the user did Click+Shift or Enter+Shift (but not Space+Shift)
+	 * @param setTimestamp whether to move focus (timestamp) to the selected day; false for mouse clicks where focus is independent
 	 * @private
 	 */
-	_selectDate(e: Event, isShift: boolean) {
+	_selectDate(e: Event, isShift: boolean, setTimestamp = true) {
 		let target = e.target as HTMLElement;
 
 		if (!target.hasAttribute("data-sap-timestamp")) {
@@ -514,7 +515,9 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const timestamp = this._getTimestampFromDom(target);
 
-		this._safelySetTimestamp(timestamp);
+		if (setTimestamp) {
+			this._safelySetTimestamp(timestamp);
+		}
 		this._updateSecondTimestamp();
 		this._updateSelectedDates(timestamp, isShift);
 
@@ -605,6 +608,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		this._safelySetTimestamp(this._getTimestampFromDom(target));
+		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
 	}
 
 	/**
@@ -724,7 +728,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_onclick(e: MouseEvent) {
-		this._selectDate(e, e.shiftKey);
+		this._selectDate(e, e.shiftKey, false);
 	}
 
 	/**

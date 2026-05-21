@@ -1760,6 +1760,36 @@ describe("Day Picker Tests", () => {
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
 			});
 	});
+
+	it("mousedown + arrow navigation + click keeps focus at navigated cell, selection on clicked cell", () => {
+		const date = new Date(Date.UTC(2000, 9, 10, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		const day15Timestamp = new Date(Date.UTC(2000, 9, 15, 0, 0, 0)).valueOf() / 1000;
+		const day12Timestamp = new Date(Date.UTC(2000, 9, 12, 0, 0, 0)).valueOf() / 1000;
+
+		// mousedown on 15th — focus moves to 15th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseDown();
+
+		// press arrow left three times — focus moves to 12th
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		// mouseup on 15th — selection goes to 15th, focus stays on 12th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseUp();
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.should("have.class", "ui5-dp-item--selected");
+	});
 });
 
 describe("Calendar Global Configuration", () => {
