@@ -28,11 +28,12 @@ export default function MediaGalleryTemplate(this: MediaGallery) {
 			</div>
 
 			{this._showThumbnails && <div class="ui5-media-gallery-thumbnails-wrapper">
-				<ul>
+				<ul role="listbox">
 					{this._visibleItems.map(item =>
 						<li id={item.id}
 							class="ui5-media-gallery-thumbnail"
 							role="option"
+							aria-selected={item.selected}
 							onClick={this._onThumbnailClick}
 						>
 							<slot name={item._individualSlot}></slot>
