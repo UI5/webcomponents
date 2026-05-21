@@ -75,6 +75,7 @@ import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+import { isInstanceOfListItemCustom } from "./ListItemCustom.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -749,7 +750,7 @@ class List extends UI5Element {
 	get ariaDescriptionText() {
 		const parts = [];
 
-		if (this.accessibleRole === ListAccessibleRole.List) {
+		if (this.accessibleRole === ListAccessibleRole.List && this._hasInteractiveItems) {
 			parts.push(this.defaultAriaDescriptionText);
 		}
 		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
@@ -768,6 +769,16 @@ class List extends UI5Element {
 
 	get defaultAriaDescriptionText() {
 		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
+	}
+
+	get _hasInteractiveItems() {
+		if (this.selectionMode === ListSelectionMode.Delete) {
+			return true;
+		}
+
+		return this.getItems().some(item => {
+			return item.getAttribute("type") === "Detail" || isInstanceOfListItemCustom(item);
+		});
 	}
 
 	get growingButtonAriaLabel() {
