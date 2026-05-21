@@ -1054,9 +1054,16 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _effectiveTabIndex() {
-		return this.disabled
+		if (this.disabled
 		|| (this.responsivePopover // Handles focus on Tab/Shift + Tab when the popover is opened
-		&& this.responsivePopover.open) ? -1 : 0;
+		&& this.responsivePopover.open)) {
+			return -1;
+		}
+		const tabindex = this.getAttribute("tabindex");
+		if (tabindex) {
+			return Number.parseInt(tabindex);
+		}
+		return 0;
 	}
 
 	 /**

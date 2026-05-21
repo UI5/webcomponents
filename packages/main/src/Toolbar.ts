@@ -8,6 +8,16 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
+import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
+import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
+import {
+	isLeft,
+	isRight,
+	isHome,
+	isEnd,
+} from "@ui5/webcomponents-base/dist/Keys.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -32,7 +42,6 @@ import type ToolbarSeparator from "./ToolbarSeparator.js";
 
 import type Button from "./Button.js";
 import type Popover from "./Popover.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
@@ -170,6 +179,9 @@ class Toolbar extends UI5Element {
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;
+	_onKeydownCapture!: (e: KeyboardEvent) => void;
+	_onFocusin!: EventListener;
+	_itemNavigation!: ItemNavigation;
 	itemsToOverflow: Array<ToolbarItemBase> = [];
 	itemsWidth = 0;
 	minContentWidth = 0;
@@ -188,6 +200,17 @@ class Toolbar extends UI5Element {
 
 		this._onResize = this.onResize.bind(this);
 		this._onCloseOverflow = this.closeOverflow.bind(this);
+		this._onKeydownCapture = this._handleKeydownCapture.bind(this);
+		this._onFocusin = this._handleFocusin.bind(this) as EventListener;
+
+		// ItemNavigation manages roving tabindex and navigation logic.
+		// Its built-in _onkeydown won't fire (because _canNavigate fails across
+		// shadow boundaries), so we call its internal handlers from our capture listener.
+		this._itemNavigation = new ItemNavigation(this, {
+			getItemsCallback: () => this._getItemNavigationItems(),
+			navigationMode: NavigationMode.Horizontal,
+			behavior: ItemNavigationBehavior.Cyclic,
+		});
 	}
 
 	/**
@@ -283,10 +306,14 @@ class Toolbar extends UI5Element {
 	 */
 	onEnterDOM() {
 		ResizeHandler.register(this, this._onResize);
+		this.addEventListener("keydown", this._onKeydownCapture, { capture: true });
+		this.addEventListener("focusin", this._onFocusin);
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._onResize);
+		this.removeEventListener("keydown", this._onKeydownCapture, { capture: true });
+		this.removeEventListener("focusin", this._onFocusin);
 	}
 
 	onInvalidation(changeInfo: ChangeInfo) {
@@ -315,6 +342,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
+		this._syncOverflowButtonTabIndex();
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
@@ -549,6 +577,121 @@ class Toolbar extends UI5Element {
 
 	getCachedItemWidth(id: string) {
 		return this.ITEMS_WIDTH_MAP.get(id);
+	}
+
+	// --- Keyboard Navigation (WAI-ARIA Toolbar Pattern) ---
+	// Capturing keydown intercepts arrows at toolbar boundaries only.
+	// Internal navigation within multi-target items is handled by the nested component's own ItemNavigation.
+
+	_getNavigatableItems(): ToolbarItemBase[] {
+		return this.standardItems.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed && !("disabled" in item && (item as { disabled?: boolean }).disabled));
+	}
+
+	_getItemNavigationItems(): Array<{ id: string; forcedTabIndex?: string }> {
+		const items: Array<{ id: string; forcedTabIndex?: string }> = [...this._getNavigatableItems()];
+		if (!this.hideOverflowButton && this.overflowButtonDOM) {
+			items.push(this.overflowButtonDOM);
+		}
+		return items;
+	}
+
+	_findCurrentFocusIndex(items: Array<{ id: string; forcedTabIndex?: string }>): number {
+		let el: Node | null = getActiveElement() as HTMLElement | null;
+		while (el) {
+			const idx = items.indexOf(el as unknown as { id: string; forcedTabIndex?: string });
+			if (idx !== -1) {
+				return idx;
+			}
+			const root = el.getRootNode();
+			el = root instanceof ShadowRoot ? root.host : (el as HTMLElement).parentElement;
+		}
+		return -1;
+	}
+
+	_handleKeydownCapture(e: KeyboardEvent) {
+		if (!isLeft(e) && !isRight(e) && !isHome(e) && !isEnd(e)) {
+			return;
+		}
+
+		const allItems = this._getItemNavigationItems();
+		if (!allItems.length) {
+			return;
+		}
+
+		const currentIdx = this._findCurrentFocusIndex(allItems);
+		if (currentIdx === -1) {
+			return;
+		}
+
+		const toolbarItems = this._getNavigatableItems();
+		const item = currentIdx < toolbarItems.length ? toolbarItems[currentIdx] : null;
+
+		const isRTL = this.effectiveDir === "rtl";
+		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
+
+		// Multi-target items: let the nested component handle unless at boundary
+		if ((isLeft(e) || isRight(e)) && item) {
+			const count = item.toolbarNavigationItemCount;
+			if (count > 1) {
+				const navIdx = item.toolbarNavigationCurrentIndex;
+				if (movingForward && navIdx < count - 1) {
+					return; // Nested component handles it
+				}
+				if (movingBackward && navIdx > 0) {
+					return; // Nested component handles it
+				}
+			}
+		}
+
+		// Toolbar-level navigation
+		e.preventDefault();
+		e.stopPropagation();
+
+		this._itemNavigation._currentIndex = currentIdx;
+
+		if (movingForward) {
+			this._itemNavigation._handleRight();
+		} else if (movingBackward) {
+			this._itemNavigation._handleLeft();
+		} else if (isHome(e)) {
+			this._itemNavigation._handleHome();
+		} else if (isEnd(e)) {
+			this._itemNavigation._handleEnd();
+		}
+
+		this._itemNavigation._applyTabIndex();
+
+		// Focus the new item
+		const newIdx = this._itemNavigation._currentIndex;
+		if (newIdx < toolbarItems.length) {
+			toolbarItems[newIdx].handleToolbarNavigationEntry(movingForward);
+		} else {
+			this._itemNavigation._focusCurrentItem();
+		}
+		this._syncOverflowButtonTabIndex();
+	}
+
+	_handleFocusin() {
+		const allItems = this._getItemNavigationItems();
+		if (!allItems.length) {
+			return;
+		}
+
+		const idx = this._findCurrentFocusIndex(allItems);
+		if (idx !== -1) {
+			this._itemNavigation._currentIndex = idx;
+			this._itemNavigation._applyTabIndex();
+			this._syncOverflowButtonTabIndex();
+		}
+	}
+
+	_syncOverflowButtonTabIndex() {
+		const overflowBtn = this.overflowButtonDOM;
+		if (!overflowBtn || this.hideOverflowButton) {
+			return;
+		}
+		overflowBtn.setAttribute("tabindex", overflowBtn.forcedTabIndex || "-1");
 	}
 }
 
