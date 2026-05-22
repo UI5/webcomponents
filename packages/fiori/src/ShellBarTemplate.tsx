@@ -234,6 +234,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 				placement="Bottom"
 				hideArrow={true}
 				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
+				accessibleName={actionsAccInfo.overflow.title}
 			>
 				<List separators="None" onClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
