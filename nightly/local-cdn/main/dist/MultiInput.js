@@ -221,7 +221,8 @@ let MultiInput = MultiInput_1 = class MultiInput extends Input {
         const relatedTarget = e.relatedTarget;
         const insideDOM = this.contains(relatedTarget);
         const insideShadowDom = this.shadowRoot.contains(relatedTarget);
-        if (!insideDOM && !insideShadowDom) {
+        const hasTokenToBeDeleted = this.tokenizer._tokens.some(token => token.toBeDeleted);
+        if (!insideDOM && !insideShadowDom && !hasTokenToBeDeleted) {
             this.tokenizer.expanded = false;
         }
         if (this.contains(relatedTarget) && relatedTarget.hasAttribute("ui5-token")) {

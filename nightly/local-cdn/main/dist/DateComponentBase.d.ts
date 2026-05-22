@@ -87,6 +87,14 @@ declare class DateComponentBase extends UI5Element {
      * @private
      */
     _isoFormatInstance?: DateFormat;
+    _cachedMinDate?: {
+        key: string;
+        value: CalendarDate;
+    };
+    _cachedMaxDate?: {
+        key: string;
+        value: CalendarDate;
+    };
     constructor();
     get _primaryCalendarType(): CalendarType | "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian";
     get _secondaryCalendarType(): CalendarType | "Gregorian" | "Islamic" | "Japanese" | "Buddhist" | "Persian" | undefined;

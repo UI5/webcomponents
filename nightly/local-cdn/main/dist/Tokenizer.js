@@ -266,7 +266,12 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
             this._expandedScrollWidth = this.contentDom.scrollWidth;
         }
         this._scrollToEndIfNeeded();
-        this._tokenDeleting = false;
+        // Only reset _tokenDeleting if no token is currently marked for deletion
+        // This prevents resetting the flag before the actual deletion logic executes
+        const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+        if (!hasTokenToBeDeleted) {
+            this._tokenDeleting = false;
+        }
         // Update lastVisibleToken after rendering is complete to avoid render loops
         renderFinished().then(() => {
             this._updateLastVisibleTokenAttribute();
@@ -310,7 +315,7 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
         this.deleteToken(target, e.detail.backSpace);
     }
     _tokenClickDelete(e, token) {
-        const tokens = this._getVisibleTokens();
+        const tokens = this._tokens;
         const target = e.target;
         const deletedTokenIndex = token ? tokens.indexOf(token) : tokens.indexOf(target); // The index of the token that just got deleted
         const nextTokenIndex = deletedTokenIndex === tokens.length - 1 ? deletedTokenIndex - 1 : deletedTokenIndex + 1; // The index of the next token that needs to be focused next due to the deletion
@@ -335,7 +340,7 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
      * @param forwardFocusToPrevious Indicates whether the focus will be forwarded to previous or next token after deletion.
      */
     deleteToken(token, forwardFocusToPrevious) {
-        const tokens = this._getVisibleTokens();
+        const tokens = this._tokens;
         const deletedTokenIndex = tokens.indexOf(token);
         let nextTokenIndex = (deletedTokenIndex === tokens.length - 1) ? deletedTokenIndex - 1 : deletedTokenIndex + 1;
         const notSelectedTokens = tokens.filter(t => !t.selected);
@@ -413,7 +418,10 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
     }
     handleAfterClose() {
         this.open = false;
-        this._preventCollapse = false;
+        // Don't reset _preventCollapse if we're in the middle of deleting a token
+        if (!this._tokenDeleting) {
+            this._preventCollapse = false;
+        }
         this._focusedElementBeforeOpen = null;
     }
     handleDialogButtonPress(e) {
@@ -644,6 +652,11 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
     }
     _onfocusout(e) {
         const relatedTarget = e.relatedTarget;
+        const tokenLosingFocus = e.target;
+        // If the token losing focus is being deleted, prevent collapse
+        if (tokenLosingFocus?.toBeDeleted) {
+            this._preventCollapse = true;
+        }
         this._tokens.forEach(token => {
             token.forcedTabIndex = "-1";
         });
@@ -654,7 +667,8 @@ let Tokenizer = Tokenizer_1 = class Tokenizer extends UI5Element {
             this._isFocusSetInternally = false;
             this._skipTabIndex = false;
         }
-        if (!this._tokenDeleting && !this._preventCollapse) {
+        const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+        if (!this._tokenDeleting && !this._preventCollapse && !hasTokenToBeDeleted) {
             this._preventCollapse = false;
             this.expanded = false;
         }

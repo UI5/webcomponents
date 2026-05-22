@@ -99,14 +99,18 @@ let Token = Token_1 = class Token extends UI5Element {
         this.focused = !this.focused;
     }
     _delete() {
+        // If toBeDeleted is already true, the delete event was already fired in mousedown
+        if (this.toBeDeleted) {
+            return;
+        }
         this.toBeDeleted = true;
         this.fireDecoratorEvent("delete");
     }
     _onmousedown(e) {
-        const target = e.currentTarget;
-        if (target === this.shadowRoot?.querySelector("[ui5-icon]")) {
-            this.toBeDeleted = true;
-        }
+        e.preventDefault(); // Prevent focus changes during deletion
+        this.toBeDeleted = true;
+        // Fire the delete event immediately to avoid losing it due to DOM changes
+        this.fireDecoratorEvent("delete");
     }
     _keydown(e) {
         const isBackSpacePressed = isBackSpace(e);
@@ -162,7 +166,7 @@ __decorate([
     property({ type: Boolean })
 ], Token.prototype, "focused", void 0);
 __decorate([
-    property({ type: Boolean })
+    property({ type: Boolean, noAttribute: true })
 ], Token.prototype, "toBeDeleted", void 0);
 __decorate([
     property({ type: Boolean })

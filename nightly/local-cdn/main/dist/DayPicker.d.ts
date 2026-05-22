@@ -232,16 +232,31 @@ declare class DayPicker extends CalendarPart implements ICalendarPicker {
     get shouldHideWeekNumbers(): boolean;
     _isWeekend(oDate: CalendarDate): boolean;
     /**
+     * Pre-computes disabled date range timestamps once before the rendering loop.
+     * Avoids repeated date string parsing inside the per-cell _isDateEnabled check.
+     * @private
+     */
+    _precomputeDisabledDates(): Array<{
+        startTimestamp: number;
+        endTimestamp: number;
+    }>;
+    /**
      * Checks if a given date is enabled (selectable).
      * A date is considered disabled if:
      * - It falls outside the min/max date range defined by the component
      * - It matches a single disabled date
      * - It falls within a disabled date range (exclusive of start and end dates)
      * @param date - The date to check
+     * @param minDate - Pre-resolved min calendar date
+     * @param maxDate - Pre-resolved max calendar date
+     * @param precomputedDisabledDates - Pre-parsed disabled date range timestamps
      * @returns `true` if the date is enabled (selectable), `false` if disabled
      * @private
      */
-    _isDateEnabled(date: CalendarDate): boolean;
+    _isDateEnabled(date: CalendarDate, minDate?: CalendarDate, maxDate?: CalendarDate, precomputedDisabledDates?: Array<{
+        startTimestamp: number;
+        endTimestamp: number;
+    }>): boolean;
     /**
      * Converts a date value string to a timestamp.
      * @param dateValue - Date string to convert
