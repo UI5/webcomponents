@@ -44,6 +44,7 @@ function ItemTemplate(this: SideNavigationItem) {
 						  aria-owns={this._groupId}
 						  aria-label={this._ariaLabel}
 						  aria-expanded={this._expanded}
+						  aria-labelledby={this._textId}
 						  aria-describedby={this._describedBy}
 			>
 				{this.sideNavCollapsed ?
@@ -51,7 +52,7 @@ function ItemTemplate(this: SideNavigationItem) {
 					:
 					this.icon && <Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text" id={this._textId} aria-labelledby={this._textAriaLabelledBy}>{this.text}</div>
+				<div class="ui5-sn-item-text" id={this._textId}>{this.text}</div>
 				{this.hasTag &&
 					<div id={this._tagId} class="ui5-sn-item-tag-slot">
 						<slot name="tag"></slot>

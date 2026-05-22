@@ -510,9 +510,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get _ariaDescribedByIds() {
-		return [
-			`${this._id}-invisibleText-describedby`,
-		].filter(Boolean).join(" ");
+		return `${this._id}-invisibleText-describedby`;
 	}
 
 	get _accInfo(): AccInfo {

@@ -231,13 +231,6 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		return `${this._id}-text`;
 	}
 
-	get _textAriaLabelledBy() {
-		if (this.hasTag) {
-			return `${this._textId} ${this._tagId}`;
-		}
-		return undefined;
-	}
-
 	get classesArray() {
 		const classes = super.classesArray;
 
