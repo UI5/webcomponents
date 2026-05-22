@@ -517,6 +517,87 @@
 		</ui5-combobox>
 	</div>
 
+	<div class="demo-section" style="padding: 20px; background: #f5f5f5; border-radius: 8px;">
+		<ui5-title>noAutoSelection Demo</ui5-title>
+		<p style="margin: 10px 0;">Type to filter items - selection only happens on Enter or click, not during typing.</p>
+
+		<ui5-combobox id="no-auto-selection-cb" no-auto-selection placeholder="Type and press Enter to select...">
+			<ui5-cb-item text="Germany" value="DE"></ui5-cb-item>
+			<ui5-cb-item text="France" value="FR"></ui5-cb-item>
+			<ui5-cb-item text="Italy" value="IT"></ui5-cb-item>
+			<ui5-cb-item text="Spain" value="ES"></ui5-cb-item>
+			<ui5-cb-item text="Greece" value="GR"></ui5-cb-item>
+		</ui5-combobox>
+
+		<div style="display: flex; gap: 15px; margin-top: 15px;">
+			<div style="flex: 1; padding: 15px; background: white; border: 2px solid #0a6ed1; border-radius: 4px; min-height: 80px;">
+				<div style="font-weight: bold; margin-bottom: 8px;">selection-change events:</div>
+				<div id="no-auto-selection-events" style="font-family: monospace; font-size: 13px;">(none yet)</div>
+			</div>
+			<div style="flex: 1; padding: 15px; background: white; border: 2px solid #e78c07; border-radius: 4px; min-height: 80px;">
+				<div style="font-weight: bold; margin-bottom: 8px;">change events:</div>
+				<div id="no-auto-selection-change-events" style="font-family: monospace; font-size: 13px;">(none yet)</div>
+			</div>
+		</div>
+
+		<ui5-button id="no-auto-selection-clear" style="margin-top: 10px;">Clear Log</ui5-button>
+
+		<script>
+			(function() {
+				const cb = document.getElementById("no-auto-selection-cb");
+				const selectionEventsEl = document.getElementById("no-auto-selection-events");
+				const changeEventsEl = document.getElementById("no-auto-selection-change-events");
+				const clearBtn = document.getElementById("no-auto-selection-clear");
+				let selectionCount = 0;
+				let changeCount = 0;
+
+				cb.addEventListener("ui5-selection-change", function(e) {
+					selectionCount++;
+					const item = e.detail.item;
+					const timestamp = new Date().toLocaleTimeString();
+					const entry = document.createElement("div");
+					entry.style.cssText = "padding: 5px 10px; margin: 3px 0; background: #e8f4e8; border-left: 3px solid #0a6ed1; animation: flashBlue 0.5s;";
+					entry.innerHTML = `<strong>#${selectionCount}</strong> [${timestamp}] Item: <strong>${item ? item.text : 'null'}</strong> (value: ${item ? item.value : 'cleared'})`;
+
+					if (selectionEventsEl.textContent === "(none yet)") {
+						selectionEventsEl.textContent = "";
+					}
+					selectionEventsEl.insertBefore(entry, selectionEventsEl.firstChild);
+				});
+
+				cb.addEventListener("ui5-change", function(e) {
+					changeCount++;
+					const timestamp = new Date().toLocaleTimeString();
+					const entry = document.createElement("div");
+					entry.style.cssText = "padding: 5px 10px; margin: 3px 0; background: #fff4e8; border-left: 3px solid #e78c07; animation: flashOrange 0.5s;";
+					entry.innerHTML = `<strong>#${changeCount}</strong> [${timestamp}] value: <strong>"${e.target.value}"</strong>`;
+
+					if (changeEventsEl.textContent === "(none yet)") {
+						changeEventsEl.textContent = "";
+					}
+					changeEventsEl.insertBefore(entry, changeEventsEl.firstChild);
+				});
+
+				clearBtn.addEventListener("click", function() {
+					selectionEventsEl.innerHTML = "(none yet)";
+					changeEventsEl.innerHTML = "(none yet)";
+					selectionCount = 0;
+					changeCount = 0;
+				});
+			})();
+		</script>
+		<style>
+			@keyframes flashBlue {
+				0% { background: #0a6ed1; color: white; }
+				100% { background: #e8f4e8; color: inherit; }
+			}
+			@keyframes flashOrange {
+				0% { background: #e78c07; color: white; }
+				100% { background: #fff4e8; color: inherit; }
+			}
+		</style>
+	</div>
+
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
 			const { value } = event.target;
