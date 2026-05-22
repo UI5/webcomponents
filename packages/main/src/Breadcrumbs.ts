@@ -662,7 +662,9 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	}
 
 	get _accessibleNameText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
+		const baseLabel = Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
+		const currentLocation = this._currentLocationText;
+		return currentLocation ? `${baseLabel} ${currentLocation}` : baseLabel;
 	}
 
 	get _dropdownArrowAccessibleNameText() {
