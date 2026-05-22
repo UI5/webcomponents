@@ -3,12 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.22.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0-rc.5) (2026-05-14)
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
 
 
 ### Bug Fixes
 
-* **OpenUI5Support:** css variables detection ([#13465](https://github.com/UI5/webcomponents/issues/13465)) ([e71cb04](https://github.com/UI5/webcomponents/commit/e71cb045f22a28250ccc823c2e6eae66434bb108))
+* **OpenUI5Support:** css variables detection ([#13465](https://github.com/UI5/webcomponents/issues/13465)) ([a43e2de](https://github.com/UI5/webcomponents/commit/a43e2dec8dc09bd3955c4c5a0795e8b7a6534dc5))
 
 
 
