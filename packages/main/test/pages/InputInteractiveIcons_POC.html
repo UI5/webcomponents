@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>POC: Input Interactive Icons Harmonization</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<style>
+	body {
+		font-family: var(--sapFontFamily);
+		padding: 2rem;
+		background-color: var(--sapBackgroundColor);
+	}
+
+	.section {
+		margin-bottom: 3rem;
+	}
+
+	.section h2 {
+		color: var(--sapTextColor);
+		margin-bottom: 1rem;
+	}
+
+	.section h3 {
+		color: var(--sapTextColor);
+		margin: 1.5rem 0 0.5rem;
+		font-size: 1rem;
+	}
+
+	.section p {
+		color: var(--sapTextColor);
+		margin-bottom: 1rem;
+	}
+
+	.examples {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		border: 1px dashed grey;
+		padding: 1rem;
+		background-color: var(--sapGroup_ContentBackground);
+	}
+
+	.example-row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.example-label {
+		min-width: 200px;
+		color: var(--sapTextColor);
+	}
+
+	.theme-switcher {
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		background: var(--sapGroup_ContentBackground);
+		padding: 1rem;
+		border: 1px solid var(--sapGroup_BorderColor);
+		border-radius: 0.5rem;
+		z-index: 100;
+	}
+
+	.theme-switcher h4 {
+		margin: 0 0 0.5rem;
+		color: var(--sapTextColor);
+	}
+
+	.comparison {
+		display: flex;
+		gap: 2rem;
+		margin-top: 1rem;
+	}
+
+	.comparison-col {
+		flex: 1;
+	}
+
+	.comparison-col h4 {
+		color: var(--sapTextColor);
+		margin-bottom: 0.5rem;
+	}
+
+	.event-log {
+		margin-top: 1rem;
+		padding: 1rem;
+		background: var(--sapGroup_ContentBackground);
+		border: 1px solid var(--sapGroup_BorderColor);
+		border-radius: 0.25rem;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+
+	.event-log h4 {
+		margin-top: 0;
+		color: var(--sapTextColor);
+	}
+
+	.event-entry {
+		color: var(--sapTextColor);
+		font-family: monospace;
+		font-size: 0.875rem;
+		padding: 0.25rem 0;
+	}
+
+	code {
+		background: var(--sapGroup_ContentBackground);
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.25rem;
+		font-size: 0.875rem;
+	}
+</style>
+
+<body>
+	<h1 style="color: var(--sapTextColor);">POC: Harmonize Input Interactive Icons Styling</h1>
+	<p style="color: var(--sapTextColor); max-width: 800px;">
+		This page demonstrates the POC for issue #6132 - harmonizing the visual styling of user-provided
+		interactive icons with the built-in clear icon. The solution automatically applies the
+		<code>.inputIcon</code> styling to custom icons when they have <code>mode="Interactive"</code>.
+	</p>
+
+	<div class="theme-switcher">
+		<h4>Theme Switcher</h4>
+		<ui5-button data-theme-name="sap_horizon">Horizon</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_dark">Horizon Dark</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_hcb">Horizon HCB</ui5-button>
+		<ui5-button data-theme-name="sap_horizon_hcw">Horizon HCW</ui5-button>
+		<ui5-button data-theme-name="sap_fiori_3">Fiori 3</ui5-button>
+		<ui5-button data-theme-name="sap_fiori_3_dark">Fiori 3 Dark</ui5-button>
+		<ui5-button data-theme-name="sap_fiori_3_hcb">Fiori 3 HCB</ui5-button>
+		<ui5-button data-theme-name="sap_fiori_3_hcw">Fiori 3 HCW</ui5-button>
+	</div>
+
+	<!-- Section 1: Before/After Comparison -->
+	<div class="section">
+		<h2>1. Visual Comparison</h2>
+		<p>
+			The inputs below demonstrate the difference between interactive and decorative icons.
+			Notice how interactive icons now have hover states matching the clear icon.
+		</p>
+
+		<div class="comparison">
+			<div class="comparison-col">
+				<h4>With Interactive Icon (mode="Interactive")</h4>
+				<div class="examples">
+					<div class="example-row">
+						<span class="example-label">Normal state:</span>
+						<ui5-input id="interactive-normal" value="Test" show-clear-icon placeholder="Hover over icons...">
+							<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Negative state:</span>
+						<ui5-input id="interactive-negative" value="Error" show-clear-icon value-state="Negative">
+							<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Critical state:</span>
+						<ui5-input id="interactive-critical" value="Warning" show-clear-icon value-state="Critical">
+							<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Positive state:</span>
+						<ui5-input id="interactive-positive" value="Success" show-clear-icon value-state="Positive">
+							<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+						</ui5-input>
+					</div>
+				</div>
+			</div>
+
+			<div class="comparison-col">
+				<h4>With Decorative Icon (mode="Decorative")</h4>
+				<div class="examples">
+					<div class="example-row">
+						<span class="example-label">Normal state:</span>
+						<ui5-input id="decorative-normal" value="Test" show-clear-icon placeholder="No hover effect">
+							<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Negative state:</span>
+						<ui5-input id="decorative-negative" value="Error" show-clear-icon value-state="Negative">
+							<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Critical state:</span>
+						<ui5-input id="decorative-critical" value="Warning" show-clear-icon value-state="Critical">
+							<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+						</ui5-input>
+					</div>
+					<div class="example-row">
+						<span class="example-label">Positive state:</span>
+						<ui5-input id="decorative-positive" value="Success" show-clear-icon value-state="Positive">
+							<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+						</ui5-input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Section 2: Different Icon Types -->
+	<div class="section">
+		<h2>2. Various Interactive Icon Examples</h2>
+		<p>Interactive icons with different use cases, all with consistent button-like styling.</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<span class="example-label">Search icon:</span>
+				<ui5-input id="search-input" value="Search term" show-clear-icon>
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Voice input icon:</span>
+				<ui5-input id="voice-input" placeholder="Speak...">
+					<ui5-icon slot="icon" name="microphone" mode="Interactive" accessible-name="Voice input"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Camera icon:</span>
+				<ui5-input id="camera-input" placeholder="Take photo..." show-clear-icon>
+					<ui5-icon slot="icon" name="camera" mode="Interactive" accessible-name="Take photo"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Navigation icon:</span>
+				<ui5-input id="nav-input" placeholder="Location..." value="San Francisco">
+					<ui5-icon slot="icon" name="navigation-down-arrow" mode="Interactive" accessible-name="Show on map"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Edit icon:</span>
+				<ui5-input id="edit-input" value="Click icon to edit" show-clear-icon>
+					<ui5-icon slot="icon" name="edit" mode="Interactive" accessible-name="Edit"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
+	<!-- Section 3: Density Modes -->
+	<div class="section">
+		<h2>3. Density Mode Support</h2>
+		<p>Interactive icons work correctly in both Cozy and Compact modes.</p>
+
+		<h3>Cozy Mode (Default)</h3>
+		<div class="examples">
+			<div class="example-row">
+				<ui5-input value="Cozy mode" show-clear-icon>
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+
+		<h3>Compact Mode</h3>
+		<div class="examples sapUiSizeCompact">
+			<div class="example-row">
+				<ui5-input value="Compact mode" show-clear-icon>
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
+	<!-- Section 4: Accessibility & Keyboard -->
+	<div class="section">
+		<h2>4. Accessibility & Keyboard Navigation</h2>
+		<p>
+			Interactive icons are focusable and keyboard-accessible. Try tabbing through the input below
+			and pressing Enter/Space on the icon.
+		</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<ui5-input id="keyboard-test" value="Tab to icon, press Enter" show-clear-icon>
+					<ui5-icon slot="icon" name="action-settings" mode="Interactive" accessible-name="Settings"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+
+		<div class="event-log">
+			<h4>Event Log:</h4>
+			<div id="event-log-content"></div>
+		</div>
+	</div>
+
+	<!-- Section 5: Without Clear Icon -->
+	<div class="section">
+		<h2>5. Interactive Icons Without Clear Icon</h2>
+		<p>Interactive icons work consistently whether or not the clear icon is present.</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<span class="example-label">Single icon:</span>
+				<ui5-input value="No clear icon">
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">With clear icon:</span>
+				<ui5-input value="With clear icon" show-clear-icon>
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
+	<!-- Section 6: Multiple Icons -->
+	<div class="section">
+		<h2>6. Multiple Icons Support</h2>
+		<p>
+			Testing multiple icons in one input. Each icon gets its own wrapper, allowing individual
+			hover and focus effects. Interactive icons are styled like the clear icon with button-like appearance.
+		</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<span class="example-label">Multiple decorative:</span>
+				<ui5-input id="multi-decorative" value="Two decorative icons">
+					<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+					<ui5-icon slot="icon" name="microphone" mode="Decorative"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Multiple interactive:</span>
+				<ui5-input id="multi-interactive" value="Two interactive icons">
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+					<ui5-icon slot="icon" name="microphone" mode="Interactive" accessible-name="Voice input"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Mixed modes:</span>
+				<ui5-input id="multi-mixed" value="Mixed icon modes">
+					<ui5-icon slot="icon" name="search" mode="Decorative"></ui5-icon>
+					<ui5-icon slot="icon" name="microphone" mode="Interactive" accessible-name="Voice input"></ui5-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Three interactive:</span>
+				<ui5-input id="multi-three" value="Three interactive icons" show-clear-icon>
+					<ui5-icon slot="icon" name="search" mode="Interactive" accessible-name="Search"></ui5-icon>
+					<ui5-icon slot="icon" name="microphone" mode="Interactive" accessible-name="Voice"></ui5-icon>
+					<ui5-icon slot="icon" name="camera" mode="Interactive" accessible-name="Camera"></ui5-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Theme switcher
+		Array.from(document.querySelectorAll(".theme-switcher ui5-button")).forEach(button => {
+			button.addEventListener("click", event => {
+				window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.target.getAttribute("data-theme-name"));
+			});
+		});
+
+		// Event logging for accessibility demo
+		const eventLog = document.getElementById("event-log-content");
+		const logEvent = (message) => {
+			const entry = document.createElement("div");
+			entry.className = "event-entry";
+			entry.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+			eventLog.insertBefore(entry, eventLog.firstChild);
+
+			// Keep only last 10 events
+			while (eventLog.children.length > 10) {
+				eventLog.removeChild(eventLog.lastChild);
+			}
+		};
+
+		// Add event listeners to keyboard test input and icon
+		const keyboardTestInput = document.getElementById("keyboard-test");
+		const keyboardTestIcon = keyboardTestInput.querySelector("ui5-icon");
+
+		keyboardTestIcon.addEventListener("click", () => {
+			logEvent("Icon clicked");
+		});
+
+		keyboardTestIcon.addEventListener("focus", () => {
+			logEvent("Icon focused");
+		});
+
+		keyboardTestIcon.addEventListener("blur", () => {
+			logEvent("Icon blurred");
+		});
+
+		// Add event listeners to all interactive icons for demonstration
+		document.querySelectorAll('ui5-icon[mode="Interactive"]').forEach(icon => {
+			icon.addEventListener("click", (e) => {
+				const input = icon.closest("ui5-input");
+				const inputId = input.id || "unknown";
+				console.log(`Interactive icon clicked in ${inputId}`);
+			});
+		});
+
+		// Add visual feedback for search icon clicks
+		const searchInput = document.getElementById("search-input");
+		const searchIcon = searchInput.querySelector("ui5-icon");
+		searchIcon.addEventListener("click", () => {
+			alert("Search icon clicked! In a real application, this would trigger a search.");
+		});
+
+		// Add visual feedback for voice icon clicks
+		const voiceInput = document.getElementById("voice-input");
+		const voiceIcon = voiceInput.querySelector("ui5-icon");
+		voiceIcon.addEventListener("click", () => {
+			voiceInput.value = "Listening...";
+			setTimeout(() => {
+				voiceInput.value = "Voice recognition demo";
+			}, 1000);
+		});
+	</script>
+</body>
+
+</html>

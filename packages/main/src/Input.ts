@@ -816,6 +816,9 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onAfterRendering() {
+		// Add class to interactive icons for styling
+		this._styleInteractiveIcons();
+
 		if (this.showSuggestions && this.Suggestions?._getPicker()) {
 			this._listWidth = this.Suggestions._getListWidth();
 
@@ -844,6 +847,26 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			this._addLinksEventListeners();
 			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
 		}
+	}
+
+	_styleInteractiveIcons() {
+		// Add a class to interactive icons so CSS can style them
+		this.icon.forEach(iconEl => {
+			const isInteractive = (iconEl as any).mode === "Interactive";
+			if (isInteractive) {
+				iconEl.classList.add("ui5-input-icon-interactive");
+				// Make the icon host focusable so clicking anywhere (including padding) focuses it
+				iconEl.setAttribute("tabindex", "0");
+				// Remove tabindex from the SVG inside so only the host is focusable
+				const svg = iconEl.shadowRoot?.querySelector("svg");
+				if (svg) {
+					svg.removeAttribute("tabindex");
+				}
+			} else {
+				iconEl.classList.remove("ui5-input-icon-interactive");
+				iconEl.removeAttribute("tabindex");
+			}
+		});
 	}
 
 	_adjustSelectionRange() {

@@ -56,6 +56,17 @@
 	border-radius: var(--ui5-icon-focus-border-radius);
 }
 
+/* Interactive icons inside Input - constrain SVG size to 1rem and suppress focus (Input handles it) */
+:host(.ui5-input-icon-interactive) .ui5-icon-root {
+	height: 1rem;
+	width: 1rem;
+}
+
+:host(.ui5-input-icon-interactive[desktop]) .ui5-icon-root:focus,
+:host(.ui5-input-icon-interactive) .ui5-icon-root:focus-visible {
+	outline: none;
+}
+
 .ui5-icon-root {
 	display:flex;
 	height: 100%;
