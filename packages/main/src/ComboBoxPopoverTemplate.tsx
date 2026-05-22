@@ -36,52 +36,52 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				onFocusOut={this._handlePopoverFocusout}
 			>
 				{this._isPhone &&
-				<>
-					<div slot="header" class="ui5-responsive-popover-header">
-						<div class="row">
-							<Title
-								level="H1"
-								wrappingType="None"
-								class="ui5-responsive-popover-header-text"
-							>
-								{this._headerTitleText}
-							</Title>
+					<>
+						<div slot="header" class="ui5-responsive-popover-header">
+							<div class="row">
+								<Title
+									level="H1"
+									wrappingType="None"
+									class="ui5-responsive-popover-header-text"
+								>
+									{this._headerTitleText}
+								</Title>
+							</div>
+
+							<div class="row">
+								<Input
+									open={this.openOnMobile}
+									placeholder={this.placeholder}
+									valueState={this.valueState}
+									showClearIcon={this.showClearIcon}
+									noTypeahead={this.noTypeahead}
+									onKeyDown={this._handleMobileKeydown}
+									onInput={this._handleMobileInput}
+									onChange={this._inputChange}
+								>
+									{!this.loading && this._filteredItems.flatMap(item => {
+										if (item.isGroupItem && item.items) {
+											// For group items, return all nested items
+											return item.items
+												.filter(nestedItem => !!nestedItem)
+												.map(nestedItem =>
+													<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)} />
+												);
+										}
+										// For regular items
+										return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)} />;
+									})}
+								</Input>
+							</div>
 						</div>
 
-						<div class="row">
-							<Input
-								open={this.openOnMobile}
-								placeholder={this.placeholder}
-								valueState={this.valueState}
-								showClearIcon={this.showClearIcon}
-								noTypeahead={this.noTypeahead}
-								onKeyDown={this._handleMobileKeydown}
-								onInput={this._handleMobileInput}
-								onChange={this._inputChange}
-							>
-								{!this.loading && this._filteredItems.flatMap(item => {
-									if (item.isGroupItem && item.items) {
-										// For group items, return all nested items
-										return item.items
-											.filter(nestedItem => !!nestedItem)
-											.map(nestedItem =>
-												<SuggestionItem text={nestedItem.text} additional-text={nestedItem.additionalText} markupText={generateHighlightedMarkupFirstMatch(nestedItem.text || "", this.filterValue)}/>
-											);
-									}
-									// For regular items
-									return <SuggestionItem text={item.text} additional-text={item.additionalText} markupText={generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue)}/>;
-								})}
-							</Input>
-						</div>
-					</div>
-
-					{this.hasValueStateText &&
-					<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
-						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
-						{ this.open && valueStateMessage.call(this) }
-					</div>
-					}
-				</>
+						{this.hasValueStateText &&
+							<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
+								<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
+								{this.open && valueStateMessage.call(this)}
+							</div>
+						}
+					</>
 				}
 
 				{!this._isPhone && this.hasValueStateText &&
@@ -93,12 +93,12 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 						}}
 						style={this.styles.suggestionPopoverHeader}
 					>
-						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
-						{ this.open && valueStateMessage.call(this) }
+						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
+						{this.open && valueStateMessage.call(this)}
 					</div>
 				}
 
-				{(this._isPhone || !this.hasValueState) && this.loading && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+				{(this._isPhone || !this.hasValueState) && this.loading && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay} />}
 				{((!this.loading && !!this._filteredItems.length) || loadingOnDesktopWithValueState) &&
 					<List
 						class="ui5-combobox-items-list"
@@ -109,7 +109,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 						onItemFocused={this._onItemFocus}
 						onMouseDown={this._itemMousedown}
 					>
-						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay}/>}
+						{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={loadingDelay} />}
 						{!this.loading && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
 					</List>
 				}
@@ -145,11 +145,11 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 					onClose={this._handleValueStatePopoverAfterClose}
 					onFocusOut={this._handleValueStatePopoverFocusout}
 				>
-			<div slot="header" class={this.classes.popoverValueState}>
-				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}/>
-				{ valueStateMessage.call(this) }
-			</div>
-		</Popover>
+					<div slot="header" class={this.classes.popoverValueState}>
+						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
+						{valueStateMessage.call(this)}
+					</div>
+				</Popover>
 			}
 		</>
 	);
@@ -158,7 +158,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 function valueStateMessage(this: ComboBox) {
 	return (
 		<>
-			{ this.shouldDisplayDefaultValueStateMessage ? this.valueStateDefaultText : <slot name="valueStateMessage"></slot> }
+			{this.shouldDisplayDefaultValueStateMessage ? this.valueStateDefaultText : <slot name="valueStateMessage"></slot>}
 		</>
 	);
 }

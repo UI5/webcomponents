@@ -743,8 +743,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	togglePopoverByDropdownIcon() {
-		if (!this.open && !this.loading && this._getItems().length === 0 ) {
-			this.fireDecoratorEvent("load-started", {shouldOpenPicker: false});
+		if (!this.open && !this.loading && this._getItems().length === 0) {
+			this.fireDecoratorEvent("load-started", { shouldOpenPicker: false });
 		}
 		this._shouldFilterItems = false;
 		this.open = !this.open;
@@ -781,7 +781,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this.fireDecoratorEvent("load-started",  {shouldOpenPicker: true});
+		this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
 
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
@@ -1241,6 +1241,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_onItemKeydown(e: KeyboardEvent) {
+		if (this.filterSelected) {
+			return;
+		}
+
 		const isFirstItemGroup = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[1] === e.target && this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0].hasAttribute("ui5-li-group");
 		const isFirstItem = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0] === e.target || isFirstItemGroup;
 		const isArrowUp = isUp(e) || isUpCtrl(e);
