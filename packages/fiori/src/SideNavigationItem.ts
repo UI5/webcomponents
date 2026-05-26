@@ -98,7 +98,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 * as this would lead to nesting of interactive elements, which is not allowed.
 	 *
 	 * @public
-	 * @since 2.7.0
+	 * @since 2.23.0
 	 */
 	@slot({ type: HTMLElement })
 	tag!: Slot<HTMLElement>;
