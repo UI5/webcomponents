@@ -1,0 +1,32 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"root": false,
+	"extends": ["../../biome.json"],
+	"files": {
+		"includes": [
+			"**",
+			"!test/**",
+			"!lib/**",
+			"!dist/**",
+			"!src/generated/**",
+			"!src/thirdparty/**",
+			"!cypress/**",
+			"!bundle.esm.js",
+			"!bundle.es5.js",
+			"!rollup.config*.js",
+			"!cypress.config.js",
+			"!postcss.config.cjs",
+			"!package-scripts.cjs",
+			"!.eslintrc.cjs",
+			"!src/renderer/directives/style-map.js",
+			"!src/util/metaUrl.js",
+			"!src/ssr-dom*",
+			"!index.js",
+			"!src/jsx-runtime.ts",
+			"!src/jsx-dev-runtime.ts",
+			"!jsx-runtime.d.ts",
+			"!jsx-dev-runtime.d.ts",
+			"!jsx-utils.ts"
+		]
+	}
+}

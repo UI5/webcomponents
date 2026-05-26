@@ -1,0 +1,22 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"root": false,
+	"extends": ["../../biome.json"],
+	"files": {
+		"includes": [
+			"**",
+			"!target/**",
+			"!dist/**",
+			"!src/generated/**",
+			"!cypress/**",
+			"!lib/**",
+			"!test/**",
+			"!bundle.*.js",
+			"!rollup.config*.js",
+			"!postcss.config.cjs",
+			"!cypress.config.js",
+			"!package-scripts.cjs",
+			"!.eslintrc.cjs"
+		]
+	}
+}

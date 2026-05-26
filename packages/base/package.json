@@ -44,7 +44,7 @@
   "types": "./dist",
   "scripts": {
     "clean": "wc-dev clean",
-    "lint": "wc-dev lint",
+    "lint": "",
     "start": "wc-dev start",
     "build": "wc-dev build",
     "generate": "wc-dev generate",

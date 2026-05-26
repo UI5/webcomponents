@@ -46,6 +46,7 @@
     "ci:test:prepare": "yarn workspace @ui5/cypress-ct-ui5-webc build && yarn workspace @ui5/cypress-internal build",
     "ci:releasebuild": "npm-run-all --sequential generate ts generateProd generateAPI",
     "ci:lint": "npm-run-all --sequential generate lint",
+
     "ci:testbuild": "npm-run-all --sequential generate ts generateProd bundle ci:test:prepare",
     "ci:deploy": "DEPLOY=true yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build",
     "ci:deploy:nightly": "DEPLOY_NIGHTLY=true yarn ci:testbuild && yarn generateAPI && yarn workspace @ui5/webcomponents-website ci:build:nightly",
@@ -58,8 +59,7 @@
     "ci:test:fiori": "yarn workspace @ui5/webcomponents-fiori test:ssr && yarn workspace @ui5/webcomponents-fiori test:cypress",
     "ci:test:compat": "yarn workspace @ui5/webcomponents-compat test:ssr && yarn workspace @ui5/webcomponents-compat test:cypress",
     "ci:test:ai": "yarn workspace @ui5/webcomponents-ai test:ssr && yarn workspace @ui5/webcomponents-ai test",
-    "lint": "yarn workspaces foreach --all --parallel run lint",
-    "lint:scope": "yarn workspaces foreach --all --parallel run lint:scope",
+    "lint": "biome check .",
     "link-all": "yarn workspaces foreach --all --parallel run link",
     "unlink-all": "yarn workspaces foreach --all --parallel run unlink",
     "prepare": "husky install",
@@ -67,6 +67,7 @@
     "husky:pre-push": "npm-run-all --sequential husky:commit-msg"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.15",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@semantic-release/github": "^11.0.0",

@@ -89,8 +89,8 @@ const getScripts = (options) => {
 			"generated": `ui5nps-script "${LIB}/rimraf/rimraf.js src/generated`,
 			"dist": `ui5nps-script "${LIB}/rimraf/rimraf.js dist`,
 		},
-		lint: `ui5nps-script "${LIB}eslint/eslint.js"`,
-		lintfix: `ui5nps-script "${LIB}eslint/eslint.js" --fix`,
+		lint: standalone ? `ui5nps-script "${LIB}eslint/eslint.js"` : "",
+		lintfix: standalone ? `ui5nps-script "${LIB}eslint/eslint.js" --fix` : "",
 		generate: {
 			default: `ui5nps prepare.all`,
 			all: `ui5nps-p build.templates build.i18n prepare.styleRelated copyProps build.illustrations`, // concurently

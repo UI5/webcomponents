@@ -1,0 +1,72 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": [
+			"**",
+			"!packages/create-package/**",
+			"!packages/cypress-ct-ui5-webc/**",
+			"!packages/cypress-internal/**",
+			"!packages/icons-business-suite/**",
+			"!packages/icons-tnt/**",
+			"!packages/theming/**",
+			"!packages/tools/**",
+			"!packages/website/**",
+			"!packages/localization/**"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				"noExtraBooleanCast": "error",
+				"noVoid": "error"
+			},
+			"style": {
+				"noYodaExpression": "error",
+				"useBlockStatements": "error",
+				"noNestedTernary": "error",
+				"useImportType": "error",
+				"noNonNullAssertion": "off"
+			},
+			"suspicious": {
+				"noAlert": "error",
+				"noConsole": "error",
+				"noSparseArray": "error",
+				"noEmptyBlockStatements": "off",
+				"noExplicitAny": "off",
+				"noEmptyInterface": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.css"],
+			"formatter": { "enabled": false },
+			"linter": { "enabled": false }
+		}
+	]
+}

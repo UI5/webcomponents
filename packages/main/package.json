@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "clean": "wc-dev clean",
-    "lint": "wc-dev lint",
+    "lint": "",
     "lint:scope": "wc-dev scope.lint",
     "start": "wc-dev start",
     "watch": "wc-dev watch",
