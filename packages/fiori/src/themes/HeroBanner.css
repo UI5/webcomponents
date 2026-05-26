@@ -72,7 +72,7 @@
 	background-image: linear-gradient(to right, var(--_ui5_banner_background) 0%, color-mix(in srgb, var(--_ui5_banner_background) 60%, transparent) 40%, transparent 70%), var(--_ui5_banner_user_image);
 }
 
-.ui5-banner-salutation {
+.ui5-banner-heading {
 	font-family: var(--sapFontHeaderFamily);
 	font-size: var(--sapFontHeader3Size);
 	font-weight: normal;
@@ -83,7 +83,7 @@
 	padding: 0;
 }
 
-.ui5-banner-date {
+.ui5-banner-overline {
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	text-align: start;
@@ -141,9 +141,9 @@
 	grid-row: 2;
 }
 
-/* L → XS (≤1024px): D – Salutation max 3 lines, truncate with ellipsis */
+/* L → XS (≤1024px): D – Heading max 3 lines, truncate with ellipsis */
 @container (max-width: 1024px) {
-	.ui5-banner-salutation {
+	.ui5-banner-heading {
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
 		line-clamp: 3;

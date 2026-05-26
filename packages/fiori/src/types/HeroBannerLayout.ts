@@ -3,7 +3,7 @@
  *
  * Defines how the free content blocks are arranged within the hero banner.
  * @public
- * @since 2.12.0
+ * @since 2.23.0
  */
 enum HeroBannerLayout {
 	/**

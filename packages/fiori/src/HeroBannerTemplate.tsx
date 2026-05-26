@@ -17,15 +17,15 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 			}} part="content">
 				<div class="ui5-banner-header" part="header">
 					<div class="ui5-banner-header-text">
-						{this.dateText &&
-							<div class="ui5-banner-date">
-								{this.dateText}
+					{this.overlineText &&
+						<div class="ui5-banner-overline">
+							{this.overlineText}
 							</div>
 						}
 
-						{this.salutationText &&
-							<h2 class="ui5-banner-salutation">
-								{this.salutationText}
+						{this.headerText &&
+							<h2 class="ui5-banner-heading">
+								{this.headerText}
 							</h2>
 						}
 					</div>

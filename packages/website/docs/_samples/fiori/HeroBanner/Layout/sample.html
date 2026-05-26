@@ -13,29 +13,30 @@
 
         <h4>FullWidth Layout</h4>
         <ui5-hero-banner
-            salutation-text="Welcome back, Alex"
-            date-text="Thursday, March 6, 2026"
+            header-text="Welcome back, Sarah"
+            overline-text="Monday, May 26, 2026"
             layout="FullWidth">
-            <ui5-input
-                placeholder="Search products, documents, reports..."
-                style="width: 100%;">
-            </ui5-input>
+            <div slot="headerActions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                <ui5-button icon="receipt" design="Default">Approve Invoices</ui5-button>
+                <ui5-button icon="shipping-status" design="Default">Track Deliveries</ui5-button>
+            </div>
+            <p>Here you can insert any additional information that may be relevant to the context. This section serves as a placeholder for content that can provide more in-depth explanations, supplementary data, or any other pertinent details that the reader might need.</p>
         </ui5-hero-banner>
 
         <br>
 
         <h4>HalfWidth Layout (50/50)</h4>
         <ui5-hero-banner
-            salutation-text="Hello, Maria"
-            date-text="Thursday, March 6, 2026"
+            header-text="Hi, David"
+            overline-text="Monday, May 26, 2026"
             layout="HalfWidth">
             <ui5-card>
-                <ui5-card-header slot="header" title-text="Open Orders" subtitle-text="This Week"></ui5-card-header>
-                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">1,247</div>
+                <ui5-card-header slot="header" title-text="Leave Balance" subtitle-text="Days remaining"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">18 of 30</div>
             </ui5-card>
             <ui5-card slot="endContent">
-                <ui5-card-header slot="header" title-text="Revenue YTD" subtitle-text="Target"></ui5-card-header>
-                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€4.2M</div>
+                <ui5-card-header slot="header" title-text="Next Payroll" subtitle-text="June 2026"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">Jun 30</div>
             </ui5-card>
         </ui5-hero-banner>
 
@@ -43,16 +44,16 @@
 
         <h4>TwoThirds Layout (2/3 + 1/3)</h4>
         <ui5-hero-banner
-            salutation-text="Good Afternoon, Thomas"
-            date-text="Thursday, March 6, 2026"
+            header-text="Good Afternoon, Thomas"
+            overline-text="Monday, May 26, 2026"
             layout="TwoThirds">
             <ui5-card>
-                <ui5-card-header slot="header" title-text="Pipeline Overview" subtitle-text="Q1 2026"></ui5-card-header>
-                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€12.8M</div>
+                <ui5-card-header slot="header" title-text="Sales Pipeline" subtitle-text="Q2 2026"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€4.2M</div>
             </ui5-card>
             <ui5-card slot="endContent">
-                <ui5-card-header slot="header" title-text="Tasks Due" subtitle-text="Today"></ui5-card-header>
-                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">7</div>
+                <ui5-card-header slot="header" title-text="Overdue Tasks" subtitle-text="Action needed"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold; color: var(--sapCriticalTextColor);">3</div>
             </ui5-card>
         </ui5-hero-banner>
 

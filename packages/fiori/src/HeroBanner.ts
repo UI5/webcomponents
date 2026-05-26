@@ -20,7 +20,7 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  *
  * The `ui5-hero-banner` is the main visual element that unifies all product homepages.
  * It is a flexible card designed to accommodate various elements depending on product needs.
- * The hero banner is a mandatory out-of-the-box element for product landing pages.
+ * The hero banner is a mandatory out-of-the-box element for product home pages.
  *
  * ### Structure
  *
@@ -28,8 +28,8 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  *
  * - **Banner Canvas** - the visual base with a background color, optional background image and shadow.
  * - **Date** (optional) - contextual text at the top, typically showing the current date.
- * - **Salutation** (mandatory) - the main greeting header below the date, e.g. "Hello, John".
- * - **Free Blocks** (optional) - customizable content areas that can contain KPI cards, search components, text, buttons, etc.
+ * - **Header** (optional) - the main greeting header below the date, e.g. "Hello, John".
+ * - **Free Slots** (optional) - customizable content areas that can contain KPI cards, search components, text, buttons, etc.
  *
  * The hero banner scrolls away below the shell navigation when the user scrolls down the page. It is not sticky.
  *
@@ -45,8 +45,10 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * ### Responsive Behavior
  *
  * The hero banner adapts to different screen sizes:
- * - On small screens (≤599px), split layouts (`HalfWidth`, `TwoThirds`) collapse to a single stacked column.
- * - On screens ≤1024px, the salutation text is truncated to a maximum of 3 lines.
+ * - On smaller screens, split layouts (HalfWidth, TwoThirds) collapse to a single stacked column.
+ * - The heading text wraps to multiple lines as needed.
+ * - Buttons in the headerAction slot will wrap.
+ * - On screens ≤1024px, the header text is wrapped to a maximum of 3 lines.
  *
  * ### ES6 Module Import
  *
@@ -55,7 +57,8 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.12.0
+ * @since 2.23.0
+ * @experimental
  * @csspart canvas - Used to style the banner canvas container
  * @csspart content - Used to style the content area of the banner
  * @csspart header - Used to style the header area (salutation, date, header actions)
@@ -70,7 +73,7 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
 })
 class HeroBanner extends UI5Element {
 	/**
-	 * Defines the salutation text displayed in the hero banner.
+	 * Defines the header text displayed in the hero banner.
 	 *
 	 * This is the main greeting header, typically a personalized message
 	 * such as "Hello, John".
@@ -79,27 +82,33 @@ class HeroBanner extends UI5Element {
 	 * @public
 	 */
 	@property()
-	salutationText?: string;
+	headerText?: string;
 
 	/**
-	 * Defines the date or secondary text displayed above the salutation.
-	 *
-	 * Can be used to show the current date, a status message,
-	 * or any other relevant contextual information.
+	 * Defines text displayed above the heading as an overline.
+	 * Can be used to show the current date, a status message, or any other relevant contextual information.
 	 *
 	 * @default undefined
 	 * @public
 	 */
 	@property()
-	dateText?: string;
+	overlineText?: string;
 
 	/**
 	 * Defines the layout of the free content blocks inside the hero banner.
 	 *
-	 * Available options are:
-	 * - `FullWidth` - Content spans the full width below the salutation.
-	 * - `HalfWidth` - Content is split 50/50 side by side.
-	 * - `TwoThirds` - First block takes 2/3 width, second takes 1/3.
+	 * The banner includes two optional content slots: default and endContent. These slots can be arranged in different ways using the layout property, which determines how they are displayed together.
+	 *
+	 * ### Available Layout Options
+	 *
+	 * - **FullWidth** - The default slot spans the full width below the heading.
+	 *   The endContent slot, if used, appears at the bottom and also spans the full width.
+	 * - **HalfWidth** - The default slot is limited to a maximum width of 50%.
+	 *   The endContent slot, if provided, appears to the right, occupying the remaining 50%.
+	 *   On smaller screens, both slots stack vertically.
+	 * - **TwoThirds** - The default slot takes up two-thirds of the banner width.
+	 *   The endContent slot occupies the remaining one-third when used.
+	 *   On smaller screens, both slots stack vertically.
 	 *
 	 * @default "FullWidth"
 	 * @public
@@ -109,7 +118,6 @@ class HeroBanner extends UI5Element {
 
 	/**
 	 * Defines the URL of the background image for the hero banner canvas.
-	 *
 	 * When set, the image is displayed as a cover background on the hero banner.
 	 *
 	 * @default undefined
@@ -123,7 +131,7 @@ class HeroBanner extends UI5Element {
 	 *
 	 * This is the default slot — content placed directly inside `<ui5-hero-banner>`
 	 * without a slot attribute lands here.
-	 * Can contain KPI cards, search components, text, buttons, and more.
+	 * Can contain KPI cards, search input fields, text, buttons, and more.
 	 *
 	 * @public
 	 */
@@ -142,7 +150,8 @@ class HeroBanner extends UI5Element {
 	endContent!: Slot<HTMLElement>;
 
 	/**
-	 * Defines action buttons displayed to the right of the salutation and date area.
+	 * Defines action buttons displayed to the right of the header area.
+	 * Typically used to display actions buttons in the top right corner.
 	 *
 	 * Can contain buttons, links, or other interactive elements that provide
 	 * quick access to relevant actions directly from the hero banner header.

@@ -4,7 +4,7 @@ describe("HeroBanner", () => {
 	describe("Rendering", () => {
 		it("renders with default configuration", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John"></HeroBanner>
+				<HeroBanner headerText="Hello, John"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -14,51 +14,51 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-salutation")
+				.find(".ui5-banner-heading")
 				.should("have.text", "Hello, John");
 		});
 
 		it("renders salutation text", () => {
 			cy.mount(
-				<HeroBanner salutationText="Good Morning, Jane"></HeroBanner>
+				<HeroBanner headerText="Good Morning, Jane"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-salutation")
+				.find(".ui5-banner-heading")
 				.should("have.text", "Good Morning, Jane");
 		});
 
 		it("renders date text when provided", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John" dateText="March 6, 2026"></HeroBanner>
+				<HeroBanner headerText="Hello, John" overlineText="March 6, 2026"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-date")
+				.find(".ui5-banner-overline")
 				.should("have.text", "March 6, 2026");
 		});
 
-		it("does not render date element when dateText is not set", () => {
+		it("does not render date element when overlineText is not set", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John"></HeroBanner>
+				<HeroBanner headerText="Hello, John"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-date")
+				.find(".ui5-banner-overline")
 				.should("not.exist");
 		});
 
-		it("does not render salutation element when salutationText is not set", () => {
+		it("does not render heading element when headerText is not set", () => {
 			cy.mount(
 				<HeroBanner></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-salutation")
+				.find(".ui5-banner-heading")
 				.should("not.exist");
 		});
 	});
@@ -66,7 +66,7 @@ describe("HeroBanner", () => {
 	describe("Layout", () => {
 		it("applies FullWidth layout by default", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John">
+				<HeroBanner headerText="Hello, John">
 					<div>Start</div>
 				</HeroBanner>
 			);
@@ -79,7 +79,7 @@ describe("HeroBanner", () => {
 
 		it("applies HalfWidth layout", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello" layout="HalfWidth">
+				<HeroBanner headerText="Hello" layout="HalfWidth">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -93,7 +93,7 @@ describe("HeroBanner", () => {
 
 		it("applies TwoThirds layout", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello" layout="TwoThirds">
+				<HeroBanner headerText="Hello" layout="TwoThirds">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -109,7 +109,7 @@ describe("HeroBanner", () => {
 	describe("Slots", () => {
 		it("renders startContent slot", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello">
+				<HeroBanner headerText="Hello">
 					<div id="start-block">Start Content</div>
 				</HeroBanner>
 			);
@@ -122,7 +122,7 @@ describe("HeroBanner", () => {
 
 		it("renders endContent slot", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello">
+				<HeroBanner headerText="Hello">
 					<div slot="endContent" id="end-block">End Content</div>
 				</HeroBanner>
 			);
@@ -135,7 +135,7 @@ describe("HeroBanner", () => {
 
 		it("renders both startContent and endContent in HalfWidth layout", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello" layout="HalfWidth">
+				<HeroBanner headerText="Hello" layout="HalfWidth">
 					<div id="start">Left</div>
 					<div slot="endContent" id="end">Right</div>
 				</HeroBanner>
@@ -162,7 +162,7 @@ describe("HeroBanner", () => {
 
 		it("renders headerActions slot", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello">
+				<HeroBanner headerText="Hello">
 					<div slot="headerActions" id="action1">Action 1</div>
 					<div slot="headerActions" id="action2">Action 2</div>
 				</HeroBanner>
@@ -184,7 +184,7 @@ describe("HeroBanner", () => {
 
 		it("does not render headerActions wrapper when no headerActions are provided", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello"></HeroBanner>
+				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -198,7 +198,7 @@ describe("HeroBanner", () => {
 		it("applies background image when set", () => {
 			cy.mount(
 				<HeroBanner
-					salutationText="Hello"
+					headerText="Hello"
 					backgroundImage="https://example.com/image.jpg"
 				></HeroBanner>
 			);
@@ -213,7 +213,7 @@ describe("HeroBanner", () => {
 
 		it("does not apply background image class when not set", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello"></HeroBanner>
+				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -226,7 +226,7 @@ describe("HeroBanner", () => {
 	describe("Height constraints", () => {
 		it("respects minimum height", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello"></HeroBanner>
+				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -240,7 +240,7 @@ describe("HeroBanner", () => {
 	describe("Accessibility", () => {
 		it("has role banner on the root element", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John"></HeroBanner>
+				<HeroBanner headerText="Hello, John"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -251,47 +251,47 @@ describe("HeroBanner", () => {
 	});
 
 	describe("Properties", () => {
-		it("updates salutationText dynamically", () => {
+		it("updates headerText dynamically", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello, John"></HeroBanner>
+				<HeroBanner headerText="Hello, John"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-salutation")
+				.find(".ui5-banner-heading")
 				.should("have.text", "Hello, John");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "salutationText", "Hello, Jane");
+				.invoke("prop", "headerText", "Hello, Jane");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-salutation")
+				.find(".ui5-banner-heading")
 				.should("have.text", "Hello, Jane");
 		});
 
-		it("updates dateText dynamically", () => {
+		it("updates overlineText dynamically", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello" dateText="March 6"></HeroBanner>
+				<HeroBanner headerText="Hello" overlineText="March 6"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-date")
+				.find(".ui5-banner-overline")
 				.should("have.text", "March 6");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "dateText", "March 7");
+				.invoke("prop", "overlineText", "March 7");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-date")
+				.find(".ui5-banner-overline")
 				.should("have.text", "March 7");
 		});
 
 		it("updates layout dynamically", () => {
 			cy.mount(
-				<HeroBanner salutationText="Hello" layout="FullWidth">
+				<HeroBanner headerText="Hello" layout="FullWidth">
 					<div>Start</div>
 				</HeroBanner>
 			);

@@ -21,7 +21,7 @@
 			<p>The simplest banner with only the mandatory salutation text.</p>
 
 			<ui5-hero-banner id="hero-banner-basic"
-				salutation-text="Hello, John">
+				header-text="Hello, John">
 			</ui5-hero-banner>
 		</section>
 
@@ -33,8 +33,8 @@
 			<p>A banner combining salutation and date text.</p>
 
 			<ui5-hero-banner id="hero-banner-date"
-				salutation-text="Good Morning, Jane"
-				date-text="Thursday, March 6, 2026">
+				header-text="Good Morning, Jane"
+				overline-text="Thursday, March 6, 2026">
 				<ui5-card slot="headerActions" style="width: 300px;">
 						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
 						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
@@ -55,8 +55,8 @@
 			<p>Banner with a full-width search field below the salutation.</p>
 
 			<ui5-hero-banner id="hero-banner-fullwidth"
-				salutation-text="Welcome back, Alex"
-				date-text="Thursday, March 6, 2026"
+				header-text="Welcome back, Alex"
+				overline-text="Thursday, March 6, 2026"
 				layout="FullWidth">
 			<ui5-input
 					placeholder="Search products, documents, reports..."
@@ -73,8 +73,8 @@
 			<p>Two KPI cards side by side in a 50/50 layout.</p>
 
 			<ui5-hero-banner id="hero-banner-half"
-				salutation-text="Hello, Maria"
-				date-text="Thursday, March 6, 2026"
+				header-text="Hello, Maria"
+				overline-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
 
 				<div class="kpi-card">
@@ -99,8 +99,8 @@
 			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
 
 			<ui5-hero-banner id="hero-banner-twothirds"
-				salutation-text="Good Afternoon, Thomas"
-				date-text="Thursday, March 6, 2026"
+				header-text="Good Afternoon, Thomas"
+				overline-text="Thursday, March 6, 2026"
 				layout="TwoThirds">
 
 				<div class="kpi-card">
@@ -129,8 +129,8 @@
 			<p>A banner with a custom background image applied to the canvas.</p>
 
 			<ui5-hero-banner id="hero-banner-bg"
-				salutation-text="Welcome, Sarah"
-				date-text="Thursday, March 6, 2026"
+				header-text="Welcome, Sarah"
+				overline-text="Thursday, March 6, 2026"
 				background-image="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg">
 			</ui5-hero-banner>
 		</section>
@@ -143,8 +143,8 @@
 			<p>The banner itself is non-interactive, but slotted content like buttons and cards follow their own interactive states.</p>
 
 			<ui5-hero-banner background-image="https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg" id="hero-banner-interactive"
-				salutation-text="Hello, David"
-				date-text="Thursday, March 6, 2026"
+				header-text="Hello, David"
+				overline-text="Thursday, March 6, 2026"
 				layout="HalfWidth">
 
 			<ui5-card>
@@ -172,8 +172,8 @@
 
 			<div class="scroll-container">
 				<ui5-hero-banner id="hero-banner-scroll"
-					salutation-text="Hello, Lisa"
-					date-text="Thursday, March 6, 2026"
+					header-text="Hello, Lisa"
+					overline-text="Thursday, March 6, 2026"
 					layout="FullWidth">
 					<div class="kpi-card">
 						<span class="kpi-label">Notifications</span>
@@ -203,8 +203,8 @@
 			<p>The start slot contains 3 action buttons; the end slot contains 4 summary cards.</p>
 
 			<ui5-hero-banner id="hero-banner-buttons-cards"
-				salutation-text="Hello, Emma"
-				date-text="Thursday, March 12, 2026"
+				header-text="Hello, Emma"
+				overline-text="Thursday, March 12, 2026"
 				layout="FullWidth">
 
 				<div role="group" aria-label="Quick actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
@@ -258,8 +258,8 @@
 			</div>
 
 			<ui5-hero-banner id="hero-banner-dynamic"
-				salutation-text="Hello, User"
-				date-text="Thursday, March 6, 2026"
+				header-text="Hello, User"
+				overline-text="Thursday, March 6, 2026"
 				layout="FullWidth">
 
 				<ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
@@ -327,8 +327,8 @@
 			<p>A 50/50 layout with salutation, date, action buttons in the start slot and a carousel of cards top-aligned with the date text in the end slot.</p>
 
 			<ui5-hero-banner id="hero-banner-top-aligned-card"
-				salutation-text="Good Morning, John"
-				date-text="Monday, May 12, 2026"
+				header-text="Good Morning, John"
+				overline-text="Monday, May 12, 2026"
 				layout="HalfWidth">
 
 				<!-- Start Content: action buttons -->
@@ -370,12 +370,12 @@
 		// --- Salutation (mandatory: cycle through names, never hidden) ---
 		document.getElementById("btn-change-salutation").addEventListener("click", function () {
 			nameIndex = (nameIndex + 1) % names.length;
-			dynamicBanner.salutationText = "Hello, " + names[nameIndex];
+			dynamicBanner.headerText = "Hello, " + names[nameIndex];
 		});
 
 		// --- Date Text toggle ---
 		document.getElementById("chk-date").addEventListener("change", function () {
-			dynamicBanner.dateText = this.checked ? "Thursday, March 6, 2026" : "";
+			dynamicBanner.overlineText = this.checked ? "Thursday, March 6, 2026" : "";
 		});
 
 		// --- Background Image toggle ---
