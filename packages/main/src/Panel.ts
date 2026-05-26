@@ -14,7 +14,6 @@ import { supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type TitleLevel from "./types/TitleLevel.js";
 import type Button from "./Button.js";
 import type PanelAccessibleRole from "./types/PanelAccessibleRole.js";
@@ -77,7 +76,8 @@ import panelCss from "./generated/themes/Panel.css.js";
  * @extends UI5Element
  * @public
  * @slot {Array<Node>} default - Defines the content of the component. The content is visible only when the component is expanded.
- * @csspart header - Used to style the wrapper of the header.
+ * @csspart header-wrapper - Used to style the outermost header wrapper, useful for adjusting sticky header position.
+ * @csspart header - Used to style the header.
  * @csspart content - Used to style the wrapper of the content.
  */
 @customElement({
@@ -205,14 +205,6 @@ class Panel extends UI5Element {
 	_touched = false;
 
 	/**
-	 * Indicates whether the content area should be focusable.
-	 * This is true when content is scrollable and has no focusable children.
-	 * @private
-	 */
-	@property({ type: Boolean, noAttribute: true })
-	_contentFocusable = false;
-
-	/**
 	 * Defines the component header area.
 	 *
 	 * **Note:** When a header is provided, the `headerText` property is ignored.
@@ -231,10 +223,6 @@ class Panel extends UI5Element {
 		}
 
 		this._hasHeader = !!this.header.length;
-	}
-
-	onAfterRendering() {
-		this._updateContentFocusable();
 	}
 
 	shouldToggle(element: HTMLElement): boolean {
@@ -346,50 +334,6 @@ class Panel extends UI5Element {
 
 	_headerOnTarget(target: HTMLElement) {
 		return target.classList.contains("sapMPanelWrappingDiv");
-	}
-
-	/**
-	 * Updates the focusability of the content area.
-	 * Content becomes focusable when:
-	 * - Panel is expanded (not collapsed)
-	 * - Content is scrollable (scrollHeight > clientHeight or scrollWidth > clientWidth)
-	 * - No focusable children exist inside
-	 * @private
-	 */
-	_updateContentFocusable() {
-		// Not focusable when collapsed
-		if (this.collapsed) {
-			this._contentFocusable = false;
-			return;
-		}
-
-		const contentDom = this.shadowRoot?.querySelector(".ui5-panel-content") as HTMLElement | null;
-		if (!contentDom) {
-			this._contentFocusable = false;
-			return;
-		}
-
-		// Check if scrollable (vertical OR horizontal)
-		const isScrollable = contentDom.scrollHeight > contentDom.clientHeight
-			|| contentDom.scrollWidth > contentDom.clientWidth;
-
-		if (!isScrollable) {
-			this._contentFocusable = false;
-			return;
-		}
-
-		// Check for focusable children (synchronous)
-		const tabbables = getTabbableElements(contentDom);
-		this._contentFocusable = tabbables.length === 0;
-	}
-
-	/**
-	 * Returns the tabindex for the content area.
-	 * Returns 0 when content should be focusable, undefined otherwise (removes attribute).
-	 * @private
-	 */
-	get _contentTabIndex(): number | undefined {
-		return this._contentFocusable ? 0 : undefined;
 	}
 
 	get toggleButtonTitle() {

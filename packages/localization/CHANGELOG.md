@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** performance of selecting is improved when there are min and max date. ([#13550](https://github.com/UI5/webcomponents/issues/13550)) ([d256801](https://github.com/UI5/webcomponents/commit/d25680198562184cbefa4394ce880498d3cc93eb))
+
+
+
+
+
 ## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization
