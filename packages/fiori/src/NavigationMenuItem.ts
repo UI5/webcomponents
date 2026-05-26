@@ -14,6 +14,8 @@ import {
 	isEnterAlt,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Templates
 import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
@@ -93,6 +95,13 @@ class NavigationMenuItem extends MenuItem {
 
 	associatedItem?: SideNavigationSelectableItemBase;
 
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
+
+	get hasTag() {
+		return !!this.tag.length;
+	}
+
 	get isExternalLink() {
 		return this.href && this.target === "_blank";
 	}
@@ -110,7 +119,7 @@ class NavigationMenuItem extends MenuItem {
 			`${this._id}-invisibleText-describedby`,
 		];
 
-		if (this.hasEndContent) {
+		if (this.hasTag) {
 			ids.push(this._tagContainerId);
 		}
 

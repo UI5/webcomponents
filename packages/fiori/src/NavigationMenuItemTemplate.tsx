@@ -48,9 +48,9 @@ function iconBegin(this: NavigationMenuItem) {
 
 function iconEnd(this: NavigationMenuItem) {
 	return (<>
-		{this.hasEndContent &&
+		{this.hasTag &&
 			<span id={this._tagContainerId} class="ui5-navmenu-item-tag-container">
-				<slot name="endContent"></slot>
+				<slot name="tag"></slot>
 			</span>
 		}
 		{this.hasSubmenu &&

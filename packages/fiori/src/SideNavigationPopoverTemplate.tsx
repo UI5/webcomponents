@@ -17,19 +17,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 			target={item.target}
 			title={item.title}
 			tooltip={item._tooltip}
-			ref={(el: HTMLElement | null) => {
-				if (el && item.tag.length > 0) {
-					const existingTags = Array.from(el.children).filter(child => child.getAttribute("slot") === "endContent");
-					if (existingTags.length === 0) {
-						item.tag.forEach(tagEl => {
-							const clonedTag = tagEl.cloneNode(true) as HTMLElement;
-							clonedTag.slot = "endContent";
-							el.appendChild(clonedTag);
-						});
-					}
-				}
-				this.captureRef.bind(item)(el);
-			}}
+			ref={this.captureRef.bind(item)}
 		>
 			{(item as SideNavigationItem).items?.length > 0 && !item.unselectable &&
 				(<NavigationMenuItem
@@ -42,19 +30,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					target={item.target}
 					title={item.title}
 					tooltip={item._tooltip}
-					ref={(el: HTMLElement | null) => {
-						if (el && item.tag.length > 0) {
-							const existingTags = Array.from(el.children).filter(child => child.getAttribute("slot") === "endContent");
-							if (existingTags.length === 0) {
-								item.tag.forEach(tagEl => {
-									const clonedTag = tagEl.cloneNode(true) as HTMLElement;
-									clonedTag.slot = "endContent";
-									el.appendChild(clonedTag);
-								});
-							}
-						}
-						this.captureRef.bind(item)(el);
-					}}
+					ref={this.captureRef.bind(item)}
 				>
 				</NavigationMenuItem>)
 			}
@@ -103,19 +79,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 						selected={this._popoverContents.item.selected}
 						unselectable={this._popoverContents.item.unselectable}
 						onui5-click={this.handlePopupItemClick}
-						ref={(el: HTMLElement | null) => {
-							if (el && this._popoverContents.item.tag.length > 0) {
-								const existingTags = Array.from(el.children).filter(child => child.getAttribute("slot") === "tag");
-								if (existingTags.length === 0) {
-									this._popoverContents.item.tag.forEach(tagEl => {
-										const clonedTag = tagEl.cloneNode(true) as HTMLElement;
-										clonedTag.slot = "tag";
-										el.appendChild(clonedTag);
-									});
-								}
-							}
-							this.captureRef.bind(this._popoverContents.item)(el as SideNavigationItem | null);
-						}}
+						ref={this.captureRef.bind(this._popoverContents.item)}
 					>
 						{this._popoverContents.subItems.map(item =>
 							<SideNavigationSubItem
@@ -129,19 +93,7 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 								selected={item.selected}
 								unselectable={item.unselectable}
 								onui5-click={this.handlePopupItemClick}
-								ref={(el: HTMLElement | null) => {
-									if (el && item.tag.length > 0) {
-										const existingTags = Array.from(el.children).filter(child => child.getAttribute("slot") === "tag");
-										if (existingTags.length === 0) {
-											item.tag.forEach(tagEl => {
-												const clonedTag = tagEl.cloneNode(true) as HTMLElement;
-												clonedTag.slot = "tag";
-												el.appendChild(clonedTag);
-											});
-										}
-									}
-									this.captureRef.bind(item)(el as SideNavigationSubItem | null);
-								}}
+								ref={this.captureRef.bind(item)}
 							>
 							</SideNavigationSubItem>
 						)}
