@@ -745,12 +745,6 @@ class SideNavigation extends UI5Element {
 		return true;
 	}
 
-	// captureRef(ref: HTMLElement & { associatedItem?: UI5Element } | null) {
-	// 	if (ref) {
-	// 		ref.associatedItem = this;
-	// 	}
-	// }
-
 	captureRef(ref: HTMLElement & { associatedItem?: UI5Element } | null) {
 		if (!ref) {
 			return;
