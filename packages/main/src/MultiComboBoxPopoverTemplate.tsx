@@ -36,11 +36,8 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			opener={this}
 		>
 			{this._isPhone && dialogHeader.call(this)}
-
 			{!this._isPhone && popoverHeader.call(this)}
-
 			{popoverContent.call(this)}
-
 			{this._isPhone && dialogFooter.call(this)}
 		</ResponsivePopover>
 

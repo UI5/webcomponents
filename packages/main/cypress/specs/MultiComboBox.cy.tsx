@@ -5081,3 +5081,56 @@ describe("Validation inside a form", () => {
 			.should("have.been.calledOnce");
 	});
 });
+
+describe("load-started event", () => {
+	it("fires on arrow click when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadStarted")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
+	it("does not fire on arrow click when MultiComboBox has items", () => {
+		cy.mount(
+			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}>
+				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadStarted")
+			.should("not.have.been.called");
+	});
+
+	it("fires on each new character typed in the input", () => {
+		cy.mount(
+			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadStarted")
+			.should("have.been.calledThrice")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === true;
+			}));
+	});
+});
