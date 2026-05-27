@@ -101,11 +101,6 @@ const getLocaleData = (localeId: string) => {
 	return content;
 };
 
-// resolves the effective locale ID that getLocaleData / _loadCldrOnce would use
-const getEffectiveLocaleId = (localeId: string) => {
-	return loaders.has(localeId) ? localeId : DEFAULT_LOCALE;
-};
-
 // load bundle over the network once
 const _loadCldrOnce = (localeId: string) => {
 	if (!cldrPromises.get(localeId)) {
@@ -172,8 +167,6 @@ export {
 	registerLocaleDataLoader,
 	fetchCldr,
 	getLocaleData,
-	getEffectiveLocaleId,
-	_loadCldrOnce,
 };
 
 export type {
