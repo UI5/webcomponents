@@ -365,7 +365,9 @@ abstract class UI5Element extends HTMLElement {
 			// Firefox/Safari close the autofocus window at end-of-parse, before
 			// async UI5 components have rendered their shadow DOM. Per HTML spec,
 			// only the first element with `autofocus` in document order wins.
-			requestAnimationFrame(() => this.focus());
+			requestAnimationFrame(() => {
+				this.focus();
+			});
 		}
 	}
 
