@@ -218,7 +218,6 @@ type InputSuggestionScrollEventDetail = {
 		ValueStateMessageCss,
 		SuggestionsCss,
 	],
-	shadowRootOptions: { delegatesFocus: true },
 })
 
 /**
@@ -735,9 +734,6 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		ResizeHandler.register(this, this._handleResizeBound);
 		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
 		this._enableComposition();
-		if (this.hasAttribute("autofocus")) {
-			this.focus();
-		}
 	}
 
 	onExitDOM() {
