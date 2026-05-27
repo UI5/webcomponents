@@ -24,7 +24,7 @@ function App() {
           <Button icon="receipt" design="Default">Approve Invoices</Button>
           <Button icon="shipping-status" design="Default">Track Deliveries</Button>
         </div>
-        <p>Here you can insert any additional information that may be relevant to the context. This section serves as a placeholder for content that can provide more in-depth explanations, supplementary data, or any other pertinent details that the reader might need.</p>
+        <div>Here you can insert any additional information that may be relevant to the context. This section serves as a placeholder for content that can provide more in-depth explanations, supplementary data, or any other pertinent details that the reader might need.</div>
       </HeroBanner>
 
       <br />
