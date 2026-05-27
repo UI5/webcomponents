@@ -1790,4 +1790,45 @@ describe("Native drag-and-drop in draggable dialogs", () => {
 			expect(preventDefaultCalled).to.be.true;
 		});
 	});
+
+	it("initial focus", () => {
+		cy.mount(
+			<>
+				<Dialog id="dialogId"
+				        headerText="Dialog Header"
+				        open>
+					<div>
+						<input id="innerInput" />
+					</div>
+				</Dialog>
+			</>
+		);
+
+		cy.get("#dialogId")
+			.should("be.visible");
+
+		cy.get("#innerInput")
+			.should("be.focused");
+	});
+
+	it("initial focus prevented", () => {
+		cy.mount(
+			<>
+				<Dialog id="dialogId"
+				        headerText="Dialog Header"
+				        open
+				        preventInitialFocus>
+					<div>
+						<input id="innerInput" />
+					</div>
+				</Dialog>
+			</>
+		);
+
+		cy.get("#dialogId")
+			.should("be.visible");
+
+		cy.get("#innerInput")
+			.should("not.be.focused");
+	});
 });
