@@ -20,7 +20,7 @@ function App() {
       <Avatar mode="Interactive" size="M" initials="TT" colorScheme="Accent7">
         <AvatarBadge
           icon="edit"
-          accessibleName="Open profile editor"
+          tooltip="Open profile editor"
           slot="badge"
         ></AvatarBadge>
       </Avatar>

@@ -633,6 +633,50 @@ describe("Wizard inside Dialog", () => {
             .find("[ui5-responsive-popover]")
             .should("be.visible");
     });
+
+    it("Tests focus management on step change", () => {
+        cy.mount(
+            <div>
+                <Dialog id="dialog" headerText="Wizard">
+                    <Wizard id="wizard">
+                        <WizardStep icon="sap-icon://home" selected titleText="Product type">
+                            <Button id="step1Button">Step 1 Button</Button>
+                        </WizardStep>
+                        <WizardStep titleText="Product Information" disabled>
+                            <Button id="step2Button">Step 2 Button</Button>
+                        </WizardStep>
+                    </Wizard>
+                    <Bar slot="footer" design="Footer">
+                        <Button id="nextButton" design="Emphasized">Next step</Button>
+                    </Bar>
+                </Dialog>
+                <Button id="openButton" style={{ display: "inline-block" }}>Open Dialog</Button>
+            </div>
+        );
+
+        cy.get("#openButton").then($button => {
+            $button[0].addEventListener("click", () => {
+                cy.get("#dialog").invoke("prop", "open", true);
+            });
+        });
+
+        cy.get("#openButton")
+            .realClick();
+
+        cy.get("#nextButton")
+            .then($button => {
+                $button[0].addEventListener("click", () => {
+                    goToWizardStep("wizard", 1);
+                });
+            });
+
+        cy.get("#nextButton")
+            .realClick();
+
+        // Verify that focus moves to the first element in the new step
+        cy.get("#step2Button")
+            .should("be.focused");
+    });
 });
 
 describe("Wizard - getFocusDomRef Method", () => {

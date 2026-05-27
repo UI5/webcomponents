@@ -1,3 +1,24 @@
 :host {
-	--ui5_slider_handle_outline: var(--sapContent_FocusWidth) dotted var(--sapContent_FocusColor);
+	--_ui5_slider_handle_height: 1.5rem;
+	--_ui5_slider_handle_width: 2rem;
+	--_ui5_slider_handle_focus_border: 0.125rem solid var(--sapContent_FocusColor);
+	--ui5_slider_handle_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	--ui5_slider_handle_outline_offset: 0.0625rem;
+	--_ui5_slider_handle_background: var(--sapSlider_HandleBackground);
+	--_ui5_slider_handle_border: 0.0625rem solid var(--sapSlider_HandleBorderColor);
+	--_ui5_slider_handle_border_radius: 0.5rem;
+	--_ui5_slider_handle_hover_background: var(--sapSlider_Hover_HandleBackground);
+	--_ui5_slider_handle_hover_border: 0.0625rem solid var(--sapSlider_Hover_HandleBorderColor);
+	--_ui5_slider_handle_background_focus: var(--sapSlider_Active_RangeHandleBackground);
+	--_ui5_slider_handle_active_border: 0.125rem solid var(--sapSlider_Active_HandleBorderColor);
+	--_ui5_slider_handle_icon_display: none;
+	--_ui5_slider_handle_icon_size: 0.875rem;
+	--_ui5_slider_handle_box_sizing: border-box;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_slider_handle_height: 1.25rem;
+		--_ui5_slider_handle_width: 1.5rem;
+	}
 }

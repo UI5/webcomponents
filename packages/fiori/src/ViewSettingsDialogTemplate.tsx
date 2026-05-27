@@ -93,7 +93,7 @@ function _getSplitButtonItems(this: ViewSettingsDialog) {
 	}
 
 	if (this.shouldBuildCustomTabs) {
-		this._renderableCustomTabs.forEach(customTab => {
+		this.customTabs.forEach(customTab => {
 			buttonItems.push(
 				<SegmentedButtonItem
 					selected={this.isCurrentCustomTabMode(customTab)}
@@ -130,8 +130,8 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 
 			{this.isModeCustom && this._selectedCustomTab && (
 				<div class="ui5-vsd-custom-tab-content">
-					{this._selectedCustomTab.title && (
-						<div class="ui5-vsd-custom-tab-title">{this._selectedCustomTab.title}</div>
+					{this._selectedCustomTab.titleText && (
+						<div class="ui5-vsd-custom-tab-title">{this._selectedCustomTab.titleText}</div>
 					)}
 					<slot class="ui5-vsd-custom-tab-slot" name={this._selectedCustomTab._individualSlot}></slot>
 				</div>
