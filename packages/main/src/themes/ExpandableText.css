@@ -11,6 +11,7 @@
 
 .ui5-exp-text-text {
 	display: inline;
+	white-space: inherit;
 }
 
 .ui5-exp-text-text,
