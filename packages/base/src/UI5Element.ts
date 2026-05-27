@@ -359,6 +359,14 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+
+		if (this.hasAttribute("autofocus")) {
+			// Honor the global `autofocus` HTML attribute. Done manually because
+			// Firefox/Safari close the autofocus window at end-of-parse, before
+			// async UI5 components have rendered their shadow DOM. Per HTML spec,
+			// only the first element with `autofocus` in document order wins.
+			requestAnimationFrame(() => this.focus());
+		}
 	}
 
 	get definePromise(): Promise<void> {
