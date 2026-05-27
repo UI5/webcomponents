@@ -1,6 +1,6 @@
 @import "../base/CalendarHeader-parameters.css";
 
-:root {
+:host {
 	--_ui5_calendar_header_arrow_button_border: 1px solid var(--sapButton_BorderColor);
 	--_ui5_calendar_header_arrow_button_border_radius: 0.375rem;
 	--_ui5_calendar_header_middle_button_width: 5.75rem;

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--ui5_table_row_outline_width: 1px;
 	--ui5_table_multiselect_popin_row_padding: 3.25rem;
 }

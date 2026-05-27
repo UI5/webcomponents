@@ -228,6 +228,21 @@ z-index: 1;
 			<ui5-button id="focusMe">Close</ui5-button>
 		</div>
 	</ui5-popover>
+	
+	<br>
+	<br>
+	<ui5-button id="closePopoverAfterScroll">Open popover and scroll</ui5-button>
+	<ui5-dialog id="scrollableDialog">
+		<div slot="header" style="height: 200px">LargeHeader</div>
+		<div style="height: 200px; overflow: auto">
+			<div style="height: 1000px">
+			<ui5-input value-state="Negative">
+				<span slot="valueStateMessage">Message</span>
+			</ui5-input>
+			</div>
+		</div>
+		<ui5-button slot="footer" id="closeAfterScrollBtn" design="Emphasized">Close</ui5-button>
+	</ui5-dialog>
 
 	<br>
 	<br>
@@ -745,6 +760,14 @@ z-index: 1;
 		document.getElementById("big-popover-button").addEventListener("click", function (event) {
 			document.getElementById("big-popover").opener = event.target;
 			document.getElementById("big-popover").open = true;
+		});
+
+		document.getElementById("closePopoverAfterScroll").addEventListener("click", function (event) {
+			scrollableDialog.open = true;
+		});
+
+		document.getElementById("closeAfterScrollBtn").addEventListener("click", function (event) {
+			scrollableDialog.open = false;
 		});
 
 		document.getElementById("acc-role-popover-button").addEventListener("click", function (event) {

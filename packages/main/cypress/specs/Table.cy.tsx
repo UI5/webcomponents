@@ -3,17 +3,18 @@ import TableHeaderRow from "../../src/TableHeaderRow.js";
 import TableCell from "../../src/TableCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableSelectionMulti from "../../src/TableSelectionMulti.js";
+import TableSelectionSingle from "../../src/TableSelectionSingle.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableHeaderCellActionAI from "../../src/TableHeaderCellActionAI.js";
 import Label from "../../src/Label.js";
 import Input from "../../src/Input.js";
+import TableRowAction from "../../src/TableRowAction.js";
 import Bar from "../../src/Bar.js";
 import Title from "../../src/Title.js";
 import Slider from "../../src/Slider.js";
 import Button from "../../src/Button.js";
 
-// Porting Table.spec.js (wdio tests) to cypress tests
-const ROLE_COLUMN_HEADER = "columnheader";
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 describe("Table - Rendering", () => {
 	function checkWidth(id: string, expectedWidth: number) {
@@ -249,6 +250,47 @@ describe("Table - Rendering", () => {
 		// 2fr is being ignored
 		checkWidth("#colD", 48);
 	});
+
+	it("should alternate rows", () => {
+		cy.mount(
+			<Table id="table1" alternateRowColors={true}>
+				<TableSelectionSingle id="selection" slot="features"></TableSelectionSingle>
+				<TableHeaderRow id="hr" slot="headerRow">
+					<TableHeaderCell>ColumnA</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="r1" rowKey="r1" interactive>
+					<TableCell>R1C1</TableCell>
+				</TableRow>
+				<TableRow id="r2" rowKey="r2" interactive>
+					<TableCell>R2C1</TableCell>
+				</TableRow>
+				<TableRow id="r3" rowKey="r3" interactive>
+					<TableCell>R3C1</TableCell>
+				</TableRow>
+				<TableRow id="r4" rowKey="r4" interactive>
+					<TableCell>R4C1</TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[0]).to.not.equal(rowBackgrounds[1]);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[2]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+			expect(rowBackgrounds[1]).to.equal(rowBackgrounds[3]);
+		});
+
+		cy.get("#selection").invoke("prop", "selected", "r2"); cy.wait(50);
+		cy.get("#table1").then($table => {
+			const rows = $table.find("[ui5-table-row]").get();
+			const rowBackgrounds = rows.map(row => getComputedStyle(row).backgroundColor);
+			expect(rowBackgrounds[1]).to.not.equal(rowBackgrounds[3]);
+			expect(rowBackgrounds[0]).to.equal(rowBackgrounds[2]);
+		});
+	});
 });
 
 describe("Table - Popin Mode", () => {
@@ -260,7 +302,7 @@ describe("Table - Popin Mode", () => {
 			const roleCondition = shouldBePoppedIn || shouldBeHidden ? "not.have.attr" : "have.attr";
 
 			cy.wrap($cell)
-				.should(roleCondition, "role", ROLE_COLUMN_HEADER);
+				.should(roleCondition, "role", "columnheader");
 			cy.get("ui5-table-header-row")
 				.shadow()
 				.find(`slot[name=default-${index + 1}]`)
@@ -388,8 +430,6 @@ describe("Table - Popin Mode", () => {
 		cy.get("ui5-table").then($table => {
 			$table.css("width", "150px");
 		});
-
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
 		cy.get("ui5-table").then($table => {
@@ -402,7 +442,7 @@ describe("Table - Popin Mode", () => {
 				for (const cell of row.cells) {
 					if (cell._popin) {
 						popinCellCount++;
-						const popinText = cell._headerCell.popinText || cell._headerCell.textContent;
+						const popinText = cell._headerCell!.popinText || cell._headerCell!.textContent;
 						if (cell.shadowRoot!.textContent === `${popinText}:`) {
 							validPopinTextCount++;
 						}
@@ -452,15 +492,12 @@ describe("Table - Horizontal alignment of cells", () => {
 	function check(id: string, index: number, alignment: string) {
 		cy.get(id)
 			.should("have.css", "justify-content", alignment)
-			.and($el => {
-				const style = $el.attr("style");
-				const variable = style?.match(/justify-content: ([^;]+)/)?.[1] ?? "";
-				expect(variable).to.equal(`var(--horizontal-align-default-${index})`);
-			});
+			.should("have.css", "text-align", alignment === "normal" ? "start" : alignment);
 
 		cy.get("ui5-table-row")
 			.get(`ui5-table-cell:nth-of-type(${index})`)
-			.should("have.css", "justify-content", alignment);
+			.should("have.css", "justify-content", alignment)
+			.should("have.css", "text-align", alignment === "normal" ? "start" : alignment);
 	}
 
 	beforeEach(() => {
@@ -488,11 +525,11 @@ describe("Table - Horizontal alignment of cells", () => {
 					<TableCell><Label><b>1249</b> EUR</Label></TableCell>
 				</TableRow>
 				<TableRow>
-					<TableCell><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
-					<TableCell><Label>Technocom</Label></TableCell>
-					<TableCell><Label>32 x 21 x 4 cm</Label></TableCell>
-					<TableCell><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
-					<TableCell><Label><b>29</b> EUR</Label></TableCell>
+					<TableCell class="productCol"><Label><b>Notebook Basic 18</b><br></br>HT-1002</Label></TableCell>
+					<TableCell class="supplierCol"><Label>Technocom</Label></TableCell>
+					<TableCell class="dimensionsCol"><Label>32 x 21 x 4 cm</Label></TableCell>
+					<TableCell class="weightCol"><Label style={{ color: "#2b7c2b" }}><b>3.7</b> KG</Label></TableCell>
+					<TableCell class="priceCol"><Label><b>29</b> EUR</Label></TableCell>
 				</TableRow>
 			</Table>
 		);
@@ -605,8 +642,10 @@ describe("Table - Horizontal alignment of cells", () => {
 
 				if (shouldBePoppedIn) {
 					check(`#${id}`, index + 1, "normal");
+					cy.get(`.${id}`).should("have.css", "justify-content", "normal");
 				} else {
 					check(`#${id}`, index + 1, alignments[id]);
+					cy.get(`.${id}`).should("have.css", "justify-content", alignments[id]);
 				}
 			});
 		});
@@ -716,6 +755,18 @@ describe("Table - Fixed Header", () => {
 		);
 
 		check(50, "#row-100");
+	});
+
+	it("creates a stacking context on the table host", () => {
+		cy.mount(
+			<Table id="table" accessibleNameRef="title" noDataText="No data found">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+			</Table>,
+		);
+
+		cy.get("#table").should("have.css", "z-index", "0");
 	});
 });
 
@@ -843,26 +894,24 @@ describe("Table - Navigated Rows", () => {
 			</Table>
 		);
 
-		cy.get("#row1")
-			.shadow()
-			.find("#navigated-cell")
+		// Navigated cell rendered on all rows and header row
+		cy.get("[ui5-table-header-row]").shadow().find("#navigated-cell")
+			.should("exist")
+			.should("have.attr", "aria-hidden", "true");
+		cy.get("[ui5-table-header-row]").shadow().find("#navigated-cell")
+			.should("have.attr", "data-excluded-from-navigation");
+
+		cy.get("#row1").shadow().find("#navigated-cell")
 			.should("exist")
 			.should("have.attr", "data-excluded-from-navigation");
 
-		cy.get("#row2")
-			.shadow()
-			.find("#navigated-cell")
+		cy.get("#row2").shadow().find("#navigated-cell")
 			.should("exist")
 			.should("have.attr", "data-excluded-from-navigation");
 
-		cy.get("#row1")
-			.shadow()
-			.find("#navigated")
-			.as("navigated1");
-
-		cy.get("#row2")
-			.shadow()
-			.find("#navigated")
+		// Navigated indicator differs between navigated and non-navigated rows
+		cy.get("#row1").shadow().find("#navigated").as("navigated1");
+		cy.get("#row2").shadow().find("#navigated")
 			.then($navigated2 => {
 				cy.get("@navigated1")
 					.should($navigated1 => {
@@ -909,6 +958,11 @@ describe("Table - Interactive Rows", () => {
 		cy.get("#row1").realPress("Enter");
 		cy.get("@rowClickHandler").should("not.have.been.called");
 
+		cy.get("#row2").realMouseDown();
+		cy.get("#row2").should("have.attr", "_active");
+		cy.get("#row1").realMouseUp();
+		cy.get("#row2").should("not.have.attr", "_active");
+
 		cy.get("#row2").realClick();
 		cy.get("@rowClickHandler").invoke("getCall", 0).its("args.0.detail.row").as("clickedRow");
 		cy.get("@clickedRow").should("have.attr", "id", "row2");
@@ -919,6 +973,10 @@ describe("Table - Interactive Rows", () => {
 		cy.get("@rowClickHandler").should("have.been.calledThrice");
 
 		cy.get("#row2").find("ui5-button").as("row2button");
+		cy.get("@row2button").realMouseDown();
+		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("@row2button").realMouseUp();
+		cy.get("#row2").should("not.have.attr", "_active");
 		cy.get("@row2button").invoke("on", "click", cy.stub().as("buttonClickHandler"));
 		cy.get("@row2button").realClick();
 		cy.get("@buttonClickHandler").should("have.been.calledOnce");
@@ -994,7 +1052,6 @@ describe("Table - HeaderCell", () => {
 		cy.get("@headerCell2").should("not.have.attr", "aria-sort");
 
 		cy.get("@table").invoke("css", "width", "250px");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(50);
 
 		cy.get("@row1").find("ui5-table-cell[_popin]").as("row1popins");
@@ -1032,5 +1089,293 @@ describe("Table - HeaderCell", () => {
 		cy.get("@actionBclickTarget").should("have.attr", "icon", "ai");
 		cy.get("@actionBclickTarget").should("have.attr", "design", "Transparent");
 		cy.get("@actionBclickTarget").should("have.attr", "tooltip", "Generated by AI");
+	});
+});
+
+describe("Table - Cell Merging", () => {
+	function mountMergedTable(overflowMode: "Scroll" | "Popin" = "Scroll") {
+		cy.mount(
+			<Table id="table" overflowMode={overflowMode}>
+				<TableSelectionMulti id="selection" slot="features"></TableSelectionMulti>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" minWidth="200px">Column A</TableHeaderCell>
+					<TableHeaderCell id="colB" minWidth="200px">Column B</TableHeaderCell>
+					<TableHeaderCell id="colC" minWidth="150px">Column C</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell id="r1cA"><Label>SAP</Label></TableCell>
+					<TableCell id="r1cB"><Label>100</Label></TableCell>
+					<TableCell id="r1cC"><Label>X</Label></TableCell>
+				</TableRow>
+				<TableRow id="row2">
+					<TableCell id="r2cA" merged><Label>SAP</Label></TableCell>
+					<TableCell id="r2cB"><Label>200</Label></TableCell>
+					<TableCell id="r2cC" merged><Label>X</Label></TableCell>
+				</TableRow>
+				<TableRow id="row3">
+					<TableCell id="r3cA" merged><Label>SAP</Label></TableCell>
+					<TableCell id="r3cB"><Label>300</Label></TableCell>
+					<TableCell id="r3cC"><Label>Y</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+	}
+
+	it("should have transparent border on merged cells and selection cell", () => {
+		mountMergedTable();
+
+		// Merged cell should have transparent top border
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
+
+		// Non-merged cell should not have transparent border
+		cy.get("#r2cB").should("not.have.css", "border-top-color", TRANSPARENT);
+		cy.get("#r2cB").find("ui5-label").should("have.css", "opacity", "1");
+
+		// Selection cell should have transparent border when first cell is merged
+		cy.get("#row2").shadow().find("#selection-cell").should("have.attr", "data-border-merged");
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
+
+		// Selection cell should NOT have transparent border when first cell is not merged
+		cy.get("#row1").shadow().find("#selection-cell").should("not.have.attr", "data-border-merged");
+		cy.get("#row1").shadow().find("#selection-cell").should("not.have.css", "border-top-color", TRANSPARENT);
+	});
+
+	it("should disable merged styles when row has popin", () => {
+		mountMergedTable("Popin");
+
+		// At full width, merged styles should be active
+		cy.get("ui5-table").invoke("css", "width", "600px");
+		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
+
+		// Shrink table to trigger popin
+		cy.get("ui5-table").invoke("css", "width", "250px");
+		cy.wait(50);
+
+		// Merged cell border should fall back to normal border color (not transparent)
+		cy.get("#row2").should("have.attr", "_has-popin");
+		cy.get("#r2cA").should("not.have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("not.have.css", "border-top-color", TRANSPARENT);
+
+		// Merged cell content should be fully visible (opacity back to 1)
+		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "1");
+
+		// Expand table again, merged styles should re-activate
+		cy.get("ui5-table").invoke("css", "width", "600px");
+		cy.wait(50);
+
+		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
+	});
+
+	it("should toggle merged styles at runtime", () => {
+		mountMergedTable();
+
+		// Initially merged
+		cy.get("#r3cA").find("ui5-label").should("have.css", "opacity", "0");
+
+		// Remove merged attribute
+		cy.get("#r3cA").invoke("removeAttr", "merged");
+		cy.get("#r3cA").find("ui5-label").should("have.css", "opacity", "1");
+		cy.get("#r3cA").should("not.have.css", "border-top-color", TRANSPARENT);
+
+		// Re-add merged attribute
+		cy.get("#r3cA").invoke("prop", "merged", true);
+		cy.get("#r3cA").find("ui5-label").should("have.css", "opacity", "0");
+		cy.get("#r3cA").should("have.css", "border-top-color", TRANSPARENT);
+	});
+
+	it("should disable merged styles on focus", () => {
+		mountMergedTable();
+
+		// Before hover: merged styles active
+		cy.get("#r2cA").find("ui5-label").should("have.css", "opacity", "0");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+
+		// On focus: merged cell content should become visible but border should remain transparent
+		cy.get("#row2").realClick();
+		cy.get("#r2cA").find("ui5-label").should("not.have.css", "opacity", "0");
+		cy.get("#r2cA").should("have.css", "border-top-color", TRANSPARENT);
+		cy.get("#row2").shadow().find("#selection-cell").should("have.css", "border-top-color", TRANSPARENT);
+	});
+});
+
+describe("Table - Dummy Cell", () => {
+	it("should render dummy cell with border and nofocus when all columns have fixed widths", () => {
+		cy.mount(
+			<Table id="table">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="200px">Product</TableHeaderCell>
+					<TableHeaderCell width="40%">Supplier</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell><Label>Product 1</Label></TableCell>
+					<TableCell><Label>Supplier 1</Label></TableCell>
+				</TableRow>
+				<TableRow id="row2" interactive>
+					<TableCell><Label>Product 2</Label></TableCell>
+					<TableCell><Label>Supplier 2</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell").should("exist");
+		cy.get("#row1").shadow().find("#dummy-cell").should("exist");
+
+		// Should have left border
+		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
+			.should("not.have.css", "border-inline-start-width", "0px");
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("not.have.css", "border-inline-start-width", "0px");
+
+		// Should have data-excluded-from-navigation="nofocus" and data-border-merged when no popin
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("have.attr", "data-excluded-from-navigation", "nofocus")
+			.should("have.attr", "data-border-merged");
+
+		// Should not focus row or fire row-click when clicking dummy cell
+		cy.get("#table").invoke("on", "row-click", cy.stub().as("rowClickHandler"));
+		cy.get("#row2").shadow().find("#dummy-cell").realClick();
+		cy.get("#row2").should("not.be.focused");
+		cy.get("#row2").should("not.have.attr", "_active");
+		cy.get("@rowClickHandler").should("not.have.been.called");
+	});
+
+	it("should not render dummy cell when columns are flexible", () => {
+		const cases = [
+			{ widths: ["200px", "auto"] },
+			{ widths: ["Auto"] },
+			{ widths: ["200px", undefined] },
+		];
+
+		cases.forEach(({ widths }) => {
+			cy.mount(
+				<Table id="table">
+					<TableHeaderRow slot="headerRow">
+						{widths.map((w, i) => (
+							<TableHeaderCell width={w}>{`Col ${i}`}</TableHeaderCell>
+						))}
+					</TableHeaderRow>
+					<TableRow id="row1">
+						{widths.map((_, i) => (
+							<TableCell><Label>{`Cell ${i}`}</Label></TableCell>
+						))}
+					</TableRow>
+				</Table>
+			);
+
+			cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell").should("not.exist");
+			cy.get("#row1").shadow().find("#dummy-cell").should("not.exist");
+		});
+	});
+
+	it("should render dummy cell after actions when no popin and before actions when popin", () => {
+		cy.mount(
+			<Table id="table" rowActionCount={2} overflowMode="Popin">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="200px" minWidth="200px">Product</TableHeaderCell>
+					<TableHeaderCell width="200px" minWidth="200px">Supplier</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell><Label>Product 1</Label></TableCell>
+					<TableCell><Label>Supplier 1</Label></TableCell>
+					<TableRowAction slot="actions" icon="edit" text="Edit"></TableRowAction>
+					<TableRowAction slot="actions" icon="delete" text="Delete"></TableRowAction>
+				</TableRow>
+			</Table>
+		);
+
+		// No popin: dummy cell is after actions cell (rightmost) in both row and header row
+		cy.get("#row1").shadow().then($shadow => {
+			const dummyCell = $shadow.find("#dummy-cell")[0];
+			const actionsCell = $shadow.find("#actions-cell")[0];
+			const position = dummyCell.compareDocumentPosition(actionsCell);
+			expect(position & Node.DOCUMENT_POSITION_PRECEDING).to.be.greaterThan(0);
+		});
+		cy.get("[ui5-table-header-row]").shadow().then($shadow => {
+			const dummyCell = $shadow.find("#dummy-cell")[0];
+			const actionsCell = $shadow.find("#actions-cell")[0];
+			const position = dummyCell.compareDocumentPosition(actionsCell);
+			expect(position & Node.DOCUMENT_POSITION_PRECEDING).to.be.greaterThan(0);
+		});
+
+		// Shrink to trigger popin: dummy cell moves before actions cell
+		cy.get("ui5-table").invoke("css", "width", "250px");
+		cy.wait(50);
+
+		cy.get("#row1").should("have.attr", "_has-popin");
+		cy.get("#row1").shadow().then($shadow => {
+			const dummyCell = $shadow.find("#dummy-cell")[0];
+			const actionsCell = $shadow.find("#actions-cell")[0];
+			const position = dummyCell.compareDocumentPosition(actionsCell);
+			expect(position & Node.DOCUMENT_POSITION_FOLLOWING).to.be.greaterThan(0);
+		});
+		cy.get("[ui5-table-header-row]").shadow().then($shadow => {
+			const dummyCell = $shadow.find("#dummy-cell")[0];
+			const actionsCell = $shadow.find("#actions-cell")[0];
+			const position = dummyCell.compareDocumentPosition(actionsCell);
+			expect(position & Node.DOCUMENT_POSITION_FOLLOWING).to.be.greaterThan(0);
+		});
+	});
+
+	it("should adapt dummy cell border, navigation attribute, and custom focus outline with popin", () => {
+		cy.mount(
+			<Table id="table" overflowMode="Popin">
+				<TableSelectionMulti slot="features" />
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell width="200px" minWidth="200px">Product</TableHeaderCell>
+					<TableHeaderCell width="200px" minWidth="200px">Supplier</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell><Label>Product 1</Label></TableCell>
+					<TableCell><Label>Supplier 1</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+
+		// At full width: left border visible, nofocus attribute on both row and header row
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("not.have.css", "border-inline-start-width", "0px")
+			.should("have.attr", "data-excluded-from-navigation", "nofocus");
+		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
+			.should("have.attr", "data-excluded-from-navigation", "nofocus");
+
+		// Focus row - custom outline should be applied
+		cy.get("#row1").should("have.attr", "_render-dummy-cell");
+		cy.get("#row1").should("not.have.attr", "_has-popin");
+		cy.realPress("Tab");
+		cy.get("#row1").shadow().find("[data-ui5-custom-outline='start']").should("exist");
+		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("not.have.attr", "data-ui5-custom-outline");
+
+		// Shrink to trigger popin to test custom outline is removed
+		cy.get("ui5-table").invoke("css", "width", "250px");
+		cy.wait(50);
+
+		cy.get("#row1").should("have.attr", "_has-popin");
+
+		// Left border removed, data-excluded-from-navigation without nofocus
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("have.css", "border-inline-start-width", "0px")
+			.should("have.attr", "data-excluded-from-navigation", "");
+		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
+			.should("have.attr", "data-excluded-from-navigation", "");
+
+		// Expand back - border and nofocus should return, custom outline reapplied via onAfterRendering
+		cy.get("ui5-table").invoke("css", "width", "800px");
+		cy.wait(50);
+
+		cy.get("#row1").should("not.have.attr", "_has-popin");
+		cy.get("#row1").shadow().find("#dummy-cell")
+			.should("not.have.css", "border-inline-start-width", "0px")
+			.should("have.attr", "data-excluded-from-navigation", "nofocus");
+		cy.get("[ui5-table-header-row]").shadow().find("#dummy-cell")
+			.should("have.attr", "data-excluded-from-navigation", "nofocus");
+		cy.get("#row1").shadow().find("[data-ui5-custom-outline='start']").should("exist");
+		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
 	});
 });

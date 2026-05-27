@@ -5,14 +5,15 @@ import {
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
+import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 import Highlight from "./types/Highlight.js";
 import ListItemType from "./types/ListItemType.js";
 import ListSelectionMode from "./types/ListSelectionMode.js";
@@ -36,6 +37,7 @@ import listItemAdditionalTextCss from "./generated/themes/ListItemAdditionalText
 
 // Icons
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 interface IAccessibleListItem {
 	accessibleName?: string;
@@ -65,6 +67,7 @@ type AccInfo = {
 	ariaOwns?: string;
 	tooltip?: string;
 	ariaKeyShortcuts?: string;
+	ariaDescribedBy?: string;
 }
 
 type ListItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "ariaSetsize" | "ariaPosinset">;
@@ -177,19 +180,34 @@ abstract class ListItem extends ListItemBase {
 
 	/**
 	 * Used to define the role of the list item.
-	 * @private
-	 * @default "ListItem"
-	 * @since 1.3.0
 	 *
+	 * **Note:** If not set, the role is automatically inherited from the parent `ui5-list` based on its `accessible-role` property
+	 * (e.g. `Menu` -> `MenuItem`, `Tree` -> `TreeItem`, `ListBox` -> `Option`).
+	 * An explicitly set `accessible-role` on the list item takes precedence over the inherited role.
+	 * @default undefined
+	 * @public
+	 * @since 1.3.0
 	 */
 	@property()
-	accessibleRole: `${ListItemAccessibleRole}` = "ListItem";
+	accessibleRole?: `${Exclude<ListItemAccessibleRole, ListItemAccessibleRole.Group>}`;
 
 	@property()
 	_forcedAccessibleRole?: string;
 
+	@property({ noAttribute: true })
+	_inheritedAccessibleRole?: string;
+
 	@property()
 	_selectionMode: `${ListSelectionMode}` = "None";
+
+	/**
+	 * Indicates whether the list item is in edit mode.
+	 * When active, Tab cycles through internal focusable elements
+	 * instead of navigating to the next list item.
+	 * Toggled by F2; also set by the parent List on F7.
+	 * @private
+	 */
+	_editMode = false;
 
 	/**
 	 * Defines the current media query size.
@@ -208,7 +226,7 @@ abstract class ListItem extends ListItemBase {
 	 * @public
 	*/
 	@slot()
-	deleteButton!: Array<IButton>;
+	deleteButton!: Slot<IButton>;
 
 	deactivateByKey: (e: KeyboardEvent) => void;
 	deactivate: () => void;
@@ -254,8 +272,10 @@ abstract class ListItem extends ListItemBase {
 		document.removeEventListener("touchend", this.deactivate);
 	}
 
-	async _onkeydown(e: KeyboardEvent) {
-		if ((isSpace(e) || isEnter(e)) && this._isTargetSelfFocusDomRef(e)) {
+	_onkeydown(e: KeyboardEvent) {
+		const isInternalElementFocused = e.target !== this.getFocusDomRef();
+
+		if ((isSpace(e) || isEnter(e)) && isInternalElementFocused) {
 			return;
 		}
 
@@ -269,15 +289,7 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (isF2(e)) {
-			const activeElement = getActiveElement();
-			const focusDomRef = this.getFocusDomRef()!;
-
-			if (activeElement === focusDomRef) {
-				const firstFocusable = await getFirstFocusableElement(focusDomRef);
-				firstFocusable?.focus();
-			} else {
-				focusDomRef.focus();
-			}
+			this._handleF2();
 		}
 	}
 
@@ -317,6 +329,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onfocusout(e: FocusEvent) {
+		if (this._editMode) {
+			const relatedTarget = e.relatedTarget as Node;
+			if (!relatedTarget || !(this.contains(relatedTarget) || this.shadowRoot!.contains(relatedTarget))) {
+				this._editMode = false;
+			}
+		}
+
 		if (e.target !== this.getFocusDomRef()) {
 			return;
 		}
@@ -330,6 +349,7 @@ abstract class ListItem extends ListItemBase {
 		}
 
 		if (e.target === this._listItem) {
+			DragRegistry.setDraggedElement(this, e);
 			this.setAttribute("data-moving", "");
 			e.dataTransfer.dropEffect = "move";
 			e.dataTransfer.effectAllowed = "move";
@@ -338,15 +358,9 @@ abstract class ListItem extends ListItemBase {
 
 	_ondragend(e: DragEvent) {
 		if (e.target === this._listItem) {
+			DragRegistry.clearDraggedElement();
 			this.removeAttribute("data-moving");
 		}
-	}
-
-	_isTargetSelfFocusDomRef(e: KeyboardEvent): boolean {
-		const target = e.target as HTMLElement,
-			focusDomRef = this.getFocusDomRef();
-
-		return target !== focusDomRef;
 	}
 
 	/**
@@ -444,7 +458,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get listItemAccessibleRole() {
-		return (this._forcedAccessibleRole || this.accessibleRole.toLowerCase()) as AriaRole | undefined;
+		if (this._forcedAccessibleRole) {
+			return this._forcedAccessibleRole as AriaRole;
+		}
+		if (this.accessibleRole) {
+			return this.accessibleRole.toLowerCase() as AriaRole;
+		}
+		return (this._inheritedAccessibleRole || "listitem") as AriaRole;
 	}
 
 	get ariaSelectedText() {
@@ -489,6 +509,10 @@ abstract class ListItem extends ListItemBase {
 		return texts.join(" ");
 	}
 
+	get _ariaDescribedByIds() {
+		return `${this._id}-invisibleText-describedby`;
+	}
+
 	get _accInfo(): AccInfo {
 		return {
 			role: this.listItemAccessibleRole,
@@ -501,6 +525,7 @@ abstract class ListItem extends ListItemBase {
 			setsize: this.accessibilityAttributes.ariaSetsize,
 			posinset: this.accessibilityAttributes.ariaPosinset,
 			tooltip: this.tooltip,
+			ariaDescribedBy: this._ariaDescribedByIds || undefined,
 		};
 	}
 
@@ -514,6 +539,96 @@ abstract class ListItem extends ListItemBase {
 
 	get _listItem() {
 		return this.shadowRoot!.querySelector("li");
+	}
+
+	_handleF2() {
+		const focusDomRef = this.getFocusDomRef()!;
+
+		if (getActiveElement() === focusDomRef) {
+			const focusables = this._getFocusableElements();
+			if (!focusables.length) {
+				return;
+			}
+			this._editMode = true;
+			focusables[0].focus();
+		} else {
+			this._editMode = false;
+			focusDomRef.focus();
+		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = this._indexOfActiveElement(focusables);
+			const nextIndex = currentIndex + 1;
+
+			if (currentIndex !== -1 && nextIndex < focusables.length) {
+				e.preventDefault();
+				focusables[nextIndex].focus();
+			} else if (!this.fireDecoratorEvent("forward-after")) {
+				e.preventDefault();
+			}
+			return;
+		}
+
+		if (!this.fireDecoratorEvent("forward-after")) {
+			e.preventDefault();
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = this._indexOfActiveElement(focusables);
+			if (currentIndex > 0) {
+				e.preventDefault();
+				focusables[currentIndex - 1].focus();
+			} else if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
+			return;
+		}
+
+		if (!this.fireDecoratorEvent("forward-before")) {
+			e.preventDefault();
+		}
+	}
+
+	_getFocusableElements(): HTMLElement[] {
+		const focusDomRef = this.getFocusDomRef()!;
+		return getTabbableElements(focusDomRef);
+	}
+
+	_indexOfActiveElement(focusables: HTMLElement[]): number {
+		const activeElement = getActiveElement() as HTMLElement;
+		return focusables.findIndex(el => el === activeElement || (el.shadowRoot !== null && el.shadowRoot.contains(activeElement)));
+	}
+
+	_getFocusedElementIndex(): number {
+		return this._indexOfActiveElement(this._getFocusableElements());
+	}
+
+	_hasFocusableElements(): boolean {
+		return this._getFocusableElements().length > 0;
+	}
+
+	_isFocusOnInternalElement(): boolean {
+		return this._indexOfActiveElement(this._getFocusableElements()) !== -1;
+	}
+
+	_focusInternalElement(targetIndex: number) {
+		const focusables = this._getFocusableElements();
+		if (!focusables.length) {
+			return;
+		}
+
+		const safeIndex = Math.min(targetIndex, focusables.length - 1);
+		const elementToFocus = focusables[safeIndex];
+
+		elementToFocus.focus();
+
+		return safeIndex;
 	}
 }
 

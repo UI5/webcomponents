@@ -1,10 +1,12 @@
-import { customElement, slot } from "@ui5/webcomponents-base/dist/decorators.js";
+import { customElement, slotStrict as slot, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import MenuItem, { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
+import MenuItemGroupCheckMode from "@ui5/webcomponents/dist/types/MenuItemGroupCheckMode.js";
 
 import UserMenuItemTemplate from "./UserMenuItemTemplate.js";
 
 // Styles
 import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -25,7 +27,6 @@ import userMenuItemCss from "./generated/themes/UserMenuItem.css.js";
  * `import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";`
  * @constructor
  * @extends MenuItem
- * @experimental
  * @public
  * @since 2.5.0
  */
@@ -42,10 +43,60 @@ class UserMenuItem extends MenuItem {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	declare items: Array<UserMenuItem>;
+	declare items: DefaultSlot<UserMenuItem>;
+
+	/**
+	 * When set, a second line appears below the menu item text showing the text
+	 * of the currently selected sub-item. Intended for use with a single-select
+	 * ui5-menu-item-group (check-mode="Single").
+	 * When enabled, the checked sub-item cannot be unchecked,
+	 * ensuring the selection text is always displayed.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	showSelection = false;
 
 	get _menuItems() {
 		return this.items.filter(isInstanceOfMenuItem);
+	}
+
+	/**
+	 * Overrides the base MenuItem behavior to prevent unchecking
+	 * the currently checked item in single-select mode when
+	 * the parent item uses showSelection, ensuring there is always
+	 * a visible selection.
+	 */
+	_updateCheckedState() {
+		const parentItem = this.parentElement?.parentElement;
+		const hasShowSelection = parentItem instanceof UserMenuItem && parentItem.showSelection;
+
+		if (hasShowSelection && this._checkMode === MenuItemGroupCheckMode.Single && this.checked) {
+			return;
+		}
+		super._updateCheckedState();
+	}
+
+	/**
+	 * Returns the text of the currently checked sub-item.
+	 * Only returns text for single-select groups.
+	 */
+	get _selectedSubItemText(): string {
+		if (!this.showSelection) {
+			return "";
+		}
+
+		const singleSelectGroup = this._menuItemGroups.find(
+			g => g.checkMode === MenuItemGroupCheckMode.Single,
+		);
+		if (!singleSelectGroup) {
+			return "";
+		}
+
+		const checkedItem = singleSelectGroup._menuItems.find(item => item.checked);
+		return checkedItem?.text || "";
 	}
 }
 

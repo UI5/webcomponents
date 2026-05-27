@@ -18,39 +18,30 @@ const writeFileIfChanged = async (fileName, content) => {
     const oldContent = await readOldContent(fileName);
     if (content !== oldContent) {
         if (!oldContent) {
-            await mkdir(path.dirname(fileName), {recursive: true});
+            await mkdir(path.dirname(fileName), { recursive: true });
         }
         return writeFile(fileName, content);
     }
 }
 
-// strips the unnecessary theming data coming from @sap-theming/theming-base-content and leaves only the css parameters
-const stripThemingBaseContent = css => {
-	css = css.replace(/\.sapThemeMeta[\s\S]*?:root/, ":root");
-	css = css.replace(/\.background-image.*{.*}/, "");
-	css = css.replace(/\.sapContrast[ ]*:root[\s\S]*?}/, "");
-	css = css.replace(/--sapFontUrl.*\);?/, "");
-	return css;
-}
-
-
 const DEFAULT_THEME = assets.themes.default;
+const CSS_VARIABLES_TARGET = process.env.CSS_VARIABLES_TARGET === "host";
 
 const getDefaultThemeCode = packageName => {
-	return `import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+    return `import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
 
 import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/${DEFAULT_THEME}/parameters-bundle.css.js";
 import defaultTheme from "./${DEFAULT_THEME}/parameters-bundle.css.js";
 
-registerThemePropertiesLoader("@ui5/webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
-registerThemePropertiesLoader("${packageName}", "${DEFAULT_THEME}", async () => defaultTheme);
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "${DEFAULT_THEME}", async () => defaultThemeBase);
+registerThemePropertiesLoader(${packageName.split("").map(c => `"${c}"`).join(" + ")}, "${DEFAULT_THEME}", async () => defaultTheme${CSS_VARIABLES_TARGET ? ', "host"' : ''});
 `;
 };
 
 const getFileContent = (packageName, css, includeDefaultTheme) => {
-	const defaultTheme = includeDefaultTheme ? getDefaultThemeCode(packageName) : "";
-	return `${defaultTheme}export default ${css.trim()}`
+    const defaultTheme = includeDefaultTheme ? getDefaultThemeCode(packageName) : "";
+    return `${defaultTheme}export default ${css.trim()}`
 }
 
 
-export { writeFileIfChanged, stripThemingBaseContent, getFileContent}
+export { writeFileIfChanged, getFileContent }

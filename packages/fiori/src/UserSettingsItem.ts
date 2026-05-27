@@ -1,11 +1,11 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
-	customElement, property, slot, eventStrict as event,
+	customElement, property, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import UserSettingsItemTemplate from "./UserSettingsItemTemplate.js";
 import type UserSettingsView from "./UserSettingsView.js";
 import UserSettingsItemCss from "./generated/themes/UserSettingsItem.css.js";
@@ -34,7 +34,6 @@ type UserSettingsItemBackClickEventDetail = {
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.8.0
  */
@@ -42,7 +41,7 @@ type UserSettingsItemBackClickEventDetail = {
 	tag: "ui5-user-settings-item",
 	renderer: jsxRenderer,
 	template: UserSettingsItemTemplate,
-	styles: [getEffectiveScrollbarStyle(), UserSettingsItemCss],
+	styles: [UserSettingsItemCss],
 })
 
 /**
@@ -150,9 +149,13 @@ class UserSettingsItem extends UI5Element {
 	accessibleName?: string;
 
 	/**
-	 * Defines the tab views of the user settings item.
+	 * Defines the page views of the user settings item.
 	 *
-	 * The tab views are displayed by default if there is no selected page view.
+	 * If there are no tab views, the first page view will be shown unless there is selected one. If there is selected page
+	 * view it will be shown no matter if there are tab views.
+	 *
+	 * The page views are displayed by default if there is no selected tab view.
+	 *
 	 * @public
 	 */
 	@slot({
@@ -164,13 +167,10 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	tabs!: Array<UserSettingsView>;
+	pages!: DefaultSlot<UserSettingsView>;
 
 	/**
-	 * Defines the page views of the user settings item.
-	 *
-	 * If there are no tab views, the first page view will be shown unless there is selected one. If there is selected page
-	 * view it will be shown no matter if there are tab views.
+	 * Defines the tab views of the user settings item.
 	 *
 	 * @public
 	 */
@@ -182,7 +182,13 @@ class UserSettingsItem extends UI5Element {
 			slots: false,
 		},
 	})
-	pages!: Array<UserSettingsView>;
+	tabs!: Slot<UserSettingsView>;
+
+	/**
+	 * Indicates whether any of the element siblings have icon.
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_siblingsWithIcon = false;
 
 	/**
 	 * @private
@@ -198,7 +204,7 @@ class UserSettingsItem extends UI5Element {
 	}
 
 	get ariaLabelledByText() {
-		return `${this.text} ${this.accessibleName}`.trim();
+		return `${this.text} ${this.accessibleName || ""}`.trim();
 	}
 
 	get _tooltip() {

@@ -1,4 +1,6 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
@@ -29,38 +31,63 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 	template: TableCellTemplate,
 })
 class TableCell extends TableCellBase {
+	/**
+	 * Defines whether the cell is visually merged with the cell directly above it.
+	 *
+	 * This is useful if consecutive cells in a column have the same value and should visually appear as a single merged cell.
+	 * Although the cell is visually merged with the previous one, its content must still be provided for accessibility purposes.
+	 * **Note:** This feature is disabled when cells are rendered as a popin, and should remain `false` for interactive cell content.
+	 *
+	 * @default false
+	 * @since 2.21.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	merged = false;
+
+	@query("#popin-header")
+	_popinHeader?: HTMLElement;
+
+	@query("#popin-content")
+	_popinContent?: HTMLElement;
+
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		if (this.horizontalAlign) {
+			this.style.textAlign = this.horizontalAlign;
 			this.style.justifyContent = this.horizontalAlign;
-		} else if (this._individualSlot) {
-			this.style.justifyContent = `var(--horizontal-align-${this._individualSlot})`;
+		} else if (this._headerCell) {
+			this.style.textAlign = `var(--halign-${this._headerCell._id})`;
+			this.style.justifyContent = `var(--halign-${this._headerCell._id})`;
 		}
 	}
 
-	injectHeaderNodes(ref: HTMLElement | null) {
+	_injectHeaderNodes(ref: HTMLElement | null) {
 		if (ref && !ref.hasChildNodes()) {
 			ref.replaceChildren(...this._popinHeaderNodes);
 		}
 	}
 
 	get _headerCell() {
-		const row = this.parentElement as TableRow;
-		const table = row.parentElement as Table;
-		const index = row.cells.indexOf(this);
-		return table.headerRow[0].cells[index];
+		const row = this.parentElement as TableRow | null;
+		const table = row?.parentElement as Table | null;
+		const index = row?.cells?.indexOf(this) ?? -1;
+
+		return (index !== -1) ? table?.headerRow?.[0]?.cells?.[index] : null;
 	}
 
 	get _popinHeaderNodes() {
-		const nodes = [];
+		const nodes: Node[] = [];
 		const headerCell = this._headerCell;
-		if (headerCell.popinText) {
-			nodes.push(headerCell.popinText);
-		} else {
-			nodes.push(...this._headerCell.content.map(node => node.cloneNode(true)));
-		}
-		if (headerCell.action[0]) {
-			nodes.push(headerCell.action[0].cloneNode(true));
+		if (headerCell) {
+			if (headerCell.popinText) {
+				nodes.push(document.createTextNode(headerCell.popinText));
+			} else {
+				nodes.push(...headerCell.content.map(node => node.cloneNode(true)));
+			}
+			if (headerCell.action[0]) {
+				nodes.push(headerCell.action[0].cloneNode(true));
+			}
 		}
 		return nodes;
 	}

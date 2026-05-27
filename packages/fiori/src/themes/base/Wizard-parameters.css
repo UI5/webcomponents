@@ -1,4 +1,4 @@
-:root {
+:host {
     --_ui5_wiz_content_item_wrapper_padding: 0rem;
     --_ui5_wiz_content_item_wrapper_bg: var(--sapBackgroundColor);
 }

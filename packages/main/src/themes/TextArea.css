@@ -140,7 +140,7 @@
 :host([growing]) .ui5-textarea-inner {
 	box-sizing: border-box;
 	height: calc(100% - (2 * var(--_ui5_textarea_wrapper_padding)));
-	width: calc(100% - (2 * var(--_ui5_textarea_wrapper_padding)));
+	width: var(--_ui5_textarea_inner_width, calc(100% - (2 * var(--_ui5_textarea_wrapper_padding))));
 	position: absolute;
 }
 
@@ -415,13 +415,4 @@
 
 :host([readonly]) .ui5-textarea-exceeded-text, :host([disabled]) .ui5-textarea-exceeded-text {
 	display: none;
-}
-
-:host .ui5-content-custom-scrollbars ::-webkit-scrollbar {
-	border-top-right-radius: var(--sapField_BorderCornerRadius);
-	border-bottom-right-radius: var(--sapField_BorderCornerRadius);
-}
-
-:host([focused]) .ui5-content-custom-scrollbars ::-webkit-scrollbar {
-	background-image: none;
 }

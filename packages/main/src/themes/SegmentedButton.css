@@ -8,13 +8,21 @@
 
 .ui5-segmented-button-root {
 	width: inherit;
-	display: grid;
-	grid-template-columns: repeat(var(--_ui5_segmented_btn_items_count), minmax(var(--_ui5_button_base_min_width), 1fr));
 	margin: 0;
 	padding: 0;
 	background-color: var(--sapButton_Background);
 	border-radius: var(--sapButton_BorderCornerRadius);
 	box-shadow: inset 0 0 0 var(--sapButton_BorderWidth) var(--sapButton_BorderColor);
+}
+
+.ui5-segmented-button-root-equal-sized-items {
+	display: grid;
+	grid-template-columns: repeat(var(--_ui5_segmented_btn_items_count), minmax(var(--_ui5_button_base_min_width), 1fr));
+}
+
+.ui5-segmented-button-root-content-fit-items {
+	display: inline-flex;
+	gap: 0;
 }
 
 ::slotted([ui5-segmented-button-item]) {
@@ -28,7 +36,7 @@
 	z-index: initial;
 }
 
-::slotted([ui5-segmented-button-item]:hover) {
+::slotted([ui5-segmented-button-item]:not([disabled]):hover) {
 	z-index: 2;
 	box-shadow: var(--_ui5_segmented_btn_hover_box_shadow);
 	border-color: var(--sapButton_Hover_BorderColor);
@@ -70,3 +78,8 @@
 ::slotted([ui5-segmented-button-item][active]:hover) {
 	border-color: var(--sapButton_Selected_BorderColor);
 }
+
+::slotted([ui5-segmented-button-item]:not([disabled]):active) {
+	background-color: var(--sapButton_Active_Background);
+}
+

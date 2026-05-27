@@ -58,6 +58,10 @@
 	height: 0.875rem;
 }
 
+:host(.ui5-navigation-menu-item-root-parent)::part(content) {
+	font-family: var(--_ui5_side_navigation_parent_item_font_family);
+}
+
 :host([design="Action"]) .ui5-sn-item-external-link-icon {
 	color: var(--sapButton_TextColor);
 }
@@ -86,4 +90,12 @@
 
 ::slotted([ui5-navigation-menu-item]:not(:last-of-type)) {
 	margin-block-end: var(--_ui5_side_navigation_item_bottom_margin);
+}
+
+.ui5-navmenu-item-tag-container {
+	display: inline-flex;
+	align-items: center;
+	margin-inline-start: 0.5rem;
+	height: 1.375rem;
+	min-width: 1.375rem;
 }

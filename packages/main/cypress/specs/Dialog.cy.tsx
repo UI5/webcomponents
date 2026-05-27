@@ -1,4 +1,5 @@
 import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import Dialog from "../../src/Dialog.js";
 import Label from "../../src/Label.js";
 import Title from "../../src/Title.js";
@@ -379,6 +380,32 @@ describe("Dialog general interaction", () => {
 			.should("not.be.visible");
 	});
 
+	it("dialog ResizeHandler registration", () => {
+		cy.spy(ResizeHandler, "register").as("registerResizeSpy");
+
+		cy.mount(
+			<>
+				<Dialog id="dialog">
+					<div>Content</div>
+				</Dialog>
+			</>
+		);
+
+		cy.get<Dialog>("#dialog")
+			.should((dialog => {
+				expect(dialog.get(0).getDomRef()).to.exist;
+			}));
+
+		cy.get("@registerResizeSpy")
+			.should("not.be.called");
+
+		cy.get("#dialog")
+			.invoke("attr", "open", true);
+
+		cy.get("@registerResizeSpy")
+			.should("be.calledOnce");
+	});
+
 
 	it("dialog repositions after screen resize", () => {
 		cy.mount(
@@ -667,6 +694,66 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
+	it("dialog remains anchored after resizing in RTL mode", () => {
+		cy.mount(
+			<>
+				<div dir="rtl">
+					<Dialog id="rtl-min-width-dialog" resizable>
+						<div id="header-slot" slot="header">Header</div>
+						<div>Content Content Content Content Content Content Content Content Content Content Content Content</div>
+						<Button id="resizable-close">Close</Button>
+					</Dialog>
+				</div>
+			</>
+		);
+
+		// Open dialog
+		cy.get("#rtl-min-width-dialog").invoke("attr", "open", true);
+		cy.get<Dialog>("#rtl-min-width-dialog").ui5DialogOpened();
+
+		// Capture initial dimensions and position
+		cy.get("#rtl-min-width-dialog").then(dialog => {
+			const initialLeft = parseInt(dialog.css("left"));
+			const initialWidth = parseInt(dialog.css("width"));
+			const initialRightEdge = initialLeft + initialWidth;
+
+			// First resize to reach minimum width
+			cy.get("#rtl-min-width-dialog")
+				.shadow()
+				.find(".ui5-popup-resize-handle")
+				.realMouseDown()
+				.realMouseMove(800, 0) // Large movement to ensure we hit min width
+				.realMouseUp();
+
+			cy.get("#rtl-min-width-dialog").then(dialogAtMinWidth => {
+				const leftAtMinWidth = parseInt(dialogAtMinWidth.css("left"));
+				const widthAtMinWidth = parseInt(dialogAtMinWidth.css("width"));
+				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
+
+				expect(widthAtMinWidth).to.equal(320);
+				expect(rightEdgeAtMinWidth).to.equal(initialRightEdge);
+
+				cy.get("#rtl-min-width-dialog")
+					.shadow()
+					.find(".ui5-popup-resize-handle")
+					.realMouseDown()
+					.realMouseMove(150, 0) // Additional rightward movement beyond min width
+					.realMouseUp();
+
+				cy.get("#rtl-min-width-dialog").then(dialogAfterExtraResize => {
+					const finalLeft = parseInt(dialogAfterExtraResize.css("left"));
+					const finalWidth = parseInt(dialogAfterExtraResize.css("width"));
+					const finalRightEdge = finalLeft + finalWidth;
+
+					expect(finalLeft).to.equal(leftAtMinWidth, "Dialog left position should not change when at min width");
+					expect(finalWidth).to.equal(widthAtMinWidth, "Dialog width should remain at min width");
+					expect(finalRightEdge).to.equal(rightEdgeAtMinWidth, "Dialog right edge should remain fixed");
+					expect(finalRightEdge).to.equal(initialRightEdge, "Dialog right edge should remain fixed from initial position");
+				});
+			});
+		});
+	});
+
 	it("resizable - keyboard support", () => {
 		cy.mount(
 			<>
@@ -737,6 +824,47 @@ describe("Dialog general interaction", () => {
 			});
 		});
 	});
+
+	it("RTL resizable - should not move dialog when resizing from the left with max-width is set", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Dialog id="resizable-dialog" resizable style={{maxWidth: "300px"}}>
+					<div id="header-slot" slot="header">Header</div>
+					<div>Content</div>
+					<Button id="resizable-close">Close</Button>
+				</Dialog>
+			</div>
+		);
+
+		cy.get("#resizable-dialog").invoke("attr", "open", true);
+
+		cy.get("#resizable-dialog").then(dialog => {
+			const widthBeforeResizing = parseInt(dialog.css("width"));
+			const heightBeforeResizing = parseInt(dialog.css("height"));
+			const topBeforeResizing = parseInt(dialog.css("top"));
+			const leftBeforeResizing = parseInt(dialog.css("left"));
+
+			cy.get("#resizable-dialog")
+				.shadow()
+				.find(".ui5-popup-resize-handle")
+				.realMouseDown({ position: "left" })
+				.realMouseMove(-100, 100)
+				.realMouseUp();
+
+			cy.get("#resizable-dialog").should(dialogAfterResizing => {
+				const widthAfterResizing = parseInt(dialogAfterResizing.css("width"));
+				const heightAfterResizing = parseInt(dialogAfterResizing.css("height"));
+				const topAfterResizing = parseInt(dialogAfterResizing.css("top"));
+				const leftAfterResizing = parseInt(dialogAfterResizing.css("left"));
+
+				expect(widthBeforeResizing).to.equal(widthAfterResizing);
+				expect(heightBeforeResizing).not.to.equal(heightAfterResizing);
+				expect(topBeforeResizing).to.equal(topAfterResizing);
+				expect(leftBeforeResizing).not.to.equal(leftAfterResizing + 100);
+			});
+		});
+	});
+
 	it("initial focus after dynamic dialog creation", () => {
 		cy.mount(
 			<>
@@ -1455,45 +1583,211 @@ describe("Dialog initially open", () => {
 		// Assert dialog matches :popover-open selector
 		cy.get("#dialogOpen").should("match", ":popover-open");
 	});
+});
 
-	it("initial focus", () => {
+describe("Event Registration", () => {
+	it("window resize event is registered only when dialog is open", () => {
 		cy.mount(
 			<>
-				<Dialog id="dialogId"
-						headerText="Dialog Header"
-						open>
-					<div>
-						<input id="innerInput" />
-					</div>
+				<Dialog id="dialog-resize-event">
+					<Button>Close</Button>
 				</Dialog>
 			</>
 		);
 
-		cy.get("#dialogId")
-			.should("be.visible");
+		// Check that resize handler is not attached when dialog is closed
+		cy.get("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.undefined;
+		});
 
-		cy.get("#innerInput")
-			.should("be.focused");
+		// Open dialog
+		cy.get("#dialog-resize-event").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog-resize-event").ui5DialogOpened();
+
+		// Check that resize handler is attached when dialog is open
+		cy.get("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.true;
+		});
+
+		// Close dialog
+		cy.get("#dialog-resize-event").invoke("prop", "open", false);
+
+		// Check that resize handler is detached when dialog is closed
+		cy.get("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.false;
+		});
 	});
 
-	it("initial focus prevented", () => {
+	it("dragstart event is registered only when dialog is open", () => {
 		cy.mount(
 			<>
-				<Dialog id="dialogId"
-						headerText="Dialog Header"
-						open
-						preventInitialFocus>
-					<div>
-						<input id="innerInput" />
-					</div>
+				<Dialog id="dialog-dragstart-event" draggable>
+					<Button>Close</Button>
 				</Dialog>
 			</>
 		);
 
-		cy.get("#dialogId")
-			.should("be.visible");
+		// Check that dragstart handler is not registered when dialog is closed
+		cy.get("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._dragHandlerRegistered).to.be.false;
+		});
 
-		cy.get("#innerInput")
-			.should("not.be.focused");
+		// Open dialog
+		cy.get("#dialog-dragstart-event").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog-dragstart-event").ui5DialogOpened();
+
+		// Check that dragstart handler is registered when dialog is open
+		cy.get("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._dragHandlerRegistered).to.be.true;
+		});
+
+		// Close dialog
+		cy.get("#dialog-dragstart-event").invoke("prop", "open", false);
+
+		// Check that dragstart handler is deregistered when dialog is closed
+		cy.get("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._dragHandlerRegistered).to.be.false;
+		});
+	});
+
+	it("events remain registered when dialog is reopened", () => {
+		cy.mount(
+			<>
+				<Dialog id="dialog-reopen-events" draggable>
+					<Button>Close</Button>
+				</Dialog>
+			</>
+		);
+
+		// Open dialog for the first time
+		cy.get("#dialog-reopen-events").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog-reopen-events").ui5DialogOpened();
+
+		// Verify handlers are registered
+		cy.get("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.true;
+			expect(dialog._dragHandlerRegistered).to.be.true;
+		});
+
+		// Close dialog
+		cy.get("#dialog-reopen-events").invoke("prop", "open", false);
+
+		// Verify handlers are deregistered
+		cy.get("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.false;
+			expect(dialog._dragHandlerRegistered).to.be.false;
+		});
+
+		// Reopen dialog
+		cy.get("#dialog-reopen-events").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog-reopen-events").ui5DialogOpened();
+
+		// Verify handlers are registered again
+		cy.get("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._screenResizeHandlerAttached).to.be.true;
+			expect(dialog._dragHandlerRegistered).to.be.true;
+		});
+	});
+});
+
+describe("Native drag-and-drop in draggable dialogs", () => {
+	it("_handleDragStart should NOT prevent default for content elements", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true} headerText="Test">
+				<div id="content-item">Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#test-dialog").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			const content = document.getElementById("content-item");
+
+			// Create a mock event
+			let preventDefaultCalled = false;
+			const mockEvent = {
+				target: content,
+				preventDefault: () => { preventDefaultCalled = true; },
+				defaultPrevented: false
+			} as unknown as DragEvent;
+
+			// Call the handler directly
+			dialog._handleDragStart(mockEvent);
+
+			expect(preventDefaultCalled).to.be.false;
+		});
+	});
+
+	it("_handleDragStart should prevent default for header element", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true} headerText="Test">
+				<div>Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#test-dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.then($header => {
+				const dialog = document.getElementById("test-dialog") as Dialog;
+				const header = $header.get(0) as HTMLElement;
+
+				// Create a mock event
+				let preventDefaultCalled = false;
+				const mockEvent = {
+					target: header,
+					preventDefault: () => { preventDefaultCalled = true; },
+					defaultPrevented: false
+				} as unknown as DragEvent;
+
+				// Call the handler directly
+				dialog._handleDragStart(mockEvent);
+
+				expect(preventDefaultCalled).to.be.true;
+			});
+	});
+
+	it("_handleDragStart should prevent default for custom header slot", () => {
+		cy.mount(
+			<Dialog id="test-dialog" draggable={true}>
+				<div slot="header" id="custom-header">Header</div>
+				<div>Content</div>
+			</Dialog>
+		);
+
+		cy.get("#test-dialog").invoke("prop", "open", true);
+		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
+
+		cy.get("#custom-header").then($header => {
+			const dialog = document.getElementById("test-dialog") as Dialog;
+			const header = $header.get(0) as HTMLElement;
+
+			// Create a mock event
+			let preventDefaultCalled = false;
+			const mockEvent = {
+				target: header,
+				preventDefault: () => { preventDefaultCalled = true; },
+				defaultPrevented: false
+			} as unknown as DragEvent;
+
+			// Call the handler directly
+			dialog._handleDragStart(mockEvent);
+
+			expect(preventDefaultCalled).to.be.true;
+		});
 	});
 });

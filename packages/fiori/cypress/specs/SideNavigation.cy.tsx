@@ -5,10 +5,13 @@ import SideNavigationSubItem from "../../src/SideNavigationSubItem.js";
 import group from "@ui5/webcomponents-icons/dist/group.js";
 import home from "@ui5/webcomponents-icons/dist/home.js";
 import employeeApprovals from "@ui5/webcomponents-icons/dist/employee-approvals.js";
+import { SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL } from "../../src/generated/i18n/i18n-defaults.js";
 import { NAVIGATION_MENU_POPOVER_HIDDEN_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
+import { NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT } from "../../src/generated/i18n/i18n-defaults.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import Tag from "@ui5/webcomponents/dist/Tag.js";
 
 describe("Side Navigation Rendering", () => {
 	it("Tests rendering in collapsed mode", () => {
@@ -208,7 +211,7 @@ describe("Side Navigation interaction", () => {
 		cy.get("#item1").should("not.have.attr", "expanded");
 	});
 
-	it("Tests expanding and collapsing of unselectable items with Space and Enter", () => {
+	it("Tests not expanding and collapsing of unselectable items with Space and Enter", () => {
 		cy.mount(
 			<SideNavigation>
 				<SideNavigationItem id="focusStart" text="focus start"></SideNavigationItem>
@@ -221,22 +224,15 @@ describe("Side Navigation interaction", () => {
 		// act
 		cy.get("#focusStart").realClick();
 		cy.realPress("ArrowDown");
-		cy.realPress("Space");
 
 		// assert
-		cy.get("#unselectableItem").should("be.focused").and("have.attr", "expanded");
+		cy.get("#unselectableItem").should("be.focused").and("not.have.attr", "expanded");
 
 		// act
 		cy.realPress("Space");
 
 		// assert
 		cy.get("#unselectableItem").should("be.focused").and("not.have.attr", "expanded");
-
-		// act
-		cy.realPress("Enter");
-
-		// assert
-		cy.get("#unselectableItem").should("be.focused").and("have.attr", "expanded");
 
 		// act
 		cy.realPress("Enter");
@@ -643,10 +639,10 @@ describe("Side Navigation interaction", () => {
 
 		[
 			{ selector: "#item", expectedCallCount: 2 },
-			{ selector: "#unselectableItem", expectedCallCount: 2 },
+			{ selector: "#unselectableItem", expectedCallCount: 1 },
 			{ selector: "#parentItem", expectedCallCount: 2 },
 			{ selector: "#childItem", expectedCallCount: 2 },
-			{ selector: "#unselectableParentItem", expectedCallCount: 2 },
+			{ selector: "#unselectableParentItem", expectedCallCount: 1 },
 		].forEach(({ selector, expectedCallCount }) => {
 			cy.get("#sideNav")
 				.then(sideNav => {
@@ -697,7 +693,7 @@ describe("Side Navigation interaction", () => {
 		cy.mount(
 			<SideNavigation>
 				<SideNavigationItem id="focusStart" text="focus start" />
-				<SideNavigationItem text="external link" unselectable={true} href="#test" />
+				<SideNavigationItem text="link" href="#test" />
 			</SideNavigation>
 		);
 
@@ -1010,7 +1006,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.visible");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("#sideNav")
@@ -1032,7 +1027,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.focused");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("@overflowMenu")
@@ -1210,21 +1204,74 @@ describe("Side Navigation Accessibility", () => {
 
 		// assert
 		cy.get("@overflowMenu")
-			.find("[ui5-navigation-menu-item][text='1']")
-			.shadow()
-			.find(".ui5-navigation-menu-item-root")
-			.should("have.attr", "aria-haspopup", "dialog");
-
-		cy.get("@overflowMenu")
 			.find("[ui5-navigation-menu-item][text='2']")
 			.shadow()
 			.find(".ui5-navigation-menu-item-root")
 			.should("have.attr", "aria-haspopup", "menu");
+	});
 
-		cy.get("@overflowMenu")
-			.find("[ui5-navigation-menu-item][text='2.1']")
+	it("SideNavigationItem description", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="1" selected={true}/>
+				<SideNavigationItem id="item2" text="2" expanded={true}>
+					<SideNavigationSubItem id="childItem" text="2.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
 			.shadow()
-			.find(".ui5-navigation-menu-item-root")
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-describedby");
+
+		cy.get("#item2")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item2")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-selectable-description`);
+
+				cy.get("#item2")
+					.shadow()
+					.find(`#${itemId}-selectable-description`)
+					.should("have.text", "To navigate to navigation item 2, press Spacebar or Enter.");
+			});
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-expanded");
+
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-expanded", "true");
+
+		cy.get("#item1")
+			.invoke("prop", "accessibilityAttributes", {
+				hasPopup: "dialog",
+			});
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-haspopup", "dialog");
+
+		cy.get("#childItem")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-haspopup");
+
+		cy.get("#childItem")
+			.invoke("prop", "accessibilityAttributes", {
+				hasPopup: "dialog",
+			});
+
+		cy.get("#childItem")
+			.shadow()
+			.find(".ui5-sn-item")
 			.should("have.attr", "aria-haspopup", "dialog");
 	});
 
@@ -1265,7 +1312,7 @@ describe("Side Navigation Accessibility", () => {
 			.find("[ui5-side-navigation-item][is-overflow]")
 			.shadow()
 			.find(".ui5-sn-item")
-			.should("have.attr", "aria-label", "Displays remaining navigation items");
+			.should("have.attr", "aria-label", SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL.defaultText);
 	});
 
 	it("SideNavigationItem aria-checked in collapsed SideNavigation", () => {
@@ -1291,9 +1338,12 @@ describe("Side Navigation Accessibility", () => {
 	it("Tests accessible-name of overflow menu and sub menu", () => {
 		cy.mount(
 			<SideNavigation id="sideNav" collapsed={true}>
-				<SideNavigationItem text="dummy item"></SideNavigationItem>
-				<SideNavigationItem text="1">
+				<SideNavigationItem text="No children"></SideNavigationItem>
+				<SideNavigationItem text="Parent 1">
 					<SideNavigationSubItem text="1.1" />
+				</SideNavigationItem>
+				<SideNavigationItem text="Parent 2 unselectable" unselectable={true}>
+					<SideNavigationSubItem text="2.1" />
 				</SideNavigationItem>
 			</SideNavigation>
 		);
@@ -1305,7 +1355,8 @@ describe("Side Navigation Accessibility", () => {
 			.shadow()
 			.find(".ui5-sn-item-overflow")
 			.realClick();
-
+	
+		// Assert
 		cy.get("#sideNav")
 			.shadow()
 			.find(".ui5-side-navigation-overflow-menu")
@@ -1314,20 +1365,88 @@ describe("Side Navigation Accessibility", () => {
 			.invoke("attr", "accessible-name-ref")
 			.should("match", /navigationMenuPopoverText$/);
 
-		cy.get("#sideNav")
-			.shadow()
-			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='1']")
-			.realClick();
 
 		cy.get("#sideNav")
 			.shadow()
-			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='1']")
+			.find(".ui5-side-navigation-overflow-menu")
 			.shadow()
 			.find(".ui5-menu-rp")
-			.should("have.attr", "accessible-name", NAVIGATION_MENU_POPOVER_HIDDEN_TEXT.defaultText);
+			.find(".ui5-hidden-text")
+			.should("have.text", NAVIGATION_MENU_POPOVER_HIDDEN_TEXT.defaultText);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu")
+			.shadow()
+			.find(".ui5-menu-rp")
+			.should("have.attr", "accessible-role", "Dialog");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='No children']")
+			.shadow()
+			.find(".ui5-navigation-menu-item-root")
+			.should("not.have.attr", "aria-haspopup");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+			.shadow()
+			.find(".ui5-navigation-menu-item-root")
+			.should("have.attr", "aria-haspopup", "menu");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 2 unselectable']")
+			.shadow()
+			.find(".ui5-navigation-menu-item-root")
+			.should("have.attr", "aria-haspopup", "menu");
+
+		cy.get("#sideNav")
+				.shadow()
+				.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+				.shadow()
+				.find(".ui5-navigation-menu-item-root")
+				.invoke("attr", "aria-describedby")
+				.should("match", /invisibleText-describedby$/);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+			.shadow()
+			.find(".ui5-navigation-menu-item-root .ui5-hidden-text")
+			.next()
+			.should("have.text", NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT.defaultText);
+
+		// Act - open sub menu
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+			.realClick();
+
+		// Assert
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+			.shadow()
+			.find(".ui5-menu-rp")
+			.should("have.attr", "accessible-name", "Parent 1");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 2 unselectable']")
+			.shadow()
+			.find(".ui5-menu-rp")
+			.should("have.attr", "accessible-name", "Parent 2 unselectable");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item][text='Parent 1']")
+			.find("[ui5-navigation-menu-item][text='Parent 1']")
+			.should("exist");
 	});
 
-	it("Tests SideNavigationGroup accessibility", () => {
+	it("Tests SideNavigationGroup group accessibility attributes", () => {
 		cy.mount(
 			<SideNavigation>
 				<SideNavigationItem text="Home"></SideNavigationItem>
@@ -1486,5 +1605,245 @@ describe("Focusable items", () => {
 			.shadow()
 			.find(".ui5-sn-item-external-link-icon")
 			.should("exist");
+	});
+
+	it("Tests accessibleName for SideNavigationItem", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" />
+				<SideNavigationItem id="item2" text="Settings">
+					<SideNavigationSubItem id="subItem1" text="Profile" accessibleName="User Profile Settings" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+
+		cy.get("#subItem1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "User Profile Settings");
+	});
+
+	it("Tests accessibleName for SideNavigationItem in collapsed mode", () => {
+		cy.mount(
+			<SideNavigation collapsed={true}>
+				<SideNavigationItem id="item1" text="Home" accessibleName="Navigate to Home Page" />
+			</SideNavigation>);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "Navigate to Home Page");
+	});
+
+	it("Tests that group element uses accessibleName when provided", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem
+					id="item1"
+					text="People"
+					accessibleName="View and manage team members"
+					expanded>
+					<SideNavigationSubItem text="From My Team" />
+					<SideNavigationSubItem text="From Other Teams" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		// Verify parent item uses accessibleName
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "aria-label", "View and manage team members");
+
+		// Verify group <ul> uses accessibleName (not just text)
+		cy.get("#item1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "View and manage team members");
+	});
+
+	it("Tests that group element falls back to text when accessibleName is not provided", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem
+					id="item1"
+					text="Settings"
+					expanded>
+					<SideNavigationSubItem text="Profile" />
+					<SideNavigationSubItem text="Privacy" />
+				</SideNavigationItem>
+			</SideNavigation>);
+
+		// Verify parent item has no aria-label (falls back to text content)
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("not.have.attr", "aria-label");
+
+		// Verify group <ul> uses text property
+		cy.get("#item1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "Settings");
+	});
+
+	it("Tests accessibleName for SideNavigationGroup", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationGroup id="group1" text="Products" accessibleName="Product Categories and Items" expanded>
+					<SideNavigationItem text="Laptops" />
+					<SideNavigationItem text="Phones" />
+				</SideNavigationGroup>
+			</SideNavigation>);
+
+		// Verify group item uses accessibleName
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-group")
+			.should("have.attr", "aria-label", "Product Categories and Items");
+
+		// Verify group <ul> uses accessibleName (not just text)
+		cy.get("#group1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "Product Categories and Items");
+	});
+
+	it("Tests that SideNavigationGroup falls back to text when accessibleName is not provided", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationGroup id="group1" text="Products" expanded>
+					<SideNavigationItem text="Laptops" />
+					<SideNavigationItem text="Phones" />
+				</SideNavigationGroup>
+			</SideNavigation>);
+
+		// Verify group item has no aria-label (falls back to text content)
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-group")
+			.should("not.have.attr", "aria-label");
+
+		// Verify group <ul> uses text property
+		cy.get("#group1")
+			.shadow()
+			.find("ul.ui5-sn-item-ul[role='group']")
+			.should("have.attr", "aria-label", "Products");
+	});
+
+	it("Tests SideNavigationItem with tag renders correctly", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Without Tag" />
+				<SideNavigationItem id="item2" text="With Tag">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-tag-slot")
+			.should("not.exist");
+
+		cy.get("#item2")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "New");
+
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item-tag-slot")
+			.should("exist");
+	});
+
+	it("Tests SideNavigationItem tag accessibility", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Item">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-tag`);
+			});
+	});
+
+	it("Tests SideNavigationItem tag with subitems has both tag and description", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Parent" expanded>
+					<Tag slot="tag" design="Set2" colorScheme="8" hideStateIcon>Beta</Tag>
+					<SideNavigationSubItem text="Child" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.invoke("attr", "aria-describedby")
+					.should("contain", `${itemId}-tag`)
+					.should("contain", `${itemId}-selectable-description`);
+			});
+	});
+
+	it("Tests SideNavigationSubItem with tag", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem text="Parent" expanded>
+					<SideNavigationSubItem id="subItem1" text="SubItem">
+						<Tag slot="tag" design="Set2" colorScheme="5" hideStateIcon>Dev</Tag>
+					</SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "Dev");
+
+		cy.get("#subItem1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#subItem1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-tag`);
+			});
+	});
+
+	it("Tests tag in collapsed mode popover", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Item" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+					<SideNavigationSubItem text="SubItem" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-side-navigation-item]")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "New");
 	});
 });

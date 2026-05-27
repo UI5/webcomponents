@@ -117,6 +117,7 @@
 	content: "";
 	position: absolute;
 	box-sizing: border-box;
+	pointer-events: none;
 	left: 0.0625rem;
 	top: 0.0625rem;
 	right: 0.0625rem;
@@ -374,4 +375,17 @@ bdi {
 	height: 100%;
 	width: 100%;
 	top:0;
+}
+
+:host([has-end-icon]:not([icon])) .ui5-button-root {
+	justify-content: flex-start;
+}
+
+:host([icon-only]) .ui5-button-root {
+	justify-content: center;
+}
+
+:host([has-end-icon]:not([icon]):not(:empty)) .ui5-button-end-icon {
+	padding-inline-start: var(--_ui5_button_base_icon_margin);
+	margin-inline-start: auto;
 }

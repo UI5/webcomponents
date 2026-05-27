@@ -300,6 +300,30 @@
 			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 		</form>
 	</section>
+
+	<section>
+		<h3>Separator configuration</h3>
+		<div>
+			<span>Text separator:</span>
+			<ui5-select id="selectSeparators">
+				<ui5-option selected>Dash</ui5-option>
+				<ui5-option>Bullet</ui5-option>
+				<ui5-option>VerticalLine</ui5-option>
+			</ui5-select>
+		</div>
+
+		<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+			<span>Read-only:</span>
+			<ui5-switch id="editableSwitch" checked text-on="Yes" text-off="No"></ui5-switch>
+		</div>
+
+		<ui5-select id="selectWithSeparator" readonly="false" text-separator="VerticalLine">
+			<ui5-option additional-text="DZ">Algeria</ui5-option>
+			<ui5-option selected additional-text="AR">Argentina</ui5-option>
+			<ui5-option additional-text="AU">Australia</ui5-option>
+		</ui5-select>
+	</section>
+
 </body>
 <script>
 	var countries =  [{ key: "Aus", text: "Australia" }, { key: "Aruba", text: "Aruba" }, { key: "Antigua", text: "Antigua and Barbuda" }, { key: "Bel", text: "Belgium" }, { key: "Bg", text: "Bulgaria" }, { key: "Bra", text: "Brazil" }];
@@ -446,5 +470,26 @@
 		formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
 		formValidationMessage.design = isValid ? "Positive" : "Negative";
 	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const selectSeparators = document.getElementById('selectSeparators');
+		const selectWithSeparator = document.getElementById('selectWithSeparator');
+		const editableSwitch = document.getElementById('editableSwitch');
+
+		selectSeparators.addEventListener('ui5-change', function(e) {
+			const selectedSeparator = e.detail.selectedOption.textContent;
+			selectWithSeparator.setAttribute('text-separator', selectedSeparator);
+		});
+
+		editableSwitch.addEventListener('ui5-change', function(e) {
+			const isChecked = e.target.checked;
+
+			if (isChecked) {
+				selectWithSeparator.readonly = true;
+			} else {
+				selectWithSeparator.readonly = false;
+			}
+		});
+	});
 </script>
 </html>

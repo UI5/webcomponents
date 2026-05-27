@@ -633,4 +633,120 @@ describe("Wizard inside Dialog", () => {
             .find("[ui5-responsive-popover]")
             .should("be.visible");
     });
+
+    it("Tests focus management on step change", () => {
+        cy.mount(
+            <div>
+                <Dialog id="dialog" headerText="Wizard">
+                    <Wizard id="wizard">
+                        <WizardStep icon="sap-icon://home" selected titleText="Product type">
+                            <Button id="step1Button">Step 1 Button</Button>
+                        </WizardStep>
+                        <WizardStep titleText="Product Information" disabled>
+                            <Button id="step2Button">Step 2 Button</Button>
+                        </WizardStep>
+                    </Wizard>
+                    <Bar slot="footer" design="Footer">
+                        <Button id="nextButton" design="Emphasized">Next step</Button>
+                    </Bar>
+                </Dialog>
+                <Button id="openButton" style={{ display: "inline-block" }}>Open Dialog</Button>
+            </div>
+        );
+
+        cy.get("#openButton").then($button => {
+            $button[0].addEventListener("click", () => {
+                cy.get("#dialog").invoke("prop", "open", true);
+            });
+        });
+
+        cy.get("#openButton")
+            .realClick();
+
+        cy.get("#nextButton")
+            .then($button => {
+                $button[0].addEventListener("click", () => {
+                    goToWizardStep("wizard", 1);
+                });
+            });
+
+        cy.get("#nextButton")
+            .realClick();
+
+        // Verify that focus moves to the first element in the new step
+        cy.get("#step2Button")
+            .should("be.focused");
+    });
+});
+
+describe("Wizard - getFocusDomRef Method", () => {
+    it("should focus the last focused wizard tab on wizard focus", () => {
+        const onButtonClick = () => {
+            document.getElementById("wizard").focus();
+        }
+        cy.mount(
+            <>
+                <Wizard id="wizard">
+                    <WizardStep icon="sap-icon://product" titleText="Product type">
+                        <MessageStrip>
+                            The Wizard control is supposed to break down large tasks.
+                        </MessageStrip>
+                    </WizardStep>
+                    <WizardStep titleText="Product Information" selected />
+                    <WizardStep titleText="Product Text" />
+                </Wizard>
+                <Button>Dummy Btn</Button>
+                <Button onClick={onButtonClick}>Focus Wizard</Button>
+            </>
+        );
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find("[ui5-wizard-tab]")
+            .eq(2)
+            .realClick();
+
+        cy.get("[ui5-button]")
+            .eq(0)
+            .realClick();
+
+        cy.get("[ui5-button]")
+            .eq(1)
+            .realClick();
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find("[ui5-wizard-tab]")
+            .eq(2)
+            .shadow()
+            .find(".ui5-wiz-step-root")
+            .should("be.focused");
+    });
+
+    it("should focus the first wizard tab if no tab was focused before ", () => {
+        const onButtonClick = () => {
+            document.getElementById("wizard").focus();
+        }
+        cy.mount(
+            <>
+                <Wizard id="wizard">
+                    <WizardStep icon="sap-icon://product" titleText="Product type"></WizardStep>
+                    <WizardStep titleText="Product Information" />
+                    <WizardStep titleText="Product Text" />
+                </Wizard>
+                <Button onClick={onButtonClick}>Focus Wizard</Button>
+            </>
+        );
+
+        cy.get("[ui5-button]")
+            .realClick();
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find("[ui5-wizard-tab]")
+            .eq(0)
+            .shadow()
+            .find(".ui5-wiz-step-root")
+            .should("be.focused");
+    });
 });

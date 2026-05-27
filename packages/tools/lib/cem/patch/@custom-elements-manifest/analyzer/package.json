@@ -1,0 +1,59 @@
+{
+  "name": "@custom-elements-manifest/analyzer",
+  "version": "0.10.10",
+  "description": "",
+  "license": "MIT",
+  "type": "module",
+  "types": "index.d.ts",
+  "bin": {
+    "custom-elements-manifest": "./cem.js",
+    "cem": "./cem.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-wc/custom-elements-manifest.git",
+    "directory": "packages/analyzer"
+  },
+  "author": "open-wc",
+  "homepage": "https://github.com/open-wc/custom-elements-manifest",
+  "bugs": {
+    "url": "https://github.com/open-wc/custom-elements-manifest"
+  },
+  "main": "index.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build:browser",
+    "start": "nodemon --ignore './custom-elements.json' cem.js analyze --dev --fast",
+    "test": "asdgf",
+    "build:browser": "esbuild src/browser-entrypoint.js --bundle --format=esm --outfile=browser/index.js",
+    "test:watch": "watchexec -w src -w test npm test",
+    "update-fixtures": "node scripts/update-version.js --version 1.0.0"
+  },
+  "keywords": [
+    "custom-elements",
+    "custom-elements-json",
+    "custom-elements-manifest",
+    "customelements",
+    "webcomponents",
+    "customelementsjson",
+    "customelementsmanifest"
+  ],
+  "dependencies": {
+    "@custom-elements-manifest/find-dependencies": "^0.0.6",
+    "@github/catalyst": "^1.6.0",
+    "@web/config-loader": "0.1.3",
+    "chokidar": "3.5.2",
+    "command-line-args": "5.1.2",
+    "comment-parser": "1.2.4",
+    "custom-elements-manifest": "1.0.0",
+    "debounce": "1.2.1",
+    "globby": "11.0.4",
+    "typescript": "~5.4.2"
+  },
+  "devDependencies": {},
+  "contributors": [
+    "Pascal Schilp <pascalschilp@gmail.com>",
+    "Benny Powers <web@bennypowers.com>",
+    "Matias Huhta <huhta.matias@gmail.com>"
+  ],
+  "customElements": "custom-elements.json"
+}

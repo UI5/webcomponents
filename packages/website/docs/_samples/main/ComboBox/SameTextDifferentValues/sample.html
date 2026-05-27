@@ -1,0 +1,33 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 350px">
+	<!-- playground-fold-end -->
+
+	<ui5-combobox id="employee-combo" placeholder="Select an employee">
+		<ui5-cb-item text="John Smith" additional-text="Sales" value="emp-101"></ui5-cb-item>
+		<ui5-cb-item text="John Smith" additional-text="Engineering" value="emp-205"></ui5-cb-item>
+		<ui5-cb-item text="John Smith" additional-text="Marketing" value="emp-342"></ui5-cb-item>
+		<ui5-cb-item text="Jane Doe" additional-text="HR" value="emp-118"></ui5-cb-item>
+		<ui5-cb-item text="Jane Doe" additional-text="Finance" value="emp-267"></ui5-cb-item>
+	</ui5-combobox>
+
+	<div id="output" style="margin-top: 1rem; font-family: var(--sapFontFamily); color: var(--sapTextColor);">
+		<div>Employee ID: <strong id="employee-id">-</strong></div>
+		<div>Name: <strong id="employee-name">-</strong></div>
+		<div>Department: <strong id="employee-dept">-</strong></div>
+	</div>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

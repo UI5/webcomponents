@@ -10,7 +10,7 @@ const shouldUpdate = (runtimeIndex: string | undefined) => {
 	if (runtimeIndex === undefined) {
 		return true;
 	}
-	return compareRuntimes(getCurrentRuntimeIndex(), parseInt(runtimeIndex)) === 1; // 1 means the current is newer, 0 means the same, -1 means the resource's runtime is newer
+	return compareRuntimes(getCurrentRuntimeIndex(), parseInt(runtimeIndex)) >= 1; // 1 or larger means the current is newer, 0 means the same, -1 means the resource's runtime is newer
 };
 
 const createStyle = (content: string, name: string, value = "", theme?: string) => {

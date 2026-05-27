@@ -1,9 +1,15 @@
 import Avatar from "../../src/Avatar.js";
-import Tag from "../../src/Tag.js";
-import Icon from "../../src/Icon.js";
+import AvatarBadge from "../../src/AvatarBadge.js";
 import "@ui5/webcomponents-icons/dist/supplier.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/person-placeholder.js";
+import "@ui5/webcomponents-icons/dist/accelerated.js";
+import "@ui5/webcomponents-icons/dist/accept.js";
+import "@ui5/webcomponents-icons/dist/edit.js";
+import "@ui5/webcomponents-icons/dist/message-error.js";
+import "@ui5/webcomponents-icons/dist/information.js";
+import "@ui5/webcomponents-icons/dist/ai.js";
+import { registerIconLoader } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 describe("Accessibility", () => {
 	it("checks if initials of avatar are correctly announced", () => {
@@ -19,6 +25,71 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.should("have.attr", "aria-label", expectedLabel);
+	});
+
+	it("should return correct accessibilityInfo object when avatar is interactive", () => {
+		const INITIALS = "JD";
+		const hasPopup = "menu";
+		const customLabel = "John Doe Avatar";
+
+		cy.mount(
+			<Avatar
+				id="interactive-info"
+				initials={INITIALS}
+				interactive
+				accessibleName={customLabel}
+				accessibilityAttributes={{hasPopup}}
+			></Avatar>
+		);
+
+		cy.get("#interactive-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+
+			// Check accessibilityInfo properties
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.role).to.equal("button");
+			expect(avatar.accessibilityInfo.type).to.equal("Button");
+			expect(avatar.accessibilityInfo.description).to.equal(customLabel);
+		});
+	});
+
+	it("should return correct accessibilityInfo object when avatar is not interactive", () => {
+		cy.mount(
+			<Avatar
+				id="non-interactive-info"
+				initials="JD"
+			></Avatar>
+		);
+
+		cy.get("#non-interactive-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+
+			// Check that accessibilityInfo is undefined
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.role).to.equal("img");
+			expect(avatar.accessibilityInfo.type).to.equal("Image");
+			expect(avatar.accessibilityInfo.description).to.equal("Avatar JD");
+		});
+	});
+
+	it("should use default label for accessibilityInfo description when no custom label is provided", () => {
+		const INITIALS = "AB";
+
+		cy.mount(
+			<Avatar
+				id="default-label-info"
+				initials={INITIALS}
+				interactive
+			></Avatar>
+		);
+
+		cy.get("#default-label-info").then($avatar => {
+			const avatar = $avatar[0] as any;
+
+			// Check that accessibilityInfo uses the default label format that includes initials
+			expect(avatar.accessibilityInfo).to.exist;
+			expect(avatar.accessibilityInfo.description).to.equal(`Avatar ${INITIALS}`);
+		});
 	});
 
 	it("checks if accessible-name is correctly passed to the icon", () => {
@@ -38,10 +109,8 @@ describe("Accessibility", () => {
 	it("doesn't fire ui5-click event, when disabled property is set", () => {
 		cy.mount(
 			<div>
-				<Avatar interactive disabled initials="JD" id="diabled-avatar" onClick={increment}>
-					<Tag slot="badge">
-						<Icon slot="icon" name="accelerated"></Icon>
-					</Tag>
+				<Avatar interactive disabled initials="JD" id="disabled-avatar" onClick={increment}>
+					<AvatarBadge slot="badge" icon="accelerated"></AvatarBadge>
 				</Avatar>
 				<input value="0" id="click-event" />
 			</div>
@@ -51,8 +120,122 @@ describe("Accessibility", () => {
 			const input = document.getElementById("click-event") as HTMLInputElement;
 			input.value = "1";
 		}
-		cy.get("#diabled-avatar").realClick();
+		cy.get("#disabled-avatar").realClick();
 		cy.get("#click-event").should("have.value", "0");
+	});
+
+	// New tests for mode property
+	it("mode='Decorative' returns empty accessibilityInfo", () => {
+		cy.mount(
+			<Avatar mode="Decorative" initials="JD" id="decorative-avatar"></Avatar>
+		);
+		cy.get("#decorative-avatar").then(($el) => {
+			const avatar = $el[0] as any;
+			expect(avatar.accessibilityInfo).to.deep.equal({});
+		});
+	});
+
+	it("mode='Decorative' renders with role='presentation' and aria-hidden", () => {
+		cy.mount(
+			<Avatar
+				id="decorative-avatar"
+				initials="AB"
+				mode="Decorative"
+			></Avatar>
+		);
+
+		cy.get("#decorative-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "presentation")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("mode='Interactive' renders with role='button' and is focusable", () => {
+		cy.mount(
+			<Avatar
+				id="interactive-mode-avatar"
+				initials="IJ"
+				mode="Interactive"
+			></Avatar>
+		);
+
+		cy.get("#interactive-mode-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("interactive property takes precedence over mode property", () => {
+		cy.mount(
+			<Avatar
+				interactive
+				mode="Decorative"
+				initials="PR"
+				id="precedence-avatar"
+			></Avatar>
+		);
+
+		// Even though mode="Decorative", interactive=true takes precedence
+		cy.get("#precedence-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "button")
+			.should("have.attr", "tabindex", "0")
+			.should("not.have.attr", "aria-hidden");
+	});
+
+	it("interactive=true with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar
+				interactive
+				disabled
+				initials="DI"
+				id="disabled-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("mode='Interactive' with disabled=true renders with role='img' and is not focusable", () => {
+		cy.mount(
+			<Avatar
+				mode="Interactive"
+				disabled
+				initials="DM"
+				id="disabled-mode-interactive-avatar"
+			></Avatar>
+		);
+
+		cy.get("#disabled-mode-interactive-avatar")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "role", "img")
+			.should("not.have.attr", "tabindex");
+	});
+
+	it("disabled interactive avatar doesn't fire click event with mode='Interactive'", () => {
+		cy.mount(
+			<div>
+				<Avatar mode="Interactive" disabled initials="DM" id="disabled-mode-click" onClick={increment}>
+				</Avatar>
+				<input value="0" id="mode-click-event" />
+			</div>
+		);
+
+		function increment() {
+			const input = document.getElementById("mode-click-event") as HTMLInputElement;
+			input.value = "1";
+		}
+
+		cy.get("#disabled-mode-click").realClick();
+		cy.get("#mode-click-event").should("have.value", "0");
 	});
 });
 
@@ -317,7 +500,7 @@ describe("Avatar Rendering and Interaction", () => {
 
 		cy.get("[ui5-avatar]")
 			.shadow()
-			.find(".ui5-avatar-root slot:not([name])") 
+			.find(".ui5-avatar-root slot:not([name])")
 			.should("exist");
 
 		cy.get("[ui5-avatar]")
@@ -413,7 +596,7 @@ describe("Avatar Rendering and Interaction", () => {
 
 	it("Tests noConflict 'ui5-click' event for interactive avatars", () => {
 		cy.mount(
-			<Avatar interactive initials="XS" size="XS"></Avatar>
+			<Avatar mode="Interactive" initials="XS" size="XS"></Avatar>
 		);
 
 		cy.get("[ui5-avatar]")
@@ -426,7 +609,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realClick();
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
 
@@ -434,7 +617,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realPress("Enter");
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledTwice");
 
@@ -442,7 +625,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realPress("Space");
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledThrice");
 	});
@@ -462,7 +645,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realClick();
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
 
@@ -470,7 +653,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realPress("Enter");
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
 
@@ -478,7 +661,7 @@ describe("Avatar Rendering and Interaction", () => {
 			.shadow()
 			.find(".ui5-avatar-root")
 			.realPress("Space");
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
 	});
@@ -496,8 +679,313 @@ describe("Avatar Rendering and Interaction", () => {
 
 		cy.get("@avatar")
 			.realClick();
-		
+
 		cy.get("@clickStub")
 			.should("have.been.calledOnce");
+	});
+});
+
+describe("Avatar with Badge", () => {
+	it("renders badge with icon", () => {
+		cy.mount(
+			<Avatar id="avatar-with-badge-icon" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
+			</Avatar>
+		);
+
+		// Verify badge is rendered
+		cy.get("#avatar-with-badge-icon")
+			.find("[ui5-avatar-badge]")
+			.should("exist");
+
+		// Verify icon inside badge is rendered
+		cy.get("#avatar-with-badge-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("exist")
+			.and("have.attr", "name", "accept");
+	});
+
+	it("renders badge with different states", () => {
+		cy.mount(
+			<>
+				<Avatar id="badge-none" initials="AB" size="M">
+					<AvatarBadge slot="badge" icon="ai" state="None"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-positive" initials="CD" size="M">
+					<AvatarBadge slot="badge" icon="accept" state="Positive"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-critical" initials="EF" size="M">
+					<AvatarBadge slot="badge" icon="alert" state="Critical"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-negative" initials="GH" size="M">
+					<AvatarBadge slot="badge" icon="message-error" state="Negative"></AvatarBadge>
+				</Avatar>
+				<Avatar id="badge-information" initials="IJ" size="M">
+					<AvatarBadge slot="badge" icon="information" state="Information"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Check that all badges are rendered in badge slot
+		cy.get("#badge-none").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-positive").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-critical").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-negative").find("[ui5-avatar-badge]").should("exist");
+		cy.get("#badge-information").find("[ui5-avatar-badge]").should("exist");
+
+		// Verify states are applied
+		cy.get("#badge-none [ui5-avatar-badge]").should("have.attr", "state", "None");
+		cy.get("#badge-positive [ui5-avatar-badge]").should("have.attr", "state", "Positive");
+		cy.get("#badge-critical [ui5-avatar-badge]").should("have.attr", "state", "Critical");
+		cy.get("#badge-negative [ui5-avatar-badge]").should("have.attr", "state", "Negative");
+		cy.get("#badge-information [ui5-avatar-badge]").should("have.attr", "state", "Information");
+	});
+
+	it("badge has correct size for each avatar size", () => {
+		cy.mount(
+			<>
+				<Avatar id="avatar-xs" initials="XS" size="XS">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-s" initials="S" size="S">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-m" initials="M" size="M">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-l" initials="L" size="L">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-xl" initials="XL" size="XL">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Check that badges are rendered for all avatar sizes
+		cy.get("#avatar-xs [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-s [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-m [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-l [ui5-avatar-badge]").should("exist");
+		cy.get("#avatar-xl [ui5-avatar-badge]").should("exist");
+
+		// Verify XS/S/M size (default badge size: 1.125rem = 18px)
+		cy.get("#avatar-xs [ui5-avatar-badge]").should("have.css", "width", "18px");
+		cy.get("#avatar-s [ui5-avatar-badge]").should("have.css", "width", "18px");
+		cy.get("#avatar-m [ui5-avatar-badge]").should("have.css", "width", "18px");
+
+		// Verify L size (1.25rem = 20px)
+		cy.get("#avatar-l [ui5-avatar-badge]").should("have.css", "width", "20px");
+
+		// Verify XL size (1.75rem = 28px)
+		cy.get("#avatar-xl [ui5-avatar-badge]").should("have.css", "width", "28px");
+	});
+
+	it("badge icon has correct size for each avatar size", () => {
+		cy.mount(
+			<>
+				<Avatar id="avatar-xs-icon" initials="XS" size="XS">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-s-icon" initials="S" size="S">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-m-icon" initials="M" size="M">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-l-icon" initials="L" size="L">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+				<Avatar id="avatar-xl-icon" initials="XL" size="XL">
+					<AvatarBadge slot="badge" icon="accept"></AvatarBadge>
+				</Avatar>
+			</>
+		);
+
+		// Verify XS/S/M icon size (default: 0.75rem = 12px)
+		cy.get("#avatar-xs-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+		cy.get("#avatar-s-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+		cy.get("#avatar-m-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "12px");
+
+		// Verify L icon size (0.875rem = 14px)
+		cy.get("#avatar-l-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "14px");
+
+		// Verify XL icon size (1rem = 16px)
+		cy.get("#avatar-xl-icon [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.css", "width", "16px");
+	});
+
+	it("shows default tooltip from icon accessible name", () => {
+		cy.mount(
+			<Avatar id="avatar-with-default-badge-tooltip" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="edit"></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-with-default-badge-tooltip [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.attr", "title", "Edit");
+	});
+
+	it("uses tooltip as tooltip text when provided", () => {
+		const customTooltip = "Open profile editor";
+
+		cy.mount(
+			<Avatar id="avatar-with-custom-badge-tooltip" initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="edit" tooltip={customTooltip}></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-with-custom-badge-tooltip [ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("have.attr", "title", customTooltip);
+	});
+
+	it("does not set badge-level accessible text when icon is invalid", () => {
+		cy.document().then(doc => {
+			const badge = doc.createElement("ui5-avatar-badge") as AvatarBadge & { effectiveTooltip?: string };
+			badge.id = "badge-fallback-tooltip";
+			badge.icon = "non-existent-icon-xyz";
+			doc.body.appendChild(badge);
+
+			cy.wait(100).then(() => {
+				expect(badge.effectiveTooltip).to.be.undefined;
+				expect(badge.hasAttribute("invalid")).to.be.true;
+				badge.remove();
+			});
+		});
+	});
+
+	it("hides badge when icon is invalid and shows when valid", () => {
+		// Test all invalid cases and valid case in one test using direct DOM manipulation
+		cy.document().then(doc => {
+			// Create and test empty icon badge
+			const badgeEmpty = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeEmpty.icon = "";
+			doc.body.appendChild(badgeEmpty);
+
+			// Create and test invalid icon badge
+			const badgeInvalid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeInvalid.icon = "non-existent-icon-xyz";
+			doc.body.appendChild(badgeInvalid);
+
+			// Create and test no icon badge
+			const badgeNoIcon = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			doc.body.appendChild(badgeNoIcon);
+
+			// Create and test valid icon badge
+			const badgeValid = doc.createElement("ui5-avatar-badge") as AvatarBadge;
+			badgeValid.icon = "accept";
+			doc.body.appendChild(badgeValid);
+
+			// Wait for components to render
+			cy.wait(200).then(() => {
+				// Test empty icon
+				expect(badgeEmpty.hasAttribute("invalid"), "empty icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeEmpty).display, "empty icon should be hidden").to.equal("none");
+
+				// Test invalid icon
+				expect(badgeInvalid.hasAttribute("invalid"), "invalid icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeInvalid).display, "invalid icon should be hidden").to.equal("none");
+
+				// Test no icon
+				expect(badgeNoIcon.hasAttribute("invalid"), "no icon should have invalid attr").to.be.true;
+				expect(getComputedStyle(badgeNoIcon).display, "no icon should be hidden").to.equal("none");
+
+				// Test valid icon
+				expect(badgeValid.hasAttribute("invalid"), "valid icon should NOT have invalid attr").to.be.false;
+				expect(getComputedStyle(badgeValid).display, "valid icon should be visible").to.not.equal("none");
+				const icon = badgeValid.shadowRoot?.querySelector(".ui5-avatar-badge-icon");
+				expect(icon, "valid icon should have icon in shadow DOM").to.exist;
+				expect(icon?.getAttribute("name")).to.equal("accept");
+
+				// Cleanup: remove elements from DOM
+				badgeEmpty.remove();
+				badgeInvalid.remove();
+				badgeNoIcon.remove();
+				badgeValid.remove();
+			});
+		});
+	});
+
+	it("does not permanently hide badge when icon collection loads after initial render", () => {
+		// Controlled deferred: loader resolves only when resolveLoader() is called.
+		let resolveLoader!: () => void;
+		const loaderDeferred = new Promise<void>(resolve => {
+			resolveLoader = resolve;
+		});
+
+		// Register a custom collection loader that stays pending until resolveLoader() fires.
+		// The collection name "lazy-test-icons" is not a standard SAP collection so it passes
+		// through getEffectiveIconCollection() unchanged, avoiding any side-effects on other tests.
+		registerIconLoader("lazy-test-icons", () =>
+			loaderDeferred.then(() => ({
+				collection: "lazy-test-icons",
+				packageName: "test",
+				data: {
+					"my-test-icon": {
+						paths: ["M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"],
+					},
+				},
+			}))
+		);
+
+		cy.mount(
+			<Avatar initials="AB" size="M">
+				<AvatarBadge slot="badge" icon="lazy-test-icons/my-test-icon"></AvatarBadge>
+			</Avatar>
+		);
+
+		// Wait for the first render to complete AND verify the badge is not hidden.
+		// .ui5-avatar-badge-icon is only rendered in shadow DOM when !invalid.
+		// Its presence proves both: (a) _render() has executed, and (b) invalid was never set to true.
+		// With the broken sync onBeforeRendering: getIconDataSync() → undefined → invalid=true
+		// → <Icon> is NOT rendered → this assertion FAILS.
+		// With the async fix: the await suspends before invalid can be touched → render with
+		// invalid=false → <Icon> IS in shadow DOM → this assertion PASSES.
+		cy.get("[ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("exist");
+
+		// Now resolve the loader — icon data becomes available.
+		cy.then(() => {
+			resolveLoader();
+		});
+
+		// After resolution the badge remains visible and its inner Icon retains the name attribute.
+		cy.get("[ui5-avatar-badge]").should("not.have.attr", "invalid");
+		cy.get("[ui5-avatar-badge]")
+			.shadow()
+			.find(".ui5-avatar-badge-icon")
+			.should("exist")
+			.and("have.attr", "name", "lazy-test-icons/my-test-icon");
+
+		// Cleanup: iconCollectionPromises and registry live on the shared meta DOM element and
+		// persist across tests in the same Cypress session. Without cleanup, a second run of this
+		// test would find the resolved promise and icon data already in cache — getIconDataSync()
+		// would return immediately, bypassing the deferred mechanism and masking a regression.
+		cy.document().then(doc => {
+			const meta = doc.querySelector("meta[name=\"ui5-shared-resources\"]") as unknown as Record<string, Record<string, Map<string, unknown>>>;
+			meta?.["SVGIcons"]?.["promises"]?.delete("lazy-test-icons");
+			meta?.["SVGIcons"]?.["registry"]?.delete("lazy-test-icons/my-test-icon");
+		});
 	});
 });

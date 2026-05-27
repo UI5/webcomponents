@@ -1,6 +1,7 @@
-import "../../dist/Assets.js";
+import "../../src/Assets.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import DateRangePicker from "../../src/DateRangePicker.js";
+import Label from "../../src/Label.js";
 
 type DateTimePickerTemplateOptions = Partial<{
 	formatPattern: string;
@@ -16,6 +17,10 @@ function DateRangePickerTemplate(options: DateTimePickerTemplateOptions) {
 }
 
 describe("DateRangePicker general interaction", () => {
+	afterEach(() => {
+		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
+	});
+
 	it("Custom Validation Error", () => {
 		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
 
@@ -487,72 +492,6 @@ describe("DateRangePicker general interaction", () => {
 			});
 	});
 
-	it("Picker popover should have accessible name", () => {
-		cy.mount(<DateRangePicker></DateRangePicker>);
-
-		cy.get<DateRangePicker>("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realPress("F4");
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.ui5DateRangePickerExpectToBeOpen()
-
-		cy.get("@dateRangePicker")
-			.shadow()
-			.find("[ui5-responsive-popover]")
-			.should("have.attr", "accessible-name", "Choose Date Range");
-	});
-
-	it("Selected days: accessibility semantics", () => {
-		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("en");
-			})
-
-		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
-
-		cy.get<DateRangePicker>("[ui5-daterange-picker]")
-			.as("dateRangePicker")
-			.shadow()
-			.find("[ui5-datetime-input]")
-			.realClick()
-			.should("be.focused");
-
-		cy.realType("09/06/2024 - 15/06/2024");
-
-		cy.realPress("Enter")
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.should("have.value", "09/06/2024 - 15/06/2024");
-
-		cy.realPress("F4");
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.ui5DateRangePickerExpectToBeOpen()
-
-		cy.get<DateRangePicker>("@dateRangePicker")
-			.shadow()
-			.find("[ui5-calendar]")
-			.shadow()
-			.find("[ui5-daypicker]")
-			.shadow()
-			.find(".ui5-dp-root .ui5-dp-content div > .ui5-dp-item")
-			.should(days => {
-				const startSelectionDay = days[14];
-				const dayInBetween = days[15];
-				const endSelectionDay = days[20];
-
-				expect(startSelectionDay).to.have.attr("aria-selected", "true");
-				expect(dayInBetween).to.have.attr("aria-selected", "true");
-				expect(endSelectionDay).to.have.attr("aria-selected", "true");
-			});
-	});
-
 	it("Min and max dates are set without format-pattern by using ISO (yyyy-MM-dd) format", () => {
 		cy.wrap({ setLanguage })
 			.then(api => {
@@ -719,5 +658,837 @@ describe("DateRangePicker general interaction", () => {
 				expect(yearInBetween).to.have.class("ui5-yp-item--selected-between");
 				expect(endSelectionYear).to.have.class("ui5-yp-item--selected");
 			});
+	});
+});
+
+describe("Accessibility", () => {
+	it("Picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(<DateRangePicker accessible-name={LABEL}></DateRangePicker>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get("@dateRangePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Date Range for ${LABEL}`);
+	});
+
+	it("Picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+		cy.mount(<>
+			<Label for="dateRangePicker">{LABEL}</Label>
+			<DateRangePicker id="dateRangePicker"></DateRangePicker>
+		</>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get("@dateRangePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Date Range for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "Some description";
+		cy.mount(<DateRangePicker accessibleDescription={DESCRIPTION}></DateRangePicker>);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="descr">{DESCRIPTION}</p>
+				<DateRangePicker accessibleDescriptionRef="descr"></DateRangePicker>
+			</>
+		);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "descr");
+
+		cy.get("#descr").should("have.text", DESCRIPTION);
+	});
+
+	it("Selected days: accessibility semantics", () => {
+		cy.wrap({ setLanguage })
+			.then(api => {
+				return api.setLanguage("en");
+			})
+
+		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
+
+		cy.get<DateRangePicker>("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/06/2024 - 15/06/2024");
+
+		cy.realPress("Enter")
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.should("have.value", "09/06/2024 - 15/06/2024");
+
+		cy.realPress("F4");
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.ui5DateRangePickerExpectToBeOpen()
+
+		cy.get<DateRangePicker>("@dateRangePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-root .ui5-dp-content div > .ui5-dp-item")
+			.should(days => {
+				const startSelectionDay = days[14];
+				const dayInBetween = days[15];
+				const endSelectionDay = days[20];
+
+				expect(startSelectionDay).to.have.attr("aria-selected", "true");
+				expect(dayInBetween).to.have.attr("aria-selected", "true");
+				expect(endSelectionDay).to.have.attr("aria-selected", "true");
+			});
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" required formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("09/09/2020 - 10/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" required formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("invalid input");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("09/09/2020 - 10/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for rangeUnderflow", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" minDate="10/10/2020" formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("01/10/2020 - 02/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: true },
+				validity: { rangeUnderflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("11/10/2020 - 12/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: false },
+				validity: { rangeUnderflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+
+	it("has correct validity for rangeOverflow", () => {
+		cy.mount(
+			<form>
+				<DateRangePicker id="dateRangePicker" maxDate="10/10/2020" formatPattern="dd/MM/yyyy"></DateRangePicker>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#dateRangePicker")
+			.as("dateRangePicker")
+			.ui5DatePickerTypeDate("11/10/2020 - 12/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: true },
+				validity: { rangeOverflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("exist");
+
+		cy.get("@dateRangePicker")
+			.ui5DatePickerTypeDate("07/09/2020 - 09/10/2020");
+
+		cy.get("@dateRangePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: false },
+				validity: { rangeOverflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateRangePicker:invalid")
+			.should("not.exist");
+	});
+});
+
+describe("DateRangePicker rejects relative dates", () => {
+	const relativeKeywords = ["today", "tomorrow", "yesterday"];
+
+	relativeKeywords.forEach(keyword => {
+		it(`typing '${keyword}' sets error state`, () => {
+			cy.mount(<DateRangePicker></DateRangePicker>);
+
+			cy.get("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realType(keyword);
+			cy.realPress("Enter");
+
+			cy.get("@dateRangePicker")
+				.should("have.value", keyword)
+				.should("have.attr", "value-state", "Negative");
+		});
+	});
+
+	it("valid concrete date range does not set error state", () => {
+		cy.mount(<DateRangePicker displayFormat="dd/MM/yyyy"></DateRangePicker>);
+
+		cy.get("[ui5-daterange-picker]")
+			.as("dateRangePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("09/09/2020 - 10/10/2020");
+		cy.realPress("Enter");
+
+		cy.get("@dateRangePicker")
+			.should("have.attr", "value-state", "None");
+	});
+});
+
+describe("DateRangePicker - Two Calendars Feature", () => {
+	describe("Basic Two Calendars Display", () => {
+		it("should display two calendars when showTwoMonths is true", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-31" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen()
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
+
+		it("should display one calendar when showTwoMonths is false", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={false} value="2024-01-01 - 2024-01-31" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetMonthContainers()
+				.should("not.exist");
+		});
+
+		it("should show consecutive months in two calendars mode", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-calheader-middlebtn")
+				.should("have.length", 6);
+		});
+
+		it("should dynamically toggle showTwoMonths after initial render", () => {
+			cy.mount(
+				<DateRangePicker value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Initially should show single calendar (no month containers in multi-month mode)
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Enable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = true;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should now show two calendars
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("have.length", 2);
+
+			// Close the picker
+			cy.realPress("Escape");
+
+			// Disable two calendars mode
+			cy.get("@dateRangePicker")
+				.then(($drp) => {
+					($drp[0] as any).showTwoMonths = false;
+				});
+
+			// Reopen the picker
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Should be back to single calendar
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			// Verify single daypicker exists
+			cy.get("@dateRangePicker")
+				.shadow()
+				.find("[ui5-calendar]")
+				.shadow()
+				.find("[ui5-daypicker]")
+				.should("exist")
+				.and("have.length", 1);
+		});
+	});
+
+	describe("Date Range Selection with Two Calendars", () => {
+		it("should allow selecting range across both calendars", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Select start date in first calendar
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 14);
+
+			// Select end date in second calendar
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 9);
+
+			cy.get("@dateRangePicker")
+				.invoke("attr", "value")
+				.should("exist")
+				.and("not.be.empty");
+		});
+
+		it("should highlight selection across both calendars", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-20 - 2024-02-10" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// First calendar should have selected dates
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(0);
+
+			// Second calendar should have selected dates
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifySelectedDatesInCalendar(1);
+		});
+
+		it("should update value when selecting new range", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-01 - 2024-01-05" />
+			);
+
+			const changeSpy = cy.spy().as("changeSpy");
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.then($drp => {
+					$drp[0].addEventListener("change", changeSpy);
+				})
+				.ui5DateRangePickerOpen();
+
+			// Select new start date
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(0, 9);
+
+			// Select new end date
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickDateInCalendar(1, 14);
+
+			cy.get("@changeSpy").should("have.been.called");
+		});
+
+		it("should respect min/max date constraints with two calendars", () => {
+			cy.mount(
+				<DateRangePicker
+					showTwoMonths={true}
+					formatPattern="dd/MM/yyyy"
+					minDate="10/01/2024"
+					maxDate="28/02/2024"
+					value="15/01/2024 - 20/01/2024"
+				/>
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			// Both calendars should show months within the valid range (Jan and Feb 2024)
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+
+			// Check that dates before minDate are disabled (e.g., Jan 5, 2024)
+			// Jan 5, 2024 = timestamp 1704412800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1704412800']")
+				.should("have.class", "ui5-dp-item--disabled");
+
+			// Check that dates within valid range are NOT disabled (e.g., Jan 15, 2024)
+			// Jan 15, 2024 = timestamp 1705276800
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetDayPicker(0)
+				.shadow()
+				.find("div[data-sap-timestamp='1705276800']")
+				.should("not.have.class", "ui5-dp-item--disabled");
+		});
+	});
+
+	describe("Navigation in Two Calendars Mode", () => {
+		it("should navigate both calendars forward", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("next");
+
+			// First calendar should show February
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
+
+			// Second calendar should show March
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
+		});
+
+		it("should navigate both calendars backward", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-03-15 - 2024-03-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerClickNavigationButton("prev");
+
+			// First calendar should show February
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(0, "February");
+
+			// Second calendar should show March
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerVerifyMonthText(1, "March");
+		});
+	});
+
+	describe("Picker Overlays", () => {
+		it("should show month picker overlay when clicking month button", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.should("not.have.attr", "hidden");
+		});
+
+		it("should show year picker overlay when clicking year button", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-year]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+		});
+
+		it("should return to day pickers after selecting from month picker", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.first()
+				.realClick();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
+	});
+
+	describe("Keyboard Navigation", () => {
+		it("should allow keyboard navigation through header buttons", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2024-01-15 - 2024-01-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.should("have.length.greaterThan", 0);
+		});
+
+		it("should activate buttons with Space key", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="Jan 15, 2024 - Jan 20, 2024" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.eq(0)
+				.find("[data-ui5-cal-header-btn-month]")
+				.focus()
+				.should("be.focused");
+
+			cy.realPress("Space");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find("[ui5-monthpicker]")
+				.should("exist")
+				.should("not.have.attr", "hidden");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendar()
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("exist")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+		});
+	});
+
+	describe("Edge Cases", () => {
+		it("should handle year boundary correctly", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} value="2025-12-15 - 2025-12-20" />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.shadow()
+				.find("[ui5-datetime-input]")
+				.realClick()
+				.should("be.focused");
+
+			cy.realPress("F4");
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectToBeOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerGetCalendarHeaders()
+				.should("have.length.greaterThan", 0);
+		});
+
+		it("should handle empty initial value", () => {
+			cy.mount(
+				<DateRangePicker showTwoMonths={true} />
+			);
+
+			cy.get<DateRangePicker>("[ui5-daterange-picker]")
+				.as("dateRangePicker")
+				.ui5DateRangePickerOpen();
+
+			cy.get<DateRangePicker>("@dateRangePicker")
+				.ui5DateRangePickerExpectMonthContainerCount(2);
+		});
 	});
 });

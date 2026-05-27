@@ -3,6 +3,8 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import Search from "./Search.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ShellBarSearchTemplate from "./ShellBarSearchTemplate.js";
+import ShellBarSearchCss from "./generated/themes/ShellBarSearch.css.js";
+
 import {
 	SEARCH_FIELD_SEARCH_ICON,
 	SHELLBAR_SEARCH_EXPANDED,
@@ -21,6 +23,10 @@ import {
 @customElement({
 	tag: "ui5-shellbar-search",
 	template: ShellBarSearchTemplate,
+	styles: [
+		Search.styles,
+		ShellBarSearchCss,
+	],
 })
 
 class ShellBarSearch extends Search {
@@ -33,12 +39,29 @@ class ShellBarSearch extends Search {
 	autoOpen = false;
 
 	_handleSearchIconPress() {
+		if (isPhone() && this.open) {
+			this._handleSearchEvent();
+			return;
+		}
+
 		super._handleSearchIconPress();
 
 		if (this.collapsed) {
 			this.collapsed = false;
 		} else if (!this.value) {
 			this.collapsed = true;
+		}
+	}
+
+	_handleEnter() {
+		if (!this.value && !this.collapsed) {
+			this.collapsed = true;
+
+			setTimeout(() => {
+				this.focus();
+			}, 0);
+		} else {
+			super._handleEnter();
 		}
 	}
 

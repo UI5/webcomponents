@@ -1,8 +1,10 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import {
 	isEscape,
 	isSpace,
@@ -36,7 +38,7 @@ import SplitButtonTemplate from "./SplitButtonTemplate.js";
 // Styles
 import SplitButtonCss from "./generated/themes/SplitButton.css.js";
 
-type SplitButtonRootAccAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title">;
+type SplitButtonRootAccAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
 type SplitButtonArrowButtonAccAtributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
 type SplitButtonAccessibilityAttributes = {root?: SplitButtonRootAccAttributes, arrowButton?: SplitButtonArrowButtonAccAtributes}
 
@@ -226,6 +228,7 @@ class SplitButton extends UI5Element {
 	 *     Accepts any string value.
 	 *   - **title**: Specifies a tooltip or description for screen readers.
 	 *     Accepts any string value.
+	 * 	- **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or give focus to the button.
 	 *
 	 * - **arrowButton**: Attributes applied specifically to the arrow (split) button.
 	 *   - **hasPopup**: Indicates the presence and type of popup triggered by the arrow button.
@@ -247,7 +250,7 @@ class SplitButton extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	text!: Array<Node>;
+	text!: DefaultSlot<Node>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -320,8 +323,12 @@ class SplitButton extends UI5Element {
 			e.preventDefault();
 			e.stopPropagation();
 			this._textButtonActive = false;
-			if (!this._shiftOrEscapePressedDuringSpace && target !== this.arrowButton) { // Do not fire click if Arrow button is focused by mouse and Space is pressed afterwards
-				this._fireClick();
+			if (!this._shiftOrEscapePressedDuringSpace) { // Do not fire click if Arrow button is focused by mouse and Space is pressed afterwards
+				if (target !== this.arrowButton) {
+					this._fireClick();
+				} else {
+					this._fireArrowClick();
+				}
 			}
 
 			this._shiftOrEscapePressedDuringSpace = false;
@@ -421,15 +428,14 @@ class SplitButton extends UI5Element {
 		e.preventDefault();
 		const target = e.target as Button;
 
-		if (this.arrowButton && target === this.arrowButton) {
-			this._activeArrowButton = true;
-			this._fireArrowClick();
-			return;
-		}
-
-		this._textButtonActive = true;
-
 		if (isEnter(e)) {
+			if (this.arrowButton && target === this.arrowButton) {
+				this._activeArrowButton = true;
+				this._fireArrowClick();
+				return;
+			}
+
+			this._textButtonActive = true;
 			this._fireClick(e);
 			return;
 		}
@@ -443,7 +449,7 @@ class SplitButton extends UI5Element {
 		return this.activeArrowButton || this._activeArrowButton;
 	}
 
-	get textButtonAccText() {
+	get buttonTextContent() {
 		return this.textContent;
 	}
 
@@ -465,6 +471,7 @@ class SplitButton extends UI5Element {
 				hasPopup: this.accessibilityAttributes?.root?.hasPopup,
 				roleDescription: this.accessibilityAttributes?.root?.roleDescription || (this._hideArrowButton ? undefined : SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION)),
 				title: this.accessibilityAttributes?.root?.title,
+				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},
 			arrowButton: {
 				hasPopup: this.accessibilityAttributes?.arrowButton?.hasPopup || "menu" as AriaHasPopup,
@@ -485,6 +492,10 @@ class SplitButton extends UI5Element {
 		return SplitButton.i18nBundle.getText(SPLIT_BUTTON_ARROW_BUTTON_TOOLTIP);
 	}
 
+	get isSplitButton(): boolean {
+		return true;
+	}
+
 	get ariaLabelText() {
 		return [SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION), SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT)].join(" ");
 	}
@@ -496,3 +507,5 @@ export default SplitButton;
 export type {
 	SplitButtonAccessibilityAttributes,
 };
+
+export const isInstanceOfSplitButton = createInstanceChecker<SplitButton>("isSplitButton");

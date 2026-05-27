@@ -25,6 +25,11 @@ type ListItemBasePressEventDetail = {
 	key?: string,
 }
 
+type ListItemBaseClickEventDetail = {
+	item: ListItemBase,
+	originalEvent: Event,
+}
+
 /**
  * @class
  * A class to serve as a foundation
@@ -37,6 +42,19 @@ type ListItemBasePressEventDetail = {
 @customElement({
 	renderer: jsxRenderer,
 	styles: [styles, draggableElementStyles],
+})
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {ListItemBase} item The activated item.
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
 })
 @event("request-tabindex-change", {
 	bubbles: true,
@@ -53,9 +71,11 @@ type ListItemBasePressEventDetail = {
 })
 @event("forward-before", {
 	bubbles: true,
+	cancelable: true,
 })
 class ListItemBase extends UI5Element implements ITabbable {
 	eventDetails!: {
+		"click": ListItemBaseClickEventDetail,
 		"request-tabindex-change": FocusEvent,
 		"_press": ListItemBasePressEventDetail,
 		"_focused": FocusEvent,
@@ -165,10 +185,52 @@ class ListItemBase extends UI5Element implements ITabbable {
 	}
 
 	_onclick(e: MouseEvent) {
-		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
+		if (this.getFocusDomRef()!.matches(":has(:focus-within)") || this._isDisabledInteractiveContentClicked(e)) {
 			return;
 		}
+		e.stopPropagation();
 		this.fireItemPress(e);
+	}
+
+	_isDisabledInteractiveContentClicked(e: MouseEvent): boolean {
+		const path = e.composedPath();
+		const focusDomRef = this.getFocusDomRef();
+
+		return path.some(target => {
+			if (!(target instanceof HTMLElement)) {
+				return false;
+			}
+
+			if (target === this || target === focusDomRef) {
+				return false;
+			}
+
+			if (!this._isNativeInteractiveElement(target) && !this._isCustomInteractiveElement(target)) {
+				return false;
+			}
+
+			return this._isElementDisabled(target);
+		});
+	}
+
+	_isNativeInteractiveElement(target: HTMLElement): boolean {
+		return target.matches("button, input, select, textarea");
+	}
+
+	_isCustomInteractiveElement(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+
+		return target.tagName.includes("-")
+			&& ("disabled" in targetWithDisabled || target.hasAttribute("aria-disabled"));
+	}
+
+	_isElementDisabled(target: HTMLElement): boolean {
+		const targetWithDisabled = target as HTMLElement & { disabled?: boolean };
+		if (typeof targetWithDisabled.disabled === "boolean") {
+			return targetWithDisabled.disabled;
+		}
+
+		return target.getAttribute("aria-disabled") === "true";
 	}
 
 	/**
@@ -192,6 +254,7 @@ class ListItemBase extends UI5Element implements ITabbable {
 		if (isEnter(e as KeyboardEvent)) {
 			e.preventDefault();
 		}
+		this.fireDecoratorEvent("click", { item: this, originalEvent: e });
 		this.fireDecoratorEvent("_press", { item: this, selected: this.selected, key: (e as KeyboardEvent).key });
 	}
 
@@ -207,7 +270,9 @@ class ListItemBase extends UI5Element implements ITabbable {
 		const target = e.target as HTMLElement;
 
 		if (this.shouldForwardTabBefore(target)) {
-			this.fireDecoratorEvent("forward-before");
+			if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
 		}
 	}
 
@@ -272,4 +337,5 @@ export default ListItemBase;
 
 export type {
 	ListItemBasePressEventDetail,
+	ListItemBaseClickEventDetail,
 };

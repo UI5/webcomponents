@@ -28,6 +28,10 @@
 	padding: 0;
 	outline: none;
 	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: fit-content;
 }
 
 :host([open]) {

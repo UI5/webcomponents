@@ -1,6 +1,45 @@
 import SegmentedButton from "../../src/SegmentedButton.js";
+import Label from "../../src/Label.js";
 import SegmentedButtonItem from "../../src/SegmentedButtonItem.js";
 import type UI5Element from "@ui5/webcomponents-base";
+import { SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "../../src/generated/i18n/i18n-defaults.js";
+import { Key } from "@ui5/webcomponents-base/dist/thirdparty/preact/preact.module.js";
+
+function testSelectItem(shouldPreventSelect: boolean, pressedKeys: Key[]) {
+	cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.as("segmentedButton");
+
+		cy.get<SegmentedButton>("@segmentedButton")
+			.find("[ui5-segmented-button-item]")
+			.as("items");
+
+		cy.get<SegmentedButtonItem>("@items")
+			.ui5SegmentedButtonFocusFirstItem();
+
+		cy.realPress("ArrowRight");
+
+		cy.get<SegmentedButtonItem>("@items")
+			.eq(1)
+			.as("secondItem");
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should("be.focused");
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should("not.have.attr", "selected");
+
+		cy.realPress(pressedKeys);
+
+		cy.get<SegmentedButtonItem>("@secondItem")
+			.should(shouldPreventSelect ? "not.have.attr" : "have.attr", "selected");
+}
 
 describe("SegmentedButton general interaction tests", () => {
 	it("should have first item selected by default", () => {
@@ -21,75 +60,19 @@ describe("SegmentedButton general interaction tests", () => {
 	});
 
 	it("should select second item with enter", () => {
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem>First</SegmentedButtonItem>
-				<SegmentedButtonItem>Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
-
-		cy.get("[ui5-segmented-button]")
-			.as("segmentedButton");
-
-		cy.get<SegmentedButton>("@segmentedButton")
-			.find("[ui5-segmented-button-item]")
-			.as("items");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.ui5SegmentedButtonFocusFirstItem();
-
-		cy.realPress("ArrowRight");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.eq(1)
-			.as("secondItem");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("be.focused");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("not.have.attr", "selected");
-
-		cy.realPress("Enter");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("have.attr", "selected");
+		testSelectItem(false, ["Enter"]);
 	});
 
 	it("should select second item with space", () => {
-		cy.mount(
-			<SegmentedButton>
-				<SegmentedButtonItem>First</SegmentedButtonItem>
-				<SegmentedButtonItem>Second</SegmentedButtonItem>
-			</SegmentedButton>
-		);
+		testSelectItem(false, ["Space"]);
+	});
 
-		cy.get("[ui5-segmented-button]")
-			.as("segmentedButton");
+	it("should not select second item on space when shift is pressed", () => {
+		testSelectItem(true, ["Space", "Shift"]);
+	});
 
-		cy.get<SegmentedButton>("@segmentedButton")
-			.find("[ui5-segmented-button-item]")
-			.as("items");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.ui5SegmentedButtonFocusFirstItem();
-
-		cy.realPress("ArrowRight");
-
-		cy.get<SegmentedButtonItem>("@items")
-			.eq(1)
-			.as("secondItem");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("be.focused");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("not.have.attr", "selected");
-
-		cy.realPress("Space");
-
-		cy.get<SegmentedButtonItem>("@secondItem")
-			.should("have.attr", "selected");
+	it("should not select second item on space when escape is pressed", () => {
+		testSelectItem(true, ["Space", "Escape"]);
 	});
 
 	it("should select last item with mouse", () => {
@@ -230,15 +213,244 @@ describe("SegmentedButton - getFocusDomRef", () => {
 	});
 });
 
-describe("Accessibility", () => {
-	it("should have correct aria labels", () => {
+describe("SegmentedButtonItems appearance", () => {
+	it("should not render items with hidden property and set correct aria-posinset and aria-setsize", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem hidden>Second</SegmentedButtonItem>
+				<SegmentedButtonItem>Third</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.as("segmentedButton");
+
+		cy.get("@segmentedButton")
+			.find("[ui5-segmented-button-item]:not([hidden])")
+			.as("visibleItems");
+
+		cy.get("@segmentedButton")
+			.find("[ui5-segmented-button-item][hidden]")
+			.as("hiddenItems");
+
+		// Only visible items should be counted by SegmentedButton
+		cy.get("@segmentedButton")
+			.invoke("attr", "style")
+			.should("satisfy", style => style.slice(-9) === "count: 2;");
+
+		// Assert aria-posinset and aria-setsize for visible items
+		cy.get("@visibleItems")
+			.shadow()
+			.find("li")
+			.each(($el, index, $list) => {
+				cy.wrap($el).should("have.attr", "aria-posinset", `${index + 1}`);
+				cy.wrap($el).should("have.attr", "aria-setsize", `${$list.length}`);
+			});
+
+		// Assert hidden item does not have aria-posinset and aria-setsize
+		cy.get("@hiddenItems")
+			.shadow()
+			.find("li")
+			.each(($el) => {
+				cy.wrap($el).should("not.have.attr", "aria-posinset");
+				cy.wrap($el).should("not.have.attr", "aria-setsize");
+			});
+	});
+});
+
+describe("SegmentedButton: fitContent", () => {
+    it("should have items with width which fits item content when itemsFitContent is true", () => {
+        cy.mount(
+            <SegmentedButton itemsFitContent={true}>
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(shortWidth => {
+				cy.get("#item2")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+				cy.get("#item3")
+					.invoke("outerWidth")
+					.should("be.gt", shortWidth);
+        });
+    });
+
+    it("should have items with equal width when itemsFitContent is false (default)", () => {
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="item1">Short</SegmentedButtonItem>
+                <SegmentedButtonItem id="item2">Much longer text</SegmentedButtonItem>
+                <SegmentedButtonItem id="item3">Medium</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+			.invoke("outerWidth")
+			.then(width1 => {
+            	cy.get("#item2")
+					.invoke("outerWidth")
+					.should("eq", width1);
+            	cy.get("#item3")
+					.invoke("outerWidth")
+					.should("eq", width1);
+        });
+    });
+});
+
+describe("SegmentedButton Accessibility", () => {
+	it("segmented button should have correct aria label when accessibleName is set", () => {
+		const LABEL = "Label";
+		cy.mount(
+			<SegmentedButton accessibleName={LABEL}>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-label", LABEL);
+	});
+
+	it("segmented button should have correct aria label when external label is set", () => {
+		const LABEL = "External label";
 		cy.mount(
 			<>
-				<SegmentedButton selectionMode="Multiple">
-					<SegmentedButtonItem accessibleName="accessible text">First</SegmentedButtonItem>
-					<SegmentedButtonItem accessibleNameRef="reference">Second</SegmentedButtonItem>
+				<Label for="segBtn">{LABEL}</Label>
+				<SegmentedButton id="segBtn">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
 				</SegmentedButton>
-				<span id="reference">accessible ref text</span>
+			</>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-label", LABEL);
+	});
+
+	it("segmented button should have correct aria label when accessibleNameRef is set", () => {
+		const LABEL = "External label";
+		cy.mount(
+			<>
+				<p id="accessibleLabel">{LABEL}</p>
+				<SegmentedButton accessibleNameRef="accessibleLabel">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-label", LABEL);
+	});
+
+	it("segmented button should have correct aria description when neither accessibleDescription nor accessibleDescriptionRef are set", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-description", SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY));
+	});
+
+	it("segmented button should have correct aria description when accessibleDescription is set", () => {
+		const DESCRIPTION = "Description";
+		cy.mount(
+			<SegmentedButton accessibleDescription={DESCRIPTION}>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+	});
+
+	it("segmented button should have correct aria description when accessibleDescriptionRef is set", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="accessibleDescription">{DESCRIPTION}</p>
+				<SegmentedButton accessibleDescriptionRef="accessibleDescription">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.shadow()
+			.find(".ui5-segmented-button-root")
+			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+	});
+
+	it("segmented button should have correct aria-multiselectable", () => {
+		cy.mount(
+			<>
+				<SegmentedButton>
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+				<SegmentedButton selectionMode="Multiple">
+					<SegmentedButtonItem>First</SegmentedButtonItem>
+					<SegmentedButtonItem>Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		// Test Single mode (default) should have aria-multiselectable="false"
+		cy.get("[ui5-segmented-button]")
+			.first()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "false")
+			.should("have.attr", "aria-orientation", "horizontal");
+
+		// Test Multiple mode should have aria-multiselectable="true"
+		cy.get("[ui5-segmented-button]")
+			.last()
+			.shadow()
+			.find("ul[role='listbox']")
+			.should("have.attr", "aria-multiselectable", "true")
+			.should("have.attr", "aria-orientation", "horizontal");
+	});
+
+	
+});
+
+
+describe("SegmentedButtonItem Accessibility", () => {
+	it("segmented button items should have correct aria labels", () => {
+		const LABEL = "Text Label";
+		const REF_LABEL = "Ref Label";
+		const FOR_LABEL = "For Label";
+		cy.mount(
+			<>
+				<Label for="thirdItem">{FOR_LABEL}</Label>
+				<SegmentedButton selectionMode="Multiple">
+					<SegmentedButtonItem accessibleName={LABEL}>First</SegmentedButtonItem>
+					<SegmentedButtonItem accessibleNameRef="reference">Second</SegmentedButtonItem>
+					<SegmentedButtonItem id="thirdItem">Third</SegmentedButtonItem>
+				</SegmentedButton>
+				<span id="reference">{REF_LABEL}</span>
 			</>
 		);
 
@@ -250,15 +462,232 @@ describe("Accessibility", () => {
 			.as("items");
 
 		cy.get<SegmentedButtonItem>("@items")
-			.first()
+			.eq(0)
 			.shadow()
 			.find("li")
-			.should("have.attr", "aria-label", "accessible text");
+			.should("have.attr", "aria-label", LABEL);
 
 		cy.get<SegmentedButtonItem>("@items")
-			.last()
+			.eq(1)
 			.shadow()
 			.find("li")
-			.should("have.attr", "aria-label", "accessible ref text");
+			.should("have.attr", "aria-label", REF_LABEL);
+
+		cy.get<SegmentedButtonItem>("@items")
+			.eq(2)
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-label", FOR_LABEL);
+	});
+
+	it("segmented button item should have correct aria descriptions", () => {
+		const DESCRIPTION = "Text Description";
+		const REF_DESCRIPTION = "Ref Description";
+		cy.mount(
+			<>
+				<p id="accessibleDescription">{REF_DESCRIPTION}</p>
+				<SegmentedButton>
+					<SegmentedButtonItem accessibleDescription={DESCRIPTION}>First</SegmentedButtonItem>
+					<SegmentedButtonItem accessibleDescriptionRef="accessibleDescription">Second</SegmentedButtonItem>
+				</SegmentedButton>
+			</>
+		);
+
+		cy.get("[ui5-segmented-button]")
+			.as("segmentedButton");
+
+		cy.get<SegmentedButton>("@segmentedButton")
+			.find("[ui5-segmented-button-item]")
+			.as("items");
+
+		cy.get<SegmentedButtonItem>("@items")
+			.eq(0)
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-description", DESCRIPTION);
+
+		cy.get<SegmentedButtonItem>("@items")
+			.eq(1)
+			.shadow()
+			.find("li")
+			.should("have.attr", "aria-description", REF_DESCRIPTION);
+	});
+
+	it("should set title attribute to slot text when tooltip is not provided", () => {
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="item1">Segmented Item Text</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        cy.get("#item1")
+            .shadow()
+            .find("li")
+            .should("have.attr", "title", "Segmented Item Text");
+    });
+
+    it("should show tooltip for disabled items", () => {
+        const TOOLTIP_TEXT = "Disabled item tooltip";
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem disabled tooltip={TOOLTIP_TEXT}>Disabled Item</SegmentedButtonItem>
+                <SegmentedButtonItem tooltip="Enabled tooltip">Enabled Item</SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        // Check that disabled item has tooltip
+        cy.get("[ui5-segmented-button-item][disabled]")
+            .shadow()
+            .find("li")
+            .should("have.attr", "title", TOOLTIP_TEXT);
+    });
+
+    it("should show tooltip on hover for disabled items", () => {
+        const TOOLTIP_TEXT = "This is a disabled item";
+        cy.mount(
+            <SegmentedButton>
+                <SegmentedButtonItem id="disabledItem" disabled tooltip={TOOLTIP_TEXT}>
+                    Disabled
+                </SegmentedButtonItem>
+            </SegmentedButton>
+        );
+
+        // Verify the disabled item has the correct title attribute
+        cy.get("#disabledItem")
+            .shadow()
+            .find("li")
+            .should("have.attr", "title", TOOLTIP_TEXT)
+            .should("have.attr", "aria-disabled", "true");
+
+        // Test that hovering shows tooltip (this is browser behavior, but we can verify the title is present)
+        cy.get("#disabledItem")
+            .shadow()
+            .find("li")
+            .trigger("mouseover")
+            .should("have.attr", "title", TOOLTIP_TEXT);
+    });
+});
+
+describe("SegmentedButtonItem: click event", () => {
+	it("should fire selection change event when item is clicked", () => {
+		const clickSpy = cy.spy().as("clickSpy");
+		const selectionChangeSpy = cy.spy().as("selectionChangeSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1" selected>First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get<SegmentedButton>("[ui5-segmented-button]")
+			.then($el => {
+				$el[0].addEventListener("selection-change", selectionChangeSpy);
+			});
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", clickSpy);
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
+
+		cy.get("@selectionChangeSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should prevent selection when preventDefault is called", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get<SegmentedButton>("[ui5-segmented-button]")
+			.then($el => {
+				$el[0].addEventListener("selection-change", cy.spy().as("selectionChangeSpy"));
+			})
+
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		cy.get("#item2")
+			.realClick();
+
+		// Item 2 should NOT be selected because we called preventDefault
+		cy.get("#item1")
+			.should("have.attr", "selected");
+		cy.get("#item2")
+			.should("not.have.attr", "selected");
+
+		cy.get("@selectionChangeSpy")
+			.should("not.have.been.called");
+	});
+
+	it("should not fire click event when disabled item is clicked", () => {
+		const clickSpy = cy.spy().as("clickSpy");
+		
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2" disabled>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", clickSpy);
+			});
+
+		// Click the disabled item directly
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.click({ force: true });
+
+		cy.get("@clickSpy").should("not.have.been.called");
+		cy.get("#item2").should("not.have.attr", "selected");
+	});
+
+	it("should provide originalEvent in click event detail", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem id="item1">First</SegmentedButtonItem>
+				<SegmentedButtonItem id="item2">Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("#item2")
+			.then($el => {
+				$el[0].addEventListener("click", cy.spy((e: CustomEvent) => {
+					// Check that event detail contains originalEvent
+					expect(e.detail).to.have.property("originalEvent");
+
+					// Check originalEvent is a MouseEvent
+					expect(e.detail.originalEvent).to.be.instanceOf(MouseEvent);
+				}).as("clickSpy"));
+			});
+
+		cy.get("#item2")
+			.realClick();
+
+		cy.get("@clickSpy")
+			.should("have.been.calledOnce");
 	});
 });
+	

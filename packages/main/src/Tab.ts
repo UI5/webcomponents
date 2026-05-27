@@ -1,8 +1,10 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import executeTemplate from "@ui5/webcomponents-base/dist/renderer/executeTemplate.js";
@@ -38,12 +40,18 @@ import css from "./generated/themes/Tab.css.js";
 import stripCss from "./generated/themes/TabInStrip.css.js";
 import draggableElementStyles from "./generated/themes/DraggableElement.css.js";
 import overflowCss from "./generated/themes/TabInOverflow.css.js";
+import DragRegistry from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
 
 const DESIGN_DESCRIPTIONS = {
 	[SemanticColor.Positive]: TAB_ARIA_DESIGN_POSITIVE,
 	[SemanticColor.Negative]: TAB_ARIA_DESIGN_NEGATIVE,
 	[SemanticColor.Neutral]: TAB_ARIA_DESIGN_NEUTRAL,
 	[SemanticColor.Critical]: TAB_ARIA_DESIGN_CRITICAL,
+};
+
+type TabClickEventDetail = {
+	tab: Tab,
+	originalEvent: Event,
 };
 
 interface TabInStrip extends HTMLElement {
@@ -72,7 +80,21 @@ interface TabInOverflow extends ListItemCustom {
 	template: TabTemplate,
 	styles: css,
 })
+/**
+ * Fired when the tab is selected either with a mouse/tap or by using the Enter or Space key.
+ *
+ * @since 2.22.0
+ * @public
+ * @param {Tab} tab The selected tab.
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
 class Tab extends UI5Element implements ITabbable, ITab {
+	eventDetails!: {
+		click: TabClickEventDetail,
+	}
 	/**
 	 * The text to be displayed for the item.
 	 * @default undefined
@@ -161,7 +183,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 			slots: false,
 		},
 	})
-	content!: Array<Node>;
+	content!: DefaultSlot<Node>;
 
 	/**
 	 * Defines hierarchies with nested sub tabs.
@@ -177,7 +199,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 			slots: false,
 		},
 	})
-	items!: Array<ITab>
+	items!: Slot<ITab>;
 
 	_isInline?: boolean;
 	_forcedMixedMode?: boolean;
@@ -490,12 +512,14 @@ class Tab extends UI5Element implements ITabbable, ITab {
 
 	_ondragstart(e: DragEvent) {
 		if (e.target instanceof HTMLElement) {
+			DragRegistry.setDraggedElement(this, e);
 			e.target.setAttribute("data-moving", "");
 		}
 	}
 
 	_ondragend(e: DragEvent) {
 		if (e.target instanceof HTMLElement) {
+			DragRegistry.clearDraggedElement();
 			e.target.removeAttribute("data-moving");
 		}
 	}
@@ -523,4 +547,5 @@ export default Tab;
 export type {
 	TabInStrip,
 	TabInOverflow,
+	TabClickEventDetail,
 };

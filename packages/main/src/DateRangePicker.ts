@@ -6,10 +6,17 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 import getTodayUTCTimestamp from "@ui5/webcomponents-localization/dist/dates/getTodayUTCTimestamp.js";
+import type DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
 	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
+	DATERANGE_VALUE_MISSING,
+	DATERANGE_PATTERN_MISMATCH,
+	DATERANGE_UNDERFLOW,
+	DATERANGE_OVERFLOW,
+	CALENDAR_FOOTER_CANCEL_BUTTON,
+	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateRangePickerTemplate from "./DateRangePickerTemplate.js";
 
@@ -23,6 +30,7 @@ import type {
 } from "./DatePicker.js";
 import type { CalendarSelectionChangeEventDetail } from "./Calendar.js";
 import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 const DEFAULT_DELIMITER = "-";
 
@@ -35,7 +43,10 @@ const DEFAULT_DELIMITER = "-";
  * ### Usage
  * The user can enter a date by:
  * Using the calendar that opens in a popup or typing it in directly in the input field (not available for mobile devices).
- * For the `ui5-daterange-picker`
+ * For the `ui5-daterange-picker`:
+ *
+ * **Note:** Relative date values such as "today", "yesterday", or "tomorrow" are not supported.
+ * Entering a relative date sets the component to an error state.
  * ### ES6 Module Import
  *
  * `import "@ui5/webcomponents/dist/DateRangePicker.js";`
@@ -73,6 +84,22 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	@property()
 	delimiter = "-";
 
+	/**
+	 * Defines whether the component displays two months side by side in the picker popup.
+	 *
+	 * When enabled, two consecutive months are shown, making it easier to select date ranges
+	 * that span multiple months without the need to navigate between months.
+	 *
+	 * **Note:** On mobile devices only a single month
+	 * will be displayed regardless of this setting.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	showTwoMonths = false;
+
 	 /**
 	 * The first date in the range during selection (this is a temporary value, not the first date in the value range)
 	 * @private
@@ -81,6 +108,35 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	_tempValue?: string;
 
 	private _prevDelimiter: string | null;
+
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateRangePicker.i18nBundle.getText(DATERANGE_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_UNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DateRangePicker.i18nBundle.getText(DATERANGE_OVERFLOW, this.maxDate);
+		}
+		return "";
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !!this.value && !this.isValidValue(this.value),
+			rangeUnderflow: !!this.value && !this.isValidMin(this.value),
+			rangeOverflow: !!this.value && !this.isValidMax(this.value),
+		};
+	}
 
 	get formFormattedValue() {
 		const values = this._splitValueByDelimiter(this.value || "").filter(Boolean);
@@ -101,6 +157,27 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	constructor() {
 		super();
 		this._prevDelimiter = null;
+	}
+
+	/**
+	 * Checks if a date string is a relative date (e.g. "today", "tomorrow")
+	 * that would be resolved by DateFormat.parseRelative().
+	 * Relative dates are not supported in DateRangePicker.
+	 * @private
+	 */
+	_isRelativeValue(dateString: string, format: DateFormat): boolean {
+		const trimmed = dateString.trim();
+		if (!trimmed) {
+			return false;
+		}
+
+		const parsed = format.parse(trimmed);
+		if (!parsed) {
+			return false;
+		}
+
+		const formatted = format.format(parsed);
+		return formatted !== trimmed;
 	}
 
 	/**
@@ -163,6 +240,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return [];
 	}
 
+	get _isPhone() {
+		return isPhone();
+	}
+
 	/**
 	 * Returns the start date of the currently selected range as JavaScript Date instance.
 	 * @public
@@ -209,10 +290,44 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
 	}
 
+	get _submitDisabled() {
+		return !this._startDateTimestamp || !this._endDateTimestamp;
+	}
+
+	get _cancelButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_CANCEL_BUTTON);
+	}
+
+	get _okButtonText() {
+		return DateRangePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	/**
+	 * Handles clicking on the `submit` button, within the picker`s footer in mobile devices.
+	 */
+	_submitClick() {
+		if (!this._startDateTimestamp || !this._endDateTimestamp) {
+			return;
+		}
+
+		const newValue = this._buildValue(this._startDateTimestamp, this._endDateTimestamp);
+		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+		this._togglePicker();
+	}
+
+	/**
+	 * Handles clicking on the `cancel` button, within the picker`s footer,
+	 * that would disregard the user selection.
+	 */
+	_cancelClick() {
+		this._tempValue = "";
+		this._togglePicker();
+	}
+
 	/**
 	 * @override
 	 */
-	get dateAriaDescription() {
+	get roleDescription() {
 		return DateRangePicker.i18nBundle.getText(DATERANGE_DESCRIPTION);
 	}
 
@@ -220,16 +335,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @override
 	 */
 	get pickerAccessibleName() {
-		return DateRangePicker.i18nBundle.getText(DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME);
-	}
-
-	/**
-	 * @override
-	 */
-	async _onInputSubmit() {
-		const caretPos = this._dateTimeInput.getCaretPosition();
-		await renderFinished();
-		this._dateTimeInput.setCaretPosition(caretPos); // Return the caret on the previous position after rendering
+		return DateRangePicker.i18nBundle.getText(DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	/**
@@ -246,8 +352,11 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValid(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getFormat()))) {
+			return false;
+		}
 
 		return parts.length <= 2 && parts.every(dateString => super.isValid(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -258,8 +367,11 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getValueFormat()))) {
+			return false;
+		}
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -270,8 +382,11 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be tested against the current date format
 	 */
 	isValidDisplayValue(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		if (parts.some(dateString => this._isRelativeValue(dateString, this.getDisplayFormat()))) {
+			return false;
+		}
 
 		return parts.length <= 2 && parts.every(dateString => super.isValidDisplayValue(dateString)); // must be at most 2 dates and each must be valid
 	}
@@ -282,10 +397,21 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	 * @param value A value to be checked
 	 */
 	isInValidRange(value: string): boolean {
-		let parts = this._splitValueByDelimiter(value).filter(str => str !== "");
-		parts = parts.filter(str => str !== " "); // remove empty strings
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
 
 		return parts.length <= 2 && parts.every(dateString => super.isInValidRange(dateString));
+	}
+
+	isValidMin(value: string): boolean {
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMin(dateString));
+	}
+
+	isValidMax(value: string): boolean {
+		const parts = this._splitValueByDelimiter(value).filter(str => str.trim() !== "");
+
+		return parts.length <= 2 && parts.every(dateString => super.isValidMax(dateString));
 	}
 
 	/**
@@ -311,6 +437,10 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const firstDateTimestamp = this._exctractDisplayTimestamp(values[0]);
 		const lastDateTimestamp = this._exctractDisplayTimestamp(values[1]);
 
+		if (!firstDateTimestamp || !lastDateTimestamp) {
+			return value;
+		}
+
 		if (firstDateTimestamp && lastDateTimestamp && firstDateTimestamp > lastDateTimestamp) { // if both are timestamps (not undefined), flip if necessary
 			return this._buildDisplayValue(lastDateTimestamp, firstDateTimestamp);
 		}
@@ -329,7 +459,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		firstDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[0]) as number) * 1000);
 		lastDateString = this._getValueStringFromTimestamp((this._exctractDisplayTimestamp(values[1]) as number) * 1000);
 
-		if (!firstDateString && !lastDateString) {
+		if (!firstDateString || !lastDateString) {
 			return value;
 		}
 
@@ -352,8 +482,12 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 			return;
 		}
 		const newValue = this._buildValue(event.detail.selectedDates[0], event.detail.selectedDates[1]); // the value will be normalized so we don't need to order them here
-		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
-		this._togglePicker();
+		if (!this._isPhone) { // on desktop we update the value immediately, on mobile we wait for the user to confirm the selection with the "OK" button
+			this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+			this._togglePicker();
+		} else {
+			this._updateValueAndFireEvents(newValue, true, ["value-changed"]); // fire value-changed immediately on mobile so the app can react to the change (e.g. update the input field), but wait with firing "change" until the user clicks "OK"
+		}
 	}
 
 	/**
@@ -518,13 +652,17 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 	}
 
 	getDisplayValueFromValue(value: string): string {
+		if (this.isLiveUpdate) {
+			return value;
+		}
+
 		let firstDateString = "";
 		let lastDateString = "";
 
 		firstDateString = this._getDisplayStringFromTimestamp((this._extractFirstTimestamp(value) as number) * 1000);
 		lastDateString = this._getDisplayStringFromTimestamp((this._extractLastTimestamp(value) as number) * 1000);
 
-		if (!firstDateString && !lastDateString) {
+		if (!firstDateString || !lastDateString) {
 			return value;
 		}
 

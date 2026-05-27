@@ -23,7 +23,7 @@ ToolbarButton.ts
 2. The new component needs to implement template file with name of the following type:
 
 ```javascript
-ToolbarButton.hbs
+ToolbarButtonTemplate.tsx
 ```
 
 3. It needs to implement **customElement** decorator, which is good to contain custom tag name, template and renderer:
@@ -54,18 +54,28 @@ text?: string;
 disabled = false;
 ```
  
-Inside ToolbarButtonTemplate.hbs:
+Inside ToolbarButtonTemplate.tsx:
  
-```html
-<ui5-button
-  class="ui5-tb-item"
-  ?disabled="{{this.disabled}}"
-  data-ui5-external-action-item-id="{{this._id}}"
-  data-ui5-stable="{{this.stableDomRef}}"
->
-  {{this.text}}
-</ui5-button>
+```tsx
+import type ToolbarButton from "./ToolbarButton.js";
+import Button from "./Button.js";
+
+export default function ToolbarButtonTemplate(this: ToolbarButton) {
+	return (
+		<div>
+			<Button
+				 class="ui5-tb-item"
+				 disabled={this.disabled}
+				 data-ui5-external-action-item-id={this._id}
+				 data-ui5-stable={this.stableDomRef}
+			>
+			  {this.text}
+			</Button>
+		</div>
+	);
+}
 ```
+
 6. The new class needs to be added to the bundle file in the corresponding library.
 
 Inside bundle.common.js:

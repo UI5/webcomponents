@@ -19,8 +19,9 @@ export default function DynamicDateRangePopoverTemplate(this: DynamicDateRange) 
 			hideArrow={true}
 			_hideHeader={true}
 			onClose={this.onPopoverClose}
-			onOpen={this.onPopoverOpen}
+			onBeforeOpen={this.onPopoverBeforeOpen}
 			onKeyDown={this.onKeyDownPopover}
+			accessibleName={this.popoverAccessibleName}
 		>
 			{this._hasCurrentOptionTemplate &&
 				<div slot="header" class="ui5-ddr-header">

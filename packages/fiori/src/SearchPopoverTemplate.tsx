@@ -17,6 +17,7 @@ import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 export default function SearchPopoverTemplate(this: Search, headerTemplate?: JsxTemplate) {
 	return (
 		<ResponsivePopover
+			id="ui5-search-list"
 			hideArrow={true}
 			preventFocusRestore={true}
 			preventInitialFocus={!isPhone()}
@@ -59,6 +60,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 						class="ui5-search-list"
 						separators={ListSeparator.None}
 						onKeyDown={this._onItemKeydown}
+						onFocusIn={this._onListItemFocusIn}
 						accessibleRole={ListAccessibleRole.ListBox}
 						onItemClick={this._onItemClick}>
 						<slot></slot>

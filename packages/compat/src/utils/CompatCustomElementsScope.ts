@@ -11,7 +11,7 @@ const setCompatCustomElementsScopingSuffix = (suffix: string) => {
 
 	if (hasRegisteredTags()) {
 		// eslint-disable-next-line no-console
-		console.warn("Setting the compatibility scoping suffix must be done before importing any components. For proper usage, read the scoping section: https://github.com/SAP/ui5-webcomponents/blob/main/docs/2-advanced/06-scoping.md.");
+		console.warn("Setting the compatibility scoping suffix must be done before importing any components. For proper usage, read the scoping section: https://github.com/UI5/webcomponents/blob/main/docs/2-advanced/06-scoping.md.");
 	}
 
 	suf = suffix;
@@ -26,7 +26,7 @@ const patchScopingSuffix = (klass: typeof UI5Element) => {
 	// eslint-disable-next-line @typescript-eslint/unbound-method
 	const originalGetTag = metadata.getTag;
 
-	metadata.getTag = function () {
+	metadata.getTag = function getTag() {
 		const originalTag = originalGetTag.call(this);
 
 		if (!originalTag) {

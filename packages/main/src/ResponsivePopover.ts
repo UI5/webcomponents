@@ -89,6 +89,13 @@ class ResponsivePopover extends Popover {
 		}
 	}
 
+	handleOpenOnEnterDOM() {
+		if (this.open && !isPhone()) {
+			this.showPopover();
+			this.openPopup();
+		}
+	}
+
 	_dialogCloseButtonClick() {
 		this.closePopup();
 	}

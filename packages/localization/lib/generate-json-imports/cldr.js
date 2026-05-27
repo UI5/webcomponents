@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import assets from "@ui5/webcomponents-tools/assets-meta.js";
+import { pathToFileURL } from "url";
 
 const allLocales = assets.locales.all;
 
@@ -39,9 +40,21 @@ const generate = async () => {
 		fs.writeFile("src/generated/json-imports/LocaleData.ts", contentDynamic(caseDynamicImports)),
 		fs.writeFile("src/generated/json-imports/LocaleData-fetch.ts", contentDynamic(caseFetchMetaResolve)),
 		fs.writeFile("src/generated/json-imports/LocaleData-node.ts", contentDynamic(caseDynamicImportJSONAttr)),
-	]);
+	])
+		.then(() => {
+			if (process.env.UI5_VERBOSE === "true") {
+				console.log("CLDR files generated.");
+			}
+		});
 }
 
-generate().then(() => {
-	console.log("CLDR files generated.");
-});
+const filePath = process.argv[1];
+const fileUrl = pathToFileURL(filePath).href;
+
+if (import.meta.url === fileUrl) {
+	generate()
+}
+
+export default {
+	_ui5mainFn: generate
+}

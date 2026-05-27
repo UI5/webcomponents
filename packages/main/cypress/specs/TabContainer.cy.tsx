@@ -7,6 +7,7 @@ import Separator from "../../src/TabSeparator.js"
 import Table from "../../src/Table.js";
 import TableCell from "../../src/TableCell.js";
 import TableRow from "../../src/TableRow.js";
+import TableHeaderRow from "../../src/TableHeaderRow.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import "@ui5/webcomponents-icons/dist/employee.js"
 import "@ui5/webcomponents-icons/dist/menu.js"
@@ -494,6 +495,55 @@ describe("TabContainer general interaction", () => {
 		});
 	});
 
+	it("tests start and end overflow behavior - tabs don't move to the right if there is enough space", () => {
+		cy.viewport(600, 1080);
+		cy.mount(
+			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
+				<Tab text="One">Tab 1</Tab>
+				<Tab text="Two">Tab 2</Tab>
+				<Tab text="Three">Tab 3</Tab>
+				<Tab text="Four">Tab 4</Tab>
+				<Tab text="Five">Tab 5</Tab>
+				<Tab text="Six">Tab 6</Tab>
+				<Tab text="Seven">Tab 7</Tab>
+				<Tab text="Eight">Tab 8</Tab>
+				<Tab text="Nine">Tab 9</Tab>
+				<Tab text="Ten" selected>Tab 10</Tab>
+				<Tab text="Eleven">Tab 11</Tab>
+				<Tab text="Twelve">Tab 12</Tab>
+				<Tab text="Thirteen">Tab 13</Tab>
+				<Tab text="Fourteen">Tab 14</Tab>
+				<Tab text="Fifteen">Tab 15</Tab>
+				<Tab text="Sixteen">Tab 16</Tab>
+				<Tab text="Seventeen">Tab 17</Tab>
+				<Tab text="Eighteen">Tab 18</Tab>
+				<Tab text="Nineteen">Tab 19</Tab>
+				<Tab text="Twenty">Twenty</Tab>
+				<Tab text="Twenty One">Twenty One</Tab>
+				<Tab text="Twenty Two">Twenty Two</Tab>
+				<Tab text="Twenty Three">Twenty Three</Tab>
+				<Tab text="Twenty Four">Twenty Four</Tab>
+				<Tab text="Twenty Five">Twenty Five</Tab>
+				<Tab text="Twenty Six">Twenty Six</Tab>
+				<Tab text="Twenty Seven">Twenty Seven</Tab>
+				<Tab text="Twenty Eight">Twenty Eight</Tab>
+				<Tab text="Twenty Nine">Twenty Nine</Tab>
+				<Tab text="Thirty">Thirty</Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
+		cy.get("#tabContainerStartAndEndOverflow").should("have.attr", "overflow-mode", "StartAndEnd");
+	
+		cy.get("@startOverflow").should("be.visible").invoke("text").should("equal", "+4");
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tab-strip-item:visible:not([hidden])").first().as("visibleTab");
+		cy.get("@visibleTab").should("exist");
+		cy.get("@visibleTab").realClick();
+
+		cy.get("@startOverflow").should("have.text", "+4");
+	});
+
 	it("tests end overflow behavior", () => {
 		cy.mount(tabContainerEndOverflow);
 		cy.viewport(1000, 1080);
@@ -528,8 +578,10 @@ describe("TabContainer general interaction", () => {
 			<TabContainer class="tabContainerNoContentPaddings" style="padding-left: 0px; padding-right: 0px;">
 				<Tab icon="sap-icon://card" selected>
 					<Table>
-						<TableHeaderCell slot="default">Source</TableHeaderCell>
-						<TableHeaderCell slot="default">Method</TableHeaderCell>
+						<TableHeaderRow slot="headerRow">
+							<TableHeaderCell>Source</TableHeaderCell>
+							<TableHeaderCell>Method</TableHeaderCell>
+						</TableHeaderRow>
 						<TableRow>
 							<TableCell>Cell 1</TableCell>
 							<TableCell>Cell 2</TableCell>
@@ -554,8 +606,10 @@ describe("TabContainer general interaction", () => {
 				</Tab>
 				<Tab icon="sap-icon://employee">
 					<Table>
-						<TableHeaderCell slot="default">Source</TableHeaderCell>
-						<TableHeaderCell slot="default">Method</TableHeaderCell>
+						<TableHeaderRow slot="headerRow">
+							<TableHeaderCell>Source</TableHeaderCell>
+							<TableHeaderCell>Method</TableHeaderCell>
+						</TableHeaderRow>
 						<TableRow>
 							<TableCell>Cell 3</TableCell>
 							<TableCell>Cell 4</TableCell>
@@ -702,7 +756,7 @@ describe("TabContainer general interaction", () => {
 		cy.get("@list").find("ui5-li-custom").eq(0).click();
 		cy.get("#tabContainerCustomOverflowButtons").then((tc) => {
 			const tabContainer = tc.get(0) as TabContainer;
-			const SELECTED_TAB_TEXT = "Thirteen";
+			const SELECTED_TAB_TEXT = "Twelve";
 			const selectedTab = tabContainer._selectedTab;
 			cy.wrap(selectedTab).should("have.attr", "text", SELECTED_TAB_TEXT);
 		});
@@ -1096,6 +1150,102 @@ describe("TabContainer keyboard handling", () => {
 		cy.get("@tabContainer").shadow().find("ui5-responsive-popover").as("popover");
 		cy.get("@popover").should("be.visible", "Popover is opened");
 	});
+
+	it("tests handling of the focus navigation with End overflow mode", () => {
+		cy.mount(
+			<>
+			<Button id="btn1"/>
+			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="End">
+				<Tab text="One">Tab 1</Tab>
+				<Tab text="Two">Tab 2</Tab>
+				<Tab id="activeTab" text="Three" selected>Tab 3</Tab>
+				<Tab text="Four">Tab 4</Tab>
+				<Tab text="Five">Tab 4</Tab>
+			</TabContainer>
+			<Button id="btn2"/>
+			</>
+		);
+
+		cy.viewport(300, 1080);
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--end").as("endOverflow");
+
+		cy.get("#btn1").realClick();
+
+		cy.realPress("Tab");
+
+		cy.realPress("ArrowRight");
+
+		cy.get("@endOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress("Tab");
+
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("@endOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("#btn1").should("be.focused");
+	});
+
+	it("tests handling of the focus navigation with Start overflow mode", () => {
+		cy.mount(
+			<>
+			<Button id="btn1"/>
+			<TabContainer id="tabContainerStartAndEndOverflow" overflowMode="StartAndEnd">
+				<Tab text="One">Tab 1</Tab>
+				<Tab text="Two">Tab 2</Tab>
+				<Tab id="activeTab" text="Three" selected>Tab 3</Tab>
+				<Tab text="Four">Tab 4</Tab>
+				<Tab text="Five">Tab 4</Tab>
+			</TabContainer>
+			<Button id="btn2"/>
+			</>
+		);
+
+		cy.viewport(300, 1080);
+
+		cy.get("#tabContainerStartAndEndOverflow").shadow().find(".ui5-tc__overflow--start").as("startOverflow");
+
+		cy.get("#btn1").realClick();
+
+		cy.realPress("Tab");
+
+		cy.realPress("ArrowLeft");
+
+		cy.get("@startOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress("Tab");
+
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("@startOverflow")
+			.find("[ui5-button]")
+			.shadow()
+			.find(".ui5-button-root")
+			.should("be.focus");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("#btn1").should("be.focused");
+	});
 });
 
 describe("TabContainer popover", () => {
@@ -1140,5 +1290,105 @@ describe("TabContainer popover", () => {
 		cy.get("@list").find(".ui5-tab-overflow-itemContent-wrapper").eq(1).should("have.css", "padding-left", "8px");
 		cy.get("@list").find(".ui5-tab-overflow-itemContent-wrapper").eq(2).should("have.css", "padding-left", "16px");
 		cy.get("@list").find(".ui5-tab-overflow-itemContent-wrapper").eq(3).should("have.css", "padding-left", "24px");
+	});
+});
+
+describe("Tab semantic click event", () => {
+	it("fires click event on tab when clicked", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+
+		cy.get("@clickStub").should("have.been.calledOnce");
+		cy.get("@clickStub").should((stub: any) => {
+			const event = stub.firstCall.args[0];
+			expect(event).to.be.instanceOf(CustomEvent);
+			expect(event.detail.tab).to.exist;
+			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
+		});
+	});
+
+	it("fires click event on tab when activated with Enter key", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+		cy.realPress("Enter");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("fires click event on tab when activated with Space key", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+		cy.realPress("Space");
+
+		cy.get("@clickStub").should("have.been.calledTwice");
+	});
+
+	it("does not fire click event on disabled tab", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products" disabled></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("clickStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").click({ force: true });
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("fires both click on Tab and tab-select on TabContainer", () => {
+		cy.mount(
+			<TabContainer id="tc1" collapsed>
+				<Tab id="tab1" text="Products"></Tab>
+				<Tab text="Laptops" selected></Tab>
+			</TabContainer>
+		);
+
+		cy.get("#tab1").then(($tab) => {
+			$tab[0].addEventListener("click", cy.stub().as("tabClickStub"));
+		});
+
+		cy.get("#tc1").then(($tc) => {
+			$tc[0].addEventListener("ui5-tab-select", cy.stub().as("tabSelectStub"));
+		});
+
+		cy.get("#tc1").shadow().find(".ui5-tab-strip-item:nth-child(1)").realClick();
+
+		cy.get("@tabClickStub").should("have.been.calledOnce");
+		cy.get("@tabSelectStub").should("have.been.calledOnce");
 	});
 });

@@ -8,10 +8,10 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isEscape, isHome, isEnd, isUp, isDown, isRight, isLeft, isUpCtrl, isDownCtrl, isRightCtrl, isLeftCtrl, isPlus, isMinus, isPageUp, isPageDown, isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { SliderHandleType } from "./SliderHandle.js";
 
 // Styles
 import sliderBaseStyles from "./generated/themes/SliderBase.css.js";
-import type { SliderTooltipChangeEventDetails } from "./SliderTooltip.js";
 import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 type StateStorage = {
@@ -163,12 +163,10 @@ abstract class SliderBase extends UI5Element {
 	@property({ type: Boolean })
 	_hiddenTickmarks = false;
 
-	@property({ type: Boolean })
-	_isInputValueValid = false;
-
 	_resizeHandler: ResizeObserverCallback;
 	_moveHandler: (e: TouchEvent | MouseEvent) => void;
 	_upHandler: (e: TouchEvent | MouseEvent) => void;
+	_windowMouseoutHandler: (e: MouseEvent) => void;
 	_stateStorage: StateStorage;
 	notResized = false;
 	_isUserInteraction = false;
@@ -189,6 +187,11 @@ abstract class SliderBase extends UI5Element {
 		this._resizeHandler = this._handleResize.bind(this);
 		this._moveHandler = this._handleMove.bind(this);
 		this._upHandler = this._handleUp.bind(this);
+		this._windowMouseoutHandler = (e: MouseEvent) => {
+			if (e.relatedTarget === document.documentElement) {
+				this.handleUpBase();
+			}
+		};
 
 		this._stateStorage = {
 			step: undefined,
@@ -294,12 +297,24 @@ abstract class SliderBase extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		const target = e.target as HTMLElement;
+		const isHandleFocused = target.hasAttribute("ui5-slider-handle");
 
-		if (isF2(e) && target.classList.contains("ui5-slider-handle")) {
-			(target.parentNode!.querySelector("[ui5-slider-tooltip]") as HTMLElement).focus();
+		if (isF2(e) && isHandleFocused) {
+			const handleType = target.getAttribute("handle-type");
+			let tooltipSelector: string;
+			if (handleType === SliderHandleType.Start) {
+				tooltipSelector = "[data-sap-ui-start-value]";
+			} else if (handleType === SliderHandleType.End) {
+				tooltipSelector = "[data-sap-ui-end-value]";
+			} else {
+				tooltipSelector = "[ui5-slider-tooltip]";
+			}
+			const tooltip = this.shadowRoot!.querySelector<HTMLElement>(tooltipSelector);
+			tooltip?.focus();
+			return;
 		}
 
-		if (this.disabled || this._effectiveStep === 0 || target.hasAttribute("ui5-slider-handle")) {
+		if (this.disabled || this._effectiveStep === 0) {
 			return;
 		}
 
@@ -309,24 +324,6 @@ abstract class SliderBase extends UI5Element {
 			this._isUserInteraction = true;
 			this._handleActionKeyPress(e);
 		}
-	}
-
-	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
-		const value = e.detail.value;
-
-		this._updateValueFromInput(value);
-	}
-
-	_updateValueFromInput(fieldValue: string) {
-		const value = parseFloat(fieldValue);
-		this._isInputValueValid = value >= this._effectiveMin && value <= this._effectiveMax;
-
-		if (!this._isInputValueValid) {
-			return;
-		}
-
-		this.value = value;
-		this.fireDecoratorEvent("change");
 	}
 
 	_onKeyupBase() {
@@ -395,21 +392,7 @@ abstract class SliderBase extends UI5Element {
 
 		if (this.labelInterval <= 0 || this._hiddenTickmarks) {
 			this._labelsOverlapping = true;
-			return;
 		}
-
-		// Check if there are any overlapping labels.
-		// If so - only the first and the last one should be visible
-
-		const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // calculate 1 rem in pixels
-		const childWidthPx = 2 * remInPx; // as specified label must be 2 rems so calculate one child width in pixels
-
-		const labelItemsParent = this.shadowRoot!.querySelector(".ui5-slider-labels") as HTMLElement;
-
-		const labelItemsSumWidth = this._labels.length * childWidthPx; // all labels width
-		const labelItemsParentWidth = labelItemsParent.clientWidth; // label parent width
-
-		this._labelsOverlapping = labelItemsParentWidth < labelItemsSumWidth;
 	}
 	/**
 	 * Called when the user starts interacting with the slider.
@@ -430,6 +413,7 @@ abstract class SliderBase extends UI5Element {
 
 		window.addEventListener("mouseup", this._upHandler);
 		window.addEventListener("touchend", this._upHandler);
+		window.addEventListener("mouseout", this._windowMouseoutHandler);
 		// Only allow one type of move event to be listened to (the first one registered after the down event)
 		if (supportsTouch() && e instanceof TouchEvent) {
 			window.addEventListener("touchmove", this._moveHandler);
@@ -463,6 +447,7 @@ abstract class SliderBase extends UI5Element {
 	handleUpBase() {
 		window.removeEventListener("mouseup", this._upHandler);
 		window.removeEventListener("touchend", this._upHandler);
+		window.removeEventListener("mouseout", this._windowMouseoutHandler);
 		// Only one of the following was attached, but it's ok to remove both as there is no error
 		window.removeEventListener("mousemove", this._moveHandler);
 		window.removeEventListener("touchmove", this._moveHandler);
@@ -765,10 +750,6 @@ abstract class SliderBase extends UI5Element {
 
 	get _tabIndex() {
 		return this.disabled ? -1 : 0;
-	}
-
-	get _ariaKeyshortcuts() {
-		return this.editableTooltip ? "F2" : undefined;
 	}
 
 	get _ariaDescribedByHandleText() {

@@ -1,6 +1,7 @@
 import DateTimePicker from "../../src/DateTimePicker.js";
 import { setAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
+import Label from "../../src/Label.js";
 
 type DateTimePickerTemplateOptions = Partial<{
 	formatPattern: string;
@@ -114,28 +115,40 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetPopover()
 			.within(() => {
-				// Click the currently selected day and then move to the next day.
 				cy.get("[ui5-calendar]")
 					.shadow()
-					.as("calendar");
-
-				cy.get("@calendar")
 					.find("[ui5-daypicker]")
 					.shadow()
 					.find(".ui5-dp-item--selected")
+					.as("selectedDay");
+
+				cy.get("[ui5-calendar]")
+					.shadow()
+					.find("[ui5-daypicker]")
+					.shadow()
+					.find('.ui5-dp-item')
+					.contains('.ui5-dp-daytext', '14')
+					.closest('.ui5-dp-item')
+					.as("nextSelectedDay");
+
+				// Click the currently selected day and move to the next day with Arrow + Right
+				cy.get("@selectedDay")
 					.realClick()
-					.should("be.focused");
+					.should("be.focused")
+					.realPress("ArrowRight");
 
-				cy.realPress("ArrowRight");
-				cy.realPress("Space");
-
-				// Confirm the change.
+				// Wait next day to be focused and then - select it with Space.
+				cy.get("@nextSelectedDay")
+					.should("be.focused")
+					.realPress("Space");
+				
+				// Confirm the new selection
 				cy.get("#ok").realClick();
 			});
 
 		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerExpectToBeClosed();
 
-		// Only the date has changed; the time remains the same.
+		// Only the date has changed - the time remains the same.
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -145,8 +158,7 @@ describe("DateTimePicker general interaction", () => {
 		setAnimationMode(AnimationMode.Full);
 	});
 
-	// Unstable test, needs investigation => https://github.com/SAP/ui5-webcomponents/issues/11376
-	it.skip("tests selection of new date without changing the time section", () => {
+	it("tests selection of new date without changing the time section", () => {
 		setAnimationMode(AnimationMode.None);
 
 		const PREVIOUS_VALUE = "14/04/2020, 02:14:19 PM";
@@ -174,7 +186,7 @@ describe("DateTimePicker general interaction", () => {
 
 		cy.realPress("Tab");
 
-		// Simulate keyboard interactions
+		//Simulate keyboard interactions
 		cy.get("@dtp")
 			.shadow()
 			.find("[ui5-datetime-input]")
@@ -277,6 +289,37 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
+	it("tests time controls with value-format HH:mm shows only hours and minutes", () => {
+		cy.mount(<DateTimePicker value-format="yyyy-MM-dd HH:mm" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker")
+			.as("dtp")
+			.ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.within(() => {
+				cy.get("[ui5-time-selection-clocks]")
+					.shadow()
+					.as("clocks");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="hours"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="minutes"]`)
+					.should("exist");
+
+				cy.get("@clocks")
+					.find(`[ui5-toggle-spin-button][data-ui5-clock="seconds"]`)
+					.should("not.exist");
+			});
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerClose();
+	});
+
 	it("tests hours clock is active on picker open", () => {
 		cy.mount(<DateTimePickerTemplate />);
 
@@ -300,7 +343,7 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests selection of 12:34:56 AM", () => {
 		setAnimationMode(AnimationMode.None);
 
@@ -324,8 +367,8 @@ describe("DateTimePicker general interaction", () => {
 
 				cy.get("@daypicker")
 					.find(".ui5-dp-item--selected")
-					.should("be.focused")
-					.realClick();
+					.realClick()
+					.should("be.focused");
 
 				cy.get("[ui5-time-selection-clocks]")
 					.shadow()
@@ -389,18 +432,18 @@ describe("DateTimePicker general interaction", () => {
 			.find("ui5-daypicker")
 			.as("daypicker");
 
-		// act: open the picker
+		//act: open the picker
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
-		// act: click today's date
+		//act: click today's date
 		cy.get("@daypicker")
 			.shadow()
 			.find("[data-sap-focus-ref]")
-			.should("be.focused")
-			.realClick();
+			.realClick()
+			.should("be.focused");
 
-		// act: confirm selection
+		//act: confirm selection
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerGetSubmitButton()
 			.should("have.prop", "disabled", false);
@@ -412,7 +455,7 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// assert: the value is not changed
+		//assert: the value is not changed
 		cy.get("@input")
 			.should("be.focused")
 			.and("have.attr", "value", "");
@@ -467,14 +510,6 @@ describe("DateTimePicker general interaction", () => {
 			});
 	});
 
-	it("picker popover should have accessible name", () => {
-		cy.mount(<DateTimePickerTemplate />);
-
-		cy.get<DateTimePicker>("[ui5-datetime-picker]")
-			.ui5DateTimePickerGetPopover()
-			.should("have.attr", "accessible-name", "Choose Date and Time");
-	});
-
 	it("value state", () => {
 		cy.mount(<DateTimePickerTemplate valueState="Negative" />);
 
@@ -496,7 +531,7 @@ describe("DateTimePicker general interaction", () => {
 			.should("have.text", "Invalid entry");
 	});
 
-	// Unstable test, needs investigation
+	//Unstable test, needs investigation
 	it("tests change event is fired on submit", () => {
 		cy.mount(<DateTimePickerTemplate onChange={cy.stub().as("changeStub")} />);
 
@@ -533,10 +568,10 @@ describe("DateTimePicker general interaction", () => {
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// Assert the change event was fired once
+		//Assert the change event was fired once
 		cy.get("@changeStub").should("have.been.calledOnce");
 
-		// Re-open the picker and submit without making a change
+		//Re-open the picker and submit without making a change
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerOpen();
 
@@ -548,11 +583,399 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerGetSubmitButton()
 			.realClick();
 
-		// Verify the picker is closed
+		//Verify the picker is closed
 		cy.get<DateTimePicker>("@dtp")
 			.ui5DateTimePickerExpectToBeClosed();
 
-		// The change event should not have been fired a second time.
+		//The change event should not have been fired a second time.
 		cy.get("@changeStub").should("have.been.calledOnce");
+	});
+
+	it("first keystroke in input should not reset caret position", () => {
+		cy.mount(
+			<DateTimePicker
+				value="Jan 11, 2020, 11:11:11 AM"
+				displayFormat="long"
+				minDate="Jan 11, 2020, 00:00:00 AM"
+				maxDate="Jan 31, 2020, 11:59:59 PM"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]").as("dtp");
+
+		cy.get("@dtp")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.as("nativeInput");
+
+		// Click to focus the input, then move to start
+		cy.get("@nativeInput").realClick();
+		cy.realPress("Home");
+
+		// Verify caret is at position 0
+		cy.get("@nativeInput").should($input => {
+			expect(($input[0] as HTMLInputElement).selectionStart).to.equal(0);
+		});
+
+		cy.get("@nativeInput").then($input => {
+			const originalValue = ($input[0] as HTMLInputElement).value;
+
+			// Press Delete — should remove first character
+			cy.realPress("Delete");
+
+			cy.get("@nativeInput").should($input => {
+				const input = $input[0] as HTMLInputElement;
+				// The value should be different (first char removed)
+				expect(input.value, "first keystroke should modify the value").to.not.equal(originalValue);
+				// Caret should remain at position 0 after deletion
+				expect(input.selectionStart, "caret should remain at start").to.equal(0);
+			});
+		});
+	});
+});
+
+describe("Accessibility", () => {
+	it("initial focus goes to calendar's current date in phone mode", () => {
+		// Using viewport instead of device simulation (focus is not available on actual phone devices), to trigger SegmentedButton view.
+		cy.viewport(500, 800);
+
+		cy.mount(<DateTimePickerTemplate value="13/04/2020, 03:16:16 PM" formatPattern="dd/MM/yyyy, hh:mm:ss a" />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]").as("dtp");
+		
+		cy.get<DateTimePicker>("@dtp").ui5DateTimePickerOpen();
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerGetPopover()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-item--selected")
+			.should("be.focused");
+	});
+
+	it("picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(<DateTimePicker accessible-name={LABEL} />);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.ui5DateTimePickerGetPopover()
+			.should("have.attr", "accessible-name", `Choose Date and Time for ${LABEL}`);
+	});
+
+	it("picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+		cy.mount(
+			<>
+				<Label for="dateTimePicker">{LABEL}</Label>
+				<DateTimePicker id="dateTimePicker" />
+			</>
+		);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.ui5DateTimePickerGetPopover()
+			.should("have.attr", "accessible-name", `Choose Date and Time for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "Some description";
+		cy.mount(<DateTimePicker accessibleDescription={DESCRIPTION}></DateTimePicker>);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="descr">{DESCRIPTION}</p>
+				<DateTimePicker accessibleDescriptionRef="descr"></DateTimePicker>
+			</>
+		);
+
+		cy.get<DateTimePicker>("[ui5-datetime-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-describedby")
+			.and("contain", "descr");
+
+		cy.get("#descr").should("have.text", DESCRIPTION);
+	});
+});
+
+
+describe("Min/Max date validation", () => {
+	it("sets Negative value state when typed value exceeds maxDate", () => {
+		cy.mount(
+			<DateTimePicker
+				displayFormat="dd/MM/yyyy, HH:mm:ss"
+				valueFormat="yyyy-MM-dd HH:mm:ss"
+				minDate="2026-05-12 08:00:00"
+				maxDate="2026-05-14 18:00:00"
+				value="2026-05-13 10:00:00"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]")
+			.as("dtp");
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+	});
+
+	it("sets Negative value state when typed value is below minDate", () => {
+		cy.mount(
+			<DateTimePicker
+				displayFormat="dd/MM/yyyy, HH:mm:ss"
+				valueFormat="yyyy-MM-dd HH:mm:ss"
+				minDate="2026-05-12 08:00:00"
+				maxDate="2026-05-14 18:00:00"
+				value="2026-05-13 10:00:00"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]")
+			.as("dtp");
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerTypeAndExpectValueState("11/05/2026, 10:00:00", "Negative");
+	});
+
+	it("sets Negative value state when time exceeds maxDate on same day", () => {
+		cy.mount(
+			<DateTimePicker
+				displayFormat="dd/MM/yyyy, HH:mm:ss"
+				valueFormat="yyyy-MM-dd HH:mm:ss"
+				minDate="2026-05-12 08:00:00"
+				maxDate="2026-05-14 18:00:00"
+				value="2026-05-14 10:00:00"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]")
+			.as("dtp");
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerTypeAndExpectValueState("14/05/2026, 19:00:00", "Negative");
+	});
+
+	it("clears Negative value state when typed value is within range", () => {
+		cy.mount(
+			<DateTimePicker
+				displayFormat="dd/MM/yyyy, HH:mm:ss"
+				valueFormat="yyyy-MM-dd HH:mm:ss"
+				minDate="2026-05-12 08:00:00"
+				maxDate="2026-05-14 18:00:00"
+			/>
+		);
+
+		cy.get("[ui5-datetime-picker]")
+			.as("dtp");
+
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerTypeAndExpectValueState("15/05/2026, 10:00:00", "Negative");
+		cy.get<DateTimePicker>("@dtp")
+			.ui5DateTimePickerTypeAndExpectValueState("13/05/2026, 12:00:00", "None");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<DateTimePicker id="dateTimePicker" required={true}></DateTimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#dateTimePicker")
+			.as("dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("exist", "Required DatePicker without value should have :invalid CSS class");
+
+		cy.get("@dateTimePicker")
+			.ui5DatePickerTypeDate("now");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("not.exist", "Required DatePicker with value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form>
+				<DateTimePicker id="dateTimePicker" required={true} valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#dateTimePicker")
+			.as("dateTimePicker")
+			.ui5DatePickerTypeDate("Test 33, 2024 ss:tt:tt");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("exist", "DateTimePicker without correct formatted value should have :invalid CSS class");
+
+		cy.get("@dateTimePicker")
+			.ui5DatePickerTypeDate("Apr 12, 2024 12:00:00");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("not.exist", "DateTimePicker with correct formatted value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for rangeUnderflow", () => {
+		cy.mount(
+			<form method="get">
+				<DateTimePicker id="dateTimePicker" minDate="Jan 10, 2024 08:00:00" valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#dateTimePicker")
+			.as("dateTimePicker")
+			.ui5DatePickerTypeDate("Jan 5, 2023 08:00:00");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: true },
+				validity: { rangeUnderflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("exist", "DateTimePicker with value below minDate should have :invalid CSS class");
+
+		cy.get("@dateTimePicker")
+			.ui5DatePickerTypeDate("Jan 20, 2024 08:00:00");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: false },
+				validity: { rangeUnderflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("not.exist", "DateTimePicker with value above minDate should not have :invalid CSS class");
+	});
+
+	it("has correct validity for rangeOverflow", () => {
+		cy.mount(
+			<form>
+				<DateTimePicker id="dateTimePicker" maxDate="Jan 10, 2024 08:00:00" valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#dateTimePicker")
+			.as("dateTimePicker")
+			.ui5DatePickerTypeDate("Jan 15, 2025 08:00:00");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: true },
+				validity: { rangeOverflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("exist", "DateTimePicker with value above maxDate should have :invalid CSS class");
+
+		cy.get("@dateTimePicker")
+			.ui5DatePickerTypeDate("Jan 5, 2024 08:00:00");
+
+		cy.get("@dateTimePicker")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: false },
+				validity: { rangeOverflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#dateTimePicker:invalid")
+			.should("not.exist", "DateTimePicker with value below maxDate should not have :invalid CSS class");
 	});
 });

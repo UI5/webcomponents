@@ -155,7 +155,7 @@ describe("Interaction", () => {
 			</>
 		);
 
-	   cy.get("[ui5-label]")
+		cy.get("[ui5-label]")
 			.realClick();
 
 		cy.get("[ui5-file-uploader]")
@@ -419,6 +419,62 @@ describe("Interaction", () => {
 			.find("[ui5-token]")
 			.should("have.length", 1);
 	});
+
+	it("tokenizer collapses when n-More popover loses focus", () => {
+		cy.mount(
+			<FileUploader id="uploader" style="width: 200px;"></FileUploader>
+		);
+
+		cy.get("[ui5-file-uploader]")
+			.as("uploader")
+			.shadow()
+			.find("input[type='file']")
+			.selectFile([
+				{
+					contents: Cypress.Buffer.from("file1 content"),
+					fileName: "file1.txt",
+					mimeType: "text/plain"
+				},
+				{
+					contents: Cypress.Buffer.from("file2 content"),
+					fileName: "file11.txt",
+					mimeType: "text/plain"
+				},
+				{
+					contents: Cypress.Buffer.from("file3 content"),
+					fileName: "file111.txt",
+					mimeType: "text/plain"
+				}
+			], { force: true });
+
+		cy.get("@uploader")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer")
+			.should("exist");
+
+		cy.get("@uploader").realClick();
+		cy.get("@uploader").realPress("ArrowRight");
+
+		cy.focused()
+			.should("have.attr", "aria-description", "Token");
+
+		cy.realPress(["Control", "i"]);
+
+		cy.get("@tokenizer")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.should("exist");
+
+		cy.get("@tokenizer")
+			.should("have.attr", "expanded");
+
+		cy.get("body")
+			.realClick();
+
+		cy.get("@tokenizer")
+			.should("not.have.attr", "expanded");
+	});
 });
 
 describe("Accessibility", () => {
@@ -466,5 +522,85 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("input[type='file']")
 			.should("have.attr", "aria-label", "Application context");
+	});
+
+	it("accessibleDescription", () => {
+		const DESCRIPTION = "File uploader description";
+		cy.mount(<FileUploader accessibleDescription={DESCRIPTION}></FileUploader>);
+
+		cy.get("[ui5-file-uploader]")
+			.shadow()
+			.find("input[type='file']")
+			.should("have.attr", "aria-description", DESCRIPTION)
+	});
+
+	it("accessibleDescriptionRef", () => {
+		const DESCRIPTION = "External file uploader description";
+		cy.mount(
+			<>
+				<p id="accessibleDescription">{DESCRIPTION}</p>
+				<FileUploader accessibleDescriptionRef="accessibleDescription"></FileUploader>
+			</>
+		);
+
+		cy.get("[ui5-file-uploader]")
+			.shadow()
+			.find("input[type='file']")
+			.should("have.attr", "aria-description", DESCRIPTION)
+	});
+});
+
+describe("Validation inside form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<FileUploader id="uploader" required></FileUploader>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#uploader")
+			.as("uploader")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#uploader:invalid")
+			.should("exist");
+
+		cy.get("@uploader")
+			.shadow()
+			.find("input[type='file']")
+			.selectFile([
+				{
+					contents: new Uint8Array(1 * 1024 * 1024), // 2 MB buffer
+					fileName: "text.txt",
+					mimeType: "text/plain"
+				}
+			], { force: true });
+
+		cy.get("@uploader")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#uploader:invalid")
+			.should("not.exist");
 	});
 });

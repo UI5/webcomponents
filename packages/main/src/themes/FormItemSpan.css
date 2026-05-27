@@ -1,12 +1,17 @@
-/* 
-* By default, 
+/*
+* By default:
 * - in M, L ans XL sizes the Form's labels take 4 cells out 12 of the whole width, e.g 4:8:0
 * - in S size, it  the Form's labels take the whole width 12/12 cells, e.g the label and the input are displayed vertically.
 *
 * The ratio can be changed via the labelSpan and the emptySpan properties.
 */
 
-@container (max-width: 600px) {
+:host {
+	--ui5-form-item-label-justify-internal: start;
+	--ui5-form-item-label-padding-internal: 0.625rem 0.25rem 0 0.25rem;
+}
+
+@container (max-width: 599px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-S);
@@ -14,12 +19,12 @@
 
 	:host([label-span-s="12"]) .ui5-form-item,
 	:host([label-span-s="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
-@container (width > 600px) and (width <= 1024px) {
+@container (min-width: 600px) and (max-width: 1023px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-M);
@@ -27,12 +32,12 @@
 
 	:host([label-span-m="12"]) .ui5-form-item,
 	:host([label-span-m="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
-@container (width > 1024px) and (width <= 1440px) {
+@container (min-width: 1024px) and (max-width: 1439px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-L);
@@ -40,12 +45,12 @@
 
 	:host([label-span-l="12"]) .ui5-form-item,
 	:host([label-span-l="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }
 
-@container (min-width: 1441px) {
+@container (min-width: 1440px) {
 	.ui5-form-item,
 	.ui5-form-group {
 		--ui5-form-item-layout: var(--ui5-form-item-layout-XL);
@@ -53,7 +58,7 @@
 
 	:host([label-span-xl="12"]) .ui5-form-item,
 	:host([label-span-xl="12"]) .ui5-form-group {
-		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-span12);
-		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-span12);
+		--ui5-form-item-label-justify: var(--ui5-form-item-label-justify-internal);
+		--ui5-form-item-label-padding: var(--ui5-form-item-label-padding-internal);
 	}
 }

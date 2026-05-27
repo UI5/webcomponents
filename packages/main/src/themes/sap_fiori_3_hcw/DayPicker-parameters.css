@@ -1,6 +1,6 @@
 @import "../base/DayPicker-parameters.css";
 
-:root {
+:host {
 	--_ui5_daypicker_item_border: none;
 	--_ui5_daypicker_item_selected_background: var(--sapContent_Selected_Background);
 	--_ui5_daypicker_dayname_color: var(--sapContent_LabelColor);

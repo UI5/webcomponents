@@ -1,0 +1,8 @@
+.scrollContainer {
+	height: 300px;
+	overflow: auto;
+}
+
+.heading {
+	margin: 2rem 0 2rem 1rem;
+}

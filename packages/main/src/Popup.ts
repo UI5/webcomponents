@@ -1,11 +1,12 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	isChrome,
 	isDesktop,
@@ -233,7 +234,7 @@ abstract class Popup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * @private
@@ -252,7 +253,7 @@ abstract class Popup extends UI5Element {
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_opened = false;
 	_open = false;
-	_isEnteredInDom = false;
+	_resizeHandlerRegistered = false;
 
 	constructor() {
 		super();
@@ -273,25 +274,34 @@ abstract class Popup extends UI5Element {
 		renderFinished().then(() => {
 			this._updateMediaRange();
 		});
+
+		if (this.open) {
+			this._registerResizeHandler();
+		} else {
+			this._deregisterResizeHandler();
+		}
 	}
 
 	onEnterDOM() {
 		this.setAttribute("popover", "manual");
-		ResizeHandler.register(this, this._resizeHandler);
+
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
 		}
 
 		this.tabIndex = -1;
-		this._isEnteredInDom = true;
 
+		this.handleOpenOnEnterDOM();
+
+		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
+		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
+	}
+
+	handleOpenOnEnterDOM() {
 		if (this.open) {
 			this.showPopover();
 			this.openPopup();
 		}
-
-		this.setAttribute("data-sap-ui-fastnavgroup-container", "true");
-		registerUI5Element(this, this._updateAssociatedLabelsTexts.bind(this));
 	}
 
 	onExitDOM() {
@@ -300,9 +310,8 @@ abstract class Popup extends UI5Element {
 			this._removeOpenedPopup();
 		}
 
-		this._isEnteredInDom = false;
-
-		ResizeHandler.deregister(this, this._resizeHandler);
+		this._deregisterResizeHandler();
+		this._detachBrowserEvents();
 		deregisterUI5Element(this);
 	}
 
@@ -332,7 +341,7 @@ abstract class Popup extends UI5Element {
 	}
 
 	async openPopup() {
-		if (!this._isEnteredInDom || this._opened) {
+		if (this._opened) {
 			return;
 		}
 
@@ -342,6 +351,8 @@ abstract class Popup extends UI5Element {
 			this.open = false;
 			return;
 		}
+
+		this._attachBrowserEvents();
 
 		if (this.isModal) {
 			Popup.blockPageScrolling(this);
@@ -357,6 +368,11 @@ abstract class Popup extends UI5Element {
 		}
 
 		this._addOpenedPopup();
+
+		this.classList.add("ui5-popup-opening");
+		setTimeout(() => {
+			this.classList.remove("ui5-popup-opening");
+		}, 50);
 
 		this.open = true;
 
@@ -379,6 +395,14 @@ abstract class Popup extends UI5Element {
 	 */
 	_preventBlockLayerFocus(e: KeyboardEvent | MouseEvent) {
 		e.preventDefault();
+	}
+
+	_attachBrowserEvents() {
+
+	}
+
+	_detachBrowserEvents() {
+
 	}
 
 	/**
@@ -568,6 +592,8 @@ abstract class Popup extends UI5Element {
 		this.hide();
 		this.open = false;
 
+		this._detachBrowserEvents();
+
 		if (!preventRegistryUpdate) {
 			this._removeOpenedPopup();
 		}
@@ -604,6 +630,20 @@ abstract class Popup extends UI5Element {
 		if (this.isConnected) {
 			this.setAttribute("popover", "manual");
 			this.showPopover();
+		}
+	}
+
+	_registerResizeHandler() {
+		if (!this._resizeHandlerRegistered) {
+			ResizeHandler.register(this, this._resizeHandler);
+			this._resizeHandlerRegistered = true;
+		}
+	}
+
+	_deregisterResizeHandler() {
+		if (this._resizeHandlerRegistered) {
+			ResizeHandler.deregister(this, this._resizeHandler);
+			this._resizeHandlerRegistered = false;
 		}
 	}
 

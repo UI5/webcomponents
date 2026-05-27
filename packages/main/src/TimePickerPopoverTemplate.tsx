@@ -16,13 +16,13 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 		<>
 			<ResponsivePopover
 				id={`${this._id}-responsive-popover`}
-				class="ui5-time-picker-popover"
+				class="ui5-time-picker-popover ui5-popover-with-value-state-header-phone"
 				placement="Bottom"
 				horizontalAlign="Start"
 				opener={this}
 				open={this.open}
 				allowTargetOverlap={true}
-				_hideHeader={!this.hasValueStateText}
+				_hideHeader={this._shouldHideHeader}
 				hideArrow={true}
 				accessibleName={this.pickerAccessibleName}
 				onClose={this.onResponsivePopoverAfterClose}
@@ -31,6 +31,8 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 				onWheel={this._handleWheel}
 				onKeyDown={this._onkeydown}
 			>
+				{ !!this.showHeader && defaultHeader.call(this) }
+
 				{ this.shouldDisplayValueStateMessageInResponsivePopover && valueStateTextHeader.call(this) }
 
 				<TimeSelectionClocks
@@ -61,7 +63,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 					onWheel={this._handleWheel}
 					onKeyDown={this._onkeydown}
 				>
-					{ this.hasValueStateText && valueStateTextHeader.call(this, { "width": "100%" }) }
+					{ this.hasValueStateText && valueStateTextHeader.call(this) }
 
 					<div class="popover-content">
 						<TimeSelectionInputs
@@ -83,20 +85,30 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 	);
 }
 
+function defaultHeader(this: TimePicker) {
+	return (
+		<div slot="header" class="ui5-responsive-popover-header">
+			<div class="row">
+				<span>{this._headerTitleText}</span>
+			</div>
+		</div>
+	);
+}
+
 function valueStateMessage(this: TimePicker) {
 	return (
 		this.shouldDisplayDefaultValueStateMessage ? this.valueStateDefaultText : <slot name="valueStateMessage"></slot>
 	);
 }
 
-function valueStateTextHeader(this: TimePicker, style?: Record<string, string>) {
+function valueStateTextHeader(this: TimePicker) {
 	if (!this.hasValueStateText) {
 		return;
 	}
 
 	return (
 		<div
-			slot="header"
+			slot={!this.showHeader ? "header" : undefined}
 			class={{
 				"ui5-popover-header": true,
 				"ui5-valuestatemessage-header": true,
@@ -106,7 +118,6 @@ function valueStateTextHeader(this: TimePicker, style?: Record<string, string>) 
 				"ui5-valuestatemessage--warning": this.valueState === ValueState.Critical,
 				"ui5-valuestatemessage--information": this.valueState === ValueState.Information,
 			}}
-			style={style}
 		>
 			<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)}/>
 			{ valueStateMessage.call(this) }

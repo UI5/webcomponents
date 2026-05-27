@@ -5,10 +5,11 @@ const options = {
 	portStep: 2,
 	compatPackage: true,
 	noWatchTS: true,
+	standalone: false,
+	cssVariablesTarget: "host",
 	dev: true,
 	internal: {
 		cypress_code_coverage: false,
-		cypress_acc_tests: false,
 	},
 };
 

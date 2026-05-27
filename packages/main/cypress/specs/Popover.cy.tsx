@@ -7,6 +7,7 @@ import Label from "../../src/Label.js";
 import List from "../../src/List.js";
 import ListItem from "../../src/ListItemStandard.js";
 import Input from "../../src/Input.js";
+import Dialog from "../../src/Dialog.js";
 
 describe("Rendering", () => {
 	it("tests arrow positioning", () => {
@@ -266,40 +267,40 @@ describe("Accessibility", () => {
 				<div slot="header" />
 			</Popover>
 		);
-	
+
 		cy.get("[ui5-popover]").invoke("removeAttr", "accessible-name");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-labelledby");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("not.have.attr", "aria-label");
 	});
-	
+
 	it("should use aria-label when accessible-name attribute is set dynamically", () => {
 		cy.mount(
 			<Popover accessibleName="This popover is important">
 				<div slot="header" />
 			</Popover>
 		);
-	
+
 		cy.get("[ui5-popover]").invoke("attr", "accessible-name", "text");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("not.have.attr", "aria-labelledby");
-	
+
 		cy.get("[ui5-popover]")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-label");
 	});
-	
+
 
 	it("tests accessible-name-ref", () => {
 		cy.mount(
@@ -652,25 +653,25 @@ describe("Popover opener", () => {
 		  </Popover>
 		 </>
 		);
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Tab");
 		cy.wait(500);
 		cy.get("#li1").should("be.focused");
 		cy.get("#first-focusable").should("not.be.focused");
-	 
+
 		cy.realPress("Tab");
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Tab");
 		cy.realPress("Tab");
-	 
+
 		cy.get("#first-focusable").should("be.focused");
-	 
+
 		cy.realPress("Escape");
-	 
+
 		cy.get("[ui5-popover]").should("not.be.visible");
 	   });
 
@@ -967,7 +968,7 @@ describe("Popover opener", () => {
 
 				pop.addEventListener("ui5-before-open", async () => {
 					const applyFocusResult = pop.applyFocus();
-					pop.remove(); 
+					pop.remove();
 
 					try {
 						await applyFocusResult;
@@ -1020,31 +1021,31 @@ describe("Popover opener", () => {
 			const container = document.createElement("div");
 			container.id = "container";
 			root[0].appendChild(container);
-	
+
 			const shadowRoot = container.attachShadow({ mode: "open" });
-	
+
 			const opener = document.createElement("ui5-button");
 			opener.setAttribute("id", "lnk");
 			opener.textContent = "Open Popover";
 			shadowRoot.appendChild(opener);
-	
+
 			const popover = document.createElement("ui5-popover");
 			popover.setAttribute("id", "pop");
 			popover.setAttribute("header-text", "Popover in Shadow Root");
 			popover.setAttribute("opener", "lnk");
-	
+
 			const content = document.createElement("div");
 			content.textContent = "Popover content";
 			popover.appendChild(content);
-	
+
 			shadowRoot.appendChild(popover);
 		});
-	
+
 		cy.get("#container")
 			.shadow()
 			.find("#lnk")
 			.realClick();
-	
+
 		cy.get("#container")
 			.shadow()
 			.find("#pop")
@@ -1053,7 +1054,7 @@ describe("Popover opener", () => {
 		cy.get("#container").then(container => {
 			container.remove();
 		});
-	});	
+	});
 
 	it("tests opener set as ID in window.document, while popover is in a shadow root", () => {
 		cy.mount(
@@ -1421,6 +1422,82 @@ describe("Placement", () => {
 				expect(top).to.be.lt(100)
 			});
 	});
+
+	it("placement=Start in RTL", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Button id="btnStart" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Open</Button>
+				<Popover id="popoverStart"
+					headerText="Start Placement"
+					opener="btnStart"
+					placement="Start">
+					<div style="width: 150px; padding: 10px;">
+						Popover with Start placement in RTL mode
+					</div>
+				</Popover>
+			</div>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+		// wait for the popover to be positioned
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		let popover;
+		cy.get('[ui5-popover]')
+			.then($popover => {
+				popover = $popover;
+			});
+
+		cy.get('#btnStart').should($opener => {
+			const popoverRect = popover[0].getBoundingClientRect();
+			const openerRect = $opener[0].getBoundingClientRect();
+
+			// In RTL mode, Start placement should position popover to the right of the opener
+			expect(popoverRect.left).to.be.greaterThan(openerRect.right - 5);
+		});
+	});
+
+	it("placement=End in RTL", () => {
+		cy.mount(
+			<div dir="rtl">
+				<Button id="btnEnd" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Open</Button>
+				<Popover id="popoverEndg"
+					headerText="End Placement"
+					opener="btnEnd"
+					placement="End">
+					<div style="width: 150px; padding: 10px;">
+						Popover with End placement in RTL mode
+					</div>
+				</Popover>
+			</div>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+		// wait for the popover to be positioned
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		let popover;
+		cy.get('[ui5-popover]')
+			.then($popover => {
+				popover = $popover;
+			});
+
+		cy.get('#btnEnd').should($opener => {
+			const popoverRect = popover[0].getBoundingClientRect();
+			const openerRect = $opener[0].getBoundingClientRect();
+
+			// In RTL mode, End placement should position popover to the left of the opener
+			expect(popoverRect.right).to.be.lessThan(openerRect.left + 5);
+		});
+	});
 });
 
 describe("Alignment", () => {
@@ -1732,5 +1809,90 @@ describe("Responsive paddings", () => {
 
 		cy.get<Popover>("[ui5-popover]").should("be.visible");
 		cy.get("[ui5-popover]").should("have.attr", "media-range", "M");
+	});
+});
+
+describe("Opener visibility in scrollable containers", () => {
+	it("should close popover when opener scrolls out of view in scrollable container", () => {
+		cy.mount(
+			<div id="scrollContainer" style={{ height: "200px", overflowY: "auto" }}>
+				<div style={{ height: "500px" }}>
+					<Button id="opener" style={{ marginTop: "100px" }}>Open</Button>
+					<Popover opener="opener" open={true}>
+						<div>Popover Content</div>
+					</Popover>
+				</div>
+			</div>
+		);
+
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+		cy.get("#scrollContainer").scrollTo(0, 200);
+
+		cy.get("[ui5-popover]").should("have.prop", "open", false);
+	});
+
+	it("should close popover when opener scrolls out in Dialog scenario", () => {
+		cy.mount(
+			<Dialog open={true}>
+				<div slot="header" style={{ height: "200px" }}>LargeHeader</div>
+				<div id="dialogScrollContainer" style={{ height: "200px", overflowY: "auto" }}>
+					<div style={{ height: "1000px" }}>
+						<Button id="dialogOpener" style={{ marginTop: "100px" }}>Opener</Button>
+						<Popover opener="dialogOpener" open={true}>
+							<div>Popover in Dialog</div>
+						</Popover>
+					</div>
+				</div>
+			</Dialog>
+		);
+
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+		cy.get("#dialogScrollContainer").scrollTo(0, 500);
+
+		cy.get("[ui5-popover]").should("have.prop", "open", false);
+	});
+
+	it("should work with nested scrollable containers", () => {
+		cy.mount(
+			<div style={{ height: "300px", overflowY: "auto" }}>
+				<div style={{ height: "500px" }}>
+					<div id="innerScroll" style={{ height: "150px", overflowY: "auto", marginTop: "50px" }}>
+						<div style={{ height: "800px" }}>
+							<Button id="nestedOpener" style={{ marginTop: "80px" }}>Nested Opener</Button>
+							<Popover opener="nestedOpener" open={true}>
+								<div>Nested Popover</div>
+							</Popover>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+		cy.get("#innerScroll").scrollTo(0, 300);
+
+		cy.get("[ui5-popover]").should("have.prop", "open", false);
+	});
+
+	it("should handle horizontal scrolling", () => {
+		cy.mount(
+			<div id="horizontalScroll" style={{ width: "200px", height: "200px", overflowX: "auto" }}>
+				<div style={{ width: "1000px", height: "100px" }}>
+					<Button id="hOpener" style={{ marginLeft: "100px" }}>Horizontal Opener</Button>
+					<Popover opener="hOpener" open={true}>
+						<div>Horizontal Popover</div>
+						</Popover>
+				</div>
+			</div>
+		);
+
+		cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+		cy.get("#horizontalScroll").scrollTo(500, 0);
+
+		cy.get("[ui5-popover]").should("have.prop", "open", false);
 	});
 });

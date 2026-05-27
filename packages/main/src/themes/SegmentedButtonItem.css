@@ -103,10 +103,6 @@
 	min-width: calc(var(--_ui5_button_base_min_width) - var(--_ui5_button_base_icon_margin) - 1rem);
 }
 
-:host([disabled]) {
-	pointer-events: none;
-}
-
 :host([desktop]:not([active])) .ui5-segmented-button-item-root:focus-within:after,
 :host(:not([active])) .ui5-segmented-button-item-root:focus-visible:after,
 :host([desktop][active]) .ui5-segmented-button-item-root:focus-within:before,

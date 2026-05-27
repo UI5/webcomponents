@@ -2,6 +2,10 @@
     width: 1000px;
 }
 
+.medium-button {
+	width: 400px;
+}
+
 .long-button-begin::part(button) {
     justify-content: flex-start;
 }

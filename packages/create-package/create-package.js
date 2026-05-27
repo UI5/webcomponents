@@ -10,10 +10,54 @@ import * as prettier from "prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const argv = yargs(hideBin(process.argv)).argv;
 const VERSION = JSON.parse(
 	await fs.readFile(path.join(__dirname, "package.json")),
 ).version;
+
+const argv = yargs(hideBin(process.argv))
+	.usage("Usage: npm create @ui5/webcomponents-package [options]")
+	.option("name", {
+		type: "string",
+		description: "Package name (npm-compatible)",
+		default: "my-package",
+	})
+	.option("tag", {
+		type: "string",
+		description: "Component tag name (e.g., my-button)",
+	})
+	.option("testSetup", {
+		type: "string",
+		choices: ["cypress", "manual"],
+		description: "Test setup configuration",
+		default: "manual",
+	})
+	.option("skip", {
+		type: "boolean",
+		description: "Skip interactive prompts and use defaults/provided values",
+		default: false,
+	})
+	.option("skipSubfolder", {
+		type: "boolean",
+		description: "Create files in current directory instead of a subfolder",
+		default: false,
+	})
+	.example(
+		"npm create @ui5/webcomponents-package",
+		"Interactive mode with prompts",
+	)
+	.example(
+		"npm create @ui5/webcomponents-package -- --name my-components --skip",
+		"Non-interactive with custom name",
+	)
+	.example(
+		"npm create @ui5/webcomponents-package -- --name @scope/my-lib --testSetup cypress --skip",
+		"Non-interactive with scoped name and Cypress",
+	)
+	.help()
+	.alias("h", "help")
+	.version(VERSION)
+	.alias("v", "version")
+	.wrap(100).argv;
 
 // Constants
 const SUPPORTED_TEST_SETUPS = ["cypress", "manual"];
@@ -23,10 +67,11 @@ const DEST_DIR = process.cwd();
 const FILES_TO_RENAME = {
 	[path.normalize("eslintignore")]: path.normalize(".eslintignore"),
 	[path.normalize("eslintrc.cjs")]: path.normalize(".eslintrc.cjs"),
+	[path.normalize("gitignore")]: path.normalize(".gitignore"),
+	[path.normalize("npmignore")]: path.normalize(".npmignore"),
 	[path.normalize("npsrc.json")]: path.normalize(".npsrc.json"),
 	[path.normalize("npmrc")]: path.normalize(".npmrc"),
 	[path.normalize("env")]: path.normalize(".env"),
-	[path.normalize("gitignore")]: path.normalize(".gitignore"),
 	[path.normalize("tsconfig.template.json")]: path.normalize("tsconfig.json"),
 	[path.normalize("cypress/tsconfig.template.json")]: path.normalize("cypress/tsconfig.json")
 };

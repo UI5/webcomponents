@@ -179,7 +179,7 @@ class TimePickerClock extends UI5Element {
 	/**
 	 * Defines the currently available Time Picker Clock items depending on Clock setup.
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_items: Array<TimePickerClockItem> = [];
 
 	/**

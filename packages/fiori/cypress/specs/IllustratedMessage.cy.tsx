@@ -34,6 +34,40 @@ describe("Accessibility", () => {
 			.should("not.have.attr", "aria-label");
 
 	});
+
+	it("should have role=img and aria-label with illustration name when decorative is false", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload" decorative={false}>
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "role", "img");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "aria-label", "UnableToUpload");
+	});
+
+	it("should have role=img and aria-label with illustration name by default (when decorative is not set)", () => {
+		cy.mount(
+			<IllustratedMessage name="NoData">
+			</IllustratedMessage>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "role", "img");
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-illustration")
+			.should("have.attr", "aria-label", "NoData");
+	});
 });
 
 describe("design", () => {

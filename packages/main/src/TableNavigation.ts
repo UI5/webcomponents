@@ -28,7 +28,6 @@ class TableNavigation extends TableExtension {
 		super();
 		this._table = table;
 		this._gridWalker = new GridWalker();
-		this._gridWalker.setGrid(this._getNavigationItemsOfGrid());
 		this._onKeyDownCaptureBound = this._onKeyDownCapture.bind(this);
 
 		// we register the keydown handler on the table element at the capturing phase since the
@@ -247,6 +246,9 @@ class TableNavigation extends TableExtension {
 		for (const target of e.composedPath() as any[]) {
 			if (target.nodeType === Node.ELEMENT_NODE) {
 				const element = target as HTMLElement;
+				if (element.getAttribute("data-excluded-from-navigation") === "nofocus") {
+					break;
+				}
 				if (element.matches(":focus-within")) {
 					focusableElement = element;
 					break;

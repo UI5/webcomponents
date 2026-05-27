@@ -1,0 +1,6 @@
+src/generated
+node_modules/
+test/
+cypress/
+.eslintrc.cjs
+.eslintignore

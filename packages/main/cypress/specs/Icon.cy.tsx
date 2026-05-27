@@ -109,24 +109,28 @@ describe("Icon general interaction", () => {
             });
         });
 
+        // Mouse click fires both native click and ui5-click for interactive icons
         cy.get("@interactiveIcon").click();
         cy.get("[ui5-input]").eq(0).should("have.prop", "value", "1");
-        cy.get("[ui5-input]").eq(1).should("have.prop", "value", "0");
-
-        cy.get("@interactiveIcon").realPress("Enter");
-        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "2");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "1");
 
-        cy.get("@interactiveIcon").realPress("Space");
-        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
+        // Enter key fires both native click and ui5-click for interactive icons
+        cy.get("@interactiveIcon").realPress("Enter");
+        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "2");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "2");
 
+        // Space key fires both native click and ui5-click for interactive icons
+        cy.get("@interactiveIcon").realPress("Space");
+        cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
+        cy.get("[ui5-input]").eq(1).should("have.prop", "value", "3");
+
+        // Non-interactive icon: mouse click fires native click but NOT ui5-click
         cy.get("@nonInteractiveIcon").click();
         cy.get("[ui5-input]").eq(2).should("have.prop", "value", "1");
         cy.get("[ui5-input]").eq(3).should("have.prop", "value", "0");
 
         cy.get("@interactiveClickStub").should("have.been.calledThrice");
-        cy.get("@interactiveUI5ClickStub").should("have.been.calledTwice");
+        cy.get("@interactiveUI5ClickStub").should("have.been.calledThrice");
 
         cy.get("@nonInteractiveClickStub").should("have.been.calledOnce");
         cy.get("@nonInteractiveUI5ClickStub").should("not.have.been.called");
@@ -273,5 +277,209 @@ describe("Icon general interaction", () => {
             .shadow()
             .find(".ui5-icon-root")
             .should("have.attr", "role", "img");
+    });
+
+    it("Tests accessibilityInfo getter", () => {
+        const interactiveMode = "Interactive";
+        const imageMode = "Image";
+        const decorativeMode = "Decorative";
+        const accessibleName = "Test Icon";
+
+        // Test with Interactive mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={interactiveMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Interactive']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+
+            // For Interactive mode, accessibilityInfo should have role, type and description
+            expect(accessibilityInfo).to.not.be.undefined;
+            expect(accessibilityInfo.role).to.equal("button");
+            expect(accessibilityInfo.type).to.equal("Button");
+            expect(accessibilityInfo.description).to.equal(accessibleName);
+        });
+
+        // Test with Decorative mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={decorativeMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Decorative']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+
+            // For Decorative mode, accessibilityInfo should return an empty object
+            expect(accessibilityInfo).to.deep.equal({});
+        });
+
+        // Test with Image mode
+        cy.mount(
+            <Icon
+                name="add-equipment"
+                mode={imageMode}
+                accessibleName={accessibleName}
+            />
+        );
+
+        cy.get("[ui5-icon][mode='Image']").then($icon => {
+            const icon = $icon[0] as any;
+            const accessibilityInfo = icon.accessibilityInfo;
+
+            // For Image mode, accessibilityInfo should have role, type and description
+            expect(accessibilityInfo).to.not.be.undefined;
+            expect(accessibilityInfo.role).to.equal("img");
+            expect(accessibilityInfo.type).to.equal("Image");
+            expect(accessibilityInfo.description).to.equal(accessibleName);
+        });
+    });
+});
+
+describe("Icon fontIcon slot", () => {
+    it("renders a span root instead of svg when fontIcon slot is used", () => {
+        cy.mount(
+            <Icon>
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root").should("exist");
+        cy.get("[ui5-icon]").shadow().find("svg").should("not.exist");
+    });
+
+    it("Decorative mode: span root has role=presentation and aria-hidden=true", () => {
+        cy.mount(
+            <Icon>
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("have.attr", "role", "presentation")
+            .should("have.attr", "aria-hidden", "true");
+    });
+
+    it("Image mode: span root has role=img and aria-label", () => {
+        cy.mount(
+            <Icon mode="Image" accessibleName="Star">
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("have.attr", "role", "img")
+            .should("have.attr", "aria-label", "Star")
+            .should("not.have.attr", "aria-hidden");
+    });
+
+    it("Interactive mode: span root has role=button and tabindex=0", () => {
+        cy.mount(
+            <Icon mode="Interactive" accessibleName="Add">
+                <span slot="fontIcon">＋</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("have.attr", "role", "button")
+            .should("have.attr", "tabindex", "0")
+            .should("have.attr", "aria-label", "Add");
+    });
+
+    it("Interactive mode: fires ui5-click on mouse click", () => {
+        cy.mount(
+            <Icon mode="Interactive" accessibleName="Add">
+                <span slot="fontIcon">＋</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").then($icon => {
+            $icon[0].addEventListener("ui5-click", cy.stub().as("ui5Click"));
+        });
+
+        cy.get("[ui5-icon]").realClick();
+        cy.get("@ui5Click").should("have.been.calledOnce");
+    });
+
+    it("Interactive mode: fires ui5-click on Enter key", () => {
+        cy.mount(
+            <Icon mode="Interactive" accessibleName="Add">
+                <span slot="fontIcon">＋</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").then($icon => {
+            $icon[0].addEventListener("ui5-click", cy.stub().as("ui5Click"));
+        });
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root").focus();
+        cy.realPress("Enter");
+        cy.get("@ui5Click").should("have.been.calledOnce");
+    });
+
+    it("Interactive mode: fires ui5-click on Space key", () => {
+        cy.mount(
+            <Icon mode="Interactive" accessibleName="Add">
+                <span slot="fontIcon">＋</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").then($icon => {
+            $icon[0].addEventListener("ui5-click", cy.stub().as("ui5Click"));
+        });
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root").focus();
+        cy.realPress("Space");
+        cy.get("@ui5Click").should("have.been.calledOnce");
+    });
+
+    it("Decorative mode: does not fire ui5-click on click", () => {
+        cy.mount(
+            <Icon>
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").then($icon => {
+            $icon[0].addEventListener("ui5-click", cy.stub().as("ui5Click"));
+        });
+
+        cy.get("[ui5-icon]").realClick();
+        cy.get("@ui5Click").should("not.have.been.called");
+    });
+
+    it("no accessible-name: aria-label is not set", () => {
+        cy.mount(
+            <Icon mode="Image">
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("not.have.attr", "aria-label");
+    });
+
+    it("accessible-name takes effect when set", () => {
+        cy.mount(
+            <Icon mode="Image" accessibleName="Initial">
+                <span slot="fontIcon">★</span>
+            </Icon>
+        );
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("have.attr", "aria-label", "Initial");
+
+        cy.get("[ui5-icon]").invoke("prop", "accessibleName", "Updated");
+
+        cy.get("[ui5-icon]").shadow().find("span.ui5-icon-root")
+            .should("have.attr", "aria-label", "Updated");
     });
 });

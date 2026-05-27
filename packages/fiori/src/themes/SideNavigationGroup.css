@@ -31,7 +31,3 @@
 	background-color: var(--_ui5_side_navigation_navigation_separator_background_color);
 	border-radius: var(--_ui5_side_navigation_navigation_separator_radius);
 }
-
-.ui5-sn-collapsed .ui5-sn-spacer {
-	margin: var(--_ui5_side_navigation_navigation_separator_margin_collapsed);
-}

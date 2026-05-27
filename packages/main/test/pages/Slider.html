@@ -24,6 +24,29 @@
 </head>
 
 	<body class="slider1auto">
+		<div class="control-panel">
+			<div class="control-group">
+				<label>Theme:</label>
+				<div class="theme-buttons">
+					<button data-theme="sap_horizon" class="active">Morning Horizon</button>
+					<button data-theme="sap_horizon_dark">Evening Horizon</button>
+					<button data-theme="sap_horizon_hcb">HCB</button>
+					<button data-theme="sap_horizon_hcw">HCW</button>
+					<button data-theme="sap_fiori_3">Quartz Light</button>
+					<button data-theme="sap_fiori_3_dark">Quartz Dark</button>
+					<button data-theme="sap_fiori_3_hcb">Quartz HCB</button>
+					<button data-theme="sap_fiori_3_hcw">Quartz HCW</button>
+				</div>
+			</div>
+			<div class="control-group">
+				<label>Density:</label>
+				<div class="density-buttons">
+					<button data-density="cozy" class="active">Cozy</button>
+					<button data-density="compact">Compact</button>
+				</div>
+			</div>
+		</div>
+
 		<section class="group">
 			<h2>Basic Slider</h2>
 			<ui5-slider id="basic-slider" accessible-name="Basic Slider" min="0" max="10"></ui5-slider>
@@ -80,6 +103,38 @@
 
 			inputTooltipSlider.addEventListener("ui5-change", () => {
 				eventResultSlider.setAttribute("value", parseInt(eventResultSlider.getAttribute("value")) + 1);
+			});
+
+			// Theme switcher
+			const themeButtons = document.querySelectorAll('.theme-buttons button');
+			themeButtons.forEach(button => {
+				button.addEventListener('click', async () => {
+					const theme = button.getAttribute('data-theme');
+					await window["sap-ui-webcomponents-bundle"].configuration.setTheme(theme);
+					document.body.setAttribute('sap-ui-theme', theme);
+					
+					// Update active state
+					themeButtons.forEach(btn => btn.classList.remove('active'));
+					button.classList.add('active');
+				});
+			});
+
+			// Density mode switcher
+			const densityButtons = document.querySelectorAll('.density-buttons button');
+			densityButtons.forEach(button => {
+				button.addEventListener('click', () => {
+					const density = button.getAttribute('data-density');
+					
+					if (density === 'compact') {
+						document.body.classList.add('ui5-content-density-compact');
+					} else {
+						document.body.classList.remove('ui5-content-density-compact');
+					}
+					
+					// Update active state
+					densityButtons.forEach(btn => btn.classList.remove('active'));
+					button.classList.add('active');
+				});
 			});
 		</script>
 	</body>

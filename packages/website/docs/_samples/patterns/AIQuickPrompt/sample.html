@@ -13,16 +13,16 @@
 	<!-- playground-fold-end -->
 	<ui5-card>
 		<ui5-card-header slot="header" title-text="Michael Adams" subtitle-text="Senior Sales Executive">
-			<img src="https://sap.github.io/ui5-webcomponents/images/avatars/man_avatar_1.png" slot="avatar">
+			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar">
 		</ui5-card-header>
 		<section class="quickPromptSection">
-			<ui5-label required>To: </ui5-label>
+			<ui5-label required show-colon>To</ui5-label>
 			<div style="display: flex; gap: 0.125rem;">
 				<ui5-token selected text="Diana Mihaylova" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
 				<ui5-token selected text="DL Marketing Sector SAP" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
 			</div>
 			<div class="quickPromptLblBtn">
-				<ui5-label style="align-self: flex-end;" required>Offer: </ui5-label>
+				<ui5-label style="align-self: flex-end;" required show-colon>Offer</ui5-label>
 				<ui5-ai-button id="quickPromptAiButton" class="quickPromptAiButton" state="generate">
 					<ui5-ai-button-state name="generate" text="Generate" icon="ai"></ui5-ai-button-state>
 					<ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>
@@ -30,7 +30,9 @@
 					<ui5-ai-button-state name="revise" text="Revise" icon="ai" end-icon="navigation-down-arrow"></ui5-ai-button-state>
 				</ui5-ai-button>
 			</div>
-			<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+				<ui5-busy-indicator class="quickPromptBusyIndicator" id="quickPromptBusyIndicator">
+				<ui5-textarea id="output" style="height: 100%;"></ui5-textarea>
+
 		</section>
 		<div class="quickPromptCardFooter">
 			<ui5-button id="footerBtnSend" design="Emphasized">Send</ui5-button>

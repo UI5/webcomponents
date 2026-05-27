@@ -3,7 +3,7 @@ import type DynamicSideContent from "./DynamicSideContent.js";
 export default function DynamicSideContentTemplate(this: DynamicSideContent) {
 	return (
 		<div
-			class="ui5-dsc-root"
+			class={this.classes.root}
 			style={this.styles.root}
 		>
 			{this._isSideContentFirst ?
@@ -24,7 +24,7 @@ export default function DynamicSideContentTemplate(this: DynamicSideContent) {
 function mainContent(this: DynamicSideContent) {
 	return (
 		<div
-			role="main"
+			role={this.accInfo.mainContent?.role}
 			aria-label={this.accInfo.mainContent?.ariaLabel}
 			class={this.classes.main}
 			style={this.styles.main}
@@ -37,7 +37,7 @@ function mainContent(this: DynamicSideContent) {
 function sideContent(this: DynamicSideContent) {
 	return (
 		<aside
-			role="complementary"
+			role={this.accInfo.sideContent?.role}
 			aria-label={this.accInfo.sideContent?.ariaLabel}
 			class={this.classes.side}
 			style={this.styles.side}

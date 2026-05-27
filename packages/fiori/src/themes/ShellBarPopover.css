@@ -7,6 +7,11 @@
 	color: var(--sapList_TextColor);
 }
 
+.ui5-shellbar-overflow-popover ::slotted([ui5-toggle-button]),
+.ui5-shellbar-overflow-popover ::slotted([ui5-button]) {
+	color: var(--sapList_TextColor);
+}
+
 .ui5-shellbar-overflow-popover [ui5-li]::part(title) {
 	font-size: var(--sapFontSize);
 }

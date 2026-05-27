@@ -1,10 +1,11 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
 import type SideNavigationItemDesign from "./types/SideNavigationItemDesign.js";
-import NavigationMenu from "./NavigationMenu.js";
 import {
 	isSpace,
 	isEnter,
@@ -13,6 +14,8 @@ import {
 	isEnterAlt,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Templates
 import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
@@ -21,7 +24,7 @@ import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
 import navigationMenuItemCss from "./generated/themes/NavigationMenuItem.css.js";
 
 import {
-	NAVIGATION_MENU_POPOVER_HIDDEN_TEXT,
+	NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -87,7 +90,17 @@ class NavigationMenuItem extends MenuItem {
 	@property()
 	design: `${SideNavigationItemDesign}` = "Default";
 
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundleFiori: I18nBundle;
+
 	associatedItem?: SideNavigationSelectableItemBase;
+
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
+
+	get hasTag() {
+		return !!this.tag.length;
+	}
 
 	get isExternalLink() {
 		return this.href && this.target === "_blank";
@@ -97,13 +110,29 @@ class NavigationMenuItem extends MenuItem {
 		return (!this.disabled && this.href) ? this.href : undefined;
 	}
 
+	get _tagContainerId() {
+		return `${this._id}-tag-container`;
+	}
+
+	get _ariaDescribedByIds() {
+		const ids = [
+			`${this._id}-invisibleText-describedby`,
+		];
+
+		if (this.hasTag) {
+			ids.push(this._tagContainerId);
+		}
+
+		return ids.filter(Boolean).join(" ");
+	}
+
 	get _accInfo() {
 		const accInfo = super._accInfo;
 
-		accInfo.role = this.href ? "none" : "treeitem";
+		accInfo.role = "none";
 
-		if (!accInfo.ariaHaspopup) {
-			accInfo.ariaHaspopup = this.accessibilityAttributes.hasPopup;
+		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
+			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundleFiori.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT);
 		}
 
 		return accInfo;
@@ -200,8 +229,9 @@ class NavigationMenuItem extends MenuItem {
 		}
 	}
 
-	get acessibleNameText() {
-		return NavigationMenu.i18nBundle.getText(NAVIGATION_MENU_POPOVER_HIDDEN_TEXT);
+	get accessibleNameText() {
+		// For the submenu's dialog
+		return this.text ?? "";
 	}
 }
 

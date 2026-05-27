@@ -1,11 +1,13 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type TitleLevel from "@ui5/webcomponents/dist/types/TitleLevel.js";
 import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import "./illustrations/Tent.js";
 import type UploadCollectionItem from "./UploadCollectionItem.js";
@@ -124,6 +126,15 @@ class UploadCollection extends UI5Element {
 	noDataText?: string;
 
 	/**
+	 * Defines the header level of the 'No data' text.
+	 * @default "H2"
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	noDataHeaderLevel: `${TitleLevel}` = "H2";
+
+	/**
 	 * By default there will be drag and drop overlay shown over the `ui5-upload-collection` when files
 	 * are dragged. If you don't intend to use drag and drop, set this property.
 	 *
@@ -159,7 +170,7 @@ class UploadCollection extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: Array<UploadCollectionItem>;
+	items!: DefaultSlot<UploadCollectionItem>;
 
 	/**
 	 * Defines the `ui5-upload-collection` header.
@@ -170,7 +181,7 @@ class UploadCollection extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	_bodyDnDHandler: DnDEventListener;
 
@@ -250,23 +261,6 @@ class UploadCollection extends UI5Element {
 
 	_onSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
 		this.fireDecoratorEvent("selection-change", { selectedItems: e.detail.selectedItems as UploadCollectionItem[] });
-	}
-
-	get classes() {
-		return {
-			content: {
-				"ui5-uc-content": true,
-				"ui5-uc-content-no-data": this.items.length === 0,
-			},
-		};
-	}
-
-	get _root() {
-		return this.shadowRoot!.querySelector(".ui5-uc-root");
-	}
-
-	get _dndOverlay() {
-		return this._root?.querySelector(".uc-dnd-overlay");
 	}
 
 	get _showDndOverlay() {

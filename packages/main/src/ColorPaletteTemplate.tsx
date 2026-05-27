@@ -15,6 +15,7 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 				onClick={this._onclick}
 				onKeyUp={this._onkeyup}
 				onKeyDown={this._onkeydown}
+				onMouseDown={this._onmousedown}
 			>
 				{this.showDefaultColor &&
 					<div class="ui5-cp-default-color-button-wrapper">
@@ -31,7 +32,7 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 					</div>
 				}
 				<div class="ui5-cp-item-container"
-					role="region"
+					role="group"
 					aria-label={this.colorContainerLabel}
 					onKeyDown={this._onColorContainerKeyDown}
 				>
@@ -58,8 +59,8 @@ export default function ColorPaletteTemplate(this: ColorPalette) {
 					<div class="ui5-cp-recent-colors-wrapper">
 						<div class="ui5-cp-separator"></div>
 						<div class="ui5-cp-recent-colors-container" onKeyDown={this._onRecentColorsContainerKeyDown}>
-							{this.recentColors.map(color =>
-								<ColorPaletteItem value={color}/>
+							{this.recentColors.map((color, index) =>
+								<ColorPaletteItem value={color} index={index + 1}/>
 							)}
 						</div>
 					</div>

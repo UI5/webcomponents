@@ -1,9 +1,15 @@
 import type { JSX } from "./jsx-runtime.d.ts";
+import type { Slot, DefaultSlot } from "./UI5Element.js";
 
 // General utils
 export type LowercaseString<T> = T extends string ? Lowercase<T> : never;
 
 // Core Framework types
+export type {
+	Slot,
+	DefaultSlot,
+};
+
 export type PromiseResolve = (value: void | PromiseLike<void>) => void;
 export type Timeout = ReturnType<typeof setTimeout>;
 export type Interval = ReturnType<typeof setInterval>;
@@ -31,25 +37,27 @@ export type AccessibilityInfo = {
 	// The WAI-ARIA role of the component.
 	role?: AriaRole,
 
-	// A translated text that represents the component type. Used when several components share same role,
-	// f.e. Select and ComboBox both have role="combobox".
-	type?: LowercaseString<string>,
+	// A translated text that represents the component type.
+	type?: string,
 
-	// A translated text that represents relevant component description/state - value, placeholder, label, etc.
+	// A translated text that represents relevant component description/state - value, placeholder, etc.
 	description?: string,
 
-	 // The component disabled state.
+	// Label of the component, e.g. `accessible-name` or `accessible-name-ref` for form elements.
+	label?: string,
+
+	// Disabled state of the component.
 	disabled?: boolean,
 
-	// The component readonly state.
+	// Readonly state of the component.
 	readonly?: boolean,
 
-	// The component required state.
+	// Required state of the component.
 	required?: boolean,
 
-	// An array of elements, aggregated by the component
-	// <b>Note:</b> Children should only be provided when it is helpful to understand the accessibility context.
-	children?: Array<HTMLElement>,
+	// An array of nodes, aggregated by the component
+	// **Note:** Children should only be provided when it is helpful to understand the accessibility context.
+	children?: Array<Node>,
 }
 
 export type AccessibilityAttributes = {

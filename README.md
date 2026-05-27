@@ -1,10 +1,10 @@
-#  ![UI5 icon](https://raw.githubusercontent.com/SAP/ui5-webcomponents/main/docs/images/Logo_wide_25.png)
+#  ![UI5 icon](https://raw.githubusercontent.com/UI5/webcomponents/main/docs/images/Logo_wide_25.png)
 
-[![CI](https://github.com/SAP/ui5-webcomponents/actions/workflows/test.yaml/badge.svg)](https://github.com/SAP/ui5-webcomponents/actions/workflows/test.yaml)
+[![CI](https://github.com/UI5/webcomponents/actions/workflows/test.yaml/badge.svg)](https://github.com/UI5/webcomponents/actions/workflows/test.yaml)
 [![npm Package Version](https://badge.fury.io/js/%40ui5%2Fwebcomponents.svg)](https://www.npmjs.com/package/@ui5/webcomponents)
-[![REUSE status](https://api.reuse.software/badge/github.com/SAP/ui5-webcomponents)](https://api.reuse.software/info/github.com/SAP/ui5-webcomponents)
+[![REUSE status](https://api.reuse.software/badge/github.com/UI5/webcomponents)](https://api.reuse.software/info/github.com/UI5/webcomponents)
 
-## What are [UI5 Web Components](https://sap.github.io/ui5-webcomponents)?
+## What are [UI5 Web Components](https://ui5.github.io/webcomponents)?
 
  - A rich set of **enterprise-grade reusable UI elements** driven by a **lightweight framework** (~20K gzipped for the framework part).
  - Suitable for building anything from **static web sites** to **complex web applications**.
@@ -19,10 +19,10 @@
  - **Elegant**: being *custom HTML elements*, they hide implementation complexity behind a single HTML tag, making them easily usable with the standard DOM APIs.
 
 ## Where can I see them in action?
-- [Playground and API Reference](https://sap.github.io/ui5-webcomponents/components/)
+- [Playground and API Reference](https://ui5.github.io/webcomponents/components/)
 
 ## More Resources
-- [UI5 Web Components Home Page](https://sap.github.io/ui5-webcomponents)
+- [UI5 Web Components Home Page](https://ui5.github.io/webcomponents)
 - [Configuring UI5 Web Components](./docs/2-advanced/01-configuration.md)
 - [Customizing with `UI Theme Designer`](./docs/2-advanced/12-theming.md)
 - [Creating a Custom UI5 Web Components Package](docs/4-development/01-package.md)
@@ -85,7 +85,7 @@ Moreover, all Angular-specific features, such as two-way data binding and Angula
 	<ui5-button>Hello world!</ui5-button>
 	```
 
-	For more information, see [Importing UI5 Web Components](https://sap.github.io/ui5-webcomponents/docs/getting-started/components-packages/) and [Understanding UI5 Web Components APIs](https://sap.github.io/ui5-webcomponents/docs/getting-started/components-APIs/).
+	For more information, see [Importing UI5 Web Components](https://ui5.github.io/webcomponents/docs/getting-started/components-packages/) and [Understanding UI5 Web Components APIs](https://ui5.github.io/webcomponents/docs/getting-started/components-APIs/).
 
 ## Typescript Support
 TypeScript Support is enabled for both component development and component consumption.
@@ -96,16 +96,23 @@ Since version `1.11.0`, we have been providing TypeScript definitions under an e
 No, you are expected to import only the components (or other public APIs) that you are going to use and bundle them along with the rest
 of your application.
 
-## Browser Support
+## Browser and Platform Support
 
-UI5 Web Components are supported by all major modern browsers.
+UI5 Web Components are supported by all major modern browsers on the desktop and mobile platforms listed below.
 
-Browser | Supported versions
---------|--------
-Chrome | Latest two stable releases
-Firefox | Latest two stable releases
-Safari | Latest two stable releases
-Edge | Latest two stable releases
+### Desktop
+
+|                                | Google Chrome   | Microsoft Edge  | Mozilla Firefox | Mozilla Firefox ESR | Apple Safari    |
+| ------------------------------ | --------------- | --------------- | --------------- | ------------------- | --------------- |
+| **Windows** (versions 10 & 11) | Latest 2 Stable | Latest 2 Stable | Latest 2 Stable | Latest              | n/a             |
+| **macOS** (Latest 2 versions)  | Latest 2 Stable | Latest 2 Stable | Latest 2 Stable | Latest              | Latest 2 Stable |
+
+### Mobile
+
+|                                   | Google Chrome   | Apple Safari    |
+| --------------------------------- | --------------- | --------------- |
+| **Android** (Latest 3 versions)   | Latest 2 Stable | n/a             |
+| **iOS & iPadOS** (Latest version) | -               | Latest 2 Stable |
 
 ## Project Structure, Development and Build
 
@@ -113,10 +120,11 @@ This section might be of interest to you mainly if you need to run or build the 
 
 ### Requirements
 - [Node.js](https://nodejs.org/) (**version 21 or higher**)
-- [Yarn](https://yarnpkg.com/en) (**version 1.22 or higher**)
+- [Yarn](https://yarnpkg.com/en) (**version 1.22 or higher for branches released before v2.15**)
+- Yarn v4 is managed via [Corepack](https://github.com/nodejs/corepack), run `corepack enable` in case the `yarn` command is not found.
 
 **Note:** The UI5 Web Components project is set up with the [Yarn](https://yarnpkg.com/) node package manager.
-This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/SAP/ui5-webcomponents). Note that npm [might add](https://github.com/npm/npm/pull/15900#issuecomment-315335381) this feature in the future.
+This is because it offers functionality that the otherwise preferred [npm](https://www.npmjs.com/) package manager is currently lacking. Namely, the [workspace](https://yarnpkg.com/lang/en/docs/workspaces/) setting which is currently used in the [UI5 Web Components (mono-)repository](https://github.com/UI5/webcomponents).
 
 ### Structure
 
@@ -153,7 +161,7 @@ yarn # to install all dependencies
 # start the playground from the project root
 yarn start:website
 
-# open http://localhost:3000/ui5-webcomponents/nightly/
+# open http://localhost:3000/webcomponents/nightly/
 ```
 
 **Note:** If you wish to manually install dependencies & run the Playground you can check out our [in depth tutorial](docs/5-contributing/03-website.md)
@@ -173,7 +181,7 @@ For example, to find the Button component (that belongs to the `main` package), 
 None as of 1.24.0
 
 ## Known Issues
-No major bugs known. To report an issue or view the currently open issues, click [here](https://github.com/SAP/ui5-webcomponents/issues).
+No major bugs known. To report an issue or view the currently open issues, click [here](https://github.com/UI5/webcomponents/issues).
 
 ## Support
 We welcome all comments, suggestions, questions, and bug reports. Please follow our [Support Guidelines](/SUPPORT.md#-content) on how to report an issue, or chat with us in the `#webcomponents` channel of the [OpenUI5 Community Slack](https://ui5-slack-invite.cfapps.eu10.hana.ondemand.com/).

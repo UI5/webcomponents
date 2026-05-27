@@ -7,6 +7,7 @@ import { reRenderAllUI5Elements } from "../Render.js";
 import { DEFAULT_LANGUAGE } from "../generated/AssetParameters.js";
 import { isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
+import { fireConfigChange, attachConfigChange, getSharedValue } from "./ConfigurationSync.js";
 
 let curLanguage: string | undefined;
 let fetchDefaultLanguage: boolean | undefined;
@@ -25,6 +26,17 @@ attachConfigurationReset(() => {
 // will trigger a re-render of all language-aware components.
 let languageChangePending = false;
 
+attachConfigChange("language", (language: string) => {
+	curLanguage = language;
+	languageChangePending = true;
+	fireLanguageChange(language).then(() => {
+		languageChangePending = false;
+		if (isBooted()) {
+			reRenderAllUI5Elements({ languageAware: true });
+		}
+	});
+});
+
 const getLanguageChangePending = () => languageChangePending;
 
 /**
@@ -34,7 +46,7 @@ const getLanguageChangePending = () => languageChangePending;
  */
 const getLanguage = (): string | undefined => {
 	if (curLanguage === undefined) {
-		curLanguage = getConfiguredLanguage();
+		curLanguage = getSharedValue<string>("language") ?? getConfiguredLanguage();
 	}
 	return curLanguage;
 };
@@ -54,6 +66,8 @@ const setLanguage = async (language: string): Promise<void> => {
 
 	languageChangePending = true;
 	curLanguage = language;
+
+	fireConfigChange("language", language);
 
 	await fireLanguageChange(language);
 

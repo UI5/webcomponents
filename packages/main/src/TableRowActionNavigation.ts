@@ -28,6 +28,10 @@ class TableRowActionNavigation extends TableRowActionBase {
 	 *
 	 * @default false
 	 * @public
+	 * @deprecated As of version 2.20.0, the navigation icon is deprecated.
+	 * For better accessibility, the interactive mode which renders a button, must be used instead. To handle the action, attach a listener to the `click` event.
+	 * If the navigation should be triggered when a row is pressed, set the row's `interactive` property and use the `row-click` event of the `ui5-table`.
+	 * This property will be removed in the next major version.
 	 */
 	@property({ type: Boolean })
 	interactive = false;
@@ -37,6 +41,19 @@ class TableRowActionNavigation extends TableRowActionBase {
 
 	isFixedAction() {
 		return true;
+	}
+
+	onEnterDOM(): void {
+		super.onEnterDOM();
+		if (!this.interactive) {
+			// eslint-disable-next-line no-console
+			console.warn(
+				"[ui5-table-row-action-navigation] The non-interactive (icon) rendering mode is deprecated and will be removed in the next major version. "
+				+ "Set the `interactive` property to render the navigation action as an accessible button and handle the action via the `click` event. "
+				+ "If the navigation should be triggered when a row is pressed, set the row's `interactive` property and use the `row-click` event of `ui5-table`. "
+				+ "Button rendering will become the only supported behavior, and the `interactive` property will then be removed.",
+			);
+		}
 	}
 
 	getRenderInfo() {

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_color-palette-item-after-focus-border-radius: 0.125rem;
 	--_ui5_color-palette-item-hover-margin: 0;
 	--_ui5_color-palette-row-height: 9.5rem;
@@ -22,4 +22,5 @@
 	--_ui5-color-palette-item-mobile-focus-inset: 0.625rem;
 	--_ui5_color-palette-item-mobile-focus-sides-inset: 0.25rem 0.25rem;
 	--_ui5_color-palette-item-after-mobile-focus-border: var(--_ui5_color-palette-item-after-focus-color);
+	--_ui5-color-palette-item-background-color: transparent;
 }

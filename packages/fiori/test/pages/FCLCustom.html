@@ -15,7 +15,15 @@
 </head>
 
 <body class="fclcustom1auto">
-
+	<ui5-label show-colon>Select layout</ui5-label>
+	<ui5-select id="selectLayout">
+		<ui5-option>TwoColumnsStartExpanded</ui5-option>
+		<ui5-option>TwoColumnsMidExpanded</ui5-option>
+		<ui5-option selected>ThreeColumnsMidExpanded</ui5-option>
+		<ui5-option>ThreeColumnsEndExpanded</ui5-option>
+		<ui5-option>ThreeColumnsStartExpandedEndHidden</ui5-option>
+		<ui5-option>ThreeColumnsMidExpandedEndHidden</ui5-option>
+	</ui5-select>
 	<ui5-flexible-column-layout id="fcl3" layout="ThreeColumnsMidExpanded">
 		<!-- start column -->
 		<div class="fclcustom2auto" slot="startColumn">
@@ -66,211 +74,53 @@
 	</ui5-flexible-column-layout>
 
 	<script>
-		var fcl = document.getElementById("fcl3");
-		fcl._layoutsConfiguration = {
+		const fcl = document.getElementById("fcl3");
+		fcl.layoutsConfiguration = {
 			desktop: {
-				"OneColumn": {
-					layout: ["100%", 0, 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
 				"TwoColumnsStartExpanded": {
-					layout: ["90%", "10%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["75%", "25%", 0],
 				},
 				"TwoColumnsMidExpanded": {
-					layout: ["10%", "90%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["20%", "80%", 0],
 				},
 				"ThreeColumnsMidExpanded": {
-					layout: ["15%", "70%", "15%"],
-					separators:	[
-						{ visible: true, gripVisible: true },
-						{ visible: true, gripVisible: true },
-					],
+					layout: ["25%", "45%", "30%"],
 				},
 				"ThreeColumnsEndExpanded": {
-					layout: ["15%", "15%", "70%"],
-					separators: [
-						{ visible: true, gripVisible: false },
-						{ visible: true, gripVisible: true },
-					],
+					layout: ["20%", "20%", "60%"],
 				},
 				"ThreeColumnsStartExpandedEndHidden": {
-					layout: ["90%", "10%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["80%", "20%", 0],
 				},
 				"ThreeColumnsMidExpandedEndHidden": {
-					layout: ["10%", "90%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: true, gripVisible: true },
-					],
-				},
-				"MidColumnFullScreen": {
-					layout: [0, "100%", 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"EndColumnFullScreen": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
+					layout: ["40%", "60%", 0],
 				},
 			},
 			tablet: {
-				"OneColumn": {
-					layout: ["100%", 0, 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
 				"TwoColumnsStartExpanded": {
-					layout: ["90%", "10%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["60%", "40%", 0],
 				},
 				"TwoColumnsMidExpanded": {
-					layout: ["10%", "90%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["40%", "60%", 0],
 				},
 				"ThreeColumnsMidExpanded": {
-					layout: [0, "90%", "10%"],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: true, gripVisible: true },
-					],
+					layout: [0, "60%", "40%"],
 				},
 				"ThreeColumnsEndExpanded": {
-					layout: [0, "10%", "90%"],
-					separators: [
-						{ visible: false },
-						{ visible: true, gripVisible: true },
-					],
+					layout: [0, "40%", "60%"],
 				},
 				"ThreeColumnsStartExpandedEndHidden": {
-					layout: ["90%", "10%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: false },
-					],
+					layout: ["60%", "40%", 0],
 				},
 				"ThreeColumnsMidExpandedEndHidden": {
-					layout: ["10%", "90%", 0],
-					separators: [
-						{ visible: true, gripVisible: true },
-						{ visible: true, gripVisible: true },
-					],
-				},
-				"MidColumnFullScreen": {
-					layout: [0, "100%", 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"EndColumnFullScreen": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-			},
-			phone: {
-				"OneColumn": {
-					layout: ["100%", 0, 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"TwoColumnsStartExpanded": {
-					layout: [0, "100%", 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"TwoColumnsMidExpanded": {
-					layout: [0, "100%", 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"ThreeColumnsStartExpanded": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"ThreeColumnsMidExpanded": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"ThreeColumnsEndExpanded": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"ThreeColumnsStartExpandedEndHidden": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"ThreeColumnsMidExpandedEndHidden": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"MidColumnFullScreen": {
-					layout: [0, "100%", 0],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
-				},
-				"EndColumnFullScreen": {
-					layout: [0, 0, "100%"],
-					separators: [
-						{ visible: false },
-						{ visible: false },
-					],
+					layout: ["40%", "60%", 0],
 				},
 			},
 		};
+		const selectLayout = document.getElementById("selectLayout");
+		selectLayout.addEventListener("ui5-change", (e) => {
+			fcl.layout = e.detail.selectedOption.textContent;
+		});
 	</script>
 
 </body>

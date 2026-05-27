@@ -1,4 +1,7 @@
 import StepInput from "../../src/StepInput.js";
+import Label from "../../src/Label.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import "../../src/Assets.js";
 
 const decreaseValue = true;
 
@@ -72,7 +75,7 @@ describe("StepInput keyboard interaction tests", () => {
 		cy.realPress(['Shift', 'PageDown']);
 
 		cy.get<StepInput>("@stepInput")
-			.should("have.prop",  "value", 0);
+			.should("have.prop", "value", 0);
 	});
 
 	it("should set the value to the 'max' with 'Ctrl+Shift+ArrowUp'", () => {
@@ -108,7 +111,7 @@ describe("StepInput keyboard interaction tests", () => {
 		cy.realPress(['Control', 'Shift', 'ArrowDown']);
 
 		cy.get<StepInput>("@stepInput")
-			.should("have.prop",  "value", 0);
+			.should("have.prop", "value", 0);
 	});
 
 	it("should restore the previous value with 'Escape'", () => {
@@ -242,7 +245,7 @@ describe("StepInput misc interaction tests", () => {
 		cy.realType("23.034");
 
 		cy.realPress("Enter");
-	
+
 		cy.get<StepInput>("@stepInput")
 			.should("have.prop", "valueState", "Negative");
 	});
@@ -378,7 +381,7 @@ describe("StepInput events", () => {
 		cy.realPress("Escape");
 
 		cy.get<StepInput>("@stepInput")
-		.should("have.prop", "value", 0);
+			.should("have.prop", "value", 0);
 
 		cy.get("@change")
 			.should("not.have.been.called");
@@ -392,7 +395,7 @@ describe("StepInput events", () => {
 		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
-			cy.get<StepInput>("@stepInput")
+		cy.get<StepInput>("@stepInput")
 			.ui5StepInputAttachHandler("ui5-change", "change");
 
 		cy.get<StepInput>("@stepInput")
@@ -407,7 +410,7 @@ describe("StepInput events", () => {
 			.should("have.been.calledOnce");
 
 		cy.get<StepInput>("@stepInput")
-            .should("have.prop", "value", 1);
+			.should("have.prop", "value", 1);
 	});
 
 	it("should fire 'change' when using 'Increase' button'", () => {
@@ -433,7 +436,7 @@ describe("StepInput events", () => {
 			.should("have.been.calledOnce");
 
 		cy.get<StepInput>("@stepInput")
-            .should("have.prop", "value", 1);
+			.should("have.prop", "value", 1);
 	});
 
 	it("should fire 'change' when using 'Decrease' button'", () => {
@@ -622,6 +625,94 @@ describe("StepInput events", () => {
 	});
 });
 
+describe("StepInput thousand separator formatting", () => {
+    it("should display value with thousand separator", () => {
+        cy.mount(
+			<StepInput value={12345}></StepInput>
+		);
+
+        cy.get("[ui5-step-input]")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+            	const val = $input.val();
+            	// Accepts both comma and dot as separator depending on locale
+            	expect(val).to.match(/12[,.]345/);
+        });
+    });
+
+    it("should parse formatted value correctly", () => {
+        cy.mount(
+			<StepInput value={12345}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+            	const val = $input.val() as string;
+				const num = Number(val.replace(/[^\d]/g, ""));
+            	expect(num).to.equal(12345);
+        });
+
+		cy.get<StepInput>("@stepInput")
+			.realClick({ "clickCount": 2 })
+			.should("be.focused");
+
+		cy.realType("1,0000");
+		cy.realPress("Enter");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+            	const val = $input.val() as string;
+            	expect(val).to.equal("10,000");
+        });
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 10000);
+    });
+
+	it("should update input value when language is changed", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+
+		cy.mount(
+			<StepInput value={10000.56} valuePrecision={2}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+				const val = $input.val() as string;
+				expect(val).to.equal("10,000.56");
+		});
+
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("de");
+			})
+			.then(() => {
+				cy.get<StepInput>("@stepInput")
+				.ui5StepInputGetInnerInput()
+				.should($input => {
+					const val = $input.val() as string;
+					expect(val).to.equal("10.000,56");
+				});
+			});
+		
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
+});
+
 describe("StepInput property propagation", () => {
 	it("should propagate 'placeholder' property to inner input", () => {
 		cy.mount(
@@ -630,33 +721,35 @@ describe("StepInput property propagation", () => {
 
 		cy.get("[ui5-step-input]")
 			.ui5StepInputCheckInnerInputProperty("placeholder", "Enter number");
-    });
+	});
 
-	it("should propagate 'min' property to inner input", () => {
+	it("should not propagate 'min' property to inner input", () => {
 		cy.mount(
 			<StepInput min={0}></StepInput>
 		);
 
+		// min should not be propogated because step input uses input with type="text"
 		cy.get("[ui5-step-input]")
-			.ui5StepInputCheckInnerInputProperty("min", "0");
-    });
+			.ui5StepInputCheckInnerInputProperty("min", "0", false);
+	});
 
-    it("should propagate 'max' property to inner input", () => {
+	it("should not propagate 'max' property to inner input", () => {
 		cy.mount(
 			<StepInput max={10}></StepInput>
 		);
 
+		// min should not be propogated because step input uses input with type="text"
 		cy.get("[ui5-step-input]")
-			.ui5StepInputCheckInnerInputProperty("max", "10");
+			.ui5StepInputCheckInnerInputProperty("max", "10", false);
 	});
 
-	it("should propagate 'step' property to inner input", () => {
+	it("should not propagate 'step' property to inner input", () => {
 		cy.mount(
 			<StepInput step={2}></StepInput>
 		);
 
 		cy.get("[ui5-step-input]")
-			.ui5StepInputCheckInnerInputProperty("step", "2");
+			.ui5StepInputCheckInnerInputProperty("step", "2", false);
 	});
 
 	it("should propagate 'disabled' property to inner input", () => {
@@ -684,5 +777,218 @@ describe("StepInput property propagation", () => {
 
 		cy.get("[ui5-step-input]")
 			.ui5StepInputCheckInnerInputProperty("value", "5");
+	});
+
+	it("should increase value on mouse wheel up", () => {
+        cy.mount(
+			<StepInput value={5} step={2}></StepInput>
+		);
+
+        cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+        cy.get<StepInput>("@stepInput")
+			.ui5StepInputScrollToChangeValue(7, false);
+    });
+
+    it("should decrease value on mouse wheel down", () => {
+        cy.mount(
+			<StepInput value={5} step={2}></StepInput>
+		);
+
+        cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+         cy.get<StepInput>("@stepInput")
+			.ui5StepInputScrollToChangeValue(3, true);
+    });
+
+    it("should not change value when readonly", () => {
+        cy.mount(
+			<StepInput value={5} step={2} readonly={true}></StepInput>
+		);
+
+        cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+        cy.get<StepInput>("@stepInput")
+			.ui5StepInputScrollToChangeValue(5, true);
+    });
+});
+
+describe("Validation inside form", () => {
+	it("has correct validity for patternMissmatch", () => {
+		cy.mount(
+			<form>
+				<StepInput id="stepInput" valuePrecision={3}></StepInput>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(2.34);
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#stepInput:invalid")
+			.should("exist", "StepInput without formatted value should have :invalid CSS class");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(2.345);
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+		cy.get("#stepInput:invalid")
+			.should("not.exist", "StepInput with formatted value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for rangeUnderflow", () => {
+		cy.mount(
+			<form>
+				<StepInput id="stepInput" min={3}></StepInput>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(2);
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: true },
+				validity: { rangeUnderflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#stepInput:invalid")
+			.should("exist", "StepInput with value lower than min should have :invalid CSS class");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(4);
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { rangeUnderflow: false },
+				validity: { rangeUnderflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#stepInput:invalid")
+			.should("not.exist", "StepInput with value higher than min should not have :invalid CSS class");
+	});
+
+	it("has correct validity for rangeOverflow", () => {
+		cy.mount(
+			<form>
+				<StepInput id="stepInput" max={3}></StepInput>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(4);
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: true },
+				validity: { rangeOverflow: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#stepInput:invalid")
+			.should("exist", "StepInput without value lower than min should have :invalid CSS class");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputTypeNumber(2);
+
+		cy.get("@stepInput")
+			.ui5AssertValidityState({
+				formValidity: { rangeOverflow: false },
+				validity: { rangeOverflow: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#stepInput:invalid")
+			.should("not.exist", "StepInput with value lower than max should not have :invalid CSS class");
+	});
+});
+
+describe("Accessibility", () => {
+	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
+		const labelText = "Quantity";
+
+		cy.mount(
+			<>
+				<Label for="stepInput">{labelText}</Label>
+				<StepInput id="stepInput"></StepInput>
+			</>
+		);
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-label", labelText);
 	});
 });

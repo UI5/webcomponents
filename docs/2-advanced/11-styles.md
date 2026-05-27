@@ -17,7 +17,7 @@ We designed some components such as Title, Label, Tag, Button, Input, and a few 
     background: purple;
   }
 ```
-You can try this yourself using the Input [sample](https://sap.github.io/ui5-webcomponents/components/Input/#custom-styling/). 
+You can try this yourself using the Input [sample](https://ui5.github.io/webcomponents/components/Input/#custom-styling/). 
 
 Unfortunately, this can't be done for all components because it depends on the complexity of the DOM structure.
 
@@ -46,6 +46,24 @@ ui5-card-header::part(status) {
 ```
 
 <b>Note:</b> All available shadow parts are described in the API reference as part of the "Overview" section of each component.
+
+## Usage of CSS Custom States
+
+Components can expose custom states that reflect their internal state using the [CSS custom state pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:state). This allows you to apply styles based on component-specific conditions without relying on classes or attributes.
+
+<b>For example:</b> You can style a component differently based on its custom state:
+
+```html
+<ui5-toolbar-item></ui5-toolbar-item>
+```
+
+```css
+ui5-toolbar-item:state(overflowed) {
+  flex-direction: column
+}
+```
+
+<b>Note:</b> All available custom states are described in the API reference as part of the "Overview" section of each component.
 
 ## Changing CSS Variables
 

@@ -21,11 +21,14 @@ export default function PanelTemplate(this: Panel) {
 					}}
 					role={this.headingWrapperRole}
 					aria-level={this.headingWrapperAriaLevel}
+					part="header-wrapper"
 				>
 					<div
 						onClick={this._headerClick}
 						onKeyDown={this._headerKeyDown}
 						onKeyUp={this._headerKeyUp}
+						onTouchStart={this._isMobile}
+						onFocusOut={this._headerFocusOut}
 						class="ui5-panel-header"
 						tabindex={this.headerTabIndex}
 						role={this.accInfo.role}

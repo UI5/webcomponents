@@ -194,19 +194,19 @@
 }
 
 :host([highlight="Negative"]) .ui5-li-highlight {
-	background: var(--sapNegativeTextColor);
+	background: var(--sapErrorBorderColor);
 }
 
 :host([highlight="Critical"]) .ui5-li-highlight {
-	background: var(--sapCriticalTextColor);
+	background: var(--sapWarningBorderColor);
 }
 
 :host([highlight="Positive"]) .ui5-li-highlight {
-	background: var(--sapPositiveTextColor);
+	background: var(--sapSuccessBorderColor);
 }
 
 :host([highlight="Information"]) .ui5-li-highlight {
-	background: var(--sapInformativeTextColor);
+	background: var(--sapInformationBorderColor);
 }
 
 /* wrapping */

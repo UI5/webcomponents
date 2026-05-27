@@ -1,4 +1,0 @@
-#dialog::part(header),
-#dialog::part(footer) {
-    padding-inline: 0;
-}

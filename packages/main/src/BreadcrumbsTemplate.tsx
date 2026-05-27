@@ -52,11 +52,10 @@ export default function BreadcrumbsTemplate(this: Breadcrumbs) {
 					<li class="ui5-breadcrumbs-current-location" onClick={this._onLabelPress}>
 						<span
 							id={`${this._id}-labelWrapper`}
-							role="link"
 							aria-current="page"
 							aria-label={this._currentLocationAccName}
 						>
-							<Label>
+							<Label wrappingType="None">
 								{this._currentLocationText}
 							</Label>
 						</span>

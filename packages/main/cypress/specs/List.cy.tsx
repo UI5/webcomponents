@@ -12,37 +12,20 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
+import Bar from "../../src/Bar.js";
+import Link from "../../src/Link.js";
+
+function getGrowingWithScrollList(length: number, height: string = "100px") {
+	return (
+		<List growing="Scroll" style={{ height }}>
+			{Array.from({ length }, (_, index) => (
+				<ListItemStandard key={index}>Item {index + 1}</ListItemStandard>
+			))}
+		</List>
+	);
+}
 
 describe("List Tests", () => {
-	it("tests 'loadMore' event fired upon infinite scroll", () => {
-		cy.mount(
-			<List style="height: 300px;" growing="Scroll">
-				<ListItemStandard>Laptop Lenovo</ListItemStandard>
-				<ListItemStandard>IPhone 3</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>DVD set</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard id="lastItem">Last Item</ListItemStandard>
-			</List>);
-
-		cy.get("[ui5-list]")
-			.as("list");
-
-		cy.get<List>("@list")
-			.then(list => {
-				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
-			})
-			.shadow()
-			.find(".ui5-list-scroll-container")
-			.as("scrollContainer")
-			.scrollTo("bottom", { duration: 100 });
-
-		cy.get("@loadMore")
-			.should("have.been.calledOnce");
-	});
-
 	it("Arrow down and up navigation between last item and growing button", () => {
 		cy.mount(
 			<List growing="Button">
@@ -171,10 +154,10 @@ describe("List Tests", () => {
 				<ListItemStandard>HP Monitor 24</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]")
 			.as("list");
-	
+
 		cy.get("@list").invoke('prop', 'accessibilityAttributes', {
 			growingButton: {
 				name: "Load more products from catalog"
@@ -185,11 +168,186 @@ describe("List Tests", () => {
 			.shadow()
 			.find("[id$='growing-btn']")
 			.should("have.attr", "aria-label", "Load more products from catalog");
-	
+
 		cy.get("@list")
 			.shadow()
 			.find("[id$='growing-btn']")
 			.should("not.have.attr", "aria-labelledby");
+	});
+
+	it("tests growing button accessible description property", () => {
+		cy.mount(
+			<List growing="Button">
+				<ListItemStandard>Product 1</ListItemStandard>
+				<ListItemStandard>Product 2</ListItemStandard>
+				<ListItemStandard>Product 3</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.as("list");
+
+		cy.get("@list").invoke('prop', 'accessibilityAttributes', {
+			growingButton: {
+				description: "This button will load additional products to the list. Click or press Enter to see more items."
+			}
+		});
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growing-btn']")
+			.should("have.attr", "aria-describedby");
+
+		cy.get("@list")
+			.shadow()
+			.find("[id$='growingButton-description']")
+			.should("exist")
+			.should("have.class", "ui5-hidden-text")
+			.should("contain.text", "This button will load additional products to the list. Click or press Enter to see more items.");
+	});
+});
+
+describe("List - Growing with scroll", () => {
+	it("tests 'loadMore' event not fired initially when the list did not overflow", () => {
+		cy.mount(
+			<div>
+				<input value="0" />
+				<List growing="Scroll">
+					<ListItemGroup headerText="New Items" />
+				</List>
+			</div>
+		);
+
+		cy.get("input").should("have.value", "0");
+	});
+	it("tests start marker is present in DOM", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-start-marker")
+			.should("exist")
+			.should("have.attr", "tabindex", "-1")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("tests end marker is present in DOM", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-end-marker")
+			.should("exist")
+			.should("have.attr", "tabindex", "-1")
+			.should("have.attr", "aria-hidden", "true");
+	});
+
+	it("End marker has correct CSS properties", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-end-marker")
+			.should("have.css", "display", "inline-block");
+	});
+
+	it("tests start marker observation works when scrolled", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]").as("list");
+
+		// Initially, start marker should be in view, so _startMarkerOutOfView should be false
+		cy.get<List>("@list")
+			.should(($el) => {
+				const list = $el.get(0);
+				expect(list._startMarkerOutOfView).to.be.false;
+			});
+
+		// Scroll down so start marker goes out of view
+		cy.get("@list")
+			.shadow()
+			.find(".ui5-list-scroll-container")
+			.scrollTo(0, 200, { duration: 100 });
+
+		cy.get<List>("@list")
+			.should(($el) => {
+				const list = $el.get(0);
+				expect(list._startMarkerOutOfView).to.be.true;
+			});
+	});
+
+	it("tests end marker observation works when scrolled to bottom as load-more is being fired", () => {
+		cy.mount(getGrowingWithScrollList(5));
+		cy.get("[ui5-list]").as("list");
+
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll to bottom so end marker becomes visible
+		cy.get("@list")
+			.shadow()
+			.find(".ui5-list-scroll-container")
+			.scrollTo("bottom", { duration: 100 });
+
+		// The load-more event should be fired when end marker becomes visible
+		// (assuming start marker is also out of view due to scrolling)
+		cy.get("@loadMore")
+			.should("have.been.called");
+	});
+
+	it("tests rerender/content change does not fire load-more event if conditions are met", () => {
+		cy.mount(
+			<div style="height: 6rem; overflow: auto; border: 1px solid black">
+				{getGrowingWithScrollList(5, "")}
+			</div>
+		);
+
+		cy.get("[ui5-list]").as("list");
+
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll the container to bottom to meet the conditions
+		cy.get("@list")
+			.parent()
+			.scrollTo("bottom", { duration: 100 });
+
+		cy.get("@loadMore").invoke("resetHistory");
+
+		// Simulate rerender by replacing content
+		cy.get<List>("@list")
+			.then(($list) => {
+				$list[0].innerHTML = '<ui5-li>New Item</ui5-li>';
+			});
+
+		cy.get("@loadMore")
+			.should("not.have.been.called");
+	});
+
+	it("tests load-more event fires when the scrollable container is a parent element", () => {
+		cy.mount(
+			<div id="scrollable-container" style="height: 150px; overflow-y: auto;">
+				<List growing="Scroll">
+					{getGrowingWithScrollList(5, "")}
+				</List>
+			</div>
+		);
+
+		cy.get("[ui5-list]").as("list");
+
+		// Set up load-more event listener
+		cy.get<List>("@list")
+			.then(list => {
+				list.get(0)?.addEventListener("ui5-load-more", cy.stub().as("loadMore"));
+			});
+
+		// Scroll the parent container (not the list itself) to bottom
+		cy.get("#scrollable-container")
+			.scrollTo("bottom", { duration: 100 });
+
+		// The load-more event should still fire because intersection observers use viewport
+		cy.get("@loadMore")
+			.should("have.been.called");
 	});
 });
 
@@ -216,6 +374,88 @@ describe("List - Accessibility", () => {
 				.find(`#${_id}-invisibleText`)
 				.should("not.have.text", "Is Active");
 		});
+	});
+
+	it("has default aria-description for accessibleRole List when no accessibleDescription is set", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("have.attr", "aria-description")
+			.and("not.be.empty");
+
+		cy.get("[ui5-list]")
+			.should(($list) => {
+				const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+				expect(defaultText).to.not.be.empty;
+			});
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.equal(defaultText);
+					});
+			});
+	});
+
+	it("combines default aria-description with user-provided accessibleDescription for accessibleRole List", () => {
+		const customDescription = "Custom list description";
+
+		cy.mount(
+			<List accessibleDescription={customDescription}>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+						expect(ariaDesc).to.include(customDescription);
+						expect(ariaDesc).to.equal(`${defaultText} ${customDescription}`);
+					});
+			});
+	});
+
+	it("does not prepend default aria-description for accessibleRole ListBox", () => {
+		const customDescription = "Custom list description";
+
+		cy.mount(
+			<List accessibleRole="ListBox" accessibleDescription={customDescription}>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.equal(customDescription);
+						expect(ariaDesc).to.not.include(defaultText);
+					});
+			});
 	});
 });
 
@@ -413,22 +653,22 @@ describe("List Tests", () => {
 				<input placeholder="selectionComponentPressed result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
-	
+
 		cy.get("[ui5-li]").eq(1)
 			.shadow()
 			.find("ui5-radio-button")
 			.click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledTwice");
 		cy.get("@selectionChangeStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("selectionComponentPressed", true)));
@@ -447,16 +687,139 @@ describe("List Tests", () => {
 				<input placeholder="selectionChange result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
+	});
+
+	it("does not fire item-click when nested button disables itself on click", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<Button id="action-button">Action</Button>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#action-button").then(($button) => {
+			const buttonClickStub = cy.stub().as("buttonClickStub");
+			buttonClickStub.callsFake(() => {
+				($button[0] as Button).disabled = true;
+			});
+
+			$button[0].addEventListener("click", buttonClickStub);
+		});
+
+		cy.get("#action-button").click();
+
+		cy.get("@buttonClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("fires item-click when nested ui5-link is clicked", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<Link id="nested-link" href="#">Details</Link>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#nested-link").then(($link) => {
+			const linkClickStub = cy.stub().as("linkClickStub");
+			$link[0].addEventListener("click", linkClickStub);
+		});
+
+		cy.get("#nested-link").click();
+
+		cy.get("@linkClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+	});
+
+	it("does not fire item-click when nested disabled custom element is clicked", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<div id="custom-host"></div>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#custom-host").then(($host) => {
+			const customAction = document.createElement("x-action");
+			customAction.id = "disabled-custom-action";
+			customAction.setAttribute("aria-disabled", "true");
+			customAction.textContent = "Disabled Action";
+			$host[0].appendChild(customAction);
+
+			const customClickStub = cy.stub().as("customClickStub");
+			customAction.addEventListener("click", customClickStub);
+		});
+
+		cy.get("#disabled-custom-action").click();
+
+		cy.get("@customClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("fires item-click when nested custom element is not disabled", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<div>
+						<span>First List Item</span>
+						<div id="custom-host-enabled"></div>
+					</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#custom-host-enabled").then(($host) => {
+			const customAction = document.createElement("x-action");
+			customAction.id = "enabled-custom-action";
+			customAction.textContent = "Enabled Action";
+			$host[0].appendChild(customAction);
+
+			const customClickStub = cy.stub().as("customClickStub");
+			customAction.addEventListener("click", customClickStub);
+		});
+
+		cy.get("#enabled-custom-action").click();
+
+		cy.get("@customClickStub").should("have.been.calledOnce");
+		cy.get("@itemClickStub").should("have.been.calledOnce");
 	});
 
 	it("selectionChange events provides previousSelection item", () => {
@@ -471,13 +834,13 @@ describe("List Tests", () => {
 				<input placeholder="selectionChange previousSelection result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("@selectionChangeStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("previouslySelectedItems")));
 		cy.get("[ui5-li]").eq(1).should("exist");
@@ -491,7 +854,7 @@ describe("List Tests", () => {
 				<ListItemStandard selected>China</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("selectionChangeStub");
 			stub.callsFake((event) => {
@@ -499,11 +862,11 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-selection-change", stub);
 		});
-	
+
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
@@ -517,7 +880,7 @@ describe("List Tests", () => {
 				<ListItemStandard selected>China</ListItemStandard>
 			</List>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("selectionChangeStub");
 			stub.callsFake((event) => {
@@ -525,13 +888,13 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-selection-change", stub);
 		});
-	
+
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(1).should("have.attr", "selected");
 		cy.get("[ui5-li]").eq(2).should("have.attr", "selected");
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@selectionChangeStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 		cy.get("[ui5-li]").eq(1).should("have.attr", "selected");
@@ -890,35 +1253,35 @@ describe("List Tests", () => {
 				<label>0</label>
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
 		});
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.click();
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.should("not.have.attr", "selected");
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.shadow()
 			.find("ui5-button")
 			.should("exist");
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.shadow()
 			.find("ui5-button")
 			.click();
-	
+
 		cy.get("@itemDeleteStub").should("have.been.calledOnce");
 		cy.get("@itemDeleteStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
@@ -941,25 +1304,88 @@ describe("List Tests", () => {
 				<label>0</label>
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
 		});
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.click();
-	
+
 		cy.get("[ui5-list]")
 			.find("ui5-li")
 			.first()
 			.should("not.have.attr", "selected");
-	
+
 		cy.realPress("Delete");
-	
+
 		cy.get("@itemDeleteStub").should("have.been.calledOnce");
 		cy.get("@itemDeleteStub").should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
+	});
+
+	it("selectionMode: delete. F2 + Tab reaches delete button", () => {
+		cy.mount(
+			<div>
+				<button>Before button</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Laptop HP</ListItemStandard>
+					<ListItemStandard>Laptop Lenovo</ListItemStandard>
+				</List>
+				<button>After button</button>
+			</div>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-delete", cy.stub().as("itemDeleteStub"));
+		});
+
+		// Click first item to focus it
+		cy.get("[ui5-li]").first().click();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab in navigation mode should forward out — not reach delete button
+		cy.realPress("Tab");
+		cy.get("button").last().should("be.focused");
+
+		// Re-focus item, then F2 to enter edit mode
+		cy.get("[ui5-li]").first().click();
+		cy.realPress("F2");
+		cy.get("[ui5-li]")
+			.first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Enter on the focused delete button should trigger deletion
+		cy.realPress("Enter");
+		cy.get("@itemDeleteStub").should("have.been.calledOnce");
+	});
+
+	it("selectionMode: delete. F2 toggles focus to delete button", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Laptop HP</ListItemStandard>
+				<ListItemStandard>Laptop Lenovo</ListItemStandard>
+			</List>
+		);
+
+		// Click first item to focus it
+		cy.get("[ui5-li]").first().click();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// F2 should move focus to the delete button
+		cy.realPress("F2");
+		cy.get("[ui5-li]")
+			.first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 again should return focus to the list item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
 	});
 
 	it("item size and classes, when an item has both text and description", () => {
@@ -1076,16 +1502,7 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().click();
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("button").first().should("be.focused");
-
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("a").should("be.focused");
-
-		cy.realPress("Tab");
-		cy.get("[ui5-li-custom]").first().find("input[type='radio']").should("be.focused");
-
-		cy.get("[ui5-li]").first().click();
+		// Tab forwards out of item (navigation mode) — internal elements require F2
 		cy.realPress("Tab");
 		cy.get("[ui5-list]")
 			.shadow()
@@ -1130,6 +1547,291 @@ describe("List Tests", () => {
 		cy.get("[ui5-li-custom]").first().should("be.focused");
 	});
 
+	it("keyboard handling on F7", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>First</Button>
+					<Button>Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-li-custom]").realClick();
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 goes to first focusable element (enters edit mode)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button (edit mode allows cycling)
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 returns to list item (exits edit mode)
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 remembers last focused element (second button)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
+	it("keyboard handling on F7 after TAB navigation", () => {
+		cy.mount(
+			<div>
+				<button>Before</button>
+				<List>
+					<ListItemCustom>
+						<Button>First</Button>
+						<Button>Second</Button>
+					</ListItemCustom>
+				</List>
+			</div>
+		);
+
+		cy.get("button").realClick();
+		cy.get("button").should("be.focused");
+
+		// Tab into list item
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 to enter internal elements (enables edit mode)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Tab to second button (edit mode allows cycling)
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").last().should("be.focused");
+
+		// F7 should store current element and return to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// F7 should remember the second button (not go to first)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
+	it("keyboard handling on F7 maintains focus position across list items", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+					<Button>Item 1 - Third</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+					<Button>Item 2 - Third</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first list item
+		cy.get("[ui5-li-custom]").first().realClick();
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// F7 to enter (should go to first button, enables edit mode)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(0).should("be.focused");
+
+		// Tab to second button (edit mode allows cycling)
+		cy.realPress("Tab");
+		cy.get("[ui5-button]").eq(1).should("be.focused");
+
+		// F7 to exit back to list item
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").first().should("be.focused");
+
+		// Navigate to second list item with ArrowDown
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li-custom]").last().should("be.focused");
+
+		// F7 should focus the second button (same index as previous item)
+		cy.realPress("F7");
+		cy.get("[ui5-button]").eq(4).should("be.focused").and("contain", "Item 2 - Second");
+	});
+
+	it("arrow down navigates to same-index element in next custom item", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 3 - First</Button>
+					<Button>Item 3 - Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first button in first item
+		cy.get("[ui5-button]").first().realClick();
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Arrow down should move to first button in second item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(2).should("be.focused").and("contain", "Item 2 - First");
+
+		// Arrow down again should move to first button in third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(4).should("be.focused").and("contain", "Item 3 - First");
+	});
+
+	it("arrow up navigates to same-index element in previous custom item", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - First</Button>
+					<Button>Item 1 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - First</Button>
+					<Button>Item 2 - Second</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 3 - First</Button>
+					<Button>Item 3 - Second</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus second button in last item
+		cy.get("[ui5-button]").eq(5).realClick();
+		cy.get("[ui5-button]").eq(5).should("be.focused");
+
+		// Arrow up should move to second button in second item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").eq(3).should("be.focused").and("contain", "Item 2 - Second");
+
+		// Arrow up again should move to second button in first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").eq(1).should("be.focused").and("contain", "Item 1 - Second");
+	});
+
+	it("arrow navigation skips standard list items", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Custom 1</Button>
+				</ListItemCustom>
+				<ListItemStandard>Standard Item</ListItemStandard>
+				<ListItemStandard>Another Standard</ListItemStandard>
+				<ListItemCustom>
+					<Button>Custom 2</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus button in first custom item
+		cy.get("[ui5-button]").first().realClick();
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Arrow down should skip standard items and focus button in second custom item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused").and("contain", "Custom 2");
+
+		// Arrow up should skip standard items and return to first custom item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").first().should("be.focused").and("contain", "Custom 1");
+	});
+
+	it("arrow navigation works across groups", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Before Group</Button>
+				</ListItemCustom>
+				<ListItemGroup headerText="Group 1">
+					<ListItemCustom>
+						<Button>In Group 1</Button>
+					</ListItemCustom>
+				</ListItemGroup>
+				<ListItemGroup headerText="Group 2">
+					<ListItemCustom>
+						<Button>In Group 2</Button>
+					</ListItemCustom>
+				</ListItemGroup>
+				<ListItemCustom>
+					<Button>After Group</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus button before groups
+		cy.get("[ui5-button]").first().realClick();
+
+		// Navigate down through groups
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(1).should("be.focused").and("contain", "In Group 1");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(2).should("be.focused").and("contain", "In Group 2");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused").and("contain", "After Group");
+	});
+
+	it("arrow navigation handles items with different element counts", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>Item 1 - A</Button>
+					<Button>Item 1 - B</Button>
+					<Button>Item 1 - C</Button>
+					<Button>Item 1 - D</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Item 2 - A</Button>
+					<Button>Item 2 - B</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus fourth button (index 3) in first item
+		cy.get("[ui5-button]").eq(3).realClick();
+		cy.get("[ui5-button]").eq(3).should("be.focused");
+
+		// Arrow down should focus last button in second item (index clamped to 1)
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").eq(5).should("be.focused").and("contain", "Item 2 - B");
+	});
+
+	it("arrow navigation does nothing at list boundaries", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Button>First Item</Button>
+				</ListItemCustom>
+				<ListItemCustom>
+					<Button>Last Item</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		// Focus first button
+		cy.get("[ui5-button]").first().realClick();
+
+		// Arrow up should do nothing (at top boundary)
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-button]").first().should("be.focused");
+
+		// Focus last button
+		cy.get("[ui5-button]").last().realClick();
+
+		// Arrow down should do nothing (at bottom boundary)
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-button]").last().should("be.focused");
+	});
+
 	it("keyboard handling on TAB when 2 level nested UI5Element is focused", () => {
 		cy.mount(
 			<div>
@@ -1151,9 +1853,7 @@ describe("List Tests", () => {
 		cy.get("[ui5-li]").eq(1).click();
 		cy.get("[ui5-li]").eq(1).should("be.focused");
 
-		cy.realPress("Tab");
-		cy.get("ui5-breadcrumbs").should("be.focused");
-
+		// Tab forwards out of item (navigation mode) — internal Breadcrumbs requires F2
 		cy.realPress("Tab");
 		cy.get("[ui5-button]").should("be.focused");
 	});
@@ -1180,19 +1880,6 @@ describe("List Tests", () => {
 		cy.get("[ui5-li]").first().should("be.focused");
 	});
 
-	it("tests 'loadMore' event not fired initially when the list did not overflow", () => {
-		cy.mount(
-			<div>
-				<input value="0" />
-				<List growing="Scroll">
-					<ListItemGroup headerText="New Items" />
-				</List>
-			</div>
-		);
-
-		cy.get("input").should("have.value", "0");
-	});
-
 	it("detailPress event is fired", () => {
 		cy.mount(
 			<div>
@@ -1203,16 +1890,16 @@ describe("List Tests", () => {
 				</List>
 			</div>
 		);
-	
+
 		cy.get("[ui5-li]").first().then(($item) => {
 			$item[0].addEventListener("ui5-detail-click", cy.stub().as("detailClickStub"));
 		});
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find(".ui5-li-detailbtn")
 			.click();
-	
+
 		cy.get("@detailClickStub").should("have.been.calledOnce");
 	});
 
@@ -1359,12 +2046,12 @@ describe("List Tests", () => {
 				<Button>Change empty item text</Button>
 			</div>
 		);
-	
+
 		const NEW_TEXT = "updated";
-	
+
 		cy.get("[ui5-li]").first()
 			.should("have.prop", "innerHTML", "");
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find("slot")
@@ -1372,7 +2059,7 @@ describe("List Tests", () => {
 				const assignedNodes = ($slot[0] as any).assignedNodes();
 				expect(assignedNodes.length).to.equal(0);
 			});
-	
+
 		cy.get("[ui5-button]").then(($btn) => {
 			const stub = cy.stub().as("buttonClickStub");
 			stub.callsFake(() => {
@@ -1383,13 +2070,13 @@ describe("List Tests", () => {
 			});
 			$btn[0].addEventListener("click", stub);
 		});
-	
+
 		cy.get("[ui5-button]").click();
-	
+
 		cy.get("@buttonClickStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first()
 			.should("have.prop", "innerHTML", NEW_TEXT);
-	
+
 		cy.get("[ui5-li]").first()
 			.shadow()
 			.find("slot")
@@ -1409,7 +2096,7 @@ describe("List Tests", () => {
 				<input placeholder="itemClick prevented result" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-list]").then(($list) => {
 			const stub = cy.stub().as("itemClickStub");
 			stub.callsFake((event) => {
@@ -1417,9 +2104,9 @@ describe("List Tests", () => {
 			});
 			$list[0].addEventListener("ui5-item-click", stub);
 		});
-	
+
 		cy.get("[ui5-li]").first().click();
-	
+
 		cy.get("@itemClickStub").should("have.been.calledOnce");
 		cy.get("[ui5-li]").first().should("not.have.attr", "selected");
 	});
@@ -1568,7 +2255,7 @@ describe("List Tests", () => {
 		cy.mount(
 			<List>
 				<ListItemStandard>
-					<a href="https://sap.github.io/ui5-webcomponents/playground/components" target="_blank">
+					<a href="https://ui5.github.io/webcomponents/playground/components" target="_blank">
 						Link to UI5 Playground
 					</a>
 				</ListItemStandard>
@@ -1579,7 +2266,7 @@ describe("List Tests", () => {
 
 		cy.get("[ui5-li]")
 			.find("a")
-			.should("have.attr", "href", "https://sap.github.io/ui5-webcomponents/playground/components")
+			.should("have.attr", "href", "https://ui5.github.io/webcomponents/playground/components")
 			.should("have.attr", "target", "_blank");
 
 		cy.get("[ui5-li]")
@@ -1602,18 +2289,18 @@ describe("List Tests", () => {
 				<input value="0" />
 			</div>
 		);
-	
+
 		cy.get("[ui5-select]").then(($select) => {
 			const listItem = $select.closest("ui5-li-custom")[0];
 			if (listItem) {
 				listItem.addEventListener("ui5-item-close", cy.stub().as("itemCloseStub"));
 			}
 		});
-	
+
 		cy.get("[ui5-select]").click();
-	
+
 		cy.realPress("Escape");
-	
+
 		cy.get("@itemCloseStub").should("not.have.been.called");
 	});
 
@@ -1636,26 +2323,6 @@ describe("List Tests", () => {
 			.shadow()
 			.find(".ui5-li-root")
 			.should("have.attr", "tabindex", "0");
-	});
-
-	it("End marker has correct CSS properties", () => {
-		cy.mount(
-			<List growing="Scroll">
-				<ListItemStandard>Laptop Lenovo</ListItemStandard>
-				<ListItemStandard>IPhone 3</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>DVD set</ListItemStandard>
-				<ListItemStandard>HP Monitor 24</ListItemStandard>
-				<ListItemStandard>Audio cabel</ListItemStandard>
-				<ListItemStandard>Last Item</ListItemStandard>
-			</List>
-		);
-
-		cy.get("[ui5-list]")
-			.shadow()
-			.find(".ui5-list-end-marker")
-			.should("have.css", "display", "inline-block");
 	});
 
 	it("Checks if tooltip property value equals the title of li element", () => {
@@ -1777,7 +2444,6 @@ describe("List - Drag and Drop", () => {
 			<div>
 				<CheckBox text="Movable items" checked />
 				<CheckBox text="Compact density" />
-				<a href="http://sap.com" draggable={true}>http://sap.com</a>
 
 				<section>
 					<h2>Drag and drop</h2>
@@ -1981,38 +2647,6 @@ describe("List - Drag and Drop", () => {
 		cy.get("[ui5-list]").first().find("[ui5-li]").should("have.length.at.least", 3);
 		cy.get("[ui5-list]").eq(1).find("[ui5-li]").should("have.length.at.least", 2);
 	});
-
-	it("Moving link to list that doesn't accept it", () => {
-		const dataTransfer = new DataTransfer();
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragstart", { dataTransfer });
-
-		cy.get("[ui5-list]").first().find("[ui5-li]").first()
-			.trigger("dragover", { dataTransfer })
-			.trigger("drop", { dataTransfer });
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragend", { dataTransfer });
-
-		cy.get("[ui5-list]").first().find("[ui5-li]").should("have.length", 3);
-	});
-
-	it("Moving link to list that accepts it", () => {
-		const dataTransfer = new DataTransfer();
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragstart", { dataTransfer });
-
-		cy.get("[ui5-list]").eq(1).find("[ui5-li]").eq(1)
-			.trigger("dragover", { dataTransfer })
-			.trigger("drop", { dataTransfer });
-
-		cy.get("a[href='http://sap.com']")
-			.trigger("dragend", { dataTransfer });
-
-		cy.get("[ui5-list]").eq(1).find("[ui5-li]").should("have.length.at.least", 3);
-	});
 });
 
 describe("List keyboard drag and drop tests", () => {
@@ -2029,14 +2663,14 @@ describe("List keyboard drag and drop tests", () => {
 
 		cy.get("[ui5-list]").then(($list) => {
 			const list = $list[0];
-			
+
 			list.addEventListener("keydown", (e) => {
 				if (e.ctrlKey) {
 					const focusedItem = document.activeElement as HTMLElement;
 					if (!focusedItem || !focusedItem.matches("[ui5-li]")) return;
-					
+
 					let targetItem = null;
-					
+
 					switch (e.key) {
 						case "ArrowRight":
 						case "ArrowDown":
@@ -2096,14 +2730,14 @@ describe("List keyboard drag and drop tests", () => {
 
 		cy.get("[ui5-list]").then(($list) => {
 			const list = $list[0];
-			
+
 			list.addEventListener("keydown", (e) => {
 				if (e.ctrlKey) {
 					const focusedItem = document.activeElement as HTMLElement;
 					if (!focusedItem || !focusedItem.matches("[ui5-li]")) return;
-					
+
 					let targetItem = null;
-					
+
 					switch (e.key) {
 						case "ArrowUp":
 							targetItem = focusedItem.previousElementSibling as HTMLElement;
@@ -2140,5 +2774,834 @@ describe("List keyboard drag and drop tests", () => {
 		}
 
 		cy.get("#item9").prev().should("have.id", "item4");
+	});
+});
+
+describe("List sticky header", () => {
+	it("sticks default header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List headerText="Sticky Header" stickyHeader>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-header")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+
+				cy.get("@container")
+					.scrollTo(0, 50);
+
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
+	});
+
+	it("sticks custom header", () => {
+		cy.mount(
+			<div id="scrollContainer" style="height: 100px;overflow: auto;">
+				<List stickyHeader>
+					<Bar slot="header">
+						<Title>Sticky Header Bar</Title>
+					</Bar>
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<div id="bottomSpacer" style={{ height: "1000px" }}></div>
+			</div>
+		);
+
+		cy.get("#scrollContainer")
+			.as("container");
+
+		cy.get("[ui5-bar]")
+			.as("header");
+
+		cy.get("@header")
+			.then(($headerBefore) => {
+				const headerTopBefore = $headerBefore[0].getBoundingClientRect().top;
+
+				cy.get("@container")
+					.scrollTo(0, 50);
+
+				cy.get("@header")
+					.should(($headerAfter) => {
+						const headerTopAfter = $headerAfter[0].getBoundingClientRect().top;
+						expect(headerTopAfter).to.eq(headerTopBefore);
+					});
+			});
+	});
+});
+
+describe("Edit mode (F2) with Delete selection mode", () => {
+	it("F2 toggles edit mode on and off", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		// Focus first item
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// F2 enters edit mode - focus moves to first focusable element
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 again exits edit mode - focus returns to list item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+	});
+
+	it("Tab in non-edit delete mode forwards to next item", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after-nav">After</button>
+			</div>
+		);
+
+		// Focus first item (not in edit mode)
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should move focus out of list (forward-after), not to delete button
+		cy.realPress("Tab");
+		cy.get("#after-nav").should("be.focused");
+	});
+
+	it("Tab in edit mode flows to next item's inner elements", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Focus first item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button of first item should be focused
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab flows to second item's delete button (single focusable per item)
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab flows to third item's delete button
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(2)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab from last item's last element exits the list
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F7 exits edit mode and returns focus to list item", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after-f7">After</button>
+			</div>
+		);
+
+		// Focus first item, enter edit mode via F2
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F7 returns focus to the list item and exits edit mode
+		cy.realPress("F7");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should forward out of list, confirming edit mode is off
+		cy.realPress("Tab");
+		cy.get("#after-f7").should("be.focused");
+	});
+
+	it("Arrow Down/Up transfers edit mode to adjacent items", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+					<ListItemStandard>Item 3</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Focus first item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button of first item should be focused
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down moves to delete button of second item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down again to third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Down at boundary does nothing — stays on third item
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up goes back to second item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up to first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Arrow Up at boundary does nothing — stays on first item
+		cy.realPress("ArrowUp");
+		cy.get("[ui5-li]").eq(0)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab from first item flows to second item's delete button (edit mode)
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// F2 exits edit mode from current item
+		cy.realPress("F2");
+		cy.get("[ui5-li]").eq(1).should("be.focused");
+	});
+
+	it("focus-out clears edit mode", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+				</List>
+				<button id="outside">Outside</button>
+			</div>
+		);
+
+		// Focus item and enter edit mode
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		// Delete button should be focused
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Click outside to move focus away
+		cy.get("#outside").realClick();
+
+		// Re-focus the list item
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		// Tab should forward out of list, confirming edit mode was cleared
+		cy.realPress("Tab");
+		cy.get("#outside").should("be.focused");
+	});
+
+	it("complete edit mode workflow with complex list items", () => {
+		// Complex list: ListItemCustom with multiple interactive elements,
+		// standard items, and a custom delete button slot
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemCustom>
+						<Button id="action1">Action 1</Button>
+						<Link>SAP Link</Link>
+						<Button id="action2">Action 2</Button>
+					</ListItemCustom>
+					<ListItemStandard>Simple Item</ListItemStandard>
+					<ListItemStandard>
+						Item with custom delete
+						<div slot="deleteButton">
+							<Button id="customDel">Custom Delete</Button>
+						</div>
+					</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// === Step 1: Focus first custom item ===
+		cy.get("[ui5-li-custom]").realClick();
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		// === Step 2: Enter edit mode with F2 ===
+		cy.realPress("F2");
+		// First focusable inside the custom item (Action 1 button) should be focused
+		cy.get("#action1").should("be.focused");
+
+		// === Step 3: Tab flows through all internal elements ===
+		cy.realPress("Tab");
+		cy.get("[ui5-link]").should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#action2").should("be.focused");
+
+		// Next Tab reaches the delete button in shadow DOM
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab from last inner element flows to next item (Simple Item's delete button)
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// === Step 4: Tab continues to third item ===
+		cy.realPress("Tab");
+		cy.get("#customDel").should("be.focused");
+
+		// === Step 5: Tab from last item exits the list ===
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+
+		// === Step 6: Re-enter edit mode on second item, test Shift+Tab flows backward ===
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Shift+Tab from second item flows to first item's last inner element (delete button)
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("[ui5-li-custom]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
+
+	it("Shift+Tab from first inner element flows to previous item", () => {
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemCustom>
+						<Button id="btn1">Action 1</Button>
+						<Button id="btn2">Action 2</Button>
+					</ListItemCustom>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Focus second item and enter edit mode
+		cy.get("[ui5-li]").realClick();
+		cy.realPress("F2");
+		cy.get("[ui5-li]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Shift+Tab from first inner element flows to previous item's last element
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("[ui5-li-custom]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Shift+Tab continues backward through previous item's elements
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#btn1").should("be.focused");
+
+		// Shift+Tab from first item's first element exits the list
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#before").should("be.focused");
+	});
+
+	it("Tab in edit mode flows through mixed item types", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemCustom>
+						<Button id="a1">A1</Button>
+						<Button id="a2">A2</Button>
+					</ListItemCustom>
+					<ListItemStandard>Standard Item</ListItemStandard>
+					<ListItemCustom>
+						<Button id="b1">B1</Button>
+					</ListItemCustom>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Enter edit mode on first item
+		cy.get("[ui5-li-custom]").first().realClick();
+		cy.realPress("F2");
+		cy.get("#a1").should("be.focused");
+
+		// Tab through first item's elements
+		cy.realPress("Tab");
+		cy.get("#a2").should("be.focused");
+
+		// Tab to first item's delete button (shadow DOM)
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab flows to second item (ListItemStandard) — its delete button
+		cy.realPress("Tab");
+		cy.get("[ui5-li]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab flows to third item (ListItemCustom) — first light DOM button
+		cy.realPress("Tab");
+		cy.get("#b1").should("be.focused");
+
+		// Tab to third item's delete button
+		cy.realPress("Tab");
+		cy.get("[ui5-li-custom]").last()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		// Tab from last item exits the list
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("Shift+Tab in non-edit delete mode forwards to previous item", () => {
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		// Focus second item
+		cy.get("[ui5-li]").last().realClick();
+		cy.get("[ui5-li]").last().should("be.focused");
+
+		// Shift+Tab should move focus out of the list (forward-before)
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#before").should("be.focused");
+	});
+});
+
+describe("Edit mode edge cases", () => {
+	it("F2 is a no-op on items with no focusable elements", () => {
+		cy.mount(
+			<div>
+				<List>
+					<ListItemStandard>Item 1</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F7 is a no-op on items with no focusable elements", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li]").first().should("be.focused");
+	});
+
+	it("Tab from last item in edit mode focuses growing button when growing=Button", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete" growing="Button">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").last().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").last()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-list]")
+			.shadow()
+			.find("[id$='growing-btn']")
+			.should("be.focused");
+	});
+
+	it("Shift+Tab from first item's first inner element exits the list", () => {
+		cy.mount(
+			<div>
+				<button id="before">Before</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+		cy.get("#before").should("be.focused");
+	});
+
+	it("F2 is a no-op in Single selection mode (radio button has tabindex=-1)", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Single">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F2 is a no-op in Multiple selection mode (checkbox has tabindex=-1)", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Multiple">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("F2");
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("F7 position memory clamps when navigating to item with fewer elements", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemCustom>
+					<Button id="btn1">Action 1</Button>
+					<Button id="btn2">Action 2</Button>
+				</ListItemCustom>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li-custom]").realClick();
+		cy.realPress("F7");
+		cy.get("#btn1").should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#btn2").should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li-custom]").should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").should("be.focused");
+
+		cy.realPress("F7");
+		cy.get("[ui5-li]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+	});
+
+	it("edit mode is cleared after focusout and re-entering the list restores navigation mode", () => {
+		cy.mount(
+			<div>
+				<button id="outside">Outside</button>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.get("#outside").realClick();
+		cy.get("#outside").should("be.focused");
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+
+	it("Arrow Down from item level uses standard navigation, not edit mode transfer", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+				<ListItemStandard>Item 3</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(1).should("be.focused");
+
+		cy.realPress("ArrowDown");
+		cy.get("[ui5-li]").eq(2).should("be.focused");
+	});
+
+	it("Tab chains across items and source item returns to navigation mode after focusout", () => {
+		cy.mount(
+			<div>
+				<List selectionMode="Delete">
+					<ListItemStandard>Item 1</ListItemStandard>
+					<ListItemStandard>Item 2</ListItemStandard>
+				</List>
+				<button id="after">After</button>
+			</div>
+		);
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.realPress("F2");
+
+		cy.get("[ui5-li]").first()
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-li]").eq(1)
+			.shadow()
+			.find("[ui5-button]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+
+		cy.get("[ui5-li]").first().realClick();
+		cy.get("[ui5-li]").first().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("#after").should("be.focused");
+	});
+});
+
+describe("List - ListItem accessible role inheritance", () => {
+	it("list items inherit 'menuitem' role when ui5-list has accessible-role='Menu'", () => {
+		cy.mount(
+			<List accessibleRole="Menu">
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+	});
+
+	it("list items inherit 'option' role when ui5-list has accessible-role='ListBox'", () => {
+		cy.mount(
+			<List accessibleRole="ListBox">
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "option");
+	});
+
+	it("list items keep 'listitem' role when ui5-list has default accessible-role='List'", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1">Item 1</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem");
+	});
+
+	it("explicit accessible-role on ui5-li takes precedence over inherited role from ui5-list", () => {
+		cy.mount(
+			<List accessibleRole="Menu">
+				<ListItemStandard id="explicit" accessibleRole="TreeItem">Item 1</ListItemStandard>
+				<ListItemStandard id="inherited">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#explicit")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "treeitem");
+
+		cy.get("#inherited")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+	});
+
+	it("list items can have an explicit accessible-role set without a parent ui5-list role", () => {
+		cy.mount(
+			<List>
+				<ListItemStandard id="item1" accessibleRole="MenuItem">Item 1</ListItemStandard>
+				<ListItemStandard id="item2">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "menuitem");
+
+		cy.get("#item2")
+			.shadow()
+			.find("li")
+			.should("have.attr", "role", "listitem");
 	});
 });

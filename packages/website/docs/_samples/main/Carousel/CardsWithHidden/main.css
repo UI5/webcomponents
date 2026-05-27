@@ -1,0 +1,10 @@
+ui5-card {
+    width: 300px;
+    height: 200px;
+    margin: 0.5rem;
+}
+
+ui5-carousel {
+    width: 100%;
+    max-width: 800px;
+}

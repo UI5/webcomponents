@@ -20,13 +20,13 @@
 }
 
 /* pointing right arrow */
-:host([actual-placement="Start"]) .ui5-popover-arrow {
+:host([actual-placement="Left"]) .ui5-popover-arrow {
 	top: calc(50% - 0.5625rem);
 	right: -0.5625rem;
 	width: 0.5625rem;
 }
 
-:host([actual-placement="Start"]) .ui5-popover-arrow:after {
+:host([actual-placement="Left"]) .ui5-popover-arrow:after {
 	margin: var(--_ui5_popover_right_arrow_margin);
 }
 
@@ -43,7 +43,7 @@
 
 /* pointing left arrow */
 :host(:not([actual-placement])) .ui5-popover-arrow,
-:host([actual-placement="End"]) .ui5-popover-arrow {
+:host([actual-placement="Right"]) .ui5-popover-arrow {
 	left: -0.5625rem;
 	top: calc(50% - 0.5625rem);
 	width: 0.5625rem;
@@ -51,7 +51,7 @@
 }
 
 :host(:not([actual-placement])) .ui5-popover-arrow:after,
-:host([actual-placement="End"]) .ui5-popover-arrow:after {
+:host([actual-placement="Right"]) .ui5-popover-arrow:after {
 	margin: var(--_ui5_popover_left_arrow_margin);
 }
 
@@ -89,4 +89,81 @@
 
 :host([modal]) .ui5-block-layer {
 	display: block;
+}
+
+/* resize handle */
+
+.ui5-popover-resize-handle {
+	position: absolute;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	z-index: 1;
+}
+
+.ui5-popover-resize-handle [ui5-icon] {
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	cursor: inherit;
+	color: var(--sapButton_Lite_TextColor);
+	--rotAngle: 0;
+	--scaleX: 1;
+	transform: rotate(var(--rotAngle)) scaleX(var(--scaleX));
+}
+
+.ui5-popover-rtl .ui5-popover-resize-handle [ui5-icon] {
+	--scaleX: -1;
+}
+
+.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle {
+	top: -0.5rem;
+	right: -0.5rem;
+	cursor: ne-resize;
+}
+
+.ui5-popover-resize-handle-top-right .ui5-popover-resize-handle [ui5-icon] {
+	bottom: 0;
+	left: 0;
+	--rotAngle: 270deg;
+}
+
+.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle {
+	top: -0.5rem;
+	left: -0.5rem;
+	cursor: nw-resize;
+}
+
+.ui5-popover-resize-handle-top-left .ui5-popover-resize-handle [ui5-icon] {
+	bottom: 0;
+	right: 0;
+	--rotAngle: 180deg;
+}
+
+.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle {
+	bottom: -0.5rem;
+	left: -0.5rem;
+	cursor: ne-resize;
+}
+
+.ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle [ui5-icon] {
+	top: 0;
+	right: 0;
+	--rotAngle: 90deg;
+}
+
+.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle {
+	bottom: -0.5rem;
+	right: -0.5rem;
+	cursor: nw-resize;
+}
+
+.ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle [ui5-icon] {
+	top: 0;
+	left: 0;
+}
+
+.ui5-popover-resizing,
+.ui5-popover-resizing * {
+	user-select: none !important;
 }

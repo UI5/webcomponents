@@ -43,6 +43,35 @@ describe("DynamicPage", () => {
 			.should("have.prop", "headerPinned", false);
 	});
 
+	it("renders correctly with initial header-snapped attribute", () => {
+		cy.mount(
+			<DynamicPage headerSnapped={true} style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+					<div slot="snappedHeading">Snapped Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					Page content with enough height to enable scrolling
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.should("have.prop", "headerSnapped", true);
+
+		cy.get("[ui5-dynamic-page-title]")
+			.should("have.prop", "snapped", true);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.should("have.prop", "_snapped", true);
+
+		cy.get("[slot='snappedHeading']")
+			.should("be.visible");
+	});
+
 	it("toggles the header-snapped state with 'headerSnapped' property", () => {
 		cy.mount(
 			<DynamicPage style={{ height: "600px" }}>
@@ -223,6 +252,213 @@ describe("DynamicPage", () => {
 			.shadow()
 			.find("[ui5-dynamic-page-header-actions]")
 			.should("have.prop", "hidePinButton", true);
+	});
+
+	it("sets scroll padding when content receives focus", () => {
+		cy.mount(
+			<DynamicPage showFooter style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<input data-testid="test-input" />
+				<Bar slot="footerArea" design="FloatingFooter">
+					<Button slot="endContent">Save</Button>
+				</Bar>
+			</DynamicPage>
+		);
+
+		cy.get("[data-testid='test-input']").focus();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.should("have.css", "scroll-padding-top")
+			.and("not.equal", "0px");
+
+		cy.get("[data-testid='test-input']").blur();
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.should("have.css", "scroll-padding-top", "0px");
+	});
+
+	it("scrolls focused elements into view", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					<input data-testid="bottom-input" style={{ marginTop: "900px" }} />
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[data-testid='bottom-input']").focus();
+
+		cy.get("[data-testid='bottom-input']").should("be.visible");
+	});
+
+	it("does not scroll content when a button is clicked while the header is partially hidden", () => {
+		let clickCount = 0;
+
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<Button data-testid="content-button" onClick={() => { clickCount += 1; }}>test</Button>
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const initialScrollTop = $container[0].scrollTop;
+
+				cy.get("[data-testid='content-button']")
+					.realClick();
+
+				cy.then(() => {
+					expect(clickCount).to.equal(1);
+				});
+
+				cy.get("[ui5-dynamic-page]")
+					.shadow()
+					.find(".ui5-dynamic-page-scroll-container")
+					.should(($updatedContainer) => {
+						expect($updatedContainer[0].scrollTop).to.be.closeTo(initialScrollTop, 1);
+					});
+			});
+	});
+
+	it("does not scroll content when a visible button receives keyboard focus while the header is partially hidden", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<button data-testid="first-content-button">first</button>
+				<Button data-testid="content-button">test</Button>
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[data-testid='first-content-button']")
+			.focus()
+			.should("be.focused");
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				const initialScrollTop = $container[0].scrollTop;
+
+				cy.realPress("Tab");
+
+				cy.get("[data-testid='content-button']")
+					.should("be.focused");
+
+				cy.get("[ui5-dynamic-page]")
+					.shadow()
+					.find(".ui5-dynamic-page-scroll-container")
+					.should(($updatedContainer) => {
+						expect($updatedContainer[0].scrollTop).to.be.closeTo(initialScrollTop, 1);
+					});
+			});
+	});
+
+	it("scrolls a partially clipped textarea into view when focused via Tab", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "180px" }}>
+						<div>Line 1</div>
+						<div>Line 2</div>
+						<div>Line 3</div>
+						<div>Line 4</div>
+						<div>Rack: 34</div>
+					</div>
+				</DynamicPageHeader>
+				<button data-testid="before-textarea">Before</button>
+				<textarea data-testid="target-textarea" style={{ display: "block", marginTop: "8px", height: "120px" }} />
+				<div style={{ height: "1000px" }}></div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 120;
+			});
+
+		cy.get("[data-testid='before-textarea']")
+			.focus()
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[data-testid='target-textarea']")
+			.should("be.focused");
+
+		cy.get("[ui5-dynamic-page]")
+			.then(($dp) => {
+				const dp = $dp[0] as DynamicPage;
+				const containerRect = dp.scrollContainer!.getBoundingClientRect();
+				const contentEl = dp.shadowRoot!.querySelector<HTMLElement>(".ui5-dynamic-page-content")!;
+				const contentRect = contentEl.getBoundingClientRect();
+				const targetRect = (dp.querySelector("[data-testid='target-textarea']") as HTMLTextAreaElement).getBoundingClientRect();
+				const visibleTop = Math.max(containerRect.top, contentRect.top);
+				const visibleBottom = containerRect.bottom - dp.endAreaHeight;
+
+				expect(targetRect.top).to.be.at.least(visibleTop);
+				expect(targetRect.bottom).to.be.at.most(visibleBottom);
+			});
 	});
 });
 
@@ -882,7 +1118,8 @@ describe("ARIA attributes", () => {
 		cy.get("[ui5-dynamic-page-header]")
 			.shadow()
 			.find(".ui5-dynamic-page-header-root")
-			.should("have.attr", "role", "region");
+			.should("have.attr", "role", "region")
+			.should("have.attr", "aria-label", "Header Expanded");
 
 		cy.get("[ui5-dynamic-page-title]")
 			.shadow()
@@ -904,8 +1141,8 @@ describe("ARIA attributes", () => {
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find("[ui5-button].ui5-dynamic-page-header-action-expand")
-			.should("have.prop", "accessibleName", "Snap Header")
-			.should("have.prop", "tooltip", "Snap Header");
+			.should("have.prop", "accessibleName", "Collapse Header")
+			.should("have.prop", "tooltip", "Collapse Header");
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
@@ -937,6 +1174,11 @@ describe("ARIA attributes", () => {
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
 			.find(".ui5-dynamic-page-title-header-wrapper")
+			.should("have.attr", "aria-label", "Header Snapped");
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
 			.should("have.attr", "aria-label", "Header Snapped");
 
 		cy.get("[ui5-dynamic-page-title]")
@@ -1012,5 +1254,26 @@ describe("ARIA attributes", () => {
 			.shadow()
 			.find(".ui5-dynamic-page-header-action-pin")
 			.should("have.attr", "tooltip", "Pin Header");
+	});
+
+	it("should use default aria-label based on header state", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					Page content with enough height to enable scrolling
+				</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
+			.should("have.attr", "aria-label", "Header Expanded");
 	});
 });

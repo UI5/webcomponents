@@ -21,6 +21,7 @@ import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement
  * that is used to support keyboard navigation of the notification list internal list.
  *
  * @private
+ * @extends List
  */
 @customElement("ui5-notification-list-internal")
 class NotificationListInternal extends List {

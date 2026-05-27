@@ -2,6 +2,24 @@ import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import Button from "../../src/Button.js";
 import Bar from "../../src/Bar.js";
 
+class MySimpleComponent extends HTMLElement {
+	constructor() {
+		super();
+		this.attachShadow({ mode: "open", delegatesFocus: true });
+
+		this.shadowRoot.innerHTML = `
+			<!-- HTML Comment -->
+			<button onclick="alert('Hello!')">Click Me</button>
+			<!-- HTML Comment -->
+		`;
+	}
+}
+
+customElements.define("my-simple-component", MySimpleComponent);
+
+// @ts-ignore
+const MySimpleComponentRenderer = () => <my-simple-component id="second" data-sap-ui-fastnavgroup="true">Second focusable</my-simple-component>
+
 describe("F6 navigation", () => {
 	describe("F6 Forward navigation", () => {
 		it("tests navigation", () => {
@@ -16,8 +34,8 @@ describe("F6 navigation", () => {
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
-					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="second">Second focusable</Button>
+					<div class="section">
+						<MySimpleComponentRenderer />
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
@@ -238,7 +256,9 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="first">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<Button id="first">First focusable</Button>
+							</div>
 						</div>
 					</div>
 					<div class="section">
@@ -246,14 +266,20 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="second">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<div class="section" data-sap-ui-fastnavgroup="true">
+									<div class="section" data-sap-ui-fastnavgroup="true">
+										<Button id="second">Second focusable</Button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Second focusable</Button>
+						<Button id="third">Third focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>
@@ -431,8 +457,8 @@ describe("F6 navigation", () => {
 				<div class="section">
 					<Button>Something focusable</Button>
 				</div>
-				<div class="section" data-sap-ui-fastnavgroup="true">
-					<Button id="second">Second focusable</Button>
+				<div class="section">
+					<MySimpleComponentRenderer />
 				</div>
 				<div class="section">
 					<Button>Something focusable</Button>
@@ -652,7 +678,9 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="first">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<Button id="first">First focusable</Button>
+							</div>
 						</div>
 					</div>
 					<div class="section">
@@ -660,14 +688,20 @@ describe("F6 navigation", () => {
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
 						<div class="section" data-sap-ui-fastnavgroup="true">
-							<Button id="second">First focusable</Button>
+							<div class="section" data-sap-ui-fastnavgroup="true">
+								<div class="section" data-sap-ui-fastnavgroup="true">
+									<div class="section" data-sap-ui-fastnavgroup="true">
+										<Button id="second">Second focusable</Button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="section">
 						<Button>Something focusable</Button>
 					</div>
 					<div class="section" data-sap-ui-fastnavgroup="true">
-						<Button id="third">Second focusable</Button>
+						<Button id="third">Third focusable</Button>
 					</div>
 					<div class="section">
 						<Button>After Element</Button>

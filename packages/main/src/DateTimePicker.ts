@@ -28,6 +28,10 @@ import {
 	DATETIME_PICKER_DATE_BUTTON,
 	DATETIME_PICKER_TIME_BUTTON,
 	DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME,
+	DATETIME_VALUE_MISSING,
+	DATETIME_PATTERN_MISMATCH,
+	DATETIME_RANGEUNDERFLOW,
+	DATETIME_RANGEOVERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -39,7 +43,7 @@ import DateTimePickerPopoverCss from "./generated/themes/DateTimePickerPopover.c
 import CalendarPickersMode from "./types/CalendarPickersMode.js";
 import type TimeSelectionClocks from "./TimeSelectionClocks.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
-import { renderFinished } from "@ui5/webcomponents-base";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
 
@@ -150,6 +154,12 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	@property({ type: Object })
 	_previewValues: PreviewValues = {};
 
+	/**
+	 * Stores the last valid value to preserve time when entering invalid values
+	 * @private
+	 */
+	_lastValidValue = "";
+
 	@query("[ui5-time-selection-clocks]")
 	_clocks!: TimeSelectionClocks;
 
@@ -189,19 +199,57 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		super._togglePicker();
 
 		if (this.open) {
+			let timeSelectionValue = this.value;
+
+			// If current value is invalid, use the last valid value for time selection
+			if (!timeSelectionValue || !this.isValidValue(timeSelectionValue)) {
+				timeSelectionValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+			}
+
 			this._previewValues = {
 				...this._previewValues,
-				timeSelectionValue: this.value || this.getValueFormat().format(UI5Date.getInstance()),
+				timeSelectionValue,
 			};
 		}
 	}
 
+	get formValidityMessage() {
+		const validity = this.formValidity;
+
+		if (validity.valueMissing) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateTimePicker.i18nBundle.getText(DATETIME_VALUE_MISSING, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.patternMismatch) {
+			// @ts-ignore oFormatOptions is a private API of DateFormat
+			return DateTimePicker.i18nBundle.getText(DATETIME_PATTERN_MISMATCH, this.getFormat().oFormatOptions.pattern as string);
+		}
+		if (validity.rangeUnderflow) {
+			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEUNDERFLOW, this.minDate);
+		}
+		if (validity.rangeOverflow) {
+			return DateTimePicker.i18nBundle.getText(DATETIME_RANGEOVERFLOW, this.maxDate);
+		}
+
+		return "";
+	}
+
+	get formValidity(): ValidityStateFlags {
+		return {
+			valueMissing: this.required && !this.value,
+			patternMismatch: !this.isValidValue(this.value),
+			rangeUnderflow: !this.isValidMin(this.value),
+			rangeOverflow: !this.isValidMax(this.value),
+		};
+	}
+
 	get _formatPattern() {
-		const hasHours = !!(this.formatPattern || "").match(/H/i);
-		const fallback = !this.formatPattern || !hasHours;
+		const formatPattern = this.formatPattern || this.valueFormat || "medium";
+		const hasHours = !!(formatPattern || "").match(/H/i);
+		const fallback = !formatPattern || !hasHours;
 
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		return fallback ? localeData.getCombinedDateTimePattern("medium", "medium", this._primaryCalendarType) : (this.formatPattern || "");
+		return fallback ? localeData.getCombinedDateTimePattern("medium", "medium", this._primaryCalendarType) : (formatPattern || "");
 	}
 
 	get _calendarTimestamp() {
@@ -255,7 +303,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	/**
 	 * @override
 	 */
-	get dateAriaDescription() {
+	get roleDescription() {
 		return DateTimePicker.i18nBundle.getText(DATETIME_DESCRIPTION);
 	}
 
@@ -263,7 +311,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @override
 	 */
 	get pickerAccessibleName() {
-		return DateTimePicker.i18nBundle.getText(DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME);
+		return DateTimePicker.i18nBundle.getText(DATETIMEPICKER_POPOVER_ACCESSIBLE_NAME, this.ariaLabelText);
 	}
 
 	/**
@@ -271,7 +319,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 * @private
 	 */
 	get _shouldHideHeader() {
-		return true;
+		return false;
 	}
 
 	/**
@@ -283,13 +331,19 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 	async onSelectedDatesChange(e: CustomEvent<CalendarSelectionChangeEventDetail>) {
 		e.preventDefault();
-		// @ts-ignore Needed for FF
-		const dateTimePickerContent = e.path ? e.path[1] : e.composedPath()[1];
+
+		// Try to get the current time value from the time picker,
+		// but fallback to last valid value if current picker time is empty or invalid
+		let timeValue = this._clocks?.value || "";
+		if (!timeValue || !this.isValidValue(timeValue)) {
+			timeValue = this._lastValidValue || this.getValueFormat().format(UI5Date.getInstance());
+		}
+
 		this._previewValues = {
 			...this._previewValues,
 			calendarTimestamp: e.detail.timestamp,
 			calendarValue: e.detail.selectedValues[0],
-			timeSelectionValue: dateTimePickerContent.lastChild.value,
+			timeSelectionValue: timeValue,
 		};
 		this._showTimeView = true;
 
@@ -376,15 +430,15 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	}
 
 	/**
-	 * Checks if the provided value is valid and within valid range.
 	 * @override
-	 * @param value
 	 */
-	_checkValueValidity(value: string): boolean {
-		if (value === "") {
-			return true;
+	_updateValueAndFireEvents(value: string, normalizeValue: boolean, events: Array<"change" | "value-changed" | "input">, updateValue = true) {
+		super._updateValueAndFireEvents(value, normalizeValue, events, updateValue);
+
+		// Always store the current value if it's valid (handles both updates and initial values)
+		if (this.value && this.isValidValue(this.value)) {
+			this._lastValidValue = this.value;
 		}
-		return this.isValidValue(value);
 	}
 
 	getSelectedDateTime() {
@@ -454,6 +508,16 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 			});
 		}
 		return this._isoFormatInstance;
+	}
+
+	/**
+	 * @override
+	 */
+	_getCalendarDateFromString(value: string) {
+		const jsDate = this.getValueFormat().parse(value) as Date;
+		if (jsDate) {
+			return CalendarDate.fromTimestamp(jsDate.getTime(), this._primaryCalendarType);
+		}
 	}
 
 	/**

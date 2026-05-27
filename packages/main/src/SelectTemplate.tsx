@@ -13,7 +13,7 @@ export default function SelectTemplate(this: Select) {
 				}}
 				id={`${this._id}-select`}
 				onClick={this._onclick}
-				title={this.tooltip}
+				title={this._effectiveTooltip}
 			>
 				{!this.icon && this.selectedOptionIcon &&
 					<Icon
@@ -38,7 +38,6 @@ export default function SelectTemplate(this: Select) {
 					aria-expanded={this._isPickerOpen}
 					aria-roledescription={this._ariaRoleDescription}
 					onKeyDown={this._onkeydown}
-					onKeyPress={this._handleKeyboardNavigation}
 					onKeyUp={this._onkeyup}
 					onFocusIn={this._onfocusin}
 					onFocusOut={this._onfocusout}

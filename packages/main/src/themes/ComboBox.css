@@ -9,3 +9,7 @@
 	height: 100%;
 	border-radius: var(--_ui5_input_border_radius);
 }
+
+:host(:not([readonly])) [inner-input] {
+	padding: var(--_ui5_input_inner_padding_with_icon);
+}

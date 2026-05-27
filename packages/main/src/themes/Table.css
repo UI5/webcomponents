@@ -1,6 +1,7 @@
 :host {
 	display: block;
 	position: relative;
+	z-index: 0; /* create a stacking context for the sticky elements */
 	color: var(--sapList_TextColor);
 	font: var(--sapFontSize) var(--sapFontFamily);
 }
@@ -31,27 +32,9 @@
 	justify-content: center;
 }
 
-#footer {
-	grid-column: 1 / -1;
-	grid-template-rows: subgrid;
-	height: fit-content;
-}
-
-#growing-cell {
-	grid-column: 1 / -1;
-	justify-content: center;
-	padding: 0;
-	border-top: 1px solid var(--sapList_BorderColor);
-	box-sizing: border-box;
-}
-
 #loading {
 	position: absolute;
 	inset: 0;
 	height: 100%;
 	z-index: 2;
-}
-
-:host([loading]) #table:has(#loading[_is-busy]) ::slotted(*) {
-	opacity: var(--sapContent_DisabledOpacity);
 }

@@ -31,6 +31,7 @@ import {
 	isPageDownAlt,
 	isPageDownShiftCtrl,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
 import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
@@ -39,6 +40,7 @@ import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import CalendarPart from "./CalendarPart.js";
 import type {
+	DisabledDateRangeT,
 	ICalendarPicker,
 	SpecialCalendarDateT,
 } from "./Calendar.js";
@@ -48,6 +50,9 @@ import {
 	DAY_PICKER_NON_WORKING_DAY,
 	DAY_PICKER_TODAY,
 	LIST_ITEM_SELECTED,
+	DAY_PICKER_SELECTED_RANGE_START,
+	DAY_PICKER_SELECTED_RANGE_END,
+	DAY_PICKER_SELECTED_RANGE_BETWEEN,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -136,7 +141,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * An array of UTC timestamps representing the selected date or dates depending on the capabilities of the picker component.
 	 * @default []
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	selectedDates: Array<number> = [];
 
 	/**
@@ -165,10 +170,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_weeks: Array<Week> = [];
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_dayNames: Array<DayName> = [];
 
 	/**
@@ -182,15 +187,23 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * When selectionMode="Range" and the first day in the range is selected, this is the currently hovered (when using mouse) or focused (when using keyboard) day by the user
 	 * @private
 	 */
-	 @property({ type: Number })
+	 @property({ type: Number, noAttribute: true })
 	_secondTimestamp?: number;
 
 	/**
 	 * Array of special calendar dates (if such are passed) from the calendar.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	specialCalendarDates: Array<SpecialCalendarDateT> = [];
+
+	/**
+	 * Array of disabled date ranges that cannot be selected.
+	 * Each range can have a start and/or end date value.
+	 * @private
+	 */
+	@property({ type: Array, noAttribute: true })
+	disabledDates: Array<DisabledDateRangeT> = [];
 
 	@query("[data-sap-focus-ref]")
 	_focusableDay!: HTMLElement;
@@ -220,15 +233,17 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType) as Array<string>;
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) as Array<string> : [];
+		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
+		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
 		const todayDate = CalendarDate.fromLocalJSDate(UI5Date.getInstance(), this._primaryCalendarType); // current day date - calculate once
 		const calendarDate = this._calendarDate; // store the _calendarDate value as this getter is expensive and degrades IE11 perf
-		const minDate = this._minDate; // store the _minDate (expensive getter)
-		const maxDate = this._maxDate; // store the _maxDate (expensive getter)
+
+		const minDate = this._minDate;
+		const maxDate = this._maxDate;
+		const precomputedDisabledDates = this._precomputeDisabledDates();
 
 		const tempSecondDate = this.hasSecondaryCalendarType ? this._getSecondaryDay(tempDate) : undefined;
 
@@ -251,7 +266,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			const isSelectedBetween = this._isDayInsideSelectionRange(timestamp);
 			const isOtherMonth = tempDate.getMonth() !== calendarDate.getMonth();
 			const isWeekend = this._isWeekend(tempDate);
-			const isDisabled = tempDate.valueOf() < minDate.valueOf() || tempDate.valueOf() > maxDate.valueOf();
+			const isDisabled = !this._isDateEnabled(tempDate, minDate, maxDate, precomputedDisabledDates);
 			const isToday = tempDate.isSame(todayDate);
 			const isFirstDayOfWeek = tempDate.getDay() === firstDayOfWeek;
 
@@ -266,9 +281,19 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
-			const ariaLabel = this.hasSecondaryCalendarType
+			let ariaLabel = this.hasSecondaryCalendarType
 				? `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()}; ${secondaryMonthsNamesString} ${tempSecondDateNumber}, ${tempSecondYearNumber} ${tooltip}`.trim()
 				: `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()} ${tooltip}`.trim();
+
+			if (this.selectionMode === CalendarSelectionMode.Range) {
+				if (isSelected && this._isRangeEndDate(timestamp)) {
+					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_END, ariaLabel);
+				} else if (isSelected && this._isRangeStartDate(timestamp)) {
+					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_START, ariaLabel);
+				} else if (isSelectedBetween) {
+					ariaLabel = DayPicker.i18nBundle.getText(DAY_PICKER_SELECTED_RANGE_BETWEEN, ariaLabel);
+				}
+			}
 
 			const day: Day = {
 				timestamp: timestamp.toString(),
@@ -364,12 +389,12 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		let dayOfTheWeek;
 
-		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType) as Array<string>;
-		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType) as Array<string>;
+		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType);
+		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType);
 		let dayName;
 
 		if (this.namesTooLong(aDayNamesAbbreviated)) {
-			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType) as Array<string>;
+			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType);
 		}
 
 		this._dayNames = [];
@@ -444,6 +469,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		return timestamp === this.selectedDates[0] || timestamp === this.selectedDates[this.selectedDates.length - 1];
+	}
+
+	_isRangeEndDate(timestamp: number): boolean {
+		return this.selectionMode === CalendarSelectionMode.Range && timestamp === this.selectedDates[1];
+	}
+
+	_isRangeStartDate(timestamp: number): boolean {
+		return this.selectionMode === CalendarSelectionMode.Range && timestamp === this.selectedDates[0];
 	}
 
 	/**
@@ -796,6 +829,78 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			|| (iWeekendEnd < iWeekendStart && (iWeekDay >= iWeekendStart || iWeekDay <= iWeekendEnd));
 	}
 
+	/**
+	 * Pre-computes disabled date range timestamps once before the rendering loop.
+	 * Avoids repeated date string parsing inside the per-cell _isDateEnabled check.
+	 * @private
+	 */
+	_precomputeDisabledDates(): Array<{ startTimestamp: number, endTimestamp: number }> {
+		return this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
+	}
+
+	/**
+	 * Checks if a given date is enabled (selectable).
+	 * A date is considered disabled if:
+	 * - It falls outside the min/max date range defined by the component
+	 * - It matches a single disabled date
+	 * - It falls within a disabled date range (exclusive of start and end dates)
+	 * @param date - The date to check
+	 * @param minDate - Pre-resolved min calendar date
+	 * @param maxDate - Pre-resolved max calendar date
+	 * @param precomputedDisabledDates - Pre-parsed disabled date range timestamps
+	 * @returns `true` if the date is enabled (selectable), `false` if disabled
+	 * @private
+	 */
+	_isDateEnabled(date: CalendarDate, minDate?: CalendarDate, maxDate?: CalendarDate, precomputedDisabledDates?: Array<{ startTimestamp: number, endTimestamp: number }>): boolean {
+		const resolvedMin = minDate ?? this._minDate;
+		const resolvedMax = maxDate ?? this._maxDate;
+
+		if ((resolvedMin && date.isBefore(resolvedMin))
+			|| (resolvedMax && date.isAfter(resolvedMax))) {
+			return false;
+		}
+
+		const dateTimestamp = date.valueOf() / 1000;
+		const disabledRanges = precomputedDisabledDates ?? this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
+
+		return !disabledRanges.some(({ startTimestamp, endTimestamp }) => {
+			if (endTimestamp) {
+				return dateTimestamp > startTimestamp && dateTimestamp < endTimestamp;
+			}
+
+			return startTimestamp && dateTimestamp === startTimestamp;
+		});
+	}
+
+	/**
+	 * Converts a date value string to a timestamp.
+	 * @param dateValue - Date string to convert
+	 * @returns timestamp in seconds, or 0 if invalid
+	 * @private
+	 */
+	_getTimestampFromDateValue(dateValue?: string): number {
+		if (!dateValue) {
+			return 0;
+		}
+
+		try {
+			const jsDate = this.getValueFormat().parse(dateValue) as Date;
+			const calendarDate = CalendarDate.fromLocalJSDate(
+				jsDate,
+				this._primaryCalendarType,
+			);
+			return calendarDate.valueOf() / 1000;
+		} catch {
+			return 0;
+		}
+	}
+
 	_isDayPressed(target: HTMLElement): boolean {
 		const targetParent = target.parentNode as HTMLElement;
 		return (target.className.indexOf("ui5-dp-item") > -1) || (targetParent && targetParent.classList && targetParent.classList.contains("ui5-dp-item"));
@@ -832,10 +937,23 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_getFirstDayOfWeek(): number {
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		let firstDayOfWeek;
+		const configurationFirstDayOfWeek = getFirstDayOfWeek();
+
+		if (configurationFirstDayOfWeek !== undefined) {
+			firstDayOfWeek = configurationFirstDayOfWeek;
+		} else {
+			firstDayOfWeek = localeData.getFirstDayOfWeek();
+		}
+
 		const result = CalendarUtils.getWeekConfigurationValues(this.calendarWeekNumbering);
 
-		const localeData = getCachedLocaleDataInstance(getLocale());
-		return result?.firstDayOfWeek ? result.firstDayOfWeek : localeData.getFirstDayOfWeek();
+		if (result?.firstDayOfWeek !== undefined && this.calendarWeekNumbering !== "Default") {
+			return result.firstDayOfWeek;
+		}
+
+		return firstDayOfWeek;
 	}
 
 	get styles() {

@@ -1,6 +1,6 @@
 @import "../base/MessageStrip-parameters.css";
 
-:root{
+:host{
 	--_ui5_message_strip_border_width: var(--sapMessage_BorderWidth);
 	--_ui5_message_strip_icon_top: 0.375rem;
 	--_ui5_message_strip_close_button_right: 0.125rem;

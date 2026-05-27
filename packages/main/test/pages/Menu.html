@@ -48,6 +48,11 @@
 	<ui5-menu id="delaymenu" loading-delay="100" loading>
 	</ui5-menu>
 
+	<ui5-menu id="delaymenu2" loading-delay="100" loading>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
 	<ui5-title level="H5" class="header-title">Clicked menu item text</ui5-title>
 	<ui5-input id="selectionInput"></ui5-input>
 
@@ -176,6 +181,7 @@
 
 	<ui5-title level="H5" class="header-title">Menu with delayed items loading</ui5-title>
 	<ui5-button id="btnAddOpenerDelay">Delayed</ui5-button>
+	<ui5-button id="btnAddOpenerDelay2">Delayed with pre-loaded items</ui5-button>
 	<br/><br/>
 
 	<ui5-title level="H5" class="header-title">Menu with right alignment</ui5-title>
@@ -233,6 +239,11 @@
 			delaymenu.open = !delaymenu.open;
 		});
 
+		btnAddOpenerDelay2.addEventListener("click", function() {
+			delaymenu2.opener = "btnAddOpenerDelay2";
+			delaymenu2.open = !delaymenu2.open;
+		});
+
 		delaymenu.addEventListener("ui5-before-open", function(event) {
 			setTimeout(function() {
 				delaymenu.loading = false;
@@ -243,6 +254,14 @@
 				twoNode.setAttribute("text", "Open from Google Cloud");
 				delaymenu.append(oneNode, twoNode);
 				delaymenu.focus();
+			}, 1000);
+		});
+
+		delaymenu2.addEventListener("ui5-before-open", function(event) {
+			setTimeout(function() {
+				delaymenu2.loading = false;
+				delaymenu2.loadingDelay = 0;
+				delaymenu2.focus();
 			}, 1000);
 		});
 

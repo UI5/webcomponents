@@ -29,7 +29,7 @@ export default function UserMenuTemplate(this: UserMenu) {
 			horizontalAlign="End"
 			tabindex={-1}
 			accessibleName={this.accessibleNameText}
-			aria-labelledby={this.accessibleNameText}
+			aria-label={this.accessibleNameText}
 			open={this.open}
 			opener={this.opener}
 			onClose={this._handlePopoverAfterClose}
@@ -77,16 +77,26 @@ export default function UserMenuTemplate(this: UserMenu) {
 						selectionMode="None"
 						separators="None"
 						accessibleRole="Menu"
+						accessibleName={this._ariaLabelledByActions}
 						onItemClick={this._handleMenuItemClick}
+						onMouseOver={this._itemMouseOver}
 						onui5-close-menu={this._handleMenuItemClose}
 					>
 						<slot></slot>
 					</List>
 			}
 
-			<div slot="footer" class="ui5-user-menu-footer">
-				<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
-			</div>
+			{this._hasCustomFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<slot name="footer"></slot>
+				</div>
+			}
+
+			{this._showDefaultFooter &&
+				<div slot="footer" class="ui5-user-menu-footer">
+					<Button class="ui5-user-menu-sign-out-btn" design="Transparent" icon={log} onClick={this._handleSignOutClick}>{this._signOutButtonText}</Button>
+				</div>
+			}
 		</ResponsivePopover>
 	);
 }
@@ -94,26 +104,31 @@ export default function UserMenuTemplate(this: UserMenu) {
 function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
-			<div class="ui5-user-menu-selected-account" aria-labelledby={this._ariaLabelledByAccountInformationText}>
-				<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} fallbackIcon={personPlaceholder} class="ui5-user-menu--selected-account-avatar" interactive>
-					{this._selectedAccount.avatarSrc &&
-						<img src={this._selectedAccount.avatarSrc}/>
-					}
-					{this.showEditButton &&
-					<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" title={this._editAvatarTooltip}>
-						<Icon slot="icon" name={edit}></Icon>
-					</Tag>
-					}
-				</Avatar>
+			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
+				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
+					<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
+						{this._selectedAccount.avatarSrc &&
+							<img src={this._selectedAccount.avatarSrc}/>
+						}
+						{this.showEditButton &&
+						<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" >
+							<Icon slot="icon" name={edit}></Icon>
+						</Tag>
+						}
+					</Avatar>
+				</span>
 				{this._selectedAccount.titleText &&
-					<Text maxLines={2} id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
+					<Text id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
 				}
 
 				{this._selectedAccount.subtitleText &&
-					<Text maxLines={1} class="ui5-user-menu-selected-account-subtitleText">{this._selectedAccount.subtitleText}</Text>
+					<Text class="ui5-user-menu-selected-account-subtitleText">{this._selectedAccount.subtitleText}</Text>
 				}
 				{this._selectedAccount.description &&
-					<Text maxLines={1} class="ui5-user-menu-selected-account-description">{this._selectedAccount.description}</Text>
+					<Text class="ui5-user-menu-selected-account-description">{this._selectedAccount.description}</Text>
+				}
+				{this._selectedAccount.additionalInfo &&
+					<Text class="ui5-user-menu-selected-account-additional-info">{this._selectedAccount.additionalInfo}</Text>
 				}
 
 				{this.showManageAccount &&
@@ -126,7 +141,7 @@ function headerContent(this: UserMenu) {
 
 function otherAccountsContent(this: UserMenu) {
 	return (<>
-		<Panel collapsed={true} class="ui5-user-menu-other-accounts" aria-labelledby={this._otherAccountsButtonText}>
+		<Panel collapsed={true} class="ui5-user-menu-other-accounts">
 			<div slot="header" class="ui5-user-menu-account-header">
 				<Title slot="header" level="H4" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
 				{this.showEditAccounts &&
@@ -144,31 +159,33 @@ function otherAccountsContent(this: UserMenu) {
 
 function otherAccountsList(this: UserMenu) {
 	return (<>
-		<List onItemClick={this._handleAccountSwitch} aria-labelledby={this._ariaLabelledByActions} loadingDelay={0}
+		<List onItemClick={this._handleAccountSwitch} loadingDelay={0}
+			accessibleName={`${this._otherAccountsButtonText} (${this._otherAccounts.length})`}
 			  loading={this._otherAccounts.some(account => account.loading === true)}>
 			{this._otherAccounts.map((account, index) =>
 				<ListItemCustom
 					ref={this.captureRef.bind(account)}
-					aria-labelledby={account.titleText}
-					aria-possition={index + 1}
-					aria-setsize={this._otherAccounts.length}
-					aria-dectiption={this.getAccountDescriptionText(account)}
+					accessibilityAttributes={{
+						"ariaPosinset": index + 1,
+						"ariaSetsize": this._otherAccounts.length
+					}}
+					accessibleName={this.getAccountDescriptionText(account)}
 				>
 					<div class="ui5-user-menu-other-accounts-content">
-						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder}>
+						<Avatar slot="image" size="S" initials={account._initials} fallbackIcon={personPlaceholder} colorScheme={account.avatarColorScheme}>
 							{account.avatarSrc &&
 								<img src={account.avatarSrc}/>
 							}
 						</Avatar>
 						<div class="ui5-user-menu-other-accounts-info">
 							{account.titleText &&
-								<Title class="ui5-user-menu-other-accounts-title" wrapping-type="None">{account.titleText}</Title>
+								<Title class="ui5-user-menu-other-accounts-title">{account.titleText}</Title>
 							}
 							{account.subtitleText &&
-								<Label class="ui5-user-menu-other-accounts-additional-info" wrapping-type="None">{account.subtitleText}</Label>
+								<Label class="ui5-user-menu-other-accounts-additional-info">{account.subtitleText}</Label>
 							}
 							{account.description &&
-								<Label class="ui5-user-menu-other-accounts-additional-info" wrapping-type="None">{account.description}</Label>
+								<Label class="ui5-user-menu-other-accounts-additional-info">{account.description}</Label>
 							}
 						</div>
 						<div>

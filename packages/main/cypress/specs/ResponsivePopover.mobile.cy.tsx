@@ -4,7 +4,7 @@ import Input from "../../src/Input.js";
 import Label from "../../src/Label.js";
 
 describe("ResponsivePopover mobile general interaction", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.ui5SimulateDevice();
 	});
 
@@ -20,6 +20,18 @@ describe("ResponsivePopover mobile general interaction", () => {
 			.shadow()
 			.find("[ui5-dialog]")
 			.should("be.visible");
+	});
+
+	it("tests showing of the dialog on phone", () => {
+		cy.mount(<ResponsivePopover open={true} />);
+
+		cy.get("[ui5-responsive-popover]")
+			.shadow()
+			.find("[ui5-dialog]")
+			.should("be.visible");
+
+		cy.get("[ui5-responsive-popover]")
+			.should("not.be.visible");
 	});
 });
 

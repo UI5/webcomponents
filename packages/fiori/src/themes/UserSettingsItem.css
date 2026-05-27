@@ -15,7 +15,6 @@
 	padding: 1rem 1rem 0.5rem;
 	font-size: var(--sapFontHeader5Size);
 	font-family: var(--sapFontBoldFamily);
-	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
 }
 
 .ui5-user-settings-item-loading-container {

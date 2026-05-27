@@ -55,7 +55,7 @@ class DateComponentBase extends UI5Element {
 	/**
 	 * Determines the format, displayed in the input field.
 	 * @default undefined
-	 * @deprecated
+	 * @deprecated Use displayFormat and valueFormat instead
 	 * @public
 	 */
 	@property()
@@ -121,6 +121,9 @@ class DateComponentBase extends UI5Element {
 	 */
 	_isoFormatInstance?: DateFormat;
 
+	_cachedMinDate?: { key: string, value: CalendarDate };
+	_cachedMaxDate?: { key: string, value: CalendarDate };
+
 	constructor() {
 		super();
 	}
@@ -135,27 +138,25 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get _minDate() {
-		let minDate;
-
-		if (this.minDate) {
-			minDate = this._getMinMaxCalendarDateFromString(this.minDate);
+		const key = `${this.minDate}__${this._primaryCalendarType}`;
+		if (!this._cachedMinDate || this._cachedMinDate.key !== key) {
+			const parsed = this.minDate ? this._getMinMaxCalendarDateFromString(this.minDate) : undefined;
+			this._cachedMinDate = { key, value: parsed || getMinCalendarDate(this._primaryCalendarType) };
 		}
-
-		return minDate || getMinCalendarDate(this._primaryCalendarType);
+		return this._cachedMinDate.value;
 	}
 
 	get _maxDate() {
-		let maxDate;
-
-		if (this.maxDate) {
-			maxDate = this._getMinMaxCalendarDateFromString(this.maxDate)!;
+		const key = `${this.maxDate}__${this._primaryCalendarType}`;
+		if (!this._cachedMaxDate || this._cachedMaxDate.key !== key) {
+			const parsed = this.maxDate ? this._getMinMaxCalendarDateFromString(this.maxDate) : undefined;
+			this._cachedMaxDate = { key, value: parsed || getMaxCalendarDate(this._primaryCalendarType) };
 		}
-
-		return maxDate || getMaxCalendarDate(this._primaryCalendarType);
+		return this._cachedMaxDate.value;
 	}
 
 	get _formatPattern() {
-		return this.formatPattern || "medium"; // get from config
+		return this.formatPattern || this.valueFormat; // get from config
 	}
 
 	get _isPattern() {
@@ -168,6 +169,10 @@ class DateComponentBase extends UI5Element {
 
 	get _isDisplayFormatPattern() {
 		return this._displayFormat !== "medium" && this._displayFormat !== "short" && this._displayFormat !== "long";
+	}
+
+	get initialFocusId(): string {
+		return `${this._id}-calendar`;
 	}
 
 	get hasSecondaryCalendarType() {

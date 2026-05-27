@@ -13,3 +13,8 @@ ui5-datetime-picker {
 .datetimepicker2auto {
     width: 300px
 }
+
+form ui5-datetime-picker:invalid {
+    outline: 2px solid var(--sapNegativeColor);
+}
+

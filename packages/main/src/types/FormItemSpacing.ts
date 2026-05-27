@@ -1,6 +1,5 @@
 /**
- * Different Button designs.
- *
+ * Different spacing of the form items.
  * @public
  * @since 2.0.0
  */

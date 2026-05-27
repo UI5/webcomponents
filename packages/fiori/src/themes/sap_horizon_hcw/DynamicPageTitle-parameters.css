@@ -1,6 +1,6 @@
 @import "../base/DynamicPageTitle-parameters.css";
 
-:root {
+:host {
     /*text-shadow of titles, breadcrumbs*/
     --sapContent_TextShadow: none;
 

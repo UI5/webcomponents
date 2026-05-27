@@ -1,0 +1,12 @@
+/* Style the group header title using CSS Shadow Parts */
+#styled-group::part(title) {
+	color: var(--sapButton_Emphasized_TextColor);
+	background-color: var(--sapButton_Emphasized_Background);
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+}
+
+/* Style the entire header container */
+#styled-group::part(header) {
+	background-color: var(--sapList_HeaderBackground);
+}

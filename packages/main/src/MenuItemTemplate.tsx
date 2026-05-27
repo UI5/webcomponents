@@ -1,23 +1,39 @@
+import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import type MenuItem from "./MenuItem.js";
+import PopoverPlacement from "./types/PopoverPlacement.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import Button from "./Button.js";
 import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Icon from "./Icon.js";
 import ListItemTemplate from "./ListItemTemplate.js";
 import type { ListItemHooks } from "./ListItemTemplate.js";
 
-const predefinedHooks: Partial<ListItemHooks> = {
-	listItemContent,
+export type MenuItemHooks = ListItemHooks & {
+	menuItemTextContent: JsxTemplate;
+}
+
+const predefinedHooks: Partial<MenuItemHooks> = {
 	iconBegin,
+	menuItemTextContent,
 };
 
-export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListItemHooks>) {
+export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
 	const currentHooks = { ...predefinedHooks, ...hooks };
+
+	if (!hooks?.listItemContent) {
+		currentHooks.listItemContent = function listItemContent(this: MenuItem) {
+			return (<>
+				{currentHooks.menuItemTextContent!.call(this)}
+
+				{rightContent.call(this)}
+				{checkmarkContent.call(this)}
+			</>);
+		};
+	}
 
 	return <>
 		{ListItemTemplate.call(this, currentHooks)}
@@ -26,13 +42,8 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<ListIte
 	</>;
 }
 
-function listItemContent(this: MenuItem) {
-	return (<>
-		{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
-
-		{rightContent.call(this)}
-		{checkmarkContent.call(this)}
-	</>);
+function menuItemTextContent(this: MenuItem) {
+	return <>{this.text && <div class="ui5-menu-item-text">{this.text}</div>}</>;
 }
 
 function checkmarkContent(this: MenuItem) {
@@ -59,7 +70,15 @@ function rightContent(this: MenuItem) {
 			</div>
 		);
 	case this.hasEndContent:
-		return <slot name="endContent" onKeyDown={this._endContentKeyDown}></slot>;
+		return (
+			<div
+				class="ui5-menu-item-end-content"
+				role="group"
+				aria-label={this.endContentAccessibleName}
+			>
+				<slot name="endContent" onKeyDown={this._endContentKeyDown}></slot>
+			</div>
+		);
 	case !!this.additionalText:
 		return (
 			<span
@@ -91,9 +110,9 @@ function listItemPostContent(this: MenuItem) {
 		preventFocusRestore={true}
 		hideArrow={true}
 		allowTargetOverlap={true}
-		placement={this.placement}
+		placement={PopoverPlacement.End}
 		verticalAlign="Top"
-		accessibleName={this.acessibleNameText}
+		accessibleName={this.accessibleNameText}
 		onBeforeOpen={this._beforePopoverOpen}
 		onOpen={this._afterPopoverOpen}
 		onBeforeClose={this._beforePopoverClose}
@@ -115,18 +134,16 @@ function listItemPostContent(this: MenuItem) {
 								{this.text}
 							</div>
 						</div>
-						<Button
-							icon={declineIcon}
-							design="Transparent"
-							aria-label={this.labelClose}
-							onClick={this._closeAll}
-						/>
 					</div >
 				</>
 			)
 		}
 
-		<div id={`${this._id}-menu-main`}>
+		<div
+			id={`${this._id}-menu-main`}
+			class={this.loading ? "menu-busy-indicator-main" : ""}
+			aria-busy={this.loading}
+		>
 			{
 				this.items.length ? (
 					<List
@@ -153,5 +170,18 @@ function listItemPostContent(this: MenuItem) {
 				/>
 			}
 		</div >
+
+		{
+			this.isPhone && (
+				<div slot="footer" class="ui5-menu-dialog-footer">
+					<Button
+						design="Transparent"
+						onClick={this._closeAll}
+					>
+						{this.labelCancel}
+					</Button>
+				</div>
+			)
+		}
 	</ResponsivePopover>;
 }

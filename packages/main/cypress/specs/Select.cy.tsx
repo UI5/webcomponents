@@ -443,6 +443,155 @@ describe("Select - Accessibility", () => {
 			.find("#accessibleDescription")
 			.should("have.text", "First description Updated second description Third description");
 	});
+
+	it("should not display tooltip when Select is not readonly", () => {
+		cy.mount(
+			<Select style="width: 50px">
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("not.have.attr", "title");
+	});
+
+	it("should display user tooltip with precedence over the default tooltip", () => {
+		cy.mount(
+			<Select style="width: 50px" tooltip="Custom tooltip" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "Custom tooltip");
+	});
+
+	it("should display default tooltip (text + additionalText) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option additionalText="AdditionalInfo" selected>VeryLongOptionText</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionText – AdditionalInfo");
+	});
+
+	it("should display default tooltip (text) if it is read-only and text is truncated, even if tooltip is not set", () => {
+		cy.mount(
+			<Select style="width: 50px" readonly>
+				<Option selected>VeryLongOptionTextThatWillBeTruncated</Option>
+				<Option >Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-root")
+			.should("have.attr", "title", "VeryLongOptionTextThatWillBeTruncated");
+	});
+
+	it("should show the text and additionalText, separated by '-' when select is read-only", () => {
+		cy.mount(
+			<Select readonly>
+				<Option additionalText="ExtraInfo" selected>SelectedOption</Option>
+				<Option additionalText="OtherInfo">OtherOption</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "SelectedOption – ExtraInfo");
+	});
+
+	it("tests accessibilityInfo getter returns correct values", () => {
+		cy.mount(
+			<>
+				<span id="labelRef">Reference Label</span>
+				{/* Basic select with selected option */}
+				<Select id="basicSelect">
+					<Option value="Option1" selected>Option 1</Option>
+					<Option value="Option2">Option 2</Option>
+				</Select>
+				
+				{/* Select with accessibleName */}
+				<Select id="namedSelect" accessibleName="Select Name">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with accessibleNameRef */}
+				<Select id="refSelect" accessibleNameRef="labelRef">
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+				
+				{/* Select with readonly and required attributes */}
+				<Select id="propsSelect" readonly required disabled>
+					<Option value="Option1" selected>Option 1</Option>
+				</Select>
+			</>
+		);
+
+		// Test basic select
+		cy.get("#basicSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.role).to.equal("combobox");
+			expect(accessInfo.type).to.equal("Listbox");
+			expect(accessInfo.readonly).to.be.false;
+			expect(accessInfo.required).to.be.false;
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.be.undefined; // No aria-label
+		});
+
+		// Test select with accessibleName
+		cy.get("#namedSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Select Name"); // Aria label
+		});
+
+		// Test select with accessibleNameRef
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Just text
+			expect(accessInfo.label).to.equal("Reference Label"); // Aria label from ref
+		});
+
+		// Test select with readonly and required properties
+		cy.get("#propsSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.readonly).to.be.true;
+			expect(accessInfo.required).to.be.true;
+			expect(accessInfo.disabled).to.be.true;
+		});
+
+		// Update the referenced label and check if the label updates
+		cy.get("#labelRef").invoke("text", "Updated Reference");
+		cy.get("#refSelect").then(($select) => {
+			const select = $select[0] as Select;
+			const accessInfo = select.accessibilityInfo;
+			
+			expect(accessInfo.description).to.equal("Option 1"); // Text remains the same
+			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
+		});
+	});
 });
 
 describe("Select - Popover", () => {
@@ -461,6 +610,63 @@ describe("Select - Popover", () => {
 			.should("be.visible")
 			.should("have.text", "Custom message");
 	});
+
+	it("ResponsivePopover should not have accessible name on desktop", () => {
+		cy.mount(
+			<Select id="desktopSelect">
+				<Option value="option1">Option 1</Option>
+				<Option value="option2">Option 2</Option>
+				<Option value="option3">Option 3</Option>
+			</Select>
+		);
+
+		// Open the popover
+		cy.get("#desktopSelect").realClick();
+
+		// Check that the ResponsivePopover does not have an accessible name on desktop
+		cy.get("#desktopSelect")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.have.attr", "accessible-name");
+	});
+
+	it("Value state message popover can extend beyond select width", () => {
+		cy.mount(
+			<Select valueState="Critical">
+				<Option>Short</Option>
+				<Option>Long</Option>
+				<div slot="valueStateMessage">
+					This is a very long value state message that should extend beyond the narrow select component width and not be constrained by it.
+				</div>
+			</Select>
+		);
+
+		// Trigger the value state popover by clicking and then pressing Escape
+		cy.get("[ui5-select]")
+			.realClick()
+			.realPress("Escape");
+
+		// Get the select width for comparison
+		cy.get("[ui5-select]")
+			.invoke("outerWidth")
+			.as("selectWidth");
+
+		// Find the standalone value state popover
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-valuestatemessage-popover")
+			.should("exist")
+			.as("valueStatePopover");
+
+		// Verify the popover width is greater than the select width
+		cy.get("@valueStatePopover")
+			.invoke("outerWidth")
+			.then((popoverWidth) => {
+				cy.get("@selectWidth").then((selectWidth) => {
+					expect(popoverWidth).to.be.greaterThan(Number(selectWidth));
+				});
+			});
+		});
 });
 
 describe("Select - Properties", () => {
@@ -488,6 +694,20 @@ describe("Select - Properties", () => {
 			</Select>);
 
 		cy.get("[ui5-select]").should("have.prop", "formFormattedValue", "");
+	});
+
+	it("Should show the selected text-separator when select is read-only", () => {
+		cy.mount(
+			<Select readonly text-separator="VerticalLine">
+				<Option additionalText="Additional1" selected>First</Option>
+				<Option additionalText="Additional2">Second</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", " | ");
 	});
 });
 
@@ -781,22 +1001,27 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
-	
-		cy.get("@select").realPress("ArrowUp");
-	
+		cy.get("@select").should("not.have.attr", "opened");
+
 		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
+	
+		cy.get("@labelRoot").realPress("ArrowUp");
+	
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
-		cy.get("@select")
-			.shadow()
-			.find(".ui5-select-label-root")
+		cy.get("@labelRoot")
 			.should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
 		cy.get("@select").should("have.prop", "value", EXPECTED_SELECTION_TEXT2);
@@ -825,24 +1050,40 @@ describe("Select general interaction", () => {
 		const EXPECTED_SELECTION_TEXT1 = "Compact";
 		const EXPECTED_SELECTION_TEXT2 = "Condensed";
 	
+		// Closed-state arrow navigation with announcement
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
 	
-		cy.get("@select").realPress("ArrowUp");
+		cy.get("@labelRoot").realPress("ArrowUp");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT1);
 	
-		cy.get("@select").realPress("ArrowDown");
+		cy.get("@labelRoot").realPress("ArrowDown");
 	
 		cy.get(".ui5-invisiblemessage-polite").should("contain.text", EXPECTED_SELECTION_TEXT2);
 	
+		// Open picker, navigate, escape (revert)
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Escape");
+		cy.get("@select").should("not.have.attr", "opened");
 	
+		// Open picker, navigate, enter (confirm)
 		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 		cy.get("@select").realPress("ArrowUp");
 		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 	
 		cy.get("@select")
 			.shadow()
@@ -920,15 +1161,14 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Banana";
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("Space");
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Tab");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("ArrowUp");
-		cy.get("[ui5-select]").realPress("Tab");
-
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
@@ -954,20 +1194,22 @@ describe("Select general interaction", () => {
 
 		const EXPECTED_SELECTION_TEXT = "Watermelon";
 
-		cy.get("[ui5-select]").eq(1).realClick();
-		cy.get("[ui5-select]").eq(1).realClick();
+		cy.get("[ui5-select]").eq(1).as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("Space");
+		cy.get("@select").realPress("ArrowDown");
+		cy.get("@select").realPress(["Shift", "Tab"]);
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").eq(1).realPress("ArrowDown");
-		cy.get("[ui5-select]").eq(1).realPress(["Shift", "Tab"]);
-
-		cy.get("[ui5-select]").eq(1)
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", EXPECTED_SELECTION_TEXT);
 
-		cy.get("[ui5-select]").eq(0).should("be.focused");
+		cy.get("[ui5-select]").eq(0)
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("be.focused");
 	});
 
 	it("tests selection does not cycle with ArrowDown", () => {
@@ -1534,24 +1776,32 @@ describe("Select general interaction", () => {
 			</Select>
 		);
 
-		cy.get("[ui5-select]").realClick();
-		cy.get("[ui5-select]").realPress("s");
+		cy.get("[ui5-select]").as("select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+		cy.get("@select").realPress("s");
 
-		cy.get("[ui5-select]")
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
 			.should("contain.text", "Second");
 
-		cy.get("[ui5-select]").realPress("Enter");
+		cy.get("@select").realPress("Enter");
+		cy.get("@select").should("not.have.attr", "opened");
 
-		cy.get("[ui5-select]").realPress("t");
-
-		cy.get("[ui5-select]")
+		// After picker closes, focus the label root before type-to-select
+		cy.get("@select")
 			.shadow()
 			.find(".ui5-select-label-root")
+			.as("labelRoot")
+			.focus()
+			.should("be.focused");
+
+		cy.get("@labelRoot").realPress("t");
+
+		cy.get("@labelRoot")
 			.should("contain.text", "Third");
 
-		cy.get("[ui5-select]").should("have.prop", "value", "Third");
+		cy.get("@select").should("have.prop", "value", "Third");
 	});
 
 	it("navigates with ArrowDown when initial value does not match any option", () => {
@@ -1598,5 +1848,170 @@ describe("Select general interaction", () => {
 			.eq(2)
 			.should("have.attr", "selected");
 		cy.get("[ui5-select]").should("have.prop", "value", "C");
+	});
+
+	it("fires change event only once when pressing Enter on opened picker", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select")
+			.then(($select) => {
+				$select[0].addEventListener("ui5-change", cy.stub().as("changeStub"));
+			});
+
+		// Open the picker, navigate to a different option, and press Enter
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// The change event must fire exactly once (not twice due to both
+		// the list item click and the Select's own Enter key handler)
+		cy.get("@changeStub").should("have.been.calledOnce");
+
+		cy.get("@select")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("contain.text", "Compact");
+	});
+
+	it("focuses the select root after the picker closes so screen readers can announce the selected value", () => {
+		cy.mount(
+			<Select>
+				<Option value="Cozy">Cozy</Option>
+				<Option value="Compact">Compact</Option>
+				<Option value="Condensed" selected>Condensed</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]")
+			.as("select");
+
+		// Open the picker and select a different option
+		cy.get("@select").realClick();
+		cy.get("@select").should("have.attr", "opened");
+
+		cy.get("@select").realPress("ArrowUp");
+		cy.get("@select").realPress("Enter");
+
+		// The picker should close
+		cy.get("@select").should("not.have.attr", "opened");
+
+		// After the picker closes, the select root should be focused
+		// so that screen readers like NVDA can announce the selected value
+		cy.get("@select")
+			.should("be.focused");
+	});
+});
+
+describe("Select - active/down state", () => {
+	it("applies active background on ui5-option while mouse is pressed", () => {
+		cy.mount(
+			<Select>
+				<Option>Option 1</Option>
+				<Option>Option 2</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.realMouseDown()
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(0)
+			.realMouseUp();
+	});
+
+	it("applies active background on ui5-option-custom while mouse is pressed", () => {
+		cy.mount(
+			<Select>
+				<OptionCustom>Option 1</OptionCustom>
+				<OptionCustom>Option 2</OptionCustom>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option-custom]")
+			.eq(0)
+			.realMouseDown()
+			.then($option => {
+				const bg = window.getComputedStyle($option[0]).backgroundColor;
+				expect(bg).not.to.equal("rgba(0, 0, 0, 0)");
+				expect(bg).not.to.equal("transparent");
+			});
+
+		cy.get("[ui5-select]")
+			.find("[ui5-option-custom]")
+			.eq(0)
+			.realMouseUp();
+	});
+});
+
+describe("Select - popover max-width", () => {
+	it("applies a max-width of 40rem to the responsive popover when the select is narrow and an option has very long text", () => {
+		const longText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ".repeat(5);
+
+		cy.mount(
+			<Select style="width: 200px;">
+				<Option value="desktop" icon="laptop">{longText}</Option>
+				<Option value="short">Short option</Option>
+			</Select>
+		);
+
+		// Open the picker
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// When the select offsetWidth / remSize <= 40, max-width should be 40rem
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should($el => {
+				const maxWidth = $el[0].style.maxWidth;
+				expect(maxWidth).to.equal("40rem");
+			});
+	});
+
+	it("caps max-width to the component's own width in pixels when the select is wider than 40rem", () => {
+		cy.mount(
+			<Select style="width: 1000px;">
+				<Option value="short">Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// When offsetWidth / remSize > 40, max-width should be the component's width in px
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.then($popover => {
+				const maxWidth = $popover[0].style.maxWidth;
+				expect(maxWidth).to.match(/^\d+px$/);
+			});
 	});
 });

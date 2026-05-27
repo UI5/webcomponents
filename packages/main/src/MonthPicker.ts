@@ -46,7 +46,7 @@ type Month = {
 	selected: boolean,
 	ariaSelected: boolean,
 	name: string,
-	nameInSecType: string,
+	nameInSecType: string | undefined,
 	disabled: boolean,
 	ariaDisabled: boolean | undefined,
 	classes: string,
@@ -101,7 +101,7 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	 * or dates depending on the capabilities of the picker component.
 	 * @default []
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	selectedDates: Array<number> = [];
 
 	/**
@@ -118,7 +118,7 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 	@property()
 	selectionMode: `${CalendarSelectionMode}` = "Single";
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_monthsInterval: MonthInterval = [];
 
 	@property({ type: Boolean, noAttribute: true })
@@ -141,12 +141,6 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 
 	onBeforeRendering() {
 		this._buildMonths();
-	}
-
-	onAfterRendering() {
-		if (!this._hidden) {
-			this.focus();
-		}
 	}
 
 	get rowSize() {
@@ -197,7 +191,7 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 				selected: isSelected || isSelectedBetween,
 				ariaSelected: isSelected || isSelectedBetween,
 				name: monthsNames[i],
-				nameInSecType: this.hasSecondaryCalendarType && this._getDisplayedSecondaryMonthText(timestamp).text,
+				nameInSecType: this.hasSecondaryCalendarType ? this._getDisplayedSecondaryMonthText(timestamp).text : undefined,
 				disabled: isDisabled,
 				ariaDisabled: isDisabled,
 				classes: "ui5-mp-item",
@@ -327,6 +321,21 @@ class MonthPicker extends CalendarPart implements ICalendarPicker {
 		const hoveredItem = target.closest(".ui5-mp-item") as HTMLElement;
 		if (hoveredItem && this.selectionMode === CalendarSelectionMode.Range && this.selectedDates.length === 1) {
 			this._secondTimestamp = this._getTimestampFromDom(hoveredItem);
+		}
+	}
+
+	/**
+	 * Sets the focus reference to the month that was clicked with mousedown.
+	 * @param e
+	 * @private
+	 */
+	_onmousedown(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		const clickedItem = target.closest(".ui5-mp-item") as HTMLElement;
+
+		if (clickedItem) {
+			const timestamp = this._getTimestampFromDom(clickedItem);
+			this._setTimestamp(timestamp);
 		}
 	}
 

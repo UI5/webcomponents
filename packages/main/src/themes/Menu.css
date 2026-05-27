@@ -19,6 +19,14 @@
 
 .ui5-menu-busy-indicator {
 	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ui5-menu-busy-indicator-main {
+	min-height: var(--_ui5_list_item_base_height);
 }
 
 .ui5-menu-dialog-header {
@@ -52,4 +60,13 @@
 
 .ui5-menu-back-button {
 	margin-right: 1rem;
+}
+
+.ui5-menu-dialog-footer {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 1rem;
+	width: 100%;
+	border-top: 0.0625rem solid var(--sapPageFooter_BorderColor);
 }

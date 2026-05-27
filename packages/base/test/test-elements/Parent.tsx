@@ -1,6 +1,6 @@
-import UI5Element from "../../src/UI5Element.js";
+import UI5Element, { Slot } from "../../src/UI5Element.js";
 import customElement from "../../src/decorators/customElement.js";
-import slot from "../../src/decorators/slot.js";
+import slot from "../../src/decorators/slot-strict.js";
 import jsxRenderer from "../../src/renderer/JsxRenderer.js";
 
 @customElement({
@@ -16,7 +16,7 @@ class Parent extends UI5Element {
 			slots: false,
 		},
 	})
-	content!: Array<Node>;
+	content!: Slot<Node[]>;
 
 	@slot({
 		type: HTMLElement,
@@ -25,7 +25,7 @@ class Parent extends UI5Element {
 			slots: false,
 		},
 	})
-	items!: Array<HTMLElement>;
+	items!: Slot<HTMLElement[]>;
 
 	static get template() {
 		return () => <div>

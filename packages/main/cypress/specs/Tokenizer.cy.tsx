@@ -63,7 +63,7 @@ describe("General Interaction", () => {
 describe("Tokenizer nMore Popover", () => {
 	it("tests opening of nMore Popover", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -102,7 +102,7 @@ describe("Tokenizer nMore Popover", () => {
 
 	it("tests F7 list item navigation", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -190,7 +190,7 @@ describe("Tokenizer nMore Popover", () => {
 
 	it("tests item deletion via keyboard", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer id="nmore-tokenizer">
 					<Token text="Andora"></Token>
 					<Token text="Bulgaria"></Token>
@@ -350,7 +350,7 @@ describe("Readonly", () => {
 
 	it("tests expanding of tokenizer + focus handling in readonly mode.", () => {
 		cy.mount(
-			<div style={{display: "flex", flexDirection: "column", width: "240px"}}>
+			<div style={{ display: "flex", flexDirection: "column", width: "240px" }}>
 				<Tokenizer readonly onTokenDelete={onTokenDelete}>
 					<Token text="Andora" readonly></Token>
 					<Token text="Bulgaria" readonly></Token>
@@ -724,7 +724,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-disabled");
 	});
 
-	it("should test tokenizer content aria attributes",  () => {
+	it("should test tokenizer content aria attributes", () => {
 		cy.mount(
 			<Tokenizer>
 				<Token text="Andora"></Token>
@@ -799,6 +799,245 @@ describe("Accessibility", () => {
 
 				cy.get("@nMoreLabel")
 					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
+			});
+	});
+});
+
+describe("Scrolling Behavior", () => {
+	it("should scroll to end when tokenizer is expanded without focused token", () => {
+		cy.mount(
+			<div style={{ width: "150px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
+					<Token text="Another very long token text that also causes overflow"></Token>
+					<Token text="Third very long token text for overflow"></Token>
+					<Token text="Fourth very long token text for overflow"></Token>
+					<Token text="Fifth very long token text for overflow"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// Verify there's actually overflow to test
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				// Only proceed if there's actual overflow
+				if (element.scrollWidth > element.clientWidth) {
+					expect(element.scrollLeft).to.equal(0);
+				}
+			});
+
+		// Click on tokenizer container to expand it
+		cy.get("[ui5-tokenizer]")
+			.realClick();
+
+		// Verify tokenizer is expanded
+		cy.get("[ui5-tokenizer]")
+			.should("have.attr", "expanded");
+
+		// Should scroll to end when expanded without focused token (only if there's overflow)
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				const maxScroll = element.scrollWidth - element.clientWidth;
+				if (maxScroll > 0) {
+					// Should be scrolled to the end (or close to it)
+					expect(element.scrollLeft).to.be.greaterThan(maxScroll * 0.5);
+				}
+			});
+	});
+
+	it("should scroll to specific token when token is clicked", () => {
+		cy.mount(
+			<div style={{ width: "150px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
+					<Token text="Another very long token text that also causes overflow"></Token>
+					<Token text="Third very long token text for overflow"></Token>
+					<Token text="Fourth very long token text for overflow"></Token>
+					<Token text="Fifth very long token text for overflow"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// Click on the third token (middle token)
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("thirdToken")
+			.realClick();
+
+		// Verify token is selected and focused (separate assertions)
+		cy.get("@thirdToken")
+			.should("have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("have.attr", "focused");
+
+		// Verify tokenizer is expanded
+		cy.get("[ui5-tokenizer]")
+			.should("have.attr", "expanded");
+
+		// Should scroll to show the selected token
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				const maxScroll = element.scrollWidth - element.clientWidth;
+				if (maxScroll > 0) {
+					// Should be scrolled some amount to show the token
+					expect(element.scrollLeft).to.be.greaterThan(0);
+				}
+			});
+	});
+
+	it("should scroll when navigating with Home and End keys", () => {
+		cy.mount(
+			<div style={{ width: "150px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
+					<Token text="Another very long token text that also causes overflow"></Token>
+					<Token text="Third very long token text for overflow"></Token>
+					<Token text="Fourth very long token text for overflow"></Token>
+					<Token text="Fifth very long token text for overflow"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// Click on first token
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		// Navigate to the last token using End key
+		cy.realPress("End");
+
+		cy.get("[ui5-token]")
+			.eq(4)
+			.should("have.attr", "focused");
+
+		// Should scroll to end for last token
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				const maxScroll = element.scrollWidth - element.clientWidth;
+				if (maxScroll > 0) {
+					expect(element.scrollLeft).to.be.closeTo(maxScroll, 20);
+				}
+			});
+
+		// Navigate back to first token using Home key
+		cy.realPress("Home");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("have.attr", "focused");
+
+		// Should scroll back to start for first token
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				expect(element.scrollLeft).to.be.closeTo(0, 20);
+			});
+	});
+
+	it("should maintain scroll position when token selection is toggled", () => {
+		cy.mount(
+			<div style={{ width: "150px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
+					<Token text="Another very long token text that also causes overflow"></Token>
+					<Token text="Third very long token text for overflow"></Token>
+					<Token text="Fourth very long token text for overflow"></Token>
+					<Token text="Fifth very long token text for overflow"></Token>
+				</Tokenizer>
+			</div>
+		);
+
+		// Click on middle token to select it
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("middleToken")
+			.realClick();
+
+		// Get scroll position after clicking middle token
+		let scrollAfterClick;
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				scrollAfterClick = $content[0].scrollLeft;
+			});
+
+		// Toggle selection with space (should deselect but maintain focus)
+		cy.realPress("Space");
+
+		cy.get("@middleToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@middleToken")
+			.should("have.attr", "focused");
+
+		// Scroll position should remain the same since token is still focused
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				expect($content[0].scrollLeft).to.equal(scrollAfterClick);
+			});
+	});
+
+	it("should scroll to end when tokenizer regains focus without focused token", () => {
+		cy.mount(
+			<div style={{ width: "150px" }}>
+				<Tokenizer>
+					<Token text="Very long token text that will definitely cause overflow in this narrow container"></Token>
+					<Token text="Another very long token text that also causes overflow"></Token>
+					<Token text="Third very long token text for overflow"></Token>
+					<Token text="Fourth very long token text for overflow"></Token>
+					<Token text="Fifth very long token text for overflow"></Token>
+				</Tokenizer>
+				<button>External button</button>
+			</div>
+		);
+
+		// Click on a token to expand tokenizer
+		cy.get("[ui5-token]")
+			.eq(1)
+			.realClick();
+
+		// Tab to external button (lose focus)
+		cy.realPress("Tab");
+
+		// Verify tokenizer is collapsed
+		cy.get("[ui5-tokenizer]")
+			.should("not.have.attr", "expanded");
+
+		// Tab back to tokenizer (regain focus)
+		cy.realPress(["Shift", "Tab"]);
+
+		// Verify tokenizer is expanded again
+		cy.get("[ui5-tokenizer]")
+			.should("have.attr", "expanded");
+
+		// Should scroll to end when regaining focus (as per _scrollToEndIfNeeded logic)
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--content")
+			.then($content => {
+				const element = $content[0];
+				const maxScroll = element.scrollWidth - element.clientWidth;
+				if (maxScroll > 0) {
+					expect(element.scrollLeft).to.be.greaterThan(maxScroll * 0.5);
+				}
 			});
 	});
 });
@@ -1085,6 +1324,31 @@ describe("Keyboard Handling", () => {
 		cy.get("[ui5-tokenizer]")
 			.find("[ui5-token]")
 			.should("have.length", 2);
+
+		cy.get("@firstToken")
+			.should("be.focused");
+	});
+
+	it("should focus previous token when deleting last token with [Backspace]", () => {
+		cy.get("[ui5-token]")
+			.eq(1)
+			.as("secondToken");
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("lastToken");
+
+		cy.get("@lastToken")
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 2);
+
+		cy.get("@secondToken")
+			.should("be.focused");
 	});
 
 	it("should delete all selected tokens on [Backspace]", () => {
@@ -1325,5 +1589,414 @@ describe("Keyboard Handling", () => {
 		cy.get("[ui5-token]")
 			.eq(1)
 			.should("have.attr", "selected");
+	});
+
+	it("should deselect all tokens on [Escape] key", () => {
+		cy.get("[ui5-token]")
+			.eq(0)
+			.as("firstToken");
+
+		cy.get("[ui5-token]")
+			.eq(1)
+			.as("secondToken");
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("thirdToken");
+
+		cy.get("@firstToken")
+			.realClick();
+
+		cy.realPress(["Shift", "End"]);
+
+		cy.get("@firstToken")
+			.should("have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("have.attr", "selected");
+
+		cy.realPress("Escape");
+
+		cy.get("@firstToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("not.have.attr", "selected");
+	});
+
+	it("should fire selection-change event on [Escape] when tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("have.been.calledOnce");
+
+		cy.get("@selectionChange")
+			.its("firstCall.args.0.detail.tokens")
+			.should("have.length", 0);
+	});
+
+	it("should not fire selection-change on [Escape] when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Space");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("not.have.attr", "selected");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("not.have.been.called");
+	});
+});
+
+describe("Clipboard Operations", () => {
+	it("should copy single token text to clipboard when Ctrl+C is pressed", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="TokenText"></Token>
+				<Token text="Token2"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		// Stub the clipboard API for secure context
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			// Mock secure context
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "TokenText");
+	});
+
+	it("should copy multiple selected tokens text to clipboard separated by newlines", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		// Select first two tokens
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "ArrowRight"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Tokens should be joined with \r\n
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Andora\r\nBulgaria");
+	});
+
+	it("should copy all tokens text when all are selected", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="First"></Token>
+				<Token text="Second"></Token>
+				<Token text="Third"></Token>
+			</Tokenizer>
+		);
+
+		// Select all tokens using Ctrl+A
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "End"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "First\r\nSecond\r\nThird");
+	});
+
+	it("should use clipboardData.setData in non-secure context (HTTP fallback)", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="HttpToken"></Token>
+				<Token text="Token2"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		// Mock non-secure context (HTTP) - navigator.clipboard.writeText should not be called
+		cy.window().then((win) => {
+			Object.defineProperty(win, "isSecureContext", { value: false, writable: true });
+			// Spy on clipboard API to ensure it's NOT called in non-secure context
+			if (win.navigator.clipboard?.writeText) {
+				cy.spy(win.navigator.clipboard, "writeText").as("clipboardWriteSpy");
+			}
+		});
+
+		// Listen for copy event to verify clipboardData.setData is called
+		let setDataCalled = false;
+		let setDataValue = "";
+		cy.document().then((doc) => {
+			doc.addEventListener("copy", (e: ClipboardEvent) => {
+				// Track the original setData call
+				const originalSetData = e.clipboardData?.setData.bind(e.clipboardData);
+				if (e.clipboardData && originalSetData) {
+					e.clipboardData.setData = (format: string, data: string) => {
+						if (format === "text/plain") {
+							setDataCalled = true;
+							setDataValue = data;
+						}
+						return originalSetData(format, data);
+					};
+				}
+			}, { once: true, capture: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Verify setData was called with correct value
+		cy.then(() => {
+			expect(setDataCalled).to.be.true;
+			expect(setDataValue).to.equal("HttpToken");
+		});
+	});
+
+	it("should cut token and copy text to clipboard when Ctrl+X is pressed", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="CutMe"></Token>
+				<Token text="KeepMe"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Verify clipboard was filled with cut token text
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "CutMe");
+
+		// Verify token was deleted
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.attr", "text", "KeepMe");
+	});
+
+	it("should cut multiple selected tokens when Ctrl+X is pressed", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Cut1"></Token>
+				<Token text="Cut2"></Token>
+				<Token text="Keep"></Token>
+			</Tokenizer>
+		);
+
+		// Select first two tokens
+		cy.get("[ui5-token]").eq(0).realClick();
+		cy.realPress(["Shift", "ArrowRight"]);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Verify clipboard contains both tokens
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Cut1\r\nCut2");
+
+		// Verify tokens were deleted
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.attr", "text", "Keep");
+	});
+
+	it("should copy with Ctrl+Insert shortcut", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="InsertCopy"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "Insert"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "InsertCopy");
+	});
+
+	it("should cut with Shift+Delete shortcut", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="ShiftDeleteCut"></Token>
+				<Token text="Remaining"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Shift", "Delete"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "ShiftDeleteCut");
+		cy.get("[ui5-token]").should("have.length", 1);
+	});
+
+	it("should not copy unselected tokens", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Selected"></Token>
+				<Token text="NotSelected"></Token>
+				<Token text="AlsoNotSelected"></Token>
+			</Tokenizer>
+		);
+
+		// Only click first token (it will be selected)
+		cy.get("[ui5-token]").eq(0).realClick();
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		// Only the selected token should be copied
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected");
+	});
+});
+
+describe("Tokenizer - getFocusDomRef Method", () => {
+	it("should focus the last focused token on tokenizer focus if its visible", () => {
+		const onButtonClick = () => {
+			document.getElementById("tokenizer").focus();
+		}
+		cy.mount(
+			<>
+				<Tokenizer id="tokenizer">
+					<Token text="Andora"></Token>
+					<Token text="Bulgaria"></Token>
+					<Token text="Canada"></Token>
+					<Token text="Denmark"></Token>
+				</Tokenizer>
+				<Button>Dummy Btn</Button>
+				<Button onClick={onButtonClick}>Focus Tokenizer</Button>
+			</>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(1)
+			.realClick();
+
+		cy.get("[ui5-button]")
+			.eq(0)
+			.realClick();
+
+		cy.get("[ui5-button]")
+			.eq(1)
+			.realClick();
+
+		cy.get("[ui5-token]")
+			.eq(1)
+			.should("be.focused");
+	});
+
+	it("should focus the first token if the previously focused token is not visible", () => {
+		const onButtonClick = () => {
+			document.getElementById("nmore-token").focus();
+		}
+		cy.mount(
+			<>
+				<div style={"width: 200px"}>
+					<Tokenizer id="nmore-token" style={"width: 200px"}>
+						<Token text="Andora"></Token>
+						<Token text="Bulgaria"></Token>
+						<Token text="Canada"></Token>
+						<Token text="Denmark"></Token>
+						<Token text="Estonia"></Token>
+					</Tokenizer>
+				</div>
+				<Button>Dummy Btn</Button>
+				<Button onClick={onButtonClick}>Focus Tokenizer</Button>
+			</>
+		);
+
+		cy.get("[ui5-button]")
+			.eq(1)
+			.realClick();
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.realClick();
+
+		cy.get("[ui5-button]")
+			.eq(0)
+			.realClick();
+
+		cy.get("[ui5-button]")
+			.eq(1)
+			.realClick();
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("be.focused");
 	});
 });

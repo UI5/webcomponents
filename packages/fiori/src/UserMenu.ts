@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	customElement, slot, eventStrict as event, property,
+	customElement, slotStrict as slot, eventStrict as event, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
@@ -13,7 +14,9 @@ import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { PopupScrollEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import { isInstanceOfMenuItem } from "@ui5/webcomponents/dist/MenuItem.js";
+import { isPhone, isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type UserMenuAccount from "./UserMenuAccount.js";
 import type UserMenuItem from "./UserMenuItem.js";
 import UserMenuTemplate from "./UserMenuTemplate.js";
@@ -32,6 +35,8 @@ import {
 	USER_MENU_CURRENT_INFORMATION_TXT,
 	USER_MENU_ACTIONS_TXT,
 } from "./generated/i18n/i18n-defaults.js";
+
+const MENU_OPEN_DELAY = 300;
 
 type UserMenuItemClickEventDetail = {
 	item: UserMenuItem;
@@ -56,7 +61,6 @@ type UserMenuOtherAccountClickEventDetail = {
  *
  * @constructor
  * @extends UI5Element
- * @experimental
  * @public
  * @since 2.5.0
  */
@@ -204,7 +208,7 @@ class UserMenu extends UI5Element {
 		type: HTMLElement,
 		"default": true,
 	})
-	menuItems!: Array<UserMenuItem>;
+	menuItems!: DefaultSlot<UserMenuItem>;
 
 	/**
 	 * Defines the user accounts.
@@ -220,7 +224,17 @@ class UserMenu extends UI5Element {
 			slots: false,
 		},
 	})
-	accounts!: Array<UserMenuAccount>;
+	accounts!: Slot<UserMenuAccount>;
+
+	/**
+	 * Defines custom footer content.
+	 *
+	 * **Note:** When provided, replaces the default "Sign Out" button. Use an empty element to hide the footer completely.
+	 * @public
+	 * @since 2.20.0
+	 */
+	@slot()
+	footer!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -252,6 +266,11 @@ class UserMenu extends UI5Element {
 	/**
 	 * @private
 	 */
+	_timeout?: Timeout;
+
+	/**
+	 * @private
+	 */
 	@query("#user-menu-rp")
 	_responsivePopover?: ResponsivePopover;
 
@@ -269,24 +288,33 @@ class UserMenu extends UI5Element {
 
 	onBeforeRendering() {
 		this._selectedAccount = this.accounts.find(account => account.selected) || this.accounts[0];
+		const siblingsWithIcon = this._menuItems.some(menuItem => !!menuItem.icon);
+
+		this._menuItems.forEach(item => {
+			item._siblingsWithIcon = siblingsWithIcon;
+		});
 	}
 
 	onAfterRendering(): void {
-		if (this._responsivePopover) {
-			const observerOptions = {
-				threshold: [0.15],
-			};
+		if (this._responsivePopover && this.open && !this._observer) {
+			this._setupObserver();
+		}
+	}
 
-			this._observer?.disconnect();
-			this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
+	_setupObserver() {
+		const observerOptions = {
+			threshold: [0.15],
+		};
 
-			if (this._selectedAccountTitleEl) {
-				this._observer.observe(this._selectedAccountTitleEl);
-			}
+		this._observer?.disconnect();
+		this._observer = new IntersectionObserver(entries => this._handleIntersection(entries), observerOptions);
 
-			if (this._selectedAccountManageBtn) {
-				this._observer.observe(this._selectedAccountManageBtn);
-			}
+		if (this._selectedAccountTitleEl) {
+			this._observer.observe(this._selectedAccountTitleEl);
+		}
+
+		if (this._selectedAccountManageBtn) {
+			this._observer.observe(this._selectedAccountManageBtn);
 		}
 	}
 
@@ -352,7 +380,7 @@ class UserMenu extends UI5Element {
 	}
 
 	_handleMenuItemClick(e: CustomEvent<ListItemClickEventDetail>) {
-		const item = e.detail.item as UserMenuItem; // imrove: improve this ideally without "as" cating
+		const item = e.detail.item as UserMenuItem;
 
 		item._updateCheckedState();
 
@@ -365,6 +393,7 @@ class UserMenu extends UI5Element {
 				item.fireEvent("close-menu");
 			}
 		} else {
+			this._closeOtherSubMenus(item);
 			this._openItemSubMenu(item);
 		}
 	}
@@ -374,15 +403,59 @@ class UserMenu extends UI5Element {
 	}
 
 	_handlePopoverAfterOpen() {
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
+		this._setupObserver();
 		this.fireDecoratorEvent("open");
 	}
 
 	_handlePopoverAfterClose() {
+		this._observer?.disconnect();
+		this._observer = undefined;
+		this._titleMovedToHeader = false;
+		this._isScrolled = false;
 		this.open = false;
 		this.fireDecoratorEvent("close");
 	}
 
-	_openItemSubMenu(item: UserMenuItem) {
+	_itemMouseOver(e: MouseEvent) {
+		if (!isDesktop()) {
+			return;
+		}
+
+		const item = e.target as UserMenuItem;
+		if (!isInstanceOfMenuItem(item)) {
+			return;
+		}
+
+		item.getFocusDomRef()?.focus();
+		this._startOpenTimeout(item);
+	}
+
+	_startOpenTimeout(item: UserMenuItem) {
+		clearTimeout(this._timeout);
+
+		this._timeout = setTimeout(() => {
+			this._closeOtherSubMenus(item);
+			this._openItemSubMenu(item, true);
+		}, MENU_OPEN_DELAY);
+	}
+
+	_closeOtherSubMenus(item: UserMenuItem) {
+		if (!this._menuItems.includes(item)) {
+			return;
+		}
+
+		this._menuItems.forEach(menuItem => {
+			if (menuItem !== item) {
+				menuItem._close();
+			}
+		});
+	}
+
+	_openItemSubMenu(item: UserMenuItem, openedByMouse = false) {
+		clearTimeout(this._timeout);
+
 		if (!item._popover || item._popover.open) {
 			return;
 		}
@@ -390,6 +463,7 @@ class UserMenu extends UI5Element {
 		item._popover.opener = item;
 		item._popover.open = true;
 		item.selected = true;
+		item._openedByMouse = openedByMouse;
 	}
 
 	_closeUserMenu() {
@@ -439,8 +513,16 @@ class UserMenu extends UI5Element {
 		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
 	}
 
+	get _hasCustomFooter(): boolean {
+		return this.footer.length > 0 && this.footer[0]?.innerHTML.trim() !== "";
+	}
+
+	get _showDefaultFooter(): boolean {
+		return this.footer.length === 0;
+	}
+
 	getAccountDescriptionText(account: UserMenuAccount) {
-		return `${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
+		return `${account.titleText} ${account.subtitleText} ${account.description} ${account.selected ? UserMenu.i18nBundle.getText(USER_MENU_POPOVER_ACCESSIBLE_ACCOUNT_SELECTED_TXT) : ""}`;
 	}
 
 	getAccountByRefId(refId: string) {
@@ -451,6 +533,10 @@ class UserMenu extends UI5Element {
 		if (ref) {
 			ref.associatedAccount = this;
 		}
+	}
+
+	get _menuItems() {
+		return this.menuItems.filter(isInstanceOfMenuItem);
 	}
 }
 

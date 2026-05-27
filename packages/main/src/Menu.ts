@@ -1,7 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import {
 	isLeft,
@@ -9,12 +11,15 @@ import {
 	isEnter,
 	isTabNext,
 	isTabPrevious,
+	isShow,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import {
 	isPhone,
 	isDesktop,
 } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -28,14 +33,17 @@ import type MenuItem from "./MenuItem.js";
 import { isInstanceOfMenuItem } from "./MenuItem.js";
 import { isInstanceOfMenuItemGroup } from "./MenuItemGroup.js";
 import { isInstanceOfMenuSeparator } from "./MenuSeparator.js";
+import { isInstanceOfSplitButton } from "./SplitButton.js";
 import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import type PopoverPlacement from "./types/PopoverPlacement.js";
 import type {
 	ListItemClickEventDetail,
 } from "./List.js";
 import menuTemplate from "./MenuTemplate.js";
 import {
-	MENU_CLOSE_BUTTON_ARIA_LABEL,
+	MENU_CANCEL_BUTTON_TEXT,
 	MENU_POPOVER_ACCESSIBLE_NAME,
+	MENU_ITEM_LOADING,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -53,6 +61,7 @@ interface IMenuItem extends UI5Element {
 	isMenuItem?: boolean;
 	isSeparator?: boolean;
 	isGroup?: boolean;
+	eventDetails: { click?: ListItemBaseClickEventDetail };
 }
 
 type MenuItemClickEventDetail = {
@@ -201,6 +210,15 @@ class Menu extends UI5Element {
 	open = false;
 
 	/**
+	 * Determines on which side the component is placed at.
+	 * @default "Bottom"
+	 * @public
+	 * @since 2.16.0
+	 */
+	@property()
+	placement: `${PopoverPlacement}` = "Bottom";
+
+	/**
 	 * Determines the horizontal alignment of the menu relative to its opener control.
 	 * @default "Start"
 	 * @public
@@ -244,7 +262,7 @@ class Menu extends UI5Element {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	items!: Array<IMenuItem>;
+	items!: DefaultSlot<IMenuItem>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -254,8 +272,8 @@ class Menu extends UI5Element {
 		return this.effectiveDir === "rtl";
 	}
 
-	get labelClose() {
-		return Menu.i18nBundle.getText(MENU_CLOSE_BUTTON_ARIA_LABEL);
+	get labelCancel() {
+		return Menu.i18nBundle.getText(MENU_CANCEL_BUTTON_TEXT);
 	}
 
 	get isPhone() {
@@ -267,6 +285,10 @@ class Menu extends UI5Element {
 	}
 	get _list() {
 		return this.shadowRoot!.querySelector<List>("[ui5-list]");
+	}
+
+	get _opener() {
+		return typeof this.opener === "string" ? document.getElementById(this.opener) : this.opener;
 	}
 
 	/** Returns menu item groups */
@@ -282,8 +304,9 @@ class Menu extends UI5Element {
 	/** Returns all menu items (including those in groups */
 	get _allMenuItems() {
 		const items: MenuItem[] = [];
+		const slottedItems = this.getSlottedNodes<IMenuItem>("items");
 
-		this.items.forEach(item => {
+		slottedItems.forEach(item => {
 			if (isInstanceOfMenuItemGroup(item)) {
 				items.push(...item._menuItems);
 			} else if (!isInstanceOfMenuSeparator(item)) {
@@ -311,7 +334,7 @@ class Menu extends UI5Element {
 		return items;
 	}
 
-	get acessibleNameText() {
+	get accessibleNameText() {
 		return Menu.i18nBundle.getText(MENU_POPOVER_ACCESSIBLE_NAME);
 	}
 
@@ -339,7 +362,7 @@ class Menu extends UI5Element {
 		this.open = false;
 	}
 
-	_openItemSubMenu(item: MenuItem) {
+	_openItemSubMenu(item: MenuItem, openedByMouse = false) {
 		clearTimeout(this._timeout);
 
 		if (!item._popover || item._popover.open) {
@@ -353,6 +376,7 @@ class Menu extends UI5Element {
 		item._popover.opener = item;
 		item._popover.open = true;
 		item.selected = true;
+		item._openedByMouse = openedByMouse;
 	}
 
 	_itemMouseOver(e: MouseEvent) {
@@ -365,7 +389,7 @@ class Menu extends UI5Element {
 			return;
 		}
 
-		item.focus();
+		item.getFocusDomRef()?.focus();
 
 		// Opens submenu with 300ms delay
 		this._startOpenTimeout(item);
@@ -401,7 +425,7 @@ class Menu extends UI5Element {
 		this._timeout = setTimeout(() => {
 			this._closeOtherSubMenus(item);
 
-			this._openItemSubMenu(item);
+			this._openItemSubMenu(item, true);
 		}, MENU_OPEN_DELAY);
 	}
 
@@ -425,6 +449,8 @@ class Menu extends UI5Element {
 
 	_itemKeyDown(e: KeyboardEvent) {
 		const isTabNextPrevious = isTabNext(e) || isTabPrevious(e);
+		const isShowKey = isShow(e);
+		const isSplitButton = this._opener && isInstanceOfSplitButton(this._opener);
 		const item = e.target as MenuItem;
 
 		if (!isInstanceOfMenuItem(item)) {
@@ -434,7 +460,7 @@ class Menu extends UI5Element {
 		const isEndContentNavigation = isRight(e) || isLeft(e);
 		const shouldOpenMenu = this.isRtl ? isLeft(e) : isRight(e);
 
-		if (isEnter(e) || isTabNextPrevious) {
+		if (isEnter(e) || isTabNextPrevious || (isShowKey && isSplitButton)) {
 			e.preventDefault();
 		}
 
@@ -443,8 +469,8 @@ class Menu extends UI5Element {
 		}
 
 		if (shouldOpenMenu) {
-			this._openItemSubMenu(item);
-		} else if (isTabNextPrevious) {
+			this._openItemSubMenu(item, false);
+		} else if (isTabNextPrevious || (isShowKey && isSplitButton)) {
 			this._close();
 		}
 	}
@@ -475,6 +501,9 @@ class Menu extends UI5Element {
 
 	_afterPopoverOpen() {
 		this._allMenuItems[0]?.focus();
+		if (this.loading) {
+			announce(Menu.i18nBundle.getText(MENU_ITEM_LOADING), InvisibleMessageMode.Polite);
+		}
 		this.fireDecoratorEvent("open");
 	}
 

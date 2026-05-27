@@ -19,7 +19,7 @@
 </head>
 
 <body class="button1auto">
-	<ui5-button design="Negative" icon="decline">Reject</ui5-button>
+	<ui5-button design="Negative" icon="decline" end-icon="add">Reject</ui5-button>
 	<ui5-button design="Positive" icon="add">Add</ui5-button>
 	<ui5-button icon="home" id="icon-only-comment"><!----><!----></ui5-button>
 	<ui5-button icon="text" id="icon-only-blank-text"> </ui5-button>
@@ -286,13 +286,19 @@
 	<ui5-button id="menuButtonTextIcon" icon="action-settings" end-icon="navigation-down-arrow">Menu Button</ui5-button>
 	<ui5-button id="menuButtonIconEnd" end-icon="navigation-down-arrow"
 		tooltip="Menu Button with End Icon only"></ui5-button>
-
 	<ui5-menu id="menu">
 		<ui5-menu-item text="Item 1"></ui5-menu-item>
 		<ui5-menu-item text="Item 2"></ui5-menu-item>
 		<ui5-menu-item text="Item 3"></ui5-menu-item>
 	</ui5-menu>
 
+	<br />
+	<br />
+	<ui5-title>Menu Buttons with fixed width</ui5-title>
+	<br />
+	<ui5-button end-icon="navigation-down-arrow" class="medium-button">Menu Button</ui5-button>
+	<ui5-button icon="action-settings" end-icon="navigation-down-arrow" class="medium-button"></ui5-button>
+	<ui5-button icon="action-settings" end-icon="navigation-down-arrow" class="medium-button">Menu Button</ui5-button>
 	<br />
 	<br />
 
@@ -302,6 +308,22 @@
 		<ui5-button type="Submit">Submit</ui5-button>
 		<ui5-button type="Reset">Reset</ui5-button>
 	</form>
+
+	<br />
+	<br />
+	<ui5-title>Buttons with form attribute (outside form)</ui5-title>
+	<br />
+	<form id="externalForm" onsubmit="handleExternalFormSubmit(event)">
+		<ui5-label>External Form:</ui5-label>
+		<ui5-input id="externalFormInput" name="externalInput" value="External form input"></ui5-input>
+	</form>
+	<br />
+	<p>These buttons are outside the form but control it via the <code>form</code> attribute:</p>
+	<ui5-button form="externalForm" type="Submit" design="Emphasized">Submit External Form</ui5-button>
+	<ui5-button form="externalForm" type="Reset">Reset External Form</ui5-button>
+	<span id="externalFormMessage" style="color: green; display: none; margin-left: 10px;">Form submitted!</span>
+	<br />
+	<br />
 
 	<ui5-button id="openDialogButton" design="Emphasized">Show Registration Dialog</ui5-button>
 
@@ -407,7 +429,21 @@
 		btnInLink.addEventListener("ui5-click", (e) => {
 			e.preventDefault();
 		});
+
+		function handleExternalFormSubmit(event) {
+			event.preventDefault();
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData.entries());
+			const message = document.getElementById('externalFormMessage');
+			message.textContent = 'Submitted: ' + JSON.stringify(values);
+			message.style.display = 'inline';
+			setTimeout(() => {
+				message.style.display = 'none';
+			}, 5000);
+		}
+		window.handleExternalFormSubmit = handleExternalFormSubmit;
 	</script>
+
 </body>
 
 </html>

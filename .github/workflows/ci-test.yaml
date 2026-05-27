@@ -6,12 +6,15 @@ on:
     branches:
       - 'main'
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        suite: ['base', 'compat', 'ai', 'main:suite-1', 'main:cy:suite-1', 'main:suite-2', 'main:cy:suite-2', 'fiori']
+        suite: ['base', 'compat', 'ai', 'main:cy:suite-1', 'main:cy:suite-2', 'main:cy:suite-3', 'main:cy:suite-4', 'fiori']
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
@@ -21,10 +24,10 @@ jobs:
         cache: 'yarn'
 
     - name: Install
-      run: yarn --frozen-lockfile
+      run: yarn --immutable
 
     - name: Build
       run: yarn ci:testbuild
 
     - name: Test
-      run: yarn ci:test:${{ matrix.suite }}
+      run: yarn ci:test:${{ matrix.suite }} --verbose

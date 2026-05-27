@@ -5,9 +5,10 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type MediaGalleryItemLayout from "./types/MediaGalleryItemLayout.js";
 import type { IMediaGalleryItem } from "./MediaGallery.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Styles
 import MediaGalleryItemCss from "./generated/themes/MediaGalleryItem.css.js";
@@ -125,14 +126,14 @@ class MediaGalleryItem extends UI5Element implements IMediaGalleryItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the content of the thumbnail.
 	 * @public
 	 */
 	@slot()
-	thumbnail!: Array<HTMLElement>;
+	thumbnail!: Slot<HTMLElement>;
 
 	_monitoredThumbnail: HTMLElement | null;
 	_monitoredContent: HTMLElement | null;

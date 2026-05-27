@@ -7,6 +7,7 @@ import DynamicDateRange from "../DynamicDateRange.js";
 
 /**
  * @class
+ * @implements {IDynamicDateRangeOption}
  * @constructor
  * @public
  * @since 2.11.0

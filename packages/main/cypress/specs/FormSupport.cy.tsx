@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import Button from "../../src/Button.js";
 import CheckBox from "../../src/CheckBox.js";
 import ColorPicker from "../../src/ColorPicker.js";
@@ -19,6 +20,7 @@ import StepInput from "../../src/StepInput.js";
 import Switch from "../../src/Switch.js";
 import TextArea from "../../src/TextArea.js";
 import TimePicker from "../../src/TimePicker.js";
+import Tokenizer from "../../src/Tokenizer.js";
 
 const getFormData = ($form: HTMLFormElement) => {
 	const formData = new FormData($form);
@@ -140,9 +142,9 @@ describe("Form support", () => {
 	it("ui5-date-picker in form", () => {
 		cy.mount(<form method="get">
 			<DatePicker id="date_picker1"></DatePicker>
-			<DatePicker id="date_picker2" value="ok"></DatePicker>
+			<DatePicker id="date_picker2" value="Jan 29, 2019" formatPattern="MMM d, y" valueFormat="MMM d, y"></DatePicker>
 			<DatePicker id="date_picker3" name="date_picker3"></DatePicker>
-			<DatePicker id="date_picker4" name="date_picker4" value="ok"></DatePicker>
+			<DatePicker id="date_picker4" name="date_picker4" value="Jan 29, 2019" formatPattern="MMM d, y" valueFormat="MMM d, y"></DatePicker>
 			<DatePicker id="date_picker5" name="date_picker5" required></DatePicker>
 			<button type="submit">Submits forms</button>
 		</form>);
@@ -163,7 +165,7 @@ describe("Form support", () => {
 			.realClick();
 
 		cy.get("#date_picker5")
-			.realType("ok", { delay: 100 });
+			.ui5DatePickerTypeDate("Jan 29, 2019", 100);
 
 		cy.get("button")
 			.realClick();
@@ -175,15 +177,15 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "date_picker3=&date_picker4=ok&date_picker5=ok");
+			.should("be.equal", "date_picker3=&date_picker4=Jan 29, 2019&date_picker5=2019-01-29");
 	});
 
 	it("ui5-daterange-picker in form", () => {
 		cy.mount(<form method="get">
 			<DateRangePicker id="daterange_picker1"></DateRangePicker>
-			<DateRangePicker id="daterange_picker2" value="ok"></DateRangePicker>
+			<DateRangePicker id="daterange_picker2" formatPattern="MMM d, y" valueFormat="MMM d, y" value="Jul 16, 2020 - Jul 29, 2020"></DateRangePicker>
 			<DateRangePicker id="daterange_picker3" name="daterange_picker3"></DateRangePicker>
-			<DateRangePicker id="daterange_picker4" name="daterange_picker4" value="ok"></DateRangePicker>
+			<DateRangePicker id="daterange_picker4" name="daterange_picker4" formatPattern="MMM d, y" valueFormat="MMM d, y" value="Jul 16, 2020 - Jul 29, 2020"></DateRangePicker>
 			<DateRangePicker id="daterange_picker5" name="daterange_picker5" required></DateRangePicker>
 			<button type="submit">Submits forms</button>
 		</form>);
@@ -204,7 +206,7 @@ describe("Form support", () => {
 			.realClick();
 
 		cy.get("#daterange_picker5")
-			.realType("ok", { delay: 100 });
+			.ui5DatePickerTypeDate("Jul 16, 2020 - Jul 29, 2020", 100);
 
 		cy.get("button")
 			.realClick();
@@ -216,16 +218,16 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "daterange_picker3=&daterange_picker4=ok&daterange_picker5=ok");
+			.should("be.equal", "daterange_picker3=&daterange_picker4=Jul 16, 2020 &daterange_picker4= Jul 29, 2020&daterange_picker5=2020-07-16 &daterange_picker5= 2020-07-29");
 	});
 
 	it("ui5-datetime-picker in form", () => {
 		cy.mount(<form method="get">
 			<DateTimePicker id="datetime_picker1"></DateTimePicker>
-			<DateTimePicker id="datetime_picker2" value="ok"></DateTimePicker>
+			<DateTimePicker id="datetime_picker2" value="Apr 12, 2024 08:00:00" valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
 			<DateTimePicker id="datetime_picker3" name="datetime_picker3"></DateTimePicker>
-			<DateTimePicker id="datetime_picker4" name="datetime_picker4" value="ok"></DateTimePicker>
-			<DateTimePicker id="datetime_picker5" name="datetime_picker5" required></DateTimePicker>
+			<DateTimePicker id="datetime_picker4" name="datetime_picker4" valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss" value="Apr 12, 2024 08:00:00"></DateTimePicker>
+			<DateTimePicker id="datetime_picker5" name="datetime_picker5" required valueFormat="MMM d, y hh:mm:ss" formatPattern="MMM d, y hh:mm:ss"></DateTimePicker>
 			<button type="submit">Submits forms</button>
 		</form>);
 
@@ -245,7 +247,7 @@ describe("Form support", () => {
 			.realClick();
 
 		cy.get("#datetime_picker5")
-			.realType("ok", { delay: 100 });
+			.ui5DatePickerTypeDate("Jan 20, 2024 08:00:00", 100);
 
 		cy.get("button")
 			.realClick();
@@ -257,7 +259,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "datetime_picker3=&datetime_picker4=ok&datetime_picker5=ok");
+			.should("be.equal", "datetime_picker3=&datetime_picker4=Apr 12, 2024 08:00:00&datetime_picker5=Jan 20, 2024 08:00:00");
 	});
 
 	it("ui5-input in form", () => {
@@ -421,6 +423,57 @@ describe("Form support", () => {
 				return getFormData($el.get(0));
 			})
 			.should("be.equal", "multi_input5=&multi_input6=ok&multi_input7=&multi_input7=ok&multi_input8=ok&multi_input8=ok&multi_input9=ok&multi_input10=ok&multi_input11=&multi_input11=ok&multi_input12=ok&multi_input12=ok");
+	});
+
+	it("ui5-tokenizer in form", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags">
+					<Token text="Apple"></Token>
+					<Token text="Banana"></Token>
+				</Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "tags=Apple&tags=Banana");
+	});
+
+	it("ui5-tokenizer does not submit anything if no tokens", () => {
+		cy.mount(
+			<form method="get">
+				<Tokenizer name="tags"></Tokenizer>
+				<button type="submit">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0)!.addEventListener("submit", e => e.preventDefault());
+			$form.get(0)!.addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("button")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.called");
+
+		cy.get("form")
+			.then($el => getFormData($el.get(0)!))
+			.should("equal", "");
 	});
 
 	it("ui5-radio-button in form 1", () => {
@@ -843,9 +896,9 @@ describe("Form support", () => {
 	it("ui5-time-picker in form", () => {
 		cy.mount(<form method="get">
 			<TimePicker id="time_picker1"></TimePicker>
-			<TimePicker id="time_picker2" value="1:10:10 PM"></TimePicker>
-			<TimePicker id="time_picker3" name="time_picker3" required></TimePicker>
-			<TimePicker id="time_picker4" name="time_picker4" value="1:10:10 PM" required></TimePicker>
+			<TimePicker id="time_picker2"  value="1:10:10 PM"></TimePicker>
+			<TimePicker id="time_picker3" valueFormat="h:mm:ss a" name="time_picker3" required></TimePicker>
+			<TimePicker id="time_picker4" valueFormat="h:mm:ss a" name="time_picker4" value="1:10:10 PM" required></TimePicker>
 			<button type="submit">Submits forms</button>
 		</form>);
 
@@ -865,7 +918,7 @@ describe("Form support", () => {
 			.realClick();
 
 		cy.get("#time_picker3")
-			.realType("ok", { delay: 100 });
+			.ui5DatePickerTypeDate("1:10:10 PM", 100);
 
 		cy.get("button")
 			.realClick();
@@ -877,7 +930,7 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "time_picker3=ok&time_picker4=1:10:10 PM");
+			.should("be.equal", "time_picker3=1:10:10 PM&time_picker4=1:10:10 PM");
 	});
 
 	it("Button's click doesn't submit form on prevent default", () => {
@@ -975,6 +1028,6 @@ describe("Form support", () => {
 			.then($el => {
 				return getFormData($el.get(0));
 			})
-			.should("be.equal", "input=ok&sel=condensed&ta=ok&dp=Apr 10, 2019&cb=on&radio=b&si=5");
+			.should("be.equal", "input=ok&sel=condensed&ta=ok&dp=2019-04-10&cb=on&radio=b&si=5");
 	});
 });

@@ -5,13 +5,14 @@ import Button from "./Button.js";
 export default function SplitButtonTemplate(this: SplitButton) {
 	return (
 		<div
-			role={this._hideArrowButton ? "button" : "group"}
+			role={this._hideArrowButton ? "presentation" : "group"}
 			class="ui5-split-button-root"
 			tabindex={this._tabIndex}
-			aria-labelledby={this._hideArrowButton ? undefined : `${this._id}-invisibleTextDefault ${this._id}-invisibleText`}
+			aria-labelledby={!this._hideArrowButton ? `${this._id}-invisibleTextDefault ${this._id}-invisibleText` : undefined}
 			aria-haspopup={this._computedAccessibilityAttributes?.root?.hasPopup}
 			aria-roledescription={this._computedAccessibilityAttributes?.root?.roleDescription}
-			aria-label={this._hideArrowButton ? this._computedAccessibilityAttributes?.root?.title : undefined}
+			aria-label={this._computedAccessibilityAttributes?.root?.title}
+			aria-keyshortcuts={this._computedAccessibilityAttributes?.root?.ariaKeyShortcuts}
 			onFocusOut={this._onFocusOut}
 			onKeyDown={this._onKeyDown}
 			onKeyUp={this._onKeyUp}
@@ -56,7 +57,7 @@ export default function SplitButtonTemplate(this: SplitButton) {
 					>
 					</Button>
 					<span id={`${this._id}-invisibleText`} class="ui5-hidden-text">{this.accInfo.keyboardHint} {this.accessibleName}</span>
-					<span id={`${this._id}-invisibleTextDefault`} class="ui5-hidden-text">{this._computedAccessibilityAttributes?.root?.title || this.textButtonAccText}</span>
+					<span id={`${this._id}-invisibleTextDefault`} class="ui5-hidden-text">{this.buttonTextContent}</span>
 				</>
 			)}
 		</div>

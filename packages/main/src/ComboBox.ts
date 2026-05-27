@@ -1,15 +1,15 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -38,6 +38,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { attachListeners } from "@ui5/webcomponents-base/dist/util/valueStateNavigation.js";
 import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js";
+import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import type { IIcon } from "./Icon.js";
 import * as Filters from "./Filters.js";
@@ -58,6 +59,7 @@ import {
 	INPUT_SUGGESTIONS_TITLE,
 	COMBOBOX_AVAILABLE_OPTIONS,
 	COMBOBOX_DIALOG_OK_BUTTON,
+	COMBOBOX_DIALOG_CANCEL_BUTTON,
 	SELECT_OPTIONS,
 	LIST_ITEM_POSITION,
 	LIST_ITEM_GROUP_HEADER,
@@ -86,9 +88,10 @@ import "./ComboBoxItemGroup.js";
 // eslint-disable-next-line
 import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
-import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
+import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
+import type InputComposition from "./features/InputComposition.js";
 
 const SKIP_ITEMS_SIZE = 10;
 
@@ -99,12 +102,14 @@ const SKIP_ITEMS_SIZE = 10;
 interface IComboBoxItem extends UI5Element {
 	text?: string,
 	headerText?: string,
+	value?: string,
 	focused: boolean,
 	isGroupItem?: boolean,
 	selected?: boolean,
 	additionalText?: string,
 	_isVisible?: boolean,
-	items?: Array<IComboBoxItem>
+	items?: Array<IComboBoxItem>,
+	eventDetails: { click?: ListItemBaseClickEventDetail },
 }
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
@@ -136,6 +141,32 @@ type ComboBoxSelectionChangeEventDetail = {
  * -  Input field - displays the selected option or a custom user entry. Users can type to narrow down the list or enter their own value.
  * -  Drop-down arrow - expands\collapses the option list.
  * -  Option list - the list of available options.
+ *
+ * ### Working with Values
+ *
+ * The ComboBox offers two ways to work with item selection:
+ *
+ * **1. Display Text Only (using `value`):**
+ * ```html
+ * <ui5-combobox value="Germany">
+ *   <ui5-cb-item text="Germany"></ui5-cb-item>
+ *   <ui5-cb-item text="France"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * Use this approach when the displayed text is sufficient for your needs.
+ *
+ * **2. Unique Identifiers - Recommended (using `selectedValue` and item `value`):**
+ * ```html
+ * <ui5-combobox value="Germany" selected-value="DE">
+ *   <ui5-cb-item text="Germany" value="DE"></ui5-cb-item>
+ *   <ui5-cb-item text="France" value="FR"></ui5-cb-item>
+ * </ui5-combobox>
+ * ```
+ * This is the recommended approach when you need to work with unique identifiers (IDs, codes) separate from display text.
+ * The `selectedValue` property references the `value` property of the selected item.
+ * In forms, the item's `value` (e.g., "DE") will be submitted instead of the display text.
+ *
+ * **Important:** Do not mix the `selectedValue` approach with the deprecated `selected` property on items.
  *
  * ### Keyboard Handling
  *
@@ -233,6 +264,28 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	value = "";
+
+	/**
+	 * Defines the value of the selected item (references the `value` property of `ui5-cb-item`).
+	 *
+	 * Use this property to work with unique identifiers (IDs, codes) instead of display text.
+	 * When set, the ComboBox finds and selects the item whose `value` property matches this property.
+	 *
+	 * **Benefits:**
+	 * - Select items programmatically by their unique identifier
+	 * - Handle items with identical display text but different underlying values
+	 * - Submit machine-readable values in forms (the item's `value` is submitted instead of the display text)
+	 *
+	 * **When to use `selectedValue` vs `value`:**
+	 * - **Recommended:** Use `selectedValue` + item `value` when you need unique identifiers separate from display text (e.g., country codes "DE", "FR" with display names "Germany", "France")
+	 * - Use only the ComboBox `value` property when the display text itself is sufficient for your use case
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	selectedValue?: string;
 
 	/**
 	 * Determines the name by which the component will be identified upon submission in an HTML form.
@@ -365,7 +418,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_iconPressed = false;
 
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_filteredItems: Array<IComboBoxItem> = [];
 
 	@property({ type: Number, noAttribute: true })
@@ -402,8 +455,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_linksListenersArray: Array<(args: any) => void> = [];
+
+	/**
+	 * Indicates whether IME composition is currently active
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isComposing = false;
 
 	/**
 	 * Defines the component items.
@@ -415,7 +476,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		individualSlots: true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<IComboBoxItem>;
+	items!: DefaultSlot<IComboBoxItem>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -429,7 +490,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the icon to be displayed in the input field.
@@ -437,7 +498,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * @since 1.0.0-rc.9
 	 */
 	@slot()
-	icon!: Array<IIcon>;
+	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
 	_itemFocused = false;
@@ -448,9 +509,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
+	_useSelectedValue = false;
 	_valueStateLinks: Array<HTMLElement> = [];
+	_composition?: InputComposition;
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+	static composition: typeof InputComposition;
 
 	get formValidityMessage() {
 		return ComboBox.i18nBundle.getText(FORM_TEXTFIELD_REQUIRED);
@@ -465,6 +529,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get formFormattedValue() {
+		// Find the selected item
+		const selectedItem = this._getItems().find(item => item.selected && !item.isGroupItem) as ComboBoxItem | undefined;
+
+		// If selected item has a value property, return it (like Select does)
+		if (selectedItem && selectedItem.value !== undefined) {
+			return selectedItem.value;
+		}
+
+		// Fallback to display text (backward compatibility)
 		return this.value;
 	}
 
@@ -501,10 +574,31 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.valueStateOpen = false;
 		}
 
+		if (this.selectedValue) {
+			this._useSelectedValue = true;
+		}
+
+		// Highlight filtered items
+		this._filteredItems.forEach(item => {
+			if (!item) {
+				return;
+			}
+			if (isInstanceOfComboBoxItemGroup(item)) {
+				// For grouped items, highlight each item in the group
+				item.items.forEach(nestedItem => {
+					if (nestedItem) {
+						this._highlightItem(nestedItem);
+					}
+				});
+			} else {
+				this._highlightItem(item as ComboBoxItem);
+			}
+		});
+
 		this._selectMatchingItem();
 		this._initialRendering = false;
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
 	get iconsCount() {
@@ -529,8 +623,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	onEnterDOM() {
+		this._enableComposition();
+	}
+
 	onExitDOM() {
 		this._removeLinksEventListeners();
+		this._composition?.removeEventListeners();
 	}
 
 	_focusin(e: FocusEvent) {
@@ -661,8 +760,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 	}
 
-	_arrowClick() {
+	_arrowMouseDown(e: MouseEvent) {
+		e.preventDefault();
 		this.inner.focus();
+	}
+
+	_arrowClick() {
 		this._resetFilter();
 
 		if (isPhone() && this.value && !this._lastValue) {
@@ -705,7 +808,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._clearFocus();
 
 		// autocomplete
-		if (shouldAutocomplete && !isAndroid()) {
+		if (shouldAutocomplete && !this._isComposing && !isAndroid()) {
 			this._handleTypeAhead(value, value);
 		}
 
@@ -795,10 +898,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (allItems.length - 1 === indexOfItem && isDown(e)) {
-			return;
-		}
-
 		this._isKeyNavigation = true;
 
 		if (
@@ -829,12 +928,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.open) {
 			this._itemFocused = true;
 			this.value = isGroupItem ? "" : currentItem.text!;
+			this.selectedValue = isGroupItem ? undefined : currentItem.value;
 			this.focused = false;
 
 			currentItem.focused = true;
 		} else {
 			this.focused = true;
 			this.value = isGroupItem ? nextItem.text! : currentItem.text!;
+			this.selectedValue = currentItem.value;
 			currentItem.focused = false;
 		}
 
@@ -867,7 +968,18 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.focused = false;
 		}
 
-		this._handleItemNavigation(e, ++indexOfItem, true /* isForward */);
+		const allItems = this._getItems();
+		const currentItem = allItems[indexOfItem];
+		const isLastItem = indexOfItem === allItems.length - 1;
+
+		// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
+		if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
+			return;
+		}
+
+		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
+
+		this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
@@ -960,7 +1072,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (isEscape(e)) {
 			this.focused = true;
-			this.value = !this.open ? this._lastValue : this.value;
+			const shouldResetValueAndStopPropagation = !this.open && this.value !== this._lastValue;
+			if (shouldResetValueAndStopPropagation) {
+				this.value = this._lastValue;
+				// stop propagation to prevent closing the popup when using the combobox inside it
+				e.stopPropagation();
+			}
 		}
 
 		if ((isTabNext(e) || isTabPrevious(e)) && this.open) {
@@ -1122,6 +1239,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		return [...filteredItemGroups, ...filteredItems];
 	}
 
+	/**
+	 * Sets the markupText property of an item with highlighted first match.
+	 * @param item The ComboBox item to highlight
+	 * @private
+	 */
+	_highlightItem(item: ComboBoxItem) {
+		item.markupText = generateHighlightedMarkupFirstMatch(item.text || "", this.filterValue);
+	}
+
 	_getFirstMatchingItem(current: string): IComboBoxItem | void {
 		const allItems = this._getItems();
 		const currentlyFocusedItem = allItems.find(item => item.focused === true);
@@ -1134,7 +1260,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const matchingItems: Array<IComboBoxItem> = this._startsWithMatchingItems(current);
 
 		if (matchingItems.length) {
-			const exactMatch = matchingItems.find(item => item.text === current);
+			let exactMatch;
+			if (this._useSelectedValue) {
+				exactMatch = matchingItems.find(item => item.value === (currentlyFocusedItem?.value || this.selectedValue) && item.text?.toLowerCase() === current.toLowerCase());
+			} else {
+				exactMatch = matchingItems.find(item => item.text?.toLowerCase() === current.toLowerCase());
+			}
+
 			return exactMatch ?? matchingItems[0];
 		}
 	}
@@ -1143,13 +1275,22 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const value = (item && item.text) || "";
 
 		this.inner.value = value;
-		this.inner.setSelectionRange(filterValue.length, value.length);
+
+		// select the whole value if it doesn't start with the filterValue, otherwise select only the autocompleted part
+		const startsWithFilter = value.toLowerCase().startsWith(filterValue.toLowerCase());
+		const selectionStart = startsWithFilter ? filterValue.length : 0;
+		this.inner.setSelectionRange(selectionStart, value.length);
 		this.value = value;
+
+		if (this._useSelectedValue) {
+			this.selectedValue = item.value;
+		}
 	}
 
 	_selectMatchingItem() {
 		const currentlyFocusedItem = this.items.find(item => item.focused);
 		const shouldSelectionBeCleared = currentlyFocusedItem && currentlyFocusedItem.isGroupItem;
+		const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
 		let itemToBeSelected: IComboBoxItem | undefined;
 		let previouslySelectedItem: IComboBoxItem | undefined;
 
@@ -1169,9 +1310,26 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._filteredItems.forEach(item => {
 			if (!shouldSelectionBeCleared && !itemToBeSelected) {
-				itemToBeSelected = ((!item.isGroupItem && (item.text === this.value)) ? item : item?.items?.find(i => i.text === this.value));
+				if (isInstanceOfComboBoxItemGroup(item)) {
+					if (this._useSelectedValue) {
+						itemToBeSelected = item.items.find(i => i.value === valueToMatch && (this.value === "" || i.text?.toLowerCase() === this.value.toLowerCase()));
+					} else {
+						itemToBeSelected = item.items?.find(i => i.text?.toLowerCase() === this.value.toLowerCase());
+					}
+				} else {
+					if (this._useSelectedValue) {
+						itemToBeSelected = this.items.find(i => i.value === valueToMatch && (this.value === "" || i.text?.toLowerCase() === this.value.toLowerCase()));
+						return;
+					}
+					itemToBeSelected = item.text?.toLowerCase() === this.value.toLowerCase() ? item : undefined;
+				}
 			}
 		});
+
+		// When selectedValue matched an item but value is empty (initial render), populate value from the item's text
+		if (itemToBeSelected && this._initialRendering && this.value === "") {
+			this.value = itemToBeSelected.text || "";
+		}
 
 		this._filteredItems = this._filteredItems.map(item => {
 			if (!isInstanceOfComboBoxItemGroup(item)) {
@@ -1185,6 +1343,18 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 			return item;
 		});
+
+		if (!itemToBeSelected && this._useSelectedValue) {
+			this.selectedValue = undefined;
+		} else {
+			this.selectedValue = itemToBeSelected?.value;
+		}
+
+		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
+		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
+		if (this._initialRendering || noUserInteraction) {
+			return;
+		}
 
 		// Fire selection-change event only when selection actually changes
 		if (previouslySelectedItem !== itemToBeSelected) {
@@ -1215,6 +1385,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_itemMousedown(e: MouseEvent) {
 		e.preventDefault();
+
+		const target = e.target as HTMLElement;
+		const listItem = target.closest<ComboBoxItem>("[ui5-cb-item], [ui5-cb-item-group]");
+
+		if (listItem) {
+			this._clearFocus();
+			listItem.focused = true;
+		}
 	}
 
 	_selectItem(e: CustomEvent<ListItemClickEventDetail>) {
@@ -1232,6 +1410,19 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = this._selectedItemText;
+		// On first item select the _useSelectedValue is still false.
+		// In case the item has a value property, we set the _useSelectedValue to true to start working with the value instead with the text.
+		if (!this._useSelectedValue && item.value !== undefined) {
+			this._useSelectedValue = true;
+		}
+
+		// Always set selectedValue when the item has a value property, regardless of _useSelectedValue state
+		if (item.value !== undefined) {
+			this.selectedValue = item.value;
+		} else if (this._useSelectedValue) {
+			// Only clear selectedValue if we were using it before
+			this.selectedValue = undefined;
+		}
 
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {
@@ -1262,18 +1453,21 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (isGroupItem) {
 			announce(`${groupHeaderText} ${currentItem.headerText}`, InvisibleMessageMode.Polite);
 		} else {
-			announce(`${currentItemAdditionalText} ${itemPositionText}`.trim(), InvisibleMessageMode.Polite);
+			announce(`${currentItemAdditionalText} ${this.open ? itemPositionText : ""}`.trim(), InvisibleMessageMode.Polite);
 		}
 	}
 
 	_clear() {
 		const selectedItem = this.items.find(item => item.selected);
 
-		if (selectedItem?.text === this.value) {
+		if (selectedItem?.text?.toLowerCase() === this.value.toLowerCase()) {
 			this.fireDecoratorEvent("change");
 		}
 
 		this.value = "";
+		if (this._useSelectedValue) {
+			this.selectedValue = undefined;
+		}
 		this.fireDecoratorEvent("input");
 
 		if (this._isPhone) {
@@ -1322,9 +1516,38 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			announce(valueStateText, InvisibleMessageMode.Polite);
 		}
 	}
+	/**
+	 * Enables IME composition handling.
+	 * Dynamically loads the InputComposition feature and sets up event listeners.
+	 * @private
+	 */
+	_enableComposition() {
+		if (this._composition) {
+			return;
+		}
+
+		const setup = (InputCompositionClass: typeof InputComposition) => {
+			this._composition = new InputCompositionClass({
+				getInputEl: () => this.inner,
+				updateCompositionState: (isComposing: boolean) => {
+					this._isComposing = isComposing;
+				},
+			});
+			this._composition.addEventListeners();
+		};
+
+		if (ComboBox.composition) {
+			setup(ComboBox.composition);
+		} else {
+			import("./features/InputComposition.js").then(CompositionModule => {
+				ComboBox.composition = CompositionModule.default;
+				setup(CompositionModule.default);
+			});
+		}
+	}
 
 	get _headerTitleText() {
-		return ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return getAssociatedLabelForTexts(this) || ComboBox.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get _iconAccessibleNameText() {
@@ -1339,6 +1562,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_OK_BUTTON);
 	}
 
+	get _dialogCancelButtonText() {
+		return ComboBox.i18nBundle.getText(COMBOBOX_DIALOG_CANCEL_BUTTON);
+	}
+
 	get inner(): HTMLInputElement {
 		return (isPhone() && this.open)
 			? this._getPickerInput().shadowRoot!.querySelector("input")!
@@ -1350,7 +1577,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_getPickerInput() {
-		return this._getPicker()!.querySelector<HTMLInputElement>("[ui5-input]")!;
+		return this._getPicker().querySelector<HTMLInputElement>("[ui5-input]")!;
 	}
 
 	get openOnMobile() {
@@ -1416,10 +1643,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get shouldDisplayDefaultValueStateMessage(): boolean {
 		return !this.valueStateMessage.length && this.hasValueStateText;
-	}
-
-	get _valueStatePopoverHorizontalAlign(): `${PopoverHorizontalAlign}` {
-		return this.effectiveDir !== "rtl" ? PopoverHorizontalAlign.Start : PopoverHorizontalAlign.End;
 	}
 
 	/**

@@ -9,13 +9,14 @@ import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
 import sortIcon from "@ui5/webcomponents-icons/dist/sort.js";
 import filterIcon from "@ui5/webcomponents-icons/dist/filter.js";
+import groupIcon from "@ui5/webcomponents-icons/dist/group-2.js";
 
 import type ViewSettingsDialog from "./ViewSettingsDialog.js";
 
 function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 	return (
 		<div slot="header" class="ui5-vsd-header">
-			<div class="ui5-vsd-header-container">
+			<div class="ui5-vsd-header-container" part="header">
 				<div class="ui5-vsd-header-start">
 					{this.showBackButton && (
 						<Button
@@ -46,24 +47,65 @@ function ViewSettingsDialogTemplateHeader(this: ViewSettingsDialog) {
 						<SegmentedButton
 							onSelectionChange={this._handleModeChange}
 						>
-							<SegmentedButtonItem
-								selected={this.isModeSort}
-								icon={sortIcon}
-								data-mode="Sort"
-								tooltip={this._sortButtonTooltip}
-							/>
-							<SegmentedButtonItem
-								selected={this.isModeFilter}
-								icon={filterIcon}
-								data-mode="Filter"
-								tooltip={this._filterButtonTooltip}
-							/>
+							{_getSplitButtonItems.call(this)}
 						</SegmentedButton>
 					</div>
 				</div>
 			)}
 		</div>
 	);
+}
+
+function _getSplitButtonItems(this: ViewSettingsDialog) {
+	const buttonItems = [];
+
+	if (this.shouldBuildSort) {
+		buttonItems.push(
+			<SegmentedButtonItem
+				selected={this.isModeSort}
+				icon={sortIcon}
+				data-mode="Sort"
+				tooltip={this._sortButtonTooltip}
+			/>
+		);
+	}
+
+	if (this.shouldBuildFilter) {
+		buttonItems.push(
+			<SegmentedButtonItem
+				selected={this.isModeFilter}
+				icon={filterIcon}
+				data-mode="Filter"
+				tooltip={this._filterButtonTooltip}
+			/>
+		);
+	}
+
+	if (this.shouldBuildGroup) {
+		buttonItems.push(
+			<SegmentedButtonItem
+				selected={this.isModeGroup}
+				icon={groupIcon}
+				data-mode="Group"
+				tooltip={this._groupButtonTooltip}
+			/>
+		);
+	}
+
+	if (this.shouldBuildCustomTabs) {
+		this.customTabs.forEach(customTab => {
+			buttonItems.push(
+				<SegmentedButtonItem
+					selected={this.isCurrentCustomTabMode(customTab)}
+					data-mode={this._customTabMode(customTab)}
+					tooltip={customTab.tooltip}
+					icon={customTab.icon}
+				/>
+			);
+		});
+	}
+
+	return buttonItems;
 }
 
 function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
@@ -75,71 +117,114 @@ function ViewSettingsDialogTemplateContent(this: ViewSettingsDialog) {
 			}}
 		>
 			{this.shouldBuildSort && this.isModeSort && (
-				<div class="ui5-vsd-sort">
-					<List
-						selectionMode="SingleStart"
-						onSelectionChange={this._onSortOrderChange} // radio button - use selectionChange
-						sort-order=""
-						accessibleNameRef={`${this._id}-label`}
-					>
-						<ListItemGroup headerText={this._sortOrderLabel}>
-							{this._currentSettings.sortOrder.map(item => (
-								<ListItemStandard
-									selected={item.selected}
-								>{item.text}</ListItemStandard>
-							))}
-						</ListItemGroup>
-					</List>
-					<List
-						selectionMode="SingleStart"
-						onSelectionChange={this._onSortByChange} // radio button - use selectionChange
-						sort-by=""
-					>
-						<ListItemGroup headerText={this._sortByLabel}>
-							{this._currentSettings.sortBy.map((item, index) => (
-								<ListItemStandard
-									data-ui5-external-action-item-index={index}
-									selected={item.selected}
-								>{item.text}</ListItemStandard>
-							))}
-						</ListItemGroup>
-					</List>
+				ViewSettingsDialogSortAndGroupTemplate.call(this, true)
+			)}
+
+			{this.shouldBuildFilter && this.isModeFilter && (
+				ViewSettingsDialogFilterTemplate.call(this)
+			)}
+
+			{this.shouldBuildGroup && this.isModeGroup && (
+				ViewSettingsDialogSortAndGroupTemplate.call(this, false)
+			)}
+
+			{this.isModeCustom && this._selectedCustomTab && (
+				<div class="ui5-vsd-custom-tab-content">
+					{this._selectedCustomTab.titleText && (
+						<div class="ui5-vsd-custom-tab-title">{this._selectedCustomTab.titleText}</div>
+					)}
+					<slot class="ui5-vsd-custom-tab-slot" name={this._selectedCustomTab._individualSlot}></slot>
 				</div>
 			)}
-			{this.shouldBuildFilter && this.isModeFilter && (<>
-				{this._filterStepTwo ? (
-					<List
-						selectionMode="Multiple"
-						onSelectionChange={this._handleFilterValueItemClick} // checkboxes to select/deselect - use selectionChange
-						accessibleNameRef={`${this._id}-label`}
-					>
-						{this._currentSettings.filters.filter(item => item.selected).map(item => (<>
-							{item.filterOptions.map(option => (
-								<ListItemStandard
-									selected={option.selected}
-								>{option.text}</ListItemStandard>
-							))}
-						</>))}
-					</List>
-				) : ( // else
-					<List
-						onItemClick={this._changeCurrentFilter} // list item to drill down into the second-level menu - use click
-						accessibleNameRef={`${this._id}-label`}
-					>
-						<ListItemGroup headerText={this._filterByLabel}>
-							{this.filterItems.map(item => (
-								<ListItemStandard
-									class="ui5-vsd-filterItemList"
-									// selected={item.selected} TODO
-									additionalText={item.additionalText}
-									accessibleName={this._selectedFiltersLabel(item)}
-								>{item.text}</ListItemStandard>
-							))}
-						</ListItemGroup>
-					</List>
-				)}
-			</>)}
+
+			{/* Hidden slots for non-active custom tabs to prevent content leaking */}
+			<div class="ui5-vsd-hidden-tabs">
+				{this.customTabs
+					.filter(tab => tab !== this._selectedCustomTab)
+					.map(tab => (
+						<slot name={tab._individualSlot}></slot>
+					))}
+			</div>
+
 		</div>
+	);
+}
+
+function ViewSettingsDialogSortAndGroupTemplate(this: ViewSettingsDialog, isSortTemplate: boolean) {
+	const currentSettingsOrder = isSortTemplate ? this._currentSettings.sortOrder : this._currentSettings.groupOrder;
+	const currentSettingsBy = isSortTemplate ? this._currentSettings.sortBy : this._currentSettings.groupBy;
+
+	return (
+		<div class={isSortTemplate ? "ui5-vsd-sort" : "ui5-vsd-group"}>
+			<List
+				selectionMode="SingleStart"
+				onSelectionChange={isSortTemplate ? this._onSortOrderChange : this._onGroupOrderChange} // radio button - use selectionChange
+				{...(isSortTemplate ? { "sort-order": "" } : { "group-order": "" })}
+				accessibleNameRef={`${this._id}-label`}
+			>
+				<ListItemGroup headerText={isSortTemplate ? this._sortOrderLabel : this._groupOrderLabel}>
+					{currentSettingsOrder.map(item => (
+						<ListItemStandard
+							selected={item.selected}
+						>{item.text}</ListItemStandard>
+					))}
+				</ListItemGroup>
+			</List>
+			<List
+				selectionMode="SingleStart"
+				onSelectionChange={isSortTemplate ? this._onSortByChange : this._onGroupByChange} // radio button - use selectionChange
+				{...(isSortTemplate ? { "sort-by": "" } : { "group-by": "" })}
+			>
+				<ListItemGroup headerText={ isSortTemplate ? this._sortByLabel : this._groupByLabel}>
+					{currentSettingsBy.map((item, index) => (
+						<ListItemStandard
+							data-ui5-external-action-item-index={index}
+							selected={item.selected}
+						>{item.text}</ListItemStandard>
+					))}
+				</ListItemGroup>
+			</List>
+		</div>
+	);
+}
+
+function ViewSettingsDialogFilterTemplate(this: ViewSettingsDialog) {
+	return (
+		<>
+			{this._filterStepTwo ? (
+				<List
+					selectionMode="Multiple"
+					onSelectionChange={this._handleFilterValueItemClick} // checkboxes to select/deselect - use selectionChange
+					filter-options=""
+					accessibleNameRef={`${this._id}-label`}
+				>
+					{this._currentSettings.filters.filter(item => item.selected).map(item => (<>
+						{item.filterOptions.map(option => (
+							<ListItemStandard
+								selected={option.selected}
+							>{option.text}</ListItemStandard>
+						))}
+					</>))}
+				</List>
+			) : ( // else
+				<List
+					onItemClick={this._changeCurrentFilter} // list item to drill down into the second-level menu - use click
+					filter-list=""
+					accessibleNameRef={`${this._id}-label`}
+				>
+					<ListItemGroup headerText={this._filterByLabel}>
+						{this.filterItems.map(item => (
+							<ListItemStandard
+								class="ui5-vsd-filterItemList"
+								// selected={item.selected} TODO
+								additionalText={item.additionalText}
+								accessibleName={this._selectedFiltersLabel(item)}
+							>{item.text}</ListItemStandard>
+						))}
+					</ListItemGroup>
+				</List>
+			)}
+		</>
 	);
 }
 

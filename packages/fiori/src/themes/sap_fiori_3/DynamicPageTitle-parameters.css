@@ -1,4 +1,4 @@
 @import "../base/DynamicPageTitle-parameters.css";
-:root {
+:host {
     --_ui5_dynamic_page_title_min_height: 3rem;
 }

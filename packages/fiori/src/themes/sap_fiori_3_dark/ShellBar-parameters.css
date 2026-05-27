@@ -1,5 +1,8 @@
 @import "../base/ShellBar-parameters.css";
 
-:root {
+:host {
 	--_ui5_shellbar_logo_outline_color: var(--sapContent_FocusColor);
+	/* Badge position adjustment for shorter shellbar height in Quartz theme */
+	--_ui5-shellbar-badge-offset: 0.25rem;
+	--_ui5-shellbar-badge-margin: -0.25rem;
 }

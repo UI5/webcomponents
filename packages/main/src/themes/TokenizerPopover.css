@@ -21,6 +21,3 @@
 	margin-inline-start: calc(-1 * var(--_ui5_tokenizer_padding));
 }
 
-.ui5-responsive-popover-footer [ui5-button]:first-child{
-	margin-right: 1rem;
-}

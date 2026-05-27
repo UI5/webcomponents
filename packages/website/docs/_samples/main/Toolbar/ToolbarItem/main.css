@@ -1,0 +1,6 @@
+/* Use :state(overflowed) to style items differently when in overflow popover */
+ui5-toolbar-item:state(overflowed) .toolbar-item-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}

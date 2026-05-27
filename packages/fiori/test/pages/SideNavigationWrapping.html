@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation with Long Wrapping Texts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<ui5-side-navigation style="height: 90vh; " id="sn1">
+		<ui5-side-navigation-item text="Home"
+								  icon="home"
+								  href="#home"
+								  tooltip="Home tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-group id="group1" expanded text="Group with very long text that should wrap" tooltip="Group tooltip">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1 lorem ipsum dolor sit amet, consectetur adipiscing elit"
+									  icon="home"
+									  href="#home"
+									  tooltip="Home 1 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" icon="group" tooltip="People tooltip">
+				<ui5-side-navigation-sub-item text="From Other Teams lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People unselectable lorem ipsum dolor sit amet, consectetur adipiscing elit" href="#people" expanded unselectable icon="group" tooltip="People unselectable tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" text="Disabled"  title="Disabled item tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 2 lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+			<ui5-side-navigation-item text="Service Management and Customer Support Operations" href="#people" expanded unselectable icon="group" tooltip="People unselectable tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" text="Disabled"  title="Service Tickets and Customer Issue Resolution"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 2 lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item href="#locations" text="Locations" icon="locate-me" ></ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#events" expanded text="Events lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="calendar">
+			<ui5-side-navigation-sub-item href="#page1" target="_self" text="Local lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="Others" selected></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item href="#locations" text="Locations 2 lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="locate-me"></ui5-side-navigation-item>
+		<ui5-side-navigation-group expanded text="Group 2 lorem ipsum dolor sit amet, consectetur adipiscing elit">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1 lorem ipsum dolor sit amet, consectetur adipiscing elit"
+									  icon="home"
+									  href="#home"
+									  title="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People 2 lorem ipsum dolor sit amet, consectetur adipiscing elit" href="#people" expanded icon="group">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="employee-approvals" title="From My Team tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 3 lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-group expanded text="Group 2 1">
+			<!-- Items -->
+			<ui5-side-navigation-item text="Home 1"
+									  icon="home"
+									  href="#home"
+									  title="Home tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" expanded icon="group">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="From My Team tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 4" icon="employee-rejections"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<ui5-side-navigation-item href="#page1" target="_self" text="Locations 25" icon="group">
+			<ui5-side-navigation-sub-item icon="home" href="#page1" target="_self" text="Local lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item icon="female" text="Others lorem ipsum dolor sit amet, consectetur adipiscing elit"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-group expanded text="Group 3">
+			<ui5-side-navigation-item text="Home 10" icon="home" href="#home" tooltip="Home 10 tooltip"></ui5-side-navigation-item>
+			<ui5-side-navigation-item text="People" href="#people" expanded icon="group" tooltip="People tooltip">
+				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" tooltip="Disabled item tooltip"></ui5-side-navigation-sub-item>
+				<ui5-side-navigation-sub-item text="From Other Teams 5" icon="employee-rejections"  tooltip="From Other Teams 5 tooltip"></ui5-side-navigation-sub-item>
+			</ui5-side-navigation-item>
+		</ui5-side-navigation-group>
+		<!-- Fixed Items -->
+		<ui5-side-navigation-item slot="fixedItems" text="Quick Create" icon="write-new" design="Action" unselectable id="quickCreate" tooltip="Quick Create Tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="Quick Create lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="write-new" design="Action" unselectable id="quickCreate2" tooltip="Quick Create Tooltip"></ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="Useful Links" icon="chain-link" title="Useful links tooltip">
+			<ui5-side-navigation-sub-item text="Vacation Tool" title="Vacation Tool tooltip"></ui5-side-navigation-sub-item>
+			<ui5-side-navigation-sub-item text="HR tool"></ui5-side-navigation-sub-item>
+		</ui5-side-navigation-item>
+		<ui5-side-navigation-item slot="fixedItems" text="History lorem ipsum dolor sit amet, consectetur adipiscing elit" icon="history"></ui5-side-navigation-item>
+	</ui5-side-navigation>
+
+	<div style="float: right">
+		<ui5-checkbox id="collapsed" text="Collapsed"></ui5-checkbox>
+		<ui5-checkbox id="density" text="Compact density"></ui5-checkbox>
+		<br>
+		<ui5-label for="slider" show-colon>Change width</ui5-label>
+		<ui5-slider id="slider" value="0" min="0" max="600" step="50" show-tickmarks label-interval="2"></ui5-slider>
+	</div>
+
+	<script>
+		const sn = document.getElementById("sn1");
+
+		const collapsedBtn = document.getElementById("collapsed");
+
+		collapsedBtn.addEventListener("change", e => {
+			sn.toggleAttribute("collapsed", e.target.checked);
+		});
+
+		const densityBtn = document.getElementById("density");
+		density.addEventListener("change", e => {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		slider.addEventListener("ui5-input", function (event) {
+			sn1.style.width = event.target.value + 'px';
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+.ui5-ai-textarea-root {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+}
+
+.ui5-ai-textarea-root .ui5-textarea-wrapper {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	position: relative;
+}
+
+.ui5-ai-textarea-root [part="footer"] {
+	position: relative;
+	width: 100%;
+	margin-top: auto;
+	flex-shrink: 0;
+}
+
+.ui5-ai-writing-assistant-footer-bar--with-border {
+	border-top: 1px solid var(--sapPageFooter_BorderColor);
+}

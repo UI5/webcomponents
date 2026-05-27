@@ -22,7 +22,7 @@ type Property = {
 	type?: BooleanConstructor | StringConstructor | ObjectConstructor | NumberConstructor | ArrayConstructor,
 	noAttribute?: boolean,
 	converter?: {
-		fromAttribute(value: string | null, type: unknown): string | number | boolean | null | undefined,
+		fromAttribute(value: string | null, type: unknown): PropertyValue,
 		toAttribute(value: unknown, type: unknown): string | null,
 	}
 }
@@ -133,7 +133,7 @@ class UI5ElementMetadata {
 	 */
 	hasAttribute(propName: string): boolean {
 		const propData = this.getProperties()[propName];
-		return propData.type !== Object && propData.type !== Array && !propData.noAttribute;
+		return propData.type !== Object && !propData.noAttribute;
 	}
 
 	/**

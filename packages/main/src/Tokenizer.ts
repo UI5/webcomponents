@@ -1,8 +1,8 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -13,6 +13,7 @@ import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/Acc
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { getFocusedElement } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ScrollEnablement from "@ui5/webcomponents-base/dist/delegate/ScrollEnablement.js";
+import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -61,7 +62,6 @@ import type Button from "./Button.js";
 import {
 	MULTIINPUT_SHOW_MORE_TOKENS,
 	TOKENIZER_ARIA_LABEL,
-	TOKENIZER_POPOVER_REMOVE,
 	TOKENIZER_ARIA_CONTAIN_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_ONE_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS,
@@ -69,6 +69,7 @@ import {
 	TOKENIZER_CLEAR_ALL,
 	TOKENIZER_DIALOG_OK_BUTTON,
 	TOKENIZER_DIALOG_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -140,6 +141,7 @@ enum ClipboardDataOperation {
 @customElement({
 	tag: "ui5-tokenizer",
 	languageAware: true,
+	formAssociated: true,
 	renderer: jsxRenderer,
 	template: TokenizerTemplate,
 	styles: [
@@ -147,7 +149,6 @@ enum ClipboardDataOperation {
 		ResponsivePopoverCommonCss,
 		SuggestionsCss,
 		TokenizerPopoverCss,
-		getEffectiveScrollbarStyle(),
 	],
 })
 
@@ -186,7 +187,7 @@ enum ClipboardDataOperation {
 	bubbles: true,
 })
 
-class Tokenizer extends UI5Element {
+class Tokenizer extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		"token-delete": TokenizerTokenDeleteEventDetail,
 		"selection-change": TokenizerSelectionChangeEventDetail,
@@ -215,6 +216,18 @@ class Tokenizer extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	multiLine = false;
+
+	/**
+	 * Determines the name by which the component will be identified upon submission in an HTML form.
+	 *
+	 * **Note:** This property is only applicable within the context of an HTML Form element.
+	 * **Note:** When the component is used inside a form element,
+	 * the value is sent as the first element in the form data, even if it's empty.
+	 * @default undefined
+	 * @public
+	 */
+	@property({ type: String })
+	declare name?: string;
 
 	/**
 	 * Defines whether "Clear All" button is present. Ensure `multiLine` is enabled, otherwise `showClearAll` will have no effect.
@@ -293,8 +306,16 @@ class Tokenizer extends UI5Element {
 	popoverMinWidth?: number;
 
 	/**
+	 * Sets the title of the nMore Popover on mobile.
+	 * **Note:** Used inside MultiInput component.
+	 * @private
+	 */
+	@property()
+	popoverTitle?: string;
+
+	/**
 	 * Prevents tokens to be part of the tab chain.
-	 * **Note:** Used inside MultiInput and MultiComboBox components.
+	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
 	 * @private
 	 */
@@ -338,7 +359,7 @@ class Tokenizer extends UI5Element {
 			slots: false,
 		},
 	})
-	tokens!: Array<Token>;
+	tokens!: DefaultSlot<Token>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -352,9 +373,33 @@ class Tokenizer extends UI5Element {
 	_previousToken: Token | null = null;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_deletedDialogItems!: Token[];
+	_lastFocusedToken: Token | null = null;
+	_isFocusSetInternally: boolean = false;
+	/**
+	 * Scroll to end when tokenizer is expanded
+	 * @private
+	 */
+	_scrollToEndOnExpand = false;
 
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
+	}
+
+	get formFormattedValue(): FormData | null {
+		const tokens = this.tokens || [];
+
+		if (this.name && tokens.length) {
+			const formData = new FormData();
+			const name = this.name;
+
+			tokens.forEach(token => {
+				formData.append(name, token.text || "");
+			});
+
+			return formData;
+		}
+
+		return null;
 	}
 
 	constructor() {
@@ -385,6 +430,10 @@ class Tokenizer extends UI5Element {
 		this._tokens.forEach(token => {
 			token.singleToken = (tokensLength === 1) || this.multiLine;
 			token.readonly = this.readonly;
+			// Clear lastVisibleToken when expanding
+			if (this.expanded && token.lastVisibleToken) {
+				token.lastVisibleToken = false;
+			}
 		});
 	}
 
@@ -405,7 +454,6 @@ class Tokenizer extends UI5Element {
 
 		if (!this.preventPopoverOpen) {
 			this.open = true;
-			this.scrollToEnd();
 		}
 
 		this._tokens.forEach(token => {
@@ -420,14 +468,13 @@ class Tokenizer extends UI5Element {
 	_onmousedown(e: MouseEvent) {
 		if ((e.target as HTMLElement).hasAttribute("ui5-token")) {
 			const target = e.target as Token;
-			this.expanded = true;
 
 			if (this.open) {
 				this._preventCollapse = true;
 			}
 
 			if (!target.toBeDeleted) {
-				this._itemNav.setCurrentItem(target);
+				this._addTokenToNavigation(target);
 				this._scrollToToken(target);
 			}
 		}
@@ -464,7 +511,7 @@ class Tokenizer extends UI5Element {
 
 		this._nMoreCount = this.overflownTokens.length;
 
-		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex) {
+		if (firstToken && !this.disabled && !this.preventInitialFocus && !this._skipTabIndex && !this._isFocusSetInternally) {
 			firstToken.forcedTabIndex = "0";
 		}
 
@@ -476,7 +523,52 @@ class Tokenizer extends UI5Element {
 			this._expandedScrollWidth = this.contentDom.scrollWidth;
 		}
 
-		this._tokenDeleting = false;
+		this._scrollToEndIfNeeded();
+
+		// Only reset _tokenDeleting if no token is currently marked for deletion
+		// This prevents resetting the flag before the actual deletion logic executes
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!hasTokenToBeDeleted) {
+			this._tokenDeleting = false;
+		}
+
+		// Update lastVisibleToken after rendering is complete to avoid render loops
+		renderFinished().then(() => {
+			this._updateLastVisibleTokenAttribute();
+		});
+	}
+
+	/**
+	 * Updates the lastVisibleToken property on tokens.
+	 * When collapsed with overflow, marks the last visible token for proper spacing to the n-more indicator.
+	 * @private
+	 */
+	_updateLastVisibleTokenAttribute() {
+		const tokensArray = this._tokens;
+		const hasOverflow = this._nMoreCount > 0;
+		const visibleTokens = tokensArray.filter(token => !token.overflows);
+		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
+
+		tokensArray.forEach(token => {
+			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
+		});
+	}
+
+	/**
+	 * Scrolls the container to the end to ensure very long tokens are visible at their end.
+	 * Otherwise, tokens may appear visually cut off.
+	 * @protected
+	 */
+	_scrollToEndIfNeeded() {
+		// if scroll to end is prevented, skip scroll to the end
+		if (!this._scrollToEndOnExpand) {
+			return;
+		}
+
+		if (this.tokens.length || this.expanded) {
+			this.scrollToEnd();
+		}
 	}
 
 	_delete(e: CustomEvent<TokenDeleteEventDetail>) {
@@ -493,7 +585,7 @@ class Tokenizer extends UI5Element {
 	}
 
 	_tokenClickDelete(e: CustomEvent<TokenDeleteEventDetail>, token: Token) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const target = e.target as Token;
 		const deletedTokenIndex = token ? tokens.indexOf(token) : tokens.indexOf(target); // The index of the token that just got deleted
 		const nextTokenIndex = deletedTokenIndex === tokens.length - 1 ? deletedTokenIndex - 1 : deletedTokenIndex + 1; // The index of the next token that needs to be focused next due to the deletion
@@ -509,6 +601,7 @@ class Tokenizer extends UI5Element {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -521,7 +614,7 @@ class Tokenizer extends UI5Element {
 	 * @param forwardFocusToPrevious Indicates whether the focus will be forwarded to previous or next token after deletion.
 	 */
 	deleteToken(token: Token, forwardFocusToPrevious?: boolean) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const deletedTokenIndex = tokens.indexOf(token);
 		let nextTokenIndex = (deletedTokenIndex === tokens.length - 1) ? deletedTokenIndex - 1 : deletedTokenIndex + 1;
 		const notSelectedTokens = tokens.filter(t => !t.selected);
@@ -603,7 +696,7 @@ class Tokenizer extends UI5Element {
 
 	handleBeforeOpen() {
 		const list = this._getList();
-		const firstListItem = list.querySelectorAll("[ui5-li]")[0]! as ListItem;
+		const firstListItem = list.querySelectorAll("[ui5-li]")[0] as ListItem;
 
 		list._itemNavigation.setCurrentItem(firstListItem);
 
@@ -612,7 +705,10 @@ class Tokenizer extends UI5Element {
 
 	handleAfterClose() {
 		this.open = false;
-		this._preventCollapse = false;
+		// Don't reset _preventCollapse if we're in the middle of deleting a token
+		if (!this._tokenDeleting) {
+			this._preventCollapse = false;
+		}
 		this._focusedElementBeforeOpen = null;
 	}
 
@@ -629,6 +725,10 @@ class Tokenizer extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		const isCtrl = !!(e.metaKey || e.ctrlKey);
+
+		if (isEscape(e)) {
+			return this._deselectAllTokens();
+		}
 
 		if ((isCtrl && ["c", "x"].includes(e.key.toLowerCase())) || isDeleteShift(e) || isInsertCtrl(e)) {
 			e.preventDefault();
@@ -897,16 +997,32 @@ class Tokenizer extends UI5Element {
 
 	_onfocusin(e: FocusEvent) {
 		const target = e.target as Token;
-		this.open = false;
-		this._itemNav.setCurrentItem(target);
+		this._lastFocusedToken = target;
 
-		if (!this.expanded) {
-			this.expanded = true;
+		if (target && target.toBeDeleted) {
+			this._tokenDeleting = true;
+
+			return;
 		}
+
+		this.open = false;
+		this.expanded = true;
+		this._addTokenToNavigation(e.target as Token);
+	}
+
+	_addTokenToNavigation(token: Token) {
+		this._scrollToEndOnExpand = false;
+		this._itemNav.setCurrentItem(token);
 	}
 
 	_onfocusout(e: FocusEvent) {
 		const relatedTarget = e.relatedTarget as HTMLElement;
+		const tokenLosingFocus = e.target as Token;
+
+		// If the token losing focus is being deleted, prevent collapse
+		if (tokenLosingFocus?.toBeDeleted) {
+			this._preventCollapse = true;
+		}
 
 		this._tokens.forEach(token => {
 			token.forcedTabIndex = "-1";
@@ -915,15 +1031,34 @@ class Tokenizer extends UI5Element {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
+			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
 		}
 
-		if (!this._tokenDeleting && !this._preventCollapse) {
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!this._tokenDeleting && !this._preventCollapse && !hasTokenToBeDeleted) {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
+	}
+
+	/**
+ 	 * Determines the DOM element to focus when the Tokenizer receives focus.
+ 	 * If the last-focused token is not overflown, focus is restored to it.
+ 	 * Otherwise, the focus defaults to the first visible token.
+ 	 */
+	getFocusDomRef(): HTMLElement | undefined {
+		if (this._lastFocusedToken && !this.overflownTokens.includes(this._lastFocusedToken)) {
+			this._itemNav._currentIndex = this.tokens.indexOf(this._lastFocusedToken);
+			this._isFocusSetInternally = true;
+			this.tokens[0].forcedTabIndex = "-1";
+		} else {
+			this._itemNav._currentIndex = 0;
+		}
+		return this._itemNav._getCurrentItem();
 	}
 
 	_toggleTokenSelection(tokens: Array<Token>) {
@@ -957,6 +1092,17 @@ class Tokenizer extends UI5Element {
 		}
 	}
 
+	_deselectAllTokens() {
+		const hadSelection = this._selectedTokens.length > 0;
+		this._tokens.forEach(token => { token.selected = false; });
+
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				tokens: [],
+			});
+		}
+	}
+
 	get hasTokens() {
 		return this._tokens.length > 0;
 	}
@@ -968,17 +1114,27 @@ class Tokenizer extends UI5Element {
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
 		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
 
-		const cutToClipboard = (e: ClipboardEvent) => {
+		// Async clipboard API (works in secure contexts - HTTPS/localhost)
+		if (navigator.clipboard?.writeText && window.isSecureContext) {
+			navigator.clipboard.writeText(tokensTexts)?.catch(() => {
+				// Silent fallback - user can retry
+			});
+			return;
+		}
+
+		// Fallback for HTTP: use ClipboardEvent with execCommand
+		// execCommand is deprecated but it is kept for compatibility reasons, as
+		// there is no other way to write to clipboard in non-secure contexts
+		const fillClipboardHandler = (e: ClipboardEvent) => {
 			if (e.clipboardData) {
 				e.clipboardData.setData("text/plain", tokensTexts);
 			}
-
 			e.preventDefault();
 		};
 
-		document.addEventListener(shortcutName, cutToClipboard);
+		document.addEventListener(shortcutName, fillClipboardHandler);
 		document.execCommand(shortcutName);
-		document.removeEventListener(shortcutName, cutToClipboard);
+		document.removeEventListener(shortcutName, fillClipboardHandler);
 	}
 
 	/**
@@ -1006,7 +1162,8 @@ class Tokenizer extends UI5Element {
 
 	/**
 	 * Scrolls token to the visible area of the container.
-	 * Adds 4 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * Adds 5 pixels to the scroll position to ensure padding and border visibility on both ends
+	 * For the last token, if its width is more than the needed space, scroll to the end without offset
 	 * @protected
 	 */
 	_scrollToToken(token: IToken) {
@@ -1016,11 +1173,18 @@ class Tokenizer extends UI5Element {
 
 		const tokenRect = token.getBoundingClientRect();
 		const tokenContainerRect = this.contentDom.getBoundingClientRect();
+		const oneSideBorderAndPaddingOffset = 5;
+
+		const isLastToken = this._tokens.indexOf(token as Token) === this._tokens.length - 1;
+		if (isLastToken) {
+			this.scrollToEnd();
+			return;
+		}
 
 		if (tokenRect.left < tokenContainerRect.left) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft - (tokenContainerRect.left - tokenRect.left + oneSideBorderAndPaddingOffset), 0);
 		} else if (tokenRect.right > tokenContainerRect.right) {
-			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + 5), 0);
+			this._scrollEnablement?.scrollTo(this.contentDom.scrollLeft + (tokenRect.right - tokenContainerRect.right + oneSideBorderAndPaddingOffset), 0);
 		}
 	}
 
@@ -1094,7 +1258,7 @@ class Tokenizer extends UI5Element {
 	}
 
 	get morePopoverTitle() {
-		return Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
+		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {

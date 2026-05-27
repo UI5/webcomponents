@@ -1,19 +1,15 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isLeft,
 	isRight,
-	isSpace,
-	isEnter,
-	isEnterShift,
-	isEnterCtrl,
-	isEnterAlt,
 	isMinus,
 	isPlus,
+	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
@@ -22,13 +18,17 @@ import {
 	SIDE_NAVIGATION_ICON_COLLAPSE,
 	SIDE_NAVIGATION_ICON_EXPAND,
 	SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL,
+	SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import "@ui5/webcomponents/dist/Tag.js";
 
 // Templates
 import SideNavigationItemTemplate from "./SideNavigationItemTemplate.js";
 
 // Styles
 import SideNavigationItemCss from "./generated/themes/SideNavigationItem.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -80,7 +80,28 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<SideNavigationSubItem>;
+	items!: DefaultSlot<SideNavigationSubItem>;
+
+	/**
+	 * Defines the tag to be displayed.
+	 *
+	 * **Note:** Tags are visible when the <code>NavigationList</code> is in expanded mode,
+	 * and hidden when collapsed, but they are visible in the overflow of the collapsed mode.
+	 *
+	 * **Note:** Only one `ui5-tag` is allowed. The tag should use `design="Set2"`, `hide-state-icon`,
+	 * and `colorScheme` values 5-10 to avoid confusion with semantic colors (1-4).
+	 *
+	 * **Note:** It is recommended to limit tag width to 64px (4rem). If tag text exceeds this,
+	 * use shortened forms or abbreviations (e.g., "Experimental" → "Exp").
+	 *
+	 * **Important:** The <code>ui5-tag</code> must never be interactive (i.e., <code>active</code> must not be set to <code>true</code>),
+	 * as this would lead to nesting of interactive elements, which is not allowed.
+	 *
+	 * @public
+	 * @since 2.23.0
+	 */
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -152,6 +173,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 			return this.accessibilityAttributes.hasPopup;
 		}
 
+		if (this.isOverflow) {
+			return "menu";
+		}
+
 		return undefined;
 	}
 
@@ -177,6 +202,39 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		}
 
 		return this.expanded;
+	}
+
+	get _describedBy() {
+		const parts: string[] = [];
+
+		if (this.hasTag) {
+			parts.push(this._tagId);
+		}
+
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			parts.push(this._selectableItemDescriptionId);
+		}
+
+		return parts.length > 0 ? parts.join(" ") : undefined;
+	}
+
+	get _selectableItemDescriptionId() {
+		return `${this._id}-selectable-description`;
+	}
+
+	get _selectableItemDescriptionText() {
+		if (!this.effectiveDisabled && this.items.length && !this.unselectable) {
+			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_PARENT_ITEM_SELECTABLE_DESCRIPTION, this.text ?? "");
+		}
+		return undefined;
+	}
+
+	get hasTag() {
+		return !!this.tag.length;
+	}
+
+	get _textId() {
+		return `${this._id}-text`;
 	}
 
 	get classesArray() {
@@ -207,6 +265,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	get _ariaLabel() {
+		if (this.accessibleName) {
+			return this.accessibleName;
+		}
+
 		if (this.isOverflow) {
 			return SideNavigationItem.i18nBundle.getText(SIDE_NAVIGATION_OVERFLOW_ITEM_LABEL);
 		}
@@ -264,15 +326,10 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 			return;
 		}
 
-		// "Space" + modifier is often reserved by the operating system or window manager
-		if (this.unselectable && isSpace(e)) {
-			this._toggle();
-			return;
-		}
-
-		// "Enter" + "Meta" is missing since it is often reserved by the operating system or window manager
-		if (this.unselectable && (isEnter(e) || isEnterShift(e) || isEnterCtrl(e) || isEnterAlt(e))) {
-			this._toggle();
+		if (isEnter(e)) {
+			if (!this.inPopover && this.unselectable && !this.isExternalLink) {
+				e.preventDefault();
+			}
 		}
 
 		super._onkeydown(e);
@@ -335,9 +392,5 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 SideNavigationItem.define();
 
-const isInstanceOfSideNavigationItem = (object: any): object is SideNavigationItem => {
-	return "isSideNavigationItem" in object;
-};
-
 export default SideNavigationItem;
-export { isInstanceOfSideNavigationItem };
+export const isInstanceOfSideNavigationItem = createInstanceChecker<SideNavigationItem>("isSideNavigationItem");

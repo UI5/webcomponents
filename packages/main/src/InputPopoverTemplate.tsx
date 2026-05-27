@@ -6,17 +6,24 @@ import alert from "@ui5/webcomponents-icons/dist/alert.js";
 import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import information from "@ui5/webcomponents-icons/dist/information.js";
 
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import Popover from "./Popover.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
-export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult }) {
+export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsList?: (this: Input) => JsxTemplateResult, mobileHeader?: (this: Input) => JsxTemplateResult }) {
 	const suggestionsList = hooks?.suggestionsList;
+	const mobileHeader = hooks?.mobileHeader;
 
 	return (
 		<>
-			{this._effectiveShowSuggestions && this.Suggestions?.template.call(this, { suggestionsList, valueStateMessage, valueStateMessageInputIcon }) }
+			{this._effectiveShowSuggestions && this.Suggestions?.template.call(this, {
+				suggestionsList,
+				mobileHeader,
+				valueStateMessage,
+				valueStateMessageInputIcon
+			})}
 
-			{this.hasValueStateMessage &&
+			{this.hasValueStateMessage && (
 				<Popover
 					preventInitialFocus={true}
 					preventFocusRestore={true}
@@ -24,17 +31,17 @@ export default function InputPopoverTemplate(this: Input, hooks?: { suggestionsL
 					class="ui5-valuestatemessage-popover"
 					placement="Bottom"
 					tabindex={-1}
-					horizontalAlign={this._valueStatePopoverHorizontalAlign}
+					horizontalAlign={PopoverHorizontalAlign.Start}
 					opener={this}
 					open={this.valueStateOpen}
 					onClose={this._handleValueStatePopoverAfterClose}
 				>
 					<div slot="header" class={this.classes.popoverValueState}>
 						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
-						{ this.valueStateOpen && valueStateMessage.call(this) }
+						{this.valueStateOpen && valueStateMessage.call(this)}
 					</div>
 				</Popover>
-			}
+			)}
 		</>
 	);
 }

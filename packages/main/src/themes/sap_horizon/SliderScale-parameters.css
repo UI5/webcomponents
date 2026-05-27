@@ -1,0 +1,9 @@
+@import "../base/SliderScale-parameters.css";
+
+:host {
+	--_ui5_slider_scale_border: none;
+	--_ui5_slider_scale_dots_display: inline-block;
+	--_ui5_range_slider_legacy_progress_focus_display: none;
+	--_ui5_range_slider_progress_focus_display: block;
+	--_ui5_range_slider_progress_focus_padding: 0 1rem 0 1rem;
+}

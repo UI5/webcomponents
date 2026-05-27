@@ -4,6 +4,9 @@ on:
   schedule:
   - cron: "00 08 * * *"
 
+permissions:
+  contents: read
+
 jobs:
   reset-gh-pages:
     runs-on: ubuntu-latest
@@ -15,9 +18,6 @@ jobs:
 
     - name: Reset gh-pages git history
       env:
-        NPM_USERNAME: ${{ secrets.NPM_USER }}
-        NPM_EMAIL: ${{ secrets.NPM_EMAIL }}
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_AUTH_TOKEN }}
         GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
       run: |
         git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"

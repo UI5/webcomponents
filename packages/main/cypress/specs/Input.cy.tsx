@@ -7,6 +7,7 @@ import Link from "../../src/Link.js";
 
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
+import { INPUT_SUGGESTIONS_EXPANDED, INPUT_SUGGESTIONS_COLLAPSED, INPUT_SUGGESTIONS_MORE_HITS } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Input Tests", () => {
 	it("test input event prevention", () => {
@@ -443,6 +444,151 @@ describe("Input general interaction", () => {
 		cy.get("@input")
 			.should("have.prop", "typedInValue", "");
 	});
+
+	it("Should fire 'change' event once when clicking a suggestion equal to the typed value", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-click"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-click")
+			.shadow()
+			.find("input")
+			.click()
+			.realType("Cozy");
+
+		cy.get("#input-equal-click")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get('#input-equal-click')
+			.find('ui5-suggestion-item[text="Cozy"]')
+			.click();
+
+		cy.get("#input-equal-click").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
+	it("Should fire 'change' event once when selecting a suggestion equal to the typed value with keyboard", () => {
+		const onChange = cy.spy().as("onChange");
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<Input
+				id="input-equal-keyboard"
+				showSuggestions
+				noTypeahead
+				onChange={onChange}
+				onSelectionChange={onSelectionChange}
+			>
+				<SuggestionItem text="Cozy" />
+				<SuggestionItem text="Compact" />
+			</Input>
+		);
+
+		cy.get("#input-equal-keyboard")
+			.shadow()
+			.find("input")
+			.click()
+			.realType("Cozy");
+
+		cy.get("#input-equal-keyboard")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowDown");
+		cy.realPress("Enter");
+
+		cy.get("#input-equal-keyboard").should("have.value", "Cozy");
+		cy.get("@onChange").should("have.been.calledOnce");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
+	});
+
+	it("Should control suggestions dynamically based on threshold", () => {
+		const THRESHOLD = 3;
+		const countries = [
+			"Argentina", "Albania", "Algeria", "Angola", "Austria", "Australia",
+			"Bulgaria", "Belgium", "Brazil", "Canada", "Colombia", "Croatia"
+		];
+
+		cy.mount(<Input id="threshold-input" showSuggestions />);
+
+		cy.document().then(doc => {
+			const input = doc.querySelector<Input>("#threshold-input")!;
+
+			input.addEventListener("input", () => {
+				const value = input.value;
+
+				while (input.lastChild) {
+					input.removeChild(input.lastChild);
+				}
+
+				if (value.length >= THRESHOLD) {
+					input.showSuggestions = true;
+
+					const filtered = countries.filter(country =>
+						country.toUpperCase().indexOf(value.toUpperCase()) === 0
+					);
+
+					filtered.forEach(country => {
+						const item = document.createElement("ui5-suggestion-item");
+						item.setAttribute("text", country);
+						input.appendChild(item);
+					});
+				} else {
+					input.showSuggestions = false;
+				}
+			});
+		});
+
+		cy.get("#threshold-input")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.realType("B");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.exist", "true");
+
+		cy.realType("ul");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.should("have.length", 1)
+			.first()
+			.should("have.attr", "text", "Bulgaria");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.exist", "true");
+	});
 });
 
 describe("Input arrow navigation", () => {
@@ -720,7 +866,7 @@ describe("Input Ctrl + Alt + F8 navigation", () => {
 			.should("have.focus");
 
 		cy.get("@secondLink")
-		.realPress("Tab");
+			.realPress("Tab");
 
 		cy.get("@secondInput")
 			.should("have.focus");
@@ -1219,6 +1365,71 @@ describe("Accessibility", () => {
 	});
 });
 
+describe("Suggestions expanded/collapsed announcement", () => {
+	it("Should include 'Expanded' in suggestions count when popover opens", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("contain.text", INPUT_SUGGESTIONS_EXPANDED.defaultText);
+	});
+
+	it("Should announce 'Collapsed' when suggestions popover closes", () => {
+		cy.mount(
+			<Input showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("#suggestionsCount")
+			.should("contain.text", INPUT_SUGGESTIONS_COLLAPSED.defaultText);
+	});
+});
+
 describe("Attribute propagation", () => {
 	it("Should change the placeholder of the inner input", () => {
 		const placeholder = "New placeholder text";
@@ -1481,9 +1692,9 @@ describe("Input general interaction", () => {
 		// Mount Input with suggestions and a change event spy
 		cy.mount(
 			<Input
-			id="myInput"
-			showSuggestions={true}
-			onChange={cy.spy().as("changeSpy")}
+				id="myInput"
+				showSuggestions={true}
+				onChange={cy.spy().as("changeSpy")}
 			>
 				<SuggestionItem text="Canada"></SuggestionItem>
 				<SuggestionItem text="Cuba"></SuggestionItem>
@@ -1697,7 +1908,7 @@ describe("Input general interaction", () => {
 			.find("input")
 			.should("not.have.attr", "aria-describedby");
 	});
-	
+
 	it("Checks if aria-label is reflected in the shadow DOM", () => {
 		const accessibleName = "New cool text";
 		cy.mount(<Input accessibleName={accessibleName} />);
@@ -1819,7 +2030,7 @@ describe("Input general interaction", () => {
 			.should("be.focused");
 
 		cy.get("@inputEl")
-			.realType("a");
+			.realType("A");
 
 		cy.get("@inputEl")
 			.should("have.value", "Adam D");
@@ -1840,7 +2051,7 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#input-custom-flat").shadow().find("input").as("input");
-		cy.get("@input").click().realType("a");
+		cy.get("@input").click().realType("A");
 
 		cy.get("@input").should("have.value", "Albania");
 		cy.get("@input").then($input => {
@@ -1860,7 +2071,7 @@ describe("Input general interaction", () => {
 		cy.get("#input-disabled-autocomplete").shadow().find("input").click().realType("c");
 		cy.get("#input-disabled-autocomplete").shadow().find("input").should("have.value", "c");
 	});
-	
+
 	it("Tests disabled autocomplete(type-ahead)", () => {
 		cy.mount(
 			<Input id="input-disabled-autocomplete" showSuggestions noTypeahead>
@@ -1898,9 +2109,9 @@ describe("Input general interaction", () => {
 
 		cy.get("#inputPreview2").shadow().find("input").click().realType("c");
 		cy.get("#inputPreview2")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get("#inputPreview2").shadow().find("input").realPress("ArrowDown");
 
@@ -1919,9 +2130,9 @@ describe("Input general interaction", () => {
 
 		cy.get("#myInput").shadow().find("input").click().realType("a");
 		cy.get("#myInput")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 
 		cy.get("#myInput").shadow().find<ResponsivePopover>("ui5-responsive-popover").ui5ResponsivePopoverOpened();
 		cy.get("@onOpen").should("have.been.calledOnce");
@@ -1956,17 +2167,17 @@ describe("Input general interaction", () => {
 
 		cy.get("#inputInDialog").shadow().find("input").realType("c");
 		cy.get("#inputInDialog")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#inputInDialog").shadow().find<ResponsivePopover>("ui5-responsive-popover").ui5ResponsivePopoverOpened();
 
 		cy.get("#inputInDialog").shadow().find("input").realPress("ArrowDown");
 		cy.get("#inputInDialog").shadow().find("input").realPress("Escape");
 		cy.get("#inputInDialog")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 		cy.get("#dialog").should("have.attr", "open");
 	});
 
@@ -1989,17 +2200,17 @@ describe("Input general interaction", () => {
 		);
 
 		cy.get("#inputCompact").click();
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "Collapsed");
 
 		cy.get("#inputCompact").shadow().find("input").realType("c");
-		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available");
+		cy.get("#inputCompact").shadow().find("#suggestionsCount").should("have.text", "3 results are available Expanded");
 
 		cy.get("#inputCompact").shadow().find("input").realType("{backspace}");
 		cy.get("#inputCompact").shadow().find("input").realType("{esc}");
 
 		cy.get("#myInput2").click();
 		cy.get("#myInput2").shadow().find("input").realType("c");
-		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available");
+		cy.get("#myInput2").shadow().find("#suggestionsCount").should("have.text", "5 results are available Expanded");
 	});
 
 	it("Should close the Popover when no suggestions are available", () => {
@@ -2120,7 +2331,7 @@ describe("Input general interaction", () => {
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
-			cy.get("#openPickerInput")
+		cy.get("#openPickerInput")
 			.shadow()
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
 			.should("have.attr", "open");
@@ -2194,7 +2405,7 @@ describe("Input general interaction", () => {
 	});
 
 	it("Tests prevented input event", () => {
-		cy.mount(<Input id="prevent-input-event" onInput={e => (e.target as Input).value.length > 3 ? e.preventDefault() : null}/>);
+		cy.mount(<Input id="prevent-input-event" onInput={e => (e.target as Input).value.length > 3 ? e.preventDefault() : null} />);
 
 		cy.get("#prevent-input-event").shadow().find("input").click().realType("abcd");
 		cy.get("#prevent-input-event").should("have.value", "abc");
@@ -2397,9 +2608,9 @@ describe("Lazy loading", () => {
 
 		cy.get("#field").shadow().find("input").click().realType("a");
 		cy.get("#field")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 	});
 
 	it("Does not reopen picker on focus in", () => {
@@ -2415,9 +2626,9 @@ describe("Lazy loading", () => {
 		cy.get("#field").shadow().find("input").realPress("Tab");
 		cy.wait(3000);
 		cy.get("#field")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 	});
 
 	it("Should not close picker when items are updated", () => {
@@ -2430,14 +2641,14 @@ describe("Lazy loading", () => {
 
 		cy.get("#field1").shadow().find("input").click().realType("S");
 		cy.get("#field1")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#field1").shadow().find("input").realType("b");
 		cy.get("#field1")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 	});
 });
 
@@ -2508,9 +2719,9 @@ describe("Property open", () => {
 		);
 
 		cy.get("#input-suggestions-open")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
 		cy.get("#input-suggestions-open").find("ui5-suggestion-item").should("have.length", 3);
 	});
 
@@ -2524,8 +2735,869 @@ describe("Property open", () => {
 		);
 
 		cy.get("#input-suggestions-open")
-		.shadow()
-		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverClosed();
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
+	});
+
+	it("should show only one valuestate popover when valueState changes during typing", () => {
+		cy.mount(
+			<Input
+				id="input-valuestate-dynamic"
+				valueState="None"
+				showSuggestions={true}
+				onInput={(e) => {
+					(e.target as Input).valueState = "Negative";
+				}}
+			>
+				<SuggestionItem text="Apple"></SuggestionItem>
+			</Input>
+		);
+
+		cy.get("#input-valuestate-dynamic")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.should("be.focused");
+
+		cy.get("@input")
+			.realType("a");
+
+		cy.get("@input")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.as("suggestionsPopover")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.realPress("Escape");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover]")
+			.as("valueStatePopover")
+			.should("have.attr", "open");
+	});
+});
+
+describe("Input Composition", () => {
+	it("should handle Korean composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-korean"
+				showSuggestions
+				placeholder="Type in Korean ..."
+			>
+				<SuggestionItem text="안녕하세요" />
+				<SuggestionItem text="고맙습니다" />
+				<SuggestionItem text="사랑" />
+				<SuggestionItem text="한국" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "사랑" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "사랑" });
+
+		cy.get("@nativeInput")
+			.invoke("val", "사랑")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "사랑");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "사랑");
+	});
+
+	it("should handle Japanese composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-japanese"
+				showSuggestions
+				placeholder="Type in Japanese ..."
+			>
+				<SuggestionItem text="こんにちは" />
+				<SuggestionItem text="ありがとう" />
+				<SuggestionItem text="東京" />
+				<SuggestionItem text="日本" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "ありがとう" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "ありがとう" });
+
+		cy.get("@nativeInput")
+			.invoke("val", "ありがとう")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "ありがとう");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "ありがとう");
+	});
+
+	it("should handle Chinese composition correctly", () => {
+		cy.mount(
+			<Input
+				id="input-composition-chinese"
+				showSuggestions
+				placeholder="Type in Chinese ..."
+			>
+				<SuggestionItem text="你好" />
+				<SuggestionItem text="谢谢" />
+				<SuggestionItem text="北京" />
+				<SuggestionItem text="中国" />
+			</Input>
+		);
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.as("nativeInput")
+			.focus();
+
+		cy.get("@nativeInput").trigger("compositionstart", { data: "" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionupdate", { data: "谢谢" });
+
+		cy.get("@input").should("have.prop", "_isComposing", true);
+
+		cy.get("@nativeInput").trigger("compositionend", { data: "谢谢" });
+
+		cy.get("@nativeInput")
+			.invoke("val", "谢谢")
+			.trigger("input", { inputType: "insertCompositionText" });
+
+		cy.get("@input").should("have.prop", "_isComposing", false);
+
+		cy.get("@input").should("have.attr", "value", "谢谢");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.realPress("Enter");
+
+		cy.get("@input")
+			.should("have.attr", "value", "谢谢");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.realType("Albania");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+
+	it("has correct validity for typeMismatch- Email", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="Email"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("email");
+
+		cy.get("@input")
+			.should("have.value", "email");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("email@gmail.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+		it("has correct validity for typeMismatch- URL", () => {
+		cy.mount(
+			<form>
+				<Input id="inpForm" required type="URL"></Input>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("[ui5-input]")
+			.as("input")
+			.realClick()
+			.realType("google");
+
+		cy.get("@input")
+			.should("have.value", "google");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: true },
+				validity: { typeMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("exist");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.get("@input")
+			.realType("https://www.google.com");
+
+		cy.get("@input")
+			.ui5AssertValidityState({
+				formValidity: { typeMismatch: false },
+				validity: { typeMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#inpForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
+
+describe("Input built-in filtering", () => {
+	it("StartsWith filtering", () => {
+		cy.mount(
+			<Input showSuggestions filter="StartsWith" noTypeahead>
+				<SuggestionItem text="Iron"></SuggestionItem>
+				<SuggestionItem text="Gold"></SuggestionItem>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("G");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+	});
+	it("Contains filtering", () => {
+		cy.mount(
+			<Input showSuggestions filter="Contains" noTypeahead>
+				<SuggestionItem text="Iron"></SuggestionItem>
+				<SuggestionItem text="Gold"></SuggestionItem>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("o");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realPress("Backspace");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverClosed();
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("l");
+
+		cy.get<ResponsivePopover>("@popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(0)
+			.should("have.attr", "hidden");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item]")
+			.eq(1)
+			.should("be.visible");
+	});
+	it("hides suggestion group when it has no matching items", () => {
+		cy.mount(
+			<Input showSuggestions filter="Contains" noTypeahead>
+				<SuggestionItemGroup headerText="Metals">
+					<SuggestionItem text="Iron"></SuggestionItem>
+					<SuggestionItem text="Gold"></SuggestionItem>
+				</SuggestionItemGroup>
+				<SuggestionItemGroup headerText="Fruits">
+					<SuggestionItem text="Apple"></SuggestionItem>
+					<SuggestionItem text="Orange"></SuggestionItem>
+				</SuggestionItemGroup>
+			</Input>
+		);
+		cy.get("[ui5-input]")
+			.as("input")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("o");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(0)
+			.should("be.visible");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(1)
+			.should("be.visible");
+
+		cy.get("@input")
+			.shadow()
+			.find("input")
+			.realType("l");
+
+		cy.get("@input")
+			.find("[ui5-suggestion-item-group]")
+			.eq(1)
+			.should("have.attr", "hidden");
+	});
+
+	describe("Typeahead capitalization handling", () => {
+		it("should preserve user's typed capitalization during typeahead and use original suggestion capitalization when accepted", () => {
+			cy.mount(
+				<Input id="capitalization-test" showSuggestions>
+					<SuggestionItem text="Apple" />
+					<SuggestionItem text="Apricot" />
+					<SuggestionItem text="Avocado" />
+				</Input>
+			);
+
+			cy.get("#capitalization-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type lowercase 'a' - should show 'apple' with user's lowercase 'a'
+			cy.get("@input")
+				.realClick()
+				.realType("a");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+
+			// Verify text selection (typeahead highlighting)
+			cy.get("@input")
+				.then($input => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(5);
+				});
+
+			// Press Enter to accept - should use original suggestion capitalization "Apple"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "Apple");
+		});
+
+		it("should preserve uppercase typed letters during typeahead", () => {
+			cy.mount(
+				<Input id="capitalization-test-upper" showSuggestions>
+					<SuggestionItem text="apple" />
+					<SuggestionItem text="apricot" />
+				</Input>
+			);
+
+			cy.get("#capitalization-test-upper")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type uppercase 'A' - should show 'Apple' with user's uppercase 'A'
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Apple");
+
+			// Press Enter to accept - should use original suggestion capitalization "apple"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+		});
+
+		it("should match suggestions regardless of capitalization and use original on Enter", () => {
+			cy.mount(
+				<Input id="exact-match-test" showSuggestions>
+					<SuggestionItem text="ap" />
+					<SuggestionItem text="Apple" />
+				</Input>
+			);
+
+			cy.get("#exact-match-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type "Ap" matching suggestion "ap"
+			cy.get("@input")
+				.realClick()
+				.realType("Ap");
+
+			// During typing, user's capitalization is preserved
+			cy.get("@input")
+				.should("have.value", "Ap");
+
+			// Press Enter - should use original suggestion capitalization "ap"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "ap");
+		});
+
+		it("should preserve user's typed capitalization through multiple characters", () => {
+			cy.mount(
+				<Input id="multi-char-test" showSuggestions>
+					<SuggestionItem text="BANANA" />
+					<SuggestionItem text="BERRY" />
+				</Input>
+			);
+
+			cy.get("#multi-char-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type "bAn" with mixed capitalization
+			cy.get("@input")
+				.realClick()
+				.realType("bAn");
+
+			// Should show suggestion with user's typed capitalization
+			cy.get("@input")
+				.should("have.value", "bAnANA");
+
+			// Press Enter - should use original suggestion capitalization "BANANA"
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "BANANA");
+		});
+
+		it("should work with selection-change event and preserve original capitalization", () => {
+			const onChangeSpy = cy.spy().as("onChange");
+			const onSelectionChangeSpy = cy.spy().as("onSelectionChange");
+
+			cy.mount(
+				<Input
+					id="selection-change-test"
+					showSuggestions
+					onChange={onChangeSpy}
+					onSelectionChange={onSelectionChangeSpy}
+				>
+					<SuggestionItem text="Orange" />
+					<SuggestionItem text="Olive" />
+				</Input>
+			);
+
+			cy.get("#selection-change-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type lowercase 'o'
+			cy.get("@input")
+				.realClick()
+				.realType("o");
+
+			cy.get("@input")
+				.should("have.value", "orange");
+
+			// Press Enter to trigger selection-change
+			cy.realPress("Enter");
+
+			// Value should be original suggestion capitalization
+			cy.get("@input")
+				.should("have.value", "Orange");
+
+			// Verify both events were called
+			cy.get("@onChange").should("have.been.calledOnce");
+			cy.get("@onSelectionChange").should("have.been.calledOnce");
+		});
+
+		it("should clear matched item on Escape and restore typed value", () => {
+			cy.mount(
+				<Input id="escape-test" showSuggestions>
+					<SuggestionItem text="Apple" />
+				</Input>
+			);
+
+			cy.get("#escape-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			// Type 'a' to trigger typeahead
+			cy.get("@input")
+				.realClick()
+				.realType("a");
+
+			cy.get("@input")
+				.should("have.value", "apple");
+
+			// Press Escape to cancel autocomplete
+			cy.realPress("Escape");
+
+			cy.get("@input")
+				.should("have.value", "a");
+
+			// Now press Enter - should not select anything
+			cy.realPress("Enter");
+
+			cy.get("@input")
+				.should("have.value", "a");
+		});
+
+		it("should restore typed value when pressing arrow up from first suggestion", () => {
+			cy.mount(
+				<Input id="arrow-up-test" showSuggestions>
+					<SuggestionItem text="Argentina" />
+					<SuggestionItem text="Australia" />
+				</Input>
+			);
+
+			cy.get("#arrow-up-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Argentina");
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "Australia");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "Argentina");
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "A");
+		});
+
+		it("should select all text for non-matching items and partial for matching during navigation", () => {
+			cy.mount(
+				<Input id="typeahead-nav-test" showSuggestions>
+					<SuggestionItem text="Aute" />
+					<SuggestionItem text="ad" />
+					<SuggestionItem text="exercitation" />
+				</Input>
+			);
+
+			cy.get("#typeahead-nav-test")
+				.shadow()
+				.find("input")
+				.as("input");
+
+			cy.get("@input")
+				.realClick()
+				.realType("A");
+
+			cy.get("@input")
+				.should("have.value", "Aute")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(4);
+				});
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "ad")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(2);
+				});
+
+			cy.realPress("ArrowDown");
+
+			cy.get("@input")
+				.should("have.value", "exercitation")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(0);
+					expect(input.selectionEnd).to.equal(12);
+				});
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "ad")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(2);
+				});
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "Aute")
+				.should(($input) => {
+					const input = $input[0] as HTMLInputElement;
+					expect(input.selectionStart).to.equal(1);
+					expect(input.selectionEnd).to.equal(4);
+				});
+
+			cy.realPress("ArrowUp");
+
+			cy.get("@input")
+				.should("have.value", "A");
+		});
 	});
 });

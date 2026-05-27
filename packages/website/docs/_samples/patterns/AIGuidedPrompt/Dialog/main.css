@@ -38,17 +38,7 @@
 }
 
 [ui5-dialog] {
-	width: 100%;
-}
-
-[ui5-dialog] .content {
-	display: grid;
-	grid-template-columns: 2fr 1fr;
-	grid-gap: 1rem;
-}
-
-[ui5-dialog] [ui5-textarea] {
-	height: 100%;
+	width: 20rem;
 }
 
 .guidedPromptDialogFooter,

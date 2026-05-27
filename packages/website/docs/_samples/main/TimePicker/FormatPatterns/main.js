@@ -1,1 +1,0 @@
-import "@ui5/webcomponents/dist/TimePicker.js";

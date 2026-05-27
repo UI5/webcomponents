@@ -13,9 +13,9 @@ function pressKeyNTimes(key: "ArrowDown" | "ArrowUp" | "Space" | "Tab" | "Enter"
 describe("TimePicker Tests", () => {
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-		.then(api => {
-			return api.setLanguage("bg")
-		})
+			.then(api => {
+				return api.setLanguage("bg")
+			})
 
 		cy.mount(<TimePicker value="03:16:16"></TimePicker>);
 
@@ -24,7 +24,7 @@ describe("TimePicker Tests", () => {
 
 		cy.get<TimePicker>("@timePicker")
 			.ui5TimePickerGetInnerInput()
-			.should("have.value", "3:16:16 ч.");
+			.should("have.value", "3:16:16");
 
 		cy.wrap({ setLanguage })
 			.then(api => {
@@ -186,6 +186,138 @@ describe("TimePicker Tests", () => {
 		cy.get("@changeStub").should("have.been.calledThrice");
 	});
 
+	it("tests displayFormat and valueFormat - typing and blur", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm:ss a" 
+				valueFormat="HH:mm:ss"
+				value="14:30:00"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Check that display shows 12-hour format with AM/PM
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "02:30:00 PM");
+
+		// Check that value attribute is in 24-hour format
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "14:30:00");
+
+		// Type a new time in display format
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.clear()
+			.realType("03:45:30 PM");
+
+		// While typing, value should show what user typed
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "03:45:30 PM");
+
+		// Blur the input
+		cy.get("body").realClick();
+
+		// After blur, value attribute should be normalized to valueFormat (24-hour)
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "15:45:30");
+
+		// Display should still show in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "03:45:30 PM");
+	});
+
+	it("tests displayFormat and valueFormat - invalid input shows error", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a" 
+				valueFormat="HH:mm:ss"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Type invalid time
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("99:99");
+
+		// Blur to trigger validation
+		cy.realPress("Tab");
+
+		// Should show error state
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "value-state", "Negative");
+
+		// Value should remain invalid
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "99:99");
+	});
+
+	it("tests displayFormat and valueFormat - programmatic value setting", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a" 
+				valueFormat="HH:mm:ss"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Set value programmatically in valueFormat
+		cy.get<TimePicker>("@timePicker")
+			.invoke("prop", "value", "16:45:00");
+
+		// Display should show in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "04:45 PM");
+
+		// Value attribute should remain in valueFormat
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "16:45:00");
+	});
+
+	it("tests valueFormat defaults to ISO format when not specified", () => {
+		cy.mount(
+			<TimePicker 
+				displayFormat="hh:mm a"
+			></TimePicker>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		// Type in display format
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realType("02:30 PM");
+
+		cy.realPress("Tab");
+
+		// Value should default to ISO format (HH:mm:ss)
+		cy.get<TimePicker>("@timePicker")
+			.should("have.value", "14:30:00");
+
+		// But display should still be in displayFormat
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerGetInnerInput()
+			.should("have.value", "02:30 PM");
+	});
+
 	it("tests value state", () => {
 		cy.mount(<TimePicker></TimePicker>);
 
@@ -328,8 +460,31 @@ describe("TimePicker Tests", () => {
 			.ui5ResponsivePopoverOpened()
 	});
 
-	it("picker popover should have accessible name", () => {
-		cy.mount(<TimePicker></TimePicker>);
+	it("displays value state message header in popover when value state is set", () => {
+		cy.mount(<TimePicker valueState="Negative"></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find(".ui5-valuestatemessage-header")
+			.should("exist")
+			.and("have.class", "ui5-valuestatemessage--error");
+	});
+});
+
+describe("Accessibility", () => {
+	it("picker popover accessible name", () => {
+		const LABEL = "Deadline";
+		cy.mount(<TimePicker accessible-name={LABEL}></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
 			.as("timePicker")
@@ -346,7 +501,65 @@ describe("TimePicker Tests", () => {
 		cy.get<TimePicker>("@timePicker")
 			.shadow()
 			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.should("have.attr", "accessible-name", "Choose Time");
+			.should("have.attr", "accessible-name", `Choose Time for ${LABEL}`);
+	});
+
+	it("picker popover accessible name with external label", () => {
+		const LABEL = "Deadline";
+		cy.mount(<>
+			<Label for="timePicker">{LABEL}</Label>
+			<TimePicker id="timePicker"></TimePicker>
+		</>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realPress("F4");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", `Choose Time for ${LABEL}`);
+	});
+
+	it("accessibleDescription property", () => {
+		const DESCRIPTION = "Some description";
+		cy.mount(<TimePicker accessibleDescription={DESCRIPTION}></TimePicker>);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.ui5TimePickerGetInnerInput()
+			.should("have.attr", "aria-describedby", "descr");
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("span#descr")
+			.should("have.text", DESCRIPTION);
+	});
+
+	it("accessibleDescriptionRef property", () => {
+		const DESCRIPTION = "External description";
+		cy.mount(
+			<>
+				<p id="descr">{DESCRIPTION}</p>
+				<TimePicker accessibleDescriptionRef="descr"></TimePicker>
+			</>
+		);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.ui5TimePickerGetInnerInput()
+			.should("have.attr", "aria-describedby")
+			.and("contain", "descr");
+
+		cy.get("#descr").should("have.text", DESCRIPTION);
 	});
 
 	it("input should have accessible name", () => {
@@ -369,24 +582,179 @@ describe("TimePicker Tests", () => {
 			.ui5TimePickerGetInnerInput()
 			.should("have.attr", "aria-label", "Pick a time");
 	});
+});
 
-	it("displays value state message header in popover when value state is set", () => {
-		cy.mount(<TimePicker valueState="Negative"></TimePicker>);
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(<form method="get" onSubmit={e => e.preventDefault()}>
+			<TimePicker id="timePicker" required={true}></TimePicker>
+			<button type="submit" id="submitBtn">Submits forms</button>
+		</form>);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("#timePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("exist", "Required timepicker without value should have :invalid CSS class");
 
 		cy.get<TimePicker>("[ui5-time-picker]")
-			.as("timePicker")
+			.ui5TimePickerTypeTime("now")
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#timePicker:invalid").should("not.exist", "Required TimePicker with value should not have :invalid CSS class");
+	});
+
+	it("has correct validity for patternMismatch", () => {
+		cy.mount(
+			<form onSubmit={e => e.preventDefault()}>
+				<TimePicker id="timePicker" required format-pattern="HH:mm:ss"></TimePicker>
+				<button type="submit" id="submitBtn">Submits forms</button>
+			</form>
+		);
+
+		cy.get("#timePicker").as("timePicker");
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerTypeTime("invalid");
+
+		cy.get("#submitBtn").click();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: true },
+				validity: { patternMismatch: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("exist", "Timepicker without correct formatted value should have :invalid CSS class");
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerTypeTime("14:00:00");
+
+		cy.get("@timePicker")
+			.ui5AssertValidityState({
+				formValidity: { patternMismatch: false },
+				validity: { patternMismatch: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#timePicker:invalid")
+			.should("not.exist", "Timepicker with correct formatted value should not have :invalid CSS class");
+	});
+});
+
+describe("Icon Tooltip Tests", () => {
+	it("TimePicker icon tooltip changes when toggling picker", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker");
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get<TimePicker>("@timePicker")
 			.ui5TimePickerValueHelpIconPress();
 
 		cy.get<TimePicker>("@timePicker")
-			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.ui5ResponsivePopoverOpened();
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get<TimePicker>("@timePicker")
+			.ui5TimePickerValueHelpIconPress();
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+	});
+
+	it("TimePicker icon tooltip changes when using keyboard shortcuts", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.as("timePicker")
+			.ui5TimePickerGetInnerInput()
+			.as("input")
+			.realClick()
+			.should("be.focused");
 
 		cy.get<TimePicker>("@timePicker")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
-			.find(".ui5-valuestatemessage-header")
-			.should("exist")
-			.and("have.class", "ui5-valuestatemessage--error");
+			.find("ui5-icon")
+			.as("icon")
+			.should("have.attr", "accessible-name", "Open Picker");
+
+		cy.get("@input")
+			.realPress("F4");
+
+		cy.get<TimePicker>("@timePicker")
+			.should("have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Close Picker");
+
+		cy.get("@input")
+			.realPress(["Alt", "ArrowUp"]);
+
+		cy.get<TimePicker>("@timePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@icon")
+			.should("have.attr", "accessible-name", "Open Picker");
 	});
-}); 
+});
+
+describe("CSS Parts", () => {
+	it("TimePicker exposes input CSS part through DateTimeInput", () => {
+		cy.mount(<TimePicker />);
+
+		cy.get<TimePicker>("[ui5-time-picker]")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.should("have.attr", "part", "input");
+	});
+});

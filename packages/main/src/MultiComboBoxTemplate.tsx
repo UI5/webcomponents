@@ -65,6 +65,7 @@ export default function MultiComboBoxTemplate(this: MultiComboBox) {
 				id="ui5-multi-combobox-input"
 				value={this.value}
 				inner-input
+				inner-input-with-icon={this._effectiveShowClearIcon || !!this.icon || !this.readonly}
 				placeholder={this._getPlaceholder}
 				disabled={this.disabled}
 				readonly={this.readonly}
