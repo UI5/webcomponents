@@ -52,6 +52,9 @@
 		<ui5-button id="message">Open Message Dialog</ui5-button>
 		<br>
 		<br>
+		<ui5-button id="messageBoxOpener">Open Message Dialog Focused Button </ui5-button>
+		<br>
+		<br>
 		<ui5-button id="prevent">Open Prevent closing Dialog</ui5-button>
 		<br>
 		<br>
@@ -110,6 +113,23 @@
 		<ui5-input></ui5-input>
 		<div slot="footer" class="dialogFooter">
 			<ui5-button design="Emphasized" id="btnCloseDialogWithInput">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="messageBox" accessible-name-ref="messageBoxTitle messageBoxText" accessible-role="AlertDialog"
+		header-text="Confirmation" data-type="Confirm" class="messageBox">
+		<div slot="header" class="messageBoxHeader">
+			<ui5-icon class="messageBoxConfirmIcon" name="sys-help-2"></ui5-icon>
+			<span class="messageBoxSpacer"></span>
+			<ui5-title id="messageBoxTitle" wrapping-type="Normal" level="H1" size="H5">Confirmation</ui5-title>
+		</div>
+		<ui5-text id="messageBoxText">You can close the MessageBox by pressing "Escape" or selecting one of the footer
+			buttons.</ui5-text>
+		<div slot="footer" class="messageBoxFooter">
+			<ui5-button class="messageBoxCloser" data-action="OK" design="Emphasized">OK</ui5-button>
+			<ui5-button class="messageBoxCloser" data-action="Custom Action" design="Transparent">Custom Action</ui5-button>
+			<ui5-button class="messageBoxCloser" data-action="Cancel" design="Transparent">Cancel</ui5-button>
+			<ui5-button class="messageBoxCloser" data-action="3: custom action" design="Default">Custom Button</ui5-button>
 		</div>
 	</ui5-dialog>
 
@@ -948,6 +968,10 @@
 
 		message.addEventListener("click", function () {
 			window["msg-dialog"].open = true;
+		});
+
+		messageBoxOpener.addEventListener("click", function () {
+			window["messageBox"].open = true;
 		});
 
 		window["prevent-dialog"].addEventListener("ui5-before-close", function (event) {

@@ -53,6 +53,7 @@ function beforeContent(this: Dialog) {
 
 function afterContent(this: Dialog) {
 	return (<>
+		<span class="ui5-hidden-text" aria-live="assertive">{this._liveText}</span>
 		{!!this.footer.length &&
 			<footer class="ui5-popup-footer-root" part="footer">
 				<slot name="footer"></slot>

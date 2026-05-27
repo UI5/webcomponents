@@ -198,6 +198,10 @@ class Dialog extends Popup {
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
 	_dragHandlerRegistered = false;
+	_liveTextTimeout?: ReturnType<typeof setTimeout>;
+
+	@property({ noAttribute: true })
+	_liveText = "";
 
 	/**
 	 * Defines the header HTML Element.
@@ -327,9 +331,33 @@ class Dialog extends Popup {
 		return toLowercaseEnumValue(this.accessibleRole);
 	}
 
+	get _contentDescriptionText(): string {
+		return this.content
+			.map(el => {
+				return (el instanceof HTMLElement) ? el.textContent?.trim() : "";
+			})
+			.filter(Boolean)
+			.join(" ");
+	}
+
 	_show() {
 		super._show();
 		this._center();
+
+		// VoiceOver on macOS does not announce text from the dialog content,
+		// so aria-live region is used to announce text-only content when the dialog opens.
+		const text = this._contentDescriptionText;
+		if (text) {
+			this._liveTextTimeout = setTimeout(() => {
+				this._liveText = text;
+			}, 100);
+		}
+	}
+
+	closePopup(escPressed = false, preventRegistryUpdate = false, preventFocusRestore = false): void {
+		clearTimeout(this._liveTextTimeout);
+		this._liveText = "";
+		super.closePopup(escPressed, preventRegistryUpdate, preventFocusRestore);
 	}
 
 	onBeforeRendering() {
