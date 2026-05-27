@@ -1,0 +1,55 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+        <h4>Search</h4>
+        <ui5-hero-banner
+            header-text="Good Morning, Anna"
+            overline-text="Monday, May 26, 2026">
+            <ui5-button slot="headerActions" icon="cart">Cart</ui5-button>
+            <ui5-search
+                placeholder="Search purchase orders, suppliers, materials..."
+                style="width: 100%; max-width: 100%;">
+            </ui5-search>
+        </ui5-hero-banner>
+
+        <br>
+
+        <h4>Header Actions Only</h4>
+        <ui5-hero-banner
+            header-text="Welcome, Lisa"
+            overline-text="Tuesday, May 27, 2026">
+            <ui5-button slot="headerActions" icon="action-settings">Settings</ui5-button>
+            <ui5-button slot="headerActions" icon="log">Activity Log</ui5-button>
+        </ui5-hero-banner>
+
+        <br>
+
+        <h4>Content with Actions</h4>
+        <ui5-hero-banner
+            header-text="Good Morning, Robert"
+            overline-text="Tuesday, May 27, 2026"
+            layout="FullWidth">
+            <p style="margin: 0;">You have 3 pending approvals and 12 new notifications since your last visit. Review your tasks below or use the quick actions to get started.</p>
+            <div slot="endContent" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <ui5-button icon="task" design="Default">Review Approvals</ui5-button>
+                <ui5-button icon="add-document" design="Default">Create Report</ui5-button>
+                <ui5-button icon="collaborate" design="Default">Team Overview</ui5-button>
+            </div>
+        </ui5-hero-banner>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
