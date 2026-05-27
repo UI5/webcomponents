@@ -3,17 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.22.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0-rc.5) (2026-05-14)
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
 
 
-### Features
 
-* **ui5-list:** inherit list item aria roles from accessibleRole ([#13463](https://github.com/UI5/webcomponents/issues/13463)) ([37e9fef](https://github.com/UI5/webcomponents/commit/37e9fef1528e449e65d2e065b8f44e324423c20f)), closes [#13264](https://github.com/UI5/webcomponents/issues/13264)
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
 
 
 ### Reverts
 
-* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([eca1480](https://github.com/UI5/webcomponents/commit/eca148013bf11022f7a5d2a15fa595314afef677)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
+* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([2b52f1b](https://github.com/UI5/webcomponents/commit/2b52f1be1a3e320820ed5dfdd651011e493b0d69)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
 
 
 

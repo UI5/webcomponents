@@ -1,11 +1,12 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
+import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
@@ -19,16 +20,19 @@ const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const UserMenu = createReactComponent(UserMenuClass);
 const UserMenuAccount = createReactComponent(UserMenuAccountClass);
 const UserMenuItem = createReactComponent(UserMenuItemClass);
+const UserMenuItemGroup = createReactComponent(UserMenuItemGroupClass);
 const Avatar = createReactComponent(AvatarClass);
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const openerRef = useRef(null);
+  const userMenuRef = useRef<UserMenuClass | null>(null);
 
   const handleProfileClick = useCallback(
     (e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
-      openerRef.current = e.detail.targetRef;
-      setMenuOpen(true);
+      const menu = userMenuRef.current;
+      if (menu) {
+        menu.opener = e.detail.targetRef;
+        menu.open = !menu.open;
+      }
     },
     [],
   );
@@ -86,7 +90,10 @@ function App() {
     console.log("Sign Out clicked");
     const result = prompt("Sign Out", "Are you sure you want to sign out?");
     if (result) {
-      setMenuOpen(false);
+      const menu = userMenuRef.current;
+      if (menu) {
+        menu.open = false;
+      }
     }
     e.preventDefault();
   }, []);
@@ -103,8 +110,7 @@ function App() {
         </Avatar>
       </ShellBar>
       <UserMenu
-        open={menuOpen}
-        opener={openerRef.current}
+        ref={userMenuRef}
         showManageAccount={true}
         showOtherAccounts={true}
         showEditAccounts={true}
@@ -115,7 +121,6 @@ function App() {
         onEditAccountsClick={handleEditAccountsClick}
         onChangeAccount={handleChangeAccount}
         onSignOutClick={handleSignOutClick}
-        onClose={() => setMenuOpen(false)}
       >
         <UserMenuAccount
           slot="accounts"
@@ -150,6 +155,12 @@ function App() {
         </UserMenuItem>
         <UserMenuItem icon="official-service" text="Legal Information" />
         <UserMenuItem icon="message-information" text="About" data-id="about" />
+        <UserMenuItem icon="globe" text="Language" data-id="single-select" showSelection={true}>
+          <UserMenuItemGroup checkMode="Single">
+            <UserMenuItem text="English" data-id="single-select-item1" checked={true} />
+            <UserMenuItem text="Deutsch" data-id="single-select-item2" />
+          </UserMenuItemGroup>
+        </UserMenuItem>
       </UserMenu>
     </>
   );
