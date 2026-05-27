@@ -1,12 +1,46 @@
 :host {
-    height: 40px;
+	height: 2.5rem;
+	min-height: 2.5rem;
 	border: none;
 }
 
+.ui5-li-root {
+	min-height: 2.5rem;
+}
+
 :host(:last-of-type) {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 :host(:first-of-type) {
-    margin-top: 0;
+	margin-top: 0;
+}
+
+:host([show-selection]) {
+	height: 3.25rem;
+	min-height: 3.25rem;
+}
+
+:host([show-selection]) .ui5-li-root {
+	min-height: 3.25rem;
+	padding-block: 0.5rem;
+}
+
+.ui5-user-menu-item-text-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	overflow: hidden;
+	flex: 1;
+	min-width: 0;
+}
+
+.ui5-user-menu-item-selection-text {
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	font-weight: normal;
+	color: var(--sapContent_LabelColor);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+
+### Features
+
+* **ui5-search:** update visual hover and active state of shell search scope ([#13256](https://github.com/UI5/webcomponents/issues/13256)) ([73a4a8b](https://github.com/UI5/webcomponents/commit/73a4a8b11362c3828ae2fe706485d157782a01b9))
+
+
+
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** correct tooltip for user avatar button ([#13475](https://github.com/UI5/webcomponents/issues/13475)) ([68ee01c](https://github.com/UI5/webcomponents/commit/68ee01cbdfb4953c9dcf1491fdf196b2477a850c))
+
+
+### Reverts
+
+* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([2b52f1b](https://github.com/UI5/webcomponents/commit/2b52f1be1a3e320820ed5dfdd651011e493b0d69)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
+
+
+
+
+
 # [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
 
 

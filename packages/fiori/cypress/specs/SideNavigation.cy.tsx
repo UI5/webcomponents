@@ -11,6 +11,7 @@ import { NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT } from "../../src/generated
 import Title from "@ui5/webcomponents/dist/Title.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
+import Tag from "@ui5/webcomponents/dist/Tag.js";
 
 describe("Side Navigation Rendering", () => {
 	it("Tests rendering in collapsed mode", () => {
@@ -1005,7 +1006,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.visible");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("#sideNav")
@@ -1027,7 +1027,6 @@ describe("Side Navigation interaction", () => {
 			.should("be.focused");
 
 		cy.get("@itemOverflow")
-			.realClick()
 			.realClick();
 
 		cy.get("@overflowMenu")
@@ -1227,9 +1226,18 @@ describe("Side Navigation Accessibility", () => {
 			.should("not.have.attr", "aria-describedby");
 
 		cy.get("#item2")
-			.shadow()
-			.find(".ui5-sn-item")
-			.should("have.attr", "aria-describedby", "To navigate to navigation item 2, press Spacebar or Enter.");
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item2")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-selectable-description`);
+
+				cy.get("#item2")
+					.shadow()
+					.find(`#${itemId}-selectable-description`)
+					.should("have.text", "To navigate to navigation item 2, press Spacebar or Enter.");
+			});
 
 		cy.get("#item1")
 			.shadow()
@@ -1724,5 +1732,118 @@ describe("Focusable items", () => {
 			.shadow()
 			.find("ul.ui5-sn-item-ul[role='group']")
 			.should("have.attr", "aria-label", "Products");
+	});
+
+	it("Tests SideNavigationItem with tag renders correctly", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Without Tag" />
+				<SideNavigationItem id="item2" text="With Tag">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-tag-slot")
+			.should("not.exist");
+
+		cy.get("#item2")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "New");
+
+		cy.get("#item2")
+			.shadow()
+			.find(".ui5-sn-item-tag-slot")
+			.should("exist");
+	});
+
+	it("Tests SideNavigationItem tag accessibility", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Item">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-tag`);
+			});
+	});
+
+	it("Tests SideNavigationItem tag with subitems has both tag and description", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem id="item1" text="Parent" expanded>
+					<Tag slot="tag" design="Set2" colorScheme="8" hideStateIcon>Beta</Tag>
+					<SideNavigationSubItem text="Child" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#item1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.invoke("attr", "aria-describedby")
+					.should("contain", `${itemId}-tag`)
+					.should("contain", `${itemId}-selectable-description`);
+			});
+	});
+
+	it("Tests SideNavigationSubItem with tag", () => {
+		cy.mount(
+			<SideNavigation>
+				<SideNavigationItem text="Parent" expanded>
+					<SideNavigationSubItem id="subItem1" text="SubItem">
+						<Tag slot="tag" design="Set2" colorScheme="5" hideStateIcon>Dev</Tag>
+					</SideNavigationSubItem>
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#subItem1")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "Dev");
+
+		cy.get("#subItem1")
+			.should("have.prop", "__id")
+			.then((itemId) => {
+				cy.get("#subItem1")
+					.shadow()
+					.find(".ui5-sn-item")
+					.should("have.attr", "aria-describedby", `${itemId}-tag`);
+			});
+	});
+
+	it("Tests tag in collapsed mode popover", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed>
+				<SideNavigationItem id="item1" text="Item" icon="home">
+					<Tag slot="tag" design="Set2" colorScheme="6" hideStateIcon>New</Tag>
+					<SideNavigationSubItem text="SubItem" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-side-navigation-item]")
+			.find("[ui5-tag]")
+			.should("exist")
+			.should("have.text", "New");
 	});
 });

@@ -29,6 +29,7 @@ jobs:
   # ✅ Job 1: Stable Release Flow
   stable-release:
     if: ${{ github.event.inputs.release_type == 'stable' }}
+    environment: "npmjs:@ui5/webcomponents"
     permissions:
       contents: write
       id-token: write
@@ -135,6 +136,7 @@ jobs:
   # ✅ Job 2: RC Release Flow
   rc-release:
     if: ${{ github.event.inputs.release_type == 'rc' || github.event_name == 'schedule' }}
+    environment: "npmjs:@ui5/webcomponents"
     permissions:
       contents: write
       id-token: write
@@ -176,6 +178,15 @@ jobs:
 
       - name: Push Changes
         run: |
+          # Rebase the local lerna version-bump commit onto the latest remote
+          # branch in case other commits landed during the build, then re-point
+          # the tag(s) lerna created so they reference the rebased commit.
+          NEW_TAGS=$(git tag --points-at HEAD)
+          git fetch origin ${{ github.ref_name }}
+          git rebase origin/${{ github.ref_name }}
+          for tag in $NEW_TAGS; do
+            git tag -f "$tag" HEAD
+          done
           git push origin HEAD
           git push origin --tags
 
@@ -228,6 +239,7 @@ jobs:
   # ✅ Job 3: Hotfix Release Flow
   hotfix-release:
     if: ${{ github.event.inputs.release_type == 'hotfix' && github.event.inputs.new_version != '' }}
+    environment: "npmjs:@ui5/webcomponents"
     permissions:
       contents: write
       id-token: write
@@ -298,6 +310,7 @@ jobs:
   # ✅ Job 4: Experimental Release Flow
   experimental-release:
     if: ${{ github.event.inputs.release_type == 'experimental' }}
+    environment: "npmjs:@ui5/webcomponents"
     permissions:
       contents: write
       id-token: write
@@ -344,6 +357,7 @@ jobs:
   # ✅ Job 5: V1 Release Flow
   v1-release:
     if: ${{ github.event.inputs.release_type == 'v1' && github.event.inputs.new_version != '' }}
+    environment: "npmjs:@ui5/webcomponents"
     permissions:
       contents: write
       id-token: write
@@ -364,9 +378,6 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Build
-        run: yarn ci:releasebuild
-        
       - name: Version Bump
         env:
           GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
@@ -379,6 +390,9 @@ jobs:
                 --yes \
                 --exact \
                 --create-release github
+
+      - name: Build
+        run: yarn ci:releasebuild
 
       - name: Publish
         run: |

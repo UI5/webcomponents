@@ -85,10 +85,29 @@
 	background-color: var(--_ui5-search-elements-background);
 	height: var(--_ui5-search-select-height);
 	--_ui5_select_label_color: var(--sapShell_TextColor);
+	/* Remove Select's default focus outline without affecting dropdown items */
+	--_ui5_input_focus_outline_color: transparent;
 }
 
-[ui5-select]:hover {
-	box-shadow: var(--sapField_Hover_Shadow);
+[ui5-select]:hover:not(:active):not(:focus-within) {
+	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
+}
+
+[ui5-select]:not(:active):not(:focus-within)::part(icon-wrapper):hover {
+	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
+}
+
+/* Active state for select - only shadow, no background */
+[ui5-select]:active,
+[ui5-select]:focus-within {
+	box-shadow: var(--_ui5-search_input_scope_active_shadow);
+}
+
+[ui5-select]:active::part(icon-wrapper),
+[ui5-select]:focus-within::part(icon-wrapper) {
+	box-shadow: var(--_ui5-search_input_scope_active_shadow);
+	background: var(--sapShell_Active_Background);
+	color: var(--sapShell_Active_TextColor);
 }
 
 [ui5-select]::part(icon) {
@@ -126,7 +145,7 @@
 	border: var(--_ui5_search_filter_button_border);
 }
 
-::slotted([slot="filterButton"]:hover) {
+::slotted([slot="filterButton"]:not([active]):not(:focus-within):hover) {
 	background-color: var(--sapShell_Hover_Background);
 	border: var(--_ui5_seach_filter_button_border_hover);
 }
@@ -158,12 +177,10 @@
 	padding-inline-start: 0.875rem;
 }
 
-[ui5-select]:hover,
 .ui5-search-field-inner-input:hover {
 	background-color: var(--_ui5-search-elements-hover-background);
 }
 
-[ui5-select]:focus-within,
 .ui5-search-field-inner-input:focus-within {
 	background-color: var(--_ui5-search-elements-active-background);
 }
@@ -273,26 +290,9 @@
 	--_ui5_input_focus_border_radius: var(--_ui5_search_input_border_radius);
 }
 
-.ui5-search-field-select:hover,
-.ui5-search-field-select[focused] {
-	background: var(--_ui5-search-wrapper-hover-background-color);
-}
-
 .ui5-search-field-select::part(icon-wrapper) {
 	border-radius: var(--_ui5_search_input_border_radius);
 	height: 100%;
-}
-
-.ui5-search-field-select[focused]::part(icon-wrapper) {
-	box-shadow: var(--sapField_Hover_Shadow);
-}
-
-:host(:not([collapsed]):hover):has([ui5-select]:hover) {
-	background: var(--_ui5-search-wrapper-background);
-}
-
-:host(:not([collapsed])):has([ui5-select][focused]) {
-	background: var(--_ui5-search-wrapper-background);
 }
 
 .ui5-search-field-inner-input::selection {
