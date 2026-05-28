@@ -355,6 +355,8 @@ abstract class UI5Element extends HTMLElement {
 			await ctor._definePromise;
 		}
 
+		// Skip rendering while a language change is in progress to avoid rendering with not fully loaded locale data.
+		// Once the locale data is loaded, the language-aware component will be re-rendered.
 		if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
 			return;
 		}
