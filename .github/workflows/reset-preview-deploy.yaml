@@ -24,6 +24,9 @@ on:
       - '!**/*.test.ts'
       - '!**/test/**'
 
+permissions:
+  contents: read
+
 jobs:
   cleanup-preview:
     runs-on: ubuntu-latest

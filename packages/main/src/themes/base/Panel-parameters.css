@@ -13,7 +13,6 @@
 	--_ui5_panel_focus_offset: 1px;
 	--_ui5_panel_focus_bottom_offset: var(--_ui5_panel_focus_offset);
 	--_ui5_panel_content_padding: 0.625rem 1rem 1.375rem 1rem;
-	--_ui5_panel_content_focus_offset: -0.1875rem;
 	--_ui5_panel_header_background_color: var(--sapBackgroundColor);
 }
 
