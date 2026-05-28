@@ -32,6 +32,25 @@
 			<iframe id="clickThisIframeInsideShadowRoot" src="./Test.html"></iframe>
 		</template>
 	</div>
+	<ui5-button id="btnTestMinWidth">Open Popover with minWidth: 500px</ui5-button>
+	<ui5-popover id="popTestMinWidth" opener="btnTestMinWidth" min-width="500px" header-text="minWidth: 500px">
+		<div style="padding: 10px;">
+			This popover has min-width set to 500px.
+		</div>
+	</ui5-popover>
+
+	<br><br>
+
+	<ui5-button id="btnTestMinWidthResizable">Open Resizable Popover with minWidth: 400px</ui5-button>
+	<ui5-popover id="popTestMinWidthResizable" opener="btnTestMinWidthResizable" resizable min-width="400px" header-text="Resizable + minWidth: 400px">
+		<div style="padding: 10px; min-height: 100px;">
+			This popover is resizable with minWidth: 400px.<br>
+			Try resizing - it won't go below 400px width!
+		</div>
+	</ui5-popover>
+
+	<br><br>
+
 	<ui5-button id="btn">Click me !</ui5-button>
 
 	<ui5-popover id="pop" class="popover6auto" placement="Top" accessible-name="This popover is important">
@@ -675,6 +694,14 @@ z-index: 1;
 	<button data-sap-ui-fastnavgroup="true">Test button 2</button>
 
 	<script>
+
+		btnTestMinWidth.addEventListener("click", function () {
+			popTestMinWidth.open = true;
+		});
+
+		btnTestMinWidthResizable.addEventListener("click", function () {
+			popTestMinWidthResizable.open = true;
+		});
 
 		test.addEventListener("click", function (event) {
 			groupPop.open = true;

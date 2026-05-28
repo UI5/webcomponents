@@ -176,6 +176,15 @@ class Popover extends Popup {
 	resizable = false;
 
 	/**
+	 * Defines the minimum width of the popover.
+	 * @default undefined
+	 * @public
+	 * @since 2.23.0
+	 */
+	@property()
+	minWidth?: string;
+
+	/**
 	 * Sets the X translation of the arrow
 	 * @private
 	 */
@@ -956,6 +965,7 @@ class Popover extends Popup {
 			root: {
 				"max-height": this._maxHeight ? `${this._maxHeight}px` : "",
 				"max-width": this._maxWidth ? `${this._maxWidth}px` : "",
+				"min-width": this.minWidth ? this.minWidth : null,
 			},
 			arrow: {
 				transform: `translate(${this.arrowTranslateX}px, ${this.arrowTranslateY}px)`,
