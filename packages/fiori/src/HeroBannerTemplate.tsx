@@ -17,9 +17,9 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 			}} part="content">
 				<div class="ui5-banner-header" part="header">
 					<div class="ui5-banner-header-text">
-					{this.overlineText &&
-						<div class="ui5-banner-overline">
-							{this.overlineText}
+						{this.overlineText &&
+							<div class="ui5-banner-overline">
+								{this.overlineText}
 							</div>
 						}
 
