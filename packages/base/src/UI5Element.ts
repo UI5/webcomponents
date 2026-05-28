@@ -18,6 +18,8 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	unregisterElement,
+	registerElement,
 } from "./Render.js";
 import { registerTag, isTagRegistered, recordTagRegistrationFailure } from "./CustomElementsRegistry.js";
 import { observeDOMNode, unobserveDOMNode } from "./DOMObserver.js";
@@ -332,6 +334,8 @@ abstract class UI5Element extends HTMLElement {
 
 		const ctor = this.constructor as typeof UI5Element;
 
+		registerElement(this);
+
 		this.setAttribute(ctor.getMetadata().getPureTag(), "");
 		if (ctor.getMetadata().supportsF6FastNavigation() && !this.hasAttribute("data-sap-ui-fastnavgroup")) {
 			this.setAttribute("data-sap-ui-fastnavgroup", "true");
@@ -349,6 +353,10 @@ abstract class UI5Element extends HTMLElement {
 
 		if (!ctor.asyncFinished) {
 			await ctor._definePromise;
+		}
+
+		if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
+			return;
 		}
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
@@ -391,6 +399,7 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 
 		cancelRender(this);
+		unregisterElement(this);
 	}
 
 	/**
