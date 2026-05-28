@@ -230,6 +230,7 @@ import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchMessageAreaClass from "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
+import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
 import NavigationLayoutClass from "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
@@ -324,7 +325,7 @@ const ComponentClasses: Record<string, any> = {
   FlexibleColumnLayoutClass, MediaGalleryClass, MediaGalleryItemClass, ProductSwitchClass,
   ProductSwitchItemClass, ViewSettingsDialogClass, ViewSettingsDialogCustomTabClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
   SearchClass, SearchItemClass, SearchMessageAreaClass, UserMenuClass, UserMenuItemClass,
-  UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
+  UserMenuItemGroupClass, UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
   ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
   UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,

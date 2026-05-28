@@ -746,8 +746,22 @@ class SideNavigation extends UI5Element {
 	}
 
 	captureRef(ref: HTMLElement & { associatedItem?: UI5Element } | null) {
-		if (ref) {
-			ref.associatedItem = this;
+		if (!ref) {
+			return;
+		}
+
+		ref.associatedItem = this;
+
+		const item = this as unknown as SideNavigationItem | SideNavigationSubItem;
+		if (item.tag?.length > 0) {
+			const existingTags = Array.from(ref.children).filter(child => child.getAttribute("slot") === "tag");
+			existingTags.forEach(tag => tag.remove());
+
+			item.tag.forEach((tagEl: HTMLElement) => {
+				const clonedTag = tagEl.cloneNode(true) as HTMLElement;
+				clonedTag.setAttribute("slot", "tag");
+				ref.appendChild(clonedTag);
+			});
 		}
 	}
 }

@@ -20,6 +20,7 @@
 	color: var(--sapContent_IconColor);
 	fill: currentColor;
 	outline: none;
+	container-type: size;
 }
 
 :host([design="Contrast"]) {
@@ -73,6 +74,11 @@
 	width: 100%;
 	outline: none;
 	vertical-align: top;
+	box-sizing: border-box;
+	align-items: center;
+	justify-content: center;
+	font-size: min(100cqw, 100cqh);
+	line-height: 1;
 }
 
 
