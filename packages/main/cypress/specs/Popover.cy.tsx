@@ -1902,7 +1902,7 @@ describe("Min Width Property", () => {
 		cy.mount(
 			<>
 				<Button id="btnMinWidth">Open Popover</Button>
-				<Popover id="popMinWidth" opener="btnMinWidth" minWidth="300px" headerText="Min Width Test">
+				<Popover id="popMinWidth" opener="btnMinWidth" style={{ minWidth: "300px" }} headerText="Min Width Test">
 					<div>Small content</div>
 				</Popover>
 			</>
@@ -1920,7 +1920,7 @@ describe("Min Width Property", () => {
 		cy.mount(
 			<>
 				<Button id="btnMinWidthWide">Open Popover</Button>
-				<Popover id="popMinWidthWide" opener="btnMinWidthWide" minWidth="200px">
+				<Popover id="popMinWidthWide" opener="btnMinWidthWide" style={{ minWidth: "200px" }}>
 					<div style={{ width: "400px", padding: "10px" }}>
 						This content is wider than the minWidth setting, and the popover should expand to fit it.
 					</div>
@@ -1942,7 +1942,7 @@ describe("Min Width Property", () => {
 		cy.mount(
 			<>
 				<Button id="btnMinWidthResizable">Open Resizable Popover</Button>
-				<Popover id="popMinWidthResizable" opener="btnMinWidthResizable" minWidth="400px" resizable headerText="Resizable with Min Width">
+				<Popover id="popMinWidthResizable" opener="btnMinWidthResizable" style={{ minWidth: "400px" }} resizable headerText="Resizable with Min Width">
 					<div>Content that can be resized but not below 400px</div>
 				</Popover>
 			</>
@@ -1978,11 +1978,11 @@ describe("Min Width Property", () => {
 		cy.mount(
 			<>
 				<Button id="btnRem">Rem Units</Button>
-				<Popover id="popRem" opener="btnRem" minWidth="20rem">
+				<Popover id="popRem" opener="btnRem" style={{ minWidth: "20rem" }}>
 					<div>Min width in rem</div>
 				</Popover>
 				<Button id="btnVw" style={{ marginLeft: "20px" }}>Vw Units</Button>
-				<Popover id="popVw" opener="btnVw" minWidth="30vw">
+				<Popover id="popVw" opener="btnVw" style={{ minWidth: "30vw" }}>
 					<div>Min width in vw</div>
 				</Popover>
 			</>

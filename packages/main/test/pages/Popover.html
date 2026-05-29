@@ -33,7 +33,7 @@
 		</template>
 	</div>
 	<ui5-button id="btnTestMinWidth">Open Popover with minWidth: 500px</ui5-button>
-	<ui5-popover id="popTestMinWidth" opener="btnTestMinWidth" min-width="500px" header-text="minWidth: 500px">
+	<ui5-popover id="popTestMinWidth" opener="btnTestMinWidth" header-text="minWidth: 500px" style="min-width: 500px;">
 		<div style="padding: 10px;">
 			This popover has min-width set to 500px.
 		</div>
@@ -42,7 +42,7 @@
 	<br><br>
 
 	<ui5-button id="btnTestMinWidthResizable">Open Resizable Popover with minWidth: 400px</ui5-button>
-	<ui5-popover id="popTestMinWidthResizable" opener="btnTestMinWidthResizable" resizable min-width="400px" header-text="Resizable + minWidth: 400px">
+	<ui5-popover id="popTestMinWidthResizable" opener="btnTestMinWidthResizable" resizable header-text="Resizable + minWidth: 400px" style="min-width: 400px;">
 		<div style="padding: 10px; min-height: 100px;">
 			This popover is resizable with minWidth: 400px.<br>
 			Try resizing - it won't go below 400px width!
