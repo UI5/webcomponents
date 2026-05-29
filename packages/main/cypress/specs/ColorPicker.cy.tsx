@@ -306,10 +306,7 @@ describe("Color Picker general interaction tests", () => {
 	});
 });
 
-describe("Color Picker font-size scaling (regression for #13521)", () => {
-	// The picker box is sized in rem, so it scales with root font-size. The pointer
-	// math used to assume 16rem === 256px and broke at any other root font-size.
-	// afterEach runs even on assertion failure, so the document state is always restored.
+describe("Color Picker font-size scaling", () => {
 	afterEach(() => {
 		cy.document().then(doc => {
 			doc.documentElement.style.fontSize = "";
@@ -325,7 +322,6 @@ describe("Color Picker font-size scaling (regression for #13521)", () => {
 
 		cy.get("[ui5-color-picker]").as("colorPicker");
 
-		// Use position to avoid hardcoding pixel coordinates that depend on font-size.
 		cy.get<ColorPicker>("@colorPicker")
 			.shadow()
 			.find(".ui5-color-picker-main-color")
@@ -334,7 +330,6 @@ describe("Color Picker font-size scaling (regression for #13521)", () => {
 		cy.get<ColorPicker>("@colorPicker")
 			.ui5ColorPickerToggleColorMode();
 
-		// Bottom-right corner = white => saturation 0%, lightness 100%.
 		cy.get<ColorPicker>("@colorPicker")
 			.ui5ColorPickerValidateInput("#saturation", "0");
 
@@ -359,7 +354,6 @@ describe("Color Picker font-size scaling (regression for #13521)", () => {
 		cy.get<ColorPicker>("@colorPicker")
 			.ui5ColorPickerToggleColorMode();
 
-		// Top-left corner = full saturation, zero lightness (black at full saturation).
 		cy.get<ColorPicker>("@colorPicker")
 			.ui5ColorPickerValidateInput("#saturation", "100");
 

@@ -49,7 +49,6 @@ import ColorPickerCss from "./generated/themes/ColorPicker.css.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 
 // Fallback box width in CSS pixels at 16px root font-size (16rem).
-// Used when the picker box hasn't been measured yet (rare — only if the box ref is missing).
 const DEFAULT_BOX_SIZE = 256;
 
 type ColorCoordinates = {
@@ -509,8 +508,7 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	_changeSelectedColor(x: number, y: number) {
 		const boxSize = this._boxSize;
-		// Store coordinates as percentages of the picker box; the template uses these as
-		// `left: x%` / `top: y%` so positioning is independent of root font-size.
+		// Store coordinates as percentages of the picker box.
 		this._selectedCoordinates = {
 			x: (x / boxSize) * 100,
 			y: (y / boxSize) * 100,
