@@ -11,36 +11,53 @@
 <body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
     <!-- playground-fold-end -->
 
-    <ui5-timeline id="filterableTimeline" sticky-header sticky-info-bar style="height: 22rem;">
-        <ui5-bar slot="header" design="Subheader">
-            <ui5-input slot="startContent" id="searchInput" placeholder="Search by author or title"></ui5-input>
-            <ui5-button slot="endContent" id="sortButton" icon="sort">Sort: Ascending</ui5-button>
-            <ui5-button slot="endContent" id="filterButton" icon="filter">Filter</ui5-button>
-        </ui5-bar>
+    <ui5-timeline id="pipelineTimeline" sticky-header sticky-info-bar style="height: 22rem;">
+        <ui5-toolbar slot="header">
+            <ui5-toolbar-item>
+                <ui5-input id="searchInput" placeholder="Search events" style="width: 14rem;"></ui5-input>
+            </ui5-toolbar-item>
+            <ui5-toolbar-spacer></ui5-toolbar-spacer>
+            <ui5-toolbar-button id="sortButton" icon="sort" text="Newest first"></ui5-toolbar-button>
+            <ui5-toolbar-button id="filterButton" icon="filter" text="Filter"></ui5-toolbar-button>
+        </ui5-toolbar>
 
         <ui5-bar slot="infoBar" design="Subheader">
-            <ui5-label slot="startContent" id="activeStateLabel">Sort: Ascending &middot; No filters &middot; No search</ui5-label>
+            <div slot="startContent" id="tokenArea" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem;"></div>
+            <ui5-label slot="endContent" id="countLabel">12 events</ui5-label>
         </ui5-bar>
 
-        <ui5-timeline-item title-text="Project kickoff" subtitle-text="20.02.2017 09:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Design review" subtitle-text="22.02.2017 11:30" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Sprint planning" subtitle-text="24.02.2017 14:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Backlog grooming" subtitle-text="26.02.2017 10:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Demo to stakeholders" subtitle-text="28.02.2017 15:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Retrospective" subtitle-text="01.03.2017 16:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Release planning" subtitle-text="03.03.2017 09:30" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
-        <ui5-timeline-item title-text="Deployment" subtitle-text="05.03.2017 12:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Build started" subtitle-text="15.11.2024 09:02" icon="play" name="CI Bot" data-env="Development" data-haystack="build started ci bot development"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Unit tests passed" subtitle-text="15.11.2024 09:08" icon="status-positive" name="CI Bot" data-env="Development" data-haystack="unit tests passed ci bot development"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Deployed to Development" subtitle-text="15.11.2024 09:12" icon="cloud" name="CI Bot" data-env="Development" data-haystack="deployed development ci bot"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Integration tests passed" subtitle-text="15.11.2024 09:34" icon="inspection" name="CI Bot" data-env="Development" data-haystack="integration tests passed ci bot development"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Deployed to Staging" subtitle-text="15.11.2024 10:01" icon="cloud" name="Elena Müller" data-env="Staging" data-haystack="deployed staging elena müller"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Performance tests passed" subtitle-text="15.11.2024 10:45" icon="status-positive" name="CI Bot" data-env="Staging" data-haystack="performance tests passed ci bot staging"></ui5-timeline-item>
+        <ui5-timeline-item title-text="QA sign-off" subtitle-text="15.11.2024 14:20" icon="accept" name="Raj Patel" data-env="Staging" data-haystack="qa sign-off raj patel staging"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Deployed to Production" subtitle-text="15.11.2024 15:00" icon="cloud-check" name="Elena Müller" data-env="Production" data-haystack="deployed production elena müller"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Health check passed" subtitle-text="15.11.2024 15:03" icon="status-positive" name="CI Bot" data-env="Production" data-haystack="health check passed ci bot production"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Error rate spike detected" subtitle-text="15.11.2024 15:47" icon="message-error" name="Monitoring" data-env="Production" data-haystack="error rate spike monitoring production"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Rollback initiated" subtitle-text="15.11.2024 15:52" icon="restart" name="Elena Müller" data-env="Production" data-haystack="rollback initiated elena müller production"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Rollback complete — stable" subtitle-text="15.11.2024 15:55" icon="complete" name="CI Bot" data-env="Production" data-haystack="rollback complete stable ci bot production"></ui5-timeline-item>
     </ui5-timeline>
 
-    <ui5-dialog id="filterDialog" header-text="Filter by author">
-        <ui5-list id="filterList" selection-mode="Multiple">
-            <ui5-li>Stanislava Baltova</ui5-li>
-            <ui5-li>Sarah Kerrigan</ui5-li>
-            <ui5-li>John Smith</ui5-li>
-        </ui5-list>
+    <ui5-dialog id="filterDialog" header-text="Filter pipeline events">
+        <div style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+                <ui5-label show-colon>Environment</ui5-label>
+                <ui5-list id="filterList" selection-mode="Multiple" style="margin-top: 0.5rem;">
+                    <ui5-li data-env="Production">Production</ui5-li>
+                    <ui5-li data-env="Staging">Staging</ui5-li>
+                    <ui5-li data-env="Development">Development</ui5-li>
+                </ui5-list>
+            </div>
+            <div>
+                <ui5-label show-colon>Time range</ui5-label>
+                <ui5-daterange-picker id="dateRangePicker" style="margin-top: 0.5rem; width: 100%;" placeholder="Select date range"></ui5-daterange-picker>
+            </div>
+        </div>
         <div slot="footer" style="display: flex; justify-content: flex-end; padding: 0.5rem; gap: 0.5rem;">
-            <ui5-button id="filterDialogApply" design="Emphasized">Apply</ui5-button>
-            <ui5-button id="filterDialogCancel">Cancel</ui5-button>
+            <ui5-button id="filterApply" design="Emphasized">Apply</ui5-button>
+            <ui5-button id="filterCancel">Cancel</ui5-button>
         </div>
     </ui5-dialog>
 

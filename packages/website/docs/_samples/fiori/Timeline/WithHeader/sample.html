@@ -1,0 +1,42 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
+    <!-- playground-fold-end -->
+
+    <ui5-timeline id="orderTimeline" sticky-header sticky-info-bar style="height: 20rem;">
+        <ui5-toolbar slot="header">
+            <ui5-toolbar-item>
+                <ui5-input id="searchInput" placeholder="Search order events" icon="search" style="width: 100%;"></ui5-input>
+            </ui5-toolbar-item>
+        </ui5-toolbar>
+
+        <ui5-bar slot="infoBar" design="Subheader">
+            <div slot="endContent" id="infoBarContent" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem;"></div>
+        </ui5-bar>
+
+        <ui5-timeline-item title-text="Order placed" subtitle-text="03.11.2024 09:14" icon="cart" name="Maria Chen" data-haystack="order placed maria chen"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Payment confirmed" subtitle-text="03.11.2024 09:15" icon="credit-card" name="Payment Gateway" data-haystack="payment confirmed gateway"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Fraud check passed" subtitle-text="03.11.2024 09:16" icon="shield" name="System" data-haystack="fraud check passed system"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Warehouse notified" subtitle-text="03.11.2024 09:45" icon="factory" name="System" data-haystack="warehouse notified system"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Items picked" subtitle-text="03.11.2024 14:22" icon="checklist" name="Warehouse Team" data-haystack="items picked warehouse team"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Package dispatched" subtitle-text="03.11.2024 16:08" icon="shipping-status" name="Warehouse Team" data-haystack="package dispatched warehouse shipping"></ui5-timeline-item>
+        <ui5-timeline-item title-text="In transit — sorting center" subtitle-text="04.11.2024 06:30" icon="process" name="Carrier" data-haystack="in transit sorting center carrier"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Out for delivery" subtitle-text="05.11.2024 08:12" icon="shipping-status" name="Carrier" data-haystack="out for delivery carrier"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Delivered" subtitle-text="05.11.2024 14:47" icon="complete" name="Carrier" data-haystack="delivered carrier"></ui5-timeline-item>
+        <ui5-timeline-item title-text="Return requested" subtitle-text="08.11.2024 10:03" icon="undo" name="Maria Chen" data-haystack="return requested maria chen"></ui5-timeline-item>
+    </ui5-timeline>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

@@ -655,10 +655,11 @@ describe("Timeline header and info-bar slots", () => {
 		cy.get("#ifb").should("be.visible");
 	});
 
-	it("reflects stickyHeader as the [sticky-header] host attribute and applies sticky positioning", () => {
+	it("reflects stickyHeader as the [sticky-header] host attribute and pins the whole header area", () => {
 		cy.mount(
 			<Timeline stickyHeader={true}>
 				<div slot="header" id="hdr">Header</div>
+				<div slot="infoBar" id="ifb">Info</div>
 				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
 			</Timeline>
 		);
@@ -668,24 +669,7 @@ describe("Timeline header and info-bar slots", () => {
 
 		cy.get("[ui5-timeline]")
 			.shadow()
-			.find(".ui5-timeline-header")
-			.should("have.css", "position", "sticky");
-	});
-
-	it("reflects stickyInfoBar as the [sticky-info-bar] host attribute and applies sticky positioning", () => {
-		cy.mount(
-			<Timeline stickyInfoBar={true}>
-				<div slot="infoBar" id="ifb">Info</div>
-				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
-			</Timeline>
-		);
-
-		cy.get("[ui5-timeline]")
-			.should("have.attr", "sticky-info-bar");
-
-		cy.get("[ui5-timeline]")
-			.shadow()
-			.find(".ui5-timeline-info-bar")
+			.find(".ui5-timeline-header-area")
 			.should("have.css", "position", "sticky");
 	});
 
@@ -693,6 +677,7 @@ describe("Timeline header and info-bar slots", () => {
 		cy.mount(
 			<Timeline>
 				<div slot="header" id="hdr">Header</div>
+				<div slot="infoBar" id="ifb">Info</div>
 				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
 			</Timeline>
 		);
@@ -702,35 +687,8 @@ describe("Timeline header and info-bar slots", () => {
 
 		cy.get("[ui5-timeline]")
 			.shadow()
-			.find(".ui5-timeline-header")
+			.find(".ui5-timeline-header-area")
 			.should("not.have.css", "position", "sticky");
-	});
-
-	it("noScrollContainer defaults to false and the host has no [no-scroll-container] attribute", () => {
-		cy.mount(
-			<Timeline>
-				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
-			</Timeline>
-		);
-
-		cy.get("[ui5-timeline]")
-			.should("not.have.attr", "no-scroll-container");
-	});
-
-	it("removes overflow:auto from the scroll container when noScrollContainer is set", () => {
-		cy.mount(
-			<Timeline noScrollContainer>
-				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
-			</Timeline>
-		);
-
-		cy.get("[ui5-timeline]")
-			.should("have.attr", "no-scroll-container");
-
-		cy.get("[ui5-timeline]")
-			.shadow()
-			.find(".ui5-timeline-scroll-container")
-			.should("not.have.css", "overflow-y", "auto");
 	});
 });
 

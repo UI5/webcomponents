@@ -136,13 +136,16 @@
 				<p>Activity log with type, priority, status and author. Header sticks to the top; info bar surfaces every applied criterion as removable tokens.</p>
 			</div>
 			<div class="scenario-body scenario-body--tall">
-				<ui5-timeline id="advancedTimeline" sticky-header sticky-info-bar style="height: 100%;">
-					<ui5-bar slot="header" design="Subheader">
-						<ui5-input slot="startContent" id="advSearch" placeholder="Search title, author or note" style="min-width: 14rem;"></ui5-input>
-						<ui5-button slot="endContent" icon="sort" id="advSortBtn">Sort: Newest</ui5-button>
-						<ui5-button slot="endContent" icon="filter" id="advFilterBtn">Filter</ui5-button>
-						<ui5-button slot="endContent" icon="refresh" id="advResetBtn" tooltip="Reset all filters"></ui5-button>
-					</ui5-bar>
+				<ui5-timeline id="advancedTimeline" sticky-header style="height: 100%;">
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-input id="advSearch" placeholder="Search title, author or note" style="width: 18rem;"></ui5-input>
+						</ui5-toolbar-item>
+						<ui5-toolbar-spacer></ui5-toolbar-spacer>
+						<ui5-toolbar-button icon="sort" id="advSortBtn" text="Sort: Newest"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="filter" id="advFilterBtn" text="Filter"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="refresh" id="advResetBtn" tooltip="Reset all filters" text="Reset"></ui5-toolbar-button>
+					</ui5-toolbar>
 
 					<ui5-bar slot="infoBar" design="Subheader">
 						<div slot="startContent" id="advStateTokens" class="metrics">
@@ -177,9 +180,11 @@
 			</div>
 			<div class="scenario-body">
 				<ui5-timeline id="searchOnlyTimeline" sticky-header style="height: 100%;">
-					<ui5-bar slot="header" design="Subheader">
-						<ui5-input slot="startContent" id="simpleSearch" placeholder="Search activities…" icon="search"></ui5-input>
-					</ui5-bar>
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-input id="simpleSearch" placeholder="Search activities…" icon="search" style="width: 100%;"></ui5-input>
+						</ui5-toolbar-item>
+					</ui5-toolbar>
 					<ui5-bar slot="infoBar" design="Subheader">
 						<ui5-label slot="startContent" id="simpleCount">8 of 8 activities</ui5-label>
 					</ui5-bar>
@@ -195,18 +200,21 @@
 			</div>
 		</article>
 
-		<!-- Scenario 3: noScrollContainer → ancestor scroll -->
+		<!-- Scenario 3: ancestor owns the scroll → sticky header still pins to it -->
 		<article class="scenario">
 			<div class="scenario-header">
-				<h2>3. <code>noScrollContainer</code> + ancestor scroll container</h2>
-				<p>The ancestor (dashed border) owns scrolling. The Timeline's sticky header sticks to the ancestor — common when a Timeline is embedded in a <code>DynamicPage</code>.</p>
+				<h2>3. Ancestor scroll container</h2>
+				<p>The ancestor (dashed border) owns scrolling. The Timeline expands to its content and <code>stickyHeader</code> pins the header area to the ancestor's scrollport — common when a Timeline is embedded in a <code>DynamicPage</code>.</p>
 			</div>
 			<div class="ancestor-scroll">
-				<ui5-timeline id="ancestorScrollTimeline" sticky-header no-scroll-container>
-					<ui5-bar slot="header" design="Subheader">
-						<ui5-label slot="startContent">Header sticks to the ancestor</ui5-label>
-						<ui5-button slot="endContent" icon="add" id="ancestorAddBtn">Add row</ui5-button>
-					</ui5-bar>
+				<ui5-timeline id="ancestorScrollTimeline" sticky-header>
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-label>Header sticks to the ancestor</ui5-label>
+						</ui5-toolbar-item>
+						<ui5-toolbar-spacer></ui5-toolbar-spacer>
+						<ui5-toolbar-button icon="add" id="ancestorAddBtn" text="Add row"></ui5-toolbar-button>
+					</ui5-toolbar>
 					<ui5-bar slot="infoBar" design="Subheader">
 						<ui5-label slot="startContent" id="ancestorCount">6 rows</ui5-label>
 					</ui5-bar>
@@ -266,7 +274,7 @@
 
 			<div>
 				<ui5-title level="H6">Date range</ui5-title>
-				<ui5-daterange-picker id="advDateRange" format-pattern="yyyy-MM-dd"></ui5-daterange-picker>
+				<ui5-daterange-picker id="advDateRange" display-format="yyyy-MM-dd"></ui5-daterange-picker>
 			</div>
 		</div>
 
@@ -431,7 +439,7 @@
 
 		advSortBtn.addEventListener("click", () => {
 			filterState.sortIndex = (filterState.sortIndex + 1) % sortKeys.length;
-			advSortBtn.textContent = `Sort: ${sortKeys[filterState.sortIndex].label}`;
+			advSortBtn.text = `Sort: ${sortKeys[filterState.sortIndex].label}`;
 			renderAdvanced();
 		});
 
@@ -449,7 +457,7 @@
 			filterState.dateTo = "";
 			filterState.sortIndex = 0;
 			advSearch.value = "";
-			advSortBtn.textContent = `Sort: ${sortKeys[0].label}`;
+			advSortBtn.text = `Sort: ${sortKeys[0].label}`;
 			[advTypeList, advStatusList, advAuthorList].forEach(list => {
 				list.querySelectorAll("[ui5-li]").forEach(li => { li.selected = false; });
 			});

@@ -75,18 +75,11 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  *
  * The Timeline exposes two named slots above the items area:
  *
- * - `header` — for a controls bar (search field, filter trigger, sort toggle, etc.).
- * The most common pattern is to place a `ui5-bar` containing a search input and buttons that open
- * a filter dialog or toggle sort direction. The Timeline itself performs no filtering, sorting, or
- * searching — the application listens for events from its own controls and reorders, hides, or
- * adds items in the default slot accordingly.
+ * - `header` — for controls (search, filter, sort). Place a `ui5-toolbar` here.
+ * - `infoBar` — for status display (active filters, item count). Place a `ui5-bar` here.
  *
- * - `infoBar` — for a status bar that reflects the result of the controls (active filters,
- * applied sort, current search query). Typically contains tokens, labels, or a `ui5-bar`.
- *
- * Either slot can be made sticky using `stickyHeader` and `stickyInfoBar`. Sticky behavior
- * applies relative to the Timeline's internal scroll container by default, and relative
- * to the nearest ancestor scroll container when `noScrollContainer` is set.
+ * The Timeline itself does not filter, sort, or search — the application owns that logic.
+ * Use `stickyHeader` to pin both bars while scrolling.
  * @constructor
  * @extends UI5Element
  * @public
@@ -171,27 +164,7 @@ class Timeline extends UI5Element {
 	growing: `${TimelineGrowingMode}` = "None";
 
 	/**
-	 * Defines whether the Timeline relinquishes its internal scroll container.
-	 *
-	 * By default the Timeline scrolls internally; sticky header and info bar stick to the
-	 * top of the Timeline. When set to `true`, the Timeline does not clip or scroll its
-	 * content — the application is expected to provide a scroll container on an ancestor
-	 * element, and sticky slots will stick to that ancestor instead.
-	 *
-	 * **Note:** When the layout is `Horizontal`, items scroll horizontally inside the Timeline
-	 * by default. Setting `noScrollContainer` in horizontal layout means the application must
-	 * also provide horizontal scrolling on an ancestor; otherwise items will overflow without a
-	 * scrollbar.
-	 *
-	 * @default false
-	 * @public
-	 * @since 2.22.0
-	 */
-	@property({ type: Boolean })
-	noScrollContainer = false;
-
-	/**
-	 * Defines whether the content of the `header` slot remains visible when the user scrolls the Timeline.
+	 * Defines whether the content of the `header` and `infoBar` slots remains visible when the user scrolls the Timeline.
 	 *
 	 * @default false
 	 * @public
@@ -199,16 +172,6 @@ class Timeline extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	stickyHeader = false;
-
-	/**
-	 * Defines whether the content of the `infoBar` slot remains visible when the user scrolls the Timeline.
-	 *
-	 * @default false
-	 * @public
-	 * @since 2.22.0
-	 */
-	@property({ type: Boolean })
-	stickyInfoBar = false;
 
 	/**
 	 * Defines the active state of the `More` button.
@@ -226,11 +189,7 @@ class Timeline extends UI5Element {
 
 	/**
 	 * Defines the content of the Timeline's header area, displayed above the items.
-	 *
-	 * The most common use case is a controls bar with a search field, sort toggle,
-	 * and a filter trigger. Typically a `ui5-bar` is placed in this slot. The Timeline
-	 * itself does not filter, sort, or search — the application listens for events from
-	 * its own controls and updates the items in the default slot accordingly.
+	 * Typically a `ui5-toolbar` with search, sort, and filter controls.
 	 *
 	 * @public
 	 * @since 2.22.0
@@ -240,11 +199,7 @@ class Timeline extends UI5Element {
 
 	/**
 	 * Defines the content of the Timeline's info bar area, displayed below the header
-	 * and above the items.
-	 *
-	 * Use this slot to surface state derived from the header controls — for example,
-	 * a list of currently applied filters, the active sort direction, or the current
-	 * search query.
+	 * and above the items. Use for status display (applied filters, sort direction, counts).
 	 *
 	 * @public
 	 * @since 2.22.0

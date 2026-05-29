@@ -23,13 +23,13 @@
 		<p style="max-width: 56rem;">
 			The Timeline exposes two named slots above the items area: <code>header</code> for a controls bar
 			(search / sort / filter triggers) and <code>infoBar</code> for a status bar that reflects the
-			applied state. Both can be made sticky via <code>stickyHeader</code> / <code>stickyInfoBar</code>.
+			applied state. The header area can be pinned at the top via <code>stickyHeader</code>.
 			The Timeline itself does not filter, sort or search — the application owns that logic.
 		</p>
 
 		<div style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start;">
 			<div style="width: 28rem; height: 24rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem; overflow: hidden;">
-				<ui5-timeline id="showcaseTimeline" sticky-header sticky-info-bar style="height: 100%;">
+				<ui5-timeline id="showcaseTimeline" sticky-header style="height: 100%;">
 					<ui5-bar slot="header" design="Subheader">
 						<ui5-input slot="startContent" id="showcaseSearch" placeholder="Search by author or title"></ui5-input>
 						<ui5-button slot="endContent" id="showcaseSortBtn" icon="sort">Sort: Ascending</ui5-button>
@@ -557,7 +557,7 @@
 	<h2>Timeline with header and info-bar slots (sticky)</h2>
 	<p>Demonstrates the canonical pattern: a controls bar in <code>header</code> with search/sort/filter triggers, and an info bar in <code>info-bar</code> reflecting the applied state. Scroll the Timeline to see sticky behavior.</p>
 	<div style="width: 600px; height: 360px; margin: 1rem; border: 1px solid var(--sapList_BorderColor);">
-		<ui5-timeline id="timelineWithSlots" sticky-header sticky-info-bar style="height: 100%;">
+		<ui5-timeline id="timelineWithSlots" sticky-header style="height: 100%;">
 			<ui5-bar slot="header" design="Subheader">
 				<ui5-input slot="startContent" placeholder="Search timeline" id="timelineSearch"></ui5-input>
 				<ui5-button slot="endContent" icon="sort" id="timelineSortBtn" tooltip="Toggle sort"></ui5-button>
@@ -579,10 +579,10 @@
 </section>
 
 <section style="width: 100%;">
-	<h2>Timeline with slots, no internal scroll container (page-level scrolling)</h2>
-	<p>When <code>noScrollContainer</code> is set, the Timeline does not clip or scroll its content. Use this when an ancestor (e.g. a DynamicPage) owns scrolling.</p>
+	<h2>Timeline with slots — ancestor owns the scroll</h2>
+	<p>When the Timeline is placed inside a scrolling ancestor without a constrained height of its own, it expands and the ancestor scrolls. <code>stickyHeader</code> still works — the header pins to the ancestor's scrollport.</p>
 	<div style="width: 600px; margin: 1rem; max-height: 320px; overflow: auto; border: 1px solid var(--sapList_BorderColor);">
-		<ui5-timeline id="timelineNotScrollable" no-scroll-container sticky-header>
+		<ui5-timeline id="timelineNotScrollable" sticky-header>
 			<ui5-bar slot="header" design="Subheader">
 				<ui5-label slot="startContent">Header sticks to the ancestor's scroll</ui5-label>
 			</ui5-bar>

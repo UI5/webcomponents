@@ -21,14 +21,18 @@ export default function TimelineTemplate(this: Timeline) {
 				class="ui5-timeline-busy-indicator"
 			>
 				<div class="ui5-timeline-scroll-container">
-					{this._hasHeader &&
-						<div class="ui5-timeline-header">
-							<slot name="header"></slot>
-						</div>
-					}
-					{this._hasInfoBar &&
-						<div class="ui5-timeline-info-bar">
-							<slot name="infoBar"></slot>
+					{(this._hasHeader || this._hasInfoBar) &&
+						<div class="ui5-timeline-header-area">
+							{this._hasHeader &&
+								<div class="ui5-timeline-header">
+									<slot name="header"></slot>
+								</div>
+							}
+							{this._hasInfoBar &&
+								<div class="ui5-timeline-info-bar">
+									<slot name="infoBar"></slot>
+								</div>
+							}
 						</div>
 					}
 					<div class="ui5-timeline-list"
