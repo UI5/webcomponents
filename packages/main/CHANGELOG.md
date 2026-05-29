@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.5](https://github.com/UI5/webcomponents/compare/v2.15.4...v2.15.5) (2026-05-29)
+
+
+### Bug Fixes
+
+* **i18n:** add missing Cancel translations for Input/ComboBox/MultiComboBox (2.15) ([#13612](https://github.com/UI5/webcomponents/issues/13612)) ([2aeb6a1](https://github.com/UI5/webcomponents/commit/2aeb6a1c9d96135ffb40c5774b6ff7937d8547fa)), closes [#13587](https://github.com/UI5/webcomponents/issues/13587)
+
+
+
+
+
 ## [2.15.4](https://github.com/UI5/webcomponents/compare/v2.15.3...v2.15.4) (2026-05-11)
 
 **Note:** Version bump only for package @ui5/webcomponents
