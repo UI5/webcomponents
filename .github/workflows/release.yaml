@@ -290,6 +290,7 @@ jobs:
               tag_name: `v${version}`,
               name: `v${version}`,
               body: changelog,
+              make_latest: 'false',
             });
 
       - name: Publish
