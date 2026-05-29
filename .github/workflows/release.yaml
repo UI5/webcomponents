@@ -226,6 +226,17 @@ jobs:
           major_minor=$(echo "${{ github.event.inputs.new_version }}" | cut -d. -f1,2)
           yarn lerna publish from-git --yes --dist-tag "hotfix-${major_minor}"
 
+      # Hotfix releases are cut from older release-* branches; they must NOT
+      # be marked as the "Latest" release on GitHub. Lerna creates the GitHub
+      # release as latest by default, so flip it back here.
+      - name: Mark GitHub release as not latest
+        env:
+          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        run: |
+          gh release edit "v${{ github.event.inputs.new_version }}" \
+            --latest=false \
+            --repo "${{ github.repository }}"
+
   # ✅ Job 4: Experimental Release Flow
   experimental-release:
     if: ${{ github.event.inputs.release_type == 'experimental' }}
