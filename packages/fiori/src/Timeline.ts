@@ -75,8 +75,14 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  *
  * The Timeline exposes two named slots above the items area:
  *
- * - `header` — for controls (search, filter, sort). Place a `ui5-toolbar` here.
- * - `infoBar` — for status display (active filters, item count). Place a `ui5-bar` here.
+ * - `header` — for a controls bar (search field, filter trigger, sort toggle, etc.).
+ * The most common pattern is to place a `ui5-toolbar` containing a search input and buttons that open
+ * a filter dialog or toggle sort direction. The Timeline itself performs no filtering, sorting, or
+ * searching — the application listens for events from its own controls and reorders, hides, or
+ * adds items in the default slot accordingly.
+ *
+ * - `infoBar` — for a status bar that reflects the result of the controls (active filters,
+ * applied sort, current search query). Typically contains tokens, labels, or a `ui5-bar`.
  *
  * The Timeline itself does not filter, sort, or search — the application owns that logic.
  * Use `stickyHeader` to pin both bars while scrolling.
