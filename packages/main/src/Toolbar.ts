@@ -302,7 +302,7 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const lastItem = this.interactiveItems.at(-1);
+			const lastItem = this.standardItems.filter(item => item.isInteractive).at(-1);
 			lastItem?.focus();
 		}
 		this.prePopulateAlwaysOverflowItems();
