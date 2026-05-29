@@ -145,7 +145,7 @@ function App() {
 
   return (
     <>
-      <Timeline stickyHeader stickyInfoBar style={{ height: "22rem" }}>
+      <Timeline stickyHeader style={{ height: "22rem" }}>
         <Toolbar slot="header">
           <ToolbarItem>
             <Input

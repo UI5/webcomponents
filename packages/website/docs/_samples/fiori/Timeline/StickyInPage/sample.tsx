@@ -62,7 +62,7 @@ function App() {
 
   return (
     <div style={{ height: "18rem", overflow: "auto", border: "1px solid var(--sapGroup_ContentBorderColor)", borderRadius: "0.5rem" }}>
-      <Timeline noScrollContainer stickyHeader stickyInfoBar>
+      <Timeline stickyHeader>
         <Toolbar slot="header">
           <ToolbarSelect onChange={(e: any) => {
             const selected = e.detail?.selectedOption;

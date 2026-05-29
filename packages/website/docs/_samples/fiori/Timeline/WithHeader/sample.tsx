@@ -64,12 +64,11 @@ function App() {
   }, [searchQuery]);
 
   return (
-    <Timeline stickyHeader stickyInfoBar style={{ height: "20rem" }}>
+    <Timeline stickyHeader style={{ height: "20rem" }}>
       <Toolbar slot="header">
         <ToolbarItem>
           <Input
             placeholder="Search order events"
-            icon="search"
             value={searchQuery}
             onInput={event => setSearchQuery((event.target as HTMLInputElement).value)}
             style={{ width: "100%" }}
