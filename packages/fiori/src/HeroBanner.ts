@@ -27,8 +27,8 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * The HeroBanner consists of the following building blocks:
  *
  * - **Banner Canvas** - the visual base with a background color, optional background image and shadow.
- * - **Date** (optional) - contextual text at the top, typically showing the current date.
- * - **Header** (optional) - the main greeting header below the date, e.g. "Hello, John".
+ * - **Overline** (optional) - contextual text at the top, e.g. the current date or a status message.
+ * - **Header** (optional) - the main greeting header below the overline, e.g. "Hello, John".
  * - **Free Slots** (optional) - customizable content areas that can contain KPI cards, search components, text, buttons, etc.
  *
  * The hero banner scrolls away below the shell navigation when the user scrolls down the page. It is not sticky.
