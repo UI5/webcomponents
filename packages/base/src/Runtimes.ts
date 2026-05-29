@@ -1,4 +1,4 @@
-import { getAllRegisteredTags } from "./CustomElementsRegistry.js";
+import { getAllRegisteredTags } from "./RegisteredElements.js";
 import { getCustomElementsScopingRules, getCustomElementsScopingSuffix } from "./CustomElementsScopeUtils.js";
 import VersionInfo from "./generated/VersionInfo.js";
 import getSharedResource from "./getSharedResource.js";

@@ -1,9 +1,14 @@
 import getSharedResource from "./getSharedResource.js";
 import { getCurrentRuntimeIndex, compareRuntimes, getAllRuntimes } from "./Runtimes.js";
+import {
+	addRegisteredTag,
+	isTagRegistered,
+	hasRegisteredTags,
+	getAllRegisteredTags,
+} from "./RegisteredElements.js";
 import type { Timeout } from "./types.js";
 
 const Tags = getSharedResource<Map<string, number>>("Tags", new Map());
-const Definitions = new Set<string>();
 
 let Failures = new Map<number, Set<string>>();
 let failureTimeout: Timeout | undefined;
@@ -11,20 +16,8 @@ let failureTimeout: Timeout | undefined;
 const UNKNOWN_RUNTIME = -1;
 
 const registerTag = (tag: string) => {
-	Definitions.add(tag);
+	addRegisteredTag(tag);
 	Tags.set(tag, getCurrentRuntimeIndex());
-};
-
-const isTagRegistered = (tag: string) => {
-	return Definitions.has(tag);
-};
-
-const hasRegisteredTags = () => {
-	return Definitions.size > 0;
-};
-
-const getAllRegisteredTags = () => {
-	return [...Definitions.values()];
 };
 
 const recordTagRegistrationFailure = (tag: string) => {
