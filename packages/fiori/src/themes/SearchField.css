@@ -87,6 +87,8 @@
 	--_ui5_select_label_color: var(--sapShell_TextColor);
 	/* Remove Select's default focus outline without affecting dropdown items */
 	--_ui5_input_focus_outline_color: transparent;
+	/* Suppress Select's bottom border gradient inside ShellBar search */
+	--_ui5_select_bottom_border_gradient: none;
 }
 
 [ui5-select]:hover:not(:active):not(:focus-within) {
@@ -261,8 +263,6 @@
 }
 .ui5-shell-search-field-icon::part(root) {
 	padding: var(--_ui5_search_icon_padding);
-	width: 1rem;
-	height: 1rem;
 	outline-offset: -0.125rem;
 }
 
