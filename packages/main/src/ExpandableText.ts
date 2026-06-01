@@ -96,6 +96,8 @@ class ExpandableText extends UI5Element {
 	@property({ type: Boolean })
 	_expanded = false;
 
+	_shouldScrollToToggle = false;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -166,8 +168,20 @@ class ExpandableText extends UI5Element {
 		}
 	}
 
+	onAfterRendering() {
+		if (this._shouldScrollToToggle) {
+			this._shouldScrollToToggle = false;
+			const toggleLink = this.shadowRoot?.querySelector<HTMLElement>("#toggle");
+			toggleLink?.scrollIntoView?.({ block: "nearest" });
+		}
+	}
+
 	_handleToggleClick() {
 		this._expanded = !this._expanded;
+
+		if (this._expanded && !this._usePopover) {
+			this._shouldScrollToToggle = true;
+		}
 	}
 
 	_handleCloseButtonClick(e: UI5CustomEvent<Button, "click">) {
