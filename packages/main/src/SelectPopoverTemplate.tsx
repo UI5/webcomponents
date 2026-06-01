@@ -27,8 +27,8 @@ export default function SelectPopoverTemplate(this: Select) {
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}
 					onKeyDown={this._onkeydown}
-					accessibleName={this.ariaLabelText || this._headerTitleText}
-				>
+					accessibleName={this._isPhone ? this._headerTitleText : undefined}
+					>
 					{this._isPhone &&
 						<div slot="header" class="ui5-responsive-popover-header">
 							<div class="row">
@@ -68,7 +68,6 @@ export default function SelectPopoverTemplate(this: Select) {
 						onMouseDown={this._itemMousedown}
 						onItemClick={this._handleItemPress}
 						accessibleRole="ListBox"
-						accessibleName={this.ariaLabelText || this._headerTitleText}
 					>
 						<slot></slot>
 					</List>
