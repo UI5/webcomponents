@@ -233,7 +233,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 				opener="ui5-shellbar-overflow-button"
 				placement="Bottom"
 				hideArrow={true}
-				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
+				horizontalAlign={this.popoverHorizontalAlign}
 				accessibleName={actionsAccInfo.overflow.title}
 			>
 				<List separators="None" onClick={this.handleOverflowItemClick}>
