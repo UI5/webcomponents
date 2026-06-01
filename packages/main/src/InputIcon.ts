@@ -70,13 +70,7 @@ class InputIcon extends UI5Element {
 		// Handle slotted icons
 		if (this.icon && this.icon.length > 0) {
 			this.icon.forEach(iconEl => {
-				// Set tabindex="-1" on the icon host to make it non-focusable
-				iconEl.setAttribute("tabindex", "-1");
-				// Set tabindex="-1" on the SVG inside
-				const svg = iconEl.shadowRoot?.querySelector("svg");
-				if (svg) {
-					svg.setAttribute("tabindex", "-1");
-				}
+				this._makeIconNonFocusable(iconEl);
 			});
 		}
 
@@ -84,14 +78,23 @@ class InputIcon extends UI5Element {
 		if (this.iconName) {
 			const internalIcon = this.shadowRoot?.querySelector("[ui5-icon]") as HTMLElement;
 			if (internalIcon) {
-				// Set tabindex="-1" on the icon host to make it non-focusable
-				internalIcon.setAttribute("tabindex", "-1");
-				// Set tabindex="-1" on the SVG inside
-				const svg = internalIcon.shadowRoot?.querySelector("svg");
-				if (svg) {
-					svg.setAttribute("tabindex", "-1");
-				}
+				this._makeIconNonFocusable(internalIcon);
 			}
+		}
+	}
+
+	/**
+	 * Makes an icon non-focusable by setting tabindex="-1" on both the icon host and its internal SVG.
+	 * @param iconEl The icon element to make non-focusable
+	 * @private
+	 */
+	_makeIconNonFocusable(iconEl: HTMLElement) {
+		// Set tabindex="-1" on the icon host to make it non-focusable
+		iconEl.setAttribute("tabindex", "-1");
+		// Set tabindex="-1" on the SVG inside
+		const svg = iconEl.shadowRoot?.querySelector("svg");
+		if (svg) {
+			svg.setAttribute("tabindex", "-1");
 		}
 	}
 }
