@@ -33,7 +33,7 @@ class InputIcon extends UI5Element {
 	 * If provided, InputIcon will create the icon internally.
 	 * If not provided, expects an icon to be slotted.
 	 * @default undefined
-	 * @public
+	 * @private
 	 */
 	@property()
 	iconName?: string;
@@ -41,7 +41,7 @@ class InputIcon extends UI5Element {
 	/**
 	 * Defines the accessible name of the icon.
 	 * @default undefined
-	 * @public
+	 * @private
 	 */
 	@property()
 	accessibleName?: string;
@@ -58,7 +58,7 @@ class InputIcon extends UI5Element {
 	/**
 	 * Defines the icon element (when not using iconName).
 	 * @default []
-	 * @public
+	 * @private
 	 */
 	@slot({ type: HTMLElement, "default": true })
 	icon!: DefaultSlot<IIcon>;
