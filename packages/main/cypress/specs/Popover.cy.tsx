@@ -1897,8 +1897,8 @@ describe("Opener visibility in scrollable containers", () => {
 	});
 });
 
-describe("Min Width Property", () => {
-	it("should apply minWidth CSS property", () => {
+describe("Min Width via CSS", () => {
+	it("should apply min-width when set via style attribute", () => {
 		cy.mount(
 			<>
 				<Button id="btnMinWidth">Open Popover</Button>
