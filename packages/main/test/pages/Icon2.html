@@ -2,6 +2,7 @@
 <html>
 
 <head>
+	<meta name="ui5-shared-resources" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
 
@@ -16,11 +17,9 @@
 		}
 	</script>
 
-
-	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
-
-
-	<link rel="stylesheet" type="text/css" href="./styles/Icon.css">
+	<script type="module" crossorigin="" src="https://ui5.github.io/webcomponents/nightly/assets/test/pages/Icon.html-DFMD2ENU.js"></script>
+	<link rel="modulepreload" crossorigin="" href="https://ui5.github.io/webcomponents/nightly/assets/bundle.esm-BGypYVhv.js">
+	<link rel="stylesheet" crossorigin="" href="https://ui5.github.io/webcomponents/nightly/assets/Icon-Bt2NqJSj.css">
 </head>
 
 <body class="icon1auto">
@@ -206,14 +205,11 @@
 					'business-suite-v2': []
 				};
 
-				const filteredSAPIcons = ['clinical-tast-tracker', 'notification'];
-
 				// Sort icons into collections
 				iconNames.forEach(iconName => {
-					const baseName = iconName.split('/').pop();
-					if (iconName.startsWith('SAP-icons-v4/') && !filteredSAPIcons.includes(baseName)) {
+					if (iconName.startsWith('SAP-icons-v4/')) {
 						collections['SAP-icons-v4'].push(iconName);
-					} else if (iconName.startsWith('SAP-icons-v5/') && !filteredSAPIcons.includes(baseName)) {
+					} else if (iconName.startsWith('SAP-icons-v5/')) {
 						collections['SAP-icons-v5'].push(iconName);
 					} else if (iconName.startsWith('tnt-v2/')) {
 						collections['tnt-v2'].push(iconName);
@@ -229,13 +225,12 @@
 				// Render icons for each collection
 				Object.keys(collections).forEach(collectionName => {
 					const section = document.getElementById(collectionName);
-					section.innerHTML = "";
 					if (section && collections[collectionName].length > 0) {
 						const countSpan = section.querySelector('.count');
 						if (countSpan) {
 							countSpan.textContent = collections[collectionName].length;
 						}
-						collections[collectionName].sort().forEach(iconName => {
+						collections[collectionName].forEach(iconName => {
 							var icon = document.createElement("ui5-icon");
 							icon.name = iconName;
 							icon.className = "samples-margin";
@@ -243,7 +238,7 @@
 						});
 					}
 				});
-			}, 0);
+			}, 2000);
 		})();
 	</script>
 
@@ -262,14 +257,11 @@
 					'business-suite-v2': []
 				};
 
-				var filteredSAPIcons = ['clinical-tast-tracker', 'notification'];
-
 				// Sort icons into collections
 				iconNames.forEach(function (iconName) {
-					var baseName = iconName.split('/').pop();
-					if (iconName.startsWith('SAP-icons-v4/') && filteredSAPIcons.indexOf(baseName) === -1) {
+					if (iconName.startsWith('SAP-icons-v4/')) {
 						collections['SAP-icons-v4'].push(iconName);
-					} else if (iconName.startsWith('SAP-icons-v5/') && filteredSAPIcons.indexOf(baseName) === -1) {
+					} else if (iconName.startsWith('SAP-icons-v5/')) {
 						collections['SAP-icons-v5'].push(iconName);
 					} else if (iconName.startsWith('tnt-v2/')) {
 						collections['tnt-v2'].push(iconName);
@@ -290,7 +282,7 @@
 						if (countSpan) {
 							countSpan.textContent = collections[collectionName].length;
 						}
-						collections[collectionName].sort().forEach(function (iconName) {
+						collections[collectionName].forEach(function (iconName) {
 							var icon = document.createElement("ui5-icon");
 							icon.name = iconName;
 							icon.className = "samples-margin";
