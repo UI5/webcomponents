@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+
+### Features
+
+* **ui5-form:** rework column layout and deprecate standalone form items ([#13293](https://github.com/UI5/webcomponents/issues/13293)) ([05aa9f3](https://github.com/UI5/webcomponents/commit/05aa9f3168c78d6229712859dc4753f7215e21a0))
+* **ui5-side-navigation:** add indication tag slot ([#13433](https://github.com/UI5/webcomponents/issues/13433)) ([0aa9b80](https://github.com/UI5/webcomponents/commit/0aa9b807faeb1b467fe9fe477acfeac73462efa7))
+
+
+
+
+
 # [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
 
 
