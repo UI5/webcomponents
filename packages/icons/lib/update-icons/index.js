@@ -14,6 +14,10 @@ const CONFIG = {
 		v4: join(__dirname, "../../../../node_modules/@sap-theming/theming-base-content/content/Base/icons/baseTheme/img"),
 		v5: join(__dirname, "../../../../node_modules/@sap-theming/theming-base-content/content/Base/icons/sap_horizon/img"),
 	},
+	deprecatedNames: [
+		"clinical-tast-tracker",
+		"soccor",
+	],
 };
 
 async function extractSvgPath(iconName, version) {
@@ -47,27 +51,17 @@ async function extractSvgPath(iconName, version) {
 	}
 }
 
-async function generateIconData(version) {
-	// Import the SAP-icons.json from theming-base-content
-	const sapIconsPath = join(__dirname, "../../../../node_modules/@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/SAP-icons.json");
-	const sapIconsJson = await readFile(sapIconsPath, "utf-8");
-	const sapIconsData = JSON.parse(sapIconsJson);
-
-	// Import the acc mapping
-	const accMappingPath = join(__dirname, "acc-mapping.json");
-	const accMappingJson = await readFile(accMappingPath, "utf-8");
-	const accMapping = JSON.parse(accMappingJson);
-
+async function generateIconData(version, sapIconsData, accMapping) {
 	// Transform the data
 	const data = {};
 	for (const unicode in sapIconsData) {
 		const icon = sapIconsData[unicode];
 
-		// Iterate over all names for this unicode
-		if (icon.names.length > 1) {
-			console.warn(`Warning: Icon with unicode ${unicode} has multiple names: ${icon.names.join(", ")}. All names will be included in the output.`);
-		}
 		for (const iconName of icon.names) {
+			if (CONFIG.deprecatedNames.includes(iconName)) {
+				continue;
+			}
+
 			// Extract SVG path data
 			const pathData = await extractSvgPath(iconName, version);
 
@@ -76,7 +70,7 @@ async function generateIconData(version) {
 				viewBox: "0 0 16 16"
 			};
 
-			if (icon.rtl === "none") {
+			if (icon.rtl === "flip") {
 				iconData.ltr = true;
 			}
 
@@ -106,8 +100,7 @@ async function generateIconData(version) {
 	};
 }
 
-async function writeIconFile(version) {
-	const data = await generateIconData(version);
+async function writeIconFile(version, data) {
 	const filePath = join(__dirname, `../../src/${version}/${CONFIG.collectionName}.json`);
 	const content = JSON.stringify(data, null, 2);
 
@@ -115,18 +108,15 @@ async function writeIconFile(version) {
 	console.log(`✓ Updated ${filePath}`);
 }
 
-async function detectIconChanges(version) {
+async function detectIconChanges(version, newData) {
 	const filePath = join(__dirname, `../../src/${version}/${CONFIG.collectionName}.json`);
+	const newIcons = Object.keys(newData.data);
 
 	try {
 		// Read existing icon data
 		const existingContent = await readFile(filePath, "utf-8");
 		const existingData = JSON.parse(existingContent);
 		const existingIcons = Object.keys(existingData.data);
-
-		// Generate new icon data
-		const newData = await generateIconData(version);
-		const newIcons = Object.keys(newData.data);
 
 		// Detect changes
 		const added = newIcons.filter(icon => !existingIcons.includes(icon));
@@ -160,7 +150,6 @@ async function detectIconChanges(version) {
 		};
 	} catch (error) {
 		if (error.code === "ENOENT") {
-			// File doesn't exist yet, this is a new installation
 			return {
 				version,
 				added: [],
@@ -211,8 +200,25 @@ async function updateIcons() {
 
 		console.log("Checking for icon changes...");
 
+		// Load shared source data once
+		const sapIconsPath = join(__dirname, "../../../../node_modules/@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/SAP-icons.json");
+		const sapIconsData = JSON.parse(await readFile(sapIconsPath, "utf-8"));
+		const accMapping = JSON.parse(await readFile(join(__dirname, "acc-mapping.json"), "utf-8"));
+
+		// Warn once about icons with multiple names
+		for (const unicode in sapIconsData) {
+			const icon = sapIconsData[unicode];
+			if (icon.names.length > 1) {
+				console.warn(`Warning: Icon with unicode ${unicode} has multiple names: ${icon.names.join(", ")}. All names will be included in the output.`);
+			}
+		}
+
+		// Generate data once per version
+		const allData = await Promise.all(CONFIG.versions.map(v => generateIconData(v, sapIconsData, accMapping)));
+		const versionDataMap = Object.fromEntries(CONFIG.versions.map((v, i) => [v, allData[i]]));
+
 		// Detect changes for all versions
-		const allChanges = await Promise.all(CONFIG.versions.map(detectIconChanges));
+		const allChanges = await Promise.all(CONFIG.versions.map(v => detectIconChanges(v, versionDataMap[v])));
 		const hasAnyChanges = allChanges.some(change => change.hasChanges);
 
 		if (hasAnyChanges && !hasForceFlag) {
@@ -227,7 +233,7 @@ async function updateIcons() {
 		}
 
 		console.log("Updating icon files...");
-		await Promise.all(CONFIG.versions.map(writeIconFile));
+		await Promise.all(CONFIG.versions.map(v => writeIconFile(v, versionDataMap[v])));
 		console.log("✓ All icons updated successfully");
 	} catch (error) {
 		console.error("✗ Error updating icons:", error);

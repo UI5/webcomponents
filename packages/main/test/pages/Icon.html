@@ -206,11 +206,14 @@
 					'business-suite-v2': []
 				};
 
+				const filteredSAPIcons = ['clinical-tast-tracker', 'notification'];
+
 				// Sort icons into collections
 				iconNames.forEach(iconName => {
-					if (iconName.startsWith('SAP-icons-v4/')) {
+					const baseName = iconName.split('/').pop();
+					if (iconName.startsWith('SAP-icons-v4/') && !filteredSAPIcons.includes(baseName)) {
 						collections['SAP-icons-v4'].push(iconName);
-					} else if (iconName.startsWith('SAP-icons-v5/')) {
+					} else if (iconName.startsWith('SAP-icons-v5/') && !filteredSAPIcons.includes(baseName)) {
 						collections['SAP-icons-v5'].push(iconName);
 					} else if (iconName.startsWith('tnt-v2/')) {
 						collections['tnt-v2'].push(iconName);
@@ -226,12 +229,13 @@
 				// Render icons for each collection
 				Object.keys(collections).forEach(collectionName => {
 					const section = document.getElementById(collectionName);
+					section.innerHTML = "";
 					if (section && collections[collectionName].length > 0) {
 						const countSpan = section.querySelector('.count');
 						if (countSpan) {
 							countSpan.textContent = collections[collectionName].length;
 						}
-						collections[collectionName].forEach(iconName => {
+						collections[collectionName].sort().forEach(iconName => {
 							var icon = document.createElement("ui5-icon");
 							icon.name = iconName;
 							icon.className = "samples-margin";
@@ -239,7 +243,7 @@
 						});
 					}
 				});
-			}, 2000);
+			}, 0);
 		})();
 	</script>
 
@@ -258,11 +262,14 @@
 					'business-suite-v2': []
 				};
 
+				var filteredSAPIcons = ['clinical-tast-tracker', 'notification'];
+
 				// Sort icons into collections
 				iconNames.forEach(function (iconName) {
-					if (iconName.startsWith('SAP-icons-v4/')) {
+					var baseName = iconName.split('/').pop();
+					if (iconName.startsWith('SAP-icons-v4/') && filteredSAPIcons.indexOf(baseName) === -1) {
 						collections['SAP-icons-v4'].push(iconName);
-					} else if (iconName.startsWith('SAP-icons-v5/')) {
+					} else if (iconName.startsWith('SAP-icons-v5/') && filteredSAPIcons.indexOf(baseName) === -1) {
 						collections['SAP-icons-v5'].push(iconName);
 					} else if (iconName.startsWith('tnt-v2/')) {
 						collections['tnt-v2'].push(iconName);
@@ -283,7 +290,7 @@
 						if (countSpan) {
 							countSpan.textContent = collections[collectionName].length;
 						}
-						collections[collectionName].forEach(function (iconName) {
+						collections[collectionName].sort().forEach(function (iconName) {
 							var icon = document.createElement("ui5-icon");
 							icon.name = iconName;
 							icon.className = "samples-margin";
