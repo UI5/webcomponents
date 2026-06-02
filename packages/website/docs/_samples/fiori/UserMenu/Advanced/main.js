@@ -1,7 +1,7 @@
 import "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
-
+import "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -12,6 +12,7 @@ import "@ui5/webcomponents-icons/dist/collaborate.js";
 import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
+import "@ui5/webcomponents-icons/dist/message-information.js";
 
 const shellbar = document.getElementById("shellbar");
 const menu = document.getElementById("userMenu");
@@ -20,7 +21,7 @@ const menu = document.getElementById("userMenu");
 
 shellbar.addEventListener("ui5-profile-click", (event) => {
 	menu.opener = event.detail.targetRef;
-	menu.open = true;
+	menu.open = !menu.open;
 });
 
 menu.addEventListener("item-click", function (event) {

@@ -18,6 +18,8 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	unregisterElement,
+	registerElement,
 } from "./Render.js";
 import { registerTag, isTagRegistered, recordTagRegistrationFailure } from "./CustomElementsRegistry.js";
 import { observeDOMNode, unobserveDOMNode } from "./DOMObserver.js";
@@ -332,6 +334,8 @@ abstract class UI5Element extends HTMLElement {
 
 		const ctor = this.constructor as typeof UI5Element;
 
+		registerElement(this);
+
 		this.setAttribute(ctor.getMetadata().getPureTag(), "");
 		if (ctor.getMetadata().supportsF6FastNavigation() && !this.hasAttribute("data-sap-ui-fastnavgroup")) {
 			this.setAttribute("data-sap-ui-fastnavgroup", "true");
@@ -351,6 +355,12 @@ abstract class UI5Element extends HTMLElement {
 			await ctor._definePromise;
 		}
 
+		// Skip rendering while a language change is in progress to avoid rendering with not fully loaded locale data.
+		// Once the locale data is loaded, the language-aware component will be re-rendered.
+		if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
+			return;
+		}
+
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
 		}
@@ -359,6 +369,16 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+
+		if (this.hasAttribute("autofocus")) {
+			// Honor the global `autofocus` HTML attribute. Done manually because
+			// Firefox/Safari close the autofocus window at end-of-parse, before
+			// async UI5 components have rendered their shadow DOM. Per HTML spec,
+			// only the first element with `autofocus` in document order wins.
+			requestAnimationFrame(() => {
+				this.focus();
+			});
+		}
 	}
 
 	get definePromise(): Promise<void> {
@@ -391,6 +411,7 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 
 		cancelRender(this);
+		unregisterElement(this);
 	}
 
 	/**

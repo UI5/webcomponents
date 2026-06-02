@@ -178,6 +178,15 @@ jobs:
 
       - name: Push Changes
         run: |
+          # Rebase the local lerna version-bump commit onto the latest remote
+          # branch in case other commits landed during the build, then re-point
+          # the tag(s) lerna created so they reference the rebased commit.
+          NEW_TAGS=$(git tag --points-at HEAD)
+          git fetch origin ${{ github.ref_name }}
+          git rebase origin/${{ github.ref_name }}
+          for tag in $NEW_TAGS; do
+            git tag -f "$tag" HEAD
+          done
           git push origin HEAD
           git push origin --tags
 
@@ -303,14 +312,14 @@ jobs:
     if: ${{ github.event.inputs.release_type == 'experimental' }}
     environment: "npmjs:@ui5/webcomponents"
     permissions:
-      contents: write
+      contents: read
       id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Setup Node
@@ -324,7 +333,7 @@ jobs:
 
       - name: Version Bump
         env:
-          GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
           git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
