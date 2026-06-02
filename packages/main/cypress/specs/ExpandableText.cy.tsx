@@ -173,6 +173,28 @@ describe("ExpandableText", () => {
 				.should("exist");
 		});
 
+		it("Scrolls toggle link into view on expansion", () => {
+			const text = "A".repeat(5000);
+			const maxCharacters = 5;
+
+			cy.mount(
+				<div style={{ height: "200px", overflow: "auto" }}>
+					<ExpandableText text={text} maxCharacters={maxCharacters}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]").shadow().as("expTextShadow");
+			cy.get("@expTextShadow").find(".ui5-exp-text-toggle").as("toggle");
+
+			cy.get("@toggle")
+				.contains(EXPANDABLE_TEXT_SHOW_MORE.defaultText)
+				.realClick();
+
+			cy.get("@toggle")
+				.contains(EXPANDABLE_TEXT_SHOW_LESS.defaultText)
+				.should("be.visible");
+		});
+
 		it("ARIA attributes", () => {
 			const text = "This is a very long text that should be displayed";
 
