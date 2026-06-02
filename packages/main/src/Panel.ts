@@ -76,7 +76,8 @@ import panelCss from "./generated/themes/Panel.css.js";
  * @extends UI5Element
  * @public
  * @slot {Array<Node>} default - Defines the content of the component. The content is visible only when the component is expanded.
- * @csspart header - Used to style the wrapper of the header.
+ * @csspart header-wrapper - Used to style the outermost header wrapper, useful for adjusting sticky header position.
+ * @csspart header - Used to style the header.
  * @csspart content - Used to style the wrapper of the content.
  */
 @customElement({

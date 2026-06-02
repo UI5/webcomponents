@@ -3,7 +3,7 @@ import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
-import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
+import CompatTableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 
@@ -11,7 +11,7 @@ const CompatTable = createReactComponent(CompatTableClass);
 const CompatTableRow = createReactComponent(CompatTableRowClass);
 const CompatTableColumn = createReactComponent(TableColumnClass);
 const CompatTableCell = createReactComponent(CompatTableCellClass);
-const TableGroupRow = createReactComponent(TableGroupRowClass);
+const TableGroupRow = createReactComponent(CompatTableGroupRowClass);
 const Text = createReactComponent(TextClass);
 const Label = createReactComponent(LabelClass);
 

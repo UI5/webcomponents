@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+
+### Features
+
+* **ui5-form:** rework column layout and deprecate standalone form items ([#13293](https://github.com/UI5/webcomponents/issues/13293)) ([05aa9f3](https://github.com/UI5/webcomponents/commit/05aa9f3168c78d6229712859dc4753f7215e21a0))
+* **ui5-side-navigation:** add indication tag slot ([#13433](https://github.com/UI5/webcomponents/issues/13433)) ([0aa9b80](https://github.com/UI5/webcomponents/commit/0aa9b807faeb1b467fe9fe477acfeac73462efa7))
+
+
+
+
+
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** performance of selecting is improved when there are min and max date. ([#13550](https://github.com/UI5/webcomponents/issues/13550)) ([d256801](https://github.com/UI5/webcomponents/commit/d25680198562184cbefa4394ce880498d3cc93eb))
+* **ui5-multi-combobox:** fix token deletion when click event is lost due to re-render ([#13530](https://github.com/UI5/webcomponents/issues/13530)) ([c1abfb0](https://github.com/UI5/webcomponents/commit/c1abfb0c3d60ae82f03e5c843738a0da0e4bb563))
+* **ui5-tabcontainer:** guard against null overflow elements ([#13565](https://github.com/UI5/webcomponents/issues/13565)) ([7d591c2](https://github.com/UI5/webcomponents/commit/7d591c22cb44331fff7c926e7743c23b7236dd88)), closes [#13532](https://github.com/UI5/webcomponents/issues/13532)
+
+
+### Features
+
+* **ui5-icon:** add fontIcon slot for font-based icon libraries ([#13569](https://github.com/UI5/webcomponents/issues/13569)) ([3cbeac5](https://github.com/UI5/webcomponents/commit/3cbeac5817df7188f23ed5edc4e4d668e0751895))
+* **ui5-panel:** expose header-wrapper part ([#13571](https://github.com/UI5/webcomponents/issues/13571)) ([33f90b9](https://github.com/UI5/webcomponents/commit/33f90b90bd96088044edd41dbd7fd07f77ab8639)), closes [#13392](https://github.com/UI5/webcomponents/issues/13392)
+
+
+### Reverts
+
+* Revert "feat(ui5-panel): focus for scrollable panel content" (#13573) ([46007ca](https://github.com/UI5/webcomponents/commit/46007cad9d0e1c00fc6c361258d3b7e5470d9d03)), closes [#13573](https://github.com/UI5/webcomponents/issues/13573) [#13501](https://github.com/UI5/webcomponents/issues/13501)
+
+
+
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
 # [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
 
 

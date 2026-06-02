@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>TextArea autofocus repro (#9063)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+<body>
+	<section>
+		<ui5-textarea></ui5-textarea>
+		<ui5-select></ui5-select>
+		<ui5-input ></ui5-input>
+		<ui5-select autofocus></ui5-select>
+		<ui5-date-picker autofocus></ui5-date-picker>
+		<ui5-combobox autofocus></ui5-combobox>
+	</section>
+
+	<section>
+		<ui5-button id="openDialogBtn">Open Dialog</ui5-button>
+		<ui5-dialog id="myDialog" header-text="Dialog with TextArea">
+			<button id="openPopoverBtn">Press</button>
+			<input />
+			<ui5-textarea placeholder="TextArea in Dialog"></ui5-textarea>
+		</ui5-dialog>
+	</section>
+	<script type="module">
+		const dialog = document.getElementById("myDialog");
+		document.getElementById("openDialogBtn").addEventListener("click", () => {
+			dialog.open = true;
+		});
+		document.getElementById("openPopoverBtn").addEventListener("click", () => {
+			popover.open = true;
+		});
+
+		window.addEventListener("load", () => {
+			requestAnimationFrame(() => {
+				const ae = document.activeElement;
+				const desc = ae === document.body
+					? "document.body (nothing focused)"
+					: `<${ae.tagName.toLowerCase()}> placeholder="${ae.getAttribute?.("placeholder") ?? ""}"`;
+				document.getElementById("log").textContent = `document.activeElement: ${desc}`;
+			});
+		});
+	</script>
+</body>
+</html>

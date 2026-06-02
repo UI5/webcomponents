@@ -53,6 +53,18 @@ class ShellBarSearch extends Search {
 		}
 	}
 
+	_handleEnter() {
+		if (!this.value && !this.collapsed) {
+			this.collapsed = true;
+
+			setTimeout(() => {
+				this.focus();
+			}, 0);
+		} else {
+			super._handleEnter();
+		}
+	}
+
 	_onFocusOutSearch(e: FocusEvent) {
 		if (isPhone()) {
 			return;

@@ -5,7 +5,6 @@ import {
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import type { AccessibilityAttributes, AriaRole, AriaHasPopup } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -68,6 +67,7 @@ type AccInfo = {
 	ariaOwns?: string;
 	tooltip?: string;
 	ariaKeyShortcuts?: string;
+	ariaDescribedBy?: string;
 }
 
 type ListItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "ariaSetsize" | "ariaPosinset">;
@@ -201,6 +201,15 @@ abstract class ListItem extends ListItemBase {
 	_selectionMode: `${ListSelectionMode}` = "None";
 
 	/**
+	 * Indicates whether the list item is in edit mode.
+	 * When active, Tab cycles through internal focusable elements
+	 * instead of navigating to the next list item.
+	 * Toggled by F2; also set by the parent List on F7.
+	 * @private
+	 */
+	_editMode = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @default "S"
 	 * @private
@@ -320,6 +329,13 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_onfocusout(e: FocusEvent) {
+		if (this._editMode) {
+			const relatedTarget = e.relatedTarget as Node;
+			if (!relatedTarget || !(this.contains(relatedTarget) || this.shadowRoot!.contains(relatedTarget))) {
+				this._editMode = false;
+			}
+		}
+
 		if (e.target !== this.getFocusDomRef()) {
 			return;
 		}
@@ -493,6 +509,10 @@ abstract class ListItem extends ListItemBase {
 		return texts.join(" ");
 	}
 
+	get _ariaDescribedByIds() {
+		return `${this._id}-invisibleText-describedby`;
+	}
+
 	get _accInfo(): AccInfo {
 		return {
 			role: this.listItemAccessibleRole,
@@ -505,6 +525,7 @@ abstract class ListItem extends ListItemBase {
 			setsize: this.accessibilityAttributes.ariaSetsize,
 			posinset: this.accessibilityAttributes.ariaPosinset,
 			tooltip: this.tooltip,
+			ariaDescribedBy: this._ariaDescribedByIds || undefined,
 		};
 	}
 
@@ -520,20 +541,57 @@ abstract class ListItem extends ListItemBase {
 		return this.shadowRoot!.querySelector("li");
 	}
 
-	async _handleF2() {
+	_handleF2() {
 		const focusDomRef = this.getFocusDomRef()!;
-		const activeElement = getActiveElement();
 
-		const focusables = this._getFocusableElements().length > 0;
-		if (!focusables) {
+		if (getActiveElement() === focusDomRef) {
+			const focusables = this._getFocusableElements();
+			if (!focusables.length) {
+				return;
+			}
+			this._editMode = true;
+			focusables[0].focus();
+		} else {
+			this._editMode = false;
+			focusDomRef.focus();
+		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = this._indexOfActiveElement(focusables);
+			const nextIndex = currentIndex + 1;
+
+			if (currentIndex !== -1 && nextIndex < focusables.length) {
+				e.preventDefault();
+				focusables[nextIndex].focus();
+			} else if (!this.fireDecoratorEvent("forward-after")) {
+				e.preventDefault();
+			}
 			return;
 		}
 
-		if (activeElement === focusDomRef) {
-			const firstFocusable = await getFirstFocusableElement(focusDomRef);
-			firstFocusable?.focus();
-		} else {
-			focusDomRef.focus();
+		if (!this.fireDecoratorEvent("forward-after")) {
+			e.preventDefault();
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			const focusables = this._getFocusableElements();
+			const currentIndex = this._indexOfActiveElement(focusables);
+			if (currentIndex > 0) {
+				e.preventDefault();
+				focusables[currentIndex - 1].focus();
+			} else if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
+			return;
+		}
+
+		if (!this.fireDecoratorEvent("forward-before")) {
+			e.preventDefault();
 		}
 	}
 
@@ -542,10 +600,13 @@ abstract class ListItem extends ListItemBase {
 		return getTabbableElements(focusDomRef);
 	}
 
-	_getFocusedElementIndex(): number {
-		const focusables = this._getFocusableElements();
+	_indexOfActiveElement(focusables: HTMLElement[]): number {
 		const activeElement = getActiveElement() as HTMLElement;
-		return focusables.indexOf(activeElement);
+		return focusables.findIndex(el => el === activeElement || (el.shadowRoot !== null && el.shadowRoot.contains(activeElement)));
+	}
+
+	_getFocusedElementIndex(): number {
+		return this._indexOfActiveElement(this._getFocusableElements());
 	}
 
 	_hasFocusableElements(): boolean {
@@ -553,9 +614,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_isFocusOnInternalElement(): boolean {
-		const focusables = this._getFocusableElements();
-		const currentElementIndex = focusables.indexOf(getActiveElement() as HTMLElement);
-		return currentElementIndex !== -1;
+		return this._indexOfActiveElement(this._getFocusableElements()) !== -1;
 	}
 
 	_focusInternalElement(targetIndex: number) {

@@ -24,6 +24,71 @@
 </head>
 <body class="colorpicker1auto">
 
+	<section class="cp-test-controls">
+		<strong>Testing controls</strong>
+
+		<label for="cpFontSize">Root font-size:</label>
+		<select id="cpFontSize">
+			<option value="">(default — 16px)</option>
+			<option value="10px">10px</option>
+			<option value="12px">12px</option>
+			<option value="14px">14px</option>
+			<option value="16px">16px</option>
+			<option value="18px">18px</option>
+			<option value="20px">20px</option>
+			<option value="24px">24px</option>
+		</select>
+
+		<label for="cpTheme">Theme:</label>
+		<select id="cpTheme">
+			<option value="sap_horizon">sap_horizon</option>
+			<option value="sap_horizon_dark">sap_horizon_dark</option>
+			<option value="sap_horizon_hcb">sap_horizon_hcb</option>
+			<option value="sap_horizon_hcw">sap_horizon_hcw</option>
+			<option value="sap_fiori_3">sap_fiori_3</option>
+			<option value="sap_fiori_3_dark">sap_fiori_3_dark</option>
+			<option value="sap_fiori_3_hcb">sap_fiori_3_hcb</option>
+			<option value="sap_fiori_3_hcw">sap_fiori_3_hcw</option>
+		</select>
+
+		<label>
+			<input type="checkbox" id="cpCompact"> Compact density
+		</label>
+
+		<span id="cpComputedSize"></span>
+
+		<button id="cpReset" type="button">Reset</button>
+	</section>
+
+	<h2>pointer must stay aligned at any root font-size</h2>
+	<p class="cp-issue-instructions">
+		Set a non-16px root font-size from the Testing controls above. Click each corner of the
+		saturation/lightness box on the pickers below — the pointer should land exactly under the
+		cursor, and clicking the bottom-right should yield <code>#ffffff</code>.
+	</p>
+
+	<div class="cp-issue-grid">
+		<div class="cp-issue-card">
+			<h3>Default</h3>
+			<ui5-color-picker id="cpDefault"></ui5-color-picker>
+			<div class="cp-readout" id="cpReadoutDefault">value: —</div>
+		</div>
+
+		<div class="cp-issue-card">
+			<h3>Pre-set white (bottom-right corner)</h3>
+			<ui5-color-picker id="cpWhite" value="rgba(255,255,255,1)"></ui5-color-picker>
+			<div class="cp-readout" id="cpReadoutWhite">value: —</div>
+		</div>
+
+		<div class="cp-issue-card">
+			<h3>Pre-set HSL center (50%, 50%)</h3>
+			<ui5-color-picker id="cpMid" value="hsl(180, 50%, 50%)"></ui5-color-picker>
+			<div class="cp-readout" id="cpReadoutMid">value: —</div>
+		</div>
+	</div>
+
+	<h2>General playground</h2>
+
 	<ui5-color-picker id="cp1"></ui5-color-picker>
 	<ui5-step-input id="changeEventCounter" value="0"></ui5-step-input>
 
@@ -75,6 +140,59 @@
 		});
 
 		colorPickerHSL._displayHSL = true;
+	</script>
+
+	<script>
+		// Testing controls — root font-size, theme, compact density.
+		var fontSizeSelect = document.getElementById("cpFontSize"),
+			themeSelect = document.getElementById("cpTheme"),
+			compactCheckbox = document.getElementById("cpCompact"),
+			computedSize = document.getElementById("cpComputedSize"),
+			resetBtn = document.getElementById("cpReset");
+
+		function updateComputedSize() {
+			computedSize.textContent = "(computed: " + getComputedStyle(document.documentElement).fontSize + ")";
+		}
+
+		fontSizeSelect.addEventListener("change", function (e) {
+			document.documentElement.style.fontSize = e.target.value;
+			updateComputedSize();
+		});
+
+		themeSelect.addEventListener("change", function (e) {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(e.target.value);
+		});
+
+		compactCheckbox.addEventListener("change", function (e) {
+			document.body.classList.toggle("ui5-content-density-compact", e.target.checked);
+		});
+
+		resetBtn.addEventListener("click", function () {
+			document.documentElement.style.fontSize = "";
+			fontSizeSelect.value = "";
+			themeSelect.value = "sap_horizon";
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme("sap_horizon");
+			compactCheckbox.checked = false;
+			document.body.classList.remove("ui5-content-density-compact");
+			updateComputedSize();
+		});
+
+		updateComputedSize();
+
+		["Default", "White", "Mid"].forEach(function (suffix) {
+			var picker = document.getElementById("cp" + suffix);
+			var readout = document.getElementById("cpReadout" + suffix);
+
+			function syncReadout() {
+				// _colorValue is private API, used only for diagnostic readout in this dev page.
+				var hsl = picker._colorValue && picker._colorValue.HSL;
+				var hslStr = hsl ? "H=" + Math.round(hsl.h) + " S=" + Math.round(hsl.s) + " L=" + Math.round(hsl.l) : "";
+				readout.textContent = "value: " + picker.value + (hslStr ? "   |   " + hslStr : "");
+			}
+
+			picker.addEventListener("change", syncReadout);
+			requestAnimationFrame(function () { requestAnimationFrame(syncReadout); });
+		});
 	</script>
 </body>
 </html>

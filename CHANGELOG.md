@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* **tools:** resolve airbnb-base eslint config from tools package location ([#13575](https://github.com/UI5/webcomponents/issues/13575)) ([96201d6](https://github.com/UI5/webcomponents/commit/96201d6e817b825fe019b94a29eac3f80e46de21))
+* **ui5-icons:** generate i18n JSON imports ([#13583](https://github.com/UI5/webcomponents/issues/13583)) ([eb2af62](https://github.com/UI5/webcomponents/commit/eb2af62871a392b0f3f9c0fc8ba03ee7e789b6c5)), closes [#13417](https://github.com/UI5/webcomponents/issues/13417)
+* **ui5-shellbar:** correct icon color in overflow popover ([#13517](https://github.com/UI5/webcomponents/issues/13517)) ([14c4218](https://github.com/UI5/webcomponents/commit/14c4218ee78dd262393d232fb8d1aaab18950974))
+* **ui5-side-navigation:** fix icon expand/collapse size ([#13595](https://github.com/UI5/webcomponents/issues/13595)) ([118a0d1](https://github.com/UI5/webcomponents/commit/118a0d14613198b61fb7df1d5952720407907ffd))
+
+
+### Features
+
+* **ui5-form:** rework column layout and deprecate standalone form items ([#13293](https://github.com/UI5/webcomponents/issues/13293)) ([05aa9f3](https://github.com/UI5/webcomponents/commit/05aa9f3168c78d6229712859dc4753f7215e21a0))
+* **ui5-shellbar:** align padding and logo styles with VD spec ([#13535](https://github.com/UI5/webcomponents/issues/13535)) ([f0c277e](https://github.com/UI5/webcomponents/commit/f0c277ea975ac9c8c308ad89f777354b4fd99d5a))
+* **ui5-side-navigation:** add indication tag slot ([#13433](https://github.com/UI5/webcomponents/issues/13433)) ([0aa9b80](https://github.com/UI5/webcomponents/commit/0aa9b807faeb1b467fe9fe477acfeac73462efa7))
+
+
+
+
+
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** performance of selecting is improved when there are min and max date. ([#13550](https://github.com/UI5/webcomponents/issues/13550)) ([d256801](https://github.com/UI5/webcomponents/commit/d25680198562184cbefa4394ce880498d3cc93eb))
+* **ui5-multi-combobox:** fix token deletion when click event is lost due to re-render ([#13530](https://github.com/UI5/webcomponents/issues/13530)) ([c1abfb0](https://github.com/UI5/webcomponents/commit/c1abfb0c3d60ae82f03e5c843738a0da0e4bb563))
+* **ui5-tabcontainer:** guard against null overflow elements ([#13565](https://github.com/UI5/webcomponents/issues/13565)) ([7d591c2](https://github.com/UI5/webcomponents/commit/7d591c22cb44331fff7c926e7743c23b7236dd88)), closes [#13532](https://github.com/UI5/webcomponents/issues/13532)
+* **ui5-table-cell:** truncate overflowing cell content ([#13566](https://github.com/UI5/webcomponents/issues/13566)) ([cfa6155](https://github.com/UI5/webcomponents/commit/cfa61558d6d2ca2290aa45dc79e59c75f4b8053b))
+
+
+### Features
+
+* **ui5-icon:** add fontIcon slot for font-based icon libraries ([#13569](https://github.com/UI5/webcomponents/issues/13569)) ([3cbeac5](https://github.com/UI5/webcomponents/commit/3cbeac5817df7188f23ed5edc4e4d668e0751895))
+* **ui5-panel:** expose header-wrapper part ([#13571](https://github.com/UI5/webcomponents/issues/13571)) ([33f90b9](https://github.com/UI5/webcomponents/commit/33f90b90bd96088044edd41dbd7fd07f77ab8639)), closes [#13392](https://github.com/UI5/webcomponents/issues/13392)
+* **ui5-search:** update visual hover and active state of shell search scope ([#13256](https://github.com/UI5/webcomponents/issues/13256)) ([73a4a8b](https://github.com/UI5/webcomponents/commit/73a4a8b11362c3828ae2fe706485d157782a01b9))
+
+
+### Reverts
+
+* Revert "feat(ui5-panel): focus for scrollable panel content" (#13573) ([46007ca](https://github.com/UI5/webcomponents/commit/46007cad9d0e1c00fc6c361258d3b7e5470d9d03)), closes [#13573](https://github.com/UI5/webcomponents/issues/13573) [#13501](https://github.com/UI5/webcomponents/issues/13501)
+
+
+
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package webcomponents
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** css variables detection ([#13465](https://github.com/UI5/webcomponents/issues/13465)) ([a43e2de](https://github.com/UI5/webcomponents/commit/a43e2dec8dc09bd3955c4c5a0795e8b7a6534dc5))
+* **ui5-shellbar:** correct tooltip for user avatar button ([#13475](https://github.com/UI5/webcomponents/issues/13475)) ([68ee01c](https://github.com/UI5/webcomponents/commit/68ee01cbdfb4953c9dcf1491fdf196b2477a850c))
+
+
+### Reverts
+
+* **ui5-timeline:** revert header-bar slot introduction   ([#13487](https://github.com/UI5/webcomponents/issues/13487)) ([2b52f1b](https://github.com/UI5/webcomponents/commit/2b52f1be1a3e320820ed5dfdd651011e493b0d69)), closes [#13451](https://github.com/UI5/webcomponents/issues/13451) [#13155](https://github.com/UI5/webcomponents/issues/13155)
+
+
+
+
+
 # [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
 
 

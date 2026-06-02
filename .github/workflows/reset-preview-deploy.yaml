@@ -24,10 +24,14 @@ on:
       - '!**/*.test.ts'
       - '!**/test/**'
 
+permissions:
+  contents: read
+
 jobs:
   cleanup-preview:
     runs-on: ubuntu-latest
-    
+    environment: netlify-preview
+
     steps:
     - name: Create empty content
       run: |
