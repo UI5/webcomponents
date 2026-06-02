@@ -223,6 +223,76 @@ describe("ExpandableText", () => {
 		});
 	});
 
+	describe("CSS Inheritance", () => {
+		it("Text element inherits white-space from host", () => {
+			const text = "This is a very long text that should be displayed";
+
+			cy.mount(
+				<div style={{ whiteSpace: "pre-wrap" }}>
+					<ExpandableText text={text} maxCharacters={9999}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]")
+				.shadow()
+				.find(".ui5-exp-text-text")
+				.should("have.css", "white-space", "pre-wrap")
+				.and("have.css", "display", "inline");
+		});
+
+		it("Text element inherits white-space 'nowrap' from host", () => {
+			const text = "This is a very long text that should be displayed";
+
+			cy.mount(
+				<div style={{ whiteSpace: "nowrap" }}>
+					<ExpandableText text={text} maxCharacters={9999}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]")
+				.shadow()
+				.find(".ui5-exp-text-text")
+				.should("have.css", "white-space", "nowrap");
+		});
+
+		it("Popover and popover text inherit white-space, font-family, and font-size from host", () => {
+			const text = "This is a very long text that should be displayed";
+			const maxCharacters = 5;
+
+			cy.mount(
+				<div style={{ whiteSpace: "pre-line" }}>
+					<ExpandableText text={text} maxCharacters={maxCharacters} overflowMode="Popover"></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]").shadow().as("expTextShadow");
+
+			cy.get("@expTextShadow")
+				.find(".ui5-exp-text-toggle")
+				.realClick();
+
+			cy.get("[ui5-expandable-text]")
+				.invoke("css", "font-family")
+				.then(hostFontFamily => {
+					cy.get("[ui5-expandable-text]")
+						.invoke("css", "font-size")
+						.then(hostFontSize => {
+							cy.get("@expTextShadow")
+								.find(".ui5-exp-text-popover")
+								.should("have.css", "white-space", "pre-line")
+								.and("have.css", "font-family", hostFontFamily as unknown as string)
+								.and("have.css", "font-size", hostFontSize as unknown as string);
+
+							cy.get("@expTextShadow")
+								.find(".ui5-exp-text-popover-text")
+								.should("have.css", "white-space", "pre-line")
+								.and("have.css", "font-family", hostFontFamily as unknown as string)
+								.and("have.css", "font-size", hostFontSize as unknown as string);
+						});
+				});
+		});
+	});
+
 	describe("Empty Indicator", () => {
 		it("Should display empty indicator if text is empty and emptyIndicatorMode=On", () => {
 			cy.mount(<ExpandableText text="" emptyIndicatorMode="On"></ExpandableText>);
