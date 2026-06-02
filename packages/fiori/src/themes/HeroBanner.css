@@ -60,7 +60,7 @@
 	min-width: 0;
 }
 
-.ui5-banner-header-actions {
+.ui5-banner-actions {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;

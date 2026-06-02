@@ -149,7 +149,7 @@ class HeroBanner extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	headerActions!: Slot<HTMLElement>;
+	actions!: Slot<HTMLElement>;
 
 	get _hasStartContent() {
 		return this.startContent.length > 0;
@@ -159,8 +159,8 @@ class HeroBanner extends UI5Element {
 		return this.endContent.length > 0;
 	}
 
-	get _hasHeaderActions() {
-		return this.headerActions.length > 0;
+	get _hasActions() {
+		return this.actions.length > 0;
 	}
 }
 

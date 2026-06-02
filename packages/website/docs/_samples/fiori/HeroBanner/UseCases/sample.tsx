@@ -21,7 +21,7 @@ function App() {
         headerText="Good Morning, Anna"
         overlineText="Monday, May 26, 2026"
       >
-        <Button slot="headerActions" icon="cart">Cart</Button>
+        <Button slot="actions" icon="cart">Cart</Button>
         <Search
           placeholder="Search purchase orders, suppliers, materials..."
           style={{ width: "100%", maxWidth: "100%" }}
@@ -35,8 +35,8 @@ function App() {
         headerText="Welcome, Lisa"
         overlineText="Tuesday, May 27, 2026"
       >
-        <Button slot="headerActions" icon="action-settings">Settings</Button>
-        <Button slot="headerActions" icon="log">Activity Log</Button>
+        <Button slot="actions" icon="action-settings">Settings</Button>
+        <Button slot="actions" icon="log">Activity Log</Button>
       </HeroBanner>
 
       <br />

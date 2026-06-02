@@ -178,7 +178,7 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-header-actions")
+				.find(".ui5-banner-actions")
 				.should("exist");
 		});
 
@@ -189,7 +189,7 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-header-actions")
+				.find(".ui5-banner-actions")
 				.should("not.exist");
 		});
 	});

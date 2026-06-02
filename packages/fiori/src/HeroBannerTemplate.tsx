@@ -26,9 +26,9 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 						}
 					</div>
 
-					{this._hasHeaderActions &&
-						<div class="ui5-banner-header-actions">
-							<slot name="headerActions"></slot>
+					{this._hasActions &&
+						<div class="ui5-banner-actions">
+							<slot name="actions"></slot>
 						</div>
 					}
 				</div>

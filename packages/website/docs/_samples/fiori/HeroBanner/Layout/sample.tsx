@@ -20,7 +20,7 @@ function App() {
         overlineText="Monday, May 26, 2026"
         layout="FullWidth"
       >
-        <div slot="headerActions" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
+        <div slot="actions" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
           <Button icon="receipt" design="Default">Approve Invoices</Button>
           <Button icon="shipping-status" design="Default">Track Deliveries</Button>
         </div>

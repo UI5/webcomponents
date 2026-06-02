@@ -35,7 +35,7 @@
 			<ui5-hero-banner id="hero-banner-date"
 				header-text="Good Morning, Jane"
 				overline-text="Thursday, March 6, 2026">
-				<ui5-card slot="headerActions" style="width: 300px;">
+				<ui5-card slot="actions" style="width: 300px;">
 						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
 						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
@@ -262,8 +262,8 @@
 				overline-text="Thursday, March 6, 2026"
 				layout="FullWidth">
 
-				<ui5-button slot="headerActions" icon="settings">Settings</ui5-button>
-				<ui5-button slot="headerActions" icon="bell">Notifications</ui5-button>
+				<ui5-button slot="actions" icon="settings">Settings</ui5-button>
+				<ui5-button slot="actions" icon="bell">Notifications</ui5-button>
 
 				<div class="kpi-card">
 					<span class="kpi-label">Start Block</span>
@@ -407,7 +407,7 @@
 			});
 		}
 
-		toggleSlot("chk-header-actions", "headerActions");
+		toggleSlot("chk-header-actions", "actions");
 		toggleSlot("chk-start", "");
 		toggleSlot("chk-end", "endContent");
 
