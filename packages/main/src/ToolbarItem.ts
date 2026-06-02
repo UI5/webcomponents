@@ -1,14 +1,11 @@
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import {
-	isLeft,
-	isRight,
-} from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarMovementInfo } from "./ToolbarItemBase.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
 /**
@@ -22,6 +19,14 @@ import type { DefaultSlot } from "@ui5/webcomponents-base";
 interface IToolbarItemContent extends HTMLElement {
 	overflowCloseEvents?: string[];
 	hasOverflow?: boolean;
+	getToolbarMovementInfo?: () => ToolbarMovementInfo | undefined;
+}
+
+interface IItemNavigationOwner extends HTMLElement {
+	_itemNavigation?: {
+		_getCurrentItem: () => unknown;
+	};
+	_getFocusableItems?: () => Array<unknown>;
 }
 
 /**
@@ -58,10 +63,18 @@ interface IToolbarItemContent extends HTMLElement {
 class ToolbarItem extends ToolbarItemBase {
 	_maxWidth = 0;
 	_wrapperChecked = false;
+	_lastFocusedNavigationTarget?: HTMLElement;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 
 	get handlesOwnKeyboardNavigation(): boolean {
-		return true;
+		const child = this.item[0] as IToolbarItemContent | undefined;
+		if (!child) {
+			return false;
+		}
+
+		return this._supportsItemNavigationMovementInfo(child)
+			|| typeof child.getToolbarMovementInfo === "function"
+			|| this._hasOwnToolbarMovementInfo();
 	}
 
 	closeOverflowSet = {
@@ -184,6 +197,7 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	_handleNavigationTarget(target: HTMLElement) {
+		this._lastFocusedNavigationTarget = target;
 		const hostTarget = this._resolveNavigationHost(target);
 
 		if (this._isRadioButtonHost(hostTarget)) {
@@ -237,37 +251,6 @@ class ToolbarItem extends ToolbarItemBase {
 		return target === host || target.contains(host) || !!target.shadowRoot?.contains(host);
 	}
 
-	_getEventOriginIndex(e: KeyboardEvent, targets: HTMLElement[]): number {
-		// eslint-disable-next-line no-restricted-syntax
-		for (const node of e.composedPath()) {
-			if (node instanceof HTMLElement) {
-				const idx = targets.findIndex(target => this._matchesNavigationTarget(target, node));
-				if (idx !== -1) {
-					return idx;
-				}
-			}
-		}
-		return -1;
-	}
-
-	_isRadioGroupTargets(targets: HTMLElement[]) {
-		return targets.length > 1 && targets.every(target => this._isRadioButtonHost(this._resolveNavigationHost(target)));
-	}
-
-	_restoreRadioBoundarySelection(targets: HTMLElement[], isForward: boolean) {
-		const edgeTarget = isForward ? targets[targets.length - 1] : targets[0];
-		this._handleNavigationTarget(edgeTarget);
-	}
-
-	handleNavigationEntry(forward: boolean) {
-		const target = this.getFocusDomRefForNavigation(forward);
-		if (!target) {
-			return;
-		}
-
-		this._handleNavigationTarget(target);
-	}
-
 	_getNavigationTargets(): HTMLElement[] {
 		return this.item
 			.filter(child => !("disabled" in child && !!(child as { disabled?: boolean }).disabled))
@@ -280,84 +263,145 @@ class ToolbarItem extends ToolbarItemBase {
 			});
 	}
 
-	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean {
-		const targets = this._getNavigationTargets();
-		if (targets.length <= 1) {
-			if (!e.defaultPrevented) {
-				return false;
-			}
+	_getCurrentNavigationState() {
+		const items = this._getNavigationTargets();
+		const active = getActiveElement() as HTMLElement | null;
+		const current = active
+			? items.find(item => this._matchesNavigationTarget(item, active))
+			: undefined;
+		const currentIndex = current ? items.indexOf(current) : -1;
 
-			const active = getActiveElement() as HTMLElement | null;
-			const origin = e.composedPath().find((node): node is HTMLElement => node instanceof HTMLElement);
-			const singleTarget = targets[0];
+		return {
+			items,
+			current,
+			currentIndex,
+		};
+	}
 
-			if (!active || !origin) {
-				return true;
-			}
+	_supportsItemNavigationMovementInfo(child: IToolbarItemContent): boolean {
+		const itemNavigationOwner = child as IItemNavigationOwner;
+		return typeof itemNavigationOwner._itemNavigation?._getCurrentItem === "function"
+			&& typeof itemNavigationOwner._getFocusableItems === "function";
+	}
 
-			const activeInsideTarget = this._matchesNavigationTarget(singleTarget, active);
-			const originInsideTarget = this._matchesNavigationTarget(singleTarget, origin);
-
-			if (activeInsideTarget && originInsideTarget) {
-				const activeHost = this._resolveNavigationHost(active);
-				const originHost = this._resolveNavigationHost(origin);
-
-				// Single-child control kept focus on the same focusable part => boundary reached,
-				// let the toolbar continue navigation to the next/previous item.
-				if (activeHost === originHost) {
-					return false;
-				}
-			}
-
-			return true;
+	_getItemNavigationMovementInfo(child: IToolbarItemContent): ToolbarMovementInfo | undefined {
+		if (!this._supportsItemNavigationMovementInfo(child)) {
+			return undefined;
 		}
 
-		const active = getActiveElement() as HTMLElement | null;
-		if (!active) {
+		const itemNavigationOwner = child as IItemNavigationOwner;
+		const items = itemNavigationOwner._getFocusableItems!();
+		const current = itemNavigationOwner._itemNavigation!._getCurrentItem();
+		const currentIndex = current ? items.indexOf(current) : -1;
+
+		if (currentIndex === -1) {
+			return undefined;
+		}
+
+		return {
+			currentIndex,
+			itemCount: items.length,
+		};
+	}
+
+	_hasOwnToolbarMovementInfo(): boolean {
+		return this._getNavigationTargets().length > 1;
+	}
+
+	_getOwnToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+		const { items, currentIndex } = this._getCurrentNavigationState();
+		if (items.length <= 1) {
+			return undefined;
+		}
+
+		if (currentIndex === -1) {
+			return undefined;
+		}
+
+		return {
+			currentIndex,
+			itemCount: items.length,
+		};
+	}
+
+	_isUsingOwnFallbackMovementInfo(): boolean {
+		const child = this.item[0] as IToolbarItemContent | undefined;
+		if (!child) {
 			return false;
 		}
 
-		const currentIndex = targets.findIndex(target => this._matchesNavigationTarget(target, active));
+		return !this._supportsItemNavigationMovementInfo(child)
+			&& typeof child.getToolbarMovementInfo !== "function"
+			&& this._hasOwnToolbarMovementInfo();
+	}
+
+	moveWithinToolbarItem(isForward: boolean): boolean {
+		if (!this._isUsingOwnFallbackMovementInfo()) {
+			return false;
+		}
+
+		const { items, currentIndex } = this._getCurrentNavigationState();
 
 		if (currentIndex === -1) {
 			return false;
 		}
 
-		const isRTL = this.effectiveDir === "rtl";
-		const isForward = (!isRTL && isRight(e)) || (isRTL && isLeft(e));
-		const isBackward = (!isRTL && isLeft(e)) || (isRTL && isRight(e));
-
-		if (!isForward && !isBackward) {
-			return false;
-		}
-
-		const isRadioGroup = this._isRadioGroupTargets(targets);
 		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
-
-		if (isRadioGroup && e.defaultPrevented) {
-			const originIndex = this._getEventOriginIndex(e, targets);
-			const wrappedForward = originIndex === targets.length - 1 && currentIndex === 0;
-			const wrappedBackward = originIndex === 0 && currentIndex === targets.length - 1;
-			const isForwardBoundary = isForward && wrappedForward;
-			const isBackwardBoundary = isBackward && wrappedBackward;
-			const unknownOriginBoundary = originIndex === -1 && (nextIndex < 0 || nextIndex >= targets.length);
-
-			if (isForwardBoundary || isBackwardBoundary || unknownOriginBoundary) {
-				this._restoreRadioBoundarySelection(targets, isForward);
-				return false;
-			}
-
-			// RadioButton already handled in-group navigation for this arrow.
-			return true;
-		}
-
-		if (nextIndex < 0 || nextIndex >= targets.length) {
+		if (nextIndex < 0 || nextIndex >= items.length) {
 			return false;
 		}
 
-		e.preventDefault();
-		this._handleNavigationTarget(targets[nextIndex]);
+		this._handleNavigationTarget(items[nextIndex]);
 		return true;
+	}
+
+	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+		const child = this.item[0] as IToolbarItemContent | undefined;
+		if (!child) {
+			return undefined;
+		}
+
+		const itemNavigationInfo = this._getItemNavigationMovementInfo(child);
+		if (itemNavigationInfo) {
+			return itemNavigationInfo;
+		}
+
+		if (typeof child.getToolbarMovementInfo === "function") {
+			return child.getToolbarMovementInfo();
+		}
+
+		return this._getOwnToolbarMovementInfo();
+	}
+
+	setToolbarForcedTabIndex(tabIndex: string) {
+		this.forcedTabIndex = tabIndex;
+
+		const { items, current } = this._getCurrentNavigationState();
+		if (!items.length) {
+			super.setToolbarForcedTabIndex(tabIndex);
+			return;
+		}
+
+		if (current) {
+			this._lastFocusedNavigationTarget = current;
+		}
+
+		const fallbackTarget = items[0];
+		const focusTarget = this._lastFocusedNavigationTarget && items.includes(this._lastFocusedNavigationTarget)
+			? this._lastFocusedNavigationTarget
+			: fallbackTarget;
+
+		items.forEach(target => {
+			target.tabIndex = tabIndex === "0" && target === focusTarget ? 0 : -1;
+		});
+	}
+
+	focusForToolbarNavigation(isForward: boolean) {
+		const target = this.getFocusDomRefForNavigation(isForward);
+		if (target) {
+			this._lastFocusedNavigationTarget = target;
+			target.focus();
+		}
 	}
 }
 

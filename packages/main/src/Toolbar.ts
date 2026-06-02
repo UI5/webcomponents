@@ -13,6 +13,8 @@ import {
 	isRight,
 	isHome,
 	isEnd,
+	isTabNext,
+	isTabPrevious,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
@@ -33,12 +35,13 @@ import type ToolbarAlign from "./types/ToolbarAlign.js";
 import type ToolbarDesign from "./types/ToolbarDesign.js";
 import ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
 
-import type ToolbarItemBase from "./ToolbarItemBase.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
 import type ToolbarSeparator from "./ToolbarSeparator.js";
 
 import type Button from "./Button.js";
 import type Popover from "./Popover.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
@@ -185,10 +188,12 @@ class Toolbar extends UI5Element {
 
 	_onResize!: ResizeObserverCallback;
 	_onCloseOverflow!: EventListener;
+	_onFocusIn!: (e: FocusEvent) => void;
+	_onKeyDown!: (e: KeyboardEvent) => void;
 	itemsToOverflow: Array<ToolbarItemBase> = [];
 	itemsWidth = 0;
 	minContentWidth = 0;
-	_lastFocusedItem?: HTMLElement;
+	_lastFocusedItem?: ToolbarItemBase | HTMLElement;
 	_originalTabIndexes = new WeakMap<HTMLElement, string | null>();
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
@@ -205,6 +210,8 @@ class Toolbar extends UI5Element {
 
 		this._onResize = this.onResize.bind(this);
 		this._onCloseOverflow = this.closeOverflow.bind(this);
+		this._onFocusIn = this._onfocusin.bind(this);
+		this._onKeyDown = this._onkeydown.bind(this);
 	}
 
 	/**
@@ -319,11 +326,11 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const items = this._getFocusableItems();
+			const items = this._getNavigableItems();
 			const lastItem = items.at(-1);
 			if (lastItem) {
 				this._lastFocusedItem = lastItem;
-				lastItem.focus();
+				lastItem.focusForToolbarNavigation(false);
 			}
 		}
 		this.prePopulateAlwaysOverflowItems();
@@ -538,10 +545,14 @@ class Toolbar extends UI5Element {
 
 	attachListeners() {
 		this.addEventListener("ui5-close-overflow", this._onCloseOverflow);
+		this.addEventListener("focusin", this._onFocusIn);
+		this.addEventListener("keydown", this._onKeyDown, true);
 	}
 
 	detachListeners() {
 		this.removeEventListener("ui5-close-overflow", this._onCloseOverflow);
+		this.removeEventListener("focusin", this._onFocusIn);
+		this.removeEventListener("keydown", this._onKeyDown, true);
 	}
 
 	onToolbarItemChange() {
@@ -731,33 +742,19 @@ class Toolbar extends UI5Element {
 		});
 	}
 
-	_applyRovingTabIndex(items = this._getFocusableItems()) {
-		// Reset all non-overflowed items first so no stale tabIndex=0 survives
-		// when an item becomes disabled while _lastFocusedItem is null or stale.
-		this.standardItems
-			.filter(item => !item.isOverflowed && !item.hidden)
-			.forEach(item => {
-				const ref = item.getFocusDomRef();
-				if (ref) {
-					this._storeOriginalTabIndex(ref);
-					ref.tabIndex = -1;
-				}
-			});
+	_applyRovingTabIndex() {
+		const items = this._getNavigationChain();
 
 		if (!items.length) {
 			return;
 		}
 
-		const current = (this._lastFocusedItem && items.includes(this._lastFocusedItem))
-			? this._lastFocusedItem
-			: items[0];
+		if (!this._lastFocusedItem || !items.includes(this._lastFocusedItem)) {
+			this._lastFocusedItem = items[0];
+		}
 
-		items.forEach(item => {
-			this._storeOriginalTabIndex(item);
-			item.tabIndex = item === current ? 0 : -1;
-		});
+		this._setCurrentItem(this._lastFocusedItem);
 
-		this._applySingleTabStopToGroups(current);
 		this._applyDisabledItemsAccessibility();
 	}
 
@@ -802,126 +799,321 @@ class Toolbar extends UI5Element {
 	}
 
 	_onfocusin(e: FocusEvent) {
-		const items = this._getFocusableItems();
-		if (!items.length) {
-			return;
-		}
+		const currentTarget = this._findItemByPath(e.composedPath())
+			|| this._findOverflowButtonByPath(e.composedPath())
+			|| this._findCurrentTargetByActiveElement();
 
-		let idx = this._findCurrentIndex(items);
-
-		if (idx === -1) {
-			const path = e.composedPath();
-			const matchedItem = this.standardItems.find(item => !item.isOverflowed && !item.hidden && path.includes(item));
-			if (matchedItem) {
-				const ref = matchedItem.getFocusDomRef();
-				idx = ref ? items.indexOf(ref) : -1;
-			}
-		}
-
-		if (idx !== -1) {
-			this._lastFocusedItem = items[idx];
-			this._applyRovingTabIndex(items);
+		if (currentTarget) {
+			this._setCurrentItem(currentTarget);
 		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		const active = getActiveElement() as HTMLElement | null;
-
-		if (!isLeft(e) && !isRight(e) && !isHome(e) && !isEnd(e)) {
+		if (isTabNext(e) || isTabPrevious(e)) {
+			const moved = this._focusAdjacentToolbarOrOutside(isTabPrevious(e), e.composedPath());
+			if (moved) {
+				e.preventDefault();
+			}
 			return;
 		}
 
-		const isRTL = this.effectiveDir === "rtl";
+		const isForward = this.effectiveDir === "rtl" ? isLeft(e) : isRight(e);
+		const isBackward = this.effectiveDir === "rtl" ? isRight(e) : isLeft(e);
+		const isHomeKey = isHome(e);
+		const isEndKey = isEnd(e);
 
-		// Left/Right are reserved for toolbar navigation.
-		// Exception: inside an input or textarea, allow native caret movement
-		// but only exit to the next/prev toolbar item when the caret is already at the boundary.
-		if ((isLeft(e) || isRight(e)) && active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
-			const input = active as HTMLInputElement | HTMLTextAreaElement;
-			const atStart = input.selectionStart === 0;
-			const atEnd = input.selectionStart === (input.value?.length ?? 0);
-			const textSelected = input.selectionStart !== input.selectionEnd;
-			const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+		if (!isForward && !isBackward && !isHomeKey && !isEndKey) {
+			return;
+		}
 
-			if (textSelected || (movingForward && !atEnd) || (!movingForward && !atStart)) {
+		const currentTarget = this._findItemByPath(e.composedPath())
+			|| this._findOverflowButtonByPath(e.composedPath())
+			|| this._findCurrentTargetByActiveElement()
+			|| this._lastFocusedItem;
+		if (!currentTarget) {
+			return;
+		}
+
+		if (currentTarget instanceof ToolbarItemBase && (isForward || isBackward)) {
+			const movementInfo = currentTarget.getToolbarMovementInfo();
+			if (movementInfo) {
+				const { currentIndex, itemCount } = movementInfo;
+				const atForwardBoundary = itemCount <= 1 || (isForward && currentIndex >= itemCount - 1);
+				const atBackwardBoundary = itemCount <= 1 || (isBackward && currentIndex <= 0);
+
+				if (atForwardBoundary || atBackwardBoundary) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					if (isForward) {
+						this._moveToNext();
+					} else {
+						this._moveToPrev();
+					}
+					return;
+				}
+
+				if (currentTarget.moveWithinToolbarItem(isForward)) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
+
+				// Not at boundary -> nested control (or fallback mover) handles traversal.
 				return;
 			}
 		}
 
-		const items = this._getFocusableItems();
-		let currentIndex = this._findCurrentIndex(items, e);
-		if (currentIndex === -1) {
-			const path = e.composedPath();
-			const toolbarItemFromPath = this.standardItems.find(item => path.includes(item));
-			const pathFocusRef = toolbarItemFromPath?.getFocusDomRef();
-			if (pathFocusRef && items.includes(pathFocusRef)) {
-				currentIndex = items.indexOf(pathFocusRef);
-			}
+		if (isHomeKey) {
+			this._moveToFirst();
+			e.preventDefault();
+			e.stopPropagation();
+			return;
 		}
 
-		if (currentIndex === -1) {
-			if (isHome(e)) {
-				currentIndex = 0;
-			} else if (isEnd(e)) {
-				currentIndex = items.length - 1;
-			} else if (this._lastFocusedItem && items.includes(this._lastFocusedItem)) {
-				currentIndex = items.indexOf(this._lastFocusedItem);
+		if (isEndKey) {
+			this._moveToLast();
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		if (isForward || isBackward) {
+			if (isForward) {
+				this._moveToNext();
 			} else {
-				return;
+				this._moveToPrev();
+			}
+
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
+
+	_findItemByPath(path: Array<EventTarget>): ToolbarItemBase | undefined {
+		return (path as HTMLElement[]).find(el => el instanceof ToolbarItemBase) as ToolbarItemBase;
+	}
+
+	_findOverflowButtonByPath(path: Array<EventTarget>): HTMLElement | undefined {
+		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		if (!overflowButton) {
+			return undefined;
+		}
+
+		const active = getActiveElement() as HTMLElement | null;
+		return path.includes(overflowButton)
+			|| !!(active && this._isNodeInsideElement(active, overflowButton))
+			? overflowButton
+			: undefined;
+	}
+
+	_isNodeInsideElement(node: Node, element: HTMLElement) {
+		let current: Node | null = node;
+
+		while (current) {
+			if (current === element) {
+				return true;
+			}
+
+			const root = current.getRootNode?.();
+			if (root instanceof ShadowRoot) {
+				current = root.host;
+			} else {
+				current = current.parentNode;
 			}
 		}
 
-		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
-		const itemHandlesKey = toolbarItem?.shouldHandleOwnKeyboardNavigation(e) ?? false;
+		return false;
+	}
 
-		// If a child already prevented default, only allow toolbar handling for items
-		// that explicitly opt into key-level delegation and currently do not own the key
-		// (e.g. ToolbarSelect with closed picker and Home/End).
-		if (e.defaultPrevented) {
-			if (!toolbarItem?.handlesOwnKeyboardNavigation || itemHandlesKey) {
-				return;
-			}
+	_findCurrentTargetByActiveElement(): ToolbarItemBase | HTMLElement | undefined {
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			return undefined;
 		}
 
-		// Let a toolbar item handle its own navigation for the keys it explicitly owns
-		// (e.g. ToolbarSelect claims Up/Down/Home/End via shouldHandleOwnKeyboardNavigation).
-		if (itemHandlesKey) {
+		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		if (overflowButton && this._isNodeInsideElement(active, overflowButton)) {
+			return overflowButton;
+		}
+
+		return this._getNavigableItems().find(item => {
+			const focusRef = item.getFocusDomRef();
+			if (focusRef && this._isNodeInsideElement(active, focusRef)) {
+				return true;
+			}
+
+			return item._getNavigationTargets().some(target => {
+				return this._isNodeInsideElement(active, target);
+			});
+		});
+	}
+
+	_getNavigationChain() {
+		const chain: Array<ToolbarItemBase | HTMLElement> = [...this._getNavigableItems()];
+		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+
+		if (!this.hideOverflowButton && overflowButton) {
+			chain.push(overflowButton);
+		}
+
+		return chain;
+	}
+
+	_getNavigableItems() {
+		return this.items.filter(item => (item.isToolbarNavigatable ?? true) && !item.isOverflowed);
+	}
+
+	_setCurrentItem(item: ToolbarItemBase | HTMLElement) {
+		this._lastFocusedItem = item;
+		const allItems = this._getNavigableItems();
+		allItems.forEach(i => {
+			i.setToolbarForcedTabIndex(i === item ? "0" : "-1");
+		});
+
+		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		if (overflowButton) {
+			overflowButton.tabIndex = item === overflowButton ? 0 : -1;
+		}
+	}
+
+	_moveToNext() {
+		this._moveToItem((current, items) => (current + 1) % items.length, true);
+	}
+
+	_moveToPrev() {
+		this._moveToItem((current, items) => (current === 0 ? items.length - 1 : current - 1), false);
+	}
+
+	_moveToFirst() {
+		this._moveToItem(() => 0, true);
+	}
+
+	_moveToLast() {
+		this._moveToItem((_, items) => items.length - 1, false);
+	}
+
+	_moveToItem(indexCalc: (currentIndex: number, items: Array<ToolbarItemBase | HTMLElement>) => number, isForward: boolean) {
+		const items = this._getNavigationChain();
+		if (!items.length) {
 			return;
 		}
+		const currentIndex = this._lastFocusedItem ? items.indexOf(this._lastFocusedItem) : -1;
+		const nextIndex = indexCalc(currentIndex === -1 ? 0 : currentIndex, items);
+		const nextItem = items[nextIndex];
+		this._setCurrentItem(nextItem);
 
-		let nextIndex = currentIndex;
-		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
-		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
+		if (nextItem instanceof ToolbarItemBase) {
+			nextItem.focusForToolbarNavigation(isForward);
+		} else {
+			nextItem.focus();
+		}
+	}
 
-		if (movingForward) {
-			nextIndex = (currentIndex + 1) % items.length;
-		} else if (movingBackward) {
-			nextIndex = (currentIndex - 1 + items.length) % items.length;
-		} else if (isHome(e)) {
-			nextIndex = 0;
-		} else if (isEnd(e)) {
-			nextIndex = items.length - 1;
+	_focusToolbarEntry() {
+		const chain = this._getNavigationChain();
+		if (!chain.length) {
+			return false;
 		}
 
-		// Always prevent default once the toolbar has committed to handling this key,
-		// so that Up/Down/Home/End do not scroll the page even when focus is already
-		// at the first or last item.
-		e.preventDefault();
+		const target = this._lastFocusedItem && chain.includes(this._lastFocusedItem)
+			? this._lastFocusedItem
+			: chain[0];
 
-		if (isHome(e) || isEnd(e) || nextIndex !== currentIndex) {
-			const nextToolbarItem = this._findToolbarItem(items[nextIndex]);
-			const directionForEntry = movingForward || isHome(e);
+		this._setCurrentItem(target);
 
-			this._lastFocusedItem = items[nextIndex];
-			this._applyRovingTabIndex(items);
+		if (target instanceof ToolbarItemBase) {
+			const targets = target._getNavigationTargets();
+			const focusTarget = targets.find(item => item.tabIndex === 0)
+				|| targets[0]
+				|| target.getFocusDomRef();
 
-			if (nextToolbarItem) {
-				nextToolbarItem.handleNavigationEntry(directionForEntry);
-				return;
+			if (!focusTarget) {
+				return false;
 			}
 
-			items[nextIndex].focus();
+			focusTarget.focus();
+			return true;
 		}
+
+		target.focus();
+		return true;
+	}
+
+	_focusAdjacentToolbarOrOutside(backward: boolean, path: Array<EventTarget>) {
+		const toolbars = Array.from(document.querySelectorAll("ui5-toolbar"));
+		const currentToolbarIndex = toolbars.indexOf(this);
+
+		if (currentToolbarIndex !== -1) {
+			const step = backward ? -1 : 1;
+
+			for (let i = currentToolbarIndex + step; i >= 0 && i < toolbars.length; i += step) {
+				const toolbar = toolbars[i];
+				const canFocusToolbar = toolbar instanceof Toolbar
+					&& toolbar !== this
+					&& toolbar.isConnected
+					&& toolbar.offsetParent !== null;
+
+				if (canFocusToolbar && toolbar._focusToolbarEntry()) {
+					return true;
+				}
+			}
+		}
+
+		return this._focusOutsideToolbar(backward, path);
+	}
+
+	_focusOutsideToolbar(backward: boolean, path: Array<EventTarget>) {
+		const active = getActiveElement() as HTMLElement | null;
+		const tabbables = getTabbableElements(document.body);
+
+		if (!tabbables.length) {
+			return false;
+		}
+
+		const currentIndexFromActive = active
+			? tabbables.findIndex(el => el === active || el.contains(active) || active.contains(el))
+			: -1;
+
+		const currentIndexFromPath = currentIndexFromActive === -1
+			? tabbables.findIndex(el => path.includes(el))
+			: -1;
+
+		const currentIndex = currentIndexFromActive !== -1 ? currentIndexFromActive : currentIndexFromPath;
+
+		if (currentIndex !== -1) {
+			const step = backward ? -1 : 1;
+			for (let i = currentIndex + step; i >= 0 && i < tabbables.length; i += step) {
+				const candidate = tabbables[i];
+				if (!this.contains(candidate) && !this.shadowRoot?.contains(candidate)) {
+					candidate.focus();
+					return true;
+				}
+			}
+		}
+
+		const insideIndices = tabbables
+			.map((el, index) => ({ el, index }))
+			.filter(({ el }) => this.contains(el) || !!this.shadowRoot?.contains(el))
+			.map(({ index }) => index);
+
+		if (!insideIndices.length) {
+			return false;
+		}
+
+		const firstInside = insideIndices[0];
+		const lastInside = insideIndices[insideIndices.length - 1];
+		const startIndex = backward ? firstInside - 1 : lastInside + 1;
+		const step = backward ? -1 : 1;
+
+		for (let i = startIndex; i >= 0 && i < tabbables.length; i += step) {
+			const candidate = tabbables[i];
+			if (!this.contains(candidate) && !this.shadowRoot?.contains(candidate)) {
+				candidate.focus();
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 

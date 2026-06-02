@@ -5,6 +5,7 @@ import ToolbarSelectOption from "../../src/ToolbarSelectOption.js";
 import ToolbarSeparator from "../../src/ToolbarSeparator.js";
 import ToolbarSpacer from "../../src/ToolbarSpacer.js";
 import ToolbarItem from "../../src/ToolbarItem.js";
+import CheckBox from "../../src/CheckBox.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
@@ -43,6 +44,74 @@ describe("Toolbar general interaction", () => {
 				cy.wrap(toolbarItem.getDomRef())
 					.should("not.be.null")
 					.should("not.be.undefined");
+			});
+	});
+
+	it("Should move focus inside checkbox group and leave group on boundary with single arrow press", () => {
+		cy.mount(
+			<Toolbar id="checkbox-group-toolbar">
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+					<CheckBox text="Checkbox 2" checked></CheckBox>
+					<CheckBox text="Checkbox 3"></CheckBox>
+				</ToolbarItem>
+				<ToolbarButton text="After group"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-checkbox][text='Checkbox 1']")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-checkbox][text='Checkbox 2']")
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-checkbox][text='Checkbox 3']")
+			.should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='After group']")
+			.should("be.focused");
+	});
+
+	it("Should navigate into and out of overflow button with single arrow press", () => {
+		cy.viewport(320, 1080);
+
+		cy.mount(
+			<Toolbar id="overflow-arrow-toolbar" style={{ width: "220px" }}>
+				<ToolbarButton text="One Long"></ToolbarButton>
+				<ToolbarButton text="Two Long"></ToolbarButton>
+				<ToolbarButton text="Three Long"></ToolbarButton>
+				<ToolbarButton text="Four Long"></ToolbarButton>
+				<ToolbarButton text="Five Long"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#overflow-arrow-toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.get("#overflow-arrow-toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar & {
+					_setCurrentItem: (item: ToolbarItem | HTMLElement) => void;
+					overflowButtonDOM: HTMLElement;
+				};
+				toolbar._setCurrentItem(toolbar.overflowButtonDOM);
+				toolbar.overflowButtonDOM.focus();
+			});
+
+		cy.realPress("ArrowRight");
+		cy.get("#overflow-arrow-toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar & {
+					_lastFocusedItem?: ToolbarItem | HTMLElement;
+				};
+				const firstToolbarItem = $toolbar.find("[ui5-toolbar-button][text='One Long']")[0] as ToolbarItem;
+				expect(toolbar._lastFocusedItem).to.equal(firstToolbarItem);
 			});
 	});
 

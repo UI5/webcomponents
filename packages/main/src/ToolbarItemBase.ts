@@ -8,6 +8,15 @@ type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
 
+export type ToolbarMovementInfo = {
+	currentIndex: number;
+	itemCount: number;
+};
+
+export interface ToolbarMovementEnabler {
+	getToolbarMovementInfo(): ToolbarMovementInfo | undefined;
+}
+
 @event("close-overflow", {
 	bubbles: true,
 })
@@ -49,10 +58,17 @@ class ToolbarItemBase extends UI5Element {
 	preventOverflowClosing = false;
 
 	/**
-	 * Defines if the toolbar item should keep arrow key navigation for itself.
+	 * Roving tabindex managed by toolbar for horizontal navigation.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	forcedTabIndex = "-1";
+
+	/**
+	 * Defines whether the item exposes internal navigation semantics.
 	 *
-	 * When set to `true`, the toolbar does not process keys that are expected
-	 * to be handled by the item itself.
+	 * Toolbar uses this to keep grouped content as a single tab stop while
+	 * still allowing arrow navigation within the item.
 	 * @default false
 	 * @protected
 	 * @since 2.22.0
@@ -61,25 +77,51 @@ class ToolbarItemBase extends UI5Element {
 		return false;
 	}
 
-	/**
-	 * Defines whether the toolbar item handles keyboard navigation for a given key.
-	 *
-	 * Override this method in complex toolbar items that need to preserve
-	 * specific key handling.
-	 * @public
-	 * @since 2.22.0
-	 */
-	shouldHandleOwnKeyboardNavigation(e: KeyboardEvent): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
-		return this.handlesOwnKeyboardNavigation;
-	}
-
 	_getNavigationTargets(): HTMLElement[] {
 		const ref = this.getFocusDomRef();
 		return ref ? [ref] : [];
 	}
 
-	handleNavigationEntry(forward: boolean): void { // eslint-disable-line @typescript-eslint/no-unused-vars
-		this.getFocusDomRef()?.focus();
+	/**
+	 * Called by toolbar to apply roving tabindex.
+	 * Override in items that need custom tabindex handling.
+	 * @private
+	 */
+	setToolbarForcedTabIndex(tabIndex: string) {
+		this.forcedTabIndex = tabIndex;
+		const target = this.getToolbarFocusTarget();
+		if (target) {
+			target.tabIndex = Number(tabIndex);
+		}
+	}
+
+	/**
+	 * Return the DOM element that should receive focus for toolbar navigation.
+	 * Override in items with custom focus targets.
+	 * @private
+	 */
+	getToolbarFocusTarget(): HTMLElement | null {
+		return this.getFocusDomRef() as HTMLElement;
+	}
+
+	/**
+	 * Focus entry point when toolbar navigates into this item.
+	 * Override in complex items (e.g., Breadcrumbs) to handle direction-aware entry.
+	 * @private
+	 */
+	focusForToolbarNavigation(isForward: boolean) {
+		if (isForward) {
+			// no-op
+		}
+		this.getToolbarFocusTarget()?.focus();
+	}
+
+	moveWithinToolbarItem(isForward: boolean): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
+		return false;
+	}
+
+	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+		return undefined;
 	}
 
 	_isOverflowed: boolean = false;
@@ -136,6 +178,10 @@ class ToolbarItemBase extends UI5Element {
 	 */
 	get isInteractive(): boolean {
 		return true;
+	}
+
+	get isToolbarNavigatable(): boolean {
+		return this.isInteractive && !this.hidden && !("disabled" in this && (this as any).disabled);
 	}
 
 	get hasOverflow(): boolean {

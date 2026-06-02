@@ -19,6 +19,8 @@ import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
 import type InputComposition from "./features/InputComposition.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import type { ToolbarMovementInfo } from "./ToolbarItemBase.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -434,6 +436,27 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	getInputDomRef() {
 		return this.getDomRef()!.querySelector<HTMLTextAreaElement>("textarea")!;
+	}
+
+	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+		const textArea = this.getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
+		if (!textArea) {
+			return undefined;
+		}
+
+		const active = getActiveElement() as HTMLElement | null;
+		const isTextAreaFocused = !!active && (active === textArea || textArea.contains(active));
+		if (!isTextAreaFocused) {
+			return undefined;
+		}
+
+		const caretIndex = textArea.selectionStart ?? 0;
+		const valueLength = textArea.value?.length ?? 0;
+
+		return {
+			currentIndex: caretIndex,
+			itemCount: valueLength + 1,
+		};
 	}
 
 	_onkeydown(e: KeyboardEvent) {

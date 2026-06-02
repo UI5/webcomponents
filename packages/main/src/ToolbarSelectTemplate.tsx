@@ -11,6 +11,7 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 			data-ui5-external-action-item-id={this._id}
 			valueState={this.valueState}
 			disabled={this.disabled}
+			tabIndex={Number(this.forcedTabIndex)}
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
 			onClick={(...args) => this.onClick(...args)}
