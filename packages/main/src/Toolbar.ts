@@ -207,21 +207,17 @@ class Toolbar extends UI5Element {
 
 	constructor() {
 		super();
-
 		this._onResize = this.onResize.bind(this);
 		this._onCloseOverflow = this.closeOverflow.bind(this);
 		this._onFocusIn = this._onfocusin.bind(this);
 		this._onKeyDown = this._onkeydown.bind(this);
 	}
-
 	/**
 	 * Read-only members
 	 */
-
 	get overflowButtonSize(): number {
 		return this.overflowButtonDOM?.getBoundingClientRect().width || 0;
 	}
-
 	get padding(): number {
 		const toolbarComputedStyle = getComputedStyle(this.getDomRef()!);
 		return calculateCSSREMValue(toolbarComputedStyle, "--_ui5-toolbar-padding-left")
@@ -591,27 +587,6 @@ class Toolbar extends UI5Element {
 	 * Keyboard Navigation
 	 */
 
-	_getFocusableItems(): Array<HTMLElement> {
-		const items: Array<HTMLElement> = [];
-
-		this.standardItems
-			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
-				&& !("disabled" in item && (item as { disabled?: boolean }).disabled))
-			.forEach(item => {
-				const focusRef = item.getFocusDomRef();
-				if (focusRef && !focusRef.hasAttribute("disabled")) {
-					items.push(focusRef);
-				}
-			});
-
-		const overflowRef = this.overflowButtonDOM?.getFocusDomRef();
-		if (!this.hideOverflowButton && overflowRef) {
-			items.push(overflowRef);
-		}
-
-		return items;
-	}
-
 	_getOverflowTabTargets(item: ToolbarItemBase): Array<HTMLElement> {
 		return item._getNavigationTargets();
 	}
@@ -690,58 +665,6 @@ class Toolbar extends UI5Element {
 			});
 	}
 
-	_findCurrentIndex(items: Array<HTMLElement>, e?: Event): number {
-		const active = getActiveElement() as HTMLElement | null;
-		if (!active) {
-			if (!e) {
-				return -1;
-			}
-			const path = e.composedPath();
-			return items.findIndex(item => path.includes(item));
-		}
-
-		const activeIndex = items.findIndex(item => item === active || item.contains(active)
-			|| (item.shadowRoot?.contains(active) ?? false));
-
-		if (activeIndex !== -1) {
-			return activeIndex;
-		}
-
-		if (!e) {
-			return -1;
-		}
-
-		const path = e.composedPath();
-		return items.findIndex(item => path.includes(item));
-	}
-
-	_findToolbarItem(focusRef: HTMLElement, active?: HTMLElement | null): ToolbarItemBase | undefined {
-		return this.standardItems.find(item => {
-			const ref = item.getFocusDomRef();
-			const focusMatches = ref === focusRef
-				|| item === focusRef
-				|| item.contains(focusRef)
-				|| !!(ref && (ref.contains(focusRef)
-					|| focusRef.contains(ref)
-					|| ref.shadowRoot?.contains(focusRef)));
-
-			if (focusMatches) {
-				return true;
-			}
-
-			if (!active) {
-				return false;
-			}
-
-			return item === active
-				|| item.contains(active)
-				|| !!(ref && (ref === active
-					|| ref.contains(active)
-					|| active.contains(ref)
-					|| ref.shadowRoot?.contains(active)));
-		});
-	}
-
 	_applyRovingTabIndex() {
 		const items = this._getNavigationChain();
 
@@ -758,46 +681,6 @@ class Toolbar extends UI5Element {
 		this._applyDisabledItemsAccessibility();
 	}
 
-	/**
-	 * For ToolbarItem groups (handlesOwnKeyboardNavigation), ensures only
-	 * the active child is tabbable so Tab exits the toolbar instead of
-	 * moving between children within the same group.
-	 */
-	_applySingleTabStopToGroups(current: HTMLElement) {
-		this.standardItems
-			.filter(item => item.handlesOwnKeyboardNavigation && !item.isOverflowed && !item.hidden)
-			.forEach(item => {
-				const targets = item._getNavigationTargets();
-				if (targets.length <= 1) {
-					return;
-				}
-
-				targets.forEach(target => {
-					this._storeOriginalTabIndex(target);
-				});
-
-				// If this group's primary ref is not the current roving tab item,
-				// all its children should be untabbable
-				const primaryRef = item.getFocusDomRef();
-				if (primaryRef !== current) {
-					targets.forEach(t => { t.tabIndex = -1; });
-					return;
-				}
-
-				// This is the active group - only the focused child should be tabbable
-				const activeEl = getActiveElement() as HTMLElement | null;
-				const activeTarget = activeEl
-					? targets.find(t => t === activeEl || t.contains(activeEl) || !!t.shadowRoot?.contains(activeEl))
-					: null;
-
-				const focusedTarget = activeTarget || targets[0];
-
-				targets.forEach(t => {
-					t.tabIndex = t === focusedTarget ? 0 : -1;
-				});
-			});
-	}
-
 	_onfocusin(e: FocusEvent) {
 		const currentTarget = this._findItemByPath(e.composedPath())
 			|| this._findOverflowButtonByPath(e.composedPath())
@@ -810,7 +693,7 @@ class Toolbar extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		if (isTabNext(e) || isTabPrevious(e)) {
-			const moved = this._focusAdjacentToolbarOrOutside(isTabPrevious(e), e.composedPath());
+			const moved = this._focusOutsideToolbar(isTabPrevious(e), e.composedPath());
 			if (moved) {
 				e.preventDefault();
 			}
@@ -1008,60 +891,6 @@ class Toolbar extends UI5Element {
 			nextItem.focus();
 		}
 	}
-
-	_focusToolbarEntry() {
-		const chain = this._getNavigationChain();
-		if (!chain.length) {
-			return false;
-		}
-
-		const target = this._lastFocusedItem && chain.includes(this._lastFocusedItem)
-			? this._lastFocusedItem
-			: chain[0];
-
-		this._setCurrentItem(target);
-
-		if (target instanceof ToolbarItemBase) {
-			const targets = target._getNavigationTargets();
-			const focusTarget = targets.find(item => item.tabIndex === 0)
-				|| targets[0]
-				|| target.getFocusDomRef();
-
-			if (!focusTarget) {
-				return false;
-			}
-
-			focusTarget.focus();
-			return true;
-		}
-
-		target.focus();
-		return true;
-	}
-
-	_focusAdjacentToolbarOrOutside(backward: boolean, path: Array<EventTarget>) {
-		const toolbars = Array.from(document.querySelectorAll("ui5-toolbar"));
-		const currentToolbarIndex = toolbars.indexOf(this);
-
-		if (currentToolbarIndex !== -1) {
-			const step = backward ? -1 : 1;
-
-			for (let i = currentToolbarIndex + step; i >= 0 && i < toolbars.length; i += step) {
-				const toolbar = toolbars[i];
-				const canFocusToolbar = toolbar instanceof Toolbar
-					&& toolbar !== this
-					&& toolbar.isConnected
-					&& toolbar.offsetParent !== null;
-
-				if (canFocusToolbar && toolbar._focusToolbarEntry()) {
-					return true;
-				}
-			}
-		}
-
-		return this._focusOutsideToolbar(backward, path);
-	}
-
 	_focusOutsideToolbar(backward: boolean, path: Array<EventTarget>) {
 		const active = getActiveElement() as HTMLElement | null;
 		const tabbables = getTabbableElements(document.body);

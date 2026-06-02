@@ -217,7 +217,6 @@ class ToolbarSelect extends ToolbarItemBase {
 	get hasCustomLabel() {
 		return !!this.label.length;
 	}
-
 }
 
 ToolbarSelect.define();
