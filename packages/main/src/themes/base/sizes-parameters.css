@@ -129,10 +129,9 @@
 	--_ui5_textarea_margin: .25rem 0;
 
 	/* Radio Button */
-	--_ui5_radio_button_height: 2.75rem;
-	--_ui5_radio_button_label_side_padding: .875rem;
+	--_ui5_radio_button_label_side_padding: .6875rem;
 	--_ui5_radio_button_inner_size: 2.75rem;
-	--_ui5_radio_button_svg_size: 1.375rem;
+	--_ui5_radio_button_svg_size: 1.5714em; /* 1.375rem */
 
 	/* Responsive Popover */
 	--_ui5-responsive_popover_header_height: 2.75rem;
@@ -333,13 +332,11 @@
 		--_ui5_tc_item_height: 4rem;
 		--_ui5_tc_header_height: var(--_ui5_tc_item_height);
 		--_ui5_tc_item_icon_circle_size: 2rem;
-		--_ui5_tc_item_icon_size: 1rem;
 
 		/* Radio Button */
-		--_ui5_radio_button_height: 2rem;
-		--_ui5_radio_button_label_side_padding: .5rem;
+		--_ui5_radio_button_label_side_padding: 0.5rem;
 		--_ui5_radio_button_inner_size: 2rem;
-		--_ui5_radio_button_svg_size: 1rem;
+		--_ui5_radio_button_svg_size: 1.1429em;  /* 1rem */
 
 		/* Responsive Popover */
 		--_ui5-responsive_popover_header_height: 2.5rem;

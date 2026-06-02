@@ -241,6 +241,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		const todayDate = CalendarDate.fromLocalJSDate(UI5Date.getInstance(), this._primaryCalendarType); // current day date - calculate once
 		const calendarDate = this._calendarDate; // store the _calendarDate value as this getter is expensive and degrades IE11 perf
 
+		const minDate = this._minDate;
+		const maxDate = this._maxDate;
+		const precomputedDisabledDates = this._precomputeDisabledDates();
+
 		const tempSecondDate = this.hasSecondaryCalendarType ? this._getSecondaryDay(tempDate) : undefined;
 
 		let week: Week = [];
@@ -262,7 +266,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			const isSelectedBetween = this._isDayInsideSelectionRange(timestamp);
 			const isOtherMonth = tempDate.getMonth() !== calendarDate.getMonth();
 			const isWeekend = this._isWeekend(tempDate);
-			const isDisabled = !this._isDateEnabled(tempDate);
+			const isDisabled = !this._isDateEnabled(tempDate, minDate, maxDate, precomputedDisabledDates);
 			const isToday = tempDate.isSame(todayDate);
 			const isFirstDayOfWeek = tempDate.getDay() === firstDayOfWeek;
 
@@ -826,27 +830,46 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	/**
+	 * Pre-computes disabled date range timestamps once before the rendering loop.
+	 * Avoids repeated date string parsing inside the per-cell _isDateEnabled check.
+	 * @private
+	 */
+	_precomputeDisabledDates(): Array<{ startTimestamp: number, endTimestamp: number }> {
+		return this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
+	}
+
+	/**
 	 * Checks if a given date is enabled (selectable).
 	 * A date is considered disabled if:
 	 * - It falls outside the min/max date range defined by the component
 	 * - It matches a single disabled date
 	 * - It falls within a disabled date range (exclusive of start and end dates)
 	 * @param date - The date to check
+	 * @param minDate - Pre-resolved min calendar date
+	 * @param maxDate - Pre-resolved max calendar date
+	 * @param precomputedDisabledDates - Pre-parsed disabled date range timestamps
 	 * @returns `true` if the date is enabled (selectable), `false` if disabled
 	 * @private
 	 */
-	_isDateEnabled(date: CalendarDate): boolean {
-		if ((this._minDate && date.isBefore(this._minDate))
-			|| (this._maxDate && date.isAfter(this._maxDate))) {
+	_isDateEnabled(date: CalendarDate, minDate?: CalendarDate, maxDate?: CalendarDate, precomputedDisabledDates?: Array<{ startTimestamp: number, endTimestamp: number }>): boolean {
+		const resolvedMin = minDate ?? this._minDate;
+		const resolvedMax = maxDate ?? this._maxDate;
+
+		if ((resolvedMin && date.isBefore(resolvedMin))
+			|| (resolvedMax && date.isAfter(resolvedMax))) {
 			return false;
 		}
 
 		const dateTimestamp = date.valueOf() / 1000;
+		const disabledRanges = precomputedDisabledDates ?? this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
 
-		return !this.disabledDates.some(range => {
-			const startTimestamp = this._getTimestampFromDateValue(range.startValue);
-			const endTimestamp = this._getTimestampFromDateValue(range.endValue);
-
+		return !disabledRanges.some(({ startTimestamp, endTimestamp }) => {
 			if (endTimestamp) {
 				return dateTimestamp > startTimestamp && dateTimestamp < endTimestamp;
 			}

@@ -23,8 +23,8 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 				<div
 					class="ui5-color-picker-circle"
 					style={{
-						left: `${this._selectedCoordinates.x}px`,
-						top: `${this._selectedCoordinates.y}px`,
+						left: `${this._selectedCoordinates.x}%`,
+						top: `${this._selectedCoordinates.y}%`,
 					}}
 				></div>
 			</div>
