@@ -274,10 +274,18 @@ class DynamicPage extends UI5Element {
 		return this.showFooter ? this.footerWrapper?.getBoundingClientRect().height || 0 : 0;
 	}
 
-	get topAreaHeight() {
+	get scrollPaddingTop() {
 		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-		return this._headerSnapped ? titleHeight : headerHeight + titleHeight;
+
+		if (this._headerSnapped) {
+			return titleHeight;
+		}
+
+		const fullHeight = headerHeight + titleHeight;
+		const scrollTop = this.scrollContainer?.scrollTop || 0;
+
+		return Math.max(titleHeight, fullHeight - scrollTop);
 	}
 
 	get dynamicPageTitle(): DynamicPageTitle | null {
@@ -517,7 +525,8 @@ class DynamicPage extends UI5Element {
 
 	onContentFocusIn(e: FocusEvent) {
 		const target = e.target as HTMLElement;
-		this.setScrollPadding({ start: this.topAreaHeight, end: this.endAreaHeight });
+		this.setScrollPadding({ start: this.scrollPaddingTop, end: this.endAreaHeight });
+
 		// textareas and similar elements appear "in view" even when partially
 		// hidden behind sticky header/footer.
 		// manual scroll brings them fully into view.

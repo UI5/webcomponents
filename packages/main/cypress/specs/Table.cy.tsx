@@ -756,6 +756,18 @@ describe("Table - Fixed Header", () => {
 
 		check(50, "#row-100");
 	});
+
+	it("creates a stacking context on the table host", () => {
+		cy.mount(
+			<Table id="table" accessibleNameRef="title" noDataText="No data found">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+			</Table>,
+		);
+
+		cy.get("#table").should("have.css", "z-index", "0");
+	});
 });
 
 describe("Table - Horizontal Scrolling", () => {

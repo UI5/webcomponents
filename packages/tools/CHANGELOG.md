@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* **tools:** resolve airbnb-base eslint config from tools package location ([#13575](https://github.com/UI5/webcomponents/issues/13575)) ([96201d6](https://github.com/UI5/webcomponents/commit/96201d6e817b825fe019b94a29eac3f80e46de21))
+* **ui5-icons:** generate i18n JSON imports ([#13583](https://github.com/UI5/webcomponents/issues/13583)) ([eb2af62](https://github.com/UI5/webcomponents/commit/eb2af62871a392b0f3f9c0fc8ba03ee7e789b6c5)), closes [#13417](https://github.com/UI5/webcomponents/issues/13417)
+
+
+
+
+
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
 # [2.22.0-rc.4](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.3...v2.22.0-rc.4) (2026-05-07)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools

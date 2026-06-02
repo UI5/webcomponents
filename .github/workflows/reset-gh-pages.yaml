@@ -4,6 +4,9 @@ on:
   schedule:
   - cron: "00 08 * * *"
 
+permissions:
+  contents: read
+
 jobs:
   reset-gh-pages:
     runs-on: ubuntu-latest
