@@ -369,6 +369,47 @@ describe("CheckBox general interaction", () => {
     });
 });
 
+describe("Font-size scaling", () => {
+    it("scales inner box size when font-size is set on the host", () => {
+        cy.mount(<CheckBox style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.greaterThan(22);
+                expect(size.height).to.be.greaterThan(22);
+            });
+    });
+
+    it("scales checkmark icon size when font-size is set on the host", () => {
+        cy.mount(<CheckBox checked style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                const size = $icon[0].getBoundingClientRect();
+                expect(size.width).to.be.greaterThan(16);
+                expect(size.height).to.be.greaterThan(16);
+            });
+    });
+
+    it("scales display-only icon size when font-size is set on the host", () => {
+        cy.mount(<CheckBox displayOnly checked style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-display-only-icon-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.greaterThan(22);
+                expect(size.height).to.be.greaterThan(22);
+            });
+    });
+});
+
 describe("Accessibility", () => {
 	it("should announce the associated label when CheckBox is focused", () => {
 		cy.mount(
