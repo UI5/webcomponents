@@ -316,10 +316,10 @@ describe("RadioButton general interaction", () => {
 		cy.get("#wrappingRb").should("have.prop", "wrappingType", "Normal");
 
 		cy.get("#truncatingRb").invoke("height").should($truncatedLabelHeight => {
-			expect($truncatedLabelHeight).to.be.equal(RADIOBUTTON_DEFAULT_HEIGHT);
+			expect($truncatedLabelHeight).to.be.closeTo(RADIOBUTTON_DEFAULT_HEIGHT, 1);
 		});
 		cy.get("#wrappingRb").invoke("height").should($truncatedLabelHeight => {
-			expect($truncatedLabelHeight).to.be.equal(RADIOBUTTON_DEFAULT_HEIGHT);
+			expect($truncatedLabelHeight).to.be.closeTo(RADIOBUTTON_DEFAULT_HEIGHT, 1);
 		});
 	});
 

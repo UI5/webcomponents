@@ -3,28 +3,8 @@
 	width: 100%;
 }
 
-:host([column-span="1"]) {
-	grid-column: span 1;
-}
-
-:host([column-span="2"]) {
-	grid-column: span 2;
-}
-
-:host([column-span="3"]) {
-	grid-column: span 3;
-}
-
-:host([column-span="4"]) {
-	grid-column: span 4;
-}
-
-:host([column-span="5"]) {
-	grid-column: span 5;
-}
-
-:host([column-span="6"]) {
-	grid-column: span 6;
+:host {
+	break-inside: avoid;
 }
 
 .ui5-form-item-root {
@@ -68,34 +48,8 @@
 	width: 100%;
 }
 
-@container (max-width: 600px) {
-	:host {
-		order: var(--ui5-form-item-order-S, unset);
-	}
-}
-
-/* M  - 1 column by default, up to 2 columns */
-@container (width > 600px) and (width <= 1024px) {
-	:host {
-		order: var(--ui5-form-item-order-M, unset);
-	}
-
-}
-
-/* L - 2 columns by default, up to 3 columns */
-@container (width > 1024px) and (width <= 1440px) {
-	:host {
-		order: var(--ui5-form-item-order-L, unset);
-	}
-}
-
-/* XL - 3 columns by default, up to 6 */
-@container (min-width: 1441px) {
-	:host {
-		order: var(--ui5-form-item-order-Xl, unset);
-	}
-}
-
 dd {
-	all: unset;
+	padding: 0;
+	margin: 0;
+	border: 0 transparent;
 }

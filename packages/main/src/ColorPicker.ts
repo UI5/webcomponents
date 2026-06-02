@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
+import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import { isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -47,7 +48,8 @@ import {
 import ColorPickerCss from "./generated/themes/ColorPicker.css.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base/dist/index.js";
 
-const PICKER_POINTER_WIDTH = 6.5;
+// Fallback box width in CSS pixels at 16px root font-size (16rem).
+const DEFAULT_BOX_SIZE = 256;
 
 type ColorCoordinates = {
 	x: number,
@@ -224,6 +226,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	mouseIn: boolean;
 
+	@query(".ui5-color-picker-main-color")
+	_mainColorRef?: HTMLElement;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -239,10 +244,11 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		super();
 		this._colorValue = new ColorValue();
 
-		// Bottom Right corner
+		// Bottom-right corner of the picker box (white = l=100%, s=0%)
+		// Stored as percentages so positioning is independent of root font-size.
 		this._selectedCoordinates = {
-			x: 256 - PICKER_POINTER_WIDTH,
-			y: 256 - PICKER_POINTER_WIDTH,
+			x: 100,
+			y: 100,
 		};
 
 		// Default main color is red
@@ -256,6 +262,12 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 		this.mouseDown = false;
 		this.mouseIn = false;
+	}
+
+	get _boxSize(): number {
+		// clientWidth excludes border, matching the coordinate space of MouseEvent.offsetX/Y
+		// which is measured from the element's padding edge.
+		return this._mainColorRef?.clientWidth || DEFAULT_BOX_SIZE;
 	}
 
 	onBeforeRendering() {
@@ -495,9 +507,11 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 	}
 
 	_changeSelectedColor(x: number, y: number) {
+		const boxSize = this._boxSize;
+		// Store coordinates as percentages of the picker box.
 		this._selectedCoordinates = {
-			x: x - PICKER_POINTER_WIDTH, // Center the coordinates, because of the width of the circle
-			y: y - PICKER_POINTER_WIDTH, // Center the coordinates, because of the height of the circle
+			x: (x / boxSize) * 100,
+			y: (y / boxSize) * 100,
 		};
 
 		// Idication that changes to the color settings are triggered as a result of user pressing over the main color section.
@@ -524,8 +538,9 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 		// 0 ≤ H < 360
 		// 4.251 because with 4.25 we get out of the colors range.
 		const h = this._hue;
-		let s = +(1 - (y / 256)).toFixed(2);
-		let l = +(x / 256).toFixed(2);
+		const boxSize = this._boxSize;
+		let s = +(1 - (y / boxSize)).toFixed(2);
+		let l = +(x / boxSize).toFixed(2);
 
 		if (Number.isNaN(s) || Number.isNaN(l)) {
 			// The event is finished out of the main color section
@@ -551,9 +566,11 @@ class ColorPicker extends UI5Element implements IFormInputElement {
 
 	_updateColorGrid() {
 		const hslColours: ColorHSL = this._colorValue.HSL;
+		// Coordinates are percentages: x = lightness, y = inverted saturation.
+		// The template applies them as `left: x%` / `top: y%` so the circle scales with the box.
 		this._selectedCoordinates = {
-			x: ((hslColours.l * 2.56)) - PICKER_POINTER_WIDTH, // Center the coordinates, because of the width of the circle
-			y: (256 - (hslColours.s * 2.56)) - PICKER_POINTER_WIDTH, // Center the coordinates, because of the height of the circle
+			x: hslColours.l,
+			y: 100 - hslColours.s,
 		};
 
 		if (this._isSelectedColorChanged) { // We shouldn't update the hue value when user presses over the main color section.
