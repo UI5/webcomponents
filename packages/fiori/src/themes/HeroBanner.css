@@ -4,6 +4,12 @@
 	display: block;
 	width: 100%;
 	container-type: inline-size;
+	background-color: var(--_ui5_banner_background);
+	background-image: linear-gradient(to right, var(--_ui5_banner_background) 0%, color-mix(in srgb, var(--_ui5_banner_background) 60%, transparent) 40%, transparent 70%), var(--_ui5_banner_background_image);
+	border-radius: var(--_ui5_banner_border_radius);
+	background-repeat: no-repeat;
+	background-position: top;
+	background-size: cover;
 }
 
 /* Banner Canvas */
@@ -11,12 +17,12 @@
 	box-sizing: border-box;
 	min-height: 5.75rem;
 	max-height: 24rem;
-	border-radius: var(--_ui5_banner_border_radius);
-	background-color: var(--_ui5_banner_background);
-	background-image: var(--_ui5_banner_background_image);
-	background-repeat: no-repeat;
-	background-position: top;
-	background-size: cover;
+	border-radius: inherit;
+	background-color: inherit;
+	background-image: inherit;
+	background-repeat: inherit;
+	background-position: inherit;
+	background-size: inherit;
 	box-shadow: var(--_ui5_banner_box_shadow);
 	border: var(--_ui5_banner_border);
 	overflow: hidden;
@@ -65,11 +71,6 @@
 	--sapButton_Lite_Hover_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 15%, transparent);
 	--sapButton_Lite_Active_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 25%, transparent);
 	--sapButton_IconColor: var(--_ui5_banner_text_color);
-}
-
-/* Gradient overlay when a background image is present */
-.ui5-banner--has-bg-image {
-	background-image: linear-gradient(to right, var(--_ui5_banner_background) 0%, color-mix(in srgb, var(--_ui5_banner_background) 60%, transparent) 40%, transparent 70%), var(--_ui5_banner_user_image);
 }
 
 .ui5-banner-heading {

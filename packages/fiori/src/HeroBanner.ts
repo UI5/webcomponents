@@ -115,17 +115,7 @@ class HeroBanner extends UI5Element {
 	 */
 	@property()
 	layout: `${HeroBannerLayout}` = "FullWidth";
-
-	/**
-	 * Defines the URL of the background image for the hero banner canvas.
-	 * When set, the image is displayed as a cover background on the hero banner.
-	 *
-	 * @default undefined
-	 * @public
-	 */
-	@property()
-	backgroundImage?: string;
-
+	
 	/**
 	 * Defines the first (default) free content block of the hero banner.
 	 *
@@ -160,15 +150,6 @@ class HeroBanner extends UI5Element {
 	 */
 	@slot()
 	headerActions!: Slot<HTMLElement>;
-
-	get _backgroundImageStyle(): Record<string, string> | undefined {
-		if (this.backgroundImage) {
-			// Sanitize: strip characters that can break out of CSS url('...')
-			const sanitized = this.backgroundImage.replace(/['"()\\]/g, "");
-			return { "--_ui5_banner_user_image": `url('${sanitized}')` };
-		}
-		return undefined;
-	}
 
 	get _hasStartContent() {
 		return this.startContent.length > 0;

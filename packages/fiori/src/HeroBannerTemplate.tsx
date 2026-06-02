@@ -3,13 +3,9 @@ import type HeroBanner from "./HeroBanner.js";
 export default function HeroBannerTemplate(this: HeroBanner) {
 	return (
 		<div
-			class={{
-				"ui5-banner-root": true,
-				"ui5-banner--has-bg-image": !!this.backgroundImage,
-			}}
+			class="ui5-banner-root"
 			role="banner"
 			part="canvas"
-			style={this._backgroundImageStyle}
 		>
 			<div class={{
 				"ui5-banner-content": true,
