@@ -14,7 +14,7 @@
 	--_ui5_checkbox_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	--_ui5_checkbox_focus_border_radius: 0;
 	--_ui5_checkbox_outer_hover_background: transparent;
-	--_ui5_checkbox_inner_width_height: 1.375rem;
+	--_ui5_checkbox_inner_width_height: 1.5714em; /* 1.375rem */
 	--_ui5_checkbox_inner_border: solid .125rem var(--sapField_BorderColor);
 	--_ui5_checkbox_inner_hover_border_color: var(--sapField_HoverBorderColor);
 	--_ui5_checkbox_inner_hover_checked_border_color: var(--sapField_HoverBorderColor);
@@ -36,7 +36,7 @@
 	--_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
 	--_ui5_checkbox_compact_wrapper_padding: .5rem;
 	--_ui5_checkbox_compact_width_height: 2rem;
-	--_ui5_checkbox_compact_inner_size: 1rem;
+	--_ui5_checkbox_compact_inner_size: 1.1429em; /* 1rem */
 	--_ui5_checkbox_compact_focus_position: .375rem;
 	--_ui5_checkbox_label_color: var(--sapContent_LabelColor);
 	--_ui5_checkbox_label_offset: var(--_ui5_checkbox_wrapper_padding);
