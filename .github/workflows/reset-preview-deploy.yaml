@@ -30,7 +30,8 @@ permissions:
 jobs:
   cleanup-preview:
     runs-on: ubuntu-latest
-    
+    environment: netlify-preview
+
     steps:
     - name: Create empty content
       run: |

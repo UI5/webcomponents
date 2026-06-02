@@ -13,10 +13,10 @@ function App() {
   return (
     <>
       <Table id="table" overflowMode="Popin">
-        <IllustratedMessage slot="noData" name="NoData" />
+        <IllustratedMessage slot="noData" name="NoData" design="Medium" />
         {/* playground-fold */}
         <TableHeaderRow slot="headerRow">
-          <TableHeaderCell id="produtCol" width="300px">
+          <TableHeaderCell id="productCol" width="300px">
             <span>Product</span>
           </TableHeaderCell>
           <TableHeaderCell id="supplierCol" width="200px">

@@ -121,6 +121,9 @@ class DateComponentBase extends UI5Element {
 	 */
 	_isoFormatInstance?: DateFormat;
 
+	_cachedMinDate?: { key: string, value: CalendarDate };
+	_cachedMaxDate?: { key: string, value: CalendarDate };
+
 	constructor() {
 		super();
 	}
@@ -135,23 +138,21 @@ class DateComponentBase extends UI5Element {
 	}
 
 	get _minDate() {
-		let minDate;
-
-		if (this.minDate) {
-			minDate = this._getMinMaxCalendarDateFromString(this.minDate);
+		const key = `${this.minDate}__${this._primaryCalendarType}`;
+		if (!this._cachedMinDate || this._cachedMinDate.key !== key) {
+			const parsed = this.minDate ? this._getMinMaxCalendarDateFromString(this.minDate) : undefined;
+			this._cachedMinDate = { key, value: parsed || getMinCalendarDate(this._primaryCalendarType) };
 		}
-
-		return minDate || getMinCalendarDate(this._primaryCalendarType);
+		return this._cachedMinDate.value;
 	}
 
 	get _maxDate() {
-		let maxDate;
-
-		if (this.maxDate) {
-			maxDate = this._getMinMaxCalendarDateFromString(this.maxDate)!;
+		const key = `${this.maxDate}__${this._primaryCalendarType}`;
+		if (!this._cachedMaxDate || this._cachedMaxDate.key !== key) {
+			const parsed = this.maxDate ? this._getMinMaxCalendarDateFromString(this.maxDate) : undefined;
+			this._cachedMaxDate = { key, value: parsed || getMaxCalendarDate(this._primaryCalendarType) };
 		}
-
-		return maxDate || getMaxCalendarDate(this._primaryCalendarType);
+		return this._cachedMaxDate.value;
 	}
 
 	get _formatPattern() {
