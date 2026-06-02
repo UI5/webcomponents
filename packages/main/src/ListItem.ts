@@ -67,6 +67,7 @@ type AccInfo = {
 	ariaOwns?: string;
 	tooltip?: string;
 	ariaKeyShortcuts?: string;
+	ariaDescribedBy?: string;
 }
 
 type ListItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "ariaSetsize" | "ariaPosinset">;
@@ -508,6 +509,10 @@ abstract class ListItem extends ListItemBase {
 		return texts.join(" ");
 	}
 
+	get _ariaDescribedByIds() {
+		return `${this._id}-invisibleText-describedby`;
+	}
+
 	get _accInfo(): AccInfo {
 		return {
 			role: this.listItemAccessibleRole,
@@ -520,6 +525,7 @@ abstract class ListItem extends ListItemBase {
 			setsize: this.accessibilityAttributes.ariaSetsize,
 			posinset: this.accessibilityAttributes.ariaPosinset,
 			tooltip: this.tooltip,
+			ariaDescribedBy: this._ariaDescribedByIds || undefined,
 		};
 	}
 

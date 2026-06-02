@@ -1,0 +1,9 @@
+ui5-side-navigation {
+    height: 600px;
+}
+
+/* Recommended max-width for tags (4rem / 64px) */
+ui5-side-navigation-item ui5-tag,
+ui5-side-navigation-sub-item ui5-tag {
+    max-width: 4rem;
+}
