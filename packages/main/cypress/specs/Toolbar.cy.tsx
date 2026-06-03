@@ -173,8 +173,6 @@ describe("Toolbar general interaction", () => {
 	});
 
 	it("Should focus first overflow item when overflow popover opens", () => {
-		cy.viewport(200, 1080);
-
 		cy.mount(
 			<Toolbar id="overflow-focus-toolbar">
 				<ToolbarButton text="One" overflow-priority="AlwaysOverflow"></ToolbarButton>
@@ -183,9 +181,12 @@ describe("Toolbar general interaction", () => {
 			</Toolbar>
 		);
 
+		cy.wait(500);
+
 		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
 			.realClick();
 
 		cy.get("[ui5-toolbar]")
@@ -193,8 +194,8 @@ describe("Toolbar general interaction", () => {
 			.find(".ui5-overflow-popover")
 			.should("have.attr", "open", "open");
 
-		cy.focused()
-			.should("have.attr", "ui5-toolbar-button");
+		cy.get("[ui5-toolbar-button][text='One']")
+			.should("be.focused");
 	});
 
 	it("shouldn't have toolbar button as popover opener when there is spacer before last toolbar item", () => {
