@@ -20,23 +20,21 @@ const tokenArea = document.getElementById("tokenArea");
 const infoLabel = document.getElementById("infoLabel");
 
 const allEntries = Array.from(timeline.querySelectorAll("[ui5-timeline-item]"));
+const allOptions = Array.from(statusFilter.querySelectorAll("[ui5-toolbar-select-option]"));
 let activeStatus = "";
 
 function renderTokens() {
     tokenArea.innerHTML = "";
     if (activeStatus !== "") {
         const token = document.createElement("ui5-token");
-        token.setAttribute("text", activeStatus);
+        token.text = activeStatus;
         token.forcedTabIndex = "0";
         token.selected = true;
         token.addEventListener("select", () => { token.selected = true; });
         token.addEventListener("delete", () => {
             activeStatus = "";
-            const allOption = statusFilter.querySelector("ui5-toolbar-select-option:first-child");
-            statusFilter.querySelectorAll("ui5-toolbar-select-option").forEach(opt => {
-                opt.removeAttribute("selected");
-            });
-            allOption.setAttribute("selected", "");
+            allOptions.forEach(opt => { opt.selected = false; });
+            allOptions[0].selected = true;
             applyFilter();
         });
         tokenArea.appendChild(token);
@@ -44,26 +42,21 @@ function renderTokens() {
 }
 
 function applyFilter() {
-    const visible = allEntries.filter(item => {
-        if (activeStatus === "") {
-            return true;
-        }
-        return item.getAttribute("data-status") === activeStatus;
-    });
-
+    let visibleCount = 0;
     allEntries.forEach(item => {
-        if (item.parentElement === timeline) {
-            timeline.removeChild(item);
+        const matches = activeStatus === "" || item.dataset.status === activeStatus;
+        item.hidden = !matches;
+        if (matches) {
+            visibleCount++;
         }
     });
-    visible.forEach(item => timeline.appendChild(item));
 
-    infoLabel.textContent = `${visible.length} of ${allEntries.length} documents`;
+    infoLabel.textContent = `${visibleCount} of ${allEntries.length} documents`;
     renderTokens();
 }
 
 statusFilter.addEventListener("change", event => {
-    const selectedOption = event.detail?.selectedOption || event.target.querySelector("[selected]");
-    activeStatus = selectedOption?.getAttribute("data-status") || "";
+    const selectedOption = event.detail?.selectedOption;
+    activeStatus = selectedOption?.dataset.status || "";
     applyFilter();
 });

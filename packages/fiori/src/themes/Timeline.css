@@ -61,7 +61,8 @@
 
 /* Scroll container */
 :host([layout="Horizontal"]) .ui5-timeline-scroll-container {
-	overflow: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
 	/* The padding values of the parent container are added to the size of scroll container */
 	width: calc(100% + var(--_ui5_timeline_scroll_container_offset));
 }
@@ -97,6 +98,7 @@
 /* Header area — wraps header + info-bar slots above the items */
 .ui5-timeline-header-area {
 	flex-shrink: 0;
+	width: 100%;
 	background: var(--sapBackgroundColor);
 	margin-block-end: 1rem;
 }
@@ -104,12 +106,12 @@
 .ui5-timeline-header,
 .ui5-timeline-info-bar {
 	flex-shrink: 0;
-	background: var(--sapBackgroundColor);
 }
 
-/* Sticky header */
+/* Sticky header — pins to the top in vertical layout and to the inline-start in horizontal layout */
 :host([sticky-header]) .ui5-timeline-header-area {
 	position: sticky;
 	top: 0;
+	inset-inline-start: 0;
 	z-index: 2;
 }

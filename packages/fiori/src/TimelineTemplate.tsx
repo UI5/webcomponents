@@ -13,6 +13,7 @@ export default function TimelineTemplate(this: Timeline) {
 			aria-label={this.ariaLabel}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
+			onWheel={this._onwheel}
 		>
 			<BusyIndicator
 				id={`${this._id}-busyIndicator`}

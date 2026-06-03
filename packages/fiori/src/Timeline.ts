@@ -219,6 +219,9 @@ class Timeline extends UI5Element {
 	@query((`[id="ui5-timeline-growing-btn"]`))
 	growingButton!: HTMLElement;
 
+	@query(".ui5-timeline-scroll-container")
+	_scrollContainer!: HTMLElement;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -360,6 +363,27 @@ class Timeline extends UI5Element {
 		}
 
 		this._itemNavigation.setCurrentItem(target);
+	}
+
+	_onwheel(e: WheelEvent) {
+		// In horizontal layout, translate vertical wheel into horizontal scroll
+		// so a regular mouse wheel can scroll through items.
+		if (this.layout !== TimelineLayout.Horizontal || !e.deltaY || e.deltaX) {
+			return;
+		}
+
+		const container = this._scrollContainer;
+		if (!container) {
+			return;
+		}
+
+		const canScroll = container.scrollWidth > container.clientWidth;
+		if (!canScroll) {
+			return;
+		}
+
+		container.scrollLeft += e.deltaY;
+		e.preventDefault();
 	}
 
 	onBeforeRendering() {
