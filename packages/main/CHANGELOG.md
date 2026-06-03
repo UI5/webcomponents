@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
+
+
+### Bug Fixes
+
+* **framework:** prevent language-aware components from rendering before CLDR data loads ([#13602](https://github.com/UI5/webcomponents/issues/13602)) ([441672b](https://github.com/UI5/webcomponents/commit/441672b62733b42f4fc1a12452711602ae6a1bb5))
+* **ui5-calendar:** set timestamp of daypicker on mousedown ([#13527](https://github.com/UI5/webcomponents/issues/13527)) ([b2dd700](https://github.com/UI5/webcomponents/commit/b2dd700a18d5fbd3e1eb1032dc0f8677cd61b975))
+* **ui5-checkbox:** align horizon checkbox hover states with selector tokens ([#13598](https://github.com/UI5/webcomponents/issues/13598)) ([170c278](https://github.com/UI5/webcomponents/commit/170c2783d43a683233a44a838b945da6fc529bcd))
+* **ui5-color-picker:** keep pointer aligned at any root font-size ([#13563](https://github.com/UI5/webcomponents/issues/13563)) ([dd7c3ba](https://github.com/UI5/webcomponents/commit/dd7c3ba1edc54a7b59c7d6d2da8b2076e73340b8)), closes [#13521](https://github.com/UI5/webcomponents/issues/13521)
+* **ui5-expandable-text:** scroll toggle link into view on expansion ([#13524](https://github.com/UI5/webcomponents/issues/13524)) ([71b8586](https://github.com/UI5/webcomponents/commit/71b858627e3eefbcf7197d070e3e6267aa5afbb7)), closes [#13258](https://github.com/UI5/webcomponents/issues/13258)
+* **ui5-tokenizer:** allow copy/cut of focused token when not selected ([#13452](https://github.com/UI5/webcomponents/issues/13452)) ([240ba03](https://github.com/UI5/webcomponents/commit/240ba03f41785299342eb81d22304c02530a630b))
+
+
+### Features
+
+* **ui5-*:** support `autofocus` attribute ([#12572](https://github.com/UI5/webcomponents/issues/12572)) ([b13a00a](https://github.com/UI5/webcomponents/commit/b13a00aed10f7c230f171551923af57a413a458a))
+
+
+
+
+
 # [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
 
 
