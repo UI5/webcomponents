@@ -23,13 +23,19 @@ if (!diff?.hasChanges) {
 
 const lines = [];
 const KIND_LABEL = {
-	declaration: "element",
-	members: "member",
+	element: "element",
+	properties: "property",
+	methods: "method",
 	events: "event",
 	slots: "slot",
 	cssProperties: "CSS property",
 	cssParts: "CSS part",
+	cssStates: "CSS state",
 	attributes: "attribute",
+	enum: "enum",
+	enumMembers: "enum member",
+	interface: "interface",
+	members: "member", // fallback for unsplit members
 };
 
 const packages = Object.keys(diff.byPackage).sort();

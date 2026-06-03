@@ -1,38 +1,24 @@
 name: Dev Close Notice
 
-# Posts a comment on open PRs targeting `main` during the "dev close" period
-# (the week leading up to a release) reminding contributors that the PR
-# should not be merged until the release ships.
+# Posts a comment on PRs targeting `main` during the "dev close" period
+# (the week leading up to a release) reminding contributors not to merge
+# until the release ships.
 #
-# Detection has two layers:
-#   1. CEM diff (preferred, source of truth): build the
-#      custom-elements-internal.json manifest on PR base AND PR head, diff for
-#      public-API additions/removals/changes. Catches additive API changes
-#      that don't use a Conventional Commit `!` marker (the 99% case in this
-#      repo). Runs only on pull_request events that touched packages/*/src/**.
-#   2. Title regex (fallback): when the CEM diff couldn't run (path filter
-#      didn't match, build failed, or it's the daily schedule sweep), match
-#      Conventional Commit `feat:` / `feat(...)` / any `!` to flag the PR.
+# Detection: build the custom-elements-internal.json manifest on PR base
+# AND PR head, diff for public-API additions/removals/changes (filtered
+# to `_ui5privacy: "public"` / `privacy: "public"`). Logic lives in
+# `.github/scripts/dev-close/diff-cem.mjs` and `format-diff.mjs`.
 #
-# Trial run: only the next dev-close window is configured below. Once we
-# confirm the workflow behaves as expected, we'll extend the list (and
-# probably move it to a JSON file).
+# Trial run: only the next dev-close window is configured below.
 #
 # Dates are interpreted in UTC. devCloseStart is inclusive; releaseDate is
 # exclusive (i.e. on releaseDate itself the workflow stops commenting).
 
 on:
   pull_request:
-    types: [opened, reopened, ready_for_review, synchronize, edited]
+    types: [opened, reopened, ready_for_review, synchronize]
     branches:
       - main
-
-  # Run daily so PRs opened before dev-close still get notified once we enter
-  # the window, and so the comment lands even if a PR has had no activity.
-  # (Daily sweep uses title regex only — building CEM for every open PR every
-  # day would be too expensive.)
-  schedule:
-    - cron: "17 7 * * *"  # 07:17 UTC daily — odd minute on purpose
 
   # Manual trigger for testing.
   workflow_dispatch:
@@ -42,17 +28,45 @@ permissions:
   pull-requests: write
 
 jobs:
-  # Job 1: build CEM on base+head, produce diff JSON. Only on pull_request,
-  # only when src changed. Soft-fails — if it can't produce a diff, the notify
-  # job falls back to the title regex.
-  cem-diff:
-    if: github.event_name == 'pull_request'
+  dev-close-notice:
+    # Only run when src files actually changed — no point building CEM otherwise.
     runs-on: ubuntu-latest
-    outputs:
-      diff_status: ${{ steps.diff.outputs.status }}  # ok | failed | no-changes
-      diff_md: ${{ steps.diff.outputs.md }}
     steps:
+      - name: Check whether we are in a dev-close window
+        id: window
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ----- Configuration -------------------------------------------------
+            // Add new entries here when the release schedule is known.
+            // devCloseStart: first day PRs should NOT be merged (inclusive, UTC)
+            // releaseDate:   day the release ships (exclusive — period ends here)
+            const DEV_CLOSE_PERIODS = [
+              { release: "next", devCloseStart: "2026-06-29", releaseDate: "2026-07-06" },
+            ];
+
+            const today = new Date();
+            today.setUTCHours(0, 0, 0, 0);
+
+            const active = DEV_CLOSE_PERIODS.find(p => {
+              const start = new Date(`${p.devCloseStart}T00:00:00Z`);
+              const end = new Date(`${p.releaseDate}T00:00:00Z`);
+              return today >= start && today < end;
+            });
+
+            if (!active) {
+              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
+              core.setOutput("active", "false");
+              return;
+            }
+
+            core.info(`In dev-close window for release "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
+            core.setOutput("active", "true");
+            core.setOutput("release", active.release);
+            core.setOutput("releaseDate", active.releaseDate);
+
       - name: Checkout PR head
+        if: steps.window.outputs.active == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -61,6 +75,7 @@ jobs:
 
       - name: Detect changed src paths
         id: changed
+        if: steps.window.outputs.active == 'true'
         working-directory: head
         run: |
           base_sha="${{ github.event.pull_request.base.sha }}"
@@ -68,11 +83,11 @@ jobs:
             echo "src_changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "src_changed=false" >> "$GITHUB_OUTPUT"
-            echo "No src changes — skipping CEM diff."
+            echo "No src changes — nothing to diff."
           fi
 
       - name: Setup Node
-        if: steps.changed.outputs.src_changed == 'true'
+        if: steps.window.outputs.active == 'true' && steps.changed.outputs.src_changed == 'true'
         uses: actions/setup-node@v4.1.0
         with:
           node-version: 22
@@ -81,11 +96,11 @@ jobs:
 
       - name: Build CEM on PR head
         id: head_build
-        if: steps.changed.outputs.src_changed == 'true'
-        working-directory: head
-        # Soft-fail: any failure here just means we'll have no head manifests
-        # and the diff step will exit with status=failed → notify falls back.
+        if: steps.window.outputs.active == 'true' && steps.changed.outputs.src_changed == 'true'
+        # Soft-fail: a failure here just means we have no head manifests, the
+        # diff step will see that and exit without commenting.
         continue-on-error: true
+        working-directory: head
         run: |
           set -e
           yarn install --immutable
@@ -99,7 +114,7 @@ jobs:
           echo "Captured $(ls ../cem-head | wc -l) head manifests."
 
       - name: Checkout PR base
-        if: steps.changed.outputs.src_changed == 'true' && steps.head_build.outcome == 'success'
+        if: steps.window.outputs.active == 'true' && steps.changed.outputs.src_changed == 'true' && steps.head_build.outcome == 'success'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.sha }}
@@ -108,9 +123,9 @@ jobs:
 
       - name: Build CEM on PR base
         id: base_build
-        if: steps.changed.outputs.src_changed == 'true' && steps.head_build.outcome == 'success'
-        working-directory: base
+        if: steps.window.outputs.active == 'true' && steps.changed.outputs.src_changed == 'true' && steps.head_build.outcome == 'success'
         continue-on-error: true
+        working-directory: base
         run: |
           set -e
           yarn install --immutable
@@ -125,20 +140,8 @@ jobs:
 
       - name: Diff manifests
         id: diff
-        # Always run so we can emit a status, even when earlier steps were
-        # skipped or failed.
-        if: always()
+        if: steps.window.outputs.active == 'true' && steps.changed.outputs.src_changed == 'true' && steps.head_build.outcome == 'success' && steps.base_build.outcome == 'success'
         run: |
-          if [ "${{ steps.changed.outputs.src_changed }}" != "true" ]; then
-            echo "status=no-changes" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ "${{ steps.head_build.outcome }}" != "success" ] || [ "${{ steps.base_build.outcome }}" != "success" ]; then
-            echo "CEM build failed on at least one side — falling back to title regex."
-            echo "status=failed" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
           diff_json=$(node head/.github/scripts/dev-close/diff-cem.mjs cem-base cem-head)
           has_changes=$(echo "$diff_json" | node -e "let s=''; process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s);process.stdout.write(j.hasChanges?'true':'false')})")
           if [ "$has_changes" = "true" ]; then
@@ -148,172 +151,61 @@ jobs:
               echo "$md"
               echo 'DEV_CLOSE_EOF'
             } >> "$GITHUB_OUTPUT"
-            echo "status=ok" >> "$GITHUB_OUTPUT"
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
           else
-            echo "status=no-changes" >> "$GITHUB_OUTPUT"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No public-API changes detected."
           fi
 
-  # Job 2: decide whether to comment, then comment. Always runs.
-  notify:
-    runs-on: ubuntu-latest
-    needs: [cem-diff]
-    # Run even if cem-diff was skipped (schedule/workflow_dispatch) or failed.
-    if: always()
-    steps:
-      - name: Comment on PRs during dev close
+      - name: Comment on PR
+        if: steps.window.outputs.active == 'true' && steps.diff.outputs.has_changes == 'true'
         uses: actions/github-script@v7
         env:
-          CEM_DIFF_STATUS: ${{ needs.cem-diff.outputs.diff_status }}
-          CEM_DIFF_MD: ${{ needs.cem-diff.outputs.diff_md }}
+          DIFF_MD: ${{ steps.diff.outputs.md }}
+          RELEASE: ${{ steps.window.outputs.release }}
+          RELEASE_DATE: ${{ steps.window.outputs.releaseDate }}
         with:
           script: |
-            // ----- Configuration -------------------------------------------------
-            // Add new entries here when the release schedule is known.
-            // devCloseStart: first day PRs should NOT be merged (inclusive, UTC)
-            // releaseDate:   day the release ships (exclusive — period ends here)
-            const DEV_CLOSE_PERIODS = [
-              { release: "next", devCloseStart: "2026-06-29", releaseDate: "2026-07-06" },
-            ];
-
-            // Marker so we never post the same comment twice on a PR.
             const MARKER = "<!-- dev-close-notice -->";
+            const prNumber = context.payload.pull_request.number;
 
-            // Title-regex fallback (used when CEM diff couldn't run).
-            //   feat: add foo                  ✅ feature
-            //   feat(ui5-button): bar          ✅ feature
-            //   feat!: drop legacy api         ✅ feature + breaking
-            //   fix(ui5-button)!: rename event ✅ breaking
-            //   fix(ui5-button): typo          ❌
-            const FEAT_TITLE_RE = /^feat(\([^)]+\))?!?:/i;
-            const BREAKING_TITLE_RE = /^[a-z]+(\([^)]+\))?!:/i;
-            const isBlockedTitle = (title) =>
-              FEAT_TITLE_RE.test(title || "") || BREAKING_TITLE_RE.test(title || "");
-
-            // --------------------------------------------------------------------
-            const today = new Date();
-            today.setUTCHours(0, 0, 0, 0);
-
-            const activePeriod = DEV_CLOSE_PERIODS.find(p => {
-              const start = new Date(`${p.devCloseStart}T00:00:00Z`);
-              const end = new Date(`${p.releaseDate}T00:00:00Z`);
-              return today >= start && today < end;
-            });
-
-            if (!activePeriod) {
-              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — nothing to do.`);
+            // Skip drafts — they aren't merge candidates yet.
+            if (context.payload.pull_request.draft) {
+              core.info(`PR #${prNumber}: draft, skipping.`);
               return;
             }
 
-            core.info(`In dev-close window for release "${activePeriod.release}" (${activePeriod.devCloseStart} → ${activePeriod.releaseDate}).`);
-
-            const cemStatus = process.env.CEM_DIFF_STATUS || "skipped";
-            const cemMd = process.env.CEM_DIFF_MD || "";
-            core.info(`CEM diff status: ${cemStatus}`);
-
-            // Build the comment body. The shape depends on detection source:
-            //   - cem-ok: list the public-API changes inline
-            //   - title-fallback: explain the title pattern matched
-            const buildBody = ({ source, cemMd, pr }) => {
-              const lines = [
-                MARKER,
-                `### ⏸️ Dev close in effect`,
-                ``,
-                `This repository is currently in **dev close** ahead of release \`${activePeriod.release}\` (scheduled **${activePeriod.releaseDate}**, UTC).`,
-                ``,
-              ];
-              if (source === "cem") {
-                lines.push(
-                  `This PR introduces **public-API changes** detected by diffing the Custom Elements Manifest:`,
-                  ``,
-                  cemMd,
-                  ``,
-                  `Please **do not merge it into \`main\`** until the release ships — public API changes should land in the next dev cycle.`,
-                );
-              } else {
-                lines.push(
-                  `This PR is detected as a **feature or a breaking change** (title pattern: \`feat:\` / \`feat(...)\` / any type with \`!\`). Please **do not merge it into \`main\`** until the release ships.`,
-                );
-              }
-              lines.push(
-                ``,
-                `Bugfixes and chores without API impact are unaffected. If you believe this PR was flagged in error, please coordinate with the release captain.`,
-                ``,
-                `_Posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/dev-close-notice.yaml) workflow._`,
-              );
-              return lines.join("\n");
-            };
-
-            // Pick the PR list based on event:
-            // - pull_request: just the one PR that triggered the run
-            // - schedule / workflow_dispatch: every open PR targeting `main`
-            let prs;
-            if (context.eventName === "pull_request") {
-              prs = [{
-                number: context.payload.pull_request.number,
-                title: context.payload.pull_request.title,
-                base: { ref: context.payload.pull_request.base.ref },
-                draft: context.payload.pull_request.draft,
-              }];
-            } else {
-              prs = await github.paginate(github.rest.pulls.list, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: "open",
-                base: "main",
-                per_page: 100,
-              });
+            // Idempotent: don't post again if the marker is already there.
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              per_page: 100,
+            });
+            if (comments.some(c => c.body && c.body.includes(MARKER))) {
+              core.info(`PR #${prNumber}: marker already present, skipping.`);
+              return;
             }
 
-            core.info(`Considering ${prs.length} PR(s).`);
+            const body = [
+              MARKER,
+              `### ⏸️ Dev close in effect`,
+              ``,
+              `This repository is currently in **dev close** ahead of release \`${process.env.RELEASE}\` (scheduled **${process.env.RELEASE_DATE}**, UTC).`,
+              ``,
+              `This PR introduces **public-API changes** detected by diffing the Custom Elements Manifest:`,
+              ``,
+              process.env.DIFF_MD,
+              ``,
+              `Please **do not merge it into \`main\`** until the release ships — public API changes should land in the next dev cycle.`,
+              ``,
+              `_Posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/dev-close-notice.yaml) workflow._`,
+            ].join("\n");
 
-            for (const pr of prs) {
-              if (pr.base.ref !== "main") continue;
-
-              // Skip drafts — they aren't merge candidates yet.
-              if (pr.draft) {
-                core.info(`PR #${pr.number}: draft, skipping.`);
-                continue;
-              }
-
-              // Decide source of detection for this PR:
-              //   - For pull_request events: prefer CEM diff if it ran successfully.
-              //     If CEM says "no-changes", trust it (don't fall back to title).
-              //     If CEM was skipped (no src changes) or failed, fall back to title.
-              //   - For schedule/dispatch: title regex only.
-              let source = null;
-              if (context.eventName === "pull_request" && cemStatus === "ok") {
-                source = "cem";
-              } else if (cemStatus === "no-changes") {
-                core.info(`PR #${pr.number}: CEM diff is empty — no public-API changes, skipping.`);
-                continue;
-              } else {
-                // cemStatus is "failed", "skipped", or this is a daily sweep.
-                if (isBlockedTitle(pr.title)) {
-                  source = "title";
-                } else {
-                  core.info(`PR #${pr.number}: title doesn't match feat/breaking ("${pr.title}"), skipping.`);
-                  continue;
-                }
-              }
-
-              // Has the marker already been posted?
-              const comments = await github.paginate(github.rest.issues.listComments, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                per_page: 100,
-              });
-
-              if (comments.some(c => c.body && c.body.includes(MARKER))) {
-                core.info(`PR #${pr.number}: marker already present, skipping.`);
-                continue;
-              }
-
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                body: buildBody({ source, cemMd, pr }),
-              });
-              core.info(`PR #${pr.number}: posted dev-close notice (source=${source}).`);
-            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
+            core.info(`PR #${prNumber}: posted dev-close notice.`);

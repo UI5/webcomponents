@@ -10,6 +10,19 @@
  * `privacy: "public"`) ourselves keeps the workflow honest about what counts
  * as a public-API change.
  *
+ * Coverage (informed by nnaydenow/version-compare's process-manifest.js, which
+ * solves a similar problem for release-prep — we kept the categories that
+ * matter, dropped the HTML rendering and signature-noise on additions):
+ *   - custom-element declarations (added / removed)
+ *   - properties (kind=field) and methods (kind=method) — separated
+ *   - events, including event parameters, _ui5Bubbles, _ui5Cancelable
+ *   - slots
+ *   - cssProperties, cssParts, cssStates, attributes
+ *   - enums, including individual enum-member additions/removals
+ *   - interfaces (added / removed / deprecation transitions)
+ *   - deprecation transitions on any tracked entity (newly deprecated,
+ *     un-deprecated, deprecation-message-changed)
+ *
  * Usage:
  *   node diff-cem.mjs <baseDir> <headDir>
  *
@@ -62,39 +75,86 @@ function isPublic(node, { topLevel = false } = {}) {
 	return topLevel && node?.customElement === true;
 }
 
-/** Collapse a manifest into a flat lookup of public entries:
- *    "<modulePath>::<declarationName>"                     → declaration node
- *    "<modulePath>::<declarationName>::<member|event|slot|cssProperty|cssPart>:<name>"
- *                                                           → member node
- */
+/** True iff this top-level declaration is in scope for our diff. We track
+ *  custom elements (the bulk of the public API), enums and interfaces — those
+ *  three are the public-typed surface of UI5 packages. */
+function isTrackedDeclaration(decl) {
+	if (!decl) return false;
+	if (decl.customElement) return isPublic(decl, { topLevel: true });
+	if (decl.kind === "enum" || decl.kind === "interface") {
+		// Enums/interfaces don't have customElement=true; they're tracked iff
+		// they declare _ui5privacy === "public" or have no privacy at all
+		// (default-public for top-level type-system declarations).
+		const p = decl._ui5privacy ?? decl.privacy;
+		return !p || p === "public";
+	}
+	return false;
+}
+
+/** Distinguish properties (kind=field) vs methods (kind=method) inside the
+ *  generic `members` array. Anything else (e.g. accessors that survive into
+ *  the manifest) falls back to "members". */
+function memberSubKind(m) {
+	if (m?.kind === "field") return "properties";
+	if (m?.kind === "method") return "methods";
+	return "members";
+}
+
+/** Collapse a manifest into a flat lookup of public entries. Each value is
+ *  `{ kind, node, parent? }` where kind is the category used in diffs. */
 function flattenPublic(manifest) {
 	const flat = new Map();
 	const modules = manifest?.modules ?? [];
 	for (const mod of modules) {
 		const path = mod.path ?? "(unknown)";
 		for (const decl of mod.declarations ?? []) {
-			if (!isPublic(decl, { topLevel: true })) continue;
+			if (!isTrackedDeclaration(decl)) continue;
+			const declKind = decl.customElement
+				? "element"
+				: decl.kind === "enum"
+					? "enum"
+					: "interface";
 			const declKey = `${path}::${decl.name}`;
-			flat.set(declKey, { kind: "declaration", node: decl });
+			flat.set(declKey, { kind: declKind, node: decl });
 
+			// Enum members: track each enum value as an entry of its own. Members
+			// of enums have no privacy field — they inherit the enum's.
+			if (declKind === "enum") {
+				for (const m of decl.members ?? []) {
+					const memberName = m?.name ?? m?.value ?? m?.id;
+					if (!memberName) continue;
+					flat.set(`${declKey}::enumMembers:${memberName}`, {
+						kind: "enumMembers",
+						node: m,
+					});
+				}
+				continue; // enums don't have the property/event/slot groups below
+			}
+
+			// Custom elements: walk every member group.
 			const groups = [
-				["members", decl.members],
+				// `members` is a heterogeneous array — split by kind.
+				["__members__", decl.members],
 				["events", decl.events],
 				["slots", decl.slots],
 				["cssProperties", decl.cssProperties],
 				["cssParts", decl.cssParts],
+				["cssStates", decl.cssStates],
 				["attributes", decl.attributes],
 			];
 			for (const [groupName, arr] of groups) {
 				if (!Array.isArray(arr)) continue;
 				for (const m of arr) {
-					// CSS properties / parts / attributes don't carry privacy fields
-					// in the manifest schema — they're always public when present
-					// on a public declaration. Members/events/slots use _ui5privacy.
-					const alwaysPublic = groupName === "cssProperties" || groupName === "cssParts" || groupName === "attributes";
+					// CSS properties / parts / states / attributes don't carry privacy
+					// fields — they're always public when present on a public element.
+					const alwaysPublic = groupName === "cssProperties"
+						|| groupName === "cssParts"
+						|| groupName === "cssStates"
+						|| groupName === "attributes";
 					if (!alwaysPublic && !isPublic(m)) continue;
-					const memberKey = `${declKey}::${groupName}:${m.name}`;
-					flat.set(memberKey, { kind: groupName, node: m });
+					const subKind = groupName === "__members__" ? memberSubKind(m) : groupName;
+					const memberKey = `${declKey}::${subKind}:${m.name}`;
+					flat.set(memberKey, { kind: subKind, node: m });
 				}
 			}
 		}
@@ -102,16 +162,56 @@ function flattenPublic(manifest) {
 	return flat;
 }
 
-/** Compare two member nodes shallowly: returns a list of changed field names
- *  (only fields that affect API surface — type text, default value, deprecated). */
-function memberFieldDiff(a, b) {
+/** Compare two nodes for surface-relevant fields. Returns a list of changed
+ *  field names. We treat "deprecated" specially — any transition matters,
+ *  including a message edit, so callers can render it explicitly. */
+function nodeFieldDiff(kind, a, b) {
 	const changed = [];
+
+	// Type text — present on properties, methods (return type), slots, events,
+	// cssProperties (sometimes), attributes.
 	const aType = a?.type?.text ?? a?._ui5type?.text;
 	const bType = b?.type?.text ?? b?._ui5type?.text;
 	if (aType !== bType) changed.push("type");
+
+	// Defaults are relevant for properties and attributes; harmless on others.
 	if ((a?.default ?? null) !== (b?.default ?? null)) changed.push("default");
-	if (Boolean(a?.deprecated) !== Boolean(b?.deprecated)) changed.push("deprecated");
+
+	// Readonly transitions matter for properties.
 	if ((a?.readonly ?? false) !== (b?.readonly ?? false)) changed.push("readonly");
+
+	// Deprecation transitions are a public-API signal in their own right.
+	const aDep = a?.deprecated;
+	const bDep = b?.deprecated;
+	if (Boolean(aDep) !== Boolean(bDep) || (aDep && bDep && aDep !== bDep)) {
+		changed.push("deprecated");
+	}
+
+	// Event-only fields.
+	if (kind === "events") {
+		if ((a?._ui5Bubbles ?? null) !== (b?._ui5Bubbles ?? null)) changed.push("bubbles");
+		if ((a?._ui5Cancelable ?? null) !== (b?._ui5Cancelable ?? null)) changed.push("cancelable");
+
+		// Parameter set diff: any add/remove/type-change counts as a change.
+		const aParams = a?._ui5parameters ?? [];
+		const bParams = b?._ui5parameters ?? [];
+		const allNames = new Set([
+			...aParams.map(p => p.name).filter(Boolean),
+			...bParams.map(p => p.name).filter(Boolean),
+		]);
+		for (const name of allNames) {
+			const ap = aParams.find(p => p.name === name);
+			const bp = bParams.find(p => p.name === name);
+			if (!ap || !bp) {
+				changed.push(`param:${name}`);
+				continue;
+			}
+			if ((ap.type?.text ?? null) !== (bp.type?.text ?? null)) {
+				changed.push(`param:${name}`);
+			}
+		}
+	}
+
 	return changed;
 }
 
@@ -124,10 +224,11 @@ function diffPackage(baseManifest, headManifest) {
 	const changed = [];
 
 	for (const [key, value] of headFlat) {
-		if (!baseFlat.has(key)) {
+		const baseEntry = baseFlat.get(key);
+		if (!baseEntry) {
 			added.push({ key, kind: value.kind, name: value.node.name });
 		} else {
-			const fields = memberFieldDiff(baseFlat.get(key).node, value.node);
+			const fields = nodeFieldDiff(value.kind, baseEntry.node, value.node);
 			if (fields.length) changed.push({ key, kind: value.kind, name: value.node.name, fields });
 		}
 	}
