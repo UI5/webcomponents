@@ -6,6 +6,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import type HeroBannerLayout from "./types/HeroBannerLayout.js";
+import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
 
 // Template
 import HeroBannerTemplate from "./HeroBannerTemplate.js";
@@ -150,6 +151,9 @@ class HeroBanner extends UI5Element {
 	 */
 	@slot()
 	actions!: Slot<HTMLElement>;
+
+	@property()
+	actionsPlacement: `${HeroBannerActionsPlacement}` = "TopRight";
 
 	get _hasStartContent() {
 		return this.startContent.length > 0;
