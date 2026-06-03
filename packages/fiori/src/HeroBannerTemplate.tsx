@@ -17,6 +17,18 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 				"ui5-banner-content": true,
 				[`ui5-banner-layout-${this.layout}`]: true,
 			}} part="content">
+				{this._hasStartContent &&
+					<div class="ui5-banner-block ui5-banner-block-start" part="startContent">
+						<slot></slot>
+					</div>
+				}
+
+				{this._hasEndContent &&
+					<div class="ui5-banner-block ui5-banner-block-end" part="endContent">
+						<slot name="endContent"></slot>
+					</div>
+				}
+
 				<div class="ui5-banner-header" part="header">
 					<div class="ui5-banner-header-text">
 						{this.overlineText &&
@@ -44,18 +56,6 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 						</div>
 					}
 				</div>
-
-				{this._hasStartContent &&
-					<div class="ui5-banner-block ui5-banner-block-start" part="startContent">
-						<slot></slot>
-					</div>
-				}
-
-				{this._hasEndContent &&
-					<div class="ui5-banner-block ui5-banner-block-end" part="endContent">
-						<slot name="endContent"></slot>
-					</div>
-				}
 			</div>
 		</div>
 	);

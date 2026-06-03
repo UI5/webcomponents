@@ -36,7 +36,7 @@
 	font-size: var(--sapFontSize);
 }
 
-/* Header (Salutation + Date) */
+/* Header (Salutation + Date) — last in DOM order, visually first by default via order: -1 */
 .ui5-banner-header {
 	display: flex;
 	flex-direction: row;
@@ -44,6 +44,7 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
+	order: -1;
 }
 
 .ui5-banner-header-text {
@@ -91,11 +92,16 @@
 	line-height: 1.4;
 }
 
-/* headerTextBlockPlacement="Bottom": push header-text to the bottom of the header row */
+/* headerTextBlockPlacement="Bottom": header is already last in DOM — just remove the order: -1 */
 :host([header-text-block-placement="Bottom"]) .ui5-banner-header {
+	order: 0;
+	margin-top: auto;
+}
+
+/* BottomStart non-split grid with endContent and no startContent:
+   two-column grid, header in col 1 — push its content to the bottom */
+:host([header-text-block-placement="Bottom"][actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-header {
 	justify-content: flex-end;
-	flex-direction: column;
-	align-items: flex-start;
 }
 
 /* actionsPlacement="BottomStart": actions sit below header-text, left-aligned */
@@ -172,6 +178,38 @@
 	grid-row: 2;
 }
 
+/* Bottom: header is last in DOM, drop order: -1 so it lands in row 2 via auto-placement */
+:host([header-text-block-placement="Bottom"]) .ui5-banner-layout-TwoColumns .ui5-banner-header,
+:host([header-text-block-placement="Bottom"]) .ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-header {
+	grid-row: 2;
+	grid-column: 1 / -1;
+}
+
+/* BottomStart in split layouts with no startContent: single-row grid, header col 1 / end block col 2 */
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)),
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) {
+	grid-template-rows: 1fr;
+	align-items: stretch;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)) .ui5-banner-header,
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end,
+:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 1;
+	align-self: stretch;
+}
+
 /* Layout: TwoColumnsStartExpanded - start column twice as wide as end, content blocks side by side */
 .ui5-banner-content.ui5-banner-layout-TwoColumnsStartExpanded {
 	display: grid;
@@ -199,7 +237,7 @@
 	grid-row: 2;
 }
 
-/* L → XS (≤1024px): D – Heading max 3 lines, truncate with ellipsis */
+/* L → XS (≤1024px): Heading max 3 lines, truncate with ellipsis */
 @container (max-width: 1024px) {
 	.ui5-banner-heading {
 		display: -webkit-box;
@@ -236,5 +274,10 @@
 	/* BottomStart end block: center content when stacked */
 	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-end {
 		align-items: center;
+	}
+
+	/* Bottom: reset margin-top push when stacked */
+	:host([header-text-block-placement="Bottom"]) .ui5-banner-header {
+		margin-top: 0;
 	}
 }
