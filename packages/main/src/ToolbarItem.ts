@@ -73,7 +73,8 @@ class ToolbarItem extends ToolbarItemBase {
 		}
 
 		return this._supportsItemNavigationMovementInfo(child)
-			|| typeof child.getToolbarMovementInfo === "function";
+			|| typeof child.getToolbarMovementInfo === "function"
+			|| this.item.length > 1;
 	}
 
 	closeOverflowSet = {
@@ -318,7 +319,35 @@ class ToolbarItem extends ToolbarItemBase {
 			return child.getToolbarMovementInfo();
 		}
 
+		// Multi-child item (e.g. radio button group, checkbox group): report
+		// current position so toolbar knows when to cross the boundary.
+		if (this.item.length > 1) {
+			const { items, currentIndex } = this._getCurrentNavigationState();
+			if (currentIndex !== -1) {
+				return { currentIndex, itemCount: items.length };
+			}
+		}
+
 		return undefined;
+	}
+
+	moveWithinToolbarItem(isForward: boolean): boolean {
+		if (this.item.length <= 1) {
+			return false;
+		}
+
+		const { items, currentIndex } = this._getCurrentNavigationState();
+		if (currentIndex === -1) {
+			return false;
+		}
+
+		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
+		if (nextIndex < 0 || nextIndex >= items.length) {
+			return false;
+		}
+
+		this._handleNavigationTarget(items[nextIndex]);
+		return true;
 	}
 
 	setToolbarForcedTabIndex(tabIndex: string) {

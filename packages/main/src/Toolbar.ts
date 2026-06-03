@@ -11,6 +11,8 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isLeft,
 	isRight,
+	isUp,
+	isDown,
 	isHome,
 	isEnd,
 	isTabNext,
@@ -343,6 +345,9 @@ class Toolbar extends UI5Element {
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
 		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
+		if (item.isOverflowed) {
+			item.setToolbarForcedTabIndex("0");
+		}
 		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
 		if (item.hasOverflow && !item.isOverflowed && itemWrapper) {
 			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
@@ -523,6 +528,8 @@ class Toolbar extends UI5Element {
 
 	onOverflowPopoverOpened() {
 		this.popoverOpen = true;
+		const firstItem = this.overflowItems.find(item => item.isInteractive && !item.hidden);
+		firstItem?.focusForToolbarNavigation(true);
 	}
 
 	onResize() {
@@ -650,6 +657,11 @@ class Toolbar extends UI5Element {
 			if (moved) {
 				e.preventDefault();
 			}
+			return;
+		}
+
+		if (isUp(e) || isDown(e)) {
+			e.preventDefault();
 			return;
 		}
 

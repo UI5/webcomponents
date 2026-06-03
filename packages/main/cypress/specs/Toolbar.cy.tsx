@@ -115,7 +115,90 @@ describe("Toolbar general interaction", () => {
 			});
 	});
 
-	it("shouldn't have toolbar button as popover opener when there is spacer before last toolbar item", () => {
+	it("Should navigate between toolbar items with Left/Right arrow keys", () => {
+		cy.mount(
+			<Toolbar id="arrow-nav-toolbar">
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar-button][text='First']").realClick().should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Second']").should("be.focused");
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Third']").should("be.focused");
+
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Second']").should("be.focused");
+	});
+
+	it("Should move focus to first/last item with Home/End keys", () => {
+		cy.mount(
+			<Toolbar id="home-end-toolbar">
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Last"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar-button][text='Second']").realClick().should("be.focused");
+
+		cy.realPress("End");
+		cy.get("[ui5-toolbar-button][text='Last']").should("be.focused");
+
+		cy.realPress("Home");
+		cy.get("[ui5-toolbar-button][text='First']").should("be.focused");
+	});
+
+	it("Should not scroll the page when pressing Up/Down inside the toolbar", () => {
+		cy.mount(
+			<div style={{ height: "2000px" }}>
+				<Toolbar id="scroll-toolbar" style={{ marginTop: "100px" }}>
+					<ToolbarButton text="Button"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		cy.get("[ui5-toolbar-button][text='Button']").realClick().should("be.focused");
+
+		cy.window().its("scrollY").as("scrollBefore");
+		cy.realPress("ArrowDown");
+		cy.window().its("scrollY").then(scrollAfter => {
+			cy.get("@scrollBefore").should("equal", scrollAfter);
+		});
+	});
+
+	it("Should focus first overflow item when overflow popover opens", () => {
+		cy.viewport(200, 1080);
+
+		cy.mount(
+			<Toolbar id="overflow-focus-toolbar">
+				<ToolbarButton text="One"></ToolbarButton>
+				<ToolbarButton text="Two"></ToolbarButton>
+				<ToolbarButton text="Three"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.realClick();
+
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-overflow-popover")
+			.should("have.attr", "open", "open");
+
+		cy.get("[ui5-toolbar-button]")
+			.first()
+			.should("be.focused");
+	});
+
+
 		cy.mount(
 			<Toolbar id="otb_spacer">
 				<ToolbarButton icon={add} text="Plus" design="Default"></ToolbarButton>
@@ -551,11 +634,8 @@ describe("Toolbar general interaction", () => {
 		// Resize the viewport to make the overflow button disappear
 		cy.viewport(800, 1080);
 
-		// Verify the focus shifts to the last interactive element outside the overflow popover
-		cy.get("[ui5-toolbar]")
-			.shadow()
-			.find(".ui5-tb-item")
-			.eq(3)
+		// Verify the focus shifts to the last visible toolbar button
+		cy.get("[ui5-toolbar-button][text='Button 5']")
 			.should("be.focused");
 	});
 
