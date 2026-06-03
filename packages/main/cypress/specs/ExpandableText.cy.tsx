@@ -271,25 +271,23 @@ describe("ExpandableText", () => {
 				.find(".ui5-exp-text-toggle")
 				.realClick();
 
-			cy.get("[ui5-expandable-text]")
-				.invoke("css", "font-family")
-				.then(hostFontFamily => {
-					cy.get("[ui5-expandable-text]")
-						.invoke("css", "font-size")
-						.then(hostFontSize => {
-							cy.get("@expTextShadow")
-								.find(".ui5-exp-text-popover")
-								.should("have.css", "white-space", "pre-line")
-								.and("have.css", "font-family", hostFontFamily as unknown as string)
-								.and("have.css", "font-size", hostFontSize as unknown as string);
+			cy.get("[ui5-expandable-text]").then($host => {
+				const hostWhiteSpace = $host.css("white-space");
+				const hostFontFamily = $host.css("font-family");
+				const hostFontSize = $host.css("font-size");
 
-							cy.get("@expTextShadow")
-								.find(".ui5-exp-text-popover-text")
-								.should("have.css", "white-space", "pre-line")
-								.and("have.css", "font-family", hostFontFamily as unknown as string)
-								.and("have.css", "font-size", hostFontSize as unknown as string);
-						});
-				});
+				cy.get("@expTextShadow")
+					.find(".ui5-exp-text-popover")
+					.should("have.css", "white-space", hostWhiteSpace)
+					.and("have.css", "font-family", hostFontFamily)
+					.and("have.css", "font-size", hostFontSize);
+
+				cy.get("@expTextShadow")
+					.find(".ui5-exp-text-popover-text")
+					.should("have.css", "white-space", hostWhiteSpace)
+					.and("have.css", "font-family", hostFontFamily)
+					.and("have.css", "font-size", hostFontSize);
+			});
 		});
 	});
 
