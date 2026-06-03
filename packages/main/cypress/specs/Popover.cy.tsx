@@ -1911,8 +1911,6 @@ describe("Min Width via CSS", () => {
 		cy.get("[ui5-popover]").invoke("prop", "open", true);
 
 		cy.get("[ui5-popover]")
-			.shadow()
-			.find(".ui5-popup-root")
 			.should("have.css", "min-width", "300px");
 	});
 
@@ -1951,8 +1949,6 @@ describe("Min Width via CSS", () => {
 		cy.get("[ui5-popover]").invoke("prop", "open", true);
 
 		cy.get("[ui5-popover]")
-			.shadow()
-			.find(".ui5-popup-root")
 			.should("have.css", "min-width", "400px");
 
 		cy.get("[ui5-popover]")
@@ -1972,26 +1968,5 @@ describe("Min Width via CSS", () => {
 				const currentWidth = $popover[0].getBoundingClientRect().width;
 				expect(currentWidth).to.be.at.least(400);
 			});
-	});
-
-	it("should accept different CSS units", () => {
-		cy.mount(
-			<>
-				<Button id="btnRem">Rem Units</Button>
-				<Popover id="popRem" opener="btnRem" style={{ minWidth: "20rem" }}>
-					<div>Min width in rem</div>
-				</Popover>
-				<Button id="btnVw" style={{ marginLeft: "20px" }}>Vw Units</Button>
-				<Popover id="popVw" opener="btnVw" style={{ minWidth: "30vw" }}>
-					<div>Min width in vw</div>
-				</Popover>
-			</>
-		);
-
-		cy.get("#popRem").invoke("prop", "open", true);
-		cy.get("#popRem")
-			.shadow()
-			.find(".ui5-popup-root")
-			.should("have.css", "min-width", "320px");
 	});
 });

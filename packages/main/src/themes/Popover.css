@@ -60,10 +60,6 @@
 	display: none;
 }
 
-.ui5-popover-root {
-	min-width: inherit;
-}
-
 .ui5-popover-arrow {
 	pointer-events: none;
 	display: block;
