@@ -77,9 +77,9 @@ describe("HeroBanner", () => {
 				.should("exist");
 		});
 
-		it("applies OneOneColumns layout", () => {
+		it("applies TwoColumns layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="OneOneColumns">
+				<HeroBanner headerText="Hello" layout="TwoColumns">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -87,13 +87,13 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-OneOneColumns")
+				.find(".ui5-banner-layout-TwoColumns")
 				.should("exist");
 		});
 
-		it("applies TwoOneColumns layout", () => {
+		it("applies TwoColumnsStartExpanded layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="TwoOneColumns">
+				<HeroBanner headerText="Hello" layout="TwoColumnsStartExpanded">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -101,7 +101,7 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-TwoOneColumns")
+				.find(".ui5-banner-layout-TwoColumnsStartExpanded")
 				.should("exist");
 		});
 	});
@@ -133,9 +133,9 @@ describe("HeroBanner", () => {
 				.and("have.text", "End Content");
 		});
 
-		it("renders both startContent and endContent in OneOneColumns layout", () => {
+		it("renders both startContent and endContent in TwoColumns layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="OneOneColumns">
+				<HeroBanner headerText="Hello" layout="TwoColumns">
 					<div id="start">Left</div>
 					<div slot="endContent" id="end">Right</div>
 				</HeroBanner>
@@ -288,11 +288,11 @@ describe("HeroBanner", () => {
 				.should("exist");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "layout", "OneOneColumns");
+				.invoke("prop", "layout", "TwoColumns");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-OneOneColumns")
+				.find(".ui5-banner-layout-TwoColumns")
 				.should("exist");
 		});
 	});
@@ -393,7 +393,7 @@ describe("HeroBanner", () => {
 
 		it("endContent block exists alongside BottomStart actions", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="BottomStart" layout="OneOneColumns">
+				<HeroBanner headerText="Hello" actionsPlacement="BottomStart" layout="TwoColumns">
 					<div slot="actions">Action</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>

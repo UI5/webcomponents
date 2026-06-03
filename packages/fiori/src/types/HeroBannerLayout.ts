@@ -14,18 +14,18 @@ enum HeroBannerLayout {
 	OneColumn = "OneColumn",
 
 	/**
-	 * Two equal columns layout (1fr 1fr).
-	 * The free content blocks are split equally side by side.
+	 * Two equal columns layout. Both content blocks share the available width equally.
+	 * The free content blocks are split side by side.
 	 * @public
 	 */
-	OneOneColumns = "OneOneColumns",
+	TwoColumns = "TwoColumns",
 
 	/**
-	 * Two unequal columns layout (2fr 1fr).
-	 * The first free block takes 2/3 width, the second takes 1/3.
+	 * Two unequal columns layout. The start content block takes twice the width of the end block.
+	 * The first free block takes two-thirds of the width, the second takes one-third.
 	 * @public
 	 */
-	TwoOneColumns = "TwoOneColumns",
+	TwoColumnsStartExpanded = "TwoColumnsStartExpanded",
 }
 
 export default HeroBannerLayout;

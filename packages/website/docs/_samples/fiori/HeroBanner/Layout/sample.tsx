@@ -29,11 +29,11 @@ function App() {
 
       <br />
 
-      <h4>OneOneColumns Layout (1fr 1fr)</h4>
+      <h4>TwoColumns Layout (equal width columns)</h4>
       <HeroBanner
         headerText="Hi, David"
         overlineText="Monday, May 26, 2026"
-        layout="OneOneColumns"
+        layout="TwoColumns"
       >
         <Card>
           <CardHeader slot="header" titleText="Leave Balance" subtitleText="Days remaining" />
@@ -47,11 +47,11 @@ function App() {
 
       <br />
 
-      <h4>TwoOneColumns Layout (2fr 1fr)</h4>
+      <h4>TwoColumnsStartExpanded Layout (start column twice as wide)</h4>
       <HeroBanner
         headerText="Good Afternoon, Thomas"
         overlineText="Monday, May 26, 2026"
-        layout="TwoOneColumns"
+        layout="TwoColumnsStartExpanded"
       >
         <Card>
           <CardHeader slot="header" titleText="Sales Pipeline" subtitleText="Q2 2026" />

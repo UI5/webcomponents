@@ -47,7 +47,7 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * ### Responsive Behavior
  *
  * The hero banner adapts to different screen sizes:
- * - On smaller screens, split layouts (OneOneColumns, TwoOneColumns) collapse to a single stacked column.
+ * - On smaller screens, split layouts (TwoColumns, TwoColumnsStartExpanded) collapse to a single stacked column.
  * - The heading text wraps to multiple lines as needed.
  * - Buttons in the headerAction slot will wrap.
  * - On screens ≤1024px, the header text is wrapped to a maximum of 3 lines.
@@ -105,10 +105,10 @@ class HeroBanner extends UI5Element {
 	 *
 	 * - **OneColumn** - The default slot spans the full width below the heading.
 	 *   The endContent slot, if used, appears at the bottom and also spans the full width.
-	 * - **OneOneColumns** - Two equal columns (1fr 1fr). The default slot occupies the left column,
-	 *   the endContent slot the right. On smaller screens, both slots stack vertically.
-	 * - **TwoOneColumns** - Two unequal columns (2fr 1fr). The default slot takes two-thirds,
-	 *   the endContent slot one-third. On smaller screens, both slots stack vertically.
+	 * - **TwoColumns** - Two equal columns. Both content blocks share the available width equally.
+	 *   The default slot occupies the left column, the endContent slot the right. On smaller screens, both slots stack vertically.
+	 * - **TwoColumnsStartExpanded** - Two unequal columns. The start content takes twice the width of the end content.
+	 *   The default slot takes two-thirds, the endContent slot one-third. On smaller screens, both slots stack vertically.
 	 *
 	 * @default "OneColumn"
 	 * @public
@@ -131,7 +131,7 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the second free content block of the hero banner.
 	 *
-	 * Used alongside `startContent` in split layouts (`OneOneColumns`, `TwoOneColumns`).
+	 * Used alongside `startContent` in split layouts (`TwoColumns`, `TwoColumnsStartExpanded`).
 	 * Can contain cards, buttons, and other interactive elements.
 	 *
 	 * @public

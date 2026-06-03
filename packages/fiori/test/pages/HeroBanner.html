@@ -68,16 +68,16 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 4. OneOneColumns Layout (1fr 1fr)      -->
-		<!-- ====================================== -->
+		<!-- 4. TwoColumns Layout (equal width columns)      -->
+<!-- ====================================== -->
 		<section>
-			<h2>4. OneOneColumns Layout (1fr 1fr)</h2>
+			<h2>4. TwoColumns Layout (equal width columns)</h2>
 			<p>Two KPI cards side by side in a 50/50 layout.</p>
 
 			<ui5-hero-banner id="hero-banner-half"
 				header-text="Hello, Maria"
 				overline-text="Thursday, March 6, 2026"
-				layout="OneOneColumns">
+				layout="TwoColumns">
 
 				<div class="kpi-card">
 					<span class="kpi-label">Open Orders</span>
@@ -94,16 +94,16 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 5. TwoOneColumns Layout (2fr 1fr)      -->
+		<!-- 5. TwoColumnsStartExpanded Layout (start column twice as wide)      -->
 		<!-- ====================================== -->
 		<section>
-			<h2>5. TwoOneColumns Layout (2fr 1fr)</h2>
+			<h2>5. TwoColumnsStartExpanded Layout (start column twice as wide)</h2>
 			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
 
 			<ui5-hero-banner id="hero-banner-twothirds"
 				header-text="Good Afternoon, Thomas"
 				overline-text="Thursday, March 6, 2026"
-				layout="TwoOneColumns">
+				layout="TwoColumnsStartExpanded">
 
 				<div class="kpi-card">
 					<span class="kpi-label">Pipeline Overview</span>
@@ -147,7 +147,7 @@
 			<ui5-hero-banner style="--_ui5_banner_background_image: url(https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg);" id="hero-banner-interactive"
 				header-text="Hello, David"
 				overline-text="Thursday, March 6, 2026"
-				layout="OneOneColumns">
+				layout="TwoColumns">
 
 			<ui5-card>
 					<ui5-card-header
@@ -253,8 +253,8 @@
 					<span class="controls-separator">|</span>
 					<span class="controls-label">Layout:</span>
 					<ui5-button id="btn-layout-full">OneColumn</ui5-button>
-					<ui5-button id="btn-layout-half">OneOneColumns</ui5-button>
-					<ui5-button id="btn-layout-twothirds">TwoOneColumns</ui5-button>
+					<ui5-button id="btn-layout-half">TwoColumns</ui5-button>
+					<ui5-button id="btn-layout-twothirds">TwoColumnsStartExpanded</ui5-button>
 				</div>
 			</div>
 
@@ -285,7 +285,7 @@
 			<p>The blue home page header as seen in SAP SuccessFactors: a personalized greeting with quick-action shortcuts on the left and a carousel of alert cards on the right.</p>
 
 			<ui5-hero-banner id="hero-banner-sf"
-				layout="TwoOneColumns">
+				layout="TwoColumnsStartExpanded">
 				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
 				<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
 					<div>
@@ -321,10 +321,10 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 12. OneOneColumns with Top-Aligned Card    -->
+		<!-- 12. TwoColumns with Top-Aligned Card    -->
 		<!-- ====================================== -->
 		<section>
-			<h2>12. OneOneColumns with Top-Aligned Carousel</h2>
+			<h2>12. TwoColumns with Top-Aligned Carousel</h2>
 			<p>A 50/50 layout with salutation, date, action buttons in the actions slot and a carousel of cards top-aligned with the date text in the end slot.</p>
 
 			<ui5-hero-banner id="hero-banner-top-aligned-card"
@@ -417,10 +417,10 @@
 			dynamicBanner.layout = "OneColumn";
 		});
 		document.getElementById("btn-layout-half").addEventListener("click", function () {
-			dynamicBanner.layout = "OneOneColumns";
+			dynamicBanner.layout = "TwoColumns";
 		});
 		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
-			dynamicBanner.layout = "TwoOneColumns";
+			dynamicBanner.layout = "TwoColumnsStartExpanded";
 		});
 	</script>
 </body>

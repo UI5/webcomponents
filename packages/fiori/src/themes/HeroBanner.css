@@ -107,14 +107,14 @@
 
 /* actionsPlacement="BottomStart" with endContent, not combined with a split layout:
    content becomes a two-column grid so end block spans full height */
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-OneOneColumns):not(.ui5-banner-layout-TwoOneColumns) {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr;
 	align-items: stretch;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-OneOneColumns):not(.ui5-banner-layout-TwoOneColumns) .ui5-banner-header {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-header {
 	grid-column: 1;
 	grid-row: 1;
 	align-self: stretch;
@@ -124,13 +124,13 @@
 	align-items: flex-start;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-OneOneColumns):not(.ui5-banner-layout-TwoOneColumns) .ui5-banner-block-start {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 1;
 	align-self: end;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-OneOneColumns):not(.ui5-banner-layout-TwoOneColumns) .ui5-banner-block-end {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 1;
 	height: 100%;
@@ -146,56 +146,56 @@
 	min-width: 0;
 }
 
-/* Layout: OneOneColumns - 1fr 1fr grid, content blocks side by side */
-.ui5-banner-content.ui5-banner-layout-OneOneColumns {
+/* Layout: TwoColumns - equal width columns, content blocks side by side */
+.ui5-banner-content.ui5-banner-layout-TwoColumns {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto 1fr;
 }
 
-.ui5-banner-layout-OneOneColumns .ui5-banner-header {
+.ui5-banner-layout-TwoColumns .ui5-banner-header {
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
 
-.ui5-banner-layout-OneOneColumns .ui5-banner-block-start {
+.ui5-banner-layout-TwoColumns .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 2;
 }
 
 /* Without endContent, start content spans full width */
-.ui5-banner-layout-OneOneColumns:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+.ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
 	grid-column: 1 / -1;
 }
 
-.ui5-banner-layout-OneOneColumns .ui5-banner-block-end {
+.ui5-banner-layout-TwoColumns .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 2;
 }
 
-/* Layout: TwoOneColumns - 2fr 1fr grid, content blocks side by side */
-.ui5-banner-content.ui5-banner-layout-TwoOneColumns {
+/* Layout: TwoColumnsStartExpanded - start column twice as wide as end, content blocks side by side */
+.ui5-banner-content.ui5-banner-layout-TwoColumnsStartExpanded {
 	display: grid;
 	grid-template-columns: 2fr 1fr;
 	grid-template-rows: auto 1fr;
 }
 
-.ui5-banner-layout-TwoOneColumns .ui5-banner-header {
+.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-header {
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
 
-.ui5-banner-layout-TwoOneColumns .ui5-banner-block-start {
+.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 2;
 }
 
 /* Without endContent, start content spans full width */
-.ui5-banner-layout-TwoOneColumns:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+.ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
 	grid-column: 1 / -1;
 }
 
-.ui5-banner-layout-TwoOneColumns .ui5-banner-block-end {
+.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 2;
 }
@@ -214,8 +214,8 @@
 
 /* XS (≤599px): revert split layouts to stacked column */
 @container (max-width: 599px) {
-	.ui5-banner-content.ui5-banner-layout-OneOneColumns,
-	.ui5-banner-content.ui5-banner-layout-TwoOneColumns {
+	.ui5-banner-content.ui5-banner-layout-TwoColumns,
+	.ui5-banner-content.ui5-banner-layout-TwoColumnsStartExpanded {
 		display: flex;
 		flex-direction: column;
 	}
@@ -229,7 +229,7 @@
 	}
 
 	/* BottomStart also collapses to column on small screens */
-	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-OneOneColumns):not(.ui5-banner-layout-TwoOneColumns) {
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) {
 		display: flex;
 		flex-direction: column;
 	}
