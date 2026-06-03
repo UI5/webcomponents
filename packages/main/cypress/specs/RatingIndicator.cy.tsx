@@ -85,36 +85,22 @@ describe("RatingIndicator", () => {
 				.should("have.attr", "name", "heart-2");
 		});
 
-		it("should render halfUnratedIcon in half-star state when readonly", () => {
-			cy.mount(<RatingIndicator value={2.5} ratedIcon="heart" unratedIcon="heart-2" halfUnratedIcon="heart-2" readonly></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
-				.should("have.attr", "name", "heart");
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
-				.should("have.attr", "name", "heart-2");
-		});
-
-		it("should render halfUnratedIcon in half-star state when disabled", () => {
-			cy.mount(<RatingIndicator value={2.5} ratedIcon="heart" unratedIcon="heart-2" halfUnratedIcon="heart-2" disabled></RatingIndicator>);
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
-				.should("have.attr", "name", "heart");
-
-			cy.get("[ui5-rating-indicator]")
-				.shadow()
-				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
-				.should("have.attr", "name", "heart-2");
-		});
-
-		it("should fall back to unratedIcon in readonly half-star when halfUnratedIcon is not set", () => {
+		it("should render custom icon (unfilled) in half-star state when readonly", () => {
 			cy.mount(<RatingIndicator value={2.5} ratedIcon="heart" unratedIcon="heart-2" readonly></RatingIndicator>);
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-left [ui5-icon]")
+				.should("have.attr", "name", "heart");
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-half .ui5-rating-indicator-half-icon-right [ui5-icon]")
+				.should("have.attr", "name", "heart-2");
+		});
+
+		it("should render custom icon (unfilled) in half-star state when disabled", () => {
+			cy.mount(<RatingIndicator value={2.5} ratedIcon="heart" unratedIcon="heart-2" disabled></RatingIndicator>);
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()

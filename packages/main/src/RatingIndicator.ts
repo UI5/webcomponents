@@ -197,19 +197,6 @@ class RatingIndicator extends UI5Element {
 	unratedIcon = "unfavorite";
 
 	/**
-	 * Defines the icon to be displayed for the non-selected half of a half-value rating symbol
-	 * in read-only or disabled mode.
-	 *
-	 * If not set, the `unratedIcon` value is used.
-	 *
-	 * @default undefined
-	 * @public
-	 * @since 2.23
-	 */
-	@property()
-	halfUnratedIcon?: string;
-
-	/**
 	 * @private
 	 */
 	@property({ type: Array, noAttribute: true })
