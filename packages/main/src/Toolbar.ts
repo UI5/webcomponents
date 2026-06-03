@@ -194,7 +194,6 @@ class Toolbar extends UI5Element {
 	itemsWidth = 0;
 	minContentWidth = 0;
 	_lastFocusedItem?: ToolbarItemBase | HTMLElement;
-	_originalTabIndexes = new WeakMap<HTMLElement, string | null>();
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -339,9 +338,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
-		this._refreshOriginalTabIndexes();
 		this._applyRovingTabIndex();
-		this._restoreOverflowTabOrder();
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
@@ -526,7 +523,6 @@ class Toolbar extends UI5Element {
 
 	onOverflowPopoverOpened() {
 		this.popoverOpen = true;
-		this._restoreOverflowTabOrder();
 	}
 
 	onResize() {
@@ -587,70 +583,6 @@ class Toolbar extends UI5Element {
 	 * Keyboard Navigation
 	 */
 
-	_getOverflowTabTargets(item: ToolbarItemBase): Array<HTMLElement> {
-		return item._getNavigationTargets();
-	}
-
-	_storeOriginalTabIndex(target: HTMLElement) {
-		if (!this._originalTabIndexes.has(target)) {
-			this._originalTabIndexes.set(target, target.getAttribute("tabindex"));
-		}
-	}
-
-	_refreshOriginalTabIndexes() {
-		this._originalTabIndexes = new WeakMap<HTMLElement, string | null>();
-
-		this.standardItems
-			.filter(item => item.isInteractive && !item.hidden)
-			.forEach(item => {
-				const focusRef = item.getFocusDomRef();
-				if (focusRef) {
-					this._storeOriginalTabIndex(focusRef);
-				}
-
-				if (item.handlesOwnKeyboardNavigation) {
-					item._getNavigationTargets().forEach(target => this._storeOriginalTabIndex(target));
-				}
-			});
-
-		this.overflowItems
-			.filter(item => item.isInteractive && !item.hidden)
-			.forEach(item => {
-				this._getOverflowTabTargets(item).forEach(target => this._storeOriginalTabIndex(target));
-			});
-	}
-
-	_restoreOriginalTabIndex(target: HTMLElement) {
-		const originalTabIndex = this._originalTabIndexes.get(target);
-
-		if (originalTabIndex === undefined || originalTabIndex === null) {
-			target.removeAttribute("tabindex");
-			return;
-		}
-
-		target.setAttribute("tabindex", originalTabIndex);
-	}
-
-	_restoreOverflowTabOrder() {
-		this.overflowItems
-			.filter(item => item.isInteractive && !item.hidden)
-			.forEach(item => {
-				const isDisabled = "disabled" in item && !!(item as { disabled?: boolean }).disabled;
-				const targets = this._getOverflowTabTargets(item);
-
-				targets.forEach(target => {
-					if (isDisabled) {
-						target.tabIndex = -1;
-						target.setAttribute("aria-disabled", "true");
-						return;
-					}
-
-					this._restoreOriginalTabIndex(target);
-					target.removeAttribute("aria-disabled");
-				});
-			});
-	}
-
 	_applyDisabledItemsAccessibility() {
 		this.standardItems
 			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
@@ -658,7 +590,6 @@ class Toolbar extends UI5Element {
 			.forEach(item => {
 				const focusRef = item.getFocusDomRef();
 				if (focusRef) {
-					this._storeOriginalTabIndex(focusRef);
 					focusRef.tabIndex = -1;
 					focusRef.setAttribute("aria-disabled", "true");
 				}
@@ -681,7 +612,25 @@ class Toolbar extends UI5Element {
 		this._applyDisabledItemsAccessibility();
 	}
 
+	_isFocusInsideOverflow(path: Array<EventTarget>): boolean {
+		const popover = this.getOverflowPopover();
+		if (!popover) {
+			return false;
+		}
+		// Check popover shadow DOM (e.g. focus trap sentinels)
+		if ((path as Node[]).some(node => popover === node || popover.shadowRoot === node)) {
+			return true;
+		}
+		// Check if the event originates from a slotted overflow item (light DOM, not contained by popover)
+		const overflowItemSet = new Set<ToolbarItemBase>(this.overflowItems);
+		return (path as Node[]).some(node => overflowItemSet.has(node as ToolbarItemBase));
+	}
+
 	_onfocusin(e: FocusEvent) {
+		if (this.popoverOpen && this._isFocusInsideOverflow(e.composedPath())) {
+			return;
+		}
+
 		const currentTarget = this._findItemByPath(e.composedPath())
 			|| this._findOverflowButtonByPath(e.composedPath())
 			|| this._findCurrentTargetByActiveElement();
@@ -692,6 +641,10 @@ class Toolbar extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
+		if (this.popoverOpen && this._isFocusInsideOverflow(e.composedPath())) {
+			return;
+		}
+
 		if (isTabNext(e) || isTabPrevious(e)) {
 			const moved = this._focusOutsideToolbar(isTabPrevious(e), e.composedPath());
 			if (moved) {
@@ -909,11 +862,13 @@ class Toolbar extends UI5Element {
 
 		const currentIndex = currentIndexFromActive !== -1 ? currentIndexFromActive : currentIndexFromPath;
 
+		const isInsideToolbar = (el: HTMLElement) => this._isNodeInsideElement(el, this);
+
 		if (currentIndex !== -1) {
 			const step = backward ? -1 : 1;
 			for (let i = currentIndex + step; i >= 0 && i < tabbables.length; i += step) {
 				const candidate = tabbables[i];
-				if (!this.contains(candidate) && !this.shadowRoot?.contains(candidate)) {
+				if (!isInsideToolbar(candidate)) {
 					candidate.focus();
 					return true;
 				}
@@ -922,7 +877,7 @@ class Toolbar extends UI5Element {
 
 		const insideIndices = tabbables
 			.map((el, index) => ({ el, index }))
-			.filter(({ el }) => this.contains(el) || !!this.shadowRoot?.contains(el))
+			.filter(({ el }) => isInsideToolbar(el))
 			.map(({ index }) => index);
 
 		if (!insideIndices.length) {
@@ -936,7 +891,7 @@ class Toolbar extends UI5Element {
 
 		for (let i = startIndex; i >= 0 && i < tabbables.length; i += step) {
 			const candidate = tabbables[i];
-			if (!this.contains(candidate) && !this.shadowRoot?.contains(candidate)) {
+			if (!isInsideToolbar(candidate)) {
 				candidate.focus();
 				return true;
 			}

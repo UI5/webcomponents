@@ -73,8 +73,7 @@ class ToolbarItem extends ToolbarItemBase {
 		}
 
 		return this._supportsItemNavigationMovementInfo(child)
-			|| typeof child.getToolbarMovementInfo === "function"
-			|| this._hasOwnToolbarMovementInfo();
+			|| typeof child.getToolbarMovementInfo === "function";
 	}
 
 	closeOverflowSet = {
@@ -304,57 +303,6 @@ class ToolbarItem extends ToolbarItemBase {
 		};
 	}
 
-	_hasOwnToolbarMovementInfo(): boolean {
-		return this._getNavigationTargets().length > 1;
-	}
-
-	_getOwnToolbarMovementInfo(): ToolbarMovementInfo | undefined {
-		const { items, currentIndex } = this._getCurrentNavigationState();
-		if (items.length <= 1) {
-			return undefined;
-		}
-
-		if (currentIndex === -1) {
-			return undefined;
-		}
-
-		return {
-			currentIndex,
-			itemCount: items.length,
-		};
-	}
-
-	_isUsingOwnFallbackMovementInfo(): boolean {
-		const child = this.item[0] as IToolbarItemContent | undefined;
-		if (!child) {
-			return false;
-		}
-
-		return !this._supportsItemNavigationMovementInfo(child)
-			&& typeof child.getToolbarMovementInfo !== "function"
-			&& this._hasOwnToolbarMovementInfo();
-	}
-
-	moveWithinToolbarItem(isForward: boolean): boolean {
-		if (!this._isUsingOwnFallbackMovementInfo()) {
-			return false;
-		}
-
-		const { items, currentIndex } = this._getCurrentNavigationState();
-
-		if (currentIndex === -1) {
-			return false;
-		}
-
-		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
-		if (nextIndex < 0 || nextIndex >= items.length) {
-			return false;
-		}
-
-		this._handleNavigationTarget(items[nextIndex]);
-		return true;
-	}
-
 	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
 		const child = this.item[0] as IToolbarItemContent | undefined;
 		if (!child) {
@@ -370,7 +318,7 @@ class ToolbarItem extends ToolbarItemBase {
 			return child.getToolbarMovementInfo();
 		}
 
-		return this._getOwnToolbarMovementInfo();
+		return undefined;
 	}
 
 	setToolbarForcedTabIndex(tabIndex: string) {
