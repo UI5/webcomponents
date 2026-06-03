@@ -20,9 +20,8 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  *
  * ### Overview
  *
- * The `ui5-hero-banner` is the main visual element that unifies all product homepages.
- * It is a flexible card designed to accommodate various elements depending on product needs.
- * The hero banner is a mandatory out-of-the-box element for product home pages.
+ * The `ui5-hero-banner` is a flexible, full-width banner designed for placement at the top of a page.
+ * It provides a personalized greeting and quick access to key information or actions.
  *
  * ### Structure
  *
@@ -33,12 +32,12 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * - **Header** (optional) - the main greeting header below the overline, e.g. "Hello, John".
  * - **Free Slots** (optional) - customizable content areas that can contain KPI cards, search components, text, buttons, etc.
  *
- * The hero banner scrolls away below the shell navigation when the user scrolls down the page. It is not sticky.
+ * The banner is not sticky — it scrolls away with the page content when the user scrolls down.
  *
  * ### Usage
  *
- * Use the `ui5-hero-banner` at the top of a product homepage to provide a personalized greeting
- * and quick access to key information or actions.
+ * Place the `ui5-hero-banner` at the top of a page to welcome the user and surface relevant
+ * information or shortcuts at a glance.
  *
  * The hero banner itself is non-interactive. However, interactive elements such as buttons, cards,
  * or search fields can be placed inside the free content slots and will follow their own
