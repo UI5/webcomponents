@@ -14,6 +14,10 @@
 	word-wrap: break-word;
 }
 
+:host([max-lines="1"]) {
+	word-break: break-all;
+}
+
 .empty-indicator-aria-label {
 	position: absolute !important;
 	clip: rect(1px, 1px, 1px, 1px);
