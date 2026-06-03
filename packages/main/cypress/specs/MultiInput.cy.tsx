@@ -31,8 +31,17 @@ const handleTokenDelete = (event) => {
 
 describe("MultiInput Web Component", () => {
 	it("creates only one token when typing 'ad' and pressing Enter", () => {
+		const fnOnKeyDown = (event: KeyboardEvent) => {
+			const inputElement =event.target as HTMLInputElement;
+			if (event.key === "Enter" && inputElement.value) {
+				const token = createTokenFromText(inputElement.value);
+				inputElement.appendChild(token);
+				inputElement.value = "";
+			}
+		}; 
+
 		cy.mount(
-			<MultiInput showSuggestions={true} showValueHelpIcon={true} id="suggestion-token">
+			<MultiInput showSuggestions={true} showValueHelpIcon={true} id="suggestion-token" onKeyDown={fnOnKeyDown}>
 				<SuggestionItem text="Aute"></SuggestionItem>
 				<SuggestionItem text="ad"></SuggestionItem>
 				<SuggestionItem text="exercitation"></SuggestionItem>
@@ -43,17 +52,6 @@ describe("MultiInput Web Component", () => {
 				<SuggestionItem text="excepteur"></SuggestionItem>
 			</MultiInput>
 		);
-
-		cy.get("#suggestion-token").then(multiInput => {
-			multiInput[0].addEventListener("keydown", (event: KeyboardEvent) => {
-				const inputElement = multiInput[0] as HTMLInputElement;
-				if (event.key === "Enter" && inputElement.value) {
-					const token = createTokenFromText(inputElement.value);
-					inputElement.appendChild(token);
-					inputElement.value = "";
-				}
-			});
-		});
 
 		cy.get("#suggestion-token")
 			.shadow()
@@ -212,16 +210,11 @@ describe("MultiInput Web Component", () => {
 
 	it("fires value-help-trigger with F4 and Alt/Option + ArrowUp/Down", () => {
 		cy.mount(
-			<MultiInput id="multi-with-value-help-icon" showValueHelpIcon={true}></MultiInput>
+			<MultiInput id="multi-with-value-help-icon" showValueHelpIcon={true} onValueHelpTrigger={cy.stub().as("valueHelpTrigger")}></MultiInput>
 		);
 
 		cy.get("[ui5-multi-input]")
 			.as("multiInput");
-
-		cy.get("@multiInput")
-			.then($multiInput => {
-				$multiInput[0].addEventListener("value-help-trigger", cy.stub().as("valueHelpTrigger"));
-			});
 
 		cy.get("@multiInput")
 			.shadow()
@@ -396,19 +389,14 @@ describe("MultiInput tokens", () => {
 	});
 
 	it("Should fire a change event", () => {
+		const changeSpy = cy.stub().as("changeSpy");
 		cy.mount(
-			<MultiInput showSuggestions={true} showValueHelpIcon={true}>
+			<MultiInput showSuggestions={true} showValueHelpIcon={true} onChange={changeSpy}>
 				<SuggestionItem text="Aute" />
 				<SuggestionItem text="ad" />
 				<SuggestionItem text="exercitation" />
 			</MultiInput>
 		);
-
-		const changeSpy = cy.stub().as("changeSpy");
-
-		cy.get("[ui5-multi-input]").then(multiInput => {
-			multiInput[0].addEventListener("ui5-change", changeSpy);
-		});
 
 		cy.get("[ui5-multi-input]")
 			.shadow()
@@ -538,23 +526,21 @@ describe("MultiInput tokens", () => {
 	});
 
 	it("should empty the field when value is cleared in the change handler", () => {
+		const fnOnChange = (evt: any) => {
+			(evt.target as HTMLElement).appendChild(createTokenFromText((evt.target as HTMLInputElement).value));
+			(evt.target as HTMLInputElement).value = "";
+		};
+
+		const fnValueHelpTrigger = (evt: any) => {
+			(evt.target as ResponsivePopover).open = true;
+		};
+
 		cy.mount(
-			<MultiInput showSuggestions id="token-unique" showValueHelpIcon>
+			<MultiInput showSuggestions id="token-unique" showValueHelpIcon onChange={fnOnChange} onValueHelpTrigger={fnValueHelpTrigger}>
 				<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
 				<SuggestionItem text="Argentina"></SuggestionItem>
 			</MultiInput>
 		);
-
-		cy.get("[ui5-multi-input]")
-			.then(multiInput => {
-				multiInput[0].addEventListener("ui5-value-help-trigger", function (event) {
-					(event.target as ResponsivePopover).open = true;
-				});
-				multiInput[0].addEventListener("ui5-change", (event) => {
-				(event.target as HTMLElement).appendChild(createTokenFromText((event.target as HTMLInputElement).value));
-				(event.target as HTMLInputElement).value = "";
-				});
-			});
 
 		cy.get("[ui5-multi-input]")
 			.shadow()
@@ -795,17 +781,12 @@ describe("MultiInput Truncated Token", () => {
 	});
 
 	it("should truncate token when a long token is added", () => {
-
 		cy.mount(
 			<>
-			<MultiInput id="truncated-token"></MultiInput>
+			<MultiInput id="truncated-token" onTokenDelete={handleTokenDelete}></MultiInput>
 			<Button>button</Button>
 			</>
 		);
-
-		cy.get("[ui5-multi-input]").then(multiInput => {
-			multiInput[0].addEventListener("ui5-token-delete", handleTokenDelete);
-		});
 
 		cy.get("[ui5-button]").then(button => {
 			button[0].addEventListener("click", () => {
@@ -986,25 +967,22 @@ describe("ARIA attributes", () => {
 	});
 
 	it("announces correct suggestion position when selecting a suggestion with Enter", () => {
+		const fnKeyDown =  (event: KeyboardEvent) => {
+			const inputElement = event.target as HTMLInputElement;
+			if (event.key === "Enter" && inputElement.value) {
+				const token = createTokenFromText(inputElement.value);
+				inputElement.appendChild(token);
+				inputElement.value = "";
+			}
+		};
+
 		cy.mount(
-			<MultiInput show-suggestions id="suggestion-token">
+			<MultiInput show-suggestions id="suggestion-token" onKeyDown={fnKeyDown}>
 				<SuggestionItem text="Aute"></SuggestionItem>
 				<SuggestionItem text="ad"></SuggestionItem>
 				<SuggestionItem text="exercitation"></SuggestionItem>
 			</MultiInput>
 		);
-
-		cy.get("[ui5-multi-input]")
-			.then(multiInput => {
-				multiInput[0].addEventListener("keydown", (event: KeyboardEvent) => {
-					const inputElement = multiInput[0] as HTMLInputElement;
-					if (event.key === "Enter" && inputElement.value) {
-						const token = createTokenFromText(inputElement.value);
-						inputElement.appendChild(token);
-						inputElement.value = "";
-					}
-				});
-			})
 
 		cy.get("[ui5-multi-input]")
 			.realClick();
@@ -1350,8 +1328,17 @@ describe("Keyboard handling", () => {
 	});
 
 	it("should change input's value when set in selection change event", () => {
+		const fnOnKeyDown = (event: KeyboardEvent) => {
+			const inputElement = event.target as HTMLInputElement;
+			if (event.key === "Enter" && inputElement.value) {
+				const token = createTokenFromText(inputElement.value);
+				inputElement.appendChild(token);
+				inputElement.value = "";
+			}
+		};
+
 		cy.mount(
-			<MultiInput showSuggestions showValueHelpIcon>
+			<MultiInput showSuggestions showValueHelpIcon onKeyDown={fnOnKeyDown}>
 				<SuggestionItem text="Aute"></SuggestionItem>
 				<SuggestionItem text="ad"></SuggestionItem>
 				<SuggestionItem text="exercitation"></SuggestionItem>
@@ -1362,18 +1349,6 @@ describe("Keyboard handling", () => {
 				<SuggestionItem text="excepteur"></SuggestionItem>
 			</MultiInput>
 		);
-
-		cy.get("[ui5-multi-input]")
-			.then(multiInput => {
-				multiInput[0].addEventListener("keydown", (event: KeyboardEvent) => {
-					const inputElement = multiInput[0] as HTMLInputElement;
-					if (event.key === "Enter" && inputElement.value) {
-						const token = createTokenFromText(inputElement.value);
-						inputElement.appendChild(token);
-						inputElement.value = "";
-					}
-				});
-			})
 
 		cy.get("[ui5-multi-input]")
 			.shadow()
@@ -1424,42 +1399,38 @@ describe("Keyboard handling", () => {
 	});
 
 	it("should trigger change event on enter", () => {
+		const fnOnChange = (event: any) => {
+			const target = event.target as HTMLInputElement;
+			if (!target.value) {
+				return;
+			}
+
+			var isDuplicate = (event.target as MultiInput).tokens.some(function(token) {
+				return token.text === (event.target as HTMLInputElement).value
+			});
+
+			if (isDuplicate) {
+				(event.target as Input).valueState = "Negative";
+
+				setTimeout(function () {
+					(event.target as Input).valueState = "None";
+				}, 200);
+
+				return;
+			}
+
+			(event.target as HTMLElement).appendChild(createTokenFromText((event.target as HTMLInputElement).value));
+			(event.target as HTMLInputElement).value = "";
+		};
+
 		cy.mount(
-			<MultiInput showSuggestions id="token-unique" showValueHelpIcon>
+			<MultiInput showSuggestions id="token-unique" showValueHelpIcon onChange={fnOnChange}>
 				<div slot="valueStateMessage" id="value-state-wrapper">Token is already in the list</div>
 				<SuggestionItem text="Argentina" />
 			</MultiInput>
 		);
 
 		cy.get("[ui5-multi-input]")
-		.then(multiInput => {
-
-			multiInput[0].addEventListener("ui5-change", function (event) {
-				const target = event.target as HTMLInputElement;
-				if (!target.value) {
-					return;
-				}
-
-				var isDuplicate = (event.target as MultiInput).tokens.some(function(token) {
-					return token.text === (event.target as HTMLInputElement).value
-				});
-
-				if (isDuplicate) {
-					(event.target as Input).valueState = "Negative";
-
-					setTimeout(function () {
-						(event.target as Input).valueState = "None";
-					}, 200);
-
-					return;
-				}
-
-				(event.target as HTMLElement).appendChild(createTokenFromText((event.target as HTMLInputElement).value));
-				(event.target as HTMLInputElement).value = "";
-			});
-		});
-
-		 cy.get("[ui5-multi-input]")
 		 	.shadow()
 			.find("input")
 			.as("innerInput");
@@ -1497,6 +1468,163 @@ describe("Keyboard handling", () => {
 			.realClick();
 
 		cy.realType("asd");
+		cy.realPress("Enter");
+
+		cy.get("@changeSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should deselect all tokens on [Escape] key", () => {
+		cy.mount(
+			<MultiInput>
+				<Token slot="tokens" text="Andora"></Token>
+				<Token slot="tokens" text="Bulgaria"></Token>
+				<Token slot="tokens" text="Canada"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.realPress("Home");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("be.focused");
+
+		cy.realPress(["Shift", "End"]);
+
+		cy.get("[ui5-token]").each($token => {
+			cy.wrap($token).should("have.attr", "selected");
+		});
+
+		cy.realPress("Escape");
+
+		cy.get("[ui5-token]").each($token => {
+			cy.wrap($token).should("not.have.attr", "selected");
+		});
+	});
+
+	it("should focus last token on ArrowLeft at start of input, keep suggestions open, and not fire change event", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.mount(
+			<MultiInput showSuggestions onChange={changeSpy}>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("a");
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress("ArrowLeft"); // cursor: pos 1 → pos 0
+		cy.realPress("ArrowLeft"); // cursor at pos 0 → focuses last token
+
+		cy.get("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@changeSpy")
+			.should("not.have.been.called");
+	});
+
+	it("should fire change event when returning from tokenizer to input via ArrowRight and pressing Tab", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.mount(
+			<MultiInput showSuggestions onChange={changeSpy}>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("a");
+
+		// focus last token
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		// return to input
+		cy.realPress("ArrowRight");
+
+		cy.get("[ui5-multi-input]")
+			.should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("@changeSpy")
+			.should("have.been.calledOnce");
+	});
+
+	it("should fire change event when returning from tokenizer to input via Tab and pressing Enter", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+
+		cy.mount(
+			<MultiInput showSuggestions noTypeahead onChange={changeSpy}>
+				<Token slot="tokens" text="Amet"></Token>
+				<SuggestionItem text="Bulgaria"></SuggestionItem>
+				<SuggestionItem text="Brazil"></SuggestionItem>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.shadow()
+			.find("input")
+			.as("input");
+
+		cy.get("@input")
+			.realClick();
+
+		cy.realType("b");
+
+		// focus last token
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.get("[ui5-token]")
+			.should("be.focused");
+
+		// return to input
+		cy.realPress("Tab");
+
+		cy.get("[ui5-multi-input]")
+			.should("be.focused");
+
 		cy.realPress("Enter");
 
 		cy.get("@changeSpy")
@@ -1665,5 +1793,63 @@ describe("MultiInput Composition", () => {
 			.realPress("Enter");
 
 		cy.get("@multiinput").should("have.attr", "value", "谢谢");
+	});
+
+	it("should handle token deletion by clicking icon when token is not focused", () => {
+		cy.mount(
+			<MultiInput style="width: 250px;">
+				<Token slot="tokens" text="Albania"></Token>
+				<Token slot="tokens" text="Argentina"></Token>
+				<Token slot="tokens" text="Bulgaria"></Token>
+				<Token slot="tokens" text="England"></Token>
+			</MultiInput>
+		);
+
+		cy.get("[ui5-multi-input]")
+			.as("multiinput")
+			.then(multiInput => {
+				multiInput[0].addEventListener("ui5-token-delete", handleTokenDelete);
+			});
+
+		// Verify initial state: 4 tokens
+		cy.get("[ui5-token]")
+			.should("have.length", 4);
+
+		// Click the input field to focus it
+		cy.get("@multiinput")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick();
+
+		// Navigate to Albania token (last token) with ArrowLeft
+		cy.realPress("ArrowLeft");
+
+		// Store reference to Albania token (now focused)
+		cy.get("[ui5-token]")
+			.eq(3)
+			.as("albaniaToken")
+			.should("have.attr", "focused");
+
+		// Move focus away from Albania to Argentina with ArrowRight
+		cy.realPress("ArrowRight");
+
+		// Verify Albania is no longer focused
+		cy.get("@albaniaToken")
+			.should("not.have.attr", "focused");
+
+		// Click delete icon on Albania token (which is not focused)
+		cy.get("@albaniaToken")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		// Verify Albania token was deleted
+		cy.get("[ui5-token]")
+			.should("have.length", 3);
+
+		// Verify Albania is no longer present
+		cy.get("[ui5-token]")
+			.should("not.contain.text", "Albania");
 	});
 });

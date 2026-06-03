@@ -521,3 +521,57 @@ describe("Some settings can be set via SAP UI URL params", () => {
 			.should("equal", "sap_fiori_3_hcb");
 	});
 });
+
+describe("URL parameters are ignored when ignoreUrlParams is set", () => {
+	before(() => {
+		const searchParams = "sap-ui-language=de&sap-ui-theme=sap_horizon_hcb&sap-ui-animationMode=none";
+
+		cy.stub(internals, "search").callsFake(() => {
+			return searchParams;
+		});
+
+		cy.window()
+			.then($el => {
+				const scriptElement = document.createElement("script");
+				scriptElement.type = "application/json";
+				scriptElement.setAttribute("data-ui5-config", "true");
+				scriptElement.innerHTML = JSON.stringify({
+					language: "fr",
+					animationMode: "basic",
+					ignoreUrlParams: true,
+				});
+				return $el.document.head.append(scriptElement);
+			});
+
+		cy.wrap({ resetConfiguration })
+			.invoke("resetConfiguration", true);
+
+		cy.mount(<TestGeneric />);
+	});
+
+	after(() => {
+		cy.window()
+			.then($el => {
+				const scriptElement = $el.document.head.querySelector("script[data-ui5-config]");
+				scriptElement?.remove();
+			});
+	});
+
+	it("Tests that URL language param is ignored and script value is used", () => {
+		cy.wrap({ getLanguage })
+			.invoke("getLanguage")
+			.should("equal", "fr");
+	});
+
+	it("Tests that URL theme param is ignored", () => {
+		cy.wrap({ getTheme })
+			.invoke("getTheme")
+			.should("not.equal", "sap_horizon_hcb");
+	});
+
+	it("Tests that URL animationMode param is ignored and script value is used", () => {
+		cy.wrap({ getAnimationMode })
+			.invoke("getAnimationMode")
+			.should("equal", AnimationMode.Basic);
+	});
+});

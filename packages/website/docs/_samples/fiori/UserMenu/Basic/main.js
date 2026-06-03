@@ -11,13 +11,14 @@ import "@ui5/webcomponents-icons/dist/collaborate.js";
 import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
+import "@ui5/webcomponents-icons/dist/message-information.js";
 
 const shellbar = document.getElementById("shellbar");
 const menu = document.getElementById("userMenu");
 
 shellbar.addEventListener("ui5-profile-click", (event) => {
 	menu.opener = event.detail.targetRef;
-	menu.open = true;
+	menu.open = !menu.open;
 });
 
 menu.addEventListener("item-click", function (event) {
