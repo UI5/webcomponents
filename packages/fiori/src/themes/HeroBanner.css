@@ -232,4 +232,9 @@
 		display: flex;
 		flex-direction: column;
 	}
+
+	/* BottomStart end block: center content when stacked */
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-end {
+		align-items: center;
+	}
 }
