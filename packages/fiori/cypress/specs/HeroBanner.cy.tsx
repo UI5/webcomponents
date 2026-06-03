@@ -297,28 +297,28 @@ describe("HeroBanner", () => {
 		});
 	});
 
-	describe("headerTextPosition", () => {
+	describe("headerTextBlockPlacement", () => {
 		it("reflects Top as the default value", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.should("have.attr", "header-text-position", "Top");
+				.should("have.attr", "header-text-block-placement", "Top");
 		});
 
 		it("reflects Bottom value as attribute", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" headerTextPosition="Bottom"></HeroBanner>
+				<HeroBanner headerText="Hello" headerTextBlockPlacement="Bottom"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.should("have.attr", "header-text-position", "Bottom");
+				.should("have.attr", "header-text-block-placement", "Bottom");
 		});
 
 		it("header-text block exists in both positions", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" headerTextPosition="Bottom"></HeroBanner>
+				<HeroBanner headerText="Hello" headerTextBlockPlacement="Bottom"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
@@ -327,19 +327,19 @@ describe("HeroBanner", () => {
 				.should("exist");
 		});
 
-		it("updates headerTextPosition dynamically", () => {
+		it("updates headerTextBlockPlacement dynamically", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.should("have.attr", "header-text-position", "Top");
+				.should("have.attr", "header-text-block-placement", "Top");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "headerTextPosition", "Bottom");
+				.invoke("prop", "headerTextBlockPlacement", "Bottom");
 
 			cy.get("[ui5-hero-banner]")
-				.should("have.attr", "header-text-position", "Bottom");
+				.should("have.attr", "header-text-block-placement", "Bottom");
 		});
 	});
 

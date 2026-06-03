@@ -7,7 +7,7 @@ import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.
 
 import type HeroBannerLayout from "./types/HeroBannerLayout.js";
 import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
-import type HeroBannerHeaderTextPosition from "./types/HeroBannerHeaderTextPosition.js";
+import type HeroBannerHeaderTextBlockPlacement from "./types/HeroBannerHeaderTextBlockPlacement.js";
 
 // Template
 import HeroBannerTemplate from "./HeroBannerTemplate.js";
@@ -164,16 +164,16 @@ class HeroBanner extends UI5Element {
 	actionsPlacement: `${HeroBannerActionsPlacement}` = "TopEnd";
 
 	/**
-	 * Defines the vertical position of the header text block within the header area.
+	 * Defines the vertical placement of the header text block within the header area.
 	 *
-	 * - **Top** (default) - Header text is placed at the top of the header area.
-	 * - **Bottom** - Header text is pushed to the bottom of the header area.
+	 * - **Top** (default) - Header text block is placed at the top of the header area.
+	 * - **Bottom** - Header text block is pushed to the bottom of the header area.
 	 *
 	 * @default "Top"
 	 * @public
 	 */
 	@property()
-	headerTextPosition: `${HeroBannerHeaderTextPosition}` = "Top";
+	headerTextBlockPlacement: `${HeroBannerHeaderTextBlockPlacement}` = "Top";
 
 	get _hasStartContent() {
 		return this.startContent.length > 0;

@@ -1,11 +1,11 @@
 /**
- * Available HeroBanner header text position options.
+ * Available HeroBanner header text block placement options.
  *
- * Defines the vertical position of the header text block within the banner header area.
+ * Defines the vertical placement of the header text block within the banner header area.
  * @public
  * @since 2.23.0
  */
-enum HeroBannerHeaderTextPosition {
+enum HeroBannerHeaderTextBlockPlacement {
 	/**
 	 * Places the header text block at the top of the header area.
 	 * @public
@@ -19,4 +19,4 @@ enum HeroBannerHeaderTextPosition {
 	Bottom = "Bottom"
 }
 
-export default HeroBannerHeaderTextPosition;
+export default HeroBannerHeaderTextBlockPlacement;

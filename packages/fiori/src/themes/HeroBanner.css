@@ -92,8 +92,8 @@
 	line-height: 1.4;
 }
 
-/* headerTextPosition="Bottom": push header-text to the bottom of the header row */
-:host([header-text-position="Bottom"]) .ui5-banner-header {
+/* headerTextBlockPlacement="Bottom": push header-text to the bottom of the header row */
+:host([header-text-block-placement="Bottom"]) .ui5-banner-header {
 	justify-content: flex-end;
 	flex-direction: column;
 	align-items: flex-start;
