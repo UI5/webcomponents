@@ -18,10 +18,17 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 
 import {
-	DIALOG_HEADER_ARIA_ROLE_DESCRIPTION,
 	DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE,
 	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE,
 	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+	DIALOG_RESIZE_HANDLE_TOOLTIP,
+	DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_DRAG_HANDLE_ARIA_LABEL,
+	DIALOG_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_HANDLE_ARIA_ROLEDESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -252,12 +259,33 @@ class Dialog extends Popup {
 		return ariaLabelledById;
 	}
 
-	get ariaRoleDescriptionHeaderText() {
-		return (this.resizable || this.draggable) ? Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_ROLE_DESCRIPTION) : undefined;
+	get effectiveAriaDescribedBy() {
+		return this._movable ? `${this._id}-dialog-descr` : undefined;
 	}
 
-	get effectiveAriaDescribedBy() {
-		return (this.resizable || this.draggable) ? `${this._id}-descr` : undefined;
+	get ariaDescribedByIds() {
+		return [
+			this.ariaDescriptionTextId,
+			this.effectiveAriaDescribedBy,
+		].filter(Boolean).join(" ");
+	}
+
+	get dialogAriaDescribedByText() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE);
+		}
+
+		return "";
 	}
 
 	get ariaDescribedByHeaderTextResizable() {
@@ -284,11 +312,45 @@ class Dialog extends Popup {
 	}
 
 	get _headerTabIndex() {
+		return undefined;
+	}
+
+	get _dragResizeHandleTabIndex() {
 		return this._movable ? 0 : undefined;
+	}
+
+	get _dragResizeHandleAriaLabel() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_HANDLE_ARIA_LABEL);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_ARIA_LABEL);
+		}
+
+		return "";
+	}
+
+	get _dragResizeHandleAriaRoleDescription() {
+		return this._movable ? Dialog.i18nBundle.getText(DIALOG_HANDLE_ARIA_ROLEDESCRIPTION) : undefined;
+	}
+
+	get _dragResizeHandleAriaDescribedBy() {
+		return this._movable ? `${this._id}-descr` : undefined;
 	}
 
 	get _showResizeHandle() {
 		return this.resizable && this.onDesktop;
+	}
+
+	get _resizeHandleTooltip() {
+		return this._showResizeHandle ? Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_TOOLTIP) : undefined;
 	}
 
 	get _minHeight() {
@@ -470,7 +532,12 @@ class Dialog extends Popup {
 	}
 
 	_onDragOrResizeKeyDown(e: KeyboardEvent) {
-		if (!this._movable || !Dialog._isHeader(e.target as HTMLElement)) {
+		if (!this._movable) {
+			return;
+		}
+
+		const target = e.target as HTMLElement;
+		if (!target || target.id !== `${this._id}-dragResizeHandler`) {
 			return;
 		}
 
