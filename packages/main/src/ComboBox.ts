@@ -130,6 +130,10 @@ type ComboBoxSelectionChangeEventDetail = {
 	item: ComboBoxItem | null,
 };
 
+type ComboBoxLoadingStart = {
+	shouldOpenPicker: boolean;
+};
+
 /**
  * @class
  *
@@ -251,6 +255,13 @@ type ComboBoxSelectionChangeEventDetail = {
 	bubbles: true,
 })
 
+/*
+ * @public
+ */
+@event("load-started", {
+	bubbles: true,
+})
+
 class ComboBox extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		"change": void,
@@ -258,6 +269,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		"open": void,
 		"close": void,
 		"selection-change": ComboBoxSelectionChangeEventDetail,
+		"load-started": ComboBoxLoadingStart,
 	}
 	/**
 	 * Defines the value of the component.
@@ -798,6 +810,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._lastValue = this.value;
 		}
 
+		if (!this.open && !this.loading && this._getItems().length === 0) {
+			this.fireDecoratorEvent("load-started", { shouldOpenPicker: false });
+		}
+
 		this._toggleRespPopover();
 	}
 
@@ -839,6 +855,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+		this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
 
 		if (isPhone()) {
 			return;
@@ -1205,6 +1222,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_click() {
 		if (isPhone() && !this.readonly) {
+			if (!this.loading && this._getItems().length === 0) {
+				this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+			}
 			this._openRespPopover();
 		}
 	}
@@ -1782,5 +1802,6 @@ export default ComboBox;
 
 export type {
 	ComboBoxSelectionChangeEventDetail,
+	ComboBoxLoadingStart,
 	IComboBoxItem,
 };

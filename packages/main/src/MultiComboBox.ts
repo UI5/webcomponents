@@ -609,7 +609,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_valueStateLinks: Array<HTMLElement>;
 	_composition?: InputComposition;
 	_prevLoading: boolean;
-	_announceLoading?: boolean;
+	_announceLoadingStart?: boolean;
 	_suppressNextLiveChange: boolean; // prevent unwanted live change events during IME composition
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -828,7 +828,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this.open = true;
 			}
 		}
-
+		
 		this.fireDecoratorEvent("input");
 	}
 
@@ -1887,9 +1887,12 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const value = input && input.value;
 
 		if (!this._prevLoading && this.loading) {
-			this._announceLoading = true;
+			this._announceLoadingStart = true;
 		} else if (this._prevLoading && !this.loading) {
-			this._announceLoading = false;
+			this._announceLoadingStart = false;
+			if (this.open && this.showSelectAll && this._filteredItems.length === 0) {
+				this.open = false;
+			}
 		}
 		this._prevLoading = this.loading;
 
@@ -1963,18 +1966,22 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
 		}
 
-		if (this._announceLoading) {
-			announce(MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING), InvisibleMessageMode.Polite);
-		} else if (this._announceLoading === false) {
-			const count = this._getItems().filter(item => item._isVisible).length;
-			const itemsLoadedMessage = count === 1 ? MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM) : MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count);
-			announce(`${MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
-		}
-		this._announceLoading = undefined;
+		this._announce();
 	}
 
 	get _isPhone() {
 		return isPhone();
+	}
+
+	_announce(){
+		if (this._announceLoadingStart) {
+			announce(MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING), InvisibleMessageMode.Polite);
+		} else if (this._announceLoadingStart !== undefined) {
+			const count = this._getItems().filter(item => item._isVisible).length;
+			const itemsLoadedMessage = count === 1 ? MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM) : MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count);
+			announce(`${MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
+		}
+		this._announceLoadingStart = undefined;
 	}
 
 	_onIconMousedown() {

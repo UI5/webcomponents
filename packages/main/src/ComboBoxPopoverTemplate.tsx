@@ -38,7 +38,6 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				{this._isPhone && dialogHeader.call(this)}
 				{valueStateHeader.call(this)}
 				{content.call(this)}
-
 				{this._isPhone && dialogFooter.call(this)}
 			</ResponsivePopover>
 

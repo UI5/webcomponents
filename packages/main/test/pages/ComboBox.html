@@ -520,11 +520,11 @@
 			const { value } = event.target;
 
 			// set busy state
-			event.target.loading = true;
-
 			if (!value) {
 				return;
 			}
+
+			event.target.loading = true;
 
 			// load data
 			try {
@@ -568,6 +568,7 @@
 			debounce = setTimeout(async () => {
 				debounce = undefined;
 				const value = e.target.value;
+				e.target.loading = true;
 
 				if (currentSearch !== undefined) {
 					// Cancel any current search that might already be happening
@@ -591,6 +592,7 @@
 				} else {
 					reset();
 				}
+				e.target.loading = false;
 			}, debounceTime);
 		});
 
@@ -699,8 +701,7 @@
 
 		document.getElementById("btn-clear").addEventListener("click", () => fnClearItems(cbLazyLoad));
 
-		cbLazyLoad.addEventListener("open", e => fnLoadItems(e.target));
-		cbLazyLoad.addEventListener("input", e => fnLoadItems(e.target));
+		cbLazyLoad.addEventListener("load-started", e => fnLoadItems(e.target));
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;
