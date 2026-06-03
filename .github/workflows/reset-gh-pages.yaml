@@ -11,14 +11,21 @@ jobs:
   reset-gh-pages:
     runs-on: ubuntu-latest
     steps:
+    - name: Generate App Token
+      id: app-token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        app-id: ${{ secrets.RELEASE_APP_ID }}
+        private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
     - uses: actions/checkout@v4
       with:
-        token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        token: ${{ steps.app-token.outputs.token }}
         fetch-depth: 0
 
     - name: Reset gh-pages git history
       env:
-        GH_TOKEN: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
       run: |
         git config user.name "${{ secrets.UI5_WEBCOMP_BOT_NAME }}"
         git config user.email "${{ secrets.UI5_WEBCOMP_BOT_EMAIL }}"
