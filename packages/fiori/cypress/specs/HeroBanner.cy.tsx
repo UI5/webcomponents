@@ -195,17 +195,17 @@ describe("HeroBanner", () => {
 	});
 
 	describe("Background Image", () => {
-		it("applies background image via CSS variable", () => {
+		it("applies background image from backgroundImage property", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello"></HeroBanner>
+				<HeroBanner headerText="Hello" backgroundImage="https://example.com/image.jpg"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("attr", "style", "--_ui5_banner_background_image: url(https://example.com/image.jpg)");
-
-			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-root")
 				.should("have.attr", "style")
-				.and("include", "--_ui5_banner_background_image");
+				.and("include", "--_ui5_banner_user_image")
+				.and("include", "https://example.com/image.jpg");
 		});
 	});
 

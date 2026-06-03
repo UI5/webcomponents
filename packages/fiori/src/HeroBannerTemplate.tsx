@@ -5,9 +5,13 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 
 	return (
 		<div
-			class="ui5-banner-root"
+			class={{
+				"ui5-banner-root": true,
+				"ui5-banner--has-bg-image": !!this.backgroundImage,
+			}}
 			role="banner"
 			part="canvas"
+			style={this._backgroundImageStyle}
 		>
 			<div class={{
 				"ui5-banner-content": true,
