@@ -14,11 +14,11 @@ const CardHeader = createReactComponent(CardHeaderClass);
 function App() {
   return (
     <>
-      <h4>FullWidth Layout</h4>
+      <h4>OneColumn Layout</h4>
       <HeroBanner
         headerText="Welcome back, Sarah"
         overlineText="Monday, May 26, 2026"
-        layout="FullWidth"
+        layout="OneColumn"
       >
         <div slot="actions" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
           <Button icon="receipt" design="Default">Approve Invoices</Button>
@@ -29,11 +29,11 @@ function App() {
 
       <br />
 
-      <h4>HalfWidth Layout (50/50)</h4>
+      <h4>OneOneColumns Layout (1fr 1fr)</h4>
       <HeroBanner
         headerText="Hi, David"
         overlineText="Monday, May 26, 2026"
-        layout="HalfWidth"
+        layout="OneOneColumns"
       >
         <Card>
           <CardHeader slot="header" titleText="Leave Balance" subtitleText="Days remaining" />
@@ -47,11 +47,11 @@ function App() {
 
       <br />
 
-      <h4>TwoThirds Layout (2/3 + 1/3)</h4>
+      <h4>TwoOneColumns Layout (2fr 1fr)</h4>
       <HeroBanner
         headerText="Good Afternoon, Thomas"
         overlineText="Monday, May 26, 2026"
-        layout="TwoThirds"
+        layout="TwoOneColumns"
       >
         <Card>
           <CardHeader slot="header" titleText="Sales Pipeline" subtitleText="Q2 2026" />

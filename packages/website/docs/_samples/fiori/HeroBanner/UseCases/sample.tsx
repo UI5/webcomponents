@@ -45,7 +45,7 @@ function App() {
       <HeroBanner
         headerText="Good Morning, Robert"
         overlineText="Tuesday, May 27, 2026"
-        layout="FullWidth"
+        layout="OneColumn"
       >
         <div style={{ margin: 0 }}>You have 3 pending approvals and 12 new notifications since your last visit. Review your tasks below or use the quick actions to get started.</div>
         <div slot="endContent" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>

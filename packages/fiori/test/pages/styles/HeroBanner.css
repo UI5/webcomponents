@@ -110,16 +110,6 @@ html, body {
 	font-size: 1.2rem;
 }
 
-/* Sample 12: top-align end content with the header */
-#hero-banner-top-aligned-card::part(header) {
-	grid-column: 1;
-}
-
-#hero-banner-top-aligned-card::part(endContent) {
-	grid-row: 1 / -1;
-	align-self: start;
-}
-
 /* Scrollable content for scroll-away demo */
 .scroll-container {
 	height: 500px;

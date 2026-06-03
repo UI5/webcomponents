@@ -1,6 +1,8 @@
 import type HeroBanner from "./HeroBanner.js";
 
 export default function HeroBannerTemplate(this: HeroBanner) {
+	const actionsBottomLeft = this.actionsPlacement === "BottomLeft";
+
 	return (
 		<div
 			class="ui5-banner-root"
@@ -24,9 +26,15 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 								{this.headerText}
 							</h2>
 						}
+
+						{actionsBottomLeft && this._hasActions &&
+							<div class="ui5-banner-actions ui5-banner-actions-bottom-left">
+								<slot name="actions"></slot>
+							</div>
+						}
 					</div>
 
-					{this._hasActions &&
+					{!actionsBottomLeft && this._hasActions &&
 						<div class="ui5-banner-actions">
 							<slot name="actions"></slot>
 						</div>

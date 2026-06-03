@@ -48,16 +48,16 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 3. FullWidth Layout with Content       -->
+		<!-- 3. OneColumn Layout with Content       -->
 		<!-- ====================================== -->
 		<section>
-			<h2>3. FullWidth Layout</h2>
+			<h2>3. OneColumn Layout</h2>
 			<p>Banner with a full-width search field below the salutation.</p>
 
 			<ui5-hero-banner id="hero-banner-fullwidth"
 				header-text="Welcome back, Alex"
 				overline-text="Thursday, March 6, 2026"
-				layout="FullWidth">
+				layout="OneColumn">
 			<ui5-input
 					placeholder="Search products, documents, reports..."
 					style="width: 100%;">
@@ -66,16 +66,16 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 4. HalfWidth Layout (50/50 Split)      -->
+		<!-- 4. OneOneColumns Layout (1fr 1fr)      -->
 		<!-- ====================================== -->
 		<section>
-			<h2>4. HalfWidth Layout (50/50 Split)</h2>
+			<h2>4. OneOneColumns Layout (1fr 1fr)</h2>
 			<p>Two KPI cards side by side in a 50/50 layout.</p>
 
 			<ui5-hero-banner id="hero-banner-half"
 				header-text="Hello, Maria"
 				overline-text="Thursday, March 6, 2026"
-				layout="HalfWidth">
+				layout="OneOneColumns">
 
 				<div class="kpi-card">
 					<span class="kpi-label">Open Orders</span>
@@ -92,16 +92,16 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 5. TwoThirds Layout (2/3 + 1/3)       -->
+		<!-- 5. TwoOneColumns Layout (2fr 1fr)      -->
 		<!-- ====================================== -->
 		<section>
-			<h2>5. TwoThirds Layout (2/3 + 1/3)</h2>
+			<h2>5. TwoOneColumns Layout (2fr 1fr)</h2>
 			<p>Primary KPI card taking 2/3 of the width with a secondary card at 1/3.</p>
 
 			<ui5-hero-banner id="hero-banner-twothirds"
 				header-text="Good Afternoon, Thomas"
 				overline-text="Thursday, March 6, 2026"
-				layout="TwoThirds">
+				layout="TwoOneColumns">
 
 				<div class="kpi-card">
 					<span class="kpi-label">Pipeline Overview</span>
@@ -145,7 +145,7 @@
 			<ui5-hero-banner style="--_ui5_banner_background_image: url(https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg);" id="hero-banner-interactive"
 				header-text="Hello, David"
 				overline-text="Thursday, March 6, 2026"
-				layout="HalfWidth">
+				layout="OneOneColumns">
 
 			<ui5-card>
 					<ui5-card-header
@@ -174,7 +174,7 @@
 				<ui5-hero-banner id="hero-banner-scroll"
 					header-text="Hello, Lisa"
 					overline-text="Thursday, March 6, 2026"
-					layout="FullWidth">
+					layout="OneColumn">
 					<div class="kpi-card">
 						<span class="kpi-label">Notifications</span>
 						<span class="kpi-value">23</span>
@@ -205,15 +205,9 @@
 			<ui5-hero-banner id="hero-banner-buttons-cards"
 				header-text="Hello, Emma"
 				overline-text="Thursday, March 12, 2026"
-				layout="FullWidth">
-
-				<div role="group" aria-label="Quick actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-					<ui5-button icon="create">New Request</ui5-button>
-					<ui5-button icon="document" design="Default">Create Report</ui5-button>
-					<ui5-button icon="email" design="Default">Send Message</ui5-button>
-				</div>
-
-				<div slot="endContent" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+				layout="OneColumn"
+				actions-placement="BottomLeft">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
 					<ui5-card>
 						<ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
 						<div style="padding: 0.75rem; color: red; text-align: start; font-size: 1.5rem; font-weight: bold;">42</div>
@@ -226,6 +220,11 @@
 						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
 						<div style="padding: 0.75rem; text-align: end; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
+				</div>
+				<div role="group" aria-label="Quick actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;" slot="actions">
+					<ui5-button icon="create">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
 				</div>
 			</ui5-hero-banner>
 		</section>
@@ -251,16 +250,16 @@
 					<ui5-button id="btn-change-salutation">Cycle Name</ui5-button>
 					<span class="controls-separator">|</span>
 					<span class="controls-label">Layout:</span>
-					<ui5-button id="btn-layout-full">FullWidth</ui5-button>
-					<ui5-button id="btn-layout-half">HalfWidth</ui5-button>
-					<ui5-button id="btn-layout-twothirds">TwoThirds</ui5-button>
+					<ui5-button id="btn-layout-full">OneColumn</ui5-button>
+					<ui5-button id="btn-layout-half">OneOneColumns</ui5-button>
+					<ui5-button id="btn-layout-twothirds">TwoOneColumns</ui5-button>
 				</div>
 			</div>
 
 			<ui5-hero-banner id="hero-banner-dynamic"
 				header-text="Hello, User"
 				overline-text="Thursday, March 6, 2026"
-				layout="FullWidth">
+				layout="OneColumn">
 
 				<ui5-button slot="actions" icon="settings">Settings</ui5-button>
 				<ui5-button slot="actions" icon="bell">Notifications</ui5-button>
@@ -284,7 +283,7 @@
 			<p>The blue home page header as seen in SAP SuccessFactors: a personalized greeting with quick-action shortcuts on the left and a carousel of alert cards on the right.</p>
 
 			<ui5-hero-banner id="hero-banner-sf"
-				layout="TwoThirds">
+				layout="TwoOneColumns">
 				<!-- Start Content (2/3): salutation + quick-action shortcut buttons -->
 				<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 0.75rem;">
 					<div>
@@ -320,19 +319,20 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 12. HalfWidth with Top-Aligned Card    -->
+		<!-- 12. OneOneColumns with Top-Aligned Card    -->
 		<!-- ====================================== -->
 		<section>
-			<h2>12. HalfWidth with Top-Aligned Carousel</h2>
-			<p>A 50/50 layout with salutation, date, action buttons in the start slot and a carousel of cards top-aligned with the date text in the end slot.</p>
+			<h2>12. OneOneColumns with Top-Aligned Carousel</h2>
+			<p>A 50/50 layout with salutation, date, action buttons in the actions slot and a carousel of cards top-aligned with the date text in the end slot.</p>
 
 			<ui5-hero-banner id="hero-banner-top-aligned-card"
 				header-text="Good Morning, John"
 				overline-text="Monday, May 12, 2026"
-				layout="HalfWidth">
+				actions-placement="BottomLeft" header-text-position="Top"
+				layout="OneOneColumns">
 
-				<!-- Start Content: action buttons -->
-				<div role="group" aria-label="Quick actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start;">
+				<!-- Actions Content: action buttons -->
+				<div role="group" aria-label="Quick actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start;" slot="actions">
 					<ui5-button icon="create" design="Default">New Request</ui5-button>
 					<ui5-button icon="document" design="Default">Create Report</ui5-button>
 					<ui5-button icon="email" design="Default">Send Message</ui5-button>
@@ -362,7 +362,7 @@
 	<div id="slot-holder" style="display: none;"></div>
 
 	<script>
-		var dynamicBanner = document.getElementById("banner-dynamic");
+		var dynamicBanner = document.getElementById("hero-banner-dynamic");
 		var slotHolder = document.getElementById("slot-holder");
 		var names = ["John", "Maria", "Thomas", "Lisa", "Alex", "Sarah", "David"];
 		var nameIndex = 0;
@@ -380,9 +380,10 @@
 
 		// --- Background Image toggle ---
 		document.getElementById("chk-bg").addEventListener("change", function () {
-			dynamicBanner.backgroundImage = this.checked
-				? "https://wallpapershome.com/images/pages/pic_h/17796.jpg"
-				: undefined;
+			dynamicBanner.style.setProperty(
+				"--_ui5_banner_background_image",
+				this.checked ? "url(https://wallpapershome.com/images/pages/pic_h/17796.jpg)" : ""
+			);
 		});
 
 		// --- Slot toggle helper: moves elements between the banner and the hidden holder ---
@@ -413,13 +414,13 @@
 
 		// --- Layout buttons ---
 		document.getElementById("btn-layout-full").addEventListener("click", function () {
-			dynamicBanner.layout = "FullWidth";
+			dynamicBanner.layout = "OneColumn";
 		});
 		document.getElementById("btn-layout-half").addEventListener("click", function () {
-			dynamicBanner.layout = "HalfWidth";
+			dynamicBanner.layout = "OneOneColumns";
 		});
 		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
-			dynamicBanner.layout = "TwoThirds";
+			dynamicBanner.layout = "TwoOneColumns";
 		});
 	</script>
 </body>

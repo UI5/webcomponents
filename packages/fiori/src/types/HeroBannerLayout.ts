@@ -7,25 +7,25 @@
  */
 enum HeroBannerLayout {
 	/**
-	 * Full width bottom-half free slot layout.
+	 * Single column layout.
 	 * The free content blocks span the entire width below the salutation.
 	 * @public
 	 */
-	FullWidth = "FullWidth",
+	OneColumn = "OneColumn",
 
 	/**
-	 * 50/50 split layout.
+	 * Two equal columns layout (1fr 1fr).
 	 * The free content blocks are split equally side by side.
 	 * @public
 	 */
-	HalfWidth = "HalfWidth",
+	OneOneColumns = "OneOneColumns",
 
 	/**
-	 * 2/3 wide bottom-half layout.
+	 * Two unequal columns layout (2fr 1fr).
 	 * The first free block takes 2/3 width, the second takes 1/3.
 	 * @public
 	 */
-	TwoThirds = "TwoThirds",
+	TwoOneColumns = "TwoOneColumns",
 }
 
 export default HeroBannerLayout;

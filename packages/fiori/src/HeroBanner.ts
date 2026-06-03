@@ -6,7 +6,8 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import type HeroBannerLayout from "./types/HeroBannerLayout.js";
-import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
+import type HeroBannerActionsPosition from "./types/HeroBannerActionsPosition.js";
+import type HeroBannerHeaderTextPosition from "./types/HeroBannerHeaderTextPosition.js";
 
 // Template
 import HeroBannerTemplate from "./HeroBannerTemplate.js";
@@ -46,7 +47,7 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * ### Responsive Behavior
  *
  * The hero banner adapts to different screen sizes:
- * - On smaller screens, split layouts (HalfWidth, TwoThirds) collapse to a single stacked column.
+ * - On smaller screens, split layouts (OneOneColumns, TwoOneColumns) collapse to a single stacked column.
  * - The heading text wraps to multiple lines as needed.
  * - Buttons in the headerAction slot will wrap.
  * - On screens ≤1024px, the header text is wrapped to a maximum of 3 lines.
@@ -102,21 +103,19 @@ class HeroBanner extends UI5Element {
 	 *
 	 * ### Available Layout Options
 	 *
-	 * - **FullWidth** - The default slot spans the full width below the heading.
+	 * - **OneColumn** - The default slot spans the full width below the heading.
 	 *   The endContent slot, if used, appears at the bottom and also spans the full width.
-	 * - **HalfWidth** - The default slot is limited to a maximum width of 50%.
-	 *   The endContent slot, if provided, appears to the right, occupying the remaining 50%.
-	 *   On smaller screens, both slots stack vertically.
-	 * - **TwoThirds** - The default slot takes up two-thirds of the banner width.
-	 *   The endContent slot occupies the remaining one-third when used.
-	 *   On smaller screens, both slots stack vertically.
+	 * - **OneOneColumns** - Two equal columns (1fr 1fr). The default slot occupies the left column,
+	 *   the endContent slot the right. On smaller screens, both slots stack vertically.
+	 * - **TwoOneColumns** - Two unequal columns (2fr 1fr). The default slot takes two-thirds,
+	 *   the endContent slot one-third. On smaller screens, both slots stack vertically.
 	 *
-	 * @default "FullWidth"
+	 * @default "OneColumn"
 	 * @public
 	 */
 	@property()
-	layout: `${HeroBannerLayout}` = "FullWidth";
-	
+	layout: `${HeroBannerLayout}` = "OneColumn";
+
 	/**
 	 * Defines the first (default) free content block of the hero banner.
 	 *
@@ -132,7 +131,7 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the second free content block of the hero banner.
 	 *
-	 * Used alongside `startContent` in split layouts (`HalfWidth`, `TwoThirds`).
+	 * Used alongside `startContent` in split layouts (`OneOneColumns`, `TwoOneColumns`).
 	 * Can contain cards, buttons, and other interactive elements.
 	 *
 	 * @public
@@ -152,8 +151,29 @@ class HeroBanner extends UI5Element {
 	@slot()
 	actions!: Slot<HTMLElement>;
 
+	/**
+	 * Defines the placement of the actions slot within the hero banner header.
+	 *
+	 * - **TopRight** (default) - Actions are displayed to the right of the header text, aligned to the top of the header row.
+	 * - **BottomLeft** - Actions are displayed below the header text, left-aligned. In this mode, the `endContent` slot spans the full height of the content area.
+	 *
+	 * @default "TopRight"
+	 * @public
+	 */
 	@property()
-	actionsPlacement: `${HeroBannerActionsPlacement}` = "TopRight";
+	actionsPlacement: `${HeroBannerActionsPosition}` = "TopRight";
+
+	/**
+	 * Defines the vertical position of the header text block within the header area.
+	 *
+	 * - **Top** (default) - Header text is placed at the top of the header area.
+	 * - **Bottom** - Header text is pushed to the bottom of the header area.
+	 *
+	 * @default "Top"
+	 * @public
+	 */
+	@property()
+	headerTextPosition: `${HeroBannerHeaderTextPosition}` = "Top";
 
 	get _hasStartContent() {
 		return this.startContent.length > 0;

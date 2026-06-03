@@ -64,7 +64,7 @@ describe("HeroBanner", () => {
 	});
 
 	describe("Layout", () => {
-		it("applies FullWidth layout by default", () => {
+		it("applies OneColumn layout by default", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello, John">
 					<div>Start</div>
@@ -73,13 +73,13 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-FullWidth")
+				.find(".ui5-banner-layout-OneColumn")
 				.should("exist");
 		});
 
-		it("applies HalfWidth layout", () => {
+		it("applies OneOneColumns layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="HalfWidth">
+				<HeroBanner headerText="Hello" layout="OneOneColumns">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -87,13 +87,13 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-HalfWidth")
+				.find(".ui5-banner-layout-OneOneColumns")
 				.should("exist");
 		});
 
-		it("applies TwoThirds layout", () => {
+		it("applies TwoOneColumns layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="TwoThirds">
+				<HeroBanner headerText="Hello" layout="TwoOneColumns">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -101,7 +101,7 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-TwoThirds")
+				.find(".ui5-banner-layout-TwoOneColumns")
 				.should("exist");
 		});
 	});
@@ -133,9 +133,9 @@ describe("HeroBanner", () => {
 				.and("have.text", "End Content");
 		});
 
-		it("renders both startContent and endContent in HalfWidth layout", () => {
+		it("renders both startContent and endContent in OneOneColumns layout", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="HalfWidth">
+				<HeroBanner headerText="Hello" layout="OneOneColumns">
 					<div id="start">Left</div>
 					<div slot="endContent" id="end">Right</div>
 				</HeroBanner>
@@ -160,11 +160,11 @@ describe("HeroBanner", () => {
 				.should("exist");
 		});
 
-		it("renders headerActions slot", () => {
+		it("renders actions slot", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello">
-					<div slot="headerActions" id="action1">Action 1</div>
-					<div slot="headerActions" id="action2">Action 2</div>
+					<div slot="actions" id="action1">Action 1</div>
+					<div slot="actions" id="action2">Action 2</div>
 				</HeroBanner>
 			);
 
@@ -182,7 +182,7 @@ describe("HeroBanner", () => {
 				.should("exist");
 		});
 
-		it("does not render headerActions wrapper when no headerActions are provided", () => {
+		it("does not render actions wrapper when no actions are provided", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello"></HeroBanner>
 			);
@@ -195,31 +195,17 @@ describe("HeroBanner", () => {
 	});
 
 	describe("Background Image", () => {
-		it("applies background image when set", () => {
-			cy.mount(
-				<HeroBanner
-					headerText="Hello"
-					backgroundImage="https://example.com/image.jpg"
-				></HeroBanner>
-			);
-
-			cy.get("[ui5-hero-banner]")
-				.shadow()
-				.find(".ui5-banner-root")
-				.should("have.class", "ui5-banner--has-bg-image")
-				.and("have.attr", "style")
-				.and("include", "url");
-		});
-
-		it("does not apply background image class when not set", () => {
+		it("applies background image via CSS variable", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello"></HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.shadow()
-				.find(".ui5-banner-root")
-				.should("not.have.class", "ui5-banner--has-bg-image");
+				.invoke("attr", "style", "--_ui5_banner_background_image: url(https://example.com/image.jpg)");
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "style")
+				.and("include", "--_ui5_banner_background_image");
 		});
 	});
 
@@ -291,23 +277,158 @@ describe("HeroBanner", () => {
 
 		it("updates layout dynamically", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="FullWidth">
+				<HeroBanner headerText="Hello" layout="OneColumn">
 					<div>Start</div>
 				</HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-FullWidth")
+				.find(".ui5-banner-layout-OneColumn")
 				.should("exist");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "layout", "HalfWidth");
+				.invoke("prop", "layout", "OneOneColumns");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-HalfWidth")
+				.find(".ui5-banner-layout-OneOneColumns")
 				.should("exist");
+		});
+	});
+
+	describe("headerTextPosition", () => {
+		it("reflects Top as the default value", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello"></HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "header-text-position", "Top");
+		});
+
+		it("reflects Bottom value as attribute", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" headerTextPosition="Bottom"></HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "header-text-position", "Bottom");
+		});
+
+		it("header-text block exists in both positions", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" headerTextPosition="Bottom"></HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header-text")
+				.should("exist");
+		});
+
+		it("updates headerTextPosition dynamically", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello"></HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "header-text-position", "Top");
+
+			cy.get("[ui5-hero-banner]")
+				.invoke("prop", "headerTextPosition", "Bottom");
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "header-text-position", "Bottom");
+		});
+	});
+
+	describe("actionsPlacement", () => {
+		it("reflects TopRight as the default value", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello">
+					<div slot="actions">Action</div>
+				</HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.should("have.attr", "actions-placement", "TopRight");
+		});
+
+		it("renders actions inside header row when TopRight", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" actionsPlacement="TopRight">
+					<div slot="actions" id="action">Action</div>
+				</HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header > .ui5-banner-actions")
+				.should("exist");
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header-text .ui5-banner-actions")
+				.should("not.exist");
+		});
+
+		it("renders actions inside header-text block when BottomLeft", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" actionsPlacement="BottomLeft">
+					<div slot="actions" id="action">Action</div>
+				</HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-left")
+				.should("exist");
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header > .ui5-banner-actions")
+				.should("not.exist");
+		});
+
+		it("endContent block exists alongside BottomLeft actions", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" actionsPlacement="BottomLeft" layout="OneOneColumns">
+					<div slot="actions">Action</div>
+					<div slot="endContent">End</div>
+				</HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-block-end")
+				.should("exist");
+		});
+
+		it("updates actionsPlacement dynamically", () => {
+			cy.mount(
+				<HeroBanner headerText="Hello" actionsPlacement="TopRight">
+					<div slot="actions">Action</div>
+				</HeroBanner>
+			);
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header > .ui5-banner-actions")
+				.should("exist");
+
+			cy.get("[ui5-hero-banner]")
+				.invoke("prop", "actionsPlacement", "BottomLeft");
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-left")
+				.should("exist");
+
+			cy.get("[ui5-hero-banner]")
+				.shadow()
+				.find(".ui5-banner-header > .ui5-banner-actions")
+				.should("not.exist");
 		});
 	});
 });
