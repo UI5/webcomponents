@@ -177,9 +177,9 @@ describe("Toolbar general interaction", () => {
 
 		cy.mount(
 			<Toolbar id="overflow-focus-toolbar">
-				<ToolbarButton text="One"></ToolbarButton>
-				<ToolbarButton text="Two"></ToolbarButton>
-				<ToolbarButton text="Three"></ToolbarButton>
+				<ToolbarButton text="One" overflow-priority="AlwaysOverflow"></ToolbarButton>
+				<ToolbarButton text="Two" overflow-priority="AlwaysOverflow"></ToolbarButton>
+				<ToolbarButton text="Three" overflow-priority="AlwaysOverflow"></ToolbarButton>
 			</Toolbar>
 		);
 
@@ -193,9 +193,8 @@ describe("Toolbar general interaction", () => {
 			.find(".ui5-overflow-popover")
 			.should("have.attr", "open", "open");
 
-		cy.get("[ui5-toolbar-button]")
-			.first()
-			.should("be.focused");
+		cy.focused()
+			.should("have.attr", "ui5-toolbar-button");
 	});
 
 	it("shouldn't have toolbar button as popover opener when there is spacer before last toolbar item", () => {
