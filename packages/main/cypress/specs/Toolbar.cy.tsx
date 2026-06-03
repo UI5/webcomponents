@@ -198,7 +198,7 @@ describe("Toolbar general interaction", () => {
 			.should("be.focused");
 	});
 
-
+	it("shouldn't have toolbar button as popover opener when there is spacer before last toolbar item", () => {
 		cy.mount(
 			<Toolbar id="otb_spacer">
 				<ToolbarButton icon={add} text="Plus" design="Default"></ToolbarButton>
