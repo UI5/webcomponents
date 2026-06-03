@@ -18,7 +18,6 @@ export default function ToolbarButtonTemplate(this: ToolbarButton) {
 			design={this.design}
 			disabled={this.disabled}
 			hidden={this.hidden}
-			tabIndex={this.isOverflowed ? undefined : Number(this.forcedTabIndex)}
 			data-ui5-external-action-item-id={this._id}
 			data-ui5-stable={this.stableDomRef}
 			onClick={(...args) => this.onClick(...args)}
