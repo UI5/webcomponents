@@ -1,0 +1,156 @@
+name: Dev Close Notice
+
+# Posts a comment on open feature PRs (`feat(...)` / `feat:` / `feat!:`) targeting
+# `main` during the "dev close" period (the week leading up to a release)
+# reminding contributors that the PR should not be merged until the release
+# ships. Bugfixes, chores, docs, etc. are NOT flagged — only features.
+#
+# Trial run: only the next dev-close window is configured below. Once we
+# confirm the workflow behaves as expected, we'll extend the list (and
+# probably move it to a JSON file).
+#
+# Dates are interpreted in UTC. devCloseStart is inclusive; releaseDate is
+# exclusive (i.e. on releaseDate itself the workflow stops commenting).
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize, edited]
+    branches:
+      - main
+
+  # Run daily so PRs opened before dev-close still get notified once we enter
+  # the window, and so the comment lands even if a PR has had no activity.
+  schedule:
+    - cron: "17 7 * * *"  # 07:17 UTC daily — odd minute on purpose
+
+  # Manual trigger for testing.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on PRs during dev close
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ----- Configuration -------------------------------------------------
+            // Add new entries here when the release schedule is known.
+            // devCloseStart: first day PRs should NOT be merged (inclusive, UTC)
+            // releaseDate:   day the release ships (exclusive — period ends here)
+            const DEV_CLOSE_PERIODS = [
+              { release: "next", devCloseStart: "2026-06-29", releaseDate: "2026-07-06" },
+            ];
+
+            // Marker so we never post the same comment twice on a PR.
+            const MARKER = "<!-- dev-close-notice -->";
+
+            // Match Conventional Commit "feat" type (with optional scope and "!"),
+            // OR ANY type marked with "!" (breaking change), e.g. fix!:, refactor!:.
+            // Both patterns indicate a change that should NOT land during dev close:
+            //   feat: add foo                  ✅ feature
+            //   feat(ui5-button): bar          ✅ feature
+            //   feat!: drop legacy api         ✅ feature + breaking
+            //   feat(ui5-table)!: bar          ✅ feature + breaking
+            //   fix(ui5-button)!: rename event ✅ breaking (public API change)
+            //   refactor!: drop public method  ✅ breaking
+            //   fix(ui5-button): typo          ❌
+            //   chore: bump deps               ❌
+            const FEAT_TITLE_RE = /^feat(\([^)]+\))?!?:/i;
+            const BREAKING_TITLE_RE = /^[a-z]+(\([^)]+\))?!:/i;
+            const isBlockedTitle = (title) =>
+              FEAT_TITLE_RE.test(title || "") || BREAKING_TITLE_RE.test(title || "");
+
+            // --------------------------------------------------------------------
+            const today = new Date();
+            today.setUTCHours(0, 0, 0, 0);
+
+            const activePeriod = DEV_CLOSE_PERIODS.find(p => {
+              const start = new Date(`${p.devCloseStart}T00:00:00Z`);
+              const end = new Date(`${p.releaseDate}T00:00:00Z`);
+              return today >= start && today < end;
+            });
+
+            if (!activePeriod) {
+              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — nothing to do.`);
+              return;
+            }
+
+            core.info(`In dev-close window for release "${activePeriod.release}" (${activePeriod.devCloseStart} → ${activePeriod.releaseDate}).`);
+
+            const body = [
+              MARKER,
+              `### ⏸️ Dev close in effect`,
+              ``,
+              `This repository is currently in **dev close** ahead of release \`${activePeriod.release}\` (scheduled **${activePeriod.releaseDate}**, UTC).`,
+              ``,
+              `This PR is detected as a **feature or a breaking change** (Conventional Commit title \`feat:\` / \`feat(...)\` / any type with \`!\`). Please **do not merge it into \`main\`** until the release ships — features and public API changes should land in the next dev cycle.`,
+              ``,
+              `Bugfixes and chores without API impact are unaffected. If you believe this PR was flagged in error (or should bypass dev close), please coordinate with the release captain.`,
+              ``,
+              `_This notice is posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/dev-close-notice.yaml) workflow. Public-API changes that don't use a Conventional Commit \`!\` marker may not be detected — please double-check this PR's impact._`,
+            ].join("\n");
+
+            // Pick the PR list based on event:
+            // - pull_request: just the one PR that triggered the run
+            // - schedule / workflow_dispatch: every open PR targeting `main`
+            let prs;
+            if (context.eventName === "pull_request") {
+              prs = [{
+                number: context.payload.pull_request.number,
+                title: context.payload.pull_request.title,
+                base: { ref: context.payload.pull_request.base.ref },
+                draft: context.payload.pull_request.draft,
+              }];
+            } else {
+              prs = await github.paginate(github.rest.pulls.list, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: "open",
+                base: "main",
+                per_page: 100,
+              });
+            }
+
+            core.info(`Considering ${prs.length} PR(s).`);
+
+            for (const pr of prs) {
+              if (pr.base.ref !== "main") continue;
+
+              // Skip drafts — they aren't merge candidates yet.
+              if (pr.draft) {
+                core.info(`PR #${pr.number}: draft, skipping.`);
+                continue;
+              }
+
+              // Only flag features and breaking changes.
+              if (!isBlockedTitle(pr.title)) {
+                core.info(`PR #${pr.number}: not a feat / breaking PR ("${pr.title}"), skipping.`);
+                continue;
+              }
+
+              // Has the marker already been posted?
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 100,
+              });
+
+              if (comments.some(c => c.body && c.body.includes(MARKER))) {
+                core.info(`PR #${pr.number}: marker already present, skipping.`);
+                continue;
+              }
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body,
+              });
+              core.info(`PR #${pr.number}: posted dev-close notice.`);
+            }
