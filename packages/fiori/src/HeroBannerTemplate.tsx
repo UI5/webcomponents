@@ -1,7 +1,7 @@
 import type HeroBanner from "./HeroBanner.js";
 
 export default function HeroBannerTemplate(this: HeroBanner) {
-	const actionsBottomLeft = this.actionsPlacement === "BottomLeft";
+	const actionsBottomStart = this.actionsPlacement === "BottomStart";
 
 	return (
 		<div
@@ -27,14 +27,14 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 							</h2>
 						}
 
-						{actionsBottomLeft && this._hasActions &&
-							<div class="ui5-banner-actions ui5-banner-actions-bottom-left">
+						{actionsBottomStart && this._hasActions &&
+							<div class="ui5-banner-actions ui5-banner-actions-bottom-start">
 								<slot name="actions"></slot>
 							</div>
 						}
 					</div>
 
-					{!actionsBottomLeft && this._hasActions &&
+					{!actionsBottomStart && this._hasActions &&
 						<div class="ui5-banner-actions">
 							<slot name="actions"></slot>
 						</div>

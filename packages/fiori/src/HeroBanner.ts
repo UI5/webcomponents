@@ -6,7 +6,7 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import type HeroBannerLayout from "./types/HeroBannerLayout.js";
-import type HeroBannerActionsPosition from "./types/HeroBannerActionsPosition.js";
+import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
 import type HeroBannerHeaderTextPosition from "./types/HeroBannerHeaderTextPosition.js";
 
 // Template
@@ -154,14 +154,14 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the placement of the actions slot within the hero banner header.
 	 *
-	 * - **TopRight** (default) - Actions are displayed to the right of the header text, aligned to the top of the header row.
-	 * - **BottomLeft** - Actions are displayed below the header text, left-aligned. In this mode, the `endContent` slot spans the full height of the content area.
+	 * - **TopEnd** (default) - Actions are displayed to the right of the header text, aligned to the top of the header row.
+	 * - **BottomStart** - Actions are displayed below the header text, left-aligned. In this mode, the `endContent` slot spans the full height of the content area.
 	 *
-	 * @default "TopRight"
+	 * @default "TopEnd"
 	 * @public
 	 */
 	@property()
-	actionsPlacement: `${HeroBannerActionsPosition}` = "TopRight";
+	actionsPlacement: `${HeroBannerActionsPlacement}` = "TopEnd";
 
 	/**
 	 * Defines the vertical position of the header text block within the header area.

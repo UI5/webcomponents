@@ -344,7 +344,7 @@ describe("HeroBanner", () => {
 	});
 
 	describe("actionsPlacement", () => {
-		it("reflects TopRight as the default value", () => {
+		it("reflects TopEnd as the default value", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello">
 					<div slot="actions">Action</div>
@@ -352,12 +352,12 @@ describe("HeroBanner", () => {
 			);
 
 			cy.get("[ui5-hero-banner]")
-				.should("have.attr", "actions-placement", "TopRight");
+				.should("have.attr", "actions-placement", "TopEnd");
 		});
 
-		it("renders actions inside header row when TopRight", () => {
+		it("renders actions inside header row when TopEnd", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="TopRight">
+				<HeroBanner headerText="Hello" actionsPlacement="TopEnd">
 					<div slot="actions" id="action">Action</div>
 				</HeroBanner>
 			);
@@ -373,16 +373,16 @@ describe("HeroBanner", () => {
 				.should("not.exist");
 		});
 
-		it("renders actions inside header-text block when BottomLeft", () => {
+		it("renders actions inside header-text block when BottomStart", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="BottomLeft">
+				<HeroBanner headerText="Hello" actionsPlacement="BottomStart">
 					<div slot="actions" id="action">Action</div>
 				</HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-left")
+				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-start")
 				.should("exist");
 
 			cy.get("[ui5-hero-banner]")
@@ -391,9 +391,9 @@ describe("HeroBanner", () => {
 				.should("not.exist");
 		});
 
-		it("endContent block exists alongside BottomLeft actions", () => {
+		it("endContent block exists alongside BottomStart actions", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="BottomLeft" layout="OneOneColumns">
+				<HeroBanner headerText="Hello" actionsPlacement="BottomStart" layout="OneOneColumns">
 					<div slot="actions">Action</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -407,7 +407,7 @@ describe("HeroBanner", () => {
 
 		it("updates actionsPlacement dynamically", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="TopRight">
+				<HeroBanner headerText="Hello" actionsPlacement="TopEnd">
 					<div slot="actions">Action</div>
 				</HeroBanner>
 			);
@@ -418,11 +418,11 @@ describe("HeroBanner", () => {
 				.should("exist");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "actionsPlacement", "BottomLeft");
+				.invoke("prop", "actionsPlacement", "BottomStart");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-left")
+				.find(".ui5-banner-header-text .ui5-banner-actions-bottom-start")
 				.should("exist");
 
 			cy.get("[ui5-hero-banner]")

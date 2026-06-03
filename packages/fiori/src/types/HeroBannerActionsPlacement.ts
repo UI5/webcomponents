@@ -1,22 +1,22 @@
 /**
- * Available HeroBanner actions position options.
+ * Available HeroBanner actions placement options.
  *
  * Defines where the actions slot is rendered within the hero banner header area.
  * @public
  * @since 2.23.0
  */
-enum HeroBannerActionsPosition {
+enum HeroBannerActionsPlacement {
 	/**
 	 * Places the actions to the right of the header text, aligned to the top of the header row.
 	 * @public
 	 */
-	TopRight = "TopRight",
+	TopEnd = "TopEnd",
 
 	/**
-	 * Places the actions below the header text, aligned to the left.
+	 * Places the actions below the header text, aligned to the start.
 	 * @public
 	 */
-	BottomLeft = "BottomLeft"
+	BottomStart = "BottomStart"
 }
 
-export default HeroBannerActionsPosition;
+export default HeroBannerActionsPlacement;
