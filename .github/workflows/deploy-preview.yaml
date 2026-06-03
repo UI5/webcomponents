@@ -37,6 +37,7 @@ jobs:
     # so the deploy step would always fail. A skipped check does not block merge.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    environment: netlify-preview
 
     steps:
     - name: Checkout
