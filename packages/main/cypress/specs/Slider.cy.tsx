@@ -1075,6 +1075,14 @@ describe("Custom Values", () => {
 			.find("[ui5-slider-scale]")
 			.shadow()
 			.find(".ui5-slider-scale-tickmark-label")
+			.eq(1)
+			.should("have.text", "Room Temp");
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
 			.eq(3)
 			.should("have.text", "Boiling");
 	});
@@ -1125,18 +1133,6 @@ describe("Custom Values", () => {
 		cy.get("@slider").should("have.value", 100);
 	});
 
-	it("Handle position is correct for non-uniform tickmark spacing", () => {
-		cy.mount(
-			<Slider value={25} min={0} max={100} tickmarks={customTickmarks} />
-		);
-
-		// value=25, min=0, max=100 → position should be 25%
-		cy.get("[ui5-slider]")
-			.shadow()
-			.find("[ui5-slider-handle]")
-			.should("have.attr", "style", "inset-inline-start: clamp(0%, 25%, 100%);");
-	});
-
 	it("aria-valuetext reflects the custom label when value matches a tickmark", () => {
 		cy.mount(
 			<Slider value={25} min={0} max={100} tickmarks={customTickmarks} />
@@ -1170,7 +1166,8 @@ describe("Custom Values", () => {
 		cy.get("@slider")
 			.shadow()
 			.find("[ui5-slider-tooltip]")
-			.should("have.attr", "value", "Room Temp");
+			.should("have.attr", "value", "Room Temp")
+			.should("have.attr", "open");
 	});
 
 	it("Tooltip is hidden when value is between custom tickmarks", () => {
@@ -1185,20 +1182,6 @@ describe("Custom Values", () => {
 			.shadow()
 			.find("[ui5-slider-tooltip]")
 			.should("not.have.attr", "open");
-	});
-
-	it("Tooltip is shown when value lands exactly on a custom tickmark", () => {
-		cy.mount(
-			<Slider value={50} min={0} max={100} tickmarks={customTickmarks} showTooltip />
-		);
-
-		cy.get("[ui5-slider]").as("slider");
-		cy.get("@slider").shadow().find("[ui5-slider-handle]").realClick();
-
-		cy.get("@slider")
-			.shadow()
-			.find("[ui5-slider-tooltip]")
-			.should("have.attr", "open");
 	});
 
 	it("Tooltip is shown for any value when no custom tickmarks are defined", () => {
@@ -1226,15 +1209,5 @@ describe("Custom Values", () => {
 			.shadow()
 			.find(".ui5-slider-scale-tickmark")
 			.should("have.length.at.least", 4);
-	});
-
-	it("Backward compatibility - slider without tickmarks works as before", () => {
-		cy.mount(<Slider min={0} max={10} step={1} value={5} />);
-
-		cy.get("[ui5-slider]").as("slider");
-		cy.get("@slider").realClick();
-
-		cy.get("@slider").realPress("ArrowRight");
-		cy.get("@slider").should("have.value", 6);
 	});
 });

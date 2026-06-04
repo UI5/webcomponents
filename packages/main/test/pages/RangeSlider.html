@@ -54,6 +54,9 @@
 
 			<h2>Custom Tickmarks - Price Range</h2>
 			<ui5-range-slider id="custom-tickmarks-price" min="0" max="1000" step="50" start-value="200" end-value="800" show-tooltip></ui5-range-slider>
+
+			<h2>Custom Tickmarks - Running Distance Range (km)</h2>
+			<ui5-range-slider id="custom-tickmarks-distance" min="0" max="42" step="0.1" start-value="5" end-value="21.1" show-tooltip></ui5-range-slider>
 		</section>
 
 		<section class="group">
@@ -95,6 +98,14 @@
 				{ value: 500, label: "$500" },
 				{ value: 750, label: "$750" },
 				{ value: 1000, label: "$1000" }
+			];
+
+			document.getElementById("custom-tickmarks-distance").tickmarks = [
+				{ value: 0, label: "Start" },
+				{ value: 5, label: "5K" },
+				{ value: 10, label: "10K" },
+				{ value: 21.1, label: "Half" },
+				{ value: 42, label: "Marathon" }
 			];
 
 			const eventTargetSlider = document.getElementById("test-slider");

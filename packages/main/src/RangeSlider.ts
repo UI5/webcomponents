@@ -15,7 +15,6 @@ import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/Ac
 import SliderBase from "./SliderBase.js";
 import RangeSliderTemplate from "./RangeSliderTemplate.js";
 import type SliderTooltip from "./SliderTooltip.js";
-import type { Tickmark } from "./SliderScale.js";
 
 // Texts
 import {
@@ -144,24 +143,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	@property()
 	tooltipEndValueState: `${ValueState}` = "None";
 
-	/**
-	 * Defines custom tickmarks with labels on the slider scale.
-	 * Each tickmark object has a numeric `value` and an optional `label` string.
-	 * Tickmarks are purely visual — they display labeled markers at specific positions
-	 * but do not affect the slider's movement behavior. The slider still moves
-	 * according to `min`, `max`, and `step`.
-	 *
-	 * When the current value matches a tickmark value, the tickmark's label
-	 * is shown in the tooltip and announced via `aria-valuetext`.
-	 *
-	 * **Note:** When `tickmarks` is provided, the scale is automatically shown
-	 * (equivalent to `showTickmarks`).
-	 * @default []
-	 * @public
-	 */
-	@property({ type: Array })
-	tickmarks: Array<Tickmark> = [];
-
 	@property({ type: Boolean })
 	rangePressed = false;
 
@@ -245,10 +226,6 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		return this.disabled || undefined;
 	}
 
-	get _hasCustomTickmarks(): boolean {
-		return this.tickmarks.length > 0;
-	}
-
 	get _isStartTooltipVisible(): boolean {
 		if (!this._tooltipsOpen) {
 			return false;
@@ -269,16 +246,12 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		return this._getCustomLabel(this.endValue) !== undefined;
 	}
 
-	_getCustomLabel(value: number): string | undefined {
-		return this.tickmarks.find(t => t.value === value)?.label;
-	}
-
 	get _ariaValueTextStart(): string | undefined {
-		return this._getCustomLabel(this.startValue) || undefined;
+		return this._getCustomLabel(this.startValue);
 	}
 
 	get _ariaValueTextEnd(): string | undefined {
-		return this._getCustomLabel(this.endValue) || undefined;
+		return this._getCustomLabel(this.endValue);
 	}
 
 	get _ariaLabelledByText() {

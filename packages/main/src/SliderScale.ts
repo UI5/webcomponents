@@ -96,7 +96,7 @@ class SliderScale extends UI5Element {
 	/**
 	 * Defines custom tickmarks to be displayed on the scale.
 	 * @default []
-	 * @public
+	 * @private
 	 */
 	@property({ type: Array })
 	tickmarks: Array<Tickmark> = [];
@@ -303,6 +303,10 @@ class SliderScale extends UI5Element {
 	}
 
 	get _tickmarksCount() {
+		if (this.tickmarks.length > 0) {
+			return this.tickmarks.length - 1;
+		}
+
 		if (this.step === 0) {
 			return 0;
 		}

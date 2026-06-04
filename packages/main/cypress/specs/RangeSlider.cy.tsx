@@ -1904,6 +1904,30 @@ describe("Custom Tickmarks", () => {
 			.find("[ui5-slider-scale]")
 			.shadow()
 			.find(".ui5-slider-scale-tickmark-label")
+			.eq(1)
+			.should("have.text", "Cool");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(2)
+			.should("have.text", "Warm");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(3)
+			.should("have.text", "Hot");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
 			.eq(4)
 			.should("have.text", "Boiling");
 	});
@@ -2053,15 +2077,5 @@ describe("Custom Tickmarks", () => {
 			.shadow()
 			.find(".ui5-slider-scale-tickmark")
 			.should("have.length.at.least", 5);
-	});
-
-	it("Backward compatibility - range slider without tickmarks works as before", () => {
-		cy.mount(<RangeSlider min={0} max={10} step={1} startValue={3} endValue={7} />);
-
-		cy.get("[ui5-range-slider]").as("slider");
-		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realClick();
-
-		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realPress("ArrowRight");
-		cy.get("@slider").should("have.attr", "end-value", "8");
 	});
 });

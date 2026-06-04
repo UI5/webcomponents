@@ -7,7 +7,6 @@ import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/In
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import SliderBase from "./SliderBase.js";
 import type SliderTooltip from "./SliderTooltip.js";
-import type { Tickmark } from "./SliderScale.js";
 
 // Template
 import SliderTemplate from "./SliderTemplate.js";
@@ -103,24 +102,6 @@ class Slider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	step = 1;
 
-	/**
-	 * Defines custom tickmarks with labels on the slider scale.
-	 * Each tickmark object has a numeric `value` and an optional `label` string.
-	 * Tickmarks are purely visual — they display labeled markers at specific positions
-	 * but do not affect the slider's movement behavior. The slider still moves
-	 * according to `min`, `max`, and `step`.
-	 *
-	 * When the current value matches a tickmark value, the tickmark's label
-	 * is shown in the tooltip and announced via `aria-valuetext`.
-	 *
-	 * **Note:** When `tickmarks` is provided, the scale is automatically shown
-	 * (equivalent to `showTickmarks`).
-	 * @default []
-	 * @public
-	 */
-	@property({ type: Array })
-	tickmarks: Array<Tickmark> = [];
-
 	@property()
 	tooltipValueState: `${ValueState}` = "None";
 
@@ -137,10 +118,6 @@ class Slider extends SliderBase implements IFormInputElement {
 		return this.value.toString();
 	}
 
-	get _hasCustomTickmarks(): boolean {
-		return this.tickmarks.length > 0;
-	}
-
 	get _isTooltipVisible(): boolean {
 		if (!this._tooltipsOpen) {
 			return false;
@@ -152,12 +129,7 @@ class Slider extends SliderBase implements IFormInputElement {
 	}
 
 	get _ariaValueText(): string | undefined {
-		const label = this._getCustomLabel(this.value);
-		return label || undefined;
-	}
-
-	_getCustomLabel(value: number): string | undefined {
-		return this.tickmarks.find(t => t.value === value)?.label;
+		return this._getCustomLabel(this.value);
 	}
 
 	@i18n("@ui5/webcomponents")
