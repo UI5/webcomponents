@@ -149,8 +149,8 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the placement of the actions slot within the hero banner header.
 	 *
-	 * - **TopEnd** (default) - Actions are displayed to the right of the header text, aligned to the top of the header row.
-	 * - **BottomStart** - Actions are displayed below the header text, left-aligned. In this mode, the `endContent` slot spans the full height of the content area.
+	 * - **TopEnd** (default) - Actions are displayed to the right of the header text, at the top of the header row.
+	 * - **BottomStart** - Actions are displayed below the header text, left-aligned, regardless of `columnsRatio` or slot usage.
 	 *
 	 * @default "TopEnd"
 	 * @public
@@ -159,10 +159,12 @@ class HeroBanner extends UI5Element {
 	actionsPlacement: `${HeroBannerActionsPlacement}` = "TopEnd";
 
 	/**
-	 * Defines the vertical placement of the header text block within the header area.
+	 * Defines the vertical placement of the header block within the content area.
 	 *
-	 * - **Top** (default) - Header text block is placed at the top of the header area.
-	 * - **Bottom** - Header text block is pushed to the bottom of the header area.
+	 * - **Top** (default) - Header block is placed at the top of the content area.
+	 * - **Bottom** - Header block is pushed to the bottom of column 1. Only takes effect when `columnsRatio`
+	 *   is `Equal` or `FirstWider` and only `endContent` is provided (no default slot content).
+	 *   When `actionsPlacement` is also `BottomStart`, the `endContent` slot spans the full height.
 	 *
 	 * @default "Top"
 	 * @public

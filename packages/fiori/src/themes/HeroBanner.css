@@ -151,6 +151,13 @@
 	min-width: 0;
 }
 
+/* Only endContent present (no startContent) — right-align its content */
+.ui5-banner-content:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
 /* columnsRatio="Equal" - equal width columns, content blocks side by side */
 .ui5-banner-content.ui5-banner-columns-equal {
 	display: grid;
@@ -279,5 +286,11 @@
 	/* Bottom: reset margin-top push when stacked */
 	:host([header-block-placement="Bottom"]) .ui5-banner-header {
 		margin-top: 0;
+	}
+
+	/* Only endContent present: expand to full width and center children */
+	.ui5-banner-content:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+		align-items: center;
+		width: 100%;
 	}
 }
