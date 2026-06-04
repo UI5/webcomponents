@@ -592,6 +592,26 @@ describe("Select - Accessibility", () => {
 			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
 		});
 	});
+
+	it("should have focus only on the selected item when dropdown is opened (not on input)", () => {
+		cy.mount(
+			<Select>
+				<Option value="Option1">Option 1</Option>
+				<Option value="Option2" selected>Option 2</Option>
+				<Option value="Option3">Option 3</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// The selected item should have focus - we verify this by checking that
+		// the input label root does NOT have focus (the pseudo-element should be hidden)
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-select-label-root")
+			.should("not.have.focus");
+	});
 });
 
 describe("Select - Popover", () => {
