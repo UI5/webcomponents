@@ -7,6 +7,7 @@ import Separator from "../../src/TabSeparator.js"
 import Table from "../../src/Table.js";
 import TableCell from "../../src/TableCell.js";
 import TableRow from "../../src/TableRow.js";
+import TableHeaderRow from "../../src/TableHeaderRow.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import "@ui5/webcomponents-icons/dist/employee.js"
 import "@ui5/webcomponents-icons/dist/menu.js"
@@ -577,8 +578,10 @@ describe("TabContainer general interaction", () => {
 			<TabContainer class="tabContainerNoContentPaddings" style="padding-left: 0px; padding-right: 0px;">
 				<Tab icon="sap-icon://card" selected>
 					<Table>
-						<TableHeaderCell slot="default">Source</TableHeaderCell>
-						<TableHeaderCell slot="default">Method</TableHeaderCell>
+						<TableHeaderRow slot="headerRow">
+							<TableHeaderCell>Source</TableHeaderCell>
+							<TableHeaderCell>Method</TableHeaderCell>
+						</TableHeaderRow>
 						<TableRow>
 							<TableCell>Cell 1</TableCell>
 							<TableCell>Cell 2</TableCell>
@@ -603,8 +606,10 @@ describe("TabContainer general interaction", () => {
 				</Tab>
 				<Tab icon="sap-icon://employee">
 					<Table>
-						<TableHeaderCell slot="default">Source</TableHeaderCell>
-						<TableHeaderCell slot="default">Method</TableHeaderCell>
+						<TableHeaderRow slot="headerRow">
+							<TableHeaderCell>Source</TableHeaderCell>
+							<TableHeaderCell>Method</TableHeaderCell>
+						</TableHeaderRow>
 						<TableRow>
 							<TableCell>Cell 3</TableCell>
 							<TableCell>Cell 4</TableCell>

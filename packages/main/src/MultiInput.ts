@@ -356,7 +356,9 @@ class MultiInput extends Input implements IFormInputElement {
 		const insideDOM = this.contains(relatedTarget);
 		const insideShadowDom = this.shadowRoot!.contains(relatedTarget);
 
-		if (!insideDOM && !insideShadowDom) {
+		const hasTokenToBeDeleted = this.tokenizer._tokens.some(token => token.toBeDeleted);
+
+		if (!insideDOM && !insideShadowDom && !hasTokenToBeDeleted) {
 			this.tokenizer.expanded = false;
 		}
 

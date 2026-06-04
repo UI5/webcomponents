@@ -369,6 +369,68 @@ describe("General", () => {
 			.should("not.exist");
 	});
 
+	it("Should delete token after focus change when tokenizer collapses", () => {
+		cy.mount(
+			<MultiComboBox style="width: 250px;">
+				<MultiComboBoxItem selected={true} text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="England"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer")
+			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
+
+		// Verify initial state: 4 tokens
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 4);
+
+		// Click on Albania token to select it (make it focused and selected)
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.first()
+			.as("albaniaToken")
+			.realClick();
+
+		// Verify Albania token is focused
+		cy.get("@albaniaToken")
+			.should("have.attr", "focused");
+
+		// Press Arrow Right to move focus to Argentina
+		cy.realPress("ArrowRight");
+
+		// Wait a moment for tokenizer state to settle
+		cy.wait(100);
+
+		// Click delete icon on Albania token
+		cy.get("@albaniaToken")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		// Verify token-delete event was fired
+		cy.get("@tokenDelete")
+			.should("have.been.calledOnce");
+
+		// Verify Albania token was removed (3 tokens remaining)
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 3);
+
+		// Verify Albania is no longer the first token
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.first()
+			.invoke("attr", "text")
+			.should("not.equal", "Albania");
+	});
+
 	it("Autocomplete (typeahead)", () => {
 		cy.mount(
 			<MultiComboBox>
@@ -826,7 +888,8 @@ describe("General", () => {
 		);
 
 		cy.get("ui5-multi-combobox")
-			.should("have.attr", "selected-values",'["al","en"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["al", "en"]);
 
 		cy.get("[ui5-mcb-item]")
 			.eq(0)
@@ -882,7 +945,8 @@ describe("General", () => {
 			.should("have.length", "1");
 
 		cy.get("[ui5-multi-combobox]")
-			.should("have.attr", "selected-values", '["dk"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["dk"]);
 	});
 
 	it("updates selectedValues when selecting items via checkbox", () => {
@@ -896,8 +960,11 @@ describe("General", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.should("have.attr", "selected-values", '[]');
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
 
 		// Open the dropdown
 		cy.get("@mcb")
@@ -913,7 +980,8 @@ describe("General", () => {
 			.realClick();
 
 		cy.get("@mcb")
-			.should("have.attr", "selected-values", '["DE"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE"]);
 
 		// Select second item via checkbox
 		cy.get("[ui5-mcb-item]")
@@ -923,7 +991,8 @@ describe("General", () => {
 			.realClick();
 
 		cy.get("@mcb")
-			.should("have.attr", "selected-values", '["DE","FR"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE", "FR"]);
 
 		// Select third and fourth items
 		cy.get("[ui5-mcb-item]")
@@ -939,7 +1008,8 @@ describe("General", () => {
 			.realClick();
 
 		cy.get("@mcb")
-			.should("have.attr", "selected-values", '["DE","FR","IT","US"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE", "FR", "IT", "US"]);
 	});
 
 	it("selects correct items when selectedValues is set before items are added", () => {
@@ -949,8 +1019,11 @@ describe("General", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.should("have.attr", "selected-values", '["FR","US"]');
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["FR", "US"]);
 
 		// No tokens yet since no items
 		cy.get("@mcb")
@@ -1015,8 +1088,11 @@ describe("General", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb")
-			.should("have.attr", "selected-values", "[]");
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
 
 		// Type "Ca" to trigger typeahead for Canada
 		cy.get("@mcb")
@@ -1030,7 +1106,8 @@ describe("General", () => {
 
 		// Verify selectedValues is updated
 		cy.get("@mcb")
-			.should("have.attr", "selected-values", '["CA"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["CA"]);
 
 		// Verify token is created
 		cy.get("@mcb")
@@ -1049,7 +1126,8 @@ describe("General", () => {
 
 		// Verify selectedValues now has both values
 		cy.get("@mcb")
-			.should("have.attr", "selected-values", '["CA","JP"]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["CA", "JP"]);
 	});
 });
 
@@ -2706,7 +2784,8 @@ describe("Event firing", () => {
 			return event.detail.item === undefined;
 		}));
 		cy.get("[ui5-multi-combobox]")
-			.should("have.attr", "selected-values", '[]');
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
 	});
 });
 

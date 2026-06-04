@@ -32,6 +32,25 @@
 			<iframe id="clickThisIframeInsideShadowRoot" src="./Test.html"></iframe>
 		</template>
 	</div>
+	<ui5-button id="btnTestMinWidth">Open Popover with minWidth: 500px</ui5-button>
+	<ui5-popover id="popTestMinWidth" opener="btnTestMinWidth" header-text="minWidth: 500px" style="min-width: 500px;">
+		<div style="padding: 10px;">
+			This popover has min-width set to 500px.
+		</div>
+	</ui5-popover>
+
+	<br><br>
+
+	<ui5-button id="btnTestMinWidthResizable">Open Resizable Popover with minWidth: 400px</ui5-button>
+	<ui5-popover id="popTestMinWidthResizable" opener="btnTestMinWidthResizable" resizable header-text="Resizable + minWidth: 400px" style="min-width: 400px;">
+		<div style="padding: 10px; min-height: 100px;">
+			This popover is resizable with minWidth: 400px.<br>
+			Try resizing - it won't go below 400px width!
+		</div>
+	</ui5-popover>
+
+	<br><br>
+
 	<ui5-button id="btn">Click me !</ui5-button>
 
 	<ui5-popover id="pop" class="popover6auto" placement="Top" accessible-name="This popover is important">
@@ -96,6 +115,13 @@
 		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
 	</ui5-popover>
 
+	<ui5-button id="btnOpenWithAttr2">Open with Attribute</ui5-button>
+	<ui5-popover id="popoverAttr2" opener="btnOpenWithAttr2">
+		<ui5-button id="btnCloseWithMethod">Close with Method</ui5-button>
+		<ui5-button id="btnCloseWithAttr">Close with Attribute</ui5-button>
+		<ui5-input autofocus placeholder="Input with autofocus"></ui5-input>
+	</ui5-popover>
+	
 	<br>
 	<br>
 
@@ -669,6 +695,14 @@ z-index: 1;
 
 	<script>
 
+		btnTestMinWidth.addEventListener("click", function () {
+			popTestMinWidth.open = true;
+		});
+
+		btnTestMinWidthResizable.addEventListener("click", function () {
+			popTestMinWidthResizable.open = true;
+		});
+
 		test.addEventListener("click", function (event) {
 			groupPop.open = true;
 		});
@@ -680,6 +714,9 @@ z-index: 1;
 
 		btnOpenWithAttr.addEventListener("click", function () {
 			popoverAttr.setAttribute("open", "");
+		});
+		btnOpenWithAttr2.addEventListener("click", function () {
+			popoverAttr2.setAttribute("open", "");
 		});
 
 		btnCloseWithMethod.addEventListener("click", function () {

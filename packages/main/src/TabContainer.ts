@@ -1316,8 +1316,10 @@ class TabContainer extends UI5Element {
 		}
 
 		const focusableRefs = [];
+		const startOverflow = this._getStartOverflow();
+		const endOverflow = this._getEndOverflow();
 
-		if (!this._getStartOverflow().hasAttribute("hidden")) {
+		if (startOverflow && !startOverflow.hasAttribute("hidden")) {
 			focusableRefs.push(this.startOverflowButton[0] || this._getStartOverflowBtnDOM());
 		}
 
@@ -1330,7 +1332,7 @@ class TabContainer extends UI5Element {
 			}
 		});
 
-		if (!this._getEndOverflow().hasAttribute("hidden")) {
+		if (endOverflow && !endOverflow.hasAttribute("hidden")) {
 			focusableRefs.push(this.overflowButton[0] || this._getEndOverflowBtnDOM());
 		}
 

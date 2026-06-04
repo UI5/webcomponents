@@ -306,6 +306,62 @@ describe("Color Picker general interaction tests", () => {
 	});
 });
 
+describe("Color Picker font-size scaling", () => {
+	afterEach(() => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "";
+		});
+	});
+
+	it("should select white at bottom-right corner with 14px root font-size", () => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "14px";
+		});
+
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]").as("colorPicker");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.shadow()
+			.find(".ui5-color-picker-main-color")
+			.realClick({ position: "bottomRight" });
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerToggleColorMode();
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#saturation", "0");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#light", "100");
+	});
+
+	it("should select black at top-left corner with 20px root font-size", () => {
+		cy.document().then(doc => {
+			doc.documentElement.style.fontSize = "20px";
+		});
+
+		cy.mount(<ColorPicker></ColorPicker>);
+
+		cy.get("[ui5-color-picker]").as("colorPicker");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.shadow()
+			.find(".ui5-color-picker-main-color")
+			.realClick({ position: "topLeft" });
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerToggleColorMode();
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#saturation", "100");
+
+		cy.get<ColorPicker>("@colorPicker")
+			.ui5ColorPickerValidateInput("#light", "0");
+	});
+});
+
 describe("Color Picker accessibility tests", () => {
 	it("should show correct accessibility info for RGB inputs", () => {
 		cy.mount(<ColorPicker></ColorPicker>);

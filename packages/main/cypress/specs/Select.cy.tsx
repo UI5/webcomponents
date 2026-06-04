@@ -1969,3 +1969,49 @@ describe("Select - active/down state", () => {
 			.realMouseUp();
 	});
 });
+
+describe("Select - popover max-width", () => {
+	it("applies a max-width of 40rem to the responsive popover when the select is narrow and an option has very long text", () => {
+		const longText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ".repeat(5);
+
+		cy.mount(
+			<Select style="width: 200px;">
+				<Option value="desktop" icon="laptop">{longText}</Option>
+				<Option value="short">Short option</Option>
+			</Select>
+		);
+
+		// Open the picker
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// When the select offsetWidth / remSize <= 40, max-width should be 40rem
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should($el => {
+				const maxWidth = $el[0].style.maxWidth;
+				expect(maxWidth).to.equal("40rem");
+			});
+	});
+
+	it("caps max-width to the component's own width in pixels when the select is wider than 40rem", () => {
+		cy.mount(
+			<Select style="width: 1000px;">
+				<Option value="short">Short</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// When offsetWidth / remSize > 40, max-width should be the component's width in px
+		cy.get("[ui5-select]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.then($popover => {
+				const maxWidth = $popover[0].style.maxWidth;
+				expect(maxWidth).to.match(/^\d+px$/);
+			});
+	});
+});
