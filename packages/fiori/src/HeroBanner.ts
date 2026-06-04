@@ -194,6 +194,22 @@ class HeroBanner extends UI5Element {
 		return this.actions.length > 0;
 	}
 
+	// headerBlockPlacement="Bottom" only takes effect in split grid layouts with only endContent
+	get _headerAtBottom() {
+		return this.headerBlockPlacement === "Bottom"
+			&& !!this.columnsRatio
+			&& !this._hasStartContent
+			&& this._hasEndContent;
+	}
+
+	// TopEnd actions must be a standalone grid item when the header is at the bottom,
+	// so they stay at the top of col 1 independently of the header position
+	get _actionsAsGridItem() {
+		return this._hasActions
+			&& this.actionsPlacement !== "BottomStart"
+			&& this._headerAtBottom;
+	}
+
 	get _backgroundImageStyle(): Record<string, string> | undefined {
 		if (this.backgroundImage) {
 			return { "--_ui5_banner_user_image": `url('${this.backgroundImage}')` };

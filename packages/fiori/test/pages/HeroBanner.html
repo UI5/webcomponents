@@ -46,7 +46,7 @@
 					<ui5-button icon="document" design="Default">Create Report</ui5-button>
 					<ui5-button icon="email" design="Default">Send Message</ui5-button>
 				</div>
-					
+
 			</ui5-hero-banner>
 		</section>
 
@@ -233,7 +233,7 @@
 		<!-- ====================================== -->
 		<section>
 			<h2>10. Interactive Controls</h2>
-			<p>All banner options can be toggled on/off. The salutation is mandatory and cannot be hidden.</p>
+			<p>All banner options can be toggled on/off. Use the controls to test every property combination dynamically.</p>
 
 			<div class="controls-panel">
 				<div class="controls-row">
@@ -245,13 +245,19 @@
 					<label class="toggle-label"><input type="checkbox" id="chk-end" checked> End Content</label>
 				</div>
 				<div class="controls-row">
-					<span class="controls-label">Salutation:</span>
-					<ui5-button id="btn-change-salutation">Cycle Name</ui5-button>
-					<span class="controls-separator">|</span>
 					<span class="controls-label">columnsRatio:</span>
 					<ui5-button id="btn-layout-full">None</ui5-button>
 					<ui5-button id="btn-layout-half">Equal</ui5-button>
 					<ui5-button id="btn-layout-twothirds">FirstWider</ui5-button>
+				</div>
+				<div class="controls-row">
+					<span class="controls-label">actionsPlacement:</span>
+					<ui5-button id="btn-actions-topend">TopEnd</ui5-button>
+					<ui5-button id="btn-actions-bottomstart">BottomStart</ui5-button>
+					<span class="controls-separator">|</span>
+					<span class="controls-label">headerBlockPlacement:</span>
+					<ui5-button id="btn-header-top">Top</ui5-button>
+					<ui5-button id="btn-header-bottom">Bottom</ui5-button>
 				</div>
 			</div>
 
@@ -358,14 +364,6 @@
 	<script>
 		var dynamicBanner = document.getElementById("hero-banner-dynamic");
 		var slotHolder = document.getElementById("slot-holder");
-		var names = ["John", "Maria", "Thomas", "Lisa", "Alex", "Sarah", "David"];
-		var nameIndex = 0;
-
-		// --- Salutation (mandatory: cycle through names, never hidden) ---
-		document.getElementById("btn-change-salutation").addEventListener("click", function () {
-			nameIndex = (nameIndex + 1) % names.length;
-			dynamicBanner.headerText = "Hello, " + names[nameIndex];
-		});
 
 		// --- Date Text toggle ---
 		document.getElementById("chk-date").addEventListener("change", function () {
@@ -404,15 +402,17 @@
 		toggleSlot("chk-end", "endContent");
 
 		// --- columnsRatio buttons ---
-		document.getElementById("btn-layout-full").addEventListener("click", function () {
-			dynamicBanner.columnsRatio = undefined;
-		});
-		document.getElementById("btn-layout-half").addEventListener("click", function () {
-			dynamicBanner.columnsRatio = "Equal";
-		});
-		document.getElementById("btn-layout-twothirds").addEventListener("click", function () {
-			dynamicBanner.columnsRatio = "FirstWider";
-		});
+		document.getElementById("btn-layout-full").addEventListener("click", function () { dynamicBanner.columnsRatio = undefined; });
+		document.getElementById("btn-layout-half").addEventListener("click", function () { dynamicBanner.columnsRatio = "Equal"; });
+		document.getElementById("btn-layout-twothirds").addEventListener("click", function () { dynamicBanner.columnsRatio = "FirstWider"; });
+
+		// --- actionsPlacement buttons ---
+		document.getElementById("btn-actions-topend").addEventListener("click", function () { dynamicBanner.actionsPlacement = "TopEnd"; });
+		document.getElementById("btn-actions-bottomstart").addEventListener("click", function () { dynamicBanner.actionsPlacement = "BottomStart"; });
+
+		// --- headerBlockPlacement buttons ---
+		document.getElementById("btn-header-top").addEventListener("click", function () { dynamicBanner.headerBlockPlacement = "Top"; });
+		document.getElementById("btn-header-bottom").addEventListener("click", function () { dynamicBanner.headerBlockPlacement = "Bottom"; });
 	</script>
 </body>
 </html>

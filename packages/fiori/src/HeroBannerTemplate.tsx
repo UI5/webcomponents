@@ -18,18 +18,6 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 				"ui5-banner-columns-equal": this.columnsRatio === "Equal",
 				"ui5-banner-columns-first-wider": this.columnsRatio === "FirstWider",
 			}} part="content">
-				{this._hasStartContent &&
-					<div class="ui5-banner-block ui5-banner-block-start" part="startContent">
-						<slot></slot>
-					</div>
-				}
-
-				{this._hasEndContent &&
-					<div class="ui5-banner-block ui5-banner-block-end" part="endContent">
-						<slot name="endContent"></slot>
-					</div>
-				}
-
 				<div class="ui5-banner-header" part="header">
 					<div class="ui5-banner-header-text">
 						{this.overlineText &&
@@ -51,12 +39,30 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 						}
 					</div>
 
-					{!actionsBottomStart && this._hasActions &&
+					{!actionsBottomStart && !this._actionsAsGridItem && this._hasActions &&
 						<div class="ui5-banner-actions">
 							<slot name="actions"></slot>
 						</div>
 					}
 				</div>
+
+				{this._hasStartContent &&
+					<div class="ui5-banner-block ui5-banner-block-start" part="startContent">
+						<slot></slot>
+					</div>
+				}
+
+				{this._hasEndContent &&
+					<div class="ui5-banner-block ui5-banner-block-end" part="endContent">
+						<slot name="endContent"></slot>
+					</div>
+				}
+
+				{this._actionsAsGridItem &&
+					<div class="ui5-banner-actions ui5-banner-actions-grid-item">
+						<slot name="actions"></slot>
+					</div>
+				}
 			</div>
 		</div>
 	);
