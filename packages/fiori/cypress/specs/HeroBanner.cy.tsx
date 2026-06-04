@@ -63,8 +63,8 @@ describe("HeroBanner", () => {
 		});
 	});
 
-	describe("Layout", () => {
-		it("applies OneColumn layout by default", () => {
+	describe("columnsRatio", () => {
+		it("renders content in single column when columnsRatio is not set", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello, John">
 					<div>Start</div>
@@ -73,13 +73,13 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-OneColumn")
-				.should("exist");
+				.find(".ui5-banner-columns-equal, .ui5-banner-columns-first-wider")
+				.should("not.exist");
 		});
 
-		it("applies TwoColumns layout", () => {
+		it("applies Equal columnsRatio", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="TwoColumns">
+				<HeroBanner headerText="Hello" columnsRatio="Equal">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -87,13 +87,13 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-TwoColumns")
+				.find(".ui5-banner-columns-equal")
 				.should("exist");
 		});
 
-		it("applies TwoColumnsStartExpanded layout", () => {
+		it("applies FirstWider columnsRatio", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="TwoColumnsStartExpanded">
+				<HeroBanner headerText="Hello" columnsRatio="FirstWider">
 					<div>Start</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>
@@ -101,7 +101,7 @@ describe("HeroBanner", () => {
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-TwoColumnsStartExpanded")
+				.find(".ui5-banner-columns-first-wider")
 				.should("exist");
 		});
 	});
@@ -133,9 +133,9 @@ describe("HeroBanner", () => {
 				.and("have.text", "End Content");
 		});
 
-		it("renders both startContent and endContent in TwoColumns layout", () => {
+		it("renders both startContent and endContent in Equal columnsRatio", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="TwoColumns">
+				<HeroBanner headerText="Hello" columnsRatio="Equal">
 					<div id="start">Left</div>
 					<div slot="endContent" id="end">Right</div>
 				</HeroBanner>
@@ -275,24 +275,24 @@ describe("HeroBanner", () => {
 				.should("have.text", "March 7");
 		});
 
-		it("updates layout dynamically", () => {
+		it("updates columnsRatio dynamically", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" layout="OneColumn">
+				<HeroBanner headerText="Hello">
 					<div>Start</div>
 				</HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-OneColumn")
-				.should("exist");
+				.find(".ui5-banner-columns-equal, .ui5-banner-columns-first-wider")
+				.should("not.exist");
 
 			cy.get("[ui5-hero-banner]")
-				.invoke("prop", "layout", "TwoColumns");
+				.invoke("prop", "columnsRatio", "Equal");
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-layout-TwoColumns")
+				.find(".ui5-banner-columns-equal")
 				.should("exist");
 		});
 	});
@@ -393,7 +393,7 @@ describe("HeroBanner", () => {
 
 		it("endContent block exists alongside BottomStart actions", () => {
 			cy.mount(
-				<HeroBanner headerText="Hello" actionsPlacement="BottomStart" layout="TwoColumns">
+				<HeroBanner headerText="Hello" actionsPlacement="BottomStart" columnsRatio="Equal">
 					<div slot="actions">Action</div>
 					<div slot="endContent">End</div>
 				</HeroBanner>

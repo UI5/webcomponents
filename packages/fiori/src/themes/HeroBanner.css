@@ -100,7 +100,7 @@
 
 /* BottomStart non-split grid with endContent and no startContent:
    two-column grid, header in col 1 — push its content to the bottom */
-:host([header-text-block-placement="Bottom"][actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-header {
+:host([header-text-block-placement="Bottom"][actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-header {
 	justify-content: flex-end;
 }
 
@@ -112,14 +112,14 @@
 
 /* actionsPlacement="BottomStart" with endContent, not combined with a split layout:
    content becomes a two-column grid so end block spans full height */
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr;
 	align-items: stretch;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-header {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-header {
 	grid-column: 1;
 	grid-row: 1;
 	align-self: stretch;
@@ -129,13 +129,13 @@
 	align-items: flex-start;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-start {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 1;
 	align-self: end;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-end {
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 1;
 	height: 100%;
@@ -151,49 +151,49 @@
 	min-width: 0;
 }
 
-/* Layout: TwoColumns - equal width columns, content blocks side by side */
-.ui5-banner-content.ui5-banner-layout-TwoColumns {
+/* columnsRatio="Equal" - equal width columns, content blocks side by side */
+.ui5-banner-content.ui5-banner-columns-equal {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto 1fr;
 }
 
-.ui5-banner-layout-TwoColumns .ui5-banner-header {
+.ui5-banner-columns-equal .ui5-banner-header {
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
 
-.ui5-banner-layout-TwoColumns .ui5-banner-block-start {
+.ui5-banner-columns-equal .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 2;
 }
 
 /* Without endContent, start content spans full width */
-.ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+.ui5-banner-columns-equal:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
 	grid-column: 1 / -1;
 }
 
-.ui5-banner-layout-TwoColumns .ui5-banner-block-end {
+.ui5-banner-columns-equal .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 2;
 }
 
 /* Bottom: header is last in DOM, drop order: -1 so it lands in row 2 via auto-placement */
-:host([header-text-block-placement="Bottom"]) .ui5-banner-layout-TwoColumns .ui5-banner-header,
-:host([header-text-block-placement="Bottom"]) .ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-header {
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal .ui5-banner-header,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider .ui5-banner-header {
 	grid-row: 2;
 	grid-column: 1 / -1;
 }
 
 /* BottomStart in split layouts with no startContent: single-row grid, header col 1 / end block col 2 */
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)),
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) {
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)),
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) {
 	grid-template-rows: 1fr;
 	align-items: stretch;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)) .ui5-banner-header,
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-header,
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
 	grid-column: 1;
 	grid-row: 1;
 	align-self: stretch;
@@ -203,36 +203,36 @@
 	align-items: flex-start;
 }
 
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumns:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end,
-:host([actions-placement="BottomStart"]) .ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end,
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 1;
 	align-self: stretch;
 }
 
-/* Layout: TwoColumnsStartExpanded - start column twice as wide as end, content blocks side by side */
-.ui5-banner-content.ui5-banner-layout-TwoColumnsStartExpanded {
+/* columnsRatio="FirstWider" - start column twice as wide as end, content blocks side by side */
+.ui5-banner-content.ui5-banner-columns-first-wider {
 	display: grid;
 	grid-template-columns: 2fr 1fr;
 	grid-template-rows: auto 1fr;
 }
 
-.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-header {
+.ui5-banner-columns-first-wider .ui5-banner-header {
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
 
-.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-block-start {
+.ui5-banner-columns-first-wider .ui5-banner-block-start {
 	grid-column: 1;
 	grid-row: 2;
 }
 
 /* Without endContent, start content spans full width */
-.ui5-banner-layout-TwoColumnsStartExpanded:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+.ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
 	grid-column: 1 / -1;
 }
 
-.ui5-banner-layout-TwoColumnsStartExpanded .ui5-banner-block-end {
+.ui5-banner-columns-first-wider .ui5-banner-block-end {
 	grid-column: 2;
 	grid-row: 2;
 }
@@ -251,8 +251,8 @@
 
 /* XS (≤599px): revert split layouts to stacked column */
 @container (max-width: 599px) {
-	.ui5-banner-content.ui5-banner-layout-TwoColumns,
-	.ui5-banner-content.ui5-banner-layout-TwoColumnsStartExpanded {
+	.ui5-banner-content.ui5-banner-columns-equal,
+	.ui5-banner-content.ui5-banner-columns-first-wider {
 		display: flex;
 		flex-direction: column;
 	}
@@ -266,18 +266,18 @@
 	}
 
 	/* BottomStart also collapses to column on small screens */
-	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) {
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) {
 		display: flex;
 		flex-direction: column;
 	}
 
 	/* BottomStart end block: center content when stacked */
-	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-layout-TwoColumns):not(.ui5-banner-layout-TwoColumnsStartExpanded) .ui5-banner-block-end {
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-block-end {
 		align-items: center;
 	}
 
 	/* Bottom: reset margin-top push when stacked */
-	:host([header-text-block-placement="Bottom"]) .ui5-banner-header {
+	:host([header-block-placement="Bottom"]) .ui5-banner-header {
 		margin-top: 0;
 	}
 }

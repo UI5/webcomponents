@@ -5,7 +5,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
-import type HeroBannerLayout from "./types/HeroBannerLayout.js";
+import type HeroBannerColumnsRatio from "./types/HeroBannerColumnsRatio.js";
 import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
 import type HeroBannerHeaderBlockPlacement from "./types/HeroBannerHeaderBlockPlacement.js";
 
@@ -46,7 +46,7 @@ import HeroBannerCss from "./generated/themes/HeroBanner.css.js";
  * ### Responsive Behavior
  *
  * The hero banner adapts to different screen sizes:
- * - On smaller screens, split layouts (TwoColumns, TwoColumnsStartExpanded) collapse to a single stacked column.
+ * - On smaller screens, split layouts (Equal, FirstWider) collapse to a single stacked column.
  * - The heading text wraps to multiple lines as needed.
  * - Buttons in the headerAction slot will wrap.
  * - On screens ≤1024px, the header text is wrapped to a maximum of 3 lines.
@@ -96,24 +96,20 @@ class HeroBanner extends UI5Element {
 	overlineText?: string;
 
 	/**
-	 * Defines the layout of the free content blocks inside the hero banner.
+	 * Defines the ratio between the two content columns inside the hero banner.
 	 *
-	 * The banner includes two optional content slots: default and endContent. These slots can be arranged in different ways using the layout property, which determines how they are displayed together.
+	 * When no value is set and only one slot is used, the content spans the full width (single column).
 	 *
-	 * ### Available Layout Options
+	 * - **Equal** - Two equal columns. Both content blocks share the available width equally.
+	 *   On smaller screens, both slots stack vertically.
+	 * - **FirstWider** - Two unequal columns. The start content takes two-thirds of the width, the end content one-third.
+	 *   On smaller screens, both slots stack vertically.
 	 *
-	 * - **OneColumn** - The default slot spans the full width below the heading.
-	 *   The endContent slot, if used, appears at the bottom and also spans the full width.
-	 * - **TwoColumns** - Two equal columns. Both content blocks share the available width equally.
-	 *   The default slot occupies the left column, the endContent slot the right. On smaller screens, both slots stack vertically.
-	 * - **TwoColumnsStartExpanded** - Two unequal columns. The start content takes twice the width of the end content.
-	 *   The default slot takes two-thirds, the endContent slot one-third. On smaller screens, both slots stack vertically.
-	 *
-	 * @default "OneColumn"
+	 * @default undefined
 	 * @public
 	 */
 	@property()
-	layout: `${HeroBannerLayout}` = "OneColumn";
+	columnsRatio?: `${HeroBannerColumnsRatio}`;
 
 	/**
 	 * Defines the first (default) free content block of the hero banner.
@@ -130,7 +126,7 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the second free content block of the hero banner.
 	 *
-	 * Used alongside `startContent` in split layouts (`TwoColumns`, `TwoColumnsStartExpanded`).
+	 * Used alongside `startContent` when `columnsRatio` is set (`Equal`, `FirstWider`).
 	 * Can contain cards, buttons, and other interactive elements.
 	 *
 	 * @public
