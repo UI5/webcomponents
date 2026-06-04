@@ -92,7 +92,7 @@ const scheduleRenderTask = async () => {
 						if (invalidatedWebComponents.isEmpty()) {
 							_resolveTaskPromise();
 						}
-					}, 200);
+					}, 0);
 				}
 			});
 		});
