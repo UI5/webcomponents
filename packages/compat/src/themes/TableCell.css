@@ -20,11 +20,6 @@ td {
 	overflow: hidden;
 }
 
-::slotted(*) {
-	max-width: 100%;
-	width: 100%;
-}
-
 :host([popined]) {
 	padding-left: 0;
 	padding-top: .25rem;
