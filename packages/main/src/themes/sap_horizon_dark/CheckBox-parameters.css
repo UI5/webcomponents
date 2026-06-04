@@ -11,7 +11,7 @@
 	--_ui5_checkbox_inner_border_radius: var(--sapField_BorderCornerRadius);
 	--_ui5_checkbox_checkmark_color: var(--sapContent_Selected_ForegroundColor);
 	/* hover & active */
-	--_ui5_checkbox_hover_background: var(--sapContent_Selected_Hover_Background);
+	--_ui5_checkbox_hover_background: var(--sapField_Selector_Hover_Background);
 	--_ui5_checkbox_inner_hover_border_color: var(--sapField_Hover_BorderColor);
 	--_ui5_checkbox_inner_hover_checked_border_color: var(--sapField_Hover_BorderColor);
 	--_ui5_checkbox_inner_selected_border_color: var(--sapField_BorderColor);
@@ -21,19 +21,19 @@
 	--_ui5_checkbox_inner_readonly_border: var(--sapElement_BorderWidth)  var(--sapField_ReadOnly_BorderColor) dashed;
 	/* error state */
 	--_ui5_checkbox_inner_error_border: var(--sapField_InvalidBorderWidth) solid var(--sapField_InvalidColor);
-	--_ui5_checkbox_inner_error_background_hover: var(--sapField_Hover_Background);
+	--_ui5_checkbox_inner_error_background_hover: var(--sapField_Selector_Hover_InvalidBackground);
 	/* warning state */
 	--_ui5_checkbox_inner_warning_border:  var(--sapField_WarningBorderWidth) solid var(--sapField_WarningColor);
 	--_ui5_checkbox_inner_warning_color: var(--sapField_WarningColor);
-	--_ui5_checkbox_inner_warning_background_hover: var(--sapField_Hover_Background);
+	--_ui5_checkbox_inner_warning_background_hover: var(--sapField_Selector_Hover_WarningBackground);
 	--_ui5_checkbox_checkmark_warning_color: var(--sapField_WarningColor);
 	/* success state */
 	--_ui5_checkbox_inner_success_border: var(--sapField_SuccessBorderWidth) solid var(--sapField_SuccessColor);
-	--_ui5_checkbox_inner_success_background_hover: var(--sapField_Hover_Background);
+	--_ui5_checkbox_inner_success_background_hover: var(--sapField_Selector_Hover_SuccessBackground);
 	/* information state */
 	--_ui5_checkbox_inner_information_color: var(--sapField_InformationColor);
 	--_ui5_checkbox_inner_information_border: var(--sapField_InformationBorderWidth) solid var(--sapField_InformationColor);
-	--_ui5_checkbox_inner_information_background_hover: var(--sapField_Hover_Background);
+	--_ui5_checkbox_inner_information_background_hover: var(--sapField_Selector_Hover_InformationBackground);
 	/* disabled */
 	--_ui5_checkbox_disabled_opacity: var(--sapContent_DisabledOpacity);
 	/* focus */
