@@ -11,6 +11,7 @@
 
 .ui5-exp-text-text {
 	display: inline;
+	white-space: inherit;
 }
 
 .ui5-exp-text-text,
@@ -22,6 +23,13 @@
 .ui5-exp-text-text,
 .ui5-exp-text-ellipsis {
 	color: inherit;
+}
+
+.ui5-exp-text-popover,
+.ui5-exp-text-popover-text {
+	white-space: inherit;
+	font-family: inherit;
+	font-size: inherit;
 }
 
 .ui5-exp-text-popover::part(content) {
