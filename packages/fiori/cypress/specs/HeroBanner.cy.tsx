@@ -194,21 +194,6 @@ describe("HeroBanner", () => {
 		});
 	});
 
-	describe("Background Image", () => {
-		it("applies background image from backgroundImage property", () => {
-			cy.mount(
-				<HeroBanner headerText="Hello" backgroundImage="https://example.com/image.jpg"></HeroBanner>
-			);
-
-			cy.get("[ui5-hero-banner]")
-				.shadow()
-				.find(".ui5-banner-root")
-				.should("have.attr", "style")
-				.and("include", "--_ui5_banner_user_image")
-				.and("include", "https://example.com/image.jpg");
-		});
-	});
-
 	describe("Height constraints", () => {
 		it("respects minimum height", () => {
 			cy.mount(

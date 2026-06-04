@@ -4,6 +4,12 @@
 	display: block;
 	width: 100%;
 	container-type: inline-size;
+	border-radius: var(--_ui5_banner_border_radius);
+	background-color: var(--_ui5_banner_background);
+	background-image: var(--_ui5_banner_background_image);
+	background-repeat: no-repeat;
+	background-position: top;
+	background-size: cover;
 }
 
 /* Banner Canvas */
@@ -11,12 +17,9 @@
 	box-sizing: border-box;
 	min-height: 5.75rem;
 	max-height: 24rem;
-	border-radius: var(--_ui5_banner_border_radius);
-	background-color: var(--_ui5_banner_background);
-	background-image: var(--_ui5_banner_background_image);
-	background-repeat: no-repeat;
-	background-position: top;
-	background-size: cover;
+	border-radius: inherit;
+	background-color: inherit;
+	background-image: inherit;
 	box-shadow: var(--_ui5_banner_box_shadow);
 	border: var(--_ui5_banner_border);
 	overflow: hidden;
@@ -70,11 +73,6 @@
 .ui5-banner-actions-bottom-start {
 	align-self: flex-start;
 	margin-top: 0.5rem;
-}
-
-/* Gradient overlay when a background image is present */
-.ui5-banner--has-bg-image {
-	background-image: linear-gradient(to right, var(--_ui5_banner_background) 0%, color-mix(in srgb, var(--_ui5_banner_background) 60%, transparent) 40%, transparent 70%), var(--_ui5_banner_user_image);
 }
 
 .ui5-banner-heading {

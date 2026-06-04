@@ -172,16 +172,6 @@ class HeroBanner extends UI5Element {
 	@property()
 	headerBlockPlacement: `${HeroBannerHeaderBlockPlacement}` = "Top";
 
-	/**
-	 * Defines the URL of the background image for the hero banner canvas.
-	 * When set, the image is displayed as a cover background on the hero banner.
-	 *
-	 * @default undefined
-	 * @public
-	 */
-	@property()
-	backgroundImage?: string;
-
 	get _hasStartContent() {
 		return this.startContent.length > 0;
 	}
@@ -208,13 +198,6 @@ class HeroBanner extends UI5Element {
 		return this._hasActions
 			&& this.actionsPlacement !== "BottomStart"
 			&& this._headerAtBottom;
-	}
-
-	get _backgroundImageStyle(): Record<string, string> | undefined {
-		if (this.backgroundImage) {
-			return { "--_ui5_banner_user_image": `url('${this.backgroundImage}')` };
-		}
-		return undefined;
 	}
 }
 

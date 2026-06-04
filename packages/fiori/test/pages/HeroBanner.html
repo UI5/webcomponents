@@ -128,12 +128,12 @@
 		<!-- ====================================== -->
 		<section>
 			<h2>6. Banner with Background Image</h2>
-			<p>A banner with a custom background image applied to the canvas.</p>
+			<p>A banner with a custom background image set via inline <code>style="background-image: url(...)"</code> on the host element.</p>
 
 			<ui5-hero-banner id="hero-banner-bg"
 				header-text="Welcome, Sarah"
 				overline-text="Thursday, March 6, 2026"
-				background-image="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg">
+				style="background-image: url('https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg');">
 			</ui5-hero-banner>
 		</section>
 
@@ -144,10 +144,11 @@
 			<h2>7. Banner with Interactive Elements</h2>
 			<p>The banner itself is non-interactive, but slotted content like buttons and cards follow their own interactive states.</p>
 
-			<ui5-hero-banner background-image="https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg" id="hero-banner-interactive"
+			<ui5-hero-banner id="hero-banner-interactive"
 				header-text="Hello, David"
 				overline-text="Thursday, March 6, 2026"
-				columns-ratio="Equal">
+				columns-ratio="Equal"
+				style="background-image: url('https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg');">
 
 			<ui5-card>
 					<ui5-card-header
@@ -372,7 +373,8 @@
 
 		// --- Background Image toggle ---
 		document.getElementById("chk-bg").addEventListener("change", function () {
-			dynamicBanner.backgroundImage = this.checked ? "https://wallpapershome.com/images/pages/pic_h/17796.jpg" : "";
+			dynamicBanner.style.backgroundImage = this.checked ? "url('https://wallpapershome.com/images/pages/pic_h/17796.jpg')" : "";
+		});
 		});
 
 		// --- Slot toggle helper: moves elements between the banner and the hidden holder ---

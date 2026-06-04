@@ -9,7 +9,7 @@ function App() {
       <HeroBanner
         headerText="Good Morning, Anna"
         overlineText="Monday, May 26, 2026"
-		backgroundImage="https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg"
+        style={{ backgroundImage: "url('https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg')" }}
       />
     </>
   );
