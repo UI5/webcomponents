@@ -4013,8 +4013,8 @@ describe("ComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-cbi-custom]").eq(0).shadow().find("li").should("contain.text", "🇩🇪 Germany");
-		cy.get("[ui5-cbi-custom]").eq(1).shadow().find("li").should("contain.text", "🇫🇷 France");
+		cy.get("[ui5-cbi-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-cbi-custom]").eq(1).should("contain.text", "🇫🇷 France");
 	});
 
 	it("should mix regular and custom items", () => {
@@ -4157,15 +4157,17 @@ describe("ComboBoxItemCustom - Navigation", () => {
 
 		cy.get("[ui5-combobox]")
 			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
 
-		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cbi-custom]").eq(1).should("have.prop", "focused", true);
 
-		cy.get("@combobox").realPress("ArrowUp");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowUp");
 		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
 	});
 
@@ -4180,15 +4182,17 @@ describe("ComboBoxItemCustom - Navigation", () => {
 
 		cy.get("[ui5-combobox]")
 			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "focused", true);
 
-		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
 
-		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "focused", true);
 	});
 });

@@ -5181,8 +5181,8 @@ describe("MultiComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).shadow().find(".ui5-li-content").should("contain.text", "🇩🇪 Germany");
-		cy.get("[ui5-mcbi-custom]").eq(1).shadow().find(".ui5-li-content").should("contain.text", "🇫🇷 France");
+		cy.get("[ui5-mcbi-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-mcbi-custom]").eq(1).should("contain.text", "🇫🇷 France");
 	});
 
 	it("should render checkbox for custom items", () => {
@@ -5371,7 +5371,7 @@ describe("MultiComboBoxItemCustom - Tokens", () => {
 			.find("[ui5-token]")
 			.eq(0)
 			.shadow()
-			.find(".ui5-token-icon")
+			.find("[ui5-icon]")
 			.realClick();
 
 		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", false);
@@ -5393,14 +5393,27 @@ describe("MultiComboBoxItemCustom - Navigation", () => {
 			.as("multiCombobox")
 			.realClick();
 
-		cy.get("@multiCombobox").realPress("ArrowDown");
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.should("be.focused");
 
-		cy.get("@multiCombobox").realPress("ArrowDown");
-		cy.get("[ui5-mcbi-custom]").eq(1).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
 
-		cy.get("@multiCombobox").realPress("ArrowUp");
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcbi-custom]").eq(1).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowUp"]);
+		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
 	});
 
 	it("should navigate through mixed items", () => {
@@ -5416,14 +5429,27 @@ describe("MultiComboBoxItemCustom - Navigation", () => {
 			.as("multiCombobox")
 			.realClick();
 
-		cy.get("@multiCombobox").realPress("ArrowDown");
-		cy.get("[ui5-mcb-item]").eq(0).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.should("be.focused");
 
-		cy.get("@multiCombobox").realPress("ArrowDown");
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
 
-		cy.get("@multiCombobox").realPress("ArrowDown");
-		cy.get("[ui5-mcb-item]").eq(1).should("have.prop", "focused", true);
+		cy.get("@multiCombobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item]").eq(1).should("be.focused");
 	});
 });
 
