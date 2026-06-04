@@ -3,6 +3,7 @@ import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 import ButtonClass from "@ui5/webcomponents/dist/Button.js";
 import CardClass from "@ui5/webcomponents/dist/Card.js";
 import CardHeaderClass from "@ui5/webcomponents/dist/CardHeader.js";
+import TitleClass from "@ui5/webcomponents/dist/Title.js";
 import "@ui5/webcomponents-icons/dist/receipt.js";
 import "@ui5/webcomponents-icons/dist/shipping-status.js";
 
@@ -10,15 +11,15 @@ const HeroBanner = createReactComponent(HeroBannerClass);
 const Button = createReactComponent(ButtonClass);
 const Card = createReactComponent(CardClass);
 const CardHeader = createReactComponent(CardHeaderClass);
+const Title = createReactComponent(TitleClass);
 
 function App() {
   return (
     <>
-      <h4>OneColumn Layout</h4>
+      <Title size="H4" style={{ display: "block", marginBottom: "0.5rem" }}>No columnsRatio (single column)</Title>
       <HeroBanner
         headerText="Welcome back, Sarah"
         overlineText="Monday, May 26, 2026"
-        layout="OneColumn"
       >
         <div slot="actions" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
           <Button icon="receipt" design="Default">Approve Invoices</Button>
@@ -29,11 +30,11 @@ function App() {
 
       <br />
 
-      <h4>TwoColumns Layout (equal width columns)</h4>
+      <Title size="H4" style={{ display: "block", marginBottom: "0.5rem" }}>columnsRatio="Equal" (equal width columns)</Title>
       <HeroBanner
         headerText="Hi, David"
         overlineText="Monday, May 26, 2026"
-        layout="TwoColumns"
+        columnsRatio="Equal"
       >
         <Card>
           <CardHeader slot="header" titleText="Leave Balance" subtitleText="Days remaining" />
@@ -47,11 +48,11 @@ function App() {
 
       <br />
 
-      <h4>TwoColumnsStartExpanded Layout (start column twice as wide)</h4>
+      <Title size="H4" style={{ display: "block", marginBottom: "0.5rem" }}>columnsRatio="FirstWider" (start column twice as wide)</Title>
       <HeroBanner
         headerText="Good Afternoon, Thomas"
         overlineText="Monday, May 26, 2026"
-        layout="TwoColumnsStartExpanded"
+        columnsRatio="FirstWider"
       >
         <Card>
           <CardHeader slot="header" titleText="Sales Pipeline" subtitleText="Q2 2026" />

@@ -11,11 +11,10 @@
 <body style="background-color: var(--sapBackgroundColor)">
     <!-- playground-fold-end -->
 
-        <h4>OneColumn Layout</h4>
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">No columnsRatio (single column)</ui5-title>
         <ui5-hero-banner
             header-text="Welcome back, Sarah"
-            overline-text="Monday, May 26, 2026"
-            layout="OneColumn">
+            overline-text="Monday, May 26, 2026">
             <div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
                 <ui5-button icon="receipt" design="Default">Approve Invoices</ui5-button>
                 <ui5-button icon="shipping-status" design="Default">Track Deliveries</ui5-button>
@@ -25,11 +24,11 @@
 
         <br>
 
-        <h4>TwoColumns Layout (equal width columns)</h4>
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">columnsRatio="Equal" (equal width columns)</ui5-title>
         <ui5-hero-banner
             header-text="Hi, David"
             overline-text="Monday, May 26, 2026"
-            layout="TwoColumns">
+            columns-ratio="Equal">
             <ui5-card>
                 <ui5-card-header slot="header" title-text="Leave Balance" subtitle-text="Days remaining"></ui5-card-header>
                 <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">18 of 30</div>
@@ -42,11 +41,11 @@
 
         <br>
 
-        <h4>TwoColumnsStartExpanded Layout (start column twice as wide)</h4>
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">columnsRatio="FirstWider" (start column twice as wide)</ui5-title>
         <ui5-hero-banner
             header-text="Good Afternoon, Thomas"
             overline-text="Monday, May 26, 2026"
-            layout="TwoColumnsStartExpanded">
+            columns-ratio="FirstWider">
             <ui5-card>
                 <ui5-card-header slot="header" title-text="Sales Pipeline" subtitle-text="Q2 2026"></ui5-card-header>
                 <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€4.2M</div>
