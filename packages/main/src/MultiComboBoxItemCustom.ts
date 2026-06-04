@@ -21,6 +21,7 @@ import type { AriaRole } from "@ui5/webcomponents-base";
  * The `ui5-mcbi-custom` is type of multi-combobox item,
  * that can be used to place multi-combobox items with custom content.
  * The text property is considered for filtering and token display.
+ * In case the user needs highlighting functionality, check "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js"
  *
  * @constructor
  * @extends ComboBoxItemCustom
