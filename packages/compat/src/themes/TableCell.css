@@ -5,19 +5,12 @@
 	height: var(--ui5_table_row_height);
 	box-sizing: border-box;
 	color: var(--sapList_TextColor);
+	word-break: break-word;
 	vertical-align: middle;
-	overflow: hidden;
-	max-width: 0;
 }
 
 td {
 	display: contents;
-}
-
-.ui5-table-cell-content {
-	display: block;
-	width: 100%;
-	overflow: hidden;
 }
 
 :host([popined]) {
