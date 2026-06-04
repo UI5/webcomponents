@@ -149,8 +149,11 @@ class ListItemCustom extends ListItem {
 		// Get accessibility announcements
 		const accessibilityText = getCustomAnnouncement(this);
 
-		// Apply the announcement using the shared invisible text element from CustomAnnouncement
+		// Apply the announcement using the shared invisible text element from CustomAnnouncement.
+		// applyCustomAnnouncement uses the ARIA reflection API which does not update the HTML
+		// attribute in all browsers, so set it explicitly to keep aria-labelledby non-empty.
 		applyCustomAnnouncement(listItem, accessibilityText);
+		listItem.setAttribute("aria-labelledby", `ui5-invisible-text ${this._accessibleNameRef}`);
 	}
 
 	private _clearInvisibleTextContent() {
@@ -159,13 +162,10 @@ class ListItemCustom extends ListItem {
 			return;
 		}
 
-		// Save the static aria-labelledby before clearing, because applyCustomAnnouncement
-		// sets ariaLabelledByElements = null which removes the attribute from the DOM entirely.
-		const ariaLabelledBy = listItem.getAttribute("aria-labelledby");
+		// applyCustomAnnouncement clears via the reflection API only, leaving the HTML attribute
+		// stale. Always restore it explicitly to the shadow span so the item stays labelled.
 		applyCustomAnnouncement(listItem, "");
-		if (ariaLabelledBy && !listItem.getAttribute("aria-labelledby")) {
-			listItem.setAttribute("aria-labelledby", ariaLabelledBy);
-		}
+		listItem.setAttribute("aria-labelledby", this._accessibleNameRef);
 	}
 
 	/**
