@@ -240,7 +240,7 @@ class PopoverResize {
 			minHeight,
 		} = window.getComputedStyle(this._popover);
 
-		const domRefComputedStyle = window.getComputedStyle(this._popover._getRealDomRef!());
+		const domRefComputedStyle = window.getComputedStyle(this._popover);
 
 		this._initialClientX = e.clientX;
 		this._initialClientY = e.clientY;
