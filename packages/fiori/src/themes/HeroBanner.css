@@ -20,6 +20,7 @@
 	border-radius: inherit;
 	background-color: inherit;
 	background-image: inherit;
+	background-size: inherit;
 	box-shadow: var(--_ui5_banner_box_shadow);
 	border: var(--_ui5_banner_border);
 	overflow: hidden;
