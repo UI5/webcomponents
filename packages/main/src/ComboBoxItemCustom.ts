@@ -36,7 +36,6 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	 * Used for filtering, autocomplete, and mobile rendering.
 	 * @default undefined
 	 * @public
-	 * @since 2.24.0
 	 */
 	@property()
 	text?: string;
@@ -46,7 +45,6 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	 * Used for programmatic selection via selectedValue property.
 	 * @default undefined
 	 * @public
-	 * @since 2.24.0
 	 */
 	@property()
 	value?: string;
@@ -68,7 +66,6 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	/**
 	 * Defines the content of the component.
 	 * @public
-	 * @since 2.24.0
 	 */
 	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
 	content!: DefaultSlot<Node>;
