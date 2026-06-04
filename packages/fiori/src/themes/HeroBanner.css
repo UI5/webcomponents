@@ -92,8 +92,8 @@
 	line-height: 1.4;
 }
 
-/* headerTextBlockPlacement="Bottom": header is already last in DOM — just remove the order: -1 */
-:host([header-text-block-placement="Bottom"]) .ui5-banner-header {
+/* headerBlockPlacement="Bottom": header is already last in DOM — just remove the order: -1 */
+:host([header-block-placement="Bottom"]) .ui5-banner-header {
 	order: 0;
 	margin-top: auto;
 }

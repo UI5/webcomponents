@@ -5,7 +5,7 @@
  * @public
  * @since 2.23.0
  */
-enum HeroBannerHeaderTextBlockPlacement {
+enum HeroBannerHeaderBlockPlacement {
 	/**
 	 * Places the header text block at the top of the header area.
 	 * @public
@@ -19,4 +19,4 @@ enum HeroBannerHeaderTextBlockPlacement {
 	Bottom = "Bottom"
 }
 
-export default HeroBannerHeaderTextBlockPlacement;
+export default HeroBannerHeaderBlockPlacement;

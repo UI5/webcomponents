@@ -7,7 +7,7 @@ import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.
 
 import type HeroBannerLayout from "./types/HeroBannerLayout.js";
 import type HeroBannerActionsPlacement from "./types/HeroBannerActionsPlacement.js";
-import type HeroBannerHeaderTextBlockPlacement from "./types/HeroBannerHeaderTextBlockPlacement.js";
+import type HeroBannerHeaderBlockPlacement from "./types/HeroBannerHeaderBlockPlacement.js";
 
 // Template
 import HeroBannerTemplate from "./HeroBannerTemplate.js";
@@ -172,7 +172,7 @@ class HeroBanner extends UI5Element {
 	 * @public
 	 */
 	@property()
-	headerTextBlockPlacement: `${HeroBannerHeaderTextBlockPlacement}` = "Top";
+	headerBlockPlacement: `${HeroBannerHeaderBlockPlacement}` = "Top";
 
 	/**
 	 * Defines the URL of the background image for the hero banner canvas.
