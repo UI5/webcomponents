@@ -1,0 +1,89 @@
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import {
+	property,
+	eventStrict as event,
+} from "@ui5/webcomponents-base/dist/decorators.js";
+import ComboBoxItemCustom from "./ComboBoxItemCustom.js";
+import CheckBox from "./CheckBox.js";
+import type { IMultiComboBoxItem } from "./MultiComboBox.js";
+import {
+	ARIA_LABEL_LIST_ITEM_CHECKBOX,
+} from "./generated/i18n/i18n-defaults.js";
+import styles from "./generated/themes/MultiComboBoxItemCustom.css.js";
+import MultiComboBoxItemCustomTemplate from "./MultiComboBoxItemCustomTemplate.js";
+import type { SelectionRequestEventDetail } from "./ListItem.js";
+import type { AriaRole } from "@ui5/webcomponents-base";
+
+/**
+ * @class
+ * The `ui5-mcbi-custom` is type of multi-combobox item,
+ * that can be used to place multi-combobox items with custom content.
+ * The text property is considered for filtering and token display.
+ *
+ * @constructor
+ * @extends ComboBoxItemCustom
+ * @implements {IMultiComboBoxItem}
+ * @public
+ * @since 2.24.0
+ */
+@customElement({
+	tag: "ui5-mcbi-custom",
+	template: MultiComboBoxItemCustomTemplate,
+	styles: [ComboBoxItemCustom.styles, styles],
+	dependencies: [...ComboBoxItemCustom.dependencies, CheckBox],
+})
+
+@event("selection-requested", {
+	bubbles: true,
+})
+class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboBoxItem {
+	eventDetails!: ComboBoxItemCustom["eventDetails"] & {
+		"selection-requested": SelectionRequestEventDetail,
+	}
+
+	/**
+	 * Defines the selected state of the component.
+	 * @default false
+	 * @public
+	 * @deprecated Set the `value` property on items and use the `selectedValues` property on the parent `ui5-multi-combobox` instead for programmatic selection.
+	 */
+	@property({ type: Boolean })
+	selected = false;
+
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_readonly = false;
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
+	get isMultiComboBoxItem() {
+		return true;
+	}
+
+	_onclick(e: MouseEvent) {
+		if ((e.target as HTMLElement)?.hasAttribute("ui5-checkbox")) {
+			return this.fireDecoratorEvent("selection-requested", { item: this, selected: (e.target as CheckBox).checked, selectionComponentPressed: true });
+		}
+
+		super._onclick(e);
+	}
+
+	get _accessibleName() {
+		return MultiComboBoxItemCustom.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX);
+	}
+
+	get checkBoxAccInfo() {
+		return {
+			role: "presentation" as AriaRole,
+		};
+	}
+}
+
+MultiComboBoxItemCustom.define();
+
+export default MultiComboBoxItemCustom;

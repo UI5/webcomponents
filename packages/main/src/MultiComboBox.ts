@@ -59,6 +59,7 @@ import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js"
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBoxItem.js";
+import "./MultiComboBoxItemCustom.js";
 import MultiComboBoxItemGroup, { isInstanceOfMultiComboBoxItemGroup } from "./MultiComboBoxItemGroup.js";
 import ListItemGroup from "./ListItemGroup.js";
 import Tokenizer, { getTokensCountText } from "./Tokenizer.js";

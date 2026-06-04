@@ -79,6 +79,7 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 
 import "./ComboBoxItem.js";
 import type ComboBoxItem from "./ComboBoxItem.js";
+import "./ComboBoxItemCustom.js";
 import type Popover from "./Popover.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type List from "./List.js";

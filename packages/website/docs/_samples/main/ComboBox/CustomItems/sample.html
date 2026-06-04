@@ -1,0 +1,34 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComboBox Custom Items</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem;">
+<!-- playground-fold-end -->
+
+    <ui5-combobox id="combobox" placeholder="Select country" style="width: 300px;">
+        <ui5-cbi-custom text="Germany" value="DE">
+            <span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇩🇪</span>Germany
+        </ui5-cbi-custom>
+        <ui5-cbi-custom text="France" value="FR">
+            <span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇫🇷</span>France
+        </ui5-cbi-custom>
+        <ui5-cbi-custom text="Spain" value="ES">
+            <span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇪🇸</span>Spain
+        </ui5-cbi-custom>
+        <ui5-cbi-custom text="Italy" value="IT">
+            <span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇮🇹</span>Italy
+        </ui5-cbi-custom>
+        <ui5-cbi-custom text="United Kingdom" value="GB">
+            <span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇬🇧</span>United Kingdom
+        </ui5-cbi-custom>
+    </ui5-combobox>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->

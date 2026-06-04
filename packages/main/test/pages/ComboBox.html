@@ -671,6 +671,59 @@
 		<ui5-cb-item text="Austria"></ui5-cb-item>
 	</ui5-combobox>
 
+	<div class="demo-section">
+		<h3>ComboBox with Custom Items</h3>
+		<span>Custom items with icons/emojis:</span>
+		<br />
+		<br />
+		<ui5-combobox id="custom-items-cb" placeholder="Select country" style="width: 300px;">
+			<ui5-cbi-custom text="Germany" value="DE">
+				<span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇩🇪</span>Germany
+			</ui5-cbi-custom>
+			<ui5-cbi-custom text="France" value="FR">
+				<span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇫🇷</span>France
+			</ui5-cbi-custom>
+			<ui5-cbi-custom text="Spain" value="ES">
+				<span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇪🇸</span>Spain
+			</ui5-cbi-custom>
+			<ui5-cbi-custom text="Italy" value="IT">
+				<span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇮🇹</span>Italy
+			</ui5-cbi-custom>
+			<ui5-cbi-custom text="United Kingdom" value="GB">
+				<span role="img" aria-label="Flag" style="margin-right: 0.5rem;">🇬🇧</span>United Kingdom
+			</ui5-cbi-custom>
+		</ui5-combobox>
+		<br />
+		<span>Selected value: <strong id="custom-items-value"></strong></span>
+		<br />
+		<span>Selected selectedValue: <strong id="custom-items-selected-value"></strong></span>
+
+		<script>
+			const customItemsCb = document.getElementById("custom-items-cb");
+			customItemsCb.addEventListener("ui5-change", function (event) {
+				document.getElementById("custom-items-value").innerHTML = event.target.value || "(empty)";
+				document.getElementById("custom-items-selected-value").innerHTML = event.target.selectedValue || "(none)";
+			});
+		</script>
+	</div>
+
+	<div class="demo-section">
+		<h3>ComboBox with Mixed Items</h3>
+		<span>Regular items mixed with custom items:</span>
+		<br />
+		<br />
+		<ui5-combobox id="mixed-items-cb" placeholder="Select option">
+			<ui5-cb-item text="Regular Item 1"></ui5-cb-item>
+			<ui5-cbi-custom text="Custom Item with Icon">
+				<strong>⭐ Custom Item with Icon</strong>
+			</ui5-cbi-custom>
+			<ui5-cb-item text="Regular Item 2"></ui5-cb-item>
+			<ui5-cbi-custom text="Another Custom Item">
+				<span style="color: blue;">🔷 Another Custom Item</span>
+			</ui5-cbi-custom>
+		</ui5-combobox>
+	</div>
+
 </body>
 
 </html>
