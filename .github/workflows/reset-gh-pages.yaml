@@ -10,6 +10,7 @@ permissions:
 jobs:
   reset-gh-pages:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
     - name: Generate App Token
       id: app-token
