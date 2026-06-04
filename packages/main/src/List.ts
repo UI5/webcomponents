@@ -1061,7 +1061,13 @@ class List extends UI5Element {
 	}
 
 	onItemToggle(e: CustomEvent<ListItemToggleEventDetail>) {
-		this.fireEvent<ListItemToggleEventDetail>("item-toggle", { item: e.detail.item });
+		const item = e.detail?.item;
+
+		if (!item) {
+			return;
+		}
+
+		this.fireEvent<ListItemToggleEventDetail>("item-toggle", { item });
 	}
 
 	onForwardBefore(e: CustomEvent) {
