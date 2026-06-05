@@ -1,7 +1,6 @@
 import type ListItemGroup from "./ListItemGroup.js";
 import ListItemGroupHeader from "./ListItemGroupHeader.js";
 import DropIndicator from "./DropIndicator.js";
-import ListItemAccessibleRole from "./types/ListItemAccessibleRole.js";
 
 export default function ListItemGroupTemplate(this: ListItemGroup, hooks?: { items: () => void }) {
 	const items = hooks?.items || defaultItems;
