@@ -7,9 +7,7 @@ export default function TableCellTemplate(this: TableCell) {
 			part="cell"
 			role="cell"
 		>
-			<div class="ui5-table-cell-content">
-				<slot></slot>
-			</div>
+			<slot></slot>
 		</td>
 	);
 }
