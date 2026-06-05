@@ -53,7 +53,7 @@ describe("HeroBanner", () => {
 	});
 
 	describe("columnsRatio", () => {
-		it("renders content in single column when columnsRatio is not set", () => {
+		it("renders content in single column when no endContent is provided", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello, John">
 					<div>Start</div>
@@ -253,13 +253,14 @@ describe("HeroBanner", () => {
 			cy.mount(
 				<HeroBanner headerText="Hello">
 					<div>Start</div>
+					<div slot="endContent">End</div>
 				</HeroBanner>
 			);
 
 			cy.get("[ui5-hero-banner]")
 				.shadow()
-				.find(".ui5-banner-columns-equal, .ui5-banner-columns-first-wider")
-				.should("not.exist");
+				.find(".ui5-banner-columns-first-wider")
+				.should("exist");
 
 			cy.get("[ui5-hero-banner]")
 				.invoke("prop", "columnsRatio", "Equal");
