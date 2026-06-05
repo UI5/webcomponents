@@ -9,7 +9,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ListItem from "./ListItem.js";
 import ListItemCustomTemplate from "./ListItemCustomTemplate.js";
-import { getCustomAnnouncement, applyCustomAnnouncement } from "./CustomAnnouncement.js";
+import { getCustomAnnouncement } from "./CustomAnnouncement.js";
 import {
 	LISTITEMCUSTOM_TYPE_TEXT,
 	LIST_ITEM_ACTIVE,
@@ -146,14 +146,11 @@ class ListItemCustom extends ListItem {
 			return;
 		}
 
-		// Get accessibility announcements
-		const accessibilityText = getCustomAnnouncement(this);
-
-		// Apply the announcement using the shared invisible text element from CustomAnnouncement.
-		// applyCustomAnnouncement uses the ARIA reflection API which does not update the HTML
-		// attribute in all browsers, so set it explicitly to keep aria-labelledby non-empty.
-		applyCustomAnnouncement(listItem, accessibilityText);
-		listItem.setAttribute("aria-labelledby", `ui5-invisible-text ${this._accessibleNameRef}`);
+		const shadowSpan = this.shadowRoot?.getElementById(this._accessibleNameRef);
+		if (shadowSpan) {
+			shadowSpan.textContent = getCustomAnnouncement(this);
+			listItem.setAttribute("aria-labelledby", this._accessibleNameRef);
+		}
 	}
 
 	private _clearInvisibleTextContent() {
@@ -162,10 +159,11 @@ class ListItemCustom extends ListItem {
 			return;
 		}
 
-		// applyCustomAnnouncement clears via the reflection API only, leaving the HTML attribute
-		// stale. Always restore it explicitly to the shadow span so the item stays labelled.
-		applyCustomAnnouncement(listItem, "");
-		listItem.setAttribute("aria-labelledby", this._accessibleNameRef);
+		const shadowSpan = this.shadowRoot?.getElementById(this._accessibleNameRef);
+		if (shadowSpan) {
+			shadowSpan.textContent = this.ariaLabelledByText;
+			listItem.setAttribute("aria-labelledby", this._accessibleNameRef);
+		}
 	}
 
 	/**

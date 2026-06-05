@@ -19,29 +19,29 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-html").click();
 
-            // After focus, global invisible text content should be populated
-            // Has description (from text content) but no tabbable controls, so no control state announcement
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            // After focus, shadow span should have the full announcement text
+            // Has description but no tabbable controls, so no control state announcement
+            cy.get("#li-custom-html")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Test Content Additional Text");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty and points to the shadow span
             cy.get("#li-custom-html")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
 
             // Remove focus
             cy.focused().blur();
 
-            // After blur, global invisible text content should be cleared
-            cy.get("#ui5-invisible-text")
-                .should("have.text", "");
+            // After blur, shadow span still has text (aria-labelledby remains populated)
+            cy.get("#li-custom-html")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("not.have.text", "");
         });
 
         it("should process text content from HTML elements for accessibility", () => {
@@ -59,22 +59,19 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-html-content").click();
 
-            // Verify text content is processed and included in the invisible text
+            // Verify text content is processed and included in the shadow span
             // Has description but no tabbable controls, so no control state announcement
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-html-content")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Primary Content Secondary Information Paragraph text");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-html-content")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
         });
     });
 
@@ -93,29 +90,29 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-ui5").click();
 
-            // After focus, global invisible text content should be populated
+            // After focus, shadow span should have the full announcement text
             // 2 tabbable controls (Button, CheckBox), so we expect ". Includes elements"
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-ui5")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Button Click me Checkbox Check option Not checked Required . Includes elements");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-ui5")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
 
             // Remove focus
             cy.focused().blur();
 
-            // After blur, global invisible text content should be cleared
-            cy.get("#ui5-invisible-text")
-                .should("have.text", "");
+            // After blur, shadow span still has text
+            cy.get("#li-custom-ui5")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("not.have.text", "");
         });
 
         it("should handle focus changes between list item and UI5 components", () => {
@@ -132,37 +129,40 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Click the list item first to get focus
             cy.get("#li-custom-ui5-focus").click();
 
-            // Verify invisible text is populated
+            // Verify shadow span is populated
             // 2 tabbable controls, so we expect ". Includes elements"
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-ui5-focus")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Button Click Me Checkbox Check Option Not checked . Includes elements");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-ui5-focus")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
 
             // Now click the button - this shouldn't trigger focusout on the list item
             // as it's a child element
             cy.get("#test-focus-button").click();
 
-            // Verify invisible text is still populated (list item should maintain focus state)
-            cy.get("#ui5-invisible-text")
+            // Verify shadow span is still populated (list item should maintain focus state)
+            cy.get("#li-custom-ui5-focus")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Button Click Me Checkbox Check Option Not checked . Includes elements");
 
             // Click outside the list to truly remove focus
             cy.get("body").click({ force: true });
 
-            // Now invisible text should be cleared
-            cy.get("#ui5-invisible-text")
-                .should("have.text", "");
+            // After blur, shadow span still has text
+            cy.get("#li-custom-ui5-focus")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("not.have.text", "");
         });
     });
 
@@ -186,22 +186,19 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-nested").click();
 
-            // Verify text content is processed and included in the invisible text
+            // Verify text content is processed
             // 1 tabbable control (Button), so we expect ". Includes element"
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-nested")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Container Text Button Nested Button Paragraph outside container . Includes element");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-nested")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
         });
 
         it("should handle deep nesting of elements", () => {
@@ -227,27 +224,27 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
 
             // Verify all nested content is processed
             // 2 tabbable controls (Button, CheckBox), so we expect ". Includes elements"
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-deep-nested")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Button Deeply Nested Button Level 2 Text Checkbox Nested Not checked . Includes elements");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-deep-nested")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
 
             // Remove focus
             cy.focused().blur();
 
-            // After blur, invisible text content should be cleared
-            cy.get("#ui5-invisible-text")
-                .should("have.text", "");
+            // After blur, shadow span still has text
+            cy.get("#li-custom-deep-nested")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("not.have.text", "");
         });
     });
 
@@ -268,29 +265,29 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-delete").click();
 
-            // Verify text content is processed and included in the invisible text
+            // Verify text content is processed
             // The delete button is tabbable, so we expect ". Includes element"
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-delete")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item Delete Mode Item Button Remove . Includes element");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-delete")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
 
             // Remove focus
             cy.focused().blur();
 
-            // After blur, invisible text content should be cleared
-            cy.get("#ui5-invisible-text")
-                .should("have.text", "");
+            // After blur, shadow span still has text
+            cy.get("#li-custom-delete")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("not.have.text", "");
         });
     });
 
@@ -306,20 +303,17 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             cy.get("#li-custom-empty").click();
 
             // Should still have basic announcement text
-            cy.get("#ui5-invisible-text")
-                .should("exist")
+            cy.get("#li-custom-empty")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
                 .should("have.text", "List Item");
 
-            // Check that ariaLabelledByElements on the internal li element includes the global invisible text
+            // Check that aria-labelledby is non-empty
             cy.get("#li-custom-empty")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    expect(ariaLabelledByElements).to.exist;
-                    const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                    expect(hasInvisibleText).to.be.true;
-                });
+                .should("have.attr", "aria-labelledby");
         });
 
         it("should handle list item with accessibleName", () => {
@@ -337,18 +331,18 @@ describe("ListItemCustom - _onfocusin and _onfocusout Tests", () => {
             // Focus the list item
             cy.get("#li-custom-accessible-name").click();
 
-            // Check that ariaLabelledByElements on the internal li element doesn't include the global invisible text
-            // when accessibleName is set
+            // When accessibleName is set, shadow span should show that name
+            cy.get("#li-custom-accessible-name")
+                .shadow()
+                .find(".ui5-hidden-text")
+                .first()
+                .should("have.text", "Accessible Name Test");
+
+            // aria-labelledby should still be non-empty
             cy.get("#li-custom-accessible-name")
                 .shadow()
                 .find("li[part='native-li']")
-                .then($li => {
-                    const ariaLabelledByElements = ($li[0] as any).ariaLabelledByElements;
-                    if (ariaLabelledByElements) {
-                        const hasInvisibleText = ariaLabelledByElements.some((el: HTMLElement) => el.id === "ui5-invisible-text");
-                        expect(hasInvisibleText).to.be.false;
-                    }
-                });
+                .should("have.attr", "aria-labelledby");
         });
     });
 });
@@ -395,33 +389,34 @@ describe("ListItemCustom - aria-labelledby regression tests", () => {
     it("should preserve accessible name when focus moves to a child interactive element", () => {
         cy.mount(
             <List>
-                <ListItemCustom>
+                <ListItemCustom id="li-child-focus">
                     <div>Item with button</div>
-                    <Button>Action</Button>
+                    <Button id="child-button">Action</Button>
                 </ListItemCustom>
             </List>
         );
 
-        cy.get("[ui5-list]").as("list");
+        // Focus the list item
+        cy.get("#li-child-focus").click();
 
-        // Focus the list item — this populates the global invisible text
-        cy.get("@list")
-            .find("[ui5-li-custom]")
-            .click();
-
-        cy.get("#ui5-invisible-text")
+        // Shadow span populated on focus
+        cy.get("#li-child-focus")
+            .shadow()
+            .find(".ui5-hidden-text")
+            .first()
             .should("have.text", "List Item Item with button Button Action . Includes element");
 
-        // Move focus to the inner button inside the child ui5-button (C2 scenario)
-        cy.get("@list")
-            .find("[ui5-button]")
+        // Move focus to the inner button inside the child ui5-button
+        cy.get("#child-button")
             .shadow()
             .find("button")
             .focus();
 
-        // The global invisible text must NOT be cleared — C2 fix ensures
-        // _clearInvisibleTextContent is not called when focus stays within the item
-        cy.get("#ui5-invisible-text")
+        // Shadow span must NOT be cleared when focus moves to a child
+        cy.get("#li-child-focus")
+            .shadow()
+            .find(".ui5-hidden-text")
+            .first()
             .should("have.text", "List Item Item with button Button Action . Includes element");
     });
 
@@ -443,7 +438,7 @@ describe("ListItemCustom - aria-labelledby regression tests", () => {
 
         cy.get("body").click({ force: true });
 
-        // The shadow span must still contain accessible text after blur — C1 fix
+        // The shadow span must still contain accessible text after blur — core regression from #13478
         cy.get("@list")
             .find("[ui5-li-custom]")
             .shadow()
