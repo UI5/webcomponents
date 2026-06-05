@@ -605,12 +605,16 @@ describe("Select - Accessibility", () => {
 		cy.get("[ui5-select]").realClick();
 		cy.get("[ui5-select]").should("have.attr", "opened");
 
-		// The selected item should have focus - we verify this by checking that
-		// the input label root does NOT have focus (the pseudo-element should be hidden)
+		// The input focus ring should not be rendered while opened.
 		cy.get("[ui5-select]")
 			.shadow()
-			.find(".ui5-select-label-root")
-			.should("not.have.focus");
+			.find(".ui5-input-focusable-element")
+			.then(($el) => {
+				const style = window.getComputedStyle($el[0], "::after");
+				expect(style.getPropertyValue("border-style")).to.equal("none");
+			});
+
+		cy.focused().should("have.attr", "role", "option");
 	});
 });
 
