@@ -11,8 +11,8 @@ export default function HeroBannerTemplate(this: HeroBanner) {
 		>
 			<div class={{
 				"ui5-banner-content": true,
-				"ui5-banner-columns-equal": this.columnsRatio === "Equal" && this._hasStartContent && this._hasEndContent,
-				"ui5-banner-columns-first-wider": this.columnsRatio === "FirstWider" && this._hasStartContent && this._hasEndContent,
+				"ui5-banner-columns-equal": this.columnsRatio === "Equal" && this._hasEndContent,
+				"ui5-banner-columns-first-wider": this.columnsRatio === "FirstWider" && this._hasEndContent,
 			}} part="content">
 				<div class="ui5-banner-header" part="header">
 					<div class="ui5-banner-header-text">

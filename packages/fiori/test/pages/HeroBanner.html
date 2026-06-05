@@ -247,7 +247,6 @@
 				</div>
 				<div class="controls-row">
 					<span class="controls-label">columnsRatio:</span>
-					<ui5-button id="btn-layout-full">None</ui5-button>
 					<ui5-button id="btn-layout-half">Equal</ui5-button>
 					<ui5-button id="btn-layout-twothirds">FirstWider</ui5-button>
 				</div>
@@ -403,7 +402,6 @@
 		toggleSlot("chk-end", "endContent");
 
 		// --- columnsRatio buttons ---
-		document.getElementById("btn-layout-full").addEventListener("click", function () { dynamicBanner.columnsRatio = undefined; });
 		document.getElementById("btn-layout-half").addEventListener("click", function () { dynamicBanner.columnsRatio = "Equal"; });
 		document.getElementById("btn-layout-twothirds").addEventListener("click", function () { dynamicBanner.columnsRatio = "FirstWider"; });
 
