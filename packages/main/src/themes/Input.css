@@ -380,7 +380,7 @@
 }
 
 /* Decorative icons keep their normal styling */
-::slotted([ui5-icon][slot="icon"]) {
+::slotted([ui5-icon]) {
 	align-self: start;
 	padding: var(--_ui5_input_custom_icon_padding);
 	box-sizing: content-box;

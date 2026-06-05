@@ -10,6 +10,7 @@ type TemplateHook = () => JsxTemplateResult;
 type SlottedIcon = IIcon & {
 	_individualSlot: string;
 	accessibleName?: string;
+	mode?: string;
 };
 
 export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook, mobileHeader?: TemplateHook }) {
@@ -81,14 +82,22 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 					{this.icon.length > 0 &&
 						this.icon.map(iconEl => {
 							const slottedIcon = iconEl as SlottedIcon;
-							return (
-								<InputIcon
-									valueState={this.valueState}
-									accessibleName={slottedIcon.accessibleName}
-								>
-									<slot name={slottedIcon._individualSlot}></slot>
-								</InputIcon>
-							);
+							const isInteractive = slottedIcon.mode === "Interactive";
+
+							// Only wrap interactive icons in InputIcon for button-like styling
+							if (isInteractive) {
+								return (
+									<InputIcon
+										valueState={this.valueState}
+										accessibleName={slottedIcon.accessibleName}
+									>
+										<slot name={slottedIcon._individualSlot}></slot>
+									</InputIcon>
+								);
+							}
+
+							// Decorative icons are just slotted without wrapper
+							return <slot name={slottedIcon._individualSlot}></slot>;
 						})
 					}
 
