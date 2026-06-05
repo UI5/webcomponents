@@ -55,7 +55,7 @@ const EMPTY_ACTIONS = [] as unknown as Slot<TableRowActionBase>;
  *
  * @constructor
  * @extends TableRow
- * @since 2.22.0
+ * @since 2.23.0
  * @public
  */
 @customElement({

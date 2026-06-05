@@ -228,6 +228,7 @@ import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOptio
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchMessageAreaClass from "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
+import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
@@ -329,7 +330,7 @@ const ComponentClasses: Record<string, any> = {
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
   ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
   UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,
-  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass,
+  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass, HeroBannerClass,
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package
