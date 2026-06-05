@@ -580,11 +580,10 @@ describe("Dialog general interaction", () => {
 				const initialTop = parseInt(dialog.css("top"));
 				const initialLeft = parseInt(dialog.css("left"));
 
-				// Act - Focus the drag/resize handle and move dialog up using keyboard
-				cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-
-				cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focused().realPress("{uparrow}");
-				cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focused().realPress("{uparrow}");
+				// Act - Tab to the drag/resize handle and move dialog up
+				cy.realPress("Tab");
+				cy.realPress("{uparrow}");
+				cy.realPress("{uparrow}");
 
 				// Assert - Top position changes, left remains the same
 
@@ -599,10 +598,8 @@ describe("Dialog general interaction", () => {
 					})
 
 					// Act - Move dialog left using keyboard
-					cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-
-					cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focused().realPress("{leftarrow}");
-					cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focused().realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
 
 					// Assert - Left position changes, top remains the same
 					cy.get("#draggable-dialog")
@@ -776,9 +773,9 @@ describe("Dialog general interaction", () => {
 			const initialTop = parseInt(dialog.css("top"));
 			const initialLeft = parseInt(dialog.css("left"));
 
-			// Act - Focus the drag/resize handle and resize height using keyboard
-			cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-			cy.get("#resizable-dialog").realPress(["Shift", "ArrowDown"]);
+			// Act - Tab to the drag/resize handle and resize height
+			cy.realPress("Tab");
+			cy.realPress(["Shift", "ArrowDown"]);
 
 			// Assert - Height changes, width and position remain the same
 			cy.get("#resizable-dialog").then(dialogAfterResizeHeight => {
@@ -790,9 +787,8 @@ describe("Dialog general interaction", () => {
 				expect(heightAfterResizeHeight).not.to.equal(initialHeight);
 				expect(leftAfterResizeHeight).to.equal(initialLeft);
 
-				// Act - Focus the drag/resize handle and resize width using keyboard
-				cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-				cy.get("#resizable-dialog").realPress(["Shift", "ArrowRight"]);
+				// Act - Resize width using keyboard
+				cy.realPress(["Shift", "ArrowRight"]);
 
 				// Assert - Width changes, height and position remain the same
 				cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
