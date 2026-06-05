@@ -153,7 +153,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 						)}
 
 						{/* Custom Items */}
-						{this.sortItems(this.items).map(item => (
+						{this.items.map(item => (
 							<div
 								key={item._id}
 								class={{
