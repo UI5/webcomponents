@@ -22,6 +22,7 @@ import {
  * @since 1.0.0-rc.8
  * @public
  */
+@customElement({})
 class NotificationListItemBase extends ListItemBase {
 	eventDetails!: ListItemBase["eventDetails"];
 	/**
