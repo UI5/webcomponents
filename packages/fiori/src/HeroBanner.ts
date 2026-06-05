@@ -98,18 +98,18 @@ class HeroBanner extends UI5Element {
 	/**
 	 * Defines the ratio between the two content columns inside the hero banner.
 	 *
-	 * When no value is set and only one slot is used, the content spans the full width (single column).
+	 * Takes effect only when `endContent` is provided. When no `endContent` is present, the content spans the full width (single column).
 	 *
 	 * - **Equal** - Two equal columns. Both content blocks share the available width equally.
 	 *   On smaller screens, both slots stack vertically.
 	 * - **FirstWider** - Two unequal columns. The start content takes two-thirds of the width, the end content one-third.
 	 *   On smaller screens, both slots stack vertically.
 	 *
-	 * @default undefined
+	 * @default "FirstWider"
 	 * @public
 	 */
 	@property()
-	columnsRatio: `${HeroBannerColumnsRatio}` = "Equal";
+	columnsRatio: `${HeroBannerColumnsRatio}` = "FirstWider";
 
 	/**
 	 * Defines the first (default) free content block of the hero banner.

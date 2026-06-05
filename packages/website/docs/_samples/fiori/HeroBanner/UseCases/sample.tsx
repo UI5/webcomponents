@@ -54,7 +54,7 @@ function App() {
         overlineText="Tuesday, May 27, 2026"
       >
         <div style={{ margin: 0 }}>You have 3 pending approvals and 12 new notifications since your last visit. Review your tasks below or use the quick actions to get started.</div>
-        <div slot="endContent" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        <div slot="actions" style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           <Button icon="task" design="Default">Review Approvals</Button>
           <Button icon="add-document" design="Default">Create Report</Button>
           <Button icon="collaborate" design="Default">Team Overview</Button>
