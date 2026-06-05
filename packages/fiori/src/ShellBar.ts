@@ -71,9 +71,6 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 type ShellBarBreakpoint = "S" | "M" | "L" | "XL" | "XXL";
 
-// actions always visible in lean mode, order is important
-const PREDEFINED_PLACE_ITEMS = ["feedback", "sys-help"];
-
 const ShellBarActions = {
 	Search: "search",
 	Profile: "profile",
@@ -767,7 +764,7 @@ class ShellBar extends UI5Element {
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.sortContent(this.content),
-			customItems: this.sortItems(this.items),
+			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
 			overflowOuter: this.overflowOuter!,
@@ -865,7 +862,7 @@ class ShellBar extends UI5Element {
 	get overflowItems() {
 		return this.overflow.getOverflowItems({
 			actions: this.actions,
-			customItems: this.sortItems(this.items),
+			customItems: this.items,
 			hiddenItemsIds: this.hiddenItemsIds,
 		});
 	}
@@ -1059,14 +1056,6 @@ class ShellBar extends UI5Element {
 	}
 
 	/* =================== Items Management =================== */
-
-	sortItems(items: readonly ShellBarItem[]) {
-		return items.toSorted((a, b) => {
-			const aIndex = PREDEFINED_PLACE_ITEMS.indexOf(a.icon || "");
-			const bIndex = PREDEFINED_PLACE_ITEMS.indexOf(b.icon || "");
-			return aIndex - bIndex;
-		});
-	}
 
 	/* =================== Accessibility =================== */
 
