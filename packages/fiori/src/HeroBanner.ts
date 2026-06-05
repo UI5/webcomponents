@@ -109,7 +109,7 @@ class HeroBanner extends UI5Element {
 	 * @public
 	 */
 	@property()
-	columnsRatio?: `${HeroBannerColumnsRatio}`;
+	columnsRatio: `${HeroBannerColumnsRatio}` = "Equal";
 
 	/**
 	 * Defines the first (default) free content block of the hero banner.
