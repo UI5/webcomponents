@@ -1,5 +1,6 @@
 :host {
-	display: inline-block;
+	display: flex;
+	align-items: stretch;
 }
 
 .ui5-input-icon-wrapper {
@@ -8,7 +9,6 @@
 	padding: 0;
 	width: var(--_ui5_input_icon_width);
 	min-width: var(--_ui5_input_icon_width);
-	height: var(--_ui5_input_icon_wrapper_height);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -19,6 +19,7 @@
 	box-sizing: border-box;
 	font-size: 1rem;
 	flex-shrink: 0;
+	flex: 1;
 }
 
 .ui5-input-icon-wrapper:hover {
@@ -26,7 +27,13 @@
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
 
-.ui5-input-icon-wrapper:focus,
+.ui5-input-icon-wrapper:focus {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: -2px;
+	background: var(--_ui5_input_icon_hover_bg);
+	box-shadow: var(--_ui5_input_icon_box_shadow);
+}
+
 .ui5-input-icon-wrapper:focus-visible {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: -2px;
@@ -82,17 +89,6 @@
 	box-shadow: var(--_ui5_input_information_icon_box_shadow);
 }
 
-/* Adjust height for value states with thicker borders */
-:host([value-state="Negative"]) .ui5-input-icon-wrapper,
-:host([value-state="Critical"]) .ui5-input-icon-wrapper,
-:host([value-state="Information"]) .ui5-input-icon-wrapper {
-	--_ui5_input_icon_wrapper_height: var(--_ui5_input_icon_wrapper_state_height);
-}
-
-:host([value-state="Positive"]) .ui5-input-icon-wrapper {
-	--_ui5_input_icon_wrapper_height: var(--_ui5_input_icon_wrapper_success_state_height);
-}
-
 /* Value state specific pressed colors */
 :host([value-state="Negative"]) .ui5-input-icon-wrapper {
 	--_ui5_input_icon_pressed_color: var(--_ui5_input_icon_error_pressed_color);
@@ -110,27 +106,16 @@
 	--_ui5_input_icon_pressed_color: var(--_ui5_input_icon_success_pressed_color);
 }
 
-/* Constrain slotted icon size to 1rem and suppress its focus (wrapper handles it) */
-::slotted([ui5-icon]) {
+/* SVG inside wrapper */
+.ui5-input-icon-svg {
 	width: 1rem;
 	height: 1rem;
 	pointer-events: none;
 	color: inherit; /* Inherit color from wrapper */
+	outline: none !important;
 }
 
-/* Suppress icon SVG focus outline - wrapper handles focus */
-::slotted([ui5-icon])::part(root) {
-	outline: none;
-}
-
-/* Internally created icon (via iconName) - suppress focus and pointer events */
-.ui5-input-icon-wrapper > [ui5-icon] {
-	width: 1rem;
-	height: 1rem;
-	pointer-events: none;
-	color: inherit; /* Inherit color from wrapper */
-}
-
-.ui5-input-icon-wrapper > [ui5-icon]::part(root) {
-	outline: none;
+.ui5-input-icon-svg:focus,
+.ui5-input-icon-svg:focus-visible {
+	outline: none !important;
 }

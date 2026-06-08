@@ -379,12 +379,63 @@
 	box-shadow: var(--sapField_Hover_InformationShadow);
 }
 
-/* Decorative icons keep their normal styling */
-::slotted([ui5-icon]) {
+/* Input Icon */
+
+.ui5-input-icon-root {
+	min-width: var(--_ui5_input_icon_min_width);
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: stretch;
+}
+
+/* TODO: Remove this after parser is fixed
+	-	this statement is transformed to [ui5-multi-combobox] [ui5-icon] which
+	affects all icons in the combobox incuding these in the list items
+*/
+::slotted([ui5-icon][slot="icon"]) {
 	align-self: start;
 	padding: var(--_ui5_input_custom_icon_padding);
-	box-sizing: content-box;
-	color: var(--_ui5_input_icon_color);
+	/* Normalize like libraries overrule the selector, thefore we need !important */
+	box-sizing: content-box !important;
+}
+
+:host([value-state="Negative"]) .inputIcon,
+:host([value-state="Critical"]) .inputIcon{
+	padding: var(--_ui5_input_error_warning_icon_padding);
+}
+
+:host([value-state="Negative"][focused]) .inputIcon,
+:host([value-state="Critical"][focused]) .inputIcon{
+	padding: var(--_ui5_input_error_warning_focused_icon_padding);
+}
+
+:host([value-state="Information"]) .inputIcon {
+	padding: var(--_ui5_input_information_icon_padding);
+}
+
+:host([value-state="Information"][focused]) .inputIcon {
+	padding: var(--_ui5_input_information_focused_icon_padding);
+}
+
+:host([value-state="Negative"]) ::slotted(.inputIcon[ui5-icon]),
+:host([value-state="Negative"]) ::slotted([ui5-icon][slot="icon"]),
+:host([value-state="Critical"]) ::slotted([ui5-icon][slot="icon"]) {
+	padding: var(--_ui5_input_error_warning_custom_icon_padding);
+}
+
+:host([value-state="Negative"][focused]) ::slotted(.inputIcon[ui5-icon]),
+:host([value-state="Negative"][focused]) ::slotted([ui5-icon][slot="icon"]),
+:host([value-state="Critical"][focused]) ::slotted([ui5-icon][slot="icon"]) {
+	padding: var(--_ui5_input_error_warning_custom_focused_icon_padding);
+}
+
+:host([value-state="Information"]) ::slotted([ui5-icon][slot="icon"]) {
+	padding: var(--_ui5_input_information_custom_icon_padding);
+}
+
+:host([value-state="Information"][focused]) ::slotted([ui5-icon][slot="icon"]) {
+	padding: var(--_ui5_input_information_custom_focused_icon_padding);
 }
 
 :host([value-state="Negative"]) .inputIcon:active,
@@ -425,6 +476,26 @@
 
 :host([value-state="Positive"]) .inputIcon:not(.inputIcon--pressed):not(:active):hover {
 	box-shadow: var(--_ui5_input_success_icon_box_shadow);
+}
+
+/* Default inputIcon interactive styles (no value-state) */
+.inputIcon {
+	cursor: pointer;
+	background-color: transparent;
+	border-radius: var(--_ui5_input_icon_border_radius);
+	transition: background 0.1s ease-in-out;
+}
+
+.inputIcon:hover {
+	background: var(--_ui5_input_icon_hover_bg);
+	box-shadow: var(--_ui5_input_icon_box_shadow);
+}
+
+.inputIcon:active,
+.inputIcon.inputIcon--pressed {
+	background-color: var(--sapButton_Active_Background);
+	color: var(--_ui5_input_icon_pressed_color);
+	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
 
 .ui5-input-clear-icon-wrapper {

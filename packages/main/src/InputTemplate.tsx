@@ -1,17 +1,10 @@
 import type Input from "./Input.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
-import type { IIcon } from "./Icon.js";
-import InputIcon from "./InputIcon.js";
+import Icon from "./Icon.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import InputPopoverTemplate from "./InputPopoverTemplate.js";
 
 type TemplateHook = () => JsxTemplateResult;
-
-type SlottedIcon = IIcon & {
-	_individualSlot: string;
-	accessibleName?: string;
-	mode?: string;
-};
 
 export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook, mobileHeader?: TemplateHook }) {
 	const suggestionsList = hooks?.suggestionsList;
@@ -70,35 +63,29 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 					/>
 
 					{this._effectiveShowClearIcon &&
-						<InputIcon
-							iconName={decline}
-							accessibleName={this.clearIconAccessibleName}
-							valueState={this.valueState}
+						<div
+							tabindex={-1}
+							class="ui5-input-clear-icon-wrapper inputIcon"
+							part="clear-icon-wrapper"
 							onClick={this._clear}
 							onMouseDown={this._iconMouseDown}
-						/>
+						>
+							<Icon
+								part="clear-icon"
+								class="ui5-input-clear-icon"
+								name={decline}
+								tabindex={-1}
+								accessibleName={this.clearIconAccessibleName}>
+							</Icon>
+						</div>
 					}
 
 					{this.icon.length > 0 &&
-						this.icon.map(iconEl => {
-							const slottedIcon = iconEl as SlottedIcon;
-							const isInteractive = slottedIcon.mode === "Interactive";
-
-							// Only wrap interactive icons in InputIcon for button-like styling
-							if (isInteractive) {
-								return (
-									<InputIcon
-										valueState={this.valueState}
-										accessibleName={slottedIcon.accessibleName}
-									>
-										<slot name={slottedIcon._individualSlot}></slot>
-									</InputIcon>
-								);
-							}
-
-							// Decorative icons are just slotted without wrapper
-							return <slot name={slottedIcon._individualSlot}></slot>;
-						})
+						<div class="ui5-input-icon-root"
+							tabindex={-1}
+						>
+							<slot name="icon"></slot>
+						</div>
 					}
 
 					<div class="ui5-input-value-state-icon">
