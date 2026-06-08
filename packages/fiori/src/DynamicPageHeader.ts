@@ -80,7 +80,7 @@ class DynamicPageHeader extends UI5Element {
 	 * Overrides the default "Header Expanded" / "Header Snapped" text.
 	 * @public
 	 * @default undefined
-	 * @since 2.23.0
+	 * @since 2.24.0
 	 */
 	@property()
 	accessibleName?: string;

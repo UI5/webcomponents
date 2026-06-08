@@ -233,7 +233,7 @@ class DynamicPage extends UI5Element {
 	*
 	* @default {}
 	* @public
-	* @since 2.23.0
+	* @since 2.24.0
 	*/
 	@property({ type: Object })
 	accessibilityAttributes: DynamicPageAccessibilityAttributes = {};
