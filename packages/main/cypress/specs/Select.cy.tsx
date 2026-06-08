@@ -592,6 +592,30 @@ describe("Select - Accessibility", () => {
 			expect(accessInfo.label).to.equal("Updated Reference"); // Updated aria label from ref
 		});
 	});
+
+	it("should have focus only on the selected item when dropdown is opened (not on input)", () => {
+		cy.mount(
+			<Select>
+				<Option value="Option1">Option 1</Option>
+				<Option value="Option2" selected>Option 2</Option>
+				<Option value="Option3">Option 3</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+		cy.get("[ui5-select]").should("have.attr", "opened");
+
+		// The input focus ring should not be rendered while opened.
+		cy.get("[ui5-select]")
+			.shadow()
+			.find(".ui5-input-focusable-element")
+			.then(($el) => {
+				const style = window.getComputedStyle($el[0], "::after");
+				expect(style.getPropertyValue("border-style")).to.equal("none");
+			});
+
+		cy.focused().should("have.attr", "role", "option");
+	});
 });
 
 describe("Select - Popover", () => {
