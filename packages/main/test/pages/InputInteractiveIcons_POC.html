@@ -7,7 +7,8 @@
 	<title>POC: Input Interactive Icons Harmonization</title>
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 	<script type="module">
-		import "@ui5/webcomponents/dist/InputIcon.js";
+
+		// Import icons
 		import "@ui5/webcomponents-icons/dist/search.js";
 		import "@ui5/webcomponents-icons/dist/microphone.js";
 		import "@ui5/webcomponents-icons/dist/camera.js";
@@ -147,6 +148,12 @@
 		<ui5-button data-theme-name="sap_fiori_3_dark">Fiori 3 Dark</ui5-button>
 		<ui5-button data-theme-name="sap_fiori_3_hcb">Fiori 3 HCB</ui5-button>
 		<ui5-button data-theme-name="sap_fiori_3_hcw">Fiori 3 HCW</ui5-button>
+		<hr style="border: none; border-top: 1px solid var(--sapGroup_BorderColor); margin: 0.5rem 0;">
+		<h4>Content Density</h4>
+		<ui5-button id="toggle-compact">Toggle Compact Mode</ui5-button>
+		<p style="font-size: 0.75rem; margin: 0.5rem 0 0; color: var(--sapTextColor);">
+			Current: <span id="density-status">Cozy</span>
+		</p>
 	</div>
 
 	<!-- Section 1: Before/After Comparison -->
@@ -369,11 +376,50 @@
 	</div>
 
 	<script>
-		// Theme switcher
+		// Wait for UI5 Web Components to load
+		window.addEventListener("load", () => {
+			// Read theme from URL parameter on page load
+			const urlParams = new URLSearchParams(window.location.search);
+			const themeFromUrl = urlParams.get('sap-ui-theme');
+			if (themeFromUrl) {
+				window["sap-ui-webcomponents-bundle"].configuration.setTheme(themeFromUrl);
+			}
+
+			// Read and apply compact mode from URL
+			const compactFromUrl = urlParams.get('compact');
+			const densityStatus = document.getElementById("density-status");
+			if (compactFromUrl === 'true') {
+				document.body.classList.add("ui5-content-density-compact");
+				densityStatus.textContent = "Compact";
+			}
+		});
+
+		// Theme switcher - updates URL parameter and reloads page
 		Array.from(document.querySelectorAll(".theme-switcher ui5-button")).forEach(button => {
 			button.addEventListener("click", event => {
-				window["sap-ui-webcomponents-bundle"].configuration.setTheme(event.target.getAttribute("data-theme-name"));
+				const themeName = event.currentTarget.getAttribute("data-theme-name");
+
+				// Update URL with theme parameter and reload
+				const url = new URL(window.location);
+				url.searchParams.set('sap-ui-theme', themeName);
+				window.location.href = url.toString();
 			});
+		});
+
+		// Compact mode toggle - updates URL and reloads
+		const toggleCompactBtn = document.getElementById("toggle-compact");
+		toggleCompactBtn.addEventListener("click", () => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const isCurrentlyCompact = urlParams.get('compact') === 'true';
+
+			// Toggle compact mode in URL
+			const url = new URL(window.location);
+			if (isCurrentlyCompact) {
+				url.searchParams.delete('compact');
+			} else {
+				url.searchParams.set('compact', 'true');
+			}
+			window.location.href = url.toString();
 		});
 
 		// Event logging for accessibility demo

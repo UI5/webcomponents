@@ -1,6 +1,8 @@
 import type Input from "./Input.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 import Icon from "./Icon.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import InputIcon from "./InputIcon.js"; // Import to ensure InputIcon themes are registered with Input
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import InputPopoverTemplate from "./InputPopoverTemplate.js";
 
