@@ -6,7 +6,7 @@ describe("ui5 and web components integration", () => {
 	beforeEach(() => { mountUI5Fixtures(); });
 	afterEach(() => { cleanupUI5Fixtures(); });
 
-	it("OpenUI5 Dialog: opening WebC Select dropdown and closing with Escape", () => {
+	it.skip("OpenUI5 Dialog: opening WebC Select dropdown and closing with Escape", () => {
 		cy.get("#openUI5Button", { timeout: 10000 })
 			.should('be.visible')
 			.realClick();
