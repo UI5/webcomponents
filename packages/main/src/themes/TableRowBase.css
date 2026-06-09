@@ -52,6 +52,11 @@
 	border-inline-start: none;
 }
 
+:host(:not([_has-popin])) #dummy-cell {
+	background: var(--sapList_Background);
+	border-top: none;
+}
+
 :host([tabindex]:focus) {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: calc(-1 * var(--sapContent_FocusWidth));

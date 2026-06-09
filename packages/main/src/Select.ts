@@ -52,6 +52,7 @@ import {
 	INPUT_SUGGESTIONS_TITLE,
 	LIST_ITEM_POSITION,
 	SELECT_ROLE_DESCRIPTION,
+	SELECT_DIALOG_CANCEL_BUTTON,
 	FORM_SELECTABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
@@ -1049,6 +1050,10 @@ class Select extends UI5Element implements IFormInputElement {
 		return Select.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
+	get _cancelButtonText() {
+		return Select.i18nBundle.getText(SELECT_DIALOG_CANCEL_BUTTON);
+	}
+
 	get _currentlySelectedOption() {
 		return this.options[this._selectedIndex];
 	}
@@ -1094,6 +1099,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get styles() {
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			popoverHeader: {
 				"display": "block",
@@ -1105,6 +1111,8 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
+				"max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
+				"margin-top": "var(--sapField_BorderWidth)",
 			},
 		};
 	}

@@ -1896,3 +1896,77 @@ describe("Opener visibility in scrollable containers", () => {
 		cy.get("[ui5-popover]").should("have.prop", "open", false);
 	});
 });
+
+describe("Min Width via CSS", () => {
+	it("should apply min-width when set via style attribute", () => {
+		cy.mount(
+			<>
+				<Button id="btnMinWidth">Open Popover</Button>
+				<Popover id="popMinWidth" opener="btnMinWidth" style={{ minWidth: "300px" }} headerText="Min Width Test">
+					<div>Small content</div>
+				</Popover>
+			</>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get("[ui5-popover]")
+			.should("have.css", "min-width", "300px");
+	});
+
+	it("should allow content wider than minWidth", () => {
+		cy.mount(
+			<>
+				<Button id="btnMinWidthWide">Open Popover</Button>
+				<Popover id="popMinWidthWide" opener="btnMinWidthWide" style={{ minWidth: "200px" }}>
+					<div style={{ width: "400px", padding: "10px" }}>
+						This content is wider than the minWidth setting, and the popover should expand to fit it.
+					</div>
+				</Popover>
+			</>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get("[ui5-popover]")
+			.then($popover => {
+				const width = $popover[0].getBoundingClientRect().width;
+				// Content is 400px + padding, popover should be wider than minWidth
+				expect(width).to.be.greaterThan(200);
+			});
+	});
+
+	it("should work with resizable popover", () => {
+		cy.mount(
+			<>
+				<Button id="btnMinWidthResizable">Open Resizable Popover</Button>
+				<Popover id="popMinWidthResizable" opener="btnMinWidthResizable" style={{ minWidth: "400px" }} resizable headerText="Resizable with Min Width">
+					<div>Content that can be resized but not below 400px</div>
+				</Popover>
+			</>
+		);
+
+		cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+		cy.get("[ui5-popover]")
+			.should("have.css", "min-width", "400px");
+
+		cy.get("[ui5-popover]")
+			.shadow()
+			.find(".ui5-popover-resize-handle")
+			.should("be.visible");
+
+		cy.get("[ui5-popover]")
+			.shadow()
+			.find(".ui5-popover-resize-handle")
+			.trigger("mousedown", { button: 0 })
+			.trigger("mousemove", { clientX: -200, clientY: 0 })
+			.trigger("mouseup");
+
+		cy.get("[ui5-popover]")
+			.then($popover => {
+				const currentWidth = $popover[0].getBoundingClientRect().width;
+				expect(currentWidth).to.be.at.least(400);
+			});
+	});
+});

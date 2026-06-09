@@ -4,13 +4,6 @@
  * @since 2.0.0
  */
 enum ListItemAccessibleRole {
-
-	/**
-	 * Represents the ARIA role "group".
-	 * @private
-	 */
-	Group = "Group",
-
 	/**
 	 * Represents the ARIA role "listitem". (by default)
 	 * @public
