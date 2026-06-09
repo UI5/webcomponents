@@ -19,10 +19,6 @@ function beforeContent(this: Dialog) {
 				id="ui5-popup-header"
 				role="region"
 				aria-label={this._headerAriaLabel}
-				aria-describedby={this.effectiveAriaDescribedBy}
-				aria-roledescription={this.ariaRoleDescriptionHeaderText}
-				tabIndex={this._headerTabIndex}
-				onKeyDown={this._onDragOrResizeKeyDown}
 				onMouseDown={this._onDragMouseDown}
 				part="header"
 				// state={this.state}
@@ -34,16 +30,6 @@ function beforeContent(this: Dialog) {
 					<slot name="header"></slot>
 					:
 					<Title level="H1" id="ui5-popup-header-text" class="ui5-popup-header-text">{this.headerText}</Title>
-				}
-
-				{this.resizable ?
-					this.draggable ?
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggableAndResizable}</span>
-						:
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextResizable}</span>
-					:
-					this.draggable &&
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggable}</span>
 				}
 			</div>
 		}
