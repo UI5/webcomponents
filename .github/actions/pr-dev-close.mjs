@@ -33,9 +33,21 @@ import { join } from "node:path";
 
 const MARKER = "<!-- dev-close-notice -->";
 
+// REPORT_ONLY modes (local validation, no comments posted to GitHub):
+//   "list"  / "1" — fast: only the candidate table, no builds
+//   "diff"        — full pipeline: build each candidate, render the would-be
+//                   comment body to stdout. Slow (~3min per PR).
+// LIMIT=N restricts how many candidates the "diff" mode processes (handy
+// when you just want to spot-check a few).
+const REPORT_ONLY = process.env.REPORT_ONLY;
+const REPORT_MODE = REPORT_ONLY === "diff" ? "diff" : (REPORT_ONLY ? "list" : null);
+const LIMIT = Number(process.env.LIMIT) || 0;
+
 const REPO = required("GITHUB_REPO");
-const RELEASE = required("RELEASE");
-const RELEASE_DATE = required("RELEASE_DATE");
+// Release / release-date are only used to render the comment body. Skip the
+// strictness in REPORT_ONLY mode so callers don't need to pass them.
+const RELEASE = REPORT_MODE ? (process.env.RELEASE ?? "next") : required("RELEASE");
+const RELEASE_DATE = REPORT_MODE ? (process.env.RELEASE_DATE ?? "(unset)") : required("RELEASE_DATE");
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -330,20 +342,28 @@ function buildHeadFor(headSha) {
 }
 
 /** Allowlist of Conventional Commit types whose PRs may introduce public-API
- *  changes. Anything else (ci, docs, test, chore, style, perf, build, revert)
- *  is skipped without spending runner time on a build. Matches optional scope
- *  `(...)` and the breaking-change `!` marker. Case-insensitive. */
-const TITLE_RE = /^(feat|fix|refactor)(\([^)]*\))?!?:/i;
+ *  changes. `feat` and `refactor` only — `fix` PRs in this repo overwhelmingly
+ *  change implementation, not surface, so we skip them by default to keep the
+ *  noise low. Anything else (ci/docs/test/chore/style/perf/build/revert) is
+ *  also skipped. Matches optional scope `(...)` and the breaking-change `!`
+ *  marker. Case-insensitive. */
+const TITLE_RE = /^(feat|refactor)(\([^)]*\))?!?:/i;
+
+/** Substrings that explicitly mean "this PR isn't merge-bound during dev
+ *  close" — proof-of-concepts, drafts, work-in-progress markers. */
+const TITLE_EXCLUDE_RE = /\b(PoC|WIP|DO NOT MERGE)\b|\[PoC\]|\[WIP\]/i;
 
 function isInScope(pr) {
-	return TITLE_RE.test(pr.title ?? "");
+	const title = pr.title ?? "";
+	if (TITLE_EXCLUDE_RE.test(title)) return false;
+	return TITLE_RE.test(title);
 }
 
 async function processPR(pr, basesByPackage) {
 	console.log(`\nPR #${pr.number} — ${pr.title}`);
 
 	if (!isInScope(pr)) {
-		console.log(`  · title isn't feat/fix/refactor, skipping`);
+		console.log(`  · title isn't feat/refactor (or matches an exclude marker), skipping`);
 		return;
 	}
 
@@ -374,8 +394,14 @@ async function processPR(pr, basesByPackage) {
 	}
 
 	const md = renderDiff(byPackage);
-	postComment(pr.number, commentBody(md));
-	console.log(`  · posted dev-close notice`);
+	const body = commentBody(md);
+	if (REPORT_MODE === "diff") {
+		console.log(`  · would post (REPORT_ONLY=diff):`);
+		console.log("\n" + body.split("\n").map(l => "    " + l).join("\n") + "\n");
+	} else {
+		postComment(pr.number, body);
+		console.log(`  · posted dev-close notice`);
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -383,7 +409,31 @@ async function processPR(pr, basesByPackage) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-	console.log(`Dev close notice — release "${RELEASE}" (${RELEASE_DATE} UTC)`);
+	console.log(`Dev close notice — release "${RELEASE}" (${RELEASE_DATE} UTC)${REPORT_MODE ? ` [REPORT_ONLY=${REPORT_MODE}]` : ""}`);
+
+	// Report-only LIST mode: skip jsdelivr, skip builds, skip comments.
+	// Just lists which PRs would be candidates for a CEM diff. The actual
+	// comment count is an upper bound — real runs only comment when the
+	// diff is non-empty, which this mode doesn't compute.
+	if (REPORT_MODE === "list") {
+		const prs = pickPRs();
+		console.log(`\nReport-only (list) mode — no builds, no comments.\n`);
+		const candidates = prs
+			.filter(pr => isInScope(pr))
+			.map(pr => ({ pr, hasMarker: hasMarkerComment(pr.number) }));
+
+		console.log(`PR     | Marker | Title`);
+		console.log(`-------+--------+-----------------------------`);
+		for (const { pr, hasMarker } of candidates) {
+			console.log(`#${String(pr.number).padEnd(5)} | ${hasMarker ? "yes   " : "no    "} | ${pr.title}`);
+		}
+		const wouldComment = candidates.filter(c => !c.hasMarker).length;
+		console.log(`\nScanned: ${prs.length} open non-draft PR(s).`);
+		console.log(`Allow-listed (feat/refactor, no PoC/WIP marker): ${candidates.length}.`);
+		console.log(`Of those, ${wouldComment} would receive a comment IF a CEM diff found public-API changes.`);
+		console.log(`\nDone.`);
+		return;
+	}
 
 	console.log(`\nFetching base manifests from jsdelivr…`);
 	const basesByPackage = new Map();
@@ -399,10 +449,30 @@ async function main() {
 	const scope = process.env.PR_NUMBER ? `PR #${process.env.PR_NUMBER}` : "open non-draft PRs targeting main";
 	console.log(`\nProcessing ${prs.length} ${scope}.`);
 
-	// Remember where to come back so we leave the tree clean.
-	const startingRef = git(["rev-parse", "HEAD"]).trim();
+	// In REPORT_ONLY=diff with LIMIT, pre-filter to allow-listed candidates
+	// and trim before doing any builds. (Production runs filter inside
+	// processPR — the LIMIT trim there would be a no-op anyway.)
+	let queue = prs;
+	if (REPORT_MODE === "diff" && LIMIT > 0) {
+		queue = prs.filter(isInScope).slice(0, LIMIT);
+		console.log(`LIMIT=${LIMIT} → diffing ${queue.length} candidate(s) only.`);
+	}
 
-	for (const pr of prs) {
+	// Remember where to come back so we leave the tree clean. If the working
+	// tree is dirty (typical for local REPORT_ONLY runs while iterating on
+	// this script), stash before we start checking out PRs and pop on exit.
+	const startingRef = git(["rev-parse", "HEAD"]).trim();
+	let stashed = false;
+	try {
+		const dirty = git(["status", "--porcelain"]).trim().length > 0;
+		if (dirty) {
+			git(["stash", "push", "--include-untracked", "-m", "pr-dev-close auto-stash"]);
+			stashed = true;
+			console.log(`(stashed dirty working tree; will pop on exit)`);
+		}
+	} catch { /* status failure shouldn't block the run */ }
+
+	for (const pr of queue) {
 		try {
 			await processPR(pr, basesByPackage);
 		} catch (e) {
@@ -413,6 +483,15 @@ async function main() {
 	try {
 		git(["checkout", startingRef]);
 	} catch { /* no-op */ }
+	if (stashed) {
+		try {
+			git(["stash", "pop"]);
+			console.log(`(popped stashed changes)`);
+		} catch (e) {
+			console.error(`Could not pop stash automatically: ${e.message}`);
+			console.error(`Run \`git stash pop\` manually.`);
+		}
+	}
 
 	console.log(`\nDone.`);
 }
