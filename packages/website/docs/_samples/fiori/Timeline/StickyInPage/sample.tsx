@@ -61,51 +61,49 @@ function App() {
   }, [activeStatus]);
 
   return (
-    <div style={{ height: "18rem", overflow: "auto", border: "1px solid var(--sapGroup_ContentBorderColor)", borderRadius: "0.5rem" }}>
-      <Timeline stickyHeader>
-        <Toolbar slot="header">
-          <ToolbarSelect onChange={(e: any) => {
-            const selected = e.detail?.selectedOption;
-            setActiveStatus(selected?.getAttribute("data-status") || "");
-          }}>
-            {STATUS_OPTIONS.map(status => (
-              <ToolbarSelectOption
-                key={status}
-                data-status={status}
-                selected={status === activeStatus}
-              >
-                {STATUS_LABELS[status]}
-              </ToolbarSelectOption>
-            ))}
-          </ToolbarSelect>
-        </Toolbar>
+    <Timeline stickyHeader style={{ height: "18rem" }}>
+      <Toolbar slot="header">
+        <ToolbarSelect onChange={(e: any) => {
+          const selected = e.detail?.selectedOption;
+          setActiveStatus(selected?.getAttribute("data-status") || "");
+        }}>
+          {STATUS_OPTIONS.map(status => (
+            <ToolbarSelectOption
+              key={status}
+              data-status={status}
+              selected={status === activeStatus}
+            >
+              {STATUS_LABELS[status]}
+            </ToolbarSelectOption>
+          ))}
+        </ToolbarSelect>
+      </Toolbar>
 
-        <Bar slot="infoBar" design="Subheader">
-          <div slot="startContent" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.375rem" }}>
-            {activeStatus !== "" && (
-              <Token
-                text={activeStatus}
-                forcedTabIndex="0"
-                selected
-                onSelect={(e: any) => { e.target.selected = true; }}
-                onDelete={() => setActiveStatus("")}
-              />
-            )}
-          </div>
-          <Label slot="endContent">{`${visibleEntries.length} of ${ENTRIES.length} documents`}</Label>
-        </Bar>
+      <Bar slot="infoBar" design="Subheader">
+        <div slot="startContent" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.375rem" }}>
+          {activeStatus !== "" && (
+            <Token
+              text={activeStatus}
+              forcedTabIndex="0"
+              selected
+              onSelect={(e: any) => { e.target.selected = true; }}
+              onDelete={() => setActiveStatus("")}
+            />
+          )}
+        </div>
+        <Label slot="endContent">{`${visibleEntries.length} of ${ENTRIES.length} documents`}</Label>
+      </Bar>
 
-        {visibleEntries.map(entry => (
-          <TimelineItem
-            key={entry.id}
-            titleText={entry.titleText}
-            subtitleText={entry.subtitleText}
-            icon={entry.icon}
-            name={entry.name}
-          />
-        ))}
-      </Timeline>
-    </div>
+      {visibleEntries.map(entry => (
+        <TimelineItem
+          key={entry.id}
+          titleText={entry.titleText}
+          subtitleText={entry.subtitleText}
+          icon={entry.icon}
+          name={entry.name}
+        />
+      ))}
+    </Timeline>
   );
 }
 

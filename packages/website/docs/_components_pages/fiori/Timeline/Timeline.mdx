@@ -54,8 +54,8 @@ The Timeline does not filter, sort, or search — the application owns that logi
 
 <WithFilter/>
 
-#### Sticky in a scrollable page area
+#### Sticky in a scrollable Timeline
 
-When the Timeline sits inside an externally scrolling container, `stickyHeader` pins the bars to the top of that ancestor.
+When the Timeline owns its scrollbar (give it a constrained height), `stickyHeader` keeps the `header` and `infoBar` slots pinned to the top while the items scroll.
 
 <StickyInPage/>

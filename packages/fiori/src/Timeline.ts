@@ -85,7 +85,8 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * applied sort, current search query). Typically contains tokens, labels, or a `ui5-bar`.
  *
  * The Timeline itself does not filter, sort, or search — the application owns that logic.
- * Use `stickyHeader` to pin both bars while scrolling.
+ * Use `stickyHeader` to pin both bars while the Timeline's items scroll. Give the Timeline
+ * a constrained height in this mode so it owns its scrollbar.
  * @constructor
  * @extends UI5Element
  * @public
@@ -171,6 +172,12 @@ class Timeline extends UI5Element {
 
 	/**
 	 * Defines whether the content of the `header` and `infoBar` slots remains visible when the user scrolls the Timeline.
+	 *
+	 * **Note:** The bars pin to the Timeline's own scrollport. Give the Timeline a
+	 * constrained height (for example `style="height: 32rem"`) so its items scroll
+	 * inside it. Placing the Timeline inside an externally scrolling ancestor while
+	 * leaving the Timeline itself unsized is not supported in this mode — the bars
+	 * will scroll away with the ancestor.
 	 *
 	 * @default false
 	 * @public

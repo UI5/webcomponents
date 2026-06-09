@@ -200,14 +200,14 @@
 			</div>
 		</article>
 
-		<!-- Scenario 3: ancestor owns the scroll → sticky header still pins to it -->
+		<!-- Scenario 3: ancestor owns the scroll → bars scroll with the content -->
 		<article class="scenario">
 			<div class="scenario-header">
 				<h2>3. Ancestor scroll container</h2>
-				<p>The ancestor (dashed border) owns scrolling. The Timeline expands to its content and <code>stickyHeader</code> pins the header area to the ancestor's scrollport — common when a Timeline is embedded in a <code>DynamicPage</code>.</p>
+				<p>The ancestor (dashed border) owns scrolling. The Timeline expands to its content and the <code>header</code> and <code>infoBar</code> slots scroll together with the items. <code>stickyHeader</code> is not used here — it pins to the Timeline's own scrollport, so it requires a Timeline that owns its scrollbar (see scenarios 1 and 2).</p>
 			</div>
 			<div class="ancestor-scroll">
-				<ui5-timeline id="ancestorScrollTimeline" sticky-header>
+				<ui5-timeline id="ancestorScrollTimeline">
 					<ui5-toolbar slot="header">
 						<ui5-toolbar-item>
 							<ui5-label>Header sticks to the ancestor</ui5-label>
