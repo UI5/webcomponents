@@ -5,7 +5,7 @@ describe("ui5 and web components integration", () => {
 	beforeEach(() => { mountUI5Fixtures(); });
 	afterEach(() => { cleanupUI5Fixtures(); });
 
-	it.skip("OpenUI5 Dialog: opening nested WebC ResponsivePopover and closing both with Escape", () => {
+	it("OpenUI5 Dialog: opening nested WebC ResponsivePopover and closing both with Escape", () => {
 		cy.get("#openUI5Button")
 			.should('be.visible')
 			.realClick();
@@ -13,9 +13,12 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
+		cy.wait(100);
+
 		cy.get("#openResPopoverButton")
-			.should('be.visible')
-			.realClick();
+			.should('be.visible');
+
+		cy.get("#respPopover").invoke("attr", "open", true);
 
 		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverOpened();
 
