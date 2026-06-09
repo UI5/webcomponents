@@ -68,7 +68,10 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 
 	_onclick(e: MouseEvent) {
 		if ((e.target as HTMLElement)?.hasAttribute("ui5-checkbox")) {
-			return this.fireDecoratorEvent("selection-requested", { item: this, selected: (e.target as CheckBox).checked, selectionComponentPressed: true });
+			const checkboxCheckedState = (e.target as CheckBox).checked;
+
+			// The checkbox has already toggled itself, so use its current state
+			return this.fireDecoratorEvent("selection-requested", { item: this, selected: checkboxCheckedState, selectionComponentPressed: true });
 		}
 
 		super._onclick(e);

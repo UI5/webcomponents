@@ -963,3 +963,187 @@ describe("Dialog header title", () => {
             .should("have.text", "Country");
     });
 });
+
+describe("Custom Items", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should select custom items via checkbox click and OK button", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcbi-custom text="New York, USA" value="NYC">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇺🇸</span>
+						<span style={{ flex: 1 }}>New York, USA</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcbi-custom>
+				<ui5-mcbi-custom text="London, UK" value="LON">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇬🇧</span>
+						<span style={{ flex: 1 }}>London, UK</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcbi-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Click custom item checkboxes
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(1)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		// Press OK button to confirm
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.realClick();
+
+		// Verify tokens were created
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 2);
+
+		// Verify token texts
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-token--text")
+			.should("have.text", "New York, USA");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.eq(1)
+			.shadow()
+			.find(".ui5-token--text")
+			.should("have.text", "London, UK");
+	});
+
+	it("Should maintain custom item checkbox state when reopening dialog", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcbi-custom text="Paris, France" value="PAR">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇫🇷</span>
+						<span style={{ flex: 1 }}>Paris, France</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcbi-custom>
+				<ui5-mcbi-custom text="Tokyo, Japan" value="TYO">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇯🇵</span>
+						<span style={{ flex: 1 }}>Tokyo, Japan</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcbi-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Select first custom item and confirm with OK
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.realClick();
+
+		// Reopen the dialog
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Verify checkbox states are maintained
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.should("have.attr", "checked");
+
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(1)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.should("not.have.attr", "checked");
+	});
+
+	it("Should not create token when custom item is selected but Cancel is pressed", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcbi-custom text="Berlin, Germany" value="BER">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇩🇪</span>
+						<span style={{ flex: 1 }}>Berlin, Germany</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcbi-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Click custom item checkbox
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcbi-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		// Press Cancel button
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-close-btn")
+			.realClick();
+
+		// Verify no token was created
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 0);
+	});
+});

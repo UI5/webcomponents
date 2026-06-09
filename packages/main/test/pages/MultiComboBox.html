@@ -903,6 +903,100 @@
 		<ui5-mcb-item text="Austria"></ui5-mcb-item>
 	</ui5-multi-combobox>
 
+	<div class="demo-section">
+		<h3>MultiComboBox with Custom Items</h3>
+		<span>Custom items with multiple icons/emojis:</span>
+		<br />
+		<br />
+		<ui5-multi-combobox id="custom-items-mcb" placeholder="Select destinations" style="width: 450px;">
+			<ui5-mcbi-custom text="New York, USA" value="NYC">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇺🇸</span>
+					<span style="flex: 1;">New York, USA</span>
+					<span role="img" aria-label="Airport">✈️</span>
+					<span role="img" aria-label="Popular">⭐</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcbi-custom text="London, UK" value="LON">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇬🇧</span>
+					<span style="flex: 1;">London, UK</span>
+					<span role="img" aria-label="Airport">✈️</span>
+					<span role="img" aria-label="Popular">⭐</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcbi-custom text="Tokyo, Japan" value="TYO">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇯🇵</span>
+					<span style="flex: 1;">Tokyo, Japan</span>
+					<span role="img" aria-label="Airport">✈️</span>
+					<span role="img" aria-label="Popular">⭐</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcbi-custom text="Paris, France" value="PAR">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇫🇷</span>
+					<span style="flex: 1;">Paris, France</span>
+					<span role="img" aria-label="Airport">✈️</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcbi-custom text="Berlin, Germany" value="BER">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇩🇪</span>
+					<span style="flex: 1;">Berlin, Germany</span>
+					<span role="img" aria-label="Train">🚆</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcbi-custom text="Sydney, Australia" value="SYD">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Flag">🇦🇺</span>
+					<span style="flex: 1;">Sydney, Australia</span>
+					<span role="img" aria-label="Beach">🏖️</span>
+					<span role="img" aria-label="Popular">⭐</span>
+				</div>
+			</ui5-mcbi-custom>
+		</ui5-multi-combobox>
+		<br />
+		<span>Selected values: <strong id="custom-items-mcb-values"></strong></span>
+		<br />
+		<span>Selected selectedValues: <strong id="custom-items-mcb-selected-values"></strong></span>
+
+		<script>
+			const customItemsMcb = document.getElementById("custom-items-mcb");
+			customItemsMcb.addEventListener("ui5-selection-change", function (event) {
+				const values = event.detail.items.map(item => item.text).join(", ");
+				const selectedValues = customItemsMcb.selectedValues.join(", ");
+				document.getElementById("custom-items-mcb-values").innerHTML = values || "(none)";
+				document.getElementById("custom-items-mcb-selected-values").innerHTML = selectedValues || "(none)";
+			});
+		</script>
+	</div>
+
+	<div class="demo-section">
+		<h3>MultiComboBox with Mixed Items</h3>
+		<span>Regular items mixed with custom items:</span>
+		<br />
+		<br />
+		<ui5-multi-combobox id="mixed-items-mcb" placeholder="Select options">
+			<ui5-mcb-item text="Regular Item 1"></ui5-mcb-item>
+			<ui5-mcbi-custom text="Custom Item with Icons">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Star">⭐</span>
+					<span style="flex: 1;">Custom Item with Icons</span>
+					<span role="img" aria-label="Fire">🔥</span>
+				</div>
+			</ui5-mcbi-custom>
+			<ui5-mcb-item text="Regular Item 2"></ui5-mcb-item>
+			<ui5-mcbi-custom text="Another Custom Item">
+				<div style="display: flex; align-items: center; gap: 0.5rem;">
+					<span role="img" aria-label="Diamond">🔷</span>
+					<span style="flex: 1; color: blue;">Another Custom Item</span>
+					<span role="img" aria-label="Check">✅</span>
+				</div>
+			</ui5-mcbi-custom>
+		</ui5-multi-combobox>
+	</div>
+
 </body>
 
 </html>
