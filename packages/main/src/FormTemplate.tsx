@@ -7,7 +7,7 @@ export default function FormTemplate(this: Form) {
 			class="ui5-form-root"
 			role={this.effectiveAccessibleRole}
 			aria-label={this.effectiveAccessibleName}
-			aria-labelledby={this.effectiveАccessibleNameRef}
+			aria-labelledby={this.effectiveAccessibleNameRef}
 			style={{
 				"--ui5-form-columns-s": this.columnsS,
 				"--ui5-form-columns-m": this.columnsM,
