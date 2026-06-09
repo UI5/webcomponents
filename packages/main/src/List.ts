@@ -1419,7 +1419,13 @@ class List extends UI5Element {
 			return;
 		}
 
-		this.fireDecoratorEvent("item-toggle", { item: e.detail.item });
+		const item = e.detail?.item;
+
+		if (!item) {
+			return;
+		}
+
+		this.fireDecoratorEvent("item-toggle", { item });
 	}
 
 	onForwardBefore(e: CustomEvent) {

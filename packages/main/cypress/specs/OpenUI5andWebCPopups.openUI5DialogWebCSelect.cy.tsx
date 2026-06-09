@@ -34,8 +34,8 @@ describe("ui5 and web components integration", () => {
 
 		cy.realPress("Escape");
 
-		cy.get("#openUI5Dialog1")
-			.should('not.exist');
+		cy.get<ResponsivePopover>("#openUI5Dialog1")
+			.ui5ResponsivePopoverClosed();
 
 		cy.get("#openUI5Button")
 			.should('be.focused');

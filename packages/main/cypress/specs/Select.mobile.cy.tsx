@@ -1,5 +1,7 @@
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
+import type ResponsivePopover from "../../src/ResponsivePopover.js";
+import { SELECT_DIALOG_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Select mobile general interaction", () => {
 	beforeEach(() => {
@@ -78,5 +80,66 @@ describe("Select mobile general interaction", () => {
 		cy.get("@changeStub").should("have.been.calledOnce");
 
 		cy.get("@select").should("have.prop", "value", "Cozy");
+	});
+});
+
+describe("Select - mobile popover Cancel button", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("renders only the Cancel button in the footer (no X in header)", () => {
+		cy.mount(
+			<Select>
+				<Option>Option 1</Option>
+				<Option>Option 2</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Header has no close button anymore.
+		cy.get("@popover")
+			.find("[slot=header] .ui5-responsive-popover-close-btn")
+			.should("not.exist");
+
+		// Footer renders exactly one Cancel button.
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-footer [ui5-button]")
+			.should("have.length", 1)
+			.and("have.class", "ui5-responsive-popover-close-btn")
+			.and("contain.text", SELECT_DIALOG_CANCEL_BUTTON.defaultText);
+	});
+
+	it("closes the mobile picker when the Cancel button is pressed", () => {
+		cy.mount(
+			<Select>
+				<Option>Option 1</Option>
+				<Option>Option 2</Option>
+			</Select>
+		);
+
+		cy.get("[ui5-select]").realClick();
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-responsive-popover-footer [ui5-button]")
+			.realClick();
+
+		cy.get("[ui5-select]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverClosed();
 	});
 });
