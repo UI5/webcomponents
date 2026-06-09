@@ -29,6 +29,9 @@ import {
 	DIALOG_DRAG_HANDLE_ARIA_LABEL,
 	DIALOG_RESIZE_HANDLE_ARIA_LABEL,
 	DIALOG_HANDLE_ARIA_ROLEDESCRIPTION,
+	DIALOG_HEADER_ARIA_LABEL,
+	DIALOG_CONTENT_ARIA_LABEL,
+	DIALOG_FOOTER_ARIA_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -387,6 +390,22 @@ class Dialog extends Popup {
 		}
 
 		return toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get _contentRole(): "region" {
+		return "region";
+	}
+
+	get _headerAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_LABEL);
+	}
+
+	get _contentAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_CONTENT_ARIA_LABEL);
+	}
+
+	get _footerAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_FOOTER_ARIA_LABEL);
 	}
 
 	_show() {
