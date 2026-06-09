@@ -991,8 +991,7 @@ describe("Side Navigation interaction", () => {
 		cy.get("@selectionChangeHandler").should("have.been.calledOnce");
 	});
 
-	// Skipped: flaky on CI — blocks merges. Tracked separately.
-	it.skip("tests selecting items in overflow menu", () => {
+	it("tests selecting items in overflow menu", () => {
 		cy.mount(
 			<SideNavigation style="height: 200px" id="sideNav" collapsed={true}>
 				<SideNavigationItem icon={home} text="Home"></SideNavigationItem>
@@ -1023,14 +1022,14 @@ describe("Side Navigation interaction", () => {
 			.as("overflowMenu");
 
 		cy.get("@overflowMenu")
-			.should("be.visible");
+			.ui5MenuOpened();
 
 		cy.get("@overflowMenu")
 			.find("[ui5-navigation-menu-item][text='Home 6']")
 			.realClick();
 
 		cy.get("@overflowMenu")
-			.should("not.be.visible");
+			.ui5MenuClosed();
 
 		cy.get("[ui5-side-navigation-item][text='Home 6']")
 			.should("be.focused");
@@ -1039,11 +1038,14 @@ describe("Side Navigation interaction", () => {
 			.realClick();
 
 		cy.get("@overflowMenu")
-			.should("be.visible");
+			.ui5MenuOpened();
 
 		cy.get("@overflowMenu")
 			.find("[ui5-navigation-menu-item][text='Home 7']")
 			.realClick();
+
+		cy.get("@overflowMenu")
+			.ui5MenuClosed();
 
 		cy.get("@itemOverflow")
 			.should("be.focused");

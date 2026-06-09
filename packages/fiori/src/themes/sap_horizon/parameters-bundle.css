@@ -1,3 +1,5 @@
+@import "../base/HeroBanner-parameters.css";
+@import "./HeroBanner-parameters.css";
 @import "../base/rtl-parameters.css";
 @import "../base/FlexibleColumnLayout-parameters.css";
 @import "../base/IllustratedMessage-parameters.css";

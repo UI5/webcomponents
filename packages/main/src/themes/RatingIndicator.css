@@ -17,7 +17,6 @@
 	cursor: initial;
 }
 
-:host([disabled]) .ui5-rating-indicator-item-unsel,
 :host([readonly]) .ui5-rating-indicator-item-unsel {
 	padding-inline: var(--_ui5_rating_indicator_readonly_item_spacing);
 	width: var(--_ui5_rating_indicator_readonly_item_width);

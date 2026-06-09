@@ -186,10 +186,10 @@ abstract class ListItem extends ListItemBase {
 	 * An explicitly set `accessible-role` on the list item takes precedence over the inherited role.
 	 * @default undefined
 	 * @public
-	 * @since 1.3.0
+	 * @since 2.23.0
 	 */
 	@property()
-	accessibleRole?: `${Exclude<ListItemAccessibleRole, ListItemAccessibleRole.Group>}`;
+	accessibleRole?: `${ListItemAccessibleRole}`;
 
 	@property()
 	_forcedAccessibleRole?: string;
