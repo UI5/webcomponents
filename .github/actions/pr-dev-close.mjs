@@ -397,6 +397,8 @@ function commentBody(diffMarkdown) {
 		``,
 		`If this change **must** ship in the current release, please request a review from one or two members of @UI5/ui5-team-webc so the team can sign off explicitly.`,
 		``,
+		`> 💬 **False positive?** If you believe this PR doesn't actually change the public API (e.g. only internal refactoring, or an entry the detector mis-attributed), please reply on this thread — your feedback helps us improve the detection during this trial run.`,
+		``,
 		`_Posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/pr-dev-close-notice.yaml) workflow._`,
 	].join("\n");
 }
