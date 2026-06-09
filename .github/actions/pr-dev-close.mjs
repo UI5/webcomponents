@@ -155,7 +155,9 @@ function memberSubKind(m) {
 	return null;
 }
 
-/** Flatten a manifest to a Map<key, {kind, name, node}>. */
+/** Flatten a manifest to a Map<key, {kind, name, node, path}>. The `path` is
+ *  the manifest's module path (e.g. `dist/HeroBanner.js`) — used to attribute
+ *  each entry back to its source file when filtering by PR-changed files. */
 function flatten(manifest) {
 	const out = new Map();
 	for (const mod of manifest?.modules ?? []) {
@@ -164,13 +166,13 @@ function flatten(manifest) {
 			const dk = declKind(decl);
 			if (!dk) continue;
 			const declKey = `${path}::${decl.name}`;
-			out.set(declKey, { kind: dk, name: decl.name, node: decl });
+			out.set(declKey, { kind: dk, name: decl.name, node: decl, path });
 
 			if (dk === "enum") {
 				for (const m of decl.members ?? []) {
 					const n = m?.name ?? m?.value;
 					if (!n) continue;
-					out.set(`${declKey}::enumMembers:${n}`, { kind: "enumMembers", name: n, node: m });
+					out.set(`${declKey}::enumMembers:${n}`, { kind: "enumMembers", name: n, node: m, path });
 				}
 				continue;
 			}
@@ -189,7 +191,7 @@ function flatten(manifest) {
 				for (const m of arr) {
 					const sub = groupName === "__members__" ? memberSubKind(m) : groupName;
 					if (!sub || !m?.name) continue;
-					out.set(`${declKey}::${sub}:${m.name}`, { kind: sub, name: m.name, node: m });
+					out.set(`${declKey}::${sub}:${m.name}`, { kind: sub, name: m.name, node: m, path });
 				}
 			}
 		}
@@ -197,12 +199,27 @@ function flatten(manifest) {
 	return out;
 }
 
-/** Surface-relevant field diff. */
+/** Surface-relevant field diff.
+ *
+ *  The published CEM (jsdelivr @latest) is post-processed: `processPublicAPI`
+ *  strips the analyzer's `_ui5Bubbles` / `_ui5Cancelable` / `_ui5parameters`
+ *  / `_ui5allowPreventDefault` annotations. The locally-built head CEM keeps
+ *  them. Comparing those fields naively makes every event look "changed".
+ *
+ *  Strategy: for each `_ui5*` dimension, skip the comparison when the base
+ *  doesn't carry it at all (= post-processing ate it). When BOTH sides have
+ *  the field, compare normally — that's the only case where a real change
+ *  is detectable. */
 function fieldDiff(kind, a, b) {
 	const changed = [];
-	const aType = a?.type?.text ?? a?._ui5type?.text;
-	const bType = b?.type?.text ?? b?._ui5type?.text;
-	if (aType !== bType) changed.push("type");
+	// Resolve type: prefer the public `type.text`. Fall back to `_ui5type.text`
+	// only when BOTH sides expose it — otherwise the published-vs-local
+	// asymmetry (post-processing strips `_ui5*`) flags every slot as changed.
+	const aType = a?.type?.text ?? (b?._ui5type ? a?._ui5type?.text : undefined);
+	const bType = b?.type?.text ?? (a?._ui5type ? b?._ui5type?.text : undefined);
+	if (aType !== undefined || bType !== undefined) {
+		if (aType !== bType) changed.push("type");
+	}
 	if ((a?.default ?? null) !== (b?.default ?? null)) changed.push("default");
 	if ((a?.readonly ?? false) !== (b?.readonly ?? false)) changed.push("readonly");
 	const aDep = a?.deprecated, bDep = b?.deprecated;
@@ -210,40 +227,78 @@ function fieldDiff(kind, a, b) {
 		changed.push("deprecated");
 	}
 	if (kind === "events") {
-		if ((a?._ui5Bubbles ?? null) !== (b?._ui5Bubbles ?? null)) changed.push("bubbles");
-		if ((a?._ui5Cancelable ?? null) !== (b?._ui5Cancelable ?? null)) changed.push("cancelable");
-		const aP = a?._ui5parameters ?? [], bP = b?._ui5parameters ?? [];
-		const names = new Set([...aP.map(p => p.name), ...bP.map(p => p.name)].filter(Boolean));
-		for (const n of names) {
-			const ap = aP.find(p => p.name === n);
-			const bp = bP.find(p => p.name === n);
-			if (!ap || !bp || (ap.type?.text ?? null) !== (bp.type?.text ?? null)) {
-				changed.push(`param:${n}`);
+		// Compare `_ui5*` only when the BASE side carries it. `a` is base
+		// (published) and `b` is head (locally built); skipping when `a`'s
+		// annotation is absent suppresses the post-processing artifact.
+		if (a?._ui5Bubbles !== undefined && a._ui5Bubbles !== (b?._ui5Bubbles ?? null)) {
+			changed.push("bubbles");
+		}
+		if (a?._ui5Cancelable !== undefined && a._ui5Cancelable !== (b?._ui5Cancelable ?? null)) {
+			changed.push("cancelable");
+		}
+		if (Array.isArray(a?._ui5parameters)) {
+			const aP = a._ui5parameters, bP = b?._ui5parameters ?? [];
+			const names = new Set([...aP.map(p => p.name), ...bP.map(p => p.name)].filter(Boolean));
+			for (const n of names) {
+				const ap = aP.find(p => p.name === n);
+				const bp = bP.find(p => p.name === n);
+				if (!ap || !bp || (ap.type?.text ?? null) !== (bp.type?.text ?? null)) {
+					changed.push(`param:${n}`);
+				}
 			}
 		}
 	}
 	return changed;
 }
 
-/** Diff one package, return { added, removed, changed } or null if no diff. */
-function diffPackage(baseManifest, headManifest) {
+/** Map a CEM module path (e.g. `dist/HeroBanner.js`, `./dist/types/Foo.js`) to
+ *  its possible source paths under the package. We return both `.ts` and
+ *  `.tsx` candidates because templates use `.tsx`. */
+function distPathToSrcPaths(pkgDir, distPath) {
+	const stem = String(distPath).replace(/^\.?\/?dist\//, "").replace(/\.js$/, "");
+	return [
+		`${pkgDir}/src/${stem}.ts`,
+		`${pkgDir}/src/${stem}.tsx`,
+	];
+}
+
+/** Drop entries whose owning source file isn't in the PR's changed-files set.
+ *  Entries without a `path` are kept defensively — better to over-report than
+ *  silently swallow something we can't attribute. */
+function filterByChangedSrc(entries, pkgDir, changedSrcSet) {
+	if (!changedSrcSet) return entries;
+	return entries.filter(e => {
+		if (!e.path) return true;
+		const candidates = distPathToSrcPaths(pkgDir, e.path);
+		return candidates.some(c => changedSrcSet.has(c));
+	});
+}
+
+/** Diff one package, return { added, removed, changed } or null if no diff.
+ *  When `changedSrcSet` is provided, results are filtered to only entries
+ *  whose source file is in that set — the PR-attribution filter that
+ *  neutralizes the "old PR vs newer main" false positive. */
+function diffPackage(baseManifest, headManifest, pkgDir, changedSrcSet) {
 	const base = flatten(baseManifest ?? { modules: [] });
 	const head = flatten(headManifest ?? { modules: [] });
 	const added = [], removed = [], changed = [];
 	for (const [k, v] of head) {
 		const b = base.get(k);
 		if (!b) {
-			added.push({ kind: v.kind, name: v.name });
+			added.push({ kind: v.kind, name: v.name, path: v.path });
 		} else {
 			const fields = fieldDiff(v.kind, b.node, v.node);
-			if (fields.length) changed.push({ kind: v.kind, name: v.name, fields });
+			if (fields.length) changed.push({ kind: v.kind, name: v.name, fields, path: v.path });
 		}
 	}
 	for (const [k, v] of base) {
-		if (!head.has(k)) removed.push({ kind: v.kind, name: v.name });
+		if (!head.has(k)) removed.push({ kind: v.kind, name: v.name, path: v.path });
 	}
-	if (!added.length && !removed.length && !changed.length) return null;
-	return { added, removed, changed };
+	const fAdded = filterByChangedSrc(added, pkgDir, changedSrcSet);
+	const fRemoved = filterByChangedSrc(removed, pkgDir, changedSrcSet);
+	const fChanged = filterByChangedSrc(changed, pkgDir, changedSrcSet);
+	if (!fAdded.length && !fRemoved.length && !fChanged.length) return null;
+	return { added: fAdded, removed: fRemoved, changed: fChanged };
 }
 
 /** Render the per-package diff to a Markdown bullet list. */
@@ -310,6 +365,23 @@ function postComment(prNumber, body) {
 	gh(["pr", "comment", String(prNumber), "--repo", REPO, "--body", body]);
 }
 
+/** Source files this PR touches (post-rename). Restricted to `packages/*\/src/`
+ *  because nothing outside there contributes to the public CEM. Used to
+ *  attribute CEM diff entries to *this* PR rather than to whatever has merged
+ *  to main since the PR branched off. */
+function getChangedSourceFiles(prNumber) {
+	const out = gh([
+		"api", `repos/${REPO}/pulls/${prNumber}/files`,
+		"--paginate",
+		"--jq", ".[].filename",
+	]);
+	return new Set(
+		out.split("\n")
+			.map(s => s.trim())
+			.filter(s => /^packages\/[^/]+\/src\//.test(s))
+	);
+}
+
 function commentBody(diffMarkdown) {
 	return [
 		MARKER,
@@ -329,7 +401,11 @@ function commentBody(diffMarkdown) {
 	].join("\n");
 }
 
-/** Build CEMs by checking out the PR head and running `yarn generate`.
+/** Build CEMs by checking out the PR head, regenerating sources, and running
+ *  the per-package CEM analyzer. `yarn generate` builds the in-source assets
+ *  (templates, CSS, i18n) the analyzer reads alongside the .ts files; it does
+ *  NOT itself produce `dist/custom-elements.json`. We then call each package's
+ *  `generateCEM` script to refresh the manifest from the current src/ tree.
  *  Caller is responsible for restoring the working tree afterwards. */
 function buildHeadFor(headSha) {
 	console.log(`  · checking out ${headSha.slice(0, 8)}`);
@@ -339,6 +415,16 @@ function buildHeadFor(headSha) {
 	sh("yarn install --immutable", { stdio: "inherit" });
 	console.log(`  · yarn generate`);
 	sh("yarn generate", { stdio: "inherit" });
+	for (const pkg of PACKAGES) {
+		console.log(`  · ${pkg.name}: yarn generateCEM`);
+		try {
+			sh(`yarn workspace ${pkg.name} generateCEM`, { stdio: "inherit" });
+		} catch (e) {
+			// Some packages may not define generateCEM (e.g. brand-new package
+			// without the script yet). Don't abort the whole PR — just skip.
+			console.error(`    (generateCEM failed for ${pkg.name}: ${e.message})`);
+		}
+	}
 }
 
 /** Allowlist of Conventional Commit types whose PRs may introduce public-API
@@ -372,6 +458,22 @@ async function processPR(pr, basesByPackage) {
 		return;
 	}
 
+	// Pull the changed-files set BEFORE checking out the PR head — `gh api`
+	// is independent of the local working tree, and we want this set to
+	// attribute CEM diff entries back to the PR (not to whatever has merged
+	// to main since the PR branched off).
+	let changedSrcSet;
+	try {
+		changedSrcSet = getChangedSourceFiles(pr.number);
+	} catch (e) {
+		console.error(`  · gh files lookup failed: ${e.message} — skipping`);
+		return;
+	}
+	if (!changedSrcSet.size) {
+		console.log(`  · no packages/*/src/ files changed, skipping`);
+		return;
+	}
+
 	try {
 		buildHeadFor(pr.headRefOid);
 	} catch (e) {
@@ -384,7 +486,7 @@ async function processPR(pr, basesByPackage) {
 		const head = readHeadCEM(pkg.dir);
 		const base = basesByPackage.get(pkg.name);
 		if (!head && !base) continue;
-		const d = diffPackage(base, head);
+		const d = diffPackage(base, head, pkg.dir, changedSrcSet);
 		if (d) byPackage[pkg.name] = d;
 	}
 
