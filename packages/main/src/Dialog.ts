@@ -18,12 +18,12 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 
 import {
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
-	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
-	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
 	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE,
 	DIALOG_RESIZE_HANDLE_TOOLTIP,
 	DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL,
 	DIALOG_DRAG_HANDLE_ARIA_LABEL,
@@ -88,14 +88,14 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  * ### Keyboard Handling
  *
  * #### Basic Navigation
- * When the `ui5-dialog` has the `draggable` property set to `true` and the header is focused, the user can move the dialog
+ * When the `ui5-dialog` has the `draggable` property set to `true`, the user can move the dialog
  * with the following keyboard shortcuts:
  *
  * - [Up] or [Down] arrow keys - Move the dialog up/down.
  * - [Left] or [Right] arrow keys - Move the dialog left/right.
  *
  * #### Resizing
- * When the `ui5-dialog` has the `resizable` property set to `true` and the header is focused, the user can change the size of the dialog
+ * When the `ui5-dialog` has the `resizable` property set to `true`, the user can change the size of the dialog
  * with the following keyboard shortcuts:
  *
  * - [Shift] + [Up] or [Down] - Decrease/Increase the height of the dialog.
@@ -279,28 +279,28 @@ class Dialog extends Popup {
 		}
 
 		if (this.resizable && this.draggable) {
-			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE);
 		}
 		if (this.draggable) {
-			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE);
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE);
 		}
 		if (this.resizable) {
-			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE);
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE);
 		}
 
 		return "";
 	}
 
-	get ariaDescribedByHeaderTextResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE);
+	get ariaDescribedByTextResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE);
 	}
 
-	get ariaDescribedByHeaderTextDraggable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE);
+	get ariaDescribedByTextDraggable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE);
 	}
 
-	get ariaDescribedByHeaderTextDraggableAndResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+	get ariaDescribedByTextDraggableAndResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
 	}
 
 	/**

@@ -71,12 +71,12 @@ function afterContent(this: Dialog) {
 				></span>
 				{this.resizable ?
 					this.draggable ?
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggableAndResizable}</span>
+						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextDraggableAndResizable}</span>
 						:
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextResizable}</span>
+						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextResizable}</span>
 					:
 					this.draggable &&
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggable}</span>
+						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextDraggable}</span>
 				}
 				{this.dialogAriaDescribedByText &&
 					<span id={`${this._id}-dialog-descr`} aria-hidden="true" class="ui5-hidden-text">{this.dialogAriaDescribedByText}</span>
