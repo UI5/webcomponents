@@ -14,6 +14,8 @@ import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
 import Bar from "../../src/Bar.js";
 import Link from "../../src/Link.js";
+import Panel from "../../src/Panel.js";
+import Label from "../../src/Label.js";
 
 function getGrowingWithScrollList(length: number, height: string = "100px") {
 	return (
@@ -204,6 +206,59 @@ describe("List Tests", () => {
 			.should("exist")
 			.should("have.class", "ui5-hidden-text")
 			.should("contain.text", "This button will load additional products to the list. Click or press Enter to see more items.");
+	});
+
+	it("does not fire item-toggle for nested panel toggle events", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom>
+					<Panel headerText="Panel A" style={{ width: "100%" }}>
+						<Label>Panel A content</Label>
+					</Panel>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]").as("list");
+
+		cy.get("@list")
+			.then(list => {
+				list.get(0).addEventListener("ui5-item-toggle", cy.stub().as("itemToggle"));
+			});
+
+		cy.get("[ui5-panel]")
+			.shadow()
+			.find(".ui5-panel-header")
+			.realClick();
+
+		cy.get("[ui5-panel]")
+			.should("have.attr", "collapsed");
+
+		cy.get("@itemToggle")
+			.should("not.have.been.called");
+	});
+
+	it("does not crash when a bubbling ui5-toggle has null detail", () => {
+		cy.mount(
+			<List>
+				<ListItemCustom id="listItemWithNestedContent">
+					<div>Nested interactive content</div>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.window().then(win => {
+			const listItem = win.document.getElementById("listItemWithNestedContent");
+			const toggleEvent = new win.CustomEvent("ui5-toggle", {
+				detail: null,
+				bubbles: true,
+				composed: true,
+			});
+
+			listItem?.dispatchEvent(toggleEvent);
+		});
+
+		cy.get("[ui5-list]").should("exist");
 	});
 });
 

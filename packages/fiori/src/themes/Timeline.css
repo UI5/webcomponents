@@ -59,10 +59,23 @@
 	margin-inline-start: var(--_ui5_tl_li_margin_bottom);
 }
 
+/* Scroll container */
 :host([layout="Horizontal"]) .ui5-timeline-scroll-container {
-	overflow: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
 	/* The padding values of the parent container are added to the size of scroll container */
 	width: calc(100% + var(--_ui5_timeline_scroll_container_offset));
+}
+
+:host([layout="Vertical"]) .ui5-timeline-scroll-container {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
+.ui5-timeline-scroll-container {
+	display: flex;
+	flex-direction: column;
 }
 
 :host([loading]) .ui5-timeline-growing-button-busy-indicator:not([_is-busy]) {
@@ -77,12 +90,28 @@
 	box-sizing: border-box;
 }
 
-:host([layout="Vertical"]) .ui5-timeline-scroll-container {
-	height: 100%;
-	width: 100%;
-}
-
 :host([growing="Scroll"]) .ui5-timeline-end-marker {
 	/* Ensure the list-end-marker has a block property to always be stretched and "visible" on the screen */
 	display: inline-block;
+}
+
+/* Header area — wraps header + info-bar slots above the items */
+.ui5-timeline-header-area {
+	flex-shrink: 0;
+	width: 100%;
+	background: var(--sapBackgroundColor);
+	margin-block-end: 1rem;
+}
+
+.ui5-timeline-header,
+.ui5-timeline-info-bar {
+	flex-shrink: 0;
+}
+
+/* Sticky header — pins to the top in vertical layout and to the inline-start in horizontal layout */
+:host([sticky-header]) .ui5-timeline-header-area {
+	position: sticky;
+	top: 0;
+	inset-inline-start: 0;
+	z-index: 2;
 }

@@ -37,7 +37,7 @@ export default function ExpandableTextTemplate(this: ExpandableText) {
 						class="ui5-exp-text-popover"
 						onClose={this._handlePopoverClose}
 					>
-						<Text id="popover-text">{this.text}</Text>
+						<Text class="ui5-exp-text-popover-text" id="popover-text">{this.text}</Text>
 						<div
 							slot="footer"
 							class="ui5-exp-text-footer"
