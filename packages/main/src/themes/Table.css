@@ -38,3 +38,7 @@
 	height: 100%;
 	z-index: 2;
 }
+
+:host([loading]) #table:has(#loading[_is-busy]) ::slotted(*) {
+	opacity: var(--sapContent_DisabledOpacity);
+}
