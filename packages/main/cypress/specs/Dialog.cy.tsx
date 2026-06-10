@@ -575,56 +575,56 @@ describe("Dialog general interaction", () => {
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
 		// Capture initial position
-		cy.get("#draggable-dialog")
-			.then(dialog => {
-				const initialTop = parseInt(dialog.css("top"));
-				const initialLeft = parseInt(dialog.css("left"));
+		cy.get("#draggable-dialog").then(dialog => {
+			cy.wrap({
+				initialTop: parseInt(dialog.css("top")),
+				initialLeft: parseInt(dialog.css("left"))
+			}).as("initialPos");
+		});
 
-				// Act - Focus drag/resize handle and move dialog up
-				cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-				cy.realPress("{uparrow}");
-				cy.realPress("{uparrow}");
+		// Act - Focus drag/resize handle and move dialog up
+		cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
+		cy.realPress("{uparrow}");
+		cy.realPress("{uparrow}");
 
-				// Assert - Top position changes, left remains the same
-
-				cy.get("#draggable-dialog").then(dialog => {
-					const leftAfterUp = parseInt(dialog.css("left"));
-					const topAfterUp = parseInt(dialog.css("top"));
-					cy.get("#draggable-dialog").should(() => {
-						expect(topAfterUp).not.to.equal(initialTop);
-					})
-					cy.get("#draggable-dialog").should(() => {
-						expect(leftAfterUp).to.equal(initialLeft);
-					})
-
-					// Act - Move dialog left using keyboard
-					cy.realPress("{leftarrow}");
-					cy.realPress("{leftarrow}");
-
-					// Assert - Left position changes, top remains the same
-					cy.get("#draggable-dialog")
-						.should(dialogAfterLeft => {
-							const topAfterLeft = parseInt(dialogAfterLeft.css("top"));
-							const leftAfterLeft = parseInt(dialogAfterLeft.css("left"));
-							expect(topAfterLeft).to.equal(topAfterUp);
-							expect(leftAfterLeft).not.to.equal(leftAfterUp);
-						});
-					});
-
-				// Close dialog
-				cy.get("#draggable-dialog").invoke("attr", "open", false);
-
-				// Reopen dialog
-				cy.get("#draggable-dialog").invoke("attr", "open", true);
-
-				// Assert - Position resets to initial
-				cy.get("#draggable-dialog")
-					.should(dialogAfterReopen => {
-						const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
-
-						expect(leftAfterReopen).to.equal(initialLeft);
-				});
+		// Assert - Top position changes, left remains the same
+		cy.get("@initialPos").then((initialPos: any) => {
+			cy.get("#draggable-dialog").then(dialog => {
+				const leftAfterUp = parseInt(dialog.css("left"));
+				const topAfterUp = parseInt(dialog.css("top"));
+				expect(topAfterUp).not.to.equal(initialPos.initialTop);
+				expect(leftAfterUp).to.equal(initialPos.initialLeft);
+				cy.wrap({ topAfterUp, leftAfterUp }).as("posAfterUp");
 			});
+		});
+
+		// Act - Move dialog left using keyboard
+		cy.realPress("{leftarrow}");
+		cy.realPress("{leftarrow}");
+
+		// Assert - Left position changes, top remains the same
+		cy.get("@posAfterUp").then((posAfterUp: any) => {
+			cy.get("#draggable-dialog").should(dialogAfterLeft => {
+				const topAfterLeft = parseInt(dialogAfterLeft.css("top"));
+				const leftAfterLeft = parseInt(dialogAfterLeft.css("left"));
+				expect(topAfterLeft).to.equal(posAfterUp.topAfterUp);
+				expect(leftAfterLeft).not.to.equal(posAfterUp.leftAfterUp);
+			});
+		});
+
+		// Close dialog
+		cy.get("#draggable-dialog").invoke("attr", "open", false);
+
+		// Reopen dialog
+		cy.get("#draggable-dialog").invoke("attr", "open", true);
+
+		// Assert - Position resets to initial
+		cy.get("@initialPos").then((initialPos: any) => {
+			cy.get("#draggable-dialog").should(dialogAfterReopen => {
+				const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
+				expect(leftAfterReopen).to.equal(initialPos.initialLeft);
+			});
+		});
 	});
 
 	it("resizable - mouse support", () => {
@@ -768,55 +768,65 @@ describe("Dialog general interaction", () => {
 
 		// Capture initial dimensions
 		cy.get("#resizable-dialog").then(dialog => {
-			const initialWidth = parseInt(dialog.css("width"));
-			const initialHeight = parseInt(dialog.css("height"));
-			const initialTop = parseInt(dialog.css("top"));
-			const initialLeft = parseInt(dialog.css("left"));
+			cy.wrap({
+				initialWidth: parseInt(dialog.css("width")),
+				initialHeight: parseInt(dialog.css("height")),
+				initialTop: parseInt(dialog.css("top")),
+				initialLeft: parseInt(dialog.css("left"))
+			}).as("initialDimensions");
+		});
 
-			// Act - Focus drag/resize handle and resize height
-			cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
-			cy.realPress(["Shift", "ArrowDown"]);
+		// Act - Focus drag/resize handle and resize height
+		cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler").focus();
+		cy.realPress(["Shift", "ArrowDown"]);
 
-			// Assert - Height changes, width and position remain the same
+		// Assert - Height changes, width and position remain the same
+		cy.get("@initialDimensions").then((initial: any) => {
 			cy.get("#resizable-dialog").then(dialogAfterResizeHeight => {
 				const widthAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("width"));
 				const heightAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("height"));
 				const leftAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("left"));
 
-				expect(widthAfterResizeHeight).to.equal(initialWidth);
-				expect(heightAfterResizeHeight).not.to.equal(initialHeight);
-				expect(leftAfterResizeHeight).to.equal(initialLeft);
+				expect(widthAfterResizeHeight).to.equal(initial.initialWidth);
+				expect(heightAfterResizeHeight).not.to.equal(initial.initialHeight);
+				expect(leftAfterResizeHeight).to.equal(initial.initialLeft);
 
-				// Act - Resize width using keyboard
-				cy.realPress(["Shift", "ArrowRight"]);
+				cy.wrap({ widthAfterResizeHeight, heightAfterResizeHeight, leftAfterResizeHeight }).as("dimensionsAfterHeight");
+			});
+		});
 
-				// Assert - Width changes, height and position remain the same
-				cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
-					const widthAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("width"));
-					const heightAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("height"));
-					const leftAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("left"));
+		// Act - Resize width using keyboard
+		cy.realPress(["Shift", "ArrowRight"]);
 
-					expect(widthAfterResizeWidth).not.to.equal(widthAfterResizeHeight);
-					expect(heightAfterResizeWidth).to.equal(heightAfterResizeHeight);
-					expect(leftAfterResizeWidth).to.equal(leftAfterResizeHeight);
+		// Assert - Width changes, height and position remain the same
+		cy.get("@dimensionsAfterHeight").then((afterHeight: any) => {
+			cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
+				const widthAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("width"));
+				const heightAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("height"));
+				const leftAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("left"));
 
-					// Close dialog
-					cy.get("#resizable-dialog").invoke("attr", "open", false);
+				expect(widthAfterResizeWidth).not.to.equal(afterHeight.widthAfterResizeHeight);
+				expect(heightAfterResizeWidth).to.equal(afterHeight.heightAfterResizeHeight);
+				expect(leftAfterResizeWidth).to.equal(afterHeight.leftAfterResizeHeight);
+			});
+		});
 
-					// Reopen dialog
-				cy.get("#resizable-dialog").invoke("attr", "open", true);
+		// Close dialog
+		cy.get("#resizable-dialog").invoke("attr", "open", false);
 
-					// Assert - Dimensions reset to initial
-					cy.get("#resizable-dialog").then(dialogAfterReopen => {
-						const widthAfterReopen = parseInt(dialogAfterReopen.css("width"));
-						const heightAfterReopen = parseInt(dialogAfterReopen.css("height"));
-						const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
+		// Reopen dialog
+		cy.get("#resizable-dialog").invoke("attr", "open", true);
 
-						expect(widthAfterReopen).to.equal(initialWidth);
-						expect(heightAfterReopen).to.equal(initialHeight);
-						expect(leftAfterReopen).to.equal(initialLeft);
-					});
-				});
+		// Assert - Dimensions reset to initial
+		cy.get("@initialDimensions").then((initial: any) => {
+			cy.get("#resizable-dialog").then(dialogAfterReopen => {
+				const widthAfterReopen = parseInt(dialogAfterReopen.css("width"));
+				const heightAfterReopen = parseInt(dialogAfterReopen.css("height"));
+				const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
+
+				expect(widthAfterReopen).to.equal(initial.initialWidth);
+				expect(heightAfterReopen).to.equal(initial.initialHeight);
+				expect(leftAfterReopen).to.equal(initial.initialLeft);
 			});
 		});
 	});
