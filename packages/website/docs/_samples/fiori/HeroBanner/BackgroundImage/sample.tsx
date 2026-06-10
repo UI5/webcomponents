@@ -10,7 +10,7 @@ function App() {
       <HeroBanner
         headerText="Good Morning, Anna"
         overlineText="Monday, May 26, 2026"
-        style={{ backgroundImage: "url('https://wallpapershome.com/images/pages/pic_h/17796.jpg')" }}
+        style={{ backgroundImage: "url('/images/banner-back4.jpg')" }}
       />
     </>
   );
