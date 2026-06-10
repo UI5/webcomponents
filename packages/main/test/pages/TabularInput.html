@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>TabularInput - Test Page</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+		.section {
+			margin-bottom: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapGroup_TitleBorderColor);
+			border-radius: 0.5rem;
+			background: var(--sapGroup_ContentBackground);
+		}
+		.section-title {
+			margin-bottom: 1rem;
+		}
+		.description {
+			color: var(--sapContent_LabelColor);
+			margin-bottom: 1rem;
+			font-size: 0.875rem;
+		}
+		ui5-tabular-input {
+			width: 100%;
+			max-width: 600px;
+		}
+		.output {
+			margin-top: 1rem;
+			padding: 0.5rem;
+			background: var(--sapField_Background);
+			border: 1px solid var(--sapField_BorderColor);
+			border-radius: 0.25rem;
+			font-family: monospace;
+			font-size: 0.875rem;
+			min-height: 2rem;
+		}
+		.narrow-container {
+			width: 350px;
+			border: 2px dashed var(--sapContent_ForegroundBorderColor);
+			padding: 1rem;
+		}
+	</style>
+</head>
+<body>
+	<ui5-title level="H1">TabularInput Component - POC Test Page</ui5-title>
+	<ui5-text>This page demonstrates the TabularInput component with tabular suggestions.</ui5-text>
+
+	<!-- Example 1: Basic Product Search -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 1: Product Search</ui5-title>
+		<p class="description">
+			Search for products. The suggestions show Product ID, Name, Category, and Price in columns.
+			Try typing "Laptop" or "Phone".
+		</p>
+
+		<ui5-tabular-input
+			id="productSearch"
+			placeholder="Search for products..."
+			show-suggestions
+			filter="Contains"
+		>
+			<!-- Column Headers -->
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Product ID</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="200px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+
+			<!-- Suggestion Rows -->
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-001</ui5-table-cell>
+				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
+				<ui5-table-cell>Electronics</ui5-table-cell>
+				<ui5-table-cell>$1,299</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-002</ui5-table-cell>
+				<ui5-table-cell>Smartphone X</ui5-table-cell>
+				<ui5-table-cell>Electronics</ui5-table-cell>
+				<ui5-table-cell>$899</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-003</ui5-table-cell>
+				<ui5-table-cell>Wireless Mouse</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$49</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-004</ui5-table-cell>
+				<ui5-table-cell>USB-C Hub</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$79</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-005</ui5-table-cell>
+				<ui5-table-cell>Phone Case</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$29</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-tabular-input>
+
+		<div class="output" id="productOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 2: Employee Directory -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 2: Employee Directory</ui5-title>
+		<p class="description">
+			Search for employees by name, department, or location.
+			Uses StartsWith filter.
+		</p>
+
+		<ui5-tabular-input
+			id="employeeSearch"
+			placeholder="Search employees..."
+			show-suggestions
+			filter="StartsWith"
+		>
+			<!-- Column Headers -->
+			<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="120px">Department</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Location</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Extension</ui5-table-header-cell>
+
+			<!-- Suggestion Rows -->
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>John Smith</ui5-table-cell>
+				<ui5-table-cell>Engineering</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x1234</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Jane Doe</ui5-table-cell>
+				<ui5-table-cell>Marketing</ui5-table-cell>
+				<ui5-table-cell>Building B</ui5-table-cell>
+				<ui5-table-cell>x2345</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>James Wilson</ui5-table-cell>
+				<ui5-table-cell>Sales</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x3456</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Sarah Johnson</ui5-table-cell>
+				<ui5-table-cell>HR</ui5-table-cell>
+				<ui5-table-cell>Building C</ui5-table-cell>
+				<ui5-table-cell>x4567</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Mike Brown</ui5-table-cell>
+				<ui5-table-cell>Engineering</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x5678</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-tabular-input>
+
+		<div class="output" id="employeeOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 3: Popin Mode (Narrow Container) -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 3: Responsive Popin Mode</ui5-title>
+		<p class="description">
+			This example is in a narrow container to demonstrate the popin behavior.
+			Columns will stack vertically when there's not enough space.
+		</p>
+
+		<div class="narrow-container">
+			<ui5-tabular-input
+				id="popinSearch"
+				placeholder="Search in narrow space..."
+				show-suggestions
+			>
+				<!-- Column Headers with importance for popin priority -->
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="0">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="120px" importance="1">Description</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="2" popin-text="Qty">Quantity</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="3" popin-text="Status">Status</ui5-table-header-cell>
+
+				<!-- Suggestion Rows -->
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>A001</ui5-table-cell>
+					<ui5-table-cell>Widget Alpha</ui5-table-cell>
+					<ui5-table-cell>150</ui5-table-cell>
+					<ui5-table-cell>In Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>B002</ui5-table-cell>
+					<ui5-table-cell>Widget Beta</ui5-table-cell>
+					<ui5-table-cell>75</ui5-table-cell>
+					<ui5-table-cell>Low Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>C003</ui5-table-cell>
+					<ui5-table-cell>Widget Gamma</ui5-table-cell>
+					<ui5-table-cell>0</ui5-table-cell>
+					<ui5-table-cell>Out of Stock</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+
+		<div class="output" id="popinOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 4: No Filter (Show All) -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 4: No Filtering</ui5-title>
+		<p class="description">
+			This example shows all suggestions without filtering.
+			Useful when the server handles filtering.
+		</p>
+
+		<ui5-tabular-input
+			id="noFilterSearch"
+			placeholder="Type anything..."
+			show-suggestions
+			filter="None"
+		>
+			<!-- Column Headers -->
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Country</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="150px">Capital</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Population</ui5-table-header-cell>
+
+			<!-- Suggestion Rows -->
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Germany</ui5-table-cell>
+				<ui5-table-cell>Berlin</ui5-table-cell>
+				<ui5-table-cell>83M</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>France</ui5-table-cell>
+				<ui5-table-cell>Paris</ui5-table-cell>
+				<ui5-table-cell>67M</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Spain</ui5-table-cell>
+				<ui5-table-cell>Madrid</ui5-table-cell>
+				<ui5-table-cell>47M</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Italy</ui5-table-cell>
+				<ui5-table-cell>Rome</ui5-table-cell>
+				<ui5-table-cell>60M</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-tabular-input>
+
+		<div class="output" id="noFilterOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 5: With Clear Icon -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 5: With Clear Icon</ui5-title>
+		<p class="description">
+			TabularInput with show-clear-icon enabled for easy value clearing.
+		</p>
+
+		<ui5-tabular-input
+			id="clearIconSearch"
+			placeholder="Search with clear icon..."
+			show-suggestions
+			show-clear-icon
+			filter="Contains"
+		>
+			<!-- Column Headers -->
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">ID</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="150px">Task</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Priority</ui5-table-header-cell>
+
+			<!-- Suggestion Rows -->
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-101</ui5-table-cell>
+				<ui5-table-cell>Review PR #123</ui5-table-cell>
+				<ui5-table-cell>High</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-102</ui5-table-cell>
+				<ui5-table-cell>Update documentation</ui5-table-cell>
+				<ui5-table-cell>Medium</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-103</ui5-table-cell>
+				<ui5-table-cell>Fix login bug</ui5-table-cell>
+				<ui5-table-cell>Critical</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-tabular-input>
+
+		<div class="output" id="clearIconOutput">Selected: (none)</div>
+	</div>
+
+	<script>
+		// Event handlers for all examples
+		document.querySelectorAll('ui5-tabular-input').forEach(input => {
+			const outputId = input.id.replace('Search', 'Output');
+			const output = document.getElementById(outputId);
+
+			input.addEventListener('row-select', (e) => {
+				const row = e.detail.row;
+				const cells = row.querySelectorAll('ui5-table-cell');
+				const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
+				output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
+				console.log('row-select event:', e.detail);
+			});
+
+			input.addEventListener('change', (e) => {
+				console.log('change event - value:', e.target.value);
+			});
+
+			input.addEventListener('input', (e) => {
+				console.log('input event - value:', e.target.value);
+			});
+
+			input.addEventListener('selection-change', (e) => {
+				console.log('selection-change event:', e.detail);
+			});
+		});
+	</script>
+</body>
+</html>

@@ -83,6 +83,7 @@ import Icon from "./Icon.js";
 import Input from "./Input.js";
 import SuggestionItemCustom from "./SuggestionItemCustom.js";
 import MultiInput from "./MultiInput.js";
+import TabularInput from "./TabularInput.js";
 import Label from "./Label.js";
 import LastOptions from "./dynamic-date-range-options/LastOptions.js";
 import Link from "./Link.js";
