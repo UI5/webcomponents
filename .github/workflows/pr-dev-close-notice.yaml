@@ -45,7 +45,7 @@ jobs:
           script: |
             // Add new entries here when the release schedule is known.
             const DEV_CLOSE_PERIODS = [
-              { release: "next", devCloseStart: "2026-06-25", releaseDate: "2026-07-06" },
+              { release: "next", devCloseStart: "2026-06-24", releaseDate: "2026-07-09" },
             ];
 
             const today = new Date();
