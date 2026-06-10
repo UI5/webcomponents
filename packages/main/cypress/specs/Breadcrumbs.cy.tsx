@@ -1156,3 +1156,34 @@ describe("BreadcrumbsItem click event", () => {
 		});
 	});
 });
+
+describe("Breadcrumbs - accessibleName property", () => {
+	it("uses the default 'Breadcrumb Trail' label when accessibleName is not set", () => {
+		cy.mount(
+			<Breadcrumbs>
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-root")
+			.should("have.attr", "aria-label", "Breadcrumb Trail");
+	});
+
+	it("reflects accessibleName on the nav element's aria-label", () => {
+		cy.mount(
+			<Breadcrumbs accessibleName="My Custom Breadcrumbs">
+				<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+				<BreadcrumbsItem>Location</BreadcrumbsItem>
+			</Breadcrumbs>
+		);
+
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find(".ui5-breadcrumbs-root")
+			.should("have.attr", "aria-label", "My Custom Breadcrumbs");
+	});
+});
+});
