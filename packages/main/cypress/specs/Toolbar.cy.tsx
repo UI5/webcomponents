@@ -154,23 +154,6 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-toolbar-button][text='First']").should("be.focused");
 	});
 
-	it("Should not scroll the page when pressing Up/Down inside the toolbar", () => {
-		cy.mount(
-			<div style={{ height: "2000px" }}>
-				<Toolbar id="scroll-toolbar" style={{ marginTop: "100px" }}>
-					<ToolbarButton text="Button"></ToolbarButton>
-				</Toolbar>
-			</div>
-		);
-
-		cy.get("[ui5-toolbar-button][text='Button']").realClick().should("be.focused");
-
-		cy.window().its("scrollY").as("scrollBefore");
-		cy.realPress("ArrowDown");
-		cy.window().its("scrollY").then(scrollAfter => {
-			cy.get("@scrollBefore").should("equal", scrollAfter);
-		});
-	});
 
 	it("Should focus first overflow item when overflow popover opens", () => {
 		cy.mount(

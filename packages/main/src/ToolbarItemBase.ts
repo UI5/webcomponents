@@ -64,19 +64,6 @@ class ToolbarItemBase extends UI5Element {
 	@property({ noAttribute: true })
 	forcedTabIndex = "-1";
 
-	/**
-	 * Defines whether the item exposes internal navigation semantics.
-	 *
-	 * Toolbar uses this to keep grouped content as a single tab stop while
-	 * still allowing arrow navigation within the item.
-	 * @default false
-	 * @protected
-	 * @since 2.22.0
-	 */
-	get handlesOwnKeyboardNavigation(): boolean {
-		return false;
-	}
-
 	_getNavigationTargets(): HTMLElement[] {
 		const ref = this.getFocusDomRef();
 		return ref ? [ref] : [];

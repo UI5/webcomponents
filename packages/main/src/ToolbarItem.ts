@@ -66,17 +66,6 @@ class ToolbarItem extends ToolbarItemBase {
 	_lastFocusedNavigationTarget?: HTMLElement;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 
-	get handlesOwnKeyboardNavigation(): boolean {
-		const child = this.item[0] as IToolbarItemContent | undefined;
-		if (!child) {
-			return false;
-		}
-
-		return this._supportsItemNavigationMovementInfo(child)
-			|| typeof child.getToolbarMovementInfo === "function"
-			|| this.item.length > 1;
-	}
-
 	closeOverflowSet = {
 		"ui5-button": ["click"],
 		"ui5-select": ["change"],

@@ -11,8 +11,6 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isLeft,
 	isRight,
-	isUp,
-	isDown,
 	isHome,
 	isEnd,
 	isTabNext,
@@ -43,7 +41,6 @@ import type ToolbarSeparator from "./ToolbarSeparator.js";
 import type Button from "./Button.js";
 import type Popover from "./Popover.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 
 type ToolbarMinWidthChangeEventDetail = {
 	minWidth: number,
@@ -590,19 +587,6 @@ class Toolbar extends UI5Element {
 	 * Keyboard Navigation
 	 */
 
-	_applyDisabledItemsAccessibility() {
-		this.standardItems
-			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
-				&& "disabled" in item && (item as { disabled?: boolean }).disabled)
-			.forEach(item => {
-				const focusRef = item.getFocusDomRef();
-				if (focusRef) {
-					focusRef.tabIndex = -1;
-					focusRef.setAttribute("aria-disabled", "true");
-				}
-			});
-	}
-
 	_applyRovingTabIndex() {
 		const items = this._getNavigationChain();
 
@@ -615,8 +599,6 @@ class Toolbar extends UI5Element {
 		}
 
 		this._setCurrentItem(this._lastFocusedItem);
-
-		this._applyDisabledItemsAccessibility();
 	}
 
 	_isFocusInsideOverflow(path: Array<EventTarget>): boolean {
@@ -653,15 +635,6 @@ class Toolbar extends UI5Element {
 		}
 
 		if (isTabNext(e) || isTabPrevious(e)) {
-			const moved = this._focusOutsideToolbar(isTabPrevious(e), e.composedPath());
-			if (moved) {
-				e.preventDefault();
-			}
-			return;
-		}
-
-		if (isUp(e) || isDown(e)) {
-			e.preventDefault();
 			return;
 		}
 
@@ -855,61 +828,6 @@ class Toolbar extends UI5Element {
 		} else {
 			nextItem.focus();
 		}
-	}
-	_focusOutsideToolbar(backward: boolean, path: Array<EventTarget>) {
-		const active = getActiveElement() as HTMLElement | null;
-		const tabbables = getTabbableElements(document.body);
-
-		if (!tabbables.length) {
-			return false;
-		}
-
-		const currentIndexFromActive = active
-			? tabbables.findIndex(el => el === active || el.contains(active) || active.contains(el))
-			: -1;
-
-		const currentIndexFromPath = currentIndexFromActive === -1
-			? tabbables.findIndex(el => path.includes(el))
-			: -1;
-
-		const currentIndex = currentIndexFromActive !== -1 ? currentIndexFromActive : currentIndexFromPath;
-
-		const isInsideToolbar = (el: HTMLElement) => this._isNodeInsideElement(el, this);
-
-		if (currentIndex !== -1) {
-			const step = backward ? -1 : 1;
-			for (let i = currentIndex + step; i >= 0 && i < tabbables.length; i += step) {
-				const candidate = tabbables[i];
-				if (!isInsideToolbar(candidate)) {
-					candidate.focus();
-					return true;
-				}
-			}
-		}
-
-		const insideIndices = tabbables
-			.map((el, index) => ({ el, index }))
-			.filter(({ el }) => isInsideToolbar(el))
-			.map(({ index }) => index);
-
-		if (!insideIndices.length) {
-			return false;
-		}
-
-		const firstInside = insideIndices[0];
-		const lastInside = insideIndices[insideIndices.length - 1];
-		const startIndex = backward ? firstInside - 1 : lastInside + 1;
-		const step = backward ? -1 : 1;
-
-		for (let i = startIndex; i >= 0 && i < tabbables.length; i += step) {
-			const candidate = tabbables[i];
-			if (!isInsideToolbar(candidate)) {
-				candidate.focus();
-				return true;
-			}
-		}
-
-		return false;
 	}
 }
 
