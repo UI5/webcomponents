@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** preserve insertion order for ShellBarItems ([#13590](https://github.com/UI5/webcomponents/issues/13590)) ([d23330a](https://github.com/UI5/webcomponents/commit/d23330a66ebb8ba7bf6495b73c79a658db1ec53c))
+* **ui5-text:** unify truncation across all max-lines values ([#13624](https://github.com/UI5/webcomponents/issues/13624)) ([3c50320](https://github.com/UI5/webcomponents/commit/3c503202d76a24a65f3b59297463762f15b0bf43))
+
+
+### Documentation
+
+* pre-release docs clean-up ([#13651](https://github.com/UI5/webcomponents/issues/13651)) ([635cbc1](https://github.com/UI5/webcomponents/commit/635cbc16a89a0adc1d9819709df9c97e7e92e663))
+
+
+### Features
+
+* **ui5-hero-banner:** introduce Hero Banner component ([#13230](https://github.com/UI5/webcomponents/issues/13230)) ([036d2c2](https://github.com/UI5/webcomponents/commit/036d2c226368b9ca62847cd4972c0b9cef1983b2))
+
+
+### BREAKING CHANGES
+
+* the click CustomEvent on ui5-tab and ui5-li-notification
+no longer includes item/tab in event.detail. Read the source element from
+event.target instead.
+
+* chore: follow-up cleanups
+
+- ListBoxItemGroupTemplate: use string literal "Group" for accessibleRole
+  (the ListItemAccessibleRole.Group enum entry was removed in this PR)
+- NotificationListItemBase: drop redundant @customElement({}) decorator on
+  the abstract base class
+- TableGroupRow: bump @since to 2.23.0
+
+* chore(website): remove newComponentBadge from .mdx frontmatter
+
+Drop the sidebar_class_name: newComponentBadge marker from all component
+and pattern docs — the components/patterns are no longer new. Where the
+class was the only frontmatter entry, the entire frontmatter block is
+removed; where it was combined with expComponentBadge, only the
+newComponentBadge token is removed.
+
+Also drop the now-unused ListItemAccessibleRole import in
+ListBoxItemGroupTemplate.tsx (left over from the string-literal switch
+in the previous commit).
+
+* fix(ui5-li-notification-base): restore @customElement decorator
+
+Revert the @customElement({}) removal from de7a850a5 — even though the
+class is abstract and never instantiated directly, the decorator
+registers metadata that subclasses (NotificationListItem,
+NotificationListGroupItem) inherit via the framework. Removing it broke
+that inheritance chain.
+
+* test: read source from event.target on tab/notification click
+
+Update the Tab and NotificationListItem semantic-click-event tests to
+read the source element from event.target instead of event.detail.tab /
+event.detail.item, which were removed earlier in this PR.
+
+
+
+
+
 # [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
 
 

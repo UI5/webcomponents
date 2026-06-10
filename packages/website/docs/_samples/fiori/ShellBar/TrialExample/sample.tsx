@@ -1,5 +1,6 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
+import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import ShellBarItemClass from "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
 import ShellBarSearchClass from "@ui5/webcomponents-fiori/dist/ShellBarSearch.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
@@ -13,6 +14,7 @@ import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
+const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const ShellBarItem = createReactComponent(ShellBarItemClass);
 const ShellBarSearch = createReactComponent(ShellBarSearchClass);
 const Avatar = createReactComponent(AvatarClass);
@@ -24,13 +26,12 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 function App() {
   return (
     <>
-      <ShellBar
-        primaryTitle="Product Identifier"
-        notificationsCount="72"
-        showNotifications={true}
-      >
+      <ShellBar notificationsCount="72" showNotifications={true}>
+        <ShellBarBranding slot="branding">
+          Product Identifier
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+        </ShellBarBranding>
         <Button icon="menu2" slot="startButton" />
-        <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
 
         <Tag design="Set2" colorScheme="7" slot="content">
           Trial

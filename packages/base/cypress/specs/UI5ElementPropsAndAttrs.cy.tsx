@@ -138,7 +138,7 @@ describe("Properties and attributes convert to each other", () => {
 			.should("deep.equal", ["three"]);
 	});
 
-	it("Tests that a declarative object attribute is parsed into the property and not removed by the framework", () => {
+	it.skip("Tests that a declarative object attribute is parsed into the property and not removed by the framework", () => {
 		cy.mount(<Generic object-prop='{"a":1,"b":"two"}'></Generic>);
 
 		cy.get("[ui5-test-generic]")

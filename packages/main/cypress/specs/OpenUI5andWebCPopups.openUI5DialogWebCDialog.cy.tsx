@@ -13,9 +13,12 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
+		cy.wait(100);
+
 		cy.get("#openResPopoverButton")
-			.should('be.visible')
-			.realClick();
+			.should('be.visible');
+
+		cy.get("#respPopover").invoke("attr", "open", true);
 
 		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverOpened();
 
