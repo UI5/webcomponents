@@ -25,6 +25,8 @@ class PopoverResize {
 	_initialBoundingRect?: DOMRect;
 	_minWidth?: number;
 	_minHeight?: number;
+	_maxWidth?: number;
+	_maxHeight?: number;
 	_resized = false;
 
 	_currentDeltaX?: number;
@@ -240,6 +242,9 @@ class PopoverResize {
 			minHeight,
 		} = window.getComputedStyle(this._popover);
 
+		const inlineMaxWidth = this._popover.style.maxWidth;
+		const inlineMaxHeight = this._popover.style.maxHeight;
+
 		const domRefComputedStyle = window.getComputedStyle(this._popover);
 
 		this._initialClientX = e.clientX;
@@ -247,6 +252,8 @@ class PopoverResize {
 
 		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
 		this._minHeight = Number.parseFloat(minHeight);
+		this._maxWidth = inlineMaxWidth ? Number.parseFloat(inlineMaxWidth) : Infinity;
+		this._maxHeight = inlineMaxHeight ? Number.parseFloat(inlineMaxHeight) : Infinity;
 
 		this._attachMouseResizeHandlers();
 	}
@@ -276,7 +283,10 @@ class PopoverResize {
 		// Calculate width changes
 		if (isResizingFromLeft) {
 			// Resizing from left edge - width increases when moving left (negative delta)
-			const maxWidthFromLeft = initialBoundingRect.x + initialBoundingRect.width - margin;
+			const maxWidthFromLeft = Math.min(
+				initialBoundingRect.x + initialBoundingRect.width - margin,
+				this._maxWidth!,
+			);
 
 			newWidth = clamp(
 				initialBoundingRect.width - deltaX,
@@ -298,7 +308,10 @@ class PopoverResize {
 			this._currentDeltaX = (initialBoundingRect.x - newLeft) / 2;
 		} else {
 			// Resizing from right edge - width increases when moving right (positive delta)
-			const maxWidthFromRight = window.innerWidth - initialBoundingRect.x - margin;
+			const maxWidthFromRight = Math.min(
+				window.innerWidth - initialBoundingRect.x - margin,
+				this._maxWidth!,
+			);
 
 			newWidth = clamp(
 				initialBoundingRect.width + deltaX,
@@ -312,7 +325,10 @@ class PopoverResize {
 		// Calculate height changes
 		if (isResizingFromTop) {
 			// Resizing from top edge - height increases when moving up (negative delta)
-			const maxHeightFromTop = initialBoundingRect.y + initialBoundingRect.height - margin;
+			const maxHeightFromTop = Math.min(
+				initialBoundingRect.y + initialBoundingRect.height - margin,
+				this._maxHeight!,
+			);
 
 			newHeight = clamp(
 				initialBoundingRect.height - deltaY,
@@ -334,7 +350,10 @@ class PopoverResize {
 			this._currentDeltaY = (initialBoundingRect.y - newTop) / 2;
 		} else {
 			// Resizing from bottom edge - height increases when moving down (positive delta)
-			const maxHeightFromBottom = window.innerHeight - initialBoundingRect.y - margin;
+			const maxHeightFromBottom = Math.min(
+				window.innerHeight - initialBoundingRect.y - margin,
+				this._maxHeight!,
+			);
 
 			newHeight = clamp(
 				initialBoundingRect.height + deltaY,
@@ -373,6 +392,8 @@ class PopoverResize {
 		delete this._initialBoundingRect;
 		delete this._minWidth;
 		delete this._minHeight;
+		delete this._maxWidth;
+		delete this._maxHeight;
 
 		this._detachMouseResizeHandlers();
 	}

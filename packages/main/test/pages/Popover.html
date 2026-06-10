@@ -51,6 +51,20 @@
 
 	<br><br>
 
+	<ui5-button id="btnTestAllConstraints">Open Resizable Popover with all constraints</ui5-button>
+	<ui5-popover id="popTestAllConstraints" opener="btnTestAllConstraints" resizable header-text="Resizable + all constraints" style="min-width: 100px; max-width: 200px; min-height: 100px; max-height: 200px;">
+		<div style="padding: 10px;">
+			This popover is resizable with:<br>
+			min-width: 100px<br>
+			max-width: 200px<br>
+			min-height: 100px<br>
+			max-height: 200px<br>
+			Try resizing!
+		</div>
+	</ui5-popover>
+
+	<br><br>
+
 	<ui5-button id="btn">Click me !</ui5-button>
 
 	<ui5-popover id="pop" class="popover6auto" placement="Top" accessible-name="This popover is important">
@@ -702,6 +716,10 @@ z-index: 1;
 		btnTestMinWidthResizable.addEventListener("click", function () {
 			popTestMinWidthResizable.open = true;
 		});
+
+		btnTestAllConstraints.addEventListener("click", function () {                                                                     
+        	popTestAllConstraints.open = true;                                                                                              
+        });
 
 		test.addEventListener("click", function (event) {
 			groupPop.open = true;
