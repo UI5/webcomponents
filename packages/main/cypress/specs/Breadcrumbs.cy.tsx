@@ -1186,4 +1186,3 @@ describe("Breadcrumbs - accessibleName property", () => {
 			.should("have.attr", "aria-label", "My Custom Breadcrumbs");
 	});
 });
-});
