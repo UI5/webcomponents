@@ -1057,7 +1057,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (isEnter(e)) {
-			this._selectionPerformed = true;
 			let focusedItem: IComboBoxItem | undefined;
 
 			this._filteredItems.forEach(item => {

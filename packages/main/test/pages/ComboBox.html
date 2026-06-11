@@ -519,9 +519,9 @@
 
 	<div class="demo-section" style="padding: 20px; background: #f0f8ff; border-radius: 8px;">
 		<ui5-title>Selection Trigger Flag Demo</ui5-title>
-		<p style="margin: 10px 0;">The selection-change event includes a <code>trigger</code> property: "typeahead", "enter", "click", or "keyboard"</p>
+		<p style="margin: 10px 0;">The selection-change event includes a <code>trigger</code> property: "Typeahead", "Click", or "Keyboard"</p>
 
-		<ui5-combobox id="trigger-flag-cb" placeholder="Try typing, arrow keys, Enter, or clicking...">
+		<ui5-combobox id="trigger-flag-cb" placeholder="Try typing, arrow keys, or clicking...">
 			<ui5-cb-item text="Apple" value="apple"></ui5-cb-item>
 			<ui5-cb-item text="Apricot" value="apricot"></ui5-cb-item>
 			<ui5-cb-item text="Banana" value="banana"></ui5-cb-item>
@@ -542,9 +542,9 @@
 
 		<div style="margin-top: 10px; padding: 10px; background: #fffbe6; border-radius: 4px; font-size: 13px;">
 			<strong>Trigger types:</strong>
-			<span style="margin-left: 10px; padding: 2px 8px; background: #d4edda; border-radius: 3px;">typeahead</span>
-			<span style="margin-left: 5px; padding: 2px 8px; background: #cce5ff; border-radius: 3px;">keyboard</span>
-			<span style="margin-left: 5px; padding: 2px 8px; background: #e2d5f1; border-radius: 3px;">click</span>
+			<span style="margin-left: 10px; padding: 2px 8px; background: #d4edda; border-radius: 3px;">Typeahead</span>
+			<span style="margin-left: 5px; padding: 2px 8px; background: #cce5ff; border-radius: 3px;">Keyboard</span>
+			<span style="margin-left: 5px; padding: 2px 8px; background: #e2d5f1; border-radius: 3px;">Click</span>
 		</div>
 
 		<ui5-button id="trigger-flag-clear" style="margin-top: 10px;">Clear Log</ui5-button>
@@ -559,9 +559,9 @@
 				let changeCount = 0;
 
 				const triggerColors = {
-					typeahead: "#d4edda",
-					keyboard: "#cce5ff",
-					click: "#e2d5f1"
+					Typeahead: "#d4edda",
+					Keyboard: "#cce5ff",
+					Click: "#e2d5f1"
 				};
 
 				cb.addEventListener("ui5-selection-change", function(e) {

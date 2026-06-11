@@ -17,7 +17,9 @@ enum ComboBoxSelectionChangeTrigger {
 	Click = "Click",
 
 	/**
-	 * Selection caused by keyboard navigation (Arrow keys, Home, End, Page Up/Down, Enter).
+	 * Selection caused by keyboard navigation (Arrow keys, Home, End, Page Up/Down).
+	 *
+	 * Note: pressing Enter does not fire `selection-change` - it fires the `change` event instead.
 	 * @public
 	 */
 	Keyboard = "Keyboard",
