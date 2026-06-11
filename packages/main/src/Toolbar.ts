@@ -8,6 +8,12 @@ import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import {
+	isLeft,
+	isRight,
+	isHome,
+	isEnd,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import "@ui5/webcomponents-icons/dist/overflow.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -57,8 +63,9 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
  *
- * - The control is not interactive, but can contain of interactive elements
- * - [Tab] - iterates through elements
+ * - [Left]/[Right] - navigate among toolbar items
+ * - [Home]/[End] - move to first/last toolbar item
+ * - [Tab] / [Shift]+[Tab] - exit the toolbar
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/Toolbar.js";`
@@ -120,6 +127,11 @@ class Toolbar extends UI5Element {
 
 	/**
 	 * Defines the accessible ARIA name of the component.
+	 *
+	 * **Note:** It is strongly recommended to always set this property or `accessibleNameRef`
+	 * when the toolbar has `role="toolbar"` (i.e. when it contains more than one interactive item).
+	 * Without an accessible name, screen readers will announce the toolbar without any context,
+	 * making it harder for keyboard-only and AT users to understand its purpose.
 	 * @default undefined
 	 * @public
 	 */
@@ -128,6 +140,9 @@ class Toolbar extends UI5Element {
 
 	/**
 	 * Receives id(or many ids) of the elements that label the input.
+	 *
+	 * **Note:** When the toolbar has `role="toolbar"`, at least one of `accessibleName` or
+	 * `accessibleNameRef` should be provided to satisfy WCAG 2.1 success criterion 4.1.2.
 	 * @default undefined
 	 * @public
 	 */
@@ -173,6 +188,8 @@ class Toolbar extends UI5Element {
 	itemsToOverflow: Array<ToolbarItemBase> = [];
 	itemsWidth = 0;
 	minContentWidth = 0;
+	_lastFocusedItem?: HTMLElement;
+	_originalTabIndexes = new WeakMap<HTMLElement, string | null>();
 
 	ITEMS_WIDTH_MAP: Map<string, number> = new Map();
 
@@ -302,8 +319,12 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const lastItem = this.interactiveItems.at(-1);
-			lastItem?.focus();
+			const items = this._getFocusableItems();
+			const lastItem = items.at(-1);
+			if (lastItem) {
+				this._lastFocusedItem = lastItem;
+				lastItem.focus();
+			}
 		}
 		this.prePopulateAlwaysOverflowItems();
 	}
@@ -315,6 +336,9 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
+		this._refreshOriginalTabIndexes();
+		this._applyRovingTabIndex();
+		this._restoreOverflowTabOrder();
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
@@ -499,6 +523,7 @@ class Toolbar extends UI5Element {
 
 	onOverflowPopoverOpened() {
 		this.popoverOpen = true;
+		this._restoreOverflowTabOrder();
 	}
 
 	onResize() {
@@ -549,6 +574,354 @@ class Toolbar extends UI5Element {
 
 	getCachedItemWidth(id: string) {
 		return this.ITEMS_WIDTH_MAP.get(id);
+	}
+
+	/**
+	 * Keyboard Navigation
+	 */
+
+	_getFocusableItems(): Array<HTMLElement> {
+		const items: Array<HTMLElement> = [];
+
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
+				&& !("disabled" in item && (item as { disabled?: boolean }).disabled))
+			.forEach(item => {
+				const focusRef = item.getFocusDomRef();
+				if (focusRef && !focusRef.hasAttribute("disabled")) {
+					items.push(focusRef);
+				}
+			});
+
+		const overflowRef = this.overflowButtonDOM?.getFocusDomRef();
+		if (!this.hideOverflowButton && overflowRef) {
+			items.push(overflowRef);
+		}
+
+		return items;
+	}
+
+	_getOverflowTabTargets(item: ToolbarItemBase): Array<HTMLElement> {
+		return item._getNavigationTargets();
+	}
+
+	_storeOriginalTabIndex(target: HTMLElement) {
+		if (!this._originalTabIndexes.has(target)) {
+			this._originalTabIndexes.set(target, target.getAttribute("tabindex"));
+		}
+	}
+
+	_refreshOriginalTabIndexes() {
+		this._originalTabIndexes = new WeakMap<HTMLElement, string | null>();
+
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				const focusRef = item.getFocusDomRef();
+				if (focusRef) {
+					this._storeOriginalTabIndex(focusRef);
+				}
+
+				if (item.handlesOwnKeyboardNavigation) {
+					item._getNavigationTargets().forEach(target => this._storeOriginalTabIndex(target));
+				}
+			});
+
+		this.overflowItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				this._getOverflowTabTargets(item).forEach(target => this._storeOriginalTabIndex(target));
+			});
+	}
+
+	_restoreOriginalTabIndex(target: HTMLElement) {
+		const originalTabIndex = this._originalTabIndexes.get(target);
+
+		if (originalTabIndex === undefined || originalTabIndex === null) {
+			target.removeAttribute("tabindex");
+			return;
+		}
+
+		target.setAttribute("tabindex", originalTabIndex);
+	}
+
+	_restoreOverflowTabOrder() {
+		this.overflowItems
+			.filter(item => item.isInteractive && !item.hidden)
+			.forEach(item => {
+				const isDisabled = "disabled" in item && !!(item as { disabled?: boolean }).disabled;
+				const targets = this._getOverflowTabTargets(item);
+
+				targets.forEach(target => {
+					if (isDisabled) {
+						target.tabIndex = -1;
+						target.setAttribute("aria-disabled", "true");
+						return;
+					}
+
+					this._restoreOriginalTabIndex(target);
+					target.removeAttribute("aria-disabled");
+				});
+			});
+	}
+
+	_applyDisabledItemsAccessibility() {
+		this.standardItems
+			.filter(item => item.isInteractive && !item.hidden && !item.isOverflowed
+				&& "disabled" in item && (item as { disabled?: boolean }).disabled)
+			.forEach(item => {
+				const focusRef = item.getFocusDomRef();
+				if (focusRef) {
+					this._storeOriginalTabIndex(focusRef);
+					focusRef.tabIndex = -1;
+					focusRef.setAttribute("aria-disabled", "true");
+				}
+			});
+	}
+
+	_findCurrentIndex(items: Array<HTMLElement>, e?: Event): number {
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			if (!e) {
+				return -1;
+			}
+			const path = e.composedPath();
+			return items.findIndex(item => path.includes(item));
+		}
+
+		const activeIndex = items.findIndex(item => item === active || item.contains(active)
+			|| (item.shadowRoot?.contains(active) ?? false));
+
+		if (activeIndex !== -1) {
+			return activeIndex;
+		}
+
+		if (!e) {
+			return -1;
+		}
+
+		const path = e.composedPath();
+		return items.findIndex(item => path.includes(item));
+	}
+
+	_findToolbarItem(focusRef: HTMLElement, active?: HTMLElement | null): ToolbarItemBase | undefined {
+		return this.standardItems.find(item => {
+			const ref = item.getFocusDomRef();
+			const focusMatches = ref === focusRef
+				|| item === focusRef
+				|| item.contains(focusRef)
+				|| !!(ref && (ref.contains(focusRef)
+					|| focusRef.contains(ref)
+					|| ref.shadowRoot?.contains(focusRef)));
+
+			if (focusMatches) {
+				return true;
+			}
+
+			if (!active) {
+				return false;
+			}
+
+			return item === active
+				|| item.contains(active)
+				|| !!(ref && (ref === active
+					|| ref.contains(active)
+					|| active.contains(ref)
+					|| ref.shadowRoot?.contains(active)));
+		});
+	}
+
+	_applyRovingTabIndex(items = this._getFocusableItems()) {
+		// Reset all non-overflowed items first so no stale tabIndex=0 survives
+		// when an item becomes disabled while _lastFocusedItem is null or stale.
+		this.standardItems
+			.filter(item => !item.isOverflowed && !item.hidden)
+			.forEach(item => {
+				const ref = item.getFocusDomRef();
+				if (ref) {
+					this._storeOriginalTabIndex(ref);
+					ref.tabIndex = -1;
+				}
+			});
+
+		if (!items.length) {
+			return;
+		}
+
+		const current = (this._lastFocusedItem && items.includes(this._lastFocusedItem))
+			? this._lastFocusedItem
+			: items[0];
+
+		items.forEach(item => {
+			this._storeOriginalTabIndex(item);
+			item.tabIndex = item === current ? 0 : -1;
+		});
+
+		this._applySingleTabStopToGroups(current);
+		this._applyDisabledItemsAccessibility();
+	}
+
+	/**
+	 * For ToolbarItem groups (handlesOwnKeyboardNavigation), ensures only
+	 * the active child is tabbable so Tab exits the toolbar instead of
+	 * moving between children within the same group.
+	 */
+	_applySingleTabStopToGroups(current: HTMLElement) {
+		this.standardItems
+			.filter(item => item.handlesOwnKeyboardNavigation && !item.isOverflowed && !item.hidden)
+			.forEach(item => {
+				const targets = item._getNavigationTargets();
+				if (targets.length <= 1) {
+					return;
+				}
+
+				targets.forEach(target => {
+					this._storeOriginalTabIndex(target);
+				});
+
+				// If this group's primary ref is not the current roving tab item,
+				// all its children should be untabbable
+				const primaryRef = item.getFocusDomRef();
+				if (primaryRef !== current) {
+					targets.forEach(t => { t.tabIndex = -1; });
+					return;
+				}
+
+				// This is the active group - only the focused child should be tabbable
+				const activeEl = getActiveElement() as HTMLElement | null;
+				const activeTarget = activeEl
+					? targets.find(t => t === activeEl || t.contains(activeEl) || !!t.shadowRoot?.contains(activeEl))
+					: null;
+
+				const focusedTarget = activeTarget || targets[0];
+
+				targets.forEach(t => {
+					t.tabIndex = t === focusedTarget ? 0 : -1;
+				});
+			});
+	}
+
+	_onfocusin(e: FocusEvent) {
+		const items = this._getFocusableItems();
+		if (!items.length) {
+			return;
+		}
+
+		let idx = this._findCurrentIndex(items);
+
+		if (idx === -1) {
+			const path = e.composedPath();
+			const matchedItem = this.standardItems.find(item => !item.isOverflowed && !item.hidden && path.includes(item));
+			if (matchedItem) {
+				const ref = matchedItem.getFocusDomRef();
+				idx = ref ? items.indexOf(ref) : -1;
+			}
+		}
+
+		if (idx !== -1) {
+			this._lastFocusedItem = items[idx];
+			this._applyRovingTabIndex(items);
+		}
+	}
+
+	_onkeydown(e: KeyboardEvent) {
+		const active = getActiveElement() as HTMLElement | null;
+
+		if (!isLeft(e) && !isRight(e) && !isHome(e) && !isEnd(e)) {
+			return;
+		}
+
+		const isRTL = this.effectiveDir === "rtl";
+
+		// Left/Right are reserved for toolbar navigation.
+		// Exception: inside an input or textarea, allow native caret movement
+		// but only exit to the next/prev toolbar item when the caret is already at the boundary.
+		if ((isLeft(e) || isRight(e)) && active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+			const input = active as HTMLInputElement | HTMLTextAreaElement;
+			const atStart = input.selectionStart === 0;
+			const atEnd = input.selectionStart === (input.value?.length ?? 0);
+			const textSelected = input.selectionStart !== input.selectionEnd;
+			const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+
+			if (textSelected || (movingForward && !atEnd) || (!movingForward && !atStart)) {
+				return;
+			}
+		}
+
+		const items = this._getFocusableItems();
+		let currentIndex = this._findCurrentIndex(items, e);
+		if (currentIndex === -1) {
+			const path = e.composedPath();
+			const toolbarItemFromPath = this.standardItems.find(item => path.includes(item));
+			const pathFocusRef = toolbarItemFromPath?.getFocusDomRef();
+			if (pathFocusRef && items.includes(pathFocusRef)) {
+				currentIndex = items.indexOf(pathFocusRef);
+			}
+		}
+
+		if (currentIndex === -1) {
+			if (isHome(e)) {
+				currentIndex = 0;
+			} else if (isEnd(e)) {
+				currentIndex = items.length - 1;
+			} else if (this._lastFocusedItem && items.includes(this._lastFocusedItem)) {
+				currentIndex = items.indexOf(this._lastFocusedItem);
+			} else {
+				return;
+			}
+		}
+
+		const toolbarItem = this._findToolbarItem(items[currentIndex], active);
+		const itemHandlesKey = toolbarItem?.shouldHandleOwnKeyboardNavigation(e) ?? false;
+
+		// If a child already prevented default, only allow toolbar handling for items
+		// that explicitly opt into key-level delegation and currently do not own the key
+		// (e.g. ToolbarSelect with closed picker and Home/End).
+		if (e.defaultPrevented) {
+			if (!toolbarItem?.handlesOwnKeyboardNavigation || itemHandlesKey) {
+				return;
+			}
+		}
+
+		// Let a toolbar item handle its own navigation for the keys it explicitly owns
+		// (e.g. ToolbarSelect claims Up/Down/Home/End via shouldHandleOwnKeyboardNavigation).
+		if (itemHandlesKey) {
+			return;
+		}
+
+		let nextIndex = currentIndex;
+		const movingForward = (isRight(e) && !isRTL) || (isLeft(e) && isRTL);
+		const movingBackward = (isLeft(e) && !isRTL) || (isRight(e) && isRTL);
+
+		if (movingForward) {
+			nextIndex = (currentIndex + 1) % items.length;
+		} else if (movingBackward) {
+			nextIndex = (currentIndex - 1 + items.length) % items.length;
+		} else if (isHome(e)) {
+			nextIndex = 0;
+		} else if (isEnd(e)) {
+			nextIndex = items.length - 1;
+		}
+
+		// Always prevent default once the toolbar has committed to handling this key,
+		// so that Up/Down/Home/End do not scroll the page even when focus is already
+		// at the first or last item.
+		e.preventDefault();
+
+		if (isHome(e) || isEnd(e) || nextIndex !== currentIndex) {
+			const nextToolbarItem = this._findToolbarItem(items[nextIndex]);
+			const directionForEntry = movingForward || isHome(e);
+
+			this._lastFocusedItem = items[nextIndex];
+			this._applyRovingTabIndex(items);
+
+			if (nextToolbarItem) {
+				nextToolbarItem.handleNavigationEntry(directionForEntry);
+				return;
+			}
+
+			items[nextIndex].focus();
+		}
 	}
 }
 
