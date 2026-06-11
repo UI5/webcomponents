@@ -972,20 +972,20 @@ describe("Custom Items", () => {
 	it("Should select custom items via checkbox click and OK button", () => {
 		cy.mount(
 			<MultiComboBox>
-				<ui5-mcbi-custom text="New York, USA" value="NYC">
+				<ui5-mcb-item-custom text="New York, USA" value="NYC">
 					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 						<span role="img" aria-label="Flag">🇺🇸</span>
 						<span style={{ flex: 1 }}>New York, USA</span>
 						<span role="img" aria-label="Airport">✈️</span>
 					</div>
-				</ui5-mcbi-custom>
-				<ui5-mcbi-custom text="London, UK" value="LON">
+				</ui5-mcb-item-custom>
+				<ui5-mcb-item-custom text="London, UK" value="LON">
 					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 						<span role="img" aria-label="Flag">🇬🇧</span>
 						<span style={{ flex: 1 }}>London, UK</span>
 						<span role="img" aria-label="Airport">✈️</span>
 					</div>
-				</ui5-mcbi-custom>
+				</ui5-mcb-item-custom>
 			</MultiComboBox>
 		);
 
@@ -996,14 +996,14 @@ describe("Custom Items", () => {
 
 		// Click custom item checkboxes
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(0)
 			.shadow()
 			.find("[ui5-checkbox]")
 			.realClick();
 
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(1)
 			.shadow()
 			.find("[ui5-checkbox]")
@@ -1047,20 +1047,20 @@ describe("Custom Items", () => {
 	it("Should maintain custom item checkbox state when reopening dialog", () => {
 		cy.mount(
 			<MultiComboBox>
-				<ui5-mcbi-custom text="Paris, France" value="PAR">
+				<ui5-mcb-item-custom text="Paris, France" value="PAR">
 					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 						<span role="img" aria-label="Flag">🇫🇷</span>
 						<span style={{ flex: 1 }}>Paris, France</span>
 						<span role="img" aria-label="Airport">✈️</span>
 					</div>
-				</ui5-mcbi-custom>
-				<ui5-mcbi-custom text="Tokyo, Japan" value="TYO">
+				</ui5-mcb-item-custom>
+				<ui5-mcb-item-custom text="Tokyo, Japan" value="TYO">
 					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 						<span role="img" aria-label="Flag">🇯🇵</span>
 						<span style={{ flex: 1 }}>Tokyo, Japan</span>
 						<span role="img" aria-label="Airport">✈️</span>
 					</div>
-				</ui5-mcbi-custom>
+				</ui5-mcb-item-custom>
 			</MultiComboBox>
 		);
 
@@ -1071,7 +1071,7 @@ describe("Custom Items", () => {
 
 		// Select first custom item and confirm with OK
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(0)
 			.shadow()
 			.find("[ui5-checkbox]")
@@ -1092,14 +1092,14 @@ describe("Custom Items", () => {
 
 		// Verify checkbox states are maintained
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(0)
 			.shadow()
 			.find("[ui5-checkbox]")
 			.should("have.attr", "checked");
 
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(1)
 			.shadow()
 			.find("[ui5-checkbox]")
@@ -1109,13 +1109,13 @@ describe("Custom Items", () => {
 	it("Should not create token when custom item is selected but Cancel is pressed", () => {
 		cy.mount(
 			<MultiComboBox>
-				<ui5-mcbi-custom text="Berlin, Germany" value="BER">
+				<ui5-mcb-item-custom text="Berlin, Germany" value="BER">
 					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 						<span role="img" aria-label="Flag">🇩🇪</span>
 						<span style={{ flex: 1 }}>Berlin, Germany</span>
 						<span role="img" aria-label="Airport">✈️</span>
 					</div>
-				</ui5-mcbi-custom>
+				</ui5-mcb-item-custom>
 			</MultiComboBox>
 		);
 
@@ -1126,7 +1126,7 @@ describe("Custom Items", () => {
 
 		// Click custom item checkbox
 		cy.get("[ui5-multi-combobox]")
-			.find("[ui5-mcbi-custom]")
+			.find("[ui5-mcb-item-custom]")
 			.eq(0)
 			.shadow()
 			.find("[ui5-checkbox]")

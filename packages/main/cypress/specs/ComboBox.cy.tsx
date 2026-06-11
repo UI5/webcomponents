@@ -4013,8 +4013,8 @@ describe("ComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-cbi-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
-		cy.get("[ui5-cbi-custom]").eq(1).should("contain.text", "🇫🇷 France");
+		cy.get("[ui5-cb-item-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-cb-item-custom]").eq(1).should("contain.text", "🇫🇷 France");
 	});
 
 	it("should mix regular and custom items", () => {
@@ -4033,7 +4033,7 @@ describe("ComboBoxItemCustom - Rendering", () => {
 			.realClick();
 
 		cy.get("[ui5-cb-item]").should("have.length", 1);
-		cy.get("[ui5-cbi-custom]").should("have.length", 1);
+		cy.get("[ui5-cb-item-custom]").should("have.length", 1);
 	});
 
 	it("should have role='option'", () => {
@@ -4048,7 +4048,7 @@ describe("ComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-cbi-custom]").shadow().find("li").should("have.attr", "role", "option");
+		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("have.attr", "role", "option");
 	});
 });
 
@@ -4068,9 +4068,9 @@ describe("ComboBoxItemCustom - Filtering", () => {
 
 		cy.get("@combobox").realPress("G");
 
-		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "_isVisible", true);
-		cy.get("[ui5-cbi-custom]").eq(1).should("not.have.prop", "_isVisible", true);
-		cy.get("[ui5-cbi-custom]").eq(2).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(2).should("not.have.prop", "_isVisible", true);
 	});
 
 	it("should filter mixed regular and custom items", () => {
@@ -4089,7 +4089,7 @@ describe("ComboBoxItemCustom - Filtering", () => {
 		cy.get("@combobox").realPress("G");
 
 		cy.get("[ui5-cb-item]").eq(0).should("not.have.prop", "_isVisible", true);
-		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
 		cy.get("[ui5-cb-item]").eq(1).should("not.have.prop", "_isVisible", true);
 	});
 });
@@ -4109,7 +4109,7 @@ describe("ComboBoxItemCustom - Selection", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-cbi-custom]").eq(0).shadow().find("li").realClick();
+		cy.get("[ui5-cb-item-custom]").eq(0).shadow().find("li").realClick();
 
 		cy.get("@combobox").should("have.prop", "value", "Germany");
 	});
@@ -4162,13 +4162,13 @@ describe("ComboBoxItemCustom - Navigation", () => {
 			.realClick();
 
 		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
-		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
 
 		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
-		cy.get("[ui5-cbi-custom]").eq(1).should("have.prop", "focused", true);
+		cy.get("[ui5-cb-item-custom]").eq(1).should("have.prop", "focused", true);
 
 		cy.get("@combobox").shadow().find("input").realPress("ArrowUp");
-		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
 	});
 
 	it("should navigate through mixed items", () => {
@@ -4190,7 +4190,7 @@ describe("ComboBoxItemCustom - Navigation", () => {
 		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "focused", true);
 
 		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
-		cy.get("[ui5-cbi-custom]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
 
 		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
 		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "focused", true);
@@ -4210,6 +4210,6 @@ describe("ComboBoxItemCustom - Accessibility", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-cbi-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
+		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
 	});
 });

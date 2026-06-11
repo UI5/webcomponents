@@ -9,7 +9,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
- * The `ui5-cbi-custom` is type of combobox item,
+ * The `ui5-cb-item-custom` is type of combobox item,
  * that can be used to place combobox items with custom content in the combobox.
  * The text property is considered for filtering and autocomplete.
  * In case the user needs highlighting functionality, check "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js"
@@ -21,7 +21,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  * @since 2.24.0
  */
 @customElement({
-	tag: "ui5-cbi-custom",
+	tag: "ui5-cb-item-custom",
 	template: ComboBoxItemCustomTemplate,
 	styles: [
 		ListItemBase.styles,

@@ -1,13 +1,13 @@
-:host([ui5-cbi-custom]) {
+:host([ui5-cb-item-custom]) {
 	height: auto;
 	min-height: var(--_ui5_list_item_base_height);
 }
 
-:host([ui5-cbi-custom]) .ui5-li-root {
+:host([ui5-cb-item-custom]) .ui5-li-root {
 	min-height: var(--_ui5_list_item_base_height);
 }
 
-:host([ui5-cbi-custom]) .ui5-li-content {
+:host([ui5-cb-item-custom]) .ui5-li-content {
 	padding-bottom: .5rem;
 	padding-top: .5rem;
 	box-sizing: border-box;

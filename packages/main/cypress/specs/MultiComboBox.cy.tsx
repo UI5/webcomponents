@@ -5181,8 +5181,8 @@ describe("MultiComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
-		cy.get("[ui5-mcbi-custom]").eq(1).should("contain.text", "🇫🇷 France");
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("contain.text", "🇫🇷 France");
 	});
 
 	it("should render checkbox for custom items", () => {
@@ -5197,7 +5197,7 @@ describe("MultiComboBoxItemCustom - Rendering", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").shadow().find("[ui5-checkbox]").should("exist");
+		cy.get("[ui5-mcb-item-custom]").shadow().find("[ui5-checkbox]").should("exist");
 	});
 
 	it("should mix regular and custom items", () => {
@@ -5216,7 +5216,7 @@ describe("MultiComboBoxItemCustom - Rendering", () => {
 			.realClick();
 
 		cy.get("[ui5-mcb-item]").should("have.length", 1);
-		cy.get("[ui5-mcbi-custom]").should("have.length", 1);
+		cy.get("[ui5-mcb-item-custom]").should("have.length", 1);
 	});
 });
 
@@ -5236,9 +5236,9 @@ describe("MultiComboBoxItemCustom - Filtering", () => {
 
 		cy.get("@multiCombobox").realPress("G");
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "_isVisible", true);
-		cy.get("[ui5-mcbi-custom]").eq(1).should("not.have.prop", "_isVisible", true);
-		cy.get("[ui5-mcbi-custom]").eq(2).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(2).should("not.have.prop", "_isVisible", true);
 	});
 
 	it("should filter mixed regular and custom items", () => {
@@ -5257,7 +5257,7 @@ describe("MultiComboBoxItemCustom - Filtering", () => {
 		cy.get("@multiCombobox").realPress("G");
 
 		cy.get("[ui5-mcb-item]").eq(0).should("not.have.prop", "_isVisible", true);
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
 		cy.get("[ui5-mcb-item]").eq(1).should("not.have.prop", "_isVisible", true);
 	});
 });
@@ -5277,9 +5277,9 @@ describe("MultiComboBoxItemCustom - Selection", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 1);
 	});
 
@@ -5298,11 +5298,11 @@ describe("MultiComboBoxItemCustom - Selection", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
-		cy.get("[ui5-mcbi-custom]").eq(1).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(1).shadow().find("[ui5-checkbox]").realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", true);
-		cy.get("[ui5-mcbi-custom]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("have.prop", "selected", true);
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
 	});
 
@@ -5315,9 +5315,9 @@ describe("MultiComboBoxItemCustom - Selection", () => {
 			</MultiComboBox>
 		);
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", true);
-		cy.get("[ui5-mcbi-custom]").eq(1).should("have.prop", "selected", true);
-		cy.get("[ui5-mcbi-custom]").eq(2).should("have.prop", "selected", false);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(2).should("have.prop", "selected", false);
 
 		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-token]").should("have.length", 2);
 	});
@@ -5364,7 +5364,7 @@ describe("MultiComboBoxItemCustom - Tokens", () => {
 			</MultiComboBox>
 		);
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 
 		cy.get("[ui5-multi-combobox]")
 			.shadow()
@@ -5374,7 +5374,7 @@ describe("MultiComboBoxItemCustom - Tokens", () => {
 			.find("[ui5-icon]")
 			.realClick();
 
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", false);
 		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-token]").should("have.length", 0);
 	});
 });
@@ -5407,13 +5407,13 @@ describe("MultiComboBoxItemCustom - Navigation", () => {
 			.ui5ResponsivePopoverOpened();
 
 		cy.realPress(["Meta", "ArrowDown"]);
-		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
 
 		cy.realPress(["Meta", "ArrowDown"]);
-		cy.get("[ui5-mcbi-custom]").eq(1).should("be.focused");
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("be.focused");
 
 		cy.realPress(["Meta", "ArrowUp"]);
-		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
 	});
 
 	it("should navigate through mixed items", () => {
@@ -5446,7 +5446,7 @@ describe("MultiComboBoxItemCustom - Navigation", () => {
 		cy.get("[ui5-mcb-item]").eq(0).should("be.focused");
 
 		cy.realPress(["Meta", "ArrowDown"]);
-		cy.get("[ui5-mcbi-custom]").eq(0).should("be.focused");
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
 
 		cy.realPress(["Meta", "ArrowDown"]);
 		cy.get("[ui5-mcb-item]").eq(1).should("be.focused");
@@ -5470,10 +5470,10 @@ describe("MultiComboBoxItemCustom - Mixed Selection", () => {
 			.realClick();
 
 		cy.get("[ui5-mcb-item]").eq(0).shadow().find("[ui5-checkbox]").realClick();
-		cy.get("[ui5-mcbi-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
 
 		cy.get("[ui5-mcb-item]").eq(0).should("have.prop", "selected", true);
-		cy.get("[ui5-mcbi-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
 	});
