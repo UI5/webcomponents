@@ -5,12 +5,9 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
-import { getIconData, getIconDataSync } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
-import type { IconData } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import InputIconTemplate from "./InputIconTemplate.js";
 import inputIconCss from "./generated/themes/InputIcon.css.js";
-
-const ICON_NOT_FOUND = "ICON_NOT_FOUND";
+import "./Icon.js";
 
 /**
  * @class
@@ -109,18 +106,6 @@ class InputIcon extends UI5Element {
 	/**
 	 * @private
 	 */
-	@property({ type: Array, noAttribute: true })
-	pathData: Array<string> = [];
-
-	/**
-	 * @private
-	 */
-	@property({ noAttribute: true })
-	viewBox = "0 0 512 512";
-
-	/**
-	 * @private
-	 */
 	@property({ type: Boolean, noAttribute: true })
 	_pressed = false;
 
@@ -129,41 +114,6 @@ class InputIcon extends UI5Element {
 	 */
 	@property({ type: Boolean, noAttribute: true })
 	_focused = false;
-
-	async onBeforeRendering() {
-		if (!this.name) {
-			this.pathData = [];
-			return;
-		}
-
-		// Try sync first (icon already loaded), then async
-		let iconData: typeof ICON_NOT_FOUND | IconData | undefined = getIconDataSync(this.name);
-		if (!iconData) {
-			iconData = await getIconData(this.name);
-		}
-
-		if (!iconData) {
-			/* eslint-disable-next-line */
-			return console.warn(`Required icon is not registered. Invalid icon name: ${this.name}`);
-		}
-
-		if (iconData === ICON_NOT_FOUND) {
-			const name = this.name.replace("sap-icon://", "");
-			/* eslint-disable-next-line */
-			return console.warn(`Required icon is not registered. You can either import the icon as a module in order to use it e.g. "@ui5/webcomponents-icons/dist/${name}.js", or setup a JSON build step and import "@ui5/webcomponents-icons/dist/AllIcons.js".`);
-		}
-
-		// Extract icon data
-		this.viewBox = iconData.viewBox || "0 0 512 512";
-
-		if ("pathData" in iconData && iconData.pathData) {
-			this.pathData = Array.isArray(iconData.pathData)
-				? iconData.pathData
-				: [iconData.pathData];
-		} else {
-			this.pathData = [];
-		}
-	}
 
 	_onclick() {
 		if (!this.disabled) {
@@ -220,8 +170,12 @@ class InputIcon extends UI5Element {
 		return this.disabled ? -1 : 0;
 	}
 
-	get hasIconTooltip() {
-		return this.showTooltip && this.accessibleName;
+	get effectiveAriaLabel() {
+		return this.accessibleName || undefined;
+	}
+
+	get effectiveTitle() {
+		return this.showTooltip && this.accessibleName ? this.accessibleName : undefined;
 	}
 }
 

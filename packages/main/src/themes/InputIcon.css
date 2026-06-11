@@ -1,3 +1,13 @@
+:host {
+	align-self: stretch;
+	height: 100%;
+}
+
+.ui5-input-icon-root {
+	height: 100%;
+	box-sizing: border-box;
+}
+
 .inputIcon {
 	color: var(--_ui5_input_icon_color);
 	cursor: pointer;
@@ -47,11 +57,14 @@
 	pointer-events: none;
 }
 
-.ui5-input-icon-svg {
-	display: block;
+/* Style the inner Icon component */
+.ui5-input-icon-inner {
+	display: flex;
 	width: 1rem;
 	height: 1rem;
-	fill: currentColor;
+	color: inherit;
+	pointer-events: none;
+	flex-shrink: 0;
 }
 
 /* Value state styling */

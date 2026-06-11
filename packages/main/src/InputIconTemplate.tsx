@@ -1,4 +1,5 @@
 import type InputIcon from "./InputIcon.js";
+import Icon from "./Icon.js";
 
 export default function InputIconTemplate(this: InputIcon) {
 	return (
@@ -12,9 +13,10 @@ export default function InputIconTemplate(this: InputIcon) {
 			}}
 			role="button"
 			tabindex={this.effectiveTabIndex}
-			aria-label={this.accessibleName}
+			aria-label={this.effectiveAriaLabel}
 			aria-pressed={this._pressed}
 			aria-disabled={this.disabled}
+			title={this.effectiveTitle}
 			onClick={this._onclick}
 			onMouseDown={this._onmousedown}
 			onMouseUp={this._onmouseup}
@@ -25,22 +27,12 @@ export default function InputIconTemplate(this: InputIcon) {
 			onKeyUp={this._onkeyup}
 			part="root"
 		>
-			{this.pathData.length > 0 && (
-				<svg
-					class="ui5-input-icon-svg"
-					part="svg"
-					viewBox={this.viewBox}
-					xmlns="http://www.w3.org/2000/svg"
-					focusable="false"
+			{this.name && (
+				<Icon
+					name={this.name}
+					class="ui5-input-icon-inner"
 					aria-hidden="true"
-				>
-					{this.hasIconTooltip && (
-						<title>{this.accessibleName}</title>
-					)}
-					<g role="presentation">
-						{this.pathData.map((path: string) => <path d={path}></path>)}
-					</g>
-				</svg>
+				/>
 			)}
 		</div>
 	);
