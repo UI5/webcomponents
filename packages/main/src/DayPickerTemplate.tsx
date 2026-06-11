@@ -13,6 +13,7 @@ export default function DayPickerTemplate(this: DayPicker) {
 			}}
 			onKeyDown={this._onkeydown}
 			onKeyUp={this._onkeyup}
+			onMouseDown={this._onmousedown}
 			onClick={this._onclick}
 			onMouseOver={this._onmouseover}
 		>

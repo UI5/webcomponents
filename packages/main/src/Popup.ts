@@ -3,7 +3,7 @@ import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -521,12 +521,17 @@ abstract class Popup extends UI5Element {
 	 * @returns Promise that resolves when the focus is applied
 	 */
 	async applyFocus(): Promise<void> {
-		// do nothing if the standard HTML autofocus is used
-		if (this.querySelector("[autofocus]")) {
+		await this._waitForDomRef();
+
+		const elementWithAutoFocus = this.querySelector("[autofocus]");
+		if (elementWithAutoFocus) {
+			// If the "autofocus" is set on UI5Element, focus it manually.
+			if ("isUI5Element" in elementWithAutoFocus) {
+				(elementWithAutoFocus as UI5Element).focus();
+			}
+			// Otherwise, the browser will focus it automatically.
 			return;
 		}
-
-		await this._waitForDomRef();
 
 		if (this.getRootNode() === this) {
 			return;
@@ -699,6 +704,14 @@ abstract class Popup extends UI5Element {
 
 	get _role() {
 		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get _contentRole(): AriaRole | undefined {
+		return undefined;
+	}
+
+	get _contentAriaLabel(): string | undefined {
+		return undefined;
 	}
 
 	get _ariaModal(): "true" | undefined {

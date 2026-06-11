@@ -3,30 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.22.0-rc.5](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0-rc.5) (2026-05-14)
+# [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
 
 
 ### Bug Fixes
 
-* **CEM:** generation for 3rd party packages ([#13477](https://github.com/UI5/webcomponents/issues/13477)) ([c714873](https://github.com/UI5/webcomponents/commit/c714873bea5fe6b84a227429ac36d73f1c4e8360))
-* **ui5-combobox:** show focus outline on list item mousedown ([#13449](https://github.com/UI5/webcomponents/issues/13449)) ([e3ea501](https://github.com/UI5/webcomponents/commit/e3ea50133f7748f380764bf6a7997aa7370f4db5)), closes [#13444](https://github.com/UI5/webcomponents/issues/13444)
-* **ui5-datetime-picker:** validation for min and max date is implemented ([#13485](https://github.com/UI5/webcomponents/issues/13485)) ([020ee37](https://github.com/UI5/webcomponents/commit/020ee3700b421e7d107aeaa907f5fd440b46d124))
-* **ui5-dialog:** clamp min-width and min-height to viewport at high zoom levels ([#13438](https://github.com/UI5/webcomponents/issues/13438)) ([c6a946a](https://github.com/UI5/webcomponents/commit/c6a946a7d195535f3a42c24c91178a7678c289ed)), closes [#11715](https://github.com/UI5/webcomponents/issues/11715)
-* **ui5-dynamic-date-range:** selection of from value is working when there are previously submitted values ([#13470](https://github.com/UI5/webcomponents/issues/13470)) ([ccde545](https://github.com/UI5/webcomponents/commit/ccde5458c9603843b7e2e2b31fd055d0b18b5bc7))
-* **ui5-link:** link is underlined when it is hovered in high contrast themes ([#13466](https://github.com/UI5/webcomponents/issues/13466)) ([6b52d85](https://github.com/UI5/webcomponents/commit/6b52d85b00faf2d5ff194b51dac149e554b94a1e))
-* **ui5-multi-combobox:** use clipboardData for paste functionality ([#13503](https://github.com/UI5/webcomponents/issues/13503)) ([19d1733](https://github.com/UI5/webcomponents/commit/19d17335edbbecb496cbf12f2af26b9c5beb756d))
-* **ui5-multi-input:** fix arrow left key behavior ([#13468](https://github.com/UI5/webcomponents/issues/13468)) ([38f8736](https://github.com/UI5/webcomponents/commit/38f8736136e2532efb2b1752e39f662e3cae3cde)), closes [#13357](https://github.com/UI5/webcomponents/issues/13357)
-* **ui5-option:** add down/active state on press ([#13428](https://github.com/UI5/webcomponents/issues/13428)) ([099b325](https://github.com/UI5/webcomponents/commit/099b325e9be54e2aa9a72594a679cd6d2f2c96d1)), closes [#13307](https://github.com/UI5/webcomponents/issues/13307)
-* **ui5-slider, ui5-range-slider:** adjust tooltip colors ([#13481](https://github.com/UI5/webcomponents/issues/13481)) ([a77b76d](https://github.com/UI5/webcomponents/commit/a77b76df2c0692549692c21e50e6cfa1a80e6008))
+* **framework:** stop reflecting object/array properties to attributes ([#13626](https://github.com/UI5/webcomponents/issues/13626)) ([f5b49c7](https://github.com/UI5/webcomponents/commit/f5b49c789975b0ec8c5390c4ce0eeced4fe71a1c))
+* **ui5-expandable-text:** fix using "white-space" style in the component ([#13599](https://github.com/UI5/webcomponents/issues/13599)) ([52a0985](https://github.com/UI5/webcomponents/commit/52a098536387b209f9e2ccf33b879fc3b492fe06))
+* **ui5-form:** replace Cyrillic А with Latin A in effectiveAccessibleNameRef ([#13649](https://github.com/UI5/webcomponents/issues/13649)) ([652a4e9](https://github.com/UI5/webcomponents/commit/652a4e9a64ec9e2addfd4d039f8de4babd13d221)), closes [#13647](https://github.com/UI5/webcomponents/issues/13647)
+* **ui5-rating-indicator:** enhance half value visualisation in readonly and disabled mode ([#13500](https://github.com/UI5/webcomponents/issues/13500)) ([d91f292](https://github.com/UI5/webcomponents/commit/d91f29212dfd9bb7967a3dbeb2d59f66d2b2e22a))
+* **ui5-select:** swap X button for footer Cancel in mobile picker ([#13615](https://github.com/UI5/webcomponents/issues/13615)) ([f98090f](https://github.com/UI5/webcomponents/commit/f98090f5187d036da38fb6aef7f5f13cd7826bbb))
+* **ui5-text:** unify truncation across all max-lines values ([#13624](https://github.com/UI5/webcomponents/issues/13624)) ([3c50320](https://github.com/UI5/webcomponents/commit/3c503202d76a24a65f3b59297463762f15b0bf43))
+
+
+### Documentation
+
+* pre-release docs clean-up ([#13651](https://github.com/UI5/webcomponents/issues/13651)) ([635cbc1](https://github.com/UI5/webcomponents/commit/635cbc16a89a0adc1d9819709df9c97e7e92e663))
 
 
 ### Features
 
-* **ui5-list:** inherit list item aria roles from accessibleRole ([#13463](https://github.com/UI5/webcomponents/issues/13463)) ([37e9fef](https://github.com/UI5/webcomponents/commit/37e9fef1528e449e65d2e065b8f44e324423c20f)), closes [#13264](https://github.com/UI5/webcomponents/issues/13264)
-* **ui5-notification-list-item, ui5-tab:** add semantic click event ([#13373](https://github.com/UI5/webcomponents/issues/13373)) ([be19e59](https://github.com/UI5/webcomponents/commit/be19e596a343473658a0104df64345e3ea915e48)), closes [#13315](https://github.com/UI5/webcomponents/issues/13315) [#13328](https://github.com/UI5/webcomponents/issues/13328)
-* **ui5-panel:** focus for scrollable panel content ([#13501](https://github.com/UI5/webcomponents/issues/13501)) ([718a93c](https://github.com/UI5/webcomponents/commit/718a93c664d0c6a9dd161cae96ec00eb33577164))
-* **ui5-tokenizer:** deselect tokens on ESC ([#13482](https://github.com/UI5/webcomponents/issues/13482)) ([442e893](https://github.com/UI5/webcomponents/commit/442e893bbe1698fa469de0574fed31fecb396db8))
-* **ui5-toolbar:** align theming tokens with Horizon spec ([#13425](https://github.com/UI5/webcomponents/issues/13425)) ([fabee23](https://github.com/UI5/webcomponents/commit/fabee236d7af60703dd6d1433e454a8ee728941b))
+* **ui5-popover:** allow min-width control via standard CSS styling ([#13607](https://github.com/UI5/webcomponents/issues/13607)) ([8fa41a7](https://github.com/UI5/webcomponents/commit/8fa41a79400783a926ec34aefd1dbe6bebbc9ac3))
+* **ui5-slider, ui5-range-slider:** make tickmarks visual-only ([#13441](https://github.com/UI5/webcomponents/issues/13441)) ([bc5ecae](https://github.com/UI5/webcomponents/commit/bc5ecae34a957e2c73d3ac81eb9556ef3725af29)), closes [#9730](https://github.com/UI5/webcomponents/issues/9730) [#9058](https://github.com/UI5/webcomponents/issues/9058)
+
+
+### BREAKING CHANGES
+
+* the click CustomEvent on ui5-tab and ui5-li-notification
+no longer includes item/tab in event.detail. Read the source element from
+event.target instead.
+
+* chore: follow-up cleanups
+
+- ListBoxItemGroupTemplate: use string literal "Group" for accessibleRole
+  (the ListItemAccessibleRole.Group enum entry was removed in this PR)
+- NotificationListItemBase: drop redundant @customElement({}) decorator on
+  the abstract base class
+- TableGroupRow: bump @since to 2.23.0
+
+* chore(website): remove newComponentBadge from .mdx frontmatter
+
+Drop the sidebar_class_name: newComponentBadge marker from all component
+and pattern docs — the components/patterns are no longer new. Where the
+class was the only frontmatter entry, the entire frontmatter block is
+removed; where it was combined with expComponentBadge, only the
+newComponentBadge token is removed.
+
+Also drop the now-unused ListItemAccessibleRole import in
+ListBoxItemGroupTemplate.tsx (left over from the string-literal switch
+in the previous commit).
+
+* fix(ui5-li-notification-base): restore @customElement decorator
+
+Revert the @customElement({}) removal from de7a850a5 — even though the
+class is abstract and never instantiated directly, the decorator
+registers metadata that subclasses (NotificationListItem,
+NotificationListGroupItem) inherit via the framework. Removing it broke
+that inheritance chain.
+
+* test: read source from event.target on tab/notification click
+
+Update the Tab and NotificationListItem semantic-click-event tests to
+read the source element from event.target instead of event.detail.tab /
+event.detail.item, which were removed earlier in this PR.
+* **ui5-slider, ui5-range-slider:** The tickmarks property no longer causes the slider
+to snap exclusively to defined values. Users must set min/max/step
+explicitly alongside tickmarks.
+
+* chore(ui5-slider): add design review test page for custom tickmarks
+
+Interactive page with 6 open design questions for review:
+1. Tooltip text for in-between values
+2. Magnetic snap behavior
+3. Keyboard Ctrl+Arrow jump targets
+4. Minor ticks between labeled tickmarks
+5. Label density/overflow handling
+6. Range slider in-range label emphasis
+
+* feat(ui5-slider, ui5-range-slider): hide tooltip between custom tickmarks
+
+When custom tickmarks are defined, only show the tooltip at exact tickmark
+values. Between tickmarks the tooltip is hidden entirely instead of showing
+the raw numeric value.
+
+Default behavior (no custom tickmarks) is unchanged. RangeSlider tooltips
+are evaluated independently per handle.
+
+* chore(ui5-slider): remove design review test page for custom tickmarks
+
+The interactive design-review page is no longer needed now that the
+remaining behavior question (tooltip for in-between values) is resolved.
+
+* feat(ui5-slider, ui5-range-slider): fix issues found
+
+
+
+
+
+# [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
+
+
+### Bug Fixes
+
+* **framework:** prevent language-aware components from rendering before CLDR data loads ([#13602](https://github.com/UI5/webcomponents/issues/13602)) ([441672b](https://github.com/UI5/webcomponents/commit/441672b62733b42f4fc1a12452711602ae6a1bb5))
+* **ui5-calendar:** set timestamp of daypicker on mousedown ([#13527](https://github.com/UI5/webcomponents/issues/13527)) ([b2dd700](https://github.com/UI5/webcomponents/commit/b2dd700a18d5fbd3e1eb1032dc0f8677cd61b975))
+* **ui5-checkbox:** align horizon checkbox hover states with selector tokens ([#13598](https://github.com/UI5/webcomponents/issues/13598)) ([170c278](https://github.com/UI5/webcomponents/commit/170c2783d43a683233a44a838b945da6fc529bcd))
+* **ui5-color-picker:** keep pointer aligned at any root font-size ([#13563](https://github.com/UI5/webcomponents/issues/13563)) ([dd7c3ba](https://github.com/UI5/webcomponents/commit/dd7c3ba1edc54a7b59c7d6d2da8b2076e73340b8)), closes [#13521](https://github.com/UI5/webcomponents/issues/13521)
+* **ui5-expandable-text:** scroll toggle link into view on expansion ([#13524](https://github.com/UI5/webcomponents/issues/13524)) ([71b8586](https://github.com/UI5/webcomponents/commit/71b858627e3eefbcf7197d070e3e6267aa5afbb7)), closes [#13258](https://github.com/UI5/webcomponents/issues/13258)
+* **ui5-tokenizer:** allow copy/cut of focused token when not selected ([#13452](https://github.com/UI5/webcomponents/issues/13452)) ([240ba03](https://github.com/UI5/webcomponents/commit/240ba03f41785299342eb81d22304c02530a630b))
+
+
+### Features
+
+* **ui5-*:** support `autofocus` attribute ([#12572](https://github.com/UI5/webcomponents/issues/12572)) ([b13a00a](https://github.com/UI5/webcomponents/commit/b13a00aed10f7c230f171551923af57a413a458a))
+
+
+
+
+
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+
+### Features
+
+* **ui5-form:** rework column layout and deprecate standalone form items ([#13293](https://github.com/UI5/webcomponents/issues/13293)) ([05aa9f3](https://github.com/UI5/webcomponents/commit/05aa9f3168c78d6229712859dc4753f7215e21a0))
+* **ui5-side-navigation:** add indication tag slot ([#13433](https://github.com/UI5/webcomponents/issues/13433)) ([0aa9b80](https://github.com/UI5/webcomponents/commit/0aa9b807faeb1b467fe9fe477acfeac73462efa7))
+
+
+
+
+
+# [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** performance of selecting is improved when there are min and max date. ([#13550](https://github.com/UI5/webcomponents/issues/13550)) ([d256801](https://github.com/UI5/webcomponents/commit/d25680198562184cbefa4394ce880498d3cc93eb))
+* **ui5-multi-combobox:** fix token deletion when click event is lost due to re-render ([#13530](https://github.com/UI5/webcomponents/issues/13530)) ([c1abfb0](https://github.com/UI5/webcomponents/commit/c1abfb0c3d60ae82f03e5c843738a0da0e4bb563))
+* **ui5-tabcontainer:** guard against null overflow elements ([#13565](https://github.com/UI5/webcomponents/issues/13565)) ([7d591c2](https://github.com/UI5/webcomponents/commit/7d591c22cb44331fff7c926e7743c23b7236dd88)), closes [#13532](https://github.com/UI5/webcomponents/issues/13532)
+
+
+### Features
+
+* **ui5-icon:** add fontIcon slot for font-based icon libraries ([#13569](https://github.com/UI5/webcomponents/issues/13569)) ([3cbeac5](https://github.com/UI5/webcomponents/commit/3cbeac5817df7188f23ed5edc4e4d668e0751895))
+* **ui5-panel:** expose header-wrapper part ([#13571](https://github.com/UI5/webcomponents/issues/13571)) ([33f90b9](https://github.com/UI5/webcomponents/commit/33f90b90bd96088044edd41dbd7fd07f77ab8639)), closes [#13392](https://github.com/UI5/webcomponents/issues/13392)
+
+
+### Reverts
+
+* Revert "feat(ui5-panel): focus for scrollable panel content" (#13573) ([46007ca](https://github.com/UI5/webcomponents/commit/46007cad9d0e1c00fc6c361258d3b7e5470d9d03)), closes [#13573](https://github.com/UI5/webcomponents/issues/13573) [#13501](https://github.com/UI5/webcomponents/issues/13501)
+
+
+
+
+
+## [2.22.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.6...v2.22.1-rc.0) (2026-05-21)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+# [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
+
+**Note:** Version bump only for package @ui5/webcomponents
 
 
 
