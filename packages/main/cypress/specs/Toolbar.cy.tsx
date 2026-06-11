@@ -483,10 +483,8 @@ describe("Toolbar general interaction", () => {
 		cy.viewport(800, 1080);
 
 		// Verify the focus shifts to the last interactive element outside the overflow popover
-		cy.get("[ui5-toolbar]")
-			.shadow()
-			.find(".ui5-tb-item")
-			.eq(3)
+		cy.get("[ui5-toolbar-button]")
+			.last()
 			.should("be.focused");
 	});
 
