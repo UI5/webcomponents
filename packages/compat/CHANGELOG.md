@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ui5-text:** unify truncation across all max-lines values ([#13624](https://github.com/UI5/webcomponents/issues/13624)) ([3c50320](https://github.com/UI5/webcomponents/commit/3c503202d76a24a65f3b59297463762f15b0bf43))
+
+
+
+
+
 # [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
 
 **Note:** Version bump only for package @ui5/webcomponents-compat
