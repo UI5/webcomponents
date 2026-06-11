@@ -143,7 +143,7 @@ class ShellBarBranding extends UI5Element {
 
 	_onkeyup(e: KeyboardEvent) {
 		if (isSpace(e)) {
-			this._fireClick();
+			this.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-branding-root")?.click();
 		}
 	}
 
@@ -154,7 +154,8 @@ class ShellBarBranding extends UI5Element {
 		}
 
 		if (isEnter(e)) {
-			this._fireClick();
+			e.preventDefault();
+			this.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-branding-root")?.click();
 		}
 	}
 }
