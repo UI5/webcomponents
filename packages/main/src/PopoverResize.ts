@@ -240,10 +240,9 @@ class PopoverResize {
 		const {
 			minWidth,
 			minHeight,
+			maxWidth,
+			maxHeight,
 		} = window.getComputedStyle(this._popover);
-
-		const inlineMaxWidth = this._popover.style.maxWidth;
-		const inlineMaxHeight = this._popover.style.maxHeight;
 
 		const domRefComputedStyle = window.getComputedStyle(this._popover);
 
@@ -252,8 +251,16 @@ class PopoverResize {
 
 		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
 		this._minHeight = Number.parseFloat(minHeight);
-		this._maxWidth = inlineMaxWidth ? Number.parseFloat(inlineMaxWidth) : Infinity;
-		this._maxHeight = inlineMaxHeight ? Number.parseFloat(inlineMaxHeight) : Infinity;
+
+		const viewportMargin = this._popover._viewportMargin;
+		const defaultMaxWidth = window.innerWidth - 2 * viewportMargin;
+		const defaultMaxHeight = window.innerHeight - 2 * viewportMargin;
+
+		const computedMaxWidth = maxWidth !== "none" ? Number.parseFloat(maxWidth) : Infinity;
+		const computedMaxHeight = maxHeight !== "none" ? Number.parseFloat(maxHeight) : Infinity;
+
+		this._maxWidth = computedMaxWidth < defaultMaxWidth ? computedMaxWidth : Infinity;
+		this._maxHeight = computedMaxHeight < defaultMaxHeight ? computedMaxHeight : Infinity;
 
 		this._attachMouseResizeHandlers();
 	}
