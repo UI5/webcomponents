@@ -236,6 +236,17 @@ class UserMenu extends UI5Element {
 	@slot()
 	footer!: Slot<HTMLElement>;
 
+	/**
+	 * Defines the content of the info area inside the User Menu's account block.
+	 *
+	 * **Note:** When empty, the User Menu renders unchanged.
+	 *
+	 * @public
+	 * @since 2.24.0
+	 */
+	@slot()
+	infoArea!: Slot<HTMLElement>;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -519,6 +530,10 @@ class UserMenu extends UI5Element {
 
 	get _showDefaultFooter(): boolean {
 		return this.footer.length === 0;
+	}
+
+	get _hasInfoArea(): boolean {
+		return this.infoArea.length > 0;
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
