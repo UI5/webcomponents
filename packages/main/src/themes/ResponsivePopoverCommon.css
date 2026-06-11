@@ -186,11 +186,12 @@
 .ui5-responsive-popover-footer {
 	display: flex;
 	justify-content: flex-end;
-	padding: 0.25rem 0;
+	align-items: center;
 	width: 100%;
+	box-sizing: border-box;
 }
 
-.ui5-responsive-popover-footer .ui5-responsive-popover-close-btn, 
+.ui5-responsive-popover-footer .ui5-responsive-popover-close-btn,
 .ui5-responsive-popover-footer .ui5-responsive-popover-footer-btn {
 	margin-left: 0.5rem;
 }
@@ -203,4 +204,3 @@
 .ui5-responsive-popover-footer .ui5-responsive-popover-footer-btn {
 	width: 4.5rem;
 }
-

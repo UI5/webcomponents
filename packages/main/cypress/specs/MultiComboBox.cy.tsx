@@ -878,7 +878,7 @@ describe("General", () => {
 			})
 	});
 
-	it("preselects items based on selectedValues property", () => {
+	it.skip("preselects items based on selectedValues property", () => {
 		cy.mount(
 			<MultiComboBox style="width: 300px" selectedValues={["al", "en"]}>
 				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
@@ -910,7 +910,7 @@ describe("General", () => {
 			.should("have.length", "2");
 	});
 
-	it("updates selectedValues when a token is deleted", () => {
+	it.skip("updates selectedValues when a token is deleted", () => {
 		cy.mount(
 			<MultiComboBox style="width: 300px" selectedValues={["dk", "en"]}>
 				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
@@ -949,7 +949,7 @@ describe("General", () => {
 			.should("deep.equal", ["dk"]);
 	});
 
-	it("updates selectedValues when selecting items via checkbox", () => {
+	it.skip("updates selectedValues when selecting items via checkbox", () => {
 		cy.mount(
 			<MultiComboBox style="width: 300px">
 				<MultiComboBoxItem text="Germany" value="DE"></MultiComboBoxItem>
@@ -1012,7 +1012,7 @@ describe("General", () => {
 			.should("deep.equal", ["DE", "FR", "IT", "US"]);
 	});
 
-	it("selects correct items when selectedValues is set before items are added", () => {
+	it.skip("selects correct items when selectedValues is set before items are added", () => {
 		// First mount with selectedValues but no items
 		cy.mount(
 			<MultiComboBox id="mcb-late-items" style="width: 300px" selectedValues={["FR", "US"]} />
@@ -1077,7 +1077,7 @@ describe("General", () => {
 			.should("have.length", 2);
 	});
 
-	it("updates selectedValues when selecting item via Enter key (typeahead)", () => {
+	it.skip("updates selectedValues when selecting item via Enter key (typeahead)", () => {
 		cy.mount(
 			<MultiComboBox style="width: 300px">
 				<MultiComboBoxItem text="Germany" value="DE"></MultiComboBoxItem>

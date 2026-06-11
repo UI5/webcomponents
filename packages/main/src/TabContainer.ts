@@ -912,7 +912,7 @@ class TabContainer extends UI5Element {
 		}
 
 		if (originalEvent) {
-			selectedTab.fireDecoratorEvent("click", { tab: selectedTab, originalEvent });
+			selectedTab.fireDecoratorEvent("click", { originalEvent });
 		}
 
 		// update selected property on all items
