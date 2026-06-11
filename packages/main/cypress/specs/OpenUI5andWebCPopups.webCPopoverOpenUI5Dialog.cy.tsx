@@ -52,16 +52,20 @@ function onOpenUI5InitMethod(win: any) {
 }
 
 function mountFixtures() {
-	cy.document().then((doc) => {
-		doc.body.innerHTML = `
+	cy.mount(
+		<>
 			<div id="content"></div>
+			{/* @ts-ignore */}
 			<ui5-button id="btnPopup">Open Popover web component</ui5-button>
+			{/* @ts-ignore */}
 			<ui5-popover id="popup" header-text="Popover">
 				<div>2. Click the button</div>
+				{/* @ts-ignore */}
 				<ui5-button id="nestedOpener">Open Dialog OpenUI5</ui5-button>
+				{/* @ts-ignore */}
 			</ui5-popover>
-		`;
-	});
+		</>
+	);
 
 	cy.window().then((win) => {
 		if (!(win as any).sap?.ui) {
