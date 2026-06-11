@@ -133,7 +133,7 @@
 			<ui5-hero-banner id="hero-banner-bg"
 				header-text="Welcome, Sarah"
 				overline-text="Thursday, March 6, 2026"
-				style="background-image: url('https://sdk.openui5.org/test-resources/sap/uxap/images/headerImg.jpg'); background-repeat: no-repeat;">
+				style="background-image: url('./img/banner-back1.jpg');">
 			</ui5-hero-banner>
 		</section>
 
@@ -148,7 +148,7 @@
 				header-text="Hello, David"
 				overline-text="Thursday, March 6, 2026"
 				columns-ratio="Equal"
-				style="background-image: url('https://images.presentationgo.com/2025/04/mountain-climber-snowy-peak-summit.jpg');">
+				style="background-image: url('./img/banner-back2.jpg');">
 
 			<ui5-card>
 					<ui5-card-header
@@ -372,7 +372,7 @@
 
 		// --- Background Image toggle ---
 		document.getElementById("chk-bg").addEventListener("change", function () {
-			dynamicBanner.style.backgroundImage = this.checked ? "url('https://wallpapershome.com/images/pages/pic_h/17796.jpg')" : "";
+			dynamicBanner.style.backgroundImage = this.checked ? "url('./img/banner-back3.jpg')" : "";
 		});
 
 		// --- Slot toggle helper: moves elements between the banner and the hidden holder ---
