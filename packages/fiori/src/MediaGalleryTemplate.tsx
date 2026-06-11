@@ -33,7 +33,7 @@ export default function MediaGalleryTemplate(this: MediaGallery) {
 						<li id={item.id}
 							class="ui5-media-gallery-thumbnail"
 							role="option"
-							aria-selected={item.selected}
+							aria-checked={item.selected}
 							onClick={this._onThumbnailClick}
 						>
 							<slot name={item._individualSlot}></slot>
