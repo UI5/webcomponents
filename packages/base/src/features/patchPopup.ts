@@ -108,6 +108,7 @@ const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 	}
 
 	domRef.setAttribute("popover", "manual");
+	domRef.hidePopover();
 	domRef.showPopover();
 };
 
