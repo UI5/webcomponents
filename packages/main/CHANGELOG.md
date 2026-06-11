@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.1](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.23.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** move popover to top of top layer ([#13671](https://github.com/UI5/webcomponents/issues/13671)) ([e90ebe5](https://github.com/UI5/webcomponents/commit/e90ebe58a21e01a241896f71e2d3ebc95aba8451))
+
+
+
+
+
 # [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
 
 
