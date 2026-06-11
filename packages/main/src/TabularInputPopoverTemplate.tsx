@@ -5,10 +5,15 @@ import ResponsivePopover from "./ResponsivePopover.js";
 import Button from "./Button.js";
 import Title from "./Title.js";
 import Input from "./Input.js";
+import Table from "./Table.js";
+import TableHeaderRow from "./TableHeaderRow.js";
+import TableHeaderCell from "./TableHeaderCell.js";
+import TableRow from "./TableRow.js";
+import TableCell from "./TableCell.js";
 
 /**
  * Renders the tabular suggestions popover for TabularInput.
- * Follows the same pattern as ComboBoxPopoverTemplate.
+ * Uses ui5-table for rendering with ARIA overrides for listbox semantics.
  */
 export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemplateResult {
 	return (
@@ -66,53 +71,54 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 }
 
 /**
- * Renders the tabular suggestions list (table with header and body).
+ * Renders the tabular suggestions list using ui5-table.
+ * ARIA roles are overridden in TabularInput.ts to provide listbox semantics.
  */
 function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
 	return (
-		<div class="ui5-tabular-input-suggestions-table">
-			<table class="ui5-tabular-suggestions-table" role="listbox">
-				<thead class="ui5-tabular-suggestions-header">
-					<tr>
-						{this.suggestionColumns.map((col, index) => (
-							<th
-								key={`col-${index}`}
-								class="ui5-tabular-suggestions-header-cell"
-								scope="col"
-								style={col.width ? `width: ${col.width}` : ""}
-							>
-								{col.textContent}
-							</th>
-						))}
-					</tr>
-				</thead>
-				<tbody class="ui5-tabular-suggestions-body">
-					{this._visibleProcessedRows.map((processedRow, rowIndex) => (
-						<tr
-							key={`row-${rowIndex}`}
-							id={`${this._id}-row-${rowIndex}`}
-							class={{
-								"ui5-tabular-suggestions-row": true,
-								"ui5-tabular-suggestions-row--focused": processedRow.row.focused,
-								"ui5-tabular-suggestions-row--selected": processedRow.row.selected,
-							}}
-							role="option"
-							aria-selected={processedRow.row.selected || processedRow.row.focused}
-							tabindex={-1}
-							onClick={() => this._onSuggestionRowClick(processedRow.row)}
+		<div class="ui5-tabular-input-suggestions-wrapper">
+			<Table
+				class="ui5-tabular-suggestions-table"
+				overflowMode="Popin"
+				accessibleName={this._tabularSuggestionsAccessibleName}
+				onKeyDown={this._onTableKeyDown}
+				onRowClick={this._onTableRowClick}
+			>
+				<TableHeaderRow slot="headerRow" sticky>
+					{this.suggestionColumns.map((col, index) => (
+						<TableHeaderCell
+							key={`col-${index}`}
+							width={col.width}
+							minWidth={col.minWidth}
+							importance={col.importance}
+							popinText={col.popinText}
 						>
-							{processedRow.cells.map((cell, cellIndex) => (
-								<td
-									key={`cell-${rowIndex}-${cellIndex}`}
-									class="ui5-tabular-suggestions-cell"
-									dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}
-								>
-								</td>
-							))}
-						</tr>
+							{col.textContent}
+						</TableHeaderCell>
 					))}
-				</tbody>
-			</table>
+				</TableHeaderRow>
+
+				{this._visibleProcessedRows.map((processedRow, rowIndex) => (
+					<TableRow
+						key={`row-${rowIndex}`}
+						id={`${this._id}-row-${rowIndex}`}
+						class={{
+							"ui5-tabular-suggestions-row--focused": processedRow.row.focused,
+							"ui5-tabular-suggestions-row--selected": processedRow.row.selected,
+						}}
+						data-row-index={rowIndex}
+						interactive
+					>
+						{processedRow.cells.map((cell, cellIndex) => (
+							<TableCell
+								key={`cell-${rowIndex}-${cellIndex}`}
+								dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}
+							>
+							</TableCell>
+						))}
+					</TableRow>
+				))}
+			</Table>
 		</div>
 	);
 }

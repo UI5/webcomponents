@@ -7,86 +7,52 @@
 	background-color: var(--sapField_Background);
 }
 
-.ui5-tabular-input-suggestions-table {
+/* Wrapper to control table sizing in popover */
+.ui5-tabular-input-suggestions-wrapper {
 	width: 100%;
 	max-height: var(--_ui5_tabular_suggestions_max_height, 20rem);
 	overflow: auto;
 }
 
+/* Let ui5-table handle its own base styling */
 .ui5-tabular-suggestions-table {
 	width: 100%;
-	border-collapse: collapse;
-	font-family: var(--sapFontFamily);
-	font-size: var(--sapFontSize);
-	table-layout: fixed;
 }
 
-.ui5-tabular-suggestions-header {
-	position: sticky;
-	top: 0;
-	z-index: 1;
+/* Hide Table's sentinel focus elements in suggestion context */
+.ui5-tabular-suggestions-table::part(before),
+.ui5-tabular-suggestions-table::part(after) {
+	display: none;
 }
 
-.ui5-tabular-suggestions-header-cell {
-	padding: var(--_ui5_tabular_suggestions_cell_padding, 0.5rem 1rem);
-	text-align: left;
-	font-weight: normal;
-	color: var(--sapList_HeaderTextColor);
-	background-color: var(--sapList_HeaderBackground);
-	border-bottom: 1px solid var(--sapList_HeaderBorderColor);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.ui5-tabular-suggestions-body {
-	background-color: var(--sapList_Background);
-}
-
-.ui5-tabular-suggestions-row {
-	cursor: pointer;
-	transition: background-color 0.1s ease;
-	outline: none;
-	position: relative;
-}
-
-.ui5-tabular-suggestions-row:hover {
-	background-color: var(--sapList_Hover_Background);
-}
-
-.ui5-tabular-suggestions-row--focused,
-.ui5-tabular-suggestions-row--selected {
+/* Focus/selection styles for suggestion rows */
+.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused,
+.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--selected {
 	background-color: var(--sapList_SelectionBackgroundColor);
 }
 
-.ui5-tabular-suggestions-row--focused {
+.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: var(--_ui5_tabular_suggestions_focus_offset, -0.125rem);
 }
 
-.ui5-tabular-suggestions-row--focused:hover,
-.ui5-tabular-suggestions-row--selected:hover {
+.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused:hover,
+.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--selected:hover {
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
 
-.ui5-tabular-suggestions-cell {
-	padding: var(--_ui5_tabular_suggestions_cell_padding, 0.5rem 1rem);
-	color: var(--sapList_TextColor);
-	border-bottom: 1px solid var(--sapList_BorderColor);
-	vertical-align: middle;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-}
-
-.ui5-tabular-suggestions-row td:first-child {
-	font-weight: 500;
-}
-
-.ui5-tabular-suggestions-cell b {
+/* Highlighted text in cells */
+.ui5-tabular-suggestions-table [ui5-table-cell] b {
 	font-weight: bold;
 	color: var(--sapList_TextColor);
 }
 
-:host([_isPhone]) .ui5-tabular-input-suggestions-table {
+/* First cell emphasis */
+.ui5-tabular-suggestions-table [ui5-table-row] [ui5-table-cell]:first-of-type {
+	font-weight: 500;
+}
+
+/* Phone mode adjustments */
+:host([_isPhone]) .ui5-tabular-input-suggestions-wrapper {
 	max-height: none;
 }

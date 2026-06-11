@@ -5,6 +5,9 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import {
+	isF2, isF7, isLeft, isRight, isPageUp, isPageDown, isHome, isEnd,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 // @ts-expect-error
@@ -14,6 +17,7 @@ import Input from "./Input.js";
 import type { IInputSuggestionItem } from "./Input.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
+import type TableRow from "./TableRow.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 
 import TabularInputTemplate from "./TabularInputTemplate.js";
@@ -313,6 +317,8 @@ class TabularInput extends Input {
 
 	onAfterRendering() {
 		if (this._useTabularSuggestions) {
+			this._applyTabularAriaOverrides();
+
 			if (this._performTextSelection) {
 				if (this.typedInValue.length && this.value.length) {
 					this._adjustSelectionRange();
@@ -324,6 +330,35 @@ class TabularInput extends Input {
 		}
 
 		super.onAfterRendering();
+	}
+
+	/**
+	 * Applies ARIA role overrides to make the ui5-table behave as a listbox.
+	 * @private
+	 */
+	_applyTabularAriaOverrides() {
+		const table = this.shadowRoot?.querySelector(".ui5-tabular-suggestions-table");
+		if (!table) {
+			return;
+		}
+
+		const tableInner = table.shadowRoot?.querySelector("[role='grid']");
+		if (tableInner) {
+			tableInner.setAttribute("role", "listbox");
+			tableInner.removeAttribute("aria-colcount");
+			tableInner.removeAttribute("aria-multiselectable");
+		}
+
+		const visibleRows = this._visibleRows;
+		table.querySelectorAll("[ui5-table-row]").forEach((rowElement, index) => {
+			const rowInner = rowElement.shadowRoot?.querySelector("[role='row']");
+			if (rowInner) {
+				rowInner.setAttribute("role", "option");
+				rowInner.removeAttribute("aria-rowindex");
+				const isSelected = visibleRows[index]?.focused || visibleRows[index]?.selected;
+				rowInner.setAttribute("aria-selected", String(!!isSelected));
+			}
+		});
 	}
 
 	/**
@@ -403,7 +438,6 @@ class TabularInput extends Input {
 
 	/**
 	 * Generates highlighted markup using StartsWithPerTerm logic.
-	 * Highlights the typed value when it appears at the start of the text or at the start of any word.
 	 * @private
 	 */
 	_generateStartsWithPerTermHighlight(text: string, value: string): string {
@@ -413,17 +447,13 @@ class TabularInput extends Input {
 
 		const valueLower = value.toLowerCase();
 		const valueLength = value.length;
-
-		// Find all positions where the value starts at beginning of text or after whitespace
 		const positions: Array<{ start: number; end: number }> = [];
 		const textLower = text.toLowerCase();
 
-		// Check start of string
 		if (textLower.startsWith(valueLower)) {
 			positions.push({ start: 0, end: valueLength });
 		}
 
-		// Check after each whitespace
 		let searchStart = 0;
 		while (searchStart < text.length) {
 			const spaceIndex = text.indexOf(" ", searchStart);
@@ -500,6 +530,32 @@ class TabularInput extends Input {
 
 	_onSuggestionRowClick(row: ITabularSuggestionRow) {
 		this._selectRow(row, false);
+	}
+
+	/**
+	 * Intercepts keyboard events on the table to prevent grid navigation.
+	 * @private
+	 */
+	_onTableKeyDown(e: KeyboardEvent) {
+		if (isF2(e) || isF7(e) || isLeft(e) || isRight(e) ||
+			isPageUp(e) || isPageDown(e) || isHome(e) || isEnd(e)) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}
+
+	/**
+	 * Handles row-click event from the table to select the corresponding suggestion.
+	 * @private
+	 */
+	_onTableRowClick(e: CustomEvent<{ row: TableRow }>) {
+		const clickedRow = e.detail.row;
+		const rowIndex = parseInt(clickedRow.dataset.rowIndex || "0", 10);
+		const suggestionRow = this._visibleRows[rowIndex];
+
+		if (suggestionRow) {
+			this._selectRow(suggestionRow, false);
+		}
 	}
 
 	_selectRow(row: ITabularSuggestionRow, keyboardUsed: boolean) {
