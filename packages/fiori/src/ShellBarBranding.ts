@@ -149,13 +149,13 @@ class ShellBarBranding extends UI5Element {
 		if (isEnter(e) && !this.href) {
 			this._activate(e);
 			e.preventDefault();
-		} else if (isSpace(e)) {			
+		} else if (isSpace(e)) {	
 			e.preventDefault();
 		}
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (!isSpace(e)) {	
+		if (!isSpace(e)) {
 			return;
 		}
 
@@ -163,7 +163,6 @@ class ShellBarBranding extends UI5Element {
 
 		if (this.href && !e.defaultPrevented) {
 			const customEvent = new MouseEvent("click");
-			
 			customEvent.stopImmediatePropagation();
 			this.getDomRef()!.dispatchEvent(customEvent);
 		}
