@@ -1,6 +1,8 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
+import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js"; // default calendar for bundling
 import {
 	isDown,
@@ -416,6 +418,10 @@ class TimeSelectionClocks extends TimePickerInternals {
 			return;
 		}
 
+		if (getAnimationMode() === AnimationMode.None) {
+			skipAnimation = true;
+		}
+
 		const currentClockComponent = this._clockComponent(this._activeIndex);
 		const newClockComponent = this._clockComponent(clockIndex);
 
@@ -428,7 +434,7 @@ class TimeSelectionClocks extends TimePickerInternals {
 			newClockComponent._skipAnimation = true;
 			this._activateClock(clockIndex);
 		} else {
-			currentClockComponent?._firstNumberElement?.addEventListener("animationend", () => this._activateClock(clockIndex), { once: true });
+			currentClockComponent?._firstNumberElement?.addEventListener("animationend", () => { this._activateClock(clockIndex); }, { once: true });
 			currentClockComponent?._clockWrapper?.classList.add("ui5-tp-clock-transition");
 		}
 	}
@@ -438,12 +444,12 @@ class TimeSelectionClocks extends TimePickerInternals {
 	 * @param clockIndex the index of the clock to be activated
 	 */
 	_activateClock(clockIndex: number) {
-		const newButton = this._buttonComponent(clockIndex);
-
 		this._entities[this._activeIndex].active = false;
 		this._activeIndex = clockIndex;
 		this._entities[this._activeIndex].active = true;
-		newButton && newButton.focus();
+
+		const newButton = this._buttonComponent(clockIndex);
+		newButton?.getFocusDomRef()?.focus();
 	}
 
 	/**

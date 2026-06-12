@@ -104,6 +104,7 @@ type DayPickerChangeEventDetail = {
 
 type DayPickerNavigateEventDetail = {
 	timestamp: number,
+	mouse?: boolean,
 }
 
 /**
@@ -612,7 +613,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		}
 
 		this._safelySetTimestamp(this._getTimestampFromDom(target));
-		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
+		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
 	/**
