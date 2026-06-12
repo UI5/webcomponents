@@ -1,5 +1,17 @@
 import { getAllRegisteredTags } from "./CustomElementsRegistry.js";
 import { getCustomElementsScopingRules, getCustomElementsScopingSuffix } from "./CustomElementsScopeUtils.js";
+import { getRegisteredFeatures } from "./FeaturesRegistry.js";
+import { getAnimationMode } from "./config/AnimationMode.js";
+import { getCalendarType, getSecondaryCalendarType } from "./config/CalendarType.js";
+import { getDefaultFontLoading } from "./config/Fonts.js";
+import { getFirstDayOfWeek, getLegacyDateCalendarCustomizing } from "./config/FormatSettings.js";
+import { getLanguage, getFetchDefaultLanguage } from "./config/Language.js";
+import { getNoConflict } from "./config/NoConflict.js";
+import { getTheme, getBaseTheme } from "./config/Theme.js";
+import { getThemeRoot } from "./config/ThemeRoot.js";
+import { getTimezone } from "./config/Timezone.js";
+import { getEnableDefaultTooltips } from "./config/Tooltips.js";
+import { getIgnoreUrlParams } from "./config/UrlParams.js";
 import VersionInfo from "./generated/VersionInfo.js";
 import getSharedResource from "./getSharedResource.js";
 
@@ -36,6 +48,28 @@ const registerCurrentRuntime = () => {
 			},
 			get registeredTags() {
 				return getAllRegisteredTags();
+			},
+			get registeredFeatures() {
+				return getRegisteredFeatures();
+			},
+			get configuration() {
+				return {
+					theme: getTheme(),
+					themeRoot: getThemeRoot(),
+					baseTheme: getBaseTheme(),
+					language: getLanguage(),
+					fetchDefaultLanguage: getFetchDefaultLanguage(),
+					timezone: getTimezone(),
+					animationMode: getAnimationMode(),
+					calendarType: getCalendarType(),
+					secondaryCalendarType: getSecondaryCalendarType(),
+					noConflict: getNoConflict(),
+					defaultFontLoading: getDefaultFontLoading(),
+					enableDefaultTooltips: getEnableDefaultTooltips(),
+					firstDayOfWeek: getFirstDayOfWeek(),
+					legacyDateCalendarCustomizing: getLegacyDateCalendarCustomizing(),
+					ignoreUrlParams: getIgnoreUrlParams(),
+				};
 			},
 			get scopingRules() {
 				return getCustomElementsScopingRules();
