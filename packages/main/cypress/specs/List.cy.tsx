@@ -433,7 +433,7 @@ describe("List - Accessibility", () => {
 
 	it("has default aria-description for accessibleRole List when no accessibleDescription is set", () => {
 		cy.mount(
-			<List>
+			<List selectionMode="Delete">
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
@@ -468,7 +468,7 @@ describe("List - Accessibility", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
-			<List accessibleDescription={customDescription}>
+			<List selectionMode="Delete" accessibleDescription={customDescription}>
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
@@ -509,6 +509,91 @@ describe("List - Accessibility", () => {
 						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
 						expect(ariaDesc).to.equal(customDescription);
 						expect(ariaDesc).to.not.include(defaultText);
+					});
+			});
+	});
+
+	it("does not announce F2 instruction for selectionMode None with standard items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc ?? "").to.not.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode Delete", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode None with type Detail items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard type="Detail">Item 1</ListItemStandard>
+				<ListItemStandard type="Detail">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode None with custom list items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemCustom>
+					<Button>Action</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
 					});
 			});
 	});
