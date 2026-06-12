@@ -146,6 +146,11 @@
 	transform: translateY(-50%);
 }
 
+/* Prevents header content from overlapping the absolutely positioned fullscreen button */
+:host([show-fullscreen-button]) .ui5-popup-header-root {
+	padding-inline-end: var(--_ui5_dialog_fullscreen_button_offset);
+}
+
 :host([on-phone]) .ui5-dialog-fullscreen-btn {
 	display: none;
 }
