@@ -29,7 +29,7 @@
 	cursor: move;
 }
 
-:host([draggable]) .ui5-popup-header-root * {
+:host([draggable]) .ui5-popup-header-root *:not(.ui5-dialog-fullscreen-btn) {
 	cursor: auto;
 }
 
@@ -137,6 +137,17 @@
 
 .ui5-popup-resize-handle [ui5-icon] {
 	color: var(--sapButton_Lite_TextColor);
+}
+
+.ui5-dialog-fullscreen-btn {
+	position: absolute;
+	inset-inline-end: 0.5rem;
+	inset-block-start: 50%;
+	transform: translateY(-50%);
+}
+
+:host([on-phone]) .ui5-dialog-fullscreen-btn {
+	display: none;
 }
 
 :host::backdrop {

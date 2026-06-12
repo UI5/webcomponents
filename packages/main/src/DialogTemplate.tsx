@@ -3,6 +3,7 @@ import type Dialog from "./Dialog.js";
 import PopupTemplate from "./PopupTemplate.js";
 import Title from "./Title.js";
 import Icon from "./Icon.js";
+import Button from "./Button.js";
 
 export default function DialogTemplate(this: Dialog) {
 	return PopupTemplate.call(this, {
@@ -24,6 +25,7 @@ function beforeContent(this: Dialog) {
 				tabIndex={this._headerTabIndex}
 				onKeyDown={this._onDragOrResizeKeyDown}
 				onMouseDown={this._onDragMouseDown}
+				onDblClick={this.showFullscreenButton ? this._onHeaderDblClick : undefined}
 				part="header"
 				// state={this.state}
 			>
@@ -34,6 +36,18 @@ function beforeContent(this: Dialog) {
 					<slot name="header"></slot>
 					:
 					<Title level="H1" id="ui5-popup-header-text" class="ui5-popup-header-text">{this.headerText}</Title>
+				}
+
+				{this._showFullscreenButton &&
+					<Button
+						class="ui5-dialog-fullscreen-btn"
+						icon={this._fullscreenButtonIcon}
+						design="Transparent"
+						tooltip={this._fullscreenButtonTooltip}
+						accessibleName={this._fullscreenButtonTooltip}
+						accessibilityAttributes={this._fullscreenButtonAccessibilityAttributes}
+						onClick={this._toggleFullscreen}
+					></Button>
 				}
 
 				{this.resizable ?

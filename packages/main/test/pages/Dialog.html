@@ -35,6 +35,7 @@
 		</div>
 		<ui5-checkbox text="Compact size" id="cbCompact"></ui5-checkbox>
 		<ui5-checkbox text="Scrollable page" id="cbScrollable"></ui5-checkbox>
+		<ui5-checkbox text="Toggle RTL" id="cbRtl"></ui5-checkbox>
 		<br>
 		<br>
 		<ui5-button id="btnOpenDialogWithInput">Open Dialog with Input</ui5-button>
@@ -80,6 +81,9 @@
 		<br>
 		<br>
 		<ui5-button id="draggable-and-resizable-open">Open draggable & resizable dialog</ui5-button>
+		<br>
+		<br>
+		<ui5-button id="fullscreen-open">Open fullscreen dialog</ui5-button>
 		<br>
 		<br>
 		<ui5-button id="rtl-draggable-and-resizable-open">Open RTL draggable & resizable dialog</ui5-button>
@@ -436,6 +440,17 @@
 
 		<div slot="footer" class="dialogFooter tallFooter">
 			<ui5-button id="draggable-and-resizable-close" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="fullscreen-dialog" header-text="Fullscreen Dialog" show-fullscreen-button draggable resizable>
+		<p>This dialog has a fullscreen toggle button in the header.</p>
+		<p>Press the fullscreen button or use Shift+Ctrl+F to toggle fullscreen mode.</p>
+		<p>You can also double-click the header to toggle.</p>
+		<ui5-input placeholder="Type something..."></ui5-input>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="fullscreen-close" design="Emphasized">Close</ui5-button>
 		</div>
 	</ui5-dialog>
 
@@ -898,6 +913,10 @@
 			scrollHelper.style.display = cbScrollable.checked ? "block" : "none";
 		});
 
+		cbRtl.addEventListener("ui5-change", function () {
+			document.documentElement.dir = cbRtl.checked ? "rtl" : "ltr";
+		});
+
 		let preventClosing = true;
 
 		btnOpenDialog.addEventListener("click", function () {
@@ -1000,6 +1019,8 @@
 		window["resizable-custom-header-close"].addEventListener("click", function () { window["resizable-dialog-custom-header"].open = false; });
 		window["draggable-and-resizable-open"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = true; });
 		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = false; });
+		window["fullscreen-open"].addEventListener("click", function () { window["fullscreen-dialog"].open = true; });
+		window["fullscreen-close"].addEventListener("click", function () { window["fullscreen-dialog"].open = false; });
 		window["rtl-draggable-and-resizable-open"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = true; });
 		window["rtl-draggable-and-resizable-close"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = false; });
 		window["rtl-maxwidth-resizable-open"].addEventListener("click", function () { window["rtl-maxwidth-resizable-dialog"].open = true; });

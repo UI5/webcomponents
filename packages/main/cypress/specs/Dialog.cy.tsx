@@ -1844,3 +1844,255 @@ describe("Native drag-and-drop in draggable dialogs", () => {
 		});
 	});
 });
+
+describe("Fullscreen Button", () => {
+	it("should show fullscreen button when showFullscreenButton is set", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("exist")
+			.and("be.visible");
+	});
+
+	it("should not show fullscreen button when showFullscreenButton is not set", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("not.exist");
+	});
+
+	it("should toggle stretch property when fullscreen button is clicked", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get("#dialog").then($dialog => {
+			($dialog.get(0) as Dialog)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+
+		cy.get("#dialog").then($dialog => {
+			($dialog.get(0) as Dialog)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should show full-screen icon when not stretched and exit-full-screen when stretched", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "full-screen");
+
+		cy.get("#dialog").then($dialog => {
+			($dialog.get(0) as Dialog)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "exit-full-screen");
+	});
+
+	it("should have correct tooltip based on stretch state", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "tooltip", "Maximize");
+
+		cy.get("#dialog").then($dialog => {
+			($dialog.get(0) as Dialog)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "tooltip", "Restore");
+	});
+
+	it("should have aria-keyshortcuts attribute", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-keyshortcuts", "Shift+Control+F");
+	});
+
+	it("should toggle fullscreen with Shift+Ctrl+F keyboard shortcut", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Input id="input"></Input>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get("#input").realClick();
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should toggle fullscreen on header double-click", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test Dialog" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get("#dialog").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			const headerRoot = dialog.shadowRoot!.querySelector(".ui5-popup-header-root")!;
+			const event = new MouseEvent("dblclick", { bubbles: true, composed: true });
+			Object.defineProperty(event, "target", { value: headerRoot });
+			headerRoot.dispatchEvent(event);
+		});
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+	});
+
+	it("should not toggle fullscreen on double-click when showFullscreenButton is false", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test Dialog" open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.realClick({ clickCount: 2 });
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should reset drag/resize state when toggling fullscreen", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} draggable={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			dialog._draggedOrResized = true;
+			Object.assign(dialog.style, { top: "100px", left: "100px", width: "400px", height: "300px" });
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.realClick();
+
+		cy.get("#dialog").then($dialog => {
+			const dialog = $dialog.get(0) as Dialog;
+			expect(dialog._draggedOrResized).to.be.false;
+			expect(dialog.style.width).to.equal("");
+			expect(dialog.style.height).to.equal("");
+		});
+	});
+
+	it("should display header when only showFullscreenButton is set", () => {
+		cy.mount(
+			<Dialog id="dialog" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.should("exist");
+	});
+
+	it("should reflect stretch state if stretch is initially true", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} stretch={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "exit-full-screen")
+			.and("have.attr", "tooltip", "Restore");
+
+		cy.get("#dialog").invoke("prop", "open", false);
+	});
+});
