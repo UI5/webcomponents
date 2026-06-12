@@ -136,26 +136,36 @@ class ShellBarBranding extends UI5Element {
 		this.fireDecoratorEvent("click");
 	}
 
-	_onclick(e: MouseEvent) {
+	private _activate(e: Event) {
 		e.stopPropagation();
 		this._fireClick();
 	}
 
-	_onkeyup(e: KeyboardEvent) {
-		if (isSpace(e)) {
-			this.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-branding-root")?.click();
-		}
+	_onclick(e: MouseEvent) {
+		this._activate(e);
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (isSpace(e)) {
+		if (isEnter(e) && !this.href) {
+			this._activate(e);
 			e.preventDefault();
+		} else if (isSpace(e)) {
+			e.preventDefault();
+		}
+	}
+
+	_onkeyup(e: KeyboardEvent) {
+		if (!isSpace(e)) {
 			return;
 		}
 
-		if (isEnter(e)) {
-			e.preventDefault();
-			this.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-branding-root")?.click();
+		this._activate(e);
+
+		if (this.href && !e.defaultPrevented) {
+			const customEvent = new MouseEvent("click");
+
+			customEvent.stopImmediatePropagation();
+			this.getDomRef()!.dispatchEvent(customEvent);
 		}
 	}
 }
