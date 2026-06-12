@@ -18,7 +18,7 @@ With UI5 Web Components, developers can leverage a powerful, flexible, and futur
 
 - **SAP Backing:** Developed and maintained by [SAP](https://sap.com) as part of the [UI5](https://openui5.org/) product family, guaranteeing ongoing support and integration with SAP's ecosystem.
 
-- **AI-Ready:** The project is structured for AI-assisted development with an [MCP server](./05-MCP-Server.md) for direct IDE integration, a machine-readable [llms.txt](/llms.txt) file, an [AGENTS.md](https://github.com/UI5/webcomponents/blob/main/AGENTS.md) guide for coding assistants, installable [Agent Skills](./06-Skills.md), and a dedicated set of [AI components](/components/ai/) for building conversational and generative AI interfaces.
+- **AI-Ready:** The project is structured for AI-assisted development with an [MCP server](./05-MCP-Server.md) for direct IDE integration, a machine-readable [llms.txt](pathname:///llms.txt) file, an [AGENTS.md](https://github.com/UI5/webcomponents/blob/main/AGENTS.md) guide for coding assistants, installable [Agent Skills](./06-Skills.md), and a dedicated set of [AI components](/components/ai/) for building conversational and generative AI interfaces.
 
 
 ## Ecosystem
@@ -37,7 +37,7 @@ The UI5 Web Components for React library remains valuable for its additional fea
 
 ### UI5 Web Components for Angular
 
-[UI5 Web Components for Angular](https://github.com/SAP/ui5-webcomponents-ngx) is a wrapper implementation around UI5 Web Components which to make it work with Angular without needing to use the `CUSTOM_ELEMENTS_SCHEMA` or `NO_ERRORS_SCHEMA` schemas.
+[UI5 Web Components for Angular](https://sap.github.io/fundamental-ngx/) is a wrapper implementation around UI5 Web Components which to make it work with Angular without needing to use the `CUSTOM_ELEMENTS_SCHEMA` or `NO_ERRORS_SCHEMA` schemas.
 Moreover, all Angular-specific features, such as two-way data binding and Angular Form support, work out of the box.
 
 

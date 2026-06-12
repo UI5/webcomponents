@@ -21,10 +21,7 @@ import type ToggleButton from "@ui5/webcomponents/dist/ToggleButton.js";
 import "./TimelineItem.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
-import {
-	TIMELINE_ARIA_LABEL,
-	TIMELINE_LOAD_MORE_BUTTON_TEXT,
-} from "./generated/i18n/i18n-defaults.js";
+import { TIMELINE_ARIA_LABEL, TIMELINE_LOAD_MORE_BUTTON_TEXT } from "./generated/i18n/i18n-defaults.js";
 import TimelineTemplate from "./TimelineTemplate.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
@@ -38,8 +35,6 @@ import TimelineLayout from "./types/TimelineLayout.js";
 import TimelineGrowingMode from "./types/TimelineGrowingMode.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import type TimelineHeaderBar from "./TimelineHeaderBar.js";
-import type { TimelineHeaderBarSearchEventDetail, TimelineHeaderBarFilterEventDetail, TimelineHeaderBarSortEventDetail } from "./TimelineHeaderBar.js";
 
 /**
  * Interface for components that may be slotted inside `ui5-timeline` as items
@@ -59,16 +54,7 @@ interface ITimelineItem extends UI5Element, ITabbable {
 	isNextItemGroup?: boolean;
 	firstItemInTimeline?: boolean;
 	effectiveRole?: string;
-	titleText?: string;
-	name?: string;
-	subtitleText?: string;
 }
-
-type TimelineSearchEventDetail = TimelineHeaderBarSearchEventDetail;
-
-type TimelineFilterEventDetail = TimelineHeaderBarFilterEventDetail;
-
-type TimelineSortEventDetail = TimelineHeaderBarSortEventDetail;
 
 const SHORT_LINE_WIDTH = "ShortLineWidth";
 const LARGE_LINE_WIDTH = "LargeLineWidth";
@@ -85,14 +71,22 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * There are two distinct variants of the timeline: basic and social. The basic timeline is read-only,
  * while the social timeline offers a high level of interaction and collaboration, and is integrated within SAP Jam.
  *
- * ### Header Bar
+ * ### Header and Info Bar Slots
  *
- * The Timeline supports a `header-bar` slot for search, filter, and sort functionality.
- * Use the `ui5-timeline-header-bar` component in this slot.
- * The Timeline fires `search`, `filter`, and `sort` events that the application should handle
- * by adding, removing, or reordering items in the DOM. The Timeline itself does not perform
- * filtering or sorting — it renders whatever items are provided in the default slot.
+ * The Timeline exposes two named slots above the items area:
  *
+ * - `header` — for a controls bar (search field, filter trigger, sort toggle, etc.).
+ * The most common pattern is to place a `ui5-toolbar` containing a search input and buttons that open
+ * a filter dialog or toggle sort direction. The Timeline itself performs no filtering, sorting, or
+ * searching — the application listens for events from its own controls and reorders, hides, or
+ * adds items in the default slot accordingly.
+ *
+ * - `infoBar` — for a status bar that reflects the result of the controls (active filters,
+ * applied sort, current search query). Typically contains tokens, labels, or a `ui5-bar`.
+ *
+ * The Timeline itself does not filter, sort, or search — the application owns that logic.
+ * Use `stickyHeader` to pin both bars while the Timeline's items scroll. Give the Timeline
+ * a constrained height in this mode so it owns its scrollbar.
  * @constructor
  * @extends UI5Element
  * @public
@@ -117,55 +111,9 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
 	bubbles: true,
 })
 
-/**
- * Fired when the user performs a search in the header bar.
- *
- * **Note:** The Timeline does not perform filtering. The application should handle
- * this event and add/remove items from the DOM to reflect the search results.
- *
- * @param {string} value The search value entered by the user.
- * @public
- * @since 2.22.0
- */
-@event("search", {
-	bubbles: true,
-})
-
-/**
- * Fired when the user changes filter selection in the header bar.
- *
- * **Note:** The Timeline does not perform filtering. The application should handle
- * this event and add/remove items from the DOM to reflect the filter selection.
- *
- * @param {string} filterBy The filter category.
- * @param {string[]} selectedOptions The selected filter option texts.
- * @public
- * @since 2.22.0
- */
-@event("filter", {
-	bubbles: true,
-})
-
-/**
- * Fired when the user changes sort order in the header bar.
- *
- * **Note:** The Timeline does not perform sorting. The application should handle
- * this event and reorder the items in the DOM accordingly.
- *
- * @param {string} sortOrder The sort order ("Ascending" or "Descending").
- * @public
- * @since 2.22.0
- */
-@event("sort", {
-	bubbles: true,
-})
-
 class Timeline extends UI5Element {
 	eventDetails!: {
 		"load-more": void,
-		"search": TimelineSearchEventDetail,
-		"filter": TimelineFilterEventDetail,
-		"sort": TimelineSortEventDetail,
 	}
 	/**
 	 * Defines the items orientation.
@@ -223,6 +171,22 @@ class Timeline extends UI5Element {
 	growing: `${TimelineGrowingMode}` = "None";
 
 	/**
+	 * Defines whether the content of the `header` and `infoBar` slots remains visible when the user scrolls the Timeline.
+	 *
+	 * **Note:** The bars pin to the Timeline's own scrollport. Give the Timeline a
+	 * constrained height (for example `style="height: 32rem"`) so its items scroll
+	 * inside it. Placing the Timeline inside an externally scrolling ancestor while
+	 * leaving the Timeline itself unsized is not supported in this mode — the bars
+	 * will scroll away with the ancestor.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	stickyHeader = false;
+
+	/**
 	 * Defines the active state of the `More` button.
 	 * @private
 	 */
@@ -237,23 +201,33 @@ class Timeline extends UI5Element {
 	items!: DefaultSlot<ITimelineItem>;
 
 	/**
-	 * Defines the header bar of the timeline.
-	 * Use `ui5-timeline-header-bar` for filtering, sorting, and search functionality.
-	 *
-	 * **Note:** The Timeline fires `search`, `filter`, and `sort` events when the user interacts
-	 * with the header bar. The application should handle these events to filter/sort the items.
+	 * Defines the content of the Timeline's header area, displayed above the items.
+	 * Typically a `ui5-toolbar` with search, sort, and filter controls.
 	 *
 	 * @public
 	 * @since 2.22.0
 	 */
 	@slot()
-	headerBar!: Slot<TimelineHeaderBar>;
+	header!: Slot<HTMLElement>;
+
+	/**
+	 * Defines the content of the Timeline's info bar area, displayed below the header
+	 * and above the items. Use for status display (applied filters, sort direction, counts).
+	 *
+	 * @public
+	 * @since 2.22.0
+	 */
+	@slot()
+	infoBar!: Slot<HTMLElement>;
 
 	@query(".ui5-timeline-end-marker")
 	timelineEndMarker!: HTMLElement;
 
 	@query((`[id="ui5-timeline-growing-btn"]`))
 	growingButton!: HTMLElement;
+
+	@query(".ui5-timeline-scroll-container")
+	_scrollContainer!: HTMLElement;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -277,6 +251,14 @@ class Timeline extends UI5Element {
 			: Timeline.i18nBundle.getText(TIMELINE_ARIA_LABEL);
 	}
 
+	get _hasHeader(): boolean {
+		return this.header.length > 0;
+	}
+
+	get _hasInfoBar(): boolean {
+		return this.infoBar.length > 0;
+	}
+
 	get showBusyIndicatorOverlay() {
 		return !this.growsWithButton && this.loading;
 	}
@@ -297,14 +279,6 @@ class Timeline extends UI5Element {
 		return this.growing === TimelineGrowingMode.Button;
 	}
 
-	get _hasHeaderBar(): boolean {
-		return this.headerBar.length > 0;
-	}
-
-	onExitDOM() {
-		this.unobserveTimelineEnd();
-	}
-
 	onAfterRendering() {
 		if (this.growsOnScroll) {
 			this.observeTimelineEnd();
@@ -313,6 +287,10 @@ class Timeline extends UI5Element {
 		}
 
 		this.growingIntersectionObserver = this.getIntersectionObserver();
+	}
+
+	onExitDOM() {
+		this.unobserveTimelineEnd();
 	}
 
 	async observeTimelineEnd() {
@@ -392,6 +370,27 @@ class Timeline extends UI5Element {
 		}
 
 		this._itemNavigation.setCurrentItem(target);
+	}
+
+	_onwheel(e: WheelEvent) {
+		// In horizontal layout, translate vertical wheel into horizontal scroll
+		// so a regular mouse wheel can scroll through items.
+		if (this.layout !== TimelineLayout.Horizontal || !e.deltaY || e.deltaX) {
+			return;
+		}
+
+		const container = this._scrollContainer;
+		if (!container) {
+			return;
+		}
+
+		const canScroll = container.scrollWidth > container.clientWidth;
+		if (!canScroll) {
+			return;
+		}
+
+		container.scrollLeft += e.deltaY;
+		e.preventDefault();
 	}
 
 	onBeforeRendering() {
@@ -559,7 +558,4 @@ Timeline.define();
 export default Timeline;
 export type {
 	ITimelineItem,
-	TimelineSearchEventDetail,
-	TimelineFilterEventDetail,
-	TimelineSortEventDetail,
 };

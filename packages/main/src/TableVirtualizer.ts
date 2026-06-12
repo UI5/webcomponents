@@ -52,6 +52,7 @@ type RangeChangeEventDetail = {
  * This allows large numbers of rows to exist, but maintain high performance by only paying the cost for those that are currently visible.
  *
  * **Note:** The maximum number of virtualized rows is limited by browser constraints, specifically the maximum supported height for a DOM element.
+ * **Note:** The `ui5-table-group-row` component is not supported by the virtualizer. Only `ui5-table-row` elements can be virtualized.
  *
  * ### ES6 Module Import
  * `import "@ui5/webcomponents/dist/TableVirtualizer.js";`

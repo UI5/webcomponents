@@ -36,7 +36,7 @@ const getScripts = (options) => {
 		createIllustrationsLoadersScript[`generate-${illustrations.set}-${illustrations.collection}`] = `ui5nps-script ${LIB}generate-js-imports/illustrations.js ${illustrations.path} ${illustrations.dynamicImports.outputFile} ${illustrations.set} ${illustrations.collection} ${illustrations.dynamicImports.location} ${illustrations.dynamicImports.filterOut.join(",")}`
 	});
 
-
+	const standalone = options.standalone ?? true;
 	const tsOption = !!(!options.legacy || options.jsx);
 	const tsCommandOld = tsOption ? "tsc" : "";
 	let tsWatchCommandStandalone = tsOption ? "tsc --watch" : "";
@@ -66,6 +66,17 @@ const getScripts = (options) => {
 		viteConfig = `-c "${require.resolve("@ui5/webcomponents-tools/components-package/vite.config.js")}"`;
 	}
 
+
+	const getPrepareDefault = () => {
+		let result = `ui5nps clean prepare.all copy copyProps prepare.typescript`
+
+		if (standalone) {
+			result = `${result} generateAPI`;
+		}
+
+		return result;
+	}
+
 	const scripts = {
 		__ui5envs: {
 			UI5_CEM_MODE: typeof options.dev === "boolean" ? (options.dev ? "dev" : undefined) : options.dev,
@@ -86,7 +97,7 @@ const getScripts = (options) => {
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 		},
 		prepare: {
-			default: `ui5nps clean prepare.all copy copyProps prepare.typescript`,
+			default: getPrepareDefault(),
 			all: `ui5nps-p build.templates build.i18n prepare.styleRelated build.illustrations`, // concurently
 			styleRelated: "ui5nps build.styles build.jsonImports build.jsImports",
 			typescript: tsCommandOld,
@@ -165,6 +176,7 @@ const getScripts = (options) => {
 			bundle: `ui5nps-script ${LIB}dev-server/dev-server.mjs ${viteConfig}`,
 		},
 		generateAPI: {
+			"default": tsOption ? "ui5nps generateAPI.generateCEM generateAPI.validateCEM generateAPI.mergeCEM" : "",
 			generateCEM: `ui5nps-script "${LIB}cem/cem.js" analyze --config "${LIB}cem/custom-elements-manifest.config.mjs"`,
 			validateCEM: `ui5nps-script "${LIB}cem/validate.js"`,
 			mergeCEM: `ui5nps-script "${LIB}cem/merge.mjs"`,

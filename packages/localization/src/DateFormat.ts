@@ -27,15 +27,25 @@ type DateFormatOptions = {
 
 const DateFormatWrapped = DateFormatNative as typeof DateFormatT;
 
+const _dateFormatCache = new Map<string, DateFormat>();
+
 class DateFormat extends DateFormatWrapped {
 	static getDateInstance(oFormatOptions?: DateFormatOptions, oLocale?: LocaleWrapped): DateFormat;
 	static getDateInstance(oLocale?: LocaleWrapped): DateFormat;
 	static getDateInstance(oFormatOptionsOrLocale?: DateFormatOptions | LocaleWrapped, oLocale?: LocaleWrapped): DateFormat {
+		const locale = oLocale ?? new LocaleWrapped(getLocale().toString());
+
 		if (oFormatOptionsOrLocale instanceof LocaleWrapped) {
 			return DateFormatWrapped.getDateInstance(undefined, oFormatOptionsOrLocale);
 		}
-		const nativeLocale = oLocale ?? new LocaleWrapped(getLocale().toString());
-		return DateFormatWrapped.getDateInstance(oFormatOptionsOrLocale, nativeLocale);
+
+		const cacheKey = `${JSON.stringify(oFormatOptionsOrLocale ?? {})}__${String(locale)}`;
+		let instance = _dateFormatCache.get(cacheKey);
+		if (!instance) {
+			instance = DateFormatWrapped.getDateInstance(oFormatOptionsOrLocale, locale);
+			_dateFormatCache.set(cacheKey, instance);
+		}
+		return instance;
 	}
 }
 

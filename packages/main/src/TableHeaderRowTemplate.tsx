@@ -54,13 +54,35 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 				return [<slot name={cell._individualSlot}></slot>];
 			})}
 
+			{ this._renderDummyCell && this._hasPopin &&
+				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
+					data-excluded-from-navigation="">
+				</TableHeaderCell>
+			}
+
 			{ this._rowActionCount > 0 &&
 				<TableHeaderCell id="actions-cell" aria-colindex={ariaColIndex++}>
 					<div id="actions-cell-content">{this._i18nRowActions}</div>
 				</TableHeaderCell>
 			}
 
-			{ this._popinCells.length > 0 &&
+			{ this._renderNavigated &&
+				<TableHeaderCell id="navigated-cell"
+					data-excluded-from-navigation
+					aria-hidden={true}
+					role="none"
+				>
+					<div id="navigated"></div>
+				</TableHeaderCell>
+			}
+
+			{ this._renderDummyCell && !this._hasPopin &&
+				<TableHeaderCell id="dummy-cell" role="none" aria-hidden={true}
+					data-excluded-from-navigation="nofocus">
+				</TableHeaderCell>
+			}
+
+			{ this._hasPopin &&
 				<TableHeaderCell id="popin-cell" aria-colindex={ariaColIndex++} data-excluded-from-navigation>
 					<div id="popin-cell-content">{this._i18nRowPopin}</div>
 				</TableHeaderCell>

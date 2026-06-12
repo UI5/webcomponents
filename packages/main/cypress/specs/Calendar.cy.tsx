@@ -753,6 +753,38 @@ describe("Calendar general interaction", () => {
 			.should("have.class", "ui5-calheader-arrowbtn-disabled");
 	});
 
+	it("Should navigate when pressing Space/Enter on prev/next buttons", () => {
+		const date = new Date(Date.UTC(2024, 5, 15, 0, 0, 0)); // June 15, 2024
+		cy.mount(getDefaultCalendar(date));
+
+		// Focus and press Enter on next button
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-next]")
+			.focus()
+			.realPress("Enter");
+
+		// Verify navigation to July
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "July");
+
+		// Focus and press Space on prev button
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-prev]")
+			.focus()
+			.realPress("Space");
+
+		// Verify navigation back to June
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "June");
+	});
+
+
 	it("Second month and year are rendered in the header", () => {
 		cy.mount(<Calendar id="calendar1" primaryCalendarType="Islamic" secondaryCalendarType="Gregorian"></Calendar>);
 		const timestamp = new Date(Date.UTC(2000, 9, 10, 0, 0, 0)).valueOf() / 1000;
@@ -1727,6 +1759,36 @@ describe("Day Picker Tests", () => {
 				expect(todayFromTimestamp.getMonth()).to.equal(actualToday.getMonth());
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
 			});
+	});
+
+	it("mousedown + arrow navigation + click keeps focus at navigated cell, selection on clicked cell", () => {
+		const date = new Date(Date.UTC(2000, 9, 10, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		const day15Timestamp = new Date(Date.UTC(2000, 9, 15, 0, 0, 0)).valueOf() / 1000;
+		const day12Timestamp = new Date(Date.UTC(2000, 9, 12, 0, 0, 0)).valueOf() / 1000;
+
+		// mousedown on 15th — focus moves to 15th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseDown();
+
+		// press arrow left three times — focus moves to 12th
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		// mouseup on 15th — selection goes to 15th, focus stays on 12th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseUp();
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.should("have.class", "ui5-dp-item--selected");
 	});
 });
 

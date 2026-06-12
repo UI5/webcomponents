@@ -4,9 +4,9 @@ import InCard from "../../../_samples/fiori/Timeline/InCard/InCard.md";
 import WithGroups from "../../../_samples/fiori/Timeline/WithGroups/WithGroups.md";
 import WithState from "../../../_samples/fiori/Timeline/WithState/WithState.md";
 import WithGrowing from "../../../_samples/fiori/Timeline/WithGrowing/WithGrowing.md";
-import WithSearch from "../../../_samples/fiori/Timeline/WithSearch/WithSearch.md";
+import WithHeader from "../../../_samples/fiori/Timeline/WithHeader/WithHeader.md";
 import WithFilter from "../../../_samples/fiori/Timeline/WithFilter/WithFilter.md";
-import WithHeaderBar from "../../../_samples/fiori/Timeline/WithHeaderBar/WithHeaderBar.md";
+import StickyInPage from "../../../_samples/fiori/Timeline/StickyInPage/StickyInPage.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -36,14 +36,26 @@ import WithHeaderBar from "../../../_samples/fiori/Timeline/WithHeaderBar/WithHe
 
 <WithGrowing/>
 
-### Timeline with Search
+### Timeline with Header and Info Bar
 
-<WithSearch />
+The `header` and `infoBar` slots let applications place their own controls and status indicators above the Timeline items.
 
-### Timeline with Filter and Sort
+- **`header`** — controls (search, sort, filter). Use a `ui5-toolbar`.
+- **`infoBar`** — status display (active filters, item count). Use a `ui5-bar` with `design="Subheader"`.
+- Use `stickyHeader` to pin both bars while scrolling.
 
-<WithFilter />
+The Timeline does not filter, sort, or search — the application owns that logic and updates items accordingly.
 
-### Timeline with Header Bar (Combined)
+#### Minimal — search and live count
 
-<WithHeaderBar />
+<WithHeader/>
+
+#### Full pipeline — search, sort and filter
+
+<WithFilter/>
+
+#### Sticky in a scrollable Timeline
+
+When the Timeline owns its scrollbar (give it a constrained height), `stickyHeader` keeps the `header` and `infoBar` slots pinned to the top while the items scroll.
+
+<StickyInPage/>

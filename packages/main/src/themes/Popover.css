@@ -1,4 +1,5 @@
 :host {
+	min-width: 6.25rem;
 	box-shadow: var(--_ui5_popover_box_shadow);
 	background-color: var(--_ui5_popover_background);
 	max-width: calc(100vw - (100vw - 100%) - 2 * var(--_ui5_popup_viewport_margin));
@@ -57,10 +58,6 @@
 
 :host([hide-arrow]) .ui5-popover-arrow {
 	display: none;
-}
-
-.ui5-popover-root {
-	min-width: 6.25rem;
 }
 
 .ui5-popover-arrow {
