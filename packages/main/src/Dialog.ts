@@ -10,7 +10,6 @@ import {
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import Popup from "./Popup.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -327,8 +326,8 @@ class Dialog extends Popup {
 
 	get _fullscreenButtonTooltip() {
 		return this.stretch
-			? Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_RESTORE as I18nText)
-			: Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_MAXIMIZE as I18nText);
+			? Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_RESTORE)
+			: Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_MAXIMIZE);
 	}
 
 	get _fullscreenButtonAccessibilityAttributes() {
