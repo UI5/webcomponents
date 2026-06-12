@@ -9,6 +9,7 @@ import "./Assets.js";
 import "./illustrations/AllIllustrations.js";
 
 // FIORI components
+import HeroBanner from "./HeroBanner.js";
 import BarcodeScannerDialog from "./BarcodeScannerDialog.js";
 import DynamicPage from "./DynamicPage.js";
 import DynamicPageHeader from "./DynamicPageHeader.js";
@@ -56,8 +57,6 @@ import UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewItem.js"
 import UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
 import Timeline from "./Timeline.js";
 import TimelineGroupItem from "./TimelineGroupItem.js";
-import TimelineHeaderBar from "./TimelineHeaderBar.js";
-import TimelineFilterOption from "./TimelineFilterOption.js";
 import NavigationLayout from "./NavigationLayout.js";
 import UploadCollection from "./UploadCollection.js";
 import UploadCollectionItem from "./UploadCollectionItem.js";

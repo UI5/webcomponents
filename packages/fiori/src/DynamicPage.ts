@@ -10,6 +10,7 @@ import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { AriaLandmarkRole } from "@ui5/webcomponents-base";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
@@ -31,6 +32,29 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+
+type DynamicPageHeaderRoles = Extract<AriaLandmarkRole, "none" | "banner" | "region">;
+type DynamicPageContentRoles = Extract<AriaLandmarkRole, "none" | "main" | "region" | "form">;
+type DynamicPageFooterRoles = Extract<AriaLandmarkRole, "none" | "contentinfo" | "region">;
+type DynamicPageRootRoles = Extract<AriaLandmarkRole, "none" | "main" | "region">;
+type DynamicPageAccessibilityAttributes = {
+	root?: {
+		role?: DynamicPageRootRoles,
+		name?: string,
+	},
+	header?: {
+		role?: DynamicPageHeaderRoles,
+		name?: string,
+	},
+	content?: {
+		role?: DynamicPageContentRoles,
+		name?: string,
+	},
+	footer?: {
+		role?: DynamicPageFooterRoles,
+		name?: string,
+	},
+};
 
 const SCROLL_DEBOUNCE_RATE = 5; // ms
 const SCROLL_THRESHOLD = 10; // px
@@ -184,6 +208,36 @@ class DynamicPage extends UI5Element {
 	@slot({ type: HTMLElement })
 	footerArea!: Slot<HTMLElement>;
 
+	/**
+	* Defines additional accessibility attributes on different areas of the component.
+	*
+	* The accessibilityAttributes object has the following fields,
+	* where each field is an object supporting one or more accessibility attributes:
+	*
+	*  - **root**: `root.role` and `root.name`.
+	*  - **header**: `header.role` and `header.name`.
+	*  - **content**: `content.role` and `content.name`.
+	*  - **footer**: `footer.role` and `footer.name`.
+	*
+	* The accessibility attributes support the following values:
+	*
+	* - **role**: Defines the accessible ARIA landmark role of the area.
+	* Accepts the following values per section:
+	* `root` — `none`, `main`, `region`;
+	* `header` — `none`, `banner`, `region`;
+	* `content` — `none`, `main`, `region`, `form`;
+	* `footer` — `none`, `contentinfo`, `region`.
+	*
+	* - **name**: Defines the accessible ARIA name of the area.
+	* Accepts any string.
+	*
+	* @default {}
+	* @public
+	* @since 2.24.0
+	*/
+	@property({ type: Object })
+	accessibilityAttributes: DynamicPageAccessibilityAttributes = {};
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -220,10 +274,18 @@ class DynamicPage extends UI5Element {
 		return this.showFooter ? this.footerWrapper?.getBoundingClientRect().height || 0 : 0;
 	}
 
-	get topAreaHeight() {
+	get scrollPaddingTop() {
 		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
 		const headerHeight = this.dynamicPageHeader?.getBoundingClientRect().height || 0;
-		return this._headerSnapped ? titleHeight : headerHeight + titleHeight;
+
+		if (this._headerSnapped) {
+			return titleHeight;
+		}
+
+		const fullHeight = headerHeight + titleHeight;
+		const scrollTop = this.scrollContainer?.scrollTop || 0;
+
+		return Math.max(titleHeight, fullHeight - scrollTop);
 	}
 
 	get dynamicPageTitle(): DynamicPageTitle | null {
@@ -281,8 +343,16 @@ class DynamicPage extends UI5Element {
 	}
 
 	get headerAriaLabel() {
-		return this.hasHeading ? this._headerLabel : undefined;
+		return this.accessibilityAttributes.header?.name || (this.hasHeading ? this._headerLabel : undefined);
 	}
+
+	get _headerRole() { return this.accessibilityAttributes.header?.role; }
+	get _rootRole() { return this.accessibilityAttributes.root?.role; }
+	get _rootAriaLabel() { return this.accessibilityAttributes.root?.name; }
+	get _contentRole() { return this.accessibilityAttributes.content?.role; }
+	get _contentAriaLabel() { return this.accessibilityAttributes.content?.name; }
+	get _footerRole() { return this.accessibilityAttributes.footer?.role; }
+	get _footerAriaLabel() { return this.accessibilityAttributes.footer?.name; }
 
 	get _hidePinButton() {
 		return this.hidePinButton || isPhone();
@@ -455,7 +525,8 @@ class DynamicPage extends UI5Element {
 
 	onContentFocusIn(e: FocusEvent) {
 		const target = e.target as HTMLElement;
-		this.setScrollPadding({ start: this.topAreaHeight, end: this.endAreaHeight });
+		this.setScrollPadding({ start: this.scrollPaddingTop, end: this.endAreaHeight });
+
 		// textareas and similar elements appear "in view" even when partially
 		// hidden behind sticky header/footer.
 		// manual scroll brings them fully into view.
@@ -480,3 +551,5 @@ class DynamicPage extends UI5Element {
 DynamicPage.define();
 
 export default DynamicPage;
+
+export type { DynamicPageAccessibilityAttributes };

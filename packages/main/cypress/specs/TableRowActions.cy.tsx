@@ -59,7 +59,7 @@ describe("TableRowActions", () => {
 					<TableRowAction slot="actions" icon={add} text="Add" invisible={true}></TableRowAction>
 				</TableRow>
 				<TableRow>
-					<TableRowActionNavigation slot="actions"></TableRowActionNavigation>
+					<TableRowActionNavigation slot="actions" interactive={true}></TableRowActionNavigation>
 				</TableRow>
 				<TableRow id="navigationRow">
 					<TableRowActionNavigation slot="actions" id="navigationAction" interactive={true}></TableRowActionNavigation>
@@ -71,7 +71,7 @@ describe("TableRowActions", () => {
 			checkTemplateColumn(`${8 + 36 + 8}px`);
 			cy.get("@row1").find("[icon=add]").shadow().find("ui5-button").should("exist");
 			cy.get("@row2").find("[icon=add]").should("have.css", "display", "block");
-			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-icon").should("have.attr", "name", "navigation-right-arrow");
+			cy.get("@row3").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
 			cy.get("@row4").find("ui5-table-row-action-navigation").shadow().find("ui5-button").should("have.attr", "icon", "navigation-right-arrow");
 
 			cy.get("#addAction").invoke("on", "click", cy.stub().as("addActionClick"));
@@ -213,7 +213,7 @@ describe("TableRowActions", () => {
 		it("tests that the aligment of navigation is more important than avoiding overflow", () => {
 			mountTable(3, () => <>
 				<TableRow>
-					<TableRowActionNavigation slot="actions" invisible={true}></TableRowActionNavigation>
+					<TableRowActionNavigation slot="actions" invisible={true} interactive={true}></TableRowActionNavigation>
 					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
 					<TableRowAction slot="actions" icon={edit} text="Edit"></TableRowAction>
 					<TableRowAction slot="actions" icon={deleteIcon} text="Delete"></TableRowAction>

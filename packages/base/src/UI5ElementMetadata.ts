@@ -133,7 +133,7 @@ class UI5ElementMetadata {
 	 */
 	hasAttribute(propName: string): boolean {
 		const propData = this.getProperties()[propName];
-		return propData.type !== Object && !propData.noAttribute;
+		return !propData.noAttribute;
 	}
 
 	/**

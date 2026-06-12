@@ -1,5 +1,17 @@
 import { getAllRegisteredTags } from "./CustomElementsRegistry.js";
 import { getCustomElementsScopingRules, getCustomElementsScopingSuffix } from "./CustomElementsScopeUtils.js";
+import { getRegisteredFeatures } from "./FeaturesRegistry.js";
+import { getAnimationMode } from "./config/AnimationMode.js";
+import { getCalendarType, getSecondaryCalendarType } from "./config/CalendarType.js";
+import { getDefaultFontLoading } from "./config/Fonts.js";
+import { getFirstDayOfWeek, getLegacyDateCalendarCustomizing } from "./config/FormatSettings.js";
+import { getLanguage, getFetchDefaultLanguage } from "./config/Language.js";
+import { getNoConflict } from "./config/NoConflict.js";
+import { getTheme, getBaseTheme } from "./config/Theme.js";
+import { getThemeRoot } from "./config/ThemeRoot.js";
+import { getTimezone } from "./config/Timezone.js";
+import { getEnableDefaultTooltips } from "./config/Tooltips.js";
+import { getIgnoreUrlParams } from "./config/UrlParams.js";
 import VersionInfo from "./generated/VersionInfo.js";
 import getSharedResource from "./getSharedResource.js";
 
@@ -37,6 +49,28 @@ const registerCurrentRuntime = () => {
 			get registeredTags() {
 				return getAllRegisteredTags();
 			},
+			get registeredFeatures() {
+				return getRegisteredFeatures();
+			},
+			get configuration() {
+				return {
+					theme: getTheme(),
+					themeRoot: getThemeRoot(),
+					baseTheme: getBaseTheme(),
+					language: getLanguage(),
+					fetchDefaultLanguage: getFetchDefaultLanguage(),
+					timezone: getTimezone(),
+					animationMode: getAnimationMode(),
+					calendarType: getCalendarType(),
+					secondaryCalendarType: getSecondaryCalendarType(),
+					noConflict: getNoConflict(),
+					defaultFontLoading: getDefaultFontLoading(),
+					enableDefaultTooltips: getEnableDefaultTooltips(),
+					firstDayOfWeek: getFirstDayOfWeek(),
+					legacyDateCalendarCustomizing: getLegacyDateCalendarCustomizing(),
+					ignoreUrlParams: getIgnoreUrlParams(),
+				};
+			},
 			get scopingRules() {
 				return getCustomElementsScopingRules();
 			},
@@ -53,6 +87,33 @@ const registerCurrentRuntime = () => {
  */
 const getCurrentRuntimeIndex = () => {
 	return currentRuntimeIndex;
+};
+
+/**
+ * Compares two VersionInfo objects and returns 1 if the first is bigger, -1 if the second is bigger, and 0 if equal.
+ */
+const compareVersions = (v1: VersionInfo, v2: VersionInfo): number => {
+	if (v1.isNext || v2.isNext) {
+		return v1.buildTime - v2.buildTime;
+	}
+
+	const majorDiff = v1.major - v2.major;
+	if (majorDiff) {
+		return majorDiff;
+	}
+
+	const minorDiff = v1.minor - v2.minor;
+	if (minorDiff) {
+		return minorDiff;
+	}
+
+	const patchDiff = v1.patch - v2.patch;
+	if (patchDiff) {
+		return patchDiff;
+	}
+
+	const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+	return collator.compare(v1.suffix, v2.suffix);
 };
 
 /**
@@ -74,33 +135,7 @@ const compareRuntimes = (index1: number, index2: number) => {
 		throw new Error("Invalid runtime index supplied");
 	}
 
-	// If any of the two is a next version, bigger buildTime wins
-	if (runtime1.isNext || runtime2.isNext) {
-		return runtime1.buildTime - runtime2.buildTime;
-	}
-
-	// If major versions differ, bigger one wins
-	const majorDiff = runtime1.major - runtime2.major;
-	if (majorDiff) {
-		return majorDiff;
-	}
-
-	// If minor versions differ, bigger one wins
-	const minorDiff = runtime1.minor - runtime2.minor;
-	if (minorDiff) {
-		return minorDiff;
-	}
-
-	// If patch versions differ, bigger one wins
-	const patchDiff = runtime1.patch - runtime2.patch;
-	if (patchDiff) {
-		return patchDiff;
-	}
-
-	// Bigger suffix wins, f.e. rc10 > rc9
-	// Important: suffix is alphanumeric, must use natural compare
-	const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-	const result = collator.compare(runtime1.suffix, runtime2.suffix);
+	const result = compareVersions(runtime1, runtime2);
 
 	compareCache.set(cacheIndex, result);
 	return result;
@@ -122,6 +157,7 @@ export {
 	getCurrentRuntimeIndex,
 	registerCurrentRuntime,
 	compareRuntimes,
+	compareVersions,
 	setRuntimeAlias,
 	getAllRuntimes,
 };

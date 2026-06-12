@@ -1,0 +1,94 @@
+name: PR Dev Close Notice
+
+# During the "dev close" period (the days leading up to a release), comment
+# on every open PR targeting `main` whose public Custom Elements Manifest
+# differs from the latest published version on npm — reminding contributors
+# not to merge until the release ships.
+#
+# Detection lives entirely in `.github/actions/pr-dev-close.mjs`. The base
+# manifest is fetched from jsdelivr (no second build), the head is the
+# tree we just generated.
+#
+# Triggers:
+#   * schedule (daily, 07:17 UTC) — sweeps every open PR. Catches PRs that
+#     were already open when the window started.
+#   * pull_request — per-event during the window. Closes the up-to-24h gap
+#     for PRs opened or pushed *after* the day's sweep.
+#   * workflow_dispatch — manual button for testing.
+#
+# Both schedule and pull_request hit the same script; the script does one
+# PR (when PR_NUMBER is set) or all open PRs (when it isn't).
+#
+# Dates are interpreted in UTC. devCloseStart inclusive; releaseDate exclusive.
+
+on:
+  schedule:
+    - cron: '17 7 * * *'
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether we are in a dev-close window
+        id: window
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Add new entries here when the release schedule is known.
+            const DEV_CLOSE_PERIODS = [
+              { release: "next", devCloseStart: "2026-06-24", releaseDate: "2026-07-09" },
+            ];
+
+            const today = new Date();
+            today.setUTCHours(0, 0, 0, 0);
+
+            const active = DEV_CLOSE_PERIODS.find(p => {
+              const start = new Date(`${p.devCloseStart}T00:00:00Z`);
+              const end = new Date(`${p.releaseDate}T00:00:00Z`);
+              return today >= start && today < end;
+            });
+
+            if (!active) {
+              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
+              core.setOutput("active", "false");
+              return;
+            }
+
+            core.info(`In dev-close window for "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
+            core.setOutput("active", "true");
+            core.setOutput("release", active.release);
+            core.setOutput("releaseDate", active.releaseDate);
+
+      - name: Checkout main
+        if: steps.window.outputs.active == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.window.outputs.active == 'true'
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Run dev-close script
+        if: steps.window.outputs.active == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          RELEASE: ${{ steps.window.outputs.release }}
+          RELEASE_DATE: ${{ steps.window.outputs.releaseDate }}
+          # Set on pull_request events; absent on schedule / workflow_dispatch.
+          # Tells the script to process this single PR instead of sweeping all.
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node .github/actions/pr-dev-close.mjs

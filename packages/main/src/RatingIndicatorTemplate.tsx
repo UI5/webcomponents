@@ -45,7 +45,7 @@ function starLi(this: RatingIndicator, star: Star) {
 					<Icon data-ui5-value={star.index} name={this.ratedIcon} />
 				</div>
 				<div class="ui5-rating-indicator-half-icon-wrapper ui5-rating-indicator-half-icon-right">
-					<Icon data-ui5-value={star.index} name={halfStarIconName.call(this)} />
+					<Icon data-ui5-value={star.index} name={this.unratedIcon} />
 				</div>
 			</li>
 		);
@@ -67,8 +67,4 @@ function starLi(this: RatingIndicator, star: Star) {
 			<Icon data-ui5-value={star.index} name={this.unratedIcon}/>
 		</li>
 	);
-}
-
-function halfStarIconName(this: RatingIndicator) {
-	return this.disabled || this.readonly ? this.ratedIcon : this.unratedIcon;
 }

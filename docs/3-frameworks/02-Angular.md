@@ -2,7 +2,7 @@
 
 In this tutorial, you will learn how to use `UI5 Web Components` in an Angular application. In the second part, we will introduce `UI5 Web Components for Angular` - wrapper library for UI5 Web Components, improving their integration with Angular.
 
-**Note:** To get the best development experience, we recommend using the [UI5 Web Components for Angular](https://ui5-webcomponents-ngx.netlify.app). The library removes the need for `CUSTOM_ELEMENTS_SCHEMA` and `NO_ERRORS_SCHEMA` schemas, and supports all Angular-specific features out-of-the-box.
+**Note:** To get the best development experience, we recommend using the [UI5 Web Components for Angular](https://sap.github.io/fundamental-ngx/) wrappers, distributed as `@fundamental-ngx/ui5-webcomponents`. The library removes the need for `CUSTOM_ELEMENTS_SCHEMA` and `NO_ERRORS_SCHEMA` schemas, and supports all Angular-specific features (typed inputs, two-way bindings, template-driven and reactive forms) out-of-the-box.
 
 ## UI5 Web Components
 
@@ -88,25 +88,25 @@ After the development server starts, the UI5 Web Components Button will be rende
 
 ## UI5 Web Components For Angular
 
-UI5 Web Components for Angular is a wrapper library for UI5 Web Components. This means that for every UI5 Web Component, there is a corresponding Angular wrapper component available.
+`UI5 Web Components for Angular` is a wrapper library for UI5 Web Components, distributed as the [`@fundamental-ngx/ui5-webcomponents`](https://www.npmjs.com/package/@fundamental-ngx/ui5-webcomponents) package and maintained as part of [Fundamental NGX](https://sap.github.io/fundamental-ngx/). For every UI5 Web Component, there is a corresponding Angular wrapper component available.
 
 **For Example:**
 
-- The native Button web component 
+- The native Button web component
 ```js
 import '@ui5/webcomponents/dist/Button.js';
 ```
 
-- The "ngx" Button wrapper component
-```js
-import { ButtonComponent } from '@ui5/webcomponents-ngx/main/button';
+- The Angular Button wrapper component
+```ts
+import { Button } from '@fundamental-ngx/ui5-webcomponents/button';
 ```
 
-These wrappers supports all Angular-specific features out-of-the-box, f.e. two-way data binding with `NgModel`, as they are native to Angular.
+The wrappers are standalone components and support all Angular-specific features out-of-the-box - typed inputs/outputs, two-way data binding with `NgModel`, and template-driven and reactive forms.
 
 ### Angular Form with `NgModel`
 
-The following section demonstrates how to build template-driven Angular form (following the oficial [Angular documentation](https://angular.io/guide/forms)) with UI5 Web Components For Angular. It illustrates the usage of two-way data binding to update the data model in the component as changes are made in the template and vice versa.
+The following section demonstrates how to build a template-driven Angular form (following the official [Angular documentation](https://angular.io/guide/forms)) with UI5 Web Components For Angular. It illustrates the usage of two-way data binding to update the data model in the component as changes are made in the template and vice versa.
 
 ### Step 1. Setup Angular project
 
@@ -118,100 +118,30 @@ cd ui5-web-components-ngx-application
 
 ### Step 2. Install UI5 Web Components for Angular.
 
-
 ```bash
-npm install @ui5/webcomponents-ngx
+npm install @fundamental-ngx/ui5-webcomponents
 ```
 
 ### Step 3. Build Angular form.
 
-To build an Angular Form, we will include the required infrastructure such as the `FormsModule`, track input validity and status using `ngModel` and make use of some form components from `@ui5/webcomponents-ngx`.
+To build an Angular Form, we will include the required infrastructure such as `FormsModule`, track input validity and status using `ngModel`, and make use of some form components from `@fundamental-ngx/ui5-webcomponents`.
 
+The wrappers are standalone components, so they can be imported directly into the component that uses them - no `NgModule` required.
 
-- Import `FormsModule` in `app.module.ts` and add it to the imports array.
-
-```js
-import { NgModule } from '@angular/core';
+```ts
+// app.component.ts
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule {
-}
-```
-
-- Import `Label`, `Input` and `Button` components from `@ui5/webcomponents-ngx` in `app.module.ts` and add them to the imports array.
-
-```js
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
+import { JsonPipe } from '@angular/common';
 
 // UI5 Web Components For Angular
-import { LabelComponent } from '@ui5/webcomponents-ngx/main/label';
-import { ButtonComponent } from '@ui5/webcomponents-ngx/main/button';
-import { InputComponent } from '@ui5/webcomponents-ngx/main/input';
-
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    LabelComponent,
-    InputComponent,
-    ButtonComponent
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule {
-}
-```
-
-### Step 4. Define a Data Model.
-
-- Add the following object, that will serve as a data model, to the `AppComponent`:
-
-```js
-// app.component.ts
-import { Component } from '@angular/core';
-
-export class AppComponent {
-  model = {
-    firstName: "",
-    lastName: ""
-  };
-}
-```
-
-### Step 5. Create the Form UI.
-
-- Add the following inline template to the `AppComponent`.
-- Bind form components to data properties using the `ngModel` directive and two-way data-binding syntax.
-- Name form controls (e.g. add `name` attribute) to make them accessible to `ngModel`.
-
-```js
-// app.component.ts
-import { Component } from '@angular/core';
+import { Label } from '@fundamental-ngx/ui5-webcomponents/label';
+import { Input } from '@fundamental-ngx/ui5-webcomponents/input';
+import { Button } from '@fundamental-ngx/ui5-webcomponents/button';
 
 @Component({
   selector: 'app-root',
+  imports: [FormsModule, JsonPipe, Label, Input, Button],
   template: `<h1>Form Works!</h1>
 
   <form #heroForm="ngForm">
@@ -222,10 +152,10 @@ import { Component } from '@angular/core';
 
     <div>
       <ui5-label for="inp2">Last Name:</ui5-label>
-      <input id="inp2" type="text" [(ngModel)]="model.lastName" name="lastName" required/>
+      <ui5-input id="inp2" [(ngModel)]="model.lastName" name="lastName" [required]="true"></ui5-input>
     </div>
-    
-    <ui5-button [submits]="true">Submit</ui5-button> 
+
+    <ui5-button [submits]="true">Submit</ui5-button>
 
     Form Value: {{heroForm.value | json}}
     Form Status: {{heroForm.status}}
@@ -239,7 +169,9 @@ export class AppComponent {
 }
 ```
 
-### Step 5. Launch the application.
+> **Tip:** If you prefer `NgModule`-based applications, the same standalone components can be added to an `NgModule`'s `imports` array - no extra adapter modules are needed.
+
+### Step 4. Launch the application.
 
 ```bash
 ng serve -o
@@ -251,7 +183,7 @@ Initially, the model is empty and the form is invalid:
 
 ```js
 // Form Value: { "firstName": "", "lastName": "" }
-// Form Status: "Invalid"
+// Form Status: "INVALID"
 ```
 
 Start typing in the input fields and you will notice how the form model and form status are updated.
@@ -260,4 +192,4 @@ Good job, the Form works!
 
 ## Summary
 
-Angular provides good support of web components and `UI5 Web Components` are working perfectly in the majority of use-cases. However, for an enhanced development experience and better support for both template-driven and Reactive forms,  the `UI5 Web Components for Angular` is the recommended choice.
+Angular provides good support for web components and `UI5 Web Components` work perfectly in the majority of use-cases. However, for an enhanced development experience and better support for both template-driven and reactive forms, the `UI5 Web Components for Angular` (`@fundamental-ngx/ui5-webcomponents`) wrappers are the recommended choice.

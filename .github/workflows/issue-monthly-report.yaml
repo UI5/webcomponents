@@ -19,7 +19,6 @@ jobs:
     steps:
       - uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
           script: |
             const REPORT_ISSUE_NUMBER = 13080; // Monthly Issues Report tracking issue
             const isDryRun = context.eventName === 'workflow_dispatch' && ${{ inputs.dry_run || false }};

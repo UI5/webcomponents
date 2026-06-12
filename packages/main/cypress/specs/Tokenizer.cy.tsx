@@ -1590,6 +1590,104 @@ describe("Keyboard Handling", () => {
 			.eq(1)
 			.should("have.attr", "selected");
 	});
+
+	it("should deselect all tokens on [Escape] key", () => {
+		cy.get("[ui5-token]")
+			.eq(0)
+			.as("firstToken");
+
+		cy.get("[ui5-token]")
+			.eq(1)
+			.as("secondToken");
+
+		cy.get("[ui5-token]")
+			.eq(2)
+			.as("thirdToken");
+
+		cy.get("@firstToken")
+			.realClick();
+
+		cy.realPress(["Shift", "End"]);
+
+		cy.get("@firstToken")
+			.should("have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("have.attr", "selected");
+
+		cy.realPress("Escape");
+
+		cy.get("@firstToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@secondToken")
+			.should("not.have.attr", "selected");
+
+		cy.get("@thirdToken")
+			.should("not.have.attr", "selected");
+	});
+
+	it("should fire selection-change event on [Escape] when tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("have.been.calledOnce");
+
+		cy.get("@selectionChange")
+			.its("firstCall.args.0.detail.tokens")
+			.should("have.length", 0);
+	});
+
+	it("should not fire selection-change on [Escape] when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onSelectionChange={cy.stub().as("selectionChange")}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+			</Tokenizer>
+		);
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Space");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.should("not.have.attr", "selected");
+
+		cy.get("@selectionChange")
+			.invoke("resetHistory");
+
+		cy.realPress("Escape");
+
+		cy.get("@selectionChange")
+			.should("not.have.been.called");
+	});
 });
 
 describe("Clipboard Operations", () => {
@@ -1823,6 +1921,108 @@ describe("Clipboard Operations", () => {
 
 		// Only the selected token should be copied
 		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected");
+	});
+
+	it("should copy focused token text when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer>
+				<Token text="Focused"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		// Tab into the tokenizer to focus the first token without selecting it
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", false);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "c"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Focused");
+	});
+
+	it("should not cut token in readonly mode", () => {
+		cy.mount(
+			<Tokenizer readonly={true}>
+				<Token text="ReadonlyToken"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Should copy but not delete in readonly mode
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "ReadonlyToken");
+		cy.get("[ui5-token]").should("have.length", 2);
+	});
+
+	it("should cut only selected tokens when there are both selected and focused tokens", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Selected1" selected></Token>
+				<Token text="Selected2" selected></Token>
+				<Token text="NotSelected"></Token>
+			</Tokenizer>
+		);
+
+		// Focus the third token via keyboard without selecting it
+		cy.realPress("Tab");
+		cy.realPress("ArrowRight");
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-token]").eq(2).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(2).should("have.prop", "selected", false);
+		// First two remain selected
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-token]").eq(1).should("have.prop", "selected", true);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		// Should cut the selected tokens, not the focused one
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Selected1\r\nSelected2");
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "text", "NotSelected");
+	});
+
+	it("should cut focused token when no tokens are selected", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Focused"></Token>
+				<Token text="Other"></Token>
+			</Tokenizer>
+		);
+
+		cy.realPress("Tab");
+		cy.get("[ui5-token]").eq(0).should("have.prop", "focused", true);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "selected", false);
+
+		cy.window().then((win) => {
+			cy.stub(win.navigator.clipboard, "writeText").as("clipboardWrite");
+			Object.defineProperty(win, "isSecureContext", { value: true, writable: true });
+		});
+
+		cy.realPress(["Control", "x"]);
+
+		cy.get("@clipboardWrite").should("have.been.calledOnceWith", "Focused");
+		cy.get("[ui5-token]").should("have.length", 1);
+		cy.get("[ui5-token]").eq(0).should("have.prop", "text", "Other");
 	});
 });
 

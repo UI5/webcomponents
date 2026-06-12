@@ -21,6 +21,7 @@ export default function PanelTemplate(this: Panel) {
 					}}
 					role={this.headingWrapperRole}
 					aria-level={this.headingWrapperAriaLevel}
+					part="header-wrapper"
 				>
 					<div
 						onClick={this._headerClick}

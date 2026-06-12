@@ -36,6 +36,8 @@
     border: var(--_ui5_color_picker_circle_outer_border);
     border-radius: 0.6875rem;
     pointer-events: none;
+    /* Inline left/top are percentages of the picker box; translate centers the circle on that point. */
+    transform: translate(-50%, -50%);
 }
 
 .ui5-color-picker-circle:after {

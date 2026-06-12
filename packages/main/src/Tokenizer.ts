@@ -524,7 +524,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 
 		this._scrollToEndIfNeeded();
-		this._tokenDeleting = false;
+
+		// Only reset _tokenDeleting if no token is currently marked for deletion
+		// This prevents resetting the flag before the actual deletion logic executes
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!hasTokenToBeDeleted) {
+			this._tokenDeleting = false;
+		}
 
 		// Update lastVisibleToken after rendering is complete to avoid render loops
 		renderFinished().then(() => {
@@ -578,7 +585,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_tokenClickDelete(e: CustomEvent<TokenDeleteEventDetail>, token: Token) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const target = e.target as Token;
 		const deletedTokenIndex = token ? tokens.indexOf(token) : tokens.indexOf(target); // The index of the token that just got deleted
 		const nextTokenIndex = deletedTokenIndex === tokens.length - 1 ? deletedTokenIndex - 1 : deletedTokenIndex + 1; // The index of the next token that needs to be focused next due to the deletion
@@ -607,7 +614,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @param forwardFocusToPrevious Indicates whether the focus will be forwarded to previous or next token after deletion.
 	 */
 	deleteToken(token: Token, forwardFocusToPrevious?: boolean) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const deletedTokenIndex = tokens.indexOf(token);
 		let nextTokenIndex = (deletedTokenIndex === tokens.length - 1) ? deletedTokenIndex - 1 : deletedTokenIndex + 1;
 		const notSelectedTokens = tokens.filter(t => !t.selected);
@@ -698,7 +705,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleAfterClose() {
 		this.open = false;
-		this._preventCollapse = false;
+		// Don't reset _preventCollapse if we're in the middle of deleting a token
+		if (!this._tokenDeleting) {
+			this._preventCollapse = false;
+		}
 		this._focusedElementBeforeOpen = null;
 	}
 
@@ -716,22 +726,30 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_onkeydown(e: KeyboardEvent) {
 		const isCtrl = !!(e.metaKey || e.ctrlKey);
 
+		if (isEscape(e)) {
+			return this._deselectAllTokens();
+		}
+
 		if ((isCtrl && ["c", "x"].includes(e.key.toLowerCase())) || isDeleteShift(e) || isInsertCtrl(e)) {
 			e.preventDefault();
 
 			const isCut = e.key.toLowerCase() === "x" || isDeleteShift(e);
 			const selectedTokens = this._tokens.filter(token => token.selected);
-			const focusedToken = selectedTokens.find(token => token.focused);
+			const focusedToken = this._tokens.find(token => token.focused);
+			let tokensToCopy = selectedTokens;
+			if (!tokensToCopy.length && focusedToken) {
+				tokensToCopy = [focusedToken];
+			}
 
-			if (isCut) {
-				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, selectedTokens);
+			if (isCut && !this.readonly && tokensToCopy.length) {
+				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, tokensToCopy);
 
-				focusedToken && this.deleteToken(focusedToken);
+				this.deleteToken(tokensToCopy[0]);
 
 				return cutResult;
 			}
 
-			return this._fillClipboard(ClipboardDataOperation.copy, selectedTokens);
+			return this._fillClipboard(ClipboardDataOperation.copy, tokensToCopy);
 		}
 
 		if (isCtrl && e.key.toLowerCase() === "i" && this._tokens.length > 0) {
@@ -1003,6 +1021,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	_onfocusout(e: FocusEvent) {
 		const relatedTarget = e.relatedTarget as HTMLElement;
+		const tokenLosingFocus = e.target as Token;
+
+		// If the token losing focus is being deleted, prevent collapse
+		if (tokenLosingFocus?.toBeDeleted) {
+			this._preventCollapse = true;
+		}
 
 		this._tokens.forEach(token => {
 			token.forcedTabIndex = "-1";
@@ -1017,7 +1041,9 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			this._skipTabIndex = false;
 		}
 
-		if (!this._tokenDeleting && !this._preventCollapse) {
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!this._tokenDeleting && !this._preventCollapse && !hasTokenToBeDeleted) {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
@@ -1070,6 +1096,17 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	_deselectAllTokens() {
+		const hadSelection = this._selectedTokens.length > 0;
+		this._tokens.forEach(token => { token.selected = false; });
+
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				tokens: [],
+			});
+		}
+	}
+
 	get hasTokens() {
 		return this._tokens.length > 0;
 	}
@@ -1079,7 +1116,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
-		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
+		const tokensTexts = tokens.map(token => token.text).join("\r\n");
 
 		// Async clipboard API (works in secure contexts - HTTPS/localhost)
 		if (navigator.clipboard?.writeText && window.isSecureContext) {

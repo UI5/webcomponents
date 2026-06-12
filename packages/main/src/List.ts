@@ -38,6 +38,7 @@ import {
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
@@ -70,15 +71,25 @@ import {
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
 	ARIA_LABEL_LIST_DELETABLE,
+	LIST_ITEM_SELECTED,
+	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+import { isInstanceOfListItemCustom } from "./ListItemCustom.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
 const PAGE_UP_DOWN_SIZE = 10;
+
+// Maps the List's accessible-role to the expected child item ARIA role (lowercase)
+const LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE: Partial<Record<`${ListAccessibleRole}`, string>> = {
+	Menu: "menuitem",
+	Tree: "treeitem",
+	ListBox: "option",
+};
 
 // ListItemBase-based events
 type ListItemFocusEventDetail = {
@@ -742,7 +753,7 @@ class List extends UI5Element {
 	get ariaDescriptionText() {
 		const parts = [];
 
-		if (this.accessibleRole === ListAccessibleRole.List) {
+		if (this.accessibleRole === ListAccessibleRole.List && this._hasInteractiveItems) {
 			parts.push(this.defaultAriaDescriptionText);
 		}
 		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
@@ -761,6 +772,16 @@ class List extends UI5Element {
 
 	get defaultAriaDescriptionText() {
 		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
+	}
+
+	get _hasInteractiveItems() {
+		if (this.selectionMode === ListSelectionMode.Delete) {
+			return true;
+		}
+
+		return this.getItems().some(item => {
+			return item.getAttribute("type") === "Detail" || isInstanceOfListItemCustom(item);
+		});
 	}
 
 	get growingButtonAriaLabel() {
@@ -843,6 +864,7 @@ class List extends UI5Element {
 
 	prepareListItems() {
 		const slottedItems = this.getItemsForProcessing();
+		const inheritedItemRole = LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE[this.accessibleRole];
 
 		slottedItems.forEach((item, key) => {
 			const isLastChild = key === slottedItems.length - 1;
@@ -851,6 +873,7 @@ class List extends UI5Element {
 
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
+				(item as ListItem)._inheritedAccessibleRole = inheritedItemRole;
 			}
 			item.hasBorder = showBottomBorder;
 
@@ -917,6 +940,12 @@ class List extends UI5Element {
 			});
 			if (changePrevented) {
 				this._revertSelection(previouslySelectedItems);
+			} else if (this.selectionMode !== ListSelectionMode.Delete) {
+				const item = e.detail.item;
+				const selectedText = item.selected
+					? List.i18nBundle.getText(LIST_ITEM_SELECTED)
+					: List.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
+				announce(selectedText, "Polite");
 			}
 		}
 	}
@@ -1065,12 +1094,15 @@ class List extends UI5Element {
 		const activeElement = getActiveElement();
 
 		e.preventDefault();
+		e.stopPropagation(); // Prevent Tokenizer's F7 handler from undoing the focus change set by this handler.
 
 		if (activeElement === listItemDomRef) {
+			listItem._editMode = true;
 			listItem._focusInternalElement(this._lastFocusedElementIndex ?? 0);
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
 		} else {
 			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
+			listItem._editMode = false;
 			listItemDomRef.focus();
 		}
 	}
@@ -1270,6 +1302,7 @@ class List extends UI5Element {
 			return false;
 		}
 
+		nextNode._editMode = listItem._editMode;
 		const focusedIndex = nextNode._focusInternalElement(targetInternalElementIndex);
 		if (focusedIndex !== undefined) {
 			this._lastFocusedElementIndex = focusedIndex;
@@ -1406,17 +1439,73 @@ class List extends UI5Element {
 			return;
 		}
 
-		this.fireDecoratorEvent("item-toggle", { item: e.detail.item });
+		const item = e.detail?.item;
+
+		if (!item) {
+			return;
+		}
+
+		this.fireDecoratorEvent("item-toggle", { item });
 	}
 
 	onForwardBefore(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : undefined;
+
+			if (prevItem) {
+				prevItem._editMode = true;
+				const focusables = prevItem._getFocusableElements();
+				prevItem._focusInternalElement(focusables.length - 1);
+				this._lastFocusedElementIndex = focusables.length - 1;
+				this.setPreviouslyFocusedItem(prevItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 		this.focusBeforeElement();
 		e.stopPropagation();
 	}
 
 	onForwardAfter(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const nextItem = currentIndex >= 0 && currentIndex < allItems.length - 1
+				? allItems[currentIndex + 1] : undefined;
+
+			if (nextItem) {
+				nextItem._editMode = true;
+				nextItem._focusInternalElement(0);
+				this._lastFocusedElementIndex = 0;
+				this.setPreviouslyFocusedItem(nextItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 
 		if (!this.growsWithButton) {
 			this.focusAfterElement();

@@ -1,4 +1,5 @@
 @import "./SideNavigationItemBase.css";
+@import "./InvisibleTextStyles.css";
 
 :host {
 	color: var(--sapList_TextColor);

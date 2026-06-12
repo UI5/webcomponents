@@ -58,6 +58,10 @@ type NotificationListItemPressEventDetail = {
 	item: NotificationListItem,
 };
 
+type NotificationListItemClickEventDetail = {
+	originalEvent: Event,
+};
+
 type Footnote = Record<string, any>;
 
 /**
@@ -142,6 +146,17 @@ const ICON_PER_STATUS_DESIGN = {
 })
 
 /**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * @since 2.23.0
+ * @public
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
+
+/**
  * Fired when the `Close` button is pressed.
  * @param {HTMLElement} item the closed item.
  * @public
@@ -160,6 +175,7 @@ const ICON_PER_STATUS_DESIGN = {
 class NotificationListItem extends NotificationListItemBase {
 	eventDetails!: NotificationListItemBase["eventDetails"] & {
 		_press: NotificationListItemPressEventDetail,
+		click: NotificationListItemClickEventDetail,
 		close: NotificationListItemCloseEventDetail,
 		_close: NotificationListItemCloseEventDetail,
 	}
@@ -478,8 +494,9 @@ class NotificationListItem extends NotificationListItemBase {
 	/**
 	 * Event handlers
 	 */
-	_onclick() {
-		this.fireItemPress();
+	_onclick(e: MouseEvent) {
+		e.stopPropagation();
+		this.fireItemPress(e);
 	}
 
 	_onShowMoreClick(e: UI5CustomEvent<Link, "click">) {
@@ -549,7 +566,7 @@ class NotificationListItem extends NotificationListItemBase {
 	/**
 	 * Private
 	 */
-	fireItemPress() {
+	fireItemPress(e: Event) {
 		if (this.getFocusDomRef()!.matches(":has(:focus-within)")) {
 			return;
 		}
@@ -557,6 +574,7 @@ class NotificationListItem extends NotificationListItemBase {
 		// NotificationListItem will never be assigned to a variable of type ListItemBase
 		// typescipt complains here, if that is the case, the parameter to the _press event handler could be a ListItemBase item,
 		// but this is never the case, all components are used by their class and never assigned to a variable with a type of ListItemBase
+		this.fireDecoratorEvent("click", { originalEvent: e });
 		this.fireDecoratorEvent("_press", { item: this });
 	}
 
@@ -591,5 +609,6 @@ NotificationListItem.define();
 export default NotificationListItem;
 export type {
 	NotificationListItemPressEventDetail,
+	NotificationListItemClickEventDetail,
 	NotificationListItemCloseEventDetail,
 };

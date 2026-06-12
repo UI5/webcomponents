@@ -13,14 +13,8 @@ export default function TimelineTemplate(this: Timeline) {
 			aria-label={this.ariaLabel}
 			onFocusIn={this._onfocusin}
 			onKeyDown={this._onkeydown}
+			onWheel={this._onwheel}
 		>
-			{/* Header Bar Slot */}
-			{this._hasHeaderBar && (
-				<div class="ui5-timeline-header-bar-wrapper">
-					<slot name="headerBar"></slot>
-				</div>
-			)}
-
 			<BusyIndicator
 				id={`${this._id}-busyIndicator`}
 				delay={this.loadingDelay}
@@ -28,7 +22,20 @@ export default function TimelineTemplate(this: Timeline) {
 				class="ui5-timeline-busy-indicator"
 			>
 				<div class="ui5-timeline-scroll-container">
-
+					{(this._hasHeader || this._hasInfoBar) &&
+						<div class="ui5-timeline-header-area">
+							{this._hasHeader &&
+								<div class="ui5-timeline-header">
+									<slot name="header"></slot>
+								</div>
+							}
+							{this._hasInfoBar &&
+								<div class="ui5-timeline-info-bar">
+									<slot name="infoBar"></slot>
+								</div>
+							}
+						</div>
+					}
 					<div class="ui5-timeline-list"
 						role={listRole}
 						aria-live="polite"

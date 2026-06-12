@@ -7,6 +7,7 @@ import sysHelp from "@ui5/webcomponents-icons/dist/sys-help.js";
 import da from "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
+import "@ui5/webcomponents-icons/dist/feedback.js";
 import "@ui5/webcomponents-icons/dist/disconnected.js";
 import "@ui5/webcomponents-icons/dist/incoming-call.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
@@ -1813,6 +1814,23 @@ describe("Component Behavior", () => {
 			cy.get("@alertClick")
 				.should("have.been.calledOnce");
 		});
+
+		it("renders items in insertion order regardless of icon name", () => {
+			cy.mount(
+				<ShellBar>
+					<ShellBarItem id="item-feedback" icon="feedback" text="Feedback" stable-dom-ref="item-feedback" />
+					<ShellBarItem id="item-accept" icon="accept" text="Accept" stable-dom-ref="item-accept" />
+					<ShellBarItem id="item-alert" icon="alert" text="Alert" stable-dom-ref="item-alert" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-custom-item").then($items => {
+				// feedback was inserted first, so its wrapper must be the first custom item in the DOM
+				expect($items[0].getAttribute("data-ui5-stable")).to.equal("item-feedback");
+				expect($items[1].getAttribute("data-ui5-stable")).to.equal("item-accept");
+				expect($items[2].getAttribute("data-ui5-stable")).to.equal("item-alert");
+			});
+		});
 	});
 
 	it("Test disabled slotted button does not show hover styles", () => {
@@ -1845,5 +1863,18 @@ describe("Component Behavior", () => {
 			const cursor = window.getComputedStyle($enabledBtn[0]).cursor;
 			expect(cursor).to.equal("pointer");
 		});
+	});
+});
+
+describe("Start button spacing", () => {
+	it("8px gap between multiple startButton elements", () => {
+		cy.mount(
+			<ShellBar>
+				<Button id="hamburger-btn" icon="menu2" slot="startButton"></Button>
+				<Button id="nav-back-btn" icon={navBack} slot="startButton"></Button>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-start-button").should("have.css", "gap", "8px");
 	});
 });

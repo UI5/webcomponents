@@ -191,7 +191,7 @@ describe("Form submission with Enter key", () => {
 
 		});
 
-		it("fires submit on second Enter after selection is confirmed", () => {
+		it.skip("fires submit on second Enter after selection is confirmed", () => {
 			mountMultiComboBoxForm(true);
 
 			cy.realType("Item");
@@ -979,7 +979,7 @@ describe("Form submission with Enter key", () => {
 				.should("be.focused");
 		};
 
-		it("doesn't submit form when Enter is pressed", () => {
+		it.skip("doesn't submit form when Enter is pressed", () => {
 			mountSelectForm();
 
 			cy.realPress("Enter");

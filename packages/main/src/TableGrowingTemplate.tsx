@@ -4,7 +4,7 @@ export default function TableGrowingTemplate(this: TableGrowing) {
 	return (
 		<div
 			id="button"
-			tabindex={-1}
+			tabindex={0}
 			data-ui5-growing-active={this._activeState}
 			onClick={this.loadMore}
 			onKeyDown={this._onKeydown}

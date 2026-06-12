@@ -53,7 +53,7 @@ export default function ListItemTemplate(this: ListItem, hooks?: Partial<ListIte
 		aria-haspopup={this._accInfo.ariaHaspopup}
 		aria-posinset={this._accInfo.posinset}
 		aria-setsize={this._accInfo.setsize}
-		aria-describedby={`${this._id}-invisibleText-describedby`}
+		aria-describedby={this._accInfo.ariaDescribedBy}
 		aria-labelledby={this._accessibleNameRef}
 		aria-disabled={this._ariaDisabled}
 		aria-selected={this._accInfo.ariaSelected}
@@ -154,8 +154,6 @@ function selectionElement(this: ListItem) {
 						) : (
 							<Button
 								part="delete-button"
-								tabindex={-1}
-								data-sap-no-tab-ref
 								id={`${this._id}-deleteSelectionElement`}
 								design="Transparent"
 								icon={declineIcon}
