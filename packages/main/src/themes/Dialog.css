@@ -142,8 +142,8 @@
 .ui5-dialog-fullscreen-btn {
 	position: absolute;
 	inset-inline-end: 0.5rem;
-	inset-block-start: 50%;
-	transform: translateY(-50%);
+	inset-block: 0;
+	margin-block: auto;
 }
 
 /* Prevents header content from overlapping the absolutely positioned fullscreen button */

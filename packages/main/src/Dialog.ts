@@ -313,7 +313,7 @@ class Dialog extends Popup {
 	}
 
 	get _showResizeHandle() {
-		return this.resizable && this.onDesktop;
+		return this.resizable && this.onDesktop && !this.stretch;
 	}
 
 	get _showFullscreenButton() {
