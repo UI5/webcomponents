@@ -145,10 +145,6 @@
 	justify-content: flex-start;
 }
 
-:host([show-fullscreen-button]) .ui5-popup-header-root {
-	padding-inline-end: var(--_ui5_dialog_fullscreen_button_inline_end_spacing);
-}
-
 :host([on-phone]) .ui5-dialog-fullscreen-btn {
 	display: none;
 }
