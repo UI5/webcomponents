@@ -314,10 +314,6 @@ class Dialog extends Popup {
 		return !this.stretch && this.onDesktop && (this.draggable || this.resizable);
 	}
 
-	get _headerTabIndex() {
-		return undefined;
-	}
-
 	get _dragResizeHandleTabIndex() {
 		return this._movable ? 0 : undefined;
 	}

@@ -777,7 +777,7 @@ describe("Dialog general interaction", () => {
 			const initialLeft = parseInt(dialog.css("left"));
 
 			// Act - Focus the drag/resize handle and resize height
-			cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler")
+			cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler")
 					.focus()
 					.should("be.focused");
 

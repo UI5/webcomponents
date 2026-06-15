@@ -61,7 +61,7 @@ function afterContent(this: Dialog) {
 			<>
 				<span
 					id={`${this._id}-dragResizeHandler`}
-					class="ui5-popup-drag-resize-handler"
+					class="ui5-popup-drag-resize-handler ui5-hidden-text"
 					tabIndex={this._dragResizeHandleTabIndex}
 					role="img"
 					aria-roledescription={this._dragResizeHandleAriaRoleDescription}
