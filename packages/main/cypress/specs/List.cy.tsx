@@ -433,7 +433,7 @@ describe("List - Accessibility", () => {
 
 	it("has default aria-description for accessibleRole List when no accessibleDescription is set", () => {
 		cy.mount(
-			<List>
+			<List selectionMode="Delete">
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
@@ -468,7 +468,7 @@ describe("List - Accessibility", () => {
 		const customDescription = "Custom list description";
 
 		cy.mount(
-			<List accessibleDescription={customDescription}>
+			<List selectionMode="Delete" accessibleDescription={customDescription}>
 				<ListItemStandard>Item 1</ListItemStandard>
 				<ListItemStandard>Item 2</ListItemStandard>
 			</List>
@@ -511,6 +511,200 @@ describe("List - Accessibility", () => {
 						expect(ariaDesc).to.not.include(defaultText);
 					});
 			});
+	});
+
+	it("does not announce F2 instruction for selectionMode None with standard items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc ?? "").to.not.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode Delete", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Item 1</ListItemStandard>
+				<ListItemStandard>Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode None with type Detail items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard type="Detail">Item 1</ListItemStandard>
+				<ListItemStandard type="Detail">Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+					});
+			});
+	});
+
+	it("announces F2 instruction for selectionMode None with custom list items", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemCustom>
+					<Button>Action</Button>
+				</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc).to.include(defaultText);
+					});
+			});
+	});
+
+	it("announces 'Selected' when an item is selected in Single mode via mouse click", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("contain.text", "Selected");
+	});
+
+	it("announces 'Selected' when an item is selected in Single mode via Space key", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().shadow().find("li").focus();
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.get("[ui5-list]").find("[ui5-li]").eq(1).shadow().find("li").focus();
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Selected");
+	});
+
+	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode via mouse click", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("contain.text", "Not Selected");
+	});
+
+	it("announces 'Selected' and 'Not Selected' when items are toggled in Multiple mode via Space key", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().shadow().find("li").focus();
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Selected");
+
+		cy.realPress("Space");
+		cy.get("@liveRegion").should("contain.text", "Not Selected");
+	});
+
+	it("does not announce selection when selectionMode is None", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard>Argentina</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("have.text", "");
+	});
+
+	it("does not announce selection when selectionMode is Delete", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard>Argentina</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().click();
+		cy.realPress("Delete");
+		cy.get("@liveRegion").should("have.text", "");
+	});
+
+	it("does not announce selection when selection-change event is prevented", () => {
+		cy.mount(
+			<List selectionMode="Single" onSelectionChange={(e: CustomEvent) => e.preventDefault()}>
+				<ListItemStandard>Argentina</ListItemStandard>
+				<ListItemStandard>Bulgaria</ListItemStandard>
+			</List>
+		);
+
+		cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+		cy.get("[ui5-list]").find("[ui5-li]").first().realClick();
+		cy.get("@liveRegion").should("have.text", "");
 	});
 });
 
