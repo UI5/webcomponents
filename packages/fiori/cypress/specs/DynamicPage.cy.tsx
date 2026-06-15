@@ -3,6 +3,12 @@ import DynamicPageTitle from "../../src/DynamicPageTitle.js";
 import DynamicPageHeader from "../../src/DynamicPageHeader.js";
 import Bar from "@ui5/webcomponents/dist/Bar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import Table from "@ui5/webcomponents/dist/Table.js";
+import TableHeaderRow from "@ui5/webcomponents/dist/TableHeaderRow.js";
+import TableHeaderCell from "@ui5/webcomponents/dist/TableHeaderCell.js";
+import TableRow from "@ui5/webcomponents/dist/TableRow.js";
+import TableCell from "@ui5/webcomponents/dist/TableCell.js";
+import TableRowAction from "@ui5/webcomponents/dist/TableRowAction.js";
 import { setAnimationMode } from "@ui5/webcomponents-base";
 
 before(() => {
@@ -459,6 +465,53 @@ describe("DynamicPage", () => {
 				expect(targetRect.top).to.be.at.least(visibleTop);
 				expect(targetRect.bottom).to.be.at.most(visibleBottom);
 			});
+	});
+
+	it("should not scroll when clicking a TableRowAction overflow button on a visible row", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "500px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+					<div slot="snappedHeading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "100px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<Table id="table" rowActionCount={3}>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell>Product</TableHeaderCell>
+						<TableHeaderCell>Supplier</TableHeaderCell>
+					</TableHeaderRow>
+					{Array.from({ length: 8 }, (_, i) => (
+						<TableRow id={`row${i}`} key={i}>
+							<TableCell>Product {i + 1}</TableCell>
+							<TableCell>Supplier {i + 1}</TableCell>
+							<TableRowAction slot="actions" icon="delete" text="Delete"></TableRowAction>
+							<TableRowAction slot="actions" icon="add" text="Add"></TableRowAction>
+							<TableRowAction slot="actions" icon="edit" text="Edit"></TableRowAction>
+							<TableRowAction slot="actions" icon="share" text="Share"></TableRowAction>
+						</TableRow>
+					))}
+				</Table>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").shadow().find(".ui5-dynamic-page-scroll-container").as("scrollContainer");
+
+		// Scroll so a row with its overflow button is visible but not obscured
+		cy.get("@scrollContainer").scrollTo(0, 80);
+
+		cy.get("@scrollContainer").then($el => {
+			const scrollBefore = $el[0].scrollTop;
+
+			// Click the overflow button - it should open the menu without scrolling
+			cy.get("#row0").shadow().find("#overflow").click();
+
+			// Allow RAF and any potential scroll to settle, then assert no jump occurred
+			cy.wait(100).then(() => {
+				cy.get("@scrollContainer").its("0.scrollTop").should("equal", scrollBefore);
+			});
+		});
 	});
 });
 
