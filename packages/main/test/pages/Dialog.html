@@ -86,6 +86,9 @@
 		<ui5-button id="fullscreen-open">Open fullscreen dialog</ui5-button>
 		<br>
 		<br>
+		<ui5-button id="fullscreen-long-title-open">Open fullscreen dialog (long title)</ui5-button>
+		<br>
+		<br>
 		<ui5-button id="rtl-draggable-and-resizable-open">Open RTL draggable & resizable dialog</ui5-button>
 		<br>
 		<br>
@@ -451,6 +454,15 @@
 
 		<div slot="footer" class="dialogFooter">
 			<ui5-button id="fullscreen-close" design="Emphasized">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<ui5-dialog id="fullscreen-long-title" header-text="This Is a Long Dialog Title That Should Be Centered" show-fullscreen-button draggable>
+		<p>Compare the title position with and without the fullscreen button.</p>
+		<p>With flex:1 approach, the title shifts toward the start instead of being visually centered in the header.</p>
+
+		<div slot="footer" class="dialogFooter">
+			<ui5-button id="fullscreen-long-title-close" design="Emphasized">Close</ui5-button>
 		</div>
 	</ui5-dialog>
 
@@ -1021,6 +1033,8 @@
 		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = false; });
 		window["fullscreen-open"].addEventListener("click", function () { window["fullscreen-dialog"].open = true; });
 		window["fullscreen-close"].addEventListener("click", function () { window["fullscreen-dialog"].open = false; });
+		window["fullscreen-long-title-open"].addEventListener("click", function () { window["fullscreen-long-title"].open = true; });
+		window["fullscreen-long-title-close"].addEventListener("click", function () { window["fullscreen-long-title"].open = false; });
 		window["rtl-draggable-and-resizable-open"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = true; });
 		window["rtl-draggable-and-resizable-close"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = false; });
 		window["rtl-maxwidth-resizable-open"].addEventListener("click", function () { window["rtl-maxwidth-resizable-dialog"].open = true; });
