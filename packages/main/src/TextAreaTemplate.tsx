@@ -47,8 +47,8 @@ export default function TextAreaTemplate(this: TextArea) {
 
 				{ afterTextarea.call(this) }
 
-				{this.showExceededText &&
-				<span class="ui5-textarea-exceeded-text">{this._exceededTextProps.exceededText}</span>
+				{this._effectiveCounterMode !== "None" &&
+				<span class={this.classes.exceededText}>{this._exceededTextProps.exceededText}</span>
 				}
 
 				{this.ariaDescriptionText &&
