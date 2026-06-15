@@ -8,6 +8,7 @@ import MultiComboBoxCustomValue from "../../../_samples/main/MultiComboBox/Multi
 import MultiComboBoxGrouping from "../../../_samples/main/MultiComboBox/MultiComboBoxGrouping/MultiComboBoxGrouping.md";
 import MultiComboBoxSelectAll from "../../../_samples/main/MultiComboBox/MultiComboBoxSelectAll/MultiComboBoxSelectAll.md";
 import SuggestionsWrapping from "../../../_samples/main/MultiComboBox/SuggestionsWrapping/SuggestionsWrapping.md";
+import LazyLoading from "../../../_samples/main/MultiComboBox/LazyLoading/LazyLoading.md";
 import SelectedValues from "../../../_samples/main/MultiComboBox/SelectedValues/SelectedValues.md";
 import SelectedValuesDynamic from "../../../_samples/main/MultiComboBox/SelectedValuesDynamic/SelectedValuesDynamic.md";
 
@@ -58,3 +59,10 @@ The sample demonstrates how the text of the items wrap when too long.
 <b>Note:</b> their representation in the input field (known as token) will truncate.
 
 <SuggestionsWrapping />
+
+### Lazy Loading
+Use the <b>load-started</b> event to load items on demand. Set <b>filter="None"</b> to disable
+client-side filtering and let the server control which items are returned.
+The event detail's <b>shouldOpenPicker</b> flag indicates whether the picker should open after items are loaded.
+
+<LazyLoading />

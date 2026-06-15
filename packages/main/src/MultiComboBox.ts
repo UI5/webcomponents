@@ -272,7 +272,10 @@ type MultiComboBoxLoadingStart = {
 	cancelable: true,
 })
 
-/*
+/**
+ * Fired when the applications can set the control in loading state to start items creation/fetching. 
+ * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
+ * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
 @event("load-started", {
@@ -828,7 +831,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				this.open = true;
 			}
 		}
-		
+
 		this.fireDecoratorEvent("input");
 	}
 
@@ -1973,7 +1976,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		return isPhone();
 	}
 
-	_announce(){
+	_announce() {
 		if (this._announceLoadingStart) {
 			announce(MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING), InvisibleMessageMode.Polite);
 		} else if (this._announceLoadingStart !== undefined) {

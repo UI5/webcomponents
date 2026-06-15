@@ -124,7 +124,10 @@ function content(this: ComboBox) {
 				onMouseDown={this._itemMousedown}
 			>
 				{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={LOADING_DELAY} />}
-				{hasFilteredItems && this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+				{(hasFilteredItems && this._filteredItems.length > 0)
+					? this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)
+					: null
+				}
 			</List>
 		);
 	}

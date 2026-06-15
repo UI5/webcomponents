@@ -1,0 +1,54 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 300px">
+    <!-- playground-fold-end -->
+
+    <ui5-combobox id="cbLazy" placeholder="Type a country name" filter="None"></ui5-combobox>
+
+    <script>
+        const cb = document.getElementById("cbLazy");
+        const COUNTRIES = ["Afghanistan", "Albania", "Algeria", "Argentina", "Australia", "Austria",
+            "Belgium", "Brazil", "Bulgaria", "Canada", "Chile", "China", "Colombia",
+            "Croatia", "Czech Republic", "Denmark", "Egypt", "Finland", "France", "Germany",
+            "Greece", "Hungary", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
+            "Italy", "Japan", "Jordan", "Kazakhstan", "Kenya", "South Korea", "Malaysia",
+            "Mexico", "Morocco", "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan",
+            "Peru", "Philippines", "Poland", "Portugal", "Romania", "Russia", "Saudi Arabia",
+            "Serbia", "Singapore", "South Africa", "Spain", "Sweden", "Switzerland", "Thailand",
+            "Turkey", "Ukraine", "United Kingdom", "United States", "Vietnam"];
+
+        cb.addEventListener("load-started", (e) => {
+            const { shouldOpenPicker } = e.detail;
+            const value = cb.value;
+
+            cb.loading = true;
+            cb.innerHTML = "";
+
+            setTimeout(() => {
+                const matches = COUNTRIES.filter(c => c.toLowerCase().includes(value.toLowerCase()));
+                matches.forEach(country => {
+                    const item = document.createElement("ui5-cb-item");
+                    item.setAttribute("text", country);
+                    cb.appendChild(item);
+                });
+                cb.loading = false;
+                if (shouldOpenPicker) {
+                    cb.open = true;
+                }
+            }, 500);
+        });
+    </script>
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

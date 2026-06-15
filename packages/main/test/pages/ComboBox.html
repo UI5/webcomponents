@@ -203,15 +203,6 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Lazy Loading - example does not work on IE11</span>
-
-		<br />
-		<br />
-
-		<ui5-combobox id="lazy" class="combobox2auto"></ui5-combobox>
-	</div>
-
-	<div class="demo-section">
 		<span>Lazy Loading with filter='None'</span>
 
 		<br />
@@ -516,45 +507,6 @@
 	</div>
 
 	<script type="module">
-		document.getElementById("lazy").addEventListener("input", async event => {
-			const { value } = event.target;
-
-			// set busy state
-			if (!value) {
-				return;
-			}
-
-			event.target.loading = true;
-
-			// load data
-			try {
-				while (document.getElementById("lazy").firstChild) {
-					document.getElementById("lazy").removeChild(document.getElementById("lazy").firstChild);
-				}
-
-				const response = await fetch(`https://restcountries.com/v3.1/name/${value}`);
-				const items = await response.json();
-				// cleanup old items
-
-				// fill new items
-				if (Array.isArray(items)) {
-					items.map(data => {
-						const element = document.createElement("ui5-cb-item");
-						element.setAttribute("text", data.name.common);
-
-						document.getElementById("lazy").appendChild(element);
-					});
-				}
-			} catch {
-
-			} finally {
-				// remove busy state
-				event.target.loading = false;
-			}
-		});
-	</script>
-
-	<script type="module">
 		const cb = document.getElementById("cb-filter-none");
 		let currentSearch,
 			debounce;
@@ -682,18 +634,16 @@
 			control.value = "";
 		} 
 
-		const fnLoadItems = (control) => { 
+		const fnLoadItems = (e) => { 
+			const control = e.target;
 			const { value, items } = control;
 			if(!items || !items.length){
 				control.loading = true;
+				control.open - e.shouldOpenPicker;
 				setTimeout(() => {
 					const group = createGroupItem(control, 'Group 1');
 					createItem(group, `Child Item 1 ${value}`);
 					createItem(group, `Chidl Item 2 ${value}`);
-					// createItem(control, `Item 1 ${value}`);
-					// createItem(control, `Item 2 ${value}`);
-					// createItem(control, `Item 3 ${value}`);
-					// createItem(control, `Option ${value}`);
 					control.loading = false;
 				}, 3000);
 			}
@@ -701,7 +651,7 @@
 
 		document.getElementById("btn-clear").addEventListener("click", () => fnClearItems(cbLazyLoad));
 
-		cbLazyLoad.addEventListener("load-started", e => fnLoadItems(e.target));
+		cbLazyLoad.addEventListener("load-started", fnLoadItems);
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;

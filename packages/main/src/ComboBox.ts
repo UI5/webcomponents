@@ -255,7 +255,10 @@ type ComboBoxLoadingStart = {
 	bubbles: true,
 })
 
-/*
+/**
+ * Fired when the applications can set the control in loading state to start items creation/fetching. 
+ * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
+ * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
 @event("load-started", {
