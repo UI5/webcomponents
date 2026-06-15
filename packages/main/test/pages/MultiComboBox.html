@@ -960,14 +960,44 @@
 		<span>Selected values: <strong id="custom-items-mcb-values"></strong></span>
 		<br />
 		<span>Selected selectedValues: <strong id="custom-items-mcb-selected-values"></strong></span>
+		<br />
+		<br />
+		<ui5-button id="select-nyc-lon-btn">Select NYC & London</ui5-button>
+		<ui5-button id="select-all-custom-btn">Select All</ui5-button>
+		<ui5-button id="clear-all-custom-btn">Clear All</ui5-button>
 
 		<script>
 			const customItemsMcb = document.getElementById("custom-items-mcb");
-			customItemsMcb.addEventListener("ui5-selection-change", function (event) {
-				const values = event.detail.items.map(item => item.text).join(", ");
+
+			// Helper function to update display
+			function updateMcbDisplay() {
+				// Get selected items by matching values
+				const selectedItems = Array.from(customItemsMcb.querySelectorAll("[ui5-mcb-item-custom]"))
+					.filter(item => customItemsMcb.selectedValues.includes(item.value));
+				const values = selectedItems.map(item => item.text).join(", ");
 				const selectedValues = customItemsMcb.selectedValues.join(", ");
 				document.getElementById("custom-items-mcb-values").innerHTML = values || "(none)";
 				document.getElementById("custom-items-mcb-selected-values").innerHTML = selectedValues || "(none)";
+			}
+
+			customItemsMcb.addEventListener("ui5-selection-change", function (event) {
+				updateMcbDisplay();
+			});
+
+			// Test buttons for programmatic selection
+			document.getElementById("select-nyc-lon-btn").addEventListener("click", () => {
+				customItemsMcb.selectedValues = ["NYC", "LON"];
+				updateMcbDisplay();
+			});
+
+			document.getElementById("select-all-custom-btn").addEventListener("click", () => {
+				customItemsMcb.selectedValues = ["NYC", "LON", "TYO", "PAR", "BER", "SYD"];
+				updateMcbDisplay();
+			});
+
+			document.getElementById("clear-all-custom-btn").addEventListener("click", () => {
+				customItemsMcb.selectedValues = [];
+				updateMcbDisplay();
 			});
 		</script>
 	</div>

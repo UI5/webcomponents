@@ -6,7 +6,7 @@ import {
 	eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import ComboBoxItemCustom from "./ComboBoxItemCustom.js";
-import CheckBox from "./CheckBox.js";
+import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
@@ -18,9 +18,9 @@ import type { AriaRole } from "@ui5/webcomponents-base";
 
 /**
  * @class
- * The `ui5-mcb-item-custom` is type of multi-combobox item,
- * that can be used to place multi-combobox items with custom content.
- * The text property is considered for filtering and token display.
+ * The `ui5-mcb-item-custom` is a multi-combobox item component
+ * that can be used to place custom content in the multi-combobox item.
+ * The text property is used for filtering and token display.
  * In case the user needs highlighting functionality, check "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js"
  *
  * @constructor
@@ -33,7 +33,6 @@ import type { AriaRole } from "@ui5/webcomponents-base";
 	tag: "ui5-mcb-item-custom",
 	template: MultiComboBoxItemCustomTemplate,
 	styles: [ComboBoxItemCustom.styles, styles],
-	dependencies: [...ComboBoxItemCustom.dependencies, CheckBox],
 })
 
 @event("selection-requested", {
@@ -45,15 +44,6 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 	}
 
 	/**
-	 * Defines the selected state of the component.
-	 * @default false
-	 * @public
-	 * @deprecated Set the `value` property on items and use the `selectedValues` property on the parent `ui5-multi-combobox` instead for programmatic selection.
-	 */
-	@property({ type: Boolean })
-	selected = false;
-
-	/**
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
@@ -61,6 +51,17 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	onBeforeRendering(): void {
+		// Synchronize selected state from parent's selectedValues
+		// This ensures the checkbox reflects the correct state
+		if (this.value) {
+			const parent = this.closest("[ui5-multi-combobox]");
+			if (parent) {
+				this.selected = (parent as any).selectedValues?.includes(this.value) ?? false;
+			}
+		}
+	}
 
 	get isMultiComboBoxItem() {
 		return true;

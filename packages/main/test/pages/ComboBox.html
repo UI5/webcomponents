@@ -725,15 +725,54 @@
 			</ui5-cb-item-custom>
 		</ui5-combobox>
 		<br />
-		<span>Selected value: <strong id="custom-items-value"></strong></span>
+		<span>Selected option text: <strong id="custom-items-text"></strong></span>
 		<br />
-		<span>Selected selectedValue: <strong id="custom-items-selected-value"></strong></span>
+		<span>selectedValue: <strong id="custom-items-selected-value"></strong></span>
+		<br />
+		<br />
+		<ui5-button id="select-nyc-btn">Select "New York, USA"</ui5-button>
+		<ui5-button id="select-london-btn">Select "London, UK"</ui5-button>
+		<ui5-button id="clear-selection-btn">Clear Selection</ui5-button>
 
 		<script>
 			const customItemsCb = document.getElementById("custom-items-cb");
 			customItemsCb.addEventListener("ui5-change", function (event) {
-				document.getElementById("custom-items-value").innerHTML = event.target.value || "(empty)";
+				document.getElementById("custom-items-text").innerHTML = event.target.value || "(empty)";
 				document.getElementById("custom-items-selected-value").innerHTML = event.target.selectedValue || "(none)";
+			});
+
+			// Helper function to update display
+			function updateDisplay() {
+				document.getElementById("custom-items-text").innerHTML = customItemsCb.value || "(empty)";
+				document.getElementById("custom-items-selected-value").innerHTML = customItemsCb.selectedValue || "(none)";
+			}
+
+			// Test buttons for programmatic selection
+			document.getElementById("select-nyc-btn").addEventListener("click", () => {
+				// Find the item with the matching value and set both value and selectedValue
+				const item = Array.from(customItemsCb.querySelectorAll("[ui5-cb-item-custom]"))
+					.find(item => item.value === "NYC");
+				if (item) {
+					customItemsCb.value = item.text;
+					customItemsCb.selectedValue = "NYC";
+					updateDisplay();
+				}
+			});
+
+			document.getElementById("select-london-btn").addEventListener("click", () => {
+				const item = Array.from(customItemsCb.querySelectorAll("[ui5-cb-item-custom]"))
+					.find(item => item.value === "LON");
+				if (item) {
+					customItemsCb.value = item.text;
+					customItemsCb.selectedValue = "LON";
+					updateDisplay();
+				}
+			});
+
+			document.getElementById("clear-selection-btn").addEventListener("click", () => {
+				customItemsCb.selectedValue = undefined;
+				customItemsCb.value = "";
+				updateDisplay();
 			});
 		</script>
 	</div>
