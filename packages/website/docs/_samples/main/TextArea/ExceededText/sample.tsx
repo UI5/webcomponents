@@ -9,18 +9,25 @@ const TextArea = createReactComponent(TextAreaClass);
 function App() {
   const [valueState, setValueState] = useState<`${ValueState}`>("None");
 
+  // App-controlled threshold
   const handleTextAreaInput = (e: UI5CustomEvent<TextAreaClass, "input">) => {
     const value = e.currentTarget.value;
     const maxlength = e.currentTarget.maxlength;
-    setValueState(value.length > maxlength ? "Critical" : "None");
+    const percentage = (value.length / maxlength) * 100;
+
+    if (percentage >= 75) {
+      setValueState("Critical");
+    } else {
+      setValueState("None");
+    }
   };
 
   return (
     <TextArea
-      maxlength={10}
-      placeholder="Enter more than 10 characters"
-      counterMode="Always"
-      valueState={valueState as "None" | "Critical"}
+      maxlength={100}
+      placeholder="Focus to see character counter"
+      counterMode="Auto"
+      valueState={valueState}
       onInput={handleTextAreaInput}
     />
   );
