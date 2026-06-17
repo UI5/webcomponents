@@ -317,7 +317,7 @@ class Dialog extends Popup {
 	}
 
 	get _showFullscreenButton() {
-		return this.showFullscreenButton && !this.onPhone;
+		return this.showFullscreenButton && !this.onPhone && !this.header.length;
 	}
 
 	get _fullscreenButtonIcon() {
