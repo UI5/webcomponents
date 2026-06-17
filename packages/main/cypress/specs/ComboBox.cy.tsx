@@ -3160,15 +3160,15 @@ describe("Loading State", () => {
 
 		cy.get("[ui5-combobox]")
 			.shadow()
-			.find("ui5-responsive-popover")
+			.find("[ui5-responsive-popover]")
 			.as("popover");
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("exist");
 
 		cy.get("@popover")
-			.find("ui5-list")
+			.find("[ui5-list]")
 			.should("not.exist");
 	});
 
@@ -3183,22 +3183,22 @@ describe("Loading State", () => {
 		cy.get("[ui5-combobox]")
 			.as("combo")
 			.shadow()
-			.find("ui5-responsive-popover")
+			.find("[ui5-responsive-popover]")
 			.as("popover");
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("exist");
 
 		cy.get("@combo")
 			.invoke("prop", "loading", false);
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("not.exist");
 
 		cy.get("@popover")
-			.find("ui5-list")
+			.find("[ui5-list]")
 			.should("exist");
 	});
 });

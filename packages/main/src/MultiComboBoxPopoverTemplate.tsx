@@ -12,8 +12,7 @@ import Popover from "./Popover.js";
 import CheckBox from "./CheckBox.js";
 import Title from "./Title.js";
 import BusyIndicator from "./BusyIndicator.js";
-
-const LOADING_DELAY = 100;
+import { LOADING_DELAY } from "./features/ComboBoxLazyLoading.js";
 
 export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 	return (<>

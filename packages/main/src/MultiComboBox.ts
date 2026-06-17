@@ -1745,7 +1745,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	_click() {
 		if (isPhone() && !this.readonly && !this._showMorePressed && !this._deleting) {
 			this.open = true;
-			if (this._getItems().length === 0) {
+			if (!this.loading  && this._getItems().length === 0) {
 				this._loadingDelegate.fireOnMobileClick();
 			}
 		}

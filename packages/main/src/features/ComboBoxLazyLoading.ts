@@ -1,6 +1,10 @@
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
+export const LOADING_DELAY = 100;
+
+type AnnounceState = "loading" | "loaded" | undefined;
+
 export interface LoadingDelegateConfig {
 	getItemCount: () => number;
 	isLoading: () => boolean;
@@ -16,7 +20,7 @@ export interface LoadingDelegateConfig {
 export default class ComboBoxLazyLoading {
 	_config: LoadingDelegateConfig;
 	_prevLoading: boolean;
-	_announceLoading?: boolean;
+	_announceLoading: AnnounceState;
 
 	constructor(config: LoadingDelegateConfig) {
 		this._config = config;
@@ -29,18 +33,18 @@ export default class ComboBoxLazyLoading {
 
 	onBeforeRendering(loading: boolean) {
 		if (!this._prevLoading && loading) {
-			this._announceLoading = true;
+			this._announceLoading = "loading";
 		} else if (this._prevLoading && !loading) {
-			this._announceLoading = false;
+			this._announceLoading = "loaded";
 			this._config.onLoadingEnd?.();
 		}
 		this._prevLoading = loading;
 	}
 
 	announceLoadingState() {
-		if (this._announceLoading) {
+		if (this._announceLoading === "loading") {
 			announce(this._config.loadingMessage(), InvisibleMessageMode.Polite);
-		} else if (this._announceLoading === false) {
+		} else if (this._announceLoading === "loaded") {
 			const count = this._config.getItemCount();
 			const itemsMsg = count === 1
 				? this._config.loadedItemMessage()

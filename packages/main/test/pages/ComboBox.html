@@ -639,7 +639,7 @@
 			const { value, items } = control;
 			if(!items || !items.length){
 				control.loading = true;
-				control.open - e.shouldOpenPicker;
+				control.open = e.shouldOpenPicker;
 				setTimeout(() => {
 					const group = createGroupItem(control, 'Group 1');
 					createItem(group, `Child Item 1 ${value}`);

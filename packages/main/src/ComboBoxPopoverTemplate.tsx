@@ -10,8 +10,7 @@ import BusyIndicator from "./BusyIndicator.js";
 import SuggestionItem from "./SuggestionItem.js";
 import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 import type ComboBox from "./ComboBox.js";
-
-const LOADING_DELAY = 100;
+import { LOADING_DELAY } from "./features/ComboBoxLazyLoading.js";
 
 export default function ComboBoxPopoverTemplate(this: ComboBox) {
 	return (
@@ -82,7 +81,7 @@ function valueStateHeader(this: ComboBox) {
 		return (
 			<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
 				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
-				{this.open && valueStateMessage.call(this)} aaaaaaa
+				{this.open && valueStateMessage.call(this)}
 			</div>
 		);
 	}
