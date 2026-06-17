@@ -569,6 +569,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._lastValue = this.getAttribute("value") || "";
 		this._loadingDelegate = new ComboBoxLazyLoading({
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
+			isLoading: () => this.loading,
+			isOpen: () => this.open,
+			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-started", { shouldOpenPicker }),
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
@@ -809,7 +812,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (!this.open && !this.loading && this._getItems().length === 0) {
-			this.fireDecoratorEvent("load-started", { shouldOpenPicker: false });
+			this._loadingDelegate.fireOnDropdownOpen();
 		}
 
 		this._toggleRespPopover();
@@ -853,7 +856,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
-		this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+		this._loadingDelegate.fireOnInput();
 
 		if (isPhone()) {
 			return;
@@ -1221,7 +1224,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_click() {
 		if (isPhone() && !this.readonly) {
 			if (!this.loading && this._getItems().length === 0) {
-				this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+				this._loadingDelegate.fireOnMobileClick();
 			}
 			this._openRespPopover();
 		}

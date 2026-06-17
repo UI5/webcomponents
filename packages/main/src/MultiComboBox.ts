@@ -666,6 +666,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._suppressNextLiveChange = false;
 		this._loadingDelegate = new ComboBoxLazyLoading({
 			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
+			isLoading: () => this.loading,
+			isOpen: () => this.open,
+			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-started", { shouldOpenPicker }),
 			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
 			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
 			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
@@ -757,7 +760,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	togglePopoverByDropdownIcon() {
 		if (!this.open && !this.loading && this._getItems().length === 0) {
-			this.fireDecoratorEvent("load-started", { shouldOpenPicker: false });
+			this._loadingDelegate.fireOnDropdownOpen();
 		}
 		this._shouldFilterItems = false;
 		this.open = !this.open;
@@ -794,7 +797,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+		this._loadingDelegate.fireOnInput();
 
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
@@ -1743,7 +1746,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (isPhone() && !this.readonly && !this._showMorePressed && !this._deleting) {
 			this.open = true;
 			if (this._getItems().length === 0) {
-				this.fireDecoratorEvent("load-started", { shouldOpenPicker: true });
+				this._loadingDelegate.fireOnMobileClick();
 			}
 		}
 
