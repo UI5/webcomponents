@@ -3992,3 +3992,110 @@ describe("Highlighting", () => {
 			.should("contain.html", "<b>AFR</b>");
 	});
 });
+
+describe("Loading State", () => {
+	it("should display busy indicator when loading is true", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+
+	it("should hide busy indicator and show items when loading becomes false", () => {
+		cy.mount(
+			<ComboBox loading open>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@combobox")
+			.invoke("prop", "loading", false);
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("not.exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("exist");
+	});
+});
+
+describe("load-started event", () => {
+	it("fires on arrow click when ComboBox has no items", () => {
+		cy.mount(
+			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadStarted")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
+	it("does not fire on arrow click when ComboBox has items", () => {
+		cy.mount(
+			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadStarted")
+			.should("not.have.been.called");
+	});
+
+	it("fires on each new character typed in the input", () => {
+		cy.mount(
+			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadStarted")
+			.should("have.been.calledThrice")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === true;
+			}));
+	});
+});

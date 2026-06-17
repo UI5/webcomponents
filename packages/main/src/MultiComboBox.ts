@@ -61,8 +61,7 @@ import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/In
 import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBoxItem.js";
 import MultiComboBoxItemGroup, { isInstanceOfMultiComboBoxItemGroup } from "./MultiComboBoxItemGroup.js";
 import ListItemGroup from "./ListItemGroup.js";
-import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 import Tokenizer, { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
 import Token from "./Token.js";
@@ -273,7 +272,7 @@ type MultiComboBoxLoadingStart = {
 })
 
 /**
- * Fired when the applications can set the control in loading state to start items creation/fetching. 
+ * Fired when the applications can set the control in loading state to start items creation/fetching.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
@@ -611,8 +610,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	selectedItems: Array<IMultiComboBoxItem>;
 	_valueStateLinks: Array<HTMLElement>;
 	_composition?: InputComposition;
-	_prevLoading: boolean;
-	_announceLoadingStart?: boolean;
+	_loadingDelegate: ComboBoxLazyLoading;
 	_suppressNextLiveChange: boolean; // prevent unwanted live change events during IME composition
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -666,7 +664,19 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.currentItemIdx = -1;
 		this._valueStateLinks = [];
 		this._suppressNextLiveChange = false;
-		this._prevLoading = this.loading;
+		this._loadingDelegate = new ComboBoxLazyLoading({
+			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
+			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
+			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
+			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
+			loadedItemsMessage: count => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count),
+			onLoadingEnd: () => {
+				if (this.open && this.showSelectAll && this._filteredItems.length === 0) {
+					this.open = false;
+				}
+			},
+		});
+		this._loadingDelegate.init(this.loading);
 	}
 
 	onEnterDOM() {
@@ -1889,15 +1899,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const autoCompletedChars = input && (input.selectionEnd || 0) - (input.selectionStart || 0);
 		const value = input && input.value;
 
-		if (!this._prevLoading && this.loading) {
-			this._announceLoadingStart = true;
-		} else if (this._prevLoading && !this.loading) {
-			this._announceLoadingStart = false;
-			if (this.open && this.showSelectAll && this._filteredItems.length === 0) {
-				this.open = false;
-			}
-		}
-		this._prevLoading = this.loading;
+		this._loadingDelegate.onBeforeRendering(this.loading);
 
 		if (this.open) {
 			const list = this._getList();
@@ -1969,22 +1971,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._valueStateLinks = this.linksInAriaValueStateHiddenText;
 		}
 
-		this._announce();
+		this._loadingDelegate.announceLoadingState();
 	}
 
 	get _isPhone() {
 		return isPhone();
-	}
-
-	_announce() {
-		if (this._announceLoadingStart) {
-			announce(MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING), InvisibleMessageMode.Polite);
-		} else if (this._announceLoadingStart !== undefined) {
-			const count = this._getItems().filter(item => item._isVisible).length;
-			const itemsLoadedMessage = count === 1 ? MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM) : MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count);
-			announce(`${MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
-		}
-		this._announceLoadingStart = undefined;
 	}
 
 	_onIconMousedown() {

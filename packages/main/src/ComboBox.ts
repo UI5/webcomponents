@@ -10,6 +10,7 @@ import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.j
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -256,7 +257,7 @@ type ComboBoxLoadingStart = {
 })
 
 /**
- * Fired when the applications can set the control in loading state to start items creation/fetching. 
+ * Fired when the applications can set the control in loading state to start items creation/fetching.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
@@ -520,8 +521,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
-	_prevLoading: boolean;
-	_announceLoading?: boolean;
+	_loadingDelegate: ComboBoxLazyLoading;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -567,7 +567,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		// when an initial value is set it should be considered as a _lastValue
 		this._lastValue = this.getAttribute("value") || "";
-		this._prevLoading = this.loading;
+		this._loadingDelegate = new ComboBoxLazyLoading({
+			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
+			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
+			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
+			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
+			loadedItemsMessage: count => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count),
+		});
+		this._loadingDelegate.init(this.loading);
 	}
 
 	onBeforeRendering() {
@@ -620,14 +627,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._selectMatchingItem();
 
 		if (!this._initialRendering) {
-			if (!this._prevLoading && this.loading) {
-				this._announceLoading = true;
-			} else if (this._prevLoading && !this.loading) {
-				this._announceLoading = false;
-			}
+			this._loadingDelegate.onBeforeRendering(this.loading);
 		}
 
-		this._prevLoading = this.loading;
 		this._initialRendering = false;
 
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
@@ -648,14 +650,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this.storeResponsivePopoverWidth();
 
-		if (this._announceLoading) {
-			announce(ComboBox.i18nBundle.getText(COMBOBOX_LOADING), InvisibleMessageMode.Polite);
-		} else if (this._announceLoading === false) {
-			const count = this._getItems().filter(item => !item.isGroupItem && item._isVisible).length;
-			const itemsLoadedMessage = count === 1 ? ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM) : ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count);
-			announce(`${ComboBox.i18nBundle.getText(COMBOBOX_LOADED)}. ${itemsLoadedMessage}`, InvisibleMessageMode.Polite);
-		}
-		this._announceLoading = undefined;
+		this._loadingDelegate.announceLoadingState();
 
 		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
 			this._removeLinksEventListeners();
