@@ -8,6 +8,7 @@ import {
 import ComboBoxItemCustom from "./ComboBoxItemCustom.js";
 import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
+import type MultiComboBox from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
 } from "./generated/i18n/i18n-defaults.js";
@@ -56,9 +57,9 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 		// Synchronize selected state from parent's selectedValues
 		// This ensures the checkbox reflects the correct state
 		if (this.value) {
-			const parent = this.closest("[ui5-multi-combobox]");
+			const parent = this.closest<MultiComboBox>("[ui5-multi-combobox]");
 			if (parent) {
-				this.selected = (parent as any).selectedValues?.includes(this.value) ?? false;
+				this.selected = parent.selectedValues?.includes(this.value) ?? false;
 			}
 		}
 	}
