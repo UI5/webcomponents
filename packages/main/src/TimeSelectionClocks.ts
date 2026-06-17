@@ -418,23 +418,20 @@ class TimeSelectionClocks extends TimePickerInternals {
 			return;
 		}
 
-		if (getAnimationMode() === AnimationMode.None) {
-			skipAnimation = true;
-		}
-
+		const shouldSkipAnimation = skipAnimation || getAnimationMode() === AnimationMode.None;
 		const currentClockComponent = this._clockComponent(this._activeIndex);
 		const newClockComponent = this._clockComponent(clockIndex);
 
 		if (this._skipAnimation && clockIndex !== 0 && this._activeIndex === 0 && currentClockComponent) {
 			currentClockComponent._skipAnimation = false;
-			this._skipAnimation = skipAnimation;
+			this._skipAnimation = shouldSkipAnimation;
 		}
 
-		if (newClockComponent && skipAnimation) {
+		if (newClockComponent && shouldSkipAnimation) {
 			newClockComponent._skipAnimation = true;
 			this._activateClock(clockIndex);
 		} else {
-			currentClockComponent?._firstNumberElement?.addEventListener("animationend", () => { this._activateClock(clockIndex); }, { once: true });
+			currentClockComponent?._firstNumberElement?.addEventListener("animationend", () => this._activateClock(clockIndex), { once: true });
 			currentClockComponent?._clockWrapper?.classList.add("ui5-tp-clock-transition");
 		}
 	}
