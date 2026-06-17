@@ -1244,6 +1244,59 @@ describe("Acc", () => {
 			.and("have.attr", "aria-modal", "true");
 	});
 
+	it("tests header, content and footer regions", () => {
+		cy.mount(
+			<Dialog id="dialog-regions" headerText="Region Test">
+				<div>Some content</div>
+				<Button slot="footer">OK</Button>
+			</Dialog>
+		);
+
+		cy.get("#dialog-regions")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-regions").ui5DialogOpened();
+
+		// Header region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Header");
+
+		// Content region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-content")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Content");
+
+		// Footer region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Footer");
+	});
+
+	it("tests footer region is not rendered when no footer slot is provided", () => {
+		cy.mount(
+			<Dialog id="dialog-no-footer" headerText="No Footer">
+				<div>Some content</div>
+			</Dialog>
+		);
+
+		cy.get("#dialog-no-footer")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-no-footer").ui5DialogOpened();
+
+		cy.get("#dialog-no-footer")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("not.exist");
+	});
+
 });
 
 describe("Page scrolling", () => {

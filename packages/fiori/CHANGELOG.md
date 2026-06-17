@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
+
+
+### Features
+
+* **ui5-dynamic-page:** add accessibilityAttributes property ([#13484](https://github.com/UI5/webcomponents/issues/13484)) ([7ee59ba](https://github.com/UI5/webcomponents/commit/7ee59ba86f6340eec16fce1ae1837c53111f7adc)), closes [#12557](https://github.com/UI5/webcomponents/issues/12557)
+* **ui5-timeline:** introduce header and info-bar slots ([#13548](https://github.com/UI5/webcomponents/issues/13548)) ([7b71a03](https://github.com/UI5/webcomponents/commit/7b71a03ecfa5b80674ffde059716ce76531f219b))
+
+
+
+
+
+# [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** preserve insertion order for ShellBarItems ([#13590](https://github.com/UI5/webcomponents/issues/13590)) ([d23330a](https://github.com/UI5/webcomponents/commit/d23330a66ebb8ba7bf6495b73c79a658db1ec53c))
+* **ui5-text:** unify truncation across all max-lines values ([#13624](https://github.com/UI5/webcomponents/issues/13624)) ([3c50320](https://github.com/UI5/webcomponents/commit/3c503202d76a24a65f3b59297463762f15b0bf43))
+
+
+### Documentation
+
+* pre-release docs clean-up ([#13651](https://github.com/UI5/webcomponents/issues/13651)) ([635cbc1](https://github.com/UI5/webcomponents/commit/635cbc16a89a0adc1d9819709df9c97e7e92e663))
+
+
+### Features
+
+* **ui5-hero-banner:** introduce Hero Banner component ([#13230](https://github.com/UI5/webcomponents/issues/13230)) ([036d2c2](https://github.com/UI5/webcomponents/commit/036d2c226368b9ca62847cd4972c0b9cef1983b2))
+
+
+### BREAKING CHANGES
+
+* the click CustomEvent on ui5-tab and ui5-li-notification
+no longer includes item/tab in event.detail. Read the source element from
+event.target instead.
+
+* chore: follow-up cleanups
+
+- ListBoxItemGroupTemplate: use string literal "Group" for accessibleRole
+  (the ListItemAccessibleRole.Group enum entry was removed in this PR)
+- NotificationListItemBase: drop redundant @customElement({}) decorator on
+  the abstract base class
+- TableGroupRow: bump @since to 2.23.0
+
+* chore(website): remove newComponentBadge from .mdx frontmatter
+
+Drop the sidebar_class_name: newComponentBadge marker from all component
+and pattern docs — the components/patterns are no longer new. Where the
+class was the only frontmatter entry, the entire frontmatter block is
+removed; where it was combined with expComponentBadge, only the
+newComponentBadge token is removed.
+
+Also drop the now-unused ListItemAccessibleRole import in
+ListBoxItemGroupTemplate.tsx (left over from the string-literal switch
+in the previous commit).
+
+* fix(ui5-li-notification-base): restore @customElement decorator
+
+Revert the @customElement({}) removal from de7a850a5 — even though the
+class is abstract and never instantiated directly, the decorator
+registers metadata that subclasses (NotificationListItem,
+NotificationListGroupItem) inherit via the framework. Removing it broke
+that inheritance chain.
+
+* test: read source from event.target on tab/notification click
+
+Update the Tab and NotificationListItem semantic-click-event tests to
+read the source element from event.target instead of event.detail.tab /
+event.detail.item, which were removed earlier in this PR.
+
+
+
+
+
+# [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
+
+
+### Bug Fixes
+
+* **ui5-search-field:** correct scope select border and icon sizing ([#13619](https://github.com/UI5/webcomponents/issues/13619)) ([64b1fea](https://github.com/UI5/webcomponents/commit/64b1feaf93d1e829fc7226a4d8e3d6f1a0fa2965))
+
+
+
+
+
 # [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
 
 

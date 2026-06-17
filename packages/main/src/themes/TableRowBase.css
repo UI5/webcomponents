@@ -5,6 +5,7 @@
 	min-height: var(--_ui5_list_item_base_height);
 	box-sizing: content-box;
 	overflow: clip;
+	break-inside: avoid;
 }
 
 #selection-cell,
