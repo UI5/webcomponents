@@ -2,6 +2,12 @@
     display: inline-block;
 }
 
+:host([_show-two-months]) {
+	overflow-y: scroll;
+	max-height: calc(100vh - 4rem);
+}
+
+
 .ui5-cal-root .ui5-calheader {
     display: block;
     height: var(--_ui5_calendar_header_height);
