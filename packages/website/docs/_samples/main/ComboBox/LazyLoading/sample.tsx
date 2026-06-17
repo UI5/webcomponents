@@ -24,7 +24,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const cbRef = useRef(null);
 
-  const handleLoadStarted = useCallback((e) => {
+  const handleLoadStart = useCallback((e) => {
     const { shouldOpenPicker } = e.detail;
     const value = cbRef.current?.value ?? "";
 
@@ -52,7 +52,7 @@ function App() {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      onLoadStarted={handleLoadStarted}
+      onLoadStart={handleLoadStarted}
     >
       {items.map((country) => (
         <ComboBoxItem key={country} text={country} />

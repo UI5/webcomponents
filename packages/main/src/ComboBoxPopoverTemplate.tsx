@@ -79,14 +79,12 @@ function valueStateHeader(this: ComboBox) {
 
 	if (this._isPhone) {
 		return (
-			<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
+			<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
 				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
 				{this.open && valueStateMessage.call(this)}
 			</div>
 		);
-	}
-
-	if (!this._isPhone) {
+	} else {
 		return (
 			<div
 				slot="header"

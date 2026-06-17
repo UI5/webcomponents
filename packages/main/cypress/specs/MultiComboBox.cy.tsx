@@ -5164,7 +5164,7 @@ describe("Validation inside a form", () => {
 describe("load-start event", () => {
 	it("fires on arrow click when MultiComboBox has no items", () => {
 		cy.mount(
-			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}></MultiComboBox>
+			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}></MultiComboBox>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -5181,7 +5181,7 @@ describe("load-start event", () => {
 
 	it("does not fire on arrow click when MultiComboBox has items", () => {
 		cy.mount(
-			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}>
+			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}>
 				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
 			</MultiComboBox>
@@ -5198,7 +5198,7 @@ describe("load-start event", () => {
 
 	it("fires on each new character typed in the input", () => {
 		cy.mount(
-			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}></MultiComboBox>
+			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}></MultiComboBox>
 		);
 
 		cy.get("[ui5-multi-combobox]")

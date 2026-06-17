@@ -25,7 +25,7 @@ function App() {
   const [selectedValues, setSelectedValues] = useState([]);
   const mcbRef = useRef(null);
 
-  const handleLoadStarted = useCallback((e) => {
+  const handleLoadStart = useCallback((e) => {
     const { shouldOpenPicker } = e.detail;
     const value = mcbRef.current?.value ?? "";
 
@@ -57,7 +57,7 @@ function App() {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      onLoadStarted={handleLoadStarted}
+      onLoadStart={handleLoadStart}
       onSelectionChange={handleSelectionChange}
     >
       {items.map((country) => (

@@ -64,11 +64,7 @@ export default class ComboBoxLazyLoading {
 	}
 
 	fireOnInput() {
-		this._config.fireLoadStarted(true);
-	}
-
-	fireOnMobileClick() {
-		if (!this._config.isLoading() && this._config.getItemCount() === 0) {
+		if (!this._config.isLoading()) {
 			this._config.fireLoadStarted(true);
 		}
 	}

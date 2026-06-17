@@ -1744,10 +1744,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	_click() {
 		if (isPhone() && !this.readonly && !this._showMorePressed && !this._deleting) {
-			this.open = true;
-			if (!this.loading  && this._getItems().length === 0) {
-				this._loadingDelegate.fireOnMobileClick();
+			if (!this.loading && this._getItems().length === 0) {
+				this._loadingDelegate.fireOnDropdownOpen();
 			}
+			this.open = true;
 		}
 
 		this._showMorePressed = false;
@@ -2426,7 +2426,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		return {
 			popoverValueStateMessage: {
 				"width": this._listWidth ? `${this._listWidth}px` : "100%",
-				"display": "inline-block",
+				"display": this._listWidth === 0 && !this.hasValueState ? "none" : "inline-block",
 			},
 			popoverHeader: {
 				"max-width": isPhone() ? "100%" : `22rem`,

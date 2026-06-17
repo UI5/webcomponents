@@ -3996,7 +3996,7 @@ describe("Highlighting", () => {
 describe("load-start event", () => {
 	it("fires on arrow click when ComboBox has no items", () => {
 		cy.mount(
-			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}></ComboBox>
+			<ComboBox onLoadStart={cy.stub().as("loadStarted")}></ComboBox>
 		);
 
 		cy.get("[ui5-combobox]")
@@ -4013,7 +4013,7 @@ describe("load-start event", () => {
 
 	it("does not fire on arrow click when ComboBox has items", () => {
 		cy.mount(
-			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}>
+			<ComboBox onLoadStart={cy.stub().as("loadStarted")}>
 				<ComboBoxItem text="Algeria"></ComboBoxItem>
 				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
 			</ComboBox>
@@ -4030,7 +4030,7 @@ describe("load-start event", () => {
 
 	it("fires on each new character typed in the input", () => {
 		cy.mount(
-			<ComboBox onLoadStarted={cy.stub().as("loadStarted")}></ComboBox>
+			<ComboBox onLoadStart={cy.stub().as("loadStarted")}></ComboBox>
 		);
 
 		cy.get("[ui5-combobox]")

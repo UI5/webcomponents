@@ -1224,7 +1224,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_click() {
 		if (isPhone() && !this.readonly) {
 			if (!this.loading && this._getItems().length === 0) {
-				this._loadingDelegate.fireOnMobileClick();
+				this._loadingDelegate.fireOnDropdownOpen();
 			}
 			this._openRespPopover();
 		}
