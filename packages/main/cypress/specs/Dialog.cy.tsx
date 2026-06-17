@@ -1098,7 +1098,7 @@ describe("Acc", () => {
 			.find(".ui5-hidden-text")
 			.should("exist")
 			.then(hiddenText => {
-				const valueOfTheHiddenText = hiddenText.first().text();
+				const valueOfTheHiddenText = hiddenText.eq(1).text();
 				cy.wrap(valueOfTheHiddenText).should("equal", "Use Arrow keys to move");
 			});
 
@@ -1135,7 +1135,7 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.first().text();
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
 						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
 					});
 			});
@@ -1174,7 +1174,7 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.first().text();
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
 						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
 					});
 			});

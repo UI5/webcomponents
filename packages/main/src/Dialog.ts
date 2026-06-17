@@ -765,6 +765,23 @@ class Dialog extends Popup {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
 	}
+
+	/**
+	 * Overrides Popup's forwardToLast to prioritize the drag/resize handler
+	 * when Shift+Tab is pressed from the first focusable element.
+	 * @private
+	 */
+	async forwardToLast() {
+		if (this._movable) {
+			const dragResizeHandler = this.shadowRoot!.querySelector(`#${this._id}-dragResizeHandler`) as HTMLElement;
+			if (dragResizeHandler) {
+				dragResizeHandler.focus();
+				return;
+			}
+		}
+
+		await super.forwardToLast();
+	}
 }
 
 Dialog.define();
