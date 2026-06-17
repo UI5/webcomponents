@@ -15,11 +15,12 @@
 	display: none;
 }
 
-[ui5-responsive-popover] [ui5-input] {
+.ui5-combobox-busy-container {
+	position: relative;
+	min-height: 2.5rem;
 	width: 100%;
 }
 
-
-.ui5-combobox-items-list:has(.ui5-combobox-busy[active]) {
-  	min-height: 1.6rem;
+[ui5-responsive-popover] [ui5-input] {
+	width: 100%;
 }

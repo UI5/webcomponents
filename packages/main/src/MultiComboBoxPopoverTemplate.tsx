@@ -160,18 +160,25 @@ function popoverContent(this: MultiComboBox) {
 	}
 
 	return <>
+		{this.loading && !this._isPhone && this.hasValueState &&
+			<div class="ui5-multi-combobox-busy-container">
+				<BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={LOADING_DELAY} />
+			</div>
+		}
 		{!this.loading && selectAllWrapper.call(this)}
-		<List separators="None"
-			selectionMode="Multiple"
-			class="ui5-multi-combobox-all-items-list"
-			accessibleRole="ListBox"
-			onKeyDown={this._onItemKeydown}>
-			{this.loading && !this._isPhone && this.hasValueState && <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={LOADING_DELAY} />}
-			{!this.loading &&
-				(this.filterSelected
+		{!this.loading &&
+			<List
+				separators="None"
+				selectionMode="Multiple"
+				class="ui5-multi-combobox-all-items-list"
+				accessibleRole="ListBox"
+				onKeyDown={this._onItemKeydown}
+			>
+				{this.filterSelected
 					? this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)
 					: this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)
-				)}
-		</List>
+				}
+			</List>
+		}
 	</>;
 }

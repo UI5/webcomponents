@@ -277,7 +277,7 @@ type MultiComboBoxLoadingStart = {
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
-@event("load-started", {
+@event("load-start", {
 	bubbles: true,
 })
 
@@ -300,7 +300,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		input: void,
 		open: void,
 		close: void,
-		"load-started": MultiComboBoxLoadingStart,
+		"load-start": MultiComboBoxLoadingStart,
 		"selection-change": MultiComboBoxSelectionChangeEventDetail,
 		"value-state-change": MultiComboBoxValueStateChangeEventDetail,
 	}
@@ -668,13 +668,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-started", { shouldOpenPicker }),
+			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-start", { shouldOpenPicker }),
 			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
 			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
 			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count),
 			onLoadingEnd: () => {
-				if (this.open && this.showSelectAll && this._filteredItems.length === 0) {
+				if (this.open && this.showSelectAll && this._getItems().length === 0) {
 					this.open = false;
 				}
 			},

@@ -262,7 +262,7 @@ type ComboBoxLoadingStart = {
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
-@event("load-started", {
+@event("load-start", {
 	bubbles: true,
 })
 
@@ -273,7 +273,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		"open": void,
 		"close": void,
 		"selection-change": ComboBoxSelectionChangeEventDetail,
-		"load-started": ComboBoxLoadingStart,
+		"load-start": ComboBoxLoadingStart,
 	}
 	/**
 	 * Defines the value of the component.
@@ -571,7 +571,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-started", { shouldOpenPicker }),
+			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-start", { shouldOpenPicker }),
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
@@ -862,7 +862,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		if (!this._filteredItems.length || value === "") {
+		if (!this.loading && (!this._filteredItems.length || value === "")) {
 			this._closeRespPopover();
 		} else {
 			this._openRespPopover();

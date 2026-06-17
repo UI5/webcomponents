@@ -109,27 +109,34 @@ function content(this: ComboBox) {
 	}
 
 	const loadingOnDesktopWithValueState = this.loading && !this._isPhone && this.hasValueState;
-	const hasFilteredItems = !this.loading && this._filteredItems && this._filteredItems.length;
+	const hasFilteredItems = !this.loading && !!this._filteredItems?.length;
 
-	if (loadingOnDesktopWithValueState || hasFilteredItems) {
-		return (
-			<List
-				class="ui5-combobox-items-list"
-				separators="None"
-				accessibleRole="ListBox"
-				selectionMode="Single"
-				onItemClick={this._selectItem}
-				onItemFocused={this._onItemFocus}
-				onMouseDown={this._itemMousedown}
-			>
-				{loadingOnDesktopWithValueState && <BusyIndicator active={true} class="ui5-combobox-busy" delay={LOADING_DELAY} />}
-				{(hasFilteredItems && this._filteredItems.length > 0)
-					? this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)
-					: null
-				}
-			</List>
-		);
+	if (!loadingOnDesktopWithValueState && !hasFilteredItems) {
+		return;
 	}
+
+	return (
+		<>
+			{loadingOnDesktopWithValueState &&
+				<div class="ui5-combobox-busy-container">
+					<BusyIndicator active={true} class="ui5-combobox-busy" delay={LOADING_DELAY} />
+				</div>
+			}
+			{hasFilteredItems &&
+				<List
+					class="ui5-combobox-items-list"
+					separators="None"
+					accessibleRole="ListBox"
+					selectionMode="Single"
+					onItemClick={this._selectItem}
+					onItemFocused={this._onItemFocus}
+					onMouseDown={this._itemMousedown}
+				>
+					{this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
+				</List>
+			}
+		</>
+	);
 }
 
 function dialogFooter(this: ComboBox) {

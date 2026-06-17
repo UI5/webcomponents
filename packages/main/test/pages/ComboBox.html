@@ -639,7 +639,7 @@
 			const { value, items } = control;
 			if(!items || !items.length){
 				control.loading = true;
-				control.open = e.shouldOpenPicker;
+				control.open = e.detail.shouldOpenPicker;
 				setTimeout(() => {
 					const group = createGroupItem(control, 'Group 1');
 					createItem(group, `Child Item 1 ${value}`);
@@ -651,7 +651,7 @@
 
 		document.getElementById("btn-clear").addEventListener("click", () => fnClearItems(cbLazyLoad));
 
-		cbLazyLoad.addEventListener("load-started", fnLoadItems);
+		cbLazyLoad.addEventListener("load-start", fnLoadItems);
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;

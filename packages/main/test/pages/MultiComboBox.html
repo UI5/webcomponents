@@ -884,15 +884,17 @@
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
 		});
 
-		document.getElementById("toggle-loading-mcb").addEventListener("load-started", (e) => {
+		document.getElementById("toggle-loading-mcb").addEventListener("load-start", (e) => {
 			const mcbControl = e.target;
-			mcbControl.loading = true;
-			mcbControl.open = e.detail.shouldOpenPicker;
-			setTimeout(() => {
-				mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item";
-				mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item 2";
-				mcbControl.loading = false;
-			}, 3000);
+			if (!mcbControl.items || mcbControl.items.length === 0 ){
+				mcbControl.loading = true;
+				mcbControl.open = e.detail.shouldOpenPicker;
+				setTimeout(() => {
+					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item";
+					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item 2";
+					mcbControl.loading = false;
+				}, 3000);
+			}
 		});
 
 		

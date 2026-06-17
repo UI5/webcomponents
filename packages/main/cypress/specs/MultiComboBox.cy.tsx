@@ -5161,7 +5161,7 @@ describe("Validation inside a form", () => {
 	});
 });
 
-describe("load-started event", () => {
+describe("load-start event", () => {
 	it("fires on arrow click when MultiComboBox has no items", () => {
 		cy.mount(
 			<MultiComboBox onLoadStarted={cy.stub().as("loadStarted")}></MultiComboBox>
@@ -5211,5 +5211,37 @@ describe("load-started event", () => {
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
 				return event.detail.shouldOpenPicker === true;
 			}));
+	});
+});
+
+describe("Loading announcements", () => {
+	it("announces loading start when loading becomes true", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "loading", true);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Loading data");
+	});
+
+	it("announces loading end with item count when loading becomes false", () => {
+		cy.mount(
+			<MultiComboBox loading>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "loading", false);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "2 results are available");
 	});
 });
