@@ -27,7 +27,7 @@ import CalendarDate from "./CalendarDate.js";
 import CalendarDateRange from "./CalendarDateRange.js";
 import "./SpecialCalendarDate.js";
 import CalendarPart from "./CalendarPart.js";
-import type { DayPickerChangeEventDetail } from "./DayPicker.js";
+import type { DayPickerChangeEventDetail, DayPickerNavigateEventDetail } from "./DayPicker.js";
 import type { MonthPickerChangeEventDetail } from "./MonthPicker.js";
 import type { YearPickerChangeEventDetail } from "./YearPicker.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
@@ -918,8 +918,14 @@ class Calendar extends CalendarPart {
 		this.switchToYearPicker();
 	}
 
-	async onNavigate(e: CustomEvent) {
+	async onNavigate(e: CustomEvent<DayPickerNavigateEventDetail>) {
 		this.timestamp = e.detail.timestamp;
+		// Mouse-driven navigation handles its own focus; the click already landed
+		// where the user wants. Refocusing after the deferred render would steal
+		// focus from a sibling component (e.g. a time picker in DateTimePicker).
+		if (e.detail.mouse) {
+			return;
+		}
 		await renderFinished();
 		this._currentPickerDOM.focus();
 	}
