@@ -314,13 +314,14 @@ class AvatarGroup extends UI5Element {
 		// add displayed-hidden avatars label
 		text += ` ${AvatarGroup.i18nBundle.getText(AVATAR_GROUP_DISPLAYED_HIDDEN_LABEL, this._itemsCount - hiddenItemsCount, hiddenItemsCount)}`;
 
-		if (this._isGroup) {
+		if (this._isInteractiveGroup) {
 			// the container role is "button", add the message for complete list activation
 			text += ` ${AvatarGroup.i18nBundle.getText(AVATAR_GROUP_SHOW_COMPLETE_LIST_LABEL)}`;
-		} else {
-			// the container role is "group", add the "how to navigate" message
+		} else if (!this._isGroup) {
+			// Individual: add the "how to navigate" message
 			text += ` ${AvatarGroup.i18nBundle.getText(AVATAR_GROUP_MOVE)}`;
 		}
+		// Static Group: no action suffix — just the count is announced
 
 		return text;
 	}
@@ -330,7 +331,7 @@ class AvatarGroup extends UI5Element {
 	}
 
 	get _containerAriaHasPopup() {
-		return this._isGroup ? this._getAriaHasPopup() : undefined;
+		return this._isInteractiveGroup ? this._getAriaHasPopup() : undefined;
 	}
 
 	get _overflowButtonAccAttributes() {
@@ -339,8 +340,15 @@ class AvatarGroup extends UI5Element {
 		};
 	}
 
+	get _isInteractiveGroup() {
+		return this._isGroup && (this._hiddenItems > 0 || this._getAriaHasPopup() !== undefined);
+	}
+
 	get _role() {
-		return this._isGroup ? "button" : "group";
+		if (!this._isGroup) {
+			return "group";
+		}
+		return this._isInteractiveGroup ? "button" : "group";
 	}
 
 	get _hiddenStartIndex() {
@@ -432,7 +440,7 @@ class AvatarGroup extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		if (this._isGroup) {
-			if (isEnter(e)) {
+			if (isEnter(e) && this._isInteractiveGroup) {
 				this._fireGroupEvent(e.target as HTMLElement);
 			} else if (isSpace(e)) {
 				e.preventDefault();
@@ -441,7 +449,7 @@ class AvatarGroup extends UI5Element {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (!e.shiftKey && isSpace(e) && this._isGroup) {
+		if (!e.shiftKey && isSpace(e) && this._isInteractiveGroup) {
 			this._fireGroupEvent(e.target as HTMLElement);
 			e.preventDefault();
 		}
@@ -458,7 +466,7 @@ class AvatarGroup extends UI5Element {
 
 	_onClick(e: MouseEvent) {
 		e.stopPropagation();
-		this._isGroup && this._fireGroupEvent(e.target as HTMLElement);
+		this._isInteractiveGroup && this._fireGroupEvent(e.target as HTMLElement);
 	}
 
 	onAvatarClick(e: MouseEvent) {

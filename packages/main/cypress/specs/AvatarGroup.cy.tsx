@@ -266,11 +266,13 @@ describe("AvatarGroup Rendering and Events", () => {
 
 	it("tests click event avatar group with type group is clicked", () => {
 		cy.mount(
-			<AvatarGroup type="Group">
-				<Avatar size="M" initials="M"></Avatar>
-				<Avatar size="M" initials="M"></Avatar>
-				<Avatar size="M" icon="home"></Avatar>
-			</AvatarGroup>
+			<div style={{ width: "60px" }}>
+				<AvatarGroup type="Group">
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" icon="home"></Avatar>
+				</AvatarGroup>
+			</div>
 		);
 
 		cy.get("[ui5-avatar-group]")
@@ -330,19 +332,23 @@ describe("AvatarGroup Rendering and Events", () => {
 
 	it("tests if click event is firing only once", () => {
 		cy.mount(
-			<div style={{width: "400px"}}>
-				<AvatarGroup type="Individual">
-					<Avatar size="XL" interactive icon="home" initials="XL"></Avatar>
-					<Avatar size="XL" interactive initials="XL"></Avatar>
-					<Avatar size="XL" interactive icon="home"></Avatar>
-					<Avatar size="XL" interactive initials="XL"></Avatar>
-				</AvatarGroup>
-				<AvatarGroup type="Group">
-					<Avatar size="XL" interactive icon="home" initials="XL"></Avatar>
-					<Avatar size="XL" interactive initials="XL"></Avatar>
-					<Avatar size="XL" interactive icon="home"></Avatar>
-					<Avatar size="XL" interactive initials="XL"></Avatar>
-				</AvatarGroup>
+			<div>
+				<div style={{width: "300px"}}>
+					<AvatarGroup type="Individual">
+						<Avatar size="XL" interactive icon="home" initials="XL"></Avatar>
+						<Avatar size="XL" interactive initials="XL"></Avatar>
+						<Avatar size="XL" interactive icon="home"></Avatar>
+						<Avatar size="XL" interactive initials="XL"></Avatar>
+					</AvatarGroup>
+				</div>
+				<div style={{width: "150px"}}>
+					<AvatarGroup type="Group">
+						<Avatar size="XL" interactive icon="home" initials="XL"></Avatar>
+						<Avatar size="XL" interactive initials="XL"></Avatar>
+						<Avatar size="XL" interactive icon="home"></Avatar>
+						<Avatar size="XL" interactive initials="XL"></Avatar>
+					</AvatarGroup>
+				</div>
 			</div>
 		);
 
@@ -485,13 +491,30 @@ describe("AvatarGroup ARIA Attributes", () => {
 	});
 
 	describe("Type Group", () => {
-		it("role is correct", () => {
+		it("role is 'group' when no overflow", () => {
 			cy.mount(
-				<AvatarGroup type="Group">
-					<Avatar size="M" initials="M"></Avatar>
-					<Avatar size="M" initials="M"></Avatar>
-					<Avatar size="M" initials="M"></Avatar>
-				</AvatarGroup>
+				<div style={{ width: "600px" }}>
+					<AvatarGroup type="Group">
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+					</AvatarGroup>
+				</div>
+			);
+
+			cy.get("[ui5-avatar-group]")
+				.should("have.prop", "_role", "group");
+		});
+
+		it("role is 'button' when overflow is present", () => {
+			cy.mount(
+				<div style={{ width: "60px" }}>
+					<AvatarGroup type="Group">
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+					</AvatarGroup>
+				</div>
 			);
 
 			cy.get("[ui5-avatar-group]")
@@ -523,27 +546,143 @@ describe("AvatarGroup ARIA Attributes", () => {
 				});
 		});
 
-		it("aria-label is correct", () => {
+		it("aria-label has no 'Activate' suffix when no overflow (static)", () => {
 			cy.mount(
-				<AvatarGroup type="Group">
-					<Avatar size="M" initials="M"></Avatar>
-					<Avatar size="M" initials="M"></Avatar>
-					<Avatar size="M" initials="M"></Avatar>
-				</AvatarGroup>
+				<div style={{ width: "600px" }}>
+					<AvatarGroup type="Group">
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+					</AvatarGroup>
+				</div>
 			);
 
 			cy.get("[ui5-avatar-group]")
 				.then(($avatarGroup) => {
 					const avatarGroup = $avatarGroup[0] as AvatarGroup;
 					const ariaLabel = avatarGroup._ariaLabelText;
-					const overflowButtonLabel = avatarGroup._overflowButtonAriaLabelText;
+
+					expect(ariaLabel).to.include("Conjoined avatars");
+					expect(ariaLabel).to.not.include("Activate for complete list");
+					expect(ariaLabel).to.not.include("Press ARROW keys");
+					expect(avatarGroup._overflowButtonAriaLabelText).to.be.undefined;
+				});
+		});
+
+		it("aria-label includes 'Activate' suffix when overflow is present", () => {
+			cy.mount(
+				<div style={{ width: "60px" }}>
+					<AvatarGroup type="Group">
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+						<Avatar size="M" initials="M"></Avatar>
+					</AvatarGroup>
+				</div>
+			);
+
+			cy.get("[ui5-avatar-group]")
+				.then(($avatarGroup) => {
+					const avatarGroup = $avatarGroup[0] as AvatarGroup;
+					const ariaLabel = avatarGroup._ariaLabelText;
 
 					expect(ariaLabel).to.include("Conjoined avatars");
 					expect(ariaLabel).to.include("Activate for complete list");
-					expect(ariaLabel).to.not.include("Press ARROW keys");
-					
-					expect(overflowButtonLabel).to.be.undefined;
 				});
 		});
+	});
+});
+
+describe("AvatarGroup - role and interactivity based on overflow state", () => {
+	it("static Group (no overflow) has tabindex=0 so it remains keyboard-discoverable", () => {
+		cy.mount(
+			<div style={{ width: "600px" }}>
+				<AvatarGroup type="Group">
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+				</AvatarGroup>
+			</div>
+		);
+
+		cy.get("[ui5-avatar-group]")
+			.shadow()
+			.find(".ui5-avatar-group-items")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("static Group (no overflow) does not fire ui5-click on Space", () => {
+		cy.mount(
+			<div style={{ width: "600px" }}>
+				<AvatarGroup type="Group">
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+				</AvatarGroup>
+			</div>
+		);
+
+		cy.get("[ui5-avatar-group]")
+			.then(($avatarGroup) => {
+				$avatarGroup[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+			});
+
+		cy.get("[ui5-avatar-group]").realPress("Space");
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("static Group (no overflow) does not fire ui5-click on Enter", () => {
+		cy.mount(
+			<div style={{ width: "600px" }}>
+				<AvatarGroup type="Group">
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+				</AvatarGroup>
+			</div>
+		);
+
+		cy.get("[ui5-avatar-group]")
+			.then(($avatarGroup) => {
+				$avatarGroup[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+			});
+
+		cy.get("[ui5-avatar-group]").realPress("Enter");
+
+		cy.get("@clickStub").should("not.have.been.called");
+	});
+
+	it("static Group with hasPopup set keeps role='button' and fires ui5-click", () => {
+		cy.mount(
+			<div style={{ width: "600px" }}>
+				<AvatarGroup type="Group">
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+					<Avatar size="M" initials="M"></Avatar>
+				</AvatarGroup>
+			</div>
+		);
+
+		cy.get("[ui5-avatar-group]").then(($avatarGroup) => {
+			($avatarGroup[0] as AvatarGroup).accessibilityAttributes = { hasPopup: "dialog" };
+		});
+
+		cy.get("[ui5-avatar-group]")
+			.then(($avatarGroup) => {
+				expect(($avatarGroup[0] as AvatarGroup)._role).to.equal("button");
+			});
+
+		cy.get("[ui5-avatar-group]")
+			.then(($avatarGroup) => {
+				$avatarGroup[0].addEventListener("ui5-click", cy.stub().as("clickStub"));
+			});
+
+		cy.get("[ui5-avatar-group]")
+			.shadow()
+			.find(".ui5-avatar-group-items")
+			.focus()
+			.realPress("Space");
+
+		cy.get("@clickStub").should("have.been.calledOnce");
 	});
 });
