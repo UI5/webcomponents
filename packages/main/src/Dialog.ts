@@ -303,6 +303,19 @@ class Dialog extends Popup {
 		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
 	}
 
+	get ariaDescribedByHandlerText() {
+		if (this.resizable && this.draggable) {
+			return this.ariaDescribedByTextDraggableAndResizable;
+		}
+		if (this.resizable) {
+			return this.ariaDescribedByTextResizable;
+		}
+		if (this.draggable) {
+			return this.ariaDescribedByTextDraggable;
+		}
+		return "";
+	}
+
 	/**
 	 * Determines if the header should be shown.
 	 */

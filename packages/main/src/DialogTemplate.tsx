@@ -69,14 +69,8 @@ function afterContent(this: Dialog) {
 					aria-describedby={this._dragResizeHandleAriaDescribedBy}
 					onKeyDown={this._onDragOrResizeKeyDown}
 				></span>
-				{this.resizable ?
-					this.draggable ?
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextDraggableAndResizable}</span>
-						:
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextResizable}</span>
-					:
-					this.draggable &&
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByTextDraggable}</span>
+				{this.ariaDescribedByHandlerText &&
+					<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHandlerText}</span>
 				}
 				{this.dialogAriaDescribedByText &&
 					<span id={`${this._id}-dialog-descr`} aria-hidden="true" class="ui5-hidden-text">{this.dialogAriaDescribedByText}</span>
