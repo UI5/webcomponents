@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Label showColon={true}>Bar with two or more active items</Label>
-      <Bar design="Header" accessibleRole="Toolbar">
+      <Bar design="Header">
         <Button
           icon="home"
           tooltip="Go home"
@@ -29,7 +29,7 @@ function App() {
       </Bar>
       <br />
       <Label showColon={true}>Bar with less than two active items</Label>
-      <Bar design="Header">
+      <Bar design="Header" accessibleRole="None">
         <Label id="basic-label">Storybook title</Label>
       </Bar>
     </>

@@ -79,6 +79,7 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 
 import "./ComboBoxItem.js";
 import type ComboBoxItem from "./ComboBoxItem.js";
+import "./ComboBoxItemCustom.js";
 import type Popover from "./Popover.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type List from "./List.js";
@@ -1318,8 +1319,16 @@ class ComboBox extends UI5Element implements IFormInputElement {
 					}
 				} else {
 					if (this._useSelectedValue) {
-						itemToBeSelected = this.items.find(i => i.value === valueToMatch && (this.value === "" || i.text?.toLowerCase() === this.value.toLowerCase()));
-						return;
+						// During initial render, match by value even if text is empty
+						if (this._initialRendering && this.value === "") {
+							itemToBeSelected = this._filteredItems.find(i => !i.isGroupItem && i.value === valueToMatch);
+						} else if (this.value !== "") {
+							// When user is typing, require exact text match in addition to value match
+							itemToBeSelected = this._filteredItems.find(i => !i.isGroupItem && i.value === valueToMatch && i.text?.toLowerCase() === this.value.toLowerCase());
+						}
+						if (itemToBeSelected) {
+							return;
+						}
 					}
 					itemToBeSelected = item.text?.toLowerCase() === this.value.toLowerCase() ? item : undefined;
 				}
