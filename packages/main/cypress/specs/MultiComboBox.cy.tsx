@@ -5196,6 +5196,78 @@ describe("load-items event", () => {
 			.should("not.have.been.called");
 	});
 
+	it("fires on F4 when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
+	it("does not fire on F4 when MultiComboBox has items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
+	it("fires on Alt+Down when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress(["Alt", "ArrowDown"]);
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
+	it("fires on Alt+Up when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress(["Alt", "ArrowUp"]);
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
 	it("fires on each new character typed in the input", () => {
 		cy.mount(
 			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>

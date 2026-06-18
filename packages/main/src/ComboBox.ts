@@ -1141,6 +1141,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			e.preventDefault();
 
 			this._resetFilter();
+			this._loadingDelegate.fireOnDropdownOpen();
 			this._toggleRespPopover();
 
 			const selectedItem = allItems.find(item => {

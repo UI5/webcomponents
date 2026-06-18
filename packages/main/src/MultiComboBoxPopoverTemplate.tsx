@@ -172,7 +172,7 @@ function popoverContent(this: MultiComboBox) {
 				selectionMode="Multiple"
 				class="ui5-multi-combobox-all-items-list"
 				accessibleRole="ListBox"
-				onKeyDown={this.filterSelected ? undefined : this._onItemKeydown}
+				onKeyDown={this._onItemKeydown}
 			>
 				{this.filterSelected
 					? this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)

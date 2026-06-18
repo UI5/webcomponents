@@ -4028,6 +4028,42 @@ describe("load-items event", () => {
 			.should("not.have.been.called");
 	});
 
+	it("fires on F4 when ComboBox has no items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.realClick();
+
+		cy.get("@comboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.shouldOpenPicker === false;
+			}));
+	});
+
+	it("does not fire on F4 when ComboBox has items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.realClick();
+
+		cy.get("@comboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
 	it("fires on each new character typed in the input", () => {
 		cy.mount(
 			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>

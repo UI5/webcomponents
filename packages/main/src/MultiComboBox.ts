@@ -1124,6 +1124,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._shouldFilterItems = false;
 		this._filteredItems = this._getItems();
 
+		this._loadingDelegate.fireOnDropdownOpen();
 		this._toggleTokenizerPopover();
 
 		if (!focusedToken && matchingItem) {
@@ -1259,6 +1260,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_onItemKeydown(e: KeyboardEvent) {
+		if (this.filterSelected) {
+			return;
+		}
+
 		const isFirstItemGroup = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[1] === e.target && this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0].hasAttribute("ui5-li-group");
 		const isFirstItem = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0] === e.target || isFirstItemGroup;
 		const isArrowUp = isUp(e) || isUpCtrl(e);
