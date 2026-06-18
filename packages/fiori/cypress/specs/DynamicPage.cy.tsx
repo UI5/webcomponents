@@ -505,7 +505,7 @@ describe("DynamicPage", () => {
 			const scrollBefore = $el[0].scrollTop;
 
 			// Click the overflow button - it should open the menu without scrolling
-			cy.get("#row0").shadow().find("#overflow").click();
+			cy.get("[ui5-table-row][id='row0']").shadow().find("[id='overflow']").realClick();
 
 			// Allow RAF and any potential scroll to settle, then assert no jump occurred
 			cy.wait(100).then(() => {
