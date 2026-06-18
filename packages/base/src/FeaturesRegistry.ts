@@ -8,7 +8,12 @@ const getFeature = <T>(name: string): T => {
 	return features.get(name) as T;
 };
 
+const getRegisteredFeatures = (): Array<string> => {
+	return [...features.keys()];
+};
+
 export {
 	registerFeature,
 	getFeature,
+	getRegisteredFeatures,
 };
