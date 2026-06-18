@@ -149,7 +149,7 @@ class ShellBarBranding extends UI5Element {
 		if (isEnter(e) && !this.href) {
 			this._activate(e);
 			e.preventDefault();
-		} else if (isSpace(e)) {	
+		} else if (isSpace(e)) {
 			e.preventDefault();
 		}
 	}
