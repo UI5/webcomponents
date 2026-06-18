@@ -153,7 +153,7 @@ type MultiComboBoxValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
 }
 
-type MultiComboBoxLoadingStart = {
+type MultiComboBoxLoadItems = {
 	shouldOpenPicker: boolean;
 }
 
@@ -272,12 +272,12 @@ type MultiComboBoxLoadingStart = {
 })
 
 /**
- * Fired when the applications can set the control in loading state to start items creation/fetching.
+ * Fired when the application should provide items for the component to render.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
-@event("load-start", {
+@event("load-items", {
 	bubbles: true,
 })
 
@@ -300,7 +300,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		input: void,
 		open: void,
 		close: void,
-		"load-start": MultiComboBoxLoadingStart,
+		"load-items": MultiComboBoxLoadItems,
 		"selection-change": MultiComboBoxSelectionChangeEventDetail,
 		"value-state-change": MultiComboBoxValueStateChangeEventDetail,
 	}
@@ -668,13 +668,15 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-start", { shouldOpenPicker }),
+			fireLoadItems: shouldOpenPicker => this.fireDecoratorEvent("load-items", { shouldOpenPicker }),
 			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
 			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
 			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count),
 			onLoadingEnd: () => {
-				if (this.open && this.showSelectAll && this._getItems().length === 0) {
+				this._filteredItems = this._shouldFilterItems ? this._filterItems(this.value) : this._getItems();
+				this._shouldFilterItems = false;
+				if (this.open && this._filteredItems.length === 0) {
 					this.open = false;
 				}
 			},
@@ -1257,10 +1259,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_onItemKeydown(e: KeyboardEvent) {
-		if (this.filterSelected) {
-			return;
-		}
-
 		const isFirstItemGroup = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[1] === e.target && this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0].hasAttribute("ui5-li-group");
 		const isFirstItem = this.list?.getSlottedNodes<IMultiComboBoxItem>("items")[0] === e.target || isFirstItemGroup;
 		const isArrowUp = isUp(e) || isUpCtrl(e);
@@ -2445,7 +2443,7 @@ export default MultiComboBox;
 
 export type {
 	IMultiComboBoxItem,
-	MultiComboBoxLoadingStart,
+	MultiComboBoxLoadItems,
 	MultiComboBoxSelectionChangeEventDetail,
 	MultiComboBoxValueStateChangeEventDetail,
 };

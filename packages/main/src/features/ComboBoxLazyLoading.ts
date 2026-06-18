@@ -9,7 +9,7 @@ export interface LoadingDelegateConfig {
 	getItemCount: () => number;
 	isLoading: () => boolean;
 	isOpen: () => boolean;
-	fireLoadStarted: (shouldOpenPicker: boolean) => void;
+	fireLoadItems: (shouldOpenPicker: boolean) => void;
 	loadingMessage: () => string;
 	loadedMessage: () => string;
 	loadedItemMessage: () => string;
@@ -54,18 +54,18 @@ export default class ComboBoxLazyLoading {
 		this._announceLoading = undefined;
 	}
 
-	// Fires load-start event when the picker is about to open and there are no items yet.
+	// Fires load-items event when the picker is about to open and there are no items yet.
 	// shouldOpenPicker=false: caller will open the picker itself (e.g. arrow click).
 	// shouldOpenPicker=true: app must open the picker when loading starts.
 	fireOnDropdownOpen() {
 		if (!this._config.isOpen() && !this._config.isLoading() && this._config.getItemCount() === 0) {
-			this._config.fireLoadStarted(false);
+			this._config.fireLoadItems(false);
 		}
 	}
 
 	fireOnInput() {
 		if (!this._config.isLoading()) {
-			this._config.fireLoadStarted(true);
+			this._config.fireLoadItems(true);
 		}
 	}
 }

@@ -84,21 +84,21 @@ function valueStateHeader(this: ComboBox) {
 				{this.open && valueStateMessage.call(this)}
 			</div>
 		);
-	} else {
-		return (
-			<div
-				slot="header"
-				class={{
-					"ui5-responsive-popover-header": true,
-					...this.classes.popoverValueState,
-				}}
-				style={this.styles.suggestionPopoverHeader}
-			>
-				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
-				{this.open && valueStateMessage.call(this)}
-			</div>
-		);
 	}
+
+	return (
+		<div
+			slot="header"
+			class={{
+				"ui5-responsive-popover-header": true,
+				...this.classes.popoverValueState,
+			}}
+			style={this.styles.suggestionPopoverHeader}
+		>
+			<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon} />
+			{this.open && valueStateMessage.call(this)}
+		</div>
+	);
 }
 
 function content(this: ComboBox) {

@@ -5161,10 +5161,10 @@ describe("Validation inside a form", () => {
 	});
 });
 
-describe("load-start event", () => {
+describe("load-items event", () => {
 	it("fires on arrow click when MultiComboBox has no items", () => {
 		cy.mount(
-			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}></MultiComboBox>
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -5172,7 +5172,7 @@ describe("load-start event", () => {
 			.find("[ui5-icon][name='slim-arrow-down']")
 			.realClick();
 
-		cy.get("@loadStarted")
+		cy.get("@loadItems")
 			.should("have.been.calledOnce")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
 				return event.detail.shouldOpenPicker === false;
@@ -5181,7 +5181,7 @@ describe("load-start event", () => {
 
 	it("does not fire on arrow click when MultiComboBox has items", () => {
 		cy.mount(
-			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}>
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}>
 				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
 				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
 			</MultiComboBox>
@@ -5192,13 +5192,13 @@ describe("load-start event", () => {
 			.find("[ui5-icon][name='slim-arrow-down']")
 			.realClick();
 
-		cy.get("@loadStarted")
+		cy.get("@loadItems")
 			.should("not.have.been.called");
 	});
 
 	it("fires on each new character typed in the input", () => {
 		cy.mount(
-			<MultiComboBox onLoadStart={cy.stub().as("loadStarted")}></MultiComboBox>
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
 		);
 
 		cy.get("[ui5-multi-combobox]")
@@ -5206,7 +5206,7 @@ describe("load-start event", () => {
 
 		cy.realType("Alg");
 
-		cy.get("@loadStarted")
+		cy.get("@loadItems")
 			.should("have.been.calledThrice")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
 				return event.detail.shouldOpenPicker === true;

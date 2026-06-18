@@ -74,7 +74,7 @@
 			<ui5-cb-item text="Bahrain"></ui5-cb-item>
 			<ui5-cb-item text="Belgium"></ui5-cb-item>
 			<ui5-cb-item text="Bosnia and Herzegovina"></ui5-cb-item>
-			<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link 1</ui5-link> and <ui5-link href="#">Link 2</ui5-link> some  more text aaaa jhdeghd </div>
+			<div slot="valueStateMessage">Custom error value state message with a <ui5-link href="#">Link 1</ui5-link> and <ui5-link href="#">Link 2</ui5-link></div>
 		</ui5-combobox>
 		<ui5-combobox id="vs-warning-default" class="combobox2auto" value-state="Critical">
 			<ui5-cb-item text="Algeria"></ui5-cb-item>
@@ -191,19 +191,29 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Loading State</span>
+		<span>Lazy loading using the 'load-items' event</span>
 
 		<br />
 		<br />
 
-		<ui5-combobox id="toggle-loading-cb" class="combobox2auto" value-state="Negative">
-			<div slot="valueStateMessage">Custom error value state message.</div>
-		</ui5-combobox>
-		<ui5-button id="btn-clear">Clear items</ui5-button>
+		<ui5-combobox id="lazy-loading-cb-1" class="combobox2auto"></ui5-combobox>
+		<ui5-button id="btn-clear-1">Clear items</ui5-button>
 	</div>
 
 	<div class="demo-section">
-		<span>Lazy Loading with filter='None'</span>
+		<span>Lazy loading using the 'load-items' event (with value state message)</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="lazy-loading-cb-2" class="combobox2auto" value-state="Negative">
+			<div slot="valueStateMessage">Custom error.</div>
+		</ui5-combobox>
+		<ui5-button id="btn-clear-2">Clear items</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<span>Lazy loading using the 'input' event and the entered text for creating items</span>
 
 		<br />
 		<br />
@@ -514,13 +524,15 @@
 		cb.addEventListener("input", (e) => {
 			// debounce by waiting till the user stops typing for more than 0.25 seconds
 			const debounceTime = 250;
+			const control = e.target;
 			if (debounce !== undefined) {
 				clearTimeout(debounce);
 			}
 			debounce = setTimeout(async () => {
 				debounce = undefined;
 				const value = e.target.value;
-				e.target.loading = true;
+				control.loading = true;
+				control.open = true;
 
 				if (currentSearch !== undefined) {
 					// Cancel any current search that might already be happening
@@ -544,7 +556,7 @@
 				} else {
 					reset();
 				}
-				e.target.loading = false;
+				control.loading = false;
 			}, debounceTime);
 		});
 
@@ -608,8 +620,6 @@
 			document.getElementById("combo").focus();
 		});
 
-		const cbLazyLoad = document.getElementById("toggle-loading-cb"); 
-
 		const createItem = (cb, text) => {
 			const item = document.createElement("ui5-cb-item");
 			item.text = text;
@@ -642,16 +652,22 @@
 				control.open = e.detail.shouldOpenPicker;
 				setTimeout(() => {
 					const group = createGroupItem(control, 'Group 1');
-					createItem(group, `Child Item 1 ${value}`);
-					createItem(group, `Chidl Item 2 ${value}`);
+					createItem(group, `Child Item 1`);
+					createItem(group, `Chidl Item 2`);
 					control.loading = false;
 				}, 3000);
 			}
 		};
 
-		document.getElementById("btn-clear").addEventListener("click", () => fnClearItems(cbLazyLoad));
+		const cbLazyLoad1 = document.getElementById("lazy-loading-cb-1"); 
+		cbLazyLoad1.addEventListener("load-items", fnLoadItems);
 
-		cbLazyLoad.addEventListener("load-start", fnLoadItems);
+		const cbLazyLoad2 = document.getElementById("lazy-loading-cb-2"); 
+		cbLazyLoad2.addEventListener("load-items", fnLoadItems);
+
+		document.getElementById("btn-clear-1").addEventListener("click", () => fnClearItems(cbLazyLoad1));
+		document.getElementById("btn-clear-2").addEventListener("click", () => fnClearItems(cbLazyLoad2));
+
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;

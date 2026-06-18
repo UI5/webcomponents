@@ -131,7 +131,7 @@ type ComboBoxSelectionChangeEventDetail = {
 	item: ComboBoxItem | null,
 };
 
-type ComboBoxLoadingStart = {
+type ComboBoxLoadItems = {
 	shouldOpenPicker: boolean;
 };
 
@@ -257,12 +257,12 @@ type ComboBoxLoadingStart = {
 })
 
 /**
- * Fired when the applications can set the control in loading state to start items creation/fetching.
+ * Fired when the application should provide items for the component to render.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
  * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
  * @public
  */
-@event("load-start", {
+@event("load-items", {
 	bubbles: true,
 })
 
@@ -273,7 +273,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		"open": void,
 		"close": void,
 		"selection-change": ComboBoxSelectionChangeEventDetail,
-		"load-start": ComboBoxLoadingStart,
+		"load-items": ComboBoxLoadItems,
 	}
 	/**
 	 * Defines the value of the component.
@@ -522,6 +522,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_initialRendering = true;
 	_loadingDelegate: ComboBoxLazyLoading;
+	_shouldFilterItemsAfterLoad = true;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -571,11 +572,18 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadStarted: shouldOpenPicker => this.fireDecoratorEvent("load-start", { shouldOpenPicker }),
+			fireLoadItems: shouldOpenPicker => this.fireDecoratorEvent("load-items", { shouldOpenPicker }),
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count),
+			onLoadingEnd: () => {
+				this._filteredItems = this._shouldFilterItemsAfterLoad ? this._filterItems(this.value) : this._getItems();
+				this._shouldFilterItemsAfterLoad = true;
+				if (this._filteredItems.length === 0 && this.value) {
+					this._closeRespPopover();
+				}
+			},
 		});
 		this._loadingDelegate.init(this.loading);
 	}
@@ -815,6 +823,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._loadingDelegate.fireOnDropdownOpen();
 		}
 
+		this._shouldFilterItemsAfterLoad = false;
 		this._toggleRespPopover();
 	}
 
@@ -1803,6 +1812,6 @@ export default ComboBox;
 
 export type {
 	ComboBoxSelectionChangeEventDetail,
-	ComboBoxLoadingStart,
+	ComboBoxLoadItems,
 	IComboBoxItem,
 };

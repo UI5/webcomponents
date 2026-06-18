@@ -575,11 +575,21 @@
 	</div>
 
 	<div class="demo-section">
-		<ui5-label>Loading State:</ui5-label>
+		<ui5-label>Lazy loading using the 'load-items' event</ui5-label>
 		<br />
 		<br />
 
-		<ui5-multi-combobox id="toggle-loading-mcb"  show-select-all>
+		<ui5-multi-combobox id="lazy-loading-mcb-1" show-select-all></ui5-multi-combobox>
+		<br /><br />
+	</div>
+
+		<div class="demo-section">
+		<ui5-label>Lazy loading using the 'load-items' event (with value state)</ui5-label>
+		<br />
+		<br />
+
+		<ui5-multi-combobox id="lazy-loading-mcb-2" value-state="Critical">
+			<div slot="valueStateMessage">Warning message</div>
 		</ui5-multi-combobox>
 		<br /><br />
 	</div>
@@ -884,9 +894,9 @@
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
 		});
 
-		document.getElementById("toggle-loading-mcb").addEventListener("load-start", (e) => {
+		const fnLoadItems = (e) => {
 			const mcbControl = e.target;
-			if (!mcbControl.items || mcbControl.items.length === 0 ){
+			if (!mcbControl.items || mcbControl.items.length === 0) {
 				mcbControl.loading = true;
 				mcbControl.open = e.detail.shouldOpenPicker;
 				setTimeout(() => {
@@ -895,10 +905,11 @@
 					mcbControl.loading = false;
 				}, 3000);
 			}
-		});
+		};
 
-		
-	</script>
+		document.getElementById("lazy-loading-mcb-1").addEventListener("load-items", fnLoadItems );
+		document.getElementById("lazy-loading-mcb-2").addEventListener("load-items", fnLoadItems );
+</script>
 
 	<h1>Dialog Header Title from Label</h1>
 	<ui5-label for="labeled-mcb">Country</ui5-label>
