@@ -113,7 +113,7 @@ describe("ShellBarBranding", () => {
 	it("fires click event on Enter and Space", () => {
 			basicTemplate();
 
-			cy.get("#shellbarBranding").then(branding => {
+			cy.get("[slot='branding']").then(branding => {
 				branding.get(0).addEventListener("ui5-click", cy.stub().as("brandingClick"));
 			});
 
