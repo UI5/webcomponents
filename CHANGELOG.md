@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* keep table rows intact when printing and harden createInstanceChecker ([#13699](https://github.com/UI5/webcomponents/issues/13699)) ([492099e](https://github.com/UI5/webcomponents/commit/492099e44b22710313c2fc67480f9b1259a7b59d)), closes [#13684](https://github.com/UI5/webcomponents/issues/13684) [#13689](https://github.com/UI5/webcomponents/issues/13689)
+* **ui5-list:** suppress F2 aria description when no interactive items present ([#13489](https://github.com/UI5/webcomponents/issues/13489)) ([f27c1ff](https://github.com/UI5/webcomponents/commit/f27c1ffa8db7d2885a1e3bff6e5c8d20270ba6b8)), closes [#13347](https://github.com/UI5/webcomponents/issues/13347)
+* **ui5-multi-combobox:** execute skipped tests ([#13687](https://github.com/UI5/webcomponents/issues/13687)) ([a754ebb](https://github.com/UI5/webcomponents/commit/a754ebb0b41b11535cd4e6465ab7fc2e96dad3f8))
+* **ui5-slider, ui5-range-slider:** add samples in playground ([#13667](https://github.com/UI5/webcomponents/issues/13667)) ([0f9dc29](https://github.com/UI5/webcomponents/commit/0f9dc2997b9d39cfa970fc9f5d3e34ad75f96aa5))
+
+
+### Features
+
+* **ui5-list:** add live region announcement for item selection ([#13440](https://github.com/UI5/webcomponents/issues/13440)) ([1c89f76](https://github.com/UI5/webcomponents/commit/1c89f7622f7f71f9afad1a5a9f65f72730b2943e)), closes [#12045](https://github.com/UI5/webcomponents/issues/12045)
+* **ui5-user-menu:** introduce infoArea slot ([#13679](https://github.com/UI5/webcomponents/issues/13679)) ([83f7912](https://github.com/UI5/webcomponents/commit/83f79127d92de5786bc5d1b85ffb341d4071555f))
+
+
+
+
+
 # [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
 
 
