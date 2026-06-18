@@ -10,9 +10,9 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 /**
  * @class
  * The `ui5-cb-item-custom` is a combobox item component
- * that can be used to place custom content in the combobox item.
- * The text property is used for filtering and auto-complete.
- * In case the user needs highlighting functionality, check "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js"
+ * that allows placing custom content inside a combobox item.
+ * The `text` property is used for filtering and auto-complete.
+ * For highlighting functionality, see `@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js`.
  *
  * @constructor
  * @extends ListItemBase
@@ -42,7 +42,7 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 
 	/**
 	 * Defines the value of the component.
-	 * Used for programmatic selection via selectedValue property.
+	 * Used for programmatic selection via the `selectedValue` property.
 	 * @default undefined
 	 * @public
 	 */
