@@ -581,9 +581,7 @@ describe("Dialog general interaction", () => {
 				const initialLeft = parseInt(dialog.css("left"));
 
 				// Act - Focus the drag/resize handle and move dialog up
-				cy.get("#draggable-dialog").shadow().find(".ui5-popup-drag-resize-handler")
-					.focus()
-					.should("be.focused");
+				cy.realPress("Tab");
 
 				cy.realPress("{uparrow}");
 				cy.realPress("{uparrow}");
@@ -777,9 +775,7 @@ describe("Dialog general interaction", () => {
 			const initialLeft = parseInt(dialog.css("left"));
 
 			// Act - Focus the drag/resize handle and resize height
-			cy.get("#resizable-dialog").shadow().find(".ui5-popup-drag-resize-handler")
-					.focus()
-					.should("be.focused");
+			cy.realPress(["Shift", "ArrowRight"]);
 
 			cy.realPress(["Shift", "ArrowDown"]);
 
