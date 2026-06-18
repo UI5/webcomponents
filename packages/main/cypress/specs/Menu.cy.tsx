@@ -133,7 +133,7 @@ describe("Menu interaction", () => {
 			.and("have.attr", "disabled");
 	});
 
-	it.skip("Add endContent to a menu item", () => {
+	it("Add endContent to a menu item", () => {
 		cy.mount(
 			<>
 				<Button id="btnOpen">Open Menu</Button>
