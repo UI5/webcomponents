@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.1](https://github.com/UI5/webcomponents/compare/v2.22.0...v2.22.1) (2026-06-19)
+
+
+### Bug Fixes
+
+* **framework:** re-apply theme on secondary boot to detect OpenUI5 custom themes ([#13680](https://github.com/UI5/webcomponents/issues/13680)) ([b1605b2](https://github.com/UI5/webcomponents/commit/b1605b2ce04376141602cf7af13470ff097cb5cc))
+* **OpenUI5Support:** move popover to top of top layer ([#13671](https://github.com/UI5/webcomponents/issues/13671)) ([ce7ad0f](https://github.com/UI5/webcomponents/commit/ce7ad0f59dd0172f9c52368c2310dc9bcc6573f8))
+
+
+
+
+
 # [2.22.0](https://github.com/UI5/webcomponents/compare/v2.22.0-rc.4...v2.22.0) (2026-05-11)
 
 
