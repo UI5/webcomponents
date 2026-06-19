@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* **ui5-slider, ui5-range-slider:** add samples in playground ([#13667](https://github.com/UI5/webcomponents/issues/13667)) ([0f9dc29](https://github.com/UI5/webcomponents/commit/0f9dc2997b9d39cfa970fc9f5d3e34ad75f96aa5))
+
+
+### Features
+
+* **ui5-user-menu:** introduce infoArea slot ([#13679](https://github.com/UI5/webcomponents/issues/13679)) ([83f7912](https://github.com/UI5/webcomponents/commit/83f79127d92de5786bc5d1b85ffb341d4071555f))
+
+
+
+
+
 # [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
 
 

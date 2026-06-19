@@ -586,8 +586,17 @@ class MenuItem extends ListItem implements IMenuItem {
 	}
 
 	_onclick(e: MouseEvent) {
+		// Clicks on the endContent slot must not activate the item (which would close the menu).
+		if (this._isEndContentClicked(e)) {
+			return;
+		}
+
 		this._shiftPressed = this._isCheckable && e.shiftKey;
 		super._onclick(e);
+	}
+
+	_isEndContentClicked(e: MouseEvent): boolean {
+		return this.endContent.some(element => e.composedPath().includes(element));
 	}
 
 	_itemKeyDown(e: KeyboardEvent) {
