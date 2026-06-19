@@ -774,9 +774,8 @@ describe("Dialog general interaction", () => {
 			const initialTop = parseInt(dialog.css("top"));
 			const initialLeft = parseInt(dialog.css("left"));
 
-			// Act - Focus the drag/resize handle and resize height
-			cy.realPress(["Shift", "ArrowRight"]);
 
+			cy.realPress("Tab"); // Focus the drag/resize handle
 			cy.realPress(["Shift", "ArrowDown"]);
 
 			// Assert - Height changes, width and position remain the same
