@@ -51,7 +51,7 @@ import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
 const STEP_SIZE = 16;
 
 const FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES = {
-	ariaKeyShortcuts: "Shift+Control+F",
+	ariaKeyShortcuts: "Shift+Ctrl+F",
 };
 
 type ValueStateWithIcon = ValueState.Negative | ValueState.Critical | ValueState.Positive | ValueState.Information;
@@ -207,6 +207,13 @@ class Dialog extends Popup {
 	 */
 	@property()
 	state: `${ValueState}` = "None";
+
+
+	/*
+	* @private
+	 */
+	@property({ type: Boolean })
+	_showFullscreenButton = false;
 
 	_screenResizeHandler: () => void;
 	_dragMouseMoveHandler: (e: MouseEvent) => void;
@@ -383,10 +390,6 @@ class Dialog extends Popup {
 		return this.resizable && this.onDesktop && !this.stretch;
 	}
 
-	get _showFullscreenButton() {
-		return this.showFullscreenButton && !this.onPhone && !this.header.length;
-	}
-
 	get _fullscreenButtonIcon() {
 		return this.stretch ? "exit-full-screen" : "full-screen";
 	}
@@ -464,6 +467,8 @@ class Dialog extends Popup {
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
+
+		this._showFullscreenButton = this.showFullscreenButton && !this.onPhone && !this.header.length;
 
 		this._isRTL = this.effectiveDir === "rtl";
 	}

@@ -1968,7 +1968,7 @@ describe("Fullscreen Button", () => {
 			.find(".ui5-dialog-fullscreen-btn")
 			.shadow()
 			.find("button")
-			.should("have.attr", "aria-keyshortcuts", "Shift+Control+F");
+			.should("have.attr", "aria-keyshortcuts", "Shift+Ctrl+F");
 	});
 
 	it("should toggle fullscreen with Shift+Ctrl+F keyboard shortcut", () => {

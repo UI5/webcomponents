@@ -125,6 +125,10 @@
 	height: 100%;
 }
 
+:host([header-text][_show-fullscreen-button]) .ui5-popup-header-root {
+	justify-content: space-between;
+}
+
 .ui5-popup-content {
 	min-height: var(--_ui5_dialog_content_min_height);
 	flex: 1 1 auto;
@@ -145,7 +149,6 @@
 }
 
 .ui5-popup-header-text {
-	flex: 1;
 	min-width: 0;
 	justify-content: flex-start;
 }
