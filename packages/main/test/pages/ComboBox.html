@@ -517,6 +517,102 @@
 		</ui5-combobox>
 	</div>
 
+	<div class="demo-section" style="padding: 20px; background: #f0f8ff; border-radius: 8px;">
+		<ui5-title>Selection Trigger Flag Demo</ui5-title>
+		<p style="margin: 10px 0;">The selection-change event includes a <code>trigger</code> property: "Typeahead", "Click", or "Keyboard"</p>
+
+		<ui5-combobox id="trigger-flag-cb" placeholder="Try typing, arrow keys, or clicking...">
+			<ui5-cb-item text="Apple" value="apple"></ui5-cb-item>
+			<ui5-cb-item text="Apricot" value="apricot"></ui5-cb-item>
+			<ui5-cb-item text="Banana" value="banana"></ui5-cb-item>
+			<ui5-cb-item text="Blueberry" value="blueberry"></ui5-cb-item>
+			<ui5-cb-item text="Cherry" value="cherry"></ui5-cb-item>
+		</ui5-combobox>
+
+		<div style="display: flex; gap: 15px; margin-top: 15px;">
+			<div style="flex: 1; padding: 15px; background: white; border: 2px solid #107e3e; border-radius: 4px; min-height: 100px;">
+				<div style="font-weight: bold; margin-bottom: 8px;">selection-change events (with trigger):</div>
+				<div id="trigger-flag-events" style="font-family: monospace; font-size: 13px;">(none yet)</div>
+			</div>
+			<div style="flex: 1; padding: 15px; background: white; border: 2px solid #e78c07; border-radius: 4px; min-height: 100px;">
+				<div style="font-weight: bold; margin-bottom: 8px;">change events:</div>
+				<div id="trigger-flag-change-events" style="font-family: monospace; font-size: 13px;">(none yet)</div>
+			</div>
+		</div>
+
+		<div style="margin-top: 10px; padding: 10px; background: #fffbe6; border-radius: 4px; font-size: 13px;">
+			<strong>Trigger types:</strong>
+			<span style="margin-left: 10px; padding: 2px 8px; background: #d4edda; border-radius: 3px;">Typeahead</span>
+			<span style="margin-left: 5px; padding: 2px 8px; background: #cce5ff; border-radius: 3px;">Keyboard</span>
+			<span style="margin-left: 5px; padding: 2px 8px; background: #e2d5f1; border-radius: 3px;">Click</span>
+		</div>
+
+		<ui5-button id="trigger-flag-clear" style="margin-top: 10px;">Clear Log</ui5-button>
+
+		<script>
+			(function() {
+				const cb = document.getElementById("trigger-flag-cb");
+				const selectionEventsEl = document.getElementById("trigger-flag-events");
+				const changeEventsEl = document.getElementById("trigger-flag-change-events");
+				const clearBtn = document.getElementById("trigger-flag-clear");
+				let selectionCount = 0;
+				let changeCount = 0;
+
+				const triggerColors = {
+					Typeahead: "#d4edda",
+					Keyboard: "#cce5ff",
+					Click: "#e2d5f1"
+				};
+
+				cb.addEventListener("ui5-selection-change", function(e) {
+					selectionCount++;
+					const item = e.detail.item;
+					const trigger = e.detail.trigger;
+					const timestamp = new Date().toLocaleTimeString();
+					const entry = document.createElement("div");
+					const bgColor = triggerColors[trigger] || "#f5f5f5";
+					entry.style.cssText = `padding: 5px 10px; margin: 3px 0; background: ${bgColor}; border-left: 3px solid #107e3e; animation: flashGreen 0.5s;`;
+					entry.innerHTML = `<strong>#${selectionCount}</strong> [${timestamp}] <span style="background: ${bgColor}; padding: 1px 6px; border-radius: 3px; font-weight: bold;">${trigger}</span> → ${item ? item.text : 'null'}`;
+
+					if (selectionEventsEl.textContent === "(none yet)") {
+						selectionEventsEl.textContent = "";
+					}
+					selectionEventsEl.insertBefore(entry, selectionEventsEl.firstChild);
+				});
+
+				cb.addEventListener("ui5-change", function(e) {
+					changeCount++;
+					const timestamp = new Date().toLocaleTimeString();
+					const entry = document.createElement("div");
+					entry.style.cssText = "padding: 5px 10px; margin: 3px 0; background: #fff4e8; border-left: 3px solid #e78c07; animation: flashOrange2 0.5s;";
+					entry.innerHTML = `<strong>#${changeCount}</strong> [${timestamp}] value: <strong>"${e.target.value}"</strong>`;
+
+					if (changeEventsEl.textContent === "(none yet)") {
+						changeEventsEl.textContent = "";
+					}
+					changeEventsEl.insertBefore(entry, changeEventsEl.firstChild);
+				});
+
+				clearBtn.addEventListener("click", function() {
+					selectionEventsEl.innerHTML = "(none yet)";
+					changeEventsEl.innerHTML = "(none yet)";
+					selectionCount = 0;
+					changeCount = 0;
+				});
+			})();
+		</script>
+		<style>
+			@keyframes flashGreen {
+				0% { background: #107e3e; color: white; }
+				100% { background: inherit; color: inherit; }
+			}
+			@keyframes flashOrange2 {
+				0% { background: #e78c07; color: white; }
+				100% { background: #fff4e8; color: inherit; }
+			}
+		</style>
+	</div>
+
 	<script type="module">
 		document.getElementById("lazy").addEventListener("ui5-input", async event => {
 			const { value } = event.target;

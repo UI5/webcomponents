@@ -2912,6 +2912,67 @@ describe("Event firing", () => {
 		cy.get("@selectionChangeSpy")
 			.should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
+
+	it("selection-change trigger is 'Typeahead' when text is auto-completed", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realType("Bul");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Bulgaria" && event.detail.trigger === "Typeahead";
+		}));
+	});
+
+	it("selection-change trigger is 'Click' when an item is clicked in the dropdown", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find(".inputIcon").realClick();
+		cy.get("@combo").find("ui5-cb-item").eq(2).realClick();
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Canada" && event.detail.trigger === "Click";
+		}));
+	});
+
+	it("selection-change trigger is 'Keyboard' when navigating with arrow keys", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realPress("F4").realPress("ArrowDown");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.trigger === "Keyboard";
+		}));
+	});
 });
 
 describe("Scrolling", () => {
