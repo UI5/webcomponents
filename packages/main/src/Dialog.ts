@@ -209,7 +209,6 @@ class Dialog extends Popup {
 	@property()
 	state: `${ValueState}` = "None";
 
-
 	/*
 	* @private
 	 */
