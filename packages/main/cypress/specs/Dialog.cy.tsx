@@ -1942,7 +1942,7 @@ describe("Fullscreen Button", () => {
 		cy.get("#dialog")
 			.shadow()
 			.find(".ui5-dialog-fullscreen-btn")
-			.should("have.attr", "tooltip", "Maximize");
+			.should("have.attr", "tooltip", "Maximize (Shift+Ctrl+F)");
 
 		cy.get("#dialog").then($dialog => {
 			($dialog.get(0) as Dialog)._toggleFullscreen();
@@ -1951,7 +1951,7 @@ describe("Fullscreen Button", () => {
 		cy.get("#dialog")
 			.shadow()
 			.find(".ui5-dialog-fullscreen-btn")
-			.should("have.attr", "tooltip", "Restore");
+			.should("have.attr", "tooltip", "Restore (Shift+Ctrl+F)");
 	});
 
 	it("should have aria-keyshortcuts attribute", () => {
@@ -2093,7 +2093,7 @@ describe("Fullscreen Button", () => {
 			.shadow()
 			.find(".ui5-dialog-fullscreen-btn")
 			.should("have.attr", "icon", "exit-full-screen")
-			.and("have.attr", "tooltip", "Restore");
+			.and("have.attr", "tooltip", "Restore (Shift+Ctrl+F)");
 
 		cy.get("#dialog").invoke("prop", "open", false);
 	});
