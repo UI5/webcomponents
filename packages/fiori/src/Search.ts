@@ -75,6 +75,7 @@ type SearchEventDetails = {
  * @public
  * @since 2.9.0
  * @experimental
+ * @csspart popover - Used to style the suggestions popup
  */
 @customElement({
 	tag: "ui5-search",

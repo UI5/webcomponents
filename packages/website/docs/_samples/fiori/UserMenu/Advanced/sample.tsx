@@ -8,6 +8,7 @@ import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
 import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import AvatarClass from "@ui5/webcomponents/dist/Avatar.js";
+import MessageStripClass from "@ui5/webcomponents/dist/MessageStrip.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 import "@ui5/webcomponents-icons/dist/collaborate.js";
@@ -22,6 +23,7 @@ const UserMenuAccount = createReactComponent(UserMenuAccountClass);
 const UserMenuItem = createReactComponent(UserMenuItemClass);
 const UserMenuItemGroup = createReactComponent(UserMenuItemGroupClass);
 const Avatar = createReactComponent(AvatarClass);
+const MessageStrip = createReactComponent(MessageStripClass);
 
 function App() {
   const userMenuRef = useRef<UserMenuClass | null>(null);
@@ -122,6 +124,9 @@ function App() {
         onChangeAccount={handleChangeAccount}
         onSignOutClick={handleSignOutClick}
       >
+        <MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>
+          All actions are recorded under the proxy audit log.
+        </MessageStrip>
         <UserMenuAccount
           slot="accounts"
           avatarSrc="/images/avatars/man_avatar_3.png"

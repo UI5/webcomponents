@@ -3,7 +3,6 @@ import type Dialog from "./Dialog.js";
 import PopupTemplate from "./PopupTemplate.js";
 import Title from "./Title.js";
 import Icon from "./Icon.js";
-import Button from "./Button.js";
 
 export default function DialogTemplate(this: Dialog) {
 	return PopupTemplate.call(this, {
@@ -20,12 +19,7 @@ function beforeContent(this: Dialog) {
 				id="ui5-popup-header"
 				role="region"
 				aria-label={this._headerAriaLabel}
-				aria-describedby={this.effectiveAriaDescribedBy}
-				aria-roledescription={this.ariaRoleDescriptionHeaderText}
-				tabIndex={this._headerTabIndex}
-				onKeyDown={this._onDragOrResizeKeyDown}
 				onMouseDown={this._onDragMouseDown}
-				onDblClick={this.showFullscreenButton ? this._onHeaderDblClick : undefined}
 				part="header"
 				// state={this.state}
 			>
@@ -36,28 +30,6 @@ function beforeContent(this: Dialog) {
 					<slot name="header"></slot>
 					:
 					<Title level="H1" id="ui5-popup-header-text" class="ui5-popup-header-text">{this.headerText}</Title>
-				}
-
-				{this._showFullscreenButton &&
-					<Button
-						class="ui5-dialog-fullscreen-btn"
-						icon={this._fullscreenButtonIcon}
-						design="Transparent"
-						tooltip={this._fullscreenButtonTooltip}
-						accessibleName={this._fullscreenButtonTooltip}
-						accessibilityAttributes={this._fullscreenButtonAccessibilityAttributes}
-						onClick={this._toggleFullscreen}
-					></Button>
-				}
-
-				{this.resizable ?
-					this.draggable ?
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggableAndResizable}</span>
-						:
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextResizable}</span>
-					:
-					this.draggable &&
-						<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHeaderTextDraggable}</span>
 				}
 			</div>
 		}
@@ -80,9 +52,30 @@ function afterContent(this: Dialog) {
 			<div
 				class="ui5-popup-resize-handle"
 				onMouseDown={this._onResizeMouseDown}
+				title={this._resizeHandleTooltip}
 			>
 				<Icon name={resizeCorner}></Icon>
 			</div>
+		}
+		{this._movable &&
+			<>
+				<span
+					id={`${this._id}-dragResizeHandler`}
+					class="ui5-popup-drag-resize-handler ui5-hidden-text"
+					tabIndex={this._dragResizeHandleTabIndex}
+					role="img"
+					aria-roledescription={this._dragResizeHandleAriaRoleDescription}
+					aria-label={this._dragResizeHandleAriaLabel}
+					aria-describedby={this._dragResizeHandleAriaDescribedBy}
+					onKeyDown={this._onDragOrResizeKeyDown}
+				></span>
+				{this.ariaDescribedByHandlerText &&
+					<span id={`${this._id}-descr`} aria-hidden="true" class="ui5-hidden-text">{this.ariaDescribedByHandlerText}</span>
+				}
+				{this.dialogAriaDescribedByText &&
+					<span id={`${this._id}-dialog-descr`} aria-hidden="true" class="ui5-hidden-text">{this.dialogAriaDescribedByText}</span>
+				}
+			</>
 		}
 	</>);
 }
