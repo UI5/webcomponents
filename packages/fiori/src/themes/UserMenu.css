@@ -172,3 +172,21 @@
     justify-content: flex-end;
     align-items: center;
 }
+
+.ui5-user-menu-info-area {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    margin-block: 0.5rem;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+    margin-inline: -0.5rem;
+}
+
+.ui5-user-menu-selected-account-subtitleText:has(+ .ui5-user-menu-info-area) {
+    margin-bottom: 0;
+}
+
+.ui5-user-menu-info-area + .ui5-user-menu-manage-account-btn {
+    margin-block-start: 0;
+}

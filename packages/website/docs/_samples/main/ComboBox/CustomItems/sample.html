@@ -1,0 +1,65 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComboBox Custom Items</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor); padding: 2rem; height: 300px;">
+<!-- playground-fold-end -->
+
+    <ui5-combobox id="combobox" placeholder="Select destination" style="width: 400px;">
+        <ui5-cb-item-custom text="New York, USA" value="NYC">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇺🇸</span>
+                <span style="flex: 1;">New York, USA</span>
+                <span role="img" aria-label="Airport">✈️</span>
+                <span role="img" aria-label="Popular">⭐</span>
+            </div>
+        </ui5-cb-item-custom>
+        <ui5-cb-item-custom text="London, UK" value="LON">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇬🇧</span>
+                <span style="flex: 1;">London, UK</span>
+                <span role="img" aria-label="Airport">✈️</span>
+                <span role="img" aria-label="Popular">⭐</span>
+            </div>
+        </ui5-cb-item-custom>
+        <ui5-cb-item-custom text="Tokyo, Japan" value="TYO">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇯🇵</span>
+                <span style="flex: 1;">Tokyo, Japan</span>
+                <span role="img" aria-label="Airport">✈️</span>
+                <span role="img" aria-label="Popular">⭐</span>
+            </div>
+        </ui5-cb-item-custom>
+        <ui5-cb-item-custom text="Paris, France" value="PAR">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇫🇷</span>
+                <span style="flex: 1;">Paris, France</span>
+                <span role="img" aria-label="Airport">✈️</span>
+            </div>
+        </ui5-cb-item-custom>
+        <ui5-cb-item-custom text="Berlin, Germany" value="BER">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇩🇪</span>
+                <span style="flex: 1;">Berlin, Germany</span>
+                <span role="img" aria-label="Train">🚆</span>
+            </div>
+        </ui5-cb-item-custom>
+        <ui5-cb-item-custom text="Sydney, Australia" value="SYD">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span role="img" aria-label="Flag">🇦🇺</span>
+                <span style="flex: 1;">Sydney, Australia</span>
+                <span role="img" aria-label="Beach">🏖️</span>
+                <span role="img" aria-label="Popular">⭐</span>
+            </div>
+        </ui5-cb-item-custom>
+    </ui5-combobox>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->
