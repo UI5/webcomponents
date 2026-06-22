@@ -2097,4 +2097,31 @@ describe("Fullscreen Button", () => {
 
 		cy.get("#dialog").invoke("prop", "open", false);
 	});
+
+	it("should not focus fullscreen button as initial focus when content has focusable elements", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button id="content-btn">Content Button</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#content-btn").should("be.focused");
+	});
+
+	it("should focus fullscreen button when no other focusable elements exist", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<p>Non-focusable content</p>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("be.focused");
+	});
 });

@@ -11,6 +11,7 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import Popup from "./Popup.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
@@ -871,6 +872,15 @@ class Dialog extends Popup {
 	_detachMouseResizeHandlers() {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+	}
+
+	async _getFirstFocusableElement() {
+		if (this._showFullscreenButton) {
+			const firstFocusable = await getFirstFocusableElement(this.contentDOM) || (this.footerDOM ? await getFirstFocusableElement(this.footerDOM) : null);
+			return firstFocusable || getFirstFocusableElement(this);
+		}
+
+		return getFirstFocusableElement(this);
 	}
 
 	/**

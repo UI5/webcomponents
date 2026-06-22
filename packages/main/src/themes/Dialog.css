@@ -125,6 +125,10 @@
 	height: 100%;
 }
 
+:host(:not([header-text])[_show-fullscreen-button]) .ui5-popup-header-root {
+	justify-content: flex-end;
+}
+
 :host([header-text][_show-fullscreen-button]) .ui5-popup-header-root {
 	justify-content: space-between;
 }
