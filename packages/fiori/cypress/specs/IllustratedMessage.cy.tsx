@@ -297,3 +297,20 @@ describe("Dot design resource handling", () => {
 			.should("have.id", "sapIllus-Dot-AddPeople");
 	});
 });
+
+describe("Utility SVG accessibility", () => {
+	it("utility SVG has only aria-hidden='true' and no role or focusable attributes", () => {
+		cy.mount(
+			<IllustratedMessage name="UnableToUpload" />
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-util")
+			.should(($svg) => {
+				expect($svg).to.have.attr("aria-hidden", "true");
+				expect($svg).not.to.have.attr("role");
+				expect($svg).not.to.have.attr("focusable");
+			});
+	});
+});
