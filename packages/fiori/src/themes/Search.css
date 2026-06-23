@@ -2,6 +2,7 @@
 
 .ui5-search-popover {
 	width: var(--search_width);
+	max-height: var(--_ui5_search_popover_max_height);
 	margin-top: .25rem;
 	box-sizing: border-box;
 }

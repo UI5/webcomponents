@@ -1,6 +1,7 @@
 import { getAllRegisteredTags } from "./CustomElementsRegistry.js";
 import { getCustomElementsScopingRules, getCustomElementsScopingSuffix } from "./CustomElementsScopeUtils.js";
-import { getRegisteredFeatures } from "./FeaturesRegistry.js";
+import { getRegisteredFeatures, getFeature } from "./FeaturesRegistry.js";
+import type OpenUI5Support from "./features/OpenUI5Support.js";
 import { getAnimationMode } from "./config/AnimationMode.js";
 import { getCalendarType, getSecondaryCalendarType } from "./config/CalendarType.js";
 import { getDefaultFontLoading } from "./config/Fonts.js";
@@ -73,6 +74,13 @@ const registerCurrentRuntime = () => {
 			},
 			get scopingRules() {
 				return getCustomElementsScopingRules();
+			},
+			get openUI5Detected() {
+				return getFeature<typeof OpenUI5Support>("OpenUI5Support")?.isOpenUI5Detected() ?? false;
+			},
+			get openUI5LoadedFirst() {
+				const openUI5Support = getFeature<typeof OpenUI5Support>("OpenUI5Support");
+				return openUI5Support ? openUI5Support.isOpenUI5LoadedFirst() : undefined;
 			},
 			alias: currentRuntimeAlias,
 			description: `Runtime ${currentRuntimeIndex} - ver ${versionInfo.version}${currentRuntimeAlias ? ` (${currentRuntimeAlias})` : ""}`,
