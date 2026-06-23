@@ -97,6 +97,13 @@ const isPrintableCharacter = (e: KeyboardEvent) => {
 	return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
 };
 
+const isI18nText = (value: unknown): value is I18nText => {
+	return typeof value === "object"
+		&& value !== null
+		&& "key" in value
+		&& "defaultText" in value;
+};
+
 /**
  * @class
  *
@@ -1049,7 +1056,11 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL as I18nText);
+		if (typeof SELECT_LISTBOX_LABEL === "string" || isI18nText(SELECT_LISTBOX_LABEL)) {
+			return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL);
+		}
+
+		return "";
 	}
 
 	get _cancelButtonText() {
@@ -1128,7 +1139,10 @@ class Select extends UI5Element implements IFormInputElement {
 		if (!fieldName) {
 			return undefined;
 		}
-		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX as I18nText);
+		const prefix = (typeof SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX === "string"
+			|| isI18nText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX))
+			? Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX)
+			: "";
 		return `${prefix} ${fieldName}`;
 	}
 
