@@ -101,7 +101,7 @@ function arrowStart(this: FlexibleColumnLayout) {
 			onClick={this.switchLayoutOnArrowPress}
 			onKeyDown={this._onArrowKeydown}
 			class="ui5-fcl-arrow ui5-fcl-arrow--start"
-			tooltip={this.accStartSeparatorText}
+			tooltip={this.accStartArrowText}
 		/>
 	);
 }
