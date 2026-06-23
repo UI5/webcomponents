@@ -18,10 +18,20 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 
 import {
-	DIALOG_HEADER_ARIA_ROLE_DESCRIPTION,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE,
+	DIALOG_RESIZE_HANDLE_TOOLTIP,
+	DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_DRAG_HANDLE_ARIA_LABEL,
+	DIALOG_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_HANDLE_ARIA_ROLEDESCRIPTION,
+	DIALOG_HEADER_ARIA_LABEL,
+	DIALOG_CONTENT_ARIA_LABEL,
+	DIALOG_FOOTER_ARIA_LABEL,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -78,14 +88,14 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  * ### Keyboard Handling
  *
  * #### Basic Navigation
- * When the `ui5-dialog` has the `draggable` property set to `true` and the header is focused, the user can move the dialog
+ * When the `ui5-dialog` has the `draggable` property set to `true`, the user can move the dialog
  * with the following keyboard shortcuts:
  *
  * - [Up] or [Down] arrow keys - Move the dialog up/down.
  * - [Left] or [Right] arrow keys - Move the dialog left/right.
  *
  * #### Resizing
- * When the `ui5-dialog` has the `resizable` property set to `true` and the header is focused, the user can change the size of the dialog
+ * When the `ui5-dialog` has the `resizable` property set to `true`, the user can change the size of the dialog
  * with the following keyboard shortcuts:
  *
  * - [Shift] + [Up] or [Down] - Decrease/Increase the height of the dialog.
@@ -252,24 +262,58 @@ class Dialog extends Popup {
 		return ariaLabelledById;
 	}
 
-	get ariaRoleDescriptionHeaderText() {
-		return (this.resizable || this.draggable) ? Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_ROLE_DESCRIPTION) : undefined;
-	}
-
 	get effectiveAriaDescribedBy() {
-		return (this.resizable || this.draggable) ? `${this._id}-descr` : undefined;
+		return this._movable ? `${this._id}-dialog-descr` : undefined;
 	}
 
-	get ariaDescribedByHeaderTextResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE);
+	get ariaDescribedByIds() {
+		return [
+			this.ariaDescriptionTextId,
+			this.effectiveAriaDescribedBy,
+		].filter(Boolean).join(" ");
 	}
 
-	get ariaDescribedByHeaderTextDraggable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE);
+	get dialogAriaDescribedByText() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE);
+		}
+
+		return "";
 	}
 
-	get ariaDescribedByHeaderTextDraggableAndResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+	get ariaDescribedByTextResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE);
+	}
+
+	get ariaDescribedByTextDraggable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE);
+	}
+
+	get ariaDescribedByTextDraggableAndResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+	}
+
+	get ariaDescribedByHandlerText() {
+		if (this.resizable && this.draggable) {
+			return this.ariaDescribedByTextDraggableAndResizable;
+		}
+		if (this.resizable) {
+			return this.ariaDescribedByTextResizable;
+		}
+		if (this.draggable) {
+			return this.ariaDescribedByTextDraggable;
+		}
+		return "";
 	}
 
 	/**
@@ -283,12 +327,42 @@ class Dialog extends Popup {
 		return !this.stretch && this.onDesktop && (this.draggable || this.resizable);
 	}
 
-	get _headerTabIndex() {
+	get _dragResizeHandleTabIndex() {
 		return this._movable ? 0 : undefined;
+	}
+
+	get _dragResizeHandleAriaLabel() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_HANDLE_ARIA_LABEL);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_ARIA_LABEL);
+		}
+
+		return "";
+	}
+
+	get _dragResizeHandleAriaRoleDescription() {
+		return this._movable ? Dialog.i18nBundle.getText(DIALOG_HANDLE_ARIA_ROLEDESCRIPTION) : undefined;
+	}
+
+	get _dragResizeHandleAriaDescribedBy() {
+		return this._movable ? `${this._id}-descr` : undefined;
 	}
 
 	get _showResizeHandle() {
 		return this.resizable && this.onDesktop;
+	}
+
+	get _resizeHandleTooltip() {
+		return this._showResizeHandle ? Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_TOOLTIP) : undefined;
 	}
 
 	get _minHeight() {
@@ -325,6 +399,22 @@ class Dialog extends Popup {
 		}
 
 		return toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get _contentRole(): "region" {
+		return "region";
+	}
+
+	get _headerAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_LABEL);
+	}
+
+	get _contentAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_CONTENT_ARIA_LABEL);
+	}
+
+	get _footerAriaLabel() {
+		return Dialog.i18nBundle.getText(DIALOG_FOOTER_ARIA_LABEL);
 	}
 
 	_show() {
@@ -470,7 +560,12 @@ class Dialog extends Popup {
 	}
 
 	_onDragOrResizeKeyDown(e: KeyboardEvent) {
-		if (!this._movable || !Dialog._isHeader(e.target as HTMLElement)) {
+		if (!this._movable) {
+			return;
+		}
+
+		const target = e.target as HTMLElement;
+		if (!target || target.id !== `${this._id}-dragResizeHandler`) {
 			return;
 		}
 
@@ -682,6 +777,23 @@ class Dialog extends Popup {
 	_detachMouseResizeHandlers() {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+	}
+
+	/**
+	 * Overrides Popup's forwardToLast to prioritize the drag/resize handler
+	 * when Shift+Tab is pressed from the first focusable element.
+	 * @private
+	 */
+	async forwardToLast() {
+		if (this._movable) {
+			const dragResizeHandler = this.shadowRoot!.querySelector(`#${this._id}-dragResizeHandler`) as HTMLElement;
+			if (dragResizeHandler) {
+				dragResizeHandler.focus();
+				return;
+			}
+		}
+
+		await super.forwardToLast();
 	}
 }
 

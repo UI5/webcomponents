@@ -27,7 +27,14 @@ export default function PopupTemplate(this: Popup, hooks?: {
 
 			{(hooks?.beforeContent || beforeContent).call(this)}
 
-			<div style={this.styles.content} class={this.classes.content} onScroll={this._scroll} part="content">
+			<div
+				style={this.styles.content}
+				class={this.classes.content}
+				role={this._contentRole}
+				aria-label={this._contentAriaLabel}
+				onScroll={this._scroll}
+				part="content"
+			>
 				<slot></slot>
 			</div>
 

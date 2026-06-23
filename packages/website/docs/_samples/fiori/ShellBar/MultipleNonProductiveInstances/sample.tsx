@@ -57,12 +57,14 @@ function App() {
       </ShellBar>
 
       <ShellBar
-        primaryTitle="Product Identifier"
         notificationsCount="72"
         showNotifications={true}
       >
+        <ShellBarBranding slot="branding">
+          Product Identifier
+          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+        </ShellBarBranding>
         <Button icon="menu2" slot="startButton" />
-        <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
 
         <Tag design="Set2" colorScheme="8" slot="content">
           Q System

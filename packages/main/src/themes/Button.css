@@ -318,7 +318,7 @@ bdi {
 	position: absolute;
 	top: 0;
 	inset-inline-end: 0;
-	margin: -0.5rem;
+	margin: var(--_ui5_button_overlay_badge_offset, -0.5rem);
 	z-index: 1;
 	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);

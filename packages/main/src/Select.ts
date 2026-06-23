@@ -53,6 +53,7 @@ import {
 	SELECT_ROLE_DESCRIPTION,
 	SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX,
 	SELECT_LISTBOX_LABEL,
+	SELECT_DIALOG_CANCEL_BUTTON,
 	FORM_SELECTABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
@@ -1048,6 +1049,10 @@ class Select extends UI5Element implements IFormInputElement {
 
 	get _headerTitleText() {
 		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL);
+	}
+
+	get _cancelButtonText() {
+		return Select.i18nBundle.getText(SELECT_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _currentlySelectedOption() {

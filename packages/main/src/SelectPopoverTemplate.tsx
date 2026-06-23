@@ -4,7 +4,6 @@ import Button from "./Button.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import Popover from "./Popover.js";
 import Icon from "./Icon.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import Title from "./Title.js";
 
 export default function SelectPopoverTemplate(this: Select) {
@@ -33,11 +32,6 @@ export default function SelectPopoverTemplate(this: Select) {
 						<div slot="header" class="ui5-responsive-popover-header">
 							<div class="row">
 								<Title>{this._headerTitleText}</Title>
-								<Button
-									class="ui5-responsive-popover-close-btn"
-									icon={decline}
-									design="Transparent"
-									onClick={this._toggleRespPopover} />
 							</div>
 
 							{this.hasValueStateText &&
@@ -72,6 +66,18 @@ export default function SelectPopoverTemplate(this: Select) {
 					>
 						<slot></slot>
 					</List>
+
+					{this._isPhone &&
+						<div slot="footer" class="ui5-responsive-popover-footer">
+							<Button
+								class="ui5-responsive-popover-close-btn"
+								design="Transparent"
+								onClick={this._toggleRespPopover}
+							>
+								{this._cancelButtonText}
+							</Button>
+						</div>
+					}
 				</ResponsivePopover>
 			}
 
