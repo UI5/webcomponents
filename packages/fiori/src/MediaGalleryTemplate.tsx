@@ -39,7 +39,10 @@ export default function MediaGalleryTemplate(this: MediaGallery) {
 							<slot name={item._individualSlot}></slot>
 						</li>
 					)}
-					{this._showOverflowBtn && <li class="ui5-media-gallery-overflow">
+					{this._showOverflowBtn && <li class="ui5-media-gallery-overflow"
+						role="option"
+						aria-checked="false"
+					>
 						<Button onClick={this._onOverflowBtnClick}>
 							+{this._overflowSize}
 						</Button>

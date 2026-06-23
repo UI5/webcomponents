@@ -651,9 +651,9 @@ describe("MediaGallery accessibility", () => {
 		cy.get("[ui5-media-gallery]")
 			.shadow()
 			.find(".ui5-media-gallery-thumbnail")
-			.each($item => {
+			.each(($item, index) => {
 				expect($item).to.have.attr("role", "option");
-				expect($item).to.have.attr("aria-checked", "true");
+				expect($item).to.have.attr("aria-checked", index === 0 ? "true" : "false");
 			});
 	});
 
