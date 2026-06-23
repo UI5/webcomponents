@@ -34,6 +34,7 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
@@ -1048,7 +1049,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL);
+		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL as I18nText);
 	}
 
 	get _cancelButtonText() {
@@ -1127,7 +1128,7 @@ class Select extends UI5Element implements IFormInputElement {
 		if (!fieldName) {
 			return undefined;
 		}
-		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX);
+		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX as I18nText);
 		return `${prefix} ${fieldName}`;
 	}
 
