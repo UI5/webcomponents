@@ -3,6 +3,12 @@ import DynamicPageTitle from "../../src/DynamicPageTitle.js";
 import DynamicPageHeader from "../../src/DynamicPageHeader.js";
 import Bar from "@ui5/webcomponents/dist/Bar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import Table from "@ui5/webcomponents/dist/Table.js";
+import TableHeaderRow from "@ui5/webcomponents/dist/TableHeaderRow.js";
+import TableHeaderCell from "@ui5/webcomponents/dist/TableHeaderCell.js";
+import TableRow from "@ui5/webcomponents/dist/TableRow.js";
+import TableCell from "@ui5/webcomponents/dist/TableCell.js";
+import TableRowAction from "@ui5/webcomponents/dist/TableRowAction.js";
 import { setAnimationMode } from "@ui5/webcomponents-base";
 
 before(() => {
@@ -165,7 +171,7 @@ describe("DynamicPage", () => {
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
-			.find("header.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
+			.find("div.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
 			.should("not.exist");
 
 		cy.get("[ui5-dynamic-page]")
@@ -178,7 +184,7 @@ describe("DynamicPage", () => {
 
 		cy.get("[ui5-dynamic-page]")
 			.shadow()
-			.find("header.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
+			.find("div.ui5-dynamic-page-title-header-wrapper > slot[name=headerArea]")
 			.should("exist");
 
 		cy.get("[ui5-dynamic-page]")
@@ -459,6 +465,53 @@ describe("DynamicPage", () => {
 				expect(targetRect.top).to.be.at.least(visibleTop);
 				expect(targetRect.bottom).to.be.at.most(visibleBottom);
 			});
+	});
+
+	it("should not scroll when clicking a TableRowAction overflow button on a visible row", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "500px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+					<div slot="snappedHeading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "100px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<Table id="table" rowActionCount={3}>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell>Product</TableHeaderCell>
+						<TableHeaderCell>Supplier</TableHeaderCell>
+					</TableHeaderRow>
+					{Array.from({ length: 8 }, (_, i) => (
+						<TableRow id={`row${i}`} key={i}>
+							<TableCell>Product {i + 1}</TableCell>
+							<TableCell>Supplier {i + 1}</TableCell>
+							<TableRowAction slot="actions" icon="delete" text="Delete"></TableRowAction>
+							<TableRowAction slot="actions" icon="add" text="Add"></TableRowAction>
+							<TableRowAction slot="actions" icon="edit" text="Edit"></TableRowAction>
+							<TableRowAction slot="actions" icon="share" text="Share"></TableRowAction>
+						</TableRow>
+					))}
+				</Table>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").shadow().find(".ui5-dynamic-page-scroll-container").as("scrollContainer");
+
+		// Scroll so a row with its overflow button is visible but not obscured
+		cy.get("@scrollContainer").scrollTo(0, 80);
+
+		cy.get("@scrollContainer").then($el => {
+			const scrollBefore = $el[0].scrollTop;
+
+			// Click the overflow button - it should open the menu without scrolling
+			cy.get("[ui5-table-row]").first().shadow().find("[icon='overflow']").realClick();
+
+			// Allow RAF and any potential scroll to settle, then assert no jump occurred
+			cy.wait(100).then(() => {
+				cy.get("@scrollContainer").its("0.scrollTop").should("equal", scrollBefore);
+			});
+		});
 	});
 });
 
@@ -1275,5 +1328,101 @@ describe("ARIA attributes", () => {
 			.shadow()
 			.find(".ui5-dynamic-page-header-root")
 			.should("have.attr", "aria-label", "Header Expanded");
+	});
+
+	it("supports customizing header role and label via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			header: { role: "none", name: "Custom Header" },
+		});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-title-header-wrapper")
+			.should("have.attr", "role", "none")
+			.should("have.attr", "aria-label", "Custom Header");
+	});
+
+	it("supports customizing headerContent label via accessibleName on DynamicPageHeader", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea" accessibleName="Custom Region Label">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page-header]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-root")
+			.should("have.attr", "aria-label", "Custom Region Label");
+	});
+
+	it("renders default banner role when only header.name is set", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			header: { name: "Custom Header Label" },
+		});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find("div.ui5-dynamic-page-title-header-wrapper")
+			.should("exist")
+			.should("have.attr", "role", "banner")
+			.should("have.attr", "aria-label", "Custom Header Label");
+	});
+
+	it("supports customizing content and footer roles via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]").invoke("prop", "accessibilityAttributes", {
+			content: { role: "main", name: "Page Content" },
+			footer: { role: "contentinfo", name: "Page Footer" },
+		});
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-content")
+			.should("have.attr", "role", "main")
+			.should("have.attr", "aria-label", "Page Content");
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-footer")
+			.should("have.attr", "role", "contentinfo")
+			.should("have.attr", "aria-label", "Page Footer");
 	});
 });

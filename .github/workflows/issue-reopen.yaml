@@ -29,7 +29,7 @@ jobs:
             const commenter = context.payload.comment.user.login;
 
             // Allowed bots
-            const isSystemUser = ['ui5-webcomponents-bot', 'github-actions[bot]'].includes(commenter);
+            const isSystemUser = ['ui5-webcomponents-bot', 'github-actions[bot]', 'sap-ui5-webcomponents-release', 'sap-ui5-webcomponents-release[bot]'].includes(commenter);
 
             const fs = require('fs');
             fs.appendFileSync(process.env.GITHUB_OUTPUT, `shouldReopen=${!isSystemUser && commentAt > closedAt}\n`);

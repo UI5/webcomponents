@@ -30,6 +30,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 			onClose={this._handleClose}
 			onBeforeClose={this._handleBeforeClose}
 			onBeforeOpen={this._handleBeforeOpen}
+			part="popover"
 			class={{
 				"ui5-search-popover": true,
 				"ui5-search-popover-phone": isPhone(),

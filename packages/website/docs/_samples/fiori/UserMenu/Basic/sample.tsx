@@ -1,6 +1,6 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
@@ -22,13 +22,15 @@ const UserMenuItem = createReactComponent(UserMenuItemClass);
 const Avatar = createReactComponent(AvatarClass);
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const openerRef = useRef(null);
+  const userMenuRef = useRef<UserMenuClass | null>(null);
 
   const handleProfileClick = useCallback(
     (e: UI5CustomEvent<ShellBarClass, "profile-click">) => {
-      openerRef.current = e.detail.targetRef;
-      setMenuOpen(true);
+      const menu = userMenuRef.current;
+      if (menu) {
+        menu.opener = e.detail.targetRef;
+        menu.open = !menu.open;
+      }
     },
     [],
   );
@@ -67,7 +69,10 @@ function App() {
     console.log("Sign Out clicked");
     const result = prompt("Sign Out", "Are you sure you want to sign out?");
     if (result) {
-      setMenuOpen(false);
+      const menu = userMenuRef.current;
+      if (menu) {
+        menu.open = false;
+      }
     }
     e.preventDefault();
   }, []);
@@ -84,12 +89,10 @@ function App() {
         </Avatar>
       </ShellBar>
       <UserMenu
-        open={menuOpen}
-        opener={openerRef.current}
+        ref={userMenuRef}
         onItemClick={handleItemClick}
         onAvatarClick={handleAvatarClick}
         onSignOutClick={handleSignOutClick}
-        onClose={() => setMenuOpen(false)}
       >
         <UserMenuAccount
           slot="accounts"

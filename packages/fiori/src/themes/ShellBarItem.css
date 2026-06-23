@@ -23,6 +23,10 @@
 	margin: var(--_ui5-shellbar-badge-margin, -0.5rem);
 }
 
+[ui5-li]::part(icon) {
+	color: var(--sapList_TextColor);
+}
+
 [ui5-li]:after {
 	position: relative;
 	width: fit-content;

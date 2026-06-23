@@ -51,6 +51,10 @@ describe("Table - Rendering", () => {
 		cy.get("@innerTable").should("have.attr", "role", "grid");
 		cy.get("@innerTable").should("have.attr", "aria-colcount", "2");
 		cy.get("@innerTable").should("have.attr", "aria-rowcount", "2");
+
+		cy.get("[ui5-table-row]").then($row => {
+			expect(getComputedStyle($row[0]).breakInside).to.equal("avoid");
+		});
 	});
 
 	it("tests if initial empty table renders without errors", () => {
@@ -755,6 +759,18 @@ describe("Table - Fixed Header", () => {
 		);
 
 		check(50, "#row-100");
+	});
+
+	it("creates a stacking context on the table host", () => {
+		cy.mount(
+			<Table id="table" accessibleNameRef="title" noDataText="No data found">
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell><span>ColumnA</span></TableHeaderCell>
+				</TableHeaderRow>
+			</Table>,
+		);
+
+		cy.get("#table").should("have.css", "z-index", "0");
 	});
 });
 
