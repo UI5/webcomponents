@@ -19,15 +19,15 @@ describe("Select mobile general interaction", () => {
 		// Open the popover
 		cy.get("#select").realClick();
 
-        // Check if accessible-name is equal to select._headerTitleText
-        cy.get("#select").invoke("prop", "_headerTitleText").then(_headerTitleText => {
-            cy.get("#select")
-                .shadow()
-                .find("[ui5-responsive-popover]")
-                .should("have.attr", "accessible-name")
-                .and("equal", _headerTitleText);
-        });
-    });
+		// Check if accessible-name is equal to select._effectivePopoverAccessibleName
+		cy.get("#select").invoke("prop", "_effectivePopoverAccessibleName").then(_effectivePopoverAccessibleName => {
+			cy.get("#select")
+				.shadow()
+				.find("[ui5-responsive-popover]")
+				.should("have.attr", "accessible-name")
+				.and("equal", _effectivePopoverAccessibleName);
+		});
+	});
 
 	it("should focus the selected option when popover opens", () => {
 		cy.mount(

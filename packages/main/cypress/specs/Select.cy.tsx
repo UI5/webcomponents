@@ -304,28 +304,33 @@ describe("Select - Accessibility", () => {
 		);
 
 		// Test listbox with consumer-provided accessible name
-		cy.get("#selectWithLabel").click();
 		cy.get("#selectWithLabel")
 			.shadow()
 			.find("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
 			.should("have.attr", "aria-label", "Choose country");
 
 		// Test listbox with accessibleNameRef
-		cy.get("#selectWithRef").click();
 		cy.get("#selectWithRef")
 			.shadow()
 			.find("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
 			.should("have.attr", "aria-label", "Label from ref");
 
 		// Test listbox with fallback label when no consumer label is provided
-		cy.get("#selectWithoutLabel").click();
 		cy.get("#selectWithoutLabel")
 			.shadow()
 			.find("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
 			.should("have.attr", "aria-label", "All Items");
 	});
 
 	it("tests popover accessible name with 'Select:' prefix on mobile", () => {
+		cy.ui5SimulateDevice("phone");
+
 		cy.mount(
 			<Select id="mobileSelect" accessibleName="Countries">
 				<Option value="DE">Germany</Option>
@@ -333,19 +338,12 @@ describe("Select - Accessibility", () => {
 			</Select>
 		);
 
-		// Simulate mobile device by setting responsive popover's _isPhone property
-		cy.get("#mobileSelect").then(($el: any) => {
-			const selectInstance = $el[0];
-			const popover = selectInstance.shadowRoot?.querySelector("[ui5-responsive-popover]");
-			
-			if (popover) {
-				// Get the accessible name from the popover
-				const accessibleName = popover.getAttribute("accessible-name");
-				// Should contain "Select: Countries" prefix
-				expect(accessibleName).to.include("Select:");
-				expect(accessibleName).to.include("Countries");
-			}
-		});
+		cy.get("#mobileSelect").realClick();
+
+		cy.get("#mobileSelect")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", "Select: Countries");
 	});
 
 	it("tests Select with valueState Positive and aria-describedby", () => {

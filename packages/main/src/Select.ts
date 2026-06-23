@@ -1128,7 +1128,7 @@ class Select extends UI5Element implements IFormInputElement {
 			return undefined;
 		}
 		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX);
-		return `${prefix}${fieldName}`;
+		return `${prefix} ${fieldName}`;
 	}
 
 	get shouldDisplayDefaultValueStateMessage() {
