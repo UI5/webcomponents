@@ -40,6 +40,28 @@ class ToolbarItemBase extends UI5Element {
 	overflowPriority: `${ToolbarItemOverflowBehavior}` = "Default";
 
 	/**
+	 * Co-overflow tag. Items in the same `ui5-toolbar` whose `overflowGroup` is the same
+	 * non-empty string overflow as one atomic unit: either all visible in the bar, or all
+	 * in the overflow popover, never split. The empty string (the default) means "no group" —
+	 * the item participates in overflow independently.
+	 *
+	 * The tag is a free-form, case-sensitive string label (e.g. `"filters"`, `"search"`). It is
+	 * layout-only and carries no ARIA, keyboard, or visual-cluster semantics. Items in a
+	 * non-empty group must have `overflowPriority = "Default"`; `AlwaysOverflow` and
+	 * `NeverOverflow` are forbidden inside a group.
+	 *
+	 * The visible bar always preserves slot order — ungrouped items between group members
+	 * keep their slot positions and the toolbar never reorders DOM children. In the popover
+	 * group members appear adjacent in slot order.
+	 *
+	 * @public
+	 * @default ""
+	 * @since 2.27.0
+	 */
+	@property()
+	overflowGroup = "";
+
+	/**
 	 * Defines if the toolbar overflow popup should close upon interaction with the item.
 	 * It will close by default.
 	 * @default false
