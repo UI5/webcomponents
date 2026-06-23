@@ -629,7 +629,7 @@ describe("MediaGallery layout", () => {
 });
 
 describe("MediaGallery accessibility", () => {
-	it("thumbnail list has role='listbox' and each thumbnail has role='option' and aria-selected", () => {
+	it("thumbnail list has role='listbox' and each thumbnail has role='option' and aria-checked", () => {
 		cy.mount(
 			<MediaGallery>
 				<MediaGalleryItem selected>
@@ -657,7 +657,7 @@ describe("MediaGallery accessibility", () => {
 			});
 	});
 
-	it("selected thumbnail has aria-selected='true', unselected has aria-selected='false'", () => {
+	it("selected thumbnail has aria-checked='true', unselected has aria-checked='false'", () => {
 		cy.mount(
 			<MediaGallery>
 				<MediaGalleryItem selected>
