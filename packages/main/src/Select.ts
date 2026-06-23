@@ -49,9 +49,10 @@ import {
 	VALUE_STATE_TYPE_INFORMATION,
 	VALUE_STATE_TYPE_ERROR,
 	VALUE_STATE_TYPE_WARNING,
-	INPUT_SUGGESTIONS_TITLE,
 	LIST_ITEM_POSITION,
 	SELECT_ROLE_DESCRIPTION,
+	SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX,
+	SELECT_LISTBOX_LABEL,
 	FORM_SELECTABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
@@ -1046,7 +1047,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return Select.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL);
 	}
 
 	get _currentlySelectedOption() {
@@ -1114,6 +1115,15 @@ class Select extends UI5Element implements IFormInputElement {
 
 	get ariaLabelText() {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this);
+	}
+
+	get _effectivePopoverAccessibleName() {
+		const fieldName = this.ariaLabelText || this._headerTitleText;
+		if (!fieldName) {
+			return undefined;
+		}
+		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX);
+		return `${prefix}${fieldName}`;
 	}
 
 	get shouldDisplayDefaultValueStateMessage() {

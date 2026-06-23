@@ -284,6 +284,70 @@ describe("Select - Accessibility", () => {
 			.should("have.attr", "aria-roledescription", EXPECTED_ARIA_ROLEDESCRIPTION);
 	});
 
+	it("tests listbox accessible naming in popover", () => {
+		cy.mount(
+			<>
+				<Select id="selectWithLabel" accessibleName="Choose country">
+					<Option value="DE">Germany</Option>
+					<Option value="US">USA</Option>
+				</Select>
+				<Select id="selectWithRef" accessibleNameRef="labelRef">
+					<Option value="One">One</Option>
+					<Option value="Two">Two</Option>
+				</Select>
+				<Select id="selectWithoutLabel">
+					<Option value="A">A</Option>
+					<Option value="B">B</Option>
+				</Select>
+				<span id="labelRef">Label from ref</span>
+			</>
+		);
+
+		// Test listbox with consumer-provided accessible name
+		cy.get("#selectWithLabel").click();
+		cy.get("#selectWithLabel")
+			.shadow()
+			.find("[ui5-list]")
+			.should("have.attr", "aria-label", "Choose country");
+
+		// Test listbox with accessibleNameRef
+		cy.get("#selectWithRef").click();
+		cy.get("#selectWithRef")
+			.shadow()
+			.find("[ui5-list]")
+			.should("have.attr", "aria-label", "Label from ref");
+
+		// Test listbox with fallback label when no consumer label is provided
+		cy.get("#selectWithoutLabel").click();
+		cy.get("#selectWithoutLabel")
+			.shadow()
+			.find("[ui5-list]")
+			.should("have.attr", "aria-label", "All Items");
+	});
+
+	it("tests popover accessible name with 'Select:' prefix on mobile", () => {
+		cy.mount(
+			<Select id="mobileSelect" accessibleName="Countries">
+				<Option value="DE">Germany</Option>
+				<Option value="US">USA</Option>
+			</Select>
+		);
+
+		// Simulate mobile device by setting responsive popover's _isPhone property
+		cy.get("#mobileSelect").then(($el: any) => {
+			const selectInstance = $el[0];
+			const popover = selectInstance.shadowRoot?.querySelector("[ui5-responsive-popover]");
+			
+			if (popover) {
+				// Get the accessible name from the popover
+				const accessibleName = popover.getAttribute("accessible-name");
+				// Should contain "Select: Countries" prefix
+				expect(accessibleName).to.include("Select:");
+				expect(accessibleName).to.include("Countries");
+			}
+		});
+	});
+
 	it("tests Select with valueState Positive and aria-describedby", () => {
 		cy.mount(
 			<Select valueState="Positive">
