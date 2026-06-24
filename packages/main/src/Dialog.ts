@@ -190,7 +190,9 @@ class Dialog extends Popup {
 	 * When pressed, it toggles the `stretch` property.
 	 * The fullscreen button is not available on phone devices.
 	 *
-	 * **Note:** The fullscreen toggle can also be triggered by pressing Shift+Ctrl+F or by double-clicking the dialog header.
+	 * **Note:** The fullscreen button is not available on phone devices,
+	 * nor when a custom header slot is provided — the application is expected
+	 * to render its own toggle inside the custom header in those cases.
 	 * @default false
 	 * @public
 	 */
@@ -236,6 +238,7 @@ class Dialog extends Popup {
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
 	_dragHandlerRegistered = false;
+	_fullscreenKeydownHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -491,16 +494,13 @@ class Dialog extends Popup {
 	_attachBrowserEvents() {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
-
-		if (this.showFullscreenButton) {
-			document.addEventListener("keydown", this._fullscreenKeydownHandler);
-		}
+		this._registerFullscreenKeydownHandler();
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
-		document.removeEventListener("keydown", this._fullscreenKeydownHandler);
+		this._deregisterFullscreenKeydownHandler();
 	}
 
 	_attachScreenResizeHandler() {
@@ -528,6 +528,20 @@ class Dialog extends Popup {
 		if (this._dragHandlerRegistered) {
 			this.removeEventListener("dragstart", this._dragStartHandler);
 			this._dragHandlerRegistered = false;
+		}
+	}
+
+	_registerFullscreenKeydownHandler() {
+		if (this.showFullscreenButton && !this._fullscreenKeydownHandlerRegistered) {
+			document.addEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = true;
+		}
+	}
+
+	_deregisterFullscreenKeydownHandler() {
+		if (this._fullscreenKeydownHandlerRegistered) {
+			document.removeEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = false;
 		}
 	}
 

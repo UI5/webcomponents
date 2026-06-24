@@ -3,9 +3,9 @@ import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents/dist/Toolbar.js";
 import "@ui5/webcomponents/dist/ToolbarButton.js";
 
-var dialogOpener = document.getElementById("dialogOpener");
-var dialog = document.getElementById("dialog");
-var dialogClosers = [...dialog.querySelectorAll(".dialogCloser")];
+const dialogOpener = document.getElementById("dialogOpener");
+const dialog = document.getElementById("dialog");
+const dialogClosers = [...dialog.querySelectorAll(".dialogCloser")];
 
 dialogOpener.accessibilityAttributes = {
     hasPopup: "dialog",
