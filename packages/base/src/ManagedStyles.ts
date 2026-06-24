@@ -27,6 +27,10 @@ const createStyle = (content: string, name: string, value = "", theme?: string) 
 };
 
 const updateStyle = (content: string, name: string, value = "", theme?: string) => {
+	if (isSSR) {
+		return;
+	}
+
 	const currentRuntimeIndex = getCurrentRuntimeIndex();
 
 	const stylesheet = document.adoptedStyleSheets.find(sh => (sh as Record<string, any>)._ui5StyleId === getStyleId(name, value));
