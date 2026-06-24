@@ -1144,7 +1144,7 @@ describe("Toolbar overflow group", () => {
 
 		// Force another layout pass — the warning must NOT re-fire.
 		cy.get("#otb_priority_violation_always").then($tb => {
-			(($tb[0] as Toolbar)).onResize();
+			($tb[0] as Toolbar).onResize();
 		});
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(200);
@@ -1186,7 +1186,7 @@ describe("Toolbar overflow group", () => {
 
 		// Force another layout pass — the warning must NOT re-fire.
 		cy.get("#otb_priority_violation_never").then($tb => {
-			(($tb[0] as Toolbar)).onResize();
+			($tb[0] as Toolbar).onResize();
 		});
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(200);
@@ -1236,7 +1236,7 @@ describe("Toolbar overflow group", () => {
 
 		// Force another layout pass — the spacer warning must NOT re-fire.
 		cy.get("#otb_spacer_violation").then($tb => {
-			(($tb[0] as Toolbar)).onResize();
+			($tb[0] as Toolbar).onResize();
 		});
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(200);
@@ -1244,6 +1244,32 @@ describe("Toolbar overflow group", () => {
 		// Exactly one warning, naming the spacer and the rule.
 		cy.get("@warn").should("have.been.calledOnce");
 		cy.get("@warn").its("firstCall.args.0").should("match", /overflow-group/i);
+		cy.get("@warn").its("firstCall.args.0").should("match", /spacer/i);
+	});
+
+	it("warns for the canonical flex-spacer case (no width, default priority) with a non-empty overflow-group", () => {
+		// The default `<ui5-toolbar-spacer>` has no width and `overflow-priority="Default"` —
+		// so it sits in `movableItems` like a normal item. Putting `overflow-group` on it must
+		// still trip the spacer-rule warning even though `ignoreSpace` removes it from the
+		// popover render and visible bar regardless of the group.
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 600px;">
+				<Toolbar id="otb_spacer_violation_flex">
+					<ToolbarButton text="Solo1" stableDomRef="spvf-solo1"></ToolbarButton>
+					<ToolbarSpacer overflow-group="g"></ToolbarSpacer>
+					<ToolbarButton text="Solo2" stableDomRef="spvf-solo2"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		cy.get("@warn").should("have.been.calledOnce");
 		cy.get("@warn").its("firstCall.args.0").should("match", /spacer/i);
 	});
 
@@ -1272,7 +1298,7 @@ describe("Toolbar overflow group", () => {
 
 		// Trigger an extra layout pass for good measure.
 		cy.get("#otb_no_warnings").then($tb => {
-			(($tb[0] as Toolbar)).onResize();
+			($tb[0] as Toolbar).onResize();
 		});
 		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(200);
