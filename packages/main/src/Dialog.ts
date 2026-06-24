@@ -110,6 +110,12 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  * - [Shift] + [Up] or [Down] - Decrease/Increase the height of the dialog.
  * - [Shift] + [Left] or [Right] - Decrease/Increase the width of the dialog.
  *
+ * #### Fullscreen
+ * When the `ui5-dialog` has the `showFullscreenButton` property set to `true`, the user can toggle fullscreen mode
+ * with the following keyboard shortcut:
+ *
+ * - [Shift] + [Ctrl] + [F] - Toggle fullscreen mode.
+ *
  * ### ES6 Module Import
  *
  * `import "@ui5/webcomponents/dist/Dialog";`
