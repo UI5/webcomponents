@@ -245,6 +245,7 @@ type ComboBoxSelectionChangeEventDetail = {
  * Fired when selection is changed by user interaction
  * @param {IComboBoxItem} item item to be selected.
  * @param {ComboBoxSelectionChangeTrigger} trigger source of the selection change - typeahead, click or keyboard navigation.
+ * @since 2.24.0
  * @public
  */
 @event("selection-change", {
