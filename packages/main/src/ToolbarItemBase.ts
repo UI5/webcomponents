@@ -48,7 +48,11 @@ class ToolbarItemBase extends UI5Element {
 	 * The tag is a free-form, case-sensitive string label (e.g. `"filters"`, `"search"`). It is
 	 * layout-only and carries no ARIA, keyboard, or visual-cluster semantics. Items in a
 	 * non-empty group must have `overflowPriority = "Default"`; `AlwaysOverflow` and
-	 * `NeverOverflow` are forbidden inside a group.
+	 * `NeverOverflow` are forbidden inside a group — setting one of those on a grouped item
+	 * emits a one-shot `console.warn` and the item's priority is treated as `Default` for
+	 * the layout pass. Spacers (`ui5-toolbar-spacer`) do not participate in grouping; setting
+	 * a non-empty `overflowGroup` on a spacer emits a one-shot `console.warn` and the spacer's
+	 * existing overflow behavior is unchanged.
 	 *
 	 * The visible bar always preserves slot order — ungrouped items between group members
 	 * keep their slot positions and the toolbar never reorders DOM children. In the popover
@@ -71,6 +75,11 @@ class ToolbarItemBase extends UI5Element {
 	preventOverflowClosing = false;
 
 	_isOverflowed: boolean = false;
+
+	// One-shot guards for `overflowGroup` validation warnings — suppress repeat
+	// warnings across re-renders, consistent with `ToolbarItem.checkForWrapper`.
+	_overflowGroupPriorityWarned = false;
+	_overflowGroupSpacerWarned = false;
 
 	get isOverflowed(): boolean {
 		return this._isOverflowed;
@@ -147,6 +156,63 @@ class ToolbarItemBase extends UI5Element {
 
 	get isSpacer() {
 		return false;
+	}
+
+	/**
+	 * Returns the `overflowPriority` actually used by the toolbar's distribution
+	 * algorithm. Items in a non-empty `overflowGroup` must have `Default` priority
+	 * (ADR-0001); when a developer puts `AlwaysOverflow` or `NeverOverflow` on a
+	 * grouped non-spacer item, this getter emits a one-shot `console.warn` and
+	 * downgrades the priority to `"Default"` for layout. Spacers are exempt
+	 * from the priority-violation rule — they get their own spacer-rule warning
+	 * elsewhere and keep their declared priority here.
+	 *
+	 * @protected
+	 */
+	get effectiveOverflowPriority(): `${ToolbarItemOverflowBehavior}` {
+		const declared = this.overflowPriority;
+		if (
+			!this.isSpacer
+			&& this.overflowGroup !== ""
+			&& (declared === "AlwaysOverflow" || declared === "NeverOverflow")
+		) {
+			if (!this._overflowGroupPriorityWarned) {
+				this._overflowGroupPriorityWarned = true;
+				// eslint-disable-next-line no-console
+				console.warn(
+					`[ui5-toolbar] ${this.tagName.toLowerCase()} has both overflow-group="${this.overflowGroup}" and overflow-priority="${declared}". `
+					+ `Items in a non-empty overflow-group must use overflow-priority="Default"; priority dropped to Default for layout.`,
+					this,
+				);
+			}
+			return "Default";
+		}
+		return declared;
+	}
+
+	/**
+	 * Returns the `overflowGroup` actually used by the toolbar's distribution
+	 * algorithm. Spacers cannot participate in grouping (ADR-0001); a spacer
+	 * with a non-empty `overflowGroup` emits a one-shot `console.warn` and this
+	 * getter returns `""` so the spacer is treated as ungrouped by the algorithm.
+	 *
+	 * @protected
+	 */
+	get effectiveOverflowGroup(): string {
+		const declared = this.overflowGroup;
+		if (this.isSpacer && declared !== "") {
+			if (!this._overflowGroupSpacerWarned) {
+				this._overflowGroupSpacerWarned = true;
+				// eslint-disable-next-line no-console
+				console.warn(
+					`[ui5-toolbar] ${this.tagName.toLowerCase()} has overflow-group="${declared}". `
+					+ `Spacers cannot participate in an overflow-group; the group tag is ignored.`,
+					this,
+				);
+			}
+			return "";
+		}
+		return declared;
 	}
 
 	get stableDomRef() {

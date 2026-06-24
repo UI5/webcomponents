@@ -229,11 +229,11 @@ class Toolbar extends UI5Element {
 	}
 
 	get alwaysOverflowItems() {
-		return this.items.filter(item => item.overflowPriority === ToolbarItemOverflowBehavior.AlwaysOverflow);
+		return this.items.filter(item => item.effectiveOverflowPriority === ToolbarItemOverflowBehavior.AlwaysOverflow);
 	}
 
 	get movableItems() {
-		return this.items.filter(item => item.overflowPriority !== ToolbarItemOverflowBehavior.AlwaysOverflow && item.overflowPriority !== ToolbarItemOverflowBehavior.NeverOverflow);
+		return this.items.filter(item => item.effectiveOverflowPriority !== ToolbarItemOverflowBehavior.AlwaysOverflow && item.effectiveOverflowPriority !== ToolbarItemOverflowBehavior.NeverOverflow);
 	}
 
 	get overflowItems() {
@@ -425,7 +425,7 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			const itemWidth = this.getItemWidth(item);
 			totalWidth += itemWidth;
-			if (item.overflowPriority === ToolbarItemOverflowBehavior.NeverOverflow) {
+			if (item.effectiveOverflowPriority === ToolbarItemOverflowBehavior.NeverOverflow) {
 				minWidth += itemWidth;
 			}
 			this.ITEMS_WIDTH_MAP.set(item._id, itemWidth);
@@ -516,7 +516,7 @@ class Toolbar extends UI5Element {
 		movable.forEach(item => {
 			const itemWidth = this.getCachedItemWidth(item._id) || 0;
 			const slotIdx = slotIndex.get(item)!;
-			const groupKey = item.overflowGroup;
+			const groupKey = item.effectiveOverflowGroup;
 			if (groupKey === "") {
 				units.push({
 					group: "",
