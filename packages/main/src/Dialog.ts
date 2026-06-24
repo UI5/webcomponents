@@ -209,8 +209,8 @@ class Dialog extends Popup {
 	@property()
 	state: `${ValueState}` = "None";
 
-	/*
-	* @private
+	/**
+	 * @private
 	 */
 	@property({ type: Boolean })
 	_showFullscreenButton = false;
@@ -349,7 +349,7 @@ class Dialog extends Popup {
 	 * Determines if the header should be shown.
 	 */
 	get _displayHeader() {
-		return this.header.length || this.headerText || this.draggable || this.resizable || this.showFullscreenButton;
+		return this.header.length || this.headerText || this.draggable || this.resizable || this._showFullscreenButton;
 	}
 
 	get _movable() {
@@ -491,6 +491,7 @@ class Dialog extends Popup {
 	_attachBrowserEvents() {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
+
 		if (this.showFullscreenButton) {
 			document.addEventListener("keydown", this._fullscreenKeydownHandler);
 		}
@@ -587,8 +588,10 @@ class Dialog extends Popup {
 	}
 
 	_onFullscreenKeydown(e: KeyboardEvent) {
-		if (this._showFullscreenButton && this._isFullscreenShortcut(e)) {
+		if (this.isTopModalPopup && this._showFullscreenButton && this._isFullscreenShortcut(e)) {
 			e.preventDefault();
+			e.stopImmediatePropagation();
+
 			this._toggleFullscreen();
 		}
 	}

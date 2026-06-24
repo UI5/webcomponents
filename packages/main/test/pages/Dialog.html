@@ -451,6 +451,19 @@
 		<p>Press the fullscreen button or use Shift+Ctrl+F to toggle fullscreen mode.</p>
 		<p>You can also double-click the header to toggle.</p>
 		<ui5-input placeholder="Type something..."></ui5-input>
+		<br>
+
+		<ui5-button id="fullscreen-nested-open">Open new fullscreen dialog</ui5-button>
+
+		<ui5-dialog id="fullscreen-dialog-nested" header-text="Nested Fullscreen Dialog" show-fullscreen-button draggable resizable>
+			<p>This dialog has a fullscreen toggle button in the header.</p>
+			<p>Press the fullscreen button or use Shift+Ctrl+F to toggle fullscreen mode.</p>
+			<p>You can also double-click the header to toggle.</p>
+			<ui5-input placeholder="Type something..."></ui5-input>
+			<div slot="footer" class="dialogFooter">
+				<ui5-button id="fullscreen-nested-close" design="Emphasized">Close</ui5-button>
+			</div>
+		</ui5-dialog>
 
 		<div slot="footer" class="dialogFooter">
 			<ui5-button id="fullscreen-close" design="Emphasized">Close</ui5-button>
@@ -1033,6 +1046,8 @@
 		window["draggable-and-resizable-close"].addEventListener("click", function () { window["draggable-and-resizable-dialog"].open = false; });
 		window["fullscreen-open"].addEventListener("click", function () { window["fullscreen-dialog"].open = true; });
 		window["fullscreen-close"].addEventListener("click", function () { window["fullscreen-dialog"].open = false; });
+		window["fullscreen-nested-open"].addEventListener("click", function () { window["fullscreen-dialog-nested"].open = true; });
+		window["fullscreen-nested-close"].addEventListener("click", function () { window["fullscreen-dialog-nested"].open = false; });
 		window["fullscreen-long-title-open"].addEventListener("click", function () { window["fullscreen-long-title"].open = true; });
 		window["fullscreen-long-title-close"].addEventListener("click", function () { window["fullscreen-long-title"].open = false; });
 		window["rtl-draggable-and-resizable-open"].addEventListener("click", function () { window["rtl-draggable-and-resizable-dialog"].open = true; });
