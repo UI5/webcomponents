@@ -2,9 +2,9 @@
     display: inline-block;
 }
 
-:host([_show-two-months]) {
-	overflow-y: scroll;
-	max-height: calc(100vh - 4rem);
+:host {
+	overflow: auto;
+	max-height: calc(100vh - 3rem);
 }
 
 
