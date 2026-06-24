@@ -3,6 +3,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type { AccessibilityAttributes, UI5CustomEvent } from "@ui5/webcomponents-base";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
@@ -109,6 +110,10 @@ class ShellBarItem extends UI5Element {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;
 	}
 
+	get isShellBarItem(): boolean {
+		return true;
+	}
+
 	hasListItems() {
 		return this.inOverflow;
 	}
@@ -131,4 +136,5 @@ class ShellBarItem extends UI5Element {
 ShellBarItem.define();
 
 export default ShellBarItem;
+export const isInstanceOfShellBarItem = createInstanceChecker<ShellBarItem>("isShellBarItem");
 export type { ShellBarItemClickEventDetail, ShellBarItemAccessibilityAttributes };
