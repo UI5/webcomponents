@@ -783,8 +783,6 @@ class Calendar extends CalendarPart {
 		return monthsToShow;
 	}
 
-
-
 	/**
 	 * The month button is hidden when the month picker or year picker is shown
 	 * @private
