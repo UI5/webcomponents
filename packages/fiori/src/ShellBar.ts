@@ -43,8 +43,7 @@ import ShellBarOverflow from "./shellbar/ShellBarOverflow.js";
 import ShellBarAccessibility from "./shellbar/ShellBarAccessibility.js";
 import ShellBarItemNavigation from "./shellbar/ShellBarItemNavigation.js";
 
-import ShellBarItem from "./ShellBarItem.js";
-import { isInstanceOfShellBarItem } from "./ShellBarItem.js";
+import ShellBarItem, { isInstanceOfShellBarItem } from "./ShellBarItem.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarOverflowResult } from "./shellbar/ShellBarOverflow.js";

@@ -135,8 +135,6 @@ class ShellBarItem extends UI5Element {
 
 ShellBarItem.define();
 
-const isInstanceOfShellBarItem = createInstanceChecker<ShellBarItem>("isShellBarItem");
-
 export default ShellBarItem;
-export { isInstanceOfShellBarItem };
+export const isInstanceOfShellBarItem = createInstanceChecker<ShellBarItem>("isShellBarItem");
 export type { ShellBarItemClickEventDetail, ShellBarItemAccessibilityAttributes };
