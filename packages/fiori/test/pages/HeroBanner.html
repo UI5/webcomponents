@@ -6,6 +6,10 @@
 	<title>HeroBanner</title>
 
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<script src="https://sdk.openui5.org/resources/sap-ui-integration.js"
+		id="sap-ui-bootstrap"
+		data-sap-ui-theme="sap_horizon">
+	</script>
 
 	<link rel="stylesheet" type="text/css" href="./styles/HeroBanner.css">
 </head>
@@ -320,7 +324,7 @@
 		</section>
 
 		<!-- ====================================== -->
-		<!-- 12. Equal columnsRatio with Top-Aligned Card    -->
+		<!-- 12. Equal columnsRatio with Top-Aligned Carousel    -->
 		<!-- ====================================== -->
 		<section>
 			<h2>12. Equal columnsRatio with Top-Aligned Carousel</h2>
@@ -353,6 +357,75 @@
 						<ui5-card-header slot="header" title-text="Avg. Response" subtitle-text="Time"></ui5-card-header>
 						<div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">1.4h</div>
 					</ui5-card>
+				</ui5-carousel>
+			</ui5-hero-banner>
+		</section>
+
+		<!-- ====================================== -->
+		<!-- 13. With Integration Cards             -->
+		<!-- ====================================== -->
+		<section>
+			<h2>13. With Integration Cards</h2>
+			<p>Header and actions pinned to the bottom of the left column, with a carousel of Numeric integration cards in the end content slot.</p>
+
+			<ui5-hero-banner id="hero-banner-integration-cards"
+				header-text="Good Morning, Anna"
+				overline-text="Monday, May 26, 2026"
+				columns-ratio="Equal"
+				actions-placement="BottomStart"
+				header-block-placement="Bottom">
+				<div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+					<ui5-button icon="create" design="Default">New Request</ui5-button>
+					<ui5-button icon="document" design="Default">Create Report</ui5-button>
+					<ui5-button icon="email" design="Default">Send Message</ui5-button>
+				</div>
+				<ui5-carousel slot="endContent" style="width: 100%;">
+					<ui-integration-card manifest='{
+						"sap.app": { "id": "ticketsCard", "type": "card" },
+						"sap.card": {
+							"type": "Numeric",
+							"header": {
+								"title": "Open Tickets",
+								"subtitle": "Support",
+								"mainIndicator": { "number": "42", "trend": "Up", "state": "Critical" },
+								"sideIndicators": [
+									{ "title": "High", "number": "12" },
+									{ "title": "Medium", "number": "30" }
+								]
+							}
+						}
+					}'></ui-integration-card>
+					<ui-integration-card manifest='{
+						"sap.app": { "id": "revenueCard", "type": "card" },
+						"sap.card": {
+							"type": "Numeric",
+							"header": {
+								"title": "Revenue YTD",
+								"subtitle": "Q2 2026",
+								"unitOfMeasurement": "EUR",
+								"mainIndicator": { "number": "4.2", "unit": "M", "trend": "Up", "state": "Good" },
+								"sideIndicators": [
+									{ "title": "Target", "number": "5", "unit": "M" },
+									{ "title": "Deviation", "number": "16", "unit": "%" }
+								]
+							}
+						}
+					}'></ui-integration-card>
+					<ui-integration-card manifest='{
+						"sap.app": { "id": "tasksCard", "type": "card" },
+						"sap.card": {
+							"type": "Numeric",
+							"header": {
+								"title": "Pending Approvals",
+								"subtitle": "Needs attention",
+								"mainIndicator": { "number": "7", "trend": "Down", "state": "Critical" },
+								"sideIndicators": [
+									{ "title": "Overdue", "number": "2" },
+									{ "title": "Due Today", "number": "5" }
+								]
+							}
+						}
+					}'></ui-integration-card>
 				</ui5-carousel>
 			</ui5-hero-banner>
 		</section>
@@ -412,6 +485,30 @@
 		// --- headerBlockPlacement buttons ---
 		document.getElementById("btn-header-top").addEventListener("click", function () { dynamicBanner.headerBlockPlacement = "Top"; });
 		document.getElementById("btn-header-bottom").addEventListener("click", function () { dynamicBanner.headerBlockPlacement = "Bottom"; });
+
+		// --- Integration card action popover ---
+		var integrationCardPopover = document.getElementById("integrationCardPopover");
+		var integrationCardPopoverContent = document.getElementById("integrationCardPopoverContent");
+
+		function showIntegrationCardPopover(params, openerElement) {
+			integrationCardPopoverContent.innerHTML = Object.entries(params)
+				.filter(function(entry) { return entry[0] !== "highlight"; })
+				.map(function(entry) {
+					return '<div style="display:flex; justify-content:space-between; gap:2rem; padding:0.25rem 0; border-bottom:1px solid var(--sapList_BorderColor);">'
+						+ '<span style="color:var(--sapContent_LabelColor); text-transform:capitalize;">' + entry[0] + '</span>'
+						+ '<span style="font-weight:600;">' + entry[1] + '</span>'
+						+ '</div>';
+				})
+				.join("");
+			integrationCardPopover.opener = openerElement;
+			integrationCardPopover.open = true;
+		}
+
+		document.getElementById("revenueCard").addEventListener("action", function(event) {
+			var params = event.detail.getParameter("parameters");
+			var source = event.detail.getParameter("actionSource").getDomRef();
+			showIntegrationCardPopover(params, source);
+		});
 	</script>
 </body>
 </html>
