@@ -572,7 +572,6 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
-		const eventTarget = e.target as ColorPaletteItem;
 		const swatchTarget = this._getColorPaletteItemFromEvent(e, this.recentColorsElements);
 
 		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
