@@ -95,7 +95,7 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 
 			{!this.loading && this.filterSelected ?
 				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
-					{this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
+					{this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
 				</List>
 				: !this.loading &&
 				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>

@@ -733,14 +733,20 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._showMorePressed = true;
 		this._tokenizer._scrollToEndOnExpand = true;
 
+		this._applySelectedItemsFilter();
+
 		this._toggleTokenizerPopover();
 	}
 
 	filterSelectedItems(e: UI5CustomEvent<ToggleButton, "click">) {
 		this.filterSelected = (e.target as ToggleButton).pressed;
-		const selectedItems = this._filteredItems.filter(item => item.selected);
 
-		this.selectedItems = this._getItems().filter((item, idx, allItems) => MultiComboBox._groupItemFilter(item, ++idx, allItems, selectedItems) || selectedItems.indexOf(item) !== -1);
+		if (this.filterSelected) {
+			this._applySelectedItemsFilter();
+		} else {
+			// Reset to show all items
+			this._updateItemsVisibility();
+		}
 	}
 
 	get _showAllItemsButtonPressed(): boolean {
@@ -1199,7 +1205,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		} else {
 			this._previouslySelectedItems = this._getSelectedItems();
-			this.selectedItems?.filter(item => !item.isGroupItem).forEach(item => {
+			// In n-more mode, use _filteredItems instead of selectedItems
+			this._filteredItems?.filter(item => !item.isGroupItem).forEach(item => {
 				item.selected = (e.target as CheckBox).checked;
 			});
 
@@ -1211,6 +1218,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 			if (changePrevented) {
 				this._revertSelection();
+			}
+
+			// In n-more mode, update Select All checkbox state after selection changes
+			if (this.filterSelected) {
+				this._updateGroupsVisibility();
 			}
 		}
 	}
@@ -1630,6 +1642,71 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			.filter((v): v is string => !!v);
 	}
 
+	/**
+	 * Filters items to show only selected items and their group headers,
+	 * and updates the _isVisible property accordingly.
+	 * Used in n-more mode.
+	 * @private
+	 */
+	_applySelectedItemsFilter() {
+		const allItems = this._getItems();
+
+		// Set _isVisible for all items based on selection
+		allItems.forEach(item => {
+			if (isInstanceOfMultiComboBoxItem(item)) {
+				item._isVisible = item.selected;
+			}
+		});
+
+		// Hide unselected items and empty groups using CSS
+		allItems.forEach(item => {
+			const shouldBeVisible = item.isGroupItem ? item._isVisible : item.selected;
+			(item as HTMLElement).style.display = shouldBeVisible ? "" : "none";
+		});
+
+		// Filter to only include selected items and non-empty groups
+		const filtered = allItems.filter(item => {
+			if (item.isGroupItem) {
+				return item._isVisible; // Group's _isVisible getter checks if any children are visible
+			}
+			return item.selected;
+		});
+
+		this._filteredItems = [...filtered];
+	}
+
+	/**
+	 * Updates the _isVisible property for all items.
+	 * If visibleItems is provided, only those items will be visible.
+	 * If not provided, all items will be visible.
+	 * @private
+	 */
+	_updateItemsVisibility(visibleItems?: IMultiComboBoxItem[]) {
+		this._getItems().forEach(item => {
+			if (isInstanceOfMultiComboBoxItem(item)) {
+				item._isVisible = visibleItems ? visibleItems.includes(item) : true;
+			}
+			// Reset display style
+			(item as HTMLElement).style.display = "";
+		});
+	}
+
+	/**
+	 * Updates Select All checkbox state in n-more mode.
+	 * Items and groups stay visible - they're only filtered on reopen.
+	 * Used when selections change while the n-more popup is open.
+	 * @private
+	 */
+	_updateGroupsVisibility() {
+		// In n-more mode, when selections change, we only update the Select All checkbox state
+		// We DON'T hide items or groups - they stay visible until popup closes and reopens
+
+		// Recalculate Select All checkbox state based on currently visible items
+		const visibleSelectableItems = this._filteredItems.filter(item => !item.isGroupItem);
+		const selectedVisibleItems = visibleSelectableItems.filter(item => item.selected);
+		this._allSelected = selectedVisibleItems.length > 0 && selectedVisibleItems.length === visibleSelectableItems.length;
+	}
+
 	_listSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
 		let changePrevented;
 
@@ -1647,6 +1724,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		// On desktop, this happens before firing the selection-change event
 		if (this.selectedValues) {
 			this.selectedValues = this._getSelectedValues();
+		}
+
+		// In n-more mode, update Select All checkbox state when selections change
+		if (this.filterSelected) {
+			this._updateGroupsVisibility();
 		}
 
 		// don't call selection change right after selection as user can cancel it on phone
@@ -1740,6 +1822,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._iconPressed = false;
 		this._preventTokenizerToggle = false;
 		this.filterSelected = false;
+
+		// Reset _isVisible for all items when closing
+		this._updateItemsVisibility();
 	}
 
 	_beforeOpen() {
@@ -1758,8 +1843,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._innerInput.value = this.value;
 
 		if (this.filterSelected) {
-			const selectedItems = this._filteredItems.filter(item => item.selected);
-			this.selectedItems = this._getItems().filter((item, idx, allItems) => MultiComboBox._groupItemFilter(item, ++idx, allItems, selectedItems) || selectedItems.indexOf(item) !== -1);
+			this._applySelectedItemsFilter();
 		}
 	}
 
@@ -1861,16 +1945,28 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const value = input && input.value;
 
 		if (this.open) {
-			const list = this._getList();
-			const selectedListItemsCount = this.items.filter(item => item.selected).length;
-			this._allSelected = selectedListItemsCount > 0 && ((selectedListItemsCount === this.items.length) || (list?.getSlottedNodes("items").length === selectedListItemsCount));
+			// When in n-more mode, Select All is checked only if ALL visible items are selected
+			// In normal mode, Select All is checked only if ALL selectable items are selected
+			if (this.filterSelected) {
+				const visibleSelectableItems = this._filteredItems.filter(item => !item.isGroupItem);
+				const selectedVisibleItems = visibleSelectableItems.filter(item => item.selected);
+				this._allSelected = selectedVisibleItems.length > 0 && selectedVisibleItems.length === visibleSelectableItems.length;
+			} else {
+				// Normal mode: Select All is checked only if ALL selectable items are selected
+				const selectableItems = this._getItems().filter(item => !item.isGroupItem && item._isVisible);
+				const selectedCount = selectableItems.filter(item => item.selected).length;
+				this._allSelected = selectedCount > 0 && selectedCount === selectableItems.length;
+			}
 		}
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
 
 		if (input && !input.value) {
 			this.valueBeforeAutoComplete = "";
-			this._filteredItems = this._getItems();
+			// Don't reset _filteredItems in n-more mode - it's controlled by _applySelectedItemsFilter
+			if (!this.filterSelected) {
+				this._filteredItems = this._getItems();
+			}
 		}
 
 		if (this.selectedValues) {
@@ -1881,9 +1977,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
 		if (!input || !value) {
+			// Don't reset visibility in n-more mode - it's controlled by _beforeOpen and _showFilteredItems
+			if (!this.filterSelected) {
+				this._updateItemsVisibility();
+			}
+			// Update readonly state for all items
 			this._getItems().forEach(item => {
 				if (isInstanceOfMultiComboBoxItem(item)) {
-					item._isVisible = true;
 					item._readonly = this.readonly;
 				}
 			});
@@ -1902,10 +2002,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			}
 		}
 
-		if (this._shouldFilterItems) {
-			this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
-		} else {
-			this._filteredItems = this._getItems();
+		// Don't reset _filteredItems in n-more mode - it's controlled by _applySelectedItemsFilter
+		if (!this.filterSelected) {
+			if (this._shouldFilterItems) {
+				this._filteredItems = this._filterItems(autoCompletedChars ? this.valueBeforeAutoComplete : value);
+			} else {
+				this._filteredItems = this._getItems();
+			}
 		}
 	}
 
@@ -2341,7 +2444,16 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	get selectAllCheckboxLabel() {
-		const items = this._getItems().filter(item => !item.isGroupItem);
+		// In n-more mode, show count of selected vs. total visible items
+		// In normal mode, show selected vs. total count
+		if (this.filterSelected) {
+			const visibleItems = this._filteredItems.filter(item => !item.isGroupItem);
+			const selectedCount = visibleItems.filter(item => item.selected).length;
+			return MultiComboBox.i18nBundle.getText(MCB_SELECTED_ITEMS, selectedCount, visibleItems.length);
+		}
+
+		// Normal mode: count only visible items
+		const items = this._getItems().filter(item => !item.isGroupItem && item._isVisible);
 		const selected = items.filter(item => item.selected);
 
 		return MultiComboBox.i18nBundle.getText(MCB_SELECTED_ITEMS, selected.length, items.length);

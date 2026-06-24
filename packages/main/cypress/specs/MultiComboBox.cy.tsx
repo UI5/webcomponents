@@ -704,6 +704,140 @@ describe("General", () => {
 			}));
 	});
 
+	it("Select All checkbox state with grouped items", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} showSelectAll={true} onSelectionChange={cy.stub().as("selectionChangeEvent")}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Verify checkbox is initially unchecked
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("checkbox")
+			.should("not.have.attr", "checked");
+
+		// Click Select All
+		cy.get("@checkbox")
+			.realClick();
+
+		// Verify checkbox is now checked
+		cy.get("@checkbox")
+			.should("have.attr", "checked");
+
+		// Verify all 4 items are selected (not 2 groups)
+		cy.get("@selectionChangeEvent")
+			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.items.length === 4;
+			}));
+
+		// Click Select All again to deselect
+		cy.get("@checkbox")
+			.realClick();
+
+		// Verify checkbox is unchecked
+		cy.get("@checkbox")
+			.should("not.have.attr", "checked");
+
+		// Verify all items are deselected
+		cy.get("@selectionChangeEvent")
+			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.items.length === 0;
+			}));
+	});
+
+	it("Select All checkbox with partial selection in groups", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Verify checkbox is unchecked (1 out of 4 items selected)
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("not.have.attr", "checked");
+	});
+
+	it("Select All checkbox checked when all grouped items selected initially", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Verify checkbox is checked (all 4 items selected)
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("have.attr", "checked");
+	});
+
 	it("Tokenizer expansion on dynamically added tokens", () => {
 		const addTokens = () => {
 			const mcb = document.getElementById("mcb");

@@ -16,13 +16,14 @@
 	font-family: var(--sapFontBoldFamily);
 }
 
+.ui5-mcb-select-all-checkbox::part(root) {
+	width: 100%;
+}
+
 .ui5-mcb-select-all-checkbox::part(root):focus::before {
 	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	border-radius: 0;
-	right: 2px;
-	left: 2px;
-	bottom: 0;
-	top: 0;
+	inset: 0 2px;
 }
 
 .ui5-mcb-select-all-checkbox::part(label) {
