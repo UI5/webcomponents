@@ -79,7 +79,6 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: 22
-          cache: 'yarn'
 
       - name: Run dev-close script
         if: steps.window.outputs.active == 'true'
