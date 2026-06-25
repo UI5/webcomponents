@@ -366,6 +366,64 @@ describe("First column closing arrow behavior", () => {
 	});
 });
 
+describe("ThreeColumnsStartHidden column widths", () => {
+	it("ThreeColumnsStartHiddenMidExpanded should have mid as the wide column on desktop", () => {
+		cy.mount(
+			<FlexibleColumnLayout style={{ height: "300px" }} layout="ThreeColumnsStartHiddenMidExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
+	});
+
+	it("ThreeColumnsStartHiddenEndExpanded should have end as the wide column on desktop", () => {
+		cy.mount(
+			<FlexibleColumnLayout style={{ height: "300px" }} layout="ThreeColumnsStartHiddenEndExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
+	});
+});
+
 describe("Layout Change API", () => {
 	it("tests change layout with API", () => {
 		cy.mount(
