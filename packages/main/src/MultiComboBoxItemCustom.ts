@@ -64,7 +64,7 @@ class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem
 	eventDetails!: {
 		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
-	} & ListItemBase["eventDetails"];
+	} & Omit<ListItemBase["eventDetails"], "click">;
 
 	/**
 	 * Defines the text of the component.

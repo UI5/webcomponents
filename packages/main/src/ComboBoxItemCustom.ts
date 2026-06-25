@@ -49,7 +49,7 @@ type ComboBoxItemCustomClickEventDetail = {
 class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	eventDetails!: {
 		"click": ComboBoxItemCustomClickEventDetail,
-	} & ListItemBase["eventDetails"];
+	} & Omit<ListItemBase["eventDetails"], "click">;
 
 	/**
 	 * Defines the text of the component.
