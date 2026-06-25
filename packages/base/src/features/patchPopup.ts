@@ -122,17 +122,19 @@ const openNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
 		return;
 	}
 
-	const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
+	queueMicrotask(() => {
+		const openUI5BlockLayer = document.getElementById("sap-ui-blocklayer-popup");
 
-	if (popup.getModal() && openUI5BlockLayer) {
-		openUI5BlockLayer.setAttribute("popover", "manual");
-		openUI5BlockLayer.hidePopover();
-		openUI5BlockLayer.showPopover();
-	}
+		if (popup.getModal() && openUI5BlockLayer) {
+			openUI5BlockLayer.setAttribute("popover", "manual");
+			openUI5BlockLayer.hidePopover();
+			openUI5BlockLayer.showPopover();
+		}
 
-	domRef.setAttribute("popover", "manual");
-	domRef.hidePopover();
-	domRef.showPopover();
+		domRef.setAttribute("popover", "manual");
+		domRef.hidePopover();
+		domRef.showPopover();
+	});
 };
 
 const closeNativePopoverForOpenUI5 = (popup: OpenUI5Popup) => {
