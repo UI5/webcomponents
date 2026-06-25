@@ -7,6 +7,7 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import ListItemBase from "./ListItemBase.js";
+import type { ListItemBasePressEventDetail } from "./ListItemBase.js";
 import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
@@ -65,7 +66,7 @@ class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem
 		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
 		"request-tabindex-change": FocusEvent,
-		"_press": ListItemBase["eventDetails"]["_press"],
+		"_press": ListItemBasePressEventDetail,
 		"_focused": FocusEvent,
 		"forward-after": void,
 		"forward-before": void,

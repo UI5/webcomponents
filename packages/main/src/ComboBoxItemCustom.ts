@@ -4,6 +4,7 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemBase from "./ListItemBase.js";
+import type { ListItemBasePressEventDetail } from "./ListItemBase.js";
 import ComboBoxItemCustomTemplate from "./ComboBoxItemCustomTemplate.js";
 import styles from "./generated/themes/ComboBoxItemCustom.css.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -50,7 +51,7 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	eventDetails!: {
 		"click": ComboBoxItemCustomClickEventDetail,
 		"request-tabindex-change": FocusEvent,
-		"_press": ListItemBase["eventDetails"]["_press"],
+		"_press": ListItemBasePressEventDetail,
 		"_focused": FocusEvent,
 		"forward-after": void,
 		"forward-before": void,
