@@ -179,6 +179,29 @@ describe("ACC", () => {
 			.find(".ui5-fcl-separator-end")
 			.should("have.attr", "aria-valuenow");
 	});
+
+	it("verifies that aria-orientation is set to vertical on separators", () => {
+		cy.mount(
+			<FlexibleColumnLayout id="fcl" layout="ThreeColumnsMidExpanded">
+				<div class="column" id="startColumn" slot="startColumn">some content</div>
+				<div class="column" id="midColumn" slot="midColumn">some content</div>
+				<div class="column" id="endColumn" slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-start")
+			.should("have.attr", "aria-orientation", "vertical");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-end")
+			.should("have.attr", "aria-orientation", "vertical");
+	});
 });
 
 before(() => {
