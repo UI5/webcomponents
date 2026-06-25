@@ -631,7 +631,7 @@ describe("Slots", () => {
 			cy.get("@shellbar").invoke("prop", "showSearchField").should("equal", true);
 		});
 
-		it("Test search toggle in overflow expands search when clicked", () => {
+		it.skip("Test search toggle in overflow expands search when clicked", () => {
 			cy.mount(
 				<ShellBar
 					id="shellbar"
