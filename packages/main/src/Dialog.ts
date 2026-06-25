@@ -200,6 +200,7 @@ class Dialog extends Popup {
 	 * nor when a custom header slot is provided — the application is expected
 	 * to render its own toggle inside the custom header in those cases.
 	 * @default false
+	 * @since 2.24.0
 	 * @public
 	 */
 	@property({ type: Boolean })
