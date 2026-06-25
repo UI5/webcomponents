@@ -22,6 +22,7 @@ import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import List from "@ui5/webcomponents/dist/List.js";
+import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import searchIcon from "@ui5/webcomponents-icons/dist/search.js";
 import bellIcon from "@ui5/webcomponents-icons/dist/bell.js";
@@ -842,9 +843,14 @@ class ShellBar extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
-	handleOverflowItemClick(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		const actionId = target.getAttribute("data-action-id");
+	handleOverflowItemClick(e: CustomEvent<ListItemClickEventDetail>) {
+		// `ListItemBase._onclick` calls `stopPropagation()`, so the raw `click`
+		// event never reaches the surrounding `<ui5-list>` in the overflow popover
+		// (which is why a real pointer click on the search entry used to do nothing).
+		// Use the list's `item-click` event instead — it is fired through the public
+		// API and carries the pressed item in `detail.item`.
+		const item = e.detail.item as unknown as HTMLElement | undefined;
+		const actionId = item?.getAttribute("data-action-id");
 
 		let prevented = e.defaultPrevented; // for custom actions
 

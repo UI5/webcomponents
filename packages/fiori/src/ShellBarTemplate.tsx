@@ -2,8 +2,8 @@ import Button from "@ui5/webcomponents/dist/Button.js";
 import ButtonBadge from "@ui5/webcomponents/dist/ButtonBadge.js";
 import Popover from "@ui5/webcomponents/dist/Popover.js";
 import List from "@ui5/webcomponents/dist/List.js";
+import ListItemStandard from "@ui5/webcomponents/dist/ListItemStandard.js";
 import type ShellBar from "./ShellBar.js";
-import ShellBarItem from "./ShellBarItem.js";
 
 import {
 	ShellBarSearchField,
@@ -235,19 +235,26 @@ export default function ShellBarTemplate(this: ShellBar) {
 				hideArrow={true}
 				horizontalAlign={this.popoverHorizontalAlign} // TODO: add test
 			>
-				<List separators="None" onClick={this.handleOverflowItemClick}>
+				<List separators="None" onItemClick={this.handleOverflowItemClick}>
 					{this.overflowItems.map(item => {
 						if (item.type === "action") {
 							const actionData = item.data;
+							// Render built-in actions (search, notifications) as real list items
+							// — children of `<ui5-list>`, not nested inside a `<ui5-shellbar-item>`.
+							// This is required so the list's `item-click` event fires with
+							// `detail.item` set to the entry that carries `data-action-id`;
+							// nesting an inner `<ui5-li>` inside `<ui5-shellbar-item>` would hide
+							// it from the list's slotted children and `item-click` would never fire.
 							return (
-								<ShellBarItem
+								<ListItemStandard
 									key={item.id}
-									icon={actionData.icon ? `sap-icon://${actionData.icon}` : ""}
 									data-action-id={item.id}
-									count={actionData.count}
-									inOverflow={true}
-									text={this.getActionOverflowText(item.id)}
-								/>
+									icon={actionData.icon ? `sap-icon://${actionData.icon}` : ""}
+									data-count={actionData.count}
+									type="Active"
+								>
+									{this.getActionOverflowText(item.id)}
+								</ListItemStandard>
 							);
 						}
 						return <slot key={item.id} name={item.data._individualSlot}></slot>;

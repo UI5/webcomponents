@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ShellBar – Search in Overflow at 320px</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script data-ui5-config type="application/json">
+		{ "language": "EN" }
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { margin: 0; font-family: sans-serif; }
+		.note { padding: 10px; background: #eef; font-size: 13px; }
+		#log { padding: 10px; font-family: monospace; white-space: pre-wrap; background: #f6f6f6; }
+		.frame { width: 320px; border: 1px solid #aaa; margin: 16px; }
+		.caption { padding: 6px 10px; background: #f0f0f0; font-weight: 600; font-size: 13px; }
+	</style>
+</head>
+<body>
+	<div class="note">
+		Each ShellBar is rendered in a 320px-wide container so the search trigger lands inside the overflow popover.<br>
+		Open overflow (≡) and click "Search" — the search field should expand. (Regression test for
+		<code>handleOverflowItemClick</code> not firing when the entry was wrapped in a <code>ui5-shellbar-item</code>.)
+	</div>
+
+	<div class="frame">
+		<div class="caption">Scenario A: self-collapsible &lt;ui5-shellbar-search&gt;</div>
+		<ui5-shellbar id="sbA" primary-title="Product Title With Long Name">
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+			<ui5-shellbar-search slot="searchField" placeholder="Search"></ui5-shellbar-search>
+			<ui5-button slot="content">Button 1</ui5-button>
+			<ui5-button slot="content">Button 2</ui5-button>
+			<ui5-button slot="content">Button 3</ui5-button>
+			<ui5-button slot="content">Button 4</ui5-button>
+			<ui5-button slot="content">Button 5</ui5-button>
+			<ui5-button slot="content">Button 6</ui5-button>
+			<ui5-button slot="content">Button 7</ui5-button>
+			<ui5-button slot="content">Button 8</ui5-button>
+			<ui5-shellbar-item icon="activities" text="A1"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A2"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A3"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A4"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A5"></ui5-shellbar-item>
+			<ui5-avatar slot="profile">
+				<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+			</ui5-avatar>
+		</ui5-shellbar>
+	</div>
+
+	<div class="frame">
+		<div class="caption">Scenario B: legacy &lt;ui5-input&gt;</div>
+		<ui5-shellbar id="sbB" primary-title="Product Title With Long Name">
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+			<ui5-input slot="searchField" placeholder="Search"></ui5-input>
+			<ui5-button slot="content">Button 1</ui5-button>
+			<ui5-button slot="content">Button 2</ui5-button>
+			<ui5-button slot="content">Button 3</ui5-button>
+			<ui5-button slot="content">Button 4</ui5-button>
+			<ui5-button slot="content">Button 5</ui5-button>
+			<ui5-button slot="content">Button 6</ui5-button>
+			<ui5-button slot="content">Button 7</ui5-button>
+			<ui5-button slot="content">Button 8</ui5-button>
+			<ui5-shellbar-item icon="activities" text="A1"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A2"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A3"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A4"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activities" text="A5"></ui5-shellbar-item>
+			<ui5-avatar slot="profile">
+				<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" />
+			</ui5-avatar>
+		</ui5-shellbar>
+	</div>
+
+	<pre id="log"></pre>
+	<script>
+		const log = document.getElementById("log");
+		const logLine = (m) => { log.textContent += m + "\n"; };
+		for (const id of ["sbA", "sbB"]) {
+			const sb = document.getElementById(id);
+			sb.showNotifications = true;
+			sb.showProductSwitch = true;
+			sb.showSearchField = false;
+			sb.addEventListener("ui5-search-button-click", () => logLine(`[${id}] search-button-click`));
+			sb.addEventListener("ui5-search-field-toggle", e => logLine(`[${id}] search-field-toggle expanded=${e.detail.expanded}`));
+		}
+	</script>
+</body>
+</html>

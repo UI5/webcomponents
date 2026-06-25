@@ -688,12 +688,15 @@ describe("Slots", () => {
 				.should("exist")
 				.and("have.attr", "open");
 
-			// Click search toggle in overflow popover
+			// Click search toggle in overflow popover. Use `realClick()` to simulate a
+			// real pointer event — a plain `.click()` synthetic dispatch goes
+			// straight to the element so it would mask regressions where the click
+			// gets stopped earlier in the bubble chain (e.g. by ListItemBase).
 			cy.get("@shellbar")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
 				.should("exist")
-				.click();
+				.realClick();
 
 			// Verify search is expanded
 			cy.get("@shellbar")
@@ -1279,7 +1282,7 @@ describe("Events", () => {
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
-				.find(".ui5-shellbar-overflow-popover [ui5-list] [ui5-shellbar-item]:nth-child(1)")
+				.find(".ui5-shellbar-overflow-popover [ui5-list] [data-action-id='notifications']")
 				.realClick();
 
 			cy.get("[ui5-shellbar]")
