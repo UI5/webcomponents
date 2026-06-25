@@ -121,7 +121,7 @@ class ShellBarItem extends UI5Element {
 		return [domRef];
 	}
 
-	fireClickEvent(e: UI5CustomEvent<Button, "click">) {
+	fireClickEvent(e: UI5CustomEvent<Button, "click"> | UI5CustomEvent<ListItemStandard, "click">) {
 		return this.fireDecoratorEvent("click", {
 			targetRef: (e.target as HTMLElement),
 		});
