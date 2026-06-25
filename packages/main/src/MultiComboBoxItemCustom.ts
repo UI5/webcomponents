@@ -64,7 +64,12 @@ class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem
 	eventDetails!: {
 		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
-	} & Omit<ListItemBase["eventDetails"], "click">;
+		"request-tabindex-change": FocusEvent,
+		"_press": ListItemBase["eventDetails"]["_press"],
+		"_focused": FocusEvent,
+		"forward-after": void,
+		"forward-before": void,
+	};
 
 	/**
 	 * Defines the text of the component.
@@ -148,3 +153,4 @@ MultiComboBoxItemCustom.define();
 
 export default MultiComboBoxItemCustom;
 export const isInstanceOfMultiComboBoxItemCustom = createInstanceChecker<MultiComboBoxItemCustom>("isMultiComboBoxItem");
+export type { MultiComboBoxItemCustomClickEventDetail };

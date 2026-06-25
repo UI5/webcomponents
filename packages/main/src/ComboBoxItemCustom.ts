@@ -49,7 +49,12 @@ type ComboBoxItemCustomClickEventDetail = {
 class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 	eventDetails!: {
 		"click": ComboBoxItemCustomClickEventDetail,
-	} & Omit<ListItemBase["eventDetails"], "click">;
+		"request-tabindex-change": FocusEvent,
+		"_press": ListItemBase["eventDetails"]["_press"],
+		"_focused": FocusEvent,
+		"forward-after": void,
+		"forward-before": void,
+	};
 
 	/**
 	 * Defines the text of the component.
@@ -98,3 +103,4 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 ComboBoxItemCustom.define();
 
 export default ComboBoxItemCustom;
+export type { ComboBoxItemCustomClickEventDetail };
