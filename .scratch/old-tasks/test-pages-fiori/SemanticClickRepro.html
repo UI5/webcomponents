@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semantic Click - NotificationListItem Repro</title>
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_horizon",
+			"language": "EN"
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: sans-serif; padding: 20px; background: var(--sapBackgroundColor); }
+		section { margin: 30px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+		h2 { margin-top: 0; }
+		.log { background: #1a1a2e; color: #0f0; padding: 12px; font-family: monospace; font-size: 13px; min-height: 60px; max-height: 200px; overflow-y: auto; border-radius: 4px; white-space: pre-wrap; }
+		.log-label { font-weight: bold; margin: 10px 0 4px; }
+		.clear-btn { margin-top: 8px; cursor: pointer; }
+		.red { color: #f44; font-weight: bold; }
+		.green { color: #0f0; }
+		.yellow { color: #ff0; }
+	</style>
+</head>
+<body>
+
+<h1>Semantic Click - NotificationListItem Issues</h1>
+
+<!-- ============================================================ -->
+<!-- ISSUE A: Missing _isDisabledInteractiveContentClicked guard   -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue A: NotificationListItem skips <code>_isDisabledInteractiveContentClicked</code> guard</h2>
+	<p><code>ListItemBase._onclick</code> checks <code>_isDisabledInteractiveContentClicked(e)</code> before firing events. <code>NotificationListItem._onclick</code> does NOT call super and skips this check.</p>
+
+	<h3>Test A1: Click the notification text (body area)</h3>
+	<p><b>Expected:</b> Semantic click fires. <span class="green">(GREEN = correct)</span></p>
+
+	<h3>Test A2: Click the "Close" button inside the notification</h3>
+	<p><b>Expected:</b> The close event fires, but the item's semantic click should NOT fire (it's interactive content within the item).</p>
+
+	<h3>Test A3: Click the "Inner Link" in footnotes</h3>
+	<p><b>Expected:</b> With base class behavior, clicking inner interactive content should NOT fire the item's semantic click.</p>
+
+	<ui5-notification-list id="nl-a">
+		<ui5-li-notification id="nli-a"
+			show-close
+			title-text="Notification with interactive content inside"
+			priority="High">
+			Click the notification body text here. Then try clicking the Close button or the link below.
+			<ui5-link id="link-a" slot="footnotes" href="javascript:void(0)">Inner Link (footnote)</ui5-link>
+		</ui5-li-notification>
+	</ui5-notification-list>
+
+	<div class="log-label">Event Log:</div>
+	<div id="log-a" class="log">Click different parts of the notification...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log-a').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE B: Disabled NotificationListItem                        -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue B: Disabled NotificationListItem (no test coverage in PR)</h2>
+	<p>The PR has a disabled-tab test but no disabled-notification test.</p>
+	<p><b>Steps:</b> Click the disabled notification below.</p>
+	<p><b>Expected:</b> No semantic click event fires.</p>
+
+	<ui5-notification-list id="nl-b">
+		<ui5-li-notification id="nli-b-enabled"
+			title-text="Enabled Notification">
+			Click me - should fire click.
+		</ui5-li-notification>
+		<ui5-li-notification id="nli-b-disabled"
+			title-text="Disabled Notification"
+			disabled>
+			Click me - should NOT fire click.
+		</ui5-li-notification>
+	</ui5-notification-list>
+
+	<div class="log-label">Event Log:</div>
+	<div id="log-b" class="log">Click each notification...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log-b').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE C: Coexistence - item click + list item-click           -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue C: Both semantic click and parent item-click fire together</h2>
+	<p><b>Steps:</b> Click the notification.</p>
+	<p><b>Expected:</b> Both the item's semantic <code>click</code> AND the list's <code>item-click</code> fire (backward compatible).</p>
+
+	<ui5-notification-list id="nl-c">
+		<ui5-li-notification id="nli-c"
+			title-text="Click me to test dual events">
+			Both events should fire.
+		</ui5-li-notification>
+	</ui5-notification-list>
+
+	<div class="log-label">Event Log:</div>
+	<div id="log-c" class="log">Click the notification...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log-c').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE D: stopPropagation for NotificationListItem             -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue D: Native click stopPropagation for NotificationListItem</h2>
+	<p><b>Steps:</b> Click the notification. Check if the wrapper div sees a native MouseEvent or only the semantic CustomEvent.</p>
+	<p><b>Expected:</b> Only CustomEvent (semantic click) reaches the wrapper. Native MouseEvent should be stopped.</p>
+
+	<div id="wrapper-d" style="padding: 10px; border: 2px dashed #999;">
+		<ui5-notification-list id="nl-d">
+			<ui5-li-notification id="nli-d"
+				title-text="Click me - what bubbles up?">
+				Check what type of event the wrapper div receives.
+			</ui5-li-notification>
+		</ui5-notification-list>
+	</div>
+
+	<div class="log-label">Event Log:</div>
+	<div id="log-d" class="log">Click the notification...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log-d').textContent = ''">Clear</button>
+</section>
+
+
+<script>
+	function ts() { return new Date().toLocaleTimeString(); }
+
+	function logTo(id, msg, cls) {
+		const el = document.getElementById(id);
+		const span = document.createElement('span');
+		span.className = cls || '';
+		span.textContent = ts() + ' | ' + msg + '\n';
+		el.appendChild(span);
+		el.scrollTop = el.scrollHeight;
+	}
+
+	function describeEvent(e) {
+		if (e instanceof CustomEvent) return 'CustomEvent(semantic)';
+		if (e instanceof PointerEvent) return 'PointerEvent(native)';
+		if (e instanceof MouseEvent) return 'MouseEvent(native)';
+		return e.constructor.name;
+	}
+
+	// ---- ISSUE A: interactive content ----
+	document.getElementById('nli-a').addEventListener('click', (e) => {
+		const cls = e instanceof CustomEvent ? 'green' : 'yellow';
+		logTo('log-a', `nli-a CLICK: ${describeEvent(e)} detail.item=${e.detail?.item?.id} origEvent=${e.detail?.originalEvent?.constructor?.name}`, cls);
+	});
+	document.getElementById('nli-a').addEventListener('close', (e) => {
+		logTo('log-a', `nli-a CLOSE event fired`, 'yellow');
+	});
+	const linkA = document.getElementById('link-a');
+	if (linkA) {
+		linkA.addEventListener('click', (e) => {
+			logTo('log-a', `link-a clicked directly (link's own click)`, 'yellow');
+		});
+	}
+
+	// ---- ISSUE B: disabled ----
+	['nli-b-enabled', 'nli-b-disabled'].forEach(id => {
+		const el = document.getElementById(id);
+		if (!el) return;
+		el.addEventListener('click', (e) => {
+			const cls = id.includes('disabled')
+				? (e instanceof CustomEvent ? 'red' : 'yellow')
+				: (e instanceof CustomEvent ? 'green' : 'yellow');
+			logTo('log-b', `${id}: ${describeEvent(e)} detail=${JSON.stringify(e.detail)}`, cls);
+		});
+	});
+
+	// ---- ISSUE C: dual events ----
+	document.getElementById('nli-c').addEventListener('click', (e) => {
+		if (e instanceof CustomEvent) {
+			logTo('log-c', `nli-c semantic CLICK: detail.item=${e.detail?.item?.id}`, 'green');
+		}
+	});
+	document.getElementById('nl-c').addEventListener('item-click', (e) => {
+		logTo('log-c', `nl-c ITEM-CLICK (parent): detail.item=${e.detail?.item?.id}`, 'green');
+	});
+
+	// ---- ISSUE D: stopPropagation ----
+	document.getElementById('nli-d').addEventListener('click', (e) => {
+		logTo('log-d', `ITEM nli-d: ${describeEvent(e)}`, e instanceof CustomEvent ? 'green' : 'yellow');
+	});
+	document.getElementById('wrapper-d').addEventListener('click', (e) => {
+		const cls = e instanceof CustomEvent ? 'green' : 'red';
+		logTo('log-d', `WRAPPER: ${describeEvent(e)} target=${e.target?.id}`, cls);
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar — Bug Repros (PR #13622)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", Arial, sans-serif;
+			max-width: 960px;
+			margin: 24px auto;
+			padding: 0 16px;
+			color: #32363a;
+		}
+		h1 {
+			font-size: 22px;
+			margin-bottom: 4px;
+		}
+		.lead {
+			color: #6a6d70;
+			margin-top: 0;
+		}
+		section {
+			border: 1px solid #d9d9d9;
+			border-radius: 6px;
+			padding: 18px 20px;
+			margin: 20px 0;
+			background: #fff;
+		}
+		section h2 {
+			margin-top: 0;
+			font-size: 17px;
+		}
+		section h2 .tag {
+			display: inline-block;
+			padding: 2px 8px;
+			border-radius: 3px;
+			font-size: 12px;
+			vertical-align: middle;
+			margin-right: 8px;
+			color: #fff;
+		}
+		.tag.crit { background: #bb0000; }
+		.tag.warn { background: #df6e0c; }
+		ol.steps {
+			margin: 8px 0 8px 18px;
+			padding: 0;
+		}
+		ol.steps li {
+			margin: 4px 0;
+		}
+		.expected {
+			background: #ebf5fe;
+			border-left: 3px solid #0a6ed1;
+			padding: 8px 12px;
+			margin: 8px 0;
+			font-size: 14px;
+		}
+		.actual {
+			background: #fdecec;
+			border-left: 3px solid #bb0000;
+			padding: 8px 12px;
+			margin: 8px 0;
+			font-size: 14px;
+		}
+		.observed {
+			margin-top: 10px;
+			padding: 8px 12px;
+			border: 1px dashed #999;
+			border-radius: 4px;
+			min-height: 22px;
+			font-family: ui-monospace, "SF Mono", Consolas, monospace;
+			font-size: 13px;
+			background: #fafafa;
+			white-space: pre-wrap;
+		}
+		.observed.empty::before {
+			content: "(no events yet — interact with the toolbar above)";
+			color: #999;
+		}
+		.toolbar-host {
+			margin: 12px 0 16px;
+			padding: 12px;
+			background: #f5f6f7;
+			border-radius: 4px;
+		}
+		.note {
+			font-size: 12px;
+			color: #6a6d70;
+			margin-top: 6px;
+		}
+		button.reset {
+			font-size: 12px;
+			padding: 4px 10px;
+			margin-left: 8px;
+		}
+		.spacer-after {
+			min-height: 80px;
+			border: 1px dashed #ccc;
+			border-radius: 4px;
+			margin-top: 12px;
+			padding: 8px;
+			color: #888;
+			font-size: 12px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Toolbar — bug reproductions for PR #13622</h1>
+	<p class="lead">
+		Three reproducible bugs in the WAI-ARIA toolbar keyboard navigation PR. Open this page,
+		follow the steps in each section, and the live "Observed" log shows what actually fires.
+	</p>
+
+	<!-- ============================================================ -->
+	<!-- BUG 1 — Empty input exits on first arrow press               -->
+	<!-- ============================================================ -->
+	<section id="bug1">
+		<h2><span class="tag crit">CRIT</span>Bug 1 — Empty <code>ui5-input</code> exits on first ArrowLeft / ArrowRight</h2>
+		<p>
+			<code>Toolbar.ts:686-712</code> + <code>Input.ts:1664-1683</code>.
+			With an empty value, <code>itemCount = valueLength + 1 = 1</code>; the boundary check
+			short-circuits on <code>itemCount &lt;= 1</code>, treating the caret as being at both
+			start and end simultaneously, so the very first arrow press exits the input.
+		</p>
+
+		<div class="toolbar-host">
+			<ui5-toolbar id="bug1-toolbar" accessible-name="Bug 1 toolbar">
+				<ui5-toolbar-button id="bug1-before" text="Before"></ui5-toolbar-button>
+				<ui5-toolbar-item>
+					<ui5-input id="bug1-input" placeholder="empty — press ArrowRight" style="width: 240px"></ui5-input>
+				</ui5-toolbar-item>
+				<ui5-toolbar-button id="bug1-after" text="After"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+
+		<ol class="steps">
+			<li>Click into the empty input above.</li>
+			<li>Press <kbd>ArrowRight</kbd>.</li>
+		</ol>
+		<div class="expected"><b>Expected:</b> caret stays in the input (nothing to traverse).</div>
+		<div class="actual"><b>Actual:</b> focus jumps to the <i>After</i> button. Symmetric for ArrowLeft → <i>Before</i>.</div>
+
+		<div class="observed empty" id="bug1-log"></div>
+		<button class="reset" onclick="clearLog('bug1-log')">Clear log</button>
+		<p class="note">
+			Try with text typed in: caret moves normally and only exits at the boundaries — that part works.
+			The bug is specifically the empty-string case.
+		</p>
+	</section>
+
+	<!-- ============================================================ -->
+	<!-- BUG 2 — Up/Down preventDefault breaks textarea caret         -->
+	<!-- ============================================================ -->
+	<section id="bug2">
+		<h2><span class="tag crit">CRIT</span>Bug 2 — ArrowUp / ArrowDown can't move caret across textarea lines</h2>
+		<p>
+			<code>Toolbar.ts:548, 663-666</code>. The toolbar attaches its keydown listener with
+			<code>capture: true</code> and unconditionally <code>preventDefault()</code>s on Up/Down.
+			Native <code>&lt;textarea&gt;</code> caret movement is the default action — once it's prevented,
+			the caret cannot leave the first line.
+		</p>
+
+		<div class="toolbar-host">
+			<ui5-toolbar id="bug2-toolbar" accessible-name="Bug 2 toolbar" style="height: 110px">
+				<ui5-toolbar-item>
+					<ui5-textarea id="bug2-textarea" rows="3" value="line one&#10;line two&#10;line three" style="width: 360px"></ui5-textarea>
+				</ui5-toolbar-item>
+				<ui5-toolbar-button id="bug2-after" text="After"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+
+		<ol class="steps">
+			<li>Click into the textarea, place the caret anywhere on <i>line one</i>.</li>
+			<li>Press <kbd>ArrowDown</kbd>.</li>
+		</ol>
+		<div class="expected"><b>Expected:</b> caret moves to <i>line two</i>.</div>
+		<div class="actual"><b>Actual:</b> caret stays put. The log shows
+			<code>defaultPrevented=true</code> on the ArrowDown event.</div>
+
+		<div class="observed empty" id="bug2-log"></div>
+		<button class="reset" onclick="clearLog('bug2-log')">Clear log</button>
+		<p class="note">
+			Compare with a plain <code>&lt;textarea&gt;</code> outside any toolbar — same key works fine.
+			The toolbar's <code>e.preventDefault()</code> in capture phase is the only difference.
+		</p>
+	</section>
+
+	<!-- ============================================================ -->
+	<!-- BUG 4 — Radio auto-click on arrow nav                        -->
+	<!-- ============================================================ -->
+	<section id="bug4">
+		<h2><span class="tag warn">HIGH</span>Bug 4 — Arrow nav auto-selects radio buttons regardless of group</h2>
+		<p>
+			<code>ToolbarItem.ts:199-243</code>. <code>_handleNavigationTarget</code> calls
+			<code>radio.click()</code> on any element with the <code>[ui5-radio-button]</code> attribute.
+			It ignores the <code>name</code> attribute (which defines the actual group), so arrow-navigating
+			between unrelated radios silently mutates form state.
+		</p>
+
+		<div class="toolbar-host">
+			<ui5-toolbar id="bug4-toolbar" accessible-name="Bug 4 toolbar">
+				<ui5-toolbar-button id="bug4-before" text="Before"></ui5-toolbar-button>
+				<ui5-toolbar-item>
+					<ui5-radio-button id="bug4-radio-a" text="Option A" name="group-A"></ui5-radio-button>
+					<ui5-radio-button id="bug4-radio-b" text="Option B" name="group-B"></ui5-radio-button>
+				</ui5-toolbar-item>
+				<ui5-toolbar-button id="bug4-after" text="After"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+
+		<ol class="steps">
+			<li>Tab into the first radio (<i>Option A</i>) — don't click. Just have it focused.</li>
+			<li>Press <kbd>ArrowRight</kbd>.</li>
+		</ol>
+		<div class="expected"><b>Expected:</b> focus moves to <i>Option B</i>; neither radio is checked
+			(they aren't in the same group; arrow nav should not select).</div>
+		<div class="actual"><b>Actual:</b> focus moves AND <i>Option B</i> becomes checked
+			(<code>change</code> event fires). Press ArrowLeft → <i>Option A</i> becomes checked.</div>
+
+		<div class="observed empty" id="bug4-log"></div>
+		<button class="reset" onclick="clearLog('bug4-log')">Clear log</button>
+		<p class="note">
+			The two radios have different <code>name</code> values (<code>group-A</code> vs <code>group-B</code>),
+			so they should not behave as a group. The PR's marker-attribute check ignores this.
+		</p>
+	</section>
+
+	<div class="spacer-after">
+		Empty space after the toolbars — useful for visually confirming Tab-out behavior.
+	</div>
+
+	<script type="module">
+		// Wait for components to be defined before wiring listeners.
+		await customElements.whenDefined("ui5-toolbar");
+		await customElements.whenDefined("ui5-toolbar-button");
+		await customElements.whenDefined("ui5-input");
+		await customElements.whenDefined("ui5-textarea");
+		await customElements.whenDefined("ui5-radio-button");
+
+		const stamp = () => {
+			const d = new Date();
+			return `${d.getMinutes().toString().padStart(2,"0")}:${d.getSeconds().toString().padStart(2,"0")}.${d.getMilliseconds().toString().padStart(3,"0")}`;
+		};
+
+		const log = (boxId, text) => {
+			const box = document.getElementById(boxId);
+			box.classList.remove("empty");
+			box.textContent += `[${stamp()}] ${text}\n`;
+			box.scrollTop = box.scrollHeight;
+		};
+
+		window.clearLog = (boxId) => {
+			const box = document.getElementById(boxId);
+			box.textContent = "";
+			box.classList.add("empty");
+		};
+
+		const focusedTag = () => {
+			let el = document.activeElement;
+			while (el && el.shadowRoot && el.shadowRoot.activeElement) {
+				el = el.shadowRoot.activeElement;
+			}
+			if (!el) return "(none)";
+			const id = el.id ? `#${el.id}` : "";
+			const root = el.getRootNode();
+			const host = root && root.host ? root.host : null;
+			const hostInfo = host ? ` inside <${host.localName}${host.id ? "#" + host.id : ""}>` : "";
+			return `<${el.localName}${id}>${hostInfo}`;
+		};
+
+		// ---------- Bug 1 wiring ----------
+		const bug1Toolbar = document.getElementById("bug1-toolbar");
+		const bug1Input = document.getElementById("bug1-input");
+		bug1Input.addEventListener("keydown", (e) => {
+			if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+				const inner = bug1Input.shadowRoot?.querySelector("input");
+				log("bug1-log", `keydown on ui5-input: key=${e.key} value="${bug1Input.value}" caret=${inner?.selectionStart ?? "?"}`);
+			}
+		});
+		bug1Toolbar.addEventListener("focusin", (e) => {
+			// Use composed path — focus may be inside shadow.
+			const path = e.composedPath();
+			const item = path.find(n => n instanceof HTMLElement && (n.localName === "ui5-toolbar-button" || n.localName === "ui5-toolbar-item" || n.localName === "ui5-input"));
+			if (item) {
+				log("bug1-log", `→ focus moved to ${focusedTag()}`);
+			}
+		});
+
+		// ---------- Bug 2 wiring ----------
+		const bug2Textarea = document.getElementById("bug2-textarea");
+		const bug2Toolbar = document.getElementById("bug2-toolbar");
+		// Listen on the host AND in capture phase on document to see if preventDefault was applied.
+		document.addEventListener("keydown", (e) => {
+			if (!bug2Toolbar.contains(e.target) && !bug2Toolbar.contains(document.activeElement)) return;
+			if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+			// We listen here AFTER capture-phase handler ran on the toolbar; defaultPrevented reflects whether
+			// the toolbar suppressed the native action.
+			const inner = bug2Textarea.shadowRoot?.querySelector("textarea");
+			log("bug2-log", `${e.key} on textarea — defaultPrevented=${e.defaultPrevented}, caretBefore=${inner?.selectionStart ?? "?"}`);
+			// Schedule a microtask to read caret AFTER the browser would have moved it (had it not been prevented).
+			Promise.resolve().then(() => {
+				log("bug2-log", `   caretAfter=${inner?.selectionStart ?? "?"} ${e.defaultPrevented ? "(no movement — preventDefault won)" : "(moved naturally)"}`);
+			});
+		});
+
+		// ---------- Bug 4 wiring ----------
+		const bug4RadioA = document.getElementById("bug4-radio-a");
+		const bug4RadioB = document.getElementById("bug4-radio-b");
+		const noteCheckedState = (label) => {
+			log("bug4-log", `   state: A.checked=${bug4RadioA.checked} B.checked=${bug4RadioB.checked}  ${label}`);
+		};
+		bug4RadioA.addEventListener("change", () => log("bug4-log", `change fired on Option A (now checked=${bug4RadioA.checked})`));
+		bug4RadioB.addEventListener("change", () => log("bug4-log", `change fired on Option B (now checked=${bug4RadioB.checked})`));
+		document.getElementById("bug4-toolbar").addEventListener("keydown", (e) => {
+			if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+				log("bug4-log", `keydown ${e.key} — focus before = ${focusedTag()}`);
+				noteCheckedState("(before)");
+				Promise.resolve().then(() => {
+					log("bug4-log", `   focus after = ${focusedTag()}`);
+					noteCheckedState("(after)");
+				});
+			}
+		});
+
+		console.info("[ToolbarBugRepros] all listeners wired.");
+	</script>
+</body>
+
+</html>

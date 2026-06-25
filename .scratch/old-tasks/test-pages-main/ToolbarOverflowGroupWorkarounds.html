@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar — can we live without overflowGroup?</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script type="module">
+		import "/src/Toolbar.ts";
+		import "/src/ToolbarButton.ts";
+		import "/src/ToolbarSeparator.ts";
+		import "/src/ToolbarSpacer.ts";
+		import "/src/ToolbarItem.ts";
+		import "/src/Button.ts";
+		import "/src/Label.ts";
+		import "/src/Input.ts";
+	</script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily, -apple-system, system-ui, sans-serif);
+			background: var(--sapBackgroundColor, #fafafa);
+			margin: 0;
+			padding: 1rem 1.5rem 3rem;
+			color: var(--sapTextColor, #222);
+			line-height: 1.45;
+		}
+
+		h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+		h2 { font-size: 1.05rem; margin: 2rem 0 0.25rem; }
+		p { margin: 0.4rem 0; max-width: 80ch; }
+		.lead { color: #444; font-size: 0.9rem; }
+
+		section {
+			border: 1px solid #e0e0e0;
+			border-radius: 6px;
+			background: white;
+			padding: 1rem 1.25rem 1.25rem;
+			margin: 1rem 0;
+		}
+
+		.scenario { font-style: italic; color: #444; }
+
+		.expect, .actual, .workaround {
+			margin: 0.5rem 0;
+			padding: 0.5rem 0.75rem;
+			border-radius: 4px;
+			font-size: 0.9rem;
+		}
+		.workaround { background: #f4f4f4; border-left: 3px solid #888; }
+		.expect    { background: #eef5fb; border-left: 3px solid #1976d2; }
+		.actual    { background: #fdf3ec; border-left: 3px solid #b35900; }
+		.actual.ok  { background: #ebf6ed; border-left-color: #2e7d32; }
+		.actual.bad { background: #fae8e8; border-left-color: #c62828; }
+
+		pre.markup {
+			background: #1e1e1e;
+			color: #d4d4d4;
+			padding: 0.6rem 0.85rem;
+			border-radius: 4px;
+			font-family: ui-monospace, "SF Mono", Menlo, monospace;
+			font-size: 0.78rem;
+			line-height: 1.45;
+			overflow-x: auto;
+			margin: 0.6rem 0 0.25rem;
+		}
+		pre.markup .tag    { color: #569cd6; }
+		pre.markup .attr   { color: #9cdcfe; }
+		pre.markup .val    { color: #ce9178; }
+		pre.markup .comment{ color: #6a9955; font-style: italic; }
+
+		.resizer {
+			border: 1px dashed #888;
+			padding: 0.25rem;
+			margin: 0.75rem 0 0.25rem;
+			resize: horizontal;
+			overflow: hidden;
+			min-width: 200px;
+			max-width: 100%;
+			width: 720px;
+			background: #fcfcfc;
+			display: flex;
+		}
+		.resizer > ui5-toolbar { flex: 1 1 0; min-width: 0; }
+		/* Workaround #2 fix: the wrapper host needs an explicit display, otherwise its
+		   slotted content measures as 0 width and overflow math doesn't see it.
+		   See Finding A in the footer. */
+		ui5-toolbar-item.has-inline-children { display: inline-flex; }
+		ui5-toolbar-item.has-inline-children > span.cluster {
+			display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap;
+		}
+		ui5-toolbar-item.has-inline-children > span.search-pair {
+			display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+		}
+
+		.hint { font-size: 0.8rem; color: #666; }
+		code { background: rgba(0,0,0,0.06); padding: 0 0.25rem; border-radius: 3px; font-size: 0.85em; }
+		kbd  { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border-radius: 3px;
+		       padding: 0 0.3rem; font-family: ui-monospace, monospace; font-size: 0.8em; }
+
+		footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #ddd; max-width: 80ch; }
+		footer h2 { margin-top: 0; }
+	</style>
+</head>
+
+<body>
+	<h1>Toolbar — can we live without <code>overflowGroup</code>?</h1>
+	<p class="lead">
+		Each scenario states what a Fiori app developer wants, what they'd see if the toolbar
+		"did the right thing," and what actually happens with today's APIs.
+		Drag the right edge of the dashed box to shrink the toolbar and watch the overflow.
+		<br><span class="hint">Tip: open the overflow popover with the <kbd>···</kbd> button
+		to inspect popover layout. The markup block above each toolbar shows the exact HTML
+		used in the demo.</span>
+	</p>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 1 — Search label must never separate from its input</h2>
+		<p class="scenario">
+			A toolbar has a few actions and one "<b>Search:</b> [____]" pair. If the bar gets
+			narrow, the label and the input must move to the overflow popover <em>together</em>
+			— never one without the other.
+		</p>
+
+		<p class="workaround"><b>Workaround:</b> wrap the label and input in a single
+			<code>&lt;ui5-toolbar-item&gt;</code> so the toolbar measures them as one item.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span>      <span class="attr">text</span>=<span class="val">"Action A"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"employee"</span> <span class="attr">text</span>=<span class="val">"Action B"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+
+  <span class="comment">&lt;!-- the workaround: one wrapper, both children inside --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-item</span> <span class="attr">class</span>=<span class="val">"has-inline-children"</span>&gt;
+    &lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="val">"search-pair"</span>&gt;
+      &lt;<span class="tag">ui5-label</span> <span class="attr">for</span>=<span class="val">"s1"</span> <span class="attr">show-colon</span>&gt;Search&lt;/<span class="tag">ui5-label</span>&gt;
+      &lt;<span class="tag">ui5-input</span> <span class="attr">id</span>=<span class="val">"s1"</span> <span class="attr">placeholder</span>=<span class="val">"Type…"</span>&gt;&lt;/<span class="tag">ui5-input</span>&gt;
+    &lt;/<span class="tag">span</span>&gt;
+  &lt;/<span class="tag">ui5-toolbar-item</span>&gt;
+
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"decline"</span> <span class="attr">text</span>=<span class="val">"Action C"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> as the bar shrinks, "Search:" + input either both
+			stay visible or both move to overflow.</p>
+
+		<p class="actual ok"><b>Actual:</b> the wrapper crosses the boundary atomically.
+			Resize down — at the narrow end both are in the popover, the rest of the bar shows
+			"Action A / Action B" only.</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button icon="add" text="Action A"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Action B"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-item class="has-inline-children">
+					<span class="search-pair">
+						<ui5-label for="s1" show-colon>Search</ui5-label>
+						<ui5-input id="s1" placeholder="Type…" style="width:12rem"></ui5-input>
+					</span>
+				</ui5-toolbar-item>
+				<ui5-toolbar-button icon="decline" text="Action C"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+		<p class="hint">Caveat noted in the footer: the wrapper needs an explicit
+			<code>display</code> on the host to be measured at all.</p>
+	</section>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 2 — Two related buttons must travel together</h2>
+		<p class="scenario">
+			After the separator, "<b>Sort</b>" and "<b>Filter</b>" are a UX pair. They are still
+			two independent buttons (each focusable, each with its own tooltip), but they should
+			never split across the bar / popover boundary.
+		</p>
+
+		<p class="workaround"><b>Workaround:</b> put both buttons inside one
+			<code>&lt;ui5-toolbar-item&gt;</code>.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Primary 1"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Primary 2"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Primary 3"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+
+  <span class="comment">&lt;!-- the workaround: two raw ui5-button inside one wrapper --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-item</span> <span class="attr">class</span>=<span class="val">"has-inline-children"</span>&gt;
+    &lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="val">"cluster"</span>&gt;
+      &lt;<span class="tag">ui5-button</span> <span class="attr">icon</span>=<span class="val">"sort"</span>&gt;Sort&lt;/<span class="tag">ui5-button</span>&gt;
+      &lt;<span class="tag">ui5-button</span> <span class="attr">icon</span>=<span class="val">"filter"</span>&gt;Filter&lt;/<span class="tag">ui5-button</span>&gt;
+    &lt;/<span class="tag">span</span>&gt;
+  &lt;/<span class="tag">ui5-toolbar-item</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> Sort + Filter overflow together; in the popover
+			they appear as two rows (one per button), each individually focusable with arrow keys,
+			each individually labeled in the a11y tree.</p>
+
+		<p class="actual bad"><b>Actual:</b> they DO overflow together — but in the popover they
+			render as <em>one horizontal row</em>, not stacked. Open the popover, then try
+			arrow-key navigation: <kbd>↓</kbd> skips past both at once because the popover sees
+			one item (the wrapper), not two children.</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button text="Primary 1"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Primary 2"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Primary 3"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-item class="has-inline-children">
+					<span class="cluster">
+						<ui5-button icon="sort">Sort</ui5-button>
+						<ui5-button icon="filter">Filter</ui5-button>
+					</span>
+				</ui5-toolbar-item>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 3 — A cluster of "secondary" actions should always be in overflow</h2>
+		<p class="scenario">
+			Three secondary actions ("Secondary 1/2/3") should never compete for bar space with
+			the primary actions. They live in the overflow popover at all widths.
+		</p>
+
+		<p class="workaround"><b>Workaround:</b> set <code>overflow-priority="AlwaysOverflow"</code>
+			on each of them.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span> <span class="attr">text</span>=<span class="val">"Primary 1"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span> <span class="attr">text</span>=<span class="val">"Primary 2"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+
+  <span class="comment">&lt;!-- the workaround: mark each secondary AlwaysOverflow --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Secondary 1"</span> <span class="attr">overflow-priority</span>=<span class="val">"AlwaysOverflow"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Secondary 2"</span> <span class="attr">overflow-priority</span>=<span class="val">"AlwaysOverflow"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Secondary 3"</span> <span class="attr">overflow-priority</span>=<span class="val">"AlwaysOverflow"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> they appear only in the popover, regardless of bar
+			width. The <kbd>···</kbd> button is always visible.</p>
+
+		<p class="actual ok"><b>Actual:</b> works as expected. But notice: this is
+			"<em>always</em> in overflow," not "in overflow <em>only when needed</em>." There's no
+			knob for "keep them in the bar when there's room, push them all out together when there
+			isn't."</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button icon="add" text="Primary 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Primary 2"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Secondary 1" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Secondary 2" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Secondary 3" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 4 — A cluster of "must-keep" actions should never overflow</h2>
+		<p class="scenario">
+			"Stay 1" and "Stay 2" are critical actions. They should stay visible in the bar even
+			when other items have to move to overflow.
+		</p>
+
+		<p class="workaround"><b>Workaround:</b> set <code>overflow-priority="NeverOverflow"</code>
+			on each.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  <span class="comment">&lt;!-- the workaround: mark each "stay" NeverOverflow --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Stay 1"</span> <span class="attr">overflow-priority</span>=<span class="val">"NeverOverflow"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Stay 2"</span> <span class="attr">overflow-priority</span>=<span class="val">"NeverOverflow"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span> <span class="attr">text</span>=<span class="val">"Move 1"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span> <span class="attr">text</span>=<span class="val">"Move 2"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span> <span class="attr">text</span>=<span class="val">"Move 3"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> "Stay 1/2" stay visible. The other ("Move 1/2/3")
+			move to the popover first as the bar narrows.</p>
+
+		<p class="actual ok"><b>Actual:</b> works as expected. Edge case: if even the
+			NeverOverflow items can't fit, the toolbar runs out of room — that's the only failure
+			mode, and it's unrelated to grouping.</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button text="Stay 1" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Stay 2" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button icon="add" text="Move 1"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Move 2"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="add" text="Move 3"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 5 — Tier-based importance: each tier should travel as a unit</h2>
+		<p class="scenario">
+			Items belong to three importance tiers. Lower tiers should move to overflow first.
+			Within each tier, the items should overflow together — Tier 3 leaves as a pair, then
+			Tier 2 leaves as a pair, etc.
+		</p>
+
+		<p class="workaround"><b>Workaround:</b> order items by importance in the DOM (last in
+			DOM = first to overflow). Today there is <em>no</em> grouping API.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  <span class="comment">&lt;!-- DOM order = priority. Last in DOM overflows first.
+       BUT: no way to say "Tier 3 must overflow as a unit". --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 1 - A"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 1 - B"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 2 - A"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 2 - B"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 3 - A"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">text</span>=<span class="val">"Tier 3 - B"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> as you shrink the bar, all of Tier 3 disappears at once,
+			then all of Tier 2.</p>
+
+		<p class="actual bad"><b>Actual:</b> items leave one at a time, breaking tier atomicity.
+			Empirical measurements from this page:
+			<br>at <b>480 px</b> — only "Tier 3 - B" is in overflow (Tier 3 - A still in bar);
+			<br>at <b>400 px</b> — both Tier 3 items in overflow;
+			<br>at <b>360 px</b> — Tier 3 plus "Tier 2 - B" in overflow, but Tier 2 - A still in bar.
+			<br>The tier is split at two distinct breakpoints. No combination of existing
+			properties prevents this.</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button text="Tier 1 - A"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Tier 1 - B"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button text="Tier 2 - A"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Tier 2 - B"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button text="Tier 3 - A"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Tier 3 - B"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+		<p class="hint">This is the case <code>overflowGroup</code> would solve cleanly: mark all
+			Tier 3 items <code>overflow-group="3"</code>, all Tier 2 <code>overflow-group="2"</code>,
+			etc. Whether the workaround above is "good enough" depends on whether any real Fiori
+			app actually files this complaint.</p>
+	</section>
+
+	<!-- ================================================================ -->
+	<section>
+		<h2>Scenario 6 — The hard case: 3 independent buttons must travel together
+			AND remain individually focusable in overflow</h2>
+		<p class="scenario">
+			"<b>View</b>, <b>Sort</b>, <b>Filter</b>" are a UX cluster. They must overflow as a
+			unit. In the popover, each must remain its own focus stop with its own a11y label —
+			they cannot collapse into one wrapper.
+		</p>
+
+		<p class="workaround"><b>Workaround attempt:</b> wrap them in one
+			<code>&lt;ui5-toolbar-item&gt;</code>, as in Scenario 2.</p>
+
+<pre class="markup">&lt;<span class="tag">ui5-toolbar</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"add"</span>      <span class="attr">text</span>=<span class="val">"Create"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-button</span> <span class="attr">icon</span>=<span class="val">"employee"</span> <span class="attr">text</span>=<span class="val">"Assign"</span>&gt;&lt;/<span class="tag">ui5-toolbar-button</span>&gt;
+  &lt;<span class="tag">ui5-toolbar-separator</span>&gt;&lt;/<span class="tag">ui5-toolbar-separator</span>&gt;
+
+  <span class="comment">&lt;!-- three independent buttons inside one wrapper --&gt;</span>
+  &lt;<span class="tag">ui5-toolbar-item</span> <span class="attr">class</span>=<span class="val">"has-inline-children"</span>&gt;
+    &lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="val">"cluster"</span>&gt;
+      &lt;<span class="tag">ui5-button</span> <span class="attr">icon</span>=<span class="val">"grid"</span>&gt;View&lt;/<span class="tag">ui5-button</span>&gt;
+      &lt;<span class="tag">ui5-button</span> <span class="attr">icon</span>=<span class="val">"sort"</span>&gt;Sort&lt;/<span class="tag">ui5-button</span>&gt;
+      &lt;<span class="tag">ui5-button</span> <span class="attr">icon</span>=<span class="val">"filter"</span>&gt;Filter&lt;/<span class="tag">ui5-button</span>&gt;
+    &lt;/<span class="tag">span</span>&gt;
+  &lt;/<span class="tag">ui5-toolbar-item</span>&gt;
+&lt;/<span class="tag">ui5-toolbar</span>&gt;</pre>
+
+		<p class="expect"><b>Expected:</b> in the popover, three stacked rows (View / Sort /
+			Filter), three arrow-key stops, three distinct accessible names.</p>
+
+		<p class="actual bad"><b>Actual:</b> one horizontal row in the popover (open it and look),
+			one arrow-key stop, one accessible item in the a11y tree. The cluster travels together
+			— but loses per-button structure on the way. This is the failure mode the wrap
+			workaround can't escape.</p>
+
+		<div class="resizer">
+			<ui5-toolbar>
+				<ui5-toolbar-button icon="add" text="Create"></ui5-toolbar-button>
+				<ui5-toolbar-button icon="employee" text="Assign"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-item class="has-inline-children">
+					<span class="cluster">
+						<ui5-button icon="grid">View</ui5-button>
+						<ui5-button icon="sort">Sort</ui5-button>
+						<ui5-button icon="filter">Filter</ui5-button>
+					</span>
+				</ui5-toolbar-item>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<!-- ================================================================ -->
+	<footer>
+		<h2>Summary</h2>
+		<p>
+			Three scenarios (1, 3, 4) are <b>covered</b> by today's APIs.
+			Two (5, 6) are <b>not</b>. Scenario 2 is partly covered — the items travel together
+			but lose per-item structure in the popover.
+		</p>
+		<p>
+			The case for <code>overflowGroup</code> hinges on whether Scenarios 5 and 6 are
+			real customer needs or hypotheticals. With no concrete report against the current
+			API, the right move is to document the workarounds, keep <code>overflowGroup</code>
+			on hold, and revisit when a real complaint lands.
+		</p>
+
+		<h2>Finding A — separate bug in <code>ui5-toolbar-item</code></h2>
+		<p>
+			While building this page I found that <code>&lt;ui5-toolbar-item&gt;</code> with
+			arbitrary slotted content (not a known UI5 component) measures as <b>0 px wide</b>
+			inside the toolbar's overflow math. Its CSS is just
+			<code>:host { height: 100% }</code> with no display rule, so the host's
+			<code>offsetWidth</code> stays 0 regardless of slotted content. The fix is to add
+			<code>display: inline-flex</code> (or similar) on the host. Every scenario on this
+			page that uses a wrapper sets that explicitly via the <code>.has-inline-children</code>
+			class. This is worth filing independently of any <code>overflowGroup</code> decision.
+		</p>
+	</footer>
+</body>
+</html>

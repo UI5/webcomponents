@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar Keyboard Navigation Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily, "72", Arial, sans-serif);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+		section {
+			margin-bottom: 2rem;
+			border: 1px solid var(--sapGroup_TitleBorderColor, #ccc);
+			border-radius: 4px;
+			padding: 1rem;
+		}
+		h2 {
+			margin-top: 0;
+			color: var(--sapTitleColor, #333);
+			font-size: 1rem;
+		}
+		.narrow {
+			width: 300px;
+		}
+		.focus-indicator {
+			margin-top: 0.5rem;
+			padding: 0.5rem;
+			background: var(--sapInformationBackground, #e8f0fe);
+			border-radius: 4px;
+			font-size: 0.85rem;
+			min-height: 1.2em;
+		}
+	</style>
+</head>
+<body>
+	<h1>Toolbar Keyboard Navigation - Manual Test Page</h1>
+
+	<input id="before-all" placeholder="Focus anchor before toolbars" style="margin-bottom: 1rem; display: block; width: 300px;" />
+
+	<!-- 1. Basic Arrow Navigation -->
+	<section>
+		<h2>1. Basic Arrow Key Navigation</h2>
+		<p>Click "First", then use ArrowRight/Left. Expected: focus moves between buttons. Wraps at edges.</p>
+		<ui5-toolbar id="toolbar-basic">
+			<ui5-toolbar-button text="First" icon="sap-icon://home"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Second" icon="sap-icon://edit"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Third" icon="sap-icon://add"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Fourth" icon="sap-icon://delete"></ui5-toolbar-button>
+		</ui5-toolbar>
+		<div class="focus-indicator" id="basic-indicator"></div>
+	</section>
+
+	<!-- 2. Home/End -->
+	<section>
+		<h2>2. Home / End Keys</h2>
+		<p>Focus any item, press Home → first item. Press End → last item.</p>
+		<ui5-toolbar id="toolbar-homeend">
+			<ui5-toolbar-button text="Alpha"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Beta"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Gamma"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Delta"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Epsilon"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 3. Tab Exit and Re-entry -->
+	<section>
+		<h2>3. Tab Exit and Re-entry</h2>
+		<p>Focus "Second" button, Tab out to input below. Shift+Tab back → should restore "Second".</p>
+		<ui5-toolbar id="toolbar-tab">
+			<ui5-toolbar-button text="First"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Second"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Third"></ui5-toolbar-button>
+		</ui5-toolbar>
+		<input id="after-tab-toolbar" placeholder="Tab lands here" style="margin-top: 0.5rem; display: block; width: 300px;" />
+	</section>
+
+	<!-- 4. Skip Non-interactive Items -->
+	<section>
+		<h2>4. Skip Separators and Spacers</h2>
+		<p>ArrowRight from "Before" should skip separator and spacer, land on "After".</p>
+		<ui5-toolbar id="toolbar-skip">
+			<ui5-toolbar-button text="Before"></ui5-toolbar-button>
+			<ui5-toolbar-separator></ui5-toolbar-separator>
+			<ui5-toolbar-spacer></ui5-toolbar-spacer>
+			<ui5-toolbar-button text="After"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 5. Disabled Items -->
+	<section>
+		<h2>5. Disabled Items Skipped</h2>
+		<p>ArrowRight from "Enabled 1" should skip "Disabled" and land on "Enabled 2".</p>
+		<ui5-toolbar id="toolbar-disabled">
+			<ui5-toolbar-button text="Enabled 1"></ui5-toolbar-button>
+			<ui5-toolbar-button text="Disabled" disabled></ui5-toolbar-button>
+			<ui5-toolbar-button text="Enabled 2"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 6. ToolbarSelect Delegation -->
+	<section>
+		<h2>6. ToolbarSelect Key Delegation</h2>
+		<p>Focus Select, press ArrowDown → dropdown opens (not toolbar nav). Press Home when closed → toolbar jumps to first.</p>
+		<ui5-toolbar id="toolbar-select">
+			<ui5-toolbar-button text="Start"></ui5-toolbar-button>
+			<ui5-toolbar-select id="test-select">
+				<ui5-toolbar-select-option>Option A</ui5-toolbar-select-option>
+				<ui5-toolbar-select-option selected>Option B</ui5-toolbar-select-option>
+				<ui5-toolbar-select-option>Option C</ui5-toolbar-select-option>
+			</ui5-toolbar-select>
+			<ui5-toolbar-button text="End"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 7. Radio Group in ToolbarItem -->
+	<section>
+		<h2>7. Radio Group (ToolbarItem)</h2>
+		<p>ArrowRight navigates within radio group. At boundary (last radio), next ArrowRight exits to Checkbox.</p>
+		<ui5-toolbar id="toolbar-radio">
+			<ui5-toolbar-item>
+				<ui5-radio-button name="grp1" text="Radio 1" checked></ui5-radio-button>
+				<ui5-radio-button name="grp1" text="Radio 2"></ui5-radio-button>
+				<ui5-radio-button name="grp1" text="Radio 3"></ui5-radio-button>
+			</ui5-toolbar-item>
+			<ui5-toolbar-item>
+				<ui5-checkbox text="Check A"></ui5-checkbox>
+			</ui5-toolbar-item>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 8. Checkbox Group in ToolbarItem -->
+	<section>
+		<h2>8. Checkbox Group (ToolbarItem)</h2>
+		<p>ArrowRight moves through checkboxes sequentially. At last checkbox, exits to next item.</p>
+		<ui5-toolbar id="toolbar-checkbox">
+			<ui5-toolbar-item>
+				<ui5-checkbox text="CB 1"></ui5-checkbox>
+				<ui5-checkbox text="CB 2"></ui5-checkbox>
+				<ui5-checkbox text="CB 3"></ui5-checkbox>
+			</ui5-toolbar-item>
+			<ui5-toolbar-button text="After Group"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 9. Input in ToolbarItem (caret boundary) -->
+	<section>
+		<h2>9. Input Caret Boundary</h2>
+		<p>Type text, move caret to end, press ArrowRight → exits to "Next". If caret mid-text, ArrowRight stays in input.</p>
+		<ui5-toolbar id="toolbar-input">
+			<ui5-toolbar-button text="Prev"></ui5-toolbar-button>
+			<ui5-toolbar-item>
+				<ui5-input id="test-input" value="hello world"></ui5-input>
+			</ui5-toolbar-item>
+			<ui5-toolbar-button text="Next"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 10. Overflow Popover -->
+	<section>
+		<h2>10. Overflow Popover (Tab navigation)</h2>
+		<p>Items forced to overflow. Click overflow button, then use Tab to navigate within popover.</p>
+		<div class="narrow">
+			<ui5-toolbar id="toolbar-overflow">
+				<ui5-toolbar-button text="Visible" icon="sap-icon://home"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Overflow 1" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Overflow 2" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Overflow 3" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<!-- 11. RTL -->
+	<section>
+		<h2>11. RTL Direction</h2>
+		<p>In RTL, ArrowLeft moves forward (next item), ArrowRight moves backward (prev item).</p>
+		<ui5-toolbar id="toolbar-rtl" dir="rtl">
+			<ui5-toolbar-button text="ראשון"></ui5-toolbar-button>
+			<ui5-toolbar-button text="שני"></ui5-toolbar-button>
+			<ui5-toolbar-button text="שלישי"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 12. Mixed ToolbarItems with Single Children -->
+	<section>
+		<h2>12. ToolbarItem with Single Child Controls</h2>
+		<p>Arrow navigation between generic wrapped controls (ComboBox, Switch, DatePicker).</p>
+		<ui5-toolbar id="toolbar-mixed">
+			<ui5-toolbar-item>
+				<ui5-combobox placeholder="Pick one">
+					<ui5-cb-item text="Apple"></ui5-cb-item>
+					<ui5-cb-item text="Banana"></ui5-cb-item>
+				</ui5-combobox>
+			</ui5-toolbar-item>
+			<ui5-toolbar-item>
+				<ui5-switch text-on="On" text-off="Off"></ui5-switch>
+			</ui5-toolbar-item>
+			<ui5-toolbar-item>
+				<ui5-date-picker placeholder="Pick date"></ui5-date-picker>
+			</ui5-toolbar-item>
+		</ui5-toolbar>
+	</section>
+
+	<!-- 13. Backward Entry into Group -->
+	<section>
+		<h2>13. Backward Entry into Groups</h2>
+		<p>ArrowLeft from "After" should enter checkbox group at last item (CB 3).</p>
+		<ui5-toolbar id="toolbar-backward">
+			<ui5-toolbar-item>
+				<ui5-checkbox text="CB 1"></ui5-checkbox>
+				<ui5-checkbox text="CB 2"></ui5-checkbox>
+				<ui5-checkbox text="CB 3"></ui5-checkbox>
+			</ui5-toolbar-item>
+			<ui5-toolbar-button text="After"></ui5-toolbar-button>
+		</ui5-toolbar>
+	</section>
+
+	<input id="after-all" placeholder="Focus anchor after toolbars" style="margin-top: 1rem; display: block; width: 300px;" />
+
+	<script>
+		// Focus tracking for debugging
+		document.addEventListener('focusin', (e) => {
+			const target = e.target;
+			const indicator = document.getElementById('basic-indicator');
+			if (indicator) {
+				const tag = target.tagName.toLowerCase();
+				const text = target.textContent?.trim().substring(0, 30) || '';
+				const id = target.id ? `#${target.id}` : '';
+				indicator.textContent = `Focus: <${tag}${id}> "${text}"`;
+			}
+		});
+	</script>
+</body>
+</html>

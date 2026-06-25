@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar with Search Field</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<link rel="stylesheet" type="text/css" href="./styles/ShellBar.css">
+</head>
+
+<body class="shellbar1auto">
+
+	<ui5-shellbar id="shellbar" show-search-field>
+		<ui5-shellbar-branding slot="branding">
+			My Application
+		</ui5-shellbar-branding>
+
+		<ui5-shellbar-search slot="searchField" placeholder="Search...">
+			<ui5-search-item text="Laptops" icon="laptop"></ui5-search-item>
+			<ui5-search-item text="Phones" icon="iphone"></ui5-search-item>
+			<ui5-search-item text="Tablets" icon="ipad"></ui5-search-item>
+			<ui5-search-item text="Monitors" icon="monitor"></ui5-search-item>
+			<ui5-search-item text="Headphones" icon="headset"></ui5-search-item>
+		</ui5-shellbar-search>
+
+		<ui5-button slot="content" icon="home">Home</ui5-button>
+		<ui5-button slot="content" icon="activities">Activities</ui5-button>
+
+		<ui5-avatar slot="profile" initials="JD" size="XS"></ui5-avatar>
+	</ui5-shellbar>
+
+</body>
+</html>

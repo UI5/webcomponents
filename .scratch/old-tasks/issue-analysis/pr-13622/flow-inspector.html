@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PR #13622 — Toolbar Keyboard Nav · Flow Inspector</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b22;
+    --panel-2: #1c232c;
+    --border: #2a3340;
+    --ink: #e6edf3;
+    --ink-dim: #98a2b3;
+    --accent: #4493f8;
+    --green: #3fb950;
+    --orange: #d29922;
+    --red: #f85149;
+    --yellow: #e3b341;
+    --purple: #bc8cff;
+    --code-bg: #0b0f14;
+    --node-stroke: #4493f8;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #161b22 0%, #0e1116 100%);
+  }
+  h1 { margin: 0; font-size: 22px; font-weight: 600; }
+  h1 .pr { color: var(--accent); font-family: "SF Mono", Menlo, monospace; font-size: 18px; }
+  header p { margin: 6px 0 0; color: var(--ink-dim); font-size: 14px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; gap: 4px;
+    background: rgba(14, 17, 22, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+  nav button {
+    background: none; border: none; color: var(--ink-dim);
+    padding: 14px 16px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  nav button:hover { color: var(--ink); }
+  nav button.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+  main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  section { display: none; }
+  section.active { display: block; }
+
+  h2 { font-size: 18px; margin: 0 0 16px; font-weight: 600; }
+  h3 { font-size: 14px; margin: 24px 0 8px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .lead { color: var(--ink-dim); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+
+  /* ================= Flow chart ================= */
+  .flow {
+    display: grid;
+    gap: 12px;
+  }
+  .node {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .node code, .node .code { font-family: "SF Mono", Menlo, monospace; font-size: 12px; color: var(--purple); }
+  .node .label { font-weight: 600; margin-bottom: 4px; }
+  .node .file { font-size: 11px; color: var(--ink-dim); font-family: "SF Mono", Menlo, monospace; }
+  .node.entry { border-color: var(--accent); background: rgba(68, 147, 248, 0.08); }
+  .node.decision { border-color: var(--orange); background: rgba(210, 153, 34, 0.06); }
+  .node.action { border-color: var(--green); background: rgba(63, 185, 80, 0.06); }
+  .node.bug { border-color: var(--red); background: rgba(248, 81, 73, 0.08); }
+  .node.bug::after {
+    content: '🐛';
+    position: absolute; top: 8px; right: 10px;
+    font-size: 14px;
+  }
+
+  .arrow {
+    text-align: center;
+    color: var(--ink-dim);
+    font-size: 18px;
+    margin: -2px 0;
+    line-height: 1;
+  }
+  .arrow .label {
+    display: inline-block;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--ink-dim);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .branch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .branch-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Finding chips */
+  .finding {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .finding.red { background: rgba(248, 81, 73, 0.18); color: var(--red); border: 1px solid rgba(248, 81, 73, 0.4); }
+  .finding.orange { background: rgba(210, 153, 34, 0.18); color: var(--orange); border: 1px solid rgba(210, 153, 34, 0.4); }
+  .finding.yellow { background: rgba(227, 179, 65, 0.18); color: var(--yellow); border: 1px solid rgba(227, 179, 65, 0.4); }
+
+  /* ================ Code ================ */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .kw { color: #ff7b72; }
+  .str { color: #a5d6ff; }
+  .num { color: #79c0ff; }
+  .com { color: #8b949e; font-style: italic; }
+  .fn { color: #d2a8ff; }
+  .red-line { background: rgba(248, 81, 73, 0.18); display: block; margin: 0 -16px; padding: 0 16px; }
+  .green-line { background: rgba(63, 185, 80, 0.12); display: block; margin: 0 -16px; padding: 0 16px; }
+
+  /* ============== Findings table ============== */
+  .findings-grid { display: grid; gap: 10px; }
+  .finding-card {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid;
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .finding-card.red { border-left-color: var(--red); }
+  .finding-card.orange { border-left-color: var(--orange); }
+  .finding-card.yellow { border-left-color: var(--yellow); }
+  .finding-card.green { border-left-color: var(--green); }
+  .finding-card .num-badge {
+    font-weight: 700; font-size: 16px; color: var(--ink-dim);
+  }
+  .finding-card .summary { font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+  .finding-card .where { font-size: 11px; color: var(--ink-dim); font-family: "SF Mono", Menlo, monospace; margin-bottom: 8px; }
+  .finding-card .why { font-size: 13px; color: var(--ink-dim); line-height: 1.6; }
+  .finding-card .why strong { color: var(--ink); }
+
+  /* ============ Side-by-side ============ */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .compare > div {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .compare h4 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-dim);
+  }
+  .compare .current h4 { color: var(--orange); }
+  .compare .simplified h4 { color: var(--green); }
+  .compare ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; }
+  .compare ul li { margin-bottom: 4px; color: var(--ink); }
+  .compare .meta {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--ink-dim);
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .compare .meta strong { color: var(--ink); }
+  .delta {
+    text-align: center;
+    margin: 16px 0;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* legend */
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; color: var(--ink-dim);
+    margin-bottom: 16px;
+  }
+  .legend .swatch {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 3px; margin-right: 6px;
+    vertical-align: middle;
+    border: 1px solid;
+  }
+  .swatch.entry { background: rgba(68, 147, 248, 0.15); border-color: var(--accent); }
+  .swatch.decision { background: rgba(210, 153, 34, 0.1); border-color: var(--orange); }
+  .swatch.action { background: rgba(63, 185, 80, 0.1); border-color: var(--green); }
+  .swatch.bug { background: rgba(248, 81, 73, 0.15); border-color: var(--red); }
+
+  details { margin: 8px 0; }
+  details summary { cursor: pointer; color: var(--accent); font-size: 12px; user-select: none; }
+  details summary:hover { text-decoration: underline; }
+  details[open] summary { margin-bottom: 6px; }
+
+  .tooltip-anchor { cursor: help; border-bottom: 1px dotted var(--ink-dim); }
+
+  /* Live demo */
+  .demo {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .toolbar-mock {
+    display: flex; gap: 8px; align-items: center;
+    background: #21262d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+  .tb-item {
+    background: #30363d;
+    border: 1px solid #444c56;
+    color: var(--ink);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .tb-item:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(68, 147, 248, 0.3); }
+  .tb-item[tabindex="-1"] { opacity: 0.7; }
+  .tb-input {
+    background: #0d1117;
+    border: 1px solid #444c56;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--ink);
+    font-size: 13px;
+    outline: none;
+    width: 140px;
+  }
+  .tb-input:focus { border-color: var(--accent); }
+  .log {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+  .log .l-key { color: var(--accent); }
+  .log .l-action { color: var(--green); }
+  .log .l-bug { color: var(--red); }
+  .log .l-info { color: var(--ink-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Toolbar Keyboard Navigation · <span class="pr">PR #13622</span></h1>
+  <p>WAI-ARIA roving tabIndex + arrow-key flow — visual review companion · <a href="https://github.com/UI5/webcomponents/pull/13622" target="_blank" style="color:var(--accent)">github.com/UI5/webcomponents/pull/13622</a></p>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="flow">Keydown Flow</button>
+  <button class="tab-btn" data-tab="paths">3 Navigation Paths</button>
+  <button class="tab-btn" data-tab="findings">Findings (1–10)</button>
+  <button class="tab-btn" data-tab="compare">Current vs. Simplified</button>
+  <button class="tab-btn" data-tab="demo">Try it (mock)</button>
+</nav>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- TAB 1: KEYDOWN FLOW                                          -->
+<!-- ============================================================ -->
+<section class="active" id="flow">
+  <h2>Keydown flow inside <code>Toolbar._onkeydown</code></h2>
+  <p class="lead">
+    What happens when the user presses a key while focus is anywhere inside a <code>&lt;ui5-toolbar&gt;</code>.
+    Bug nodes (🐛) cross-reference the findings tab. Source: <code>packages/main/src/Toolbar.ts:650–740</code>.
+  </p>
+
+  <div class="legend">
+    <span><span class="swatch entry"></span>Entry / Event</span>
+    <span><span class="swatch decision"></span>Decision</span>
+    <span><span class="swatch action"></span>Action</span>
+    <span><span class="swatch bug"></span>Bug found in review</span>
+  </div>
+
+  <div class="flow">
+    <div class="node entry">
+      <div class="label">⌨️ Keydown event (capture phase)</div>
+      <div class="file">Toolbar.ts:548 · addEventListener("keydown", _onKeyDown, <span class="code">true</span>)</div>
+    </div>
+    <div class="arrow">▼</div>
+
+    <div class="node decision">
+      <div class="label">popoverOpen && focus inside overflow popover?</div>
+      <div class="file">Toolbar.ts:651–653</div>
+    </div>
+    <div class="branch">
+      <div>
+        <div class="arrow"><span class="label">yes</span>▼</div>
+        <div class="node action">
+          <div class="label">return — let popover handle</div>
+        </div>
+      </div>
+      <div>
+        <div class="arrow"><span class="label">no</span>▼</div>
+        <div class="node decision">
+          <div class="label">isTab / isShiftTab?</div>
+          <div class="file">Toolbar.ts:655–662</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <div></div>
+      <div>
+        <div class="arrow"><span class="label">yes</span>▼</div>
+        <div class="node bug">
+          <div class="label">_focusOutsideToolbar(backward, path)</div>
+          <div class="file">Toolbar.ts:859 · <code>getTabbableElements(document.body)</code> on every Tab keypress
+            <span class="finding orange" onclick="goFinding(5)">#5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+    <div class="node bug">
+      <div class="label">isUp(e) || isDown(e)? → e.preventDefault(); return</div>
+      <div class="file">Toolbar.ts:663–666 · unconditional, breaks <code>&lt;ui5-textarea&gt;</code> caret
+        <span class="finding red" onclick="goFinding(2)">#2</span>
+      </div>
+    </div>
+
+    <div class="arrow">▼</div>
+    <div class="node decision">
+      <div class="label">Compute isForward / isBackward (RTL-aware), isHome, isEnd</div>
+      <div class="file">Toolbar.ts:668–671</div>
+    </div>
+
+    <div class="arrow">▼</div>
+    <div class="node decision">
+      <div class="label">None of {Left, Right, Home, End}? → return</div>
+      <div class="file">Toolbar.ts:673–675</div>
+    </div>
+
+    <div class="arrow">▼</div>
+    <div class="node action">
+      <div class="label">Find currentTarget</div>
+      <div class="file">_findItemByPath ?? _findOverflowButtonByPath ?? _findCurrentTargetByActiveElement ?? _lastFocusedItem</div>
+    </div>
+
+    <div class="arrow">▼</div>
+    <div class="node decision">
+      <div class="label">currentTarget instanceof ToolbarItemBase && (isForward || isBackward)?</div>
+      <div class="file">Toolbar.ts:684</div>
+    </div>
+
+    <div class="arrow"><span class="label">yes</span>▼</div>
+
+    <div class="node decision">
+      <div class="label">movementInfo = currentTarget.getToolbarMovementInfo()</div>
+      <div class="file">Returns <code>{ currentIndex, itemCount }</code> or <code>undefined</code> · 3 paths feed this →
+        <a href="#" onclick="setTab('paths');return false;" style="color:var(--accent)">see "3 Paths" tab</a></div>
+    </div>
+
+    <div class="branch">
+      <div>
+        <div class="arrow"><span class="label">undefined</span>▼</div>
+        <div class="node action">
+          <div class="label">fall through → Home/End / move next/prev</div>
+        </div>
+      </div>
+      <div>
+        <div class="arrow"><span class="label">defined</span>▼</div>
+        <div class="node decision">
+          <div class="label">Boundary check</div>
+          <div class="file">Toolbar.ts:687–688</div>
+          <pre style="margin-top:8px"><span class="kw">const</span> atForwardBoundary  = itemCount &lt;= <span class="num">1</span> || (isForward  && currentIndex &gt;= itemCount-<span class="num">1</span>);
+<span class="kw">const</span> atBackwardBoundary = itemCount &lt;= <span class="num">1</span> || (isBackward && currentIndex &lt;= <span class="num">0</span>);</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <div></div>
+      <div>
+        <div class="branch">
+          <div>
+            <div class="arrow"><span class="label">at boundary</span>▼</div>
+            <div class="node action">
+              <div class="label">_moveToNext / _moveToPrev (sibling toolbar item)</div>
+            </div>
+          </div>
+          <div>
+            <div class="arrow"><span class="label">interior</span>▼</div>
+            <div class="node action">
+              <div class="label">moveWithinToolbarItem(isForward)</div>
+              <div class="file">delegates to nested ItemNavigation / native default</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Side-effects on render</h3>
+  <div class="node bug" style="margin-top:8px">
+    <div class="label">onBeforeRendering — focus recovery on overflow button</div>
+    <div class="file">Toolbar.ts:322–334 · reads stale <code>itemsToOverflow</code> (cleared on every <code>onToolbarItemChange</code>)
+      <span class="finding red" onclick="goFinding(3)">#3</span>
+    </div>
+    <pre><span class="com">// Runs BEFORE prePopulateAlwaysOverflowItems()</span>
+<span class="kw">if</span> (getActiveElement() === <span class="kw">this</span>.overflowButtonDOM?.getFocusDomRef() && <span class="red-line"><span class="kw">this</span>.hideOverflowButton</span>) {
+    <span class="com">// → steals focus from overflow button on AlwaysOverflow toolbars</span>
+}
+<span class="kw">this</span>.prePopulateAlwaysOverflowItems();  <span class="com">// ← runs AFTER, too late</span></pre>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB 2: 3 NAVIGATION PATHS                                    -->
+<!-- ============================================================ -->
+<section id="paths">
+  <h2>The 3 ways <code>ToolbarItem.getToolbarMovementInfo()</code> learns "where the cursor is"</h2>
+  <p class="lead">
+    The PR introduces three independent strategies to determine an item's internal navigation state.
+    They're tried in order. Path 1 reaches into private API; Path 3 is a footgun. Source:
+    <code>packages/main/src/ToolbarItem.ts:281–351</code>.
+  </p>
+
+  <div class="branch-3">
+    <div class="panel" style="border-color: var(--orange);">
+      <h3 style="color: var(--orange); margin-top:0;">Path 1 — Duck-typed _itemNavigation</h3>
+      <p class="lead" style="margin:0 0 10px;">If the slotted child has <code>_itemNavigation._getCurrentItem</code>, dig into it.</p>
+      <pre><span class="com">// ToolbarItem.ts:281–305</span>
+<span class="fn">_supportsItemNavigationMovementInfo</span>(child) {
+  <span class="kw">return</span> <span class="kw">typeof</span> child._itemNavigation
+    ?._getCurrentItem === <span class="str">"function"</span>
+    && <span class="kw">typeof</span> child._getFocusableItems
+       === <span class="str">"function"</span>;
+}</pre>
+      <details><summary>⚠️ Why fragile</summary>
+        <p style="font-size:12px;color:var(--ink-dim);line-height:1.6">
+          Reaches across the component boundary into <strong>private underscore-prefixed members</strong>
+          of another component (<code>SegmentedButton</code>, etc.). Renaming <code>_currentItem</code>
+          or restructuring <code>ItemNavigation</code> silently breaks toolbar nav at runtime, with no
+          type-safety net.
+        </p>
+      </details>
+    </div>
+
+    <div class="panel" style="border-color: var(--green);">
+      <h3 style="color: var(--green); margin-top:0;">Path 2 — Explicit getToolbarMovementInfo</h3>
+      <p class="lead" style="margin:0 0 10px;">If the child opted in by implementing the interface.</p>
+      <pre><span class="com">// ToolbarItem.ts:318–320</span>
+<span class="kw">if</span> (<span class="kw">typeof</span> child.getToolbarMovementInfo
+    === <span class="str">"function"</span>) {
+  <span class="kw">return</span> child.getToolbarMovementInfo();
+}</pre>
+      <p style="font-size:12px;color:var(--ink-dim);line-height:1.6">
+        ✓ Implemented on <code>Input</code> &amp; <code>TextArea</code>.<br>
+        ✓ Honest contract — type-checked, opt-in.<br>
+        ✓ This is the one to keep.
+      </p>
+    </div>
+
+    <div class="panel" style="border-color: var(--orange);">
+      <h3 style="color: var(--orange); margin-top:0;">Path 3 — Multi-child fallback</h3>
+      <p class="lead" style="margin:0 0 10px;">If item has <code>&gt;1</code> slotted child, treat them as a navigable list.</p>
+      <pre><span class="com">// ToolbarItem.ts:322–351 (paraphrased)</span>
+<span class="kw">const</span> targets = <span class="kw">this</span>._getNavigationTargets();
+<span class="kw">if</span> (targets.length &gt; <span class="num">1</span>) {
+  <span class="kw">const</span> idx = targets.indexOf(active);
+  <span class="kw">return</span> { currentIndex: idx,
+           itemCount: targets.length };
+}</pre>
+      <details><summary>⚠️ Why footgun</summary>
+        <p style="font-size:12px;color:var(--ink-dim);line-height:1.6">
+          Slotting <em>any</em> two children — say a <code>&lt;ui5-title&gt;</code> + a
+          <code>&lt;ui5-button&gt;</code> — accidentally turns the item into an arrow-navigable group.
+          The "group" had no semantic meaning intended by the user. Rule of thumb: implicit groupings
+          based on count are landmines.
+        </p>
+      </details>
+    </div>
+  </div>
+
+  <h3>Proposed simplification — collapse to Path 2 only</h3>
+  <div class="panel">
+    <p class="lead" style="margin:0 0 12px;">
+      Components that currently rely on Path 1 (e.g. <code>SegmentedButton</code>) implement Path 2 in three lines and the duck-typing goes away:
+    </p>
+    <pre><span class="com">// SegmentedButton.ts (proposed addition)</span>
+<span class="fn">getToolbarMovementInfo</span>() {
+  <span class="kw">const</span> items = <span class="kw">this</span>._itemNavigation.getItemsForProcessing();
+  <span class="kw">const</span> idx   = items.indexOf(<span class="kw">this</span>._itemNavigation._currentIndex);
+  <span class="kw">return</span> idx === -<span class="num">1</span> ? <span class="kw">undefined</span> : { currentIndex: idx, itemCount: items.length };
+}</pre>
+    <p style="font-size:13px;color:var(--ink-dim);line-height:1.6;margin:8px 0 0">
+      ~50 lines deleted in <code>ToolbarItem.ts</code>, plus the fragile private-API dependency. One contract, one mental model.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB 3: FINDINGS                                              -->
+<!-- ============================================================ -->
+<section id="findings">
+  <h2>10 review findings, ranked by severity</h2>
+  <p class="lead">
+    Click any chip elsewhere in this page to jump to its detail card. Severity follows traffic-light convention:
+    <span style="color:var(--red)">🔴 blocker</span>,
+    <span style="color:var(--orange)">🟠 discuss before merge</span>,
+    <span style="color:var(--yellow)">🟡 cleanup</span>,
+    <span style="color:var(--green)">🟢 nice-to-have</span>.
+    Finding #1 from the original review was <em>retracted</em> after discussion (in a toolbar, empty-input arrow keys correctly exit).
+  </p>
+
+  <div class="findings-grid">
+
+    <div class="finding-card red" id="f1">
+      <div class="num-badge">1</div>
+      <div>
+        <div class="summary">~~Empty input early-exit on Arrow keys~~ <span style="color:var(--green); font-weight:400; font-size:12px;">— retracted ✓</span></div>
+        <div class="where">Input.ts:1664 · TextArea.ts:441 · Toolbar.ts:687</div>
+        <div class="why">
+          Originally flagged: <code>itemCount &lt;= 1</code> short-circuit fires on empty inputs. <strong>After discussion: this is the desired behavior</strong> — inside a toolbar, an empty input has nothing to explore, so arrow keys should move to the next/previous toolbar item.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card red" id="f2">
+      <div class="num-badge">2</div>
+      <div>
+        <div class="summary">ArrowUp/Down preventDefault is unconditional → breaks <code>&lt;ui5-textarea&gt;</code> caret movement</div>
+        <div class="where">Toolbar.ts:548 (capture) + Toolbar.ts:663–666</div>
+        <div class="why">
+          <strong>Repro:</strong> slot a multi-line <code>&lt;ui5-textarea&gt;</code> in a <code>&lt;ui5-toolbar-item&gt;</code>. The native <code>&lt;textarea&gt;</code> default action is <em>the only</em> source of vertical caret movement (no programmatic Up/Down handler in TextArea).
+          <strong>Capture-phase preventDefault</strong> on Up/Down kills it before the textarea ever sees the event. <code>ui5-input</code> and <code>ui5-select</code> are unaffected because they handle Up/Down programmatically.
+          <br><br><strong>Fix:</strong> only <code>preventDefault</code> if the focused item exposes <code>getToolbarMovementInfo()</code>, or move this branch <em>below</em> the movement-info branch.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card red" id="f3">
+      <div class="num-badge">3</div>
+      <div>
+        <div class="summary"><code>onBeforeRendering</code> reads stale <code>itemsToOverflow</code>, steals focus from overflow button</div>
+        <div class="where">Toolbar.ts:322–334</div>
+        <div class="why">
+          <strong>Repro:</strong> a toolbar with only <code>AlwaysOverflow</code> items, focus on the overflow button. A re-render is triggered.
+          <code>onToolbarItemChange()</code> resets <code>itemsToOverflow = []</code> (line 559).
+          <code>onBeforeRendering</code> sees the empty array, computes <code>hideOverflowButton === true</code>, and yanks focus to the last navigable item — <em>before</em> <code>prePopulateAlwaysOverflowItems()</code> runs one line later.
+          <br><br><strong>Fix:</strong> call <code>prePopulateAlwaysOverflowItems()</code> first, or defer the focus-recovery to <code>onAfterRendering</code> after layout has settled.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card orange" id="f4">
+      <div class="num-badge">4</div>
+      <div>
+        <div class="summary">Arrow nav auto-clicks <code>ui5-radio-button</code>, ignoring <code>name</code> grouping</div>
+        <div class="where">ToolbarItem.ts:199–243 (<code>_handleNavigationTarget</code>)</div>
+        <div class="why">
+          When focus lands on a <code>[ui5-radio-button]</code>, the toolbar calls <code>radio.click()</code>. While that matches the WAI-ARIA radiogroup pattern, it fires for <em>any</em> radio in <em>any</em> grouping — two unrelated yes/no toggles in one toolbar item also get auto-toggled.
+          <strong>Wrong altitude:</strong> RadioButton-specific behavior baked into a generic toolbar navigator.
+          <br><br><strong>Fix:</strong> (a) only auto-click when radios share <code>name</code>; or (b) move the behavior into RadioButton itself (let it react to focus); or (c) introduce a small protocol like <code>child.onToolbarArrowFocus?.()</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card orange" id="f5">
+      <div class="num-badge">5</div>
+      <div>
+        <div class="summary"><code>_focusOutsideToolbar</code> walks the entire document on every Tab keypress</div>
+        <div class="where">Toolbar.ts:861</div>
+        <div class="why">
+          <code>getTabbableElements(document.body)</code> recursively descends every shadow root and runs <code>isElementTabbable</code> (which calls <code>getComputedStyle</code>) on each. On a typical Fiori shell page this is a synchronous O(N) walk per Tab, with potential layout flushes.
+          <br><br><strong>Deeper question:</strong> if roving tabindex is correct, the browser already does this for free — that's literally what Tab does. The handler may be solving a problem that doesn't exist.
+          <br><br><strong>Fix:</strong> scope to <code>this.getRootNode()</code>, or delete the handler and rely on native Tab.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card yellow" id="f6">
+      <div class="num-badge">6</div>
+      <div>
+        <div class="summary"><code>handlesOwnKeyboardNavigation</code> is dead public API</div>
+        <div class="where">ToolbarItemBase.ts:76–78 · ToolbarItem.ts:69–78</div>
+        <div class="why">
+          <code>grep -rn handlesOwnKeyboardNavigation packages/*/src</code> returns only the two getter definitions — nothing reads them. Earlier branch checkpoints had four call-sites; they were removed during refactor and the getters were left behind.
+          <br><br><strong>Fix:</strong> remove the getter (preferred) — <code>getToolbarMovementInfo()</code> truthiness already serves the same purpose.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card yellow" id="f7">
+      <div class="num-badge">7</div>
+      <div>
+        <div class="summary">RadioButton <code>@csspart root</code> JSDoc removed but template still emits <code>part="root"</code></div>
+        <div class="where">RadioButton.ts:69–70 (deleted) · RadioButtonTemplate.tsx:10</div>
+        <div class="why">
+          Commit <code>7622f8045cc</code> deleted the <code>@csspart root</code> JSDoc but left <code>part="root"</code> on the template. Either revert the doc deletion (the part is still public) or also drop the <code>part</code> from the template (silently breaks <code>::part(root)</code> consumers).
+          <br>Looks accidental and unrelated to the toolbar feature.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card yellow" id="f8">
+      <div class="num-badge">8</div>
+      <div>
+        <div class="summary">Duplicated <code>getToolbarMovementInfo</code> in Input/TextArea + duplicated currentIndex discovery in ToolbarItem</div>
+        <div class="where">Input.ts:1664–1683 · TextArea.ts:441–460 · ToolbarItem.ts (3× variants)</div>
+        <div class="why">
+          Input/TextArea bodies are mechanically identical: <code>selectionStart</code>, <code>value.length</code>, focus check, <code>+1</code>. Extract to <code>caretMovementInfo(el)</code> next to <code>Caret.ts</code>.
+          <br><br>In <code>ToolbarItem.ts</code>, <code>currentIndex</code> discovery is restated three times. One private helper returning <code>{ items, currentIndex }</code> would collapse ~30 lines.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card yellow" id="f9">
+      <div class="num-badge">9</div>
+      <div>
+        <div class="summary">Selection ignores <code>selectionEnd</code></div>
+        <div class="where">Input.ts:1676 · TextArea.ts:453</div>
+        <div class="why">
+          Reports <code>currentIndex = selectionStart</code> regardless of direction. With text fully selected (start=0, end=N), ArrowLeft hits <code>atBackwardBoundary</code> (<code>currentIndex &lt;= 0</code>) and exits the input — but native behavior would collapse the selection to position 0, <em>still inside</em> the field.
+          <br><br><strong>Fix:</strong> use <code>selectionEnd</code> for forward comparisons, <code>selectionStart</code> for backward.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card green" id="f10">
+      <div class="num-badge">10</div>
+      <div>
+        <div class="summary">Reuse — three new helpers reinvent existing ones</div>
+        <div class="where">Toolbar.ts:757 · ToolbarItem.ts:236 · ToolbarItem.ts:186</div>
+        <div class="why">
+          • <code>Toolbar._isNodeInsideElement</code> → use <code>PopupUtils.isNodeContainedWithin</code><br>
+          • <code>ToolbarItem._isUI5Host</code> (duck-types <code>getMetadata</code>) → use <code>instanceOfUI5Element</code> from <code>UI5Element.ts:1468</code><br>
+          • <code>ToolbarItem._getFirstTabbableDescendant</code> → already covered by <code>getTabbableElements</code>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB 4: COMPARE                                               -->
+<!-- ============================================================ -->
+<section id="compare">
+  <h2>Current PR design vs. proposed simplification</h2>
+  <p class="lead">
+    Same WAI-ARIA semantics, smaller surface. The good parts (popover isolation, Home/End handling, test shape, key dispatch) stay; the speculative breadth gets cut.
+  </p>
+
+  <div class="compare">
+    <div class="current">
+      <h4>🟠 Current PR — 5-method extension API + 3 nav paths</h4>
+      <ul>
+        <li><code>getToolbarMovementInfo()</code> — explicit interface ✓</li>
+        <li><code>moveWithinToolbarItem(isForward)</code></li>
+        <li><code>focusForToolbarNavigation(isForward)</code></li>
+        <li><code>setToolbarForcedTabIndex(tabIndex)</code></li>
+        <li><code>handlesOwnKeyboardNavigation</code> getter — <em>dead</em></li>
+        <li>+ duck-typed <code>_itemNavigation</code> path (private API)</li>
+        <li>+ multi-child fallback path (footgun)</li>
+        <li>+ <code>_focusOutsideToolbar</code> doing browser's job</li>
+      </ul>
+      <div class="meta">
+        <strong>Toolbar.ts:</strong> ~370 added<br>
+        <strong>ToolbarItem.ts:</strong> ~233 added<br>
+        <strong>ToolbarItemBase.ts:</strong> ~80 added<br>
+        <strong>Total new code:</strong> ~683 lines
+      </div>
+    </div>
+
+    <div class="simplified">
+      <h4>🟢 Proposed — 2-method contract, 1 nav path</h4>
+      <ul>
+        <li><code>getToolbarMovementInfo()</code> — single contract</li>
+        <li><code>getNavigationTargets()</code> — for multi-target items</li>
+        <li>Toolbar writes tabindex itself in one loop</li>
+        <li>SegmentedButton implements <code>getToolbarMovementInfo</code> in 3 lines</li>
+        <li>Native Tab handles "leave toolbar" — no manual scan</li>
+        <li>Up/Down preventDefault gated on movement info</li>
+        <li>Empty input early-exit retained (toolbar context)</li>
+        <li>Radio click side-effect moves to RadioButtonGroup</li>
+      </ul>
+      <div class="meta">
+        <strong>Toolbar.ts:</strong> ~200<br>
+        <strong>ToolbarItem.ts:</strong> ~120<br>
+        <strong>ToolbarItemBase.ts:</strong> ~25<br>
+        <strong>Total new code:</strong> ~345 lines
+      </div>
+    </div>
+  </div>
+
+  <div class="delta">
+    ≈ 50% less new code · narrower API surface · no fragile private-API duck-typing · 3 fewer correctness bugs to maintain
+  </div>
+
+  <h3>Cuts mapped to findings</h3>
+  <div class="panel">
+    <table style="width:100%; font-size:13px; border-collapse:collapse;">
+      <thead><tr style="border-bottom:1px solid var(--border); color:var(--ink-dim); text-align:left;">
+        <th style="padding:8px 4px;">Cut</th><th>Resolves</th><th>Saved</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Drop duck-typed Path 1 + multi-child Path 3</td><td>Brittleness; fewer surprise groupings</td><td>~50 lines</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Remove <code>handlesOwnKeyboardNavigation</code></td><td>Finding #6</td><td>2 getters</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Fold <code>moveWithinToolbarItem</code> + <code>focusForToolbarNavigation</code></td><td>API surface</td><td>1 method</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Toolbar writes tabindex; drop <code>setToolbarForcedTabIndex</code></td><td>Inversion of control</td><td>~25 lines</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Delete <code>_focusOutsideToolbar</code></td><td>Finding #5</td><td>~60 lines</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Move radio <code>.click()</code> to RadioButton</td><td>Finding #4 (altitude)</td><td>~15 lines</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;">Use <code>instanceOfUI5Element</code>, <code>isNodeContainedWithin</code></td><td>Finding #10</td><td>~25 lines</td></tr>
+        <tr><td style="padding:8px 4px;">Extract <code>caretMovementInfo</code> shared util</td><td>Findings #8, #9 (one place to fix)</td><td>~20 lines</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB 5: DEMO                                                  -->
+<!-- ============================================================ -->
+<section id="demo">
+  <h2>Try it — mock toolbar with the PR's roving tabindex behavior</h2>
+  <p class="lead">
+    Click the first button to enter, then use <kbd>←</kbd>/<kbd>→</kbd> to roam, <kbd>Home</kbd>/<kbd>End</kbd> to jump,
+    <kbd>Tab</kbd> to leave. The empty input demonstrates Finding #1 (now confirmed correct).
+    Try ArrowDown in the textarea to feel Finding #2.
+  </p>
+
+  <div class="demo">
+    <div class="toolbar-mock" id="tb" role="toolbar" aria-label="Demo toolbar">
+      <button class="tb-item" data-i="0" tabindex="0">Cut</button>
+      <button class="tb-item" data-i="1" tabindex="-1">Copy</button>
+      <input class="tb-input" data-i="2" tabindex="-1" placeholder="empty input — try arrows" />
+      <input class="tb-input" data-i="3" tabindex="-1" value="hello world" />
+      <textarea class="tb-input" data-i="4" tabindex="-1" rows="2" style="width:160px; resize:none">line one
+line two</textarea>
+      <button class="tb-item" data-i="5" tabindex="-1">Paste</button>
+      <button class="tb-item" data-i="6" tabindex="-1">Delete</button>
+    </div>
+    <p style="color:var(--ink-dim); font-size:12px; margin: 0 0 8px;">Event log:</p>
+    <div class="log" id="log"></div>
+    <button onclick="document.getElementById('log').innerHTML=''" style="margin-top:8px; background:transparent; border:1px solid var(--border); color:var(--ink-dim); padding:4px 10px; border-radius:6px; cursor:pointer;">Clear log</button>
+  </div>
+
+  <h3>What the mock simulates</h3>
+  <div class="panel">
+    <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.8;">
+      <li><strong>Roving tabindex:</strong> exactly one item has <code>tabindex=0</code>; the rest have <code>tabindex=-1</code>. Tab-out works because only one tab stop.</li>
+      <li><strong>ArrowLeft/Right:</strong> moves focus between items. Inputs/textarea use <code>selectionStart</code> + <code>value.length</code> to decide when to exit.</li>
+      <li><strong>Empty input:</strong> first arrow press exits (toolbar takes over — Finding #1 retracted).</li>
+      <li><strong>"hello world" input:</strong> arrow moves caret first, only exits at boundaries (proper movementInfo behavior).</li>
+      <li><strong>Textarea ArrowDown:</strong> in the real PR, capture-phase <code>preventDefault</code> kills the native vertical caret. The mock highlights this case in <span style="color:var(--red)">red</span> in the log.</li>
+      <li><strong>Home/End:</strong> jump to first/last toolbar item.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ===== Tab switching =====
+function setTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+  document.querySelectorAll('main > section').forEach(s => s.classList.toggle('active', s.id === id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => setTab(btn.dataset.tab));
+});
+
+function goFinding(n) {
+  setTab('findings');
+  setTimeout(() => {
+    const el = document.getElementById('f' + n);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.transition = 'box-shadow 0.4s';
+      el.style.boxShadow = '0 0 0 3px rgba(68, 147, 248, 0.4)';
+      setTimeout(() => el.style.boxShadow = '', 1500);
+    }
+  }, 100);
+}
+
+// ===== Mock toolbar =====
+(function() {
+  const tb = document.getElementById('tb');
+  if (!tb) return;
+  const items = [...tb.querySelectorAll('[data-i]')];
+  const log = document.getElementById('log');
+
+  function L(html, cls = '') {
+    const line = document.createElement('div');
+    line.className = cls;
+    line.innerHTML = html;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function setActive(i) {
+    items.forEach((el, idx) => el.tabIndex = idx === i ? 0 : -1);
+    items[i].focus();
+  }
+
+  function getCurIdx() {
+    const a = document.activeElement;
+    return items.indexOf(a);
+  }
+
+  function caretInfo(el) {
+    if (!('selectionStart' in el)) return null;
+    const len = (el.value || '').length;
+    return { idx: el.selectionStart ?? 0, count: len + 1 };
+  }
+
+  tb.addEventListener('keydown', (e) => {
+    const cur = getCurIdx();
+    if (cur === -1) return;
+    const target = items[cur];
+    const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+    const keyName = e.key;
+
+    // up/down — what PR does
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (target.tagName === 'TEXTAREA') {
+        L(`<span class="l-key">${keyName}</span> on textarea — <span class="l-bug">PR would preventDefault here, breaking caret (Finding #2)</span>`, '');
+        // we DON'T preventDefault in the mock so you can see native works
+        return;
+      }
+      L(`<span class="l-key">${keyName}</span> on item — preventDefault, no toolbar action`, '');
+      e.preventDefault();
+      return;
+    }
+
+    if (e.key === 'Home') {
+      e.preventDefault();
+      L(`<span class="l-key">Home</span> → move to first item (idx 0)`, 'l-action');
+      setActive(0); return;
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      L(`<span class="l-key">End</span> → move to last item (idx ${items.length - 1})`, 'l-action');
+      setActive(items.length - 1); return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      const fwd = e.key === 'ArrowRight';
+      // Movement-info path
+      if (isInput) {
+        const ci = caretInfo(target);
+        const atForwardBoundary = ci.count <= 1 || (fwd  && ci.idx >= ci.count - 1);
+        const atBackwardBoundary = ci.count <= 1 || (!fwd && ci.idx <= 0);
+        L(`<span class="l-key">${keyName}</span> on <code>${target.tagName.toLowerCase()}</code>: caret idx=${ci.idx}, count=${ci.count}, atFwd=${atForwardBoundary}, atBack=${atBackwardBoundary}`, 'l-info');
+        if (atForwardBoundary || atBackwardBoundary) {
+          e.preventDefault();
+          const next = fwd ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
+          if (next !== cur) {
+            L(`  → boundary hit, move to item idx ${next}`, 'l-action');
+            setActive(next);
+          } else {
+            L(`  → at toolbar edge, stay`, 'l-info');
+          }
+          return;
+        }
+        // not at boundary, let native handle caret
+        L(`  → interior, native caret movement`, 'l-info');
+        return;
+      }
+      // plain button: move siblings
+      e.preventDefault();
+      const next = fwd ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
+      if (next !== cur) {
+        L(`<span class="l-key">${keyName}</span> on button → move to item idx ${next}`, 'l-action');
+        setActive(next);
+      } else {
+        L(`<span class="l-key">${keyName}</span> on button → at edge`, 'l-info');
+      }
+    }
+  }, true); // capture, like the PR
+
+  // initial
+  L('<span class="l-info">Click "Cut" or press Tab into the toolbar to begin.</span>');
+})();
+</script>
+</body>
+</html>

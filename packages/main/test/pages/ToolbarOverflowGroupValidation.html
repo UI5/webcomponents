@@ -1,0 +1,169 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar — overflow-group validation</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: var(--sapFontFamily); padding: 1rem; }
+		section { max-width: 100%; margin-bottom: 2rem; }
+		.frame { border: 1px dashed var(--sapNeutralBorderColor); padding: 0.5rem; }
+		.frame ui5-toolbar { width: 100%; }
+		.controls { display: flex; gap: 0.5rem; align-items: center; margin: 0.25rem 0 0.75rem; }
+		h2, h3 { color: var(--sapTitleColor); }
+		code { background: var(--sapNeutralBackground); padding: 0 0.25rem; }
+		.hint { color: var(--sapNeutralTextColor); font-size: 0.85rem; }
+	</style>
+</head>
+
+<body>
+	<h1>Toolbar — overflow-group validation</h1>
+	<p>
+		Each scenario configures the toolbar incorrectly per ADR-0001 and should produce
+		<strong>exactly one</strong> <code>console.warn</code> per offending item. Open the
+		DevTools console before interacting with the page.
+	</p>
+
+	<section>
+		<h3>1. Mixed-priority violation: AlwaysOverflow on a grouped item</h3>
+		<p>
+			<code>Filter</code> button has <code>overflow-group="filters"</code> AND
+			<code>overflow-priority="AlwaysOverflow"</code>. The warning should fire once and
+			the item's priority should drop to <code>Default</code> for layout, so the group
+			overflows atomically together with the select.
+		</p>
+		<div id="frame1" class="frame" style="width: 800px;">
+			<ui5-toolbar id="tb1">
+				<ui5-toolbar-button text="New" icon="add"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Edit" icon="edit"></ui5-toolbar-button>
+				<ui5-toolbar-button id="bad-priority-always" text="Filter:" overflow-group="filters" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-select overflow-group="filters">
+					<ui5-toolbar-select-option>All</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option selected>Open</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option>Closed</ui5-toolbar-select-option>
+				</ui5-toolbar-select>
+			</ui5-toolbar>
+		</div>
+		<div class="controls">
+			<ui5-button id="resize1">Shrink frame1 to 300px</ui5-button>
+			<ui5-button id="rerender1">Force re-render (toggle width)</ui5-button>
+		</div>
+	</section>
+
+	<section>
+		<h3>2. Mixed-priority violation: NeverOverflow on a grouped item</h3>
+		<p>
+			<code>Range</code> button has <code>overflow-group="range"</code> AND
+			<code>overflow-priority="NeverOverflow"</code>. The warning should fire once and the
+			priority should drop to <code>Default</code> so the group can overflow as one.
+		</p>
+		<div id="frame2" class="frame" style="width: 800px;">
+			<ui5-toolbar id="tb2">
+				<ui5-toolbar-button text="Refresh" icon="refresh"></ui5-toolbar-button>
+				<ui5-toolbar-button id="bad-priority-never" text="Range" overflow-group="range" overflow-priority="NeverOverflow"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Sort"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Date" overflow-group="range" icon="calendar"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+		<div class="controls">
+			<ui5-button id="resize2">Shrink frame2 to 280px</ui5-button>
+			<ui5-button id="rerender2">Force re-render (toggle width)</ui5-button>
+		</div>
+	</section>
+
+	<section>
+		<h3>3. Spacer violation: <code>overflow-group</code> on a spacer</h3>
+		<p>
+			A <code>ui5-toolbar-spacer</code> with <code>overflow-group="sg"</code>. The warning
+			should fire once; the spacer continues its existing flex/spacer behavior and is
+			<strong>not</strong> yoked to the group's overflow decision.
+		</p>
+		<div id="frame3" class="frame" style="width: 600px;">
+			<ui5-toolbar id="tb3">
+				<ui5-toolbar-button text="Left"></ui5-toolbar-button>
+				<ui5-toolbar-spacer id="bad-spacer" overflow-group="sg"></ui5-toolbar-spacer>
+				<ui5-toolbar-button text="Right" overflow-group="sg"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+		<div class="controls">
+			<ui5-button id="rerender3">Force re-render (toggle width)</ui5-button>
+		</div>
+	</section>
+
+	<section>
+		<h3>4. Valid configuration (control case — no warnings expected)</h3>
+		<p>
+			Two grouped buttons with default priority and a spacer with no group. The console
+			should remain silent for this section.
+		</p>
+		<div id="frame4" class="frame" style="width: 600px;">
+			<ui5-toolbar id="tb4">
+				<ui5-toolbar-button text="A" overflow-group="ok"></ui5-toolbar-button>
+				<ui5-toolbar-button text="B" overflow-group="ok"></ui5-toolbar-button>
+				<ui5-toolbar-spacer></ui5-toolbar-spacer>
+				<ui5-toolbar-button text="C"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<section>
+		<h3>Diagnostics</h3>
+		<p class="hint">
+			Click below to dump the <code>console.warn</code> count + the effective getters for
+			each test element. Useful when running this page under Chrome DevTools MCP.
+		</p>
+		<ui5-button id="dump">Dump diagnostics</ui5-button>
+		<pre id="diag" style="background: var(--sapNeutralBackground); padding: 0.5rem;"></pre>
+	</section>
+
+	<script>
+		// Patch console.warn to count calls per offending element so we can verify "one-shot".
+		const warnCounts = new Map();
+		const originalWarn = console.warn.bind(console);
+		console.warn = (...args) => {
+			// Group by tag name + first message string fragment.
+			const head = typeof args[0] === "string" ? args[0] : "";
+			const el = args.find(a => a && a.tagName);
+			const key = (el ? el.id || el.tagName.toLowerCase() : "?") + "::" + head.slice(0, 60);
+			warnCounts.set(key, (warnCounts.get(key) || 0) + 1);
+			originalWarn(...args);
+		};
+		window.__warnCounts = warnCounts;
+
+		const shrink = (frameId, px) => {
+			document.getElementById(frameId).style.width = px + "px";
+		};
+		const rerender = (frameId, originalPx) => {
+			const f = document.getElementById(frameId);
+			const w = parseInt(f.style.width, 10);
+			f.style.width = (w === originalPx ? originalPx - 10 : originalPx) + "px";
+		};
+
+		document.getElementById("resize1").addEventListener("ui5-click", () => shrink("frame1", 300));
+		document.getElementById("rerender1").addEventListener("ui5-click", () => rerender("frame1", 800));
+		document.getElementById("resize2").addEventListener("ui5-click", () => shrink("frame2", 280));
+		document.getElementById("rerender2").addEventListener("ui5-click", () => rerender("frame2", 800));
+		document.getElementById("rerender3").addEventListener("ui5-click", () => rerender("frame3", 600));
+
+		document.getElementById("dump").addEventListener("ui5-click", () => {
+			const lines = [];
+			lines.push("warn counts:");
+			for (const [k, v] of warnCounts.entries()) lines.push(`  ${k}  =>  ${v}`);
+			const probe = id => {
+				const el = document.getElementById(id);
+				if (!el) return `${id}: NOT FOUND`;
+				return `${id}: declared overflowGroup="${el.overflowGroup}" overflowPriority="${el.overflowPriority}" => effectiveOverflowGroup="${el.effectiveOverflowGroup}" effectiveOverflowPriority="${el.effectiveOverflowPriority}" isOverflowed=${el.isOverflowed}`;
+			};
+			lines.push("");
+			lines.push("element states:");
+			lines.push("  " + probe("bad-priority-always"));
+			lines.push("  " + probe("bad-priority-never"));
+			lines.push("  " + probe("bad-spacer"));
+			document.getElementById("diag").textContent = lines.join("\n");
+		});
+	</script>
+</body>
+
+</html>

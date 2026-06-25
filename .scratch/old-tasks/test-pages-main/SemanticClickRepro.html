@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semantic Click - ListItemBase &amp; Tab Repro</title>
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_horizon",
+			"language": "EN"
+		}
+	</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: sans-serif; padding: 20px; background: var(--sapBackgroundColor); }
+		section { margin: 30px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+		h2 { margin-top: 0; }
+		.log { background: #1a1a2e; color: #0f0; padding: 12px; font-family: monospace; font-size: 13px; min-height: 60px; max-height: 200px; overflow-y: auto; border-radius: 4px; white-space: pre-wrap; }
+		.log-label { font-weight: bold; margin: 10px 0 4px; }
+		.clear-btn { margin-top: 8px; cursor: pointer; }
+		.red { color: #f44; font-weight: bold; }
+		.green { color: #0f0; }
+		.yellow { color: #ff0; }
+	</style>
+</head>
+<body>
+
+<h1>Semantic Click - ListItemBase &amp; Tab Issues</h1>
+
+<!-- ============================================================ -->
+<!-- ISSUE 1: Disabled ListItem - stopPropagation before guard     -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue 1: Disabled ListItem eats native click silently</h2>
+	<p><code>ListItemBase._onclick</code> calls <code>e.stopPropagation()</code> BEFORE <code>fireItemPress</code>, which has the <code>disabled</code> guard. So a disabled item swallows the native click but never fires the semantic click either.</p>
+	<p><b>Steps:</b> Click each item. Check the log for what the wrapper div receives.</p>
+	<p><b>Expected:</b> Enabled item = semantic CustomEvent only. Disabled item = nothing (native is eaten, semantic not fired).</p>
+
+	<div id="wrapper1" style="padding: 10px; border: 2px dashed #999;">
+		<ui5-list id="list1">
+			<ui5-li id="li-enabled">Enabled Item</ui5-li>
+			<ui5-li id="li-disabled" disabled>Disabled Item</ui5-li>
+		</ui5-list>
+	</div>
+
+	<div class="log-label">Events reaching wrapper div:</div>
+	<div id="log1" class="log">Click each item...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log1').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE 2: stopPropagation - native vs semantic                 -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue 2: Verify stopPropagation blocks native, passes semantic</h2>
+	<p><b>Steps:</b> Click the list item.</p>
+	<p><b>Expected:</b> Wrapper div should see ONLY the CustomEvent (semantic), not the native MouseEvent.</p>
+
+	<div id="wrapper2" style="padding: 10px; border: 2px dashed #999;">
+		<ui5-list id="list2">
+			<ui5-li id="li2">Click me - what reaches the wrapper?</ui5-li>
+		</ui5-list>
+	</div>
+
+	<div class="log-label">Events on the item itself + events on wrapper div:</div>
+	<div id="log2" class="log">Click the item...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log2').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE 3: Tab - programmatic selection                         -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue 3: Tab - user click vs programmatic selection</h2>
+	<p><b>Steps:</b> (1) Click Tab 1 manually. (2) Then click the "Select Tab 2 Programmatically" button.</p>
+	<p><b>Expected:</b> User click fires semantic <code>click</code> on the tab. Programmatic selection does NOT fire semantic <code>click</code>.</p>
+
+	<ui5-tabcontainer id="tc3" collapsed>
+		<ui5-tab id="tab3-1" text="Tab 1"></ui5-tab>
+		<ui5-tab id="tab3-2" text="Tab 2" selected></ui5-tab>
+		<ui5-tab id="tab3-3" text="Tab 3 (disabled)" disabled></ui5-tab>
+	</ui5-tabcontainer>
+	<br>
+	<button id="btn-prog" onclick="programmaticSelectTab()">Select Tab 2 Programmatically</button>
+	<button onclick="document.getElementById('tab3-1').click()">Call tab3-1.click() from JS</button>
+
+	<div class="log-label">Event Log:</div>
+	<div id="log3" class="log">Interact with tabs...\n</div>
+	<button class="clear-btn" onclick="document.getElementById('log3').textContent = ''">Clear</button>
+</section>
+
+<!-- ============================================================ -->
+<!-- ISSUE 4: Disabled Tab                                         -->
+<!-- ============================================================ -->
+<section>
+	<h2>Issue 4: Disabled Tab (reference - PR has a test for this)</h2>
+	<p><b>Steps:</b> Click the disabled "Tab 3" above in Issue 3. Check the log.</p>
+	<p><b>Expected:</b> No semantic click event.</p>
+</section>
+
+
+<script>
+	function ts() { return new Date().toLocaleTimeString(); }
+
+	function logTo(id, msg, cls) {
+		const el = document.getElementById(id);
+		const span = document.createElement('span');
+		span.className = cls || '';
+		span.textContent = ts() + ' | ' + msg + '\n';
+		el.appendChild(span);
+		el.scrollTop = el.scrollHeight;
+	}
+
+	function describeEvent(e) {
+		if (e instanceof CustomEvent) return 'CustomEvent(semantic)';
+		if (e instanceof PointerEvent) return 'PointerEvent(native)';
+		if (e instanceof MouseEvent) return 'MouseEvent(native)';
+		return e.constructor.name;
+	}
+
+	// ---- ISSUE 1 ----
+	document.getElementById('wrapper1').addEventListener('click', (e) => {
+		const cls = e instanceof CustomEvent ? 'green' : 'red';
+		logTo('log1', `WRAPPER: ${describeEvent(e)} target=${e.target?.id || e.target?.tagName} detail=${JSON.stringify(e.detail)}`, cls);
+	});
+	['li-enabled', 'li-disabled'].forEach(id => {
+		const el = document.getElementById(id);
+		if (!el) return;
+		el.addEventListener('click', (e) => {
+			logTo('log1', `${id}: ${describeEvent(e)} detail=${JSON.stringify(e.detail)}`,
+				e instanceof CustomEvent ? 'green' : 'yellow');
+		});
+	});
+
+	// ---- ISSUE 2 ----
+	document.getElementById('li2').addEventListener('click', (e) => {
+		logTo('log2', `ITEM li2: ${describeEvent(e)}`, e instanceof CustomEvent ? 'green' : 'yellow');
+	});
+	document.getElementById('wrapper2').addEventListener('click', (e) => {
+		const cls = e instanceof CustomEvent ? 'green' : 'red';
+		logTo('log2', `WRAPPER: ${describeEvent(e)} target=${e.target?.id}`, cls);
+	});
+
+	// ---- ISSUE 3 ----
+	['tab3-1', 'tab3-2', 'tab3-3'].forEach(id => {
+		const el = document.getElementById(id);
+		if (!el) return;
+		el.addEventListener('click', (e) => {
+			logTo('log3', `${id} click: ${describeEvent(e)} detail.tab=${e.detail?.tab?.id} detail.originalEvent=${e.detail?.originalEvent?.constructor?.name}`,
+				e instanceof CustomEvent ? 'green' : 'yellow');
+		});
+	});
+	document.getElementById('tc3').addEventListener('tab-select', (e) => {
+		logTo('log3', `tab-select: tab=${e.detail?.tab?.id}`, 'yellow');
+	});
+
+	function programmaticSelectTab() {
+		const tabs = document.querySelectorAll('#tc3 ui5-tab');
+		tabs.forEach(t => t.selected = false);
+		document.getElementById('tab3-2').selected = true;
+		logTo('log3', 'PROGRAMMATIC: set tab3-2.selected = true', 'yellow');
+	}
+</script>
+
+</body>
+</html>

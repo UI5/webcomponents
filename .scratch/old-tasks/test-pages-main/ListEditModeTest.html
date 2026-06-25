@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List Edit Mode - Feature Test Sample</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 2rem;
+			padding-bottom: 5rem;
+			font-family: "72", "72full", Arial, sans-serif;
+			background: var(--sapBackgroundColor, #f5f6f7);
+		}
+
+		h1 { color: var(--sapTitleColor, #32363a); }
+		h2 { margin-top: 2rem; color: var(--sapTitleColor, #32363a); }
+		h3 { margin-top: 1rem; color: var(--sapContent_LabelColor, #6a6d70); }
+
+		.test-case {
+			margin-bottom: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapField_BorderColor, #89919a);
+			border-radius: 8px;
+			background: var(--sapGroup_ContentBackground, #fff);
+			max-width: 700px;
+		}
+
+		.test-case p {
+			margin: 0 0 0.75rem 0;
+			font-size: 0.9em;
+			color: var(--sapContent_LabelColor, #6a6d70);
+		}
+
+		.test-case p strong {
+			color: var(--sapTextColor, #32363a);
+		}
+
+		.pass-fail {
+			display: flex;
+			gap: 0.5rem;
+			margin-top: 0.75rem;
+		}
+
+		.pass-fail button {
+			padding: 4px 12px;
+			border: 1px solid;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 0.85em;
+		}
+
+		.pass-fail button.pass {
+			border-color: var(--sapPositiveColor, #2b7c2b);
+			color: var(--sapPositiveColor, #2b7c2b);
+			background: transparent;
+		}
+
+		.pass-fail button.fail {
+			border-color: var(--sapNegativeColor, #bb0000);
+			color: var(--sapNegativeColor, #bb0000);
+			background: transparent;
+		}
+
+		.pass-fail button.active-pass {
+			background: var(--sapPositiveColor, #2b7c2b);
+			color: #fff;
+		}
+
+		.pass-fail button.active-fail {
+			background: var(--sapNegativeColor, #bb0000);
+			color: #fff;
+		}
+
+		.buttons-row {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+		}
+
+		kbd {
+			display: inline-block;
+			padding: 2px 6px;
+			font-size: 0.85em;
+			font-family: monospace;
+			background: var(--sapButton_Background, #fff);
+			border: 1px solid var(--sapButton_BorderColor, #bcc3ca);
+			border-radius: 3px;
+			box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+		}
+
+		.focus-log {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: var(--sapShell_Background, #354a5f);
+			color: var(--sapShell_TextColor, #fff);
+			padding: 0.75rem 1rem;
+			font-family: monospace;
+			font-size: 0.85em;
+			z-index: 999;
+			display: flex;
+			gap: 1.5rem;
+			align-items: center;
+		}
+
+		.focus-log span { opacity: 0.6; }
+		.focus-log strong { opacity: 1; }
+
+		.summary {
+			position: fixed;
+			top: 0;
+			right: 0;
+			padding: 0.5rem 1rem;
+			background: var(--sapShell_Background, #354a5f);
+			color: var(--sapShell_TextColor, #fff);
+			font-family: monospace;
+			font-size: 0.85em;
+			border-bottom-left-radius: 8px;
+			z-index: 999;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>List Edit Mode - Feature Test</h1>
+
+	<p>Test the new keyboard navigation edit mode in List items. Use the focus tracker at the bottom to monitor which element has focus and the current edit mode state.</p>
+
+	<!-- ============================================================ -->
+	<!-- TEST 1: F2 enters edit mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc1">
+		<h2>Test 1: F2 enters edit mode from item level</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" item &rarr; press <kbd>F2</kbd><br>
+		<strong>Expected:</strong> Focus moves to the delete button. Edit mode indicator shows ON.</p>
+
+		<ui5-button id="before-tc1">Before</ui5-button>
+		<ui5-list id="list-tc1" selection-mode="Delete" header-text="F2 Enter Edit Mode">
+			<ui5-li id="item-tc1-1">Laptop</ui5-li>
+			<ui5-li id="item-tc1-2">Monitor</ui5-li>
+			<ui5-li id="item-tc1-3">Keyboard</ui5-li>
+		</ui5-list>
+		<ui5-button id="after-tc1">After</ui5-button>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 2: F2 exits edit mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc2">
+		<h2>Test 2: F2 exits edit mode back to item level</h2>
+		<p><strong>Steps:</strong> From Test 1 result (delete button focused) &rarr; press <kbd>F2</kbd> again<br>
+		<strong>Expected:</strong> Focus returns to the list item root. Edit mode indicator shows OFF.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 3: Tab in navigation mode forwards out of the list -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc3">
+		<h2>Test 3: Tab in navigation mode exits the list</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" item (navigation mode) &rarr; press <kbd>Tab</kbd><br>
+		<strong>Expected:</strong> Focus moves to the "After" button below the list (exits the list). Delete button is NOT focused.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 4: Tab in edit mode cycles through items -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc4">
+		<h2>Test 4: Tab in edit mode flows to next item's elements</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" &rarr; <kbd>F2</kbd> (enters edit mode, focus on delete btn) &rarr; <kbd>Tab</kbd><br>
+		<strong>Expected:</strong> Focus moves to "Monitor" item's delete button. Then <kbd>Tab</kbd> again moves to "Keyboard" item's delete button.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 5: Tab from last item in edit mode exits the list -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc5">
+		<h2>Test 5: Tab from last item in edit mode exits the list</h2>
+		<p><strong>Steps:</strong> Continue from Test 4 (focus on "Keyboard" delete button in edit mode) &rarr; <kbd>Tab</kbd><br>
+		<strong>Expected:</strong> Focus moves to the "After" button. Edit mode is cleared.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 6: Shift+Tab in edit mode goes backwards -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc6">
+		<h2>Test 6: Shift+Tab in edit mode flows backwards</h2>
+		<p><strong>Steps:</strong> Focus "Monitor" &rarr; <kbd>F2</kbd> &rarr; <kbd>Shift+Tab</kbd><br>
+		<strong>Expected:</strong> Focus moves to "Laptop" item's delete button (last focusable element of previous item).</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 7: Shift+Tab from first item's first element exits -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc7">
+		<h2>Test 7: Shift+Tab from first item exits the list backwards</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" &rarr; <kbd>F2</kbd> (on delete button) &rarr; <kbd>Shift+Tab</kbd><br>
+		<strong>Expected:</strong> Focus moves to "Before" button above the list.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 8: F7 enters and exits edit mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc8">
+		<h2>Test 8: F7 toggles edit mode</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" item &rarr; press <kbd>F7</kbd><br>
+		<strong>Expected:</strong> Focus moves to internal element (delete button). Press <kbd>F7</kbd> again &rarr; focus returns to item root.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 9: Arrow Up/Down in edit mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc9">
+		<h2>Test 9: Arrow Up/Down transfers focus to same-index element in adjacent item</h2>
+		<p><strong>Steps:</strong> Focus item 1's first button &rarr; <kbd>Arrow Down</kbd><br>
+		<strong>Expected:</strong> Focus moves to item 2's first button (same positional index). Edit mode transfers.</p>
+
+		<ui5-list id="list-tc9" selection-mode="Delete" header-text="Arrow Navigation in Edit Mode">
+			<ui5-li-custom id="item-tc9-1">
+				<div class="buttons-row">
+					<ui5-button>Action A</ui5-button>
+					<ui5-button>Action B</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom id="item-tc9-2">
+				<div class="buttons-row">
+					<ui5-button>Action X</ui5-button>
+					<ui5-button>Action Y</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom id="item-tc9-3">
+				<div class="buttons-row">
+					<ui5-button>Action P</ui5-button>
+					<ui5-button>Action Q</ui5-button>
+					<ui5-button>Action R</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 10: Index clamping across items with different element counts -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc10">
+		<h2>Test 10: Arrow navigation clamps index to available elements</h2>
+		<p><strong>Steps:</strong> In list above, focus item 3's "Action R" (index 2) &rarr; <kbd>Arrow Up</kbd><br>
+		<strong>Expected:</strong> Focus moves to item 2's "Action Y" (index 1, clamped from 2 since item 2 only has 2 elements).</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 11: Focus-out clears edit mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc11">
+		<h2>Test 11: Clicking outside clears edit mode</h2>
+		<p><strong>Steps:</strong> Enter edit mode on any item &rarr; click the "Click Outside" button below<br>
+		<strong>Expected:</strong> Edit mode is cleared. Re-focusing the item and pressing <kbd>Tab</kbd> exits the list (navigation mode).</p>
+
+		<ui5-list id="list-tc11" selection-mode="Delete" header-text="Focus-out Cleanup">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Inside Button 1</ui5-button>
+					<ui5-button>Inside Button 2</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="outside-tc11">Click Outside</ui5-button>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 12: Tab flow with multiple focusable elements per item -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc12">
+		<h2>Test 12: Tab flows through ALL inner elements before moving to next item</h2>
+		<p><strong>Steps:</strong> Focus item 1 &rarr; <kbd>F2</kbd> &rarr; repeatedly press <kbd>Tab</kbd><br>
+		<strong>Expected:</strong> Tab order: Edit &rarr; Link &rarr; Archive &rarr; Delete btn &rarr; (next item) View &rarr; Input &rarr; Submit &rarr; Delete btn &rarr; exits list</p>
+
+		<ui5-button id="before-tc12">Before</ui5-button>
+		<ui5-list id="list-tc12" selection-mode="Delete" header-text="Full Tab Flow">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Edit</ui5-button>
+					<ui5-link href="#">Link</ui5-link>
+					<ui5-button design="Negative">Archive</ui5-button>
+				</div>
+			</ui5-li-custom>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>View</ui5-button>
+					<ui5-input placeholder="Comment" style="width: 120px;"></ui5-input>
+					<ui5-button design="Emphasized">Submit</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="after-tc12">After</ui5-button>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 13: Growing button interaction -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc13">
+		<h2>Test 13: Tab from last item in edit mode reaches growing button</h2>
+		<p><strong>Steps:</strong> Focus last item &rarr; <kbd>F2</kbd> &rarr; <kbd>Tab</kbd> past last focusable element<br>
+		<strong>Expected:</strong> Focus moves to the "More" / growing button.</p>
+
+		<ui5-list id="list-tc13" selection-mode="Delete" growing="Button" header-text="Growing + Edit Mode">
+			<ui5-li>Item Alpha</ui5-li>
+			<ui5-li>Item Beta</ui5-li>
+			<ui5-li>Item Gamma</ui5-li>
+		</ui5-list>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 14: Detail type + Delete mode -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc14">
+		<h2>Test 14: Detail button and Delete button both reachable in edit mode</h2>
+		<p><strong>Steps:</strong> Focus item &rarr; <kbd>F2</kbd> &rarr; <kbd>Tab</kbd> through elements<br>
+		<strong>Expected:</strong> Tab visits: Detail button &rarr; Delete button &rarr; next item's Detail button &rarr; next Delete button.</p>
+
+		<ui5-list id="list-tc14" selection-mode="Delete" header-text="Detail + Delete">
+			<ui5-li type="Detail">Report Q1 2024</ui5-li>
+			<ui5-li type="Detail">Report Q2 2024</ui5-li>
+			<ui5-li type="Detail">Report Q3 2024</ui5-li>
+		</ui5-list>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 15: Mixed ListItemStandard and ListItemCustom -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc15">
+		<h2>Test 15: Tab flows through mixed item types correctly</h2>
+		<p><strong>Steps:</strong> Focus first item &rarr; <kbd>F2</kbd> &rarr; Tab through all items<br>
+		<strong>Expected:</strong> Tab visits custom item's buttons + delete, then standard item's delete, then next custom item's elements + delete.</p>
+
+		<ui5-list id="list-tc15" selection-mode="Delete" header-text="Mixed Item Types">
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-button>Custom Action</ui5-button>
+					<ui5-link href="#">Custom Link</ui5-link>
+				</div>
+			</ui5-li-custom>
+			<ui5-li>Standard Item (only delete button here)</ui5-li>
+			<ui5-li-custom>
+				<div class="buttons-row">
+					<ui5-input placeholder="Search..." style="width: 140px;"></ui5-input>
+					<ui5-button icon="search">Go</ui5-button>
+				</div>
+			</ui5-li-custom>
+		</ui5-list>
+		<ui5-button id="after-tc15">After</ui5-button>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 16: Custom delete button slot -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc16">
+		<h2>Test 16: Custom delete button slot is reachable in edit mode</h2>
+		<p><strong>Steps:</strong> Focus item with custom delete button &rarr; <kbd>F2</kbd><br>
+		<strong>Expected:</strong> Focus reaches the custom "Remove" button in the deleteButton slot.</p>
+
+		<ui5-list id="list-tc16" selection-mode="Delete" header-text="Custom Delete Button Slot">
+			<ui5-li>Standard delete</ui5-li>
+			<ui5-li>
+				Custom delete button
+				<div slot="deleteButton">
+					<ui5-button design="Negative" icon="delete">Remove</ui5-button>
+				</div>
+			</ui5-li>
+			<ui5-li>Another standard</ui5-li>
+		</ui5-list>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 17: F2 no-op in Single/Multiple selection modes -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc17">
+		<h2>Test 17: F2 is no-op when items have no focusable inner elements</h2>
+		<p><strong>Steps:</strong> Focus a standard item in SingleEnd mode &rarr; press <kbd>F2</kbd><br>
+		<strong>Expected:</strong> Nothing happens. Focus stays on the item. Radio button has tabindex=-1 so it's not focusable.</p>
+
+		<ui5-list id="list-tc17-single" selection-mode="SingleEnd" header-text="SingleEnd - F2 no-op">
+			<ui5-li>Item without inner focusables</ui5-li>
+			<ui5-li>Another item</ui5-li>
+		</ui5-list>
+
+		<h3>Multiple selection mode</h3>
+		<ui5-list id="list-tc17-multi" selection-mode="Multiple" header-text="Multiple - F2 no-op">
+			<ui5-li>Item in multiple mode</ui5-li>
+			<ui5-li>Another item</ui5-li>
+		</ui5-list>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- ============================================================ -->
+	<!-- TEST 18: Navigation mode - Arrows still navigate between items -->
+	<!-- ============================================================ -->
+	<div class="test-case" id="tc18">
+		<h2>Test 18: Arrow keys in navigation mode move between items (no edit transfer)</h2>
+		<p><strong>Steps:</strong> Focus "Laptop" &rarr; press <kbd>Arrow Down</kbd> (without entering edit mode)<br>
+		<strong>Expected:</strong> Focus moves to "Monitor" item root (standard list navigation). No edit mode entered.</p>
+
+		<div class="pass-fail">
+			<button class="pass" onclick="markResult(this, 'pass')">Pass</button>
+			<button class="fail" onclick="markResult(this, 'fail')">Fail</button>
+		</div>
+	</div>
+
+	<!-- Summary bar -->
+	<div class="summary" id="summary">Results: 0/18</div>
+
+	<!-- Focus tracker bar -->
+	<div class="focus-log" id="focusLog">
+		<span>Focus:</span>
+		<strong id="focusTarget">-</strong>
+		<span>|</span>
+		<span>Edit mode:</span>
+		<strong id="editModeStatus">-</strong>
+		<span>|</span>
+		<span>Last key:</span>
+		<strong id="lastKey">-</strong>
+	</div>
+
+	<script>
+		const focusTarget = document.getElementById('focusTarget');
+		const editModeStatus = document.getElementById('editModeStatus');
+		const lastKey = document.getElementById('lastKey');
+		const summary = document.getElementById('summary');
+		let passed = 0;
+		let total = 18;
+
+		function getLabel(el) {
+			if (!el) return '-';
+			const tag = el.tagName?.toLowerCase() || '?';
+
+			if (tag === 'ui5-li-custom' || tag === 'ui5-li') {
+				const list = el.closest('ui5-list');
+				const items = list ? [...list.querySelectorAll('ui5-li, ui5-li-custom')] : [];
+				const idx = items.indexOf(el);
+				const text = el.textContent?.trim().substring(0, 20) || '';
+				return `${tag} [item ${idx + 1}]${text ? ' "' + text + '"' : ''}`;
+			}
+
+			const text = el.textContent?.trim().substring(0, 30) || el.placeholder || el.getAttribute('icon') || '';
+			const part = el.getAttribute('part') || '';
+			const partLabel = part ? ` [part=${part}]` : '';
+			return `${tag}${partLabel}${text ? ': "' + text + '"' : ''}`;
+		}
+
+		function markResult(btn, result) {
+			const container = btn.parentElement;
+			const buttons = container.querySelectorAll('button');
+			buttons.forEach(b => {
+				b.classList.remove('active-pass', 'active-fail');
+			});
+
+			if (result === 'pass') {
+				btn.classList.add('active-pass');
+			} else {
+				btn.classList.add('active-fail');
+			}
+
+			updateSummary();
+		}
+
+		function updateSummary() {
+			const passButtons = document.querySelectorAll('.active-pass');
+			const failButtons = document.querySelectorAll('.active-fail');
+			const tested = passButtons.length + failButtons.length;
+			summary.textContent = `Results: ${passButtons.length} passed, ${failButtons.length} failed / ${total} total (${tested} tested)`;
+		}
+
+		document.addEventListener('focusin', function(e) {
+			focusTarget.textContent = getLabel(e.target);
+
+			const listItem = e.target.closest?.('ui5-li, ui5-li-custom');
+			if (listItem) {
+				editModeStatus.textContent = listItem._editMode ? 'ON' : 'OFF';
+				editModeStatus.style.color = listItem._editMode ? '#4caf50' : '#ff9800';
+			} else {
+				editModeStatus.textContent = '-';
+				editModeStatus.style.color = '';
+			}
+		});
+
+		document.addEventListener('keydown', function(e) {
+			const special = ['F2', 'F7', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape', 'Delete'];
+			if (special.includes(e.key)) {
+				lastKey.textContent = (e.shiftKey ? 'Shift+' : '') + (e.ctrlKey ? 'Ctrl+' : '') + e.key;
+			}
+
+			setTimeout(() => {
+				const active = document.activeElement;
+				let deepActive = active;
+				while (deepActive?.shadowRoot?.activeElement) {
+					deepActive = deepActive.shadowRoot.activeElement;
+				}
+
+				const listItem = active?.closest?.('ui5-li, ui5-li-custom')
+					|| deepActive?.closest?.('ui5-li, ui5-li-custom');
+				if (listItem) {
+					editModeStatus.textContent = listItem._editMode ? 'ON' : 'OFF';
+					editModeStatus.style.color = listItem._editMode ? '#4caf50' : '#ff9800';
+				}
+
+				focusTarget.textContent = getLabel(deepActive || active);
+			}, 50);
+		});
+	</script>
+</body>
+
+</html>

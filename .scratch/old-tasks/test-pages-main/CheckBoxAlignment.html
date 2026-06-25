@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CheckBox - Label Vertical Alignment</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily, "72", Arial, sans-serif);
+			padding: 2rem;
+			background: var(--sapBackgroundColor, #fff);
+		}
+		section {
+			margin-bottom: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapField_BorderColor, #ccc);
+			border-radius: 8px;
+		}
+		h2 {
+			margin-top: 0;
+			color: var(--sapTitleColor, #333);
+		}
+		.narrow {
+			width: 250px;
+		}
+		.medium {
+			width: 350px;
+		}
+		.highlight {
+			background: var(--sapInfobar_Background, #e8f0fe);
+			padding: 0.5rem;
+			border-radius: 4px;
+			margin-bottom: 0.5rem;
+		}
+		ui5-checkbox {
+			display: block;
+			margin-bottom: 0.75rem;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>CheckBox & Label Vertical Alignment Demo</h1>
+
+	<section>
+		<h2>1. Single-line (default) — Both centered</h2>
+		<ui5-checkbox text="Short label"></ui5-checkbox>
+		<ui5-checkbox checked text="Another short label"></ui5-checkbox>
+		<ui5-checkbox text="Indeterminate" indeterminate></ui5-checkbox>
+	</section>
+
+	<section>
+		<h2>2. Wrapping (wrappingType="Normal") — Narrow container</h2>
+		<p>The checkbox indicator should stay <strong>top-aligned</strong>, label text wraps and centers itself.</p>
+		<div class="narrow highlight">
+			<ui5-checkbox text="This is a long label text that will definitely wrap to multiple lines in a narrow container to demonstrate vertical alignment behavior."></ui5-checkbox>
+			<ui5-checkbox checked text="Another long wrapping label to show that the checkbox stays at the top while text flows below it naturally."></ui5-checkbox>
+			<ui5-checkbox value-state="Negative" text="Error state with a very long label that wraps to show alignment is consistent across value states."></ui5-checkbox>
+		</div>
+	</section>
+
+	<section>
+		<h2>3. Wrapping vs Truncation — Side by side comparison</h2>
+		<div style="display: flex; gap: 2rem;">
+			<div class="narrow">
+				<h3>wrappingType="Normal" (default)</h3>
+				<div class="highlight">
+					<ui5-checkbox text="This text will wrap to multiple lines because the container is narrow enough to force wrapping behavior."></ui5-checkbox>
+				</div>
+			</div>
+			<div class="narrow">
+				<h3>wrappingType="None"</h3>
+				<div class="highlight">
+					<ui5-checkbox wrapping-type="None" text="This text will truncate with an ellipsis because wrappingType is set to None."></ui5-checkbox>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h2>4. Various text lengths with wrapping</h2>
+		<div class="medium highlight">
+			<ui5-checkbox text="One line"></ui5-checkbox>
+			<ui5-checkbox text="Two lines of text that will wrap onto a second line in this container."></ui5-checkbox>
+			<ui5-checkbox text="Three or more lines of text that should definitely wrap across multiple lines to clearly show how the checkbox indicator stays at the top while the label text wraps below, demonstrating the flex-start alignment behavior."></ui5-checkbox>
+		</div>
+	</section>
+
+	<section>
+		<h2>5. Wrapping with different states</h2>
+		<div class="narrow highlight">
+			<ui5-checkbox text="Default state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox checked text="Checked state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox indeterminate text="Indeterminate state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox readonly text="Read-only state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox disabled text="Disabled state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox value-state="Negative" text="Negative state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox value-state="Positive" text="Positive state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+			<ui5-checkbox value-state="Critical" text="Critical state with wrapping long text label that goes to multiple lines"></ui5-checkbox>
+		</div>
+	</section>
+
+	<section>
+		<h2>6. Display-only with wrapping</h2>
+		<div class="narrow highlight">
+			<ui5-checkbox display-only text="Display only unchecked with a long wrapping text label"></ui5-checkbox>
+			<ui5-checkbox display-only checked text="Display only checked with a long wrapping text label"></ui5-checkbox>
+		</div>
+	</section>
+
+</body>
+</html>
