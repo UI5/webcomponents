@@ -426,9 +426,8 @@ class Search extends SearchField {
 		const innerInput = this.nativeInput!;
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
-		this.open = false;
-		this._isTyping = false;
-		this._valueBeforeArrowNav = undefined;
+
+		this._closePopupAndResetState();
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -442,6 +441,12 @@ class Search extends SearchField {
 
 	_handleSearchEvent() {
 		this.fireDecoratorEvent("search", { item: this._proposedItem });
+	}
+
+	_closePopupAndResetState() {
+		this.open = false;
+		this._isTyping = false;
+		this._valueBeforeArrowNav = undefined;
 	}
 
 	_handleEscape() {
