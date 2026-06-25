@@ -8,13 +8,13 @@
 	<title>Sample</title>
 	<script src="https://sdk.openui5.org/resources/sap-ui-integration.js" id="sap-ui-bootstrap"
 		data-sap-ui-theme="sap_horizon">
-		</script>
+	</script>
 </head>
 
 <body style="background-color: var(--sapBackgroundColor)">
 	<!-- playground-fold-end -->
 
-	<ui5-hero-banner header-text="Good Morning, Anna" overline-text="Monday, May 26, 2026" columns-ratio="Equal"
+	<ui5-hero-banner header-text="Good Morning, Anna" overline-text="Monday, May 26, 2026" columns-ratio="FirstWider"
 		actions-placement="BottomStart" header-block-placement="Bottom">
 
 		<div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -22,22 +22,7 @@
 			<ui5-button icon="document" design="Default">Create Report</ui5-button>
 			<ui5-button icon="email" design="Default">Send Message</ui5-button>
 		</div>
-
-		<ui5-carousel background-design="Transparent" page-indicator-border-design="None" page-indicator-background-design="Transparent" slot="endContent"
-			style="width: 100%;">
-			<ui-integration-card style="width: 280px;" manifest='{
-                    "sap.app": { "id": "ticketsCard", "type": "card" },
-                    "sap.card": {
-                        "type": "List",
-                        "header": {
-                            "icon": { "src": "sap-icon://customer-order-entry" },
-                            "title": "Open Tickets",
-                            "subtitle": "Support queue",
-                            "status": { "text": "42 open" }
-                        }
-                    }
-                }'></ui-integration-card>
-			<ui-integration-card style="width: 280px;" manifest='{
+		<ui-integration-card style="height: 120px;" manifest='{
                     "sap.app": { "id": "revenueCard", "type": "card" },
                     "sap.card": {
                         "type": "List",
@@ -48,20 +33,7 @@
                             "status": { "text": "€4.2M" }
                         }
                     }
-                }'></ui-integration-card>
-			<ui-integration-card style="width: 280px;" manifest='{
-                    "sap.app": { "id": "tasksCard", "type": "card" },
-                    "sap.card": {
-                        "type": "List",
-                        "header": {
-                            "icon": { "src": "sap-icon://task" },
-                            "title": "Pending Approvals",
-                            "subtitle": "Needs attention",
-                            "status": { "text": "7 total" }
-                        }
-                    }
-                }'></ui-integration-card>
-		</ui5-carousel>
+                }' slot="endContent"></ui-integration-card>
 	</ui5-hero-banner>
 
 	<!-- playground-fold -->
