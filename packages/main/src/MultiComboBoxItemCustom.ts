@@ -19,6 +19,11 @@ import type { AriaRole } from "@ui5/webcomponents-base";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
+type MultiComboBoxItemCustomClickEventDetail = {
+	item?: MultiComboBoxItemCustom,
+	originalEvent: Event,
+}
+
 /**
  * @class
  * The `ui5-mcb-item-custom` is a multi-combobox item component
@@ -56,9 +61,10 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
 	bubbles: true,
 })
 class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem {
-	eventDetails!: ListItemBase["eventDetails"] & {
+	eventDetails!: {
+		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
-	}
+	} & ListItemBase["eventDetails"];
 
 	/**
 	 * Defines the text of the component.

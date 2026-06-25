@@ -8,6 +8,11 @@ import ComboBoxItemCustomTemplate from "./ComboBoxItemCustomTemplate.js";
 import styles from "./generated/themes/ComboBoxItemCustom.css.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
+type ComboBoxItemCustomClickEventDetail = {
+	item?: ComboBoxItemCustom,
+	originalEvent: Event,
+}
+
 /**
  * @class
  * The `ui5-cb-item-custom` is a combobox item component
@@ -42,7 +47,9 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 	bubbles: true,
 })
 class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
-	eventDetails!: ListItemBase["eventDetails"];
+	eventDetails!: {
+		"click": ComboBoxItemCustomClickEventDetail,
+	} & ListItemBase["eventDetails"];
 
 	/**
 	 * Defines the text of the component.
