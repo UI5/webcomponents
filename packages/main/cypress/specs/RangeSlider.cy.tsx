@@ -1,4 +1,5 @@
 import RangeSlider from "../../src/RangeSlider.js";
+import { RANGE_SLIDER_START_HANDLE_DESCRIPTION, RANGE_SLIDER_END_HANDLE_DESCRIPTION } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Testing Range Slider interactions", () => {
 	it("Changing the current startValue is reflected", () => {
@@ -874,7 +875,7 @@ describe("Testing events", () => {
 			const startValue = rangeSlider.startValue;
 
 			cy.get("@startHandle")
-				.should("have.attr", "aria-label", "Left handle");
+				.should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
 
 			cy.get("@startHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -903,7 +904,7 @@ describe("Testing events", () => {
 			const endValue = rangeSlider.endValue;
 
 			cy.get("@endHandle")
-				.should("have.attr", "aria-label", "Right handle");
+				.should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 
 			cy.get("@endHandle")
 				.should("have.attr", "aria-valuemin", `${minValue}`);
@@ -929,8 +930,8 @@ describe("Testing events", () => {
 			.find("[ui5-slider-handle][handle-type='End']")
 			.as("endHandle");
 
-		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
-		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
+		cy.get("@startHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
+		cy.get("@endHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 
 		// Drag start handle past end handle to swap values using real events
 		cy.get("@startHandle")
@@ -938,8 +939,8 @@ describe("Testing events", () => {
 			.realMouseMove(100, 0)
 			.realMouseUp();
 
-		cy.get("@startHandle").should("have.attr", "aria-label", "Left handle");
-		cy.get("@endHandle").should("have.attr", "aria-label", "Right handle");
+		cy.get("@startHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION));
+		cy.get("@endHandle").should("have.attr", "aria-label", RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION));
 	});
 
 	it("Click anywhere in the Range Slider should focus the closest handle", () => {
@@ -1811,12 +1812,12 @@ describe("Accessibility", () => {
 		cy.get("[ui5-range-slider]")
 			.shadow()
 			.find("[ui5-slider-handle][handle-type='Start']")
-			.should("have.attr", "aria-label", `${labelText} Left handle`);
+			.should("have.attr", "aria-label", `${labelText} ${RangeSlider.i18nBundle.getText(RANGE_SLIDER_START_HANDLE_DESCRIPTION)}`);
 
 		cy.get("[ui5-range-slider]")
 			.shadow()
 			.find("[ui5-slider-handle][handle-type='End']")
-			.should("have.attr", "aria-label", `${labelText} Right handle`);
+			.should("have.attr", "aria-label", `${labelText} ${RangeSlider.i18nBundle.getText(RANGE_SLIDER_END_HANDLE_DESCRIPTION)}`);
 	});
 
 	it("Aria attributes of the progress bar are set correctly", () => {
@@ -1861,5 +1862,220 @@ describe("Accessibility", () => {
 				.should("have.attr", "aria-valuenow", `${rangeSize}`);
 
 		});
+	});
+});
+
+describe("Custom Tickmarks", () => {
+	const customTickmarks = [
+		{ value: 0, label: "Freezing" },
+		{ value: 25, label: "Cool" },
+		{ value: 50, label: "Warm" },
+		{ value: 75, label: "Hot" },
+		{ value: 100, label: "Boiling" },
+	];
+
+	beforeEach(() => {
+		cy.get('[data-cy-root]')
+			.invoke('css', 'padding', '100px');
+	});
+
+	it("Renders custom labels on tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={20} endValue={80} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.should("have.length", 5);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(0)
+			.should("have.text", "Freezing");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(1)
+			.should("have.text", "Cool");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(2)
+			.should("have.text", "Warm");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(3)
+			.should("have.text", "Hot");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark-label")
+			.eq(4)
+			.should("have.text", "Boiling");
+	});
+
+	it("Allows free movement based on step, not snapping to tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} step={1} startValue={0} endValue={50} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realPress("ArrowRight");
+
+		cy.get("@slider").should("have.attr", "start-value", "1");
+	});
+
+	it("Arrow key moves by step value for end handle", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} step={5} startValue={10} endValue={50} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realClick();
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='End']").realPress("ArrowRight");
+
+		cy.get("@slider").should("have.attr", "end-value", "55");
+	});
+
+	it("aria-valuetext reflects the custom label when value matches a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={75} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='Start']")
+			.should("have.attr", "aria-valuetext", "Cool");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='End']")
+			.should("have.attr", "aria-valuetext", "Hot");
+	});
+
+	it("aria-valuetext is absent when value does not match a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={10} endValue={60} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='Start']")
+			.should("not.have.attr", "aria-valuetext");
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-handle][handle-type='End']")
+			.should("not.have.attr", "aria-valuetext");
+	});
+
+	it("Tooltip shows custom label when value matches a tickmark", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={75} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "value", "Cool");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("have.attr", "value", "Hot");
+	});
+
+	it("Tooltips are hidden when both handle values are between custom tickmarks", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={30} endValue={60} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("not.have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("not.have.attr", "open");
+	});
+
+	it("Tooltip visibility is independent per handle when custom tickmarks are defined", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={25} endValue={60} tickmarks={customTickmarks} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("not.have.attr", "open");
+	});
+
+	it("Tooltips are shown for any value when no custom tickmarks are defined", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={17} endValue={63} showTooltip />
+		);
+
+		cy.get("[ui5-range-slider]").as("slider");
+		cy.get("@slider").shadow().find("[ui5-slider-handle][handle-type='Start']").realClick();
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-start-value]")
+			.should("have.attr", "open");
+
+		cy.get("@slider")
+			.shadow()
+			.find("[ui5-slider-tooltip][data-sap-ui-end-value]")
+			.should("have.attr", "open");
+	});
+
+	it("Tickmarks auto-show without showTickmarks attribute", () => {
+		cy.mount(
+			<RangeSlider min={0} max={100} startValue={20} endValue={80} tickmarks={customTickmarks} />
+		);
+
+		cy.get("[ui5-range-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-scale-tickmark")
+			.should("have.length.at.least", 5);
 	});
 });

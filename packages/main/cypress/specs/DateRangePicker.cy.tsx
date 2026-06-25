@@ -17,6 +17,10 @@ function DateRangePickerTemplate(options: DateTimePickerTemplateOptions) {
 }
 
 describe("DateRangePicker general interaction", () => {
+	afterEach(() => {
+		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
+	});
+
 	it("Custom Validation Error", () => {
 		cy.mount(<DateRangePickerTemplate formatPattern="dd/MM/yyyy" />);
 
@@ -1430,7 +1434,7 @@ describe("DateRangePicker - Two Calendars Feature", () => {
 				.ui5DateRangePickerGetCalendarHeaders()
 				.eq(0)
 				.find("[data-ui5-cal-header-btn-month]")
-				.realClick()
+				.focus()
 				.should("be.focused");
 
 			cy.realPress("Space");

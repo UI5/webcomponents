@@ -26,7 +26,7 @@ type ListItemBasePressEventDetail = {
 }
 
 type ListItemBaseClickEventDetail = {
-	item: ListItemBase,
+	item?: ListItemBase,
 	originalEvent: Event,
 }
 
@@ -48,9 +48,8 @@ type ListItemBaseClickEventDetail = {
  *
  * **Note:** The event will not be fired if the `disabled` property is set to `true`.
  *
- * @since 2.22.0
+ * @since 2.23.0
  * @public
- * @param {ListItemBase} item The activated item.
  * @param {Event} originalEvent The original event from the user interaction.
  */
 @event("click", {
@@ -71,6 +70,7 @@ type ListItemBaseClickEventDetail = {
 })
 @event("forward-before", {
 	bubbles: true,
+	cancelable: true,
 })
 class ListItemBase extends UI5Element implements ITabbable {
 	eventDetails!: {
@@ -269,7 +269,9 @@ class ListItemBase extends UI5Element implements ITabbable {
 		const target = e.target as HTMLElement;
 
 		if (this.shouldForwardTabBefore(target)) {
-			this.fireDecoratorEvent("forward-before");
+			if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
 		}
 	}
 

@@ -7,6 +7,7 @@ import sysHelp from "@ui5/webcomponents-icons/dist/sys-help.js";
 import da from "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
+import "@ui5/webcomponents-icons/dist/feedback.js";
 import "@ui5/webcomponents-icons/dist/disconnected.js";
 import "@ui5/webcomponents-icons/dist/incoming-call.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
@@ -1813,6 +1814,23 @@ describe("Component Behavior", () => {
 			cy.get("@alertClick")
 				.should("have.been.calledOnce");
 		});
+
+		it("renders items in insertion order regardless of icon name", () => {
+			cy.mount(
+				<ShellBar>
+					<ShellBarItem id="item-feedback" icon="feedback" text="Feedback" stable-dom-ref="item-feedback" />
+					<ShellBarItem id="item-accept" icon="accept" text="Accept" stable-dom-ref="item-accept" />
+					<ShellBarItem id="item-alert" icon="alert" text="Alert" stable-dom-ref="item-alert" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-custom-item").then($items => {
+				// feedback was inserted first, so its wrapper must be the first custom item in the DOM
+				expect($items[0].getAttribute("data-ui5-stable")).to.equal("item-feedback");
+				expect($items[1].getAttribute("data-ui5-stable")).to.equal("item-accept");
+				expect($items[2].getAttribute("data-ui5-stable")).to.equal("item-alert");
+			});
+		});
 	});
 
 	it("Test disabled slotted button does not show hover styles", () => {
@@ -1844,6 +1862,71 @@ describe("Component Behavior", () => {
 		cy.get("[ui5-shellbar] [ui5-button][slot^='content']").then($enabledBtn => {
 			const cursor = window.getComputedStyle($enabledBtn[0]).cursor;
 			expect(cursor).to.equal("pointer");
+		});
+	});
+});
+
+describe("Start button spacing", () => {
+	it("8px gap between multiple startButton elements", () => {
+		cy.mount(
+			<ShellBar>
+				<Button id="hamburger-btn" icon="menu2" slot="startButton"></Button>
+				<Button id="nav-back-btn" icon={navBack} slot="startButton"></Button>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-start-button").should("have.css", "gap", "8px");
+	});
+});
+
+describe("Non-ShellBarItem children in default slot", () => {
+	it("should not throw 'processed too many times' when resizing across the overflow breakpoint with a stray <span> in the default slot", () => {
+		// Capture any errors thrown during the run — the bug surfaced as an
+		// uncaught Error: "Web component processed too many times this task,
+		// max allowed is: 10" from RenderQueue when the overflow algorithm
+		// failed to converge.
+		const errors: string[] = [];
+		cy.on("uncaught:exception", (err) => {
+			errors.push(err.message);
+			return false; // don't fail the test here; we assert below
+		});
+
+		cy.mount(
+			<ShellBar id="shellbar-stray" notificationsCount="72" showNotifications={true}>
+				<Button icon="menu2" slot="startButton"></Button>
+				<ShellBarBranding slot="branding">
+					Product Identifier
+					<img slot="logo" src="https://ui5.github.io/webcomponents/images/sap-logo-svg.svg" />
+				</ShellBarBranding>
+				<ShellBarSearch slot="searchField" showClearIcon placeholder="Search Apps, Products"></ShellBarSearch>
+				{/* The problem child — a stray non-ShellBarItem element in the default slot. */}
+				<span></span>
+				<Avatar slot="profile">
+					<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_3.png" />
+				</Avatar>
+			</ShellBar>
+		);
+
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Oscillate across the overflow breakpoint several times. This is what
+		// triggered the runaway re-render in the regression — a single resize
+		// is not enough; the algorithm has to be invoked while the previous
+		// pass is still settling.
+		for (let i = 0; i < 6; i++) {
+			cy.viewport(1400, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			cy.viewport(320, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+		}
+
+		// ShellBar must still be in the DOM and operating after the oscillation.
+		cy.get("#shellbar-stray").should("exist");
+
+		// And no "processed too many times" error must have fired.
+		cy.then(() => {
+			const matches = errors.filter(e => /processed too many times/i.test(e));
+			expect(matches, `unexpected RenderQueue errors:\n${matches.join("\n")}`).to.have.length(0);
 		});
 	});
 });

@@ -303,6 +303,10 @@ class SliderScale extends UI5Element {
 	}
 
 	get _tickmarksCount() {
+		if (this.tickmarks.length > 0) {
+			return this.tickmarks.length - 1;
+		}
+
 		if (this.step === 0) {
 			return 0;
 		}

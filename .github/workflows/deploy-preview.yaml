@@ -28,11 +28,25 @@ on:
         - '!**/*.test.ts'
         - '!**/test/**'
 
+permissions:
+  contents: read
+
 jobs:
   deploy-preview:
+    # Skip for PRs from forks — they don't have access to the Netlify secrets,
+    # so the deploy step would always fail. A skipped check does not block merge.
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    
+    environment: netlify-preview
+
     steps:
+    - name: Generate App Token
+      id: app-token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        client-id: ${{ secrets.TOKEN_APP_ID }}
+        private-key: ${{ secrets.TOKEN_APP_KEY }}
+
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -70,7 +84,7 @@ jobs:
       if: always()
       uses: actions/github-script@v7
       with:
-        github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        github-token: ${{ steps.app-token.outputs.token }}
         script: |
           const { data: pr } = await github.rest.pulls.get({
             owner: context.repo.owner,
@@ -113,7 +127,7 @@ jobs:
       with:
         publish-dir: './packages/website/build'
         production-deploy: false
-        github-token: ${{ secrets.UI5_WEBCOMP_BOT_GH_TOKEN }}
+        github-token: ${{ steps.app-token.outputs.token }}
         deploy-message: "Deploy preview for PR #${{ github.event.number }}"
         alias: pr-${{ github.event.number }}
         enable-pull-request-comment: true
