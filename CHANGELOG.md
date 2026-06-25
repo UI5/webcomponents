@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.1...v2.24.0-rc.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13720](https://github.com/UI5/webcomponents/issues/13720)) ([f75e906](https://github.com/UI5/webcomponents/commit/f75e9064903f3927feb1411d61fd57bb1296f1d8))
+* **ui5-breadcrumbs:** acc findings fixed ([#13557](https://github.com/UI5/webcomponents/issues/13557)) ([9b6fea7](https://github.com/UI5/webcomponents/commit/9b6fea736543a77bffdd3d7448c521953269fe60))
+* **ui5-dynamic-page:** prevent scroll jump on TableRowAction focus ([#13698](https://github.com/UI5/webcomponents/issues/13698)) ([ec9f9f2](https://github.com/UI5/webcomponents/commit/ec9f9f2f9f189a989e3d590cad1168bceb53ad0d)), closes [#13694](https://github.com/UI5/webcomponents/issues/13694)
+* **ui5-form:** incorrect labelSpan behavior when width is close to layout breakpoint ([#13727](https://github.com/UI5/webcomponents/issues/13727)) ([7b5fd2d](https://github.com/UI5/webcomponents/commit/7b5fd2dd824fa6df8c28ea6b3b48107ffa5127de))
+* **ui5-hero-banner:** improvements ([#13710](https://github.com/UI5/webcomponents/issues/13710)) ([6962494](https://github.com/UI5/webcomponents/commit/6962494c9ea72281c470aea29d89c10b05eea73a))
+* **ui5-illustrated-message:** acc findings fixed ([#13554](https://github.com/UI5/webcomponents/issues/13554)) ([c254f7d](https://github.com/UI5/webcomponents/commit/c254f7d47d9bb525db0aae73c2a7185c5a79b49a))
+* **ui5-illustrated-message:** remove custom --sap parameter declarations ([#13471](https://github.com/UI5/webcomponents/issues/13471)) ([fd7eb5e](https://github.com/UI5/webcomponents/commit/fd7eb5eb7cba4417969ea6382fa1b8a0c1cd31ea)), closes [#13056](https://github.com/UI5/webcomponents/issues/13056)
+* **ui5-menu-item:** prevent menu from closing on endContent click ([#13705](https://github.com/UI5/webcomponents/issues/13705)) ([a7ca3af](https://github.com/UI5/webcomponents/commit/a7ca3af261d01c02bd16d7cada1afaa6e7a1814e))
+* **ui5-shellbar:** ignore non-ShellBarItem children in overflow calculation ([#13729](https://github.com/UI5/webcomponents/issues/13729)) ([064fda6](https://github.com/UI5/webcomponents/commit/064fda602c4f907ff042b4d1c7045cb19cf5ba68))
+
+
+### Features
+
+* **ui5-barcode-scanner-dialog:** add format to scan-success event payload ([#13718](https://github.com/UI5/webcomponents/issues/13718)) ([0000cc1](https://github.com/UI5/webcomponents/commit/0000cc15e178310711470b77fad04b3238f8eec9)), closes [#13490](https://github.com/UI5/webcomponents/issues/13490)
+* **ui5-combobox:** add trigger flag to selection-change event ([#13567](https://github.com/UI5/webcomponents/issues/13567)) ([638ad9c](https://github.com/UI5/webcomponents/commit/638ad9ced7c5012d8f0068d7d14702bf28ab6ba2))
+* **ui5-comobobox, ui5-multi-combobox:** add custom items ([#13640](https://github.com/UI5/webcomponents/issues/13640)) ([4f37e60](https://github.com/UI5/webcomponents/commit/4f37e60fc08fc789693da50e788c53ee67deb58e))
+* **ui5-comobobox, ui5-multi-combobox:** add custom items ([#13716](https://github.com/UI5/webcomponents/issues/13716)) ([246e770](https://github.com/UI5/webcomponents/commit/246e77087b8f39a167696a7812d6a047235369ab))
+* **ui5-dialog:** focus goes on entire dialog for drag and resize ([#13632](https://github.com/UI5/webcomponents/issues/13632)) ([5378baf](https://github.com/UI5/webcomponents/commit/5378bafcfd5559eae185a4c96ba94fc6b0977aff))
+* **ui5-search:** max-height for suggestions dropdown ([#13603](https://github.com/UI5/webcomponents/issues/13603)) ([0697178](https://github.com/UI5/webcomponents/commit/069717871b2cb5140c62e485acb2b39a06b61ef7))
+
+
+
+
+
 # [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
 
 
