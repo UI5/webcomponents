@@ -52,6 +52,35 @@
 		.frame-full {
 			width: 100%;
 		}
+
+		/* Wrapper for the NavigationLayout section so it gets a fixed 320×600 box. */
+		.nav-frame {
+			width: 320px;
+			height: 600px;
+			border: 1px solid #ccc;
+			margin-bottom: 24px;
+			box-sizing: content-box;
+			overflow: hidden;
+		}
+
+		.nav-frame ui5-navigation-layout {
+			height: 100%;
+		}
+
+		.nav-content {
+			padding: 12px 16px;
+			font-size: 0.875rem;
+			color: var(--sapTextColor);
+		}
+
+		.nav-content h3 {
+			margin: 0 0 8px 0;
+			font-size: 1rem;
+		}
+
+		.nav-content p {
+			margin: 0 0 12px 0;
+		}
 	</style>
 </head>
 
@@ -143,12 +172,62 @@
 		</ui5-shellbar>
 	</div>
 
-	<p class="viewport-label">320px Navigation Layout (ShellBar + collapsed SideNavigation, isolated in a 320×600 iframe):</p>
-	<iframe
-		src="./ShellBar320pxNavLayout.html"
-		title="320px Navigation Layout"
-		style="width: 320px; height: 600px; border: 1px solid #ccc; display: block;"
-	></iframe>
+	<p class="viewport-label">320px Navigation Layout (ShellBar + collapsed SideNavigation, 320×600 box):</p>
+	<div class="nav-frame">
+		<ui5-navigation-layout id="nl-320" mode="Collapsed">
+			<ui5-shellbar
+				slot="header"
+				id="shellbar-nav-320"
+				primary-title="Application Title"
+				secondary-title="Secondary"
+			>
+				<ui5-shellbar-branding slot="branding">
+					<img src="./img/sap-r-grad-scrn.svg" slot="logo"/>
+				</ui5-shellbar-branding>
+
+				<ui5-button slot="startButton" icon="menu2" tooltip="Menu" id="nav-toggle"></ui5-button>
+				<ui5-button slot="startButton" icon="nav-back" tooltip="Back"></ui5-button>
+
+				<ui5-button slot="content" icon="slim-arrow-down" tooltip="Application Title"></ui5-button>
+
+				<ui5-avatar slot="profile" initials="JM"></ui5-avatar>
+
+				<ui5-shellbar-item icon="activities" text="Activities" title="Activities"></ui5-shellbar-item>
+				<ui5-shellbar-item icon="bell" text="Notifications" title="Notifications"></ui5-shellbar-item>
+				<ui5-shellbar-item icon="action-settings" text="Settings" title="Settings"></ui5-shellbar-item>
+				<ui5-shellbar-item icon="sys-help" text="Help" title="Help"></ui5-shellbar-item>
+				<ui5-shellbar-item icon="discussion" text="Discussion" title="Discussion"></ui5-shellbar-item>
+			</ui5-shellbar>
+
+			<ui5-side-navigation slot="sideContent" collapsed id="sn-320">
+				<ui5-side-navigation-item text="Home" href="#home" icon="home" selected></ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Sales Orders" href="#sales" icon="sales-order"></ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Customers" href="#customers" icon="customer"></ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Reports" href="#reports" icon="bar-chart"></ui5-side-navigation-item>
+				<ui5-side-navigation-item text="Tasks" href="#tasks" icon="activities"></ui5-side-navigation-item>
+
+				<ui5-side-navigation-item slot="fixedItems" text="Settings" icon="action-settings"></ui5-side-navigation-item>
+				<ui5-side-navigation-item slot="fixedItems" text="Help" icon="sys-help"></ui5-side-navigation-item>
+			</ui5-side-navigation>
+
+			<div class="nav-content">
+				<h3>Home</h3>
+				<p>FLP-style layout at 320px: ShellBar at the top, collapsed SideNavigation rail on the left, page content here.</p>
+				<p>At this narrow width the Application Title chevron can be dropped if branding spacings are not tightened for the S breakpoint.</p>
+				<p>Tap the menu (hamburger) button in the ShellBar to expand/collapse the side navigation.</p>
+			</div>
+		</ui5-navigation-layout>
+	</div>
+
+	<script type="module">
+		const navToggle = document.getElementById("nav-toggle");
+		const layout = document.getElementById("nl-320");
+		if (navToggle && layout) {
+			navToggle.addEventListener("click", () => {
+				layout.mode = layout.mode === "Expanded" ? "Collapsed" : "Expanded";
+			});
+		}
+	</script>
 
 </body>
 </html>
