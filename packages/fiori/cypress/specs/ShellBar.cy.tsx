@@ -1449,6 +1449,72 @@ describe("Search Controllers", () => {
 
 		cy.get("#shellbar").should("have.prop", "showSearchField", true);
 	});
+
+	it("Test search auto-restores when resizing back to large viewport", () => {
+		cy.viewport(500, 1080);
+		cy.mount(
+			<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				<ShellBarItem icon={activities} text="Action"></ShellBarItem>
+				<Button slot="content">Button</Button>
+			</ShellBar>
+		);
+
+		// search collapses on initial small-viewport load
+		cy.get("#shellbar").should("have.prop", "showSearchField", false);
+
+		// resize to large — search should restore
+		cy.viewport(1200, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+	});
+
+	it("Test search stays open across small→large→small resize cycle", () => {
+		cy.mount(
+			<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				<ShellBarItem icon={activities} text="Action"></ShellBarItem>
+				<Button slot="content">Button</Button>
+			</ShellBar>
+		);
+
+		// initial large-viewport render — search stays open
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+
+		cy.viewport(400, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+
+		cy.viewport(1200, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+
+		cy.viewport(400, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+		cy.get("#shellbar").should("have.prop", "showSearchField", true);
+	});
+
+	it("Test search collapsed on small-viewport mount stays collapsed across small resize", () => {
+		cy.viewport(500, 1080);
+		cy.mount(
+			<ShellBar id="shellbar" showSearchField={true} showNotifications={true} showProductSwitch={true}>
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				<ShellBarItem icon={activities} text="Action"></ShellBarItem>
+				<Button slot="content">Button</Button>
+			</ShellBar>
+		);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", false);
+
+		cy.viewport(400, 800);
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		cy.get("#shellbar").should("have.prop", "showSearchField", false);
+	});
 });
 
 describe("Overflow", () => {

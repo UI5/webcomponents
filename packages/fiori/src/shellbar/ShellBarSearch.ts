@@ -76,10 +76,12 @@ class ShellBarSearch implements IShellBarSearchController {
 		const searchHasFocus = document.activeElement === this.getSearchField();
 		const searchHasValue = !!this.getSearchField()?.value;
 
-		// On initial load, allow search to collapse even if it would trigger full-screen mode.
-		// This prevents search from showing in full-screen when page loads on small screens.
-		// After initial render, prevent collapse in full-screen mode during resize.
-		const inFullScreen = !this.initialRender && this.shouldShowFullScreen();
+		// Prevent collapse if search is visible and items are overflowing (full-screen mode).
+		// Use hiddenItems count rather than live DOM overflow check, since updateOverflow()
+		// has already resolved the overflow by hiding items before this is called.
+		// On the very first autoManageSearchState call (initialRender=true), allow collapse
+		// so search doesn't show in full-screen when the page first loads on a small screen.
+		const inFullScreen = !this.initialRender && hiddenItems > 0 && this.getSearchState();
 		const preventCollapse = searchHasFocus || searchHasValue || inFullScreen;
 
 		if (hiddenItems > 0 && !preventCollapse) {
@@ -117,6 +119,12 @@ class ShellBarSearch implements IShellBarSearchController {
 	 */
 	shouldShowFullScreen(): boolean {
 		return this.getOverflowed() && this.getSearchState();
+	}
+
+	notifyInitialRender(hiddenItems: number) {
+		if (hiddenItems === 0) {
+			this.initialRender = false;
+		}
 	}
 
 	private onSearchOpen(e: Event) {

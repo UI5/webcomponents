@@ -665,7 +665,8 @@ class ShellBar extends UI5Element {
 
 	onAfterRendering() {
 		this.updateBreakpoint();
-		this.updateOverflow();
+		const hiddenItemsIds = this.updateOverflow() ?? [];
+		this.searchAdaptor?.notifyInitialRender(hiddenItemsIds.length);
 	}
 
 	/* =================== Actions Management =================== */

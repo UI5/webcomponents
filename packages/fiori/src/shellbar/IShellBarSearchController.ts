@@ -29,4 +29,12 @@ export interface IShellBarSearchController {
 	 * Returns true when shellbar is overflowing AND search is visible.
 	 */
 	shouldShowFullScreen(): boolean;
+
+	/**
+	 * Called from onAfterRendering to inform the controller of the initial render state.
+	 * If hiddenItems is 0 (component rendered without overflow), clears the initialRender flag
+	 * so that subsequent resize events don't incorrectly treat themselves as "initial render"
+	 * and collapse search that the user explicitly opened.
+	 */
+	notifyInitialRender(hiddenItems: number): void;
 }
