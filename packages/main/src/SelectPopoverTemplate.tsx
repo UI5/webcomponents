@@ -62,7 +62,7 @@ export default function SelectPopoverTemplate(this: Select) {
 						onMouseDown={this._itemMousedown}
 						onItemClick={this._handleItemPress}
 						accessibleRole="ListBox"
-						accessibleName={this.ariaLabelText || this._headerTitleText}
+						accessibleName={this._effectiveListAccessibleName}
 					>
 						<slot></slot>
 					</List>

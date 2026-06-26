@@ -34,7 +34,6 @@ import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
@@ -93,15 +92,10 @@ type SelectLiveChangeEventDetail = {
 	selectedOption: IOption,
 }
 
+type I18nTextArg = Parameters<I18nBundle["getText"]>[0];
+
 const isPrintableCharacter = (e: KeyboardEvent) => {
 	return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
-};
-
-const isI18nText = (value: unknown): value is I18nText => {
-	return typeof value === "object"
-		&& value !== null
-		&& "key" in value
-		&& "defaultText" in value;
 };
 
 /**
@@ -1056,11 +1050,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		if (typeof SELECT_LISTBOX_LABEL === "string" || isI18nText(SELECT_LISTBOX_LABEL)) {
-			return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL);
-		}
-
-		return "";
+		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL as I18nTextArg);
 	}
 
 	get _cancelButtonText() {
@@ -1134,15 +1124,16 @@ class Select extends UI5Element implements IFormInputElement {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this);
 	}
 
+	get _effectiveListAccessibleName() {
+		return this.ariaLabelText || this._headerTitleText;
+	}
+
 	get _effectivePopoverAccessibleName() {
-		const fieldName = this.ariaLabelText || this._headerTitleText;
+		const fieldName = this._effectiveListAccessibleName;
 		if (!fieldName) {
 			return undefined;
 		}
-		const prefix = (typeof SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX === "string"
-			|| isI18nText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX))
-			? Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX)
-			: "";
+		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX as I18nTextArg);
 		return `${prefix} ${fieldName}`;
 	}
 

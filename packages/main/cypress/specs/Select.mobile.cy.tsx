@@ -1,7 +1,11 @@
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
-import { SELECT_DIALOG_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import {
+	SELECT_DIALOG_CANCEL_BUTTON,
+	SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX,
+	SELECT_LISTBOX_LABEL,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Select mobile general interaction", () => {
 	beforeEach(() => {
@@ -18,15 +22,12 @@ describe("Select mobile general interaction", () => {
 
 		// Open the popover
 		cy.get("#select").realClick();
+		const expectedAccessibleName = `${SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX.defaultText} ${SELECT_LISTBOX_LABEL.defaultText}`;
 
-		// Check if accessible-name is equal to select._effectivePopoverAccessibleName
-		cy.get("#select").invoke("prop", "_effectivePopoverAccessibleName").then(_effectivePopoverAccessibleName => {
-			cy.get("#select")
-				.shadow()
-				.find("[ui5-responsive-popover]")
-				.should("have.attr", "accessible-name")
-				.and("equal", _effectivePopoverAccessibleName);
-		});
+		cy.get("#select")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "accessible-name", expectedAccessibleName);
 	});
 
 	it("should focus the selected option when popover opens", () => {
