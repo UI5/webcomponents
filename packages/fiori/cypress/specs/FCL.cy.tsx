@@ -179,6 +179,29 @@ describe("ACC", () => {
 			.find(".ui5-fcl-separator-end")
 			.should("have.attr", "aria-valuenow");
 	});
+
+	it("verifies that aria-orientation is set to vertical on separators", () => {
+		cy.mount(
+			<FlexibleColumnLayout id="fcl" layout="ThreeColumnsMidExpanded">
+				<div class="column" id="startColumn" slot="startColumn">some content</div>
+				<div class="column" id="midColumn" slot="midColumn">some content</div>
+				<div class="column" id="endColumn" slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-start")
+			.should("have.attr", "aria-orientation", "vertical");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-end")
+			.should("have.attr", "aria-orientation", "vertical");
+	});
 });
 
 before(() => {
@@ -340,6 +363,64 @@ describe("First column closing arrow behavior", () => {
 			.shadow()
 			.find(".ui5-fcl-arrow--start")
 			.should("have.attr", "icon", "slim-arrow-right");
+	});
+});
+
+describe("ThreeColumnsStartHidden column widths", () => {
+	it("ThreeColumnsStartHiddenMidExpanded should have mid as the wide column on desktop", () => {
+		cy.mount(
+			<FlexibleColumnLayout style={{ height: "300px" }} layout="ThreeColumnsStartHiddenMidExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
+	});
+
+	it("ThreeColumnsStartHiddenEndExpanded should have end as the wide column on desktop", () => {
+		cy.mount(
+			<FlexibleColumnLayout style={{ height: "300px" }} layout="ThreeColumnsStartHiddenEndExpanded">
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--start")
+			.should("have.attr", "style")
+			.and("include", "width: 0px");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--middle")
+			.should("have.attr", "style")
+			.and("include", "width: 33%");
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-column--end")
+			.should("have.attr", "style")
+			.and("include", "width: 67%");
 	});
 });
 
