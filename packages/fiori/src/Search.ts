@@ -559,10 +559,6 @@ class Search extends SearchField {
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {
-			if (isPhone()) {
-				this.open = false;
-			}
-
 			return;
 		}
 
