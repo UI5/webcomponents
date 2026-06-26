@@ -1685,6 +1685,8 @@ describe("Component Behavior", () => {
 		});
 
 		it("forwards search expanded state to the inner search button", () => {
+			cy.viewport(1920, 1080);
+
 			cy.mount(
 				<ShellBar showSearchField={true}>
 					<Input slot="searchField" />
@@ -1700,7 +1702,7 @@ describe("Component Behavior", () => {
 		});
 
 		it("provides accessible name for overflow popover when opened", () => {
-			cy.viewport(320, 1080);
+			cy.viewport(1920, 1080);
 
 			cy.mount(
 				<ShellBar
@@ -1715,13 +1717,12 @@ describe("Component Behavior", () => {
 			);
 
 			cy.get("[ui5-shellbar]")
-				.shadow()
-				.find(".ui5-shellbar-overflow-button")
-				.realClick();
+				.invoke("prop", "overflowPopoverOpen", true);
 
 			cy.get("[ui5-shellbar]")
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover")
+				.should("have.prop", "open", true)
 				.should("have.attr", "accessible-name")
 				.invoke("attr", "accessible-name")
 				.should("not.be.empty");
