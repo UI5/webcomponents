@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.2](https://github.com/UI5/webcomponents/compare/v2.23.1...v2.23.2) (2026-06-26)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13745](https://github.com/UI5/webcomponents/issues/13745)) ([3cdaa23](https://github.com/UI5/webcomponents/commit/3cdaa233d2d4bab8553e44d3d455cf466dbbe3d1))
+
+
+
+
+
 ## [2.23.1](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.23.1) (2026-06-11)
 
 

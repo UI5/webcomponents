@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.2](https://github.com/UI5/webcomponents/compare/v2.23.1...v2.23.2) (2026-06-26)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13745](https://github.com/UI5/webcomponents/issues/13745)) ([3cdaa23](https://github.com/UI5/webcomponents/commit/3cdaa233d2d4bab8553e44d3d455cf466dbbe3d1))
+* **ui5-search:** keep popup open on item click when search event is prevented ([#13757](https://github.com/UI5/webcomponents/issues/13757)) ([32f551b](https://github.com/UI5/webcomponents/commit/32f551b5375978c878f757fa9d54eef2a5b2ede6)), closes [#13750](https://github.com/UI5/webcomponents/issues/13750)
+* **ui5-shellbar-branding:** space key now triggers click event ([#13748](https://github.com/UI5/webcomponents/issues/13748)) ([17b6d45](https://github.com/UI5/webcomponents/commit/17b6d4548866360ed5e930e704219a0a65f716b1))
+* **ui5-shellbar-item:** fire click event when item is clicked in overflow popover ([#13747](https://github.com/UI5/webcomponents/issues/13747)) ([703bb33](https://github.com/UI5/webcomponents/commit/703bb33fbf7b98cc09901b756f72bbd49b9067ad))
+* **ui5-shellbar-search:** fix closing popup on tapping magnifier icon in mobile ([#13746](https://github.com/UI5/webcomponents/issues/13746)) ([182b9c3](https://github.com/UI5/webcomponents/commit/182b9c325a9813d0cb7e95a3702a9ea9e5e6dec3))
+* **ui5-shellbar:** ignore non-ShellBarItem children in overflow calculation ([#13744](https://github.com/UI5/webcomponents/issues/13744)) ([5898503](https://github.com/UI5/webcomponents/commit/5898503b03e68b6ebb83dd3fbc24f18b9d93f20f))
+* **ui5-shellbar:** return overflow button from notificationsDomRef wh… ([#13753](https://github.com/UI5/webcomponents/issues/13753)) ([bc210b2](https://github.com/UI5/webcomponents/commit/bc210b29f6e61bfe3292bde97db2b29975928077)), closes [#13752](https://github.com/UI5/webcomponents/issues/13752)
+
+
+
+
+
 ## [2.23.1](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.23.1) (2026-06-11)
 
 
