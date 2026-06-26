@@ -966,6 +966,36 @@ describe("Events", () => {
 				.should("have.been.calledOnce");
 		});
 
+		it("notificationsDomRef returns overflow button when notifications are in overflow", () => {
+			cy.viewport(320, 800);
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					secondaryTitle="Second title"
+					showNotifications={true}
+					notificationsCount="5"
+					showProductSwitch={true}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Button 1</Button>
+					<ToggleButton icon="sap-icon://da" slot="assistant" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").as("shellbar");
+
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("exist")
+				.then(overflowBtn => {
+					cy.get("@shellbar").then($shellbar => {
+						const shellbar = $shellbar[0] as ShellBar;
+						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
+					});
+				});
+		});
+
 		it("tests profileClick event", () => {
 			cy.mount(
 				<ShellBar>
