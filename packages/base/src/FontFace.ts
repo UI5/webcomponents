@@ -1,4 +1,4 @@
-import { hasStyle, createStyle } from "./ManagedStyles.js";
+import { createOrUpdateStyle } from "./ManagedStyles.js";
 import { getFeature } from "./FeaturesRegistry.js";
 import fontFaceCSS from "./generated/css/FontFace.css.js";
 import type OpenUI5Support from "./features/OpenUI5Support.js";
@@ -20,9 +20,7 @@ const insertMainFontFace = () => {
 		return;
 	}
 
-	if (!hasStyle("data-ui5-font-face")) {
-		createStyle(fontFaceCSS, "data-ui5-font-face");
-	}
+	createOrUpdateStyle(fontFaceCSS, "data-ui5-font-face");
 };
 
 export default insertFontFace;
