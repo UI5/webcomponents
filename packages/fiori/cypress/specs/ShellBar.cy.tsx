@@ -1683,6 +1683,49 @@ describe("Component Behavior", () => {
 				.find("button")
 				.should("have.attr", "aria-haspopup", NOTIFICATIONS_BTN_ARIA_HASPOPUP);
 		});
+
+		it("forwards search expanded state to the inner search button", () => {
+			cy.mount(
+				<ShellBar showSearchField={true}>
+					<Input slot="searchField" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-search-button")
+				.shadow()
+				.find("button")
+				.should("have.attr", "aria-expanded", "true");
+		});
+
+		it("provides accessible name for overflow popover when opened", () => {
+			cy.viewport(320, 1080);
+
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					showNotifications
+					showProductSwitch
+				>
+					<ShellBarItem icon="disconnected" text="Disconnect" />
+					<ShellBarItem icon="incoming-call" text="Incoming Calls" />
+					<Button icon={navBack} slot="startButton" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.realClick();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "accessible-name")
+				.invoke("attr", "accessible-name")
+				.should("not.be.empty");
+		});
 	});
 
 	describe("ui5-shellbar menu", () => {
