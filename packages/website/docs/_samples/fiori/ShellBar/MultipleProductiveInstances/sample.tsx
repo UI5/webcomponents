@@ -27,7 +27,7 @@ function App() {
       <ShellBar style={{ marginBottom: "1rem" }} notificationsCount="72" showNotifications={true}>
         <ShellBarBranding slot="branding">
           Product Identifier
-          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+          <img slot="logo" src="/images/sap-r-grad-scrn.svg" alt="SAP Logo" />
         </ShellBarBranding>
         <Button icon="menu2" slot="startButton" />
 
@@ -51,7 +51,7 @@ function App() {
       <ShellBar notificationsCount="72" showNotifications={true}>
         <ShellBarBranding slot="branding">
           Product Identifier
-          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+          <img slot="logo" src="/images/sap-r-grad-scrn.svg" alt="SAP Logo" />
         </ShellBarBranding>
         <Button icon="menu2" slot="startButton" />
 
