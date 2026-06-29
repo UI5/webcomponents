@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
+
+**Note:** Version bump only for package @ui5/webcomponents
+
+
+
+
+
+# [2.24.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.1...v2.24.0-rc.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13720](https://github.com/UI5/webcomponents/issues/13720)) ([f75e906](https://github.com/UI5/webcomponents/commit/f75e9064903f3927feb1411d61fd57bb1296f1d8))
+* **ui5-breadcrumbs:** acc findings fixed ([#13557](https://github.com/UI5/webcomponents/issues/13557)) ([9b6fea7](https://github.com/UI5/webcomponents/commit/9b6fea736543a77bffdd3d7448c521953269fe60))
+* **ui5-form:** incorrect labelSpan behavior when width is close to layout breakpoint ([#13727](https://github.com/UI5/webcomponents/issues/13727)) ([7b5fd2d](https://github.com/UI5/webcomponents/commit/7b5fd2dd824fa6df8c28ea6b3b48107ffa5127de))
+* **ui5-menu-item:** prevent menu from closing on endContent click ([#13705](https://github.com/UI5/webcomponents/issues/13705)) ([a7ca3af](https://github.com/UI5/webcomponents/commit/a7ca3af261d01c02bd16d7cada1afaa6e7a1814e))
+
+
+### Features
+
+* **ui5-combobox:** add trigger flag to selection-change event ([#13567](https://github.com/UI5/webcomponents/issues/13567)) ([638ad9c](https://github.com/UI5/webcomponents/commit/638ad9ced7c5012d8f0068d7d14702bf28ab6ba2))
+* **ui5-comobobox, ui5-multi-combobox:** add custom items ([#13640](https://github.com/UI5/webcomponents/issues/13640)) ([4f37e60](https://github.com/UI5/webcomponents/commit/4f37e60fc08fc789693da50e788c53ee67deb58e))
+* **ui5-comobobox, ui5-multi-combobox:** add custom items ([#13716](https://github.com/UI5/webcomponents/issues/13716)) ([246e770](https://github.com/UI5/webcomponents/commit/246e77087b8f39a167696a7812d6a047235369ab))
+* **ui5-dialog:** focus goes on entire dialog for drag and resize ([#13632](https://github.com/UI5/webcomponents/issues/13632)) ([5378baf](https://github.com/UI5/webcomponents/commit/5378bafcfd5559eae185a4c96ba94fc6b0977aff))
+
+
+
+
+
+# [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* keep table rows intact when printing and harden createInstanceChecker ([#13699](https://github.com/UI5/webcomponents/issues/13699)) ([492099e](https://github.com/UI5/webcomponents/commit/492099e44b22710313c2fc67480f9b1259a7b59d)), closes [#13684](https://github.com/UI5/webcomponents/issues/13684) [#13689](https://github.com/UI5/webcomponents/issues/13689)
+* **ui5-list:** suppress F2 aria description when no interactive items present ([#13489](https://github.com/UI5/webcomponents/issues/13489)) ([f27c1ff](https://github.com/UI5/webcomponents/commit/f27c1ffa8db7d2885a1e3bff6e5c8d20270ba6b8)), closes [#13347](https://github.com/UI5/webcomponents/issues/13347)
+* **ui5-multi-combobox:** execute skipped tests ([#13687](https://github.com/UI5/webcomponents/issues/13687)) ([a754ebb](https://github.com/UI5/webcomponents/commit/a754ebb0b41b11535cd4e6465ab7fc2e96dad3f8))
+
+
+### Features
+
+* **ui5-list:** add live region announcement for item selection ([#13440](https://github.com/UI5/webcomponents/issues/13440)) ([1c89f76](https://github.com/UI5/webcomponents/commit/1c89f7622f7f71f9afad1a5a9f65f72730b2943e)), closes [#12045](https://github.com/UI5/webcomponents/issues/12045)
+
+
+
+
+
+# [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
+
+
+### Bug Fixes
+
+* **ui5-bar, ui5-button:** prevent button badge from being clipped inside `ui5-bar` ([#13618](https://github.com/UI5/webcomponents/issues/13618)) ([294a2dd](https://github.com/UI5/webcomponents/commit/294a2dddca670edb40bcd35e3e048852b4d0aeb4))
+* **ui5-list:** guard item-toggle against null event detail ([#13646](https://github.com/UI5/webcomponents/issues/13646)) ([e410472](https://github.com/UI5/webcomponents/commit/e4104724827c89797353b22dd8cd3015ce9b6a93)), closes [#13576](https://github.com/UI5/webcomponents/issues/13576)
+* **ui5-popover:** add max-width/max-height support for resizable popover ([#13668](https://github.com/UI5/webcomponents/issues/13668)) ([0a7ef13](https://github.com/UI5/webcomponents/commit/0a7ef13bbf20d6a5711bbcee7ec2ad4e2985281a))
+* **ui5-select:** remove focus outline from input when dropdown is opened ([#13643](https://github.com/UI5/webcomponents/issues/13643)) ([2786b28](https://github.com/UI5/webcomponents/commit/2786b283de3284ba52eb182f86ec068d619ea646)), closes [#13616](https://github.com/UI5/webcomponents/issues/13616)
+* **ui5-table:** include growing button in tab order and arrow navigation ([#13676](https://github.com/UI5/webcomponents/issues/13676)) ([14e745f](https://github.com/UI5/webcomponents/commit/14e745fff1e0c76b46fa3d052c6bddac64baf21a))
+
+
+### Features
+
+* **ui5-dialog:** add role 'region' to the header, content and footer ([#13645](https://github.com/UI5/webcomponents/issues/13645)) ([1ba3995](https://github.com/UI5/webcomponents/commit/1ba3995ad62182bf1ad45b093a059ab9e1cfb73c))
+
+
+
+
+
 # [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
 
 
