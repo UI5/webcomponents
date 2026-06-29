@@ -407,7 +407,15 @@ class RadioButton extends UI5Element implements IFormInputElement {
 	}
 
 	get ariaLabelText() {
-		return [getEffectiveAriaLabelText(this), this.text].filter(Boolean).join(" ");
+		return getEffectiveAriaLabelText(this) || undefined;
+	}
+
+	get ariaLabelledBy() {
+		if (!this.ariaLabelText) {
+			return this.text ? `${this._id}-label` : undefined;
+		}
+
+		return undefined;
 	}
 
 	get effectiveAriaDescribedBy() {
