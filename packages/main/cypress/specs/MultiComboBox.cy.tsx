@@ -916,32 +916,22 @@ describe("General", () => {
 			.find(".ui5-mcb-select-all-checkbox")
 			.realClick();
 
-		// Close popover
+		// Verify input value is still "a" after Select All
+		cy.get("@input")
+			.should("have.value", "a");
+
+		// Verify 2 items selected (Argentina, Australia)
 		cy.get("@mcb")
 			.shadow()
-			.find(".inputIcon")
-			.realClick();
+			.find("[ui5-token]")
+			.should("have.length", 2);
 
-		cy.get("@mcb")
-			.shadow()
-			.find<ResponsivePopover>("ui5-responsive-popover")
-			.ui5ResponsivePopoverClosed();
-
-		// Reopen and type "s" to filter
-		cy.get("@mcb")
-			.realClick();
-
+		// Clear input and type "s" to filter (popover stays open)
 		cy.get("@input")
 			.clear()
 			.realType("s");
 
-		// Wait for popover to reopen with new filter
-		cy.get("@mcb")
-			.shadow()
-			.find<ResponsivePopover>("ui5-responsive-popover")
-			.ui5ResponsivePopoverOpened();
-
-		// Click Select All for "s" filter
+		// Click Select All for "s" filter (should select Spain)
 		cy.get("@mcb")
 			.shadow()
 			.find<ResponsivePopover>("ui5-responsive-popover")
@@ -951,6 +941,12 @@ describe("General", () => {
 		// Verify input value is "s", not "a"
 		cy.get("@input")
 			.should("have.value", "s");
+
+		// Verify now 3 items are selected (Argentina, Australia, Spain)
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-token]")
+			.should("have.length", 3);
 	});
 
 	it("Tokenizer expansion on dynamically added tokens", () => {
