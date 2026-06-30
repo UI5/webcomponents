@@ -225,6 +225,55 @@
 		<ui5-text style="padding-top: 0.25rem; font-style: italic;">The examples shows scoped search with scoped suggestions. Change scope to filter suggestions.</ui5-text>
 	</div>
 
+	<div class="container">
+		<ui5-label>Search with Grouped Suggestions and "Search in" group - Pick a scope from the suggestions</ui5-label>
+		<ui5-search id="search-in-scope" show-clear-icon scope-value="all" placeholder="Search ...">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Sales Orders" value="salesOrders" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Purchase Orders" value="purchaseOrders" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Customers" value="customers" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
+
+			<ui5-search-item-group header-text="Recent">
+				<ui5-search-item text="SO-1001 — Acme Corp" icon="sales-order"></ui5-search-item>
+				<ui5-search-item text="PO-4502 — Globex" icon="cart"></ui5-search-item>
+				<ui5-search-item text="Customer: Initech" icon="customer"></ui5-search-item>
+			</ui5-search-item-group>
+
+			<ui5-search-item-group id="search-in-group" header-text="Search in">
+				<ui5-search-item text="Sales Orders" icon="sales-order" data-scope="salesOrders"></ui5-search-item>
+				<ui5-search-item text="Purchase Orders" icon="cart" data-scope="purchaseOrders"></ui5-search-item>
+				<ui5-search-item text="Customers" icon="customer" data-scope="customers"></ui5-search-item>
+				<ui5-search-item text="Products" icon="product" data-scope="products"></ui5-search-item>
+			</ui5-search-item-group>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			Picking an item from the "Search in" group changes the active scope instead of completing the search.
+		</ui5-text>
+	</div>
+
+	<script>
+		(function () {
+			const searchInScope = document.getElementById('search-in-scope');
+
+			searchInScope.addEventListener('ui5-search', (event) => {
+				const item = event.detail.item;
+				const targetScope = item && item.dataset && item.dataset.scope;
+
+				if (!targetScope) {
+					return;
+				}
+
+				// Item belongs to the "Search in" group — switch scope rather than submitting a search.
+				// preventDefault keeps the popup open so the user can continue picking suggestions in the new scope.
+				event.preventDefault();
+				searchInScope.scopeValue = targetScope;
+				searchInScope.value = "";
+				searchInScope.focus();
+			});
+		}());
+	</script>
+
 
 	<div class="container">
 		<ui5-label>Search with Suggestions - Filters and noTypeAhead</ui5-label>
