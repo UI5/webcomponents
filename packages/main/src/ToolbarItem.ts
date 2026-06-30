@@ -310,7 +310,7 @@ class ToolbarItem extends ToolbarItemBase {
 		const itemNavOwner = child as IItemNavigationOwner;
 		if (typeof itemNavOwner._itemNavigation?._getCurrentItem === "function"
 			&& typeof itemNavOwner._getFocusableItems === "function") {
-			const items = itemNavOwner._getFocusableItems!();
+			const items = itemNavOwner._getFocusableItems();
 			const current = itemNavOwner._itemNavigation._getCurrentItem();
 			const currentIndex = current
 				? items.findIndex(item => (item.getFocusDomRef ? item.getFocusDomRef() : item) === current)

@@ -96,6 +96,7 @@ class ToolbarItemBase extends UI5Element {
 	 * Override in complex items (e.g., Breadcrumbs) to handle direction-aware entry.
 	 * @private
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	focusForToolbarNavigation(isForward: boolean) {
 		this.getToolbarFocusTarget()?.focus();
 	}

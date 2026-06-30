@@ -320,7 +320,7 @@ class Toolbar extends UI5Element {
 		this.detachListeners();
 		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
-			const items = this._getNavigableItems();
+			const items = this.standardItems.filter(item => item.isToolbarNavigatable);
 			const lastItem = items.at(-1);
 			if (lastItem) {
 				this._lastFocusedItem = lastItem;
@@ -792,7 +792,7 @@ class Toolbar extends UI5Element {
 	}
 
 	_moveToPrev() {
-		this._moveToItem((current, items) => Math.max(current - 1, 0), false);
+		this._moveToItem(current => Math.max(current - 1, 0), false);
 	}
 
 	_moveToFirst() {

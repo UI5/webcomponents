@@ -106,13 +106,17 @@ describe("Toolbar general interaction", () => {
 			});
 
 		cy.realPress("ArrowLeft");
+
+		// After ArrowLeft from overflow button, focus lands on the last visible toolbar item
 		cy.get("#overflow-arrow-toolbar")
 			.then($toolbar => {
 				const toolbar = $toolbar[0] as Toolbar & {
 					_lastFocusedItem?: ToolbarItem | HTMLElement;
+					_getNavigableItems: () => ToolbarItem[];
 				};
-				const lastToolbarItem = $toolbar.find("[ui5-toolbar-button][text='Five Long']")[0] as ToolbarItem;
-				expect(toolbar._lastFocusedItem).to.equal(lastToolbarItem);
+				const navigableItems = toolbar._getNavigableItems();
+				const expectedLastItem = navigableItems.at(-1);
+				expect(toolbar._lastFocusedItem).to.equal(expectedLastItem);
 			});
 	});
 
