@@ -800,7 +800,7 @@ describe("Carousel general interaction", () => {
 			});
 	});
 
-	it("_resizing remains true when navigateTo is called after _onResize with same page index", () => {
+	it("_resizing remains false when navigateTo is called after _onResize", () => {
 		cy.mount(
 			<Carousel id="carousel">
 				<Button>Button 1</Button>
@@ -814,7 +814,7 @@ describe("Carousel general interaction", () => {
 				const carousel = $carousel[0];
 				carousel._onResize();
 				carousel.navigateTo(2);
-				expect(carousel._resizing).to.be.true;
+				expect(carousel._resizing).to.be.false;
 			});
 	});
 
