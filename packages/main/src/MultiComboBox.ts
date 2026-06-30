@@ -2204,7 +2204,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if ((!this.shadowRoot!.contains(e.relatedTarget as Node) || focusIsGoingInPopover) && !this._deleting && !this._clearingValue) {
 			this.focused = false;
 
-			if (!this.noValidation && this.value) {
+			// Don't clear value if focus is going to popover (e.g., value state message)
+			if (!this.noValidation && this.value && !focusIsGoingInPopover) {
 				this.value = "";
 				this._lastValue = "";
 				// Also clear the DOM input to prevent typeahead from running on old value
