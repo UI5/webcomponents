@@ -62,7 +62,7 @@ import InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
-import type { ToolbarMovementInfo } from "./ToolbarItemBase.js";
+import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
 
 // Templates
 import InputTemplate from "./InputTemplate.js";
@@ -1661,7 +1661,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		return this.nativeInput;
 	}
 
-	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+	getArrowNavState(): ToolbarArrowNavState | undefined {
 		const input = this.getInputDOMRefSync();
 		if (!input) {
 			return undefined;
@@ -1673,13 +1673,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 			return undefined;
 		}
 
-		const caretIndex = input.selectionStart ?? 0;
-		const valueLength = input.value?.length ?? 0;
+		const caret = input.selectionStart ?? 0;
+		const len = input.value?.length ?? 0;
 
-		return {
-			currentIndex: caretIndex,
-			itemCount: valueLength + 1,
-		};
+		return { atLeftEnd: caret === 0, atRightEnd: caret >= len };
 	}
 
 	/**

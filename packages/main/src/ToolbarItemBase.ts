@@ -8,13 +8,13 @@ type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
 
-export type ToolbarMovementInfo = {
-	currentIndex: number;
-	itemCount: number;
+export type ToolbarArrowNavState = {
+	atLeftEnd: boolean;
+	atRightEnd: boolean;
 };
 
-export interface ToolbarMovementEnabler {
-	getToolbarMovementInfo(): ToolbarMovementInfo | undefined;
+export interface ToolbarArrowNavigation {
+	getArrowNavState(): ToolbarArrowNavState;
 }
 
 @event("close-overflow", {
@@ -97,17 +97,10 @@ class ToolbarItemBase extends UI5Element {
 	 * @private
 	 */
 	focusForToolbarNavigation(isForward: boolean) {
-		if (isForward) {
-			// no-op
-		}
 		this.getToolbarFocusTarget()?.focus();
 	}
 
-	moveWithinToolbarItem(isForward: boolean): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
-		return false;
-	}
-
-	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+	getArrowNavState(): ToolbarArrowNavState | undefined {
 		return undefined;
 	}
 

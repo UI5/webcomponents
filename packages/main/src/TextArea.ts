@@ -20,7 +20,7 @@ import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/In
 import type Popover from "./Popover.js";
 import type InputComposition from "./features/InputComposition.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import type { ToolbarMovementInfo } from "./ToolbarItemBase.js";
+import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -438,7 +438,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 		return this.getDomRef()!.querySelector<HTMLTextAreaElement>("textarea")!;
 	}
 
-	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+	getArrowNavState(): ToolbarArrowNavState | undefined {
 		const textArea = this.getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
 		if (!textArea) {
 			return undefined;
@@ -450,13 +450,10 @@ class TextArea extends UI5Element implements IFormInputElement {
 			return undefined;
 		}
 
-		const caretIndex = textArea.selectionStart ?? 0;
-		const valueLength = textArea.value?.length ?? 0;
+		const caret = textArea.selectionStart ?? 0;
+		const len = textArea.value?.length ?? 0;
 
-		return {
-			currentIndex: caretIndex,
-			itemCount: valueLength + 1,
-		};
+		return { atLeftEnd: caret === 0, atRightEnd: caret >= len };
 	}
 
 	_onkeydown(e: KeyboardEvent) {

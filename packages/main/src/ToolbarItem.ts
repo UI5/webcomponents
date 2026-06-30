@@ -2,10 +2,14 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import {
+	isLeft,
+	isRight,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { ToolbarMovementInfo } from "./ToolbarItemBase.js";
+import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
 /**
@@ -19,14 +23,14 @@ import type { DefaultSlot } from "@ui5/webcomponents-base";
 interface IToolbarItemContent extends HTMLElement {
 	overflowCloseEvents?: string[];
 	hasOverflow?: boolean;
-	getToolbarMovementInfo?: () => ToolbarMovementInfo | undefined;
+	getArrowNavState?: () => ToolbarArrowNavState | undefined;
 }
 
 interface IItemNavigationOwner extends HTMLElement {
 	_itemNavigation?: {
-		_getCurrentItem: () => unknown;
+		_getCurrentItem: () => HTMLElement | undefined;
 	};
-	_getFocusableItems?: () => Array<unknown>;
+	_getFocusableItems?: () => Array<{ getFocusDomRef?: () => HTMLElement }>;
 }
 
 /**
@@ -65,6 +69,7 @@ class ToolbarItem extends ToolbarItemBase {
 	_wrapperChecked = false;
 	_lastFocusedNavigationTarget?: HTMLElement;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
+	_onMultiChildKeydownRef = this._onMultiChildKeydown.bind(this);
 
 	closeOverflowSet = {
 		"ui5-button": ["click"],
@@ -83,10 +88,16 @@ class ToolbarItem extends ToolbarItemBase {
 	onBeforeRendering(): void {
 		this.checkForWrapper();
 		this.attachCloseOverflowHandlers();
+		if (this.item.length > 1) {
+			this.addEventListener("keydown", this._onMultiChildKeydownRef, true);
+		} else {
+			this.removeEventListener("keydown", this._onMultiChildKeydownRef, true);
+		}
 	}
 
 	onExitDOM(): void {
 		this.detachCloseOverflowHandlers();
+		this.removeEventListener("keydown", this._onMultiChildKeydownRef, true);
 	}
 
 	/**
@@ -267,76 +278,70 @@ class ToolbarItem extends ToolbarItemBase {
 		};
 	}
 
-	_supportsItemNavigationMovementInfo(child: IToolbarItemContent): boolean {
-		const itemNavigationOwner = child as IItemNavigationOwner;
-		return typeof itemNavigationOwner._itemNavigation?._getCurrentItem === "function"
-			&& typeof itemNavigationOwner._getFocusableItems === "function";
-	}
-
-	_getItemNavigationMovementInfo(child: IToolbarItemContent): ToolbarMovementInfo | undefined {
-		if (!this._supportsItemNavigationMovementInfo(child)) {
-			return undefined;
+	_onMultiChildKeydown(e: KeyboardEvent) {
+		const isForward = this.effectiveDir === "rtl" ? isLeft(e) : isRight(e);
+		const isBackward = this.effectiveDir === "rtl" ? isRight(e) : isLeft(e);
+		if (!isForward && !isBackward) {
+			return;
 		}
 
-		const itemNavigationOwner = child as IItemNavigationOwner;
-		const items = itemNavigationOwner._getFocusableItems!();
-		const current = itemNavigationOwner._itemNavigation!._getCurrentItem();
-		const currentIndex = current ? items.indexOf(current) : -1;
-
+		const { items, currentIndex } = this._getCurrentNavigationState();
 		if (currentIndex === -1) {
-			return undefined;
+			return;
 		}
 
-		return {
-			currentIndex,
-			itemCount: items.length,
-		};
+		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
+		if (nextIndex < 0 || nextIndex >= items.length) {
+			return;
+		}
+
+		e.preventDefault();
+		e.stopPropagation();
+		this._handleNavigationTarget(items[nextIndex]);
 	}
 
-	getToolbarMovementInfo(): ToolbarMovementInfo | undefined {
+	getArrowNavState(): ToolbarArrowNavState | undefined {
 		const child = this.item[0] as IToolbarItemContent | undefined;
 		if (!child) {
 			return undefined;
 		}
 
-		const itemNavigationInfo = this._getItemNavigationMovementInfo(child);
-		if (itemNavigationInfo) {
-			return itemNavigationInfo;
-		}
-
-		if (typeof child.getToolbarMovementInfo === "function") {
-			return child.getToolbarMovementInfo();
-		}
-
-		// Multi-child item (e.g. radio button group, checkbox group): report
-		// current position so toolbar knows when to cross the boundary.
-		if (this.item.length > 1) {
-			const { items, currentIndex } = this._getCurrentNavigationState();
+		// Priority 1: ItemNavigation-based components (e.g. Breadcrumbs, SegmentedButton)
+		const itemNavOwner = child as IItemNavigationOwner;
+		if (typeof itemNavOwner._itemNavigation?._getCurrentItem === "function"
+			&& typeof itemNavOwner._getFocusableItems === "function") {
+			const items = itemNavOwner._getFocusableItems!();
+			const current = itemNavOwner._itemNavigation._getCurrentItem();
+			const currentIndex = current
+				? items.findIndex(item => (item.getFocusDomRef ? item.getFocusDomRef() : item) === current)
+				: -1;
 			if (currentIndex !== -1) {
-				return { currentIndex, itemCount: items.length };
+				return {
+					atLeftEnd: currentIndex === 0,
+					atRightEnd: currentIndex === items.length - 1,
+				};
 			}
 		}
 
-		return undefined;
-	}
+		// Priority 2: explicit new interface (e.g. Input, TextArea)
+		if (typeof child.getArrowNavState === "function") {
+			return child.getArrowNavState();
+		}
 
-	moveWithinToolbarItem(isForward: boolean): boolean {
+		// Priority 3: proprietary multi-child fallback (e.g. bare checkbox group)
 		if (this.item.length <= 1) {
-			return false;
+			return undefined;
 		}
 
 		const { items, currentIndex } = this._getCurrentNavigationState();
 		if (currentIndex === -1) {
-			return false;
+			return undefined;
 		}
 
-		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
-		if (nextIndex < 0 || nextIndex >= items.length) {
-			return false;
-		}
-
-		this._handleNavigationTarget(items[nextIndex]);
-		return true;
+		return {
+			atLeftEnd: currentIndex === 0,
+			atRightEnd: currentIndex === items.length - 1,
+		};
 	}
 
 	setToolbarForcedTabIndex(tabIndex: string) {
@@ -352,13 +357,8 @@ class ToolbarItem extends ToolbarItemBase {
 			this._lastFocusedNavigationTarget = current;
 		}
 
-		const fallbackTarget = items[0];
-		const focusTarget = this._lastFocusedNavigationTarget && items.includes(this._lastFocusedNavigationTarget)
-			? this._lastFocusedNavigationTarget
-			: fallbackTarget;
-
 		items.forEach(target => {
-			target.tabIndex = tabIndex === "0" && target === focusTarget ? 0 : -1;
+			target.tabIndex = Number(tabIndex);
 		});
 	}
 

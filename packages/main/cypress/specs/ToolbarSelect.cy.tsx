@@ -299,17 +299,16 @@ describe("Toolbar general interaction", () => {
 			</>
 		);
 
-		// Set up button click handler
-		cy.get("#btn").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				// First, deselect all options
-				const select = document.querySelector("ui5-toolbar-select");
+		// Attach click handler via document to avoid jQuery wrapping issues
+		cy.document().then(doc => {
+			const btn = doc.getElementById("btn");
+			btn?.addEventListener("click", () => {
+				const select = doc.querySelector("ui5-toolbar-select");
 				const options = select?.querySelectorAll("ui5-toolbar-select-option");
 				options?.forEach(opt => {
 					(opt as ToolbarSelectOption).selected = false;
 				});
-				// Then select option 2
-				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
+				const opt2 = doc.getElementById("opt2") as ToolbarSelectOption;
 				opt2.selected = true;
 			});
 		});
@@ -360,11 +359,12 @@ describe("Toolbar general interaction", () => {
 		);
 
 		// Set up button to attempt selecting multiple options
-		cy.get("#selectMultiple").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
-				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
-				const opt3 = document.getElementById("opt3") as ToolbarSelectOption;
+		cy.document().then(doc => {
+			const btn = doc.getElementById("selectMultiple");
+			btn?.addEventListener("click", () => {
+				const opt1 = doc.getElementById("opt1") as ToolbarSelectOption;
+				const opt2 = doc.getElementById("opt2") as ToolbarSelectOption;
+				const opt3 = doc.getElementById("opt3") as ToolbarSelectOption;
 
 				// Try to select multiple options
 				opt1.selected = true;

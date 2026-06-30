@@ -588,17 +588,22 @@ class Toolbar extends UI5Element {
 	 */
 
 	_applyRovingTabIndex() {
-		const items = this._getNavigationChain();
+		const items = this._getNavigableItems();
 
 		if (!items.length) {
 			return;
 		}
 
-		if (!this._lastFocusedItem || !items.includes(this._lastFocusedItem)) {
-			this._lastFocusedItem = items[0];
+		items.forEach(item => item.setToolbarForcedTabIndex("0"));
+
+		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		if (overflowButton && !this.hideOverflowButton) {
+			overflowButton.tabIndex = 0;
 		}
 
-		this._setCurrentItem(this._lastFocusedItem);
+		if (!this._lastFocusedItem || !this._getNavigationChain().includes(this._lastFocusedItem)) {
+			this._lastFocusedItem = items[0];
+		}
 	}
 
 	_isFocusInsideOverflow(path: Array<EventTarget>): boolean {
@@ -635,6 +640,12 @@ class Toolbar extends UI5Element {
 		}
 
 		if (isTabNext(e) || isTabPrevious(e)) {
+			this._setCurrentItem(
+				this._findItemByPath(e.composedPath())
+				|| this._findOverflowButtonByPath(e.composedPath())
+				|| this._findCurrentTargetByActiveElement()
+				|| this._lastFocusedItem!,
+			);
 			return;
 		}
 
@@ -656,30 +667,18 @@ class Toolbar extends UI5Element {
 		}
 
 		if (currentTarget instanceof ToolbarItemBase && (isForward || isBackward)) {
-			const movementInfo = currentTarget.getToolbarMovementInfo();
-			if (movementInfo) {
-				const { currentIndex, itemCount } = movementInfo;
-				const atForwardBoundary = itemCount <= 1 || (isForward && currentIndex >= itemCount - 1);
-				const atBackwardBoundary = itemCount <= 1 || (isBackward && currentIndex <= 0);
-
-				if (atForwardBoundary || atBackwardBoundary) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					if (isForward) {
-						this._moveToNext();
-					} else {
-						this._moveToPrev();
-					}
+			const state = currentTarget.getArrowNavState();
+			if (state) {
+				const atEnd = isForward ? state.atRightEnd : state.atLeftEnd;
+				if (!atEnd) {
 					return;
 				}
+			}
+		}
 
-				if (currentTarget.moveWithinToolbarItem(isForward)) {
-					e.preventDefault();
-					e.stopPropagation();
-				}
-
-				// Not at boundary -> nested control (or fallback mover) handles traversal.
+		if (currentTarget instanceof ToolbarItemBase && (isHomeKey || isEndKey)) {
+			const state = currentTarget.getArrowNavState();
+			if (state) {
 				return;
 			}
 		}
@@ -786,23 +785,14 @@ class Toolbar extends UI5Element {
 
 	_setCurrentItem(item: ToolbarItemBase | HTMLElement) {
 		this._lastFocusedItem = item;
-		const allItems = this._getNavigableItems();
-		allItems.forEach(i => {
-			i.setToolbarForcedTabIndex(i === item ? "0" : "-1");
-		});
-
-		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
-		if (overflowButton) {
-			overflowButton.tabIndex = item === overflowButton ? 0 : -1;
-		}
 	}
 
 	_moveToNext() {
-		this._moveToItem((current, items) => (current + 1) % items.length, true);
+		this._moveToItem((current, items) => Math.min(current + 1, items.length - 1), true);
 	}
 
 	_moveToPrev() {
-		this._moveToItem((current, items) => (current === 0 ? items.length - 1 : current - 1), false);
+		this._moveToItem((current, items) => Math.max(current - 1, 0), false);
 	}
 
 	_moveToFirst() {
@@ -820,6 +810,11 @@ class Toolbar extends UI5Element {
 		}
 		const currentIndex = this._lastFocusedItem ? items.indexOf(this._lastFocusedItem) : -1;
 		const nextIndex = indexCalc(currentIndex === -1 ? 0 : currentIndex, items);
+
+		if (nextIndex === currentIndex) {
+			return;
+		}
+
 		const nextItem = items[nextIndex];
 		this._setCurrentItem(nextItem);
 

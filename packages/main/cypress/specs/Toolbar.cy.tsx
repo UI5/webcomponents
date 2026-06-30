@@ -11,6 +11,7 @@ import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import employee from "@ui5/webcomponents-icons/dist/employee.js";
 import Button from "../../src/Button.js";
 import Dialog from "../../src/Dialog.js";
+import Input from "../../src/Input.js";
 
 describe("Toolbar general interaction", () => {
 	it("Should not return null upon calling getDomRef for all direct child items", () => {
@@ -76,7 +77,7 @@ describe("Toolbar general interaction", () => {
 			.should("be.focused");
 	});
 
-	it("Should navigate into and out of overflow button with single arrow press", () => {
+	it("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
 		cy.viewport(320, 1080);
 
 		cy.mount(
@@ -104,14 +105,14 @@ describe("Toolbar general interaction", () => {
 				toolbar.overflowButtonDOM.focus();
 			});
 
-		cy.realPress("ArrowRight");
+		cy.realPress("ArrowLeft");
 		cy.get("#overflow-arrow-toolbar")
 			.then($toolbar => {
 				const toolbar = $toolbar[0] as Toolbar & {
 					_lastFocusedItem?: ToolbarItem | HTMLElement;
 				};
-				const firstToolbarItem = $toolbar.find("[ui5-toolbar-button][text='One Long']")[0] as ToolbarItem;
-				expect(toolbar._lastFocusedItem).to.equal(firstToolbarItem);
+				const lastToolbarItem = $toolbar.find("[ui5-toolbar-button][text='Five Long']")[0] as ToolbarItem;
+				expect(toolbar._lastFocusedItem).to.equal(lastToolbarItem);
 			});
 	});
 
@@ -154,6 +155,118 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-toolbar-button][text='First']").should("be.focused");
 	});
 
+
+	it("Should not wrap on ArrowRight at last item or ArrowLeft at first item", () => {
+		cy.mount(
+			<Toolbar id="no-wrap-toolbar">
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// ArrowLeft on first item does nothing
+		cy.get("[ui5-toolbar-button][text='First']").realClick().should("be.focused");
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='First']").should("be.focused");
+
+		// ArrowRight on last item does nothing
+		cy.get("[ui5-toolbar-button][text='Third']").realClick().should("be.focused");
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Third']").should("be.focused");
+	});
+
+	it("Should allow Tab to navigate between toolbar items (all items have tabIndex=0)", () => {
+		cy.mount(
+			<Toolbar id="tab-index-toolbar">
+				<ToolbarButton text="A"></ToolbarButton>
+				<ToolbarButton text="B"></ToolbarButton>
+				<ToolbarButton text="C"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar-button][text='A']").realClick().should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-toolbar-button][text='B']").should("be.focused");
+
+		cy.realPress("Tab");
+		cy.get("[ui5-toolbar-button][text='C']").should("be.focused");
+	});
+
+	it("Should respect Input caret position when deciding arrow navigation", () => {
+		cy.mount(
+			<Toolbar id="input-caret-toolbar">
+				<ToolbarButton text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<Input id="toolbar-input" value="hello"></Input>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Focus the input and move caret to start
+		cy.get("#toolbar-input").realClick();
+		cy.get("#toolbar-input").realPress("Home");
+
+		// ArrowLeft at caret=0 (atLeftEnd) → toolbar moves to previous item
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Before']").should("be.focused");
+
+		// Now focus input and move caret to end
+		cy.get("#toolbar-input").realClick();
+		cy.get("#toolbar-input").realPress("End");
+
+		// ArrowRight at caret=end (atRightEnd) → toolbar moves to next item
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='After']").should("be.focused");
+	});
+
+	it("Should keep focus within Input while caret is not at boundary", () => {
+		cy.mount(
+			<Toolbar id="input-mid-caret-toolbar">
+				<ToolbarButton text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<Input id="mid-toolbar-input" value="hello"></Input>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#mid-toolbar-input").realClick();
+
+		// Home key is NOT intercepted by toolbar when an Input has focus (caret-aware items)
+		cy.realPress("Home");
+		cy.get("#mid-toolbar-input").should("be.focused");
+
+		// Set caret to position 2 (mid-string) via DOM to avoid End key exiting to last item
+		cy.get("#mid-toolbar-input").then($input => {
+			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
+			const native = ui5Input.nativeInput;
+			if (native) {
+				native.focus();
+				native.setSelectionRange(2, 2);
+			}
+		});
+
+		// ArrowRight with caret mid-string → stays in input, toolbar does not navigate
+		cy.realPress("ArrowRight");
+		cy.get("#mid-toolbar-input").should("be.focused");
+
+		// Move caret back to mid
+		cy.get("#mid-toolbar-input").then($input => {
+			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
+			const native = ui5Input.nativeInput;
+			if (native) {
+				native.focus();
+				native.setSelectionRange(2, 2);
+			}
+		});
+
+		// ArrowLeft with caret mid-string → stays in input
+		cy.realPress("ArrowLeft");
+		cy.get("#mid-toolbar-input").should("be.focused");
+	});
 
 	it("Should focus first overflow item when overflow popover opens", () => {
 		cy.mount(
@@ -295,6 +408,30 @@ describe("Toolbar general interaction", () => {
 			.shadow()
 			.find(".ui5-tb-overflow-btn-hidden")
 			.should("exist", "hidden class attached to tb button, meaning it's not shown as expected");
+	});
+
+	it("Should handle toolbar-select with width larger than the toolbar", () => {
+		cy.mount(
+			<div style="width: 200px;">
+				<Toolbar id="toolbar-wide-select">
+					<ToolbarSelect width="400px">
+						<ToolbarSelectOption>Option 1</ToolbarSelectOption>
+						<ToolbarSelectOption>Option 2</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		cy.get("#toolbar-wide-select")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("not.have.class", "ui5-tb-overflow-btn-hidden");
+
+		cy.get("[ui5-toolbar-select]")
+			.should("have.prop", "isOverflowed", true);
 	});
 
 	it("Should call event handlers on item", () => {
