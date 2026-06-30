@@ -838,6 +838,121 @@ describe("General", () => {
 			.should("have.attr", "checked");
 	});
 
+	it("Select All preserves filter value when filtering", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} showSelectAll={true}>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Australia"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Belgium"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		// Type "a" to filter
+		cy.get("@mcb")
+			.shadow()
+			.find("#ui5-multi-combobox-input")
+			.as("input")
+			.realType("a");
+
+		// Wait for popover to open with filtered items
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Click Select All
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.realClick();
+
+		// Verify input value is still "a"
+		cy.get("@input")
+			.should("have.value", "a");
+
+		// Verify only 2 filtered items are selected (Argentina, Australia)
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-token]")
+			.should("have.length", 2);
+	});
+
+	it("Select All with different filter values", () => {
+		cy.mount(
+			<MultiComboBox noValidation={true} showSelectAll={true}>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Australia"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Belgium"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Spain"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		// Type "a" to filter
+		cy.get("@mcb")
+			.shadow()
+			.find("#ui5-multi-combobox-input")
+			.as("input")
+			.realType("a");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Click Select All to select filtered items
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.realClick();
+
+		// Close popover
+		cy.get("@mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverClosed();
+
+		// Reopen and type "s" to filter
+		cy.get("@mcb")
+			.realClick();
+
+		cy.get("@input")
+			.clear()
+			.realType("s");
+
+		// Wait for popover to reopen with new filter
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Click Select All for "s" filter
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.realClick();
+
+		// Verify input value is "s", not "a"
+		cy.get("@input")
+			.should("have.value", "s");
+	});
+
 	it("Tokenizer expansion on dynamically added tokens", () => {
 		const addTokens = () => {
 			const mcb = document.getElementById("mcb");
