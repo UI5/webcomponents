@@ -23,7 +23,7 @@
 .ui5-mcb-select-all-checkbox::part(root):focus::before {
 	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	border-radius: 0;
-	inset: 0 2px;
+	inset: .125rem;
 }
 
 .ui5-mcb-select-all-checkbox::part(label) {

@@ -800,6 +800,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.value = input.value;
+		// Update valueBeforeAutoComplete with the user's typed value (not typeahead completion)
+		this.valueBeforeAutoComplete = input.value;
 		this._filteredItems = filteredItems;
 
 		if (!isPhone()) {
@@ -1160,6 +1162,14 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		const allItemsSelected = filteredItems.every(item => item.selected);
 		this._previouslySelectedItems = filteredItems.filter(item => item.selected).map(item => item);
 
+		// Use valueBeforeAutoComplete to get the actual typed text (not typeahead completion)
+		// Fall back to reading from the DOM input if valueBeforeAutoComplete is not set
+		const filterValue = this.valueBeforeAutoComplete || this._innerInput?.value || "";
+
+		// Disable autocomplete to prevent typeahead from changing the filter value
+		const previousShouldAutocomplete = this._shouldAutocomplete;
+		this._shouldAutocomplete = false;
+
 		filteredItems.forEach(item => {
 			item.selected = !allItemsSelected;
 		});
@@ -1169,6 +1179,19 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		if (changePrevented) {
 			this._revertSelection();
 		}
+
+		// Preserve the filter value (same as _listSelectionChange does for checkbox clicks)
+		this.value = filterValue;
+		this.valueBeforeAutoComplete = filterValue;
+
+		if (this._innerInput) {
+			this._innerInput.value = filterValue;
+		}
+
+		// Restore autocomplete on next tick to allow normal typing
+		setTimeout(() => {
+			this._shouldAutocomplete = previousShouldAutocomplete;
+		}, 0);
 	}
 
 	_onListHeaderKeydown(e: KeyboardEvent) {
@@ -1823,11 +1846,22 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._preventTokenizerToggle = false;
 		this.filterSelected = false;
 
+		// Only reset filter state if there's no input value and no saved filter value
+		// Keep _shouldFilterItems = true if we have a filter value stored
+		if (!this._innerInput?.value && !this.valueBeforeAutoComplete && !this.value) {
+			this._shouldFilterItems = false;
+		}
+
 		// Reset _isVisible for all items when closing
 		this._updateItemsVisibility();
 	}
 
 	_beforeOpen() {
+		// If reopening with a stored filter value, restore it
+		if (this._shouldFilterItems === true && this.valueBeforeAutoComplete && !this.value) {
+			this.value = this.valueBeforeAutoComplete;
+		}
+
 		this.open = true;
 		this._itemsBeforeOpen = this._getItems().map(item => {
 			return {
@@ -1962,7 +1996,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
 
 		if (input && !input.value) {
-			this.valueBeforeAutoComplete = "";
+			// Don't clear valueBeforeAutoComplete if filtering is active
+			if (this._shouldFilterItems !== true) {
+				this.valueBeforeAutoComplete = "";
+			}
 			// Don't reset _filteredItems in n-more mode - it's controlled by _applySelectedItemsFilter
 			if (!this.filterSelected) {
 				this._filteredItems = this._getItems();
@@ -1977,8 +2014,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
 		if (!input || !value) {
-			// Don't reset visibility in n-more mode - it's controlled by _beforeOpen and _showFilteredItems
-			if (!this.filterSelected) {
+			// Don't reset visibility if:
+			// - In n-more mode (controlled by _beforeOpen and _showFilteredItems)
+			// - Filtering is active (preserve filtered state even if popup briefly closes)
+			if (!this.filterSelected && this._shouldFilterItems !== true) {
 				this._updateItemsVisibility();
 			}
 			// Update readonly state for all items
@@ -2144,7 +2183,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			token.selected = false;
 		});
 
-		this.valueBeforeAutoComplete = "";
+		// Don't clear valueBeforeAutoComplete if filtering is active
+		if (this._shouldFilterItems !== true) {
+			this.valueBeforeAutoComplete = "";
+		}
 	}
 
 	inputFocusOut(e: FocusEvent) {
@@ -2165,6 +2207,10 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			if (!this.noValidation && this.value) {
 				this.value = "";
 				this._lastValue = "";
+				// Also clear the DOM input to prevent typeahead from running on old value
+				if (this._innerInput) {
+					this._innerInput.value = "";
+				}
 				if (this.valueState === ValueState.Negative && this._effectiveValueState !== ValueState.Negative) {
 					this._updateValueState(this._effectiveValueState);
 				}
