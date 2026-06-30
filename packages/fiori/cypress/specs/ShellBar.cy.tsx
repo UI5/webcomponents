@@ -693,7 +693,7 @@ describe("Slots", () => {
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
 				.should("exist")
-				.click();
+				.realClick();
 
 			// Verify search is expanded
 			cy.get("@shellbar")
@@ -964,6 +964,36 @@ describe("Events", () => {
 
 			cy.get("@notificationsClick")
 				.should("have.been.calledOnce");
+		});
+
+		it("notificationsDomRef returns overflow button when notifications are in overflow", () => {
+			cy.viewport(320, 800);
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					secondaryTitle="Second title"
+					showNotifications={true}
+					notificationsCount="5"
+					showProductSwitch={true}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Button 1</Button>
+					<ToggleButton icon="sap-icon://da" slot="assistant" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").as("shellbar");
+
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("exist")
+				.then(overflowBtn => {
+					cy.get("@shellbar").then($shellbar => {
+						const shellbar = $shellbar[0] as ShellBar;
+						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
+					});
+				});
 		});
 
 		it("tests profileClick event", () => {
@@ -1810,6 +1840,70 @@ describe("Component Behavior", () => {
 
 			cy.get("[ui5-shellbar-item][icon='alert']")
 				.click();
+
+			cy.get("@alertClick")
+				.should("have.been.calledOnce");
+		});
+
+		it("tests 'click' on custom action in overflow popover", () => {
+			cy.viewport(320, 800);
+
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					showNotifications
+					showProductSwitch
+				>
+					<ShellBarBranding slot="branding">
+						Product Title
+						<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+					</ShellBarBranding>
+					<Button icon="nav-back" slot="startButton" />
+					<ShellBarItem id="overflow-accept" icon="accept" text="Accept" />
+					<ShellBarItem id="overflow-alert" icon="alert" text="Alert" />
+				</ShellBar>
+			);
+
+			cy.get("#overflow-accept").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("acceptClick"));
+			});
+			cy.get("#overflow-alert").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("alertClick"));
+			});
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("be.visible")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-accept")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
+
+			cy.get("@acceptClick")
+				.should("have.been.calledOnce");
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-alert")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
 
 			cy.get("@alertClick")
 				.should("have.been.calledOnce");

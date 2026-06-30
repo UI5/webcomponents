@@ -1139,6 +1139,9 @@ class ShellBar extends UI5Element {
 	 * @since 1.0.0-rc.16
 	 */
 	get notificationsDomRef(): HTMLElement | null {
+		if (this.isHidden(ShellBarActions.Notifications)) {
+			return this.overflowDomRef;
+		}
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="notifications"]`);
 	}
 
