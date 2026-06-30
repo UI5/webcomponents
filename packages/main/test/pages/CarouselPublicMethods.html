@@ -238,14 +238,15 @@
 				<ui5-li icon="learning-assistant">Tutorials</ui5-li>
 			</ui5-list>
 		</ui5-card>
-
 	</ui5-carousel>
+	<ui5-button id="btnNavigate">Check animation after resize - navigate to 5</ui5-button>
 </body>
 
 <script>
 	const navigateLeftBtn = document.getElementById("navigateLeft");
 	const navigateRightBtn = document.getElementById("navigateRight");
 	const carousel = document.getElementById("carouselCards");
+	const btnNavigate = document.getElementById("btnNavigate");
 
 	navigateLeftBtn.addEventListener("click", function() {
 		const newPageIndex = carousel.visibleItemsIndices[0] - 1;
@@ -255,6 +256,11 @@
 	navigateRightBtn.addEventListener("click", function() {
 		const newPageIndex = carousel.visibleItemsIndices[0] + 1;
 		carousel.navigateTo(newPageIndex);
+	});
+
+	btnNavigate.addEventListener("click", function() {
+		carousel._onResize();
+		carousel.navigateTo(5);
 	});
 </script>
 

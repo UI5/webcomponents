@@ -691,6 +691,8 @@ class Carousel extends UI5Element {
 			return;
 		}
 
+		this._resizing = false;
+
 		this._currentPageIndex = newPageIndex;
 		this._updateVisibleItems(newPageIndex);
 

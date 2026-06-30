@@ -800,6 +800,24 @@ describe("Carousel general interaction", () => {
 			});
 	});
 
+	it("_resizing remains true when navigateTo is called after _onResize with same page index", () => {
+		cy.mount(
+			<Carousel id="carousel">
+				<Button>Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+			</Carousel>
+		);
+
+		cy.get<Carousel>("#carousel")
+			.then($carousel => {
+				const carousel = $carousel[0];
+				carousel._onResize();
+				carousel.navigateTo(2);
+				expect(carousel._resizing).to.be.true;
+			});
+	});
+
 	it("items should remain reachable after resizing increases items per page", () => {
 		const navigateStub = cy.stub().as("navigateStub");
 
