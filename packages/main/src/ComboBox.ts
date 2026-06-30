@@ -128,8 +128,16 @@ enum ValueStateIconMapping {
 	Information = "information",
 }
 
+/**
+ * Describes the source of a `selection-change` event fired by the `ui5-combobox`.
+ * @public
+ * @since 2.24.0
+ */
+type ComboBoxSelectionChangeTrigger = "Typeahead" | "Click" | "Keyboard";
+
 type ComboBoxSelectionChangeEventDetail = {
 	item: ComboBoxItem | null,
+	trigger: ComboBoxSelectionChangeTrigger,
 };
 
 type ComboBoxLoadItems = {
@@ -251,6 +259,8 @@ type ComboBoxLoadItems = {
 /**
  * Fired when selection is changed by user interaction
  * @param {IComboBoxItem} item item to be selected.
+ * @param {string} trigger source of the selection change - typeahead, click or keyboard navigation.
+ * @since 2.24.0
  * @public
  */
 @event("selection-change", {
@@ -529,6 +539,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_autocomplete = false;
 	_isKeyNavigation = false;
 	_selectionPerformed = false;
+	_selectionTrigger?: ComboBoxSelectionChangeTrigger;
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
@@ -1016,6 +1027,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleArrowDown(e: KeyboardEvent, indexOfItem: number) {
+		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
 		if (this.focused && indexOfItem === -1 && isOpen) {
@@ -1037,6 +1049,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
+		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
 		if (indexOfItem === 0) {
@@ -1056,6 +1069,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handlePageUp(e: KeyboardEvent, indexOfItem: number) {
+		this._selectionTrigger = "Keyboard";
 		const allItems = this._getItems();
 		const isProposedIndexValid = indexOfItem - SKIP_ITEMS_SIZE > -1;
 		indexOfItem = isProposedIndexValid ? indexOfItem - SKIP_ITEMS_SIZE : 0;
@@ -1065,6 +1079,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handlePageDown(e: KeyboardEvent, indexOfItem: number) {
+		this._selectionTrigger = "Keyboard";
 		const allItems = this._getItems();
 		const itemsLength = allItems.length;
 		const isProposedIndexValid = indexOfItem + SKIP_ITEMS_SIZE < itemsLength;
@@ -1076,12 +1091,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleHome(e: KeyboardEvent) {
+		this._selectionTrigger = "Keyboard";
 		const shouldMoveForward = isInstanceOfComboBoxItemGroup(this._filteredItems[0]) && !this.open;
 
 		this._handleItemNavigation(e, 0, shouldMoveForward);
 	}
 
 	_handleEnd(e: KeyboardEvent) {
+		this._selectionTrigger = "Keyboard";
 		this._handleItemNavigation(e, this._getItems().length - 1, true /* isForward */);
 	}
 
@@ -1417,22 +1434,23 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		const noUserInteraction = !this.focused && !this._isKeyNavigation && !this._selectionPerformed && !this._iconPressed;
-		// Skip firing "selection-change" event if this is initial rendering or if there has been no user interaction yet
 		if (this._initialRendering || noUserInteraction) {
 			return;
 		}
 
-		// Fire selection-change event only when selection actually changes
 		if (previouslySelectedItem !== itemToBeSelected) {
+			const trigger = this._selectionTrigger || "Typeahead";
+			this._selectionTrigger = undefined;
+
 			if (itemToBeSelected) {
-				// New item selected
 				this.fireDecoratorEvent("selection-change", {
 					item: itemToBeSelected as ComboBoxItem,
+					trigger,
 				});
 			} else if (previouslySelectedItem) {
-				// Selection cleared - fire event with 'null'
 				this.fireDecoratorEvent("selection-change", {
 					item: null,
+					trigger,
 				});
 			}
 		}
@@ -1493,6 +1511,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {
 				item,
+				trigger: "Click",
 			});
 		}
 
@@ -1822,6 +1841,7 @@ export default ComboBox;
 
 export type {
 	ComboBoxSelectionChangeEventDetail,
+	ComboBoxSelectionChangeTrigger,
 	ComboBoxLoadItems,
 	IComboBoxItem,
 };

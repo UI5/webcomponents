@@ -5,10 +5,11 @@ import {
 	property,
 	eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
-import ComboBoxItemCustom from "./ComboBoxItemCustom.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import ListItemBase from "./ListItemBase.js";
+import type { ListItemBasePressEventDetail } from "./ListItemBase.js";
 import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
-import type MultiComboBox from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
 } from "./generated/i18n/i18n-defaults.js";
@@ -16,16 +17,23 @@ import styles from "./generated/themes/MultiComboBoxItemCustom.css.js";
 import MultiComboBoxItemCustomTemplate from "./MultiComboBoxItemCustomTemplate.js";
 import type { SelectionRequestEventDetail } from "./ListItem.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+
+type MultiComboBoxItemCustomClickEventDetail = {
+	item?: MultiComboBoxItemCustom,
+	originalEvent: Event,
+}
 
 /**
  * @class
  * The `ui5-mcb-item-custom` is a multi-combobox item component
- * that hat allows placing custom content inside a multi-combobox item.
+ * that allows placing custom content inside a multi-combobox item.
  * The `text` property is used for filtering and token display.
  * For highlighting functionality, see `@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js`.
  *
  * @constructor
- * @extends ComboBoxItemCustom
+ * @extends ListItemBase
  * @implements {IMultiComboBoxItem}
  * @public
  * @since 2.24.0
@@ -33,16 +41,68 @@ import type { AriaRole } from "@ui5/webcomponents-base";
 @customElement({
 	tag: "ui5-mcb-item-custom",
 	template: MultiComboBoxItemCustomTemplate,
-	styles: [ComboBoxItemCustom.styles, styles],
+	styles: [
+		ListItemBase.styles,
+		styles,
+	],
 })
-
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.24.0
+ * @public
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
 @event("selection-requested", {
 	bubbles: true,
 })
-class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboBoxItem {
-	eventDetails!: ComboBoxItemCustom["eventDetails"] & {
+class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem {
+	eventDetails!: {
+		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
-	}
+		"request-tabindex-change": FocusEvent,
+		"_press": ListItemBasePressEventDetail,
+		"_focused": FocusEvent,
+		"forward-after": void,
+		"forward-before": void,
+	};
+
+	/**
+	 * Defines the text of the component.
+	 * Used for filtering and token display.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	text?: string;
+
+	/**
+	 * Defines the value of the component.
+	 * Used for programmatic selection via selectedValues property.
+	 * @default undefined
+	 * @public
+	 */
+	@property()
+	value?: string;
+
+	/**
+	 * Indicates whether the item is filtered.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_isVisible = false;
+
+	/**
+	 * Indicates whether the item is focused.
+	 * @protected
+	 */
+	@property({ type: Boolean })
+	focused = false;
 
 	/**
 	 * @private
@@ -50,22 +110,22 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 	@property({ type: Boolean, noAttribute: true })
 	_readonly = false;
 
+	/**
+	 * Defines the content of the component.
+	 * @public
+	 */
+	@slot({ type: Node, "default": true, invalidateOnChildChange: true })
+	content!: DefaultSlot<Node>;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	onBeforeRendering(): void {
-		// Synchronize selected state from parent's selectedValues
-		// This ensures the checkbox reflects the correct state
-		if (this.value) {
-			const parent = this.closest<MultiComboBox>("[ui5-multi-combobox]");
-			if (parent) {
-				this.selected = parent.selectedValues?.includes(this.value) ?? false;
-			}
-		}
-	}
-
 	get isMultiComboBoxItem() {
 		return true;
+	}
+
+	get _effectiveTabIndex() {
+		return -1;
 	}
 
 	_onclick(e: MouseEvent) {
@@ -93,3 +153,5 @@ class MultiComboBoxItemCustom extends ComboBoxItemCustom implements IMultiComboB
 MultiComboBoxItemCustom.define();
 
 export default MultiComboBoxItemCustom;
+export const isInstanceOfMultiComboBoxItemCustom = createInstanceChecker<MultiComboBoxItemCustom>("isMultiComboBoxItem");
+export type { MultiComboBoxItemCustomClickEventDetail };
