@@ -3,7 +3,7 @@ import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 
 export const LOADING_DELAY = 100;
 
-type AnnounceState = "loading" | "loaded" | undefined;
+type AnnounceState = "Loading" | "Loaded" | "None";
 
 export interface LoadingDelegateConfig {
 	getItemCount: () => number;
@@ -25,6 +25,7 @@ export default class ComboBoxLazyLoading {
 	constructor(config: LoadingDelegateConfig) {
 		this._config = config;
 		this._prevLoading = false;
+		this._announceLoading = "None";
 	}
 
 	init(loading: boolean) {
@@ -33,25 +34,25 @@ export default class ComboBoxLazyLoading {
 
 	onBeforeRendering(loading: boolean) {
 		if (!this._prevLoading && loading) {
-			this._announceLoading = "loading";
+			this._announceLoading = "Loading";
 		} else if (this._prevLoading && !loading) {
-			this._announceLoading = "loaded";
+			this._announceLoading = "Loaded";
 			this._config.onLoadingEnd?.();
 		}
 		this._prevLoading = loading;
 	}
 
 	announceLoadingState() {
-		if (this._announceLoading === "loading") {
+		if (this._announceLoading === "Loading") {
 			announce(this._config.loadingMessage(), InvisibleMessageMode.Polite);
-		} else if (this._announceLoading === "loaded") {
+		} else if (this._announceLoading === "Loaded") {
 			const count = this._config.getItemCount();
 			const itemsMsg = count === 1
 				? this._config.loadedItemMessage()
 				: this._config.loadedItemsMessage(count);
 			announce(`${this._config.loadedMessage()}. ${itemsMsg}`, InvisibleMessageMode.Polite);
 		}
-		this._announceLoading = undefined;
+		this._announceLoading = "None";
 	}
 
 	// Fires load-items event when the picker is about to open and there are no items yet.

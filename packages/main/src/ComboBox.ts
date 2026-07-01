@@ -648,11 +648,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 
 		this._selectMatchingItem();
-
-		if (!this._initialRendering) {
-			this._loadingDelegate.onBeforeRendering(this.loading);
-		}
-
+		this._loadingDelegate.onBeforeRendering(this.loading);
 		this._initialRendering = false;
 
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
@@ -1804,7 +1800,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			suggestionPopoverHeader: {
-				"display": this._listWidth === 0 ? "none" : "inline-block",
+				"display": (!this._isPhone && this._listWidth === 0) ? "none" : "inline-block",
 				"width": `${this._listWidth || ""}px`,
 				"max-width": "inherit",
 			},
