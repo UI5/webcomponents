@@ -4,5 +4,19 @@
 }
 
 .ui5-select-popover .ui5-responsive-popover-header .row {
-    justify-content: flex-start;
+	justify-content: flex-start;
+}
+
+/* Align value state message header with Visual Design spec (issue #13308):
+   - Remove the per-state inset bottom border (box-shadow)
+   - Add sapContent_HeaderShadow to separate header from options list */
+.ui5-select-popover .ui5-valuestatemessage--error,
+.ui5-select-popover .ui5-valuestatemessage--warning,
+.ui5-select-popover .ui5-valuestatemessage--success,
+.ui5-select-popover .ui5-valuestatemessage--information {
+	box-shadow: none;
+}
+
+.ui5-select-popover .ui5-valuestatemessage-header {
+	box-shadow: var(--sapContent_HeaderShadow);
 }
