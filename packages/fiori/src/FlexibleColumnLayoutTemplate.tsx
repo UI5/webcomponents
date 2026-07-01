@@ -34,6 +34,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 				style={{ display: this.showStartSeparator ? "flex" : "none" }}
 				tabindex={this.startSeparatorTabIndex}
 				aria-valuenow={this.startSeparatorValue}
+				aria-orientation="vertical"
 				onMouseDown={this.onSeparatorPress}
 				onTouchStart={this.onSeparatorPress}
 				onKeyDown={this._onSeparatorKeydown}
@@ -65,6 +66,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 				style={{ display: this.showEndSeparator ? "flex" : "none" }}
 				tabindex={this.endSeparatorTabIndex}
 				aria-valuenow={this.endSeparatorValue}
+				aria-orientation="vertical"
 				onMouseDown={this.onSeparatorPress}
 				onTouchStart={this.onSeparatorPress}
 				onKeyDown={this._onSeparatorKeydown}
