@@ -12,6 +12,7 @@ export default function ShellBarItemTemplate(this: ShellBarItem) {
 				data-count={this.count}
 				data-ui5-stable={this.stableDomRef}
 				accessibilityAttributes={this.accessibilityAttributes}
+				onClick={this.fireClickEvent}
 			>
 				{this.text}
 			</ListItemStandard>

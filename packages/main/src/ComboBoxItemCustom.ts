@@ -1,11 +1,18 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import type { IComboBoxItem } from "./ComboBox.js";
 import ListItemBase from "./ListItemBase.js";
+import type { ListItemBasePressEventDetail } from "./ListItemBase.js";
 import ComboBoxItemCustomTemplate from "./ComboBoxItemCustomTemplate.js";
 import styles from "./generated/themes/ComboBoxItemCustom.css.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+
+type ComboBoxItemCustomClickEventDetail = {
+	item?: ComboBoxItemCustom,
+	originalEvent: Event,
+}
 
 /**
  * @class
@@ -28,8 +35,27 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 		styles,
 	],
 })
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.24.0
+ * @public
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
 class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
-	eventDetails!: ListItemBase["eventDetails"];
+	eventDetails!: {
+		"click": ComboBoxItemCustomClickEventDetail,
+		"request-tabindex-change": FocusEvent,
+		"_press": ListItemBasePressEventDetail,
+		"_focused": FocusEvent,
+		"forward-after": void,
+		"forward-before": void,
+	};
 
 	/**
 	 * Defines the text of the component.
@@ -78,3 +104,4 @@ class ComboBoxItemCustom extends ListItemBase implements IComboBoxItem {
 ComboBoxItemCustom.define();
 
 export default ComboBoxItemCustom;
+export type { ComboBoxItemCustomClickEventDetail };
