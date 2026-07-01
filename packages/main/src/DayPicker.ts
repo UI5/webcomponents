@@ -104,6 +104,7 @@ type DayPickerChangeEventDetail = {
 
 type DayPickerNavigateEventDetail = {
 	timestamp: number,
+	mouse?: boolean,
 }
 
 /**
@@ -233,13 +234,17 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType) as Array<string>;
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) as Array<string> : [];
+		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
+		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
 		const todayDate = CalendarDate.fromLocalJSDate(UI5Date.getInstance(), this._primaryCalendarType); // current day date - calculate once
 		const calendarDate = this._calendarDate; // store the _calendarDate value as this getter is expensive and degrades IE11 perf
+
+		const minDate = this._minDate;
+		const maxDate = this._maxDate;
+		const precomputedDisabledDates = this._precomputeDisabledDates();
 
 		const tempSecondDate = this.hasSecondaryCalendarType ? this._getSecondaryDay(tempDate) : undefined;
 
@@ -262,7 +267,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			const isSelectedBetween = this._isDayInsideSelectionRange(timestamp);
 			const isOtherMonth = tempDate.getMonth() !== calendarDate.getMonth();
 			const isWeekend = this._isWeekend(tempDate);
-			const isDisabled = !this._isDateEnabled(tempDate);
+			const isDisabled = !this._isDateEnabled(tempDate, minDate, maxDate, precomputedDisabledDates);
 			const isToday = tempDate.isSame(todayDate);
 			const isFirstDayOfWeek = tempDate.getDay() === firstDayOfWeek;
 
@@ -385,12 +390,12 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		let dayOfTheWeek;
 
-		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType) as Array<string>;
-		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType) as Array<string>;
+		const aDayNamesWide = localeData.getDays("wide", this._primaryCalendarType);
+		let aDayNamesAbbreviated = localeData.getDays("abbreviated", this._primaryCalendarType);
 		let dayName;
 
 		if (this.namesTooLong(aDayNamesAbbreviated)) {
-			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType) as Array<string>;
+			aDayNamesAbbreviated = localeData.getDays("narrow", this._primaryCalendarType);
 		}
 
 		this._dayNames = [];
@@ -499,9 +504,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Selects/deselects a day.
 	 * @param e
 	 * @param isShift true if the user did Click+Shift or Enter+Shift (but not Space+Shift)
+	 * @param setTimestamp whether to move focus (timestamp) to the selected day; false for mouse clicks where focus is independent
 	 * @private
 	 */
-	_selectDate(e: Event, isShift: boolean) {
+	_selectDate(e: Event, isShift: boolean, setTimestamp = true) {
 		let target = e.target as HTMLElement;
 
 		if (!target.hasAttribute("data-sap-timestamp")) {
@@ -514,7 +520,9 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const timestamp = this._getTimestampFromDom(target);
 
-		this._safelySetTimestamp(timestamp);
+		if (setTimestamp) {
+			this._safelySetTimestamp(timestamp);
+		}
 		this._updateSecondTimestamp();
 		this._updateSelectedDates(timestamp, isShift);
 
@@ -591,6 +599,21 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	_removeTimestampFromSelection(timestamp: number) {
 		this.selectedDates = this.selectedDates.filter(value => value !== timestamp);
+	}
+
+	_onmousedown(e: MouseEvent) {
+		let target = e.target as HTMLElement;
+
+		if (!target.hasAttribute("data-sap-timestamp")) {
+			target = target.parentNode as HTMLElement;
+		}
+
+		if (!this._isDayPressed(target)) {
+			return;
+		}
+
+		this._safelySetTimestamp(this._getTimestampFromDom(target));
+		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
 	/**
@@ -710,7 +733,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_onclick(e: MouseEvent) {
-		this._selectDate(e, e.shiftKey);
+		this._selectDate(e, e.shiftKey, false);
 	}
 
 	/**
@@ -826,27 +849,46 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	/**
+	 * Pre-computes disabled date range timestamps once before the rendering loop.
+	 * Avoids repeated date string parsing inside the per-cell _isDateEnabled check.
+	 * @private
+	 */
+	_precomputeDisabledDates(): Array<{ startTimestamp: number, endTimestamp: number }> {
+		return this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
+	}
+
+	/**
 	 * Checks if a given date is enabled (selectable).
 	 * A date is considered disabled if:
 	 * - It falls outside the min/max date range defined by the component
 	 * - It matches a single disabled date
 	 * - It falls within a disabled date range (exclusive of start and end dates)
 	 * @param date - The date to check
+	 * @param minDate - Pre-resolved min calendar date
+	 * @param maxDate - Pre-resolved max calendar date
+	 * @param precomputedDisabledDates - Pre-parsed disabled date range timestamps
 	 * @returns `true` if the date is enabled (selectable), `false` if disabled
 	 * @private
 	 */
-	_isDateEnabled(date: CalendarDate): boolean {
-		if ((this._minDate && date.isBefore(this._minDate))
-			|| (this._maxDate && date.isAfter(this._maxDate))) {
+	_isDateEnabled(date: CalendarDate, minDate?: CalendarDate, maxDate?: CalendarDate, precomputedDisabledDates?: Array<{ startTimestamp: number, endTimestamp: number }>): boolean {
+		const resolvedMin = minDate ?? this._minDate;
+		const resolvedMax = maxDate ?? this._maxDate;
+
+		if ((resolvedMin && date.isBefore(resolvedMin))
+			|| (resolvedMax && date.isAfter(resolvedMax))) {
 			return false;
 		}
 
 		const dateTimestamp = date.valueOf() / 1000;
+		const disabledRanges = precomputedDisabledDates ?? this.disabledDates.map(range => ({
+			startTimestamp: this._getTimestampFromDateValue(range.startValue),
+			endTimestamp: this._getTimestampFromDateValue(range.endValue),
+		}));
 
-		return !this.disabledDates.some(range => {
-			const startTimestamp = this._getTimestampFromDateValue(range.startValue);
-			const endTimestamp = this._getTimestampFromDateValue(range.endValue);
-
+		return !disabledRanges.some(({ startTimestamp, endTimestamp }) => {
 			if (endTimestamp) {
 				return dateTimestamp > startTimestamp && dateTimestamp < endTimestamp;
 			}

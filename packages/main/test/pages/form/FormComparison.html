@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Form Comparison - UI5 Web Components vs OpenUI5</title>
+
+	<!-- UI5 Web Components -->
+	<script src="../%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<!-- OpenUI5 -->
+	<script id="sap-ui-bootstrap" src="https://sdk.openui5.org/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+		data-sap-ui-libs="sap.m,sap.ui.layout" data-sap-ui-bindingSyntax="complex" data-sap-ui-compatVersion="edge"
+		data-sap-ui-async="true">
+		</script>
+
+	<style>
+		body {
+			font-family: "72", "72full", Arial, Helvetica, sans-serif;
+			padding: 20px;
+			background-color: var(--sapBackgroundColor);
+		}
+
+		.comparison-container {
+			display: flex;
+			gap: 40px;
+			margin-bottom: 40px;
+		}
+
+		.form-container {
+			flex: 1;
+			border: 1px solid #ccc;
+			padding: 20px;
+			border-radius: 4px;
+		}
+
+		.form-container h2 {
+			margin-top: 0;
+			color: #0854a0;
+			font-size: 1.2rem;
+		}
+
+		.section-divider {
+			margin: 60px 0 40px 0;
+			border-top: 2px solid #0854a0;
+			padding-top: 20px;
+		}
+
+		.section-title {
+			font-size: 1.5rem;
+			font-weight: bold;
+			color: #0854a0;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Form Comparison: UI5 Web Components vs OpenUI5</h1>
+
+	<!-- Test containers will be generated dynamically -->
+
+	<script>
+		sap.ui.require([
+			"sap/ui/layout/form/Form",
+			"sap/ui/layout/form/FormContainer",
+			"sap/ui/layout/form/FormElement",
+			"sap/ui/layout/form/ColumnLayout",
+			"sap/ui/layout/form/ColumnContainerData",
+			"sap/ui/layout/form/ColumnElementData",
+			"sap/ui/core/Title",
+			"sap/m/Label",
+			"sap/m/Input"
+		], function (Form, FormContainer, FormElement, ColumnLayout, ColumnContainerData, ColumnElementData, Title, Label, Input) {
+
+			/**
+			 * Generic function to create forms from JSON configuration
+			 * @param {Object} config - Form configuration
+			 * @param {string} config.title - Form title
+			 * @param {Object} config.layout - Layout configuration (columnsXL, columnsL, columnsM, columnsS)
+			 * @param {Array} config.formGroups - Array of form groups
+			 * @param {number} config.formGroups[].itemsCount - Number of items to generate (1 to N)
+			 * @param {string} openui5ContainerId - ID of container for OpenUI5 form
+			 * @param {string} wcContainerId - ID of container for Web Components form
+			 */
+			window.createFormsFromJSON = function (config, openui5ContainerId, wcContainerId) {
+				// Create OpenUI5 Form
+				createOpenUI5Form(config, openui5ContainerId);
+
+				// Create Web Components Form
+				createWebComponentsForm(config, wcContainerId);
+			};
+
+			function createOpenUI5Form(config, containerId) {
+				const formContainers = config.formGroups.map(group => {
+					const formElements = [];
+
+					// Generate items from 1 to itemsCount
+					for (let i = 1; i <= group.itemsCount; i++) {
+						formElements.push(new FormElement({
+							label: new Label({ text: String(i) }),
+							fields: [new Input({ value: String(i) })]
+						}));
+					}
+
+					// Build title with colSpan info
+					let titleText = group.title || "";
+					if (group.colSpan) {
+						const spanInfo = `(M${group.colSpan.M} L${group.colSpan.L} XL${group.colSpan.XL})`;
+						titleText = titleText ? `${titleText} ${spanInfo}` : spanInfo;
+					}
+
+					const formContainer = new FormContainer({
+						title: titleText ? new Title({ text: titleText }) : undefined,
+						formElements: formElements
+					});
+
+					// Add layoutData if colSpan is specified
+					// Note: OpenUI5 only supports columnsM, columnsL, columnsXL (no columnsS)
+					if (group.colSpan) {
+						const layoutData = {};
+						if (group.colSpan.M !== undefined) layoutData.columnsM = group.colSpan.M;
+						if (group.colSpan.L !== undefined) layoutData.columnsL = group.colSpan.L;
+						if (group.colSpan.XL !== undefined) layoutData.columnsXL = group.colSpan.XL;
+						formContainer.setLayoutData(new ColumnContainerData(layoutData));
+					}
+
+					return formContainer;
+				});
+
+				// Note: OpenUI5 ColumnLayout only supports columnsM, columnsL, columnsXL (no columnsS)
+				const layoutConfig = {};
+				if (config.layout.columnsM !== undefined) layoutConfig.columnsM = config.layout.columnsM;
+				if (config.layout.columnsL !== undefined) layoutConfig.columnsL = config.layout.columnsL;
+				if (config.layout.columnsXL !== undefined) layoutConfig.columnsXL = config.layout.columnsXL;
+
+				const form = new Form({
+					title: new Title({ text: config.title }),
+					layout: new ColumnLayout(layoutConfig),
+					formContainers: formContainers
+				});
+
+				form.placeAt(containerId);
+			}
+
+			function createWebComponentsForm(config, containerId) {
+				const container = document.getElementById(containerId);
+
+				// Create form element
+				const form = document.createElement("ui5-form");
+				form.setAttribute("header-text", config.title);
+				form.setAttribute("label-span", "S12 M12 L12 XL12"); // Labels take full width
+				// Default S to 1 if not provided (OpenUI5 doesn't support S, but Web Components do)
+				const columnsS = config.layout.columnsS || 1;
+				form.setAttribute("layout", `S${columnsS} M${config.layout.columnsM} L${config.layout.columnsL} XL${config.layout.columnsXL}`);
+
+				// Create form groups
+				config.formGroups.forEach(group => {
+					const formGroup = document.createElement("ui5-form-group");
+
+					// Build title with colSpan info
+					let titleText = group.title || "";
+					if (group.colSpan) {
+						const colSpanS = group.colSpan.S || 1;
+						const spanInfo = `(S${colSpanS} M${group.colSpan.M} L${group.colSpan.L} XL${group.colSpan.XL})`;
+						titleText = titleText ? `${titleText} ${spanInfo}` : spanInfo;
+					}
+
+					if (titleText) {
+						formGroup.setAttribute("header-text", titleText);
+					}
+
+					if (group.colSpan) {
+						// Default S to 1 if not provided
+						const colSpanS = group.colSpan.S || 1;
+						formGroup.setAttribute("col-span", `S${colSpanS} M${group.colSpan.M} L${group.colSpan.L} XL${group.colSpan.XL}`);
+					}
+
+					// Generate items from 1 to itemsCount
+					for (let i = 1; i <= group.itemsCount; i++) {
+						const formItem = document.createElement("ui5-form-item");
+
+						const label = document.createElement("ui5-label");
+						label.setAttribute("slot", "labelContent");
+						label.textContent = String(i);
+
+						const input = document.createElement("ui5-input");
+						input.setAttribute("value", String(i));
+
+						formItem.appendChild(label);
+						formItem.appendChild(input);
+						formGroup.appendChild(formItem);
+					}
+
+					form.appendChild(formGroup);
+				});
+
+				container.appendChild(form);
+			}
+
+			// Define 20 test configurations
+			const testConfigs = [
+				// Test 1: Single group with growing column spans
+				{
+					title: "Test 1: Single Group - Growing (M1 L2 XL3)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 3 }
+					]
+				},
+				// Test 2: Multiple groups with same column span
+				{
+					title: "Test 2: Three Groups - Same Span (All M1 L1 XL2)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 2 },
+						{ title: "Group 2", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 2 },
+						{ title: "Group 3", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 2 }
+					]
+				},
+				// Test 3: Full width group
+				{
+					title: "Test 3: Full Width Group",
+					layout: { columnsXL: 4, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Full Width", colSpan: { M: 2, L: 3, XL: 4 }, itemsCount: 5 }
+					]
+				},
+				// Test 4: Two groups, one twice as wide
+				{
+					title: "Test 4: Uneven Groups (G1: XL2, G2: XL4)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1 - Narrow", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 },
+						{ title: "Group 2 - Wide", colSpan: { M: 1, L: 2, XL: 4 }, itemsCount: 3 }
+					]
+				},
+				// Test 5: Four equal groups
+				{
+					title: "Test 5: Four Equal Groups",
+					layout: { columnsXL: 4, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Group 2", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Group 3", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Group 4", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 }
+					]
+				},
+				// Test 6: Many items in single group
+				{
+					title: "Test 6: Single Group - Many Items (12 items)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Large Group", colSpan: { M: 2, L: 3, XL: 6 }, itemsCount: 12 }
+					]
+				},
+				// Test 7: Narrow layout
+				{
+					title: "Test 7: Narrow Layout (Max 2 columns)",
+					layout: { columnsXL: 2, columnsL: 2, columnsM: 1 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 3 },
+						{ title: "Group 2", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 3 }
+					]
+				},
+				// Test 8: Wide layout
+				{
+					title: "Test 8: Wide Layout (Max 6 columns)",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 4 },
+						{ title: "Group 2", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 4 }
+					]
+				},
+				// Test 9: Groups without titles
+				{
+					title: "Test 9: Groups Without Titles",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 },
+						{ colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 },
+						{ colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 }
+					]
+				},
+				// Test 10: Groups without colSpan (auto-fit)
+				{
+					title: "Test 10: Groups Without ColSpan (Auto-fit)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", itemsCount: 4 },
+						{ title: "Group 2", itemsCount: 4 },
+						{ title: "Group 3", itemsCount: 4 }
+					]
+				},
+				// Test 11: Single column layout
+				{
+					title: "Test 11: Single Column Layout",
+					layout: { columnsXL: 1, columnsL: 1, columnsM: 1 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 5 }
+					]
+				},
+				// Test 12: Mixed group sizes
+				{
+					title: "Test 12: Mixed Group Sizes (1, 5, 10 items)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Small", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 1 },
+						{ title: "Medium", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 5 },
+						{ title: "Large", colSpan: { M: 1, L: 1, XL: 3 }, itemsCount: 10 }
+					]
+				},
+				// Test 13: All groups span full width
+				{
+					title: "Test 13: All Groups Full Width",
+					layout: { columnsXL: 4, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 2, L: 3, XL: 4 }, itemsCount: 3 },
+						{ title: "Group 2", colSpan: { M: 2, L: 3, XL: 4 }, itemsCount: 3 },
+						{ title: "Group 3", colSpan: { M: 2, L: 3, XL: 4 }, itemsCount: 3 }
+					]
+				},
+				// Test 14: Six small groups
+				{
+					title: "Test 14: Six Small Groups",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "G1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G2", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G3", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G4", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G5", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G6", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 }
+					]
+				},
+				// Test 15: Progressive sizing
+				{
+					title: "Test 15: Progressive Sizing (1-2-3 pattern)",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 3 },
+					formGroups: [
+						{ title: "Small", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Medium", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 4 },
+						{ title: "Large", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 6 }
+					]
+				},
+				// Test 16: Two equal halves
+				{
+					title: "Test 16: Two Equal Halves",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Left Half", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 6 },
+						{ title: "Right Half", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 6 }
+					]
+				},
+				// Test 17: One third + two thirds split
+				{
+					title: "Test 17: One Third + Two Thirds Split",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "1/3 Width", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 },
+						{ title: "2/3 Width", colSpan: { M: 1, L: 2, XL: 4 }, itemsCount: 5 }
+					]
+				},
+				// Test 18: Maximum columns
+				{
+					title: "Test 18: Maximum Columns (XL6 L4 M3)",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 3 },
+					formGroups: [
+						{ title: "G1", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 4 },
+						{ title: "G2", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 4 },
+						{ title: "G3", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 4 }
+					]
+				},
+				// Test 19: Minimal - single group, single item
+				{
+					title: "Test 19: Minimal - Single Item",
+					layout: { columnsXL: 2, columnsL: 2, columnsM: 1 },
+					formGroups: [
+						{ title: "Only Group", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 1 }
+					]
+				},
+				// Test 20: Complex asymmetric layout
+				{
+					title: "Test 20: Complex Asymmetric Layout",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Small 1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Small 2", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "Large", colSpan: { M: 2, L: 2, XL: 4 }, itemsCount: 8 }
+					]
+				},
+				// Test 21: No column spans (default behavior)
+				{
+					title: "Test 21: No Column Spans (Default)",
+					layout: { columnsXL: 4, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", itemsCount: 3 },
+						{ title: "Group 2", itemsCount: 3 }
+					]
+				},
+				// Test 22: Consistent 2-column pattern
+				{
+					title: "Test 22: Consistent 2-Column Pattern",
+					layout: { columnsXL: 4, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Group 1", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 4 },
+						{ title: "Group 2", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 4 }
+					]
+				},
+				// Test 23: Single large group with many items
+				{
+					title: "Test 23: Large Group - 20 Items",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Large Dataset", colSpan: { M: 2, L: 4, XL: 6 }, itemsCount: 20 }
+					]
+				},
+				// Test 24: Header and footer groups
+				{
+					title: "Test 24: Header-Body-Footer Pattern",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 2 },
+					formGroups: [
+						{ title: "Header Section", colSpan: { M: 2, L: 3, XL: 6 }, itemsCount: 2 },
+						{ title: "Body Left", colSpan: { M: 1, L: 1, XL: 3 }, itemsCount: 5 },
+						{ title: "Body Right", colSpan: { M: 1, L: 2, XL: 3 }, itemsCount: 5 },
+						{ title: "Footer Section", colSpan: { M: 2, L: 3, XL: 6 }, itemsCount: 2 }
+					]
+				},
+				// Test 25: Responsive collapse
+				{
+					title: "Test 25: Responsive Collapse (XL6→M1)",
+					layout: { columnsXL: 6, columnsL: 3, columnsM: 1 },
+					formGroups: [
+						{ title: "Wide Desktop Only", colSpan: { M: 1, L: 3, XL: 6 }, itemsCount: 4 }
+					]
+				},
+				// Test 26: Grid-like layout
+				{
+					title: "Test 26: Grid Layout - 3x2",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 3 },
+					formGroups: [
+						{ title: "Cell 1", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 2 },
+						{ title: "Cell 2", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 2 },
+						{ title: "Cell 3", colSpan: { M: 1, L: 2, XL: 2 }, itemsCount: 2 }
+					]
+				},
+				// Test 27: Extreme - 1 vs 5 columns
+				{
+					title: "Test 27: Extreme Split (1 vs 5 columns)",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Tiny", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 1 },
+						{ title: "Huge", colSpan: { M: 1, L: 3, XL: 5 }, itemsCount: 15 }
+					]
+				},
+				// Test 28: Five groups wrapping
+				{
+					title: "Test 28: Five Groups - Wrapping Layout",
+					layout: { columnsXL: 5, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "G1", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G2", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G3", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G4", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 },
+						{ title: "G5", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 2 }
+					]
+				},
+				// Test 29: Varying item counts
+				{
+					title: "Test 29: Varying Item Counts (1-2-3-4)",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "1 Item", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 1 },
+						{ title: "2 Items", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 2 },
+						{ title: "3 Items", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 3 },
+						{ title: "4 Items", colSpan: { M: 1, L: 1, XL: 1 }, itemsCount: 4 }
+					]
+				},
+				// Test 30: Sidebar + main content pattern
+				{
+					title: "Test 30: Sidebar + Main Content",
+					layout: { columnsXL: 6, columnsL: 4, columnsM: 2 },
+					formGroups: [
+						{ title: "Sidebar", colSpan: { M: 1, L: 1, XL: 2 }, itemsCount: 6 },
+						{ title: "Main Content", colSpan: { M: 1, L: 3, XL: 4 }, itemsCount: 10 }
+					]
+				}
+			];
+
+			// Generate containers and create forms
+			const body = document.body;
+			testConfigs.forEach((config, index) => {
+				const testNum = index + 1;
+
+				// Create comparison container
+				const comparisonDiv = document.createElement("div");
+				comparisonDiv.id = `test${testNum}`;
+				comparisonDiv.className = "comparison-container";
+
+				// OpenUI5 container
+				const openUI5Div = document.createElement("div");
+				openUI5Div.className = "form-container";
+				openUI5Div.innerHTML = `<h2>OpenUI5</h2><div id="openui5-container-${testNum}"></div>`;
+
+				// Web Components container
+				const wcDiv = document.createElement("div");
+				wcDiv.className = "form-container";
+				wcDiv.innerHTML = `<h2>Web Components</h2><div id="wc-container-${testNum}"></div>`;
+
+				comparisonDiv.appendChild(openUI5Div);
+				comparisonDiv.appendChild(wcDiv);
+				body.appendChild(comparisonDiv);
+
+				// Create the forms
+				createFormsFromJSON(config, `openui5-container-${testNum}`, `wc-container-${testNum}`);
+			});
+		});
+	</script>
+</body>
+
+</html>

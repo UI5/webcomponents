@@ -126,6 +126,11 @@
 	padding-top: 0.25rem;
 }
 
+.ui5-menu-item-end-content {
+	display: inline-flex;
+	align-items: center;
+}
+
 .ui5-menu-busy-indicator {
 	position: absolute;
 	width: 100%;

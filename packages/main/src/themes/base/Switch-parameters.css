@@ -133,6 +133,10 @@
 
 	--_ui5_switch_icon_width: 0.75rem;
 	--_ui5_switch_icon_height: 0.75rem;
+
+	/* readonly - borders */
+	--_ui5_switch_readonly_track_border_style: dashed;
+	--_ui5_switch_readonly_handle_border_style: solid;
 }
 
 @container style(--ui5_content_density: compact) {

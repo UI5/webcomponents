@@ -1,4 +1,5 @@
 :host {
+	/* Note: Dialog overwrites these variables. In case of change, check the Bar in Dialog's footer appearance */
 	--_ui5_bar_base_height: 2.75rem;
 	--_ui5_bar_subheader_height: 3rem;
 	--_ui5_bar-start-container-padding-start: 1rem;

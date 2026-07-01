@@ -1,7 +1,8 @@
-import { SHOW_SELECTED_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { SHOW_SELECTED_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
+import Label from "../../src/Label.js";
 
 describe("MultiComboBox mobile general interaction", () => {
     beforeEach(() => {
@@ -874,4 +875,275 @@ describe("Accessibility", () => {
             .should("have.attr", "accessible-name", SHOW_SELECTED_BUTTON.defaultText);
 
     });
+});
+
+describe("Dialog header title", () => {
+    beforeEach(() => {
+        cy.ui5SimulateDevice("phone");
+    });
+
+    it("Should display label text as dialog header title when label for is used", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" />
+                    <MultiComboBoxItem text="Item 2" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
+    });
+
+    it("Should fallback to 'All Items' when no label is associated", () => {
+        cy.mount(
+            <MultiComboBox id="myMCB">
+                <MultiComboBoxItem text="Item 1" />
+                <MultiComboBoxItem text="Item 2" />
+            </MultiComboBox>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
+    });
+
+    it("Should display label text as dialog header title when opened via n-more", () => {
+        cy.mount(
+            <>
+                <Label for="myMCB">Country</Label>
+                <MultiComboBox id="myMCB">
+                    <MultiComboBoxItem text="Item 1" selected />
+                    <MultiComboBoxItem text="Item 2" selected />
+                    <MultiComboBoxItem text="Item 3" />
+                </MultiComboBox>
+            </>
+        );
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .realClick();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("#myMCB")
+            .shadow()
+            .find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+            .should("have.text", "Country");
+    });
+});
+
+describe("Custom Items", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should select custom items via checkbox click and OK button", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcb-item-custom text="New York, USA" value="NYC">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇺🇸</span>
+						<span style={{ flex: 1 }}>New York, USA</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcb-item-custom>
+				<ui5-mcb-item-custom text="London, UK" value="LON">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇬🇧</span>
+						<span style={{ flex: 1 }}>London, UK</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcb-item-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Click custom item checkboxes
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(1)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		// Press OK button to confirm
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.realClick();
+
+		// Verify tokens were created
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 2);
+
+		// Verify token texts
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-token--text")
+			.should("have.text", "New York, USA");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.eq(1)
+			.shadow()
+			.find(".ui5-token--text")
+			.should("have.text", "London, UK");
+	});
+
+	it("Should maintain custom item checkbox state when reopening dialog", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcb-item-custom text="Paris, France" value="PAR">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇫🇷</span>
+						<span style={{ flex: 1 }}>Paris, France</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcb-item-custom>
+				<ui5-mcb-item-custom text="Tokyo, Japan" value="TYO">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇯🇵</span>
+						<span style={{ flex: 1 }}>Tokyo, Japan</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcb-item-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Select first custom item and confirm with OK
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-footer")
+			.find("[ui5-button]")
+			.realClick();
+
+		// Reopen the dialog
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Verify checkbox states are maintained
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.should("have.attr", "checked");
+
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(1)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.should("not.have.attr", "checked");
+	});
+
+	it("Should not create token when custom item is selected but Cancel is pressed", () => {
+		cy.mount(
+			<MultiComboBox>
+				<ui5-mcb-item-custom text="Berlin, Germany" value="BER">
+					<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+						<span role="img" aria-label="Flag">🇩🇪</span>
+						<span style={{ flex: 1 }}>Berlin, Germany</span>
+						<span role="img" aria-label="Airport">✈️</span>
+					</div>
+				</ui5-mcb-item-custom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Click custom item checkbox
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item-custom]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		// Press Cancel button
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find(".ui5-responsive-popover-close-btn")
+			.realClick();
+
+		// Verify no token was created
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 0);
+	});
 });

@@ -27,7 +27,7 @@ import CalendarDate from "./CalendarDate.js";
 import CalendarDateRange from "./CalendarDateRange.js";
 import "./SpecialCalendarDate.js";
 import CalendarPart from "./CalendarPart.js";
-import type { DayPickerChangeEventDetail } from "./DayPicker.js";
+import type { DayPickerChangeEventDetail, DayPickerNavigateEventDetail } from "./DayPicker.js";
 import type { MonthPickerChangeEventDetail } from "./MonthPicker.js";
 import type { YearPickerChangeEventDetail } from "./YearPicker.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
@@ -36,6 +36,9 @@ import type CalendarLegend from "./CalendarLegend.js";
 import type { CalendarLegendItemSelectionChangeEventDetail } from "./CalendarLegend.js";
 import type SpecialCalendarDate from "./SpecialCalendarDate.js";
 import type CalendarLegendItemType from "./types/CalendarLegendItemType.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 
 // Default calendar for bundling
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
@@ -63,6 +66,9 @@ import {
 	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
+import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
+
+const PHONE_MODE_BREAKPOINT = 640; // px
 
 interface ICalendarPicker extends HTMLElement {
 	_showPreviousPage: () => void,
@@ -281,6 +287,15 @@ class Calendar extends CalendarPart {
 	hideWeekNumbers = false;
 
 	/**
+	 * Defines whether the component displays two months side by side in the picker popup.
+	 * @default false
+	 * @private
+	 * @since 2.22.0
+	 */
+	@property({ type: Boolean })
+	_showTwoMonths = false;
+
+	/**
 	 * Which picker is currently visible to the user: day/month/year/yearRange
 	 * @private
 	 */
@@ -357,6 +372,11 @@ class Calendar extends CalendarPart {
 	@property()
 	_selectedItemType: `${CalendarLegendItemType}` = "None";
 
+	@property({ type: Boolean, noAttribute: true })
+	_phoneMode = false;
+
+	_handleResizeBound: ResizeObserverCallback;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -364,6 +384,89 @@ class Calendar extends CalendarPart {
 		super();
 
 		this._valueIsProcessed = false;
+		this._handleResizeBound = this._handleResize.bind(this);
+	}
+
+	onEnterDOM() {
+		ResizeHandler.register(document.body, this._handleResizeBound);
+		this._handleResize();
+	}
+
+	get _phoneView() {
+		return isPhone() || this._phoneMode;
+	}
+
+	get _portraitView() {
+		return this._phoneMode;
+	}
+
+	/**
+	 * Handles document resize to switch between `phoneMode` and `portraitMode`.
+	 * - `_phoneMode`: When resolution is under PHONE_MODE_BREAKPOINT (regardless of device type)
+	 */
+	_handleResize() {
+		if (!this._showTwoMonths) {
+			return;
+		}
+
+		const documentWidth = document.body.offsetWidth;
+		const underBreakpoint = documentWidth <= PHONE_MODE_BREAKPOINT;
+
+		// Phone mode: only when it's an actual phone device
+		const phoneModeChange = (underBreakpoint && !this._phoneMode) || (!underBreakpoint && this._phoneMode);
+
+		if (phoneModeChange) {
+			this._phoneMode = underBreakpoint;
+		}
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(document.body, this._handleResizeBound);
+	}
+
+	/**
+	 * Returns the timestamp for a specific month index when displaying multiple months
+	 * @private
+	 */
+	_getMonthTimestamp(monthIndex: number): number {
+		if (monthIndex === 0) {
+			return this._timestamp;
+		}
+
+		const calendarDate = CalendarDateComponent.fromTimestamp(this._timestamp * 1000, this._primaryCalendarType);
+		const modifiedDate = modifyDateBy(calendarDate, monthIndex, "month", false);
+
+		return modifiedDate.valueOf() / 1000;
+	}
+
+	/**
+	 * Generates header button text (month and year) for a specific month timestamp
+	 * @private
+	 */
+	_getHeaderTextForMonth(monthTimestamp: number): { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } {
+		const calendarDate = CalendarDateComponent.fromTimestamp(monthTimestamp * 1000, this._primaryCalendarType);
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		const yearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._primaryCalendarType });
+
+		const monthText = localeData.getMonthsStandAlone("wide", this._primaryCalendarType)[calendarDate.getMonth()];
+		const localDate = calendarDate.toLocalJSDate();
+		const yearText = String(yearFormat.format(localDate, true));
+
+		const result: { monthText: string, yearText: string, secondMonthText?: string, secondYearText?: string } = {
+			monthText,
+			yearText,
+		};
+
+		if (this.hasSecondaryCalendarType) {
+			const secondaryDate = transformDateToSecondaryType(this._primaryCalendarType, this._secondaryCalendarType, monthTimestamp, true);
+			const secondaryCalendarDate = secondaryDate.firstDate || secondaryDate.lastDate;
+			const secondaryLocaleData = getCachedLocaleDataInstance(getLocale());
+			result.secondMonthText = secondaryLocaleData.getMonthsStandAlone("wide", this._secondaryCalendarType)[secondaryCalendarDate.getMonth()];
+			const secondaryYearFormat = DateFormat.getDateInstance({ format: "y", calendarType: this._secondaryCalendarType });
+			result.secondYearText = String(secondaryYearFormat.format(secondaryCalendarDate.toLocalJSDate(), true));
+		}
+
+		return result;
 	}
 
 	/**
@@ -649,9 +752,9 @@ class Calendar extends CalendarPart {
 		const currentYearRange = this._currentYearRange;
 		const { rangeStart, rangeEnd } = this._createYearRangeDates(currentYearRange);
 
-		const rangeStartSecType = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, rangeStart.valueOf() / 1000, true)
+		const rangeStartSecType = transformDateToSecondaryType(this._primaryCalendarType, this._secondaryCalendarType, rangeStart.valueOf() / 1000, true)
 			.firstDate;
-		const rangeEndSecType = transformDateToSecondaryType(this.primaryCalendarType, this._secondaryCalendarType, rangeEnd.valueOf() / 1000, true)
+		const rangeEndSecType = transformDateToSecondaryType(this._primaryCalendarType, this._secondaryCalendarType, rangeEnd.valueOf() / 1000, true)
 			.lastDate;
 
 		this._headerYearRangeButtonTextSecType = `${yearFormatSecType.format(rangeStartSecType.toLocalJSDate())} - ${yearFormatSecType.format(rangeEndSecType.toLocalJSDate())}`;
@@ -675,12 +778,17 @@ class Calendar extends CalendarPart {
 		};
 	}
 
+	get _monthsToShow() {
+		const monthsToShow = this._showTwoMonths && !isPhone() ? 2 : 1;
+		return monthsToShow;
+	}
+
 	/**
 	 * The month button is hidden when the month picker or year picker is shown
 	 * @private
 	 */
 	get _isHeaderMonthButtonHidden(): boolean {
-		return this._currentPicker !== "day";
+		return this._showTwoMonths ? this._currentPicker === "yearrange" || this._currentPicker === "year" : this._currentPicker !== "day";
 	}
 
 	/**
@@ -700,6 +808,10 @@ class Calendar extends CalendarPart {
 	}
 
 	get _isDayPickerHidden() {
+		// In multi-month mode (monthsToShow > 1), keep day pickers visible even when other pickers are shown
+		if (this._showTwoMonths) {
+			return false;
+		}
 		return this._currentPicker !== "day";
 	}
 
@@ -713,6 +825,18 @@ class Calendar extends CalendarPart {
 
 	get _isYearRangePickerHidden() {
 		return this._currentPicker !== "yearrange";
+	}
+
+	get _isDefaultHeaderModeInMultipleMonths() {
+		return !this._isDayPickerHidden && this._isYearPickerHidden;
+	}
+
+	get _shouldShowOnePickerHeaderButtonInMultipleMonths() {
+		return !this._isDayPickerHidden && !this._isYearPickerHidden;
+	}
+
+	get _inert() {
+		return this._showTwoMonths && (!this._isMonthPickerHidden || !this._isYearPickerHidden || !this._isYearRangePickerHidden);
 	}
 
 	get _currentYearRange(): CalendarYearRangeT {
@@ -789,8 +913,14 @@ class Calendar extends CalendarPart {
 		this.switchToYearPicker();
 	}
 
-	async onNavigate(e: CustomEvent) {
+	async onNavigate(e: CustomEvent<DayPickerNavigateEventDetail>) {
 		this.timestamp = e.detail.timestamp;
+		// Mouse-driven navigation handles its own focus; the click already landed
+		// where the user wants. Refocusing after the deferred render would steal
+		// focus from a sibling component (e.g. a time picker in DateTimePicker).
+		if (e.detail.mouse) {
+			return;
+		}
 		await renderFinished();
 		this._currentPickerDOM.focus();
 	}
@@ -953,6 +1083,7 @@ class Calendar extends CalendarPart {
 
 	onYearButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
+			e.preventDefault();
 			this.switchToYearPicker();
 			this.fireDecoratorEvent("show-year-view");
 		}
@@ -971,12 +1102,13 @@ class Calendar extends CalendarPart {
 
 	onYearRangeButtonKeyUp(e: KeyboardEvent) {
 		if (isSpace(e)) {
+			e.preventDefault();
 			this.switchToYearRangePicker();
 			this.fireDecoratorEvent("show-year-range-view");
 		}
 	}
 
-	_handleNavigationButtonKeyDown(e: MouseEvent, isDisabled: boolean, action: () => void) {
+	_handleNavigationButtonClick(e: MouseEvent, isDisabled: boolean, action: () => void) {
 		if (isDisabled) {
 			e.preventDefault();
 			return;
@@ -990,12 +1122,56 @@ class Calendar extends CalendarPart {
 		e.preventDefault();
 	}
 
+	_handlePrevNextButtonKeyDown(e: KeyboardEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
+			e.preventDefault();
+			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
+		}
+
+		if (isEnter(e)) {
+			action();
+			e.preventDefault();
+		}
+	}
+
+	_handlePrevNextButtonKeyUp(e: KeyboardEvent, isDisabled: boolean, action: () => void) {
+		if (isDisabled) {
+			e.preventDefault();
+			return;
+		}
+
+		if (isSpace(e)) {
+			e.preventDefault();
+			action();
+		}
+	}
+
 	onPrevButtonClick(e: MouseEvent) {
-		this._handleNavigationButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+		this._handleNavigationButtonClick(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
 	}
 
 	onNextButtonClick(e: MouseEvent) {
-		this._handleNavigationButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+		this._handleNavigationButtonClick(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+	}
+
+	onPrevButtonKeyDown(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyDown(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
+
+	onPrevButtonKeyUp(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyUp(e, this._previousButtonDisabled, () => this.onHeaderPreviousPress());
+	}
+
+	onNextButtonKeyDown(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyDown(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
+	}
+
+	onNextButtonKeyUp(e: KeyboardEvent) {
+		this._handlePrevNextButtonKeyUp(e, this._nextButtonDisabled, () => this.onHeaderNextPress());
 	}
 
 	/**

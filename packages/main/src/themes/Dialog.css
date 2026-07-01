@@ -1,8 +1,8 @@
 @import "./InvisibleTextStyles.css";
 
 :host {
-	min-width: 20rem;
-	min-height: 6rem;
+	min-width: min(20rem, 90vw);
+	min-height: min(6rem, 90vh);
 	max-height: 94%;
 	max-width: 90%;
 	flex-direction: column;
@@ -102,17 +102,22 @@
 	outline: none;
 }
 
-:host([desktop]) .ui5-popup-header-root:focus:after,
-.ui5-popup-header-root:focus-visible:after {
+.ui5-popup-drag-resize-handler:focus {
+	outline: none;
+}
+
+.ui5-popup-root:has(.ui5-popup-drag-resize-handler:focus)::before {
 	content: '';
 	position: absolute;
-	left: var(--_ui5_dialog_header_focus_left_offset);
-	bottom: var(--_ui5_dialog_header_focus_bottom_offset);
-	right: var(--_ui5_dialog_header_focus_right_offset);
-	top: var(--_ui5_dialog_header_focus_top_offset);
+	inset: var(--_ui5_dialog_focus_outline_offset);
 	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	border-radius: var(--_ui5_dialog_header_border_radius) var(--_ui5_dialog_header_border_radius) 0 0;
+	border-radius: var(--sapElement_BorderCornerRadius);
 	pointer-events: none;
+	z-index: 5;
+}
+
+:host([resizable]) .ui5-popup-root:has(.ui5-popup-drag-resize-handler:focus)::before {
+	border-end-end-radius: var(--_ui5_dialog_resizable_bottom_right_radius);
 }
 
 :host([stretch]) .ui5-popup-content {

@@ -422,7 +422,7 @@
 }
 
 .ui5-dp-item--withsecondtype .ui5-dp-daytext {
-	font-size: 0.75rem;
+	font-size: var(--_ui5_dp_item_withsecondtype_font_size);
 }
 
 .ui5-dp-item.ui5-dp-item--withsecondtype .ui5-dp-specialday,

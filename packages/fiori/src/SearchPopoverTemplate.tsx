@@ -30,6 +30,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 			onClose={this._handleClose}
 			onBeforeClose={this._handleBeforeClose}
 			onBeforeOpen={this._handleBeforeOpen}
+			part="popover"
 			class={{
 				"ui5-search-popover": true,
 				"ui5-search-popover-phone": isPhone(),
@@ -39,7 +40,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 			{isPhone() ? (headerTemplate ? headerTemplate.call(this) : (
 				<>
 					<header slot="header" class="ui5-search-popup-searching-header">
-						<Input class="ui5-search-popover-search-field" onInput={this._handleMobileInput} showClearIcon={this.showClearIcon} noTypeahead={this.noTypeahead} hint={InputKeyHint.Search} onKeyDown={this._onMobileInputKeydown}>
+						<Input value={this.value} class="ui5-search-popover-search-field" onInput={this._handleMobileInput} showClearIcon={this.showClearIcon} noTypeahead={this.noTypeahead} hint={InputKeyHint.Search} onKeyDown={this._onMobileInputKeydown}>
 							{this._flattenItems.map(item => {
 								return (<SuggestionItem text={item.text}></SuggestionItem>);
 							})}
@@ -60,6 +61,7 @@ export default function SearchPopoverTemplate(this: Search, headerTemplate?: Jsx
 						class="ui5-search-list"
 						separators={ListSeparator.None}
 						onKeyDown={this._onItemKeydown}
+						onFocusIn={this._onListItemFocusIn}
 						accessibleRole={ListAccessibleRole.ListBox}
 						onItemClick={this._onItemClick}>
 						<slot></slot>

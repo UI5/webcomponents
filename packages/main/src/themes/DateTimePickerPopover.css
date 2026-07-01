@@ -4,7 +4,9 @@
 }
 
 :host .ui5-date-picker-popover:not([on-phone]) .ui5-popover-header {
-	width: 20rem;
+	width: 100%;
+	max-width: 100%;
+	display: block;
 }
 
 .ui5-dt-picker-content {

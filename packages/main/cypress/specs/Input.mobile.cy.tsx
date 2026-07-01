@@ -2,7 +2,8 @@ import Input from "../../src/Input.js";
 import "../../src/features/InputSuggestions.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 import SuggestionItem from "../../src/SuggestionItem.js";
-import { INPUT_SUGGESTIONS_OK_BUTTON, INPUT_SUGGESTIONS_CANCEL_BUTTON } from "../../src/generated/i18n/i18n-defaults.js";
+import { INPUT_SUGGESTIONS_OK_BUTTON, INPUT_SUGGESTIONS_CANCEL_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
 
 describe("Input on mobile device", () => {
 	beforeEach(() => {
@@ -440,5 +441,56 @@ describe("Property open", () => {
 		.shadow()
 		.find<ResponsivePopover>("[ui5-responsive-popover]")
 		.ui5ResponsivePopoverClosed();
+	});
+});
+
+describe("Dialog header title", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should display label text as dialog header title when label for is used", () => {
+		cy.mount(
+			<>
+				<Label for="myInput">Country</Label>
+				<Input id="myInput" showSuggestions>
+					<SuggestionItem text="Item 1" />
+					<SuggestionItem text="Item 2" />
+				</Input>
+			</>
+		);
+
+		cy.get("#myInput").realClick();
+
+		cy.get("#myInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myInput")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", "Country");
+	});
+
+	it("Should fallback to 'All Items' when no label is associated", () => {
+		cy.mount(
+			<Input id="myInput" showSuggestions>
+				<SuggestionItem text="Item 1" />
+				<SuggestionItem text="Item 2" />
+			</Input>
+		);
+
+		cy.get("#myInput").realClick();
+
+		cy.get("#myInput")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("#myInput")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-responsive-popover-header-text")
+			.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
 	});
 });

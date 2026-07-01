@@ -9,6 +9,7 @@ import "./Assets.js";
 import "./illustrations/AllIllustrations.js";
 
 // FIORI components
+import HeroBanner from "./HeroBanner.js";
 import BarcodeScannerDialog from "./BarcodeScannerDialog.js";
 import DynamicPage from "./DynamicPage.js";
 import DynamicPageHeader from "./DynamicPageHeader.js";
@@ -64,6 +65,7 @@ import UserMenuAccount from "./UserMenuAccount.js";
 import UserMenuItem from "./UserMenuItem.js";
 import UserMenuItemGroup from "./UserMenuItemGroup.js";
 import ViewSettingsDialog from "./ViewSettingsDialog.js";
+import ViewSettingsDialogCustomTab from "./ViewSettingsDialogCustomTab.js";
 import Wizard from "./Wizard.js";
 
 testAssets.defaultTexts = { ...testAssets.defaultTexts, ...defaultFioriTexts };

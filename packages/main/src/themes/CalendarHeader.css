@@ -70,7 +70,7 @@
 }
 
 .ui5-calheader-arrowbtn:not(:active) .ui5-calheader-btn-sectext {
-	color: var(--sapNeutralElementColor);
+	color: var(--sapContent_LabelColor);
 	font-size: var(--sapFontSmallSize);
 }
 

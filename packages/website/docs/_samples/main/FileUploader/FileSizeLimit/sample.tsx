@@ -35,7 +35,7 @@ function App() {
   return (
     <>
       <div style={{ height: "300px" }}>
-        <Label for="max-file-size-uploader">Upload files up to 2 MB:</Label>
+        <Label showColon={true} for="max-file-size-uploader">Upload files up to 2 MB</Label>
         <FileUploader
           maxFileSize={2}
           id="max-file-size-uploader"

@@ -8,6 +8,7 @@ import "@ui5/webcomponents-localization/dist/features/calendar/Islamic.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 import { resetConfiguration } from "@ui5/webcomponents-base/dist/InitialConfiguration.js";
 import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
+import CalendarSelectionMode from "../../src/types/CalendarSelectionMode.js";
 
 const getDefaultCalendar = (date: Date) => {
 	const calDate = new Date(date);
@@ -751,6 +752,38 @@ describe("Calendar general interaction", () => {
 			.find("[data-ui5-cal-header-btn-next]")
 			.should("have.class", "ui5-calheader-arrowbtn-disabled");
 	});
+
+	it("Should navigate when pressing Space/Enter on prev/next buttons", () => {
+		const date = new Date(Date.UTC(2024, 5, 15, 0, 0, 0)); // June 15, 2024
+		cy.mount(getDefaultCalendar(date));
+
+		// Focus and press Enter on next button
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-next]")
+			.focus()
+			.realPress("Enter");
+
+		// Verify navigation to July
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "July");
+
+		// Focus and press Space on prev button
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-prev]")
+			.focus()
+			.realPress("Space");
+
+		// Verify navigation back to June
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[data-ui5-cal-header-btn-month]")
+			.should("contain.text", "June");
+	});
+
 
 	it("Second month and year are rendered in the header", () => {
 		cy.mount(<Calendar id="calendar1" primaryCalendarType="Islamic" secondaryCalendarType="Gregorian"></Calendar>);
@@ -1727,6 +1760,36 @@ describe("Day Picker Tests", () => {
 				expect(todayFromTimestamp.getFullYear()).to.equal(actualToday.getFullYear());
 			});
 	});
+
+	it("mousedown + arrow navigation + click keeps focus at navigated cell, selection on clicked cell", () => {
+		const date = new Date(Date.UTC(2000, 9, 10, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		const day15Timestamp = new Date(Date.UTC(2000, 9, 15, 0, 0, 0)).valueOf() / 1000;
+		const day12Timestamp = new Date(Date.UTC(2000, 9, 12, 0, 0, 0)).valueOf() / 1000;
+
+		// mousedown on 15th — focus moves to 15th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseDown();
+
+		// press arrow left three times — focus moves to 12th
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+		cy.realPress("ArrowLeft");
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		// mouseup on 15th — selection goes to 15th, focus stays on 12th
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.realMouseUp();
+
+		cy.ui5CalendarGetDay("#calendar1", day12Timestamp.toString())
+			.should("have.focus");
+
+		cy.ui5CalendarGetDay("#calendar1", day15Timestamp.toString())
+			.should("have.class", "ui5-dp-item--selected");
+	});
 });
 
 describe("Calendar Global Configuration", () => {
@@ -1763,5 +1826,469 @@ describe("Calendar Global Configuration", () => {
 			.find(".ui5-dp-firstday")
 			.first()
 			.should("have.text", "Sat");
+	});
+});
+
+describe("Calendar - Multiple Months Mode", () => {
+	describe("Two Calendars Display", () => {
+		it("should display two calendars when _showTwoMonths is true", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 1, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("have.length", 2);
+		});
+
+		it("should display only one calendar when _showTwoMonths is false", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={false}>
+					<CalendarDate value="Jan 1, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.should("not.exist");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[id$='-daypicker']")
+				.should("exist");
+		});
+
+		it("should display consecutive months in two calendar mode", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// First calendar should show January
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "January");
+
+			// Second calendar should show February
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "February");
+		});
+
+		it("should have correct CSS classes for multiple months mode", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 1, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-root")
+				.should("have.class", "ui5-dt-cal--multiple");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-content")
+				.should("have.class", "ui5-cal-content-multiple");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-multiple-months-wrapper")
+				.should("exist");
+		});
+	});
+
+	describe("Navigation in Multiple Months Mode", () => {
+		it("should show prev button only in first calendar header", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// First calendar should have prev button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-prev]")
+				.should("exist");
+
+			// Second calendar should have spacer instead of prev button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find("[data-ui5-cal-header-btn-prev]")
+				.should("not.exist");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find(".ui5-calheader-spacer")
+				.should("exist");
+		});
+
+		it("should show next button only in last calendar header (desktop)", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// First calendar should have spacer instead of next button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-next]")
+				.should("not.exist");
+
+			// Second calendar should have next button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find("[data-ui5-cal-header-btn-next]")
+				.should("exist");
+		});
+
+		it("should navigate both calendars when clicking prev button", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Mar 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click prev button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-prev]")
+				.realClick();
+
+			// First calendar should show February
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "February");
+
+			// Second calendar should show March
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "March");
+		});
+
+		it("should navigate both calendars when clicking next button", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click next button
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-next]")
+				.realClick();
+
+			// First calendar should show February
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "February");
+
+			// Second calendar should show March
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.last()
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("contain.text", "March");
+		});
+	});
+
+	describe("Picker Overlays in Multiple Months Mode", () => {
+		it("should show month picker as overlay when clicking month button", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click month button in first calendar
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-month]")
+				.realClick();
+
+			// Month picker should be visible in overlay container
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.should("not.have.attr", "hidden");
+		});
+
+		it("should show year picker as overlay when clicking year button", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click year button in first calendar
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.first()
+				.find("[data-ui5-cal-header-btn-year]")
+				.realClick();
+
+			// Year picker should be visible in overlay container
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("not.have.class", "ui5-cal-overlay-hidden");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-YP']")
+				.should("not.have.attr", "hidden");
+		});
+
+		it("should show overlay effect on day pickers when picker is open", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click month button to open month picker
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-month]")
+				.first()
+				.realClick();
+
+			// Overlay should be visible
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-daypicker-overlay")
+				.should("be.visible");
+		});
+
+		it("should hide overlay when selecting a month", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Open month picker
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-month]")
+				.first()
+				.realClick();
+
+			// Select a month
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.find("[id$='-MP']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.first()
+				.realClick();
+
+			// Overlay should be hidden
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-overlay-container")
+				.should("have.class", "ui5-cal-overlay-hidden");
+		});
+	});
+
+	describe("Date Selection in Multiple Months Mode", () => {
+		it("should allow selecting dates from both calendars", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true} selectionMode={CalendarSelectionMode.Single}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Click date in second calendar (February)
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.last()
+				.find("[id$='-daypicker-1']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.first()
+				.realClick();
+
+			// Selected date should be updated
+			cy.get<Calendar>("#cal")
+				.then($cal => {
+					const selectedDates = $cal[0].selectedDates;
+					expect(selectedDates).to.have.length(1);
+				});
+		});
+
+		it("should support range selection across both calendars", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true} selectionMode={CalendarSelectionMode.Range}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Select start date in January (first calendar)
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.first()
+				.find("[id$='-daypicker-0']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.eq(14) // Jan 15
+				.realClick();
+
+			// Select end date in February (second calendar)
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-container")
+				.last()
+				.find("[id$='-daypicker-1']")
+				.shadow()
+				.find("[data-sap-timestamp]")
+				.eq(13) // Feb 14
+				.realClick();
+
+			// Should have range selected
+			cy.get<Calendar>("#cal")
+				.then($cal => {
+					const selectedDates = $cal[0].selectedDates;
+					expect(selectedDates).to.have.length(2);
+				});
+		});
+	});
+
+	describe("Header Buttons in Multiple Months Mode", () => {
+		it("should hide month button when year or year-range picker is shown", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Open year picker
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-year]")
+				.first()
+				.realClick();
+
+			// Month button should be hidden in unified header
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-calheader-default-multiple")
+				.find("[data-ui5-cal-header-btn-month]")
+				.should("have.attr", "hidden");
+		});
+
+		it("should show all header buttons in default day picker mode", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			// Both calendars should show month and year buttons
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find(".ui5-cal-month-header-container")
+				.each(($container) => {
+					cy.wrap($container)
+						.find("[data-ui5-cal-header-btn-month]")
+						.should("not.have.attr", "hidden");
+
+					cy.wrap($container)
+						.find("[data-ui5-cal-header-btn-year]")
+						.should("not.have.attr", "hidden");
+				});
+		});
+	});
+
+	describe("Accessibility in Multiple Months Mode", () => {
+		it("should have proper ARIA labels on navigation buttons", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-prev]")
+				.should("have.attr", "aria-label");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-next]")
+				.should("have.attr", "aria-label");
+		});
+
+		it("should have proper role attributes on header buttons", () => {
+			cy.mount(
+				<Calendar id="cal" _showTwoMonths={true}>
+					<CalendarDate value="Jan 15, 2024"></CalendarDate>
+				</Calendar>
+			);
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-prev]")
+				.should("have.attr", "role", "button");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-next]")
+				.should("have.attr", "role", "button");
+
+			cy.get<Calendar>("#cal")
+				.shadow()
+				.find("[data-ui5-cal-header-btn-month]")
+				.first()
+				.should("have.attr", "role", "button");
+		});
 	});
 });

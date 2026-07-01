@@ -21,7 +21,7 @@ export default function CarouselTemplate(this: Carousel) {
 			onMouseDown={this._onmousedown}
 		>
 			<div class={this.classes.viewport} part="content">
-				<div role="list" aria-label={this._ariaListLabel} class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentSlideIndex * (this._itemWidth || 0)}px, 0, 0` }}>
+				<div role="list" aria-label={this._ariaListLabel} class={this.classes.content} style={{ transform: `translate3d(${this._isRTL ? "" : "-"}${this._currentPageIndex * (this._itemWidth || 0)}px, 0, 0` }}>
 					{this.items.map((itemInfo, i) =>
 						<div
 							data-sap-focus-ref={this._focusedItemIndex === i ? true : undefined}
@@ -106,5 +106,5 @@ function navIndicator(this: Carousel) {
 		<div
 			dir="auto"
 			class="ui5-carousel-navigation-text"
-		>{this._currentSlideIndex + 1}&nbsp;{this.ofText}&nbsp;{this.pagesCount}</div>;
+		>{this._currentPageIndex + 1}&nbsp;{this.ofText}&nbsp;{this.pagesCount}</div>;
 }

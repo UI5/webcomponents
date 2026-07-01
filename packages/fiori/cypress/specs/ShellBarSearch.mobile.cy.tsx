@@ -95,4 +95,71 @@ describe("Mobile Behaviour", () => {
 		cy.get("[ui5-shellbar-search]")
 			.should("have.prop", "collapsed", true);
 	});
+
+	it("should fire search event when search icon is pressed in open dialog", () => {
+		cy.mount(
+			<ShellBarSearch showClearIcon={true} onSearch={cy.stub().as("search")}>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</ShellBarSearch>
+		);
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick();
+
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "open", true);
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] header input")
+			.type("test");
+
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-shell-search-field-search-icon")
+			.realClick();
+
+		cy.get("@search").should("have.been.calledOnce");
+	});
+
+	it("should close popup when clicking magnifier icon on mobile", () => {
+		cy.mount(
+			<ShellBarSearch onSearch={cy.stub().as("search")}>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</ShellBarSearch>
+		);
+
+		// Open search dialog by clicking the search button
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-button]")
+			.realClick();
+
+		// Verify dialog is open
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "open", true);
+
+		// Type in search field
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] header input")
+			.type("test");
+
+		// Click search/magnifier icon inside the mobile dialog
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-responsive-popover] .ui5-shell-search-field-search-icon")
+			.realClick();
+
+		// Verify search event was fired
+		cy.get("@search").should("have.been.calledOnce");
+
+		// Verify popup is closed (this is the main fix)
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "open", false);
+	});
 });

@@ -136,6 +136,15 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	separators: `${BreadcrumbsSeparator}` = "Slash";
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.24.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Holds the number of items in the overflow.
 	 * @default 0
 	 * @private
@@ -387,6 +396,16 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 				shiftKey,
 			} = e.detail;
 
+		if (!item.fireDecoratorEvent("click", {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		})) {
+			e.preventDefault();
+			return;
+		}
+
 		if (!this.fireDecoratorEvent("item-click", {
 			item,
 			altKey,
@@ -408,6 +427,15 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 				shiftKey,
 			} = e;
 
+		if (!item.fireDecoratorEvent("click", {
+			altKey,
+			ctrlKey,
+			metaKey,
+			shiftKey,
+		})) {
+			return;
+		}
+
 		this.fireDecoratorEvent("item-click", {
 			item,
 			altKey,
@@ -421,6 +449,15 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 		const listItem = e.detail.selectedItems[0],
 			items = this._getItems(),
 			item = items.find(x => `${x._id}-li` === listItem.id)!;
+
+		if (!item.fireDecoratorEvent("click", {
+			altKey: false,
+			ctrlKey: false,
+			metaKey: false,
+			shiftKey: false,
+		})) {
+			return;
+		}
 
 		if (this.fireDecoratorEvent("item-click", { item })) {
 			locationOpen(item.href, item.target || "_self", "noopener,noreferrer");
@@ -634,7 +671,7 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	}
 
 	get _accessibleNameText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
+		return this.accessibleName || Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
 	}
 
 	get _dropdownArrowAccessibleNameText() {

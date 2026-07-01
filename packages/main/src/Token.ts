@@ -124,8 +124,16 @@ class Token extends UI5Element implements IToken {
 	 * @default false
 	 * @private
 	 */
-	@property({ type: Boolean })
+	@property({ type: Boolean, noAttribute: true })
 	toBeDeleted = false;
+
+	/**
+	 * Set by the tokenizer to mark the last visible token before overflow.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	lastVisibleToken = false;
 
 	/**
 	 * Defines the tabIndex of the component.
@@ -162,16 +170,20 @@ class Token extends UI5Element implements IToken {
 	}
 
 	_delete() {
+		// If toBeDeleted is already true, the delete event was already fired in mousedown
+		if (this.toBeDeleted) {
+			return;
+		}
+
 		this.toBeDeleted = true;
 		this.fireDecoratorEvent("delete");
 	}
 
 	_onmousedown(e: MouseEvent) {
-		const target = e.currentTarget as HTMLElement;
-
-		if (target === this.shadowRoot?.querySelector("[ui5-icon]")) {
-			this.toBeDeleted = true;
-		}
+		e.preventDefault(); // Prevent focus changes during deletion
+		this.toBeDeleted = true;
+		// Fire the delete event immediately to avoid losing it due to DOM changes
+		this.fireDecoratorEvent("delete");
 	}
 
 	_keydown(e: KeyboardEvent) {

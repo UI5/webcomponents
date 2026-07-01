@@ -13,6 +13,7 @@ export default function DayPickerTemplate(this: DayPicker) {
 			}}
 			onKeyDown={this._onkeydown}
 			onKeyUp={this._onkeyup}
+			onMouseDown={this._onmousedown}
 			onClick={this._onclick}
 			onMouseOver={this._onmouseover}
 		>
@@ -24,7 +25,7 @@ export default function DayPickerTemplate(this: DayPicker) {
 							aria-label={day.ultraShortName ? day.name : undefined}
 							class={day.classes}
 						>
-							{day.ultraShortName ? day.ultraShortName : <span aria-hidden="true" class="ui5-hidden-text">{day.name}</span>}
+							{day.ultraShortName ? day.ultraShortName : <span class="ui5-hidden-text">{day.name}</span>}
 						</div>
 					)}
 				</div>

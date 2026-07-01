@@ -3,6 +3,7 @@ import Label from "../../src/Label.js";
 import Switch from "../../src/Switch.js";
 
 describe("General events interactions", () => {
+
 	it("Should fire change event", () => {
 		cy.mount(<Switch onChange={cy.stub().as("changed")}>Click me</Switch>);
 
@@ -98,6 +99,37 @@ describe("General events interactions", () => {
     cy.get("@switch")
         .should("not.have.attr", "checked");
 	});
+
+	it("Should not toggle when readonly (click)", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.realClick();
+
+		cy.get("@switch")
+			.should("not.have.attr", "checked");
+	});
+
+	it("Should not toggle when readonly (keyboard)", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.as("switch");
+
+		cy.get("@switch")
+			.shadow()
+			.find(".ui5-switch-root")
+			.focus()
+			.should("be.focused")
+			.realPress("Space");
+
+		cy.get("@switch")
+			.should("not.have.attr", "checked");
+	});
+
 });
 
 describe("General accesibility attributes", () => {
@@ -111,7 +143,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${geoLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", geoLocationDescr);
 
 	});
 
@@ -127,7 +159,7 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("role", "switch");
 
 		cy.get("@switch")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", `${gpsLocationDescr} No`);
+			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", gpsLocationDescr);
 	});
 
 	it("Should set correct correct tooltip on the root", () => {
@@ -137,11 +169,13 @@ describe("General accesibility attributes", () => {
 			.ui5SwitchCheckAttributeInShadowDomRoot("title", gpsLocationDescr);
 	});
 
-	it("Should set correct attribute 'aria-label' when 'text-on' and 'text-off' attributes aren't set", () => {
+	it("Should not have 'aria-label' attribute when 'text-on' and 'text-off' attributes aren't set", () => {
 		cy.mount(<Switch></Switch>);
 
 		cy.get("[ui5-switch]")
-			.ui5SwitchCheckAttributeInShadowDomRoot("aria-label", "");
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("not.have.attr", "aria-label");
 	});
 
 	it("Should propagate 'required' attribute properly on the root", () => {
@@ -156,6 +190,30 @@ describe("General accesibility attributes", () => {
 
 		cy.get("[ui5-switch]")
 			.ui5SwitchCheckAttributeInShadowDomRoot("aria-required", "false");
+	});
+
+	it("Should have 'aria-describedby' attribute when readonly", () => {
+		cy.mount(<Switch readonly></Switch>);
+
+		cy.get("[ui5-switch]")
+			.then($switch => {
+				const switchId = ($switch.get(0) as Switch)._id;
+				const expectedDescribedBy = `${switchId}-readonly-desc`;
+				
+				cy.wrap($switch)
+					.ui5SwitchCheckAttributeInShadowDomRoot("aria-describedby", expectedDescribedBy);
+			});
+	});
+
+	it("Should not have 'aria-describedby' attribute when not readonly", () => {
+		cy.mount(<Switch></Switch>);
+
+		cy.mount(<Switch></Switch>);
+
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("not.have.attr", "aria-describedby");
 	});
 });
 
@@ -229,6 +287,15 @@ describe("General interactions in form", () => {
 });
 
 describe("Accessibility", () => {
+
+	it("should have aria-readonly when readonly", () => {
+		cy.mount(<Switch readonly></Switch>);
+		cy.get("[ui5-switch]")
+			.shadow()
+			.find(".ui5-switch-root")
+			.should("have.attr", "aria-readonly", "true");
+	});
+
 	it("should have correct aria-label when associated with a label via 'for' attribute", () => {
 		const labelText = "Enable notifications";
 

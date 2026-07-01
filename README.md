@@ -96,16 +96,23 @@ Since version `1.11.0`, we have been providing TypeScript definitions under an e
 No, you are expected to import only the components (or other public APIs) that you are going to use and bundle them along with the rest
 of your application.
 
-## Browser Support
+## Browser and Platform Support
 
-UI5 Web Components are supported by all major modern browsers.
+UI5 Web Components are supported by all major modern browsers on the desktop and mobile platforms listed below.
 
-Browser | Supported versions
---------|--------
-Chrome | Latest two stable releases
-Firefox | Latest two stable releases
-Safari | Latest two stable releases
-Edge | Latest two stable releases
+### Desktop
+
+|                                | Google Chrome   | Microsoft Edge  | Mozilla Firefox | Mozilla Firefox ESR | Apple Safari    |
+| ------------------------------ | --------------- | --------------- | --------------- | ------------------- | --------------- |
+| **Windows** (versions 10 & 11) | Latest 2 Stable | Latest 2 Stable | Latest 2 Stable | Latest              | n/a             |
+| **macOS** (Latest 2 versions)  | Latest 2 Stable | Latest 2 Stable | Latest 2 Stable | Latest              | Latest 2 Stable |
+
+### Mobile
+
+|                                   | Google Chrome   | Apple Safari    |
+| --------------------------------- | --------------- | --------------- |
+| **Android** (Latest 3 versions)   | Latest 2 Stable | n/a             |
+| **iOS & iPadOS** (Latest version) | -               | Latest 2 Stable |
 
 ## Project Structure, Development and Build
 

@@ -22,12 +22,12 @@
             <ui5-form-group header-text="Group1 (Text Fields)" column-span="2">
 
                 <ui5-form-item>
-                    <ui5-label required for="nameInp" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="nameInp" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-input id="nameInp" value="Typed text"></ui5-input>
                 </ui5-form-item>
                 
                 <ui5-form-item>
-                    <ui5-label required for="cityInp" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="cityInp" slot="labelContent" show-colon>Label</ui5-label>
                     <div>
                         <ui5-input id="cityInp" placeholder="Placeholder" style="flex-grow: 1; margin-inline-end: 0.25rem;"></ui5-input>
                         <ui5-text>UNIT</ui5-text>
@@ -35,24 +35,24 @@
                 </ui5-form-item>
             
                 <ui5-form-item>
-                    <ui5-label required for="streetInp" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="streetInp" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-textarea id="streetInp" placeholder="Write your message here" show-exceeded-text  maxlength="10"></ui5-textarea>
                 </ui5-form-item>
                 
                 <ui5-form-item>
-                    <ui5-label required slot="labelContent" for="fileUpload">Label:</ui5-label>
+                    <ui5-label required slot="labelContent" for="fileUpload" show-colon>Label</ui5-label>
                     <ui5-file-uploader id="fileUpload" placeholder="Choose a file">
                         <ui5-button>Browse...</ui5-button>
                     </ui5-file-uploader>
                 </ui5-form-item>
 
                 <ui5-form-item>
-                    <ui5-label required for="durationInp" slot="labelContent">Duration:</ui5-label>
+                    <ui5-label required for="durationInp" slot="labelContent" show-colon>Duration</ui5-label>
                     <ui5-time-picker id="durationInp" format-pattern="hh:mm:ss" value="12:00:01"></ui5-time-picker>
                 </ui5-form-item>
     
                 <ui5-form-item>
-                    <ui5-label required for="cityInp3" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="cityInp3" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-input id="cityInp3" placeholder="Placeholder"></ui5-input>
                     <ui5-input placeholder="Placeholder"></ui5-input>
                 </ui5-form-item>
@@ -60,12 +60,12 @@
 
             <ui5-form-group header-text="Group2 (Cb, Rb, Switch)">
                 <ui5-form-item>
-                    <ui5-label required slot="labelContent" for="rbGroup">Label:</ui5-label>
+                    <ui5-label required slot="labelContent" for="rbGroup" show-colon>Label</ui5-label>
                     <ui5-checkbox class="margin--density-aware" text="Here comes your checkbox text"></ui5-checkbox>
                 </ui5-form-item>
 
                 <ui5-form-item>
-                    <ui5-label required slot="labelContent" for="rbGroup">Label:</ui5-label>
+                    <ui5-label required slot="labelContent" for="rbGroup" show-colon>Label</ui5-label>
 
                     <div role="radiogroup" class="margin--density-aware">
                         <ui5-radio-button id="rbGroup" text="With Text" name="test"></ui5-radio-button>
@@ -74,14 +74,14 @@
                 </ui5-form-item>
 
                 <ui5-form-item>
-                    <ui5-label required slot="labelContent" for="swGroup">Label:</ui5-label>
+                    <ui5-label required slot="labelContent" for="swGroup" show-colon>Label</ui5-label>
                     <ui5-switch id="swGrou" class="margin--fixed" checked></ui5-switch>
                 </ui5-form-item>
             </ui5-form-group>
 
             <ui5-form-group header-text="Group3 (Select Fields)">
                 <ui5-form-item>
-                    <ui5-label required for="countrySel" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="countrySel" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-select id="countrySel" accessible-name-ref="countryLbl">
                         <ui5-option>Australia</ui5-option>
                         <ui5-option selected>Germany</ui5-option>
@@ -90,7 +90,7 @@
                 </ui5-form-item>
 
                 <ui5-form-item>
-                    <ui5-label required for="countrySel2" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="countrySel2" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-select id="countrySel2" accessible-name-ref="countryLbl">
                         <ui5-option>Australia</ui5-option>
                         <ui5-option>Germany</ui5-option>
@@ -99,7 +99,7 @@
                 </ui5-form-item>
 
                 <ui5-form-item>
-                    <ui5-label required for="mcb-grouping1" slot="labelContent">Label:</ui5-label>
+                    <ui5-label required for="mcb-grouping1" slot="labelContent" show-colon>Label</ui5-label>
                     <ui5-multi-input id="mcb-grouping1" show-value-help-icon>
                         <ui5-token slot="tokens" text="laboris"></ui5-token>
                         <ui5-token slot="tokens" text="ipsum"></ui5-token>

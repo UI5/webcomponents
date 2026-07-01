@@ -8,7 +8,7 @@ import { promises as fs } from 'node:fs';
  */
 const extractVersionChangelog = (changelog, version) => {
 	const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-	const regex = new RegExp(`^# \\[${escapedVersion}\\][^\\n]*\\n([\\s\\S]*?)(?=\\n# \\[|$(?!\\n))`, 'm');
+	const regex = new RegExp(`^#{1,2} \\[${escapedVersion}\\][^\\n]*\\n([\\s\\S]*?)(?=\\n#{1,2} \\[|$(?!\\n))`, 'm');
 	const match = changelog.match(regex);
 
 	if (match) {

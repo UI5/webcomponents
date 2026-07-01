@@ -19,6 +19,7 @@ type CollectionData = {
 		path?: string,
 		paths?: Array<string>,
 		ltr?: boolean,
+		viewBox?: string,
 		acc?: I18nText,
 	}>,
 };
@@ -70,6 +71,7 @@ const _fillRegistry = (bundleData: CollectionData) => {
 		registerIcon(iconName, {
 			pathData: (iconData.path || iconData.paths)!,
 			ltr: iconData.ltr,
+			viewBox: iconData.viewBox,
 			accData: iconData.acc,
 			collection: bundleData.collection,
 			packageName: bundleData.packageName,

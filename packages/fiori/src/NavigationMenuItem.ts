@@ -14,6 +14,8 @@ import {
 	isEnterAlt,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 // Templates
 import NavigationMenuItemTemplate from "./NavigationMenuItemTemplate.js";
@@ -93,6 +95,13 @@ class NavigationMenuItem extends MenuItem {
 
 	associatedItem?: SideNavigationSelectableItemBase;
 
+	@slot({ type: HTMLElement })
+	tag!: Slot<HTMLElement>;
+
+	get hasTag() {
+		return !!this.tag.length;
+	}
+
 	get isExternalLink() {
 		return this.href && this.target === "_blank";
 	}
@@ -101,13 +110,28 @@ class NavigationMenuItem extends MenuItem {
 		return (!this.disabled && this.href) ? this.href : undefined;
 	}
 
+	get _tagContainerId() {
+		return `${this._id}-tag-container`;
+	}
+
+	get _ariaDescribedByIds() {
+		const ids = [
+			`${this._id}-invisibleText-describedby`,
+		];
+
+		if (this.hasTag) {
+			ids.push(this._tagContainerId);
+		}
+
+		return ids.filter(Boolean).join(" ");
+	}
+
 	get _accInfo() {
 		const accInfo = super._accInfo;
 
 		accInfo.role = "none";
 
 		if (this.hasSubmenu && this.associatedItem?.isSelectable) {
-			// For the menu item on first level (parent item)
 			accInfo.ariaSelectedText = NavigationMenuItem.i18nBundleFiori.getText(NAVIGATION_MENU_SELECTABLE_ITEM_HIDDEN_TEXT);
 		}
 

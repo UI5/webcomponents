@@ -134,6 +134,7 @@ import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
+import TableGroupRowClass from "@ui5/webcomponents/dist/TableGroupRow.js";
 import TreeClass from "@ui5/webcomponents/dist/Tree.js";
 import TreeItemClass from "@ui5/webcomponents/dist/TreeItem.js";
 import TreeItemCustomClass from "@ui5/webcomponents/dist/TreeItemCustom.js";
@@ -220,14 +221,17 @@ import MediaGalleryItemClass from "@ui5/webcomponents-fiori/dist/MediaGalleryIte
 import ProductSwitchClass from "@ui5/webcomponents-fiori/dist/ProductSwitch.js";
 import ProductSwitchItemClass from "@ui5/webcomponents-fiori/dist/ProductSwitchItem.js";
 import ViewSettingsDialogClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";
+import ViewSettingsDialogCustomTabClass from "@ui5/webcomponents-fiori/dist/ViewSettingsDialogCustomTab.js";
 import SortItemClass from "@ui5/webcomponents-fiori/dist/SortItem.js";
 import FilterItemClass from "@ui5/webcomponents-fiori/dist/FilterItem.js";
 import FilterItemOptionClass from "@ui5/webcomponents-fiori/dist/FilterItemOption.js";
 import SearchClass from "@ui5/webcomponents-fiori/dist/Search.js";
 import SearchItemClass from "@ui5/webcomponents-fiori/dist/SearchItem.js";
 import SearchMessageAreaClass from "@ui5/webcomponents-fiori/dist/SearchMessageArea.js";
+import HeroBannerClass from "@ui5/webcomponents-fiori/dist/HeroBanner.js";
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
+import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import BarcodeScannerDialogClass from "@ui5/webcomponents-fiori/dist/BarcodeScannerDialog.js";
 import NavigationLayoutClass from "@ui5/webcomponents-fiori/dist/NavigationLayout.js";
@@ -259,7 +263,7 @@ import CompatTableClass from "@ui5/webcomponents-compat/dist/Table.js";
 import TableColumnClass from "@ui5/webcomponents-compat/dist/TableColumn.js";
 import CompatTableRowClass from "@ui5/webcomponents-compat/dist/TableRow.js";
 import CompatTableCellClass from "@ui5/webcomponents-compat/dist/TableCell.js";
-import TableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
+import CompatTableGroupRowClass from "@ui5/webcomponents-compat/dist/TableGroupRow.js";
 
 // Import icons commonly used in samples
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
@@ -300,7 +304,7 @@ const ComponentClasses: Record<string, any> = {
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
   StepInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
-  TableRowClass, TableCellClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
+  TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,
   ToolbarSelectOptionClass, SegmentedButtonClass, SegmentedButtonItemClass, ComboBoxClass,
   ComboBoxItemClass, ComboBoxItemGroupClass, MultiComboBoxClass, MultiComboBoxItemClass,
@@ -320,17 +324,17 @@ const ComponentClasses: Record<string, any> = {
   WizardStepClass, IllustratedMessageClass, TimelineClass, TimelineItemClass, TimelineGroupItemClass,
   PageClass, DynamicPageClass, DynamicPageTitleClass, DynamicPageHeaderClass, DynamicSideContentClass,
   FlexibleColumnLayoutClass, MediaGalleryClass, MediaGalleryItemClass, ProductSwitchClass,
-  ProductSwitchItemClass, ViewSettingsDialogClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
+  ProductSwitchItemClass, ViewSettingsDialogClass, ViewSettingsDialogCustomTabClass, SortItemClass, FilterItemClass, FilterItemOptionClass,
   SearchClass, SearchItemClass, SearchMessageAreaClass, UserMenuClass, UserMenuItemClass,
-  UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
+  UserMenuItemGroupClass, UserMenuAccountClass, BarcodeScannerDialogClass, NavigationLayoutClass, SearchFieldClass,
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
   ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
   UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,
-  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass,
+  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass, HeroBannerClass,
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package
-  CompatTableClass, TableColumnClass, CompatTableRowClass, CompatTableCellClass, TableGroupRowClass,
+  CompatTableClass, TableColumnClass, CompatTableRowClass, CompatTableCellClass, CompatTableGroupRowClass,
 };
 
 interface ReactPlaygroundProps {

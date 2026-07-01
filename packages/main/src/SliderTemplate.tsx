@@ -20,7 +20,6 @@ const handle = (slider: Slider) => {
 				min={slider.min}
 				max={slider.max}
 				tabIndex={slider.disabled ? -1 : 0}
-				disabled={slider.disabled}
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"
@@ -28,9 +27,9 @@ const handle = (slider: Slider) => {
 				aria-valuemin={slider.min}
 				aria-valuemax={slider.max}
 				aria-valuenow={slider.value}
+				aria-valuetext={slider._ariaValueText}
 				aria-label={slider._ariaLabel}
 				aria-disabled={slider._ariaDisabled}
-				aria-keyshortcuts={slider._ariaKeyshortcuts}
 				aria-describedby={slider._ariaDescribedByHandleText}
 				style={{
 					"inset-inline-start": `clamp(0%, ${position}%, 100%)`,
@@ -44,7 +43,7 @@ const handle = (slider: Slider) => {
 
 const tooltip = (slider: Slider) => (
 	<SliderTooltip
-		open={slider._tooltipsOpen}
+		open={slider._isTooltipVisible}
 		value={slider.tooltipValue}
 		min={slider.min}
 		max={slider.max}
@@ -79,8 +78,9 @@ export default function SliderTemplate(this: Slider) {
 					max={this.max}
 					step={this.step}
 					startValue={this.min}
-					showTickmarks={this.showTickmarks}
-					labelInterval={this.labelInterval}
+					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
+					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
+					tickmarks={this.tickmarks}
 					onFocusOut={this._onfocusout}
 					onFocusIn={this._onfocusin}
 					part="scale"

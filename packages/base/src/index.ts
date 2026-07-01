@@ -24,6 +24,7 @@ import {
 	getFetchDefaultLanguage,
 } from "./config/Language.js";
 import { getNoConflict, setNoConflict } from "./config/NoConflict.js";
+import { getIgnoreUrlParams, setIgnoreUrlParams } from "./config/UrlParams.js";
 import {
 	getTheme,
 	setTheme,
@@ -133,6 +134,8 @@ export {
 	getFetchDefaultLanguage,
 	getNoConflict,
 	setNoConflict,
+	getIgnoreUrlParams,
+	setIgnoreUrlParams,
 	getTheme,
 	setTheme,
 	getDefaultTheme,

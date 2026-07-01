@@ -32,7 +32,6 @@ const {
 	TABLE_SELECTION: { defaultText: SELECTION },
 	TABLE_COLUMN_HEADER_ROW: { defaultText: COLUMN_HEADER_ROW },
 	TABLE_ROW_SELECTED: { defaultText: SELECTED },
-	TABLE_ROW_NAVIGABLE: { defaultText: NAVIGABLE },
 	TABLE_ROW_NAVIGATED: { defaultText: NAVIGATED },
 	TABLE_ROW_ACTIVE: { defaultText: ACTIVE },
 } = Translations;
@@ -59,7 +58,7 @@ describe("Cell Custom Announcement - More details", () => {
 					<TableCell><input id="row1-input1" value="Row1Input1"/><input id="row1-input2" value="Row1Input2" hidden/></TableCell>
 					<TableCell><div id="row1-div"><b></b></div></TableCell>
 					<TableCell><Button id="row1-button">Row1Cell3</Button></TableCell>
-					<TableRowActionNavigation slot="actions" id="row1-nav-action"></TableRowActionNavigation>
+					<TableRowActionNavigation slot="actions" id="row1-nav-action" interactive={true}></TableRowActionNavigation>
 					<TableRowAction slot="actions" id="row1-add-action" icon={add} text="Add"></TableRowAction>
 					<TableRowAction slot="actions" id="row1-edit-action" icon={edit} text="Edit"></TableRowAction>
 				</TableRow>
@@ -146,22 +145,25 @@ describe("Cell Custom Announcement - More details", () => {
 		checkAnnouncement(`Button with custom accessibility text . ${CONTAINS_CONTROL}`, true);
 
 		cy.realPress("ArrowRight"); // Row actions cell
-		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
+		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 3));
 		cy.focused().should("have.attr", "aria-colindex", "6")
 					.should("have.attr", "role", "gridcell")
 					.then($rowActionsCell => {
 						const rowActionsCell = $rowActionsCell[0];
 						const invisibleText = document.getElementById("ui5-invisible-text");
-						expect(rowActionsCell.ariaLabelledByElements[0]).to.equal(invisibleText);
+						expect(rowActionsCell.ariaLabelledByElements![0]).to.equal(invisibleText);
 						rowActionsCell.blur();
 						expect(rowActionsCell.ariaLabelledByElements).to.equal(null);
 						rowActionsCell.focus();
 					});
 
 		cy.get("#row1-edit-action").invoke("remove");
-		checkAnnouncement(ONE_ROW_ACTION, true);
+		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2), true);
 
 		cy.get("#row1-add-action").invoke("remove");
+		checkAnnouncement(ONE_ROW_ACTION, true);
+
+		cy.get("#row1-nav-action").invoke("remove");
 		checkAnnouncement(EMPTY, true);
 
 		cy.get("@row1NavigatedCell").should("have.attr", "role", "none")
@@ -251,7 +253,7 @@ describe("Row Custom Announcement - Less details", () => {
 						C4
 						<Button id="row1-button">C4Button</Button>
 					</TableCell>
-					<TableRowActionNavigation slot="actions" id="row1-nav-action"></TableRowActionNavigation>
+					<TableRowActionNavigation slot="actions" id="row1-nav-action" interactive={true}></TableRowActionNavigation>
 					<TableRowAction slot="actions" id="row1-add-action" icon={add} text="Add"></TableRowAction>
 				</TableRow>
 			</Table>
@@ -283,7 +285,7 @@ describe("Row Custom Announcement - Less details", () => {
 		});
 	});
 
-	function checkAnnouncement(expectedText: string, focusAgain = false, check = "contains") {
+	function checkAnnouncement(expectedText: string, focusAgain = false, check: "contains" | "equal" = "contains") {
 		focusAgain && cy.focused().then($el => {
 			if ($el.attr("ui5-table-header-row") !== undefined) {
 				cy.realPress("ArrowDown");
@@ -301,14 +303,14 @@ describe("Row Custom Announcement - Less details", () => {
 
 	it("should announce table rows", () => {
 		cy.get("@row1").realClick();
-		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${NAVIGABLE} . H1`);
+		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${ACTIVE} . H1`);
 		checkAnnouncement(`H1 . R1C1 . H2 . ${CONTAINS_CONTROLS} . H3 . ${EMPTY} . H4 . C4 Button C4Button`);
-		checkAnnouncement(ONE_ROW_ACTION);
+		checkAnnouncement(Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2));
 		cy.focused().should("have.attr", "aria-rowindex", "2")
 					.should("have.attr", "role", "row");
 
 		cy.get("#selection").invoke("attr", "selected", "");
-		checkAnnouncement(`Row . 2 of 2 . ${NAVIGABLE}`, true);
+		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE}`, true);
 
 		cy.get("#row1-nav-action").invoke("prop", "interactive", true);
 		checkAnnouncement(`Row . 2 of 2 . ${ACTIVE} . H1`, true);

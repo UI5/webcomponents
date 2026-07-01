@@ -52,6 +52,7 @@ import {
 	INPUT_SUGGESTIONS_TITLE,
 	LIST_ITEM_POSITION,
 	SELECT_ROLE_DESCRIPTION,
+	SELECT_DIALOG_CANCEL_BUTTON,
 	FORM_SELECTABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
@@ -89,6 +90,10 @@ type SelectChangeEventDetail = {
 type SelectLiveChangeEventDetail = {
 	selectedOption: IOption,
 }
+
+const isPrintableCharacter = (e: KeyboardEvent) => {
+	return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+};
 
 /**
  * @class
@@ -690,15 +695,20 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleHomeKey(e);
 		} else if (isEnd(e)) {
 			this._handleEndKey(e);
-		} else if (isEnter(e)) {
+		// When focus is on the list item, Enter triggers _handleItemPress via the List item-click
+		// event, which already calls _handleSelectionChange and prevents default.
+		// Skip here to avoid a double selection change.
+		} else if (isEnter(e) && !e.defaultPrevented) {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
 			this._handleArrowNavigation(e);
+		} else if (isPrintableCharacter(e)) {
+			this._handleKeyboardNavigation(e);
 		}
 	}
 
 	_handleKeyboardNavigation(e: KeyboardEvent) {
-		if (isEnter(e) || this.readonly) {
+		if (this.readonly) {
 			return;
 		}
 
@@ -941,9 +951,9 @@ class Select extends UI5Element implements IFormInputElement {
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
 			option.focused = option.selected;
-			if (option.focused && isPhone()) {
-				// on phone, the popover opens full screen (dialog)
-				// move focus to option to read out dialog header
+			if (option.focused) {
+				// move focus to the selected option so screen readers
+				// can announce it when the popover opens
 				option.focus();
 			}
 		});
@@ -1040,6 +1050,10 @@ class Select extends UI5Element implements IFormInputElement {
 		return Select.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
+	get _cancelButtonText() {
+		return Select.i18nBundle.getText(SELECT_DIALOG_CANCEL_BUTTON);
+	}
+
 	get _currentlySelectedOption() {
 		return this.options[this._selectedIndex];
 	}
@@ -1085,6 +1099,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get styles() {
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			popoverHeader: {
 				"display": "block",
@@ -1096,6 +1111,8 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
+				"max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
+				"margin-top": "var(--sapField_BorderWidth)",
 			},
 		};
 	}

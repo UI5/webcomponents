@@ -7,6 +7,7 @@ import sysHelp from "@ui5/webcomponents-icons/dist/sys-help.js";
 import da from "@ui5/webcomponents-icons/dist/da.js";
 import "@ui5/webcomponents-icons/dist/accept.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
+import "@ui5/webcomponents-icons/dist/feedback.js";
 import "@ui5/webcomponents-icons/dist/disconnected.js";
 import "@ui5/webcomponents-icons/dist/incoming-call.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
@@ -692,7 +693,7 @@ describe("Slots", () => {
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
 				.should("exist")
-				.click();
+				.realClick();
 
 			// Verify search is expanded
 			cy.get("@shellbar")
@@ -963,6 +964,36 @@ describe("Events", () => {
 
 			cy.get("@notificationsClick")
 				.should("have.been.calledOnce");
+		});
+
+		it("notificationsDomRef returns overflow button when notifications are in overflow", () => {
+			cy.viewport(320, 800);
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					secondaryTitle="Second title"
+					showNotifications={true}
+					notificationsCount="5"
+					showProductSwitch={true}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Button 1</Button>
+					<ToggleButton icon="sap-icon://da" slot="assistant" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").as("shellbar");
+
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("exist")
+				.then(overflowBtn => {
+					cy.get("@shellbar").then($shellbar => {
+						const shellbar = $shellbar[0] as ShellBar;
+						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
+					});
+				});
 		});
 
 		it("tests profileClick event", () => {
@@ -1813,6 +1844,87 @@ describe("Component Behavior", () => {
 			cy.get("@alertClick")
 				.should("have.been.calledOnce");
 		});
+
+		it("tests 'click' on custom action in overflow popover", () => {
+			cy.viewport(320, 800);
+
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					showNotifications
+					showProductSwitch
+				>
+					<ShellBarBranding slot="branding">
+						Product Title
+						<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+					</ShellBarBranding>
+					<Button icon="nav-back" slot="startButton" />
+					<ShellBarItem id="overflow-accept" icon="accept" text="Accept" />
+					<ShellBarItem id="overflow-alert" icon="alert" text="Alert" />
+				</ShellBar>
+			);
+
+			cy.get("#overflow-accept").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("acceptClick"));
+			});
+			cy.get("#overflow-alert").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("alertClick"));
+			});
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("be.visible")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-accept")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
+
+			cy.get("@acceptClick")
+				.should("have.been.calledOnce");
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-alert")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
+
+			cy.get("@alertClick")
+				.should("have.been.calledOnce");
+		});
+
+		it("renders items in insertion order regardless of icon name", () => {
+			cy.mount(
+				<ShellBar>
+					<ShellBarItem id="item-feedback" icon="feedback" text="Feedback" stable-dom-ref="item-feedback" />
+					<ShellBarItem id="item-accept" icon="accept" text="Accept" stable-dom-ref="item-accept" />
+					<ShellBarItem id="item-alert" icon="alert" text="Alert" stable-dom-ref="item-alert" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-custom-item").then($items => {
+				// feedback was inserted first, so its wrapper must be the first custom item in the DOM
+				expect($items[0].getAttribute("data-ui5-stable")).to.equal("item-feedback");
+				expect($items[1].getAttribute("data-ui5-stable")).to.equal("item-accept");
+				expect($items[2].getAttribute("data-ui5-stable")).to.equal("item-alert");
+			});
+		});
 	});
 
 	it("Test disabled slotted button does not show hover styles", () => {
@@ -1844,6 +1956,71 @@ describe("Component Behavior", () => {
 		cy.get("[ui5-shellbar] [ui5-button][slot^='content']").then($enabledBtn => {
 			const cursor = window.getComputedStyle($enabledBtn[0]).cursor;
 			expect(cursor).to.equal("pointer");
+		});
+	});
+});
+
+describe("Start button spacing", () => {
+	it("8px gap between multiple startButton elements", () => {
+		cy.mount(
+			<ShellBar>
+				<Button id="hamburger-btn" icon="menu2" slot="startButton"></Button>
+				<Button id="nav-back-btn" icon={navBack} slot="startButton"></Button>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-start-button").should("have.css", "gap", "8px");
+	});
+});
+
+describe("Non-ShellBarItem children in default slot", () => {
+	it("should not throw 'processed too many times' when resizing across the overflow breakpoint with a stray <span> in the default slot", () => {
+		// Capture any errors thrown during the run — the bug surfaced as an
+		// uncaught Error: "Web component processed too many times this task,
+		// max allowed is: 10" from RenderQueue when the overflow algorithm
+		// failed to converge.
+		const errors: string[] = [];
+		cy.on("uncaught:exception", (err) => {
+			errors.push(err.message);
+			return false; // don't fail the test here; we assert below
+		});
+
+		cy.mount(
+			<ShellBar id="shellbar-stray" notificationsCount="72" showNotifications={true}>
+				<Button icon="menu2" slot="startButton"></Button>
+				<ShellBarBranding slot="branding">
+					Product Identifier
+					<img slot="logo" src="https://ui5.github.io/webcomponents/images/sap-logo-svg.svg" />
+				</ShellBarBranding>
+				<ShellBarSearch slot="searchField" showClearIcon placeholder="Search Apps, Products"></ShellBarSearch>
+				{/* The problem child — a stray non-ShellBarItem element in the default slot. */}
+				<span></span>
+				<Avatar slot="profile">
+					<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_3.png" />
+				</Avatar>
+			</ShellBar>
+		);
+
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Oscillate across the overflow breakpoint several times. This is what
+		// triggered the runaway re-render in the regression — a single resize
+		// is not enough; the algorithm has to be invoked while the previous
+		// pass is still settling.
+		for (let i = 0; i < 6; i++) {
+			cy.viewport(1400, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			cy.viewport(320, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+		}
+
+		// ShellBar must still be in the DOM and operating after the oscillation.
+		cy.get("#shellbar-stray").should("exist");
+
+		// And no "processed too many times" error must have fired.
+		cy.then(() => {
+			const matches = errors.filter(e => /processed too many times/i.test(e));
+			expect(matches, `unexpected RenderQueue errors:\n${matches.join("\n")}`).to.have.length(0);
 		});
 	});
 });

@@ -58,13 +58,6 @@ class TableNavigation extends TableExtension {
 			items.push(this._getNavigationItemsOfRow(this._table._noDataRow));
 		}
 
-		if (this._table.rows.length > 0 && this._table._getGrowing()?.hasGrowingComponent()) {
-			items.push([this._table._getGrowing()?.getFocusDomRef()]);
-			this._gridWalker.setLastRowPos(-1);
-		} else {
-			this._gridWalker.setLastRowPos(0);
-		}
-
 		if (!this._gridWalker.getCurrent()) {
 			this._gridWalker.setRowPos(this._gridWalker.getFirstRowPos());
 		}
@@ -92,8 +85,8 @@ class TableNavigation extends TableExtension {
 		}
 
 		const navigationItems = this._getNavigationItemsOfGrid().flat();
-		if (navigationItems.includes(this._lastFocusedItem)) {
-			this._lastFocusedItem?.removeAttribute("tabindex");
+		if (this._lastFocusedItem && navigationItems.includes(this._lastFocusedItem)) {
+			this._lastFocusedItem.removeAttribute("tabindex");
 		}
 
 		if (navigationItems.includes(element)) {
@@ -164,7 +157,22 @@ class TableNavigation extends TableExtension {
 	}
 
 	_handleArrowUpDown(e: KeyboardEvent, eventOrigin: HTMLElement, direction: -1 | 1) {
-		if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented || this._isEventFromCurrentItem(e) || /^(input|textarea)$/i.test(eventOrigin.nodeName)) {
+		if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented || /^(input|textarea)$/i.test(eventOrigin.nodeName)) {
+			return false;
+		}
+
+		const lastRow = this._table.rows.at(-1);
+		const growingButton = this._table._getGrowing()?.getFocusDomRef();
+		const shouldFocusGrowingButton = direction === 1 && eventOrigin === lastRow;
+		const shouldFocusLastRow = direction === -1 && eventOrigin === growingButton;
+
+		if (lastRow && growingButton && (shouldFocusGrowingButton || shouldFocusLastRow)) {
+			this._focusElement(shouldFocusGrowingButton ? growingButton : lastRow);
+			e.preventDefault();
+			return;
+		}
+
+		if (this._isEventFromCurrentItem(e)) {
 			return false;
 		}
 
@@ -246,6 +254,9 @@ class TableNavigation extends TableExtension {
 		for (const target of e.composedPath() as any[]) {
 			if (target.nodeType === Node.ELEMENT_NODE) {
 				const element = target as HTMLElement;
+				if (element.getAttribute("data-excluded-from-navigation") === "nofocus") {
+					break;
+				}
 				if (element.matches(":focus-within")) {
 					focusableElement = element;
 					break;

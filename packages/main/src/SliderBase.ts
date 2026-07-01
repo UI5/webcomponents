@@ -8,6 +8,8 @@ import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delega
 import {
 	isEscape, isHome, isEnd, isUp, isDown, isRight, isLeft, isUpCtrl, isDownCtrl, isRightCtrl, isLeftCtrl, isPlus, isMinus, isPageUp, isPageDown, isF2,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import { SliderHandleType } from "./SliderHandle.js";
+import type { Tickmark } from "./SliderScale.js";
 
 // Styles
 import sliderBaseStyles from "./generated/themes/SliderBase.css.js";
@@ -91,6 +93,9 @@ abstract class SliderBase extends UI5Element {
 	 * **Note:** The step and tickmarks properties must be enabled.
 	 * Example - if the step value is set to 2 and the label interval is also specified to 2 - then every second
 	 * tickmark will be labelled, which means every 4th value number.
+	 *
+	 * **Note:** This property is ignored when the `tickmarks` property is used.
+	 * In that case every custom tickmark is labelled with its own `label`.
 	 * @default 0
 	 * @public
 	 */
@@ -106,6 +111,26 @@ abstract class SliderBase extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	showTickmarks = false;
+
+	/**
+	 * Defines custom tickmarks with labels on the slider scale.
+	 * Each tickmark object has a numeric `value` and an optional `label` string.
+	 * Tickmarks are purely visual — they display labeled markers at specific positions
+	 * but do not affect the slider's movement behavior. The slider still moves
+	 * according to `min`, `max`, and `step`.
+	 *
+	 * When the current value matches a tickmark value, the tickmark's label
+	 * is shown in the tooltip and announced via `aria-valuetext`.
+	 *
+	 * **Note:** When `tickmarks` is provided, the scale is automatically shown
+	 * (equivalent to `showTickmarks`), and `labelInterval` is ignored - every
+	 * custom tickmark is rendered with its own `label`.
+	 * @default []
+	 * @public
+	 * @since 2.23.0
+	 */
+	@property({ type: Array })
+	tickmarks: Array<Tickmark> = [];
 
 	/**
 	 * Enables handle tooltip displaying the current value.
@@ -296,12 +321,24 @@ abstract class SliderBase extends UI5Element {
 
 	_onkeydown(e: KeyboardEvent) {
 		const target = e.target as HTMLElement;
+		const isHandleFocused = target.hasAttribute("ui5-slider-handle");
 
-		if (isF2(e) && target.classList.contains("ui5-slider-handle")) {
-			(target.parentNode!.querySelector("[ui5-slider-tooltip]") as HTMLElement).focus();
+		if (isF2(e) && isHandleFocused) {
+			const handleType = target.getAttribute("handle-type");
+			let tooltipSelector: string;
+			if (handleType === SliderHandleType.Start) {
+				tooltipSelector = "[data-sap-ui-start-value]";
+			} else if (handleType === SliderHandleType.End) {
+				tooltipSelector = "[data-sap-ui-end-value]";
+			} else {
+				tooltipSelector = "[ui5-slider-tooltip]";
+			}
+			const tooltip = this.shadowRoot!.querySelector<HTMLElement>(tooltipSelector);
+			tooltip?.focus();
+			return;
 		}
 
-		if (this.disabled || this._effectiveStep === 0 || target.hasAttribute("ui5-slider-handle")) {
+		if (this.disabled || this._effectiveStep === 0) {
 			return;
 		}
 
@@ -379,21 +416,7 @@ abstract class SliderBase extends UI5Element {
 
 		if (this.labelInterval <= 0 || this._hiddenTickmarks) {
 			this._labelsOverlapping = true;
-			return;
 		}
-
-		// Check if there are any overlapping labels.
-		// If so - only the first and the last one should be visible
-
-		const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize); // calculate 1 rem in pixels
-		const childWidthPx = 2 * remInPx; // as specified label must be 2 rems so calculate one child width in pixels
-
-		const labelItemsParent = this.shadowRoot!.querySelector(".ui5-slider-labels") as HTMLElement;
-
-		const labelItemsSumWidth = this._labels.length * childWidthPx; // all labels width
-		const labelItemsParentWidth = labelItemsParent.clientWidth; // label parent width
-
-		this._labelsOverlapping = labelItemsParentWidth < labelItemsSumWidth;
 	}
 	/**
 	 * Called when the user starts interacting with the slider.
@@ -560,6 +583,21 @@ abstract class SliderBase extends UI5Element {
 			return 0;
 		}
 		return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? Number(match[2]) : 0));
+	}
+
+	get _hasCustomTickmarks(): boolean {
+		return this.tickmarks.length > 0;
+	}
+
+	/**
+	 * Returns the label of the custom tickmark matching the given value, or `undefined` if none matches.
+	 * @private
+	 */
+	_getCustomLabel(value: number): string | undefined {
+		const precision = SliderBase._getDecimalPrecisionOfNumber(this.step);
+		const target = value.toFixed(precision);
+
+		return this.tickmarks.find(t => t.value.toFixed(precision) === target)?.label;
 	}
 
 	/**
@@ -751,10 +789,6 @@ abstract class SliderBase extends UI5Element {
 
 	get _tabIndex() {
 		return this.disabled ? -1 : 0;
-	}
-
-	get _ariaKeyshortcuts() {
-		return this.editableTooltip ? "F2" : undefined;
 	}
 
 	get _ariaDescribedByHandleText() {
