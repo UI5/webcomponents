@@ -1,9 +1,1 @@
 @import "../base/Dialog-parameters.css";
-
-:host {
-	--_ui5_dialog_header_focus_bottom_offset: 2px;
-	--_ui5_dialog_header_focus_top_offset: 1px;
-	--_ui5_dialog_header_focus_left_offset: 1px;
-	--_ui5_dialog_header_focus_right_offset: 1px;
-	--_ui5_dialog_header_border_radius: var(--sapElement_BorderCornerRadius);
-}

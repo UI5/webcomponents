@@ -41,6 +41,7 @@ class ShellBarSearch extends Search {
 	_handleSearchIconPress() {
 		if (isPhone() && this.open) {
 			this._handleSearchEvent();
+			this._closePopupAndResetState();
 			return;
 		}
 

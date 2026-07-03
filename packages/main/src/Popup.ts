@@ -3,7 +3,7 @@ import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -20,7 +20,7 @@ import {
 	getAllAccessibleDescriptionRefTexts,
 	deregisterUI5Element,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { hasStyle, createStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
+import { createOrUpdateStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
 import { isEnter, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getFocusedElement, isFocusedElementWithinNode } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -37,9 +37,7 @@ import popupBlockLayerStyles from "./generated/themes/PopupBlockLayer.css.js";
 import globalStyles from "./generated/themes/PopupGlobal.css.js";
 
 const createBlockingStyle = (): void => {
-	if (!hasStyle("data-ui5-popup-scroll-blocker")) {
-		createStyle(globalStyles, "data-ui5-popup-scroll-blocker");
-	}
+	createOrUpdateStyle(globalStyles, "data-ui5-popup-scroll-blocker");
 };
 
 createBlockingStyle();
@@ -704,6 +702,14 @@ abstract class Popup extends UI5Element {
 
 	get _role() {
 		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get _contentRole(): AriaRole | undefined {
+		return undefined;
+	}
+
+	get _contentAriaLabel(): string | undefined {
+		return undefined;
 	}
 
 	get _ariaModal(): "true" | undefined {

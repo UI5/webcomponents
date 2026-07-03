@@ -106,7 +106,7 @@ function headerContent(this: UserMenu) {
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
 				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
-					<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
+					<Avatar size="L" onClick={this._isAvatarInteractive ? this._handleAvatarClick : undefined} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" mode={this._isAvatarInteractive ? "Interactive" : "Image"}>
 						{this._selectedAccount.avatarSrc &&
 							<img src={this._selectedAccount.avatarSrc}/>
 						}
@@ -129,6 +129,12 @@ function headerContent(this: UserMenu) {
 				}
 				{this._selectedAccount.additionalInfo &&
 					<Text class="ui5-user-menu-selected-account-additional-info">{this._selectedAccount.additionalInfo}</Text>
+				}
+
+				{this._hasInfoArea &&
+					<div class="ui5-user-menu-info-area">
+						<slot name="infoArea"></slot>
+					</div>
 				}
 
 				{this.showManageAccount &&

@@ -12,6 +12,10 @@ import Toolbar from "../../src/Toolbar.js";
 import ToolbarButton from "../../src/ToolbarButton.js";
 import Tokenizer from "../../src/Tokenizer.js";
 import Token from "../../src/Token.js";
+import {
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Keyboard", () => {
 	it("TAB navigation", () => {
@@ -580,11 +584,11 @@ describe("Dialog general interaction", () => {
 				const initialTop = parseInt(dialog.css("top"));
 				const initialLeft = parseInt(dialog.css("left"));
 
-				// Act - Move dialog up using keyboard
-				cy.get("#header-slot").realClick();
+				// Act - Focus the drag/resize handle and move dialog up
+				cy.realPress("Tab");
 
-				cy.get("#header-slot").focused().realPress("{uparrow}");
-				cy.get("#header-slot").focused().realPress("{uparrow}");
+				cy.realPress("{uparrow}");
+				cy.realPress("{uparrow}");
 
 				// Assert - Top position changes, left remains the same
 
@@ -599,10 +603,8 @@ describe("Dialog general interaction", () => {
 					})
 
 					// Act - Move dialog left using keyboard
-					cy.get("#header-slot").realClick();
-
-					cy.get("#header-slot").focused().realPress("{leftarrow}");
-					cy.get("#header-slot").focused().realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
 
 					// Assert - Left position changes, top remains the same
 					cy.get("#draggable-dialog")
@@ -776,9 +778,9 @@ describe("Dialog general interaction", () => {
 			const initialTop = parseInt(dialog.css("top"));
 			const initialLeft = parseInt(dialog.css("left"));
 
-			// Act - Resize height using keyboard
-			cy.get("#resizable-dialog").shadow().find(".ui5-popup-resize-handle").click();
-			cy.get("#resizable-dialog").realPress(["Shift", "ArrowDown"]);
+
+			cy.realPress("Tab"); // Focus the drag/resize handle
+			cy.realPress(["Shift", "ArrowDown"]);
 
 			// Assert - Height changes, width and position remain the same
 			cy.get("#resizable-dialog").then(dialogAfterResizeHeight => {
@@ -791,8 +793,7 @@ describe("Dialog general interaction", () => {
 				expect(leftAfterResizeHeight).to.equal(initialLeft);
 
 				// Act - Resize width using keyboard
-				cy.get("#resizable-dialog").shadow().find(".ui5-popup-resize-handle").click();
-				cy.get("#resizable-dialog").realPress(["Shift", "ArrowRight"]);
+				cy.realPress(["Shift", "ArrowRight"]);
 
 				// Assert - Width changes, height and position remain the same
 				cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
@@ -1078,30 +1079,33 @@ describe("Acc", () => {
 		cy.get("#draggable-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
-		// Assert aria-labelledby and aria attributes
+		// Assert aria-label on the dialog root
 		cy.get("#draggable-dialog")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-label", "Draggable");
 
+		// Assert aria-describedby is on the drag/resize handle, not the header
 		cy.get("#draggable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby");
 
+		// Assert hidden text contains keyboard instructions
 		cy.get("#draggable-dialog")
 			.shadow()
 			.find(".ui5-hidden-text")
 			.should("exist")
 			.then(hiddenText => {
-				const valueOfTheHiddenText = hiddenText.text();
-				cy.wrap(valueOfTheHiddenText).should("equal", "Use Arrow keys to move");
+				const valueOfTheHiddenText = hiddenText.eq(1).text();
+				cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE));
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#draggable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 	});
 
 	it("tests aria-describedby for default header", () => {
@@ -1119,10 +1123,10 @@ describe("Acc", () => {
 		cy.get("#resizable-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#resizable-dialog").ui5DialogOpened();
 
-		// Assert aria-describedby and aria-roledescription attributes
+		// Assert aria-describedby is on the drag/resize handle
 		cy.get("#resizable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby")
 			.then($el => {
 				cy.get("#resizable-dialog")
@@ -1130,15 +1134,16 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#resizable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 
 	});
 
@@ -1157,10 +1162,10 @@ describe("Acc", () => {
 		cy.get("#resizable-dialog-custom-header").invoke("attr", "open", true);
 		cy.get<Dialog>("#resizable-dialog-custom-header").ui5DialogOpened();
 
-		// Assert aria-describedby and aria-roledescription attributes
+		// Assert aria-describedby is on the drag/resize handle
 		cy.get("#resizable-dialog-custom-header")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby")
 			.then($el => {
 				cy.get("#resizable-dialog-custom-header")
@@ -1168,15 +1173,16 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#resizable-dialog-custom-header")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 	});
 
 	it("tests accessibleName-ref", () => {
@@ -1242,6 +1248,59 @@ describe("Acc", () => {
 			.find(".ui5-popup-root")
 			.should("have.attr", "role", "alertdialog")
 			.and("have.attr", "aria-modal", "true");
+	});
+
+	it("tests header, content and footer regions", () => {
+		cy.mount(
+			<Dialog id="dialog-regions" headerText="Region Test">
+				<div>Some content</div>
+				<Button slot="footer">OK</Button>
+			</Dialog>
+		);
+
+		cy.get("#dialog-regions")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-regions").ui5DialogOpened();
+
+		// Header region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Header");
+
+		// Content region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-content")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Content");
+
+		// Footer region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Footer");
+	});
+
+	it("tests footer region is not rendered when no footer slot is provided", () => {
+		cy.mount(
+			<Dialog id="dialog-no-footer" headerText="No Footer">
+				<div>Some content</div>
+			</Dialog>
+		);
+
+		cy.get("#dialog-no-footer")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-no-footer").ui5DialogOpened();
+
+		cy.get("#dialog-no-footer")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("not.exist");
 	});
 
 });

@@ -343,7 +343,6 @@ describe("DateTimePicker general interaction", () => {
 			.ui5DateTimePickerClose();
 	});
 
-	//Unstable test, needs investigation
 	it("tests selection of 12:34:56 AM", () => {
 		setAnimationMode(AnimationMode.None);
 
