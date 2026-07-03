@@ -30,6 +30,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 			<div
 				role={this.accStartSeparatorRole}
 				title={this.accStartSeparatorText}
+				aria-label={this.accStartSeparatorText}
 				class="ui5-fcl-separator ui5-fcl-separator-start"
 				style={{ display: this.showStartSeparator ? "flex" : "none" }}
 				tabindex={this.startSeparatorTabIndex}
@@ -62,6 +63,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 			<div
 				role={this.accEndSeparatorRole}
 				title={this.accEndSeparatorText}
+				aria-label={this.accEndSeparatorText}
 				class="ui5-fcl-separator ui5-fcl-separator-end"
 				style={{ display: this.showEndSeparator ? "flex" : "none" }}
 				tabindex={this.endSeparatorTabIndex}
