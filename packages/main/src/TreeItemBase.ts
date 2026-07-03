@@ -168,10 +168,10 @@ class TreeItemBase extends ListItem {
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.8.0
+	 * @since 2.24.0
 	 */
 	@property()
-	declare accessibleName?: string;
+	accessibleName?: string;
 
 	/**
 	 * @private
