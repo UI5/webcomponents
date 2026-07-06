@@ -518,7 +518,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		const timestamp = this._getTimestampFromDom(target);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : this.timestamp!;
 
 		if (setTimestamp) {
 			this._safelySetTimestamp(timestamp);
@@ -612,7 +612,16 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		this._safelySetTimestamp(this._getTimestampFromDom(target));
+		const timestamp = this._getTimestampFromDom(target);
+		const clickedDate = CalendarDate.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
+		const isOtherMonth = clickedDate.getMonth() !== this._calendarDate.getMonth();
+
+		this._safelySetTimestamp(timestamp);
+
+		if (isOtherMonth) {
+			this._autoFocus = true;
+		}
+
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
