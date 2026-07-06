@@ -12,6 +12,10 @@ import Toolbar from "../../src/Toolbar.js";
 import ToolbarButton from "../../src/ToolbarButton.js";
 import Tokenizer from "../../src/Tokenizer.js";
 import Token from "../../src/Token.js";
+import {
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Keyboard", () => {
 	it("TAB navigation", () => {
@@ -1094,7 +1098,7 @@ describe("Acc", () => {
 			.should("exist")
 			.then(hiddenText => {
 				const valueOfTheHiddenText = hiddenText.eq(1).text();
-				cy.wrap(valueOfTheHiddenText).should("equal", "Use Arrow keys to move");
+				cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE));
 			});
 
 		// Assert aria-roledescription on the drag/resize handle
@@ -1131,7 +1135,7 @@ describe("Acc", () => {
 					.should("exist")
 					.then(hiddenText => {
 						const valueOfTheHiddenText = hiddenText.eq(1).text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 
@@ -1170,7 +1174,7 @@ describe("Acc", () => {
 					.should("exist")
 					.then(hiddenText => {
 						const valueOfTheHiddenText = hiddenText.eq(1).text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 

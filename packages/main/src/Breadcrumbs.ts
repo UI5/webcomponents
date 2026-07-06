@@ -139,7 +139,7 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 2.22.0
+	 * @since 2.24.0
 	 */
 	@property()
 	accessibleName?: string;

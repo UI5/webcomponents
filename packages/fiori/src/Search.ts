@@ -76,6 +76,7 @@ type SearchEventDetails = {
  * @since 2.9.0
  * @experimental
  * @csspart popover - Used to style the suggestions popup
+ * @since 2.24.0
  */
 @customElement({
 	tag: "ui5-search",
@@ -426,9 +427,8 @@ class Search extends SearchField {
 		const innerInput = this.nativeInput!;
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
-		this.open = false;
-		this._isTyping = false;
-		this._valueBeforeArrowNav = undefined;
+
+		this._closePopupAndResetState();
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -442,6 +442,12 @@ class Search extends SearchField {
 
 	_handleSearchEvent() {
 		this.fireDecoratorEvent("search", { item: this._proposedItem });
+	}
+
+	_closePopupAndResetState() {
+		this.open = false;
+		this._isTyping = false;
+		this._valueBeforeArrowNav = undefined;
 	}
 
 	_handleEscape() {
@@ -554,10 +560,6 @@ class Search extends SearchField {
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {
-			if (isPhone()) {
-				this.open = false;
-			}
-
 			return;
 		}
 
