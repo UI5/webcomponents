@@ -724,7 +724,7 @@ describe("Dialog general interaction", () => {
 				.shadow()
 				.find(".ui5-popup-resize-handle")
 				.realMouseDown()
-				.realMouseMove(800, 0) // Large movement to ensure we hit min width
+				.realMouseMove(420, 0) // Large movement to ensure we hit min width
 				.realMouseUp();
 
 			cy.get("#rtl-min-width-dialog").then(dialogAtMinWidth => {
