@@ -586,5 +586,21 @@
 			}
 		});
 	</script>
+
+	<div class="container last">
+		<ui5-label>Search with Long Scope Labels - Testing scope dropdown with extensive text</ui5-label>
+		<ui5-search id="search-long-scopes" show-clear-icon scope-value="all-categories" placeholder="Search by category">
+			<ui5-search-scope text="All Categories and Subcategories" value="all-categories" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Enterprise Resource Planning Systems" value="erp" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Customer Relationship Management" value="crm" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Supply Chain Management Solutions" value="scm" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Human Capital Management and Workforce Analytics" value="hcm" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Business Intelligence and Data Warehousing" value="bi" slot="scopes"></ui5-search-scope>
+		</ui5-search>
+		<ui5-text style="padding-top: 0.25rem; font-style: italic;">
+			This example demonstrates how the scope dropdown handles long text labels and proper truncation/wrapping behavior.
+		</ui5-text>
+	</div>
+
 </body>
 </html>

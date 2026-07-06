@@ -302,3 +302,50 @@
 	background: var(--sapSelectedColor);
 	color: var(--sapContent_ContrastTextColor);
 }
+
+/* Mobile scope selector button */
+.ui5-search-field-scope-button {
+	min-width: 2rem;
+	width: 2rem;
+	height: var(--_ui5-search-select-height);
+	margin: 0 0.25rem;
+	border-radius: var(--_ui5_search_input_border_radius);
+	border: var(--_ui5-search-border);
+	box-shadow: none;
+	background: var(--_ui5-search-elements-background);
+	color: var(--sapShell_InteractiveTextColor);
+}
+
+.ui5-search-field-scope-button::part(button)::before,
+.ui5-search-field-scope-button::part(button)::after {
+	display: none;
+}
+
+.ui5-search-field-scope-button:hover {
+	box-shadow: var(--_ui5-search_input_scope_hover_shadow);
+	background-color: var(--sapShell_Hover_Background);
+}
+
+.ui5-search-field-scope-button:active,
+.ui5-search-field-scope-button:focus-within {
+	box-shadow: var(--_ui5-search_input_scope_active_shadow);
+	background: var(--sapShell_Active_Background);
+	color: var(--sapShell_Active_TextColor);
+}
+
+/* Scope popover on mobile */
+.ui5-search-field-scope-popover {
+	min-width: 12rem;
+}
+
+.ui5-search-field-scope-popover::part(content) {
+	padding: 0;
+}
+
+.ui5-search-field-scope-popover [ui5-list] {
+	border: none;
+}
+
+.ui5-search-field-scope-popover [ui5-li-standard][selected] {
+	background-color: var(--sapList_SelectionBackgroundColor);
+}
