@@ -9,6 +9,14 @@ import "@ui5/webcomponents-icons/dist/email.js";
 const HeroBanner = createReactComponent(HeroBannerClass);
 const Button = createReactComponent(ButtonClass);
 
+declare module "react" {
+  namespace JSX {
+    interface IntrinsicElements {
+      "ui-integration-card": React.HTMLAttributes<HTMLElement> & { manifest?: string };
+    }
+  }
+}
+
 const revenueManifest = {
   "sap.app": { id: "revenueCard", type: "card" },
   "sap.card": {
