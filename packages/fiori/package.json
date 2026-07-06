@@ -45,6 +45,8 @@
     "test:cypress": "wc-dev test-cy-ci",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:cypress:open": "wc-dev test-cy-open",
+    "test:cypress:visual": "CYPRESS_VISUAL=true yarn test:cypress",
+    "test:cypress:open:visual": "CYPRESS_VISUAL=true yarn test:cypress:open",
     "create-ui5-element": "wc-create-ui5-element",
     "prepublishOnly": "tsc -b"
   },
