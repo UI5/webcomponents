@@ -210,6 +210,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_focusableDay!: HTMLElement;
 
 	_autoFocus?: boolean;
+	_mousedownTimestamp?: number;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -518,7 +519,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : this.timestamp!;
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		this._mousedownTimestamp = undefined;
 
 		if (setTimestamp) {
 			this._safelySetTimestamp(timestamp);
@@ -616,6 +618,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		const clickedDate = CalendarDate.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
 		const isOtherMonth = clickedDate.getMonth() !== this._calendarDate.getMonth();
 
+		this._mousedownTimestamp = timestamp;
 		this._safelySetTimestamp(timestamp);
 
 		if (isOtherMonth) {
