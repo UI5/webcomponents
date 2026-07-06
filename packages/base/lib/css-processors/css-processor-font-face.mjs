@@ -12,7 +12,7 @@ const generate = async () => {
         const declarationExpr = /@font-face\s*{[^}]*}/g;
 
         // change font-face src
-        text = text.replaceAll("../baseTheme/fonts", CDN_URL);
+        text = text.replaceAll("../../../Base/baseLib/baseTheme/fonts", CDN_URL);
 
         // extract declarations for separate usage
         let fontFaceDeclarations = [...text.matchAll(declarationExpr)].map(x => x[0]);
