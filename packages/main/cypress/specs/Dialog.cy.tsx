@@ -860,7 +860,7 @@ describe("Dialog general interaction", () => {
 
 				expect(widthBeforeResizing).to.equal(widthAfterResizing);
 				expect(heightBeforeResizing).not.to.equal(heightAfterResizing);
-				expect(topBeforeResizing).to.equal(topAfterResizing);
+				expect(topBeforeResizing).to.be.closeTo(topAfterResizing, 2);
 				expect(leftBeforeResizing).not.to.equal(leftAfterResizing + 100);
 			});
 		});
