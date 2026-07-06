@@ -1,9 +1,15 @@
 name: PR Dev Close Notice
 
-# During the "dev close" period (the days leading up to a release), comment
-# on every open PR targeting `main` whose public Custom Elements Manifest
-# differs from the latest published version on npm — reminding contributors
-# not to merge until the release ships.
+# Two modes, driven by whether today falls inside a dev-close window:
+#
+#   * notice (in-window) — comment on every open PR targeting `main` whose
+#     public Custom Elements Manifest differs from the latest published
+#     version on npm, reminding contributors not to merge until the release
+#     ships.
+#   * clear  (out-of-window) — sweep open PRs that already carry the
+#     dev-close notice and post a follow-up "clear to merge" comment on
+#     each. Runs on schedule / workflow_dispatch only; pull_request events
+#     outside a window do nothing.
 #
 # Detection lives entirely in `.github/actions/pr-dev-close.mjs`. The base
 # manifest is fetched from jsdelivr (no second build), the head is the
@@ -11,7 +17,8 @@ name: PR Dev Close Notice
 #
 # Triggers:
 #   * schedule (daily, 07:17 UTC) — sweeps every open PR. Catches PRs that
-#     were already open when the window started.
+#     were already open when the window started, and delivers the clear
+#     notice the day after a release ships.
 #   * pull_request — per-event during the window. Closes the up-to-24h gap
 #     for PRs opened or pushed *after* the day's sweep.
 #   * workflow_dispatch — manual button for testing.
@@ -38,14 +45,19 @@ jobs:
   notice:
     runs-on: ubuntu-latest
     steps:
-      - name: Check whether we are in a dev-close window
+      - name: Decide mode based on the release schedule
         id: window
         uses: actions/github-script@v7
         with:
           script: |
-            // Add new entries here when the release schedule is known.
+            // Release schedule — sourced from https://github.com/UI5/webcomponents/issues/10568.
+            // Add new entries here when the release schedule is extended.
             const DEV_CLOSE_PERIODS = [
-              { release: "next", devCloseStart: "2026-06-24", releaseDate: "2026-07-09" },
+              { release: "2.25", devCloseStart: "2026-07-22", releaseDate: "2026-07-29" },
+              { release: "2.26", devCloseStart: "2026-08-19", releaseDate: "2026-08-26" },
+              { release: "2.27", devCloseStart: "2026-09-16", releaseDate: "2026-09-23" },
+              { release: "2.28", devCloseStart: "2026-10-14", releaseDate: "2026-10-21" },
+              { release: "2.29", devCloseStart: "2026-11-11", releaseDate: "2026-11-18" },
             ];
 
             const today = new Date();
@@ -57,34 +69,44 @@ jobs:
               return today >= start && today < end;
             });
 
-            if (!active) {
-              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
-              core.setOutput("active", "false");
+            if (active) {
+              core.info(`In dev-close window for "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
+              core.setOutput("mode", "notice");
+              core.setOutput("release", active.release);
+              core.setOutput("releaseDate", active.releaseDate);
               return;
             }
 
-            core.info(`In dev-close window for "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
-            core.setOutput("active", "true");
-            core.setOutput("release", active.release);
-            core.setOutput("releaseDate", active.releaseDate);
+            // Outside a window. On pull_request events we do nothing — the
+            // follow-up "clear to merge" sweep only runs on schedule /
+            // workflow_dispatch to avoid churn on every PR event.
+            if (context.eventName === "pull_request") {
+              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
+              core.setOutput("mode", "none");
+              return;
+            }
+
+            core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — running clear-notice sweep.`);
+            core.setOutput("mode", "clear");
 
       - name: Checkout main
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         uses: actions/setup-node@v4.1.0
         with:
           node-version: 22
 
       - name: Run dev-close script
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
+          MODE: ${{ steps.window.outputs.mode }}
           RELEASE: ${{ steps.window.outputs.release }}
           RELEASE_DATE: ${{ steps.window.outputs.releaseDate }}
           # Set on pull_request events; absent on schedule / workflow_dispatch.
