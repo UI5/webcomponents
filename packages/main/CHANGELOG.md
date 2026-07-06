@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+
+### Bug Fixes
+
+* **ui5-date-range-picker:** remove only portrait mode on calendars when two months are shown ([#13703](https://github.com/UI5/webcomponents/issues/13703)) ([8a7670d](https://github.com/UI5/webcomponents/commit/8a7670dbfe7a73fef2079d3314bd651c2fe4c3d5))
+* **ui5-list:** expose item selection state via aria-selected attribute ([#13782](https://github.com/UI5/webcomponents/issues/13782)) ([644ed0a](https://github.com/UI5/webcomponents/commit/644ed0a094162cda469af5c3b392fc8a140a4fb5)), closes [#13773](https://github.com/UI5/webcomponents/issues/13773)
+* **ui5-radio-button:** fix accessible-name double announcement ([#13761](https://github.com/UI5/webcomponents/issues/13761)) ([48e69fe](https://github.com/UI5/webcomponents/commit/48e69fe1295beabe42abc8d7c0c4729f1d95d20f))
+* **ui5-select:** align value state message header with design spec ([#13766](https://github.com/UI5/webcomponents/issues/13766)) ([173d3fc](https://github.com/UI5/webcomponents/commit/173d3fc33eb7768ee7aad25f46d387fe64194040)), closes [#13308](https://github.com/UI5/webcomponents/issues/13308)
+* **ui5-textarea:** preserve space for exceeded text counter ([#13765](https://github.com/UI5/webcomponents/issues/13765)) ([6cc1943](https://github.com/UI5/webcomponents/commit/6cc1943a6b0787b03bdf22a04f0d014b4e317e7d))
+
+
+
+
+
 # [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
 
 **Note:** Version bump only for package @ui5/webcomponents
