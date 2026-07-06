@@ -39,6 +39,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: write
 
 jobs:
@@ -50,20 +51,69 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            // Release schedule — sourced from https://github.com/UI5/webcomponents/issues/10568.
-            // Add new entries here when the release schedule is extended.
-            const DEV_CLOSE_PERIODS = [
-              { release: "2.25", devCloseStart: "2026-07-22", releaseDate: "2026-07-29" },
-              { release: "2.26", devCloseStart: "2026-08-19", releaseDate: "2026-08-26" },
-              { release: "2.27", devCloseStart: "2026-09-16", releaseDate: "2026-09-23" },
-              { release: "2.28", devCloseStart: "2026-10-14", releaseDate: "2026-10-21" },
-              { release: "2.29", devCloseStart: "2026-11-11", releaseDate: "2026-11-18" },
-            ];
+            // The release schedule is maintained as a Markdown table on this
+            // tracking issue — single source of truth, edited in place when
+            // the plan slips. We parse it here rather than hardcoding, so a
+            // date change doesn't need a workflow PR.
+            //
+            // Expected shape (each row is one release):
+            //   | Version | Dev Start | Dev Close | Release  |
+            //   |---------|-----------|-----------|----------|
+            //   | 2.25    | 09.07.26  | 22.07.26  | 29.07.26 |
+            //
+            // Any row we can't parse (typo, missing cell, non-DD.MM.YY date)
+            // is skipped with a warning — the workflow keeps working on the
+            // remaining rows.
+            const SCHEDULE_ISSUE = 10568;
+
+            function parseDate(cell) {
+              // "DD.MM.YY" → "20YY-MM-DD"
+              const m = cell.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{2})$/);
+              if (!m) return null;
+              const [, dd, mm, yy] = m;
+              return `20${yy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+            }
+
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: SCHEDULE_ISSUE,
+            });
+
+            const periods = [];
+            for (const line of (issue.body || "").split(/\r?\n/)) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("|")) continue;
+              const cells = trimmed.split("|").map(c => c.trim());
+              // A well-formed row splits to ["", version, devStart, devClose, release, ""]
+              if (cells.length < 6) continue;
+              const release = cells[1];
+              const devClose = cells[3];
+              const releaseDate = cells[4];
+              // Skip header / separator rows — only version-shaped strings continue.
+              if (!/^\d+\.\d+/.test(release)) continue;
+              const dc = parseDate(devClose);
+              const rd = parseDate(releaseDate);
+              if (!dc || !rd) {
+                core.warning(`Schedule row for "${release}" skipped — unparseable dates (devClose="${devClose}", release="${releaseDate}").`);
+                continue;
+              }
+              periods.push({ release, devCloseStart: dc, releaseDate: rd });
+            }
+
+            if (!periods.length) {
+              core.warning(`No parseable schedule rows found on issue #${SCHEDULE_ISSUE}; exiting.`);
+              core.setOutput("mode", "none");
+              return;
+            }
+
+            core.info(`Parsed ${periods.length} schedule entr${periods.length === 1 ? "y" : "ies"} from issue #${SCHEDULE_ISSUE}:`);
+            for (const p of periods) core.info(`  · ${p.release}: dev-close ${p.devCloseStart} → release ${p.releaseDate}`);
 
             const today = new Date();
             today.setUTCHours(0, 0, 0, 0);
 
-            const active = DEV_CLOSE_PERIODS.find(p => {
+            const active = periods.find(p => {
               const start = new Date(`${p.devCloseStart}T00:00:00Z`);
               const end = new Date(`${p.releaseDate}T00:00:00Z`);
               return today >= start && today < end;
