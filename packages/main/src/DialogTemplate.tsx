@@ -21,7 +21,7 @@ function beforeContent(this: Dialog) {
 				role="region"
 				aria-label={this._headerAriaLabel}
 				onMouseDown={this._onDragMouseDown}
-				onDblClick={this.showFullscreenButton ? this._onHeaderDblClick : undefined}
+				onDblClick={this._showFullscreenButton ? this._onHeaderDblClick : undefined}
 				part="header"
 				// state={this.state}
 			>

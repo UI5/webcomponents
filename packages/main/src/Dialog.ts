@@ -595,10 +595,6 @@ class Dialog extends Popup {
 	}
 
 	_onHeaderDblClick(e: MouseEvent) {
-		if (!this._showFullscreenButton) {
-			return;
-		}
-
 		const target = e.target as HTMLElement;
 		const headerRoot = this._root.querySelector(".ui5-popup-header-root");
 		if (target !== headerRoot && !target.classList.contains("ui5-popup-header-text")) {
