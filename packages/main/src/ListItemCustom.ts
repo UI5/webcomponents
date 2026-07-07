@@ -65,7 +65,7 @@ class ListItemCustom extends ListItem {
 	 * **Note**: If not provided a default text alternative will be set, if present.
 	 * @default undefined
 	 * @public
-	 * @since 2.24.0
+	 * @since 1.0.0-rc.15
 	 */
 	@property()
 	accessibleName?: string;
