@@ -1,5 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -277,7 +277,10 @@ class IllustratedMessage extends UI5Element {
 	static i18nBundle: I18nBundle;
 	_lastKnownOffsetWidthForMedia: Record<string, number>;
 	_lastKnownOffsetHeightForMedia: Record<string, number>;
+	_contentHeightForMedia: Record<string, number>;
 	_lastKnownMedia: string;
+	_lastWidth: number | undefined;
+	_lastHeight: number | undefined;
 	_handleResize: ResizeObserverCallback;
 
 	constructor() {
@@ -287,6 +290,8 @@ class IllustratedMessage extends UI5Element {
 		// this will store the last known offsetWidth of the IllustratedMessage DOM node for a given media (e.g. "Spot")
 		this._lastKnownOffsetWidthForMedia = {};
 		this._lastKnownOffsetHeightForMedia = {};
+		// this will store the last known height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
+		this._contentHeightForMedia = {};
 		// this will store the last known media, in order to detect if IllustratedMessage has been hidden by expand/collapse container
 		this._lastKnownMedia = "base";
 	}
@@ -378,48 +383,77 @@ class IllustratedMessage extends UI5Element {
 		ResizeHandler.deregister(this, this._handleResize);
 	}
 
+	onInvalidation(changeInfo: ChangeInfo) {
+		if (
+			(changeInfo.type === "property" && ["name", "titleText", "subtitleText"].includes(changeInfo.name)) ||
+			(changeInfo.type === "slot" && ["title", "subtitle", "default"].includes(changeInfo.name))
+		) {
+			this._contentHeightForMedia = {};
+		}
+	}
+
 	handleResize() {
-		if (this.design !== IllustrationMessageDesign.Auto) {
-			this._adjustHeightToFitContainer();
+		if (this.design === IllustrationMessageDesign.Auto) {
+			this._cacheContentHeight();
+			this._applyMedia();
+		}
+	}
+
+	_applyMedia() {
+		const currentWidth = this.offsetWidth;
+		const currentHeight = this.offsetHeight;
+
+		const isWidthChanged = this._lastWidth !== currentWidth;
+		const isHeightChanged = this._lastHeight !== currentHeight;
+		this._lastWidth = currentWidth;
+		this._lastHeight = currentHeight;
+
+		let newMedia = this._getMediaForSize(currentWidth);
+
+		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia];
+		const lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
+		this._lastKnownOffsetWidthForMedia[newMedia] = currentWidth;
+		this._lastKnownOffsetHeightForMedia[newMedia] = currentHeight;
+		// prevents infinite resizing, when same width is detected for the same media,
+		// excluding the case in which, the control is placed inside expand/collapse container
+		if (isWidthChanged && !isHeightChanged && lastKnownOffsetWidth && currentWidth === lastKnownOffsetWidth
+			&& this._lastKnownOffsetWidthForMedia[this._lastKnownMedia] !== 0 && currentHeight === lastKnownOffsetHeight
+			&& this._lastKnownOffsetHeightForMedia[this._lastKnownMedia] !== 0) {
 			return;
 		}
 
-		this._applyMedia();
-		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
+		this.media = newMedia;
+		this._lastKnownMedia = newMedia;
 	}
 
-	_applyMedia(heightChange?: boolean) {
-		const currOffsetWidth = this.offsetWidth,
-			currOffsetHeight = this.offsetHeight;
-
-		const design = heightChange ? currOffsetHeight : currOffsetWidth,
-			oBreakpounts = heightChange ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
-		let newMedia = "";
-
-		if (design <= oBreakpounts.BASE) {
-			newMedia = IllustratedMessage.MEDIA.BASE;
-		} else if (design <= oBreakpounts.DOT) {
-			newMedia = IllustratedMessage.MEDIA.DOT;
-		} else if (design <= oBreakpounts.SPOT) {
-			newMedia = IllustratedMessage.MEDIA.SPOT;
-		} else if (design <= oBreakpounts.DIALOG) {
-			newMedia = IllustratedMessage.MEDIA.DIALOG;
+	_getMediaForSize(width: number): string {
+		let media = "";
+		let mediaIndex = -1;
+		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
+			media = IllustratedMessage.MEDIA.BASE;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.DOT) {
+			media = IllustratedMessage.MEDIA.DOT;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.SPOT) {
+			media = IllustratedMessage.MEDIA.SPOT;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.DIALOG) {
+			media = IllustratedMessage.MEDIA.DIALOG;
 		} else {
-			newMedia = IllustratedMessage.MEDIA.SCENE;
+			media = IllustratedMessage.MEDIA.SCENE;
 		}
-		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia],
-			lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
-		 // prevents infinite resizing, when same width is detected for the same media,
-		 // excluding the case in which, the control is placed inside expand/collapse container
-		if (!(lastKnownOffsetWidth && currOffsetWidth === lastKnownOffsetWidth
-			&& lastKnownOffsetHeight && currOffsetHeight === lastKnownOffsetHeight)
-			|| this._lastKnownOffsetWidthForMedia[this._lastKnownMedia] === 0
-			|| this._lastKnownOffsetHeightForMedia[this._lastKnownMedia] === 0) {
-			this.media = newMedia;
-			this._lastKnownOffsetWidthForMedia[newMedia] = currOffsetWidth;
-			this._lastKnownOffsetHeightForMedia[newMedia] = currOffsetHeight;
-			this._lastKnownMedia = newMedia;
+
+		mediaIndex = Object.values(IllustratedMessage.MEDIA).indexOf(media);
+
+		while (mediaIndex > 0 && this._mediaRequiresVerticalScrollbar(media)) {
+			mediaIndex--;
+			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
+
+		return media;
+	}
+
+	_mediaRequiresVerticalScrollbar(media: string): boolean {
+		const containerHeight = this.clientHeight || 0;
+		return !!this._contentHeightForMedia[media] && containerHeight < this._contentHeightForMedia[media];
 	}
 
 	_setSVGAccAttrs() {
@@ -446,21 +480,20 @@ class IllustratedMessage extends UI5Element {
 		}
 	}
 
-	_adjustHeightToFitContainer() {
-		const illustrationWrapper = <HTMLElement> this.shadowRoot!.querySelector(".ui5-illustrated-message-illustration"),
-			illustration = illustrationWrapper.querySelector("svg");
-
-		if (illustration) {
-			illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", false);
-			if (this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight) {
-				illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", true);
-				this._applyMedia(true /* height change */);
-			}
+	onAfterRendering() {
+		this._setSVGAccAttrs();
+		if (this.design === IllustrationMessageDesign.Auto) {
+			this._cacheContentHeight();
+			this._applyMedia();
 		}
 	}
 
-	onAfterRendering() {
-		this._setSVGAccAttrs();
+	_cacheContentHeight() {
+		if (this.media && this.scrollHeight > this.clientHeight) {
+			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
+			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
+			innerElHeight && (this._contentHeightForMedia[this.media] = innerElHeight);
+		}
 	}
 
 	/**

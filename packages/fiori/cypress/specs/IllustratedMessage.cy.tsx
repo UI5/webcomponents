@@ -156,73 +156,60 @@ describe("IllustratedMessage 'design' property", () => {
 	});
 });
 
-describe("Vertical responsiveness", () => {
-	it("content with auto design shrinks to fit the parent container", () => {
-		const expectedMedia = "dialog";
-
+describe("Width-based responsiveness (auto height)", () => {
+	it("media is base when container width is 100px", () => {
 		cy.mount(
-			<div style={{ height: "300px" }}>
+			<div style={{ width: "100px", height: "auto" }}>
 				<IllustratedMessage />
 			</div>
 		);
 
 		cy.get("[ui5-illustrated-message]")
-			.shadow()
-			.find(".ui5-illustrated-message-root")
-			.should(($contents) => {
-				const scrollHeight = $contents[0].scrollHeight;
-				const offsetHeight = $contents[0].offsetHeight;
-
-				expect(scrollHeight).to.be.lessThan(300);
-				expect(scrollHeight).to.equal(offsetHeight);
-			});
-
-		cy.get("[ui5-illustrated-message]")
-			.should("have.prop", "media", expectedMedia);
+			.should("have.attr", "media", IllustratedMessage.MEDIA.BASE);
 	});
 
-	it("content with auto design expands to fit the parent container", () => {
-		const expectedMedia = "scene";
-
+	it("media is dot when container width is 200px", () => {
 		cy.mount(
-			<div style={{ height: "500px" }}>
+			<div style={{ width: "200px", height: "auto" }}>
 				<IllustratedMessage />
 			</div>
 		);
 
 		cy.get("[ui5-illustrated-message]")
-			.shadow()
-			.find(".ui5-illustrated-message-root")
-			.should(($contents) => {
-				const scrollHeight = $contents[0].scrollHeight;
-				const offsetHeight = $contents[0].offsetHeight;
-				expect(scrollHeight).to.be.lessThan(500);
-				expect(scrollHeight).to.equal(offsetHeight);
-			});
-	
-		cy.get("[ui5-illustrated-message]")
-			.should("have.prop", "media", expectedMedia);
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
 	});
 
-	it("content with fixed design fits the parent container", () => {
+	it("media is spot when container width is 300px", () => {
 		cy.mount(
-			<div>
-				<IllustratedMessage design="Dialog" />
+			<div style={{ width: "300px", height: "auto" }}>
+				<IllustratedMessage />
 			</div>
 		);
 
-		cy.get("div")
-			.invoke("css", "height", "250px");
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SPOT);
+	});
+
+	it("media is dialog when container width is 500px", () => {
+		cy.mount(
+			<div style={{ width: "500px", height: "auto" }}>
+				<IllustratedMessage />
+			</div>
+		);
 
 		cy.get("[ui5-illustrated-message]")
-			.shadow()
-			.find(".ui5-illustrated-message-root")
-			.should(($contents) => {
-				const scrollHeight = $contents[0].scrollHeight;
-				const offsetHeight = $contents[0].offsetHeight;
-				expect(scrollHeight).to.be.lessThan(250);
-				expect(scrollHeight).to.equal(offsetHeight);
-			});
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DIALOG);
+	});
+
+	it("media is scene when container width is 800px", () => {
+		cy.mount(
+			<div style={{ width: "800px", height: "auto" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
 	});
 
 	it("shows image with unconstrained height when container has auto height", () => {
@@ -240,8 +227,82 @@ describe("Vertical responsiveness", () => {
 			.find(".ui5-illustrated-message-illustration svg")
 			.should("have.css", "height", "160px");
 	});
+});
 
-	it("Illustration visible, when container fit content height", () => {
+describe("Height-based responsiveness (restricted height, wide container)", () => {
+	it("media is scene when container height is 600px", () => {
+		cy.mount(
+			<div style={{ width: "800px", height: "600px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("media shrinks to dialog when container height is 350px", () => {
+		cy.mount(
+			<div style={{ width: "800px", height: "350px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DIALOG);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("media shrinks to spot when container height is 250px", () => {
+		cy.mount(
+			<div style={{ width: "800px", height: "250px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SPOT);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("media shrinks to dot when container height is 180px", () => {
+		cy.mount(
+			<div style={{ width: "800px", height: "180px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("illustration is visible when container height fits content", () => {
 		cy.mount(
 			<div style={{ height: "440px" }}>
 				<IllustratedMessage design="Scene" />
@@ -257,7 +318,7 @@ describe("Vertical responsiveness", () => {
 			});
 	});
 
-	it("Illustration visible, when IM slotted and container has fixed height", () => {
+	it("illustration is visible when IM is slotted and container has fixed height", () => {
 		cy.mount(
 			<Panel style={{ height: "19rem" }} noAnimation>
 				<IllustratedMessage name="AddColumn" />
@@ -270,6 +331,62 @@ describe("Vertical responsiveness", () => {
 			.should(($illustration) => {
 				const scrollHeight = $illustration[0].scrollHeight;
 				expect(scrollHeight).to.not.equal(0);
+			});
+	});
+});
+
+describe("Height-based responsiveness (restricted height, dialog-width container)", () => {
+	it("media is dialog when container height is 500px", () => {
+		cy.mount(
+			<div style={{ width: "500px", height: "500px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DIALOG);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("media shrinks to spot when container height is 250px", () => {
+		cy.mount(
+			<div style={{ width: "500px", height: "250px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SPOT);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
+			});
+	});
+
+	it("media shrinks to dot when container height is 180px", () => {
+		cy.mount(
+			<div style={{ width: "500px", height: "180px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
+
+		cy.get("[ui5-illustrated-message]")
+			.shadow()
+			.find(".ui5-illustrated-message-inner")
+			.should(($el) => {
+				expect($el[0].scrollHeight).to.be.lte($el[0].offsetHeight + 1);
 			});
 	});
 });
