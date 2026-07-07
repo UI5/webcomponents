@@ -26,36 +26,36 @@
 	bottom: 1rem;
 }
 
-.lr-item{
-	display: grid;
-	grid-template-columns: 150px 1fr;
-	align-items: center;
-	gap: 16px;
+#language-region-strip {
+	display: block;
+	margin-bottom: 1rem;
 }
 
-.lt-time-format{
+.language-region-form {
 	display: flex;
-	align-items: center;
-	margin: 0 1rem 0 1rem;
-}
-
-.language-region-container{
-	display: flex;
-	min-height: 2.5rem;
-	align-item:flex-start;
 	flex-direction: column;
-	gap: 0.563rem;
-}
-
-.language-region-label{
-	display: flex;
-	flex: 1 0 0;
 	width: 100%;
 }
 
-.language-region-control{
+.language-region-row {
 	display: flex;
-	gap: 0.188rem;
+	flex-direction: column;
+	width: 100%;
+}
+
+.language-region-row > ui5-label,
+.language-region-row > [ui5-label] {
+	padding: 0.5rem 0 0.125rem 0;
+}
+
+.language-region-row:first-child > ui5-label,
+.language-region-row:first-child > [ui5-label] {
+	padding-top: 0;
+}
+
+.language-region-row > ui5-select,
+.language-region-row > [ui5-select] {
+	display: block;
 	width: 100%;
 }
 
