@@ -1761,6 +1761,24 @@ describe("Day Picker Tests", () => {
 			});
 	});
 
+	it("clicking on a day in the next month selects that day and moves focus to it", () => {
+		// February 2026: the last row shows March 1 - 14 as other-month days
+		const date = new Date(Date.UTC(2026, 1, 14, 0, 0, 0));
+		cy.mount(getDefaultCalendar(date));
+
+		const march1Timestamp = new Date(Date.UTC(2026, 2, 1, 0, 0, 0)).valueOf() / 1000;
+
+		cy.ui5CalendarGetDay("#calendar1", march1Timestamp.toString())
+			.realClick();
+
+		// Calendar navigates to March; March 1 must be selected and focused
+		cy.ui5CalendarGetDay("#calendar1", march1Timestamp.toString())
+			.should("have.class", "ui5-dp-item--selected");
+
+		cy.ui5CalendarGetDay("#calendar1", march1Timestamp.toString())
+			.should("be.focused");
+	});
+
 	it("mousedown + arrow navigation + click keeps focus at navigated cell, selection on clicked cell", () => {
 		const date = new Date(Date.UTC(2000, 9, 10, 0, 0, 0));
 		cy.mount(getDefaultCalendar(date));
