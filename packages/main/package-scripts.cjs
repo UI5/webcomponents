@@ -9,6 +9,7 @@ const options = {
 	cssVariablesTarget: "host",
 	internal: {
 		cypress_code_coverage: false,
+		cypress_visual: process.env.CYPRESS_VISUAL === "true",
 	},
 };
 

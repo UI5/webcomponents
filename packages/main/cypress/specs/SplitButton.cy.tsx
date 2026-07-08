@@ -129,7 +129,11 @@ describe("Split Button general interaction", () => {
 		cy.get("[ui5-split-button]")
 			.shadow()
 			.find(".ui5-split-arrow-button")
-			.focus()
+			.focus();
+
+		cy.get("[ui5-split-button]")
+			.shadow()
+			.find(".ui5-split-arrow-button")
 			.should("be.focused")
 			.then(($btn) => {
 				const el = $btn[0] as Element;
