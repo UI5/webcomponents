@@ -7,6 +7,7 @@ const FIXED_FORMAT = "MMM d, yyyy, hh:mm:ss a";
 
 describe("DateTimePicker visual", () => {
 	beforeEach(() => {
+		cy.clock(new Date("Apr 15, 2024").getTime(), ["Date"]);
 		setAnimationMode(AnimationMode.None);
 	});
 
@@ -39,12 +40,52 @@ describe("DateTimePicker visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Negative — popover open", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Negative">
+				<span slot="valueStateMessage">Invalid date and time</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").ui5DateTimePickerOpen();
+		cy.screenshot();
+	});
+
+	it("value state — Negative — focused", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Negative">
+				<span slot="valueStateMessage">Invalid date and time</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Critical", () => {
 		cy.mount(
 			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Critical">
 				<span slot="valueStateMessage">Date outside allowed range</span>
 			</DateTimePicker>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Critical — popover open", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Critical">
+				<span slot="valueStateMessage">Date outside allowed range</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").ui5DateTimePickerOpen();
+		cy.screenshot();
+	});
+
+	it("value state — Critical — focused", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Critical">
+				<span slot="valueStateMessage">Date outside allowed range</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
@@ -57,12 +98,52 @@ describe("DateTimePicker visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Positive — popover open", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Positive">
+				<span slot="valueStateMessage">Date is valid</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").ui5DateTimePickerOpen();
+		cy.screenshot();
+	});
+
+	it("value state — Positive — focused", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Positive">
+				<span slot="valueStateMessage">Date is valid</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Information", () => {
 		cy.mount(
 			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Information">
 				<span slot="valueStateMessage">Date will be used as reference</span>
 			</DateTimePicker>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Information — popover open", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Information">
+				<span slot="valueStateMessage">Date will be used as reference</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").ui5DateTimePickerOpen();
+		cy.screenshot();
+	});
+
+	it("value state — Information — focused", () => {
+		cy.mount(
+			<DateTimePicker value={FIXED_VALUE} formatPattern={FIXED_FORMAT} valueState="Information">
+				<span slot="valueStateMessage">Date will be used as reference</span>
+			</DateTimePicker>
+		);
+		cy.get("[ui5-datetime-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 

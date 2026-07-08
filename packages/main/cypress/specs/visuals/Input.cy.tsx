@@ -45,12 +45,32 @@ describe("Input visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Negative — focused", () => {
+		cy.mount(
+			<Input value="invalid@" valueState="Negative">
+				<span slot="valueStateMessage">Invalid input</span>
+			</Input>
+		);
+		cy.get("[ui5-input]").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Critical", () => {
 		cy.mount(
 			<Input value="warning text" valueState="Critical">
 				<span slot="valueStateMessage">Please review</span>
 			</Input>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Critical — focused", () => {
+		cy.mount(
+			<Input value="warning text" valueState="Critical">
+				<span slot="valueStateMessage">Please review</span>
+			</Input>
+		);
+		cy.get("[ui5-input]").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
@@ -63,12 +83,32 @@ describe("Input visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Positive — focused", () => {
+		cy.mount(
+			<Input value="valid input" valueState="Positive">
+				<span slot="valueStateMessage">Looks good</span>
+			</Input>
+		);
+		cy.get("[ui5-input]").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Information", () => {
 		cy.mount(
 			<Input value="info text" valueState="Information">
 				<span slot="valueStateMessage">Additional info</span>
 			</Input>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Information — focused", () => {
+		cy.mount(
+			<Input value="info text" valueState="Information">
+				<span slot="valueStateMessage">Additional info</span>
+			</Input>
+		);
+		cy.get("[ui5-input]").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
