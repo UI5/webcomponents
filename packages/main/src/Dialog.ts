@@ -11,11 +11,14 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import Popup from "./Popup.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
+import "@ui5/webcomponents-icons/dist/full-screen.js";
+import "@ui5/webcomponents-icons/dist/exit-full-screen.js";
 
 import {
 	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
@@ -32,6 +35,8 @@ import {
 	DIALOG_HEADER_ARIA_LABEL,
 	DIALOG_CONTENT_ARIA_LABEL,
 	DIALOG_FOOTER_ARIA_LABEL,
+	DIALOG_FULLSCREEN_MAXIMIZE,
+	DIALOG_FULLSCREEN_RESTORE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -45,6 +50,10 @@ import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
  * Defines the step size at which this component would change by when being dragged or resized with the keyboard.
  */
 const STEP_SIZE = 16;
+
+const FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES = {
+	ariaKeyShortcuts: "Shift+Ctrl+F",
+};
 
 type ValueStateWithIcon = ValueState.Negative | ValueState.Critical | ValueState.Positive | ValueState.Information;
 /**
@@ -100,6 +109,12 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  *
  * - [Shift] + [Up] or [Down] - Decrease/Increase the height of the dialog.
  * - [Shift] + [Left] or [Right] - Decrease/Increase the width of the dialog.
+ *
+ * #### Fullscreen
+ * When the `ui5-dialog` has the `showFullscreenButton` property set to `true`, the user can toggle fullscreen mode
+ * with the following keyboard shortcut:
+ *
+ * - [Shift] + [Ctrl] + [F] - Toggle fullscreen mode.
  *
  * ### ES6 Module Import
  *
@@ -177,6 +192,21 @@ class Dialog extends Popup {
 	resizable = false;
 
 	/**
+	 * Defines whether a fullscreen toggle button is shown in the dialog header.
+	 * When pressed, it toggles the `stretch` property.
+	 * The fullscreen button is not available on phone devices.
+	 *
+	 * **Note:** The fullscreen button is not available on phone devices,
+	 * nor when a custom header slot is provided — the application is expected
+	 * to render its own toggle inside the custom header in those cases.
+	 * @default false
+	 * @since 2.25.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showFullscreenButton = false;
+
+	/**
 	 * Defines the state of the `Dialog`.
 	 *
 	 * **Note:** If `"Negative"` and `"Critical"` states is set, it will change the
@@ -188,12 +218,19 @@ class Dialog extends Popup {
 	@property()
 	state: `${ValueState}` = "None";
 
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_showFullscreenButton = false;
+
 	_screenResizeHandler: () => void;
 	_dragMouseMoveHandler: (e: MouseEvent) => void;
 	_dragMouseUpHandler: (e: MouseEvent) => void;
 	_resizeMouseMoveHandler: (e: MouseEvent) => void;
 	_resizeMouseUpHandler: (e: MouseEvent) => void;
 	_dragStartHandler: (e: DragEvent) => void;
+	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -208,6 +245,7 @@ class Dialog extends Popup {
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
 	_dragHandlerRegistered = false;
+	_fullscreenKeydownHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -242,6 +280,7 @@ class Dialog extends Popup {
 		this._resizeMouseUpHandler = this._onResizeMouseUp.bind(this);
 
 		this._dragStartHandler = this._handleDragStart.bind(this);
+		this._fullscreenKeydownHandler = this._onFullscreenKeydown.bind(this);
 	}
 
 	static _isHeader(element: HTMLElement) {
@@ -320,7 +359,7 @@ class Dialog extends Popup {
 	 * Determines if the header should be shown.
 	 */
 	get _displayHeader() {
-		return this.header.length || this.headerText || this.draggable || this.resizable;
+		return this.header.length || this.headerText || this.draggable || this.resizable || this._showFullscreenButton;
 	}
 
 	get _movable() {
@@ -358,7 +397,21 @@ class Dialog extends Popup {
 	}
 
 	get _showResizeHandle() {
-		return this.resizable && this.onDesktop;
+		return this.resizable && this.onDesktop && !this.stretch;
+	}
+
+	get _fullscreenButtonIcon() {
+		return this.stretch ? "exit-full-screen" : "full-screen";
+	}
+
+	get _fullscreenButtonTooltip() {
+		return this.stretch
+			? Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_RESTORE)
+			: Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_MAXIMIZE);
+	}
+
+	get _fullscreenButtonAccessibilityAttributes() {
+		return FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES;
 	}
 
 	get _resizeHandleTooltip() {
@@ -425,6 +478,8 @@ class Dialog extends Popup {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
+		this._showFullscreenButton = this.showFullscreenButton && !this.onPhone && !this.header.length;
+
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
@@ -446,11 +501,13 @@ class Dialog extends Popup {
 	_attachBrowserEvents() {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
+		this._registerFullscreenKeydownHandler();
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
+		this._deregisterFullscreenKeydownHandler();
 	}
 
 	_attachScreenResizeHandler() {
@@ -481,6 +538,20 @@ class Dialog extends Popup {
 		}
 	}
 
+	_registerFullscreenKeydownHandler() {
+		if (this.showFullscreenButton && !this._fullscreenKeydownHandlerRegistered) {
+			document.addEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = true;
+		}
+	}
+
+	_deregisterFullscreenKeydownHandler() {
+		if (this._fullscreenKeydownHandlerRegistered) {
+			document.removeEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = false;
+		}
+	}
+
 	_center() {
 		const height = window.innerHeight - this.offsetHeight,
 			width = window.innerWidth - this.offsetWidth;
@@ -503,6 +574,49 @@ class Dialog extends Popup {
 	/**
 	 * Event handlers
 	 */
+	_toggleFullscreen() {
+		if (this.onPhone) {
+			return;
+		}
+
+		const wasStretched = this.stretch;
+		this.stretch = !this.stretch;
+
+		this._revertSize();
+		this._draggedOrResized = false;
+
+		if (wasStretched) {
+			requestAnimationFrame(() => {
+				if (this.open) {
+					this._center();
+				}
+			});
+		}
+	}
+
+	_onHeaderDblClick(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		const headerRoot = this._root.querySelector(".ui5-popup-header-root");
+		if (target !== headerRoot && !target.classList.contains("ui5-popup-header-text")) {
+			return;
+		}
+
+		this._toggleFullscreen();
+	}
+
+	_onFullscreenKeydown(e: KeyboardEvent) {
+		if (this.isTopModalPopup && this._showFullscreenButton && this._isFullscreenShortcut(e)) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			this._toggleFullscreen();
+		}
+	}
+
+	_isFullscreenShortcut(e: KeyboardEvent) {
+		return (e.key === "f" || e.key === "F") && e.ctrlKey && e.shiftKey && !e.altKey;
+	}
+
 	_onDragMouseDown(e: MouseEvent) {
 		// allow dragging only on the header
 		if (!this._movable || !this.draggable || !Dialog._isHeader(e.target as HTMLElement)) {
@@ -777,6 +891,15 @@ class Dialog extends Popup {
 	_detachMouseResizeHandlers() {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+	}
+
+	async _getFirstFocusableElement() {
+		if (this._showFullscreenButton) {
+			const firstFocusable = await getFirstFocusableElement(this.contentDOM) || (this.footerDOM ? await getFirstFocusableElement(this.footerDOM) : null);
+			return firstFocusable || getFirstFocusableElement(this);
+		}
+
+		return getFirstFocusableElement(this);
 	}
 
 	/**
