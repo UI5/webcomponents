@@ -90,6 +90,18 @@ For `IllustratedMessage`, there are no individual illustration source files — 
 import "../../../src/illustrations/AllIllustrations.js";
 ```
 
+When a component uses an `icon` prop, import each icon as a **named import** (not a side-effect import) and pass the imported value to the prop:
+
+```tsx
+// WRONG — side-effect import, icon name passed as string
+import "@ui5/webcomponents-icons/dist/favorite.js";
+<ToggleButton icon="favorite" />
+
+// CORRECT — named import, value passed to prop
+import favorite from "@ui5/webcomponents-icons/dist/favorite.js";
+<ToggleButton icon={favorite} />
+```
+
 Import only what you actually use in the test.
 
 ## Before writing: read the existing functional test
@@ -148,8 +160,19 @@ Look at what the component can show and add cases accordingly:
   narrowed list.
 - **Selected items / tokens** — pre-select items, screenshot the tokenized
   state.
-- **Value state** — when a component accepts `valueState`, write one `it` per
-  value state value. The full set is `Negative`, `Critical`, `Positive`,
+- **Value state** — when a component accepts `valueState`, write **three** `it`
+  blocks per value state value:
+  1. **Basic** — component mounted with the value state prop, no interaction (screenshot at rest).
+  2. **Popover/dropdown open** — for components that have a dropdown or calendar
+     popover (ComboBox, MultiComboBox, Select, DatePicker, DateRangePicker,
+     DateTimePicker, MultiInput), open it and screenshot. The value state message
+     strip appears inside the popover here.
+  3. **Focused, dropdown closed** — for the same components, open then close with
+     Escape (or simply click the input area) so the component is focused but the
+     dropdown is closed. A standalone value state message popover appears in this
+     state, which has different rendering to the in-dropdown version.
+     For Input and MultiInput (no dropdown), just click the input to focus.
+  The full set of value state values is `Negative`, `Critical`, `Positive`,
   `Information`. `None` is the default and is already covered by the basic
   state test — do not add a separate case for it. Always include a
   `valueStateMessage` slot so the message strip renders. Applies to Input,
@@ -202,6 +225,22 @@ to themselves and is more resilient to tag name changes.
 
 Always prefer the existing custom commands over raw DOM queries — they
 already handle waiting and shadow DOM traversal correctly.
+
+### Nested shadow DOM — date/time pickers
+
+`DatePicker`, `DateRangePicker`, and `DateTimePicker` render their text field
+as an internal `ui5-datetime-input` component, which has **its own shadow
+DOM**. The native `<input>` is therefore two shadow levels deep. Use:
+
+```tsx
+cy.get("[ui5-date-picker]")
+  .shadow().find("ui5-datetime-input")
+  .shadow().find("input")
+  .realClick();
+```
+
+`shadow().find("input")` on the outer picker element will fail with
+"Expected to find element: input, but never found it."
 
 ### Available custom commands (use these for interactions)
 
@@ -315,6 +354,31 @@ describe("MultiComboBox visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Negative — dropdown open", () => {
+		cy.mount(
+			<MultiComboBox valueState="Negative">
+				<span slot="valueStateMessage">Error message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-icon]").realClick();
+		cy.get("[ui5-multi-combobox]").shadow().find("ui5-responsive-popover").ui5ResponsivePopoverOpened();
+		cy.screenshot();
+	});
+
+	it("value state — Negative — focused", () => {
+		cy.mount(
+			<MultiComboBox valueState="Negative">
+				<span slot="valueStateMessage">Error message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Critical", () => {
 		cy.mount(
 			<MultiComboBox valueState="Critical">
@@ -323,6 +387,31 @@ describe("MultiComboBox visual", () => {
 				<MultiComboBoxItem text="Bulgaria" />
 			</MultiComboBox>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Critical — dropdown open", () => {
+		cy.mount(
+			<MultiComboBox valueState="Critical">
+				<span slot="valueStateMessage">Warning message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-icon]").realClick();
+		cy.get("[ui5-multi-combobox]").shadow().find("ui5-responsive-popover").ui5ResponsivePopoverOpened();
+		cy.screenshot();
+	});
+
+	it("value state — Critical — focused", () => {
+		cy.mount(
+			<MultiComboBox valueState="Critical">
+				<span slot="valueStateMessage">Warning message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
@@ -337,6 +426,31 @@ describe("MultiComboBox visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Positive — dropdown open", () => {
+		cy.mount(
+			<MultiComboBox valueState="Positive">
+				<span slot="valueStateMessage">Success message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-icon]").realClick();
+		cy.get("[ui5-multi-combobox]").shadow().find("ui5-responsive-popover").ui5ResponsivePopoverOpened();
+		cy.screenshot();
+	});
+
+	it("value state — Positive — focused", () => {
+		cy.mount(
+			<MultiComboBox valueState="Positive">
+				<span slot="valueStateMessage">Success message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Information", () => {
 		cy.mount(
 			<MultiComboBox valueState="Information">
@@ -345,6 +459,31 @@ describe("MultiComboBox visual", () => {
 				<MultiComboBoxItem text="Bulgaria" />
 			</MultiComboBox>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Information — dropdown open", () => {
+		cy.mount(
+			<MultiComboBox valueState="Information">
+				<span slot="valueStateMessage">Info message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-icon]").realClick();
+		cy.get("[ui5-multi-combobox]").shadow().find("ui5-responsive-popover").ui5ResponsivePopoverOpened();
+		cy.screenshot();
+	});
+
+	it("value state — Information — focused", () => {
+		cy.mount(
+			<MultiComboBox valueState="Information">
+				<span slot="valueStateMessage">Info message</span>
+				<MultiComboBoxItem text="Algeria" />
+				<MultiComboBoxItem text="Bulgaria" />
+			</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
@@ -374,17 +513,50 @@ runs will cause false diffs and make the test useless as a visual baseline.
 
 **Avoid:**
 - `BusyIndicator` — the spinner animation frame varies per run.
-- `DatePicker`, `TimePicker`, `DateRangePicker`, `DateTimePicker` without a
-  fixed value — they display today's date, which changes daily. Always pass
-  a hardcoded `value` prop: `<DatePicker value="2024-01-15" />`.
-- `DynamicDateRange` without a fixed option selected.
 - Any component that fetches or derives content at runtime (clocks,
   relative timestamps, random IDs shown in the UI).
 
-**If you must include a date/time component**, pin the value:
+### Freezing time for date/time components
+
+Any component that calls `new Date()` internally — to format a value,
+highlight today in a calendar, or derive a relative label — will produce
+different screenshots on different days. This includes:
+
+- `Calendar`, `SpecialCalendarDate` — today's cell is highlighted
+- `DatePicker`, `DateRangePicker`, `DateTimePicker` — today is highlighted in the open calendar
+- `DynamicDateRange` — operators like `TODAY`, `LASTDAYS`, `NEXTWEEKS` format to the current date
+
+**Always add a `beforeEach` that freezes `Date` using `cy.clock`:**
+
 ```tsx
-<DatePicker value="Jan 15, 2024" />
-<TimePicker value="10:00:00" />
+beforeEach(() => {
+    cy.clock(new Date("Jan 15, 2024").getTime(), ["Date"]);
+});
+```
+
+The second argument `["Date"]` is critical — it stubs **only** the `Date`
+constructor and leaves `setTimeout`/`setInterval` untouched. Without it,
+`cy.clock()` also freezes timers, which breaks UI5's async rendering and
+causes all tests to time out.
+
+Use `Jan 15, 2024` as the standard fixed date across all tests in this
+repo for consistency.
+
+For `Calendar` and `SpecialCalendarDate`, pass a fixed `timestamp` prop
+instead of (or in addition to) `cy.clock` — the `timestamp` prop pins
+which month is displayed:
+
+```tsx
+<Calendar timestamp={1705276800} />  // Jan 15, 2024 in epoch seconds
+```
+
+For `DynamicDateRange`, also import all option classes so they register
+themselves before the component renders:
+
+```tsx
+import "../../../src/dynamic-date-range-options/Today.js";
+import "../../../src/dynamic-date-range-options/SingleDate.js";
+// ... all options used in the test
 ```
 
 ## Running the test
