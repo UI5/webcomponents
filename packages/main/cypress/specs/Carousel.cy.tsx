@@ -800,7 +800,7 @@ describe("Carousel general interaction", () => {
 			});
 	});
 
-	it.only("_resizing remains false when navigateTo is called after _onResize", () => {
+	it("_resizing remains false when navigateTo is called after _onResize", () => {
 		cy.mount(
 			<Carousel id="carousel"
 			          style="height: 300px;"
