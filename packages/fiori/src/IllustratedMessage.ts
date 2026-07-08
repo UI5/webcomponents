@@ -376,8 +376,8 @@ class IllustratedMessage extends UI5Element {
 
 	onInvalidation(changeInfo: ChangeInfo) {
 		if (
-			(changeInfo.type === "property" && ["name", "titleText", "subtitleText"].includes(changeInfo.name)) ||
-			(changeInfo.type === "slot" && ["title", "subtitle", "default"].includes(changeInfo.name))
+			(changeInfo.type === "property" && ["name", "titleText", "subtitleText"].includes(changeInfo.name))
+			|| (changeInfo.type === "slot" && ["title", "subtitle", "default"].includes(changeInfo.name))
 		) {
 			this._contentHeightForMedia = {};
 		}
@@ -385,24 +385,22 @@ class IllustratedMessage extends UI5Element {
 
 	handleResize() {
 		if (this.design === IllustrationMessageDesign.Auto) {
-			this._cacheContentHeight();
+			this._checkHeightConstraints();
 			this._applyMedia();
 		}
 	}
 
 	_applyMedia() {
-		const currentWidth = this.offsetWidth;
-		const currentHeight = this.offsetHeight;
+		const currentWidth = this.offsetWidth,
+			currentHeight = this.offsetHeight,
+			isWidthChanged = this._lastWidth !== currentWidth,
+			isHeightChanged = this._lastHeight !== currentHeight,
+			newMedia = this._getMediaForSize(currentWidth),
+			lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia],
+			lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
 
-		const isWidthChanged = this._lastWidth !== currentWidth;
-		const isHeightChanged = this._lastHeight !== currentHeight;
 		this._lastWidth = currentWidth;
 		this._lastHeight = currentHeight;
-
-		let newMedia = this._getMediaForSize(currentWidth);
-
-		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia];
-		const lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
 		this._lastKnownOffsetWidthForMedia[newMedia] = currentWidth;
 		this._lastKnownOffsetHeightForMedia[newMedia] = currentHeight;
 		// prevents infinite resizing, when same width is detected for the same media,
@@ -418,8 +416,8 @@ class IllustratedMessage extends UI5Element {
 	}
 
 	_getMediaForSize(width: number): string {
-		let media = "";
-		let mediaIndex = -1;
+		let media = "",
+			mediaIndex = -1;
 		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
 			media = IllustratedMessage.MEDIA.BASE;
 		} else if (width <= IllustratedMessage.BREAKPOINTS.DOT) {
@@ -434,7 +432,7 @@ class IllustratedMessage extends UI5Element {
 
 		mediaIndex = Object.values(IllustratedMessage.MEDIA).indexOf(media);
 
-		while (mediaIndex > 0 && this._mediaRequiresVerticalScrollbar(media)) {
+		while (mediaIndex > 0 && this._mediaExceedsContainerHeight(media)) {
 			mediaIndex--;
 			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
@@ -442,7 +440,7 @@ class IllustratedMessage extends UI5Element {
 		return media;
 	}
 
-	_mediaRequiresVerticalScrollbar(media: string): boolean {
+	_mediaExceedsContainerHeight(media: string): boolean {
 		const containerHeight = this.clientHeight || 0;
 		return !!this._contentHeightForMedia[media] && containerHeight < this._contentHeightForMedia[media];
 	}
@@ -474,13 +472,19 @@ class IllustratedMessage extends UI5Element {
 	onAfterRendering() {
 		this._setSVGAccAttrs();
 		if (this.design === IllustrationMessageDesign.Auto) {
-			this._cacheContentHeight();
+			this._checkHeightConstraints();
 			this._applyMedia();
 		}
 	}
 
-	_cacheContentHeight() {
-		if (this.media && this.scrollHeight > this.clientHeight) {
+	/**
+	 * Checks if the current height of the component is enough to display the illustration, title, subtitle and actions.
+	 * If not, the minimum required height for the current media is stored in the `_contentHeightForMedia` object.
+	 * @private
+	 * @since 1.5.0
+	 */
+	_checkHeightConstraints() {
+		if (this.media && this.scrollHeight > this.clientHeight) { // needs vertical responsiveness
 			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
 			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
 			innerElHeight && (this._contentHeightForMedia[this.media] = innerElHeight);

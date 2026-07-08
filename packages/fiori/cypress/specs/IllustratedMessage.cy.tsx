@@ -212,6 +212,38 @@ describe("Width-based responsiveness (auto height)", () => {
 			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
 	});
 
+	it("media updates from dot to scene when container width expands", () => {
+		// This test guards against a specific bug: without the `scrollHeight > clientHeight`
+		// guard in _checkHeightConstraints, _contentHeightForMedia["scene"] gets recorded
+		// while scene is rendered at full width. When width then shrinks (dot media), the
+		// container height (auto) shrinks too. On re-expansion, _mediaExceedsContainerHeight("scene")
+		// compares the stored scene height against the current (small) clientHeight and wrongly
+		// blocks the upgrade back to scene.
+		cy.mount(
+			<div id="resizable-container" style={{ width: "800px", height: "auto" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		// First render at wide width so _contentHeightForMedia["scene"] gets populated
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+
+		// Shrink to dot — clientHeight (auto) now equals the small dot illustration height
+		cy.get("#resizable-container")
+			.invoke("css", "width", "200px");
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.DOT);
+
+		// Expand back — must resolve to scene, not stay stuck at dot/dialog
+		cy.get("#resizable-container")
+			.invoke("css", "width", "800px");
+
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+	});
+
 	it("shows image with unconstrained height when container has auto height", () => {
 		cy.mount(
 			<div style={{ width: "400px" }}>
