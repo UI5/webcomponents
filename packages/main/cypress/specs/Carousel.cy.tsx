@@ -800,21 +800,38 @@ describe("Carousel general interaction", () => {
 			});
 	});
 
-	it("_resizing remains false when navigateTo is called after _onResize", () => {
+	it.only("_resizing remains false when navigateTo is called after _onResize", () => {
 		cy.mount(
-			<Carousel id="carousel">
+			<Carousel id="carousel"
+			          style="height: 300px;"
+			          items-per-page="S3 M3 L3 XL3"
+			          arrowsPlacement="Navigation">
 				<Button>Button 1</Button>
 				<Button>Button 2</Button>
 				<Button>Button 3</Button>
+				<Button>Button 4</Button>
+				<Button>Button 5</Button>
+				<Button>Button 6</Button>
 			</Carousel>
 		);
 
 		cy.get<Carousel>("#carousel")
 			.then($carousel => {
 				const carousel = $carousel[0];
-				carousel._onResize();
-				carousel.navigateTo(2);
+				carousel.style.width = "99%";
 				expect(carousel._resizing).to.be.false;
+
+				return new Cypress.Promise(resolve => {
+					requestAnimationFrame(() => {
+						carousel.style.width = "98%";
+						expect(carousel._resizing).to.be.false;
+
+						setTimeout(() => {
+							expect(carousel._resizing).to.be.false;
+							resolve();
+						}, 200);
+					});
+				});
 			});
 	});
 

@@ -401,6 +401,8 @@ class Carousel extends UI5Element {
 		const previousItemsPerPage = this.effectiveItemsPerPage;
 
 		// Set the resizing flag to suppress animation while resizing
+		const previousWidth = this._width;
+
 		this._resizing = true;
 
 		// Change transitively effectiveItemsPerPage by modifying _width
@@ -409,7 +411,8 @@ class Carousel extends UI5Element {
 
 		// Items per page did not change,
 		// therefore page index does not need to be re-adjusted
-		if (this.effectiveItemsPerPage === previousItemsPerPage) {
+		if (this._width === previousWidth && this.effectiveItemsPerPage === previousItemsPerPage) {
+			this._resizing = false;
 			this._updateVisibleItems(this._currentPageIndex);
 			return;
 		}
@@ -690,8 +693,6 @@ class Carousel extends UI5Element {
 		if (this._currentPageIndex === newPageIndex) {
 			return;
 		}
-
-		this._resizing = false;
 
 		this._currentPageIndex = newPageIndex;
 		this._updateVisibleItems(newPageIndex);
