@@ -5,6 +5,7 @@ export default function StepInputTemplate(this: StepInput) {
 	return (
 		<NumberInput
 			_showStepButtons={true}
+			_externalAriaLabel={this._associatedLabelText}
 			value={this.value}
 			min={this.min}
 			max={this.max}

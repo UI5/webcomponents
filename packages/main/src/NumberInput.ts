@@ -265,6 +265,9 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	_showStepButtons = false;
 
 	@property({ noAttribute: true })
+	_externalAriaLabel?: string;
+
+	@property({ noAttribute: true })
 	_decIconDisabled = false;
 
 	@property({ noAttribute: true })
@@ -401,7 +404,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	get accInfo(): InputAccInfo {
 		return {
 			"ariaRequired": this.required,
-			"ariaLabel": getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this),
+			"ariaLabel": getEffectiveAriaLabelText(this) || this._externalAriaLabel || getAssociatedLabelForTexts(this),
 		};
 	}
 
