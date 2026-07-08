@@ -32,6 +32,19 @@ const realEventCmdCallback = (originalFn: any, element: any, ...args: any) => {
 		.then(() => originalFn(element, ...args));
 };
 
+Cypress.Commands.overwrite("focus", (originalFn, element, ...args) => {
+	cy.waitRenderFinished();
+
+	cy.get(element as any)
+		.then($el => {
+			const el = $el[0];
+			if (el.tagName.includes("-") && typeof el.focus === "function") {
+				return cy.wrap(el.focus(...args), { log: false });
+			}
+			return originalFn(element, ...args);
+		});
+});
+
 const realEventCommands = [
 	"realClick",
 	"realHover",
