@@ -14,7 +14,6 @@ export default function StepInputTemplate(this: StepInput) {
 			disabled={this.disabled}
 			readonly={this.readonly}
 			placeholder={this.placeholder}
-			name={this.name}
 			valuePrecision={this.valuePrecision}
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
