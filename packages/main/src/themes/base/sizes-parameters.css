@@ -351,9 +351,9 @@
 		/* SplitButton */
 		--_ui5_split_button_middle_separator_height: 1.625rem;
 
-		/* StepInput */
-		--_ui5_step_input_min_width: 6rem;
-		--_ui5_step_input_padding: 2rem;
+		/* NumberInput / StepInput */
+		--_ui5_number_input_min_width: 6rem;
+		--_ui5_number_input_padding_with_step_buttons: 2rem;
 
 		/* Tree */
 		--_ui5-tree-indent-step: 0.5rem;

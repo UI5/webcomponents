@@ -1,0 +1,25 @@
+@import "../base/NumberInput-parameters.css";
+
+:host {
+	--_ui5_number_input_input_error_background_color: inherit;
+	--_ui5_number_input_button_state_hover_background_color: var(--sapField_Hover_Background);
+	--_ui5_number_input_border_style: none;
+	--_ui5_number_input_border_style_hover: none;
+	--_ui5_number_input_button_background_color: transparent;
+	--_ui5_number_input_input_border: none;
+	--_ui5_number_input_input_margin_top: 0;
+	--_ui5_number_input_button_display: inline-flex;
+	--_ui5_number_input_button_left: 0;
+	--_ui5_number_input_button_right: 0;
+	--_ui5_number_input_input_border_focused_after: 0.125rem solid #0070f2;
+	--_ui5_number_input_input_border_top_bottom_focused_after: 0;
+	--_ui5_number_input_input_border_radius_focused_after: 0.25rem;
+	--_ui5_number_input_input_information_border_color_focused_after: var(--sapField_InformationColor);
+	--_ui5_number_input_input_warning_border_color_focused_after: var(--sapField_WarningColor);
+	--_ui5_number_input_input_success_border_color_focused_after: var(--sapField_SuccessColor);
+	--_ui5_number_input_input_error_border_color_focused_after: var(--sapField_InvalidColor);
+	--_ui5_number_input_disabled_button_background: none;
+	--_ui5_number_input_border_color_hover: none;
+	--_ui5_number_input_border_hover: none;
+	--_ui5_input_input_background_color: transparent;
+}
