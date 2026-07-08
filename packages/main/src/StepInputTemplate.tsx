@@ -21,6 +21,7 @@ export default function StepInputTemplate(this: StepInput) {
 			onChange={this._onNiChange}
 			onInput={this._onNiInput}
 			onValueStateChange={this._onNiValueStateChange}
+			onui5-_request-submit={this._onRequestSubmit}
 		>
 			{this.valueStateMessage.length > 0 &&
 				<slot name="valueStateMessage" slot="valueStateMessage"></slot>

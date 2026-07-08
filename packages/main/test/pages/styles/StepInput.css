@@ -35,6 +35,6 @@ h3 {
     width: 250px
 }
 
-form ui5-step-input:invalid {
+form ui5-step-input:invalid ui5-number-input {
     outline: 2px solid var(--sapNegativeColor);
 }

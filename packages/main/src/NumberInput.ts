@@ -29,11 +29,11 @@ import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/In
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import NumberInputTemplate from "./NumberInputTemplate.js";
 import {
-	STEPINPUT_DEC_ICON_TITLE,
-	STEPINPUT_INC_ICON_TITLE,
-	STEPINPUT_PATTER_MISSMATCH,
-	STEPINPUT_RANGEOVERFLOW,
-	STEPINPUT_RANGEUNDERFLOW,
+	NUMBERINPUT_DEC_ICON_TITLE,
+	NUMBERINPUT_INC_ICON_TITLE,
+	NUMBERINPUT_PATTER_MISSMATCH,
+	NUMBERINPUT_RANGEOVERFLOW,
+	NUMBERINPUT_RANGEUNDERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents-icons/dist/less.js";
 import "@ui5/webcomponents-icons/dist/add.js";
@@ -92,7 +92,7 @@ type NumberInputValueStateChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/NumberInput.js";`
  * @constructor
  * @extends UI5Element
- * @since 2.10.0
+ * @since 2.24.0
  * @public
  */
 @customElement({
@@ -325,13 +325,13 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.patternMismatch) {
-			return NumberInput.i18nBundle.getText(STEPINPUT_PATTER_MISSMATCH, this.valuePrecision);
+			return NumberInput.i18nBundle.getText(NUMBERINPUT_PATTER_MISSMATCH, this.valuePrecision);
 		}
 		if (validity.rangeUnderflow) {
-			return NumberInput.i18nBundle.getText(STEPINPUT_RANGEUNDERFLOW, this.min as number);
+			return NumberInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);
 		}
 		if (validity.rangeOverflow) {
-			return NumberInput.i18nBundle.getText(STEPINPUT_RANGEOVERFLOW, this.max as number);
+			return NumberInput.i18nBundle.getText(NUMBERINPUT_RANGEOVERFLOW, this.max as number);
 		}
 
 		return "";
@@ -356,11 +356,11 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	// icons-related
 
 	get decIconTitle() {
-		return NumberInput.i18nBundle.getText(STEPINPUT_DEC_ICON_TITLE);
+		return NumberInput.i18nBundle.getText(NUMBERINPUT_DEC_ICON_TITLE);
 	}
 
 	get incIconTitle() {
-		return NumberInput.i18nBundle.getText(STEPINPUT_INC_ICON_TITLE);
+		return NumberInput.i18nBundle.getText(NUMBERINPUT_INC_ICON_TITLE);
 	}
 
 	get _decIconClickable() {

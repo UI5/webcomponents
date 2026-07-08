@@ -11,9 +11,9 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
-	STEPINPUT_PATTER_MISSMATCH,
-	STEPINPUT_RANGEOVERFLOW,
-	STEPINPUT_RANGEUNDERFLOW,
+	NUMBERINPUT_PATTER_MISSMATCH,
+	NUMBERINPUT_RANGEOVERFLOW,
+	NUMBERINPUT_RANGEUNDERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
 import StepInputTemplate from "./StepInputTemplate.js";
 import type { InputEventDetail } from "./Input.js";
@@ -240,13 +240,13 @@ class StepInput extends UI5Element implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.patternMismatch) {
-			return StepInput.i18nBundle.getText(STEPINPUT_PATTER_MISSMATCH, this.valuePrecision);
+			return StepInput.i18nBundle.getText(NUMBERINPUT_PATTER_MISSMATCH, this.valuePrecision);
 		}
 		if (validity.rangeUnderflow) {
-			return StepInput.i18nBundle.getText(STEPINPUT_RANGEUNDERFLOW, this.min as number);
+			return StepInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);
 		}
 		if (validity.rangeOverflow) {
-			return StepInput.i18nBundle.getText(STEPINPUT_RANGEOVERFLOW, this.max as number);
+			return StepInput.i18nBundle.getText(NUMBERINPUT_RANGEOVERFLOW, this.max as number);
 		}
 
 		return "";
@@ -254,7 +254,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	get formValidity(): ValidityStateFlags {
 		return {
-			patternMismatch: this.value !== 0 && this._innerNumberInput ? this._innerNumberInput.formValidity.patternMismatch : false,
+			patternMismatch: this.value !== 0 && (this._innerNumberInput?.formValidity.patternMismatch ?? false),
 			rangeOverflow: this.max !== undefined && this.value >= this.max,
 			rangeUnderflow: this.min !== undefined && this.value <= this.min,
 		};
@@ -262,6 +262,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	get formFormattedValue(): FormData | string | null {
 		return this.value.toString();
+	}
+
+	getFocusDomRef(): HTMLElement | undefined {
+		return this._innerNumberInput?.getFocusDomRef();
 	}
 
 	_onNiChange(e: Event) {
@@ -272,7 +276,6 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_onNiInput(e: CustomEvent<InputEventDetail>) {
 		e.stopPropagation();
-		this._syncFromInner();
 		const prevented = !this.fireDecoratorEvent("input", { inputType: e.detail.inputType });
 		if (prevented) {
 			e.preventDefault();
@@ -286,7 +289,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 			valid: e.detail.valid,
 		});
 		if (prevented) {
-			e.preventDefault();
+			// Inner already applied the new valueState — revert it back to the outer's current value
 			this._innerNumberInput.valueState = this.valueState;
 		} else {
 			this.valueState = e.detail.valueState;
@@ -300,6 +303,12 @@ class StepInput extends UI5Element implements IFormInputElement {
 		}
 		this.value = ni.value;
 		this.valueState = ni.valueState;
+	}
+
+	_onRequestSubmit() {
+		if (this._internals.form) {
+			submitForm(this);
+		}
 	}
 }
 
