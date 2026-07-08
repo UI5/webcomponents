@@ -226,6 +226,185 @@ describe("StepInput button interaction tests", () => {
 	});
 });
 
+describe("StepInput events", () => {
+	it("should fire 'input' event when typing", () => {
+		cy.mount(
+			<StepInput></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-input", "input");
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realType("5");
+
+		cy.get("@input")
+			.should("have.been.called");
+	});
+
+	it("should prevent 'input' event when prevented on StepInput", () => {
+		cy.mount(
+			<StepInput></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.then($el => {
+				$el.get(0).addEventListener("input", e => {
+					e.preventDefault();
+					($el.get(0) as StepInput).value = 30;
+				});
+			});
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("1");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value", 30);
+	});
+
+	it("should fire 'value-state-change' event when value goes out of range", () => {
+		cy.mount(
+			<StepInput min={3}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-value-state-change", "stateChange");
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick({ clickCount: 2 })
+			.should("be.focused");
+
+		cy.realType("2");
+
+		cy.realPress("Tab");
+
+		cy.get("@stateChange")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "Negative");
+	});
+
+	it("should not change 'valueState' when 'value-state-change' event is prevented", () => {
+		const valueState = "Positive";
+
+		cy.mount(
+			<StepInput valueState={valueState} min={3}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.then($el => {
+				$el.get(0).addEventListener("value-state-change", e => {
+					e.preventDefault();
+				});
+			});
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-value-state-change", "stateChange");
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick({ clickCount: 2 })
+			.should("be.focused");
+
+		cy.realType("2");
+
+		cy.realPress("Tab");
+
+		cy.get("@stateChange")
+			.should("have.been.calledOnce");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", valueState);
+	});
+
+	it("should sync 'valueState' to outer element on 'change'", () => {
+		cy.mount(
+			<StepInput min={3}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick({ clickCount: 2 })
+			.should("be.focused");
+
+		cy.realType("2");
+
+		cy.realPress("Tab");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "Negative");
+
+		cy.get<StepInput>("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick({ clickCount: 2 })
+			.should("be.focused");
+
+		cy.realType("5");
+
+		cy.realPress("Tab");
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "valueState", "None");
+	});
+
+	it("should submit form when 'Enter' is pressed inside the input", () => {
+		cy.mount(
+			<form>
+				<StepInput id="stepInput"></StepInput>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form")
+			.then($item => {
+				$item.get(0).addEventListener("submit", (e) => e.preventDefault());
+				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
+			});
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-number-input]")
+			.realClick()
+			.should("be.focused");
+
+		cy.realPress("Enter");
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
+
 describe("Validation inside form", () => {
 	it("has correct validity for patternMissmatch", () => {
 		cy.mount(

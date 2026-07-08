@@ -133,11 +133,15 @@ type NumberInputValueStateChangeEventDetail = {
 	bubbles: true,
 	cancelable: true,
 })
+@event("_request-submit", {
+	bubbles: true,
+})
 class NumberInput extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		change: void
 		input: InputEventDetail
 		"value-state-change": NumberInputValueStateChangeEventDetail
+		"_request-submit": void
 	}
 
 	/**
@@ -661,9 +665,11 @@ class NumberInput extends UI5Element implements IFormInputElement {
 
 	_isValueChanged(inputValue: number) {
 		const isValueWithCorrectPrecision = this._isValueWithCorrectPrecision;
-		// Treat values as distinct when modified to match a specific precision (e.g., from 3.4000 to 3.40),
-		// even if JavaScript sees them as equal, to correctly update valueState based on expected valuePrecision.
-		const isPrecisionCorrectButValueStateError = isValueWithCorrectPrecision && this.valueState === ValueState.Negative;
+		const isWithinRange = (this.min === undefined || inputValue >= this.min) && (this.max === undefined || inputValue <= this.max);
+		// Treat values as distinct when the precision was just corrected (e.g., from 3.4000 to 3.40) while
+		// the value was previously invalid due to precision — but only when the value is in range. Without
+		// this guard the condition also triggers for range violations, causing a redundant second _validate call.
+		const isPrecisionCorrectButValueStateError = isValueWithCorrectPrecision && isWithinRange && this.valueState === ValueState.Negative;
 
 		return this.value !== this._previousValue
 			|| this.value !== inputValue
@@ -693,6 +699,8 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	_onInputRequestSubmit() {
 		if (this._internals.form) {
 			submitForm(this);
+		} else {
+			this.fireDecoratorEvent("_request-submit");
 		}
 	}
 
