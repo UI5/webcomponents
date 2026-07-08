@@ -275,25 +275,15 @@ class IllustratedMessage extends UI5Element {
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
-	_lastKnownOffsetWidthForMedia: Record<string, number>;
-	_lastKnownOffsetHeightForMedia: Record<string, number>;
 	_contentHeightForMedia: Record<string, number>;
-	_lastKnownMedia: string;
-	_lastWidth: number | undefined;
-	_lastHeight: number | undefined;
 	_handleResize: ResizeObserverCallback;
 
 	constructor() {
 		super();
 
 		this._handleResize = this.handleResize.bind(this);
-		// this will store the last known offsetWidth of the IllustratedMessage DOM node for a given media (e.g. "Spot")
-		this._lastKnownOffsetWidthForMedia = {};
-		this._lastKnownOffsetHeightForMedia = {};
-		// this will store the last known height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
+		// this will store the height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
 		this._contentHeightForMedia = {};
-		// this will store the last known media, in order to detect if IllustratedMessage has been hidden by expand/collapse container
-		this._lastKnownMedia = "base";
 	}
 
 	static get BREAKPOINTS() {
@@ -390,34 +380,25 @@ class IllustratedMessage extends UI5Element {
 		}
 	}
 
-	_applyMedia() {
-		const currentWidth = this.offsetWidth,
-			currentHeight = this.offsetHeight,
-			isWidthChanged = this._lastWidth !== currentWidth,
-			isHeightChanged = this._lastHeight !== currentHeight,
-			newMedia = this._getMediaForSize(currentWidth),
-			lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia],
-			lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
-
-		this._lastWidth = currentWidth;
-		this._lastHeight = currentHeight;
-		this._lastKnownOffsetWidthForMedia[newMedia] = currentWidth;
-		this._lastKnownOffsetHeightForMedia[newMedia] = currentHeight;
-		// prevents infinite resizing, when same width is detected for the same media,
-		// excluding the case in which, the control is placed inside expand/collapse container
-		if (isWidthChanged && !isHeightChanged && lastKnownOffsetWidth && currentWidth === lastKnownOffsetWidth
-			&& this._lastKnownOffsetWidthForMedia[this._lastKnownMedia] !== 0 && currentHeight === lastKnownOffsetHeight
-			&& this._lastKnownOffsetHeightForMedia[this._lastKnownMedia] !== 0) {
-			return;
+	/**
+	 * Checks if the current height of the component is enough to display the illustration, title, subtitle and actions.
+	 * If not, the minimum required height for the current media is stored in the `_contentHeightForMedia` object.
+	 * @private
+	 * @since 1.5.0
+	 */
+	_checkHeightConstraints() {
+		if (this.media && this.scrollHeight > this.clientHeight) { // needs vertical responsiveness
+			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
+			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
+			innerElHeight && (this._contentHeightForMedia[this.media] = innerElHeight);
 		}
-
-		this.media = newMedia;
-		this._lastKnownMedia = newMedia;
 	}
 
-	_getMediaForSize(width: number): string {
+	_applyMedia() {
+		const width = this.offsetWidth;
 		let media = "",
 			mediaIndex = -1;
+
 		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
 			media = IllustratedMessage.MEDIA.BASE;
 		} else if (width <= IllustratedMessage.BREAKPOINTS.DOT) {
@@ -437,7 +418,7 @@ class IllustratedMessage extends UI5Element {
 			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
 
-		return media;
+		this.media = media;
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -474,20 +455,6 @@ class IllustratedMessage extends UI5Element {
 		if (this.design === IllustrationMessageDesign.Auto) {
 			this._checkHeightConstraints();
 			this._applyMedia();
-		}
-	}
-
-	/**
-	 * Checks if the current height of the component is enough to display the illustration, title, subtitle and actions.
-	 * If not, the minimum required height for the current media is stored in the `_contentHeightForMedia` object.
-	 * @private
-	 * @since 1.5.0
-	 */
-	_checkHeightConstraints() {
-		if (this.media && this.scrollHeight > this.clientHeight) { // needs vertical responsiveness
-			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
-			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
-			innerElHeight && (this._contentHeightForMedia[this.media] = innerElHeight);
 		}
 	}
 
