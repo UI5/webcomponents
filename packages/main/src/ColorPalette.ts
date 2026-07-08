@@ -509,7 +509,6 @@ class ColorPalette extends UI5Element {
 	_onColorContainerKeyDown(e: KeyboardEvent) {
 		const eventTarget = e.target as ColorPaletteItem;
 		const swatchTarget = this._getColorPaletteItemFromEvent(e, this.displayedColors);
-		const isLastSwatchInSingleRow = this._isSingleRow() && swatchTarget && this._isLastSwatch(swatchTarget, this.displayedColors);
 
 		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 		if (this._shouldPreventHomeEnd(e)) {
@@ -527,7 +526,13 @@ class ColorPalette extends UI5Element {
 			this.selectColor(swatchTarget || eventTarget);
 		}
 
-		if (this._isPrevious(e) && swatchTarget && this._isFirstSwatch(swatchTarget, this.displayedColors)) {
+		if (!swatchTarget) {
+			return;
+		}
+
+		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(swatchTarget, this.displayedColors);
+
+		if (this._isPrevious(e) && this._isFirstSwatch(swatchTarget, this.displayedColors)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -537,8 +542,8 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastSwatchOfLastFullRow(),
 				() => this._focusLastDisplayedColor(),
 			);
-		} else if ((isRight(e) && swatchTarget && this._isLastSwatch(swatchTarget, this.displayedColors))
-			|| (isDown(e) && swatchTarget && (this._isLastSwatchOfLastFullRow(swatchTarget) || isLastSwatchInSingleRow))
+		} else if ((isRight(e) && this._isLastSwatch(swatchTarget, this.displayedColors))
+			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(swatchTarget) || isLastSwatchInSingleRow))
 		) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -548,7 +553,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (swatchTarget && isHome(e) && this._isFirstSwatchInRow(swatchTarget)) {
+		} else if (isHome(e) && this._isFirstSwatchInRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -556,7 +561,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusMoreColors(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (swatchTarget && isEnd(e) && this._isLastSwatchInRow(swatchTarget)) {
+		} else if (isEnd(e) && this._isLastSwatchInRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -564,7 +569,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusLastDisplayedColor(),
 			);
-		} else if (swatchTarget && isEnd(e) && this._isSwatchInLastRow(swatchTarget)) {
+		} else if (isEnd(e) && this._isSwatchInLastRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
@@ -585,7 +590,11 @@ class ColorPalette extends UI5Element {
 			this._currentlySelected = undefined;
 		}
 
-		if (this._isNext(e) && swatchTarget && this._isLastSwatch(swatchTarget, this.recentColorsElements)) {
+		if (!swatchTarget) {
+			return;
+		}
+
+		if (this._isNext(e) && this._isLastSwatch(swatchTarget, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -593,7 +602,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusMoreColors(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (this._isPrevious(e) && swatchTarget && this._isFirstSwatch(swatchTarget, this.recentColorsElements)) {
+		} else if (this._isPrevious(e) && this._isFirstSwatch(swatchTarget, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -602,7 +611,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastDisplayedColor(),
 				() => this._focusDefaultColor(),
 			);
-		} else if (swatchTarget && isEnd(e)) {
+		} else if (isEnd(e)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastRecentColor();
@@ -723,17 +732,7 @@ class ColorPalette extends UI5Element {
 	 * @returns True if any candidate successfully focused an element, false if all failed.
 	 */
 	_focusFirstAvailable(...candidates: Array<() => boolean>): boolean {
-		if (!candidates.length) {
-			return false;
-		}
-
-		const [focusAction, ...remainingCandidates] = candidates;
-
-		if (focusAction()) {
-			return true;
-		}
-
-		return this._focusFirstAvailable(...remainingCandidates);
+		return candidates.some(focusAction => focusAction());
 	}
 
 	/**
