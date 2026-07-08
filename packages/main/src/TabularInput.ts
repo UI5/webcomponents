@@ -10,8 +10,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-// @ts-expect-error
-import encodeXML from "@ui5/webcomponents-base/dist/sap/base/security/encodeXML.js";
+import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import Input from "./Input.js";
 import type { IInputSuggestionItem } from "./Input.js";
@@ -19,6 +18,7 @@ import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
 import type TableRow from "./TableRow.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
+import type TableOverflowMode from "./types/TableOverflowMode.js";
 
 import TabularInputTemplate from "./TabularInputTemplate.js";
 import tabularInputStyles from "./generated/themes/TabularInput.css.js";
@@ -27,6 +27,7 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 import {
 	INPUT_SUGGESTIONS,
 	INPUT_SUGGESTIONS_MORE_HITS,
+	LIST_ITEM_POSITION,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -55,10 +56,6 @@ interface ITabularSuggestionRow extends UI5Element {
 	cells: TableCell[];
 	selected?: boolean;
 	focused?: boolean;
-}
-
-type TabularInputRowSelectEventDetail = {
-	row: ITabularSuggestionRow;
 }
 
 type TabularInputSelectionChangeEventDetail = {
@@ -119,19 +116,9 @@ type TabularInputSelectionChangeEventDetail = {
 	styles: [Input.styles, SuggestionsCss, tabularInputStyles],
 })
 
-/**
- * Fired when a suggestion row is selected.
- * @param {ITabularSuggestionRow} row The selected row instance
- * @public
- */
-@event("row-select", {
-	bubbles: true,
-})
-
 class TabularInput extends Input {
 	// @ts-expect-error - Intentionally override selection-change to use 'row' instead of 'item'
 	eventDetails!: Omit<Input["eventDetails"], "selection-change"> & {
-		"row-select": TabularInputRowSelectEventDetail,
 		"selection-change": TabularInputSelectionChangeEventDetail,
 	}
 
@@ -158,6 +145,18 @@ class TabularInput extends Input {
 	 */
 	@slot({ type: HTMLElement })
 	suggestionRows!: Slot<ITabularSuggestionRow>;
+
+	/**
+	 * Defines the overflow behavior of the suggestion table.
+	 *
+	 * **Note:** When set to `Popin`, columns that don't fit will be shown as pop-in content.
+	 * When set to `Scroll`, a horizontal scrollbar will appear.
+	 *
+	 * @default "Popin"
+	 * @public
+	 */
+	@property()
+	overflowMode: `${TableOverflowMode}` = "Popin";
 
 	/**
 	 * Internal property to track if table suggestions are being used
@@ -212,11 +211,7 @@ class TabularInput extends Input {
 		this._useTabularSuggestions = this.suggestionColumns.length > 0 && this.suggestionRows.length > 0;
 
 		if (this._useTabularSuggestions) {
-			if (this.filter !== "None" && this.typedInValue) {
-				this._filterTabularRows();
-			} else {
-				this._resetRowVisibility();
-			}
+			this._processRows();
 
 			this._handleTabularPopoverOpen();
 			this._handleTabularTypeAhead();
@@ -317,8 +312,6 @@ class TabularInput extends Input {
 
 	onAfterRendering() {
 		if (this._useTabularSuggestions) {
-			this._applyTabularAriaOverrides();
-
 			if (this._performTextSelection) {
 				if (this.typedInValue.length && this.value.length) {
 					this._adjustSelectionRange();
@@ -330,35 +323,6 @@ class TabularInput extends Input {
 		}
 
 		super.onAfterRendering();
-	}
-
-	/**
-	 * Applies ARIA role overrides to make the ui5-table behave as a listbox.
-	 * @private
-	 */
-	_applyTabularAriaOverrides() {
-		const table = this.shadowRoot?.querySelector(".ui5-tabular-suggestions-table");
-		if (!table) {
-			return;
-		}
-
-		const tableInner = table.shadowRoot?.querySelector("[role='grid']");
-		if (tableInner) {
-			tableInner.setAttribute("role", "listbox");
-			tableInner.removeAttribute("aria-colcount");
-			tableInner.removeAttribute("aria-multiselectable");
-		}
-
-		const visibleRows = this._visibleRows;
-		table.querySelectorAll("[ui5-table-row]").forEach((rowElement, index) => {
-			const rowInner = rowElement.shadowRoot?.querySelector("[role='row']");
-			if (rowInner) {
-				rowInner.setAttribute("role", "option");
-				rowInner.removeAttribute("aria-rowindex");
-				const isSelected = visibleRows[index]?.focused || visibleRows[index]?.selected;
-				rowInner.setAttribute("aria-selected", String(!!isSelected));
-			}
-		});
 	}
 
 	/**
@@ -376,140 +340,21 @@ class TabularInput extends Input {
 	}
 
 	/**
+	 * Processes rows and generates highlighted markup for cell content.
 	 * @private
 	 */
-	_filterTabularRows() {
-		const typedValue = this.typedInValue;
-		const typedValueLower = typedValue.toLowerCase();
-
-		this._processedRows = [];
-
-		this.suggestionRows.forEach(row => {
-			const cells = row.cells || [];
-			let matches = false;
-
-			const processedCells: HighlightedCellContent[] = cells.map(cell => {
-				const cellText = cell.textContent?.trim() || "";
-				const cellMatches = this._matchesStartsWithPerTerm(cellText, typedValueLower);
-
-				if (cellMatches) {
-					matches = true;
-				}
-
-				const highlightedMarkup = typedValue
-					? this._generateStartsWithPerTermHighlight(cellText, typedValue)
-					: encodeXML(cellText);
-
-				return {
-					text: cellText,
-					highlightedMarkup,
-				};
-			});
-
-			(row as UI5Element).hidden = !matches;
-
-			if (matches) {
-				this._processedRows.push({
-					row,
-					cells: processedCells,
-				});
-			}
-		});
-	}
-
-	/**
-	 * @private
-	 */
-	_matchesStartsWithPerTerm(text: string, valueLower: string): boolean {
-		if (!valueLower) {
-			return true;
-		}
-		const textLower = text.toLowerCase();
-		const reg = new RegExp(`(^|\\s)${this._escapeRegExp(valueLower)}`, "i");
-		return reg.test(textLower);
-	}
-
-	/**
-	 * @private
-	 */
-	_escapeRegExp(str: string): string {
-		return str.replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
-	}
-
-	/**
-	 * Generates highlighted markup using StartsWithPerTerm logic.
-	 * @private
-	 */
-	_generateStartsWithPerTermHighlight(text: string, value: string): string {
-		if (!text || !value) {
-			return encodeXML(text);
-		}
-
-		const valueLower = value.toLowerCase();
-		const valueLength = value.length;
-		const positions: Array<{ start: number; end: number }> = [];
-		const textLower = text.toLowerCase();
-
-		if (textLower.startsWith(valueLower)) {
-			positions.push({ start: 0, end: valueLength });
-		}
-
-		let searchStart = 0;
-		while (searchStart < text.length) {
-			const spaceIndex = text.indexOf(" ", searchStart);
-			if (spaceIndex === -1) {
-				break;
-			}
-
-			const wordStart = spaceIndex + 1;
-			if (wordStart < text.length && textLower.substring(wordStart).startsWith(valueLower)) {
-				positions.push({ start: wordStart, end: wordStart + valueLength });
-			}
-			searchStart = spaceIndex + 1;
-		}
-
-		if (positions.length === 0) {
-			return encodeXML(text);
-		}
-
-		let result = "";
-		let lastEnd = 0;
-
-		for (const pos of positions) {
-			if (pos.start > lastEnd) {
-				result += encodeXML(text.substring(lastEnd, pos.start));
-			}
-			result += `<b>${encodeXML(text.substring(pos.start, pos.end))}</b>`;
-			lastEnd = pos.end;
-		}
-
-		if (lastEnd < text.length) {
-			result += encodeXML(text.substring(lastEnd));
-		}
-
-		return result;
-	}
-
-	/**
-	 * @private
-	 */
-	_resetRowVisibility() {
+	_processRows() {
 		const typedValue = this.typedInValue;
 		this._processedRows = [];
 
 		this.suggestionRows.forEach(row => {
-			(row as UI5Element).hidden = false;
-
 			const cells = row.cells || [];
 			const processedCells: HighlightedCellContent[] = cells.map(cell => {
 				const cellText = cell.textContent?.trim() || "";
-				const highlightedMarkup = typedValue
-					? this._generateStartsWithPerTermHighlight(cellText, typedValue)
-					: encodeXML(cellText);
 
 				return {
 					text: cellText,
-					highlightedMarkup,
+					highlightedMarkup: generateHighlightedMarkup(cellText, typedValue),
 				};
 			});
 
@@ -525,23 +370,12 @@ class TabularInput extends Input {
 	}
 
 	get _visibleProcessedRows(): ProcessedSuggestionRow[] {
-		return this._processedRows.filter(pr => !(pr.row as UI5Element).hidden);
+		const visibleRowSet = new Set(this._visibleRows);
+		return this._processedRows.filter(pr => visibleRowSet.has(pr.row));
 	}
 
 	_onSuggestionRowClick(row: ITabularSuggestionRow) {
 		this._selectRow(row, false);
-	}
-
-	/**
-	 * Intercepts keyboard events on the table to prevent grid navigation.
-	 * @private
-	 */
-	_onTableKeyDown(e: KeyboardEvent) {
-		if (isF2(e) || isF7(e) || isLeft(e) || isRight(e) ||
-			isPageUp(e) || isPageDown(e) || isHome(e) || isEnd(e)) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	}
 
 	/**
@@ -568,7 +402,6 @@ class TabularInput extends Input {
 		this.fireDecoratorEvent("selection-change", {
 			row,
 		});
-		this.fireDecoratorEvent("row-select", { row });
 		this.fireDecoratorEvent("change");
 		this.fireDecoratorEvent("input", { inputType: "" });
 
@@ -638,6 +471,8 @@ class TabularInput extends Input {
 				this._deselectAllRows();
 				this._matchedTabularRow = undefined;
 				this._rowFocused = false;
+				this._clearAnnouncement();
+				this.value = this.typedInValue;
 				return;
 			}
 			nextIndex = currentIndex - 1;
@@ -651,6 +486,9 @@ class TabularInput extends Input {
 
 		const previewValue = this._getRowValue(visibleRows[nextIndex]);
 		this.value = previewValue;
+		this._performTextSelection = true;
+
+		this._announceSelectedRow(nextIndex);
 
 		this.fireDecoratorEvent("selection-change", {
 			row: visibleRows[nextIndex],
@@ -702,6 +540,7 @@ class TabularInput extends Input {
 			this._matchedTabularRow = undefined;
 			this._rowFocused = false;
 			this.isTyping = false;
+			this._clearAnnouncement();
 			return;
 		}
 		super._handleEscape();
@@ -752,16 +591,27 @@ class TabularInput extends Input {
 	}
 
 	/**
-	 * Returns the ID of the currently focused row for aria-activedescendant
+	 * Announces the currently selected row for screen readers using a live region.
 	 * @private
 	 */
-	get _activeDescendantId(): string | undefined {
-		const focusedRow = this._visibleRows.find(row => row.focused);
-		if (focusedRow) {
-			const index = this._visibleRows.indexOf(focusedRow);
-			return `${this._id}-row-${index}`;
+	_announceSelectedRow(rowIndex: number) {
+		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
+		if (invisibleText) {
+			const rowText = this._getRowValue(this._visibleRows[rowIndex]);
+			const positionText = Input.i18nBundle.getText(LIST_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
+			invisibleText.textContent = `${rowText} ${positionText}`;
 		}
-		return undefined;
+	}
+
+	/**
+	 * Clears the announcement text when closing the popover.
+	 * @private
+	 */
+	_clearAnnouncement() {
+		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
+		if (invisibleText) {
+			invisibleText.textContent = "";
+		}
 	}
 
 	/**
@@ -800,6 +650,5 @@ TabularInput.define();
 export default TabularInput;
 export type {
 	ITabularSuggestionRow,
-	TabularInputRowSelectEventDetail,
 	TabularInputSelectionChangeEventDetail,
 };

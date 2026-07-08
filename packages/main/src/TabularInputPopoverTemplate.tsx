@@ -13,7 +13,7 @@ import TableCell from "./TableCell.js";
 
 /**
  * Renders the tabular suggestions popover for TabularInput.
- * Uses ui5-table for rendering with ARIA overrides for listbox semantics.
+ * Uses ui5-table for rendering tabular suggestions.
  */
 export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemplateResult {
 	return (
@@ -72,30 +72,35 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 
 /**
  * Renders the tabular suggestions list using ui5-table.
- * ARIA roles are overridden in TabularInput.ts to provide listbox semantics.
  */
 function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
+	const isScrollMode = this.overflowMode === "Scroll";
+	const lastColumnIndex = this.suggestionColumns.length - 1;
+
 	return (
 		<div class="ui5-tabular-input-suggestions-wrapper">
 			<Table
 				class="ui5-tabular-suggestions-table"
-				overflowMode="Popin"
+				overflowMode={this.overflowMode}
 				accessibleName={this._tabularSuggestionsAccessibleName}
-				onKeyDown={this._onTableKeyDown}
 				onRowClick={this._onTableRowClick}
 			>
 				<TableHeaderRow slot="headerRow" sticky>
-					{this.suggestionColumns.map((col, index) => (
-						<TableHeaderCell
-							key={`col-${index}`}
-							width={col.width}
-							minWidth={col.minWidth}
-							importance={col.importance}
-							popinText={col.popinText}
-						>
-							{col.textContent}
-						</TableHeaderCell>
-					))}
+					{this.suggestionColumns.map((col, index) => {
+						// In Scroll mode, make last column flexible to prevent dummy cell
+						const width = (isScrollMode && index === lastColumnIndex) ? undefined : col.width;
+						return (
+							<TableHeaderCell
+								key={`col-${index}`}
+								width={width}
+								minWidth={col.minWidth || col.width}
+								importance={col.importance}
+								popinText={col.popinText}
+							>
+								{col.textContent}
+							</TableHeaderCell>
+						);
+					})}
 				</TableHeaderRow>
 
 				{this._visibleProcessedRows.map((processedRow, rowIndex) => (

@@ -56,14 +56,13 @@
 		<ui5-title class="section-title" level="H2">Example 1: Product Search</ui5-title>
 		<p class="description">
 			Search for products. The suggestions show Product ID, Name, Category, and Price in columns.
-			Try typing "Laptop" or "Phone".
+			Try typing "Laptop" or "Phone". Matching text is highlighted in the suggestions.
 		</p>
 
 		<ui5-tabular-input
 			id="productSearch"
 			placeholder="Search for products..."
 			show-suggestions
-			filter="Contains"
 		>
 			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="100px">Product ID</ui5-table-header-cell>
@@ -111,15 +110,13 @@
 	<div class="section">
 		<ui5-title class="section-title" level="H2">Example 2: Employee Directory</ui5-title>
 		<p class="description">
-			Search for employees by name, department, or location.
-			Uses StartsWith filter.
+			Search for employees by name. Typed text is highlighted in all cells.
 		</p>
 
 		<ui5-tabular-input
 			id="employeeSearch"
 			placeholder="Search employees..."
 			show-suggestions
-			filter="StartsWith"
 		>
 			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
@@ -165,9 +162,9 @@
 
 	<!-- Example 3: Popin Mode (Narrow Container) -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 3: Responsive Popin Mode</ui5-title>
+		<ui5-title class="section-title" level="H2">Example 3: Popin Overflow Mode (Default)</ui5-title>
 		<p class="description">
-			This example is in a narrow container to demonstrate the popin behavior.
+			This example uses <code>overflow-mode="Popin"</code> (the default) in a narrow container.
 			Columns will stack vertically when there's not enough space.
 		</p>
 
@@ -176,6 +173,7 @@
 				id="popinSearch"
 				placeholder="Search in narrow space..."
 				show-suggestions
+				overflow-mode="Popin"
 			>
 				<!-- Column Headers with importance for popin priority -->
 				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="0">Code</ui5-table-header-cell>
@@ -208,19 +206,64 @@
 		<div class="output" id="popinOutput">Selected: (none)</div>
 	</div>
 
-	<!-- Example 4: No Filter (Show All) -->
+	<!-- Example 4: Scroll Overflow Mode -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 4: No Filtering</ui5-title>
+		<ui5-title class="section-title" level="H2">Example 4: Scroll Overflow Mode</ui5-title>
 		<p class="description">
-			This example shows all suggestions without filtering.
-			Useful when the server handles filtering.
+			This example uses <code>overflow-mode="Scroll"</code> in a narrow container.
+			A horizontal scrollbar appears when columns don't fit.
+		</p>
+
+		<div class="narrow-container">
+			<ui5-tabular-input
+				id="scrollSearch"
+				placeholder="Search with scroll..."
+				show-suggestions
+				overflow-mode="Scroll"
+			>
+				<!-- Column Headers -->
+				<ui5-table-header-cell slot="suggestionColumns" width="80px">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Description</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px">Quantity</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="100px">Status</ui5-table-header-cell>
+
+				<!-- Suggestion Rows -->
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>A001</ui5-table-cell>
+					<ui5-table-cell>Widget Alpha</ui5-table-cell>
+					<ui5-table-cell>150</ui5-table-cell>
+					<ui5-table-cell>In Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>B002</ui5-table-cell>
+					<ui5-table-cell>Widget Beta</ui5-table-cell>
+					<ui5-table-cell>75</ui5-table-cell>
+					<ui5-table-cell>Low Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>C003</ui5-table-cell>
+					<ui5-table-cell>Widget Gamma</ui5-table-cell>
+					<ui5-table-cell>0</ui5-table-cell>
+					<ui5-table-cell>Out of Stock</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+
+		<div class="output" id="scrollOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 5: Server-Side Filtering -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 5: Server-Side Filtering</ui5-title>
+		<p class="description">
+			Filtering is the app developer's responsibility. Listen to the "input" event to filter
+			the suggestion rows based on the typed value (e.g., via server request).
 		</p>
 
 		<ui5-tabular-input
 			id="noFilterSearch"
 			placeholder="Type anything..."
 			show-suggestions
-			filter="None"
 		>
 			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="100px">Country</ui5-table-header-cell>
@@ -253,9 +296,9 @@
 		<div class="output" id="noFilterOutput">Selected: (none)</div>
 	</div>
 
-	<!-- Example 5: With Clear Icon -->
+	<!-- Example 6: With Clear Icon -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 5: With Clear Icon</ui5-title>
+		<ui5-title class="section-title" level="H2">Example 6: With Clear Icon</ui5-title>
 		<p class="description">
 			TabularInput with show-clear-icon enabled for easy value clearing.
 		</p>
@@ -265,7 +308,6 @@
 			placeholder="Search with clear icon..."
 			show-suggestions
 			show-clear-icon
-			filter="Contains"
 		>
 			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="80px">ID</ui5-table-header-cell>
@@ -299,12 +341,14 @@
 			const outputId = input.id.replace('Search', 'Output');
 			const output = document.getElementById(outputId);
 
-			input.addEventListener('row-select', (e) => {
+			input.addEventListener('selection-change', (e) => {
 				const row = e.detail.row;
-				const cells = row.querySelectorAll('ui5-table-cell');
-				const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
-				output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
-				console.log('row-select event:', e.detail);
+				if (row) {
+					const cells = row.querySelectorAll('ui5-table-cell');
+					const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
+					output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
+				}
+				console.log('selection-change event:', e.detail);
 			});
 
 			input.addEventListener('change', (e) => {
@@ -313,10 +357,6 @@
 
 			input.addEventListener('input', (e) => {
 				console.log('input event - value:', e.target.value);
-			});
-
-			input.addEventListener('selection-change', (e) => {
-				console.log('selection-change event:', e.detail);
 			});
 		});
 	</script>
