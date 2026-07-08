@@ -10,6 +10,7 @@ Cypress.Commands.add('waitRenderFinished', () => {
 Cypress.Commands.add('mount', args => {
 	cy.then(() => mount(args)).then(() => {
 		cy.waitRenderFinished();
+		cy.wrap(document.fonts.ready, { log: false });
 	});
 });
 
