@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.3](https://github.com/UI5/webcomponents/compare/v2.23.2...v2.23.3) (2026-07-08)
+
+
+### Bug Fixes
+
+* **framework:** await pending language change in connectedCallback (2.23) ([#13801](https://github.com/UI5/webcomponents/issues/13801)) ([4535b24](https://github.com/UI5/webcomponents/commit/4535b24284fdc4594d2b30765ad0f12651d3d5ea)), closes [#13602](https://github.com/UI5/webcomponents/issues/13602)
+
+
+
+
+
 ## [2.23.2](https://github.com/UI5/webcomponents/compare/v2.23.1...v2.23.2) (2026-06-26)
 
 
