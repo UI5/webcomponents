@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents",
-  "version": "2.23.0",
+  "version": "2.24.0",
   "description": "UI5 Web Components: webcomponents.main",
   "ui5": {
     "webComponentsPackage": true
@@ -33,6 +33,8 @@
     "test:cypress:suite-3": "wc-dev test-cy-ci-suite-3",
     "test:cypress:suite-4": "wc-dev test-cy-ci-suite-4",
     "test:cypress:open": "wc-dev test-cy-open",
+    "test:cypress:visual": "CYPRESS_VISUAL=true yarn test:cypress",
+    "test:cypress:open:visual": "CYPRESS_VISUAL=true yarn test:cypress:open",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:vitest": "yarn vitest run",
     "test:ssr": "node -e \"import('./test/ssr/component-imports.js')\"",
@@ -54,17 +56,17 @@
     "directory": "packages/main"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "2.23.0",
-    "@ui5/webcomponents-icons": "2.23.0",
-    "@ui5/webcomponents-icons-business-suite": "2.23.0",
-    "@ui5/webcomponents-icons-tnt": "2.23.0",
-    "@ui5/webcomponents-localization": "2.23.0",
-    "@ui5/webcomponents-theming": "2.23.0"
+    "@ui5/webcomponents-base": "2.24.0",
+    "@ui5/webcomponents-icons": "2.24.0",
+    "@ui5/webcomponents-icons-business-suite": "2.24.0",
+    "@ui5/webcomponents-icons-tnt": "2.24.0",
+    "@ui5/webcomponents-localization": "2.24.0",
+    "@ui5/webcomponents-theming": "2.24.0"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.23.0",
+    "@ui5/webcomponents-tools": "2.24.0",
     "cypress": "15.9.0",
     "jsdom": "^26.0.0",
     "lit": "^2.0.0",

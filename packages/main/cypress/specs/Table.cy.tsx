@@ -51,6 +51,10 @@ describe("Table - Rendering", () => {
 		cy.get("@innerTable").should("have.attr", "role", "grid");
 		cy.get("@innerTable").should("have.attr", "aria-colcount", "2");
 		cy.get("@innerTable").should("have.attr", "aria-rowcount", "2");
+
+		cy.get("[ui5-table-row]").then($row => {
+			expect(getComputedStyle($row[0]).breakInside).to.equal("avoid");
+		});
 	});
 
 	it("tests if initial empty table renders without errors", () => {
@@ -115,6 +119,7 @@ describe("Table - Rendering", () => {
 		const expectedWidth = 100;
 		cy.get("ui5-table-header-cell").each(($cell) => {
 			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+			expect(getComputedStyle($cell[0]).minHeight).to.not.equal("auto");
 		});
 	});
 

@@ -11,20 +11,32 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import Popup from "./Popup.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import "@ui5/webcomponents-icons/dist/information.js";
+import "@ui5/webcomponents-icons/dist/full-screen.js";
+import "@ui5/webcomponents-icons/dist/exit-full-screen.js";
 
 import {
-	DIALOG_HEADER_ARIA_ROLE_DESCRIPTION,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE,
-	DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE,
+	DIALOG_RESIZE_HANDLE_TOOLTIP,
+	DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_DRAG_HANDLE_ARIA_LABEL,
+	DIALOG_RESIZE_HANDLE_ARIA_LABEL,
+	DIALOG_HANDLE_ARIA_ROLEDESCRIPTION,
 	DIALOG_HEADER_ARIA_LABEL,
 	DIALOG_CONTENT_ARIA_LABEL,
 	DIALOG_FOOTER_ARIA_LABEL,
+	DIALOG_FULLSCREEN_MAXIMIZE,
+	DIALOG_FULLSCREEN_RESTORE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -38,6 +50,10 @@ import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
  * Defines the step size at which this component would change by when being dragged or resized with the keyboard.
  */
 const STEP_SIZE = 16;
+
+const FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES = {
+	ariaKeyShortcuts: "Shift+Ctrl+F",
+};
 
 type ValueStateWithIcon = ValueState.Negative | ValueState.Critical | ValueState.Positive | ValueState.Information;
 /**
@@ -81,18 +97,24 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  * ### Keyboard Handling
  *
  * #### Basic Navigation
- * When the `ui5-dialog` has the `draggable` property set to `true` and the header is focused, the user can move the dialog
+ * When the `ui5-dialog` has the `draggable` property set to `true`, the user can move the dialog
  * with the following keyboard shortcuts:
  *
  * - [Up] or [Down] arrow keys - Move the dialog up/down.
  * - [Left] or [Right] arrow keys - Move the dialog left/right.
  *
  * #### Resizing
- * When the `ui5-dialog` has the `resizable` property set to `true` and the header is focused, the user can change the size of the dialog
+ * When the `ui5-dialog` has the `resizable` property set to `true`, the user can change the size of the dialog
  * with the following keyboard shortcuts:
  *
  * - [Shift] + [Up] or [Down] - Decrease/Increase the height of the dialog.
  * - [Shift] + [Left] or [Right] - Decrease/Increase the width of the dialog.
+ *
+ * #### Fullscreen
+ * When the `ui5-dialog` has the `showFullscreenButton` property set to `true`, the user can toggle fullscreen mode
+ * with the following keyboard shortcut:
+ *
+ * - [Shift] + [Ctrl] + [F] - Toggle fullscreen mode.
  *
  * ### ES6 Module Import
  *
@@ -170,6 +192,21 @@ class Dialog extends Popup {
 	resizable = false;
 
 	/**
+	 * Defines whether a fullscreen toggle button is shown in the dialog header.
+	 * When pressed, it toggles the `stretch` property.
+	 * The fullscreen button is not available on phone devices.
+	 *
+	 * **Note:** The fullscreen button is not available on phone devices,
+	 * nor when a custom header slot is provided — the application is expected
+	 * to render its own toggle inside the custom header in those cases.
+	 * @default false
+	 * @since 2.25.0
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showFullscreenButton = false;
+
+	/**
 	 * Defines the state of the `Dialog`.
 	 *
 	 * **Note:** If `"Negative"` and `"Critical"` states is set, it will change the
@@ -181,12 +218,19 @@ class Dialog extends Popup {
 	@property()
 	state: `${ValueState}` = "None";
 
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_showFullscreenButton = false;
+
 	_screenResizeHandler: () => void;
 	_dragMouseMoveHandler: (e: MouseEvent) => void;
 	_dragMouseUpHandler: (e: MouseEvent) => void;
 	_resizeMouseMoveHandler: (e: MouseEvent) => void;
 	_resizeMouseUpHandler: (e: MouseEvent) => void;
 	_dragStartHandler: (e: DragEvent) => void;
+	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -201,6 +245,7 @@ class Dialog extends Popup {
 	_cachedMinHeight?: number;
 	_draggedOrResized = false;
 	_dragHandlerRegistered = false;
+	_fullscreenKeydownHandlerRegistered = false;
 
 	/**
 	 * Defines the header HTML Element.
@@ -235,6 +280,7 @@ class Dialog extends Popup {
 		this._resizeMouseUpHandler = this._onResizeMouseUp.bind(this);
 
 		this._dragStartHandler = this._handleDragStart.bind(this);
+		this._fullscreenKeydownHandler = this._onFullscreenKeydown.bind(this);
 	}
 
 	static _isHeader(element: HTMLElement) {
@@ -255,43 +301,121 @@ class Dialog extends Popup {
 		return ariaLabelledById;
 	}
 
-	get ariaRoleDescriptionHeaderText() {
-		return (this.resizable || this.draggable) ? Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_ROLE_DESCRIPTION) : undefined;
-	}
-
 	get effectiveAriaDescribedBy() {
-		return (this.resizable || this.draggable) ? `${this._id}-descr` : undefined;
+		return this._movable ? `${this._id}-dialog-descr` : undefined;
 	}
 
-	get ariaDescribedByHeaderTextResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_RESIZABLE);
+	get ariaDescribedByIds() {
+		return [
+			this.ariaDescriptionTextId,
+			this.effectiveAriaDescribedBy,
+		].filter(Boolean).join(" ");
 	}
 
-	get ariaDescribedByHeaderTextDraggable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE);
+	get dialogAriaDescribedByText() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE_RESIZABLE);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_DRAGGABLE);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_REACH_RESIZABLE);
+		}
+
+		return "";
 	}
 
-	get ariaDescribedByHeaderTextDraggableAndResizable() {
-		return Dialog.i18nBundle.getText(DIALOG_HEADER_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+	get ariaDescribedByTextResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE);
+	}
+
+	get ariaDescribedByTextDraggable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE);
+	}
+
+	get ariaDescribedByTextDraggableAndResizable() {
+		return Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE_RESIZABLE);
+	}
+
+	get ariaDescribedByHandlerText() {
+		if (this.resizable && this.draggable) {
+			return this.ariaDescribedByTextDraggableAndResizable;
+		}
+		if (this.resizable) {
+			return this.ariaDescribedByTextResizable;
+		}
+		if (this.draggable) {
+			return this.ariaDescribedByTextDraggable;
+		}
+		return "";
 	}
 
 	/**
 	 * Determines if the header should be shown.
 	 */
 	get _displayHeader() {
-		return this.header.length || this.headerText || this.draggable || this.resizable;
+		return this.header.length || this.headerText || this.draggable || this.resizable || this._showFullscreenButton;
 	}
 
 	get _movable() {
 		return !this.stretch && this.onDesktop && (this.draggable || this.resizable);
 	}
 
-	get _headerTabIndex() {
+	get _dragResizeHandleTabIndex() {
 		return this._movable ? 0 : undefined;
 	}
 
+	get _dragResizeHandleAriaLabel() {
+		if (!this._movable) {
+			return "";
+		}
+
+		if (this.resizable && this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_AND_RESIZE_HANDLE_ARIA_LABEL);
+		}
+		if (this.draggable) {
+			return Dialog.i18nBundle.getText(DIALOG_DRAG_HANDLE_ARIA_LABEL);
+		}
+		if (this.resizable) {
+			return Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_ARIA_LABEL);
+		}
+
+		return "";
+	}
+
+	get _dragResizeHandleAriaRoleDescription() {
+		return this._movable ? Dialog.i18nBundle.getText(DIALOG_HANDLE_ARIA_ROLEDESCRIPTION) : undefined;
+	}
+
+	get _dragResizeHandleAriaDescribedBy() {
+		return this._movable ? `${this._id}-descr` : undefined;
+	}
+
 	get _showResizeHandle() {
-		return this.resizable && this.onDesktop;
+		return this.resizable && this.onDesktop && !this.stretch;
+	}
+
+	get _fullscreenButtonIcon() {
+		return this.stretch ? "exit-full-screen" : "full-screen";
+	}
+
+	get _fullscreenButtonTooltip() {
+		return this.stretch
+			? Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_RESTORE)
+			: Dialog.i18nBundle.getText(DIALOG_FULLSCREEN_MAXIMIZE);
+	}
+
+	get _fullscreenButtonAccessibilityAttributes() {
+		return FULLSCREEN_BUTTON_ACCESSIBILITY_ATTRIBUTES;
+	}
+
+	get _resizeHandleTooltip() {
+		return this._showResizeHandle ? Dialog.i18nBundle.getText(DIALOG_RESIZE_HANDLE_TOOLTIP) : undefined;
 	}
 
 	get _minHeight() {
@@ -354,6 +478,8 @@ class Dialog extends Popup {
 	onBeforeRendering() {
 		super.onBeforeRendering();
 
+		this._showFullscreenButton = this.showFullscreenButton && !this.onPhone && !this.header.length;
+
 		this._isRTL = this.effectiveDir === "rtl";
 	}
 
@@ -375,11 +501,13 @@ class Dialog extends Popup {
 	_attachBrowserEvents() {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
+		this._registerFullscreenKeydownHandler();
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
+		this._deregisterFullscreenKeydownHandler();
 	}
 
 	_attachScreenResizeHandler() {
@@ -410,6 +538,20 @@ class Dialog extends Popup {
 		}
 	}
 
+	_registerFullscreenKeydownHandler() {
+		if (this.showFullscreenButton && !this._fullscreenKeydownHandlerRegistered) {
+			document.addEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = true;
+		}
+	}
+
+	_deregisterFullscreenKeydownHandler() {
+		if (this._fullscreenKeydownHandlerRegistered) {
+			document.removeEventListener("keydown", this._fullscreenKeydownHandler);
+			this._fullscreenKeydownHandlerRegistered = false;
+		}
+	}
+
 	_center() {
 		const height = window.innerHeight - this.offsetHeight,
 			width = window.innerWidth - this.offsetWidth;
@@ -432,6 +574,49 @@ class Dialog extends Popup {
 	/**
 	 * Event handlers
 	 */
+	_toggleFullscreen() {
+		if (this.onPhone) {
+			return;
+		}
+
+		const wasStretched = this.stretch;
+		this.stretch = !this.stretch;
+
+		this._revertSize();
+		this._draggedOrResized = false;
+
+		if (wasStretched) {
+			requestAnimationFrame(() => {
+				if (this.open) {
+					this._center();
+				}
+			});
+		}
+	}
+
+	_onHeaderDblClick(e: MouseEvent) {
+		const target = e.target as HTMLElement;
+		const headerRoot = this._root.querySelector(".ui5-popup-header-root");
+		if (target !== headerRoot && !target.classList.contains("ui5-popup-header-text")) {
+			return;
+		}
+
+		this._toggleFullscreen();
+	}
+
+	_onFullscreenKeydown(e: KeyboardEvent) {
+		if (this.isTopModalPopup && this._showFullscreenButton && this._isFullscreenShortcut(e)) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			this._toggleFullscreen();
+		}
+	}
+
+	_isFullscreenShortcut(e: KeyboardEvent) {
+		return (e.key === "f" || e.key === "F") && e.ctrlKey && e.shiftKey && !e.altKey;
+	}
+
 	_onDragMouseDown(e: MouseEvent) {
 		// allow dragging only on the header
 		if (!this._movable || !this.draggable || !Dialog._isHeader(e.target as HTMLElement)) {
@@ -489,7 +674,12 @@ class Dialog extends Popup {
 	}
 
 	_onDragOrResizeKeyDown(e: KeyboardEvent) {
-		if (!this._movable || !Dialog._isHeader(e.target as HTMLElement)) {
+		if (!this._movable) {
+			return;
+		}
+
+		const target = e.target as HTMLElement;
+		if (!target || target.id !== `${this._id}-dragResizeHandler`) {
 			return;
 		}
 
@@ -701,6 +891,32 @@ class Dialog extends Popup {
 	_detachMouseResizeHandlers() {
 		window.removeEventListener("mousemove", this._resizeMouseMoveHandler);
 		window.removeEventListener("mouseup", this._resizeMouseUpHandler);
+	}
+
+	async _getFirstFocusableElement() {
+		if (this._showFullscreenButton) {
+			const firstFocusable = await getFirstFocusableElement(this.contentDOM) || (this.footerDOM ? await getFirstFocusableElement(this.footerDOM) : null);
+			return firstFocusable || getFirstFocusableElement(this);
+		}
+
+		return getFirstFocusableElement(this);
+	}
+
+	/**
+	 * Overrides Popup's forwardToLast to prioritize the drag/resize handler
+	 * when Shift+Tab is pressed from the first focusable element.
+	 * @private
+	 */
+	async forwardToLast() {
+		if (this._movable) {
+			const dragResizeHandler = this.shadowRoot!.querySelector(`#${this._id}-dragResizeHandler`) as HTMLElement;
+			if (dragResizeHandler) {
+				dragResizeHandler.focus();
+				return;
+			}
+		}
+
+		await super.forwardToLast();
 	}
 }
 

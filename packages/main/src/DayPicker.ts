@@ -104,6 +104,7 @@ type DayPickerChangeEventDetail = {
 
 type DayPickerNavigateEventDetail = {
 	timestamp: number,
+	mouse?: boolean,
 }
 
 /**
@@ -209,6 +210,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_focusableDay!: HTMLElement;
 
 	_autoFocus?: boolean;
+	_mousedownTimestamp?: number;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -517,7 +519,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		const timestamp = this._getTimestampFromDom(target);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		this._mousedownTimestamp = undefined;
 
 		if (setTimestamp) {
 			this._safelySetTimestamp(timestamp);
@@ -611,8 +614,18 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		this._safelySetTimestamp(this._getTimestampFromDom(target));
-		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp! });
+		const timestamp = this._getTimestampFromDom(target);
+		const clickedDate = CalendarDate.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
+		const isOtherMonth = clickedDate.getMonth() !== this._calendarDate.getMonth();
+
+		this._mousedownTimestamp = timestamp;
+		this._safelySetTimestamp(timestamp);
+
+		if (isOtherMonth) {
+			this._autoFocus = true;
+		}
+
+		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
 	/**

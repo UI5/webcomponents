@@ -12,6 +12,7 @@ export default function RadioButtonTemplate(this: RadioButton) {
 			aria-disabled={this.effectiveAriaDisabled}
 			aria-describedby={this.effectiveAriaDescribedBy}
 			aria-label={this.ariaLabelText}
+			aria-labelledby={this.ariaLabelledBy}
 			tabindex={this.effectiveTabIndex}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}

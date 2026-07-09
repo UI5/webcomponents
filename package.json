@@ -58,6 +58,7 @@
     "ci:test:fiori": "yarn workspace @ui5/webcomponents-fiori test:ssr && yarn workspace @ui5/webcomponents-fiori test:cypress",
     "ci:test:compat": "yarn workspace @ui5/webcomponents-compat test:ssr && yarn workspace @ui5/webcomponents-compat test:cypress",
     "ci:test:ai": "yarn workspace @ui5/webcomponents-ai test:ssr && yarn workspace @ui5/webcomponents-ai test",
+    "ci:test:visual": "yarn workspaces foreach --all --include '@ui5/webcomponents' --include '@ui5/webcomponents-fiori' run test:cypress:visual",
     "lint": "yarn workspaces foreach --all --parallel run lint",
     "lint:scope": "yarn workspaces foreach --all --parallel run lint:scope",
     "link-all": "yarn workspaces foreach --all --parallel run link",
