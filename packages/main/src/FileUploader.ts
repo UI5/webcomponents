@@ -59,6 +59,8 @@ import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
 
 const convertBytesToMegabytes = (bytes: number) => (bytes / 1024) / 1024;
 
+type MappedValueState = Exclude<`${ValueState}`, "None">;
+
 type FileData = {
 	fileName: string,
 	fileSize: number,
@@ -632,7 +634,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		};
 	}
 
-	get valueStateTypeMappings(): Record<string, string> {
+	get valueStateTypeMappings(): Record<MappedValueState, string> {
 		return {
 			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
 			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
@@ -646,7 +648,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 			return undefined;
 		}
 
-		const valueStateType = this.valueStateTypeMappings[this.valueState];
+		const valueStateType = this.valueStateTypeMappings[this.valueState as MappedValueState];
 
 		if (this.shouldDisplayDefaultValueStateMessage) {
 			return this.valueStateText ? `${valueStateType} ${this.valueStateText}` : valueStateType;
@@ -675,7 +677,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		return this.placeholder ?? (this.multiple ? multiplePlaceholder : singlePlaceholder);
 	}
 
-	get valueStateTextMappings(): Record<string, string> {
+	get valueStateTextMappings(): Record<MappedValueState, string> {
 		return {
 			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_SUCCESS),
 			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_INFORMATION),
@@ -684,8 +686,8 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		};
 	}
 
-	get valueStateText(): string {
-		return this.valueStateTextMappings[this.valueState];
+	get valueStateText(): string | undefined {
+		return this.valueStateTextMappings[this.valueState as MappedValueState];
 	}
 
 	get hasValueState(): boolean {
