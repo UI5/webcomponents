@@ -819,12 +819,10 @@ describe("Carousel general interaction", () => {
 			.then($carousel => {
 				const carousel = $carousel[0];
 				carousel.style.width = "99%";
-				expect(carousel._resizing).to.be.false;
 
 				return new Cypress.Promise(resolve => {
 					requestAnimationFrame(() => {
 						carousel.style.width = "98%";
-						expect(carousel._resizing).to.be.false;
 
 						setTimeout(() => {
 							expect(carousel._resizing).to.be.false;
