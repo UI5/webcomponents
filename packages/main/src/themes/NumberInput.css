@@ -22,7 +22,6 @@
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
 	border: var(--_ui5_number_input_border_style);
-	border-width: var(--_ui5_number_input_border_width);
 	border-radius: var(--sapField_BorderCornerRadius);
 	box-sizing: border-box;
 	height: var(--_ui5_input_height);
@@ -69,13 +68,11 @@
 :host([value-state="None"]:not([readonly]):not([disabled]):hover) {
 	background-color: var(--_ui5_number_input_border_color_hover);
 	border: var(--_ui5_number_input_border_hover);
-	border-width: var(--_ui5_number_input_border_width);
 }
 :host(:not([value-state]):not([readonly]):not([disabled]):not([focused]):hover),
 :host([value-state="None"]:not([readonly]):not([disabled]):not([focused]):hover) {
 	background-color: var(--sapField_Hover_Background);
 	border: var(--_ui5_number_input_border_style_hover);
-	border-width: var(--_ui5_number_input_border_width);
 	box-shadow: var(--sapField_Hover_Shadow);
 }
 
@@ -105,10 +102,13 @@
 :host(:not([value-state]):not([readonly]):not([disabled])[focused]),
 :host([value-state="None"]:not([readonly]):not([disabled])[focused]),
 :host([value-state="Positive"]:not([readonly]):not([disabled])[focused]),
-:host([value-state="Negative"]:not([readonly]):not([disabled])[focused]),
 :host([value-state="Information"]:not([readonly]):not([disabled])[focused]),
 :host([value-state="Critical"]:not([readonly]):not([disabled])[focused]){
 	background-color: var(--sapField_Focus_Background);
+}
+
+:host([value-state="Negative"]:not([readonly]):not([disabled])[focused]) {
+	background-color: var(--_ui5_number_input_error_focused_background);
 }
 
 :host([value-state="Negative"]:not([readonly]):not([disabled]):hover),
@@ -288,6 +288,8 @@
 
 :host([value-state="Information"]:not([readonly]):not([disabled])) .ui5-number-input-input[focused]::after {
 	border-color: var(--_ui5_number_input_input_information_border_color_focused_after);
+	top: var(--_ui5_number_input_input_border_top_information_focused_after);
+	bottom: var(--_ui5_number_input_input_border_bottom_information_focused_after);
 }
 
 :host([value-state="Critical"]:not([readonly]):not([disabled])) .ui5-number-input-input[focused]::after {
