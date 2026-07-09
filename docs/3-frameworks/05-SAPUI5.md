@@ -14,13 +14,13 @@ The full, up-to-date instructions live in the SAPUI5 documentation: [Using Web C
 
 ### Step 1. Create a SAPUI5 app
 
-If you don't already have one, scaffold a SAPUI5 (TypeScript) app with the community generator:
+If you don't already have one, scaffold a SAPUI5 app with the community [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5). It runs on top of [Yeoman](https://yeoman.io/), so you can invoke it without a global install:
 
 ```bash
-npx generator-easy-ui5 project
+npx -p yo -p generator-easy-ui5 yo easy-ui5 project
 ```
 
-Answer the prompts (project name, namespace, TypeScript support, etc.). For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/SAP/generator-easy-ui5) and the [SAPUI5 TypeScript tutorial](https://sap.github.io/ui5-typescript/).
+Answer the prompts (project name, namespace, framework, etc.). For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5) and the [UI5 CLI Getting Started guide](https://ui5.github.io/cli/stable/pages/GettingStarted/).
 
 ### Step 2. Install the UI5 tooling extension
 
@@ -30,7 +30,7 @@ The [`ui5-tooling-modules`](https://www.npmjs.com/package/ui5-tooling-modules) C
 npm install ui5-tooling-modules --save-dev --ignore-scripts=false -rte=ui5.yaml,ui5-local.yaml,ui5-deploy.yaml
 ```
 
-The `-rte` (register-tooling-extension) flag registers the custom task and middleware in your `ui5*.yaml` files automatically. If your project has only `ui5.yaml`, use `-rte` without a value.
+The `-rte` (register-tooling-extension) flag registers the custom task and middleware in your `ui5*.yaml` files automatically. Any listed file that doesn't exist is simply skipped, so the command above is safe even if your project only has `ui5.yaml` — you can also pass `-rte` without a value to target just that file.
 
 ### Step 3. Install the Web Components packages you need
 
