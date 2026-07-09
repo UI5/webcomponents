@@ -73,6 +73,16 @@ realEventCommandsRest.forEach(cmd => {
 	});
 });
 
+Cypress.Commands.overwrite("screenshot", (originalFn, ...args) => {
+	const delay = Number(Cypress.env("SCREENSHOT_DELAY") ?? 0);
+
+	if (delay > 0) {
+		return cy.wait(delay).then(() => (originalFn as any)(...args));
+	}
+
+	return (originalFn as any)(...args);
+});
+
 declare global {
 	namespace Cypress {
 		interface Chainable {
