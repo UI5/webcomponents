@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Wizard Accessibility Test Page</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_horizon",
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: "72", Arial, sans-serif;
+			padding: 2rem;
+			background-color: var(--sapBackgroundColor);
+		}
+
+		.test-section {
+			margin-bottom: 3rem;
+			padding: 1.5rem;
+			border: 1px solid var(--sapContent_ForegroundBorderColor);
+			border-radius: 0.5rem;
+			background-color: var(--sapGroup_ContentBackground);
+		}
+
+		.test-section h2 {
+			margin-top: 0;
+			color: var(--sapTitleColor);
+			border-bottom: 1px solid var(--sapContent_ForegroundBorderColor);
+			padding-bottom: 0.5rem;
+		}
+
+		.test-description {
+			margin-bottom: 1rem;
+			color: var(--sapContent_LabelColor);
+			font-size: 0.875rem;
+		}
+
+		.wizard-container {
+			height: 400px;
+			border: 1px solid var(--sapContent_ForegroundBorderColor);
+			border-radius: 0.25rem;
+		}
+
+		ui5-wizard {
+			height: 100%;
+		}
+
+		.step-content {
+			padding: 1rem;
+		}
+
+		.instructions {
+			background-color: var(--sapInformationBackground);
+			padding: 1rem;
+			border-radius: 0.25rem;
+			margin-bottom: 2rem;
+		}
+
+		.instructions h3 {
+			margin-top: 0;
+			color: var(--sapInformationColor);
+		}
+
+		.instructions ul {
+			margin-bottom: 0;
+		}
+
+		code {
+			background-color: var(--sapButton_Lite_Background);
+			padding: 0.125rem 0.25rem;
+			border-radius: 0.125rem;
+			font-family: monospace;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Wizard Accessibility Test Page</h1>
+	<p>Use this page to test the <code>accessibleName</code> and <code>accessibleNameRef</code> properties with screen readers (JAWS on Windows, VoiceOver on macOS).</p>
+
+	<!-- Test 1: Default behavior (no accessibleName) -->
+	<div class="test-section">
+		<h2>Test 1: Default Behavior (No accessibleName)</h2>
+		<p class="test-description">
+			This wizard has no <code>accessibleName</code> set. It should announce the default i18n label: <strong>"Wizard"</strong>
+		</p>
+		<div class="wizard-container">
+			<ui5-wizard id="wizard-default">
+				<ui5-wizard-step title-text="Personal Information" icon="sap-icon://person-placeholder" selected>
+					<div class="step-content">
+						<ui5-title>Step 1: Personal Information</ui5-title>
+						<br>
+						<ui5-label>Enter your personal details here.</ui5-label>
+						<br><br>
+						<ui5-input placeholder="Your name..."></ui5-input>
+						<br><br>
+						<ui5-button id="toStep2Default" design="Emphasized">Continue to Step 2</ui5-button>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Contact Details" disabled>
+					<div class="step-content">
+						<ui5-title>Step 2: Contact Details</ui5-title>
+						<br>
+						<ui5-label>Enter your contact information.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+	</div>
+
+	<!-- Test 2: accessibleName property -->
+	<div class="test-section">
+		<h2>Test 2: Using accessibleName Property</h2>
+		<p class="test-description">
+			This wizard has <code>accessibleName="Employee Registration Process"</code> set. It should announce: <strong>"Employee Registration Process"</strong>
+		</p>
+		<div class="wizard-container">
+			<ui5-wizard id="wizard-accessible-name" accessible-name="Employee Registration Process">
+				<ui5-wizard-step title-text="Personal Details" icon="sap-icon://employee" selected>
+					<div class="step-content">
+						<ui5-title>Step 1: Personal Details</ui5-title>
+						<br>
+						<ui5-label>Complete your employee profile.</ui5-label>
+						<br><br>
+						<ui5-input placeholder="Employee ID..."></ui5-input>
+						<br><br>
+						<ui5-button id="toStep2AccessibleName" design="Emphasized">Continue to Step 2</ui5-button>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Department Assignment" disabled>
+					<div class="step-content">
+						<ui5-title>Step 2: Department Assignment</ui5-title>
+						<br>
+						<ui5-label>Select your department.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+	</div>
+
+	<!-- Test 3: accessibleNameRef property -->
+	<div class="test-section">
+		<h2>Test 3: Using accessibleNameRef Property</h2>
+		<p class="test-description">
+			This wizard has <code>accessibleNameRef="order-wizard-label"</code> referencing an external element. It should announce: <strong>"Order Completion Workflow"</strong>
+		</p>
+		<h3 id="order-wizard-label">Order Completion Workflow</h3>
+		<div class="wizard-container">
+			<ui5-wizard id="wizard-accessible-name-ref" accessible-name-ref="order-wizard-label">
+				<ui5-wizard-step title-text="Cart Review" icon="sap-icon://cart" selected>
+					<div class="step-content">
+						<ui5-title>Step 1: Review Your Cart</ui5-title>
+						<br>
+						<ui5-label>Please review the items in your cart before proceeding.</ui5-label>
+						<br><br>
+						<ui5-button id="toStep2AccessibleNameRef" design="Emphasized">Continue to Payment</ui5-button>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Payment" disabled>
+					<div class="step-content">
+						<ui5-title>Step 2: Payment Details</ui5-title>
+						<br>
+						<ui5-label>Enter your payment information.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Confirmation" disabled>
+					<div class="step-content">
+						<ui5-title>Step 3: Order Confirmation</ui5-title>
+						<br>
+						<ui5-label>Your order has been placed.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+	</div>
+
+	<!-- Test 4: accessibleNameRef overrides accessibleName -->
+	<div class="test-section">
+		<h2>Test 4: accessibleNameRef Takes Precedence Over accessibleName</h2>
+		<p class="test-description">
+			This wizard has both <code>accessibleName="Internal Label"</code> and <code>accessibleNameRef="external-label"</code>.
+			The <code>accessibleNameRef</code> should take precedence. It should announce: <strong>"Expense Report Submission"</strong>
+		</p>
+		<span id="external-label">Expense Report Submission</span>
+		<div class="wizard-container">
+			<ui5-wizard id="wizard-both-props" accessible-name="Internal Label" accessible-name-ref="external-label">
+				<ui5-wizard-step title-text="Expense Details" icon="sap-icon://money-bills" selected>
+					<div class="step-content">
+						<ui5-title>Step 1: Expense Details</ui5-title>
+						<br>
+						<ui5-label>Enter your expense information.</ui5-label>
+						<br><br>
+						<ui5-input placeholder="Amount..."></ui5-input>
+						<br><br>
+						<ui5-button id="toStep2Both" design="Emphasized">Continue to Receipts</ui5-button>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Receipts" disabled>
+					<div class="step-content">
+						<ui5-title>Step 2: Upload Receipts</ui5-title>
+						<br>
+						<ui5-label>Upload your expense receipts.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+	</div>
+
+	<!-- Test 5: Multiple Wizards on Same Page -->
+	<div class="test-section">
+		<h2>Test 5: Multiple Wizards with Different Accessible Names</h2>
+		<p class="test-description">
+			Two wizards on the same page with different accessible names. Screen readers should distinguish between them.
+		</p>
+
+		<h4>Wizard A: <span id="wizardA-label">Account Setup Wizard</span></h4>
+		<div class="wizard-container" style="height: 250px; margin-bottom: 1rem;">
+			<ui5-wizard id="wizard-a" accessible-name-ref="wizardA-label">
+				<ui5-wizard-step title-text="Username" selected>
+					<div class="step-content">
+						<ui5-input placeholder="Choose username..."></ui5-input>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Password" disabled>
+					<div class="step-content">
+						<ui5-input type="Password" placeholder="Choose password..."></ui5-input>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+
+		<h4>Wizard B: <span id="wizardB-label">Profile Customization Wizard</span></h4>
+		<div class="wizard-container" style="height: 250px;">
+			<ui5-wizard id="wizard-b" accessible-name-ref="wizardB-label">
+				<ui5-wizard-step title-text="Avatar" selected>
+					<div class="step-content">
+						<ui5-label>Choose your profile picture.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+				<ui5-wizard-step title-text="Theme" disabled>
+					<div class="step-content">
+						<ui5-label>Select your preferred theme.</ui5-label>
+					</div>
+				</ui5-wizard-step>
+			</ui5-wizard>
+		</div>
+	</div>
+
+	<script>
+		// Helper function to move to next step
+		function moveToNextStep(wizardId, currentStepIndex) {
+			const wizard = document.getElementById(wizardId);
+			const steps = wizard.querySelectorAll("ui5-wizard-step");
+
+			if (currentStepIndex < steps.length - 1) {
+				steps[currentStepIndex].selected = false;
+				steps[currentStepIndex + 1].disabled = false;
+				steps[currentStepIndex + 1].selected = true;
+			}
+		}
+
+		// Wire up the "Continue" buttons
+		document.getElementById("toStep2Default")?.addEventListener("click", () => {
+			moveToNextStep("wizard-default", 0);
+		});
+
+		document.getElementById("toStep2AccessibleName")?.addEventListener("click", () => {
+			moveToNextStep("wizard-accessible-name", 0);
+		});
+
+		document.getElementById("toStep2AccessibleNameRef")?.addEventListener("click", () => {
+			moveToNextStep("wizard-accessible-name-ref", 0);
+		});
+
+		document.getElementById("toStep2Both")?.addEventListener("click", () => {
+			moveToNextStep("wizard-both-props", 0);
+		});
+	</script>
+</body>
+
+</html>
