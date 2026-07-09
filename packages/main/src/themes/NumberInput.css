@@ -10,15 +10,25 @@
 	word-spacing: normal;
 }
 
+:host([disabled]) {
+    opacity: var(--_ui5_input_disabled_opacity);
+    cursor: default;
+    pointer-events: none;
+    background-color: var(--_ui5-input_disabled_background);
+    border-color: var(--_ui5_input_disabled_border_color);
+}
+
 :host {
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
 	border: var(--_ui5_number_input_border_style);
+	border-width: var(--_ui5_number_input_border_width);
 	border-radius: var(--sapField_BorderCornerRadius);
 	box-sizing: border-box;
 	height: var(--_ui5_input_height);
 	position: relative;
 	isolation: isolate;
+	overflow: hidden;
 	margin: var(--_ui5_input_margin_top_bottom) 0;
 	min-width: var(--_ui5_number_input_min_width);
 	text-align: right;
@@ -41,15 +51,31 @@
 	box-shadow: none;
 }
 
+:host([value-state="Information"]:not([readonly]):not([disabled])) {
+	border-width: var(--_ui5_input_information_border_width);
+}
+
+:host([readonly]:not([disabled])) {
+	border-width: var(--sapElement_BorderWidth);
+}
+
+:host([value-state="Negative"]:not([readonly]):not([disabled])),
+:host([value-state="Critical"]:not([readonly]):not([disabled])),
+:host([value-state="Information"]:not([readonly]):not([disabled])) {
+	border-style: var(--_ui5_number_input_error_warning_information_border_style);
+}
+
 :host(:not([value-state]):not([readonly]):not([disabled]):hover),
 :host([value-state="None"]:not([readonly]):not([disabled]):hover) {
 	background-color: var(--_ui5_number_input_border_color_hover);
 	border: var(--_ui5_number_input_border_hover);
+	border-width: var(--_ui5_number_input_border_width);
 }
 :host(:not([value-state]):not([readonly]):not([disabled]):not([focused]):hover),
 :host([value-state="None"]:not([readonly]):not([disabled]):not([focused]):hover) {
 	background-color: var(--sapField_Hover_Background);
 	border: var(--_ui5_number_input_border_style_hover);
+	border-width: var(--_ui5_number_input_border_width);
 	box-shadow: var(--sapField_Hover_Shadow);
 }
 
@@ -85,6 +111,11 @@
 	background-color: var(--sapField_Focus_Background);
 }
 
+:host([value-state="Negative"]:not([readonly]):not([disabled]):hover),
+:host([value-state="Negative"]:not([readonly]):not([disabled])[focused]:hover) {
+	background-color: var(--_ui5_number_input_error_hover_background);
+}
+
 :host([value-state="Positive"]:not([readonly]):not([disabled]))::after,
 :host([value-state="Negative"]:not([readonly]):not([disabled]))::after,
 :host([value-state="None"]:not([readonly]):not([disabled]))::after,
@@ -99,7 +130,7 @@
 	outline: none;
 	pointer-events: none;
 	border-radius: var(--sapField_BorderCornerRadius);
-	border-style: var(--_ui5_input_error_warning_border_style);
+	border-style: var(--_ui5_number_input_after_border_style);
 	z-index: 0;
 	border-width: 0px;
 }
@@ -128,12 +159,9 @@
 	border-width: var(--_ui5_input_state_border_width);
 }
 :host([value-state="Negative"]:not([readonly]):not([disabled])) .ui5-number-input-input {
-	background-color: var(--_ui5_input_input_background_color);
+	background-color: var(--_ui5_number_input_error_background_color);
 }
 
-:host([value-state="Negative"]:not([readonly]):not([disabled])) .ui5-number-input-input:hover {
-	background-color: var(--_ui5_number_input_input_error_background_color);
-}
 :host([value-state]:not([value-state="None"]) .ui5-number-input-input[focused]) {
 		outline: none;
 }
@@ -238,12 +266,20 @@
 	border: var(--_ui5_number_input_input_border_focused_after);
 	top: var(--_ui5_number_input_input_border_top_bottom_focused_after);
 	right: 0px;
-	bottom: var(--_ui5_number_input_input_border_top_bottom_focused_after);
+	bottom: var(--_ui5_number_input_input_border_bottom_focused_after);
 	border-radius: var(--_ui5_number_input_input_border_radius_focused_after);
 	left: 0px;
 	outline: none;
 	pointer-events: none;
 	z-index: 1;
+}
+
+:host([readonly]) .ui5-number-input-input[focused]::after{
+	top: var(--_ui5_input_readonly_focus_offset);
+    bottom: var(--_ui5_input_readonly_focus_offset);
+    left: var(--_ui5_input_readonly_focus_offset);
+    right: var(--_ui5_input_readonly_focus_offset);
+    border-radius: var(--_ui5_input_readonly_focus_border_radius);
 }
 
 :host .ui5-number-input-input[focused] {

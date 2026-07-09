@@ -13,6 +13,7 @@
 	--_ui5_number_input_button_right: 0;
 	--_ui5_number_input_input_border_focused_after: 0.125rem solid #0070f2;
 	--_ui5_number_input_input_border_top_bottom_focused_after: 0;
+	--_ui5_number_input_input_border_bottom_focused_after: 0;
 	--_ui5_number_input_input_border_radius_focused_after: 0.25rem;
 	--_ui5_number_input_input_information_border_color_focused_after: var(--sapField_InformationColor);
 	--_ui5_number_input_input_warning_border_color_focused_after: var(--sapField_WarningColor);

@@ -1,0 +1,11 @@
+@import "../base/NumberInput-parameters.css";
+
+:host {
+	--_ui5_number_input_border_width: 2px;
+	--_ui5_number_input_error_warning_information_border_style: dashed;
+	--_ui5_number_input_after_border_style: none;
+	--_ui5_number_input_error_background_color: transparent;
+	--_ui5_number_input_error_hover_background: var(--sapField_InvalidBackground);
+	--_ui5_number_input_input_border_top_bottom_focused_after: 0.125rem;
+	--_ui5_number_input_input_border_bottom_focused_after: 0.1875rem;
+}

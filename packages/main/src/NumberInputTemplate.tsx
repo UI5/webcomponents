@@ -9,7 +9,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 	return (
 		<div
 			id={`${this._id}`}
-			class={{ "ui5-number-input-root": true, "ui5-number-input-root--with-buttons": this._showStepButtons }}
+			class={{ "ui5-number-input-root": true, "ui5-number-input-root--with-buttons": this._showStepButtons && !this.readonly }}
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
 			onFocusOut={this._onfocusout}
