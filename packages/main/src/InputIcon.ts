@@ -115,7 +115,9 @@ class InputIcon extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_focused = false;
 
-	_onclick() {
+	_onclick(e: MouseEvent) {
+		e.stopImmediatePropagation();
+
 		if (!this.disabled) {
 			this.fireDecoratorEvent("click");
 		}

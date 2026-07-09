@@ -1,5 +1,4 @@
 :host {
-	align-self: stretch;
 	height: 100%;
 }
 
@@ -115,4 +114,25 @@
 
 :host([value-state="Positive"]) .inputIcon:not(.inputIcon--pressed):not(:active):hover {
 	box-shadow: var(--_ui5_input_success_icon_box_shadow);
+}
+
+/* Override focus outline colors for value states */
+:host([value-state="Negative"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+}
+
+:host([value-state="Critical"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+}
+
+:host([value-state="Information"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--sapContent_FocusColor);
+	border-inline-start-color: var(--sapContent_FocusColor);
+}
+
+:host([value-state="Positive"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
 }

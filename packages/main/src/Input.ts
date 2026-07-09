@@ -769,6 +769,13 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 
+		// Sync value state to slotted input icons
+		this.icon.forEach((iconElement: IIcon) => {
+			if (iconElement.hasAttribute("ui5-input-icon")) {
+				(iconElement as any).valueState = this.valueState;
+			}
+		});
+
 		const hasItems = !!this._flattenItems.length;
 		const hasValue = !!this.value;
 		const isFocused = this.shadowRoot!.querySelector("input") === getActiveElement();
