@@ -14,13 +14,14 @@ The full, up-to-date instructions live in the SAPUI5 documentation: [Using Web C
 
 ### Step 1. Create a SAPUI5 app
 
-If you don't already have one, scaffold a SAPUI5 app with the community [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5). It runs on top of [Yeoman](https://yeoman.io/), so you can invoke it without a global install:
+If you don't already have one, scaffold a SAPUI5 app with the community [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5), a [Yeoman](https://yeoman.io/)-based generator:
 
 ```bash
-npx -p yo -p generator-easy-ui5 yo easy-ui5 project
+npm install --global yo generator-easy-ui5
+yo easy-ui5 project
 ```
 
-Answer the prompts (project name, namespace, framework, etc.). For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5) and the [UI5 CLI Getting Started guide](https://ui5.github.io/cli/stable/pages/GettingStarted/).
+Answer the prompts (project name, namespace, framework, etc.). To run it without a global install, you can also use `npx -p yo -p generator-easy-ui5 yo easy-ui5 project`. For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5) and the [UI5 CLI Getting Started guide](https://ui5.github.io/cli/stable/pages/GettingStarted/).
 
 ### Step 2. Install the UI5 tooling extension
 
