@@ -8,6 +8,7 @@
 
 :host(:not([collapsed])),
 .ui5-shellbar-search-field-wrapper {
+	width: var(--search_width);
 	min-width: 18rem;
 	max-width: 36rem;
 	margin: 0;

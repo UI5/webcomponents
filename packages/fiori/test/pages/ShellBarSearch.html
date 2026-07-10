@@ -32,6 +32,28 @@
 		<img src="https://ui5.github.io/webcomponents/nightly/images/avatars/man_avatar_3.png" />
 	</ui5-avatar>
 </ui5-shellbar>
+
+<!-- Example with long scope names -->
+<ui5-shellbar id="shellbar-long-scopes" notifications-count="5" show-notifications>
+	<ui5-shellbar-branding slot="branding">
+		Enterprise Portal
+		<img slot="logo" src="https://ui5.github.io/webcomponents/nightly/images/sap-logo-svg.svg" />
+	</ui5-shellbar-branding>
+
+	<ui5-shellbar-search slot="searchField" id="search-long-scopes" scope-value="all" show-clear-icon
+		placeholder="Search...">
+		<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+		<ui5-search-scope text="Enterprise Resource Planning" value="erp" slot="scopes"></ui5-search-scope>
+		<ui5-search-scope text="Customer Relationship Management and Marketing Automation" value="crm" slot="scopes"></ui5-search-scope>
+		<ui5-search-scope text="Supply Chain Management, Logistics, and Warehouse Operations" value="scm" slot="scopes"></ui5-search-scope>
+		<ui5-search-scope text="HR" value="hr" slot="scopes"></ui5-search-scope>
+	</ui5-shellbar-search>
+
+	<ui5-avatar slot="profile">
+		<img src="https://ui5.github.io/webcomponents/nightly/images/avatars/woman_avatar_5.png" />
+	</ui5-avatar>
+</ui5-shellbar>
+
 <body>
 </body>
 
