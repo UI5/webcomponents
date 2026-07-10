@@ -46,6 +46,17 @@
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
 
+/* Disabled state styling */
+.inputIcon.inputIcon--disabled {
+	opacity: var(--sapContent_DisabledOpacity);
+	cursor: default;
+}
+
+/* Readonly state styling */
+.inputIcon.inputIcon--readonly {
+	cursor: default;
+}
+
 
 /* Style the inner Icon component */
 .ui5-input-icon-inner {

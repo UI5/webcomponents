@@ -177,8 +177,11 @@
 					<div class="example-row">
 						<span class="example-label">Normal state:</span>
 						<ui5-input id="interactive-normal" value="Test" show-clear-icon placeholder="Hover over icons...">
-							<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+							<ui5-input-icon id="toggle-icon" slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
 						</ui5-input>
+					</div>
+					<div class="example-row">
+						<ui5-button id="toggle-icon-disabled">Toggle Icon Disabled</ui5-button>
 					</div>
 					<div class="example-row">
 						<span class="example-label">Negative state:</span>
@@ -530,6 +533,13 @@
 				const input = document.getElementById(`readonly-input-${i}`);
 				input.toggleAttribute("readonly");
 			}
+		});
+
+		// Toggle disabled for a single icon
+		const toggleIconDisabledBtn = document.getElementById("toggle-icon-disabled");
+		const toggleIcon = document.getElementById("toggle-icon");
+		toggleIconDisabledBtn.addEventListener("click", () => {
+			toggleIcon.toggleAttribute("disabled");
 		});
 
 		// Event logging for accessibility demo
