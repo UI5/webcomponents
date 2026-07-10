@@ -535,13 +535,22 @@ class SideNavigation extends UI5Element {
 				return sum;
 			}
 			itemRef.classList.remove("ui5-sn-item-hidden");
-			return sum + itemRef.offsetHeight;
+
+			let itemDomRef = itemRef;
+
+			if (isInstanceOfSideNavigationItemBase(itemRef) && itemRef.getDomRef()) {
+				itemDomRef = itemRef.getDomRef()!;
+			}
+
+			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
+
+			return sum + itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
 		}, 0);
 
 		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
 		const listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
 
-		if (itemsHeight <= listHeight) {
+		if (itemsHeight < listHeight) {
 			return;
 		}
 
@@ -573,13 +582,15 @@ class SideNavigation extends UI5Element {
 				itemDomRef = item;
 			}
 
-			if (itemDomRef) {
-				const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
-				itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			if (!itemDomRef) {
+				return;
+			}
 
-				if (itemsHeight > listHeight) {
-					item.classList.add("ui5-sn-item-hidden");
-				}
+			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
+			itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+
+			if (itemsHeight > listHeight) {
+				item.classList.add("ui5-sn-item-hidden");
 			}
 		});
 
