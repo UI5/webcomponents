@@ -553,6 +553,18 @@ class DynamicPage extends UI5Element {
 		this.setScrollPadding({ start: 0, end: 0 });
 	}
 
+	onTitleAreaFocusIn(e: FocusEvent) {
+		if (!this.hasHeading || !this._headerSnapped || this.headerPinned || this.showHeaderInStickArea) {
+			return;
+		}
+		if (this.headerActions?.contains(e.target as Node)) {
+			return;
+		}
+		this.isToggled = true;
+		this._toggleHeader();
+		this.fireDecoratorEvent("title-toggle");
+	}
+
 	setScrollPadding(padding: { start: number, end: number }) {
 		this.scrollContainer?.style.setProperty("scroll-padding-top", `${padding.start}px`);
 		this.scrollContainer?.style.setProperty("scroll-padding-bottom", `${padding.end}px`);
