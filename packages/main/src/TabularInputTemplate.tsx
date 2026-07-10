@@ -11,13 +11,8 @@ export default function TabularInputTemplate(this: TabularInput) {
 	});
 }
 
-function tabularPreContent(this: TabularInput) {
-	// No pre-content needed for TabularInput
-}
-
-function tabularPostContent(this: TabularInput) {
-	// No post-content needed for TabularInput
-}
+function tabularPreContent(this: TabularInput) {}
+function tabularPostContent(this: TabularInput) {}
 
 function tabularPopoverTemplate(this: TabularInput) {
 	if (!this._useTabularSuggestions) {

@@ -1,6 +1,15 @@
 import type TabularInput from "./TabularInput.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 
+import Icon from "./Icon.js";
+import error from "@ui5/webcomponents-icons/dist/error.js";
+import alert from "@ui5/webcomponents-icons/dist/alert.js";
+import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
+import information from "@ui5/webcomponents-icons/dist/information.js";
+
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import Popover from "./Popover.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import Button from "./Button.js";
 import Title from "./Title.js";
@@ -11,68 +20,124 @@ import TableHeaderCell from "./TableHeaderCell.js";
 import TableRow from "./TableRow.js";
 import TableCell from "./TableCell.js";
 
-/**
- * Renders the tabular suggestions popover for TabularInput.
- * Uses ui5-table for rendering tabular suggestions.
- */
 export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemplateResult {
 	return (
-		<ResponsivePopover
-			class="ui5-suggestions-popover"
-			hideArrow={true}
-			preventFocusRestore={true}
-			preventInitialFocus={true}
-			placement="Bottom"
-			horizontalAlign="Start"
-			tabindex={-1}
-			style={this.styles.suggestionsPopover}
-			onOpen={this._afterOpenPicker}
-			onClose={this._afterClosePicker}
-			open={this.open}
-			opener={this}
-			accessibleName={this._tabularSuggestionsAccessibleName}
-		>
-			{this._isPhone &&
-				<div slot="header" class="ui5-responsive-popover-header">
-					<div class="row">
-						<Title level="H1" wrappingType="None" class="ui5-responsive-popover-header-text">
-							{this._headerTitleText}
-						</Title>
-					</div>
-					<div class="row">
-						<div class="input-root-phone native-input-wrapper">
-							<Input
-								class="ui5-input-inner-phone"
-								type={this.inputType}
-								value={this.value}
-								showClearIcon={this.showClearIcon}
-								placeholder={this.placeholder}
-								onInput={this._handleInput}
-							/>
+		<>
+			<ResponsivePopover
+				class="ui5-suggestions-popover"
+				hideArrow={true}
+				preventFocusRestore={true}
+				preventInitialFocus={true}
+				placement="Bottom"
+				horizontalAlign="Start"
+				tabindex={-1}
+				style={this.styles.suggestionsPopover}
+				onOpen={this._afterOpenPicker}
+				onClose={this._afterClosePicker}
+				open={this.open}
+				opener={this}
+				accessibleName={this._tabularSuggestionsAccessibleName}
+			>
+				{this._isPhone &&
+					<div slot="header" class="ui5-responsive-popover-header">
+						<div class="row">
+							<Title level="H1" wrappingType="None" class="ui5-responsive-popover-header-text">
+								{this._headerTitleText}
+							</Title>
 						</div>
+						<div class="row">
+							<div class="input-root-phone native-input-wrapper">
+								<Input
+									class="ui5-input-inner-phone"
+									type={this.inputType}
+									value={this.value}
+									showClearIcon={this.showClearIcon}
+									placeholder={this.placeholder}
+									onInput={this._handleInput}
+								/>
+							</div>
+						</div>
+						{this.hasValueStateMessage &&
+						<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
+							<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
+							{this.open && valueStateMessage.call(this)}
+						</div>
+					}
 					</div>
-				</div>
-			}
+				}
 
-			{tabularSuggestionsList.call(this)}
+				{!this._isPhone && this.hasValueStateMessage &&
+					<div
+						slot="header"
+						class={{
+							"ui5-responsive-popover-header": true,
+							...this.classes.popoverValueState,
+						}}
+						style={this.styles.suggestionPopoverHeader}
+					>
+						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
+						{this.open && valueStateMessage.call(this)}
+					</div>
+				}
 
-			{this._isPhone &&
-				<div slot="footer" class="ui5-responsive-popover-footer">
-					<Button design="Emphasized" onClick={this._confirmMobileValue}>
-						{this._suggestionsOkButtonText}
-					</Button>
-					<Button class="ui5-responsive-popover-close-btn" design="Transparent" onClick={this._cancelMobileValue}>
-						{this._suggestionsCancelButtonText}
-					</Button>
-				</div>
-			}
-		</ResponsivePopover>
+				{tabularSuggestionsList.call(this)}
+
+				{this._isPhone &&
+					<div slot="footer" class="ui5-responsive-popover-footer">
+						<Button design="Emphasized" onClick={this._confirmMobileValue}>
+							{this._suggestionsOkButtonText}
+						</Button>
+						<Button class="ui5-responsive-popover-close-btn" design="Transparent" onClick={this._cancelMobileValue}>
+							{this._suggestionsCancelButtonText}
+						</Button>
+					</div>
+				}
+			</ResponsivePopover>
+
+			{this.hasValueStateMessage && (
+				<Popover
+					preventInitialFocus={true}
+					preventFocusRestore={true}
+					hideArrow={true}
+					class="ui5-valuestatemessage-popover"
+					placement="Bottom"
+					tabindex={-1}
+					horizontalAlign={PopoverHorizontalAlign.Start}
+					opener={this}
+					open={this.valueStateOpen}
+					onClose={this._handleValueStatePopoverAfterClose}
+				>
+					<div slot="header" class={this.classes.popoverValueState}>
+						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
+						{this.valueStateOpen && valueStateMessage.call(this)}
+					</div>
+				</Popover>
+			)}
+		</>
 	);
 }
 
-/**
- * Renders the tabular suggestions list using ui5-table.
- */
+function valueStateMessage(this: TabularInput) {
+	return (
+		<>
+			{
+				this.shouldDisplayDefaultValueStateMessage ? this.valueStateText : <slot name="valueStateMessage"></slot>
+			}
+		</>
+	);
+}
+
+function valueStateMessageInputIcon(this: TabularInput) {
+	const iconPerValueState = {
+		Negative: error,
+		Critical: alert,
+		Positive: sysEnter2,
+		Information: information,
+	};
+
+	return this.valueState !== ValueState.None ? iconPerValueState[this.valueState as keyof typeof iconPerValueState] : "";
+}
+
 function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
 	const isScrollMode = this.overflowMode === "Scroll";
 	const lastColumnIndex = this.suggestionColumns.length - 1;
@@ -87,7 +152,6 @@ function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
 			>
 				<TableHeaderRow slot="headerRow" sticky>
 					{this.suggestionColumns.map((col, index) => {
-						// In Scroll mode, make last column flexible to prevent dummy cell
 						const width = (isScrollMode && index === lastColumnIndex) ? undefined : col.width;
 						return (
 							<TableHeaderCell

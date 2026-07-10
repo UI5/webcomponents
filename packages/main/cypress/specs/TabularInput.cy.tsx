@@ -128,24 +128,20 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 		cy.get("@input").realType("j");
 
-		// First ArrowDown selects first row
 		cy.realPress("ArrowDown");
 		cy.get("@input").should("have.value", "John");
 
-		// Second ArrowDown moves to second row
 		cy.realPress("ArrowDown");
 		cy.get("@input").should("have.value", "Jane");
 
-		// Third ArrowDown moves to third row
 		cy.realPress("ArrowDown");
 		cy.get("@input").should("have.value", "Jack");
 
-		// ArrowUp goes back
 		cy.realPress("ArrowUp");
 		cy.get("@input").should("have.value", "Jane");
 	});
 
-	it("selects text during navigation (typeahead preservation)", () => {
+	it("selects text during navigation", () => {
 		cy.mount(
 			<TabularInput noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
@@ -168,7 +164,6 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 		cy.get("@input").should("have.value", "John");
 
-		// Check that the autocompleted part is selected
 		cy.window().then(win => {
 			const selection = win.getSelection()?.toString();
 			expect(selection).to.contain("ohn");
@@ -307,11 +302,8 @@ describe("TabularInput - Typeahead", () => {
 
 		cy.get("@input").realType("jo");
 
-		// Typeahead autocompletes - preserves user's typed case + rest from suggestion
-		// "jo" + "hn" = "john"
 		cy.get("@input").should("have.value", "john");
 
-		// Check that the autocompleted part is selected
 		cy.window().then(win => {
 			const selection = win.getSelection()?.toString();
 			expect(selection).to.contain("hn");
@@ -433,6 +425,226 @@ describe("TabularInput - Value State", () => {
 
 		cy.get("[ui5-tabular-input]")
 			.should("have.attr", "value-state", "Negative");
+	});
+
+	it("shows value state header in suggestions popover", () => {
+		cy.mount(
+			<TabularInput valueState="Negative">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header']")
+			.should("exist")
+			.find("[ui5-icon]")
+			.should("exist");
+	});
+
+	it("shows custom value state message from slot", () => {
+		cy.mount(
+			<TabularInput valueState="Information">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+				<div slot="valueStateMessage">Custom info message</div>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] slot[name='valueStateMessage']")
+			.should("exist");
+	});
+
+	it("shows value state icon for Critical state", () => {
+		cy.mount(
+			<TabularInput valueState="Critical">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-icon]")
+			.should("exist");
+	});
+
+	it("shows value state icon for Information state", () => {
+		cy.mount(
+			<TabularInput valueState="Information">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-icon]")
+			.should("exist");
+	});
+
+	it("applies Positive value state styling without header message", () => {
+		cy.mount(
+			<TabularInput valueState="Positive">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.should("have.attr", "value-state", "Positive");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header']")
+			.should("not.exist");
+	});
+
+	it("shows value state header on re-focus after blur", () => {
+		cy.mount(
+			<TabularInput valueState="Negative">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-icon]")
+			.should("exist");
+
+		cy.get("body").realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+
+		cy.get("@input").realClick();
+		cy.get("@input").realType("o");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-icon]")
+			.should("exist");
+	});
+
+	it("shows standalone value state popover when focused without typing", () => {
+		cy.mount(
+			<TabularInput valueState="Negative">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("have.attr", "open");
+	});
+
+	it("shows standalone value state popover on re-focus without typing", () => {
+		cy.mount(
+			<TabularInput valueState="Negative">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("have.attr", "open");
+
+		cy.get("body").realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("not.have.attr", "open");
+
+		cy.get("@input").realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("have.attr", "open");
 	});
 });
 

@@ -335,16 +335,256 @@
 		<div class="output" id="clearIconOutput">Selected: (none)</div>
 	</div>
 
+	<!-- Example 7: Value States -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 7: Value States</ui5-title>
+		<p class="description">
+			TabularInput supports all value states: Negative (Error), Critical (Warning), Positive (Success), and Information.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-tabular-input
+				id="negativeState"
+				placeholder="Negative (Error) state..."
+				value-state="Negative"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item A</ui5-table-cell>
+					<ui5-table-cell>Invalid</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="criticalState"
+				placeholder="Critical (Warning) state..."
+				value-state="Critical"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item B</ui5-table-cell>
+					<ui5-table-cell>Pending</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="positiveState"
+				placeholder="Positive (Success) state..."
+				value-state="Positive"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item C</ui5-table-cell>
+					<ui5-table-cell>Approved</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="informationState"
+				placeholder="Information state..."
+				value-state="Information"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item D</ui5-table-cell>
+					<ui5-table-cell>Info</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+	</div>
+
+	<!-- Example 8: Value State with Custom Message -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 8: Value State with Custom Message</ui5-title>
+		<p class="description">
+			Custom value state messages are shown in a popover when the input is focused.
+			Focus on each input to see the message.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-tabular-input
+				id="negativeMessage"
+				placeholder="Error with message..."
+				value-state="Negative"
+			>
+				<div slot="valueStateMessage">
+					This product ID is invalid. Please enter a valid ID starting with "PRD-".
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Price</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-001</ui5-table-cell>
+					<ui5-table-cell>$99</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="criticalMessage"
+				placeholder="Warning with message..."
+				value-state="Critical"
+			>
+				<div slot="valueStateMessage">
+					Stock is running low. Consider reordering soon.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Stock</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget X</ui5-table-cell>
+					<ui5-table-cell>5 left</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="informationMessage"
+				placeholder="Information with message..."
+				value-state="Information"
+			>
+				<div slot="valueStateMessage">
+					Tip: You can use wildcards (*) for broader search results.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Search</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Results</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget*</ui5-table-cell>
+					<ui5-table-cell>25 matches</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+	</div>
+
+	<!-- Example 9: Value State with Formatted Text -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 9: Value State with Formatted Text</ui5-title>
+		<p class="description">
+			Value state messages can contain formatted text with bold, italic, and other styling.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-tabular-input
+				id="formattedNegative"
+				placeholder="Error with formatted message..."
+				value-state="Negative"
+			>
+				<div slot="valueStateMessage">
+					<strong>Invalid Entry:</strong> The value <em>"XYZ-999"</em> does not match any record.
+					Please check your input and try again.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Description</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>ABC-001</ui5-table-cell>
+					<ui5-table-cell>Valid Code</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="formattedCritical"
+				placeholder="Warning with formatted message..."
+				value-state="Critical"
+			>
+				<div slot="valueStateMessage">
+					<strong>Attention:</strong> This item will be <em>discontinued</em> on <strong>December 31, 2026</strong>.
+					Consider selecting an alternative.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Item</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">End Date</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Legacy Widget</ui5-table-cell>
+					<ui5-table-cell>Dec 31, 2026</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>New Widget</ui5-table-cell>
+					<ui5-table-cell>Active</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+	</div>
+
+	<!-- Example 10: Value State with Links -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 10: Value State with Links</ui5-title>
+		<p class="description">
+			Value state messages can contain interactive links for help, documentation, or actions.
+			Focus on the input to see the message with links.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-tabular-input
+				id="linkNegative"
+				placeholder="Error with help link..."
+				value-state="Negative"
+			>
+				<div slot="valueStateMessage">
+					Product not found in catalog.
+					<ui5-link href="https://example.com/help/products" target="_blank">View product guidelines</ui5-link>
+					or
+					<ui5-link href="https://example.com/contact" target="_blank">contact support</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-001</ui5-table-cell>
+					<ui5-table-cell>Electronics</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="linkCritical"
+				placeholder="Warning with action links..."
+				value-state="Critical"
+			>
+				<div slot="valueStateMessage">
+					This vendor requires approval.
+					<ui5-link id="approvalLink">Request approval</ui5-link>
+					or
+					<ui5-link id="alternativeLink">choose alternative vendor</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Vendor</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Acme Corp</ui5-table-cell>
+					<ui5-table-cell>Pending</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Beta Inc</ui5-table-cell>
+					<ui5-table-cell>Approved</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+
+			<ui5-tabular-input
+				id="linkInformation"
+				placeholder="Info with documentation link..."
+				value-state="Information"
+			>
+				<div slot="valueStateMessage">
+					New search syntax available!
+					<ui5-link href="https://example.com/docs/search" target="_blank">Learn about advanced search operators</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Query</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Results</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>name:Widget</ui5-table-cell>
+					<ui5-table-cell>15 matches</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-tabular-input>
+		</div>
+	</div>
+
 	<script>
-		// Event handlers for all examples
-		document.querySelectorAll('ui5-tabular-input').forEach(input => {
-			const outputId = input.id.replace('Search', 'Output');
-			const output = document.getElementById(outputId);
+		document.querySelectorAll('[ui5-tabular-input]').forEach(input => {
+			const inputId = input.getAttribute('id') || '';
+			const output = inputId.includes('Search')
+				? document.getElementById(inputId.replace('Search', 'Output'))
+				: null;
 
 			input.addEventListener('selection-change', (e) => {
 				const row = e.detail.row;
-				if (row) {
-					const cells = row.querySelectorAll('ui5-table-cell');
+				if (row && output) {
+					const cells = row.querySelectorAll('[ui5-table-cell]');
 					const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
 					output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
 				}

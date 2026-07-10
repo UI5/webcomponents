@@ -3,11 +3,7 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
-import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import {
-	isF2, isF7, isLeft, isRight, isPageUp, isPageDown, isHome, isEnd,
-} from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
@@ -212,13 +208,8 @@ class TabularInput extends Input {
 
 		if (this._useTabularSuggestions) {
 			this._processRows();
-
 			this._handleTabularPopoverOpen();
 			this._handleTabularTypeAhead();
-
-			this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
-			this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
-			return;
 		}
 
 		super.onBeforeRendering();
@@ -319,6 +310,7 @@ class TabularInput extends Input {
 				this.fireDecoratorEvent("type-ahead");
 			}
 			this._performTextSelection = false;
+
 			return;
 		}
 
@@ -374,6 +366,9 @@ class TabularInput extends Input {
 		return this._processedRows.filter(pr => visibleRowSet.has(pr.row));
 	}
 
+	/**
+	 * @private
+	 */
 	_onSuggestionRowClick(row: ITabularSuggestionRow) {
 		this._selectRow(row, false);
 	}
@@ -392,6 +387,9 @@ class TabularInput extends Input {
 		}
 	}
 
+	/**
+	 * @private
+	 */
 	_selectRow(row: ITabularSuggestionRow, keyboardUsed: boolean) {
 		const rowValue = this._getRowValue(row);
 
@@ -416,6 +414,9 @@ class TabularInput extends Input {
 		}
 	}
 
+	/**
+	 * @private
+	 */
 	_getRowValue(row: ITabularSuggestionRow): string {
 		const cells = row.cells || [];
 
@@ -426,6 +427,9 @@ class TabularInput extends Input {
 		return "";
 	}
 
+	/**
+	 * @private
+	 */
 	_deselectAllRows() {
 		this.suggestionRows.forEach(row => {
 			row.selected = false;
@@ -433,6 +437,9 @@ class TabularInput extends Input {
 		});
 	}
 
+	/**
+	 * @private
+	 */
 	_handleDown(e: KeyboardEvent) {
 		if (this._useTabularSuggestions && this.open) {
 			e.preventDefault();
@@ -442,6 +449,9 @@ class TabularInput extends Input {
 		super._handleDown(e);
 	}
 
+	/**
+	 * @private
+	 */
 	_handleUp(e: KeyboardEvent) {
 		if (this._useTabularSuggestions && this.open) {
 			e.preventDefault();
@@ -451,6 +461,9 @@ class TabularInput extends Input {
 		super._handleUp(e);
 	}
 
+	/**
+	 * @private
+	 */
 	_navigateRows(forward: boolean) {
 		const visibleRows = this._visibleRows;
 
@@ -495,6 +508,9 @@ class TabularInput extends Input {
 		});
 	}
 
+	/**
+	 * @private
+	 */
 	_handleEnter(e: KeyboardEvent) {
 		if (this._useTabularSuggestions) {
 			const visibleRows = this._visibleRows;
@@ -515,11 +531,8 @@ class TabularInput extends Input {
 
 				if (this.open) {
 					e.preventDefault();
-					this._selectRow(rowToSelect, true);
-				} else {
-					this.fireSelectionChange(rowToSelect as unknown as IInputSuggestionItem, true);
-					this._selectRow(rowToSelect, true);
 				}
+				this._selectRow(rowToSelect, true);
 				return;
 			}
 
@@ -532,6 +545,9 @@ class TabularInput extends Input {
 		super._handleEnter(e);
 	}
 
+	/**
+	 * @private
+	 */
 	_handleEscape() {
 		if (this._useTabularSuggestions && this.open) {
 			this.value = this.typedInValue || this.valueBeforeSelectionStart;
@@ -546,6 +562,9 @@ class TabularInput extends Input {
 		super._handleEscape();
 	}
 
+	/**
+	 * @private
+	 */
 	_clearPopoverFocusAndSelection() {
 		if (this._useTabularSuggestions) {
 			this._deselectAllRows();
@@ -637,6 +656,8 @@ class TabularInput extends Input {
 
 			this.focused = false;
 			this.open = false;
+			this.isTyping = false;
+			this.lastConfirmedValue = "";
 			this._clearPopoverFocusAndSelection();
 			return;
 		}
