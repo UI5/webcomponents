@@ -26,7 +26,7 @@ import "./Icon.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 2.24.0
+ * @since 2.25.0
  */
 @customElement({
 	tag: "ui5-input-icon",
