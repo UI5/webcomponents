@@ -104,6 +104,17 @@ class InputIcon extends UI5Element {
 	disabled = false;
 
 	/**
+	 * Defines whether the icon is readonly.
+	 *
+	 * **Note:** Readonly icons are not interactive and do not fire click events.
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	readonly = false;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
@@ -116,15 +127,18 @@ class InputIcon extends UI5Element {
 	_focused = false;
 
 	_onclick(e: MouseEvent) {
-		e.stopImmediatePropagation();
-
-		if (!this.disabled) {
-			this.fireDecoratorEvent("click");
+		if (this.disabled || this.readonly) {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+			return;
 		}
+
+		e.stopImmediatePropagation();
+		this.fireDecoratorEvent("click");
 	}
 
 	_onmousedown() {
-		if (!this.disabled) {
+		if (!this.disabled && !this.readonly) {
 			this._pressed = true;
 		}
 	}
@@ -147,7 +161,7 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.disabled) {
+		if (this.disabled || this.readonly) {
 			return;
 		}
 
@@ -158,7 +172,7 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this.disabled) {
+		if (this.disabled || this.readonly) {
 			return;
 		}
 
@@ -169,7 +183,7 @@ class InputIcon extends UI5Element {
 	}
 
 	get effectiveTabIndex() {
-		return this.disabled ? -1 : 0;
+		return (this.disabled || this.readonly) ? -1 : 0;
 	}
 
 	get effectiveAriaLabel() {

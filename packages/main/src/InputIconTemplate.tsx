@@ -10,11 +10,11 @@ export default function InputIconTemplate(this: InputIcon) {
 				"inputIcon--pressed": this._pressed,
 				"inputIcon--focused": this._focused,
 				"inputIcon--disabled": this.disabled,
+				"inputIcon--readonly": this.readonly,
 			}}
 			role="button"
 			tabindex={this.effectiveTabIndex}
 			aria-label={this.effectiveAriaLabel}
-			aria-pressed={this._pressed}
 			aria-disabled={this.disabled}
 			title={this.effectiveTitle}
 			onClick={this._onclick}

@@ -437,6 +437,74 @@
 		</div>
 	</div>
 
+	<!-- Section 8: Read-Only Inputs with Interactive Icons -->
+	<div class="section">
+		<h2>8. Read-Only Inputs with Interactive Icons</h2>
+		<p>InputIcon works correctly in read-only inputs, maintaining proper visual styling.</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<span class="example-label">Read-only with icon:</span>
+				<ui5-input value="Read-only with icon" readonly>
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Read-only + clear icon:</span>
+				<ui5-input value="Read-only with multiple icons" readonly show-clear-icon>
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+					<ui5-input-icon slot="icon" name="microphone" accessible-name="Voice input"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Read-only + negative:</span>
+				<ui5-input value="Read-only negative" readonly value-state="Negative">
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Read-only + positive:</span>
+				<ui5-input value="Read-only positive" readonly value-state="Positive">
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
+	<!-- Section 9: Disabled Inputs with Interactive Icons -->
+	<div class="section">
+		<h2>9. Disabled Inputs with Interactive Icons</h2>
+		<p>InputIcon displays correctly in disabled inputs with appropriate disabled styling.</p>
+
+		<div class="examples">
+			<div class="example-row">
+				<span class="example-label">Disabled with icon:</span>
+				<ui5-input value="Disabled with icon" disabled>
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Disabled + clear icon:</span>
+				<ui5-input value="Disabled with multiple icons" disabled show-clear-icon>
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+					<ui5-input-icon slot="icon" name="microphone" accessible-name="Voice input"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Disabled + negative:</span>
+				<ui5-input value="Disabled negative" disabled value-state="Negative">
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+			<div class="example-row">
+				<span class="example-label">Disabled + critical:</span>
+				<ui5-input value="Disabled critical" disabled value-state="Critical">
+					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+				</ui5-input>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		// Theme switcher - simple, no reload
 		Array.from(document.querySelectorAll(".theme-switcher ui5-button[data-theme-name]")).forEach(button => {
@@ -486,7 +554,7 @@
 
 		// Add event listeners to all InputIcon components for demonstration
 		document.querySelectorAll('ui5-input-icon').forEach(icon => {
-			icon.addEventListener("click", (e) => {
+			icon.addEventListener("ui5-click", (e) => {
 				const input = icon.closest("ui5-input");
 				const inputId = input?.id || "unknown";
 				console.log(`Interactive icon clicked in ${inputId}`);
@@ -497,7 +565,7 @@
 		const searchInput = document.getElementById("search-input");
 		const searchIcon = searchInput?.querySelector("ui5-input-icon");
 		if (searchIcon) {
-			searchIcon.addEventListener("click", () => {
+			searchIcon.addEventListener("ui5-click", () => {
 				alert("Search icon clicked! In a real application, this would trigger a search.");
 			});
 		}
@@ -506,7 +574,7 @@
 		const voiceInput = document.getElementById("voice-input");
 		const voiceIcon = voiceInput?.querySelector("ui5-input-icon");
 		if (voiceIcon) {
-			voiceIcon.addEventListener("click", () => {
+			voiceIcon.addEventListener("ui5-click", () => {
 				voiceInput.value = "Listening...";
 				setTimeout(() => {
 					voiceInput.value = "Voice recognition demo";

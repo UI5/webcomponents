@@ -773,6 +773,8 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		this.icon.forEach((iconElement: IIcon) => {
 			if (iconElement.hasAttribute("ui5-input-icon")) {
 				(iconElement as any).valueState = this.valueState;
+				(iconElement as any).readonly = this.readonly;
+				(iconElement as any).disabled = this.disabled;
 			}
 		});
 
