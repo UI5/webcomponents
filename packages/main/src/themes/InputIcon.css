@@ -29,19 +29,19 @@
 	color: var(--_ui5_input_icon_pressed_color);
 }
 
-.inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):active {
+.inputIcon:not(.inputIcon--disabled):active {
 	background-color: var(--sapButton_Active_Background);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	color: var(--_ui5_input_icon_pressed_color);
 }
 
-.inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+.inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	background: var(--_ui5_input_icon_hover_bg);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
 
-.inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+.inputIcon:not(.inputIcon--disabled):hover {
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
@@ -49,11 +49,6 @@
 /* Disabled state styling */
 .inputIcon.inputIcon--disabled {
 	opacity: var(--sapContent_DisabledOpacity);
-	cursor: default;
-}
-
-/* Readonly state styling */
-.inputIcon.inputIcon--readonly {
 	cursor: default;
 }
 
@@ -78,43 +73,43 @@
 	padding: var(--_ui5_input_information_icon_padding);
 }
 
-:host([value-state="Negative"]) .inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):active,
+:host([value-state="Negative"]) .inputIcon:not(.inputIcon--disabled):active,
 :host([value-state="Negative"]) .inputIcon.inputIcon--pressed {
 	box-shadow: var(--_ui5_input_error_icon_box_shadow);
 	color: var(--_ui5_input_icon_error_pressed_color);
 }
 
-:host([value-state="Negative"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+:host([value-state="Negative"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	box-shadow: var(--_ui5_input_error_icon_box_shadow);
 }
 
-:host([value-state="Critical"]) .inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):active,
+:host([value-state="Critical"]) .inputIcon:not(.inputIcon--disabled):active,
 :host([value-state="Critical"]) .inputIcon.inputIcon--pressed {
 	box-shadow: var(--_ui5_input_warning_icon_box_shadow);
 	color: var(--_ui5_input_icon_warning_pressed_color);
 }
 
-:host([value-state="Critical"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+:host([value-state="Critical"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	box-shadow: var(--_ui5_input_warning_icon_box_shadow);
 }
 
-:host([value-state="Information"]) .inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):active,
+:host([value-state="Information"]) .inputIcon:not(.inputIcon--disabled):active,
 :host([value-state="Information"]) .inputIcon.inputIcon--pressed {
 	box-shadow: var(--_ui5_input_information_icon_box_shadow);
 	color: var(--_ui5_input_icon_information_pressed_color);
 }
 
-:host([value-state="Information"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+:host([value-state="Information"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	box-shadow: var(--_ui5_input_information_icon_box_shadow);
 }
 
-:host([value-state="Positive"]) .inputIcon:not(.inputIcon--disabled):not(.inputIcon--readonly):active,
+:host([value-state="Positive"]) .inputIcon:not(.inputIcon--disabled):active,
 :host([value-state="Positive"]) .inputIcon.inputIcon--pressed {
 	box-shadow: var(--_ui5_input_success_icon_box_shadow);
 	color: var(--_ui5_input_icon_success_pressed_color);
 }
 
-:host([value-state="Positive"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):not(.inputIcon--readonly):hover {
+:host([value-state="Positive"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	box-shadow: var(--_ui5_input_success_icon_box_shadow);
 }
 

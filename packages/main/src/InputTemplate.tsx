@@ -80,7 +80,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 						</div>
 					}
 
-					{this.icon.length > 0 && !this.readonly &&
+					{this.icon.length > 0 &&
 						<div class="ui5-input-icon-root"
 							tabindex={-1}
 						>
