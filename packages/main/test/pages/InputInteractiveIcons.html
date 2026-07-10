@@ -445,28 +445,31 @@
 		<div class="examples">
 			<div class="example-row">
 				<span class="example-label">Read-only with icon:</span>
-				<ui5-input value="Read-only with icon" readonly>
+				<ui5-input id="readonly-input-1" value="Read-only with icon" readonly>
 					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
 				</ui5-input>
 			</div>
 			<div class="example-row">
 				<span class="example-label">Read-only + clear icon:</span>
-				<ui5-input value="Read-only with multiple icons" readonly show-clear-icon>
+				<ui5-input id="readonly-input-2" value="Read-only with multiple icons" readonly show-clear-icon>
 					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
 					<ui5-input-icon slot="icon" name="microphone" accessible-name="Voice input"></ui5-input-icon>
 				</ui5-input>
 			</div>
 			<div class="example-row">
 				<span class="example-label">Read-only + negative:</span>
-				<ui5-input value="Read-only negative" readonly value-state="Negative">
+				<ui5-input id="readonly-input-3" value="Read-only negative" readonly value-state="Negative">
 					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
 				</ui5-input>
 			</div>
 			<div class="example-row">
 				<span class="example-label">Read-only + positive:</span>
-				<ui5-input value="Read-only positive" readonly value-state="Positive">
+				<ui5-input id="readonly-input-4" value="Read-only positive" readonly value-state="Positive">
 					<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
 				</ui5-input>
+			</div>
+			<div class="example-row">
+				<ui5-button id="toggle-readonly">Toggle All Readonly</ui5-button>
 			</div>
 		</div>
 	</div>
@@ -518,6 +521,15 @@
 		const toggleCompactBtn = document.getElementById("toggle-compact");
 		toggleCompactBtn.addEventListener("click", () => {
 			document.body.classList.toggle("ui5-content-density-compact");
+		});
+
+		// Toggle readonly for section 8 inputs
+		const toggleReadonlyBtn = document.getElementById("toggle-readonly");
+		toggleReadonlyBtn.addEventListener("click", () => {
+			for (let i = 1; i <= 4; i++) {
+				const input = document.getElementById(`readonly-input-${i}`);
+				input.toggleAttribute("readonly");
+			}
 		});
 
 		// Event logging for accessibility demo
