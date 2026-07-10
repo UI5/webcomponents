@@ -2,11 +2,7 @@
 
 UI5 Web Components are first-class citizens in SAPUI5 (and OpenUI5). A UI5 Web Component can be required and used like a regular SAPUI5 control — its properties map to SAPUI5 properties, its slots to aggregations, and its events to SAPUI5 events. This means you can drop a Web Component into an XML view or a controller and use it side-by-side with the SAPUI5 controls you already know.
 
-## Build once, reuse across frameworks
-
-The idea is to build each UI element once as a UI5 Web Component and reuse it everywhere — React, Angular, Vue, SAPUI5, and any other framework or plain HTML page.
-
-New or selected UI elements, over time, will be delivered as UI5 Web Components to avoid duplication and exposed as SAPUI5 controls. When that happens, the integration is done by SAPUI5 itself — application developers don't need to install a Web Component package or change their code. You keep using the SAPUI5 control the way you always have, and it transparently benefits from the shared UI5 Web Components implementation underneath.
+New or selected UI elements, over time, will be delivered as UI5 Web Components to avoid duplication.
 
 ## How to Integrate
 
