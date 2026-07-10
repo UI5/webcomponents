@@ -14,7 +14,7 @@
 	--_ui5_number_input_button_display: inline-block;
 	--_ui5_number_input_button_left: 0;
 	--_ui5_number_input_button_right: 0;
-	--_ui5_number_input_input_border_focused_after: var(--_ui5_input_focus_border_width) dotted var(--sapContent_FocusColor);
+	--_ui5_number_input_input_border_focused_after: var(--_ui5_input_focus_border_width) dotted var(--sapField_Active_BorderColor);
 	--_ui5_number_input_input_border_top_bottom_focused_after: 0.0625rem;
 	--_ui5_number_input_input_border_bottom_focused_after: 0.0625rem;
 	--_ui5_number_input_input_border_top_information_focused_after: 0.0625rem;

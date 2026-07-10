@@ -280,6 +280,7 @@
     left: var(--_ui5_input_readonly_focus_offset);
     right: var(--_ui5_input_readonly_focus_offset);
     border-radius: var(--_ui5_input_readonly_focus_border_radius);
+	border-color: var(--sapContent_FocusColor);
 }
 
 :host .ui5-number-input-input[focused] {
