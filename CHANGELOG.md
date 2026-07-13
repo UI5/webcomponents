@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+
+### Bug Fixes
+
+* **framework:** await pending language change in connectedCallback instead of skipping first render ([#13798](https://github.com/UI5/webcomponents/issues/13798)) ([7086878](https://github.com/UI5/webcomponents/commit/7086878ee9bf047c9727d887a09897aabb09abe6)), closes [#13602](https://github.com/UI5/webcomponents/issues/13602)
+* **ui5-calendar:** select correct day in other month ([#13786](https://github.com/UI5/webcomponents/issues/13786)) ([82bde13](https://github.com/UI5/webcomponents/commit/82bde13e8d2f77539f59de0bcadfd3fd9a77da6b)), closes [#13760](https://github.com/UI5/webcomponents/issues/13760)
+* **ui5-file-uploader:** announce value state message to screen readers ([#13759](https://github.com/UI5/webcomponents/issues/13759)) ([3ff0ed1](https://github.com/UI5/webcomponents/commit/3ff0ed1ee57c2ba6086af1fdec461a6e4fa602b7))
+* **ui5-table-header-cell:** set min-height to prevent header row jump ([#13785](https://github.com/UI5/webcomponents/issues/13785)) ([653149e](https://github.com/UI5/webcomponents/commit/653149e8f9f9beabb0bd5570acf7fc618f16367b)), closes [#13454](https://github.com/UI5/webcomponents/issues/13454)
+
+
+### Features
+
+* **ui5-dialog:** add fullscreen toggle button ([#13691](https://github.com/UI5/webcomponents/issues/13691)) ([d9d329b](https://github.com/UI5/webcomponents/commit/d9d329b826cd85163486e589eb9514370eb6ce45))
+
+
+
+
+
 # [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
 
 
