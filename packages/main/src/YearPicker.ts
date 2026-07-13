@@ -70,8 +70,6 @@ type YearPickerNavigateEventDetail = {
 	tag: "ui5-yearpicker",
 	styles: yearPickerStyles,
 	template: YearPickerTemplate,
-	languageAware: true,
-	cldr: true,
 })
 /**
  * Fired when the user selects a year via "Space", "Enter" or click.

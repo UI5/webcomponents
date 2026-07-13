@@ -231,8 +231,6 @@ type DisabledDateRangeT = {
 	fastNavigation: true,
 	template: CalendarTemplate,
 	styles: [calendarCSS, CalendarHeaderCss],
-	languageAware: true,
-	cldr: true,
 })
 /**
  * Fired when the selected dates change.

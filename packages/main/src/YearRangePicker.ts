@@ -71,8 +71,6 @@ type YearRangePickerNavigateEventDetail = {
 		yearRangePickerStyles,
 	],
 	template: YearRangePickerTemplate,
-	languageAware: true,
-	cldr: true,
 })
 
 /**
