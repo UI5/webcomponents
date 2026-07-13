@@ -8,8 +8,8 @@ import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 
 export default function CalendarTemplate(this: Calendar) {
 	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
-	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitView && !this._isCompactMode;
-	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && (this._portraitView || this._isCompactMode);
+	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitView;
+	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && this._portraitView;
 
 	return (
 		<>

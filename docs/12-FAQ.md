@@ -22,7 +22,7 @@ sidebar_label: FAQ
 
 **Q: Are UI5 Web Components APIs stable?**
 
-**A:**Yes.
+**A:** Yes.
 
 
 **Q: Can I create my own UI5 Web Components?**

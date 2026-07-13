@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-fiori",
-  "version": "2.24.0-rc.1",
+  "version": "2.24.0",
   "description": "UI5 Web Components: webcomponents.fiori",
   "ui5": {
     "webComponentsPackage": true
@@ -45,6 +45,8 @@
     "test:cypress": "wc-dev test-cy-ci",
     "test:cypress:single": "npx cypress run --component --browser chrome --spec",
     "test:cypress:open": "wc-dev test-cy-open",
+    "test:cypress:visual": "CYPRESS_VISUAL=true yarn test:cypress",
+    "test:cypress:open:visual": "CYPRESS_VISUAL=true yarn test:cypress:open",
     "create-ui5-element": "wc-create-ui5-element",
     "prepublishOnly": "tsc -b"
   },
@@ -54,16 +56,16 @@
     "directory": "packages/fiori"
   },
   "dependencies": {
-    "@ui5/webcomponents": "2.24.0-rc.1",
-    "@ui5/webcomponents-base": "2.24.0-rc.1",
-    "@ui5/webcomponents-icons": "2.24.0-rc.1",
-    "@ui5/webcomponents-theming": "2.24.0-rc.1",
+    "@ui5/webcomponents": "2.24.0",
+    "@ui5/webcomponents-base": "2.24.0",
+    "@ui5/webcomponents-icons": "2.24.0",
+    "@ui5/webcomponents-theming": "2.24.0",
     "@zxing/library": "^0.21.3"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
-    "@ui5/webcomponents-tools": "2.24.0-rc.1",
+    "@ui5/webcomponents-tools": "2.24.0",
     "cypress": "15.9.0",
     "lit": "^2.0.0",
     "vite": "5.4.21",
