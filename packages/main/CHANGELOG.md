@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.29](https://github.com/UI5/webcomponents/compare/v1.24.28...v1.24.29) (2026-07-13)
+
+
+### Bug Fixes
+
+* **OpenUI5Support:** fix error on Firefox ([#13794](https://github.com/UI5/webcomponents/issues/13794)) ([24083d5](https://github.com/UI5/webcomponents/commit/24083d55eac4051598e411b3c1689bfa6723cb4d))
+* **ui5-list:** guard item-toggle against null event detail ([eb43cba](https://github.com/UI5/webcomponents/commit/eb43cba101c4ef6ca6ea9242913e83038008aa92)), closes [#13646](https://github.com/UI5/webcomponents/issues/13646) [#13576](https://github.com/UI5/webcomponents/issues/13576)
+
+
+
+
+
 ## [1.24.28](https://github.com/UI5/webcomponents/compare/v1.24.27...v1.24.28) (2026-05-11)
 
 
