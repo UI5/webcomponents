@@ -3,6 +3,7 @@ import QuickAction from "../../../_samples/fiori/SideNavigation/QuickAction/Quic
 import UnselectableParentItems from "../../../_samples/fiori/SideNavigation/UnselectableParentItems/UnselectableParentItems.md";
 import OverlayMode from "../../../_samples/fiori/SideNavigation/OverlayMode/OverlayMode.md";
 import CustomWidth from "../../../_samples/fiori/SideNavigation/CustomWidth/CustomWidth.md";
+import Tags from "../../../_samples/fiori/SideNavigation/Tags/Tags.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -32,3 +33,12 @@ SideNavigation is enabled to be used inside a responsive popover. This example s
 The width of the side navigation panel can be customized using CSS. The panel must be at least 16 rem wide to maintain readability and layout stability. You can set a larger width as needed, but it cannot be reduced below 16 rem. If the panel does not have sufficient space, long texts will wrap automatically.
 
 <CustomWidth />
+
+### Indication Tags
+Navigation items can display indication tags to highlight status or phases such as "New", "Beta", or "Deprecated". Tags use the `tag` slot and should follow these guidelines:
+- Use `ui5-tag` with `design="Set2"`, `hide-state-icon`, and `colorScheme` values 5-10 (avoiding semantic colors 1-4 which may be confused with error/success/warning states)
+- It is recommended to limit tag width to 64px (4rem). If tag text exceeds this, use shortened forms or abbreviations (e.g., "Experimental" → "Exp")
+- Tags are non-interactive - they serve purely as visual indicators and do not trigger any action or tooltip
+- Only one tag is allowed per navigation item
+
+<Tags />

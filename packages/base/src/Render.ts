@@ -34,13 +34,27 @@ const renderDeferred = async (webComponent: UI5Element) => {
 };
 
 /**
+ * Register all web components attached to the DOM
+ */
+const registerElement = (webComponent: UI5Element) => {
+	registeredElements.add(webComponent);
+};
+
+/**
+ * Unregister all web components detached from the DOM
+ */
+const unregisterElement = (webComponent: UI5Element) => {
+	registeredElements.delete(webComponent);
+};
+
+/**
  * Renders a component synchronously and adds it to the registry of rendered components
  *
  * @param webComponent
  */
 const renderImmediately = (webComponent: UI5Element) => {
 	eventProvider.fireEvent("beforeComponentRender", webComponent);
-	registeredElements.add(webComponent);
+	registerElement(webComponent);
 	webComponent._render();
 };
 
@@ -51,7 +65,7 @@ const renderImmediately = (webComponent: UI5Element) => {
  */
 const cancelRender = (webComponent: UI5Element) => {
 	invalidatedWebComponents.remove(webComponent);
-	registeredElements.delete(webComponent);
+	unregisterElement(webComponent);
 };
 
 /**
@@ -173,6 +187,8 @@ export {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	registerElement,
+	unregisterElement,
 	renderFinished,
 	reRenderAllUI5Elements,
 	attachBeforeComponentRender,

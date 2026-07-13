@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.24.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.1...v2.24.0-rc.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13720](https://github.com/UI5/webcomponents/issues/13720)) ([f75e906](https://github.com/UI5/webcomponents/commit/f75e9064903f3927feb1411d61fd57bb1296f1d8))
+
+
+
+
+
+# [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* keep table rows intact when printing and harden createInstanceChecker ([#13699](https://github.com/UI5/webcomponents/issues/13699)) ([492099e](https://github.com/UI5/webcomponents/commit/492099e44b22710313c2fc67480f9b1259a7b59d)), closes [#13684](https://github.com/UI5/webcomponents/issues/13684) [#13689](https://github.com/UI5/webcomponents/issues/13689)
+
+
+
+
+
+# [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **framework:** stop reflecting object/array properties to attributes ([#13626](https://github.com/UI5/webcomponents/issues/13626)) ([f5b49c7](https://github.com/UI5/webcomponents/commit/f5b49c789975b0ec8c5390c4ce0eeced4fe71a1c))
+
+
+
+
+
+# [2.23.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.1...v2.23.0-rc.2) (2026-06-03)
+
+
+### Bug Fixes
+
+* **framework:** prevent language-aware components from rendering before CLDR data loads ([#13602](https://github.com/UI5/webcomponents/issues/13602)) ([441672b](https://github.com/UI5/webcomponents/commit/441672b62733b42f4fc1a12452711602ae6a1bb5))
+
+
+### Features
+
+* **ui5-*:** support `autofocus` attribute ([#12572](https://github.com/UI5/webcomponents/issues/12572)) ([b13a00a](https://github.com/UI5/webcomponents/commit/b13a00aed10f7c230f171551923af57a413a458a))
+
+
+
+
+
+# [2.23.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.0...v2.23.0-rc.1) (2026-05-28)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
 # [2.23.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.22.1-rc.0...v2.23.0-rc.0) (2026-05-23)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

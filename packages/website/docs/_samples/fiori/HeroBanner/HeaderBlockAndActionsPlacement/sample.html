@@ -1,0 +1,38 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+        <ui5-hero-banner
+            header-text="Good Morning, Anna"
+            overline-text="Monday, May 26, 2026"
+            columns-ratio="Equal"
+            actions-placement="BottomStart"
+            header-block-placement="Bottom">
+
+            <div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <ui5-button icon="create" design="Default">New Request</ui5-button>
+                <ui5-button icon="document" design="Default">Create Report</ui5-button>
+                <ui5-button icon="email" design="Default">Send Message</ui5-button>
+            </div>
+
+            <ui5-card slot="endContent" style="width: 100%;">
+                <ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold; color: var(--sapNegativeColor);">42</div>
+            </ui5-card>
+        </ui5-hero-banner>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

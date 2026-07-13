@@ -16,7 +16,8 @@
 	box-shadow: inherit;
 	border-radius: inherit;
 	min-width: 0;
-	overflow: hidden;
+	overflow-x: clip;
+	overflow-y: visible;
 }
 
 .ui5-bar-root .ui5-bar-startcontent-container,
@@ -39,7 +40,8 @@
 	flex: 1 1 auto;
 	padding: 0 var(--_ui5_bar-mid-container-padding-start-end);
 	min-width: 0;
-	overflow: hidden;
+	overflow-x: clip;
+	overflow-y: visible;
 }
 
 .ui5-bar-root .ui5-bar-startcontent-container {
@@ -54,7 +56,8 @@
 
 .ui5-bar-root.ui5-bar-root-shrinked .ui5-bar-content-container {
 	min-width: 0px;
-	overflow: hidden;
+	overflow-x: clip;
+	overflow-y: visible;
 	height: 100%;
 }
 
@@ -80,7 +83,7 @@
 	border: none;
 }
 
-::slotted(*:not([hidden])) {
+::slotted(*:not([hidden]):not([ui5-button])) {
 	margin: 0 0.25rem;
 	display: inline-block;
     max-width: 100%;
@@ -88,4 +91,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
+}
+
+/* Scoped here (not in Bar-parameters.css) so the override applies only to buttons inside a Bar, not to standalone buttons on the page. */
+::slotted([ui5-button]) {
+	margin: 0 0.25rem;
+	--_ui5_button_overlay_badge_offset: -0.25rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	::slotted([ui5-button]) {
+		--_ui5_button_overlay_badge_offset: initial;
+	}
 }

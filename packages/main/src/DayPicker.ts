@@ -104,6 +104,7 @@ type DayPickerChangeEventDetail = {
 
 type DayPickerNavigateEventDetail = {
 	timestamp: number,
+	mouse?: boolean,
 }
 
 /**
@@ -209,6 +210,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_focusableDay!: HTMLElement;
 
 	_autoFocus?: boolean;
+	_mousedownTimestamp?: number;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -503,9 +505,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * Selects/deselects a day.
 	 * @param e
 	 * @param isShift true if the user did Click+Shift or Enter+Shift (but not Space+Shift)
+	 * @param setTimestamp whether to move focus (timestamp) to the selected day; false for mouse clicks where focus is independent
 	 * @private
 	 */
-	_selectDate(e: Event, isShift: boolean) {
+	_selectDate(e: Event, isShift: boolean, setTimestamp = true) {
 		let target = e.target as HTMLElement;
 
 		if (!target.hasAttribute("data-sap-timestamp")) {
@@ -516,9 +519,12 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		const timestamp = this._getTimestampFromDom(target);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		this._mousedownTimestamp = undefined;
 
-		this._safelySetTimestamp(timestamp);
+		if (setTimestamp) {
+			this._safelySetTimestamp(timestamp);
+		}
 		this._updateSecondTimestamp();
 		this._updateSelectedDates(timestamp, isShift);
 
@@ -595,6 +601,31 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	_removeTimestampFromSelection(timestamp: number) {
 		this.selectedDates = this.selectedDates.filter(value => value !== timestamp);
+	}
+
+	_onmousedown(e: MouseEvent) {
+		let target = e.target as HTMLElement;
+
+		if (!target.hasAttribute("data-sap-timestamp")) {
+			target = target.parentNode as HTMLElement;
+		}
+
+		if (!this._isDayPressed(target)) {
+			return;
+		}
+
+		const timestamp = this._getTimestampFromDom(target);
+		const clickedDate = CalendarDate.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
+		const isOtherMonth = clickedDate.getMonth() !== this._calendarDate.getMonth();
+
+		this._mousedownTimestamp = timestamp;
+		this._safelySetTimestamp(timestamp);
+
+		if (isOtherMonth) {
+			this._autoFocus = true;
+		}
+
+		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
 	/**
@@ -714,7 +745,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_onclick(e: MouseEvent) {
-		this._selectDate(e, e.shiftKey);
+		this._selectDate(e, e.shiftKey, false);
 	}
 
 	/**

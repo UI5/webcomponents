@@ -1312,7 +1312,7 @@ describe("Tab semantic click event", () => {
 		cy.get("@clickStub").should((stub: any) => {
 			const event = stub.firstCall.args[0];
 			expect(event).to.be.instanceOf(CustomEvent);
-			expect(event.detail.tab).to.exist;
+			expect(event.target).to.have.property("id", "tab1");
 			expect(event.detail.originalEvent).to.be.instanceOf(MouseEvent);
 		});
 	});

@@ -12,6 +12,10 @@ import Toolbar from "../../src/Toolbar.js";
 import ToolbarButton from "../../src/ToolbarButton.js";
 import Tokenizer from "../../src/Tokenizer.js";
 import Token from "../../src/Token.js";
+import {
+	DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE,
+	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Keyboard", () => {
 	it("TAB navigation", () => {
@@ -580,11 +584,11 @@ describe("Dialog general interaction", () => {
 				const initialTop = parseInt(dialog.css("top"));
 				const initialLeft = parseInt(dialog.css("left"));
 
-				// Act - Move dialog up using keyboard
-				cy.get("#header-slot").realClick();
+				// Act - Focus the drag/resize handle and move dialog up
+				cy.realPress("Tab");
 
-				cy.get("#header-slot").focused().realPress("{uparrow}");
-				cy.get("#header-slot").focused().realPress("{uparrow}");
+				cy.realPress("{uparrow}");
+				cy.realPress("{uparrow}");
 
 				// Assert - Top position changes, left remains the same
 
@@ -599,10 +603,8 @@ describe("Dialog general interaction", () => {
 					})
 
 					// Act - Move dialog left using keyboard
-					cy.get("#header-slot").realClick();
-
-					cy.get("#header-slot").focused().realPress("{leftarrow}");
-					cy.get("#header-slot").focused().realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
+					cy.realPress("{leftarrow}");
 
 					// Assert - Left position changes, top remains the same
 					cy.get("#draggable-dialog")
@@ -722,7 +724,7 @@ describe("Dialog general interaction", () => {
 				.shadow()
 				.find(".ui5-popup-resize-handle")
 				.realMouseDown()
-				.realMouseMove(800, 0) // Large movement to ensure we hit min width
+				.realMouseMove(420, 0) // Large movement to ensure we hit min width
 				.realMouseUp();
 
 			cy.get("#rtl-min-width-dialog").then(dialogAtMinWidth => {
@@ -737,7 +739,7 @@ describe("Dialog general interaction", () => {
 					.shadow()
 					.find(".ui5-popup-resize-handle")
 					.realMouseDown()
-					.realMouseMove(150, 0) // Additional rightward movement beyond min width
+					.realMouseMove(350, 0) // Additional rightward movement beyond min width
 					.realMouseUp();
 
 				cy.get("#rtl-min-width-dialog").then(dialogAfterExtraResize => {
@@ -776,9 +778,9 @@ describe("Dialog general interaction", () => {
 			const initialTop = parseInt(dialog.css("top"));
 			const initialLeft = parseInt(dialog.css("left"));
 
-			// Act - Resize height using keyboard
-			cy.get("#resizable-dialog").shadow().find(".ui5-popup-resize-handle").click();
-			cy.get("#resizable-dialog").realPress(["Shift", "ArrowDown"]);
+
+			cy.realPress("Tab"); // Focus the drag/resize handle
+			cy.realPress(["Shift", "ArrowDown"]);
 
 			// Assert - Height changes, width and position remain the same
 			cy.get("#resizable-dialog").then(dialogAfterResizeHeight => {
@@ -791,8 +793,7 @@ describe("Dialog general interaction", () => {
 				expect(leftAfterResizeHeight).to.equal(initialLeft);
 
 				// Act - Resize width using keyboard
-				cy.get("#resizable-dialog").shadow().find(".ui5-popup-resize-handle").click();
-				cy.get("#resizable-dialog").realPress(["Shift", "ArrowRight"]);
+				cy.realPress(["Shift", "ArrowRight"]);
 
 				// Assert - Width changes, height and position remain the same
 				cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
@@ -859,7 +860,7 @@ describe("Dialog general interaction", () => {
 
 				expect(widthBeforeResizing).to.equal(widthAfterResizing);
 				expect(heightBeforeResizing).not.to.equal(heightAfterResizing);
-				expect(topBeforeResizing).to.equal(topAfterResizing);
+				expect(topBeforeResizing).to.be.closeTo(topAfterResizing, 2);
 				expect(leftBeforeResizing).not.to.equal(leftAfterResizing + 100);
 			});
 		});
@@ -1078,30 +1079,33 @@ describe("Acc", () => {
 		cy.get("#draggable-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
-		// Assert aria-labelledby and aria attributes
+		// Assert aria-label on the dialog root
 		cy.get("#draggable-dialog")
 			.shadow()
 			.find(".ui5-popup-root")
 			.should("have.attr", "aria-label", "Draggable");
 
+		// Assert aria-describedby is on the drag/resize handle, not the header
 		cy.get("#draggable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby");
 
+		// Assert hidden text contains keyboard instructions
 		cy.get("#draggable-dialog")
 			.shadow()
 			.find(".ui5-hidden-text")
 			.should("exist")
 			.then(hiddenText => {
-				const valueOfTheHiddenText = hiddenText.text();
-				cy.wrap(valueOfTheHiddenText).should("equal", "Use Arrow keys to move");
+				const valueOfTheHiddenText = hiddenText.eq(1).text();
+				cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_DRAGGABLE));
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#draggable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 	});
 
 	it("tests aria-describedby for default header", () => {
@@ -1119,10 +1123,10 @@ describe("Acc", () => {
 		cy.get("#resizable-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#resizable-dialog").ui5DialogOpened();
 
-		// Assert aria-describedby and aria-roledescription attributes
+		// Assert aria-describedby is on the drag/resize handle
 		cy.get("#resizable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby")
 			.then($el => {
 				cy.get("#resizable-dialog")
@@ -1130,15 +1134,16 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#resizable-dialog")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 
 	});
 
@@ -1157,10 +1162,10 @@ describe("Acc", () => {
 		cy.get("#resizable-dialog-custom-header").invoke("attr", "open", true);
 		cy.get<Dialog>("#resizable-dialog-custom-header").ui5DialogOpened();
 
-		// Assert aria-describedby and aria-roledescription attributes
+		// Assert aria-describedby is on the drag/resize handle
 		cy.get("#resizable-dialog-custom-header")
 			.shadow()
-			.find(".ui5-popup-header-root")
+			.find(".ui5-popup-drag-resize-handler")
 			.should("have.attr", "aria-describedby")
 			.then($el => {
 				cy.get("#resizable-dialog-custom-header")
@@ -1168,15 +1173,16 @@ describe("Acc", () => {
 					.find(".ui5-hidden-text")
 					.should("exist")
 					.then(hiddenText => {
-						const valueOfTheHiddenText = hiddenText.text();
-						cy.wrap(valueOfTheHiddenText).should("equal", "Use Shift+Arrow keys to resize");
+						const valueOfTheHiddenText = hiddenText.eq(1).text();
+						cy.wrap(valueOfTheHiddenText).should("equal", Dialog.i18nBundle.getText(DIALOG_ARIA_DESCRIBEDBY_RESIZABLE));
 					});
 			});
 
+		// Assert aria-roledescription on the drag/resize handle
 		cy.get("#resizable-dialog-custom-header")
 			.shadow()
-			.find(".ui5-popup-header-root")
-			.should("have.attr", "aria-roledescription", "Interactive Header");
+			.find(".ui5-popup-drag-resize-handler")
+			.should("have.attr", "aria-roledescription", "Handle");
 	});
 
 	it("tests accessibleName-ref", () => {
@@ -1242,6 +1248,59 @@ describe("Acc", () => {
 			.find(".ui5-popup-root")
 			.should("have.attr", "role", "alertdialog")
 			.and("have.attr", "aria-modal", "true");
+	});
+
+	it("tests header, content and footer regions", () => {
+		cy.mount(
+			<Dialog id="dialog-regions" headerText="Region Test">
+				<div>Some content</div>
+				<Button slot="footer">OK</Button>
+			</Dialog>
+		);
+
+		cy.get("#dialog-regions")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-regions").ui5DialogOpened();
+
+		// Header region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Header");
+
+		// Content region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-content")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Content");
+
+		// Footer region
+		cy.get("#dialog-regions")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("have.attr", "role", "region")
+			.and("have.attr", "aria-label", "Footer");
+	});
+
+	it("tests footer region is not rendered when no footer slot is provided", () => {
+		cy.mount(
+			<Dialog id="dialog-no-footer" headerText="No Footer">
+				<div>Some content</div>
+			</Dialog>
+		);
+
+		cy.get("#dialog-no-footer")
+			.invoke("prop", "open", true);
+
+		cy.get<Dialog>("#dialog-no-footer").ui5DialogOpened();
+
+		cy.get("#dialog-no-footer")
+			.shadow()
+			.find(".ui5-popup-footer-root")
+			.should("not.exist");
 	});
 
 });
@@ -1596,8 +1655,8 @@ describe("Event Registration", () => {
 		);
 
 		// Check that resize handler is not attached when dialog is closed
-		cy.get("#dialog-resize-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.undefined;
 		});
 
@@ -1606,8 +1665,8 @@ describe("Event Registration", () => {
 		cy.get<Dialog>("#dialog-resize-event").ui5DialogOpened();
 
 		// Check that resize handler is attached when dialog is open
-		cy.get("#dialog-resize-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.true;
 		});
 
@@ -1615,8 +1674,8 @@ describe("Event Registration", () => {
 		cy.get("#dialog-resize-event").invoke("prop", "open", false);
 
 		// Check that resize handler is detached when dialog is closed
-		cy.get("#dialog-resize-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-resize-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.false;
 		});
 	});
@@ -1631,8 +1690,8 @@ describe("Event Registration", () => {
 		);
 
 		// Check that dragstart handler is not registered when dialog is closed
-		cy.get("#dialog-dragstart-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._dragHandlerRegistered).to.be.false;
 		});
 
@@ -1641,8 +1700,8 @@ describe("Event Registration", () => {
 		cy.get<Dialog>("#dialog-dragstart-event").ui5DialogOpened();
 
 		// Check that dragstart handler is registered when dialog is open
-		cy.get("#dialog-dragstart-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._dragHandlerRegistered).to.be.true;
 		});
 
@@ -1650,8 +1709,8 @@ describe("Event Registration", () => {
 		cy.get("#dialog-dragstart-event").invoke("prop", "open", false);
 
 		// Check that dragstart handler is deregistered when dialog is closed
-		cy.get("#dialog-dragstart-event").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-dragstart-event").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._dragHandlerRegistered).to.be.false;
 		});
 	});
@@ -1670,8 +1729,8 @@ describe("Event Registration", () => {
 		cy.get<Dialog>("#dialog-reopen-events").ui5DialogOpened();
 
 		// Verify handlers are registered
-		cy.get("#dialog-reopen-events").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.true;
 			expect(dialog._dragHandlerRegistered).to.be.true;
 		});
@@ -1680,8 +1739,8 @@ describe("Event Registration", () => {
 		cy.get("#dialog-reopen-events").invoke("prop", "open", false);
 
 		// Verify handlers are deregistered
-		cy.get("#dialog-reopen-events").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.false;
 			expect(dialog._dragHandlerRegistered).to.be.false;
 		});
@@ -1691,8 +1750,8 @@ describe("Event Registration", () => {
 		cy.get<Dialog>("#dialog-reopen-events").ui5DialogOpened();
 
 		// Verify handlers are registered again
-		cy.get("#dialog-reopen-events").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#dialog-reopen-events").then($dialog => {
+			const dialog = $dialog.get(0);
 			expect(dialog._screenResizeHandlerAttached).to.be.true;
 			expect(dialog._dragHandlerRegistered).to.be.true;
 		});
@@ -1710,8 +1769,8 @@ describe("Native drag-and-drop in draggable dialogs", () => {
 		cy.get("#test-dialog").invoke("prop", "open", true);
 		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
 
-		cy.get("#test-dialog").then($dialog => {
-			const dialog = $dialog.get(0) as Dialog;
+		cy.get<Dialog>("#test-dialog").then($dialog => {
+			const dialog = $dialog.get(0);
 			const content = document.getElementById("content-item");
 
 			// Create a mock event
@@ -1772,9 +1831,9 @@ describe("Native drag-and-drop in draggable dialogs", () => {
 		cy.get("#test-dialog").invoke("prop", "open", true);
 		cy.get<Dialog>("#test-dialog").ui5DialogOpened();
 
-		cy.get("#custom-header").then($header => {
+		cy.get<HTMLElement>("#custom-header").then($header => {
 			const dialog = document.getElementById("test-dialog") as Dialog;
-			const header = $header.get(0) as HTMLElement;
+			const header = $header.get(0);
 
 			// Create a mock event
 			let preventDefaultCalled = false;
@@ -1789,5 +1848,317 @@ describe("Native drag-and-drop in draggable dialogs", () => {
 
 			expect(preventDefaultCalled).to.be.true;
 		});
+	});
+});
+
+describe("Fullscreen Button", () => {
+	it("should show fullscreen button when showFullscreenButton is set", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("exist")
+			.and("be.visible");
+	});
+
+	it("should not show fullscreen button when showFullscreenButton is not set", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("not.exist");
+	});
+
+	it("should toggle stretch property when fullscreen button is clicked", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			$dialog.get(0)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			$dialog.get(0)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should show full-screen icon when not stretched and exit-full-screen when stretched", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "full-screen");
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			$dialog.get(0)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "exit-full-screen");
+	});
+
+	it("should have correct tooltip based on stretch state", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "tooltip", "Maximize (Shift+Ctrl+F)");
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			$dialog.get(0)._toggleFullscreen();
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "tooltip", "Restore (Shift+Ctrl+F)");
+	});
+
+	it("should have aria-keyshortcuts attribute", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.shadow()
+			.find("button")
+			.should("have.attr", "aria-keyshortcuts", "Shift+Ctrl+F");
+	});
+
+	it("should toggle fullscreen with Shift+Ctrl+F keyboard shortcut", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Input id="input"></Input>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get("#input").realClick();
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should toggle fullscreen on header double-click", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test Dialog" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+
+		cy.get("#dialog").then($dialog => {
+			const dialog = $dialog.get(0);
+			const headerRoot = dialog.shadowRoot!.querySelector(".ui5-popup-header-root")!;
+			const event = new MouseEvent("dblclick", { bubbles: true, composed: true });
+			Object.defineProperty(event, "target", { value: headerRoot });
+			headerRoot.dispatchEvent(event);
+		});
+
+		cy.get("#dialog")
+			.should("have.attr", "stretch");
+	});
+
+	it("should not toggle fullscreen on double-click when showFullscreenButton is false", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test Dialog" open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.realClick({ clickCount: 2 });
+
+		cy.get("#dialog")
+			.should("not.have.attr", "stretch");
+	});
+
+	it("should reset drag/resize state when toggling fullscreen", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} draggable={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			const dialog = $dialog.get(0);
+			dialog._draggedOrResized = true;
+			Object.assign(dialog.style, { top: "100px", left: "100px", width: "400px", height: "300px" });
+		});
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.realClick();
+
+		cy.get<Dialog>("#dialog").then($dialog => {
+			const dialog = $dialog.get(0);
+			expect(dialog._draggedOrResized).to.be.false;
+			expect(dialog.style.width).to.equal("");
+			expect(dialog.style.height).to.equal("");
+		});
+	});
+
+	it("should display header when only showFullscreenButton is set", () => {
+		cy.mount(
+			<Dialog id="dialog" showFullscreenButton={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.should("exist");
+	});
+
+	it("should reflect stretch state if stretch is initially true", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} stretch={true} open={true}>
+				<Button>Content</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("have.attr", "icon", "exit-full-screen")
+			.and("have.attr", "tooltip", "Restore (Shift+Ctrl+F)");
+
+		cy.get("#dialog").invoke("prop", "open", false);
+	});
+
+	it("should not focus fullscreen button as initial focus when content has focusable elements", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<Button id="content-btn">Content Button</Button>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#content-btn").should("be.focused");
+	});
+
+	it("should focus fullscreen button when no other focusable elements exist", () => {
+		cy.mount(
+			<Dialog id="dialog" headerText="Test" showFullscreenButton={true} open={true}>
+				<p>Non-focusable content</p>
+			</Dialog>
+		);
+
+		cy.get<Dialog>("#dialog").ui5DialogOpened();
+
+		cy.get("#dialog")
+			.shadow()
+			.find(".ui5-dialog-fullscreen-btn")
+			.should("be.focused");
+	});
+
+	it("Ctrl+Shift+F should only toggle the top dialog when two dialogs with fullscreen button are open", () => {
+		cy.mount(
+			<>
+				<Dialog id="dialog1" headerText="First Dialog" showFullscreenButton={true}>
+					<Button id="btn1">Content 1</Button>
+				</Dialog>
+				<Dialog id="dialog2" headerText="Second Dialog" showFullscreenButton={true}>
+					<Input id="input2"></Input>
+				</Dialog>
+			</>
+		);
+
+		cy.get("#dialog1").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog1").ui5DialogOpened();
+
+		cy.get("#dialog2").invoke("prop", "open", true);
+		cy.get<Dialog>("#dialog2").ui5DialogOpened();
+
+		cy.get("#dialog1").should("not.have.attr", "stretch");
+		cy.get("#dialog2").should("not.have.attr", "stretch");
+
+		cy.get("#input2").realClick();
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog2").should("have.attr", "stretch");
+		cy.get("#dialog1").should("not.have.attr", "stretch");
+
+		cy.realPress(["Shift", "Control", "f"]);
+
+		cy.get("#dialog2").should("not.have.attr", "stretch");
+		cy.get("#dialog1").should("not.have.attr", "stretch");
 	});
 });

@@ -1,6 +1,7 @@
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ComboBox from "../../src/ComboBox.js";
 import ComboBoxItem from "../../src/ComboBoxItem.js";
+import ComboBoxItemCustom from "../../src/ComboBoxItemCustom.js";
 import ComboBoxItemGroup from "../../src/ComboBoxItemGroup.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Link from "../../src/Link.js";
@@ -2911,6 +2912,67 @@ describe("Event firing", () => {
 		cy.get("@selectionChangeSpy")
 			.should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
+
+	it("selection-change trigger is 'Typeahead' when text is auto-completed", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realType("Bul");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Bulgaria" && event.detail.trigger === "Typeahead";
+		}));
+	});
+
+	it("selection-change trigger is 'Click' when an item is clicked in the dropdown", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find(".inputIcon").realClick();
+		cy.get("@combo").find("ui5-cb-item").eq(2).realClick();
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Canada" && event.detail.trigger === "Click";
+		}));
+	});
+
+	it("selection-change trigger is 'Keyboard' when navigating with arrow keys", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realPress("F4").realPress("ArrowDown");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.trigger === "Keyboard";
+		}));
+	});
 });
 
 describe("Scrolling", () => {
@@ -3990,5 +4052,225 @@ describe("Highlighting", () => {
 		// Should preserve original case "AFR" not "afr"
 		cy.get("@combobox").find("[ui5-cb-item]").eq(0).shadow().find(".ui5-li-title")
 			.should("contain.html", "<b>AFR</b>");
+	});
+});
+
+describe("ComboBoxItemCustom - Rendering", () => {
+	it("should render custom content correctly", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Germany">
+					<span role="img" aria-label="Flag">🇩🇪</span> Germany
+				</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France">
+					<span role="img" aria-label="Flag">🇫🇷</span> France
+				</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-cb-item-custom]").eq(1).should("contain.text", "🇫🇷 France");
+	});
+
+	it("should mix regular and custom items", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Standard Item"></ComboBoxItem>
+				<ComboBoxItemCustom text="Custom Item">
+					<strong>Custom Item</strong>
+				</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").should("have.length", 1);
+		cy.get("[ui5-cb-item-custom]").should("have.length", 1);
+	});
+
+	it("should have role='option'", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Test">Test Item</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("have.attr", "role", "option");
+	});
+});
+
+describe("ComboBoxItemCustom - Filtering", () => {
+	it("should filter custom items by text property", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France">🇫🇷 France</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="Spain">🇪🇸 Spain</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox").realPress("G");
+
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(2).should("not.have.prop", "_isVisible", true);
+	});
+
+	it("should filter mixed regular and custom items", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Austria"></ComboBoxItem>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItem text="France"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox").realPress("G");
+
+		cy.get("[ui5-cb-item]").eq(0).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(1).should("not.have.prop", "_isVisible", true);
+	});
+});
+
+describe("ComboBoxItemCustom - Selection", () => {
+	it("should select custom item on click", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France">🇫🇷 France</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item-custom]").eq(0).shadow().find("li").realClick();
+
+		cy.get("@combobox").should("have.prop", "value", "Germany");
+	});
+
+	it("should select custom item with Enter key", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France">🇫🇷 France</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.realClick();
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@combobox").should("have.prop", "value", "Germany");
+	});
+
+	it("should work with value property for programmatic selection", () => {
+		cy.mount(
+			<ComboBox selectedValue="FR">
+				<ComboBoxItemCustom text="Germany" value="DE">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France" value="FR">🇫🇷 France</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").should("have.prop", "value", "France");
+		cy.get("[ui5-combobox]").should("have.prop", "selectedValue", "FR");
+	});
+});
+
+describe("ComboBoxItemCustom - Navigation", () => {
+	it("should navigate through custom items with arrow keys", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="France">🇫🇷 France</ComboBoxItemCustom>
+				<ComboBoxItemCustom text="Spain">🇪🇸 Spain</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
+		cy.get("[ui5-cb-item-custom]").eq(1).should("have.prop", "focused", true);
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowUp");
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
+	});
+
+	it("should navigate through mixed items", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Austria"></ComboBoxItem>
+				<ComboBoxItemCustom text="Germany">🇩🇪 Germany</ComboBoxItemCustom>
+				<ComboBoxItem text="France"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "focused", true);
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
+		cy.get("[ui5-cb-item-custom]").eq(0).should("have.prop", "focused", true);
+
+		cy.get("@combobox").shadow().find("input").realPress("ArrowDown");
+		cy.get("[ui5-cb-item]").eq(1).should("have.prop", "focused", true);
+	});
+});
+
+describe("ComboBoxItemCustom - Accessibility", () => {
+	it("should have correct tabindex", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItemCustom text="Test">Test Item</ComboBoxItemCustom>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
 	});
 });

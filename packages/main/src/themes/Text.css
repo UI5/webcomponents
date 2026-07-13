@@ -6,21 +6,16 @@
 	line-height: normal;
 	cursor: text;
 	overflow: hidden;
-}
-
-:host([max-lines="1"]) {
-	display: inline-block;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-:host(:not([max-lines="1"])) {
 	display: -webkit-inline-box;
 	-webkit-line-clamp: var(--_ui5_text_max_lines);
 	line-clamp: var(--_ui5_text_max_lines);
 	-webkit-box-orient: vertical;
 	white-space: normal;
 	word-wrap: break-word;
+}
+
+:host([max-lines="1"]) {
+	word-break: break-all;
 }
 
 .empty-indicator-aria-label {
