@@ -10,6 +10,7 @@ Cypress.Commands.add('waitRenderFinished', () => {
 Cypress.Commands.add('mount', args => {
 	cy.then(() => mount(args)).then(() => {
 		cy.waitRenderFinished();
+		cy.wrap(document.fonts.ready, { log: false });
 	});
 });
 
@@ -70,6 +71,16 @@ realEventCommandsRest.forEach(cmd => {
 			return originalFn(element, ...args);
 		});
 	});
+});
+
+Cypress.Commands.overwrite("screenshot", (originalFn, ...args) => {
+	const delay = Number(Cypress.env("SCREENSHOT_DELAY") ?? 0);
+
+	if (delay > 0) {
+		return cy.wait(delay).then(() => (originalFn as any)(...args));
+	}
+
+	return (originalFn as any)(...args);
 });
 
 declare global {
