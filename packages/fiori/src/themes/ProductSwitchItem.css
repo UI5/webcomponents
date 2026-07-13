@@ -1,6 +1,6 @@
 :host {
 	width: var(--_ui5_product_switch_item_width);
-	height: var(--_ui5_product_switch_item_height);
+	min-height: var(--_ui5_product_switch_item_height);
 	margin: .25rem;
 	border-radius: .25rem;
 	box-sizing: border-box;
@@ -88,9 +88,8 @@
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-subtitle,
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title {
 	line-height: 1.25rem;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	white-space: normal;
+	overflow-wrap: anywhere;
 	max-width: 100%;
 	pointer-events: none;
 	text-align: center;
@@ -99,13 +98,6 @@
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title {
 	font-size:var(--sapFontHeader6Size);
 	color:var(--sapGroup_TitleTextColor);
-}
-
-.ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title:only-child {
-	white-space: normal;
-    -webkit-line-clamp: 2;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
 }
 
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-subtitle {
@@ -119,7 +111,8 @@
 		width: 100%;
 		width: 100%;
 		max-width: 600px;
-		height: 5rem;
+		min-height: 5rem;
+		height: auto;
 		border-radius: 0;
 	}
 

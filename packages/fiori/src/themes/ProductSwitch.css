@@ -16,6 +16,10 @@
 	width: 564px; /* 3 * item size */
 }
 
+:host([desktop-columns="2"]) .ui5-product-switch-root {
+	width: 376px; /* 2 * item size */
+}
+
 @media only screen and (max-width: 900px) {
 	.ui5-product-switch-root {
 		width: 564px; /* 3 * item size */
@@ -24,7 +28,8 @@
 
 @media only screen and (max-width: 600px) {
 	.ui5-product-switch-root,
-	:host([desktop-columns="3"]) .ui5-product-switch-root {
+	:host([desktop-columns="3"]) .ui5-product-switch-root,
+	:host([desktop-columns="2"]) .ui5-product-switch-root {
 		flex-direction: column;
 		padding: 0;
 		width: 100%;
