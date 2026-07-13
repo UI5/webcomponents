@@ -95,7 +95,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 							aria-autocomplete="both"
 							aria-controls="ui5-search-list"
 							value={this.value}
-							placeholder={this.placeholder}
+							placeholder={this._effectivePlaceholder}
 							data-sap-focus-ref
 							onInput={this._handleInput}
 							onFocusIn={this._onfocusin}

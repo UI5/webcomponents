@@ -237,12 +237,6 @@ class Search extends SearchField {
 	 */
 	_deleteHandler: (e: CustomEvent) => void;
 
-	/**
-	 * Stores the initial search width to prevent recalculation on scope changes.
-	 * @private
-	 */
-	_initialSearchWidth?: number;
-
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -317,15 +311,7 @@ class Search extends SearchField {
 		this._performTextSelection = false;
 
 		if (!this.collapsed) {
-			// Capture width only once when first expanded
-			if (!this._initialSearchWidth) {
-				this._initialSearchWidth = this.getBoundingClientRect().width;
-			}
-			// Always set from stored value to prevent recalculation
-			this.style.setProperty("--search_width", `${this._initialSearchWidth}px`);
-		} else {
-			// Reset when collapsed so it can recalculate on next expansion
-			this._initialSearchWidth = undefined;
+			this.style.setProperty("--search_width", `${this.getBoundingClientRect().width}px`);
 		}
 	}
 

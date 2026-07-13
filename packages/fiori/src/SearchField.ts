@@ -25,6 +25,7 @@ import {
 	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
 	SEARCH_FIELD_LABEL,
+	SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE,
 } from "./generated/i18n/i18n-defaults.js";
 
 const SCREEN_WIDTH_BREAKPOINT = 450;
@@ -342,9 +343,7 @@ class SearchField extends UI5Element {
 		}
 
 		const scopeValue = listItem.getAttribute("data-scope-value");
-		const scopeItem = this.scopes.find((scope: ISearchScope) =>
-			scope.value === scopeValue
-		);
+		const scopeItem = this.scopes.find((scope: ISearchScope) => scope.value === scopeValue);
 
 		if (scopeItem) {
 			this.scopeValue = scopeItem.value;
@@ -372,13 +371,24 @@ class SearchField extends UI5Element {
 			searchIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_SEARCH_ICON),
 			clearIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_CLEAR_ICON),
 			searchFieldAriaLabel: SearchField.i18nBundle.getText(SEARCH_FIELD_LABEL),
+			placeholderWithScope: SearchField.i18nBundle.getText(SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE),
 		};
 	}
 
+	get _effectivePlaceholder(): string | undefined {
+		// If scopes exist and no user-defined placeholder, show "Search in: {SCOPE}"
+		if (this.scopes?.length && !this.placeholder && this.scopeValue) {
+			const selectedScope = this.scopes.find((scope: ISearchScope) => scope.value === this.scopeValue);
+			if (selectedScope?.text) {
+				return String(SearchField.i18nBundle.getText(SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE, String(selectedScope.text)));
+			}
+		}
+		return this.placeholder;
+	}
+
 	get _scopeIconAccessibleName(): string {
-		const selectedScope = this.scopes.find((scope: ISearchScope) =>
-			scope.value === this.scopeValue
-		);
+		const selectedScope = this.scopes.find((scope: ISearchScope) => scope.value === this.scopeValue);
+
 		return selectedScope
 			? `${this._translations.scope}: ${selectedScope.text}`
 			: this._translations.scope;
