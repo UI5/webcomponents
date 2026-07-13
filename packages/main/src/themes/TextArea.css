@@ -414,5 +414,5 @@
 }
 
 :host([readonly]) .ui5-textarea-exceeded-text, :host([disabled]) .ui5-textarea-exceeded-text {
-	display: none;
+	visibility: hidden;
 }

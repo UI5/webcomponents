@@ -89,7 +89,6 @@ import "./ComboBoxItemGroup.js";
 // eslint-disable-next-line
 import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
-import ComboBoxSelectionChangeTrigger from "./types/ComboBoxSelectionChangeTrigger.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
@@ -124,9 +123,16 @@ enum ValueStateIconMapping {
 	Information = "information",
 }
 
+/**
+ * Describes the source of a `selection-change` event fired by the `ui5-combobox`.
+ * @public
+ * @since 2.24.0
+ */
+type ComboBoxSelectionChangeTrigger = "Typeahead" | "Click" | "Keyboard";
+
 type ComboBoxSelectionChangeEventDetail = {
 	item: ComboBoxItem | null,
-	trigger: `${ComboBoxSelectionChangeTrigger}`,
+	trigger: ComboBoxSelectionChangeTrigger,
 };
 
 /**
@@ -244,7 +250,8 @@ type ComboBoxSelectionChangeEventDetail = {
 /**
  * Fired when selection is changed by user interaction
  * @param {IComboBoxItem} item item to be selected.
- * @param {ComboBoxSelectionChangeTrigger} trigger source of the selection change - typeahead, click or keyboard navigation.
+ * @param {string} trigger source of the selection change - typeahead, click or keyboard navigation.
+ * @since 2.24.0
  * @public
  */
 @event("selection-change", {
@@ -510,7 +517,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_autocomplete = false;
 	_isKeyNavigation = false;
 	_selectionPerformed = false;
-	_selectionTrigger?: `${ComboBoxSelectionChangeTrigger}`;
+	_selectionTrigger?: ComboBoxSelectionChangeTrigger;
 	_lastValue: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
@@ -967,7 +974,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleArrowDown(e: KeyboardEvent, indexOfItem: number) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
 		if (this.focused && indexOfItem === -1 && isOpen) {
@@ -989,7 +996,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
 		if (indexOfItem === 0) {
@@ -1009,7 +1016,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handlePageUp(e: KeyboardEvent, indexOfItem: number) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		const allItems = this._getItems();
 		const isProposedIndexValid = indexOfItem - SKIP_ITEMS_SIZE > -1;
 		indexOfItem = isProposedIndexValid ? indexOfItem - SKIP_ITEMS_SIZE : 0;
@@ -1019,7 +1026,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handlePageDown(e: KeyboardEvent, indexOfItem: number) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		const allItems = this._getItems();
 		const itemsLength = allItems.length;
 		const isProposedIndexValid = indexOfItem + SKIP_ITEMS_SIZE < itemsLength;
@@ -1031,14 +1038,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleHome(e: KeyboardEvent) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		const shouldMoveForward = isInstanceOfComboBoxItemGroup(this._filteredItems[0]) && !this.open;
 
 		this._handleItemNavigation(e, 0, shouldMoveForward);
 	}
 
 	_handleEnd(e: KeyboardEvent) {
-		this._selectionTrigger = ComboBoxSelectionChangeTrigger.Keyboard;
+		this._selectionTrigger = "Keyboard";
 		this._handleItemNavigation(e, this._getItems().length - 1, true /* isForward */);
 	}
 
@@ -1375,7 +1382,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		if (previouslySelectedItem !== itemToBeSelected) {
-			const trigger = this._selectionTrigger || ComboBoxSelectionChangeTrigger.Typeahead;
+			const trigger = this._selectionTrigger || "Typeahead";
 			this._selectionTrigger = undefined;
 
 			if (itemToBeSelected) {
@@ -1447,7 +1454,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (!item.selected) {
 			this.fireDecoratorEvent("selection-change", {
 				item,
-				trigger: ComboBoxSelectionChangeTrigger.Click,
+				trigger: "Click",
 			});
 		}
 
@@ -1774,9 +1781,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 ComboBox.define();
 
 export default ComboBox;
-export { ComboBoxSelectionChangeTrigger };
 
 export type {
 	ComboBoxSelectionChangeEventDetail,
+	ComboBoxSelectionChangeTrigger,
 	IComboBoxItem,
 };

@@ -1174,12 +1174,12 @@ describe("Accessibility with Animation Disabled", () => {
 		cy.get("[ui5-flexible-column-layout]")
 			.shadow()
 			.find(".ui5-fcl-separator-start")
-			.should("have.attr", "title", startSeparatorText);
+			.should("have.attr", "aria-label", startSeparatorText);
 
 		cy.get("[ui5-flexible-column-layout]")
 			.shadow()
 			.find(".ui5-fcl-separator-end")
-			.should("have.attr", "title", endSeparatorText);
+			.should("have.attr", "aria-label", endSeparatorText);
 	});
 
 	it("tests acc default roles", () => {
