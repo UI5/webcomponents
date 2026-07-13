@@ -121,7 +121,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 				</div>
 			</div>
 
-				{ popoverTemplate ? popoverTemplate.call(this) : InputPopoverTemplate.call(this, { suggestionsList, mobileHeader }) }
+			{ popoverTemplate ? popoverTemplate.call(this) : InputPopoverTemplate.call(this, { suggestionsList, mobileHeader }) }
 		</>
 	);
 }

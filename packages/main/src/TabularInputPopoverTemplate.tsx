@@ -62,7 +62,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 							<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
 							{this.open && valueStateMessage.call(this)}
 						</div>
-					}
+						}
 					</div>
 				}
 

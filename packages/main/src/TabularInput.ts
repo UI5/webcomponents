@@ -379,7 +379,7 @@ class TabularInput extends Input {
 	 */
 	_onTableRowClick(e: CustomEvent<{ row: TableRow }>) {
 		const clickedRow = e.detail.row;
-		const rowIndex = parseInt(clickedRow.dataset.rowIndex || "0", 10);
+		const rowIndex = parseInt(clickedRow.dataset.rowIndex || "0");
 		const suggestionRow = this._visibleRows[rowIndex];
 
 		if (suggestionRow) {
