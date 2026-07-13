@@ -7,25 +7,21 @@
 	background-color: var(--sapField_Background);
 }
 
-/* Wrapper to control table sizing in popover */
 .ui5-tabular-input-suggestions-wrapper {
 	width: 100%;
 	max-height: var(--_ui5_tabular_suggestions_max_height, 20rem);
 	overflow: auto;
 }
 
-/* Let ui5-table handle its own base styling */
 .ui5-tabular-suggestions-table {
 	width: 100%;
 }
 
-/* Hide Table's sentinel focus elements in suggestion context */
 .ui5-tabular-suggestions-table::part(before),
 .ui5-tabular-suggestions-table::part(after) {
 	display: none;
 }
 
-/* Focus/selection styles for suggestion rows */
 .ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused,
 .ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--selected {
 	background-color: var(--sapList_SelectionBackgroundColor);
@@ -41,18 +37,15 @@
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
 
-/* Highlighted text in cells */
 .ui5-tabular-suggestions-table [ui5-table-cell] b {
 	font-weight: bold;
 	color: var(--sapList_TextColor);
 }
 
-/* First cell emphasis */
 .ui5-tabular-suggestions-table [ui5-table-row] [ui5-table-cell]:first-of-type {
 	font-weight: 500;
 }
 
-/* Phone mode adjustments */
 :host([_isPhone]) .ui5-tabular-input-suggestions-wrapper {
 	max-height: none;
 }
