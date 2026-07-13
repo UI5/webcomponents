@@ -126,8 +126,14 @@ class InputIcon extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_focused = false;
 
+	/**
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_parentDisabled = false;
+
 	_onclick(e: MouseEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || this._parentDisabled) {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			return;
@@ -138,7 +144,7 @@ class InputIcon extends UI5Element {
 	}
 
 	_onmousedown() {
-		if (!this.disabled && !this.readonly) {
+		if (!this.disabled && !this.readonly && !this._parentDisabled) {
 			this._pressed = true;
 		}
 	}
@@ -161,7 +167,7 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || this._parentDisabled) {
 			return;
 		}
 
@@ -172,7 +178,7 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || this._parentDisabled) {
 			return;
 		}
 
@@ -183,7 +189,7 @@ class InputIcon extends UI5Element {
 	}
 
 	get effectiveTabIndex() {
-		return (this.disabled || this.readonly) ? -1 : 0;
+		return (this.disabled || this.readonly || this._parentDisabled) ? -1 : 0;
 	}
 
 	get effectiveAriaLabel() {
