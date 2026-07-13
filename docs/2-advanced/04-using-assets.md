@@ -20,7 +20,7 @@ Import the `dist/Assets.js` file of the respective NPM package:
 - `import "@ui5/<PACKAGE-NAME>/dist/Assets-fetch.js`
 - `import "@ui5/<PACKAGE-NAME>/dist/Assets-node.js`
 
-** Note: read "Techcnocal aspects" below on how to choose which one to use**
+** Note: read "Technical aspects" below on how to choose which one to use**
 
 | Project                | NPM Package                                                                                                      | Assets           | Module                                           | Notes                                                                                                                                                                                                            |
 |------------------------|------------------------------------------------------------------------------------------------------------------|------------------|--------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
