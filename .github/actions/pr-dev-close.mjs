@@ -2,10 +2,17 @@
 /**
  * Dev-close PR notice — single-file workflow worker.
  *
- * Walks every open non-draft PR targeting `main`, diffs its public Custom
- * Elements Manifest against the latest published manifest on jsDelivr, and
- * posts (once, idempotently) a "do not merge during dev close" comment if
- * any public-API changes are detected.
+ * Two modes:
+ *
+ *   notice (MODE=notice, in-window) — walks every open non-draft PR
+ *   targeting `main`, diffs its public Custom Elements Manifest against
+ *   the latest published manifest on jsDelivr, and posts (once,
+ *   idempotently) a "do not merge during dev close" comment if any
+ *   public-API changes are detected.
+ *
+ *   clear  (MODE=clear, out-of-window) — walks every open non-draft PR
+ *   that carries the notice marker and posts (once, idempotently) a
+ *   follow-up "release shipped, clear to merge" comment.
  *
  * Triggered from .github/workflows/pr-dev-close-notice.yaml; the workflow
  * has already run `yarn install && yarn generate` on the runner before
@@ -18,11 +25,14 @@
  *   ship if the PR merged + cut a release today, which is exactly the
  *   "should not merge during dev close" question. Saves ~2 min per PR.
  *
- * Inputs (env, all required):
+ * Inputs (env):
  *   GH_TOKEN        — token for `gh` CLI (read PRs, post comments)
  *   GITHUB_REPO     — "owner/repo"
- *   RELEASE         — release identifier shown in the comment (e.g. "next")
- *   RELEASE_DATE    — release date shown in the comment (YYYY-MM-DD UTC)
+ *   MODE            — "notice" | "clear" (defaults to "notice")
+ *   RELEASE         — release identifier shown in the notice comment
+ *                     (required in notice mode; ignored in clear mode)
+ *   RELEASE_DATE    — release date shown in the notice comment
+ *                     (required in notice mode; ignored in clear mode)
  *
  * Always exits 0 (this is advisory CI; failures should not block).
  */
@@ -32,6 +42,7 @@ import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 
 const MARKER = "<!-- dev-close-notice -->";
+const CLEAR_MARKER = "<!-- dev-close-cleared -->";
 
 // REPORT_ONLY modes (local validation, no comments posted to GitHub):
 //   "list"  / "1" — fast: only the candidate table, no builds
@@ -44,10 +55,13 @@ const REPORT_MODE = REPORT_ONLY === "diff" ? "diff" : (REPORT_ONLY ? "list" : nu
 const LIMIT = Number(process.env.LIMIT) || 0;
 
 const REPO = required("GITHUB_REPO");
-// Release / release-date are only used to render the comment body. Skip the
-// strictness in REPORT_ONLY mode so callers don't need to pass them.
-const RELEASE = REPORT_MODE ? (process.env.RELEASE ?? "next") : required("RELEASE");
-const RELEASE_DATE = REPORT_MODE ? (process.env.RELEASE_DATE ?? "(unset)") : required("RELEASE_DATE");
+const MODE = process.env.MODE === "clear" ? "clear" : "notice";
+// Release / release-date are only used to render the notice comment body.
+// Skip the strictness in REPORT_ONLY and clear modes so callers don't need
+// to pass them.
+const NEEDS_RELEASE = MODE === "notice" && !REPORT_MODE;
+const RELEASE = NEEDS_RELEASE ? required("RELEASE") : (process.env.RELEASE ?? "next");
+const RELEASE_DATE = NEEDS_RELEASE ? required("RELEASE_DATE") : (process.env.RELEASE_DATE ?? "(unset)");
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -352,13 +366,17 @@ function pickPRs() {
 	return listOpenPRs();
 }
 
-function hasMarkerComment(prNumber) {
+function hasCommentWithMarker(prNumber, marker) {
 	const json = gh([
 		"api", `repos/${REPO}/issues/${prNumber}/comments`,
 		"--paginate",
 		"--jq", "[.[] | .body] | join(\"\\n---\\n\")",
 	]);
-	return json.includes(MARKER);
+	return json.includes(marker);
+}
+
+function hasMarkerComment(prNumber) {
+	return hasCommentWithMarker(prNumber, MARKER);
 }
 
 function postComment(prNumber, body) {
@@ -398,6 +416,17 @@ function commentBody(diffMarkdown) {
 		`If this change **must** ship in the current release, please request a review from one or two members of @UI5/ui5-team-webc so the team can sign off explicitly.`,
 		``,
 		`> 💬 **False positive?** If you believe this PR doesn't actually change the public API (e.g. only internal refactoring, or an entry the detector mis-attributed), please reply on this thread — your feedback helps us improve the detection during this trial run.`,
+		``,
+		`_Posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/pr-dev-close-notice.yaml) workflow._`,
+	].join("\n");
+}
+
+function clearCommentBody() {
+	return [
+		CLEAR_MARKER,
+		`### ✅ Dev close is over — this PR is clear to merge`,
+		``,
+		`The release has shipped and we are outside the dev-close window. The earlier notice on this thread no longer applies — you can go ahead and merge whenever you (and reviewers) are ready.`,
 		``,
 		`_Posted automatically by the [Dev Close Notice](../blob/main/.github/workflows/pr-dev-close-notice.yaml) workflow._`,
 	].join("\n");
@@ -508,11 +537,43 @@ async function processPR(pr, basesByPackage) {
 	}
 }
 
+/** Clear-mode sweep. For every open non-draft PR that carries the notice
+ *  marker but not yet the clear marker, post the "release shipped, clear to
+ *  merge" follow-up. No builds, no CEM work — just comment plumbing. */
+function sweepClearNotices() {
+	const prs = listOpenPRs();
+	console.log(`\nClear-notice sweep — scanning ${prs.length} open non-draft PR(s).`);
+
+	let posted = 0;
+	for (const pr of prs) {
+		try {
+			if (!hasCommentWithMarker(pr.number, MARKER)) continue;
+			if (hasCommentWithMarker(pr.number, CLEAR_MARKER)) {
+				console.log(`  · #${pr.number}: already cleared, skipping`);
+				continue;
+			}
+			postComment(pr.number, clearCommentBody());
+			console.log(`  · #${pr.number}: posted clear notice`);
+			posted++;
+		} catch (e) {
+			console.error(`  · #${pr.number}: ${e.message}`);
+		}
+	}
+	console.log(`\nClear notices posted: ${posted}.`);
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 async function main() {
+	if (MODE === "clear") {
+		console.log(`Dev close clear-notice sweep`);
+		sweepClearNotices();
+		console.log(`\nDone.`);
+		return;
+	}
+
 	console.log(`Dev close notice — release "${RELEASE}" (${RELEASE_DATE} UTC)${REPORT_MODE ? ` [REPORT_ONLY=${REPORT_MODE}]` : ""}`);
 
 	// Report-only LIST mode: skip jsdelivr, skip builds, skip comments.

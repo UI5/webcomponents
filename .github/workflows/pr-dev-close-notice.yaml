@@ -1,9 +1,15 @@
 name: PR Dev Close Notice
 
-# During the "dev close" period (the days leading up to a release), comment
-# on every open PR targeting `main` whose public Custom Elements Manifest
-# differs from the latest published version on npm — reminding contributors
-# not to merge until the release ships.
+# Two modes, driven by whether today falls inside a dev-close window:
+#
+#   * notice (in-window) — comment on every open PR targeting `main` whose
+#     public Custom Elements Manifest differs from the latest published
+#     version on npm, reminding contributors not to merge until the release
+#     ships.
+#   * clear  (out-of-window) — sweep open PRs that already carry the
+#     dev-close notice and post a follow-up "clear to merge" comment on
+#     each. Runs on schedule / workflow_dispatch only; pull_request events
+#     outside a window do nothing.
 #
 # Detection lives entirely in `.github/actions/pr-dev-close.mjs`. The base
 # manifest is fetched from jsdelivr (no second build), the head is the
@@ -11,7 +17,8 @@ name: PR Dev Close Notice
 #
 # Triggers:
 #   * schedule (daily, 07:17 UTC) — sweeps every open PR. Catches PRs that
-#     were already open when the window started.
+#     were already open when the window started, and delivers the clear
+#     notice the day after a release ships.
 #   * pull_request — per-event during the window. Closes the up-to-24h gap
 #     for PRs opened or pushed *after* the day's sweep.
 #   * workflow_dispatch — manual button for testing.
@@ -32,59 +39,124 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: write
 
 jobs:
   notice:
     runs-on: ubuntu-latest
     steps:
-      - name: Check whether we are in a dev-close window
+      - name: Decide mode based on the release schedule
         id: window
         uses: actions/github-script@v7
         with:
           script: |
-            // Add new entries here when the release schedule is known.
-            const DEV_CLOSE_PERIODS = [
-              { release: "next", devCloseStart: "2026-06-24", releaseDate: "2026-07-09" },
-            ];
+            // The release schedule is maintained as a Markdown table on this
+            // tracking issue — single source of truth, edited in place when
+            // the plan slips. We parse it here rather than hardcoding, so a
+            // date change doesn't need a workflow PR.
+            //
+            // Expected shape (each row is one release):
+            //   | Version | Dev Start | Dev Close | Release  |
+            //   |---------|-----------|-----------|----------|
+            //   | 2.25    | 09.07.26  | 22.07.26  | 29.07.26 |
+            //
+            // Any row we can't parse (typo, missing cell, non-DD.MM.YY date)
+            // is skipped with a warning — the workflow keeps working on the
+            // remaining rows.
+            const SCHEDULE_ISSUE = 10568;
+
+            function parseDate(cell) {
+              // "DD.MM.YY" → "20YY-MM-DD"
+              const m = cell.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{2})$/);
+              if (!m) return null;
+              const [, dd, mm, yy] = m;
+              return `20${yy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+            }
+
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: SCHEDULE_ISSUE,
+            });
+
+            const periods = [];
+            for (const line of (issue.body || "").split(/\r?\n/)) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("|")) continue;
+              const cells = trimmed.split("|").map(c => c.trim());
+              // A well-formed row splits to ["", version, devStart, devClose, release, ""]
+              if (cells.length < 6) continue;
+              const release = cells[1];
+              const devClose = cells[3];
+              const releaseDate = cells[4];
+              // Skip header / separator rows — only version-shaped strings continue.
+              if (!/^\d+\.\d+/.test(release)) continue;
+              const dc = parseDate(devClose);
+              const rd = parseDate(releaseDate);
+              if (!dc || !rd) {
+                core.warning(`Schedule row for "${release}" skipped — unparseable dates (devClose="${devClose}", release="${releaseDate}").`);
+                continue;
+              }
+              periods.push({ release, devCloseStart: dc, releaseDate: rd });
+            }
+
+            if (!periods.length) {
+              core.warning(`No parseable schedule rows found on issue #${SCHEDULE_ISSUE}; exiting.`);
+              core.setOutput("mode", "none");
+              return;
+            }
+
+            core.info(`Parsed ${periods.length} schedule entr${periods.length === 1 ? "y" : "ies"} from issue #${SCHEDULE_ISSUE}:`);
+            for (const p of periods) core.info(`  · ${p.release}: dev-close ${p.devCloseStart} → release ${p.releaseDate}`);
 
             const today = new Date();
             today.setUTCHours(0, 0, 0, 0);
 
-            const active = DEV_CLOSE_PERIODS.find(p => {
+            const active = periods.find(p => {
               const start = new Date(`${p.devCloseStart}T00:00:00Z`);
               const end = new Date(`${p.releaseDate}T00:00:00Z`);
               return today >= start && today < end;
             });
 
-            if (!active) {
-              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
-              core.setOutput("active", "false");
+            if (active) {
+              core.info(`In dev-close window for "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
+              core.setOutput("mode", "notice");
+              core.setOutput("release", active.release);
+              core.setOutput("releaseDate", active.releaseDate);
               return;
             }
 
-            core.info(`In dev-close window for "${active.release}" (${active.devCloseStart} → ${active.releaseDate}).`);
-            core.setOutput("active", "true");
-            core.setOutput("release", active.release);
-            core.setOutput("releaseDate", active.releaseDate);
+            // Outside a window. On pull_request events we do nothing — the
+            // follow-up "clear to merge" sweep only runs on schedule /
+            // workflow_dispatch to avoid churn on every PR event.
+            if (context.eventName === "pull_request") {
+              core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — exiting.`);
+              core.setOutput("mode", "none");
+              return;
+            }
+
+            core.info(`Today (${today.toISOString().slice(0, 10)}) is not in a dev-close window — running clear-notice sweep.`);
+            core.setOutput("mode", "clear");
 
       - name: Checkout main
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         uses: actions/setup-node@v4.1.0
         with:
           node-version: 22
 
       - name: Run dev-close script
-        if: steps.window.outputs.active == 'true'
+        if: steps.window.outputs.mode != 'none'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
+          MODE: ${{ steps.window.outputs.mode }}
           RELEASE: ${{ steps.window.outputs.release }}
           RELEASE_DATE: ${{ steps.window.outputs.releaseDate }}
           # Set on pull_request events; absent on schedule / workflow_dispatch.
