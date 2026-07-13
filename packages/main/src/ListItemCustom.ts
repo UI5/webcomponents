@@ -7,6 +7,7 @@ import type { ClassMap, AccessibilityInfo } from "@ui5/webcomponents-base/dist/t
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import ListItem from "./ListItem.js";
 import ListItemCustomTemplate from "./ListItemCustomTemplate.js";
 import { getCustomAnnouncement, applyCustomAnnouncement } from "./CustomAnnouncement.js";
@@ -44,6 +45,11 @@ import ListItemCustomCss from "./generated/themes/ListItemCustom.css.js";
 class ListItemCustom extends ListItem {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	get isCustomListItem() {
+		return true;
+	}
+
 	/**
 	 * Defines whether the item is movable.
 	 * @default false
@@ -193,3 +199,5 @@ class ListItemCustom extends ListItem {
 ListItemCustom.define();
 
 export default ListItemCustom;
+
+export const isInstanceOfListItemCustom = createInstanceChecker<ListItemCustom>("isCustomListItem");

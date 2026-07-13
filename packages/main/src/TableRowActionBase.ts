@@ -125,7 +125,7 @@ abstract class TableRowActionBase extends UI5Element {
 	}
 
 	get _isInteractive() {
-		return this.getRenderInfo().interactive;
+		return this.getRenderInfo().interactive !== false;
 	}
 }
 

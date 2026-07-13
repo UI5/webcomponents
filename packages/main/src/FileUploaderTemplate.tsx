@@ -35,10 +35,14 @@ export default function FileUploaderTemplate(this: FileUploader) {
 						aria-description={this.accInfo.ariaDescription}
 						aria-required={this.accInfo.ariaRequired}
 						aria-invalid={this.accInfo.ariaInvalid}
+						aria-describedby={this.accInfo.ariaDescribedBy}
 						onClick={this._onNativeInputClick}
 						onChange={this._onChange}
 						data-sap-focus-ref
 					/>
+					{this.hasValueState &&
+						<span id="valueStateDesc" class="ui5-hidden-text">{this.ariaValueStateHiddenText}</span>
+					}
 				</div>
 
 				{this.hideInput ? (

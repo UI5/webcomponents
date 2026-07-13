@@ -129,10 +129,9 @@
 	--_ui5_textarea_margin: .25rem 0;
 
 	/* Radio Button */
-	--_ui5_radio_button_height: 2.75rem;
-	--_ui5_radio_button_label_side_padding: .875rem;
+	--_ui5_radio_button_label_side_padding: .6875rem;
 	--_ui5_radio_button_inner_size: 2.75rem;
-	--_ui5_radio_button_svg_size: 1.375rem;
+	--_ui5_radio_button_svg_size: 1.5714em; /* 1.375rem */
 
 	/* Responsive Popover */
 	--_ui5-responsive_popover_header_height: 2.75rem;
@@ -183,12 +182,11 @@
 		--_ui5_calendar_header_height: 2rem;
 		--_ui5_calendar_header_arrow_button_width: 2rem;
 		--_ui5_calendar_header_padding: 0;
-		--_ui5_calendar_multiple_layout: column;
 		--_ui5_calendar_multiple_gap: 0.5rem;
-		--_ui5_calendar_multiple_width: var(--_ui5_calendar_width);
+		--_ui5_calendar_multiple_width: calc((var(--_ui5_calendar_width) * 2) + (var(--_ui5_calendar_left_right_padding) * 2));;
 		--_ui5_calendar_overlay_top: 54%;
 		--_ui5_calendar_overlay_width: 100%;
-		--_ui5_calendar_multiple_months_height: calc(2 * var(--_ui5_calendar_height));
+		--_ui5_calendar_multiple_months_height: var(--_ui5_calendar_height);
 
 		/* Calendar Legend */
 		--_ui5-calendar-legend-root-padding: 0.5rem;
@@ -333,13 +331,11 @@
 		--_ui5_tc_item_height: 4rem;
 		--_ui5_tc_header_height: var(--_ui5_tc_item_height);
 		--_ui5_tc_item_icon_circle_size: 2rem;
-		--_ui5_tc_item_icon_size: 1rem;
 
 		/* Radio Button */
-		--_ui5_radio_button_height: 2rem;
-		--_ui5_radio_button_label_side_padding: .5rem;
+		--_ui5_radio_button_label_side_padding: 0.5rem;
 		--_ui5_radio_button_inner_size: 2rem;
-		--_ui5_radio_button_svg_size: 1rem;
+		--_ui5_radio_button_svg_size: 1.1429em;  /* 1rem */
 
 		/* Responsive Popover */
 		--_ui5-responsive_popover_header_height: 2.5rem;

@@ -316,10 +316,10 @@ describe("RadioButton general interaction", () => {
 		cy.get("#wrappingRb").should("have.prop", "wrappingType", "Normal");
 
 		cy.get("#truncatingRb").invoke("height").should($truncatedLabelHeight => {
-			expect($truncatedLabelHeight).to.be.equal(RADIOBUTTON_DEFAULT_HEIGHT);
+			expect($truncatedLabelHeight).to.be.closeTo(RADIOBUTTON_DEFAULT_HEIGHT, 1);
 		});
 		cy.get("#wrappingRb").invoke("height").should($truncatedLabelHeight => {
-			expect($truncatedLabelHeight).to.be.equal(RADIOBUTTON_DEFAULT_HEIGHT);
+			expect($truncatedLabelHeight).to.be.closeTo(RADIOBUTTON_DEFAULT_HEIGHT, 1);
 		});
 	});
 
@@ -334,7 +334,7 @@ describe("RadioButton general interaction", () => {
 			</>);
 
 		cy.get("#rb-acc-name").should('have.prop', "ariaLabelText", RADIOBUTTON_LABEL);
-		cy.get("#rb-acc-name-text").should('have.prop', "ariaLabelText", `${RADIOBUTTON_LABEL} ${RADIOBUTTON_TEXT}`);
+		cy.get("#rb-acc-name-text").should('have.prop', "ariaLabelText", RADIOBUTTON_LABEL);
 	});
 
 	it("tests accessibleNameRef", () => {
@@ -357,7 +357,7 @@ describe("RadioButton general interaction", () => {
 				<RadioButton id="rb-acc-name-ref-with-text" accessibleNameRef="lbl-rb-acc-name-ref-with-text" text={RADIO_BUTTON_TEXT}></RadioButton>
 			</>);
 
-		cy.get("#rb-acc-name-ref-with-text").should("have.prop", "ariaLabelText", `${LABEL_TEXT} ${RADIO_BUTTON_TEXT}`);
+		cy.get("#rb-acc-name-ref-with-text").should("have.prop", "ariaLabelText", LABEL_TEXT);
 	});
 
 	it("tests accessibleNameRef when the radio button is wrapped by another custom element", () => {

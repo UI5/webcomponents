@@ -67,6 +67,7 @@ type AccInfo = {
 	ariaOwns?: string;
 	tooltip?: string;
 	ariaKeyShortcuts?: string;
+	ariaDescribedBy?: string;
 }
 
 type ListItemAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup" | "ariaSetsize" | "ariaPosinset">;
@@ -185,10 +186,10 @@ abstract class ListItem extends ListItemBase {
 	 * An explicitly set `accessible-role` on the list item takes precedence over the inherited role.
 	 * @default undefined
 	 * @public
-	 * @since 1.3.0
+	 * @since 2.23.0
 	 */
 	@property()
-	accessibleRole?: `${Exclude<ListItemAccessibleRole, ListItemAccessibleRole.Group>}`;
+	accessibleRole?: `${ListItemAccessibleRole}`;
 
 	@property()
 	_forcedAccessibleRole?: string;
@@ -508,6 +509,10 @@ abstract class ListItem extends ListItemBase {
 		return texts.join(" ");
 	}
 
+	get _ariaDescribedByIds() {
+		return `${this._id}-invisibleText-describedby`;
+	}
+
 	get _accInfo(): AccInfo {
 		return {
 			role: this.listItemAccessibleRole,
@@ -515,11 +520,13 @@ abstract class ListItem extends ListItemBase {
 			ariaLevel: undefined,
 			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
 			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON),
+			ariaSelected: this._ariaSelected,
 			ariaSelectedText: this.ariaSelectedText,
 			ariaHaspopup: this.accessibilityAttributes.hasPopup,
 			setsize: this.accessibilityAttributes.ariaSetsize,
 			posinset: this.accessibilityAttributes.ariaPosinset,
 			tooltip: this.tooltip,
+			ariaDescribedBy: this._ariaDescribedByIds || undefined,
 		};
 	}
 

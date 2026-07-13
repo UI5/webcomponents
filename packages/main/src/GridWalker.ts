@@ -17,11 +17,17 @@ class GridWalker {
 	}
 
 	left() {
-		this.colPos = Math.max(this.getColPos() - 1, 0);
+		const cellCount = this.grid[this.getRowPos()].length;
+		if (cellCount > 1) {
+			this.colPos = Math.max(this.getColPos() - 1, 0);
+		}
 	}
 
 	right() {
-		this.colPos = Math.min(this.getColPos() + 1, this.grid[this.getRowPos()].length - 1);
+		const cellCount = this.grid[this.getRowPos()].length;
+		if (cellCount > 1) {
+			this.colPos = Math.min(this.getColPos() + 1, cellCount - 1);
+		}
 	}
 
 	up() {

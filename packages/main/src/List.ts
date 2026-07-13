@@ -38,6 +38,7 @@ import {
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
@@ -70,11 +71,14 @@ import {
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
 	ARIA_LABEL_LIST_DELETABLE,
+	LIST_ITEM_SELECTED,
+	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+import { isInstanceOfListItemCustom } from "./ListItemCustom.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -749,7 +753,7 @@ class List extends UI5Element {
 	get ariaDescriptionText() {
 		const parts = [];
 
-		if (this.accessibleRole === ListAccessibleRole.List) {
+		if (this.accessibleRole === ListAccessibleRole.List && this._hasInteractiveItems) {
 			parts.push(this.defaultAriaDescriptionText);
 		}
 		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
@@ -768,6 +772,16 @@ class List extends UI5Element {
 
 	get defaultAriaDescriptionText() {
 		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
+	}
+
+	get _hasInteractiveItems() {
+		if (this.selectionMode === ListSelectionMode.Delete) {
+			return true;
+		}
+
+		return this.getItems().some(item => {
+			return item.getAttribute("type") === "Detail" || isInstanceOfListItemCustom(item);
+		});
 	}
 
 	get growingButtonAriaLabel() {
@@ -930,6 +944,12 @@ class List extends UI5Element {
 			});
 			if (changePrevented) {
 				this._revertSelection(previouslySelectedItems);
+			} else if (this.selectionMode !== ListSelectionMode.Delete) {
+				const item = e.detail.item;
+				const selectedText = item.selected
+					? List.i18nBundle.getText(LIST_ITEM_SELECTED)
+					: List.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
+				announce(selectedText, "Polite");
 			}
 		}
 	}
@@ -1423,7 +1443,13 @@ class List extends UI5Element {
 			return;
 		}
 
-		this.fireDecoratorEvent("item-toggle", { item: e.detail.item });
+		const item = e.detail?.item;
+
+		if (!item) {
+			return;
+		}
+
+		this.fireDecoratorEvent("item-toggle", { item });
 	}
 
 	onForwardBefore(e: CustomEvent) {

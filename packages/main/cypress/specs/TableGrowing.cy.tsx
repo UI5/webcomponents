@@ -103,6 +103,15 @@ describe("TableGrowing - Button", () => {
 				.find("#button")
 				.should("not.be.visible");
 		});
+
+		it("growing button has tabindex=0 so it participates in the natural tab order", () => {
+			cy.mount(<TableSample></TableSample>);
+
+			cy.get("[ui5-table-growing]")
+				.shadow()
+				.find("#button")
+				.should("have.attr", "tabindex", "0");
+		});
 	});
 
 	describe("Event & Focus", () => {

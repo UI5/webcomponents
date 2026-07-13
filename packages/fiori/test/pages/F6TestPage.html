@@ -88,19 +88,11 @@
 	<br><br>
 
 	<ui5-table class="demo-table" id="testRowClick">
-		<ui5-table-column id="column-1" slot="columns">
-			<ui5-label>City</ui5-label>
-		</ui5-table-column>
-
-		<ui5-table-column id="column-2" slot="columns" min-width="500" popin-text="Supplier">
-			<ui5-label>Supplier</ui5-label>
-		</ui5-table-column>
-
-		<ui5-table-column id="column-3" slot="columns" min-width="500" popin-text="Country" demand-popin>
-			<div class="column-content">
-				<ui5-label>Country</ui5-label>
-			</div>
-		</ui5-table-column>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="column-1">City</ui5-table-header-cell>
+			<ui5-table-header-cell id="column-2" min-width="500px" popin-text="Supplier" popin-hidden>Supplier</ui5-table-header-cell>
+			<ui5-table-header-cell id="column-3" min-width="500px" popin-text="Country" popin-hidden>Country</ui5-table-header-cell>
+		</ui5-table-header-row>
 
 		<ui5-table-row data-city="Dublin">
 			<ui5-table-cell><span id="testRowClickCell1">Dublin</span></ui5-table-cell>
