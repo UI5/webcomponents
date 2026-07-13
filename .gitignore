@@ -14,6 +14,9 @@ coverage
 # Cypress internal logs
 cypress-logs
 
+cypress/screenshots
+cypress/videos
+
 # scoping feature generated entry points for vite consumption
 packages/compat/test/pages/scoped
 packages/main/test/pages/scoped
