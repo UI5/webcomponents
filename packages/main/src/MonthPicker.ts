@@ -77,6 +77,8 @@ type MonthPickerNavigateEventDetail = {
 	tag: "ui5-monthpicker",
 	template: MonthPickerTemplate,
 	styles: monthPickerStyles,
+	languageAware: true,
+	cldr: true,
 })
 /**
  * Fired when the user selects a month via "Space", "Enter" or click.

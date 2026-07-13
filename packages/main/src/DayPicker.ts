@@ -119,6 +119,8 @@ type DayPickerNavigateEventDetail = {
 	tag: "ui5-daypicker",
 	styles: dayPickerCSS,
 	template: DayPickerTemplate,
+	languageAware: true,
+	cldr: true,
 })
 /**
  * Fired when the selected date(s) change
