@@ -20,6 +20,50 @@ interface IToolbarItemContent extends HTMLElement {
 }
 
 /**
+ * Interface for components that support toolbar navigation without ItemNavigation.
+ * Implement this on your component to enable Up/Down navigation within a toolbar item.
+ *
+ * @public
+ * @since 2.22.0
+ */
+interface IToolbarNavigatable {
+	/**
+	 * Number of navigable items. Mirrors ItemNavigation's `_getItems().length`.
+	 */
+	toolbarNavigationItemCount: number;
+	/**
+	 * 0-based index of currently focused item. Mirrors ItemNavigation's `_currentIndex`.
+	 */
+	toolbarNavigationCurrentIndex: number;
+	/**
+	 * Focus the item at the given index. Mirrors `setCurrentItem` + `_focusCurrentItem`.
+	 */
+	focusToolbarNavigationItem(index: number): void;
+	/**
+	 * Called when toolbar navigation enters this component from outside.
+	 */
+	handleToolbarNavigationEntry?(forward: boolean): void;
+}
+
+/**
+ * Duck-typed interface for accessing a child component's ItemNavigation instance.
+ */
+interface IChildItemNavigation {
+	_getItems: () => Array<{ id: string; forcedTabIndex?: string }>;
+	_currentIndex: number;
+	setCurrentItem: (item: { id: string; forcedTabIndex?: string }) => void;
+	_focusCurrentItem: () => void;
+	_applyTabIndex: () => void;
+}
+
+/**
+ * Duck-typed host that may have an _itemNavigation property.
+ */
+interface IToolbarNavigatableHost extends HTMLElement {
+	_itemNavigation?: Partial<IChildItemNavigation>;
+}
+
+/**
  * @class
  *
  * ### Overview
@@ -55,6 +99,7 @@ class ToolbarItem extends ToolbarItemBase {
 	_wrapperChecked = false;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 
+
 	closeOverflowSet = {
 		"ui5-button": ["click"],
 		"ui5-select": ["change"],
@@ -72,6 +117,7 @@ class ToolbarItem extends ToolbarItemBase {
 	onBeforeRendering(): void {
 		this.checkForWrapper();
 		this.attachCloseOverflowHandlers();
+		this._syncChildTabIndex();
 	}
 
 	onExitDOM(): void {
@@ -147,10 +193,154 @@ class ToolbarItem extends ToolbarItemBase {
 	get hasOverflow(): boolean {
 		return this.item[0]?.hasOverflow ?? false;
 	}
+
+	getFocusDomRef(): HTMLElement | undefined {
+		const child = this.item[0];
+		if (child && typeof (child as HTMLElement & { getFocusDomRef?: () => HTMLElement }).getFocusDomRef === "function") {
+			return (child as HTMLElement & { getFocusDomRef: () => HTMLElement }).getFocusDomRef() || child;
+		}
+
+		if (child) {
+			return this._getFirstFocusableChild(child) || child;
+		}
+
+		return super.getFocusDomRef();
+	}
+
+	/**
+	 * Returns the child's ItemNavigation instance if it has one (duck-typed).
+	 * This enables auto-detection of components like SegmentedButton.
+	 */
+	_getChildItemNavigation(): IChildItemNavigation | null {
+		const child = this.item[0] as IToolbarNavigatableHost | undefined;
+		if (child
+			&& child._itemNavigation
+			&& typeof child._itemNavigation._getItems === "function"
+			&& typeof child._itemNavigation.setCurrentItem === "function"
+			&& "_currentIndex" in child._itemNavigation) {
+			return child._itemNavigation as IChildItemNavigation;
+		}
+		return null;
+	}
+
+	/**
+	 * Checks if the child implements the IToolbarNavigatable interface (duck-typed).
+	 */
+	_getChildNavigatable(): IToolbarNavigatable | null {
+		const child = this.item[0] as Partial<IToolbarNavigatable> | undefined;
+		if (child
+			&& typeof child.toolbarNavigationItemCount === "number"
+			&& typeof child.toolbarNavigationCurrentIndex === "number"
+			&& typeof child.focusToolbarNavigationItem === "function") {
+			return child as IToolbarNavigatable;
+		}
+		return null;
+	}
+
+	/**
+	 * Syncs the child's internal tabindex state based on this item's forcedTabIndex.
+	 */
+	_syncChildTabIndex(): void {
+		const childNav = this._getChildItemNavigation();
+		if (childNav) {
+			const items = childNav._getItems();
+			if (this.forcedTabIndex === "-1") {
+				items.forEach(item => { item.forcedTabIndex = "-1"; });
+			} else {
+				childNav._applyTabIndex();
+			}
+			return;
+		}
+
+		// Propagate forcedTabIndex to child if it supports it
+		const child = this.item[0] as { forcedTabIndex?: string } | undefined;
+		if (child && "forcedTabIndex" in child) {
+			child.forcedTabIndex = this.forcedTabIndex;
+		}
+	}
+
+	// --- Navigation interface ---
+
+	get toolbarNavigationItemCount(): number {
+		const childNav = this._getChildItemNavigation();
+		if (childNav) {
+			return childNav._getItems().length;
+		}
+
+		const navigatable = this._getChildNavigatable();
+		if (navigatable) {
+			return navigatable.toolbarNavigationItemCount;
+		}
+
+		return 1;
+	}
+
+	get toolbarNavigationCurrentIndex(): number {
+		const childNav = this._getChildItemNavigation();
+		if (childNav) {
+			return childNav._currentIndex;
+		}
+
+		const navigatable = this._getChildNavigatable();
+		if (navigatable) {
+			return navigatable.toolbarNavigationCurrentIndex;
+		}
+
+		return 0;
+	}
+
+	focusToolbarNavigationItem(index: number): void {
+		const childNav = this._getChildItemNavigation();
+		if (childNav) {
+			const items = childNav._getItems();
+			if (items[index]) {
+				childNav.setCurrentItem(items[index]);
+				childNav._focusCurrentItem();
+			}
+			return;
+		}
+
+		const navigatable = this._getChildNavigatable();
+		if (navigatable) {
+			navigatable.focusToolbarNavigationItem(index);
+			return;
+		}
+
+		this.getFocusDomRef()?.focus();
+	}
+
+	handleToolbarNavigationEntry(forward: boolean): void {
+		const childNav = this._getChildItemNavigation();
+		if (childNav) {
+			childNav._focusCurrentItem();
+			return;
+		}
+
+		const navigatable = this._getChildNavigatable();
+		if (navigatable) {
+			if (typeof navigatable.handleToolbarNavigationEntry === "function") {
+				navigatable.handleToolbarNavigationEntry(forward);
+			} else {
+				navigatable.focusToolbarNavigationItem(
+					forward ? 0 : navigatable.toolbarNavigationItemCount - 1,
+				);
+			}
+			return;
+		}
+
+		this.getFocusDomRef()?.focus();
+	}
+
+	_getFirstFocusableChild(root: HTMLElement): HTMLElement | null {
+		return root.querySelector<HTMLElement>(
+			"a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
+		);
+	}
 }
 
 export type {
 	IToolbarItemContent,
+	IToolbarNavigatable,
 };
 ToolbarItem.define();
 
