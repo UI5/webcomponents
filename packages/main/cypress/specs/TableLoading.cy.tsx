@@ -6,7 +6,7 @@ import TableCell from "../../src/TableCell.js";
 import Label from "../../src/Label.js";
 
 describe("Table - loading", () => {
-	it("tests busy indicator is displayed", () => {
+	it("tests busy indicator is displayed and dims slotted rows", () => {
 		cy.mount(
 			<>
 				<input id="before" />
@@ -28,6 +28,18 @@ describe("Table - loading", () => {
 			.shadow()
 			.find(".ui5-busy-indicator-busy-area")
 			.should("exist");
+
+		cy.get("[ui5-table]")
+			.shadow()
+			.find("#loading[_is-busy]")
+			.should("exist")
+			.then(() => {
+				cy.get("[ui5-table]")
+					.find("[ui5-table-row]")
+					.should(($row) => {
+						expect(parseFloat(getComputedStyle($row[0]).opacity)).to.be.lessThan(1);
+					});
+			});
 
 		cy.get("#before")
 			.realClick();

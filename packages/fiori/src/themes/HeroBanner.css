@@ -1,0 +1,362 @@
+/* HeroBanner Component Styles */
+
+:host(:not([hidden])) {
+	display: block;
+	width: 100%;
+	container-type: inline-size;
+	border-radius: var(--_ui5_banner_border_radius);
+	background-color: var(--_ui5_banner_background);
+	background-image: var(--_ui5_banner_background_image);
+	background-repeat: no-repeat;
+	background-position: top;
+	background-size: cover;
+}
+
+/* Banner Canvas */
+.ui5-banner-root {
+	box-sizing: border-box;
+	min-height: 5.75rem;
+	border-radius: inherit;
+	background-color: inherit;
+	background-image: inherit;
+	background-size: inherit;
+	box-shadow: var(--_ui5_banner_box_shadow);
+	overflow: hidden;
+	position: relative;
+}
+
+/* Content area — flex column by default, header first */
+.ui5-banner-content {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	box-sizing: border-box;
+	padding: 1.5rem;
+	color: var(--_ui5_banner_text_color);
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+}
+
+/* Header row: overline + heading on the left, actions on the right */
+.ui5-banner-header {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.ui5-banner-header-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.ui5-banner-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex: 0 0 auto;
+	--sapButton_Lite_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Hover_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Active_TextColor: var(--_ui5_banner_text_color);
+	--sapButton_Lite_Hover_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 15%, transparent);
+	--sapButton_Lite_Active_Background: color-mix(in srgb, var(--_ui5_banner_text_color) 25%, transparent);
+	--sapButton_IconColor: var(--_ui5_banner_text_color);
+}
+
+/* actionsPlacement="BottomStart": actions sit below header-text, left-aligned */
+.ui5-banner-actions-bottom-start {
+	align-self: flex-start;
+	margin-top: 0.5rem;
+}
+
+.ui5-banner-heading {
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader3Size);
+	font-weight: normal;
+	text-align: start;
+	color: var(--_ui5_banner_text_color);
+	line-height: 1.4;
+	margin: 0;
+	padding: 0;
+}
+
+.ui5-banner-overline {
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	text-align: start;
+	color: var(--_ui5_banner_text_color);
+	line-height: 1.4;
+}
+
+/* Free content blocks */
+.ui5-banner-block {
+	box-sizing: border-box;
+	min-width: 0;
+}
+
+/* Only endContent present (no startContent) — expand to full width */
+.ui5-banner-content:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+/* ============================================================
+   columnsRatio="Equal" — 2-column grid, header spans full width
+   ============================================================ */
+.ui5-banner-content.ui5-banner-columns-equal {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: auto 1fr;
+}
+
+.ui5-banner-columns-equal .ui5-banner-header {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.ui5-banner-columns-equal .ui5-banner-block-start {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+/* Without endContent, start content spans full width */
+.ui5-banner-columns-equal:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+	grid-column: 1 / -1;
+}
+
+.ui5-banner-columns-equal .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+/* ============================================================
+   columnsRatio="FirstWider" — 2/3 + 1/3 grid
+   ============================================================ */
+.ui5-banner-content.ui5-banner-columns-first-wider {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	grid-template-rows: auto 1fr;
+}
+
+.ui5-banner-columns-first-wider .ui5-banner-header {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.ui5-banner-columns-first-wider .ui5-banner-block-start {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+/* Without endContent, start content spans full width */
+.ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-end)) .ui5-banner-block-start {
+	grid-column: 1 / -1;
+}
+
+.ui5-banner-columns-first-wider .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+/* ============================================================
+   actionsPlacement="BottomStart" modifiers
+   (must come after base grid rules to override them)
+   ============================================================ */
+
+/* BottomStart + only endContent: make root a flex column so content stretches to fill it */
+:host([actions-placement="BottomStart"]) .ui5-banner-root:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)) {
+	display: flex;
+	flex-direction: column;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-root:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)) .ui5-banner-content {
+	flex: 1;
+}
+
+/* No columnsRatio + only endContent: switch to 2-col grid so endContent fills full height */
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+	align-items: stretch;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-header {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 1;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+/* Split layouts + BottomStart + has startContent:
+   header becomes flex-column so actions flow below heading */
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:has(.ui5-banner-block-start) .ui5-banner-header,
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:has(.ui5-banner-block-start) .ui5-banner-header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+/* Split layouts + BottomStart + no startContent:
+   single-row grid, header col 1 full height, endContent col 2 full height */
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)),
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) {
+	grid-template-rows: 1fr;
+	align-items: stretch;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-header,
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end,
+:host([actions-placement="BottomStart"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 1;
+	align-self: stretch;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* ============================================================
+   headerBlockPlacement="Bottom" modifiers
+   Only active when columnsRatio is set and only endContent is present.
+   (must come after BottomStart rules to override them when both are set)
+   ============================================================ */
+
+/* Flex layout (no columnsRatio): push header to bottom with margin-top auto */
+:host([header-block-placement="Bottom"]) .ui5-banner-content:not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-header {
+	margin-top: auto;
+}
+
+/* Split grid layouts + only endContent:
+   single-row grid, header at bottom of col 1, endContent fills col 2 */
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)),
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) {
+	grid-template-rows: 1fr;
+	align-items: stretch;
+	min-height: 12rem;
+}
+
+/* When TopEnd actions are present: 2-row grid so actions sit above endContent in col 2 */
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item),
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) {
+	grid-template-rows: auto 1fr;
+}
+
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-header,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: end;
+}
+
+/* With actions: header still fills col 1, aligned to bottom */
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-header,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-header {
+	grid-row: 1 / 3;
+	align-self: end;
+}
+
+/* TopEnd actions in col 2 row 1 — above endContent */
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-actions-grid-item,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-actions-grid-item {
+	grid-column: 2;
+	grid-row: 1;
+	align-self: start;
+	justify-self: end;
+	min-width: 0;
+}
+
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+	grid-column: 2;
+	grid-row: 1;
+	align-self: stretch;
+	height: 100%;
+}
+
+/* With actions: endContent moves to row 2 so actions occupy row 1 */
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-block-end,
+:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-block-end {
+	grid-row: 2;
+}
+
+/* XS (≤599px): collapse split layouts to stacked column */
+@container (max-width: 599px) {
+	.ui5-banner-content.ui5-banner-columns-equal,
+	.ui5-banner-content.ui5-banner-columns-first-wider {
+		display: flex;
+		flex-direction: column;
+	}
+
+	:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-header,
+	:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+		align-self: flex-start;
+	}
+
+	.ui5-banner-header {
+		order: 1;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ui5-banner-actions,
+	.ui5-banner-actions-grid-item {
+		order: 2;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ui5-banner-block-start {
+		order: 3;
+	}
+
+	.ui5-banner-block-end {
+		order: 4;
+	}
+
+	/* BottomStart no-columnsRatio grid collapses to column */
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	:host([actions-placement="BottomStart"]) .ui5-banner-content:has(.ui5-banner-block-end):not(:has(.ui5-banner-block-start)):not(.ui5-banner-columns-equal):not(.ui5-banner-columns-first-wider) .ui5-banner-block-end {
+		justify-content: center;
+	}
+
+	/* Only endContent present: expand to full width and center children */
+	.ui5-banner-content:not(:has(.ui5-banner-block-start)) .ui5-banner-block-end {
+		justify-content: center;
+		width: 100%;
+	}
+}

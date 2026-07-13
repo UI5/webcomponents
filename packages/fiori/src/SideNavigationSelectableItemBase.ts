@@ -254,6 +254,10 @@ class SideNavigationSelectableItemBase extends SideNavigationItemBase {
 		return this.selected;
 	}
 
+	get _tagId() {
+		return `${this._id}-tag`;
+	}
+
 	_onkeydown(e: KeyboardEvent) {
 		const isRTL = this.effectiveDir === "rtl";
 

@@ -136,26 +136,34 @@ class ShellBarBranding extends UI5Element {
 		this.fireDecoratorEvent("click");
 	}
 
-	_onclick(e: MouseEvent) {
+	private _activate(e: Event) {
 		e.stopPropagation();
 		this._fireClick();
 	}
 
-	_onkeyup(e: KeyboardEvent) {
-		if (isSpace(e)) {
-			this._fireClick();
-		}
+	private _getAnchor() {
+		return this.shadowRoot?.querySelector("a") as HTMLAnchorElement | null;
+	}
+
+	_onclick(e: MouseEvent) {
+		this._activate(e);
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (isSpace(e)) {
+		if (isEnter(e) && !this.href) {
 			e.preventDefault();
+			this._getAnchor()?.click();
+		} else if (isSpace(e)) {
+			e.preventDefault();
+		}
+	}
+
+	_onkeyup(e: KeyboardEvent) {
+		if (!isSpace(e)) {
 			return;
 		}
 
-		if (isEnter(e)) {
-			this._fireClick();
-		}
+		this._getAnchor()?.click();
 	}
 }
 

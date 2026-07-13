@@ -43,7 +43,7 @@ import ShellBarOverflow from "./shellbar/ShellBarOverflow.js";
 import ShellBarAccessibility from "./shellbar/ShellBarAccessibility.js";
 import ShellBarItemNavigation from "./shellbar/ShellBarItemNavigation.js";
 
-import ShellBarItem from "./ShellBarItem.js";
+import ShellBarItem, { isInstanceOfShellBarItem } from "./ShellBarItem.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarOverflowResult } from "./shellbar/ShellBarOverflow.js";
@@ -70,9 +70,6 @@ import {
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 type ShellBarBreakpoint = "S" | "M" | "L" | "XL" | "XXL";
-
-// actions always visible in lean mode, order is important
-const PREDEFINED_PLACE_ITEMS = ["feedback", "sys-help"];
 
 const ShellBarActions = {
 	Search: "search",
@@ -767,7 +764,7 @@ class ShellBar extends UI5Element {
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.sortContent(this.content),
-			customItems: this.sortItems(this.items),
+			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
 			overflowOuter: this.overflowOuter!,
@@ -789,7 +786,7 @@ class ShellBar extends UI5Element {
 		const { hiddenItemsIds, showOverflowButton } = result;
 
 		// Update items overflow state
-		this.items.forEach(item => {
+		this._validItems.forEach(item => {
 			item.inOverflow = hiddenItemsIds.includes(item._id);
 			if (item.inOverflow) {
 				// clear the hidden class to ensure the item is visible in the overflow popover
@@ -865,9 +862,21 @@ class ShellBar extends UI5Element {
 	get overflowItems() {
 		return this.overflow.getOverflowItems({
 			actions: this.actions,
-			customItems: this.sortItems(this.items),
+			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 		});
+	}
+
+	/**
+	 * Only entries that are actually `ui5-shellbar-item` instances participate in the
+	 * overflow calculation and template rendering. The default slot's type is
+	 * `HTMLElement`, so any stray child (e.g. a bare `<span>`) ends up in `this.items`;
+	 * if such an element reaches the overflow algorithm it has no `_id` / `stableDomRef`,
+	 * which writes `undefined` back into reactive properties on every pass and re-enters
+	 * the render queue until `RenderQueue` throws "processed too many times".
+	 */
+	get _validItems(): ShellBarItem[] {
+		return this.items.filter(isInstanceOfShellBarItem);
 	}
 
 	/**
@@ -1060,14 +1069,6 @@ class ShellBar extends UI5Element {
 
 	/* =================== Items Management =================== */
 
-	sortItems(items: readonly ShellBarItem[]) {
-		return items.toSorted((a, b) => {
-			const aIndex = PREDEFINED_PLACE_ITEMS.indexOf(a.icon || "");
-			const bIndex = PREDEFINED_PLACE_ITEMS.indexOf(b.icon || "");
-			return aIndex - bIndex;
-		});
-	}
-
 	/* =================== Accessibility =================== */
 
 	get actionsAccessibilityInfo(): ShellBarAccessibilityInfo {
@@ -1139,6 +1140,9 @@ class ShellBar extends UI5Element {
 	 * @since 1.0.0-rc.16
 	 */
 	get notificationsDomRef(): HTMLElement | null {
+		if (this.isHidden(ShellBarActions.Notifications)) {
+			return this.overflowDomRef;
+		}
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="notifications"]`);
 	}
 

@@ -27,7 +27,7 @@ import CalendarDate from "./CalendarDate.js";
 import CalendarDateRange from "./CalendarDateRange.js";
 import "./SpecialCalendarDate.js";
 import CalendarPart from "./CalendarPart.js";
-import type { DayPickerChangeEventDetail } from "./DayPicker.js";
+import type { DayPickerChangeEventDetail, DayPickerNavigateEventDetail } from "./DayPicker.js";
 import type { MonthPickerChangeEventDetail } from "./MonthPicker.js";
 import type { YearPickerChangeEventDetail } from "./YearPicker.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
@@ -66,7 +66,6 @@ import {
 	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
-import getEffectiveContentDensity from "@ui5/webcomponents-base/dist/util/getEffectiveContentDensity.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
@@ -779,10 +778,6 @@ class Calendar extends CalendarPart {
 		};
 	}
 
-	get _isCompactMode() {
-		return getEffectiveContentDensity(this) === "compact";
-	}
-
 	get _monthsToShow() {
 		const monthsToShow = this._showTwoMonths && !isPhone() ? 2 : 1;
 		return monthsToShow;
@@ -918,8 +913,14 @@ class Calendar extends CalendarPart {
 		this.switchToYearPicker();
 	}
 
-	async onNavigate(e: CustomEvent) {
+	async onNavigate(e: CustomEvent<DayPickerNavigateEventDetail>) {
 		this.timestamp = e.detail.timestamp;
+		// Mouse-driven navigation handles its own focus; the click already landed
+		// where the user wants. Refocusing after the deferred render would steal
+		// focus from a sibling component (e.g. a time picker in DateTimePicker).
+		if (e.detail.mouse) {
+			return;
+		}
 		await renderFinished();
 		this._currentPickerDOM.focus();
 	}

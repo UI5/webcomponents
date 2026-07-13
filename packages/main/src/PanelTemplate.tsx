@@ -21,6 +21,7 @@ export default function PanelTemplate(this: Panel) {
 					}}
 					role={this.headingWrapperRole}
 					aria-level={this.headingWrapperAriaLevel}
+					part="header-wrapper"
 				>
 					<div
 						onClick={this._headerClick}
@@ -89,22 +90,15 @@ export default function PanelTemplate(this: Panel) {
 
 			{/* content area */}
 			<div
-				class={{
-					"ui5-panel-content-wrapper": true,
-					"ui5-panel-content-focusable": this._contentFocusable,
-				}}
+				class="ui5-panel-content"
+				id={ `${this._id}-content` }
+				tabindex={ -1 }
 				style={{
 					display: this._contentExpanded ? "block" : "none",
 				}}
+				part="content"
 			>
-				<div
-					class="ui5-panel-content"
-					id={ `${this._id}-content` }
-					tabindex={ this._contentTabIndex }
-					part="content"
-				>
-					<slot></slot>
-				</div>
+				<slot></slot>
 			</div>
 		</div>
 	</>);

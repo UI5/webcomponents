@@ -5,6 +5,7 @@
 	min-height: var(--_ui5_list_item_base_height);
 	box-sizing: content-box;
 	overflow: clip;
+	break-inside: avoid;
 }
 
 #selection-cell,
@@ -50,6 +51,11 @@
 
 :host([_has-popin]) #dummy-cell {
 	border-inline-start: none;
+}
+
+:host(:not([_has-popin])) #dummy-cell {
+	background: var(--sapList_Background);
+	border-top: none;
 }
 
 :host([tabindex]:focus) {

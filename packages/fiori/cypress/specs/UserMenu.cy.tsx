@@ -5,6 +5,7 @@ import UserMenuItemGroup from "../../src/UserMenuItemGroup.js";
 
 import actionSettings from "@ui5/webcomponents-icons/dist/action-settings.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import MessageStrip from "@ui5/webcomponents/dist/MessageStrip.js";
 
 import {
 	USER_MENU_MANAGE_ACCOUNT_BUTTON_TXT,
@@ -431,6 +432,71 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").find("[ui5-tag]").should("have.length", 1);
 	});
 
+	it("tests avatar is non-interactive by default", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1"
+						subtitleText="alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("not.have.attr", "interactive");
+		cy.get("@avatar").should("have.attr", "mode", "Image");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "img");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("not.have.attr", "tabindex");
+	});
+
+	it("tests avatarInteractive=true exposes role='button' and fires avatar-click", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" avatarInteractive={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "mode", "Interactive");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "button");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "tabindex", "0");
+
+		cy.get("@userMenu").then($userMenu => {
+			$userMenu.get(0).addEventListener("avatar-click", cy.stub().as("clicked"));
+		});
+		cy.get("@avatar").click();
+		cy.get("@clicked").should("have.been.calledOnce");
+	});
+
+	it("tests showEditButton implies interactive avatar regardless of avatarInteractive", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showEditButton={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "mode", "Interactive");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "button");
+	});
+
 	it("tests avatarColorScheme default value", () => {
 		cy.mount(
 			<>
@@ -504,7 +570,7 @@ describe("Events", () => {
 		cy.mount(
 			<>
 				<Button id="openUserMenuBtn">Open User Menu</Button>
-				<UserMenu open={true} opener="openUserMenuBtn">
+				<UserMenu open={true} opener="openUserMenuBtn" avatarInteractive={true}>
 					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
 				</UserMenu>
 			</>
@@ -1103,6 +1169,131 @@ describe("Footer configuration", () => {
 
 		cy.get("@userMenu").shadow().find(".ui5-user-menu-sign-out-btn").click();
 		cy.get("@signOutClicked").should("have.been.calledOnce");
+	});
+});
+
+describe("InfoArea slot", () => {
+	it("does not render the info-area wrapper when slot is empty", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area").should("not.exist");
+	});
+
+	it("renders the info-area wrapper when a child is slotted", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>
+						Proxy session active for jane.doe@sap.com
+					</MessageStrip>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area").should("exist");
+		cy.get("[ui5-user-menu]").find("[ui5-message-strip][slot='infoArea']").should("exist");
+	});
+
+	it("renders info-area between additional info and manage account button (DOM order)", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showManageAccount={true}>
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier" additionalInfo="Primary Employment"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>Proxy</MessageStrip>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().then($host => {
+			const all = Array.from($host[0].querySelectorAll(".ui5-user-menu-selected-account-additional-info, .ui5-user-menu-info-area, #selected-account-manage-btn"));
+			expect(all.map(el => el.classList.contains("ui5-user-menu-selected-account-additional-info") ? "additional" : el.classList.contains("ui5-user-menu-info-area") ? "info" : "btn"))
+				.to.deep.equal(["additional", "info", "btn"]);
+		});
+	});
+
+	it("multi-line strip grows and pushes the manage-account button down", () => {
+		const longText =
+			"You are working on behalf of Jane Doe (jane.doe@sap.com). " +
+			"All actions performed in this session are recorded under the proxy audit log. " +
+			"Switch back to your own account from the Other Accounts section to leave this session.";
+
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showManageAccount={true}>
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>
+						{longText}
+					</MessageStrip>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area")
+			.invoke("outerHeight")
+			.should("be.greaterThan", 60);
+
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area").then($info => {
+			const infoBottom = $info.get(0).getBoundingClientRect().bottom;
+			cy.get("[ui5-user-menu]").shadow().find("#selected-account-manage-btn").then($btn => {
+				const btnTop = $btn.get(0).getBoundingClientRect().top;
+				expect(btnTop).to.be.gte(infoBottom - 1);
+			});
+		});
+	});
+
+	it("does not break the title-flickering observer on scroll when slot is populated", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showManageAccount={true}>
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>Proxy</MessageStrip>
+					{Array.from({ length: 25 }, (_, i) =>
+						<UserMenuItem key={i} text={`Setting ${i + 1}`} data-id={`setting${i + 1}`}></UserMenuItem>
+					)}
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.shadow()
+			.find('div[part="content"]')
+			.scrollTo("bottom");
+
+		cy.get("[ui5-user-menu]").shadow().find("[ui5-bar]").as("headerBar");
+		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier");
+	});
+
+	it("renders correctly without manage-account button", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier" additionalInfo="Primary Employment"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>Proxy</MessageStrip>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area").should("exist");
+		cy.get("[ui5-user-menu]").shadow().find("#selected-account-manage-btn").should("not.exist");
+
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-selected-account-additional-info").then($info => {
+			const additionalBottom = $info.get(0).getBoundingClientRect().bottom;
+			cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area").then($area => {
+				const areaTop = $area.get(0).getBoundingClientRect().top;
+				expect(areaTop).to.be.gte(additionalBottom);
+			});
+		});
 	});
 });
 

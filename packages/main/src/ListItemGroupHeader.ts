@@ -61,7 +61,7 @@ class ListItemGroupHeader extends ListItemBase {
 	accessibleName?: string;
 
 	@property()
-	accessibleRole: `${ListItemAccessibleRole}` = ListItemAccessibleRole.ListItem;
+	accessibleRole: `${ListItemAccessibleRole}` | "Group" = ListItemAccessibleRole.ListItem;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.

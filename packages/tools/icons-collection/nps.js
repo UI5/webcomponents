@@ -67,7 +67,7 @@ const getScripts = (options) => {
 			},
 			jsonImports: {
 				default: "ui5nps build.jsonImports.i18n",
-				i18n: `ui5nps-script "${LIB}/generate-json-imports/i18n.js" src/generated/assets/i18n src/generated/json-imports`,
+				i18n: `ui5nps-script "${LIB}/generate-json-imports/i18n.js" src/i18n src/generated/json-imports`,
 			},
 			icons: createJSImportsCmd,
 		},

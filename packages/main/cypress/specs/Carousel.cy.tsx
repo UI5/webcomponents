@@ -800,6 +800,39 @@ describe("Carousel general interaction", () => {
 			});
 	});
 
+	it("_resizing remains false when navigateTo is called after _onResize", () => {
+		cy.mount(
+			<Carousel id="carousel"
+			          style="height: 300px;"
+			          items-per-page="S3 M3 L3 XL3"
+			          arrowsPlacement="Navigation">
+				<Button>Button 1</Button>
+				<Button>Button 2</Button>
+				<Button>Button 3</Button>
+				<Button>Button 4</Button>
+				<Button>Button 5</Button>
+				<Button>Button 6</Button>
+			</Carousel>
+		);
+
+		cy.get<Carousel>("#carousel")
+			.then($carousel => {
+				const carousel = $carousel[0];
+				carousel.style.width = "99%";
+
+				return new Cypress.Promise(resolve => {
+					requestAnimationFrame(() => {
+						carousel.style.width = "98%";
+
+						setTimeout(() => {
+							expect(carousel._resizing).to.be.false;
+							resolve();
+						}, 200);
+					});
+				});
+			});
+	});
+
 	it("items should remain reachable after resizing increases items per page", () => {
 		const navigateStub = cy.stub().as("navigateStub");
 

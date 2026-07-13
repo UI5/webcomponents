@@ -18,6 +18,8 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	unregisterElement,
+	registerElement,
 } from "./Render.js";
 import { registerTag, isTagRegistered, recordTagRegistrationFailure } from "./CustomElementsRegistry.js";
 import { observeDOMNode, unobserveDOMNode } from "./DOMObserver.js";
@@ -96,12 +98,14 @@ const defaultConverter = {
 			return value as boolean ? "" : null;
 		}
 
-		// don't set attributes for arrays and objects
+		// Don't reflect arrays and objects to the DOM. Attributes exist for CSS selectors
+		// (which don't apply to objects/arrays) and for debugging via the Elements panel
+		// (devs will use the console with property access for these). Declarative
+		// attribute -> property is still supported via fromAttribute (JSON.parse).
 		if (type === Object || type === Array) {
-			return JSON.stringify(value);
+			return null;
 		}
 
-		// object, array, other
 		if (value === null || value === undefined) {
 			return null;
 		}
@@ -332,6 +336,8 @@ abstract class UI5Element extends HTMLElement {
 
 		const ctor = this.constructor as typeof UI5Element;
 
+		registerElement(this);
+
 		this.setAttribute(ctor.getMetadata().getPureTag(), "");
 		if (ctor.getMetadata().supportsF6FastNavigation() && !this.hasAttribute("data-sap-ui-fastnavgroup")) {
 			this.setAttribute("data-sap-ui-fastnavgroup", "true");
@@ -351,14 +357,37 @@ abstract class UI5Element extends HTMLElement {
 			await ctor._definePromise;
 		}
 
+		// Wait for any pending language change to finish before rendering to avoid rendering
+		// with not fully loaded locale data. Once it resolves, proceed with the normal render
+		// path so onEnterDOM and the rest of the lifecycle fire exactly as they would otherwise.
+		// Note: the reRenderAllUI5Elements call that closes out the language change may already
+		// have rendered this element via the deferred queue (since it was registered above), so
+		// we skip renderImmediately if the first render has already happened.
+		const languageChangePending = getLanguageChangePending();
+		if (ctor.getMetadata().isLanguageAware() && languageChangePending) {
+			await languageChangePending;
+		}
+
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
 		}
 
-		renderImmediately(this);
+		if (!this._rendered) {
+			renderImmediately(this);
+		}
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+
+		if (this.hasAttribute("autofocus")) {
+			// Honor the global `autofocus` HTML attribute. Done manually because
+			// Firefox/Safari close the autofocus window at end-of-parse, before
+			// async UI5 components have rendered their shadow DOM. Per HTML spec,
+			// only the first element with `autofocus` in document order wins.
+			requestAnimationFrame(() => {
+				this.focus();
+			});
+		}
 	}
 
 	get definePromise(): Promise<void> {
@@ -391,6 +420,7 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 
 		cancelRender(this);
+		unregisterElement(this);
 	}
 
 	/**
@@ -707,6 +737,14 @@ abstract class UI5Element extends HTMLElement {
 
 		const properties = ctor.getMetadata().getProperties();
 		const propData = properties[name];
+
+		// Object and Array properties are not reflected to attributes. The attribute is only
+		// consumed as a declarative input (parsed via fromAttribute on attributeChangedCallback),
+		// so the framework must neither write nor remove it - leave any author-set attribute alone.
+		if (propData.type === Object || propData.type === Array) {
+			return;
+		}
+
 		const attrName = camelToKebabCase(name);
 		const converter = propData.converter || defaultConverter;
 
