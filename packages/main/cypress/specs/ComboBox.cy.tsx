@@ -4277,27 +4277,16 @@ describe("ComboBoxItemCustom - Accessibility", () => {
 
 describe("Newline normalization in item text", () => {
 	it("should fire change event twice when selecting two different items with newlines via keyboard", () => {
-		const changeSpy = cy.stub().as("changeSpy");
-		cy.document().then(doc => {
-			const combobox = doc.createElement("ui5-combobox") as any;
-			combobox.id = "test-cb-newlines";
-			combobox.addEventListener("ui5-change", changeSpy);
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nA"} value="item-a" />
+				<ComboBoxItem text={"Item\nB"} value="item-b" />
+			</ComboBox>
+		);
 
-			const item1 = doc.createElement("ui5-cb-item");
-			item1.setAttribute("text", "Item\nA");
-			item1.setAttribute("value", "item-a");
-			combobox.appendChild(item1);
-
-			const item2 = doc.createElement("ui5-cb-item");
-			item2.setAttribute("text", "Item\nB");
-			item2.setAttribute("value", "item-b");
-			combobox.appendChild(item2);
-
-			doc.body.appendChild(combobox);
-		});
-
-		cy.get("#test-cb-newlines")
-			.as("combobox");
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
 
 		cy.get("@combobox")
 			.shadow()
@@ -4332,29 +4321,18 @@ describe("Newline normalization in item text", () => {
 	});
 
 	it("should fire change event when selecting items with identical normalized display text but different values", () => {
-		const changeSpy = cy.stub().as("changeSpy");
-		cy.document().then(doc => {
-			const combobox = doc.createElement("ui5-combobox") as any;
-			combobox.id = "test-cb-normalized";
-			combobox.addEventListener("ui5-change", changeSpy);
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nX"} value="first" />
+				<ComboBoxItem text="Item X" value="second" />
+			</ComboBox>
+		);
 
-			const item1 = doc.createElement("ui5-cb-item");
-			item1.setAttribute("text", "Item\nX");
-			item1.setAttribute("value", "first");
-			combobox.appendChild(item1);
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
 
-			const item2 = doc.createElement("ui5-cb-item");
-			item2.setAttribute("text", "Item X");
-			item2.setAttribute("value", "second");
-			combobox.appendChild(item2);
-
-			doc.body.appendChild(combobox);
-		});
-
-		cy.get("#test-cb-normalized")
-			.as("combobox");
-
-		cy.get("@combobox").find("[ui5-cb-item]").should("have.length", 2);
+		cy.get("[ui5-cb-item]").should("have.length", 2);
 
 		cy.get("@combobox")
 			.shadow()
