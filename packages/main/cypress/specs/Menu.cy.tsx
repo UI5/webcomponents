@@ -1143,6 +1143,70 @@ describe("Menu interaction", () => {
 				.should("have.attr", "accessible-name", "Select an option from the menu");
 		});
 
+		it("aria-checked is applied to menuitemradio and menuitemcheckbox items", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Regular Item"></MenuItem>
+						<MenuItemGroup checkMode="Single" id="groupSingle">
+							<MenuItem text="Radio Checked" checked></MenuItem>
+							<MenuItem text="Radio Unchecked"></MenuItem>
+						</MenuItemGroup>
+						<MenuItemGroup checkMode="Multiple" id="groupMulti">
+							<MenuItem text="Checkbox Checked" checked></MenuItem>
+							<MenuItem text="Checkbox Unchecked"></MenuItem>
+						</MenuItemGroup>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu]").as("menu");
+
+			cy.get("@menu")
+				.find("[text='Regular Item']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitem")
+				.and("not.have.attr", "aria-checked");
+
+			cy.get("@menu")
+				.find("[id='groupSingle']")
+				.as("groupSingle");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "false");
+
+			cy.get("@menu")
+				.find("[id='groupMulti']")
+				.as("groupMulti");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "false");
+		});
+
 		it("Menu items - navigation in endContent", () => {
 			cy.mount(
 				<>
