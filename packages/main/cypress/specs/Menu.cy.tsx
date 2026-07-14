@@ -3,6 +3,7 @@ import SplitButton from "../../src/SplitButton.js";
 import Menu from "../../src/Menu.js";
 import MenuItem from "../../src/MenuItem.js";
 import MenuItemGroup from "../../src/MenuItemGroup.js";
+import MenuSeparator from "../../src/MenuSeparator.js";
 
 import openFolder from "@ui5/webcomponents-icons/dist/open-folder.js";
 import addFolder from "@ui5/webcomponents-icons/dist/add-folder.js";
@@ -1205,6 +1206,28 @@ describe("Menu interaction", () => {
 				.find("li")
 				.should("have.attr", "role", "menuitemcheckbox")
 				.and("have.attr", "aria-checked", "false");
+		});
+
+		it("Menu separator has correct accessibility semantics", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Item 1"></MenuItem>
+						<MenuSeparator></MenuSeparator>
+						<MenuItem text="Item 2"></MenuItem>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu-separator]")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "separator")
+				.and("not.have.attr", "tabindex")
+				.and("not.have.attr", "aria-disabled")
+				.and("not.have.attr", "aria-labelledby")
+				.and("not.have.attr", "aria-describedby");
 		});
 
 		it("Menu items - navigation in endContent", () => {
