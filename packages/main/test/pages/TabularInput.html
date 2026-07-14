@@ -577,6 +577,60 @@
 		</div>
 	</div>
 
+	<!-- Example 12: Many Suggestions (112 rows) -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 12: Many Suggestions (112 rows)</ui5-title>
+		<p class="description">
+			This example demonstrates performance with a large number of suggestions (112 rows).
+			The popover should handle scrolling smoothly.
+		</p>
+
+		<ui5-tabular-input
+			id="manySearch"
+			placeholder="Search 112 products..."
+			show-suggestions
+		>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">SKU</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="200px">Product Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+		</ui5-tabular-input>
+
+		<div class="output" id="manyOutput">Selected: (none)</div>
+	</div>
+
+	<script>
+		(function() {
+			const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Toys', 'Food', 'Health'];
+			const adjectives = ['Premium', 'Classic', 'Deluxe', 'Basic', 'Pro', 'Elite', 'Compact', 'Ultra'];
+			const nouns = ['Widget', 'Gadget', 'Device', 'Tool', 'Item', 'Product', 'Gear', 'Thing'];
+
+			const manyInput = document.getElementById('manySearch');
+			if (manyInput) {
+				for (let i = 1; i <= 112; i++) {
+					const row = document.createElement('ui5-table-row');
+					row.slot = 'suggestionRows';
+
+					const sku = `SKU-${String(i).padStart(3, '0')}`;
+					const adj = adjectives[i % adjectives.length];
+					const noun = nouns[Math.floor(i / adjectives.length) % nouns.length];
+					const productName = `${adj} ${noun} ${i}`;
+					const category = categories[i % categories.length];
+					const price = `$${(Math.floor(Math.random() * 500) + 10).toFixed(2)}`;
+
+					row.innerHTML = `
+						<ui5-table-cell>${sku}</ui5-table-cell>
+						<ui5-table-cell>${productName}</ui5-table-cell>
+						<ui5-table-cell>${category}</ui5-table-cell>
+						<ui5-table-cell>${price}</ui5-table-cell>
+					`;
+
+					manyInput.appendChild(row);
+				}
+			}
+		})();
+	</script>
+
 	<script>
 		document.querySelectorAll('[ui5-tabular-input]').forEach(input => {
 			const inputId = input.getAttribute('id') || '';

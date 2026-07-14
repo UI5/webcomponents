@@ -10,6 +10,7 @@ import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generat
 
 import Input from "./Input.js";
 import type { IInputSuggestionItem } from "./Input.js";
+import type Table from "./Table.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
 import type TableRow from "./TableRow.js";
@@ -502,6 +503,7 @@ class TabularInput extends Input {
 		this._performTextSelection = true;
 
 		this._announceSelectedRow(nextIndex);
+		this._scrollRowIntoView(nextIndex);
 
 		this.fireDecoratorEvent("selection-change", {
 			row: visibleRows[nextIndex],
@@ -639,6 +641,42 @@ class TabularInput extends Input {
 	 */
 	_getTabularPopover() {
 		return this.shadowRoot?.querySelector<ResponsivePopover>(".ui5-suggestions-popover");
+	}
+
+	/**
+	 * Scrolls the row at the given index into view within the suggestions popover.
+	 * @private
+	 */
+	_scrollRowIntoView(rowIndex: number) {
+		const popover = this._getTabularPopover();
+		if (!popover) {
+			return;
+		}
+
+		const table = popover.querySelector<Table>("[ui5-table]");
+		const rowElement = table?.rows[rowIndex];
+
+		if (!rowElement) {
+			return;
+		}
+
+		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-tabular-input-suggestions-wrapper");
+		if (!scrollContainer) {
+			return;
+		}
+
+		const containerRect = scrollContainer.getBoundingClientRect();
+		const rowRect = rowElement.getBoundingClientRect();
+
+		const isRowAboveView = rowRect.top < containerRect.top;
+		const isRowBelowView = rowRect.bottom > containerRect.bottom;
+
+		if (isRowAboveView || isRowBelowView) {
+			rowElement.scrollIntoView({
+				behavior: "auto",
+				block: "nearest",
+			});
+		}
 	}
 
 	/**
