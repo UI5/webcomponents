@@ -5,6 +5,10 @@ import Label from "../../src/Label.js";
 import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Date Picker Tests", () => {
+	afterEach(() => {
+		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
+	});
+
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -58,11 +62,6 @@ describe("Date Picker Tests", () => {
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetPopoverDate(timestamp_11_Dec_2018)
 			.should("have.class", "ui5-dp-item--selected");
-
-		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("en");
-			});
 	});
 
 	it("custom formatting", () => {
@@ -342,11 +341,6 @@ describe("Date Picker Tests", () => {
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetPopoverDate(timestamp_3_Feb_2019)
 			.should("have.class", "ui5-dp-wday6");
-
-		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("en");
-			});
 	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
