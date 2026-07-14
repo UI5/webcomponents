@@ -6,6 +6,28 @@ import "@ui5/webcomponents-icons/dist/thumb-up.js";
 import "@ui5/webcomponents-icons/dist/thumb-down.js";
 
 describe("RatingIndicator", () => {
+	describe("Default Icons Loading", () => {
+		it("should load and render the default 'favorite' and 'unfavorite' icons without explicit imports", () => {
+			cy.mount(<RatingIndicator value={3}></RatingIndicator>);
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-sel [ui5-icon]")
+				.first()
+				.shadow()
+				.find("svg")
+				.should("exist");
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
+				.first()
+				.shadow()
+				.find("svg")
+				.should("exist");
+		});
+	});
+
 	describe("Custom Icons", () => {
 		it("should render default icons when no custom icons are specified", () => {
 			cy.mount(<RatingIndicator value={3}></RatingIndicator>);
