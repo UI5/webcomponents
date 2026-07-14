@@ -1,0 +1,45 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 250px;">
+<!-- playground-fold-end -->
+
+    <ui5-tabular-input placeholder="Search for products...">
+        <ui5-table-header-cell slot="suggestionColumns" width="120px">Product ID</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="200px">Name</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>PRD-001</ui5-table-cell>
+            <ui5-table-cell>Laptop Pro 15</ui5-table-cell>
+            <ui5-table-cell>Electronics</ui5-table-cell>
+            <ui5-table-cell>$1,299</ui5-table-cell>
+        </ui5-table-row>
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>PRD-002</ui5-table-cell>
+            <ui5-table-cell>Smartphone X</ui5-table-cell>
+            <ui5-table-cell>Electronics</ui5-table-cell>
+            <ui5-table-cell>$899</ui5-table-cell>
+        </ui5-table-row>
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>PRD-003</ui5-table-cell>
+            <ui5-table-cell>Wireless Mouse</ui5-table-cell>
+            <ui5-table-cell>Accessories</ui5-table-cell>
+            <ui5-table-cell>$49</ui5-table-cell>
+        </ui5-table-row>
+    </ui5-tabular-input>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

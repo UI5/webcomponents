@@ -1,0 +1,45 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 250px;">
+<!-- playground-fold-end -->
+
+    <ui5-tabular-input placeholder="Search employees..." overflow-mode="Scroll" style="width: 400px;">
+        <ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="120px">Department</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="120px">Location</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="100px">Extension</ui5-table-header-cell>
+
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>John Smith</ui5-table-cell>
+            <ui5-table-cell>Engineering</ui5-table-cell>
+            <ui5-table-cell>Building A</ui5-table-cell>
+            <ui5-table-cell>x1234</ui5-table-cell>
+        </ui5-table-row>
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>Jane Doe</ui5-table-cell>
+            <ui5-table-cell>Marketing</ui5-table-cell>
+            <ui5-table-cell>Building B</ui5-table-cell>
+            <ui5-table-cell>x2345</ui5-table-cell>
+        </ui5-table-row>
+        <ui5-table-row slot="suggestionRows">
+            <ui5-table-cell>James Wilson</ui5-table-cell>
+            <ui5-table-cell>Sales</ui5-table-cell>
+            <ui5-table-cell>Building A</ui5-table-cell>
+            <ui5-table-cell>x3456</ui5-table-cell>
+        </ui5-table-row>
+    </ui5-tabular-input>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
