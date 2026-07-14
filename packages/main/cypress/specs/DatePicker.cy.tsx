@@ -4,11 +4,9 @@ import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
 import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
-describe("Date Picker Tests", () => {
-	// afterEach(() => {
-	// 	cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
-	// });
+let languageReady: Promise<void>;
 
+describe("Date Picker Tests", () => {
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
@@ -36,33 +34,37 @@ describe("Date Picker Tests", () => {
 			.should("not.have.attr", "aria-expanded");
 	});
 
-	// it("input receives value in format pattern depending on the set language", () => {
-	// 	cy.wrap({ setLanguage })
-	// 		.then(api => {
-	// 			return api.setLanguage("bg");
-	// 		});
+	it("input receives value in format pattern depending on the set language", () => {
+		cy.then(() => {
+			languageReady = setLanguage("bg");
+		});
 
-	// 	cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
+		cy.then(() => languageReady);
 
-	// 	cy.get("[ui5-date-picker]")
-	// 		.as("datePicker");
+		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
 
-	// 	cy.get("@datePicker")
-	// 		.should("have.value", "11 декември 2018\u202fг.")
-	// 		.and("have.attr", "value-state", "None");
+		cy.get("[ui5-date-picker]")
+			.as("datePicker");
 
-	// 	const timestamp_11_Dec_2018 = 1544486400;
+		cy.get("@datePicker")
+			.should("have.value", "11 декември 2018\u202fг.")
+			.and("have.attr", "value-state", "None");
 
-	// 	cy.get<DatePicker>("@datePicker")
-	// 		.ui5DatePickerGetInnerInput()
-	// 		.realClick()
-	// 		.should("be.focused")
-	// 		.realPress("F4");
+		const timestamp_11_Dec_2018 = 1544486400;
 
-	// 	cy.get<DatePicker>("@datePicker")
-	// 		.ui5DatePickerGetPopoverDate(timestamp_11_Dec_2018)
-	// 		.should("have.class", "ui5-dp-item--selected");
-	// });
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetInnerInput()
+			.realClick()
+			.should("be.focused")
+			.realPress("F4");
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetPopoverDate(timestamp_11_Dec_2018)
+			.should("have.class", "ui5-dp-item--selected");
+
+		cy.wrap({ setLanguage })
+			.then(api => api.setLanguage("en"));
+	});
 
 	it("custom formatting", () => {
 		cy.mount(<DatePicker formatPattern="yyyy, dd/MM"></DatePicker>);
@@ -319,29 +321,33 @@ describe("Date Picker Tests", () => {
 			.should("have.value", "");
 	});
 
-	// it("respect first day of the week - monday", () => {
-	// 	cy.wrap({ setLanguage })
-	// 		.then(api => {
-	// 			return api.setLanguage("bg");
-	// 		});
+	it("respect first day of the week - monday", () => {
+		cy.then(() => {
+			languageReady = setLanguage("bg");
+		});
 
-	// 	cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
+		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
 
-	// 	const timestamp_3_Feb_2019 = 1549152000;
-	// 	const timestamp_28_Jan_2019 = 1548633600;
+		cy.then(() => languageReady);
 
-	// 	cy.get("[ui5-date-picker]")
-	// 		.as("datePicker")
-	// 		.ui5DatePickerValueHelpIconPress();
+		const timestamp_3_Feb_2019 = 1549152000;
+		const timestamp_28_Jan_2019 = 1548633600;
 
-	// 	cy.get<DatePicker>("@datePicker")
-	// 		.ui5DatePickerGetFirstDisplayedDate()
-	// 		.should("have.attr", "data-sap-timestamp", timestamp_28_Jan_2019.toString());
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
 
-	// 	cy.get<DatePicker>("@datePicker")
-	// 		.ui5DatePickerGetPopoverDate(timestamp_3_Feb_2019)
-	// 		.should("have.class", "ui5-dp-wday6");
-	// });
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetFirstDisplayedDate()
+			.should("have.attr", "data-sap-timestamp", timestamp_28_Jan_2019.toString());
+
+		cy.get<DatePicker>("@datePicker")
+			.ui5DatePickerGetPopoverDate(timestamp_3_Feb_2019)
+			.should("have.class", "ui5-dp-wday6");
+
+		cy.wrap({ setLanguage })
+			.then(api => api.setLanguage("en"));
+	});
 
 	it("if today is 30 jan, clicking next month does not skip feb", () => {
 		cy.mount(<DatePicker value="Jan 30, 2019" formatPattern="MMM d, y"></DatePicker>);
