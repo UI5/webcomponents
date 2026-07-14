@@ -1223,11 +1223,22 @@ describe("Menu interaction", () => {
 			cy.get("[ui5-menu-separator]")
 				.shadow()
 				.find("li")
-				.should("have.attr", "role", "separator")
-				.and("not.have.attr", "tabindex")
-				.and("not.have.attr", "aria-disabled")
-				.and("not.have.attr", "aria-labelledby")
-				.and("not.have.attr", "aria-describedby");
+				.as("separator");
+
+			cy.get("@separator")
+				.should("have.attr", "role", "separator");
+
+			cy.get("@separator")
+				.should("not.have.attr", "tabindex");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-disabled");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-labelledby");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-describedby");
 		});
 
 		it("Menu items - navigation in endContent", () => {
