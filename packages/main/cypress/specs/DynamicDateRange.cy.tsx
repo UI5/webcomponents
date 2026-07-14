@@ -1,4 +1,5 @@
 import DynamicDateRange, { IDynamicDateRangeOption } from '../../src/DynamicDateRange.js';
+import Label from "../../src/Label.js";
 import SingleDate from '../../src/dynamic-date-range-options/SingleDate.js';
 import DateRange from '../../src/dynamic-date-range-options/DateRange.js';
 import Today from '../../src/dynamic-date-range-options/Today.js';
@@ -270,6 +271,23 @@ describe("DynamicDateRange Component", () => {
 			.shadow()
 			.find("div[data-sap-timestamp='1747267200']")
 			.should("have.class", "ui5-dp-item--selected"); // Timestamp for May 15, 2025
+	});
+
+	it("should focus the input when the associated label is clicked", () => {
+		cy.mount(
+			<>
+				<Label for="ddr">Pick a date</Label>
+				<DynamicDateRange id="ddr" options="TODAY, DATE, DATERANGE"></DynamicDateRange>
+			</>
+		);
+
+		cy.get("[ui5-label]")
+			.realClick();
+
+		cy.get("[ui5-dynamic-date-range]")
+			.shadow()
+			.find("[ui5-input]")
+			.should("be.focused");
 	});
 });
 
