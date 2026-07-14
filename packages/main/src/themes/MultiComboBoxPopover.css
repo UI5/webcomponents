@@ -9,6 +9,21 @@
 	top: 0;
 	z-index: 2;
 	background: var(--sapPageHeader_Background);
+	box-sizing: border-box;
+}
+
+.ui5-mcb-select-all-header:focus,
+.ui5-mcb-select-all-header:focus-within {
+	outline: none;
+}
+
+.ui5-mcb-select-all-header:focus::after,
+.ui5-mcb-select-all-header:focus-within::after {
+	content: "";
+	position: absolute;
+	inset: 2px;
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	pointer-events: none;
 }
 
 .ui5-mcb-select-all-checkbox {
@@ -17,12 +32,7 @@
 }
 
 .ui5-mcb-select-all-checkbox::part(root):focus::before {
-	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	border-radius: 0;
-	right: 2px;
-	left: 2px;
-	bottom: 0;
-	top: 0;
+	display: none;
 }
 
 .ui5-mcb-select-all-checkbox::part(label) {

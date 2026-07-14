@@ -1862,8 +1862,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (this.open) {
 			const list = this._getList();
-			const selectedListItemsCount = this.items.filter(item => item.selected).length;
-			this._allSelected = selectedListItemsCount > 0 && ((selectedListItemsCount === this.items.length) || (list?.getSlottedNodes("items").length === selectedListItemsCount));
+			const selectableItems = this._getItems().filter(item => !item.isGroupItem);
+			const selectedListItemsCount = selectableItems.filter(item => item.selected).length;
+			this._allSelected = selectedListItemsCount > 0 && ((selectedListItemsCount === selectableItems.length) || (list?.getSlottedNodes("items").length === selectedListItemsCount));
 		}
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
