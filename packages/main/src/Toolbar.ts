@@ -160,7 +160,7 @@ class Toolbar extends UI5Element {
 	/**
 	 * Defines the items of the component.
 	 *
-	 * **Note:** **Note:** Use `ui5-toolbar-button`, `ui5-toolbar-select`, `ui5-toolbar-separator` and `ui5-toolbar-spacer` for the most common toolbar actions. To place any other UI5 Web Component into the toolbar and have it participate in overflow handling, wrap it in a `ui5-toolbar-item`.
+	 * **Note:** Use `ui5-toolbar-button`, `ui5-toolbar-select`, `ui5-toolbar-separator` and `ui5-toolbar-spacer` for the most common toolbar actions. To place any other UI5 Web Component into the toolbar and have it participate in overflow handling, wrap it in a `ui5-toolbar-item`.
 	 * @public
 	 */
 	@slot({
