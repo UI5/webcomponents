@@ -4274,3 +4274,117 @@ describe("ComboBoxItemCustom - Accessibility", () => {
 		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
 	});
 });
+
+describe("Newline normalization in item text", () => {
+	it("should fire change event twice when selecting two different items with newlines via keyboard", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+		cy.document().then(doc => {
+			const combobox = doc.createElement("ui5-combobox") as any;
+			combobox.id = "test-cb-newlines";
+			combobox.addEventListener("ui5-change", changeSpy);
+
+			const item1 = doc.createElement("ui5-cb-item");
+			item1.setAttribute("text", "Item\nA");
+			item1.setAttribute("value", "item-a");
+			combobox.appendChild(item1);
+
+			const item2 = doc.createElement("ui5-cb-item");
+			item2.setAttribute("text", "Item\nB");
+			item2.setAttribute("value", "item-b");
+			combobox.appendChild(item2);
+
+			doc.body.appendChild(combobox);
+		});
+
+		cy.get("#test-cb-newlines")
+			.as("combobox");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
+	});
+
+	it("should fire change event when selecting items with identical normalized display text but different values", () => {
+		const changeSpy = cy.stub().as("changeSpy");
+		cy.document().then(doc => {
+			const combobox = doc.createElement("ui5-combobox") as any;
+			combobox.id = "test-cb-normalized";
+			combobox.addEventListener("ui5-change", changeSpy);
+
+			const item1 = doc.createElement("ui5-cb-item");
+			item1.setAttribute("text", "Item\nX");
+			item1.setAttribute("value", "first");
+			combobox.appendChild(item1);
+
+			const item2 = doc.createElement("ui5-cb-item");
+			item2.setAttribute("text", "Item X");
+			item2.setAttribute("value", "second");
+			combobox.appendChild(item2);
+
+			doc.body.appendChild(combobox);
+		});
+
+		cy.get("#test-cb-normalized")
+			.as("combobox");
+
+		cy.get("@combobox").find("[ui5-cb-item]").should("have.length", 2);
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
+	});
+});
