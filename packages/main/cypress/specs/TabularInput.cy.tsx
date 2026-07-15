@@ -28,7 +28,7 @@ describe("TabularInput - Basic Rendering", () => {
 
 	it("opens suggestions popover on focus and type", () => {
 		cy.mount(
-			<TabularInput>
+			<TabularInput showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -50,7 +50,7 @@ describe("TabularInput - Basic Rendering", () => {
 
 	it("closes suggestions popover on Escape", () => {
 		cy.mount(
-			<TabularInput>
+			<TabularInput showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -81,7 +81,7 @@ describe("TabularInput - Basic Rendering", () => {
 describe("TabularInput - Highlighting", () => {
 	it("highlights matching text in cells", () => {
 		cy.mount(
-			<TabularInput>
+			<TabularInput showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John Smith</TableCell>
@@ -108,7 +108,7 @@ describe("TabularInput - Highlighting", () => {
 describe("TabularInput - Keyboard Navigation", () => {
 	it("navigates through rows with Arrow Down/Up", () => {
 		cy.mount(
-			<TabularInput noTypeahead>
+			<TabularInput showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -143,7 +143,7 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 	it("selects text during navigation", () => {
 		cy.mount(
-			<TabularInput noTypeahead>
+			<TabularInput showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -172,7 +172,7 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 	it("restores typed value when pressing Arrow Up from first row", () => {
 		cy.mount(
-			<TabularInput noTypeahead>
+			<TabularInput showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -197,7 +197,7 @@ describe("TabularInput - Keyboard Navigation", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput onSelectionChange={onSelectionChange}>
+			<TabularInput showSuggestions onSelectionChange={onSelectionChange}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -229,7 +229,7 @@ describe("TabularInput - Row Selection", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput onSelectionChange={onSelectionChange} noTypeahead>
+			<TabularInput showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -260,7 +260,7 @@ describe("TabularInput - Row Selection", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput onSelectionChange={onSelectionChange}>
+			<TabularInput showSuggestions onSelectionChange={onSelectionChange}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -285,7 +285,7 @@ describe("TabularInput - Row Selection", () => {
 describe("TabularInput - Typeahead", () => {
 	it("performs typeahead with first matching row", () => {
 		cy.mount(
-			<TabularInput>
+			<TabularInput showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -312,7 +312,7 @@ describe("TabularInput - Typeahead", () => {
 
 	it("disables typeahead with noTypeahead property", () => {
 		cy.mount(
-			<TabularInput noTypeahead>
+			<TabularInput showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -333,7 +333,7 @@ describe("TabularInput - Typeahead", () => {
 describe("TabularInput - Clear Icon", () => {
 	it("shows clear icon when value is present", () => {
 		cy.mount(
-			<TabularInput showClearIcon>
+			<TabularInput showSuggestions showClearIcon>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -355,7 +355,7 @@ describe("TabularInput - Clear Icon", () => {
 
 	it("clears value when clicking clear icon", () => {
 		cy.mount(
-			<TabularInput showClearIcon>
+			<TabularInput showSuggestions showClearIcon>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -415,7 +415,7 @@ describe("TabularInput - Overflow Mode", () => {
 describe("TabularInput - Value State", () => {
 	it("displays value state", () => {
 		cy.mount(
-			<TabularInput valueState="Negative">
+			<TabularInput showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -429,7 +429,7 @@ describe("TabularInput - Value State", () => {
 
 	it("shows value state header in suggestions popover", () => {
 		cy.mount(
-			<TabularInput valueState="Negative">
+			<TabularInput showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -458,7 +458,7 @@ describe("TabularInput - Value State", () => {
 
 	it("shows custom value state message from slot", () => {
 		cy.mount(
-			<TabularInput valueState="Information">
+			<TabularInput showSuggestions valueState="Information">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -481,7 +481,7 @@ describe("TabularInput - Value State", () => {
 
 	it("shows standalone value state popover when focused without typing", () => {
 		cy.mount(
-			<TabularInput valueState="Negative">
+			<TabularInput showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -505,10 +505,122 @@ describe("TabularInput - Value State", () => {
 	});
 });
 
+describe("TabularInput - showSuggestions Property", () => {
+	it("does not open suggestions popover when showSuggestions is false", () => {
+		cy.mount(
+			<TabularInput showSuggestions={false}>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+
+	it("does not open suggestions popover when showSuggestions is not set (defaults to false)", () => {
+		cy.mount(
+			<TabularInput>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+
+	it("opens suggestions popover when showSuggestions is true", () => {
+		cy.mount(
+			<TabularInput showSuggestions>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+	});
+
+	it("does not perform typeahead when showSuggestions is false", () => {
+		cy.mount(
+			<TabularInput showSuggestions={false}>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("jo");
+
+		cy.get("@input").should("have.value", "jo");
+	});
+
+	it("shows value state popover when showSuggestions is false and has value state", () => {
+		cy.mount(
+			<TabularInput showSuggestions={false} valueState="Negative">
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-popover].ui5-valuestatemessage-popover")
+			.should("have.attr", "open");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+});
+
 describe("TabularInput - Disabled and Readonly", () => {
 	it("does not open popover when disabled", () => {
 		cy.mount(
-			<TabularInput disabled>
+			<TabularInput showSuggestions disabled>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -528,7 +640,7 @@ describe("TabularInput - Disabled and Readonly", () => {
 
 	it("does not open popover when readonly", () => {
 		cy.mount(
-			<TabularInput readonly>
+			<TabularInput showSuggestions readonly>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>

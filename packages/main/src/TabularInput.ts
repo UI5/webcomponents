@@ -182,24 +182,20 @@ class TabularInput extends Input {
 	 */
 	_matchedTabularRow?: ITabularSuggestionRow;
 
-	/**
-	 * Override: For tabular suggestions, we always show suggestions
-	 * (we don't use the parent's showSuggestions property)
-	 */
 	get _effectiveShowSuggestions() {
 		if (this._useTabularSuggestions) {
-			return true;
+			return this.showSuggestions;
 		}
 		return super._effectiveShowSuggestions;
 	}
 
 	/**
 	 * Override: Return tabular rows as suggestion items for the parent's hasItems check
-	 * This ensures the parent's open logic works correctly
+	 * Returns empty when showSuggestions is false to prevent parent from opening popover
 	 */
 	get _flattenItems(): Array<IInputSuggestionItem> {
 		if (this._useTabularSuggestions) {
-			return this.suggestionRows as unknown as Array<IInputSuggestionItem>;
+			return this.showSuggestions ? this.suggestionRows as unknown as Array<IInputSuggestionItem> : [];
 		}
 		return super._flattenItems;
 	}
@@ -220,6 +216,10 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleTabularPopoverOpen() {
+		if (!this._effectiveShowSuggestions) {
+			return;
+		}
+
 		const hasItems = this._visibleRows.length > 0;
 		const hasValue = !!this.value;
 		const isFocused = this.shadowRoot?.querySelector("input") === getActiveElement();
@@ -236,6 +236,10 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleTabularTypeAhead() {
+		if (!this._effectiveShowSuggestions) {
+			return;
+		}
+
 		const innerInput = this.getInputDOMRefSync();
 		if (!innerInput || !this.value) {
 			return;
