@@ -108,6 +108,17 @@
 	flex-direction: column;
 }
 
+.ui5-cp-default-color-button-wrapper:hover,
+.ui5-cp-more-colors-wrapper:hover {
+	background-color: var(--sapButton_Lite_Hover_Background);
+}
+
+.ui5-cp-default-color-button-wrapper .ui5-cp-default-color-button,
+.ui5-cp-more-colors-wrapper .ui5-cp-more-colors {
+	--sapButton_Lite_Hover_Background: transparent;
+	--sapButton_Lite_Hover_BorderColor: transparent;
+}
+
 .ui5-cp-separator {
 	height: 0.0625rem;
 	background: var(--sapToolbar_SeparatorColor);
