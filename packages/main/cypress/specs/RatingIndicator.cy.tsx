@@ -15,16 +15,22 @@ describe("RatingIndicator", () => {
 				.find(".ui5-rating-indicator-item-sel [ui5-icon]")
 				.first()
 				.shadow()
-				.find("svg")
-				.should("exist");
+				.find("svg path[d]")
+				.should("exist")
+				.and($path => {
+					expect($path.attr("d")).to.have.length.greaterThan(0);
+				});
 
 			cy.get("[ui5-rating-indicator]")
 				.shadow()
 				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
 				.first()
 				.shadow()
-				.find("svg")
-				.should("exist");
+				.find("svg path[d]")
+				.should("exist")
+				.and($path => {
+					expect($path.attr("d")).to.have.length.greaterThan(0);
+				});
 		});
 	});
 
