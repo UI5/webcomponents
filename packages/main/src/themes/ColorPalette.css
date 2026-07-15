@@ -117,8 +117,6 @@
 .ui5-cp-more-colors {
 	padding: 0.0625rem;
 	--_ui5_button_border_radius: 0;
-	--sapButton_Lite_BorderColor: transparent;
-	--sapButton_Lite_Hover_BorderColor: transparent;
-	--sapButton_Lite_TextColor: var(--sapTextColor);
-	--sapButton_Lite_Hover_TextColor: var(--sapTextColor);
+	--sapButton_Lite_TextColor: var(--_ui5_color-palette-button-text-color);
+	--sapButton_Lite_Hover_TextColor: var(--_ui5_color-palette-button-text-color);
 }
