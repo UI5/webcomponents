@@ -432,10 +432,14 @@ class DynamicPage extends UI5Element {
 		}
 	}
 
-	async onExpandClick() {
+	_doToggle() {
 		this.isToggled = true;
 		this._toggleHeader();
 		this.fireDecoratorEvent("title-toggle");
+	}
+
+	async onExpandClick() {
+		this._doToggle();
 		await renderFinished();
 		this.headerActions?.focusExpandButton();
 
@@ -462,9 +466,7 @@ class DynamicPage extends UI5Element {
 		if (!this.hasHeading) {
 			return;
 		}
-		this.isToggled = true;
-		this._toggleHeader();
-		this.fireDecoratorEvent("title-toggle");
+		this._doToggle();
 		await renderFinished();
 		this.dynamicPageTitle!.focus();
 	}
@@ -553,16 +555,16 @@ class DynamicPage extends UI5Element {
 		this.setScrollPadding({ start: 0, end: 0 });
 	}
 
-	onTitleAreaFocusIn(e: FocusEvent) {
+	async onTitleAreaFocusIn(e: FocusEvent) {
 		if (!this.hasHeading || !this._headerSnapped || this.headerPinned || this.showHeaderInStickArea) {
 			return;
 		}
 		if (this.headerActions?.contains(e.target as Node)) {
 			return;
 		}
-		this.isToggled = true;
-		this._toggleHeader();
-		this.fireDecoratorEvent("title-toggle");
+		this._doToggle();
+		await renderFinished();
+		announce(this._headerLabel, InvisibleMessageMode.Polite);
 	}
 
 	setScrollPadding(padding: { start: number, end: number }) {
