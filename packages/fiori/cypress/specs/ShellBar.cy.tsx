@@ -541,6 +541,33 @@ describe("Slots", () => {
 			cy.get("#search").should("have.prop", "collapsed", true);
 		});
 
+		it("Test pressing Enter on empty search collapses it and keeps ShellBar state in sync", () => {
+			cy.mount(
+				<ShellBar id="shellbar" showSearchField={true}>
+					<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				</ShellBar>
+			);
+
+			// Initially expanded, ShellBar reflects the expanded state
+			cy.get("#search").should("have.prop", "collapsed", false);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", true);
+
+			// Focus the input and press Enter without a value
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realClick();
+
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realPress("Enter");
+
+			// The search collapses AND the ShellBar's own state collapses in sync
+			cy.get("#search").should("have.prop", "collapsed", true);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
+		});
+
 		it("Test showSearchField property is false when using collapsed search field", () => {
 			cy.mount(
 				<ShellBar id="shellbar">
