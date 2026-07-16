@@ -16,7 +16,7 @@ import type { SelectChangeEventDetail } from "./Select.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail & {
-	selectedToolbarOption: ToolbarSelectOption;
+	selectedToolbarOption: ToolbarSelectOption | undefined;
 };
 
 /**
@@ -47,7 +47,7 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * Fired when the selected option changes.
  * @param {HTMLElement} selectedOption the selected option.
  * @param {HTMLElement} selectedToolbarOption the original toolbar select option.
- * @since 2.24.0
+ * @since 2.25.0
  * @public
  */
 @event("change", {
@@ -204,11 +204,10 @@ class ToolbarSelect extends ToolbarItemBase {
 			this.fireDecoratorEvent("close-overflow");
 		}
 
-		this._syncOptions(e.detail.selectedOption);
+		this._syncOptions(selectedOptionIndex);
 	}
 
-	_syncOptions(selectedOption: HTMLElement): void {
-		const selectedOptionIndex = Number(selectedOption?.getAttribute("data-ui5-external-action-item-index"));
+	_syncOptions(selectedOptionIndex: number): void {
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
 			option.selected = index === selectedOptionIndex;
 		});

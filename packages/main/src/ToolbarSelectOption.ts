@@ -23,7 +23,7 @@ class ToolbarSelectOption extends UI5Element {
 	 * Defines the value of the component.
 	 * @default undefined
 	 * @public
-	 * @since 2.24.0
+	 * @since 2.25.0
 	 */
 	@property()
 	value?: string;
@@ -56,7 +56,7 @@ class ToolbarSelectOption extends UI5Element {
 				}
 			});
 			if (parent.select) {
-				parent.select.value = this.value !== undefined ? this.value : (this.textContent || "");
+				parent.select.value = this.value !== undefined && this.value !== "" ? this.value : (this.textContent || "");
 			}
 		}
 	}
