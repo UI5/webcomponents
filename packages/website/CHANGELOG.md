@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+
+### Features
+
+* **ui5-dialog:** add fullscreen toggle button ([#13691](https://github.com/UI5/webcomponents/issues/13691)) ([d9d329b](https://github.com/UI5/webcomponents/commit/d9d329b826cd85163486e589eb9514370eb6ce45))
+
+
+
+
+
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
 # [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-website

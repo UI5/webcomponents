@@ -35,6 +35,10 @@ import {
 	VALUE_STATE_INFORMATION,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
+	VALUE_STATE_TYPE_SUCCESS,
+	VALUE_STATE_TYPE_INFORMATION,
+	VALUE_STATE_TYPE_ERROR,
+	VALUE_STATE_TYPE_WARNING,
 	FILEUPLOADER_DEFAULT_PLACEHOLDER,
 	FILEUPLOADER_DEFAULT_MULTIPLE_PLACEHOLDER,
 	FILEUPLOADER_ROLE_DESCRIPTION,
@@ -54,6 +58,8 @@ import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverComm
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
 
 const convertBytesToMegabytes = (bytes: number) => (bytes / 1024) / 1024;
+
+type MappedValueState = Exclude<`${ValueState}`, "None">;
 
 type FileData = {
 	fileName: string,
@@ -624,7 +630,33 @@ class FileUploader extends UI5Element implements IFormInputElement {
 			"ariaHasPopup": "dialog",
 			"ariaLabel": getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined,
 			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
+			"ariaDescribedBy": this.hasValueState ? "valueStateDesc" : undefined,
 		};
+	}
+
+	get valueStateTypeMappings(): Record<MappedValueState, string> {
+		return {
+			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
+			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
+			"Negative": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
+			"Critical": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
+		};
+	}
+
+	get ariaValueStateHiddenText(): string | undefined {
+		if (!this.hasValueState) {
+			return undefined;
+		}
+
+		const valueStateType = this.valueStateTypeMappings[this.valueState as MappedValueState];
+
+		if (this.shouldDisplayDefaultValueStateMessage) {
+			return this.valueStateText ? `${valueStateType} ${this.valueStateText}` : valueStateType;
+		}
+
+		return this.valueStateMessage.length
+			? `${valueStateType} ${this.valueStateMessage.map(el => el.textContent).join(" ")}`
+			: valueStateType;
 	}
 
 	get inputTitle(): string {
@@ -645,7 +677,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		return this.placeholder ?? (this.multiple ? multiplePlaceholder : singlePlaceholder);
 	}
 
-	get valueStateTextMappings(): Record<string, string> {
+	get valueStateTextMappings(): Record<MappedValueState, string> {
 		return {
 			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_SUCCESS),
 			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_INFORMATION),
@@ -654,8 +686,8 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		};
 	}
 
-	get valueStateText(): string {
-		return this.valueStateTextMappings[this.valueState];
+	get valueStateText(): string | undefined {
+		return this.valueStateTextMappings[this.valueState as MappedValueState];
 	}
 
 	get hasValueState(): boolean {
