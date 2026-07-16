@@ -13,10 +13,6 @@ export type ToolbarArrowNavState = {
 	atRightEnd: boolean;
 };
 
-export interface ToolbarArrowNavigation {
-	getArrowNavState(): ToolbarArrowNavState;
-}
-
 @event("close-overflow", {
 	bubbles: true,
 })
@@ -57,38 +53,9 @@ class ToolbarItemBase extends UI5Element {
 	@property({ type: Boolean })
 	preventOverflowClosing = false;
 
-	/**
-	 * Roving tabindex managed by toolbar for horizontal navigation.
-	 * @private
-	 */
-	@property({ noAttribute: true })
-	forcedTabIndex = "-1";
-
 	_getNavigationTargets(): HTMLElement[] {
 		const ref = this.getFocusDomRef();
 		return ref ? [ref] : [];
-	}
-
-	/**
-	 * Called by toolbar to apply roving tabindex.
-	 * Override in items that need custom tabindex handling.
-	 * @private
-	 */
-	setToolbarForcedTabIndex(tabIndex: string) {
-		this.forcedTabIndex = tabIndex;
-		const target = this.getToolbarFocusTarget();
-		if (target) {
-			target.tabIndex = Number(tabIndex);
-		}
-	}
-
-	/**
-	 * Return the DOM element that should receive focus for toolbar navigation.
-	 * Override in items with custom focus targets.
-	 * @private
-	 */
-	getToolbarFocusTarget(): HTMLElement | null {
-		return this.getFocusDomRef() as HTMLElement;
 	}
 
 	/**
@@ -98,7 +65,7 @@ class ToolbarItemBase extends UI5Element {
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	focusForToolbarNavigation(isForward: boolean) {
-		this.getToolbarFocusTarget()?.focus();
+		this.getFocusDomRef()?.focus();
 	}
 
 	getArrowNavState(): ToolbarArrowNavState | undefined {
@@ -162,7 +129,7 @@ class ToolbarItemBase extends UI5Element {
 	}
 
 	get isToolbarNavigatable(): boolean {
-		return this.isInteractive && !this.hidden && !("disabled" in this && (this as any).disabled);
+		return this.isInteractive && !this.hidden && !("disabled" in this && !!(this as { disabled?: boolean }).disabled);
 	}
 
 	get hasOverflow(): boolean {

@@ -301,10 +301,12 @@ class Toolbar extends UI5Element {
 	 */
 	onEnterDOM() {
 		ResizeHandler.register(this, this._onResize);
+		this.attachListeners();
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._onResize);
+		this.detachListeners();
 	}
 
 	onInvalidation(changeInfo: ChangeInfo) {
@@ -317,8 +319,6 @@ class Toolbar extends UI5Element {
 	}
 
 	onBeforeRendering() {
-		this.detachListeners();
-		this.attachListeners();
 		if (getActiveElement() === this.overflowButtonDOM?.getFocusDomRef() && this.hideOverflowButton) {
 			const items = this.standardItems.filter(item => item.isToolbarNavigatable);
 			const lastItem = items.at(-1);
@@ -337,14 +337,22 @@ class Toolbar extends UI5Element {
 		this.items.forEach(item => {
 			this.addItemsAdditionalProperties(item);
 		});
-		this._applyRovingTabIndex();
+		this._reconcileLastFocusedItem();
+	}
+
+	/**
+	 * Drops the tracked re-entry item once it leaves the navigation chain
+	 * (moved to overflow or removed), so Tab re-entry and arrow/Home/End
+	 * navigation don't silently restart from the first item.
+	 */
+	_reconcileLastFocusedItem() {
+		if (this._lastFocusedItem instanceof ToolbarItemBase && !this._getNavigationChain().includes(this._lastFocusedItem)) {
+			this._lastFocusedItem = undefined;
+		}
 	}
 
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
 		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
-		if (item.isOverflowed) {
-			item.setToolbarForcedTabIndex("0");
-		}
 		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
 		if (item.hasOverflow && !item.isOverflowed && itemWrapper) {
 			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
@@ -587,25 +595,6 @@ class Toolbar extends UI5Element {
 	 * Keyboard Navigation
 	 */
 
-	_applyRovingTabIndex() {
-		const items = this._getNavigableItems();
-
-		if (!items.length) {
-			return;
-		}
-
-		items.forEach(item => item.setToolbarForcedTabIndex("0"));
-
-		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
-		if (overflowButton && !this.hideOverflowButton) {
-			overflowButton.tabIndex = 0;
-		}
-
-		if (!this._lastFocusedItem || !this._getNavigationChain().includes(this._lastFocusedItem)) {
-			this._lastFocusedItem = items[0];
-		}
-	}
-
 	_isFocusInsideOverflow(path: Array<EventTarget>): boolean {
 		const popover = this.getOverflowPopover();
 		if (!popover) {
@@ -621,12 +610,14 @@ class Toolbar extends UI5Element {
 	}
 
 	_onfocusin(e: FocusEvent) {
-		if (this.popoverOpen && this._isFocusInsideOverflow(e.composedPath())) {
+		const path = e.composedPath();
+
+		if (this.popoverOpen && this._isFocusInsideOverflow(path)) {
 			return;
 		}
 
-		const currentTarget = this._findItemByPath(e.composedPath())
-			|| this._findOverflowButtonByPath(e.composedPath())
+		const currentTarget = this._findItemByPath(path)
+			|| this._findOverflowButtonByPath(path)
 			|| this._findCurrentTargetByActiveElement();
 
 		if (currentTarget) {
@@ -635,17 +626,20 @@ class Toolbar extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.popoverOpen && this._isFocusInsideOverflow(e.composedPath())) {
+		const path = e.composedPath();
+
+		if (this.popoverOpen && this._isFocusInsideOverflow(path)) {
 			return;
 		}
 
 		if (isTabNext(e) || isTabPrevious(e)) {
-			this._setCurrentItem(
-				this._findItemByPath(e.composedPath())
-				|| this._findOverflowButtonByPath(e.composedPath())
+			const tabTarget = this._findItemByPath(path)
+				|| this._findOverflowButtonByPath(path)
 				|| this._findCurrentTargetByActiveElement()
-				|| this._lastFocusedItem!,
-			);
+				|| this._lastFocusedItem;
+			if (tabTarget) {
+				this._setCurrentItem(tabTarget);
+			}
 			return;
 		}
 
@@ -658,29 +652,28 @@ class Toolbar extends UI5Element {
 			return;
 		}
 
-		const currentTarget = this._findItemByPath(e.composedPath())
-			|| this._findOverflowButtonByPath(e.composedPath())
+		const currentTarget = this._findItemByPath(path)
+			|| this._findOverflowButtonByPath(path)
 			|| this._findCurrentTargetByActiveElement()
 			|| this._lastFocusedItem;
 		if (!currentTarget) {
 			return;
 		}
 
-		if (currentTarget instanceof ToolbarItemBase && (isForward || isBackward)) {
-			const state = currentTarget.getArrowNavState();
-			if (state) {
-				const atEnd = isForward ? state.atRightEnd : state.atLeftEnd;
-				if (!atEnd) {
-					return;
-				}
+		// Items that manage their own internal navigation (Input caret, Breadcrumbs,
+		// checkbox groups) report a boundary state; the toolbar only takes over the
+		// key once the item is at the relevant end.
+		const navState = currentTarget instanceof ToolbarItemBase ? currentTarget.getArrowNavState() : undefined;
+
+		if (navState && (isForward || isBackward)) {
+			const atEnd = isForward ? navState.atRightEnd : navState.atLeftEnd;
+			if (!atEnd) {
+				return;
 			}
 		}
 
-		if (currentTarget instanceof ToolbarItemBase && (isHomeKey || isEndKey)) {
-			const state = currentTarget.getArrowNavState();
-			if (state) {
-				return;
-			}
+		if (navState && (isHomeKey || isEndKey)) {
+			return;
 		}
 
 		if (isHomeKey) {
@@ -710,11 +703,11 @@ class Toolbar extends UI5Element {
 	}
 
 	_findItemByPath(path: Array<EventTarget>): ToolbarItemBase | undefined {
-		return (path as HTMLElement[]).find(el => el instanceof ToolbarItemBase) as ToolbarItemBase;
+		return (path as HTMLElement[]).find((el): el is ToolbarItemBase => el instanceof ToolbarItemBase);
 	}
 
 	_findOverflowButtonByPath(path: Array<EventTarget>): HTMLElement | undefined {
-		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		const overflowButton = this.overflowButtonDOM;
 		if (!overflowButton) {
 			return undefined;
 		}
@@ -751,26 +744,19 @@ class Toolbar extends UI5Element {
 			return undefined;
 		}
 
-		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		const overflowButton = this.overflowButtonDOM;
 		if (overflowButton && this._isNodeInsideElement(active, overflowButton)) {
 			return overflowButton;
 		}
 
-		return this._getNavigableItems().find(item => {
-			const focusRef = item.getFocusDomRef();
-			if (focusRef && this._isNodeInsideElement(active, focusRef)) {
-				return true;
-			}
-
-			return item._getNavigationTargets().some(target => {
-				return this._isNodeInsideElement(active, target);
-			});
-		});
+		// _getNavigationTargets() already includes the item's focus ref, so a single
+		// membership check per item is enough - no need to test getFocusDomRef separately.
+		return this._getNavigableItems().find(item => item._getNavigationTargets().some(target => this._isNodeInsideElement(active, target)));
 	}
 
 	_getNavigationChain() {
 		const chain: Array<ToolbarItemBase | HTMLElement> = [...this._getNavigableItems()];
-		const overflowButton = this.overflowButtonDOM as unknown as HTMLElement | null;
+		const overflowButton = this.overflowButtonDOM;
 
 		if (!this.hideOverflowButton && overflowButton) {
 			chain.push(overflowButton);
@@ -780,7 +766,7 @@ class Toolbar extends UI5Element {
 	}
 
 	_getNavigableItems() {
-		return this.items.filter(item => (item.isToolbarNavigatable ?? true) && !item.isOverflowed);
+		return this.items.filter(item => item.isToolbarNavigatable && !item.isOverflowed);
 	}
 
 	_setCurrentItem(item: ToolbarItemBase | HTMLElement) {
@@ -809,7 +795,18 @@ class Toolbar extends UI5Element {
 			return;
 		}
 		const currentIndex = this._lastFocusedItem ? items.indexOf(this._lastFocusedItem) : -1;
-		const nextIndex = indexCalc(currentIndex === -1 ? 0 : currentIndex, items);
+
+		// No tracked item in the current chain: enter at the near end for the
+		// pressed direction (first item for forward, last for backward) instead
+		// of coercing to 0 and then stepping past it.
+		if (currentIndex === -1) {
+			const entryItem = items[isForward ? 0 : items.length - 1];
+			this._setCurrentItem(entryItem);
+			this._focusNavigationItem(entryItem, isForward);
+			return;
+		}
+
+		const nextIndex = indexCalc(currentIndex, items);
 
 		if (nextIndex === currentIndex) {
 			return;
@@ -817,11 +814,14 @@ class Toolbar extends UI5Element {
 
 		const nextItem = items[nextIndex];
 		this._setCurrentItem(nextItem);
+		this._focusNavigationItem(nextItem, isForward);
+	}
 
-		if (nextItem instanceof ToolbarItemBase) {
-			nextItem.focusForToolbarNavigation(isForward);
+	_focusNavigationItem(item: ToolbarItemBase | HTMLElement, isForward: boolean) {
+		if (item instanceof ToolbarItemBase) {
+			item.focusForToolbarNavigation(isForward);
 		} else {
-			nextItem.focus();
+			item.focus();
 		}
 	}
 }

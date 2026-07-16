@@ -2,9 +2,12 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	isLeft,
 	isRight,
+	isHome,
+	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
@@ -67,7 +70,6 @@ interface IItemNavigationOwner extends HTMLElement {
 class ToolbarItem extends ToolbarItemBase {
 	_maxWidth = 0;
 	_wrapperChecked = false;
-	_lastFocusedNavigationTarget?: HTMLElement;
 	fireCloseOverflowRef = this.fireCloseOverflow.bind(this);
 	_onMultiChildKeydownRef = this._onMultiChildKeydown.bind(this);
 
@@ -166,21 +168,69 @@ class ToolbarItem extends ToolbarItemBase {
 		return ctor?.getMetadata ? ctor.getMetadata().getPureTag() : this.getSlottedNodes<IToolbarItemContent>("item")[0]?.tagName;
 	}
 
+	get isInteractive(): boolean {
+		return this._getNavigationTargets().some(target => this._isFocusable(target));
+	}
+
+	_isFocusable(el: HTMLElement): boolean {
+		const target = this._resolveFocusableTarget(el);
+		// A disabled control reports tabIndex 0 but isn't focusable.
+		if ("disabled" in target && !!(target as { disabled?: boolean }).disabled) {
+			return false;
+		}
+		// A bare <a> with no href reports tabIndex 0 but isn't focusable, UNLESS it
+		// opts in via an explicit tabindex attribute (e.g. ui5-link rendered as a
+		// button - <a role="button" tabindex="0"> with no href, used by the
+		// Breadcrumbs overflow arrow).
+		if (target.matches("a:not([href]):not([tabindex])")) {
+			return false;
+		}
+		// tabIndex >= 0 covers focusable-by-default elements and explicit tabindex;
+		// static content (div, span, ui5-text's focus ref) reports -1.
+		return target.tabIndex >= 0;
+	}
+
+	_resolveFocusableTarget(el: HTMLElement): HTMLElement {
+		// Drill through UI5 hosts that delegate focus (date-picker ->
+		// datetime-input -> native input); each host reports tabIndex -1.
+		let current: HTMLElement = el;
+		const seen = new Set<HTMLElement>();
+		while (instanceOfUI5Element(current) && !seen.has(current)) {
+			seen.add(current);
+			const next = current.getFocusDomRef();
+			if (!next || next === current) {
+				break;
+			}
+			current = next;
+		}
+		return current;
+	}
+
 	get hasOverflow(): boolean {
 		return this.item[0]?.hasOverflow ?? false;
 	}
 
 	getFocusDomRef(): HTMLElement | undefined {
 		const child = this.item[0];
-		if (child && typeof (child as HTMLElement & { getFocusDomRef?: () => HTMLElement }).getFocusDomRef === "function") {
-			return (child as HTMLElement & { getFocusDomRef: () => HTMLElement }).getFocusDomRef() || child;
-		}
-
 		if (child) {
-			return this._getFirstTabbableDescendant(child) || child;
+			return this._resolveChildFocusTarget(child);
 		}
 
 		return super.getFocusDomRef();
+	}
+
+	/**
+	 * Resolves the element that should receive focus for a slotted child:
+	 * the child's own focus DOM ref when it is a UI5 component, otherwise the
+	 * first tabbable descendant, falling back to the child itself.
+	 */
+	_resolveChildFocusTarget(child: HTMLElement): HTMLElement {
+		const withFocusRef = child as HTMLElement & { getFocusDomRef?: () => HTMLElement };
+		if (typeof withFocusRef.getFocusDomRef === "function") {
+			return withFocusRef.getFocusDomRef() || child;
+		}
+
+		return this._getFirstTabbableDescendant(child) || child;
 	}
 
 	_getFirstTabbableDescendant(root: HTMLElement): HTMLElement | null {
@@ -197,7 +247,6 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	_handleNavigationTarget(target: HTMLElement) {
-		this._lastFocusedNavigationTarget = target;
 		const hostTarget = this._resolveNavigationHost(target);
 
 		if (this._isRadioButtonHost(hostTarget)) {
@@ -254,13 +303,7 @@ class ToolbarItem extends ToolbarItemBase {
 	_getNavigationTargets(): HTMLElement[] {
 		return this.item
 			.filter(child => !("disabled" in child && !!(child as { disabled?: boolean }).disabled))
-			.map(child => {
-				if (typeof (child as HTMLElement & { getFocusDomRef?: () => HTMLElement }).getFocusDomRef === "function") {
-					return (child as HTMLElement & { getFocusDomRef: () => HTMLElement }).getFocusDomRef() || child;
-				}
-
-				return this._getFirstTabbableDescendant(child) || child;
-			});
+			.map(child => this._resolveChildFocusTarget(child));
 	}
 
 	_getCurrentNavigationState() {
@@ -281,7 +324,9 @@ class ToolbarItem extends ToolbarItemBase {
 	_onMultiChildKeydown(e: KeyboardEvent) {
 		const isForward = this.effectiveDir === "rtl" ? isLeft(e) : isRight(e);
 		const isBackward = this.effectiveDir === "rtl" ? isRight(e) : isLeft(e);
-		if (!isForward && !isBackward) {
+		const isHomeKey = isHome(e);
+		const isEndKey = isEnd(e);
+		if (!isForward && !isBackward && !isHomeKey && !isEndKey) {
 			return;
 		}
 
@@ -290,8 +335,17 @@ class ToolbarItem extends ToolbarItemBase {
 			return;
 		}
 
-		const nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
-		if (nextIndex < 0 || nextIndex >= items.length) {
+		// Home/End jump to the first/last child within the group.
+		let nextIndex: number;
+		if (isHomeKey) {
+			nextIndex = 0;
+		} else if (isEndKey) {
+			nextIndex = items.length - 1;
+		} else {
+			nextIndex = isForward ? currentIndex + 1 : currentIndex - 1;
+		}
+
+		if (nextIndex === currentIndex || nextIndex < 0 || nextIndex >= items.length) {
 			return;
 		}
 
@@ -344,30 +398,9 @@ class ToolbarItem extends ToolbarItemBase {
 		};
 	}
 
-	setToolbarForcedTabIndex(tabIndex: string) {
-		this.forcedTabIndex = tabIndex;
-
-		const { items, current } = this._getCurrentNavigationState();
-		if (!items.length) {
-			super.setToolbarForcedTabIndex(tabIndex);
-			return;
-		}
-
-		if (current) {
-			this._lastFocusedNavigationTarget = current;
-		}
-
-		items.forEach(target => {
-			target.tabIndex = Number(tabIndex);
-		});
-	}
-
 	focusForToolbarNavigation(isForward: boolean) {
 		const target = this.getFocusDomRefForNavigation(isForward);
-		if (target) {
-			this._lastFocusedNavigationTarget = target;
-			target.focus();
-		}
+		target?.focus();
 	}
 }
 

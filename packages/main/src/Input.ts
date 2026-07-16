@@ -1683,9 +1683,14 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		const caret = input.selectionStart ?? 0;
+		const caretEnd = input.selectionEnd ?? caret;
 		const len = input.value?.length ?? 0;
 
-		return { atLeftEnd: caret === 0, atRightEnd: caret >= len };
+		// A non-collapsed selection is not a navigation boundary: Left/Right should
+		// collapse the selection (native behaviour), not exit to the next toolbar item.
+		const collapsed = caret === caretEnd;
+
+		return { atLeftEnd: collapsed && caret === 0, atRightEnd: collapsed && caretEnd >= len };
 	}
 
 	/**

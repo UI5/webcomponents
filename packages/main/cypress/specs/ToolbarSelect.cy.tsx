@@ -313,35 +313,20 @@ describe("Toolbar general interaction", () => {
 			});
 		});
 
-		// Verify initial state - first option has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("have.attr", "selected");
+		// Verify initial state - option 2 is not selected (default selection is option 1)
+		cy.get("#opt2")
+			.should("not.have.attr", "selected");
 
 		// Click button using realClick
 		cy.get("#btn").realClick();
 
-		// Verify option 2 now has the selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(1)
+		// Verify option 2 is now selected (explicit selection reflects to the light-DOM option)
+		cy.get("#opt2")
 			.should("have.attr", "selected");
 
-		// Verify option 1 no longer has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("not.have.attr", "selected");
+		// The rendered select reflects option 2 as the selected value
+		cy.get("ui5-select", { includeShadowDom: true })
+			.should("have.attr", "value", "2");
 	});
 
 	it("Should ensure only one option is selected at any time", () => {

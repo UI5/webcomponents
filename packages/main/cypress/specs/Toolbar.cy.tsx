@@ -12,6 +12,11 @@ import employee from "@ui5/webcomponents-icons/dist/employee.js";
 import Button from "../../src/Button.js";
 import Dialog from "../../src/Dialog.js";
 import Input from "../../src/Input.js";
+import TextArea from "../../src/TextArea.js";
+import Text from "../../src/Text.js";
+import DatePicker from "../../src/DatePicker.js";
+import Breadcrumbs from "../../src/Breadcrumbs.js";
+import BreadcrumbsItem from "../../src/BreadcrumbsItem.js";
 
 describe("Toolbar general interaction", () => {
 	it("Should not return null upon calling getDomRef for all direct child items", () => {
@@ -77,6 +82,111 @@ describe("Toolbar general interaction", () => {
 			.should("be.focused");
 	});
 
+	it("Should not treat text-only items as interactive (no role=toolbar, skipped by arrow nav)", () => {
+		cy.mount(
+			<Toolbar id="text-only-toolbar">
+				<ToolbarItem>
+					<Text>Just text</Text>
+				</ToolbarItem>
+				<ToolbarButton text="Only button"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Only one interactive item (the button) -> toolbar should NOT get role="toolbar"
+		cy.get("#text-only-toolbar")
+			.shadow()
+			.find(".ui5-tb-items")
+			.should("not.have.attr", "role");
+
+		cy.get("#text-only-toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar & {
+					_getNavigableItems: () => ToolbarItem[];
+				};
+				const navigableItems = toolbar._getNavigableItems();
+				// The text-only item is not navigable, only the button is
+				expect(navigableItems).to.have.length(1);
+				expect(navigableItems[0].isInteractive).to.be.true;
+			});
+	});
+
+	it("Should treat focus-delegating UI5 hosts (ui5-date-picker) as interactive", () => {
+		cy.mount(
+			<Toolbar id="date-picker-toolbar">
+				<ToolbarButton text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<DatePicker id="toolbar-date-picker"></DatePicker>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// The date-picker host reports tabIndex -1 but delegates focus inward;
+		// it must still count as interactive and remain in the navigation chain.
+		cy.get("#date-picker-toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar & {
+					_getNavigableItems: () => ToolbarItem[];
+				};
+				const navigableItems = toolbar._getNavigableItems();
+				expect(navigableItems).to.have.length(3);
+			});
+
+		// role="toolbar" is set because there are multiple interactive items
+		cy.get("#date-picker-toolbar")
+			.shadow()
+			.find(".ui5-tb-items")
+			.should("have.attr", "role", "toolbar");
+
+		// Arrow navigation can reach the date-picker from the first button
+		cy.get("[ui5-toolbar-button][text='Before']").realClick().should("be.focused");
+		cy.realPress("ArrowRight");
+		cy.get("#toolbar-date-picker").should("be.focused");
+	});
+
+	it("Should not skip a self-overflowed Breadcrumbs item (href-less link with explicit tabindex is focusable)", () => {
+		cy.mount(
+			<Toolbar id="breadcrumbs-toolbar" style={{ width: "500px" }}>
+				<ToolbarButton text="Mid 2"></ToolbarButton>
+				<ToolbarItem>
+					<Breadcrumbs>
+						<BreadcrumbsItem href="#">Link1</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link2</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link3</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link4</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Link5</BreadcrumbsItem>
+						<BreadcrumbsItem href="#">Location</BreadcrumbsItem>
+					</Breadcrumbs>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Narrow width forces Breadcrumbs to self-overflow: its focus target becomes
+		// the dropdown "More" arrow (a href-less <a role="button" tabindex="0">).
+		// It must still be treated as interactive and stay in the navigation chain.
+		cy.get("[ui5-breadcrumbs]")
+			.shadow()
+			.find("[ui5-link]")
+			.should("exist");
+
+		cy.get("#breadcrumbs-toolbar")
+			.then($toolbar => {
+				const toolbar = $toolbar[0] as Toolbar & {
+					_getNavigableItems: () => ToolbarItem[];
+				};
+				const navigableItems = toolbar._getNavigableItems();
+				// Mid 2 button + Breadcrumbs item + After button (none skipped)
+				const hasBreadcrumbs = navigableItems.some(item => !!item.querySelector("[ui5-breadcrumbs]"));
+				expect(hasBreadcrumbs, "Breadcrumbs item is navigable").to.be.true;
+			});
+
+		// ArrowRight from the first button must land on the Breadcrumbs, not skip to "After"
+		cy.get("[ui5-toolbar-button][text='Mid 2']").realClick().should("be.focused");
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-breadcrumbs]").should("be.focused");
+	});
+
 	it("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
 		cy.viewport(320, 1080);
 
@@ -107,7 +217,10 @@ describe("Toolbar general interaction", () => {
 
 		cy.realPress("ArrowLeft");
 
-		// After ArrowLeft from overflow button, focus lands on the last visible toolbar item
+		// After ArrowLeft from the overflow button, the last visible toolbar item
+		// becomes the current navigation target. The overflow button is focused
+		// programmatically here (a real click would open the popover), so assert on
+		// the toolbar's tracked target rather than on document.activeElement.
 		cy.get("#overflow-arrow-toolbar")
 			.then($toolbar => {
 				const toolbar = $toolbar[0] as Toolbar & {
@@ -180,7 +293,7 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-toolbar-button][text='Third']").should("be.focused");
 	});
 
-	it("Should allow Tab to navigate between toolbar items (all items have tabIndex=0)", () => {
+	it("Should allow Tab to navigate between toolbar items (natural tab order, no roving tabindex)", () => {
 		cy.mount(
 			<Toolbar id="tab-index-toolbar">
 				<ToolbarButton text="A"></ToolbarButton>
@@ -270,6 +383,146 @@ describe("Toolbar general interaction", () => {
 		// ArrowLeft with caret mid-string → stays in input
 		cy.realPress("ArrowLeft");
 		cy.get("#mid-toolbar-input").should("be.focused");
+	});
+
+	it("Should keep focus within Input when a range is selected at a boundary", () => {
+		cy.mount(
+			<Toolbar id="input-selection-toolbar">
+				<ToolbarButton text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<Input id="selection-toolbar-input" value="hello"></Input>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("#selection-toolbar-input").realClick();
+
+		// Select the whole value: selectionStart=0 but selectionEnd=len, so this is
+		// NOT a collapsed boundary - ArrowLeft should collapse the selection natively,
+		// not exit the toolbar to the previous item.
+		cy.get("#selection-toolbar-input").then($input => {
+			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
+			const native = ui5Input.nativeInput;
+			if (native) {
+				native.focus();
+				native.setSelectionRange(0, native.value.length);
+			}
+		});
+
+		cy.realPress("ArrowLeft");
+		cy.get("#selection-toolbar-input").should("be.focused");
+
+		// Same on the right edge with a full selection - ArrowRight stays in the input.
+		cy.get("#selection-toolbar-input").then($input => {
+			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
+			const native = ui5Input.nativeInput;
+			if (native) {
+				native.focus();
+				native.setSelectionRange(0, native.value.length);
+			}
+		});
+
+		cy.realPress("ArrowRight");
+		cy.get("#selection-toolbar-input").should("be.focused");
+	});
+
+	it("Should respect TextArea caret position when deciding arrow navigation", () => {
+		cy.mount(
+			<Toolbar id="textarea-caret-toolbar">
+				<ToolbarButton text="Before"></ToolbarButton>
+				<ToolbarItem>
+					<TextArea id="toolbar-textarea" value="hello"></TextArea>
+				</ToolbarItem>
+				<ToolbarButton text="After"></ToolbarButton>
+			</Toolbar>
+		);
+
+		// Caret at start (position 0) → ArrowLeft exits to the previous item
+		cy.get("#toolbar-textarea").realClick();
+		cy.get("#toolbar-textarea").then($ta => {
+			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
+			if (native) {
+				native.focus();
+				native.setSelectionRange(0, 0);
+			}
+		});
+
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Before']").should("be.focused");
+
+		// Caret at end → ArrowRight exits to the next item
+		cy.get("#toolbar-textarea").realClick();
+		cy.get("#toolbar-textarea").then($ta => {
+			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
+			if (native) {
+				const len = native.value.length;
+				native.focus();
+				native.setSelectionRange(len, len);
+			}
+		});
+
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='After']").should("be.focused");
+
+		// Caret mid-string → stays in the TextArea
+		cy.get("#toolbar-textarea").realClick();
+		cy.get("#toolbar-textarea").then($ta => {
+			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
+			if (native) {
+				native.focus();
+				native.setSelectionRange(2, 2);
+			}
+		});
+
+		cy.realPress("ArrowRight");
+		cy.get("#toolbar-textarea").should("be.focused");
+	});
+
+	it("Should reverse Left/Right arrow direction in RTL", () => {
+		cy.mount(
+			<Toolbar id="rtl-toolbar" dir="rtl">
+				<ToolbarButton text="First"></ToolbarButton>
+				<ToolbarButton text="Second"></ToolbarButton>
+				<ToolbarButton text="Third"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-toolbar-button][text='First']").realClick().should("be.focused");
+
+		// In RTL, ArrowLeft moves forward through the items
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Second']").should("be.focused");
+
+		cy.realPress("ArrowLeft");
+		cy.get("[ui5-toolbar-button][text='Third']").should("be.focused");
+
+		// ArrowRight moves backward
+		cy.realPress("ArrowRight");
+		cy.get("[ui5-toolbar-button][text='Second']").should("be.focused");
+	});
+
+	it("Should jump to first/last child with Home/End inside a multi-child group", () => {
+		cy.mount(
+			<Toolbar id="group-home-end-toolbar">
+				<ToolbarItem>
+					<CheckBox text="Checkbox 1"></CheckBox>
+					<CheckBox text="Checkbox 2"></CheckBox>
+					<CheckBox text="Checkbox 3"></CheckBox>
+				</ToolbarItem>
+				<ToolbarButton text="After group"></ToolbarButton>
+			</Toolbar>
+		);
+
+		cy.get("[ui5-checkbox][text='Checkbox 1']").realClick().should("be.focused");
+
+		// End jumps to the last checkbox within the group (does not exit the group)
+		cy.realPress("End");
+		cy.get("[ui5-checkbox][text='Checkbox 3']").should("be.focused");
+
+		// Home jumps back to the first checkbox
+		cy.realPress("Home");
+		cy.get("[ui5-checkbox][text='Checkbox 1']").should("be.focused");
 	});
 
 	it("Should focus first overflow item when overflow popover opens", () => {
