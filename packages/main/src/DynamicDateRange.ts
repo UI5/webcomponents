@@ -192,6 +192,7 @@ class DynamicDateRange extends UI5Element {
 	 * Receives id(or many ids) of the elements that label the component.
 	 * @default undefined
 	 * @public
+	 * @since 2.25.0
 	 */
 	@property()
 	accessibleNameRef?: string;

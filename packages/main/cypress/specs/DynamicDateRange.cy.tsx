@@ -289,6 +289,23 @@ describe("DynamicDateRange Component", () => {
 			.find("[ui5-input]")
 			.should("be.focused");
 	});
+
+	it("should apply accessibleNameRef as aria-label on the inner input", () => {
+		cy.mount(
+			<>
+				<Label id="ddr-label-1">Date Range</Label>
+				<Label id="ddr-label-2">Label</Label>
+				<DynamicDateRange options="TODAY, DATE" accessibleNameRef="ddr-label-1 ddr-label-2"></DynamicDateRange>
+			</>
+		);
+
+		cy.get("[ui5-dynamic-date-range]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-label", "Date Range Label");
+	});
 });
 
 describe("DynamicDateRange Last/Next Options", () => {
