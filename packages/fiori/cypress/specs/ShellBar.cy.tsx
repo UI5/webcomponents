@@ -1861,6 +1861,9 @@ describe("Component Behavior", () => {
 					<Button icon="nav-back" slot="startButton" />
 					<ShellBarItem id="overflow-accept" icon="accept" text="Accept" />
 					<ShellBarItem id="overflow-alert" icon="alert" text="Alert" />
+					<ShellBarItem icon="activities" text="Activities" />
+					<ShellBarItem icon="sys-help" text="Help" />
+					<ShellBarItem icon="discussion" text="Discussion" />
 				</ShellBar>
 			);
 

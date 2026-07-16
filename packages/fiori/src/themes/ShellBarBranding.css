@@ -77,3 +77,22 @@
 ::slotted([slot="logo"]):active {
 	pointer-events: none;
 }
+
+/* ============================================================================
+   S BREAKPOINT
+   Tighten branding chrome on the smallest viewport so the Application Title
+   chevron can fit at 320px FLP width.
+   ============================================================================ */
+:host([_is-sbreak-point]) .ui5-shellbar-branding-root {
+	padding-inline: 0.25rem 0.25rem;
+	margin-inline-end: 0;
+}
+
+:host([_is-sbreak-point]) .ui5-shellbar-logo-area {
+	padding: 0.125rem 0.25rem;
+	margin-inline-end: 0;
+}
+
+:host([_is-sbreak-point]) ::slotted([slot="logo"]) {
+	padding-inline: 0;
+}
