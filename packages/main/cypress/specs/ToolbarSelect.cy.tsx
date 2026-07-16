@@ -380,6 +380,12 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-toolbar-select-option]").eq(2).should("have.attr", "selected");
 		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
 		cy.get("[ui5-toolbar-select-option]").eq(1).should("not.have.attr", "selected");
-		cy.get("ui5-select", { includeShadowDom: true }).should("have.attr", "value", "3");
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(2)
+			.should("have.attr", "selected");
 	});
 });

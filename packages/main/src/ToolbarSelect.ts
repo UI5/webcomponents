@@ -150,6 +150,10 @@ class ToolbarSelect extends ToolbarItemBase {
 	 */
 	@property()
 	set value(newValue: string) {
+		if (!newValue) {
+			this._value = "";
+			return;
+		}
 		if (this.select && this.select.value !== newValue) {
 			this.select.value = newValue;
 		}
@@ -157,7 +161,11 @@ class ToolbarSelect extends ToolbarItemBase {
 	}
 
 	get value(): string | undefined {
-		return this.select ? this.select.value : this._value;
+		if (this._value) {
+			return this._value;
+		}
+		const selectedOption = this.options.find(o => o.selected);
+		return selectedOption?.textContent || this.select?.value || "";
 	}
 
 	get select(): Select | null {
@@ -191,6 +199,30 @@ class ToolbarSelect extends ToolbarItemBase {
 		}
 	}
 
+	onBeforeRendering(): void {
+		super.onBeforeRendering();
+		let lastSelectedIndex = -1;
+		this.options.forEach((option, index) => {
+			if (option.selected) {
+				lastSelectedIndex = index;
+			}
+		});
+		this.options.forEach((option, index) => {
+			const shouldBeSelected = index === lastSelectedIndex;
+			if (option.selected !== shouldBeSelected) {
+				option.selected = shouldBeSelected;
+			}
+		});
+	}
+
+	onAfterRendering(): void {
+		super.onAfterRendering();
+		if (this._value && this.select && this.select.value !== this._value) {
+			this.select.value = this._value;
+			this._value = "";
+		}
+	}
+
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
 		e.stopImmediatePropagation();
 		const prevented = !this.fireDecoratorEvent("change", { ...e.detail, targetRef: e.target as HTMLElement });
@@ -203,6 +235,7 @@ class ToolbarSelect extends ToolbarItemBase {
 
 	_syncOptions(selectedOption: HTMLElement): void {
 		const selectedOptionIndex = Number(selectedOption?.getAttribute("data-ui5-external-action-item-index"));
+		this._value = "";
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
 			option.selected = index === selectedOptionIndex;
 		});
