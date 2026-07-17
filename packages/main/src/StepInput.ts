@@ -256,8 +256,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 	get formValidity(): ValidityStateFlags {
 		return {
 			patternMismatch: this.value !== 0 && (this._innerNumberInput?.formValidity.patternMismatch ?? false),
-			rangeOverflow: this.max !== undefined && this.value >= this.max,
-			rangeUnderflow: this.min !== undefined && this.value <= this.min,
+			rangeOverflow: this.max !== undefined && this.value > this.max,
+			rangeUnderflow: this.min !== undefined && this.value < this.min,
 		};
 	}
 
