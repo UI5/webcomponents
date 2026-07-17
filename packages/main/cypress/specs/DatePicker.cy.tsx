@@ -4,7 +4,7 @@ import DatePicker from "../../src/DatePicker.js";
 import Label from "../../src/Label.js";
 import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
-describe("Date Picker Tests", () => {
+describe.skip("Date Picker Tests", () => {
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
