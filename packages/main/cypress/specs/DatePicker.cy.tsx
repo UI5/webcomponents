@@ -8,7 +8,7 @@ describe("Date Picker Tests", () => {
 	afterEach(() => {
 		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
 	});
-
+    
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 
