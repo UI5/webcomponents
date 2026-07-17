@@ -729,7 +729,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 				this._previousValue = this.value;
 			}
 			this.value = this._previousValue;
-			this.input.value = this.value.toFixed(this.valuePrecision);
+			this.input.value = this._formatNumber(this.value);
 		} else if (this.max !== undefined && (isPageUpShift(e) || isUpShiftCtrl(e))) {
 			// step to max
 			this._modifyValue(this.max - this.value);
