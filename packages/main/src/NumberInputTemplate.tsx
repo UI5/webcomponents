@@ -51,6 +51,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 				disabled={this.disabled}
 				required={this.required}
 				readonly={this.readonly}
+				focused={this.focused}
 				onui5-_request-submit={this._onInputRequestSubmit}
 				valueState={this.valueState}
 				_inputAccInfo={this.accInfo}
