@@ -12,7 +12,7 @@ import { getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/Ac
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
-	NUMBERINPUT_PATTER_MISSMATCH,
+	NUMBERINPUT_PATTERN_MISSMATCH,
 	NUMBERINPUT_RANGEOVERFLOW,
 	NUMBERINPUT_RANGEUNDERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
@@ -241,7 +241,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.patternMismatch) {
-			return StepInput.i18nBundle.getText(NUMBERINPUT_PATTER_MISSMATCH, this.valuePrecision);
+			return StepInput.i18nBundle.getText(NUMBERINPUT_PATTERN_MISSMATCH, this.valuePrecision);
 		}
 		if (validity.rangeUnderflow) {
 			return StepInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);

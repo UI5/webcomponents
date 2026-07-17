@@ -31,7 +31,7 @@ import NumberInputTemplate from "./NumberInputTemplate.js";
 import {
 	NUMBERINPUT_DEC_ICON_TITLE,
 	NUMBERINPUT_INC_ICON_TITLE,
-	NUMBERINPUT_PATTER_MISSMATCH,
+	NUMBERINPUT_PATTERN_MISSMATCH,
 	NUMBERINPUT_RANGEOVERFLOW,
 	NUMBERINPUT_RANGEUNDERFLOW,
 } from "./generated/i18n/i18n-defaults.js";
@@ -331,7 +331,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.patternMismatch) {
-			return NumberInput.i18nBundle.getText(NUMBERINPUT_PATTER_MISSMATCH, this.valuePrecision);
+			return NumberInput.i18nBundle.getText(NUMBERINPUT_PATTERN_MISSMATCH, this.valuePrecision);
 		}
 		if (validity.rangeUnderflow) {
 			return NumberInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);
