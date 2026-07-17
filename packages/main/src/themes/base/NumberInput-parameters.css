@@ -2,7 +2,7 @@
 	--_ui5_number_input_error_focused_background: var(--sapField_Focus_Background);
 	--_ui5_number_input_button_state_hover_background_color: var(--sapField_Background);
 	--_ui5_number_input_error_hover_background: var(--sapField_Background);
-	--_ui5_number_input_border_style: 1px solid var(--sapField_BorderColor);;
+	--_ui5_number_input_border_style: 1px solid var(--sapField_BorderColor);
 	--_ui5_number_input_border_style_hover: 1px solid var(--sapField_Hover_BorderColor);
 	--_ui5_number_input_error_warning_information_border_style: none;
 	--_ui5_number_input_after_border_style: var(--_ui5_input_error_warning_border_style);
