@@ -66,7 +66,6 @@ type NumberInputValueStateChangeEventDetail = {
  * ### Overview
  *
  * The `ui5-number-input` is a numeric input field. It allows users to enter, edit, and select numeric values.
- * Optionally, it can display increment/decrement buttons (controlled via the internal `_showStepButtons` property).
  *
  * ### Usage
  *
