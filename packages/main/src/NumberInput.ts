@@ -494,7 +494,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	_onButtonFocusOut() {
 		setTimeout(() => {
 			if (!this._inputFocused && !this.shadowRoot!.activeElement) {
-				this.inputOuter.removeAttribute("focused");
+				this.focused = false;
 			}
 		}, 0);
 	}
@@ -595,7 +595,6 @@ class NumberInput extends UI5Element implements IFormInputElement {
 			this._validate();
 			this._setButtonState();
 			this.focused = true;
-			this.inputOuter.setAttribute("focused", "");
 			if (fireChangeEvent) {
 				this._fireChangeEvent();
 			} else {
