@@ -100,6 +100,10 @@ class ShellBarSearch extends Search {
 		return isPhone() ? domRef?.querySelector<HTMLInputElement>(`[ui5-responsive-popover] input`) : super.nativeInput;
 	}
 
+	getSearchButtonDomRef(): HTMLElement | null {
+		return this.shadowRoot?.querySelector<HTMLElement>(".ui5-shell-search-field-button") ?? null;
+	}
+
 	_onfocusin() {
 		super._onfocusin();
 
