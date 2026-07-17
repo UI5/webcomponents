@@ -18,7 +18,9 @@ function DateRangePickerTemplate(options: DateTimePickerTemplateOptions) {
 
 describe("DateRangePicker general interaction", () => {
 	afterEach(() => {
-		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
+		cy.wrap({ setLanguage }).then(api => {
+			return api.setLanguage("en");
+		});
 	});
 
 	it("Custom Validation Error", () => {
