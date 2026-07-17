@@ -283,9 +283,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
-			let ariaLabel = this.hasSecondaryCalendarType
-				? `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()}; ${secondaryMonthsNamesString} ${tempSecondDateNumber}, ${tempSecondYearNumber} ${tooltip}`.trim()
-				: `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()} ${tooltip}`.trim();
+			let ariaLabel = this._formatLong.format(tempDate.toUTCJSDate(), true);
+			if (this.hasSecondaryCalendarType && tempSecondDate) {
+				ariaLabel += ` ${this._formatLongSecondary.format(tempSecondDate.toUTCJSDate(), true)}`;
+			}
 
 			if (this.selectionMode === CalendarSelectionMode.Range) {
 				if (isSelected && this._isRangeEndDate(timestamp)) {
@@ -1003,6 +1004,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		return this.hasSecondaryCalendarType
 			? `${this._primaryCalendarType} calendar with secondary ${this.secondaryCalendarType as string} calendar`
 			: `${this._primaryCalendarType} calendar`;
+	}
+
+	get _formatLong() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._primaryCalendarType });
+	}
+
+	get _formatLongSecondary() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._secondaryCalendarType });
 	}
 }
 

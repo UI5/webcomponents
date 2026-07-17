@@ -1605,6 +1605,38 @@ describe("Calendar accessibility", () => {
 			}
 		});
 	});
+
+	it("Should format day cell aria-label according to the current locale", () => {
+		const date = new Date(Date.UTC(2024, 0, 15, 0, 0, 0));
+		cy.mount(
+			<Calendar id="calendar1" timestamp={date.valueOf() / 1000} primaryCalendarType="Gregorian">
+				<CalendarDate value="Jan 15, 2024"></CalendarDate>
+			</Calendar>
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.attr", "aria-label", "January 15, 2024");
+	});
+
+	it("Should append secondary Islamic calendar date in day cell aria-label", () => {
+		const date = new Date(Date.UTC(2024, 0, 15, 0, 0, 0));
+		cy.mount(
+			<Calendar id="calendar1" timestamp={date.valueOf() / 1000} primaryCalendarType="Gregorian" secondaryCalendarType="Islamic">
+				<CalendarDate value="Jan 15, 2024"></CalendarDate>
+			</Calendar>
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.attr", "aria-label", "January 15, 2024 Rajab 4, 1445 AH");
+	});
 });
 
 describe("Day Picker Tests", () => {
