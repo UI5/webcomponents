@@ -217,16 +217,15 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	onBeforeRendering() {
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		this._buildWeeks(localeData);
+		this._buildWeeks();
 		this._buildDayNames(localeData);
 	}
 
 	/**
 	 * Builds the "_weeks" object that represents the month.
-	 * @param localeData
 	 * @private
 	 */
-	_buildWeeks(localeData: LocaleData) {
+	_buildWeeks() {
 		if (this._hidden) {
 			return; // Optimization to not do any work unless the current picker
 		}
@@ -235,8 +234,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
@@ -276,10 +273,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				? `${nonWorkingDayLabel} `
 				: "";
 			const todayAriaLabel = isToday ? `${todayLabel} ` : "";
-
-			const tempSecondDateNumber = tempSecondDate ? tempSecondDate.getDate() : "";
-			const tempSecondYearNumber = tempSecondDate ? tempSecondDate.getYear() : "";
-			const secondaryMonthsNamesString = secondaryMonthsNames.length > 0 ? secondaryMonthsNames[tempSecondDate!.getMonth()] : "";
 
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
