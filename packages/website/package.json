@@ -1,6 +1,6 @@
 {
   "name": "@ui5/webcomponents-website",
-  "version": "2.24.0",
+  "version": "2.25.0-rc.0",
   "private": true,
   "scripts": {
     "generate-local-cdn": "rimraf ./local-cdn && node ./build-scripts/local-cdn.mjs",
@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "@babel/standalone": "^7.24.0",
-    "@docusaurus/core": "3.1.1",
-    "@docusaurus/preset-classic": "3.1.1",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
     "@mdx-js/react": "^3.0.0",
     "@monaco-editor/react": "^4.6.0",
     "clsx": "^2.0.0",
@@ -51,9 +51,9 @@
     "tarts": "^2.0.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.1.1",
-    "@docusaurus/tsconfig": "3.1.1",
-    "@docusaurus/types": "3.1.1",
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/tsconfig": "3.10.2",
+    "@docusaurus/types": "3.10.2",
     "copy-and-watch": "^0.1.5",
     "dotenv-cli": "^7.4.1",
     "pako": "^2.1.0",

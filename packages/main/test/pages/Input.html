@@ -1245,6 +1245,53 @@
 		<ui5-suggestion-item text="Argentina"></ui5-suggestion-item>
 		<ui5-suggestion-item text="Austria"></ui5-suggestion-item>
 	</ui5-input>
+
+	<h3>Input with Interactive Icons</h3>
+	<ui5-input id="input-with-icon" placeholder="Input with interactive icon" show-clear-icon>
+		<ui5-input-icon id="search-icon" slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<h3>Input with Interactive Icons - All Value States</h3>
+	<ui5-input placeholder="Neutral state" show-clear-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<ui5-input placeholder="Error state" value-state="Negative" show-clear-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<ui5-input placeholder="Warning state" value-state="Critical" show-clear-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<ui5-input placeholder="Success state" value-state="Positive" show-clear-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<ui5-input placeholder="Information state" value-state="Information" show-clear-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<h3>Input with Multiple Interactive Icons</h3>
+	<ui5-input placeholder="Multiple icons" value="Some text" show-clear-icon>
+		<ui5-input-icon slot="icon" name="microphone" accessible-name="Voice input"></ui5-input-icon>
+		<ui5-input-icon slot="icon" name="camera" accessible-name="Camera"></ui5-input-icon>
+		<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
+	</ui5-input>
+	<br><br>
+
+	<script>
+		// Add click handlers for interactive icons
+		document.getElementById("search-icon").addEventListener("click", function() {
+			alert("Search icon clicked!");
+		});
+	</script>
 </body>
 
 </html>
