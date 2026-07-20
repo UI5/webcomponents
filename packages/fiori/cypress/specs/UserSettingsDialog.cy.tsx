@@ -1495,3 +1495,97 @@ describe("F6 Navigation", () => {
             .should("be.focused");
     });
 });
+
+describe("Save mode", () => {
+	it("renders the default single Close button when saveMode is not set", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.length", 1);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.attr", "design", "Transparent");
+	});
+
+	it("renders Save (Emphasized) + Cancel buttons when saveMode is set", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.length", 2);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(0).should("have.attr", "design", "Emphasized");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(1).should("have.attr", "design", "Transparent");
+	});
+
+	it("fires the save event when the Save button is clicked", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("save", cy.stub().as("saveEv"));
+		});
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(0)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@saveEv").should("have.been.calledOnce");
+	});
+
+	it("fires the cancel event when the Cancel button is clicked", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("cancel", cy.stub().as("cancelEv"));
+		});
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(1)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@cancelEv").should("have.been.calledOnce");
+	});
+
+	it("does not close the dialog automatically on Save or Cancel", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(0)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@dialog").should("have.attr", "open");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(1)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@dialog").should("have.attr", "open");
+	});
+
+	it("still fires before-close on ESC in saveMode", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("before-close", cy.stub().as("beforeClose"));
+		});
+		cy.realPress("Escape");
+		cy.get("@beforeClose").should("have.been.calledOnce");
+	});
+});

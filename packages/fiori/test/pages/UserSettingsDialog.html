@@ -52,6 +52,7 @@
 
 <div style="border:1px solid black"></div>
 <ui5-button id="btnOpenSettings">User settings</ui5-button>
+<ui5-button id="btnOpenSaveModeSettings">User settings (Save mode)</ui5-button>
 <ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
 	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" selected>
 		<ui5-user-settings-account-view id="account" show-manage-account="true">
@@ -490,6 +491,101 @@
 	</ui5-user-settings-item>
 </ui5-user-settings-dialog>
 
+<!-- Second dialog: same content, save-mode enabled to demonstrate the Save + Cancel footer -->
+<ui5-user-settings-dialog id="saveModeSettings" header-text="Settings" show-search-field save-mode>
+	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" selected>
+		<ui5-user-settings-account-view show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+			<ui5-panel fixed class="ua-panel">
+				<ui5-text>
+					Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+				</ui5-text>
+			</ui5-panel>
+		</ui5-user-settings-account-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
+		<ui5-user-settings-appearance-view text="Themes">
+			<div slot="additionalContent">
+				<div class="ui5-user-settings-appearance-view-additional-content-header">
+					<ui5-text id="sm-touch-input-label">Optimize for Touch Input</ui5-text>
+					<ui5-switch accessible-name-ref="sm-touch-input-label"></ui5-switch>
+				</div>
+				<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+					Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+				</ui5-text>
+			</div>
+			<ui5-user-settings-appearance-view-group header-text="Horizon">
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="Morning Horizon" selected></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="Evening Horizon"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+			<ui5-user-settings-appearance-view-group header-text="Quartz">
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="Quartz Light"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="Quartz Dark"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+		</ui5-user-settings-appearance-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
+		<ui5-user-settings-view>
+			<div class="language-region-container">
+				<ui5-label for="sm-language" class="language-region-label">Display Language:</ui5-label>
+				<ui5-combobox id="sm-language" class="language-region-control" placeholder="Language" value="English (United States)">
+					<ui5-cb-item text="English (United States)" selected></ui5-cb-item>
+					<ui5-cb-item text="English (United Kingdom)"></ui5-cb-item>
+					<ui5-cb-item text="German (Germany)"></ui5-cb-item>
+					<ui5-cb-item text="French (France)"></ui5-cb-item>
+					<ui5-cb-item text="Japanese"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-region" class="language-region-label">Region:</ui5-label>
+				<ui5-combobox id="sm-region" class="language-region-control" placeholder="Region" value="United States">
+					<ui5-cb-item text="United States"></ui5-cb-item>
+					<ui5-cb-item text="United Kingdom"></ui5-cb-item>
+					<ui5-cb-item text="Germany"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-dateFormat" class="language-region-label">Date Format:</ui5-label>
+				<ui5-combobox id="sm-dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
+					<ui5-cb-item text="MM.DD.YYYY"></ui5-cb-item>
+					<ui5-cb-item text="DD.MM.YYYY"></ui5-cb-item>
+					<ui5-cb-item text="YYYY-MM-DD"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-timeFormat" class="language-region-label">Time Format:</ui5-label>
+				<ui5-combobox id="sm-timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
+					<ui5-cb-item text="12 Hour"></ui5-cb-item>
+					<ui5-cb-item text="24 Hour"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
+		<ui5-user-settings-view text="Reset Personalization">
+			<ui5-button>Reset Personalization content</ui5-button>
+		</ui5-user-settings-view>
+		<ui5-user-settings-view text="Reset All Settings">
+			<ui5-button>Reset All Settings content</ui5-button>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+</ui5-user-settings-dialog>
+
+<!-- Confirmation dialog shown after Save: asks whether to close the settings dialog. -->
+<ui5-dialog id="confirmSaveDialog" state="Information" header-text="Save Settings">
+	<ui5-text>Do you want to save your changes and close the dialog?</ui5-text>
+	<ui5-toolbar slot="footer">
+		<ui5-toolbar-button id="confirmSaveYes" design="Emphasized" text="Yes"></ui5-toolbar-button>
+		<ui5-toolbar-button id="confirmSaveNo" design="Transparent" text="No"></ui5-toolbar-button>
+	</ui5-toolbar>
+</ui5-dialog>
+
 <ui5-dialog id="additionalDialog" state="Information" header-text="Change Display Language">
 	<ui5-text>Changing the display language to [New Language] will update the language across the user interface.</ui5-text>
 		<ui5-toolbar slot="footer">
@@ -715,6 +811,39 @@
 		if (selectedItem?.itemKey) {
 			window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
 		}
+	});
+
+	// Save-mode demo: opens the second dialog with save-mode enabled.
+	const saveModeSettings = document.getElementById("saveModeSettings");
+	const btnOpenSaveModeSettings = document.getElementById("btnOpenSaveModeSettings");
+	const confirmSaveDialog = document.getElementById("confirmSaveDialog");
+	const confirmSaveYes = document.getElementById("confirmSaveYes");
+	const confirmSaveNo = document.getElementById("confirmSaveNo");
+
+	btnOpenSaveModeSettings.addEventListener("click", () => {
+		saveModeSettings.open = true;
+	});
+
+	// Save: ask the user whether to close the dialog. In a real app this is where
+	// the backend save call would happen; the confirmation only demonstrates that
+	// closing is an app decision.
+	saveModeSettings.addEventListener("save", () => {
+		console.log("save clicked");
+		confirmSaveDialog.open = true;
+	});
+
+	// Cancel: discard changes and close the dialog directly.
+	saveModeSettings.addEventListener("cancel", () => {
+		console.log("cancel clicked — closing dialog");
+		saveModeSettings.open = false;
+	});
+
+	confirmSaveYes.addEventListener("click", () => {
+		confirmSaveDialog.open = false;
+		saveModeSettings.open = false;
+	});
+	confirmSaveNo.addEventListener("click", () => {
+		confirmSaveDialog.open = false;
 	});
 </script>
 </body>
