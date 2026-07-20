@@ -296,6 +296,9 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	@property({ noAttribute: true })
 	_spinStarted = false;
 
+	@property({ noAttribute: true })
+	_inputValue?: string;
+
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
 	 *
@@ -590,7 +593,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		value = this._preciseValue(value);
 		if (value !== this.value) {
 			this.value = value;
-			this.input.value = this._formatNumber(value);
+			this._inputValue = this._formatNumber(value);
 			this._validate();
 			this._setButtonState();
 			this.focused = true;
@@ -652,15 +655,12 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		const inputValue = this._parseNumber(updatedValue);
 		if (this._isValueChanged(inputValue)) {
 			this._updateValueAndValidate(Number.isNaN(inputValue) ? this.min || 0 : inputValue);
-			this.innerInput.value = this.input.value;
 		}
 	}
 
 	_setDefaultInputValueIfNeeded() {
 		if (this.input.value === "") {
-			const defaultValue = this._formatNumber(this.min || 0);
-			this.input.value = defaultValue;
-			this.innerInput.value = defaultValue; // we need to update inner input value as well, to avoid empty input scenario
+			this._inputValue = this._formatNumber(this.min || 0);
 		}
 	}
 
@@ -728,7 +728,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 				this._previousValue = this.value;
 			}
 			this.value = this._previousValue;
-			this.input.value = this._formatNumber(this.value);
+			this._inputValue = this._formatNumber(this.value);
 		} else if (this.max !== undefined && (isPageUpShift(e) || isUpShiftCtrl(e))) {
 			// step to max
 			this._modifyValue(this.max - this.value);

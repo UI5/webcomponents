@@ -47,7 +47,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 				class="ui5-number-input-input"
 				placeholder={this.placeholder}
 				type={this.type}
-				value={this._displayValue}
+				value={this._inputValue ?? this._displayValue}
 				disabled={this.disabled}
 				required={this.required}
 				readonly={this.readonly}
