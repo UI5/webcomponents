@@ -1,4 +1,5 @@
 import StepInput from "../../src/StepInput.js";
+import type NumberInput from "../../src/NumberInput.js";
 
 const decreaseValue = true;
 
@@ -223,6 +224,130 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.ui5StepInputChangeValueWithButtons(31);
+	});
+});
+
+describe("StepInput spin interaction tests", () => {
+	it("should continuously decrease value while decrement button is held", () => {
+		cy.mount(
+			<StepInput value={10} step={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.shadow()
+			.find(".ui5-step-dec [ui5-icon]")
+			.as("decBtn")
+			.realMouseDown();
+
+		cy.wait(1500); // hold the button to let the spin loop fire multiple steps
+
+		cy.get("@decBtn")
+			.trigger("mouseup");
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.should(ni => {
+				expect((ni[0] as NumberInput).value).to.be.lessThan(10);
+			});
+	});
+
+	it("should continuously increase value while increment button is held", () => {
+		cy.mount(
+			<StepInput value={0} step={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.shadow()
+			.find(".ui5-step-inc [ui5-icon]")
+			.as("incBtn")
+			.realMouseDown();
+
+		cy.wait(1500); // hold the button to let the spin loop fire multiple steps
+
+		cy.get("@incBtn")
+			.realMouseUp();
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.should(ni => {
+				expect((ni[0] as NumberInput).value).to.be.greaterThan(0);
+			});
+	});
+
+	it("should stop spinning and fire 'change' on mouseup", () => {
+		cy.mount(
+			<StepInput value={10} step={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.shadow()
+			.find(".ui5-step-dec [ui5-icon]")
+			.as("decBtn")
+			.realMouseDown();
+
+		cy.wait(1500); // hold the button to let the spin loop fire multiple steps
+
+		cy.get("@decBtn")
+			.realMouseUp();
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value")
+			.and("be.lessThan", 10);
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
+	});
+
+	it("should stop spinning and fire 'change' when mouse leaves the button", () => {
+		cy.mount(
+			<StepInput value={10} step={1}></StepInput>
+		);
+
+		cy.get("[ui5-step-input]")
+			.as("stepInput");
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputAttachHandler("ui5-change", "change");
+
+		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
+			.shadow()
+			.find(".ui5-step-dec [ui5-icon]")
+			.as("decBtn")
+			.realMouseDown();
+
+		cy.wait(1500); // hold the button to let the spin loop fire multiple steps
+
+		cy.get("@decBtn")
+			.realMouseMove(-50, 0);
+
+		cy.get<StepInput>("@stepInput")
+			.should("have.prop", "value")
+			.and("be.lessThan", 10);
+
+		cy.get("@change")
+			.should("have.been.calledOnce");
 	});
 });
 
