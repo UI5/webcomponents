@@ -582,6 +582,10 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	 * @param fireChangeEvent if `true`, fires `change` event when the value is changed
 	 */
 	_modifyValue(modifier: number, fireChangeEvent = false) {
+		if (this.min !== undefined && this.max !== undefined && this.min > this.max) {
+			console.warn(`[ui5-number-input] Invalid configuration: 'min' (${this.min}) is greater than 'max' (${this.max}). Value modification skipped.`); // eslint-disable-line
+			return;
+		}
 		let value;
 		value = this.value + modifier;
 		if (this.min !== undefined && value < this.min) {
