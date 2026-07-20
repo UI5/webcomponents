@@ -62,7 +62,7 @@ import InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
-import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
+import type { ToolbarArrowNavState, IToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 
 // Templates
 import InputTemplate from "./InputTemplate.js";
@@ -300,7 +300,7 @@ type InputSuggestionScrollEventDetail = {
  */
 @event("close")
 
-class Input extends UI5Element implements SuggestionComponent, IFormInputElement {
+class Input extends UI5Element implements SuggestionComponent, IFormInputElement, IToolbarArrowNavProvider {
 	eventDetails!: {
 		"change": InputEventDetail,
 		"input": InputEventDetail,

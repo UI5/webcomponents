@@ -12,7 +12,6 @@ import employee from "@ui5/webcomponents-icons/dist/employee.js";
 import Button from "../../src/Button.js";
 import Dialog from "../../src/Dialog.js";
 import Input from "../../src/Input.js";
-import TextArea from "../../src/TextArea.js";
 import Text from "../../src/Text.js";
 import DatePicker from "../../src/DatePicker.js";
 import Breadcrumbs from "../../src/Breadcrumbs.js";
@@ -425,58 +424,6 @@ describe("Toolbar general interaction", () => {
 
 		cy.realPress("ArrowRight");
 		cy.get("#selection-toolbar-input").should("be.focused");
-	});
-
-	it("Should respect TextArea caret position when deciding arrow navigation", () => {
-		cy.mount(
-			<Toolbar id="textarea-caret-toolbar">
-				<ToolbarButton text="Before"></ToolbarButton>
-				<ToolbarItem>
-					<TextArea id="toolbar-textarea" value="hello"></TextArea>
-				</ToolbarItem>
-				<ToolbarButton text="After"></ToolbarButton>
-			</Toolbar>
-		);
-
-		// Caret at start (position 0) → ArrowLeft exits to the previous item
-		cy.get("#toolbar-textarea").realClick();
-		cy.get("#toolbar-textarea").then($ta => {
-			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
-			if (native) {
-				native.focus();
-				native.setSelectionRange(0, 0);
-			}
-		});
-
-		cy.realPress("ArrowLeft");
-		cy.get("[ui5-toolbar-button][text='Before']").should("be.focused");
-
-		// Caret at end → ArrowRight exits to the next item
-		cy.get("#toolbar-textarea").realClick();
-		cy.get("#toolbar-textarea").then($ta => {
-			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
-			if (native) {
-				const len = native.value.length;
-				native.focus();
-				native.setSelectionRange(len, len);
-			}
-		});
-
-		cy.realPress("ArrowRight");
-		cy.get("[ui5-toolbar-button][text='After']").should("be.focused");
-
-		// Caret mid-string → stays in the TextArea
-		cy.get("#toolbar-textarea").realClick();
-		cy.get("#toolbar-textarea").then($ta => {
-			const native = ($ta[0] as TextArea).getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
-			if (native) {
-				native.focus();
-				native.setSelectionRange(2, 2);
-			}
-		});
-
-		cy.realPress("ArrowRight");
-		cy.get("#toolbar-textarea").should("be.focused");
 	});
 
 	it("Should reverse Left/Right arrow direction in RTL", () => {

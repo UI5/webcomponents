@@ -19,8 +19,6 @@ import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type Popover from "./Popover.js";
 import type InputComposition from "./features/InputComposition.js";
-import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
 
 import TextAreaTemplate from "./TextAreaTemplate.js";
 
@@ -436,29 +434,6 @@ class TextArea extends UI5Element implements IFormInputElement {
 
 	getInputDomRef() {
 		return this.getDomRef()!.querySelector<HTMLTextAreaElement>("textarea")!;
-	}
-
-	getArrowNavState(): ToolbarArrowNavState | undefined {
-		const textArea = this.getDomRef()?.querySelector<HTMLTextAreaElement>("textarea");
-		if (!textArea) {
-			return undefined;
-		}
-
-		const active = getActiveElement() as HTMLElement | null;
-		const isTextAreaFocused = !!active && (active === textArea || textArea.contains(active));
-		if (!isTextAreaFocused) {
-			return undefined;
-		}
-
-		const caret = textArea.selectionStart ?? 0;
-		const caretEnd = textArea.selectionEnd ?? caret;
-		const len = textArea.value?.length ?? 0;
-
-		// A non-collapsed selection is not a navigation boundary: Left/Right should
-		// collapse the selection (native behaviour), not exit to the next toolbar item.
-		const collapsed = caret === caretEnd;
-
-		return { atLeftEnd: collapsed && caret === 0, atRightEnd: collapsed && caretEnd >= len };
 	}
 
 	_onkeydown(e: KeyboardEvent) {

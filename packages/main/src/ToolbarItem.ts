@@ -12,13 +12,16 @@ import {
 import ToolbarItemTemplate from "./ToolbarItemTemplate.js";
 import ToolbarItemCss from "./generated/themes/ToolbarItem.css.js";
 import ToolbarItemBase from "./ToolbarItemBase.js";
-import type { ToolbarArrowNavState } from "./ToolbarItemBase.js";
+import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
+import { isToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base";
 
 /**
  * Interface for the slotted item in `ui5-toolbar-item`.
  *
  * It could be any HTMLElement or UI5 Web Component with option to specify custom overflow closing events and overflow behavior.
+ * Components that also implement {@link IToolbarArrowNavProvider} can report their internal navigation boundary
+ * state to the toolbar for caret-aware arrow-key handling.
  *
  * @public
  * @since 2.20.0
@@ -26,7 +29,6 @@ import type { DefaultSlot } from "@ui5/webcomponents-base";
 interface IToolbarItemContent extends HTMLElement {
 	overflowCloseEvents?: string[];
 	hasOverflow?: boolean;
-	getArrowNavState?: () => ToolbarArrowNavState | undefined;
 }
 
 interface IItemNavigationOwner extends HTMLElement {
@@ -377,8 +379,8 @@ class ToolbarItem extends ToolbarItemBase {
 			}
 		}
 
-		// Priority 2: explicit new interface (e.g. Input, TextArea)
-		if (typeof child.getArrowNavState === "function") {
+		// Priority 2: IToolbarArrowNavProvider interface (e.g. Input)
+		if (isToolbarArrowNavProvider(child)) {
 			return child.getArrowNavState();
 		}
 

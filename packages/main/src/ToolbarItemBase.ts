@@ -3,15 +3,11 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
+import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
 
 type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
 }
-
-export type ToolbarArrowNavState = {
-	atLeftEnd: boolean;
-	atRightEnd: boolean;
-};
 
 @event("close-overflow", {
 	bubbles: true,
