@@ -626,22 +626,22 @@ describe("StepInput events", () => {
 });
 
 describe("StepInput thousand separator formatting", () => {
-    it("should display value with thousand separator", () => {
-        cy.mount(
+	it("should display value with thousand separator", () => {
+		cy.mount(
 			<StepInput value={12345}></StepInput>
 		);
 
-        cy.get("[ui5-step-input]")
+		cy.get("[ui5-step-input]")
 			.ui5StepInputGetInnerInput()
 			.should($input => {
-            	const val = $input.val();
-            	// Accepts both comma and dot as separator depending on locale
-            	expect(val).to.match(/12[,.]345/);
-        });
-    });
+				const val = $input.val();
+				// Accepts both comma and dot as separator depending on locale
+				expect(val).to.match(/12[,.]345/);
+			});
+	});
 
-    it("should parse formatted value correctly", () => {
-        cy.mount(
+	it("should parse formatted value correctly", () => {
+		cy.mount(
 			<StepInput value={12345}></StepInput>
 		);
 
@@ -651,10 +651,10 @@ describe("StepInput thousand separator formatting", () => {
 		cy.get<StepInput>("@stepInput")
 			.ui5StepInputGetInnerInput()
 			.should($input => {
-            	const val = $input.val() as string;
+				const val = $input.val() as string;
 				const num = Number(val.replace(/[^\d]/g, ""));
-            	expect(num).to.equal(12345);
-        });
+				expect(num).to.equal(12345);
+			});
 
 		cy.get<StepInput>("@stepInput")
 			.realClick({ "clickCount": 2 })
@@ -666,18 +666,18 @@ describe("StepInput thousand separator formatting", () => {
 		cy.get<StepInput>("@stepInput")
 			.ui5StepInputGetInnerInput()
 			.should($input => {
-            	const val = $input.val() as string;
-            	expect(val).to.equal("10,000");
-        });
+				const val = $input.val() as string;
+				expect(val).to.equal("10,000");
+			});
 
 		cy.get<StepInput>("@stepInput")
 			.should("have.prop", "value", 10000);
-    });
+	});
 
 	it("should update input value when language is changed", () => {
 		cy.wrap({ setLanguage })
-			.then(async ({ setLanguage }) => {
-				await setLanguage("en");
+			.then(({ setLanguage }) => {
+				return setLanguage("en");
 			});
 
 		cy.mount(
@@ -691,24 +691,23 @@ describe("StepInput thousand separator formatting", () => {
 			.should($input => {
 				const val = $input.val() as string;
 				expect(val).to.equal("10,000.56");
-		});
+			});
 
 		cy.wrap({ setLanguage })
-			.then(async ({ setLanguage }) => {
-				await setLanguage("de");
-			})
-			.then(() => {
-				cy.get<StepInput>("@stepInput")
-				.ui5StepInputGetInnerInput()
-				.should($input => {
-					const val = $input.val() as string;
-					expect(val).to.equal("10.000,56");
-				});
+			.then(({ setLanguage }) => {
+				return setLanguage("de");
 			});
-		
+
+		cy.get<StepInput>("@stepInput")
+			.ui5StepInputGetInnerInput()
+			.should($input => {
+				const val = $input.val() as string;
+				expect(val).to.equal("10.000,56");
+			});
+
 		cy.wrap({ setLanguage })
-			.then(async ({ setLanguage }) => {
-				await setLanguage("en");
+			.then(({ setLanguage }) => {
+				return setLanguage("en");
 			});
 	});
 });
@@ -780,40 +779,40 @@ describe("StepInput property propagation", () => {
 	});
 
 	it("should increase value on mouse wheel up", () => {
-        cy.mount(
+		cy.mount(
 			<StepInput value={5} step={2}></StepInput>
 		);
 
-        cy.get("[ui5-step-input]")
+		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
-        cy.get<StepInput>("@stepInput")
+		cy.get<StepInput>("@stepInput")
 			.ui5StepInputScrollToChangeValue(7, false);
-    });
+	});
 
-    it("should decrease value on mouse wheel down", () => {
-        cy.mount(
+	it("should decrease value on mouse wheel down", () => {
+		cy.mount(
 			<StepInput value={5} step={2}></StepInput>
 		);
 
-        cy.get("[ui5-step-input]")
+		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
-         cy.get<StepInput>("@stepInput")
+		cy.get<StepInput>("@stepInput")
 			.ui5StepInputScrollToChangeValue(3, true);
-    });
+	});
 
-    it("should not change value when readonly", () => {
-        cy.mount(
+	it("should not change value when readonly", () => {
+		cy.mount(
 			<StepInput value={5} step={2} readonly={true}></StepInput>
 		);
 
-        cy.get("[ui5-step-input]")
+		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
-        cy.get<StepInput>("@stepInput")
+		cy.get<StepInput>("@stepInput")
 			.ui5StepInputScrollToChangeValue(5, true);
-    });
+	});
 });
 
 describe("Validation inside form", () => {
