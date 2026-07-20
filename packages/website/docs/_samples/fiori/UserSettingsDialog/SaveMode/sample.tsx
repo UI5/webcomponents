@@ -272,7 +272,7 @@ function App() {
             <Button id="reset-all-button" onClick={handleResetAllButtonClick}>
               Reset All Personalization
             </Button>
-            <Panel fixed={true} className="ua-panel">
+            <Panel fixed={true} class="ua-panel">
               <Text>
                 Reset your personalization settings for the launchpad (such as
                 theme, language, user activities, and home page content).
@@ -296,7 +296,7 @@ function App() {
                 <Text id="touch-input-label">Optimize for Touch Input</Text>
                 <Switch accessibleNameRef="touch-input-label" />
               </div>
-              <Text className="ui5-user-settings-appearance-view-additional-content-description">
+              <Text class="ui5-user-settings-appearance-view-additional-content-description">
                 Increases the size and spacing of controls to allow you to
                 interact with them more easily using your fingertip. This is
                 useful for hybrid devices that combine touch and mouse events.
@@ -352,10 +352,10 @@ function App() {
               id="language-region-container"
               className="language-region-container"
             >
-              <Label for="language" showColon={true} className="language-region-label">Display Language</Label>
+              <Label for="language" showColon={true} class="language-region-label">Display Language</Label>
               <ComboBox
                 id="language"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Language"
                 value="English (United States)"
                 onSelectionChange={handleLanguageSelectionChange}
@@ -407,10 +407,10 @@ function App() {
                   additionalText="Español (España)"
                 />
               </ComboBox>
-              <Label for="region" showColon={true} className="language-region-label">Region</Label>
+              <Label for="region" showColon={true} class="language-region-label">Region</Label>
               <ComboBox
                 id="region"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Region"
                 value="United States"
               >
@@ -429,10 +429,10 @@ function App() {
                 <ComboBoxItem text="Spanish (Mexico)" additionalText="MX" />
                 <ComboBoxItem text="Spanish (Spain)" additionalText="ES" />
               </ComboBox>
-              <Label for="dateFormat" showColon={true} className="language-region-label">Date Format</Label>
+              <Label for="dateFormat" showColon={true} class="language-region-label">Date Format</Label>
               <ComboBox
                 id="dateFormat"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Date Format"
                 value="MM.DD.YYYY"
               >
@@ -473,10 +473,10 @@ function App() {
                   additionalText="e.g. 2025-10-23"
                 />
               </ComboBox>
-              <Label for="timeFormat" showColon={true} className="language-region-label">Time Format</Label>
+              <Label for="timeFormat" showColon={true} class="language-region-label">Time Format</Label>
               <ComboBox
                 id="timeFormat"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Time Format"
                 value="12 Hour"
               >
@@ -498,10 +498,10 @@ function App() {
                   additionalText="e.g. 00:05:10 pm"
                 />
               </ComboBox>
-              <Label for="timeZone" showColon={true} className="language-region-label">Time Zone</Label>
+              <Label for="timeZone" showColon={true} class="language-region-label">Time Zone</Label>
               <ComboBox
                 id="timeZone"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Time Zone"
                 value="Eastern Standard Time (UTC -05:00)"
               >
@@ -602,10 +602,10 @@ function App() {
                   additionalText="Wellington, New Zealand"
                 />
               </ComboBox>
-              <Label for="currency" showColon={true} className="language-region-label">Currency</Label>
+              <Label for="currency" showColon={true} class="language-region-label">Currency</Label>
               <ComboBox
                 id="currency"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Currency"
                 value="USD - United States Dollar"
               >
@@ -637,10 +637,10 @@ function App() {
                 <ComboBoxItem text="South Korean Won" additionalText="KRW" />
                 <ComboBoxItem text="Turkish Lira" additionalText="TRY" />
               </ComboBox>
-              <Label for="numberFormat" showColon={true} className="language-region-label">Number Format</Label>
+              <Label for="numberFormat" showColon={true} class="language-region-label">Number Format</Label>
               <ComboBox
                 id="numberFormat"
-                className="language-region-control"
+                class="language-region-control"
                 placeholder="Number Format"
                 value="1,234.56"
               >
