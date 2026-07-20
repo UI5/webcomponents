@@ -374,16 +374,6 @@ describe("Height-based responsiveness (restricted height, wide container)", () =
 	});
 
 	it("clears the content-height cache on theme change so media re-evaluates freshly", () => {
-		// Guards against a stale-cache bug: a themeAware re-render bypasses `_invalidate` (it goes
-		// through `renderDeferred` from `reRenderAllUI5Elements`), so `onInvalidation` does not fire
-		// on a theme switch. Without an explicit `attachThemeLoaded` cache clear, a downgrade
-		// recorded under one theme's typography would persist and prevent the media from
-		// re-upgrading once a theme with tighter fonts is applied.
-		//
-		// Rather than depend on the exact pixel-boundary between two themes' typographies (which is
-		// fragile to CSS changes), this test asserts the contract directly: after a theme change,
-		// the internal `_contentHeightForMedia` cache is empty, so any previously recorded
-		// overflow height no longer blocks media selection.
 		cy.mount(
 			<div style={{ width: "800px", height: "600px" }}>
 				<IllustratedMessage />
@@ -394,7 +384,7 @@ describe("Height-based responsiveness (restricted height, wide container)", () =
 		cy.get("[ui5-illustrated-message]")
 			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
 
-		// Poison the cache with an impossibly large scene height. On the next render without a
+		// Poison the cache with an impossibly large scene content-height. On the next render without a
 		// cache clear, `_applyMedia` would treat scene as exceeding the container and downgrade.
 		cy.get("[ui5-illustrated-message]").then(($el) => {
 			const im = $el[0] as unknown as IllustratedMessage;
