@@ -15,6 +15,7 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -238,11 +239,12 @@ class SideNavigation extends UI5Element {
 
 	_handleResizeBound: () => void;
 	_fnTransitionEnd?: (event: TransitionEvent) => void;
+	_animationTimeoutId?: ReturnType<typeof setTimeout>;
 	_bAnimating = false;
 
 	onInvalidation(changeInfo: ChangeInfo) {
 		if (changeInfo.type === "property" && changeInfo.name === "collapsed") {
-			if (this.getDomRef()) {
+			if (this.getDomRef() && getAnimationMode() !== "none") {
 				this._bAnimating = true;
 			}
 		}
@@ -522,6 +524,11 @@ class SideNavigation extends UI5Element {
 			this.removeEventListener("transitionend", this._fnTransitionEnd);
 			this._fnTransitionEnd = undefined;
 		}
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+			this._animationTimeoutId = undefined;
+		}
+		this._bAnimating = false;
 	}
 
 	handleResize() {
@@ -655,14 +662,20 @@ class SideNavigation extends UI5Element {
 			this.removeEventListener("transitionend", this._fnTransitionEnd);
 		}
 
-		this._fnTransitionEnd = (oEvent: TransitionEvent) => {
-			if (oEvent.propertyName !== "width" && oEvent.propertyName !== "min-width") {
-				return;
-			}
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+		}
 
+		const cleanupAnimation = () => {
 			oDomRef.classList.remove("ui5-sn-animating");
-			this.removeEventListener("transitionend", this._fnTransitionEnd!);
-			this._fnTransitionEnd = undefined;
+			if (this._fnTransitionEnd) {
+				this.removeEventListener("transitionend", this._fnTransitionEnd);
+				this._fnTransitionEnd = undefined;
+			}
+			if (this._animationTimeoutId) {
+				clearTimeout(this._animationTimeoutId);
+				this._animationTimeoutId = undefined;
+			}
 			this._bAnimating = false;
 
 			this._getAllItems(this.items)
@@ -672,7 +685,20 @@ class SideNavigation extends UI5Element {
 				});
 		};
 
+		this._fnTransitionEnd = (oEvent: TransitionEvent) => {
+			if (oEvent.propertyName !== "width" && oEvent.propertyName !== "min-width") {
+				return;
+			}
+
+			cleanupAnimation();
+		};
+
 		this.addEventListener("transitionend", this._fnTransitionEnd);
+
+		// Fallback timeout in case transitionend doesn't fire
+		this._animationTimeoutId = setTimeout(() => {
+			cleanupAnimation();
+		}, 500);
 	}
 
 	_handleItemClick(e: KeyboardEvent | MouseEvent, item: SideNavigationSelectableItemBase) {
