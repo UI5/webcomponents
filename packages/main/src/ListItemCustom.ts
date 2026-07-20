@@ -68,7 +68,7 @@ class ListItemCustom extends ListItem {
 	 * @since 1.0.0-rc.15
 	 */
 	@property()
-	declare accessibleName?: string;
+	accessibleName?: string;
 
 	_onkeydown(e: KeyboardEvent) {
 		const isFocused = this.matches(":focus");
