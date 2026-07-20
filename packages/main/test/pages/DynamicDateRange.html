@@ -51,6 +51,15 @@
 			></ui5-dynamic-date-range>
 		</div>
 
+		<div>
+			<h3>Label For</h3>
+			<ui5-label for="ddr-with-label">Pick a date</ui5-label>
+			<ui5-dynamic-date-range
+				id="ddr-with-label"
+				options="TODAY, YESTERDAY, TOMORROW, DATE, DATERANGE"
+			></ui5-dynamic-date-range>
+		</div>
+
 		<script>
 			const lastNext = document.getElementById("last-next");
 			lastNext.addEventListener("ui5-change", (event) => {
