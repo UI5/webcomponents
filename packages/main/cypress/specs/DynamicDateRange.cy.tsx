@@ -1,4 +1,5 @@
 import DynamicDateRange, { IDynamicDateRangeOption } from '../../src/DynamicDateRange.js';
+import Label from "../../src/Label.js";
 import SingleDate from '../../src/dynamic-date-range-options/SingleDate.js';
 import DateRange from '../../src/dynamic-date-range-options/DateRange.js';
 import Today from '../../src/dynamic-date-range-options/Today.js';
@@ -270,6 +271,40 @@ describe("DynamicDateRange Component", () => {
 			.shadow()
 			.find("div[data-sap-timestamp='1747267200']")
 			.should("have.class", "ui5-dp-item--selected"); // Timestamp for May 15, 2025
+	});
+
+	it("should focus the input when the associated label is clicked", () => {
+		cy.mount(
+			<>
+				<Label for="ddr">Pick a date</Label>
+				<DynamicDateRange id="ddr" options="TODAY, DATE, DATERANGE"></DynamicDateRange>
+			</>
+		);
+
+		cy.get("[ui5-label]")
+			.realClick();
+
+		cy.get("[ui5-dynamic-date-range]")
+			.shadow()
+			.find("[ui5-input]")
+			.should("be.focused");
+	});
+
+	it("should apply accessibleNameRef as aria-label on the inner input", () => {
+		cy.mount(
+			<>
+				<Label id="ddr-label-1">Date Range</Label>
+				<Label id="ddr-label-2">Label</Label>
+				<DynamicDateRange options="TODAY, DATE" accessibleNameRef="ddr-label-1 ddr-label-2"></DynamicDateRange>
+			</>
+		);
+
+		cy.get("[ui5-dynamic-date-range]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("have.attr", "aria-label", "Date Range Label");
 	});
 });
 
