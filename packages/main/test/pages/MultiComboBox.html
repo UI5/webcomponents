@@ -894,16 +894,42 @@
 			document.getElementById("mcb-form-submit").textContent = ++submitCounter;
 		});
 
-		const fnLoadItems = (e) => {
+		// Simulates a network fetch that resolves after a delay and honors an AbortSignal.
+		// Rejects with an "AbortError" when the signal is aborted (i.e. superseded by newer input).
+		const fetchMcbItems = (value, signal) => new Promise((resolve, reject) => {
+			const timer = setTimeout(() => {
+				resolve([`${value || "New Item"}`, `${value || "New Item"} 2`]);
+			}, 2000);
+
+			signal.addEventListener("abort", () => {
+				clearTimeout(timer);
+				reject(new DOMException("Aborted", "AbortError"));
+			});
+		});
+
+		const fnLoadItems = async (e) => {
 			const mcbControl = e.target;
-			if (!mcbControl.items || mcbControl.items.length === 0) {
-				mcbControl.loading = true;
-				mcbControl.open = e.detail.shouldOpenPicker;
-				setTimeout(() => {
-					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item";
-					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = "New Item 2";
-					mcbControl.loading = false;
-				}, 3000);
+			const { reason, value, signal } = e.detail;
+
+			mcbControl.loading = true;
+			// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+			if (reason === "input") {
+				mcbControl.open = true;
+			}
+
+			try {
+				const items = await fetchMcbItems(value, signal);
+				// A newer load-items event would have aborted this signal before we get here.
+				[...mcbControl.querySelectorAll("ui5-mcb-item")].forEach(c => mcbControl.removeChild(c));
+				items.forEach((text) => {
+					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = text;
+				});
+				mcbControl.loading = false;
+			} catch (err) {
+				// Superseded by a newer load-items event - a fresh request is now in charge of loading state.
+				if (err.name !== "AbortError") {
+					throw err;
+				}
 			}
 		};
 

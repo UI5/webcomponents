@@ -25,19 +25,36 @@
             "Serbia", "Singapore", "South Africa", "Spain", "Sweden", "Switzerland", "Thailand",
             "Turkey", "Ukraine", "United Kingdom", "United States", "Vietnam"];
 
-        mcb.addEventListener("load-items", (e) => {
-            const { shouldOpenPicker } = e.detail;
-            const value = mcb.value;
+        // Simulates a network request that resolves after a delay and honors an AbortSignal.
+        // Rejects with an "AbortError" when the signal is aborted (superseded by newer input).
+        const fetchCountries = (value, signal) => new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                resolve(COUNTRIES.filter(c => c.toLowerCase().includes(value.toLowerCase())));
+            }, 500);
+
+            signal.addEventListener("abort", () => {
+                clearTimeout(timer);
+                reject(new DOMException("Aborted", "AbortError"));
+            });
+        });
+
+        mcb.addEventListener("load-items", async (e) => {
+            const { reason, value, signal } = e.detail;
 
             mcb.loading = true;
+            // On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+            if (reason === "input") {
+                mcb.open = true;
+            }
 
+            // Preserve the current selection so it survives re-populating the list.
             const selectedTexts = Array.from(mcb.querySelectorAll("ui5-mcb-item[selected]"))
                 .map(item => item.getAttribute("text"));
 
-            mcb.innerHTML = "";
-
-            setTimeout(() => {
-                const matches = COUNTRIES.filter(c => c.toLowerCase().includes(value.toLowerCase()));
+            try {
+                const matches = await fetchCountries(value, signal);
+                // A newer load-items event would have aborted this signal before we reach here.
+                mcb.innerHTML = "";
                 matches.forEach(country => {
                     const item = document.createElement("ui5-mcb-item");
                     item.setAttribute("text", country);
@@ -47,10 +64,12 @@
                     mcb.appendChild(item);
                 });
                 mcb.loading = false;
-                if (shouldOpenPicker) {
-                    mcb.open = true;
+            } catch (err) {
+                // Superseded by a newer load-items event - a fresh request now owns the loading state.
+                if (err.name !== "AbortError") {
+                    throw err;
                 }
-            }, 500);
+            }
         });
     </script>
     <!-- playground-fold -->

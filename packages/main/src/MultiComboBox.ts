@@ -62,7 +62,7 @@ import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBo
 import "./MultiComboBoxItemCustom.js";
 import MultiComboBoxItemGroup, { isInstanceOfMultiComboBoxItemGroup } from "./MultiComboBoxItemGroup.js";
 import ListItemGroup from "./ListItemGroup.js";
-import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading, { type LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
 import Tokenizer, { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
 import Token from "./Token.js";
@@ -155,7 +155,9 @@ type MultiComboBoxValueStateChangeEventDetail = {
 }
 
 type MultiComboBoxLoadItems = {
-	shouldOpenPicker: boolean;
+	reason: LoadItemsReason;
+	value: string;
+	signal: AbortSignal;
 }
 
 /**
@@ -275,7 +277,9 @@ type MultiComboBoxLoadItems = {
 /**
  * Fired when the application should provide items for the component to render.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
- * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
+ * @param {string} reason the reason the event was fired - "input" when text is typed, "open" when the picker is about to open
+ * @param {string} value the value of the input during the event firing
+ * @param {AbortSignal} signal aborted when a newer `load-items` event is fired, so the application can cancel an outdated fetch
  * @public
  */
 @event("load-items", {
@@ -669,7 +673,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadItems: shouldOpenPicker => this.fireDecoratorEvent("load-items", { shouldOpenPicker }),
+			fireLoadItems: (reason, signal) => this.fireDecoratorEvent("load-items", { reason, value: this.value, signal }),
 			loadingMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADING),
 			loadedMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED),
 			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),

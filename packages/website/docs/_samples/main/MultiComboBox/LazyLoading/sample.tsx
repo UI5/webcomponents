@@ -25,23 +25,42 @@ function App() {
   const [selectedValues, setSelectedValues] = useState([]);
   const mcbRef = useRef(null);
 
-  const handleLoadItems = useCallback((e) => {
-    const { shouldOpenPicker } = e.detail;
-    const value = mcbRef.current?.value ?? "";
+  // Simulates a network request that resolves after a delay and honors an AbortSignal.
+  // Rejects with an "AbortError" when the signal is aborted (superseded by newer input).
+  const fetchCountries = (value, signal) =>
+    new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        resolve(
+          COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
+        );
+      }, 500);
+
+      signal.addEventListener("abort", () => {
+        clearTimeout(timer);
+        reject(new DOMException("Aborted", "AbortError"));
+      });
+    });
+
+  const handleLoadItems = useCallback(async (e) => {
+    const { reason, value, signal } = e.detail;
 
     setLoading(true);
-    setItems([]);
+    // On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+    if (reason === "input") {
+      setOpen(true);
+    }
 
-    setTimeout(() => {
-      const matches = COUNTRIES.filter((c) =>
-        c.toLowerCase().includes(value.toLowerCase())
-      );
+    try {
+      const matches = await fetchCountries(value, signal);
+      // A newer load-items event would have aborted this signal before we reach here.
       setItems(matches);
       setLoading(false);
-      if (shouldOpenPicker) {
-        setOpen(true);
+    } catch (err) {
+      // Superseded by a newer load-items event - a fresh request now owns the loading state.
+      if (err.name !== "AbortError") {
+        throw err;
       }
-    }, 500);
+    }
   }, []);
 
   const handleSelectionChange = useCallback((e) => {

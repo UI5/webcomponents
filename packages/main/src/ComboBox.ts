@@ -10,7 +10,7 @@ import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.j
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading, { type LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -141,7 +141,9 @@ type ComboBoxSelectionChangeEventDetail = {
 };
 
 type ComboBoxLoadItems = {
-	shouldOpenPicker: boolean;
+	reason: LoadItemsReason;
+	value: string;
+	signal: AbortSignal;
 };
 
 /**
@@ -270,7 +272,9 @@ type ComboBoxLoadItems = {
 /**
  * Fired when the application should provide items for the component to render.
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
- * @param {boolean} shouldOpenPicker true if the applications should explicitly open the picker
+ * @param {string} reason the reason the event was fired - "input" when text is typed, "open" when the picker is about to open
+ * @param {string} value value of the input
+ * @param {AbortSignal} signal aborted when a newer `load-items` event is fired, so the application can cancel an outdated fetch
  * @public
  */
 @event("load-items", {
@@ -584,7 +588,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadItems: shouldOpenPicker => this.fireDecoratorEvent("load-items", { shouldOpenPicker }),
+			fireLoadItems: (reason, signal) => this.fireDecoratorEvent("load-items", { reason, value: this.value, signal }),
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),

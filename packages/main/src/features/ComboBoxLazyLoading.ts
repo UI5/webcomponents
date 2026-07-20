@@ -4,12 +4,13 @@ import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 export const LOADING_DELAY = 100;
 
 type AnnounceState = "Loading" | "Loaded" | "None";
+type LoadItemsReason = "input" | "open";
 
 export interface LoadingDelegateConfig {
 	getItemCount: () => number;
 	isLoading: () => boolean;
 	isOpen: () => boolean;
-	fireLoadItems: (shouldOpenPicker: boolean) => void;
+	fireLoadItems: (reason: LoadItemsReason, signal: AbortSignal) => void;
 	loadingMessage: () => string;
 	loadedMessage: () => string;
 	loadedItemMessage: () => string;
@@ -21,6 +22,7 @@ export default class ComboBoxLazyLoading {
 	_config: LoadingDelegateConfig;
 	_prevLoading: boolean;
 	_announceLoading: AnnounceState;
+	_abortController?: AbortController;
 
 	constructor(config: LoadingDelegateConfig) {
 		this._config = config;
@@ -55,18 +57,26 @@ export default class ComboBoxLazyLoading {
 		this._announceLoading = "None";
 	}
 
+	// Aborts the AbortSignal of the previous load-items event (so the app can cancel
+	// an outdated fetch), creates a fresh controller, and fires the new load-items.
+	_fireLoadItems(reason: LoadItemsReason) {
+		this._abortController?.abort();
+		this._abortController = new AbortController();
+		this._config.fireLoadItems(reason, this._abortController.signal);
+	}
+
 	// Fires load-items event when the picker is about to open and there are no items yet.
 	// shouldOpenPicker=false: caller will open the picker itself (e.g. arrow click).
 	// shouldOpenPicker=true: app must open the picker when loading starts.
 	fireOnDropdownOpen() {
 		if (!this._config.isOpen() && !this._config.isLoading() && this._config.getItemCount() === 0) {
-			this._config.fireLoadItems(false);
+			this._fireLoadItems("open");
 		}
 	}
 
 	fireOnInput() {
-		if (!this._config.isLoading()) {
-			this._config.fireLoadItems(true);
-		}
+		this._fireLoadItems("input");
 	}
 }
+
+export type { LoadItemsReason };

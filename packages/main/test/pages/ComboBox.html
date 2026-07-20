@@ -740,18 +740,49 @@
 			control.value = "";
 		} 
 
-		const fnLoadItems = (e) => { 
+		// Simulates a network fetch that resolves after a delay and honors an AbortSignal.
+		// Rejects with an "AbortError" when the signal is aborted (i.e. superseded by newer input).
+		const fetchItems = (value, signal) => new Promise((resolve, reject) => {
+			const timer = setTimeout(() => {
+				const items = [];
+				for (let i = 0; i < 5; i++) {
+					items.push(`${value || "Item"} #${i + 1}`);
+				}
+				resolve(items);
+			}, 2000);
+
+			signal.addEventListener("abort", () => {
+				clearTimeout(timer);
+				reject(new DOMException("Aborted", "AbortError"));
+			});
+		});
+
+		// Removes the loaded items without touching the current value.
+		const removeItems = (control) => {
+			[...control.querySelectorAll("ui5-cb-item, ui5-cb-item-group")].forEach(c => control.removeChild(c));
+		};
+
+		const fnLoadItems = async (e) => {
 			const control = e.target;
-			const { value, items } = control;
-			if(!items || !items.length){
-				control.loading = true;
-				control.open = e.detail.shouldOpenPicker;
-				setTimeout(() => {
-					const group = createGroupItem(control, 'Group 1');
-					createItem(group, `Child Item 1`);
-					createItem(group, `Chidl Item 2`);
-					control.loading = false;
-				}, 3000);
+			const { reason, value, signal } = e.detail;
+
+			control.loading = true;
+			// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+			if (reason === "input") {
+				control.open = true;
+			}
+
+			try {
+				const items = await fetchItems(value, signal);
+				// A newer load-items event would have aborted this signal before we get here.
+				removeItems(control);
+				items.forEach((text) => createItem(control, text));
+				control.loading = false;
+			} catch (err) {
+				// Superseded by a newer load-items event - a fresh request is now in charge of loading state.
+				if (err.name !== "AbortError") {
+					throw err;
+				}
 			}
 		};
 
