@@ -384,7 +384,6 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	get _displayValue() {
 		if (this._languageChanged) {
 			this._languageChanged = false;
-			this.valueState = ValueState.None; // to reset the value state visual
 			return this._formatNumber(this.value);
 		}
 		// For the cases when there is set value precision but the input value is not with correct precision we don't need to format it
@@ -437,6 +436,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 			this._languageChanged = true;
 			this._delimiter = undefined;
 			this._groupSeparator = undefined;
+			this.valueState = ValueState.None; // to reset the value state visual
 
 			return Promise.resolve();
 		};
