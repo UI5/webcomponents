@@ -427,6 +427,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 
 	onExitDOM() {
 		this._cleanupLanguageChangeHandler();
+		this._resetSpin();
 	}
 
 	_setupLanguageChangeHandler() {
