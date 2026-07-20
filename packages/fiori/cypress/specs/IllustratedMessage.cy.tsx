@@ -2,6 +2,7 @@ import IllustratedMessage from "../../src/IllustratedMessage.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import "@ui5/webcomponents-fiori/dist/illustrations/AllIllustrations.js"
 import Panel from "@ui5/webcomponents/dist/Panel.js";
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 describe("Accessibility", () => {
 	it("should add aria-hidden and role=presetation to the SVG when decorative is true", () => {
@@ -262,6 +263,12 @@ describe("Width-based responsiveness (auto height)", () => {
 });
 
 describe("Height-based responsiveness (restricted height, wide container)", () => {
+	after(() => {
+		// Restore theme so that a switch performed inside this describe does not bleed into
+		// subsequent specs. Mirrors the pattern in IllustratedMessageV5.cy.tsx.
+		cy.wrap({ setTheme }).invoke("setTheme", "sap_horizon");
+	});
+
 	it("media is scene when container height is 600px", () => {
 		cy.mount(
 			<div style={{ width: "800px", height: "600px" }}>
@@ -364,6 +371,52 @@ describe("Height-based responsiveness (restricted height, wide container)", () =
 				const scrollHeight = $illustration[0].scrollHeight;
 				expect(scrollHeight).to.not.equal(0);
 			});
+	});
+
+	it("clears the content-height cache on theme change so media re-evaluates freshly", () => {
+		// Guards against a stale-cache bug: a themeAware re-render bypasses `_invalidate` (it goes
+		// through `renderDeferred` from `reRenderAllUI5Elements`), so `onInvalidation` does not fire
+		// on a theme switch. Without an explicit `attachThemeLoaded` cache clear, a downgrade
+		// recorded under one theme's typography would persist and prevent the media from
+		// re-upgrading once a theme with tighter fonts is applied.
+		//
+		// Rather than depend on the exact pixel-boundary between two themes' typographies (which is
+		// fragile to CSS changes), this test asserts the contract directly: after a theme change,
+		// the internal `_contentHeightForMedia` cache is empty, so any previously recorded
+		// overflow height no longer blocks media selection.
+		cy.mount(
+			<div style={{ width: "800px", height: "600px" }}>
+				<IllustratedMessage />
+			</div>
+		);
+
+		// Baseline: scene fits comfortably in 800×600.
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+
+		// Poison the cache with an impossibly large scene height. On the next render without a
+		// cache clear, `_applyMedia` would treat scene as exceeding the container and downgrade.
+		cy.get("[ui5-illustrated-message]").then(($el) => {
+			const im = $el[0] as unknown as IllustratedMessage;
+			im._contentHeightForMedia[IllustratedMessage.MEDIA.SCENE] = 99999;
+		});
+
+		// Fire a theme change. The fix installs an `attachThemeLoaded` listener that clears the
+		// cache before the framework's themeAware re-render measures against the new theme.
+		cy.wrap({ setTheme }).invoke("setTheme", "sap_fiori_3");
+
+		// If the cache was cleared, the poisoned entry is gone and scene stays selected.
+		// Without the fix, the stale entry blocks scene and media downgrades to dialog.
+		cy.get("[ui5-illustrated-message]")
+			.should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+
+		cy.get("[ui5-illustrated-message]").then(($el) => {
+			const im = $el[0] as unknown as IllustratedMessage;
+			// The cache was cleared and then re-populated only if the (fresh) content actually
+			// overflows the container. In 800×600 nothing overflows, so no scene entry should
+			// remain from the poisoned value.
+			expect(im._contentHeightForMedia[IllustratedMessage.MEDIA.SCENE]).to.be.undefined;
+		});
 	});
 });
 

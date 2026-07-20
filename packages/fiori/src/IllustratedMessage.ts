@@ -6,6 +6,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { attachThemeLoaded, detachThemeLoaded } from "@ui5/webcomponents-base/dist/Theming.js";
 import { getIllustrationDataSync, getIllustrationData } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -277,11 +278,17 @@ class IllustratedMessage extends UI5Element {
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
 	_handleResize: ResizeObserverCallback;
+	_handleThemeLoaded: () => void;
 
 	constructor() {
 		super();
 
 		this._handleResize = this.handleResize.bind(this);
+		this._handleThemeLoaded = () => {
+			// Cached content-height are theme-dependent, so clear them when the theme changes.
+			// This hook is needed because `onInvalidation` does not fire when the theme changes
+			this._contentHeightForMedia = {};
+		};
 		// this will store the height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
 		this._contentHeightForMedia = {};
 	}
@@ -358,10 +365,12 @@ class IllustratedMessage extends UI5Element {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResize);
+		attachThemeLoaded(this._handleThemeLoaded);
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResize);
+		detachThemeLoaded(this._handleThemeLoaded);
 	}
 
 	onInvalidation(changeInfo: ChangeInfo) {
@@ -387,6 +396,11 @@ class IllustratedMessage extends UI5Element {
 	 * @since 1.5.0
 	 */
 	_checkHeightConstraints() {
+		// The `scrollHeight > clientHeight` guard is load-bearing: the cache must be populated ONLY
+		// when the content genuinely overflows the container. When the host container has
+		// `height: auto`, its clientHeight equals the content height and there is by definition no
+		// real constraint — recording that height would falsely poison `_contentHeightForMedia` and
+		// cause spurious downgrades on the next render (e.g. after a width shrink-and-grow).
 		if (this.media && this.scrollHeight > this.clientHeight) { // needs vertical responsiveness
 			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
 			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
