@@ -16,6 +16,7 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			draggable={this.movable}
 			role={injectedProps?.role}
 			title={injectedProps?.title}
+			aria-selected={injectedProps?.role === "option" ? this.selected : undefined}
 			onFocusIn={this._onfocusin}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
