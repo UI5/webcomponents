@@ -1,11 +1,12 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import { attachThemeLoaded, detachThemeLoaded } from "@ui5/webcomponents-base/dist/Theming.js";
 import { getIllustrationDataSync, getIllustrationData } from "@ui5/webcomponents-base/dist/asset-registries/Illustrations.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -275,20 +276,21 @@ class IllustratedMessage extends UI5Element {
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
-	_lastKnownOffsetWidthForMedia: Record<string, number>;
-	_lastKnownOffsetHeightForMedia: Record<string, number>;
-	_lastKnownMedia: string;
+	_contentHeightForMedia: Record<string, number>;
 	_handleResize: ResizeObserverCallback;
+	_handleThemeLoaded: () => void;
 
 	constructor() {
 		super();
 
 		this._handleResize = this.handleResize.bind(this);
-		// this will store the last known offsetWidth of the IllustratedMessage DOM node for a given media (e.g. "Spot")
-		this._lastKnownOffsetWidthForMedia = {};
-		this._lastKnownOffsetHeightForMedia = {};
-		// this will store the last known media, in order to detect if IllustratedMessage has been hidden by expand/collapse container
-		this._lastKnownMedia = "base";
+		this._handleThemeLoaded = () => {
+			// Cached content-height are theme-dependent, so clear them when the theme changes.
+			// This hook is needed because `onInvalidation` does not fire when the theme changes
+			this._contentHeightForMedia = {};
+		};
+		// this will store the height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
+		this._contentHeightForMedia = {};
 	}
 
 	static get BREAKPOINTS() {
@@ -297,15 +299,6 @@ class IllustratedMessage extends UI5Element {
 			SPOT: 360,
 			DOT: 260,
 			BASE: 160,
-		};
-	}
-
-	static get BREAKPOINTS_HEIGHT() {
-		return {
-			DIALOG: 415,
-			SPOT: 284,
-			DOT: 207,
-			BASE: 61,
 		};
 	}
 
@@ -372,54 +365,79 @@ class IllustratedMessage extends UI5Element {
 
 	onEnterDOM() {
 		ResizeHandler.register(this, this._handleResize);
+		attachThemeLoaded(this._handleThemeLoaded);
 	}
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResize);
+		detachThemeLoaded(this._handleThemeLoaded);
+	}
+
+	onInvalidation(changeInfo: ChangeInfo) {
+		if (
+			(changeInfo.type === "property" && ["name", "titleText", "subtitleText"].includes(changeInfo.name))
+			|| (changeInfo.type === "slot" && ["title", "subtitle", "default"].includes(changeInfo.name))
+		) {
+			this._contentHeightForMedia = {};
+		}
 	}
 
 	handleResize() {
-		if (this.design !== IllustrationMessageDesign.Auto) {
-			this._adjustHeightToFitContainer();
-			return;
+		if (this.design === IllustrationMessageDesign.Auto) {
+			this._checkHeightConstraints();
+			this._applyMedia();
 		}
-
-		this._applyMedia();
-		window.requestAnimationFrame(this._adjustHeightToFitContainer.bind(this));
 	}
 
-	_applyMedia(heightChange?: boolean) {
-		const currOffsetWidth = this.offsetWidth,
-			currOffsetHeight = this.offsetHeight;
+	/**
+	 * Checks if the current height of the component is enough to display the illustration, title, subtitle and actions.
+	 * If not, the minimum required height for the current media is stored in the `_contentHeightForMedia` object.
+	 * @private
+	 * @since 1.5.0
+	 */
+	_checkHeightConstraints() {
+		// The `scrollHeight > clientHeight` guard is load-bearing: the cache must be populated ONLY
+		// when the content genuinely overflows the container. When the host container has
+		// `height: auto`, its clientHeight equals the content height and there is by definition no
+		// real constraint — recording that height would falsely poison `_contentHeightForMedia` and
+		// cause spurious downgrades on the next render (e.g. after a width shrink-and-grow).
+		if (this.media && this.scrollHeight > this.clientHeight) { // needs vertical responsiveness
+			const innerEl = this.shadowRoot!.querySelector<HTMLElement>(".ui5-illustrated-message-inner");
+			const innerElHeight = innerEl ? innerEl.scrollHeight : 0;
+			innerElHeight && (this._contentHeightForMedia[this.media] = innerElHeight);
+		}
+	}
 
-		const design = heightChange ? currOffsetHeight : currOffsetWidth,
-			oBreakpounts = heightChange ? IllustratedMessage.BREAKPOINTS_HEIGHT : IllustratedMessage.BREAKPOINTS;
-		let newMedia = "";
+	_applyMedia() {
+		const width = this.offsetWidth;
+		let media = "",
+			mediaIndex = -1;
 
-		if (design <= oBreakpounts.BASE) {
-			newMedia = IllustratedMessage.MEDIA.BASE;
-		} else if (design <= oBreakpounts.DOT) {
-			newMedia = IllustratedMessage.MEDIA.DOT;
-		} else if (design <= oBreakpounts.SPOT) {
-			newMedia = IllustratedMessage.MEDIA.SPOT;
-		} else if (design <= oBreakpounts.DIALOG) {
-			newMedia = IllustratedMessage.MEDIA.DIALOG;
+		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
+			media = IllustratedMessage.MEDIA.BASE;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.DOT) {
+			media = IllustratedMessage.MEDIA.DOT;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.SPOT) {
+			media = IllustratedMessage.MEDIA.SPOT;
+		} else if (width <= IllustratedMessage.BREAKPOINTS.DIALOG) {
+			media = IllustratedMessage.MEDIA.DIALOG;
 		} else {
-			newMedia = IllustratedMessage.MEDIA.SCENE;
+			media = IllustratedMessage.MEDIA.SCENE;
 		}
-		const lastKnownOffsetWidth = this._lastKnownOffsetWidthForMedia[newMedia],
-			lastKnownOffsetHeight = this._lastKnownOffsetHeightForMedia[newMedia];
-		 // prevents infinite resizing, when same width is detected for the same media,
-		 // excluding the case in which, the control is placed inside expand/collapse container
-		if (!(lastKnownOffsetWidth && currOffsetWidth === lastKnownOffsetWidth
-			&& lastKnownOffsetHeight && currOffsetHeight === lastKnownOffsetHeight)
-			|| this._lastKnownOffsetWidthForMedia[this._lastKnownMedia] === 0
-			|| this._lastKnownOffsetHeightForMedia[this._lastKnownMedia] === 0) {
-			this.media = newMedia;
-			this._lastKnownOffsetWidthForMedia[newMedia] = currOffsetWidth;
-			this._lastKnownOffsetHeightForMedia[newMedia] = currOffsetHeight;
-			this._lastKnownMedia = newMedia;
+
+		mediaIndex = Object.values(IllustratedMessage.MEDIA).indexOf(media);
+
+		while (mediaIndex > 0 && this._mediaExceedsContainerHeight(media)) {
+			mediaIndex--;
+			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
+
+		this.media = media;
+	}
+
+	_mediaExceedsContainerHeight(media: string): boolean {
+		const containerHeight = this.clientHeight || 0;
+		return !!this._contentHeightForMedia[media] && containerHeight < this._contentHeightForMedia[media];
 	}
 
 	_setSVGAccAttrs() {
@@ -446,21 +464,12 @@ class IllustratedMessage extends UI5Element {
 		}
 	}
 
-	_adjustHeightToFitContainer() {
-		const illustrationWrapper = <HTMLElement> this.shadowRoot!.querySelector(".ui5-illustrated-message-illustration"),
-			illustration = illustrationWrapper.querySelector("svg");
-
-		if (illustration) {
-			illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", false);
-			if (this.getDomRef()!.scrollHeight > this.getDomRef()!.offsetHeight) {
-				illustrationWrapper.classList.toggle("ui5-illustrated-message-illustration-fit-content", true);
-				this._applyMedia(true /* height change */);
-			}
-		}
-	}
-
 	onAfterRendering() {
 		this._setSVGAccAttrs();
+		if (this.design === IllustrationMessageDesign.Auto) {
+			this._checkHeightConstraints();
+			this._applyMedia();
+		}
 	}
 
 	/**
