@@ -3247,6 +3247,31 @@ describe("Accessibility", () => {
 			.find(".ui5-checkbox-root")
 			.should("not.have.attr", "tabindex");
 	});
+
+	it("Should announce selected state to screen readers", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Selected Item"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Unselected Item"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(1)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Not Selected");
+	});
 });
 
 describe("Grouping", () => {

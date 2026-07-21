@@ -35,6 +35,7 @@ describe("Initial rendering", () => {
 		cy.get("@dialog").should("exist");
 		cy.get("@dialog").find("[ui5-title]").contains("Settings");
 		cy.get("@dialog").find("[ui5-title]").should("have.length", 1);
+		cy.get("@dialog").find("[ui5-title]").should("have.attr", "size", "H5");
 	});
 
 	it("tests show-search-field provided", () => {
@@ -180,6 +181,7 @@ describe("Initial rendering", () => {
 		cy.get("@settingItem").shadow().find("[ui5-title]").as("title");
 		cy.get("@title").should("have.length", 1);
 		cy.get("@title").contains("Header title | Setting 3");
+		cy.get("@title").should("have.attr", "size", "H5");
 	});
 
 	it("tests setting tabs", () => {
@@ -1047,10 +1049,11 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
         cy.get("@item").shadow().find("[ui5-avatar]").as("avatar");
         cy.get("@avatar").should("exist");
-        cy.get("@avatar").should("have.length", 2); // Two avatars: one for cozy, one for compact mode
-        cy.get("@avatar").first().should("have.attr", "icon", "palette");
-        cy.get("@avatar").first().should("have.attr", "shape", "Square");
-        cy.get("@avatar").first().should("have.attr", "color-scheme", "Accent7");
+        cy.get("@avatar").should("have.length", 1);
+        cy.get("@avatar").should("have.attr", "icon", "palette");
+        cy.get("@avatar").should("have.attr", "shape", "Square");
+        cy.get("@avatar").should("have.attr", "color-scheme", "Accent7");
+        cy.get("@avatar").should("have.attr", "size", "S");
     });
 
     it("tests appearance view item text displayed", () => {
