@@ -36,7 +36,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 				onClose={this._afterClosePicker}
 				open={this.open}
 				opener={this}
-				accessibleName={this._tabularSuggestionsAccessibleName}
+				accessibleName={this.suggestionsText}
 			>
 				{this._isPhone &&
 					<div slot="header" class="ui5-responsive-popover-header">
@@ -147,7 +147,7 @@ function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
 			<Table
 				class="ui5-tabular-suggestions-table"
 				overflowMode={this.overflowMode}
-				accessibleName={this._tabularSuggestionsAccessibleName}
+				accessibleName={this.suggestionsText}
 				onRowClick={this._onTableRowClick}
 			>
 				<TableHeaderRow slot="headerRow" sticky>
@@ -179,10 +179,8 @@ function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
 						interactive
 					>
 						{processedRow.cells.map((cell, cellIndex) => (
-							<TableCell
-								key={`cell-${rowIndex}-${cellIndex}`}
-								dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}
-							>
+							<TableCell key={`cell-${rowIndex}-${cellIndex}`}>
+								<span dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}></span>
 							</TableCell>
 						))}
 					</TableRow>

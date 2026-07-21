@@ -48,12 +48,11 @@
 	</style>
 </head>
 <body>
-	<ui5-title level="H1">TabularInput Component - POC Test Page</ui5-title>
+	<ui5-title level="H1">TabularInput Component - Test Page</ui5-title>
 	<ui5-text>This page demonstrates the TabularInput component with tabular suggestions.</ui5-text>
 
-	<!-- Example 1: Basic Product Search -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 1: Product Search</ui5-title>
+		<ui5-title class="section-title" level="H2">Product Search</ui5-title>
 		<p class="description">
 			Search for products. The suggestions show Product ID, Name, Category, and Price in columns.
 			Try typing "Laptop" or "Phone". Matching text is highlighted in the suggestions.
@@ -70,7 +69,6 @@
 			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
 
-			<!-- Suggestion Rows -->
 			<ui5-table-row slot="suggestionRows">
 				<ui5-table-cell>PRD-001</ui5-table-cell>
 				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
@@ -106,9 +104,8 @@
 		<div class="output" id="productOutput">Selected: (none)</div>
 	</div>
 
-	<!-- Example 2: Employee Directory -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 2: Employee Directory</ui5-title>
+		<ui5-title class="section-title" level="H2">Employee Directory</ui5-title>
 		<p class="description">
 			Search for employees by name. Typed text is highlighted in all cells.
 		</p>
@@ -118,13 +115,11 @@
 			placeholder="Search employees..."
 			show-suggestions
 		>
-			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" width="120px">Department</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Location</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" width="100px">Extension</ui5-table-header-cell>
 
-			<!-- Suggestion Rows -->
 			<ui5-table-row slot="suggestionRows">
 				<ui5-table-cell>John Smith</ui5-table-cell>
 				<ui5-table-cell>Engineering</ui5-table-cell>
@@ -160,9 +155,8 @@
 		<div class="output" id="employeeOutput">Selected: (none)</div>
 	</div>
 
-	<!-- Example 3: Popin Mode (Narrow Container) -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 3: Popin Overflow Mode (Default)</ui5-title>
+		<ui5-title class="section-title" level="H2">Popin Overflow Mode (Default)</ui5-title>
 		<p class="description">
 			This example uses <code>overflow-mode="Popin"</code> (the default) in a narrow container.
 			Columns will stack vertically when there's not enough space.
@@ -175,13 +169,11 @@
 				show-suggestions
 				overflow-mode="Popin"
 			>
-				<!-- Column Headers with importance for popin priority -->
 				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="0">Code</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" min-width="120px" importance="1">Description</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="2" popin-text="Qty">Quantity</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="3" popin-text="Status">Status</ui5-table-header-cell>
 
-				<!-- Suggestion Rows -->
 				<ui5-table-row slot="suggestionRows">
 					<ui5-table-cell>A001</ui5-table-cell>
 					<ui5-table-cell>Widget Alpha</ui5-table-cell>
@@ -206,9 +198,8 @@
 		<div class="output" id="popinOutput">Selected: (none)</div>
 	</div>
 
-	<!-- Example 4: Scroll Overflow Mode -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 4: Scroll Overflow Mode</ui5-title>
+		<ui5-title class="section-title" level="H2">Scroll Overflow Mode</ui5-title>
 		<p class="description">
 			This example uses <code>overflow-mode="Scroll"</code> in a narrow container.
 			A horizontal scrollbar appears when columns don't fit.
@@ -221,13 +212,11 @@
 				show-suggestions
 				overflow-mode="Scroll"
 			>
-				<!-- Column Headers -->
 				<ui5-table-header-cell slot="suggestionColumns" width="80px">Code</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" width="150px">Description</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" width="80px">Quantity</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" width="100px">Status</ui5-table-header-cell>
 
-				<!-- Suggestion Rows -->
 				<ui5-table-row slot="suggestionRows">
 					<ui5-table-cell>A001</ui5-table-cell>
 					<ui5-table-cell>Widget Alpha</ui5-table-cell>
@@ -253,9 +242,8 @@
 	</div>
 
 
-	<!-- Example 5: With Clear Icon -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 6: With Clear Icon</ui5-title>
+		<ui5-title class="section-title" level="H2">With Clear Icon</ui5-title>
 		<p class="description">
 			TabularInput with show-clear-icon enabled for easy value clearing.
 		</p>
@@ -266,12 +254,10 @@
 			show-suggestions
 			show-clear-icon
 		>
-			<!-- Column Headers -->
 			<ui5-table-header-cell slot="suggestionColumns" width="80px">ID</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" min-width="150px">Task</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" width="100px">Priority</ui5-table-header-cell>
 
-			<!-- Suggestion Rows -->
 			<ui5-table-row slot="suggestionRows">
 				<ui5-table-cell>T-101</ui5-table-cell>
 				<ui5-table-cell>Review PR #123</ui5-table-cell>
@@ -354,9 +340,8 @@
 		</div>
 	</div>
 
-	<!-- Example 7: Value State with Custom Message -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 8: Value State with Custom Message</ui5-title>
+		<ui5-title class="section-title" level="H2">Value State with Custom Message and suggestions</ui5-title>
 		<p class="description">
 			Custom value state messages are shown in a popover when the input is focused.
 			Focus on each input to see the message.
@@ -367,6 +352,7 @@
 				id="negativeMessage"
 				placeholder="Error with message..."
 				value-state="Negative"
+				show-suggestions
 			>
 				<div slot="valueStateMessage">
 					This product ID is invalid. Please enter a valid ID starting with "PRD-".
@@ -383,6 +369,7 @@
 				id="criticalMessage"
 				placeholder="Warning with message..."
 				value-state="Critical"
+				show-suggestions
 			>
 				<div slot="valueStateMessage">
 					Stock is running low. Consider reordering soon.
@@ -413,9 +400,8 @@
 		</div>
 	</div>
 
-	<!-- Example 8: Value State with Formatted Text -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 9: Value State with Formatted Text</ui5-title>
+		<ui5-title class="section-title" level="H2">Value State with Formatted Text</ui5-title>
 		<p class="description">
 			Value state messages can contain formatted text with bold, italic, and other styling.
 		</p>
@@ -461,9 +447,8 @@
 		</div>
 	</div>
 
-	<!-- Example 9: Value State with Links -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 10: Value State with Links</ui5-title>
+		<ui5-title class="section-title" level="H2">Value State with Links</ui5-title>
 		<p class="description">
 			Value state messages can contain interactive links for help, documentation, or actions.
 			Focus on the input to see the message with links.
@@ -531,9 +516,8 @@
 		</div>
 	</div>
 
-	<!-- Example 11: Disabled and Readonly -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 11: Disabled and Readonly</ui5-title>
+		<ui5-title class="section-title" level="H2">Disabled and Readonly</ui5-title>
 		<p class="description">
 			Disabled inputs cannot be focused or edited. Readonly inputs can be focused but not edited.
 		</p>
@@ -577,9 +561,8 @@
 		</div>
 	</div>
 
-	<!-- Example 12: Many Suggestions (112 rows) -->
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Example 12: Many Suggestions (112 rows)</ui5-title>
+		<ui5-title class="section-title" level="H2">Many Suggestions (112 rows)</ui5-title>
 		<p class="description">
 			This example demonstrates performance with a large number of suggestions (112 rows).
 			The popover should handle scrolling smoothly.
@@ -632,7 +615,7 @@
 	</script>
 
 	<script>
-		document.querySelectorAll('[ui5-tabular-input]').forEach(input => {
+		document.querySelectorAll('ui5-tabular-input').forEach(input => {
 			const inputId = input.getAttribute('id') || '';
 			const output = inputId.includes('Search')
 				? document.getElementById(inputId.replace('Search', 'Output'))
@@ -645,16 +628,15 @@
 					const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
 					output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
 				}
-				console.log('selection-change event:', e.detail);
 			});
+		});
 
-			input.addEventListener('change', (e) => {
-				console.log('change event - value:', e.target.value);
-			});
-
-			input.addEventListener('input', (e) => {
-				console.log('input event - value:', e.target.value);
-			});
+		// Logging for first example
+		document.getElementById('productSearch').addEventListener('selection-change', (e) => {
+			console.log('selection-change event:', e.detail);
+		});
+		document.getElementById('productSearch').addEventListener('change', (e) => {
+			console.log('change event - value:', e.target.value);
 		});
 	</script>
 </body>

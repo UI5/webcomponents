@@ -280,6 +280,37 @@ describe("TabularInput - Row Selection", () => {
 		cy.realPress("ArrowDown");
 		cy.get("@onSelectionChange").should("have.been.called");
 	});
+
+	it("does not fire duplicate selection-change when pressing Enter on already focused row", () => {
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
+		cy.mount(
+			<TabularInput showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>Jane</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		// Navigate to first row - this fires selection-change once
+		cy.realPress("ArrowDown");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
+
+		// Press Enter on the already focused row - should NOT fire selection-change again
+		cy.realPress("Enter");
+		cy.get("@input").should("have.value", "John");
+		cy.get("@onSelectionChange").should("have.been.calledOnce");
+	});
 });
 
 describe("TabularInput - Typeahead", () => {

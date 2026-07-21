@@ -1,5 +1,6 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -22,9 +23,7 @@ import tabularInputStyles from "./generated/themes/TabularInput.css.js";
 import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 
 import {
-	INPUT_SUGGESTIONS,
-	INPUT_SUGGESTIONS_MORE_HITS,
-	LIST_ITEM_POSITION,
+	ROW_ITEM_POSITION,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -201,7 +200,7 @@ class TabularInput extends Input {
 	}
 
 	onBeforeRendering() {
-		this._useTabularSuggestions = this.suggestionColumns.length > 0 && this.suggestionRows.length > 0;
+		this._useTabularSuggestions = this.suggestionColumns.length > 0;
 
 		if (this._useTabularSuggestions) {
 			this._processRows();
@@ -307,19 +306,17 @@ class TabularInput extends Input {
 	}
 
 	onAfterRendering() {
-		if (this._useTabularSuggestions) {
-			if (this._performTextSelection) {
-				if (this.typedInValue.length && this.value.length) {
-					this._adjustSelectionRange();
-				}
-				this.fireDecoratorEvent("type-ahead");
-			}
-			this._performTextSelection = false;
-
-			return;
+		if (!this._useTabularSuggestions) {
+			return super.onAfterRendering();
 		}
 
-		super.onAfterRendering();
+		if (this._performTextSelection) {
+			if (this.typedInValue.length && this.value.length) {
+				this._adjustSelectionRange();
+			}
+			this.fireDecoratorEvent("type-ahead");
+		}
+		this._performTextSelection = false;
 	}
 
 	/**
@@ -372,13 +369,6 @@ class TabularInput extends Input {
 	}
 
 	/**
-	 * @private
-	 */
-	_onSuggestionRowClick(row: ITabularSuggestionRow) {
-		this._selectRow(row, false);
-	}
-
-	/**
 	 * Handles row-click event from the table to select the corresponding suggestion.
 	 * @private
 	 */
@@ -397,16 +387,18 @@ class TabularInput extends Input {
 	 */
 	_selectRow(row: ITabularSuggestionRow, keyboardUsed: boolean) {
 		const rowValue = this._getRowValue(row);
+		const isAlreadySelected = row.focused || row.selected;
 
 		this.value = rowValue;
 		this.typedInValue = rowValue;
 		this.open = false;
 
-		this.fireDecoratorEvent("selection-change", {
-			row,
-		});
+		if (!isAlreadySelected) {
+			this.fireDecoratorEvent("selection-change", {
+				row,
+			});
+		}
 		this.fireDecoratorEvent("change");
-		this.fireDecoratorEvent("input", { inputType: "" });
 
 		this._deselectAllRows();
 		row.selected = true;
@@ -518,66 +510,66 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleEnter(e: KeyboardEvent) {
-		if (this._useTabularSuggestions) {
-			const visibleRows = this._visibleRows;
-			const focusedRow = visibleRows.find(row => row.focused);
-			const innerInput = this.getInputDOMRefSync()!;
+		if (!this._useTabularSuggestions) {
+			return super._handleEnter(e);
+		}
 
-			let rowToSelect = focusedRow || this._matchedTabularRow;
+		const visibleRows = this._visibleRows;
+		const focusedRow = visibleRows.find(row => row.focused);
+		const innerInput = this.getInputDOMRefSync()!;
 
-			if (!rowToSelect) {
-				rowToSelect = visibleRows.find(row => {
-					return this._getRowValue(row).toLowerCase() === this.value.toLowerCase();
-				});
-			}
+		let rowToSelect = focusedRow || this._matchedTabularRow;
 
-			if (rowToSelect) {
-				const rowValue = this._getRowValue(rowToSelect);
-				innerInput.setSelectionRange(rowValue.length, rowValue.length);
+		if (!rowToSelect) {
+			rowToSelect = visibleRows.find(row => {
+				return this._getRowValue(row).toLowerCase() === this.value.toLowerCase();
+			});
+		}
 
-				if (this.open) {
-					e.preventDefault();
-				}
-				this._selectRow(rowToSelect, true);
-				return;
-			}
+		if (rowToSelect) {
+			const rowValue = this._getRowValue(rowToSelect);
+			innerInput.setSelectionRange(rowValue.length, rowValue.length);
 
 			if (this.open) {
-				this.open = false;
+				e.preventDefault();
 			}
-			this.lastConfirmedValue = this.value;
+			this._selectRow(rowToSelect, true);
 			return;
 		}
-		super._handleEnter(e);
+
+		if (this.open) {
+			this.open = false;
+		}
+		this.lastConfirmedValue = this.value;
 	}
 
 	/**
 	 * @private
 	 */
 	_handleEscape() {
-		if (this._useTabularSuggestions && this.open) {
-			this.value = this.typedInValue || this.valueBeforeSelectionStart;
-			this.open = false;
-			this._deselectAllRows();
-			this._matchedTabularRow = undefined;
-			this._rowFocused = false;
-			this.isTyping = false;
-			this._clearAnnouncement();
-			return;
+		if (!this._useTabularSuggestions || !this.open) {
+			return super._handleEscape();
 		}
-		super._handleEscape();
+
+		this.value = this.typedInValue || this.valueBeforeSelectionStart;
+		this.open = false;
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		this._rowFocused = false;
+		this.isTyping = false;
+		this._clearAnnouncement();
 	}
 
 	/**
 	 * @private
 	 */
 	_clearPopoverFocusAndSelection() {
-		if (this._useTabularSuggestions) {
-			this._deselectAllRows();
-			this.hasSuggestionItemSelected = false;
-			return;
+		if (!this._useTabularSuggestions) {
+			return super._clearPopoverFocusAndSelection();
 		}
-		super._clearPopoverFocusAndSelection();
+
+		this._deselectAllRows();
+		this.hasSuggestionItemSelected = false;
 	}
 
 	get _hasTabularSuggestions(): boolean {
@@ -600,22 +592,6 @@ class TabularInput extends Input {
 	}
 
 	/**
-	 * Returns the accessible name for the suggestions popover
-	 * @private
-	 */
-	get _tabularSuggestionsAccessibleName(): string {
-		return Input.i18nBundle.getText(INPUT_SUGGESTIONS);
-	}
-
-	/**
-	 * Returns the count text for available suggestions
-	 * @private
-	 */
-	get _tabularSuggestionsCountText(): string {
-		return Input.i18nBundle.getText(INPUT_SUGGESTIONS_MORE_HITS, this._visibleRows.length);
-	}
-
-	/**
 	 * Announces the currently selected row for screen readers using a live region.
 	 * @private
 	 */
@@ -623,7 +599,7 @@ class TabularInput extends Input {
 		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
 		if (invisibleText) {
 			const rowText = this._getRowValue(this._visibleRows[rowIndex]);
-			const positionText = Input.i18nBundle.getText(LIST_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
+			const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION as I18nText, rowIndex + 1, this._visibleRows.length);
 			invisibleText.textContent = `${rowText} ${positionText}`;
 		}
 	}
@@ -688,23 +664,22 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_onfocusout(e: FocusEvent) {
-		if (this._useTabularSuggestions) {
-			const toBeFocused = e.relatedTarget as HTMLElement;
-			const popover = this._getTabularPopover();
+		if (!this._useTabularSuggestions) {
+			return super._onfocusout(e);
+		}
 
-			if (popover?.contains(toBeFocused) || this.contains(toBeFocused)) {
-				return;
-			}
+		const toBeFocused = e.relatedTarget as HTMLElement;
+		const popover = this._getTabularPopover();
 
-			this.focused = false;
-			this.open = false;
-			this.isTyping = false;
-			this.lastConfirmedValue = "";
-			this._clearPopoverFocusAndSelection();
+		if (popover?.contains(toBeFocused) || this.contains(toBeFocused)) {
 			return;
 		}
 
-		super._onfocusout(e);
+		this.focused = false;
+		this.open = false;
+		this.isTyping = false;
+		this.lastConfirmedValue = "";
+		this._clearPopoverFocusAndSelection();
 	}
 }
 
