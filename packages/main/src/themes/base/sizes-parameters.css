@@ -14,8 +14,8 @@
 	--_ui5_calendar_overlay_width: 16rem;
 
 	--_ui5_checkbox_root_side_padding: .6875rem;
-	--_ui5_checkbox_icon_size: 1rem;
-	--_ui5_checkbox_partially_icon_size: .75rem;
+	--_ui5_checkbox_icon_size: 1.1429em; /* 1rem */
+	--_ui5_checkbox_partially_icon_size: 0.8571em; /* 0.75rem */
 	--_ui5_custom_list_item_rb_min_width: 2.75rem;
 	--_ui5_day_picker_item_width: 2.25rem;
 	--_ui5_day_picker_item_height: 2.875rem;
@@ -199,8 +199,8 @@
 		--_ui5_checkbox_focus_position: var(--_ui5_checkbox_compact_focus_position);
 		--_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
 		--_ui5_checkbox_inner_width_height: var(--_ui5_checkbox_compact_inner_size);
-		--_ui5_checkbox_icon_size: .75rem;
-		--_ui5_checkbox_partially_icon_size: .5rem;
+		--_ui5_checkbox_icon_size: 0.8571em; /* 0.75rem */
+		--_ui5_checkbox_partially_icon_size: 0.5714em; /* 0.5rem */
 
 		/* ColorPicker */
 		--_ui5_color_picker_slider_progress_container_height: 1.125rem;

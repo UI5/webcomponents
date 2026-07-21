@@ -3,7 +3,7 @@
 :host {
 	--_ui5_checkbox_wrapper_padding: .6875rem;
 	--_ui5_checkbox_width_height: 2.75rem;
-	--_ui5_checkbox_icon_size: 1rem;
+	--_ui5_checkbox_icon_size: 1.1429em; /* 1rem */
 	--_ui5_checkbox_label_color: var(--sapField_TextColor);
 	/* default checkbox*/
 	--_ui5_checkbox_inner_border: solid var(--sapField_BorderWidth) var(--sapField_BorderColor);
