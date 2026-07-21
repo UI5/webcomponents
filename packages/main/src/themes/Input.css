@@ -381,6 +381,10 @@
 
 /* Input Icon */
 
+::slotted([ui5-input-icon]) {
+	height: 100%;
+}
+
 .ui5-input-icon-root {
 	min-width: var(--_ui5_input_icon_min_width);
 	height: 100%;

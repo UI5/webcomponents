@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** select correct day in other month ([#13786](https://github.com/UI5/webcomponents/issues/13786)) ([82bde13](https://github.com/UI5/webcomponents/commit/82bde13e8d2f77539f59de0bcadfd3fd9a77da6b)), closes [#13760](https://github.com/UI5/webcomponents/issues/13760)
+* **ui5-file-uploader:** announce value state message to screen readers ([#13759](https://github.com/UI5/webcomponents/issues/13759)) ([3ff0ed1](https://github.com/UI5/webcomponents/commit/3ff0ed1ee57c2ba6086af1fdec461a6e4fa602b7))
+* **ui5-table-header-cell:** set min-height to prevent header row jump ([#13785](https://github.com/UI5/webcomponents/issues/13785)) ([653149e](https://github.com/UI5/webcomponents/commit/653149e8f9f9beabb0bd5570acf7fc618f16367b)), closes [#13454](https://github.com/UI5/webcomponents/issues/13454)
+
+
+### Features
+
+* **ui5-dialog:** add fullscreen toggle button ([#13691](https://github.com/UI5/webcomponents/issues/13691)) ([d9d329b](https://github.com/UI5/webcomponents/commit/d9d329b826cd85163486e589eb9514370eb6ce45))
+
+
+
+
+
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+
+### Bug Fixes
+
+* **ui5-date-range-picker:** remove only portrait mode on calendars when two months are shown ([#13703](https://github.com/UI5/webcomponents/issues/13703)) ([8a7670d](https://github.com/UI5/webcomponents/commit/8a7670dbfe7a73fef2079d3314bd651c2fe4c3d5))
+* **ui5-list:** expose item selection state via aria-selected attribute ([#13782](https://github.com/UI5/webcomponents/issues/13782)) ([644ed0a](https://github.com/UI5/webcomponents/commit/644ed0a094162cda469af5c3b392fc8a140a4fb5)), closes [#13773](https://github.com/UI5/webcomponents/issues/13773)
+* **ui5-radio-button:** fix accessible-name double announcement ([#13761](https://github.com/UI5/webcomponents/issues/13761)) ([48e69fe](https://github.com/UI5/webcomponents/commit/48e69fe1295beabe42abc8d7c0c4729f1d95d20f))
+* **ui5-select:** align value state message header with design spec ([#13766](https://github.com/UI5/webcomponents/issues/13766)) ([173d3fc](https://github.com/UI5/webcomponents/commit/173d3fc33eb7768ee7aad25f46d387fe64194040)), closes [#13308](https://github.com/UI5/webcomponents/issues/13308)
+* **ui5-textarea:** preserve space for exceeded text counter ([#13765](https://github.com/UI5/webcomponents/issues/13765)) ([6cc1943](https://github.com/UI5/webcomponents/commit/6cc1943a6b0787b03bdf22a04f0d014b4e317e7d))
+
+
+
+
+
 # [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
 
 **Note:** Version bump only for package @ui5/webcomponents

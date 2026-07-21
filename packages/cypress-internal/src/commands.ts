@@ -10,6 +10,7 @@ Cypress.Commands.add('waitRenderFinished', () => {
 Cypress.Commands.add('mount', args => {
 	cy.then(() => mount(args)).then(() => {
 		cy.waitRenderFinished();
+		cy.wrap(document.fonts.ready, { log: false });
 	});
 });
 
@@ -31,6 +32,19 @@ const realEventCmdCallback = (originalFn: any, element: any, ...args: any) => {
 		})
 		.then(() => originalFn(element, ...args));
 };
+
+Cypress.Commands.overwrite("focus", (originalFn, element, ...args) => {
+	cy.waitRenderFinished();
+
+	cy.get(element as any)
+		.then($el => {
+			const el = $el[0];
+			if (el.tagName.includes("-") && typeof el.focus === "function") {
+				return cy.wrap(el.focus(...args), { log: false });
+			}
+			return originalFn(element, ...args);
+		});
+});
 
 const realEventCommands = [
 	"realClick",
@@ -57,6 +71,16 @@ realEventCommandsRest.forEach(cmd => {
 			return originalFn(element, ...args);
 		});
 	});
+});
+
+Cypress.Commands.overwrite("screenshot", (originalFn, ...args) => {
+	const delay = Number(Cypress.env("SCREENSHOT_DELAY") ?? 0);
+
+	if (delay > 0) {
+		return cy.wait(delay).then(() => (originalFn as any)(...args));
+	}
+
+	return (originalFn as any)(...args);
 });
 
 declare global {
