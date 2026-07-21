@@ -898,6 +898,16 @@ abstract class UI5Element extends HTMLElement {
 	 */
 	_render() {
 		const ctor = this.constructor as typeof UI5Element;
+
+		// Skip rendering language-aware components while a language change (CLDR + i18n fetch) is
+		// still in flight. reRenderAllUI5Elements({ languageAware: true }) will re-render them once
+		// the data is ready. Without this guard, a component added to the render queue *before* the
+		// language change started (e.g. via renderDeferred) can still call onBeforeRendering and
+		// onAfterRendering with stale or missing locale data.
+		if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
+			return;
+		}
+
 		const hasIndividualSlots = ctor.getMetadata().hasIndividualSlots();
 
 		// restore properties that were initialized before `define` by calling the setter
