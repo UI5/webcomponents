@@ -594,15 +594,28 @@ class TabularInput extends Input {
 
 	/**
 	 * Announces the currently selected row for screen readers using a live region.
+	 * Includes row position and all column values with their headers.
 	 * @private
 	 */
 	_announceSelectedRow(rowIndex: number) {
 		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
-		if (invisibleText) {
-			const rowText = this._getRowValue(this._visibleRows[rowIndex]);
-			const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
-			invisibleText.textContent = `${rowText} ${positionText}`;
+		if (!invisibleText) {
+			return;
 		}
+
+		const row = this._visibleRows[rowIndex];
+		const cells = row.cells || [];
+		const columns = this.suggestionColumns;
+
+		const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
+
+		const cellTexts = cells.map((cell, index) => {
+			const cellValue = cell.textContent?.trim() || "";
+			const columnHeader = columns[index]?.textContent?.trim() || "";
+			return columnHeader ? `${columnHeader}: ${cellValue}` : cellValue;
+		}).join(", ");
+
+		invisibleText.textContent = `${positionText}. ${cellTexts}`;
 	}
 
 	/**

@@ -689,3 +689,46 @@ describe("TabularInput - Disabled and Readonly", () => {
 			.should("not.have.attr", "open");
 	});
 });
+
+describe("TabularInput - Accessibility", () => {
+	it("announces row position and all column values during navigation", () => {
+		cy.mount(
+			<TabularInput showSuggestions noTypeahead>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableHeaderCell slot="suggestionColumns">Country</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+					<TableCell>USA</TableCell>
+				</TableRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>Jane</TableCell>
+					<TableCell>UK</TableCell>
+				</TableRow>
+			</TabularInput>
+		);
+
+		cy.get("[ui5-tabular-input]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.realPress("ArrowDown");
+
+		cy.get("@input")
+			.shadow()
+			.find("#selectionText")
+			.should("contain.text", "Row 1 of 2")
+			.and("contain.text", "Name: John")
+			.and("contain.text", "Country: USA");
+
+		cy.realPress("ArrowDown");
+
+		cy.get("@input")
+			.shadow()
+			.find("#selectionText")
+			.should("contain.text", "Row 2 of 2")
+			.and("contain.text", "Name: Jane")
+			.and("contain.text", "Country: UK");
+	});
+});
