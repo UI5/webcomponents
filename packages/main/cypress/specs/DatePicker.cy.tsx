@@ -6,7 +6,10 @@ import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18
 
 describe("Date Picker Tests", () => {
 	afterEach(() => {
-		cy.wrap({ setLanguage }).then(api => api.setLanguage("en"));
+		cy.wrap({ setLanguage })
+			.then(async api => {
+				await api.setLanguage("en");
+			});
 	});
     
 	it("input renders", () => {
@@ -38,8 +41,8 @@ describe("Date Picker Tests", () => {
 
 	it("input receives value in format pattern depending on the set language", () => {
 		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("bg");
+			.then(async api => {
+				await api.setLanguage("bg");
 			});
 
 		cy.mount(<DatePicker value="11 декември 2018г." formatPattern="long"></DatePicker>);
@@ -321,8 +324,8 @@ describe("Date Picker Tests", () => {
 
 	it("respect first day of the week - monday", () => {
 		cy.wrap({ setLanguage })
-			.then(api => {
-				return api.setLanguage("bg");
+			.then(async api => {
+				await api.setLanguage("bg");
 			});
 
 		cy.mount(<DatePicker value="фев 6, 2019" formatPattern="MMM d, y"></DatePicker>);
