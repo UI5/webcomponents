@@ -9,7 +9,7 @@ import UserMenuAccount from "../../src/UserMenuAccount.js";
 import UserSettingsDialog from "../../src/UserSettingsDialog.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
-import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT} from "../../src/generated/i18n/i18n-defaults.js";
+import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT, USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
 	it("tests no config provided", () => {
@@ -780,6 +780,32 @@ describe("User account view", () => {
         cy.get("@settingView").should("exist");
         cy.get("@settingView").shadow().find("[ui5-button]").contains(USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT.defaultText);
         cy.get("@settingView").shadow().find("[ui5-button]").should("have.length", 1);
+    });
+
+    it("tests i18n texts are resolved (i18nBundle guard)", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsAccountView text="Setting1" showManageAccount={true}>
+                    <UserMenuAccount slot="account"
+                                     titleText="Alain Chevalier 1"
+                                     subtitleText="alian.chevalier@sap.com"
+                                     description="Delivery Manager, SAP SE">
+                    </UserMenuAccount>
+                </UserSettingsAccountView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+        cy.get("@settingItem").find("[ui5-user-settings-account-view]").as("settingView");
+        cy.get("@settingView").should("exist");
+
+        // _manageAccountButtonText resolves via the guarded i18nBundle getter
+        cy.get("@settingView").shadow().find("[ui5-button]")
+            .should("contain.text", USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT.defaultText);
+
+        // _editAvatarTooltip resolves via the guarded i18nBundle getter and is applied as the badge title
+        cy.get("@settingView").shadow().find("[ui5-avatar] [ui5-tag]")
+            .should("have.attr", "title", USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT.defaultText);
     });
 
     it("tests avatar default", () => {
