@@ -28,7 +28,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-orientation="vertical" aria-roledescription={this.ariaRoleDescList}>
 					<div class="ui5-user-settings-side-header">
 						{this.headerText &&
-							<Title level="H1" size="H4">{this.headerText}</Title>
+							<Title level="H1" size="H5">{this.headerText}</Title>
 						}
 						{this.showSearchField &&
 							<Input placeholder="Search" type="Search" class="ui5-user-settings-side-search"
