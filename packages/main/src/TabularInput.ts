@@ -318,6 +318,21 @@ class TabularInput extends Input {
 			this.fireDecoratorEvent("type-ahead");
 		}
 		this._performTextSelection = false;
+		this._updateValueStateLinks();
+	}
+
+	/**
+	 * Updates event listeners for links in value state message.
+	 * @private
+	 */
+	_updateValueStateLinks() {
+		const currentLinks = this.linksInAriaValueStateHiddenText;
+		if (this._valueStateLinks.length !== currentLinks.length ||
+			!this._valueStateLinks.every((link, i) => link === currentLinks[i])) {
+			this._removeLinksEventListeners();
+			this._addLinksEventListeners();
+			this._valueStateLinks = currentLinks;
+		}
 	}
 
 	/**
