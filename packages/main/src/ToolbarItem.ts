@@ -20,7 +20,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base";
  * Interface for the slotted item in `ui5-toolbar-item`.
  *
  * It could be any HTMLElement or UI5 Web Component with option to specify custom overflow closing events and overflow behavior.
- * Components that also implement {@link IToolbarArrowNavProvider} can report their internal navigation boundary
+ * Components that also implement `IToolbarArrowNavProvider` can report their internal navigation boundary
  * state to the toolbar for caret-aware arrow-key handling.
  *
  * @public
