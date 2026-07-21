@@ -2,8 +2,9 @@
 	content: none;
 }
 
-:host([open][focused][_row-focused]) {
-	border-color: var(--sapField_BorderColor);
+:host([open][focused][_row-focused]),
+:host([open][focused][_row-focused]:hover) {
+	border: var(--sapField_BorderWidth) solid var(--sapField_BorderColor);
 	background-color: var(--sapField_Background);
 }
 

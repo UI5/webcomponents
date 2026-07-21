@@ -599,7 +599,7 @@ class TabularInput extends Input {
 		const invisibleText = this.shadowRoot?.querySelector("#selectionText");
 		if (invisibleText) {
 			const rowText = this._getRowValue(this._visibleRows[rowIndex]);
-			const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION as I18nText, rowIndex + 1, this._visibleRows.length);
+			const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
 			invisibleText.textContent = `${rowText} ${positionText}`;
 		}
 	}
