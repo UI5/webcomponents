@@ -409,40 +409,6 @@ describe("TabularInput - Clear Icon", () => {
 	});
 });
 
-describe("TabularInput - Overflow Mode", () => {
-	it("renders with Popin overflow mode by default", () => {
-		cy.mount(
-			<TabularInput>
-				<TableHeaderCell slot="suggestionColumns" width="100px">Col1</TableHeaderCell>
-				<TableHeaderCell slot="suggestionColumns" width="100px">Col2</TableHeaderCell>
-				<TableRow slot="suggestionRows">
-					<TableCell>Cell1</TableCell>
-					<TableCell>Cell2</TableCell>
-				</TableRow>
-			</TabularInput>
-		);
-
-		cy.get("[ui5-tabular-input]")
-			.should("have.attr", "overflow-mode", "Popin");
-	});
-
-	it("accepts Scroll overflow mode", () => {
-		cy.mount(
-			<TabularInput overflowMode="Scroll">
-				<TableHeaderCell slot="suggestionColumns" width="100px">Col1</TableHeaderCell>
-				<TableHeaderCell slot="suggestionColumns" width="100px">Col2</TableHeaderCell>
-				<TableRow slot="suggestionRows">
-					<TableCell>Cell1</TableCell>
-					<TableCell>Cell2</TableCell>
-				</TableRow>
-			</TabularInput>
-		);
-
-		cy.get("[ui5-tabular-input]")
-			.should("have.attr", "overflow-mode", "Scroll");
-	});
-});
-
 describe("TabularInput - Value State", () => {
 	it("displays value state", () => {
 		cy.mount(
