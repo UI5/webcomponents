@@ -259,6 +259,42 @@
 		<ui5-shellbar-item icon="discussion" count="2" id="test-invalidation-item"></ui5-shellbar-item>
 	</ui5-shellbar>
 
+	<!-- Badge Scenarios (Figma spec) -->
+
+	<h3>Badge Scenarios</h3>
+
+	<!-- Scenario 1: Single item visible in bar with counter badge -->
+	<ui5-shellbar id="sb-badge-single" class="shellbar-example">
+		<ui5-shellbar-branding slot="branding">Badge - Single Visible</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="bell" text="Notifications" count="72"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="activity-2" text="Tasks" count="5"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="discussion" text="Messages"></ui5-shellbar-item>
+	</ui5-shellbar>
+
+	<!-- Scenario 2: One badged item overflowed -> overflow button shows counter badge -->
+	<div style="width: 300px;">
+		<ui5-shellbar id="sb-badge-overflow-counter" class="shellbar-example">
+			<ui5-shellbar-branding slot="branding">Badge - Overflow Counter</ui5-shellbar-branding>
+			<ui5-shellbar-item icon="bell" text="Notifications" count="72"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activity-2" text="Tasks"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="discussion" text="Messages"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="email" text="Email"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="calendar" text="Calendar"></ui5-shellbar-item>
+		</ui5-shellbar>
+	</div>
+
+	<!-- Scenario 3: Multiple badged items overflowed -> overflow button shows attention dot -->
+	<div style="width: 300px;">
+		<ui5-shellbar id="sb-badge-overflow-attention" class="shellbar-example">
+			<ui5-shellbar-branding slot="branding">Badge - Attention Dot</ui5-shellbar-branding>
+			<ui5-shellbar-item icon="bell" text="Notifications" count="72"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="activity-2" text="Tasks" count="5"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="discussion" text="Messages"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="email" text="Email"></ui5-shellbar-item>
+			<ui5-shellbar-item icon="calendar" text="Calendar"></ui5-shellbar-item>
+		</ui5-shellbar>
+	</div>
+
 	<ui5-toast id="wcToastTC">Custom Action Fired</ui5-toast>
 
 	<ui5-shellbar id="sbAcc">
