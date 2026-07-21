@@ -59,8 +59,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 						</div>
 						{this.hasValueStateMessage &&
 						<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
-							<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
-							{this.open && valueStateMessage.call(this)}
+							{valueStateMessage.call(this, this.open)}
 						</div>
 						}
 					</div>
@@ -75,8 +74,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 						}}
 						style={this.styles.suggestionPopoverHeader}
 					>
-						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
-						{this.open && valueStateMessage.call(this)}
+						{valueStateMessage.call(this, this.open)}
 					</div>
 				}
 
@@ -108,8 +106,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 					onClose={this._handleValueStatePopoverAfterClose}
 				>
 					<div slot="header" class={this.classes.popoverValueState}>
-						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
-						{this.valueStateOpen && valueStateMessage.call(this)}
+						{valueStateMessage.call(this, this.valueStateOpen)}
 					</div>
 				</Popover>
 			)}
@@ -117,17 +114,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 	);
 }
 
-function valueStateMessage(this: TabularInput) {
-	return (
-		<>
-			{
-				this.shouldDisplayDefaultValueStateMessage ? this.valueStateText : <slot name="valueStateMessage"></slot>
-			}
-		</>
-	);
-}
-
-function valueStateMessageInputIcon(this: TabularInput) {
+function valueStateMessage(this: TabularInput, open: boolean) {
 	const iconPerValueState = {
 		Negative: error,
 		Critical: alert,
@@ -135,7 +122,14 @@ function valueStateMessageInputIcon(this: TabularInput) {
 		Information: information,
 	};
 
-	return this.valueState !== ValueState.None ? iconPerValueState[this.valueState as keyof typeof iconPerValueState] : "";
+	const iconName = this.valueState !== ValueState.None ? iconPerValueState[this.valueState as keyof typeof iconPerValueState] : "";
+
+	return (
+		<>
+			<Icon class="ui5-input-value-state-message-icon" name={iconName} />
+			{open && (this.shouldDisplayDefaultValueStateMessage ? this.valueStateText : <slot name="valueStateMessage"></slot>)}
+		</>
+	);
 }
 
 function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {

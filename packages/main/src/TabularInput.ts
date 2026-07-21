@@ -1,6 +1,5 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -85,6 +84,8 @@ type TabularInputSelectionChangeEventDetail = {
  * are defined via:
  * - `suggestionColumns`: Table header cells defining the columns
  * - `suggestionRows`: Table rows with cells containing the suggestion data
+ *
+ * **Note:** Autocomplete (typeahead) matches only the first column of suggestion rows.
  *
  * ### Keyboard Handling
  *
