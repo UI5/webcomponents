@@ -4,6 +4,9 @@ import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableCell from "../../src/TableCell.js";
 import TableGrowing from "../../src/TableGrowing.js";
+import TableSelectionMulti from "../../src/TableSelectionMulti.js";
+import TableRowAction from "../../src/TableRowAction.js";
+import TableRowActionNavigation from "../../src/TableRowActionNavigation.js";
 import Bar from "../../src/Bar.js";
 import Title from "../../src/Title.js";
 
@@ -431,5 +434,184 @@ describe("Table - Keyboard Navigation with Fixed Headers", () => {
 				});
 			});
 		}
+	});
+});
+
+describe("Table - Keyboard Navigation with overflowMode=Scroll", () => {
+	const sixColumnHeader = (
+		<TableHeaderRow slot="headerRow">
+			<TableHeaderCell minWidth="180px">Column A</TableHeaderCell>
+			<TableHeaderCell minWidth="180px">Column B</TableHeaderCell>
+			<TableHeaderCell minWidth="180px">Column C</TableHeaderCell>
+			<TableHeaderCell minWidth="180px">Column D</TableHeaderCell>
+			<TableHeaderCell minWidth="180px">Column E</TableHeaderCell>
+			<TableHeaderCell minWidth="180px">Column F</TableHeaderCell>
+		</TableHeaderRow>
+	);
+
+	const wideRow = (rowId: string, keyLabel: string) => (
+		<TableRow id={rowId} rowKey={rowId}>
+			<TableCell>{keyLabel}-A</TableCell>
+			<TableCell>{keyLabel}-B</TableCell>
+			<TableCell>{keyLabel}-C</TableCell>
+			<TableCell>{keyLabel}-D</TableCell>
+			<TableCell>{keyLabel}-E</TableCell>
+			<TableCell>{keyLabel}-F</TableCell>
+		</TableRow>
+	);
+
+	const focusFirstCell = (key: "ArrowRight" | "ArrowLeft", pressesToFirstCell: number) => {
+		// Cypress#focus() rejects the custom element, and .click()
+		// fail because the sticky column partially covers the row
+		cy.get("#row-1").then($row => $row[0].focus());
+		for (let p = 0; p < pressesToFirstCell; p++) {
+			cy.realPress(key);
+		}
+		cy.get("#row-1").children("ui5-table-cell").eq(0).should("be.focused");
+	};
+
+	const walkAndAssertClearOfSticky = (
+		key: "ArrowRight" | "ArrowLeft",
+		stickyCellId: string,
+		assertClear: (stickyRect: DOMRect, focusedRect: DOMRect) => void,
+	) => {
+		for (let i = 1; i < 6; i++) {
+			cy.realPress(key);
+			cy.get("#row-1").children("ui5-table-cell").eq(i).as("focused").should("be.focused");
+			cy.get("#row-1").shadow().find(stickyCellId).then($sticky => {
+				const stickyRect = $sticky[0].getBoundingClientRect();
+				cy.get("@focused").then($f => assertClear(stickyRect, $f[0].getBoundingClientRect()));
+			});
+		}
+	};
+
+	it("horizontal arrow keys keep focus past the sticky selection column (LTR)", () => {
+		cy.mount(
+			<div style="width:400px;">
+				<Table id="table" overflowMode="Scroll">
+					<TableSelectionMulti slot="features" />
+					{sixColumnHeader}
+					{wideRow("row-1", "R1")}
+				</Table>
+			</div>
+		);
+
+		focusFirstCell("ArrowRight", 2);
+		walkAndAssertClearOfSticky("ArrowRight", "#selection-cell", (sel, focused) => {
+			expect(focused.left).to.be.at.least(sel.right - 0.5);
+		});
+	});
+
+	it("horizontal arrow keys keep focus past the sticky actions/navigated column (LTR)", () => {
+		cy.mount(
+			<div style="width:400px;">
+				<Table id="table" overflowMode="Scroll" rowActionCount={1}>
+					{sixColumnHeader}
+					<TableRow id="row-1" rowKey="row-1" navigated={true}>
+						<TableCell>R1-A</TableCell>
+						<TableCell>R1-B</TableCell>
+						<TableCell>R1-C</TableCell>
+						<TableCell>R1-D</TableCell>
+						<TableCell>R1-E</TableCell>
+						<TableCell>R1-F</TableCell>
+						<TableRowAction slot="actions" icon="edit" text="Edit" />
+						<TableRowActionNavigation slot="actions" />
+					</TableRow>
+				</Table>
+			</div>
+		);
+
+		focusFirstCell("ArrowRight", 1);
+		walkAndAssertClearOfSticky("ArrowRight", "#actions-cell", (act, focused) => {
+			expect(focused.right).to.be.at.most(act.left + 0.5);
+		});
+	});
+
+	it("horizontal arrow keys keep focus past sticky columns (RTL)", () => {
+		cy.mount(
+			<div dir="rtl" style="width:400px;">
+				<Table id="table" overflowMode="Scroll">
+					<TableSelectionMulti slot="features" />
+					{sixColumnHeader}
+					{wideRow("row-1", "R1")}
+				</Table>
+			</div>
+		);
+
+		// In RTL, ArrowLeft moves to the next logical column.
+		focusFirstCell("ArrowLeft", 2);
+		walkAndAssertClearOfSticky("ArrowLeft", "#selection-cell", (sel, focused) => {
+			expect(focused.right).to.be.at.most(sel.left + 0.5);
+		});
+	});
+
+	it("cell wider than viewport is aligned to leading edge", () => {
+		cy.mount(
+			<div style="width:300px;">
+				<Table id="table" overflowMode="Scroll">
+					<TableSelectionMulti slot="features" />
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell minWidth="600px">Wide Column</TableHeaderCell>
+						<TableHeaderCell minWidth="180px">Column B</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow id="row-1" rowKey="row-1">
+						<TableCell>Wide content that is far wider than the visible viewport</TableCell>
+						<TableCell>B</TableCell>
+					</TableRow>
+				</Table>
+			</div>
+		);
+
+		focusFirstCell("ArrowRight", 2);
+		cy.get("#row-1").shadow().find("#selection-cell").then($sel => {
+			const selRight = $sel[0].getBoundingClientRect().right;
+			cy.get("#row-1").children("ui5-table-cell").eq(0).then($w => {
+				expect(Math.abs($w[0].getBoundingClientRect().left - selRight)).to.be.at.most(1.5);
+			});
+		});
+	});
+
+	const verticalStickyTable = (
+		<Table id="table" overflowMode="Scroll" style="height: 150px">
+			<TableHeaderRow slot="headerRow" sticky>
+				<TableHeaderCell>Column A</TableHeaderCell>
+			</TableHeaderRow>
+			{Array.from({ length: 30 }).map((_, i) => (
+				<TableRow id={`row-${i}`} rowKey={`${i}`}>
+					<TableCell>Cell {i}</TableCell>
+				</TableRow>
+			))}
+		</Table>
+	);
+
+	// Scrolls down, navigates back up with ArrowUp and asserts the focused row is not hidden under the sticky header.
+	const assertFocusedRowNotHiddenUnderHeader = () => {
+		cy.get("#row-0").then($row => $row[0].focus());
+		for (let i = 0; i < 20; i++) {
+			cy.realPress("ArrowDown");
+		}
+		cy.get("#row-20").should("be.focused");
+
+		for (let i = 0; i < 5; i++) {
+			cy.realPress("ArrowUp");
+		}
+		cy.get("#row-15").should("be.focused");
+
+		cy.get("#table").find("[ui5-table-header-row]").then($header => {
+			const headerRect = $header[0].getBoundingClientRect();
+			cy.get("#row-15").then($row => {
+				expect($row[0].getBoundingClientRect().top).to.be.at.least(headerRect.bottom - 0.5);
+			});
+		});
+	};
+
+	it("focused row is not hidden under the sticky header (table scrolls)", () => {
+		cy.mount(verticalStickyTable);
+		assertFocusedRowNotHiddenUnderHeader();
+	});
+
+	it("focused row is not hidden under the sticky header (wrapper scrolls)", () => {
+		cy.mount(<div style="height: 150px; overflow: auto;">{verticalStickyTable}</div>);
+		assertFocusedRowNotHiddenUnderHeader();
 	});
 });

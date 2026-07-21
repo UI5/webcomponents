@@ -121,9 +121,6 @@ class TableRow extends TableRowBase<TableCell> {
 	@query("#popin-cell")
 	_popinCell?: TableCell;
 
-	@query("#actions-cell")
-	_actionsCell?: TableCell;
-
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		this.ariaRowIndex = (this.role === "row") ? `${this._rowIndex + 2}` : null;
