@@ -27,7 +27,20 @@
 	color: var(--sapList_TextColor);
 }
 
-[ui5-li]::part(additional-text) {
+[ui5-li]::part(title) {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	overflow: visible;
+}
+
+.ui5-shellbar-item-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ui5-shellbar-item-badge {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
