@@ -12,7 +12,7 @@ const TableCell = createReactComponent(TableCellClass);
 function App() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <TabularInput placeholder="Error state..." valueState="Negative">
+      <TabularInput placeholder="Error state..." valueState="Negative" showSuggestions>
         <div slot="valueStateMessage">Product ID is invalid. Please enter a valid ID.</div>
         <TableHeaderCell slot="suggestionColumns" width="150px">Product</TableHeaderCell>
         <TableHeaderCell slot="suggestionColumns" minWidth="100px">Price</TableHeaderCell>
@@ -22,7 +22,7 @@ function App() {
         </TableRow>
       </TabularInput>
 
-      <TabularInput placeholder="Warning state..." valueState="Critical">
+      <TabularInput placeholder="Warning state..." valueState="Critical" showSuggestions>
         <div slot="valueStateMessage">Stock is running low. Consider reordering soon.</div>
         <TableHeaderCell slot="suggestionColumns" width="150px">Product</TableHeaderCell>
         <TableHeaderCell slot="suggestionColumns" minWidth="100px">Stock</TableHeaderCell>
@@ -32,7 +32,7 @@ function App() {
         </TableRow>
       </TabularInput>
 
-      <TabularInput placeholder="Information state..." valueState="Information">
+      <TabularInput placeholder="Information state..." valueState="Information" showSuggestions>
         <div slot="valueStateMessage">Tip: You can use wildcards (*) for broader search.</div>
         <TableHeaderCell slot="suggestionColumns" width="150px">Search</TableHeaderCell>
         <TableHeaderCell slot="suggestionColumns" minWidth="100px">Results</TableHeaderCell>

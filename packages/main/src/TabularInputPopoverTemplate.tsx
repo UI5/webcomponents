@@ -133,14 +133,14 @@ function valueStateMessage(this: TabularInput, open: boolean) {
 }
 
 function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
-	const isScrollMode = this.overflowMode === "Scroll";
+	const isScrollMode = this._overflowMode === "Scroll";
 	const lastColumnIndex = this.suggestionColumns.length - 1;
 
 	return (
 		<div class="ui5-tabular-input-suggestions-wrapper">
 			<Table
 				class="ui5-tabular-suggestions-table"
-				overflowMode={this.overflowMode}
+				overflowMode={this._overflowMode}
 				accessibleName={this.suggestionsText}
 				onRowClick={this._onTableRowClick}
 			>

@@ -11,7 +11,7 @@ const TableCell = createReactComponent(TableCellClass);
 
 function App() {
   return (
-    <TabularInput placeholder="Search for products...">
+    <TabularInput placeholder="Search for products..." showSuggestions>
       <TableHeaderCell slot="suggestionColumns" width="120px">Product ID</TableHeaderCell>
       <TableHeaderCell slot="suggestionColumns" width="200px">Name</TableHeaderCell>
       <TableHeaderCell slot="suggestionColumns" minWidth="100px">Category</TableHeaderCell>

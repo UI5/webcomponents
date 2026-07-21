@@ -1,11 +1,19 @@
-:host([open][focused][_row-focused]) .ui5-input-focusable-element::after {
+:host([focused]:not([_row-focused])) .ui5-input-focusable-element::after {
+	content: var(--ui5_input_focus_pseudo_element_content);
+}
+
+:host([focused][_row-focused]) .ui5-input-focusable-element::after {
 	content: none;
 }
 
-:host([open][focused][_row-focused]),
-:host([open][focused][_row-focused]:hover) {
-	border: var(--sapField_BorderWidth) solid var(--sapField_BorderColor);
+:host([focused][_row-focused]) {
+	border-color: var(--sapField_BorderColor);
 	background-color: var(--sapField_Background);
+}
+
+:host(:not([value-state]):not([readonly])[focused][_row-focused]:hover),
+:host([value-state="None"]:not([readonly])[focused][_row-focused]:hover) {
+	box-shadow: var(--sapField_Hover_Shadow);
 }
 
 .ui5-tabular-input-suggestions-wrapper {
@@ -16,6 +24,14 @@
 
 .ui5-tabular-suggestions-table {
 	width: 100%;
+}
+
+.ui5-tabular-suggestions-table [ui5-table-header-row] {
+	border-top: none;
+}
+
+.ui5-tabular-suggestions-table [ui5-table-row]:last-of-type {
+	border-bottom: none;
 }
 
 .ui5-tabular-suggestions-table::part(before),

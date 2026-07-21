@@ -145,15 +145,11 @@ class TabularInput extends Input {
 
 	/**
 	 * Defines the overflow behavior of the suggestion table.
-	 *
-	 * **Note:** When set to `Popin`, columns that don't fit will be shown as pop-in content.
-	 * When set to `Scroll`, a horizontal scrollbar will appear.
-	 *
 	 * @default "Popin"
-	 * @public
+	 * @private
 	 */
-	@property()
-	overflowMode: `${TableOverflowMode}` = "Popin";
+	@property({ noAttribute: true })
+	_overflowMode: `${TableOverflowMode}` = "Popin";
 
 	/**
 	 * Internal property to track if table suggestions are being used
@@ -708,6 +704,7 @@ class TabularInput extends Input {
 		this.open = false;
 		this.isTyping = false;
 		this.lastConfirmedValue = "";
+		this._rowFocused = false;
 		this._clearPopoverFocusAndSelection();
 	}
 }
