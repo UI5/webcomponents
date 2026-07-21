@@ -211,8 +211,16 @@ describe("Toolbar general interaction", () => {
 					overflowButtonDOM: HTMLElement;
 				};
 				toolbar._setCurrentItem(toolbar.overflowButtonDOM);
-				toolbar.overflowButtonDOM.focus();
+				// Focus the inner focus target so realPress reliably delivers the keydown
+				const focusTarget = (toolbar.overflowButtonDOM as any).getFocusDomRef?.() ?? toolbar.overflowButtonDOM;
+				focusTarget.focus();
 			});
+
+		// Wait for focus to settle before pressing the key
+		cy.get("#overflow-arrow-toolbar")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("be.focused");
 
 		cy.realPress("ArrowLeft");
 
@@ -220,16 +228,16 @@ describe("Toolbar general interaction", () => {
 		// becomes the current navigation target. The overflow button is focused
 		// programmatically here (a real click would open the popover), so assert on
 		// the toolbar's tracked target rather than on document.activeElement.
-		cy.get("#overflow-arrow-toolbar")
-			.then($toolbar => {
-				const toolbar = $toolbar[0] as Toolbar & {
-					_lastFocusedItem?: ToolbarItem | HTMLElement;
-					_getNavigableItems: () => ToolbarItem[];
-				};
-				const navigableItems = toolbar._getNavigableItems();
-				const expectedLastItem = navigableItems.at(-1);
-				expect(toolbar._lastFocusedItem).to.equal(expectedLastItem);
-			});
+		// Use cy.get(...).should() so Cypress retries until _lastFocusedItem settles.
+		cy.get("#overflow-arrow-toolbar").should($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar & {
+				_lastFocusedItem?: ToolbarItem | HTMLElement;
+				_getNavigableItems: () => ToolbarItem[];
+			};
+			const navigableItems = toolbar._getNavigableItems();
+			const expectedLastItem = navigableItems.at(-1);
+			expect(toolbar._lastFocusedItem).to.equal(expectedLastItem);
+		});
 	});
 
 	it("Should navigate between toolbar items with Left/Right arrow keys", () => {
@@ -355,29 +363,19 @@ describe("Toolbar general interaction", () => {
 		cy.realPress("Home");
 		cy.get("#mid-toolbar-input").should("be.focused");
 
-		// Set caret to position 2 (mid-string) via DOM to avoid End key exiting to last item
-		cy.get("#mid-toolbar-input").then($input => {
-			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
-			const native = ui5Input.nativeInput;
-			if (native) {
-				native.focus();
-				native.setSelectionRange(2, 2);
-			}
-		});
+		// Type something so caret is in the middle, then use ArrowRight — caret moves inside the input
+		// Use realClick which positions caret at a mid-string position, then assert focus stays.
+		cy.get("#mid-toolbar-input").realClick();
+		cy.get("#mid-toolbar-input").should("be.focused");
+
+		// Move caret to start first, then nudge right to mid position
+		cy.realPress("Home");
+		cy.realPress("ArrowRight");
+		cy.realPress("ArrowRight");
 
 		// ArrowRight with caret mid-string → stays in input, toolbar does not navigate
 		cy.realPress("ArrowRight");
 		cy.get("#mid-toolbar-input").should("be.focused");
-
-		// Move caret back to mid
-		cy.get("#mid-toolbar-input").then($input => {
-			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
-			const native = ui5Input.nativeInput;
-			if (native) {
-				native.focus();
-				native.setSelectionRange(2, 2);
-			}
-		});
 
 		// ArrowLeft with caret mid-string → stays in input
 		cy.realPress("ArrowLeft");
@@ -396,31 +394,23 @@ describe("Toolbar general interaction", () => {
 		);
 
 		cy.get("#selection-toolbar-input").realClick();
+		cy.get("#selection-toolbar-input").should("be.focused");
 
-		// Select the whole value: selectionStart=0 but selectionEnd=len, so this is
-		// NOT a collapsed boundary - ArrowLeft should collapse the selection natively,
+		// Create a non-collapsed selection (0..len) via Home + Shift+End.
+		// Ctrl+A is unreliable inside shadow-DOM inputs in Cypress on macOS.
+		// This is NOT a collapsed boundary — ArrowLeft should collapse the selection natively,
 		// not exit the toolbar to the previous item.
-		cy.get("#selection-toolbar-input").then($input => {
-			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
-			const native = ui5Input.nativeInput;
-			if (native) {
-				native.focus();
-				native.setSelectionRange(0, native.value.length);
-			}
-		});
+		cy.realPress("Home");
+		cy.realPress(["Shift", "End"]);
 
 		cy.realPress("ArrowLeft");
 		cy.get("#selection-toolbar-input").should("be.focused");
 
-		// Same on the right edge with a full selection - ArrowRight stays in the input.
-		cy.get("#selection-toolbar-input").then($input => {
-			const ui5Input = $input[0] as Input & { nativeInput: HTMLInputElement | null };
-			const native = ui5Input.nativeInput;
-			if (native) {
-				native.focus();
-				native.setSelectionRange(0, native.value.length);
-			}
-		});
+		// Re-focus and recreate the full selection for the ArrowRight case.
+		cy.get("#selection-toolbar-input").realClick();
+		cy.get("#selection-toolbar-input").should("be.focused");
+		cy.realPress("Home");
+		cy.realPress(["Shift", "End"]);
 
 		cy.realPress("ArrowRight");
 		cy.get("#selection-toolbar-input").should("be.focused");
@@ -481,8 +471,6 @@ describe("Toolbar general interaction", () => {
 			</Toolbar>
 		);
 
-		cy.wait(500);
-
 		cy.get("[ui5-toolbar]")
 			.shadow()
 			.find(".ui5-tb-overflow-btn")
@@ -513,9 +501,6 @@ describe("Toolbar general interaction", () => {
 
 		cy.get("#otb_spacer")
 			.as("toolbar");
-
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
-		cy.wait(500);
 
 		cy.get("@toolbar")
 			.shadow()
@@ -625,9 +610,6 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			</div>
 		);
-
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
-		cy.wait(500);
 
 		cy.get("#toolbar-wide-select")
 			.shadow()

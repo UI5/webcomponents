@@ -536,30 +536,33 @@ describe("Toolbar general interaction", () => {
 			</>
 		);
 
-		// Attach click handler via document to avoid jQuery wrapping issues
-		cy.document().then(doc => {
-			const btn = doc.getElementById("btn");
-			btn?.addEventListener("click", () => {
-				const select = doc.querySelector("ui5-toolbar-select");
+		// Attach click handler once the button is in the DOM
+		cy.get("#btn").then($btn => {
+			$btn.get(0).addEventListener("click", () => {
+				const select = document.querySelector("ui5-toolbar-select");
 				const options = select?.querySelectorAll("ui5-toolbar-select-option");
 				options?.forEach(opt => {
 					(opt as ToolbarSelectOption).selected = false;
 				});
-				const opt2 = doc.getElementById("opt2") as ToolbarSelectOption;
+				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
 				opt2.selected = true;
 			});
 		});
 
 		// Verify initial state - option 2 is not selected (default selection is option 1)
-		cy.get("#opt2")
-			.should("not.have.attr", "selected");
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.false;
+		});
 
 		// Click button using realClick
 		cy.get("#btn").realClick();
 
 		// Verify option 2 is now selected (explicit selection reflects to the light-DOM option)
-		cy.get("#opt2")
-			.should("have.attr", "selected");
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.true;
+		});
 
 		// The rendered select reflects option 2 as the selected value
 		cy.get("ui5-select", { includeShadowDom: true })
