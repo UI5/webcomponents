@@ -62,7 +62,8 @@ import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBo
 import "./MultiComboBoxItemCustom.js";
 import MultiComboBoxItemGroup, { isInstanceOfMultiComboBoxItemGroup } from "./MultiComboBoxItemGroup.js";
 import ListItemGroup from "./ListItemGroup.js";
-import ComboBoxLazyLoading, { type LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import type { LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 import Tokenizer, { getTokensCountText } from "./Tokenizer.js";
 import type { TokenizerTokenDeleteEventDetail } from "./Tokenizer.js";
 import Token from "./Token.js";

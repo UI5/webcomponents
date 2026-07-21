@@ -10,7 +10,8 @@ import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.j
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import ComboBoxLazyLoading, { type LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import type { LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";

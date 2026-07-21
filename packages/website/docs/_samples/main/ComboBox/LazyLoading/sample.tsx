@@ -27,7 +27,7 @@ function App() {
   // Simulates a network request that resolves after a delay and honors an AbortSignal.
   // Rejects with an "AbortError" when the signal is aborted (superseded by newer input).
   const fetchCountries = (value, signal) =>
-    new Promise((resolve, reject) => {
+    new Promise<string[]>((resolve, reject) => {
       const timer = setTimeout(() => {
         resolve(
           COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
