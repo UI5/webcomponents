@@ -1075,6 +1075,7 @@ class ShellBar extends UI5Element {
 		return this.accessibility.getActionsAccessibilityAttributes(this.texts, {
 			overflowPopoverOpen: this.overflowPopoverOpen,
 			accessibilityAttributes: this.accessibilityAttributes,
+			showSearchField: this.showSearchField,
 		});
 	}
 
