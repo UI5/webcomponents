@@ -25,6 +25,7 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 			{this.options.map((option, index) => (
 				<Option
 					selected={option.selected}
+					value={option.value}
 					data-ui5-external-action-item-index={index}
 				>
 					{option.textContent}

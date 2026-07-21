@@ -484,7 +484,7 @@ class MenuItem extends ListItem implements IMenuItem {
 			ariaKeyShortcuts: this.accessibilityAttributes.ariaKeyShortcuts,
 			ariaExpanded: this.hasSubmenu ? this.isSubMenuOpen : undefined,
 			ariaHidden: !!this.additionalText && !!this.accessibilityAttributes.ariaKeyShortcuts ? true : undefined,
-			ariaChecked: this._markChecked ? true : undefined,
+			ariaChecked: this._isCheckable ? this._markChecked : undefined,
 		};
 
 		return { ...super._accInfo, ...accInfoSettings };

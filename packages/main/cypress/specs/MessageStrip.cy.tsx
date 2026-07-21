@@ -8,6 +8,9 @@ import {
 	MESSAGE_STRIP_INFORMATION,
 	MESSAGE_STRIP_CLOSABLE,
 	MESSAGE_STRIP_CUSTOM,
+	MESSAGE_STRIP_ERROR,
+	MESSAGE_STRIP_WARNING,
+	MESSAGE_STRIP_SUCCESS,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 import palette from "@ui5/webcomponents-icons/dist/palette.js";
@@ -167,5 +170,36 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-hidden-text")
 			.should("have.text", `${MESSAGE_STRIP_CUSTOM.defaultText} ${MESSAGE_STRIP_CLOSABLE.defaultText}`);
+	});
+
+	it("should have correct accessible text for all design states", () => {
+		cy.mount(
+			<>
+				<MessageStrip id="info" design="Information">Information message</MessageStrip>
+				<MessageStrip id="positive" design="Positive">Positive message</MessageStrip>
+				<MessageStrip id="negative" design="Negative">Negative message</MessageStrip>
+				<MessageStrip id="critical" design="Critical">Critical message</MessageStrip>
+			</>
+		);
+
+		cy.get("#info")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", MESSAGE_STRIP_INFORMATION.defaultText);
+
+		cy.get("#positive")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", MESSAGE_STRIP_SUCCESS.defaultText);
+
+		cy.get("#negative")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", MESSAGE_STRIP_ERROR.defaultText);
+
+		cy.get("#critical")
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", MESSAGE_STRIP_WARNING.defaultText);
 	});
 });
