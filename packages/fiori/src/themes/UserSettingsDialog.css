@@ -32,6 +32,7 @@
 	flex-direction: column;
 	gap: 0.5rem;
 	padding: 1rem;
+	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
 }
 
 .ui5-user-settings-side-search {
@@ -39,6 +40,10 @@
 }
 
 .ui5-user-settings-side-items,
+.ui5-user-settings-side-fixedItems {
+	border-top: 0;
+}
+
 .ui5-user-settings-side-fixedItems {
 	border-top: 0.0625rem solid var(--sapList_BorderColor);
 }

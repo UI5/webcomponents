@@ -57,7 +57,7 @@
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@ui5/cypress-internal": "0.1.0",
     "@ui5/webcomponents-tools": "2.25.0-rc.0",
-    "cypress": "15.9.0",
+    "cypress": "15.18.1",
     "vite": "5.4.21"
   }
 }
