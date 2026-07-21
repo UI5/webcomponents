@@ -622,8 +622,94 @@ describe("MediaGallery layout", () => {
 	
 		cy.get("[ui5-media-gallery] [ui5-media-gallery-item]").then($items => {
 			const itemsCount = $items.length;
-			
+
 			cy.get("[ui5-media-gallery]").should("have.prop", "_overflowSize", itemsCount);
 		});
+	});
+});
+
+describe("MediaGallery accessibility", () => {
+	it("thumbnail list has role='listbox' and each thumbnail has role='option' and aria-checked", () => {
+		cy.mount(
+			<MediaGallery>
+				<MediaGalleryItem selected>
+					<img src="./img/HT-1000.jpg" />
+					<img src="./img/HT-1000.jpg" slot="thumbnail" />
+				</MediaGalleryItem>
+				<MediaGalleryItem>
+					<img src="./img/HT-1010.jpg" />
+					<img src="./img/HT-1010.jpg" slot="thumbnail" />
+				</MediaGalleryItem>
+			</MediaGallery>
+		);
+
+		cy.get("[ui5-media-gallery]")
+			.shadow()
+			.find(".ui5-media-gallery-thumbnails-wrapper ul")
+			.should("have.attr", "role", "listbox");
+
+		cy.get("[ui5-media-gallery]")
+			.shadow()
+			.find(".ui5-media-gallery-thumbnail")
+			.each(($item, index) => {
+				expect($item).to.have.attr("role", "option");
+				expect($item).to.have.attr("aria-checked", index === 0 ? "true" : "false");
+			});
+	});
+
+	it("selected thumbnail has aria-checked='true', unselected has aria-checked='false'", () => {
+		cy.mount(
+			<MediaGallery>
+				<MediaGalleryItem selected>
+					<img src="./img/HT-1000.jpg" />
+					<img src="./img/HT-1000.jpg" slot="thumbnail" />
+				</MediaGalleryItem>
+				<MediaGalleryItem>
+					<img src="./img/HT-1010.jpg" />
+					<img src="./img/HT-1010.jpg" slot="thumbnail" />
+				</MediaGalleryItem>
+			</MediaGallery>
+		);
+
+		cy.get("[ui5-media-gallery]")
+			.shadow()
+			.find(".ui5-media-gallery-thumbnail")
+			.first()
+			.should("have.attr", "aria-checked", "true");
+
+		cy.get("[ui5-media-gallery]")
+			.shadow()
+			.find(".ui5-media-gallery-thumbnail")
+			.last()
+			.should("have.attr", "aria-checked", "false");
+	});
+
+	it("overflow list item has role='option' and aria-checked='false'", () => {
+		cy.mount(
+			<div style={{ width: "120px" }}>
+				<MediaGallery>
+					<MediaGalleryItem>
+						<img src="./img/HT-1000.jpg" />
+						<img src="./img/HT-1000.jpg" slot="thumbnail" />
+					</MediaGalleryItem>
+					<MediaGalleryItem>
+						<img src="./img/HT-1010.jpg" />
+						<img src="./img/HT-1010.jpg" slot="thumbnail" />
+					</MediaGalleryItem>
+					<MediaGalleryItem>
+						<img src="./img/HT-1022.jpg" />
+						<img src="./img/HT-1022.jpg" slot="thumbnail" />
+					</MediaGalleryItem>
+				</MediaGallery>
+			</div>
+		);
+
+		cy.get("[ui5-media-gallery]")
+			.shadow()
+			.find(".ui5-media-gallery-overflow")
+			.should(($li) => {
+				expect($li).to.have.attr("role", "option");
+				expect($li).to.have.attr("aria-checked", "false");
+			});
 	});
 });
