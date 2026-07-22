@@ -6,6 +6,7 @@ interface ShellBarSearchConstructorParams {
 	getOverflowed: () => boolean;
 	getSearchState: () => boolean;
 	setSearchState: (expanded: boolean) => void;
+	handleSearchButtonClick: () => boolean;
 	getSearchField: () => IShellBarSearchField | null;
 	getCSSVariable: (variable: string) => string;
 }
@@ -26,6 +27,7 @@ class ShellBarSearch implements IShellBarSearchController {
 	private getSearchField: () => IShellBarSearchField | null;
 	private getSearchState: () => boolean;
 	private setSearchState: (expanded: boolean) => void;
+	private handleSearchButtonClick: () => boolean;
 	private getCSSVariable: (variable: string) => string;
 	private initialRender = true;
 
@@ -35,12 +37,14 @@ class ShellBarSearch implements IShellBarSearchController {
 		getSearchField,
 		getSearchState,
 		getCSSVariable,
+		handleSearchButtonClick,
 	}: ShellBarSearchConstructorParams) {
 		this.getOverflowed = getOverflowed;
 		this.getCSSVariable = getCSSVariable;
 		this.getSearchField = getSearchField;
 		this.getSearchState = getSearchState;
 		this.setSearchState = setSearchState;
+		this.handleSearchButtonClick = handleSearchButtonClick;
 	}
 
 	subscribe(searchField: HTMLElement | null = this.getSearchField()) {
@@ -150,7 +154,7 @@ class ShellBarSearch implements IShellBarSearchController {
 			return;
 		}
 
-		this.setSearchState(!this.getSearchState());
+		this.handleSearchButtonClick();
 	}
 
 	/**
