@@ -355,7 +355,7 @@ describe("MultiInput tokens", () => {
 
 		cy.get("[ui5-token]")
 			.eq(1)
-			.should("not.have.attr", "overflows");
+			.should("have.attr", "overflows");
 
 		cy.get("[ui5-token]")
 			.eq(2)
@@ -571,7 +571,7 @@ describe("MultiInput tokens", () => {
 					<Token text="Lorem ipsum 1" slot="tokens"></Token>
 				</MultiInput>
 				<MultiInput id="mi-more">
-					<Token text="Token 1" slot="tokens"></Token>
+					<Token text="AC" slot="tokens"></Token>
 					<Token text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea." slot="tokens"></Token>
 				</MultiInput>
 			</>
