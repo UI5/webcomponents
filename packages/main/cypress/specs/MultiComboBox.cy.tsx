@@ -5518,7 +5518,7 @@ describe("load-items event", () => {
 		cy.get("@loadItems")
 			.should("have.been.calledOnce")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.shouldOpenPicker === false;
+				return event.detail.reason === "open";
 			}));
 	});
 
@@ -5553,7 +5553,7 @@ describe("load-items event", () => {
 		cy.get("@loadItems")
 			.should("have.been.calledOnce")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.shouldOpenPicker === false;
+				return event.detail.reason === "open";
 			}));
 	});
 
@@ -5589,7 +5589,7 @@ describe("load-items event", () => {
 		cy.get("@loadItems")
 			.should("have.been.calledOnce")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.shouldOpenPicker === false;
+				return event.detail.reason === "open";
 			}));
 	});
 
@@ -5607,7 +5607,7 @@ describe("load-items event", () => {
 		cy.get("@loadItems")
 			.should("have.been.calledOnce")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.shouldOpenPicker === false;
+				return event.detail.reason === "open";
 			}));
 	});
 
@@ -5624,7 +5624,7 @@ describe("load-items event", () => {
 		cy.get("@loadItems")
 			.should("have.been.calledThrice")
 			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.shouldOpenPicker === true;
+				return event.detail.reason === "input";
 			}));
 	});
 });
