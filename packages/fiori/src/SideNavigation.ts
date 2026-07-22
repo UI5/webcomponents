@@ -15,7 +15,6 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
-import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -244,7 +243,7 @@ class SideNavigation extends UI5Element {
 
 	onInvalidation(changeInfo: ChangeInfo) {
 		if (changeInfo.type === "property" && changeInfo.name === "collapsed") {
-			if (this.getDomRef() && getAnimationMode() !== "none") {
+			if (this.getDomRef()) {
 				this._bAnimating = true;
 			}
 		}
