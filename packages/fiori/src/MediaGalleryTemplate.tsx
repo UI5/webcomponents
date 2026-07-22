@@ -28,17 +28,21 @@ export default function MediaGalleryTemplate(this: MediaGallery) {
 			</div>
 
 			{this._showThumbnails && <div class="ui5-media-gallery-thumbnails-wrapper">
-				<ul>
+				<ul role="listbox">
 					{this._visibleItems.map(item =>
 						<li id={item.id}
 							class="ui5-media-gallery-thumbnail"
 							role="option"
+							aria-checked={item.selected}
 							onClick={this._onThumbnailClick}
 						>
 							<slot name={item._individualSlot}></slot>
 						</li>
 					)}
-					{this._showOverflowBtn && <li class="ui5-media-gallery-overflow">
+					{this._showOverflowBtn && <li class="ui5-media-gallery-overflow"
+						role="option"
+						aria-checked="false"
+					>
 						<Button onClick={this._onOverflowBtnClick}>
 							+{this._overflowSize}
 						</Button>

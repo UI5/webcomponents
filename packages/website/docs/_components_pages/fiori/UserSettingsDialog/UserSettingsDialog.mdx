@@ -3,6 +3,7 @@ slug: ../UserSettingsDialog
 ---
 
 import Basic from "../../../_samples/fiori/UserSettingsDialog/Basic/Basic.md";
+import SaveMode from "../../../_samples/fiori/UserSettingsDialog/SaveMode/SaveMode.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -10,3 +11,12 @@ import Basic from "../../../_samples/fiori/UserSettingsDialog/Basic/Basic.md";
 <Basic />
 
 <%COMPONENT_METADATA%>
+
+## More Samples
+
+### Save Mode
+By default the dialog shows a single <b>Close</b> button in its footer and follows an implicit-save flow — changes are applied as the user interacts with each view.
+
+Setting the <b>saveMode</b> property replaces the footer with <b>Save</b> (Emphasized) and <b>Cancel</b> buttons. Clicks fire the corresponding <b>save</b> and <b>cancel</b> events; the dialog does not close itself, so the application is responsible for persisting or discarding the changes and closing the dialog afterwards (typically after a successful backend call).
+
+<SaveMode />

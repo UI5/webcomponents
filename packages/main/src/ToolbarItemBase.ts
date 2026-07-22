@@ -3,6 +3,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 
 import type ToolbarItemOverflowBehavior from "./types/ToolbarItemOverflowBehavior.js";
+import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
 
 type ToolbarItemEventDetail = {
 	targetRef: HTMLElement;
@@ -47,6 +48,25 @@ class ToolbarItemBase extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	preventOverflowClosing = false;
+
+	_getNavigationTargets(): HTMLElement[] {
+		const ref = this.getFocusDomRef();
+		return ref ? [ref] : [];
+	}
+
+	/**
+	 * Focus entry point when toolbar navigates into this item.
+	 * Override in complex items (e.g., Breadcrumbs) to handle direction-aware entry.
+	 * @private
+	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	focusForToolbarNavigation(isForward: boolean) {
+		this.getFocusDomRef()?.focus();
+	}
+
+	getArrowNavState(): ToolbarArrowNavState | undefined {
+		return undefined;
+	}
 
 	_isOverflowed: boolean = false;
 
@@ -102,6 +122,10 @@ class ToolbarItemBase extends UI5Element {
 	 */
 	get isInteractive(): boolean {
 		return true;
+	}
+
+	get isToolbarNavigatable(): boolean {
+		return this.isInteractive && !this.hidden && !("disabled" in this && !!(this as { disabled?: boolean }).disabled);
 	}
 
 	get hasOverflow(): boolean {
