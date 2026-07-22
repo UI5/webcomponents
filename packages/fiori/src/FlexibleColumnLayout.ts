@@ -1442,6 +1442,10 @@ class FlexibleColumnLayout extends UI5Element {
 		return name;
 	}
 
+	get accStartArrowText() {
+		return this.accessibilityAttributes.startSeparator?.name || FlexibleColumnLayout.i18nBundle.getText("FCL_START_ARROW_TOOLTIP");
+	}
+
 	get accEndSeparatorText() {
 		return this.accessibilityAttributes.endSeparator?.name || FlexibleColumnLayout.i18nBundle.getText(FCL_END_SEPARATOR_TOOLTIP);
 	}

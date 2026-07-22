@@ -202,6 +202,51 @@ describe("ACC", () => {
 			.find(".ui5-fcl-separator-end")
 			.should("have.attr", "aria-orientation", "vertical");
 	});
+
+	it("verifies that aria-valuenow is present only when separator grip is shown", () => {
+		cy.mount(
+			<FlexibleColumnLayout id="fcl" layout="ThreeColumnsEndExpanded">
+				<div class="column" id="startColumn" slot="startColumn">some content</div>
+				<div class="column" id="midColumn" slot="midColumn">some content</div>
+				<div class="column" id="endColumn" slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.as("fcl");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-start")
+			.should("not.have.attr", "aria-valuenow");
+
+		cy.get("@fcl")
+			.shadow()
+			.find(".ui5-fcl-separator-end")
+			.should("have.attr", "aria-valuenow");
+	});
+
+	it("verifies that start arrow has tooltip when separator name is supplied", () => {
+		const startSeparatorName = "Switch columns";
+
+		cy.mount(
+			<FlexibleColumnLayout
+				layout="ThreeColumnsEndExpanded"
+				accessibilityAttributes={{
+					startSeparator: { role: "separator", name: startSeparatorName },
+				}}
+			>
+				<div slot="startColumn">some content</div>
+				<div slot="midColumn">some content</div>
+				<div slot="endColumn">some content</div>
+			</FlexibleColumnLayout>
+		);
+
+		cy.get("[ui5-flexible-column-layout]")
+			.shadow()
+			.find(".ui5-fcl-arrow--start")
+			.should("have.attr", "tooltip", startSeparatorName);
+	});
 });
 
 before(() => {
