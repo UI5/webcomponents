@@ -65,6 +65,7 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.10",
+    "@figma/code-connect": "^1.4.9",
     "@ui5/cypress-internal": "0.1.0",
     "@ui5/webcomponents-tools": "2.25.0-rc.0",
     "cypress": "15.18.1",
