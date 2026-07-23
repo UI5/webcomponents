@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import MultiComboBoxItemCustom from "../../src/MultiComboBoxItemCustom.js";
@@ -6,6 +7,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Button from "../../src/Button.js";
 import Link from "../../src/Link.js";
 import Input from "../../src/Input.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { MULTIINPUT_SHOW_MORE_TOKENS, TOKENIZER_ARIA_CONTAIN_ONE_TOKEN, TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS, TOKENIZER_ARIA_CONTAIN_TOKEN, TOKENIZER_SHOW_ALL_ITEMS, VALUE_STATE_ERROR, VALUE_STATE_TYPE_ERROR, VALUE_STATE_TYPE_SUCCESS, VALUE_STATE_TYPE_WARNING, VALUE_STATE_WARNING } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Security", () => {
@@ -372,7 +374,7 @@ describe("General", () => {
 
 	it("Should delete token after focus change when tokenizer collapses", () => {
 		cy.mount(
-			<MultiComboBox style="width: 250px;">
+			<MultiComboBox style="width: 280px;">
 				<MultiComboBoxItem selected={true} text="Albania"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Argentina"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
@@ -5501,5 +5503,82 @@ describe("MultiComboBoxItemCustom - Mixed Selection", () => {
 		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+});
+
+describe("Tokenizer overflow calculation", () => {
+	it("should not cause render loop at specific widths with medium-length tokens", () => {
+		// This test verifies the fix for a render loop that occurred when:
+		// - MultiComboBox has a specific width (208px)
+		// - First token is medium-length (3-4 characters)
+		// - The "n more" indicator in Korean (wider text) causes oscillation
+		// Korean "1 more" = "1개 더" which is significantly wider than English
+		// The loop is reproducable in english as well but we need to change the english
+		// translation to be 1 character longer (instead of "more" use "moree")
+
+		// Set language to Korean and wait for it to load
+		cy.wrap({ setLanguage })
+			.then(api => api.setLanguage("ko"));
+
+		cy.mount(
+			<MultiComboBox style="width: 208px">
+				<MultiComboBoxItem selected text="보기"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="임포트"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="편집"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		// Get the tokenizer element
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		// Wait for language to fully apply and rendering to stabilize
+		cy.wait(300);
+
+		// Get the "n more" text element with timeout - should exist with 3 selected tokens at 208px
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.as("nMoreText");
+
+		// Verify Korean text is shown (contains Korean characters)
+		// Korean shows "N개 항목" (wider than English "N more")
+		cy.get("@nMoreText")
+			.invoke("text")
+			.should("match", /개|항목/); // Korean text contains these characters
+
+		// Capture the initial text of the "n more" indicator
+		cy.get("@nMoreText")
+			.invoke("text")
+			.as("initialText");
+
+		// Wait a bit to ensure no render loop is happening
+		cy.wait(500);
+
+		// Verify the "n more" text hasn't changed (would change continuously in a render loop)
+		cy.get("@nMoreText")
+			.invoke("text")
+			.then(currentText => {
+				cy.get("@initialText").should("equal", currentText);
+			});
+
+		// Verify the tokenizer state is stable
+		cy.get("@tokenizer")
+			.should("exist");
+
+		// Verify tokens exist in the tokenizer (tokens are created from selected items)
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length.at.least", 1);
+
+		// Reset language
+		cy.wrap({ setLanguage })
+			.then(api => api.setLanguage("en"));
 	});
 });

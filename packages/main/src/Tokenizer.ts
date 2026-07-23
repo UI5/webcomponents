@@ -1272,22 +1272,32 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		const tokensArray = this._tokens;
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
+		// Reset overflow to measure all tokens
 		tokensArray.forEach(token => {
 			token.overflows = false;
 		});
 
-		return tokensArray.filter(token => {
-			const parentRect = this.contentDom.getBoundingClientRect();
+		const parentRect = this.contentDom.getBoundingClientRect();
+		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentStart = Number(parentRect.left.toFixed(2));
+
+		// Measure "n more" width
+		let nMoreWidth = 0;
+		const nMoreElement = this.moreLink;
+		if (nMoreElement) {
+			nMoreWidth = nMoreElement.getBoundingClientRect().width;
+		}
+
+		// Calculate overflow, reserving space for "n more" except on last token
+		return tokensArray.filter((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const parentEnd = Number(parentRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
-			const parentStart = Number(parentRect.left.toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > parentEnd));
+			const isLastToken = index === tokensArray.length - 1;
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+
+			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
 
 			return token.overflows;
 		});
