@@ -22,6 +22,8 @@ import {
 	USER_SETTINGS_DIALOG_ACCESSIBLE_NAME,
 	USER_SETTINGS_LIST_ARIA_ROLE_DESC,
 	USER_SETTINGS_DIALOG_CLOSE_BUTTON_TEXT,
+	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
+	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
 } from "./generated/i18n/i18n-defaults.js";
 
@@ -63,13 +65,16 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
 })
 
 /**
- * Fired when a settings dialog is open.
+ * Fired when the settings dialog is opened.
  * @public
  */
 @event("open")
 
 /**
  * Fired before the settings dialog is closed.
+ *
+ * **Note:** This event is cancelable via `preventDefault()`, allowing the application to keep the
+ * dialog open — for example, to prompt the user about unsaved changes before dismissal.
  * @public
  */
 @event("before-close", {
@@ -77,10 +82,26 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
 })
 
 /**
- * Fired when a settings dialog is closed.
+ * Fired when the settings dialog is closed.
  * @public
  */
 @event("close")
+
+/**
+ * Fired when the Save button in the footer is clicked.
+ * The dialog does not close automatically — the application is responsible
+ * for closing it after persisting the changes.
+ * @public
+ */
+@event("save")
+
+/**
+ * Fired when the Cancel button in the footer is clicked.
+ * The dialog does not close automatically — the application is responsible
+ * for closing it after discarding the changes.
+ * @public
+ */
+@event("cancel")
 
 class UserSettingsDialog extends UI5Element {
 	eventDetails!: {
@@ -88,6 +109,8 @@ class UserSettingsDialog extends UI5Element {
 		"open": void,
 		"before-close": UserSettingsBeforeCloseEventDetail,
 		"close": void,
+		"save": void,
+		"cancel": void,
 	};
 	/**
 	 * Defines, if the User Settings Dialog is opened.
@@ -116,6 +139,20 @@ class UserSettingsDialog extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	showSearchField = false;
+
+	/**
+	 * Defines whether the dialog offers Save and Cancel actions in its footer.
+	 *
+	 * When true, the footer renders a Save (Emphasized) and a Cancel button
+	 * instead of the default Close button. Save and Cancel each fire a
+	 * corresponding event; the application is responsible for closing the
+	 * dialog (typically after persisting or discarding the changes).
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	saveMode = false;
 
 	/**
 	 * Defines the user settings items.
@@ -295,6 +332,12 @@ class UserSettingsDialog extends UI5Element {
 	get closeButtonText() {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_CLOSE_BUTTON_TEXT);
 	}
+	get saveButtonText() {
+		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT);
+	}
+	get cancelButtonText() {
+		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT);
+	}
 	get noSearchResultsText() {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
 	}
@@ -313,6 +356,14 @@ class UserSettingsDialog extends UI5Element {
 		if (!eventPrevented) {
 			this.open = false;
 		}
+	}
+
+	_handleSaveButtonClick() {
+		this.fireDecoratorEvent("save");
+	}
+
+	_handleCancelButtonClick() {
+		this.fireDecoratorEvent("cancel");
 	}
 
 	_handleCollapseClick() {
