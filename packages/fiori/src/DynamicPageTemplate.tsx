@@ -13,6 +13,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 					role={this._headerRole || "banner"}
 					aria-label={this.headerAriaLabel}
 					onui5-toggle-title={this.onToggleTitle}
+					onFocusIn={this.onTitleAreaFocusIn}
 				>
 					<slot name="titleArea"></slot>
 					{this.headerInTitle &&
