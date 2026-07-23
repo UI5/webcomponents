@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-user-settings-dialog:** align dialog with latest design spec ([#13805](https://github.com/UI5/webcomponents/issues/13805)) ([8eac65f](https://github.com/UI5/webcomponents/commit/8eac65fc462834a4d4435762dfb239fefbb85642))
+
+
+### Features
+
+* **ui5-input:** add styling to interactive custom icons ([#13674](https://github.com/UI5/webcomponents/issues/13674)) ([ce3fecd](https://github.com/UI5/webcomponents/commit/ce3fecd2fcfffcd1f989a2a54f8e640f43d44174))
+* **ui5-user-settings-dialog:** add saveMode with Save/Cancel footer ([#13845](https://github.com/UI5/webcomponents/issues/13845)) ([7a23598](https://github.com/UI5/webcomponents/commit/7a23598ddc60f53de5a63e3cd09a8ac6e889d528))
+
+
+
+
+
 # [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
 
 

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-card:** adjust focus outline offset ([#13856](https://github.com/UI5/webcomponents/issues/13856)) ([924a0ab](https://github.com/UI5/webcomponents/commit/924a0ab69d993ae4c9eb3d94623f560fa3338f68))
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-carousel:** remove redundant role="region" from section element ([#13561](https://github.com/UI5/webcomponents/issues/13561)) ([f512c2a](https://github.com/UI5/webcomponents/commit/f512c2aa087c7ea3731dd71fa8870068ec8a5531))
+* **ui5-color-palette:** fix hover background shape mismatch in color palette popover buttons ([#13832](https://github.com/UI5/webcomponents/issues/13832)) ([1e1b8aa](https://github.com/UI5/webcomponents/commit/1e1b8aa5e8d51f89e94f9b7bf2dbb32c548b9aee))
+* **ui5-date-picker:** fix flaky tests ([#13818](https://github.com/UI5/webcomponents/issues/13818)) ([38881cd](https://github.com/UI5/webcomponents/commit/38881cdd44289c7fcddd1812443ec4c351736d3f))
+* **ui5-li-custom, ui5-tree-item-custom:** add accessibleName property for stable accessible names ([#13780](https://github.com/UI5/webcomponents/issues/13780)) ([ad0c2a8](https://github.com/UI5/webcomponents/commit/ad0c2a8b7657e54f8661c37e0a81eec0833c0efd)), closes [#13478](https://github.com/UI5/webcomponents/issues/13478)
+* **ui5-menu-separator:** fix a11y semantics by refactoring to extend UI5Element ([#13820](https://github.com/UI5/webcomponents/issues/13820)) ([d5872d5](https://github.com/UI5/webcomponents/commit/d5872d5eb909b80bd10155e8f6cd11c436d6e1e9))
+* **ui5-menu:** add missing aria-checked attribute on menuitemradio and menuitemcheckbox ([#13811](https://github.com/UI5/webcomponents/issues/13811)) ([3fde914](https://github.com/UI5/webcomponents/commit/3fde91481ed47b33b08180672fa190f99cf496c3))
+* **ui5-message-strip:** update announcement translations ([#13825](https://github.com/UI5/webcomponents/issues/13825)) ([20cc1df](https://github.com/UI5/webcomponents/commit/20cc1df1d0b9ce92ff9f13b940e02c04932d60d4)), closes [#13779](https://github.com/UI5/webcomponents/issues/13779)
+* **ui5-multi-combobox:** announce suggestions selected state ([#13767](https://github.com/UI5/webcomponents/issues/13767)) ([3bfae80](https://github.com/UI5/webcomponents/commit/3bfae802a7022228d77f6c9f9ecf5117eadb4cf3))
+* **ui5-rating-indicator:** import default icons ([#13824](https://github.com/UI5/webcomponents/issues/13824)) ([c9a6ff1](https://github.com/UI5/webcomponents/commit/c9a6ff148f46a8b041d7cfdb4e4864cef8908f2c)), closes [#13796](https://github.com/UI5/webcomponents/issues/13796)
+* **ui5-slider:** add aria-valuenow attribute ([#13830](https://github.com/UI5/webcomponents/issues/13830)) ([b043b8b](https://github.com/UI5/webcomponents/commit/b043b8bf944b51106910ad1187a01ec9298ae36b))
+* **ui5-table:** ignore 1px scrollWidth/clientWidth diff to prevent stuck popin on Safari ([#13791](https://github.com/UI5/webcomponents/issues/13791)) ([3566600](https://github.com/UI5/webcomponents/commit/3566600e42a79395781e53242689bcec9ba5f7ea)), closes [#12812](https://github.com/UI5/webcomponents/issues/12812)
+
+
+### Features
+
+* **ui5-dynamic-date-range:** support label for ([#13821](https://github.com/UI5/webcomponents/issues/13821)) ([88d47d3](https://github.com/UI5/webcomponents/commit/88d47d3bff502f6830308243c8d110457e3b9300))
+* **ui5-input:** add styling to interactive custom icons ([#13674](https://github.com/UI5/webcomponents/issues/13674)) ([ce3fecd](https://github.com/UI5/webcomponents/commit/ce3fecd2fcfffcd1f989a2a54f8e640f43d44174))
+* **ui5-toolbar-select:** add value prop to ToolbarSelectOption and selectedToolbarOption in change event ([#13804](https://github.com/UI5/webcomponents/issues/13804)) ([4d5009c](https://github.com/UI5/webcomponents/commit/4d5009c3754ff5c5b667f4d9825263ed472f0a2a)), closes [#13609](https://github.com/UI5/webcomponents/issues/13609)
+* **ui5-toolbar:** implement WAI-ARIA toolbar keyboard navigation ([#13622](https://github.com/UI5/webcomponents/issues/13622)) ([df3a8e8](https://github.com/UI5/webcomponents/commit/df3a8e8fc8f5b579b7418564f9fe343423247ff5)), closes [#12945](https://github.com/UI5/webcomponents/issues/12945)
+
+
+
+
+
 # [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
 
 

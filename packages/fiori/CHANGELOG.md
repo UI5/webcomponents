@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-hero-banner:** apply correct css params ([#13847](https://github.com/UI5/webcomponents/issues/13847)) ([613a326](https://github.com/UI5/webcomponents/commit/613a326ae5c8625ef6417ee230c9ee7cc58e5a25))
+* **ui5-illustrated-message:** correct grammar in empty-state titles ([#13831](https://github.com/UI5/webcomponents/issues/13831)) ([bffb084](https://github.com/UI5/webcomponents/commit/bffb084f0d379940b3a64bd4b94d76e236396726))
+* **ui5-media-gallery:** acc findings fixed  ([#13555](https://github.com/UI5/webcomponents/issues/13555)) ([07fa66d](https://github.com/UI5/webcomponents/commit/07fa66dea133382f19f8fe2c18a26e50fa5f1753))
+* **ui5-shellbar-search:** keep ShellBar state in sync on empty Enter ([#13834](https://github.com/UI5/webcomponents/issues/13834)) ([853038e](https://github.com/UI5/webcomponents/commit/853038ecb8757a001ee080abcbb9e5cf7243bdc6))
+* **ui5-shellbar:** fix search-button-click event and getSearchButtonDomRef with ui5-shellbar-search ([#13843](https://github.com/UI5/webcomponents/issues/13843)) ([95c0af8](https://github.com/UI5/webcomponents/commit/95c0af8802fc6783e77ea8b729a5dbcc9198242e))
+* **ui5-user-settings-dialog:** align dialog with latest design spec ([#13805](https://github.com/UI5/webcomponents/issues/13805)) ([8eac65f](https://github.com/UI5/webcomponents/commit/8eac65fc462834a4d4435762dfb239fefbb85642))
+
+
+### Features
+
+* **ui5-user-settings-dialog:** add saveMode with Save/Cancel footer ([#13845](https://github.com/UI5/webcomponents/issues/13845)) ([7a23598](https://github.com/UI5/webcomponents/commit/7a23598ddc60f53de5a63e3cd09a8ac6e889d528))
+
+
+
+
+
 # [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori
