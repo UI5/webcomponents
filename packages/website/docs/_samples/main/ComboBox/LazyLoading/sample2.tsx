@@ -1,6 +1,7 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ComboBoxClass from "@ui5/webcomponents/dist/ComboBox.js";
 import ComboBoxItemClass from "@ui5/webcomponents/dist/ComboBoxItem.js";
+import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState, useCallback } from "react";
 
 const ComboBox = createReactComponent(ComboBoxClass);
@@ -30,11 +31,11 @@ function App() {
     });
 
   // The default filter is left in place, so the ComboBox filters the loaded items on the
-  // client as the user types. We only fetch once - when the picker opens with no items -
-  // and we ignore e.detail.signal, so typing while the request is in flight does NOT
-  // cancel it. When it resolves, the already-typed value filters the list client-side.
-  const handleLoadItems = useCallback(async (e) => {
-    if (e.detail.reason !== "open") {
+  // client as the user types. We only fetch once - when the picker opens with no items or when
+  // the user starts typing. The request is not abortable, so typing while it is in flight does
+  // NOT cancel it. When it resolves, the already-typed value filters the list client-side.
+  const handleLoadItems = useCallback(async (e: UI5CustomEvent<ComboBoxClass, "load-items">) => {
+    if (e.detail.reason === "input" && (e.target as unknown as ComboBoxClass).loading) {
       return;
     }
 
@@ -51,7 +52,7 @@ function App() {
       loading={loading}
       onLoadItems={handleLoadItems}
     >
-      {items.map((country) => (
+      {items.map((country: string) => (
         <ComboBoxItem key={country} text={country} />
       ))}
     </ComboBox>

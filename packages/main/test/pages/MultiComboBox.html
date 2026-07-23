@@ -907,9 +907,18 @@
 			});
 		});
 
+		// The app owns the AbortController per control, so a newer request cancels the previous one.
+		const abortControllers = new WeakMap();
+
 		const fnLoadItems = async (e) => {
 			const mcbControl = e.target;
-			const { reason, value, signal } = e.detail;
+			const { reason, value } = e.detail;
+
+			// Cancel any in-flight request for this control and create a fresh signal.
+			abortControllers.get(mcbControl)?.abort();
+			const abortController = new AbortController();
+			abortControllers.set(mcbControl, abortController);
+			const { signal } = abortController;
 
 			mcbControl.loading = true;
 			// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.

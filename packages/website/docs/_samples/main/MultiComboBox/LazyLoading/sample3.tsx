@@ -1,7 +1,7 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import MultiComboBoxClass from "@ui5/webcomponents/dist/MultiComboBox.js";
 import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 const MultiComboBox = createReactComponent(MultiComboBoxClass);
 const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
@@ -23,15 +23,21 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
+  const abortControllerRef = useRef<AbortController>();
 
   // Simulates a server-side search: resolves after a delay with countries filtered
-  // by "value", and rejects with an "AbortError" when the request is cancelled.
+  // by "value" (an empty value returns all), and rejects with an "AbortError" when the
+  // request is cancelled.
   const searchCountries = (value, signal) =>
     new Promise<string[]>((resolve, reject) => {
       const timer = setTimeout(() => {
-        resolve(
-          COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
-        );
+        if (value.trim().length > 0) {
+          resolve(
+            COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
+          );
+        } else {
+          resolve(COUNTRIES);
+        }
       }, 600);
 
       signal.addEventListener("abort", () => {
@@ -40,18 +46,22 @@ function App() {
       });
     });
 
-  // This is a pure "search as you type" flow. With filter="None" every keystroke fires a
-  // load-items event with reason "input"; the component aborts the previous request's
-  // signal, so an outdated search is cancelled and only the latest query resolves.
+  // This is a pure "search as you type" flow. Every keystroke fires a load-items event with
+  // reason "input"; the app aborts the previous request's AbortController, so an outdated
+  // search is cancelled and only the latest query resolves.
   const handleLoadItems = useCallback(async (e) => {
-    const { value, signal } = e.detail;
+    const { value, reason } = e.detail;
 
-    if (!value) {
-      return;
-    }
+    // Cancel any in-flight request and create a fresh signal for this one.
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
 
     setLoading(true);
-    setOpen(true);
+
+    if (reason === "input") {
+      setOpen(true);
+    }
 
     try {
       const matches = await searchCountries(value, signal);

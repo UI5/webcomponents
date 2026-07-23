@@ -12,18 +12,18 @@ import react3 from '!!raw-loader!./sample3.tsx';
 
 #### Load on open, cancel and re-query on type
 
-Items are loaded when the picker opens (arrow down) and re-queried from the "server" as you type. Because `filter="None"`, every keystroke fires a new `load-items` event and the component aborts the previous request's `signal`, so an in-flight fetch is cancelled in favor of a fresh, server-side filtered one. Already selected items are preserved when the list is repopulated.
+Items are loaded when the picker opens (arrow down) and re-queried from the "server" as you type. Every keystroke fires a new `load-items` event and the application aborts the previous request via its own `AbortController`, so an in-flight fetch is cancelled in favor of a fresh, server-side filtered one. Already selected items are preserved when the list is repopulated.
 
 <Editor html={html} js={js} react={react} />
 
 #### Load all on open, filter on the client
 
-Items are fetched once, when the picker opens with no items. The request is not abortable, so typing while it is in flight does not cancel it - the default filter narrows the loaded list on the client once the data arrives.
+Items are fetched once, when the picker opens with no items or when user starts typing. The request is not aborted, so typing while it is in flight does not cancel it - the default filter narrows the loaded list on the client once the data arrives.
 
 <Editor html={html2} js={js2} react={react2} />
 
 #### Search as you type
 
-There is no preloading - each character you type triggers a server-side search. Outdated requests are aborted via the `signal`, so only the latest query resolves into items.
+There is no preloading - each character you type triggers a server-side search. Outdated requests are aborted via the application's `AbortController`, so only the latest query resolves into items.
 
 <Editor html={html3} js={js3} react={react3} />

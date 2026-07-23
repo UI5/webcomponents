@@ -21,6 +21,7 @@ const COUNTRIES = [
 function App() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
 
   // Simulates a network request that returns the full list after a delay.
@@ -31,12 +32,16 @@ function App() {
     });
 
   // The default filter is left in place, so the MultiComboBox filters the loaded items on
-  // the client as the user types. We only fetch once - when the picker opens with no items -
-  // and we ignore e.detail.signal, so typing while the request is in flight does NOT
-  // cancel it. When it resolves, the already-typed value filters the list client-side.
+  // the client as the user types. We only fetch once - when the picker opens with no items or
+  // when the user starts typing. The request is not abortable, so typing while it is in flight
+  // does NOT cancel it. When it resolves, the already-typed value filters the list client-side.
   const handleLoadItems = useCallback(async (e) => {
-    if (e.detail.reason !== "open") {
-      return;
+    if (e.detail.reason === "input") {
+      if (e.target.loading) {
+        return;
+      }
+
+      setOpen(true);
     }
 
     setLoading(true);
@@ -54,6 +59,9 @@ function App() {
     <MultiComboBox
       placeholder="Open to load all, then filter"
       loading={loading}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       onLoadItems={handleLoadItems}
       onSelectionChange={handleSelectionChange}
     >

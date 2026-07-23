@@ -10,7 +10,7 @@ export interface LoadingDelegateConfig {
 	getItemCount: () => number;
 	isLoading: () => boolean;
 	isOpen: () => boolean;
-	fireLoadItems: (reason: LoadItemsReason, signal: AbortSignal) => void;
+	fireLoadItems: (reason: LoadItemsReason) => void;
 	loadingMessage: () => string;
 	loadedMessage: () => string;
 	loadedItemMessage: () => string;
@@ -22,7 +22,6 @@ export default class ComboBoxLazyLoading {
 	_config: LoadingDelegateConfig;
 	_prevLoading: boolean;
 	_announceLoading: AnnounceState;
-	_abortController?: AbortController;
 
 	constructor(config: LoadingDelegateConfig) {
 		this._config = config;
@@ -57,25 +56,17 @@ export default class ComboBoxLazyLoading {
 		this._announceLoading = "None";
 	}
 
-	// Aborts the AbortSignal of the previous load-items event (so the app can cancel
-	// an outdated fetch), creates a fresh controller, and fires the new load-items.
-	_fireLoadItems(reason: LoadItemsReason) {
-		this._abortController?.abort();
-		this._abortController = new AbortController();
-		this._config.fireLoadItems(reason, this._abortController.signal);
-	}
-
 	// Fires load-items event when the picker is about to open and there are no items yet.
 	// shouldOpenPicker=false: caller will open the picker itself (e.g. arrow click).
 	// shouldOpenPicker=true: app must open the picker when loading starts.
 	fireOnDropdownOpen() {
 		if (!this._config.isOpen() && !this._config.isLoading() && this._config.getItemCount() === 0) {
-			this._fireLoadItems("open");
+			this._config.fireLoadItems("open");
 		}
 	}
 
 	fireOnInput() {
-		this._fireLoadItems("input");
+		this._config.fireLoadItems("input");
 	}
 }
 

@@ -141,10 +141,9 @@ type ComboBoxSelectionChangeEventDetail = {
 	trigger: ComboBoxSelectionChangeTrigger,
 };
 
-type ComboBoxLoadItems = {
+type ComboBoxLoadItemsEventDetail = {
 	reason: LoadItemsReason;
 	value: string;
-	signal: AbortSignal;
 };
 
 /**
@@ -275,7 +274,6 @@ type ComboBoxLoadItems = {
  * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
  * @param {string} reason the reason the event was fired - "input" when text is typed, "open" when the picker is about to open
  * @param {string} value value of the input
- * @param {AbortSignal} signal aborted when a newer `load-items` event is fired, so the application can cancel an outdated fetch
  * @public
  */
 @event("load-items", {
@@ -289,7 +287,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		"open": void,
 		"close": void,
 		"selection-change": ComboBoxSelectionChangeEventDetail,
-		"load-items": ComboBoxLoadItems,
+		"load-items": ComboBoxLoadItemsEventDetail,
 	}
 	/**
 	 * Defines the value of the component.
@@ -589,7 +587,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadItems: (reason, signal) => this.fireDecoratorEvent("load-items", { reason, value: this.value, signal }),
+			fireLoadItems: reason => this.fireDecoratorEvent("load-items", { reason, value: this.value }),
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
@@ -1843,6 +1841,6 @@ export default ComboBox;
 export type {
 	ComboBoxSelectionChangeEventDetail,
 	ComboBoxSelectionChangeTrigger,
-	ComboBoxLoadItems,
+	ComboBoxLoadItemsEventDetail,
 	IComboBoxItem,
 };

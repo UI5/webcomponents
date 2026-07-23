@@ -1,7 +1,8 @@
+import { UI5CustomEvent } from "@ui5/webcomponents-base";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import MultiComboBoxClass from "@ui5/webcomponents/dist/MultiComboBox.js";
 import MultiComboBoxItemClass from "@ui5/webcomponents/dist/MultiComboBoxItem.js";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 const MultiComboBox = createReactComponent(MultiComboBoxClass);
 const MultiComboBoxItem = createReactComponent(MultiComboBoxItemClass);
@@ -23,11 +24,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
+  const abortControllerRef = useRef<AbortController>();
 
   // Simulates a server-side search: resolves after a delay with countries filtered
   // by "value" (an empty value returns all), and rejects with an "AbortError" when
   // the request is cancelled.
-  const fetchCountries = (value, signal) =>
+  const fetchCountries = (value: string, signal: AbortSignal) =>
     new Promise<string[]>((resolve, reject) => {
       const timer = setTimeout(() => {
         resolve(
@@ -42,14 +44,22 @@ function App() {
     });
 
   // Arrow down fires load-items with an empty value, so the "server" returns all countries.
-  // Because filter="None", each typed character fires a new load-items - the component
-  // aborts the previous request's signal, so the in-flight fetch is cancelled and a fresh
+  // Because filter="None", each typed character fires a new load-items - the app aborts the
+  // previous request's AbortController, so the in-flight fetch is cancelled and a fresh
   // server-side filtered request takes over.
-  const handleLoadItems = useCallback(async (e) => {
-    const { value, signal } = e.detail;
+  const handleLoadItems = useCallback(async (e: UI5CustomEvent<MultiComboBoxClass, "load-items">) => {
+    const { value, reason } = e.detail;
+
+    // Cancel any in-flight request and create a fresh signal for this one.
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
 
     setLoading(true);
-    setOpen(true);
+
+    if (reason !== "open") {
+      setOpen(true);
+    }
 
     try {
       const matches = await fetchCountries(value, signal);
@@ -57,14 +67,14 @@ function App() {
       setLoading(false);
     } catch (err) {
       // A newer load-items event superseded this one - the fresh request owns loading now.
-      if (err.name !== "AbortError") {
+      if ((err as any).name !== "AbortError") {
         throw err;
       }
     }
   }, []);
 
-  const handleSelectionChange = useCallback((e) => {
-    setSelectedValues(e.detail.items.map((item) => item.text));
+  const handleSelectionChange = useCallback((e: any) => {
+    setSelectedValues(e.detail.items.map((item: any) => item.text));
   }, []);
 
   return (
@@ -78,7 +88,7 @@ function App() {
       onLoadItems={handleLoadItems}
       onSelectionChange={handleSelectionChange}
     >
-      {items.map((country) => (
+      {items.map((country: string) => (
         <MultiComboBoxItem
           key={country}
           text={country}

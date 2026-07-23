@@ -69,9 +69,9 @@ This allows you to build rich, visually appealing dropdown items that can displa
 
 ### Lazy Loading
 Use the `load-items` event to load items on demand. Its detail carries the `reason`
-(`"open"` when the picker is opened with no items, `"input"` when the user types), the current
-`value`, and an `AbortSignal` that is aborted whenever a newer `load-items` event is fired - so an
-outdated request can be cancelled. Set `filter="None"` to disable client-side filtering and let the
-server decide which items are returned.
+(`"open"` when the picker is opened with no items, `"input"` when the user types) and the current
+`value`. The application can create its own `AbortController` and abort the previous request whenever a
+newer `load-items` event is fired - so an outdated request can be cancelled. Set `filter="None"` to
+disable client-side filtering and let the server decide which items are returned.
 
 <LazyLoading />

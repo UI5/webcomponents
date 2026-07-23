@@ -762,9 +762,18 @@
 			[...control.querySelectorAll("ui5-cb-item, ui5-cb-item-group")].forEach(c => control.removeChild(c));
 		};
 
+		// The app owns the AbortController per control, so a newer request cancels the previous one.
+		const abortControllers = new WeakMap();
+
 		const fnLoadItems = async (e) => {
 			const control = e.target;
-			const { reason, value, signal } = e.detail;
+			const { reason, value } = e.detail;
+
+			// Cancel any in-flight request for this control and create a fresh signal.
+			abortControllers.get(control)?.abort();
+			const abortController = new AbortController();
+			abortControllers.set(control, abortController);
+			const { signal } = abortController;
 
 			control.loading = true;
 			// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
