@@ -261,6 +261,10 @@ and there is an additional border that appears on hover. */
 	justify-content: center;
 }
 
+:host([side-nav-collapsed][side-nav-animating]) .ui5-sn-item {
+	justify-content: flex-start;
+}
+
 :host([slot="fixedItems"]:not(side-nav-collapsed)) .ui5-sn-item.ui5-sn-item-level1 {
 	margin-top: var(--_ui5_side_navigation_first_fixed_item_margin_top); /* space for the focus*/
  }
