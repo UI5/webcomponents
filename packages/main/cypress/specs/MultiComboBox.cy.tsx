@@ -5515,7 +5515,7 @@ describe("Tokenizer overflow calculation", () => {
 		// Korean "1 more" = "1개 더" which is significantly wider than English
 		// The loop is reproducable in english as well but we need to change the english
 		// translation to be 1 character longer (instead of "more" use "moree")
-		
+
 		// Set language to Korean and wait for it to load
 		cy.wrap({ setLanguage })
 			.then(api => api.setLanguage("ko"));
@@ -5524,7 +5524,8 @@ describe("Tokenizer overflow calculation", () => {
 			<MultiComboBox style="width: 208px">
 				<MultiComboBoxItem selected text="보기"></MultiComboBoxItem>
 				<MultiComboBoxItem selected text="임포트"></MultiComboBoxItem>
-				<MultiComboBoxItem text="편집"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="편집"></MultiComboBoxItem>
+				<MultiComboBoxItem text="삭제"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -5537,21 +5538,21 @@ describe("Tokenizer overflow calculation", () => {
 			.find("[ui5-tokenizer]")
 			.as("tokenizer");
 
-		// Get the "n more" text element
+		// Wait a bit for language to fully apply
+		cy.wait(200);
+
+		// Get the "n more" text element (if it exists)
 		cy.get("@tokenizer")
 			.shadow()
 			.find(".ui5-tokenizer-more-text")
 			.as("nMoreText");
 
-		// Wait a bit for language to fully apply
-		cy.wait(200);
-
-		// Verify "n more" indicator is shown (some tokens should overflow)
+		// Verify "n more" indicator is shown (some tokens should overflow at 208px with 3 tokens)
 		cy.get("@nMoreText")
 			.should("be.visible");
 
 		// Verify Korean text is shown (contains Korean characters)
-		// Korean shows "2개 항목" (wider than English "2 more")
+		// Korean shows "N개 항목" (wider than English "N more")
 		cy.get("@nMoreText")
 			.invoke("text")
 			.should("match", /개|항목/); // Korean text contains these characters
