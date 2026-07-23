@@ -1,0 +1,59 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 350px;">
+    <!-- playground-fold-end -->
+
+    <ui5-multi-combobox id="mcbWait" placeholder="Open to load all, then filter"></ui5-multi-combobox>
+
+    <script>
+        const mcb = document.getElementById("mcbWait");
+        const COUNTRIES = ["Afghanistan", "Albania", "Algeria", "Argentina", "Australia", "Austria",
+            "Belgium", "Brazil", "Bulgaria", "Canada", "Chile", "China", "Colombia",
+            "Croatia", "Czech Republic", "Denmark", "Egypt", "Finland", "France", "Germany",
+            "Greece", "Hungary", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
+            "Italy", "Japan", "Jordan", "Kazakhstan", "Kenya", "South Korea", "Malaysia",
+            "Mexico", "Morocco", "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan",
+            "Peru", "Philippines", "Poland", "Portugal", "Romania", "Russia", "Saudi Arabia",
+            "Serbia", "Singapore", "South Africa", "Spain", "Sweden", "Switzerland", "Thailand",
+            "Turkey", "Ukraine", "United Kingdom", "United States", "Vietnam"];
+
+        // Simulates a network request that returns the full list after a delay.
+        // This request is intentionally NOT abortable - once started, it runs to completion.
+        const fetchAllCountries = () => new Promise((resolve) => {
+            setTimeout(() => resolve(COUNTRIES.slice()), 1500);
+        });
+
+        // The default filter is left in place, so the MultiComboBox filters the loaded items on
+        // the client as the user types. We only fetch once - when the picker opens with no items -
+        // and we ignore e.detail.signal, so typing while the request is in flight does NOT
+        // cancel it. When it resolves, the already-typed value filters the list client-side.
+        mcb.addEventListener("load-items", async (e) => {
+            if (e.detail.reason !== "open") {
+                return;
+            }
+
+            mcb.loading = true;
+
+            const matches = await fetchAllCountries();
+            matches.forEach(country => {
+                const item = document.createElement("ui5-mcb-item");
+                item.setAttribute("text", country);
+                mcb.appendChild(item);
+            });
+            mcb.loading = false;
+        });
+    </script>
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

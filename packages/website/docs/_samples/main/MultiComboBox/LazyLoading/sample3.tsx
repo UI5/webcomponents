@@ -25,15 +25,14 @@ function App() {
   const [selectedValues, setSelectedValues] = useState([]);
 
   // Simulates a server-side search: resolves after a delay with countries filtered
-  // by "value" (an empty value returns all), and rejects with an "AbortError" when
-  // the request is cancelled.
-  const fetchCountries = (value, signal) =>
+  // by "value", and rejects with an "AbortError" when the request is cancelled.
+  const searchCountries = (value, signal) =>
     new Promise<string[]>((resolve, reject) => {
       const timer = setTimeout(() => {
         resolve(
           COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
         );
-      }, 800);
+      }, 600);
 
       signal.addEventListener("abort", () => {
         clearTimeout(timer);
@@ -41,22 +40,25 @@ function App() {
       });
     });
 
-  // Arrow down fires load-items with an empty value, so the "server" returns all countries.
-  // Because filter="None", each typed character fires a new load-items - the component
-  // aborts the previous request's signal, so the in-flight fetch is cancelled and a fresh
-  // server-side filtered request takes over.
+  // This is a pure "search as you type" flow. With filter="None" every keystroke fires a
+  // load-items event with reason "input"; the component aborts the previous request's
+  // signal, so an outdated search is cancelled and only the latest query resolves.
   const handleLoadItems = useCallback(async (e) => {
     const { value, signal } = e.detail;
+
+    if (!value) {
+      return;
+    }
 
     setLoading(true);
     setOpen(true);
 
     try {
-      const matches = await fetchCountries(value, signal);
+      const matches = await searchCountries(value, signal);
       setItems(matches);
       setLoading(false);
     } catch (err) {
-      // A newer load-items event superseded this one - the fresh request owns loading now.
+      // Superseded by a newer search - the fresh request now owns the loading state.
       if (err.name !== "AbortError") {
         throw err;
       }
@@ -69,7 +71,7 @@ function App() {
 
   return (
     <MultiComboBox
-      placeholder="Open to load, type to refine"
+      placeholder="Type to search countries"
       filter="None"
       loading={loading}
       open={open}

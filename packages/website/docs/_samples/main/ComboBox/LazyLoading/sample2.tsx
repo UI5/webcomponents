@@ -21,55 +21,34 @@ const COUNTRIES = [
 function App() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
 
-  // Simulates a server-side search: resolves after a delay with countries filtered
-  // by "value" (an empty value returns all), and rejects with an "AbortError" when
-  // the request is cancelled.
-  const fetchCountries = (value, signal) =>
-    new Promise<string[]>((resolve, reject) => {
-      const timer = setTimeout(() => {
-        resolve(
-          COUNTRIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()))
-        );
-      }, 800);
-
-      signal.addEventListener("abort", () => {
-        clearTimeout(timer);
-        reject(new DOMException("Aborted", "AbortError"));
-      });
+  // Simulates a network request that returns the full list after a delay.
+  // This request is intentionally NOT abortable - once started, it runs to completion.
+  const fetchAllCountries = () =>
+    new Promise<string[]>((resolve) => {
+      setTimeout(() => resolve(COUNTRIES.slice()), 1500);
     });
 
-  // Arrow down fires load-items with an empty value, so the "server" returns all countries.
-  // Because filter="None", each typed character fires a new load-items - the component
-  // aborts the previous request's signal, so the in-flight fetch is cancelled and a fresh
-  // server-side filtered request takes over.
+  // The default filter is left in place, so the ComboBox filters the loaded items on the
+  // client as the user types. We only fetch once - when the picker opens with no items -
+  // and we ignore e.detail.signal, so typing while the request is in flight does NOT
+  // cancel it. When it resolves, the already-typed value filters the list client-side.
   const handleLoadItems = useCallback(async (e) => {
-    const { value, signal } = e.detail;
+    if (e.detail.reason !== "open") {
+      return;
+    }
 
     setLoading(true);
-    setOpen(true);
 
-    try {
-      const matches = await fetchCountries(value, signal);
-      setItems(matches);
-      setLoading(false);
-    } catch (err) {
-      // A newer load-items event superseded this one - the fresh request owns loading now.
-      if (err.name !== "AbortError") {
-        throw err;
-      }
-    }
+    const matches = await fetchAllCountries();
+    setItems(matches);
+    setLoading(false);
   }, []);
 
   return (
     <ComboBox
-      placeholder="Open to load, type to refine"
-      filter="None"
+      placeholder="Open to load all, then filter"
       loading={loading}
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
       onLoadItems={handleLoadItems}
     >
       {items.map((country) => (
