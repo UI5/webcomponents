@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-card:** adjust focus outline offset ([#13856](https://github.com/UI5/webcomponents/issues/13856)) ([924a0ab](https://github.com/UI5/webcomponents/commit/924a0ab69d993ae4c9eb3d94623f560fa3338f68))
+
+
+
+
+
 # [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
 
 
