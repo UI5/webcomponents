@@ -10,6 +10,10 @@ import SearchFieldCss from "./generated/themes/SearchField.css.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IOption, SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";
+import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 
 import {
 	isEnter,
@@ -21,7 +25,10 @@ import {
 	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
 	SEARCH_FIELD_LABEL,
+	SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE,
 } from "./generated/i18n/i18n-defaults.js";
+
+const SCREEN_WIDTH_BREAKPOINT = 450;
 
 /**
  * Interface for components that may be slotted inside a `ui5-search`
@@ -207,11 +214,53 @@ class SearchField extends UI5Element {
 	@property({ type: Boolean })
 	_effectiveShowClearIcon = false;
 
+	/**
+	 * Indicates whether the component is rendering on a small screen (mobile).
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_isMobileView = false;
+
+
+	/**
+	 * Indicates whether the scope selection popover is open on mobile.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_scopePopoverOpen = false;
+
+	_scopeIconButton?: HTMLElement;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
+	onEnterDOM() {
+		ResizeHandler.register(this, this._handleResize.bind(this) as ResizeObserverCallback);
+		this._isMobileView = this._isSmallScreen();
+	}
+
+	onExitDOM() {
+		ResizeHandler.deregister(this, this._handleResize.bind(this) as ResizeObserverCallback);
+	}
+
 	onBeforeRendering() {
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value);
+		this._isMobileView = this._isSmallScreen();
+	}
+
+	private _isSmallScreen(): boolean {
+		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
+	private _handleResize() {
+		const newMobileView = this._isSmallScreen();
+		if (this._isMobileView !== newMobileView) {
+			this._isMobileView = newMobileView;
+			// Close popover when switching modes to prevent state issues
+			if (this._scopePopoverOpen) {
+				this._scopePopoverOpen = false;
+			}
+		}
 	}
 
 	_onkeydown(e:KeyboardEvent) {
@@ -276,6 +325,36 @@ class SearchField extends UI5Element {
 		});
 	}
 
+	_handleScopeIconPress() {
+		if (!this.scopes?.length) {
+			return;
+		}
+		this._scopePopoverOpen = !this._scopePopoverOpen;
+	}
+
+	_handleScopePopoverClose() {
+		this._scopePopoverOpen = false;
+	}
+
+	_handleScopeItemClick(e: CustomEvent<ListItemClickEventDetail>) {
+		const listItem = e.detail.item;
+		if (!listItem) {
+			return;
+		}
+
+		const scopeValue = listItem.getAttribute("data-scope-value");
+		const scopeItem = this.scopes.find((scope: ISearchScope) => scope.value === scopeValue);
+
+		if (scopeItem) {
+			this.scopeValue = scopeItem.value;
+			this.fireDecoratorEvent("scope-change", {
+				scope: scopeItem,
+			});
+		}
+
+		this._scopePopoverOpen = false;
+	}
+
 	get _isSearchIcon() {
 		return this.value.length && this.focusedInnerInput;
 	}
@@ -292,7 +371,27 @@ class SearchField extends UI5Element {
 			searchIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_SEARCH_ICON),
 			clearIcon: SearchField.i18nBundle.getText(SEARCH_FIELD_CLEAR_ICON),
 			searchFieldAriaLabel: SearchField.i18nBundle.getText(SEARCH_FIELD_LABEL),
+			placeholderWithScope: SearchField.i18nBundle.getText(SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE),
 		};
+	}
+
+	get _effectivePlaceholder(): string | undefined {
+		// If scopes exist and no user-defined placeholder, show "Search in: {SCOPE}"
+		if (this.scopes?.length && !this.placeholder && this.scopeValue) {
+			const selectedScope = this.scopes.find((scope: ISearchScope) => scope.value === this.scopeValue);
+			if (selectedScope?.text) {
+				return String(SearchField.i18nBundle.getText(SEARCH_FIELD_PLACEHOLDER_WITH_SCOPE, String(selectedScope.text)));
+			}
+		}
+		return this.placeholder;
+	}
+
+	get _scopeIconAccessibleName(): string {
+		const selectedScope = this.scopes.find((scope: ISearchScope) => scope.value === this.scopeValue);
+
+		return selectedScope
+			? `${this._translations.scope}: ${selectedScope.text}`
+			: this._translations.scope;
 	}
 
 	get _effectiveIconTooltip() {
@@ -302,6 +401,12 @@ class SearchField extends UI5Element {
 	captureRef(ref: HTMLElement & { scopeOption?: UI5Element} | null) {
 		if (ref) {
 			ref.scopeOption = this;
+		}
+	}
+
+	captureScopeIconRef(ref: HTMLElement | null) {
+		if (ref) {
+			this._scopeIconButton = ref;
 		}
 	}
 }

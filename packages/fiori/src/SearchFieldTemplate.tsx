@@ -5,8 +5,10 @@ import Select from "@ui5/webcomponents/dist/Select.js";
 import type SearchField from "./SearchField.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
+import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
+import SearchFieldScopePopoverTemplate from "./SearchFieldScopePopoverTemplate.js";
 
 export type SearchFieldTemplateOptions = {
 	/**
@@ -35,23 +37,46 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 					<div class="ui5-search-field-content">
 						{this.scopes?.length ? (
 							<>
-								<Select
-									onChange={this._handleScopeChange}
-									class="ui5-search-field-select"
-									accessibleName={this._translations.scope}
-									tooltip={this._translations.scope}
-									value={this.scopeValue}
-								>
-									{this.scopes.map(scopeOption => (
-										<Option
-											value={scopeOption.value}
-											data-ui5-stable={scopeOption.stableDomRef}
-											ref={this.captureRef.bind(scopeOption)}
-										>{scopeOption.text}
-										</Option>
-									))}
-								</Select>
-								<div class="ui5-search-field-separator"></div>
+								{!this._isMobileView ? (
+									// Desktop/Tablet: Show full Select component
+									<>
+										<Select
+											onChange={this._handleScopeChange}
+											class="ui5-search-field-select"
+											accessibleName={this._translations.scope}
+											tooltip={this._translations.scope}
+											value={this.scopeValue}
+										>
+											{this.scopes.map(scopeOption => (
+												<Option
+													value={scopeOption.value}
+													data-ui5-stable={scopeOption.stableDomRef}
+													ref={this.captureRef.bind(scopeOption)}
+												>{scopeOption.text}
+												</Option>
+											))}
+										</Select>
+										<div class="ui5-search-field-separator"></div>
+									</>
+								) : (
+									// Mobile/Phone: Show icon button only
+									<>
+										<Button
+											ref={this.captureScopeIconRef.bind(this)}
+											class="ui5-search-field-scope-button"
+											icon={slimArrowDown}
+											design={ButtonDesign.Transparent}
+											onClick={this._handleScopeIconPress}
+											tooltip={this._scopeIconAccessibleName}
+											accessibleName={this._scopeIconAccessibleName}
+											accessibilityAttributes={{
+												hasPopup: "listbox",
+												expanded: this._scopePopoverOpen,
+											}}
+										/>
+										<div class="ui5-search-field-separator"></div>
+									</>
+								)}
 							</>
 						) : this.filterButton?.length ? (
 							<>
@@ -70,7 +95,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 							aria-autocomplete="both"
 							aria-controls="ui5-search-list"
 							value={this.value}
-							placeholder={this.placeholder}
+							placeholder={this._effectivePlaceholder}
 							data-sap-focus-ref
 							onInput={this._handleInput}
 							onFocusIn={this._onfocusin}
@@ -100,6 +125,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 						></Icon>
 					</div>
 				</div>
+				{SearchFieldScopePopoverTemplate.call(this)}
 			</BusyIndicator>
 		)
 	);
