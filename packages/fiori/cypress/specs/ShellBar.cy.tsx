@@ -1425,6 +1425,46 @@ describe("ButtonBadge in ShellBar", () => {
 			.should("have.attr", "text", "3");
 	});
 
+	it("Test if overflow list item renders badge span when count is set", () => {
+		cy.mount(
+			<>
+				<ShellBarItem id="item-with-badge" icon="accept" text="Item" count="42" in-overflow />
+				<ShellBarItem id="item-no-badge" icon="alert" text="Other" in-overflow />
+			</>
+		);
+
+		// Item with count: badge span exists with correct text
+		cy.get("#item-with-badge")
+			.shadow()
+			.find(".ui5-shellbar-item-badge")
+			.should("exist")
+			.should("have.text", "42");
+
+		// Item without count: no badge span rendered
+		cy.get("#item-no-badge")
+			.shadow()
+			.find(".ui5-shellbar-item-badge")
+			.should("not.exist");
+	});
+
+	it("Test count updates propagate to overflow badge span", () => {
+		cy.mount(
+			<ShellBarItem id="item-update" icon="accept" text="Item" count="1" in-overflow />
+		);
+
+		cy.get("#item-update")
+			.shadow()
+			.find(".ui5-shellbar-item-badge")
+			.should("have.text", "1");
+
+		cy.get("#item-update").invoke("attr", "count", "99+");
+
+		cy.get("#item-update")
+			.shadow()
+			.find(".ui5-shellbar-item-badge")
+			.should("have.text", "99+");
+	});
+
 	it("Test if overflow button shows appropriate badge when items are overflowed", () => {
 		cy.mount(
 			<ShellBar id="shellbar-with-overflow"
