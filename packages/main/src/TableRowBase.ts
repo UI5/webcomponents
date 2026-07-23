@@ -46,6 +46,9 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	@query("#selection-cell")
 	_selectionCell?: HTMLElement;
 
+	@query("#actions-cell")
+	_actionsCell?: HTMLElement;
+
 	@query("#navigated-cell")
 	_navigatedCell?: HTMLElement;
 
@@ -162,7 +165,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _stickyCells() {
-		return [this._selectionCell, ...this.cells, this._navigatedCell].filter(cell => cell?.hasAttribute("fixed"));
+		return [this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
 	}
 
 	get _i18nRowSelector(): string {

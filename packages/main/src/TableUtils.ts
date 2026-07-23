@@ -16,10 +16,10 @@ const findRowInPath = (composedPath: Array<EventTarget>) => {
 	return composedPath.find((el: EventTarget) => el instanceof HTMLElement && el.hasAttribute("ui5-table-row")) as TableRow;
 };
 
-const findVerticalScrollContainer = (element: HTMLElement): HTMLElement => {
+const findVerticalScrollContainer = (element: HTMLElement, requireOverflow = false): HTMLElement => {
 	while (element) {
 		const { overflowY } = window.getComputedStyle(element);
-		if (overflowY === "auto" || overflowY === "scroll") {
+		if ((overflowY === "auto" || overflowY === "scroll") && (!requireOverflow || element.scrollHeight > element.clientHeight)) {
 			return element;
 		}
 
@@ -33,43 +33,59 @@ const findVerticalScrollContainer = (element: HTMLElement): HTMLElement => {
 	return document.scrollingElement as HTMLElement || document.documentElement;
 };
 
-const scrollElementIntoView = (scrollContainer: HTMLElement, element: HTMLElement, stickyElements: HTMLElement[], isRtl: boolean) => {
-	if (stickyElements.length === 0) {
-		return;
-	}
+type Axis = "x" | "y";
 
+const AXIS_PROPS = {
+	x: { start: "left", end: "right", size: "width" },
+	y: { start: "top", end: "bottom", size: "height" },
+} as const;
+
+// Computes the scroll delta needed to bring an element into view within a scroll container, considering sticky elements that may be in the way
+const computeAxisScrollDelta = (
+	element: HTMLElement,
+	scrollContainer: HTMLElement,
+	stickyElements: HTMLElement[],
+	axis: Axis,
+): number => {
+	const { start, end, size } = AXIS_PROPS[axis];
 	const elementRect = element.getBoundingClientRect();
-	const inline = isRtl ? "right" : "left";
+	const scrollContainerRect = scrollContainer.getBoundingClientRect();
 
-	const { x: stickyX, y: stickyY } = stickyElements.reduce(({ x, y }, stickyElement) => {
-		const { top, [inline]: inlineStart } = getComputedStyle(stickyElement);
-		const stickyElementRect = stickyElement.getBoundingClientRect();
-		if (top !== "auto" && stickyElementRect.bottom > elementRect.top) {
-			y = Math.max(y, stickyElementRect.bottom);
-		}
-		if (inlineStart !== "auto") {
-			if (!isRtl && stickyElementRect.right > elementRect.left) {
-				x = Math.max(x, stickyElementRect.right);
-			} else if (isRtl && stickyElementRect.left < elementRect.right) {
-				x = Math.min(x, stickyElementRect.left);
-			}
+	let pinStart = 0;
+	let pinEnd = 0;
+	stickyElements.forEach(sticky => {
+		if (sticky === element || sticky.contains(element)) {
+			return;
 		}
 
-		return { x, y };
-	}, { x: elementRect[inline], y: elementRect.top });
-
-	const scrollX = elementRect[inline] - stickyX;
-	const scrollY = elementRect.top - stickyY;
-
-	if (scrollX === 0 && scrollY === 0) {
-		// avoid unnecessary scroll call, when nothing changes
-		return;
-	}
-
-	scrollContainer.scrollBy({
-		top: scrollY,
-		left: scrollX,
+		const stickyStyle = getComputedStyle(sticky);
+		const stickyRect = sticky.getBoundingClientRect();
+		if (stickyStyle[start] !== "auto") {
+			pinStart = Math.max(pinStart, stickyRect[end] - scrollContainerRect[start]);
+		}
+		if (stickyStyle[end] !== "auto") {
+			pinEnd = Math.max(pinEnd, scrollContainerRect[end] - stickyRect[start]);
+		}
 	});
+
+	const viewportStart = scrollContainerRect[start] + pinStart;
+	const viewportEnd = scrollContainerRect[end] - pinEnd;
+
+	// Element already spans the whole container
+	if (elementRect[start] <= scrollContainerRect[start] && elementRect[end] >= scrollContainerRect[end]) {
+		return 0;
+	}
+	// Element larger than the visible viewport
+	if (elementRect[size] > viewportEnd - viewportStart) {
+		return (axis === "x" && element.matches(":dir(rtl)")) ? elementRect[end] - viewportEnd : elementRect[start] - viewportStart;
+	}
+	if (elementRect[start] < viewportStart) {
+		return elementRect[start] - viewportStart;
+	}
+	if (elementRect[end] > viewportEnd) {
+		return elementRect[end] - viewportEnd;
+	}
+	return 0;
 };
 
 const isFeature = <T>(element: any, identifier: string): element is T => {
@@ -116,7 +132,7 @@ export {
 	isHeaderSelectionCell,
 	findRowInPath,
 	findVerticalScrollContainer,
-	scrollElementIntoView,
+	computeAxisScrollDelta,
 	isFeature,
 	throttle,
 	toggleAttribute,
