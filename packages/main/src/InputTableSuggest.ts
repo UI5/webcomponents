@@ -17,8 +17,8 @@ import type TableRow from "./TableRow.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type TableOverflowMode from "./types/TableOverflowMode.js";
 
-import TabularInputTemplate from "./TabularInputTemplate.js";
-import tabularInputStyles from "./generated/themes/TabularInput.css.js";
+import InputTableSuggestTemplate from "./InputTableSuggestTemplate.js";
+import InputTableSuggestStyles from "./generated/themes/InputTableSuggest.css.js";
 import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 
 import {
@@ -39,7 +39,7 @@ type HighlightedCellContent = {
  * @private
  */
 type ProcessedSuggestionRow = {
-	row: ITabularSuggestionRow;
+	row: ITableSuggestionRow;
 	cells: HighlightedCellContent[];
 };
 
@@ -47,21 +47,21 @@ type ProcessedSuggestionRow = {
  * Interface for tabular suggestion row items
  * @public
  */
-interface ITabularSuggestionRow extends UI5Element {
+interface ITableSuggestionRow extends UI5Element {
 	cells: TableCell[];
 	selected?: boolean;
 	focused?: boolean;
 }
 
-type TabularInputSelectionChangeEventDetail = {
-	row: ITabularSuggestionRow | null;
+type InputTableSuggestSelectionChangeEventDetail = {
+	row: ITableSuggestionRow | null;
 }
 
 /**
  * @class
  * ### Overview
  *
- * The `ui5-tabular-input` component is an input field with tabular suggestions support.
+ * The `ui5-input-table-suggest` component is an input field with tabular suggestions support.
  * It displays suggestions in a table format with multiple columns, allowing users to
  * see more information about each suggestion before selecting it.
  *
@@ -97,7 +97,7 @@ type TabularInputSelectionChangeEventDetail = {
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents/dist/TabularInput.js";`
+ * `import "@ui5/webcomponents/dist/InputTableSuggest.js";`
  *
  * @constructor
  * @extends Input
@@ -105,18 +105,18 @@ type TabularInputSelectionChangeEventDetail = {
  * @experimental
  */
 @customElement({
-	tag: "ui5-tabular-input",
+	tag: "ui5-input-table-suggest",
 	languageAware: true,
 	formAssociated: true,
 	renderer: jsxRenderer,
-	template: TabularInputTemplate,
-	styles: [Input.styles, SuggestionsCss, tabularInputStyles],
+	template: InputTableSuggestTemplate,
+	styles: [Input.styles, SuggestionsCss, InputTableSuggestStyles],
 })
 
-class TabularInput extends Input {
+class InputTableSuggest extends Input {
 	// @ts-expect-error - Intentionally override selection-change to use 'row' instead of 'item'
 	eventDetails!: Omit<Input["eventDetails"], "selection-change"> & {
-		"selection-change": TabularInputSelectionChangeEventDetail,
+		"selection-change": InputTableSuggestSelectionChangeEventDetail,
 	}
 
 	/**
@@ -141,7 +141,7 @@ class TabularInput extends Input {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	suggestionRows!: Slot<ITabularSuggestionRow>;
+	suggestionRows!: Slot<ITableSuggestionRow>;
 
 	/**
 	 * Defines the overflow behavior of the suggestion table.
@@ -156,7 +156,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })
-	_useTabularSuggestions = false;
+	_useTableSuggestions = false;
 
 	/**
 	 * Internal property reflecting whether a suggestion row has focus.
@@ -176,10 +176,10 @@ class TabularInput extends Input {
 	 * Stores the matched row for typeahead (similar to Input's _matchedSuggestionItem)
 	 * @private
 	 */
-	_matchedTabularRow?: ITabularSuggestionRow;
+	_matchedTabularRow?: ITableSuggestionRow;
 
 	get _effectiveShowSuggestions() {
-		if (this._useTabularSuggestions) {
+		if (this._useTableSuggestions) {
 			return this.showSuggestions;
 		}
 		return super._effectiveShowSuggestions;
@@ -190,16 +190,16 @@ class TabularInput extends Input {
 	 * Returns empty when showSuggestions is false to prevent parent from opening popover
 	 */
 	get _flattenItems(): Array<IInputSuggestionItem> {
-		if (this._useTabularSuggestions) {
+		if (this._useTableSuggestions) {
 			return this.showSuggestions ? this.suggestionRows as unknown as Array<IInputSuggestionItem> : [];
 		}
 		return super._flattenItems;
 	}
 
 	onBeforeRendering() {
-		this._useTabularSuggestions = this.suggestionColumns.length > 0;
+		this._useTableSuggestions = this.suggestionColumns.length > 0;
 
-		if (this._useTabularSuggestions) {
+		if (this._useTableSuggestions) {
 			this._processRows();
 			this._handleTabularPopoverOpen();
 			this._handleTabularTypeAhead();
@@ -259,7 +259,7 @@ class TabularInput extends Input {
 	/**
 	 * @private
 	 */
-	_getFirstMatchingRow(current: string): ITabularSuggestionRow | undefined {
+	_getFirstMatchingRow(current: string): ITableSuggestionRow | undefined {
 		const visibleRows = this._visibleRows;
 		if (!visibleRows.length) {
 			return;
@@ -276,7 +276,7 @@ class TabularInput extends Input {
 	/**
 	 * @private
 	 */
-	_performRowTypeAhead(row: ITabularSuggestionRow) {
+	_performRowTypeAhead(row: ITableSuggestionRow) {
 		const suggestionText = this._getRowValue(row);
 		const typedValue = this.typedInValue;
 
@@ -291,7 +291,7 @@ class TabularInput extends Input {
 	/**
 	 * @private
 	 */
-	_selectMatchingRow(row: ITabularSuggestionRow) {
+	_selectMatchingRow(row: ITableSuggestionRow) {
 		this._deselectAllRows();
 
 		row.selected = true;
@@ -303,7 +303,7 @@ class TabularInput extends Input {
 	}
 
 	onAfterRendering() {
-		if (!this._useTabularSuggestions) {
+		if (!this._useTableSuggestions) {
 			return super.onAfterRendering();
 		}
 
@@ -335,7 +335,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_adjustSelectionRange() {
-		if (this._useTabularSuggestions) {
+		if (this._useTableSuggestions) {
 			const innerInput = this.getInputDOMRefSync();
 			if (innerInput) {
 				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
@@ -371,7 +371,7 @@ class TabularInput extends Input {
 		});
 	}
 
-	get _visibleRows(): ITabularSuggestionRow[] {
+	get _visibleRows(): ITableSuggestionRow[] {
 		return this.suggestionRows.filter(row => !(row as UI5Element).hidden);
 	}
 
@@ -397,7 +397,7 @@ class TabularInput extends Input {
 	/**
 	 * @private
 	 */
-	_selectRow(row: ITabularSuggestionRow, keyboardUsed: boolean) {
+	_selectRow(row: ITableSuggestionRow, keyboardUsed: boolean) {
 		const rowValue = this._getRowValue(row);
 		const isAlreadySelected = row.focused || row.selected;
 
@@ -426,7 +426,7 @@ class TabularInput extends Input {
 	/**
 	 * @private
 	 */
-	_getRowValue(row: ITabularSuggestionRow): string {
+	_getRowValue(row: ITableSuggestionRow): string {
 		const cells = row.cells || [];
 
 		if (cells.length > 0) {
@@ -450,7 +450,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleDown(e: KeyboardEvent) {
-		if (this._useTabularSuggestions && this.open) {
+		if (this._useTableSuggestions && this.open) {
 			e.preventDefault();
 			this._navigateRows(true);
 			return;
@@ -462,7 +462,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleUp(e: KeyboardEvent) {
-		if (this._useTabularSuggestions && this.open) {
+		if (this._useTableSuggestions && this.open) {
 			e.preventDefault();
 			this._navigateRows(false);
 			return;
@@ -522,7 +522,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleEnter(e: KeyboardEvent) {
-		if (!this._useTabularSuggestions) {
+		if (!this._useTableSuggestions) {
 			return super._handleEnter(e);
 		}
 
@@ -559,7 +559,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_handleEscape() {
-		if (!this._useTabularSuggestions || !this.open) {
+		if (!this._useTableSuggestions || !this.open) {
 			return super._handleEscape();
 		}
 
@@ -576,7 +576,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_clearPopoverFocusAndSelection() {
-		if (!this._useTabularSuggestions) {
+		if (!this._useTableSuggestions) {
 			return super._clearPopoverFocusAndSelection();
 		}
 
@@ -585,7 +585,7 @@ class TabularInput extends Input {
 	}
 
 	get _hasTabularSuggestions(): boolean {
-		return this._useTabularSuggestions && this._visibleRows.length > 0;
+		return this._useTableSuggestions && this._visibleRows.length > 0;
 	}
 
 	get _columnsCount(): number {
@@ -593,11 +593,11 @@ class TabularInput extends Input {
 	}
 
 	get _isRowFocused(): boolean {
-		return this._useTabularSuggestions && this._visibleRows.some(row => row.focused);
+		return this._useTableSuggestions && this._visibleRows.some(row => row.focused);
 	}
 
 	override get _isSuggestionsFocused(): boolean {
-		if (this._useTabularSuggestions) {
+		if (this._useTableSuggestions) {
 			return this._isRowFocused;
 		}
 		return super._isSuggestionsFocused || false;
@@ -665,7 +665,7 @@ class TabularInput extends Input {
 			return;
 		}
 
-		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-tabular-input-suggestions-wrapper");
+		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-input-table-suggest-suggestions-wrapper");
 		if (!scrollContainer) {
 			return;
 		}
@@ -689,7 +689,7 @@ class TabularInput extends Input {
 	 * @private
 	 */
 	_onfocusout(e: FocusEvent) {
-		if (!this._useTabularSuggestions) {
+		if (!this._useTableSuggestions) {
 			return super._onfocusout(e);
 		}
 
@@ -709,10 +709,10 @@ class TabularInput extends Input {
 	}
 }
 
-TabularInput.define();
+InputTableSuggest.define();
 
-export default TabularInput;
+export default InputTableSuggest;
 export type {
-	ITabularSuggestionRow,
-	TabularInputSelectionChangeEventDetail,
+	ITableSuggestionRow,
+	InputTableSuggestSelectionChangeEventDetail,
 };

@@ -16,7 +16,7 @@
 	box-shadow: var(--sapField_Hover_Shadow);
 }
 
-.ui5-tabular-input-suggestions-wrapper {
+.ui5-input-table-suggest-suggestions-wrapper {
 	width: 100%;
 	max-height: var(--_ui5_tabular_suggestions_max_height, 20rem);
 	overflow: auto;
@@ -63,6 +63,6 @@
 	font-weight: 500;
 }
 
-:host([_isPhone]) .ui5-tabular-input-suggestions-wrapper {
+:host([_isPhone]) .ui5-input-table-suggest-suggestions-wrapper {
 	max-height: none;
 }

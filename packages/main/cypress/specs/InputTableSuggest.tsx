@@ -1,13 +1,13 @@
-import TabularInput from "../../src/TabularInput.js";
+import InputTableSuggest from "../../src/InputTableSuggest.js";
 import TableHeaderCell from "../../src/TableHeaderCell.js";
 import TableRow from "../../src/TableRow.js";
 import TableCell from "../../src/TableCell.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 
-describe("TabularInput - Basic Rendering", () => {
+describe("InputTableSuggest - Basic Rendering", () => {
 	it("renders with tabular suggestions", () => {
 		cy.mount(
-			<TabularInput>
+			<InputTableSuggest>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableHeaderCell slot="suggestionColumns">Country</TableHeaderCell>
 				<TableRow slot="suggestionRows">
@@ -18,25 +18,25 @@ describe("TabularInput - Basic Rendering", () => {
 					<TableCell>Jane</TableCell>
 					<TableCell>UK</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]").should("exist");
-		cy.get("[ui5-tabular-input]").find("[ui5-table-header-cell]").should("have.length", 2);
-		cy.get("[ui5-tabular-input]").find("[ui5-table-row]").should("have.length", 2);
+		cy.get("[ui5-input-table-suggest]").should("exist");
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-header-cell]").should("have.length", 2);
+		cy.get("[ui5-input-table-suggest]").find("[ui5-table-row]").should("have.length", 2);
 	});
 
 	it("opens suggestions popover on focus and type", () => {
 		cy.mount(
-			<TabularInput showSuggestions>
+			<InputTableSuggest showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -50,15 +50,15 @@ describe("TabularInput - Basic Rendering", () => {
 
 	it("closes suggestions popover on Escape", () => {
 		cy.mount(
-			<TabularInput showSuggestions>
+			<InputTableSuggest showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -78,18 +78,18 @@ describe("TabularInput - Basic Rendering", () => {
 	});
 });
 
-describe("TabularInput - Highlighting", () => {
+describe("InputTableSuggest - Highlighting", () => {
 	it("highlights matching text in cells", () => {
 		cy.mount(
-			<TabularInput showSuggestions>
+			<InputTableSuggest showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John Smith</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -105,10 +105,10 @@ describe("TabularInput - Highlighting", () => {
 	});
 });
 
-describe("TabularInput - Keyboard Navigation", () => {
+describe("InputTableSuggest - Keyboard Navigation", () => {
 	it("navigates through rows with Arrow Down/Up", () => {
 		cy.mount(
-			<TabularInput showSuggestions noTypeahead>
+			<InputTableSuggest showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -119,10 +119,10 @@ describe("TabularInput - Keyboard Navigation", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jack</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -143,7 +143,7 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 	it("selects text during navigation", () => {
 		cy.mount(
-			<TabularInput showSuggestions noTypeahead>
+			<InputTableSuggest showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -151,10 +151,10 @@ describe("TabularInput - Keyboard Navigation", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jane</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -172,15 +172,15 @@ describe("TabularInput - Keyboard Navigation", () => {
 
 	it("restores typed value when pressing Arrow Up from first row", () => {
 		cy.mount(
-			<TabularInput showSuggestions noTypeahead>
+			<InputTableSuggest showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -197,15 +197,15 @@ describe("TabularInput - Keyboard Navigation", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput showSuggestions onSelectionChange={onSelectionChange}>
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -224,12 +224,12 @@ describe("TabularInput - Keyboard Navigation", () => {
 	});
 });
 
-describe("TabularInput - Row Selection", () => {
+describe("InputTableSuggest - Row Selection", () => {
 	it("selects row on click", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -237,10 +237,10 @@ describe("TabularInput - Row Selection", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jane</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -260,7 +260,7 @@ describe("TabularInput - Row Selection", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput showSuggestions onSelectionChange={onSelectionChange}>
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -268,10 +268,10 @@ describe("TabularInput - Row Selection", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jane</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -285,7 +285,7 @@ describe("TabularInput - Row Selection", () => {
 		const onSelectionChange = cy.spy().as("onSelectionChange");
 
 		cy.mount(
-			<TabularInput showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
+			<InputTableSuggest showSuggestions onSelectionChange={onSelectionChange} noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -293,10 +293,10 @@ describe("TabularInput - Row Selection", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jane</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -313,10 +313,10 @@ describe("TabularInput - Row Selection", () => {
 	});
 });
 
-describe("TabularInput - Typeahead", () => {
+describe("InputTableSuggest - Typeahead", () => {
 	it("performs typeahead with first matching row", () => {
 		cy.mount(
-			<TabularInput showSuggestions>
+			<InputTableSuggest showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
@@ -324,10 +324,10 @@ describe("TabularInput - Typeahead", () => {
 				<TableRow slot="suggestionRows">
 					<TableCell>Jane</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -343,15 +343,15 @@ describe("TabularInput - Typeahead", () => {
 
 	it("disables typeahead with noTypeahead property", () => {
 		cy.mount(
-			<TabularInput showSuggestions noTypeahead>
+			<InputTableSuggest showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -361,18 +361,18 @@ describe("TabularInput - Typeahead", () => {
 	});
 });
 
-describe("TabularInput - Clear Icon", () => {
+describe("InputTableSuggest - Clear Icon", () => {
 	it("shows clear icon when value is present", () => {
 		cy.mount(
-			<TabularInput showSuggestions showClearIcon>
+			<InputTableSuggest showSuggestions showClearIcon>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -386,15 +386,15 @@ describe("TabularInput - Clear Icon", () => {
 
 	it("clears value when clicking clear icon", () => {
 		cy.mount(
-			<TabularInput showSuggestions showClearIcon>
+			<InputTableSuggest showSuggestions showClearIcon>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -409,32 +409,32 @@ describe("TabularInput - Clear Icon", () => {
 	});
 });
 
-describe("TabularInput - Value State", () => {
+describe("InputTableSuggest - Value State", () => {
 	it("displays value state", () => {
 		cy.mount(
-			<TabularInput showSuggestions valueState="Negative">
+			<InputTableSuggest showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.should("have.attr", "value-state", "Negative");
 	});
 
 	it("shows value state header in suggestions popover", () => {
 		cy.mount(
-			<TabularInput showSuggestions valueState="Negative">
+			<InputTableSuggest showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -455,16 +455,16 @@ describe("TabularInput - Value State", () => {
 
 	it("shows custom value state message from slot", () => {
 		cy.mount(
-			<TabularInput showSuggestions valueState="Information">
+			<InputTableSuggest showSuggestions valueState="Information">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
 				<div slot="valueStateMessage">Custom info message</div>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -478,15 +478,15 @@ describe("TabularInput - Value State", () => {
 
 	it("shows standalone value state popover when focused without typing", () => {
 		cy.mount(
-			<TabularInput showSuggestions valueState="Negative">
+			<InputTableSuggest showSuggestions valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -502,18 +502,18 @@ describe("TabularInput - Value State", () => {
 	});
 });
 
-describe("TabularInput - showSuggestions Property", () => {
+describe("InputTableSuggest - showSuggestions Property", () => {
 	it("does not open suggestions popover when showSuggestions is false", () => {
 		cy.mount(
-			<TabularInput showSuggestions={false}>
+			<InputTableSuggest showSuggestions={false}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -527,15 +527,15 @@ describe("TabularInput - showSuggestions Property", () => {
 
 	it("does not open suggestions popover when showSuggestions is not set (defaults to false)", () => {
 		cy.mount(
-			<TabularInput>
+			<InputTableSuggest>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -549,15 +549,15 @@ describe("TabularInput - showSuggestions Property", () => {
 
 	it("opens suggestions popover when showSuggestions is true", () => {
 		cy.mount(
-			<TabularInput showSuggestions>
+			<InputTableSuggest showSuggestions>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -571,15 +571,15 @@ describe("TabularInput - showSuggestions Property", () => {
 
 	it("does not perform typeahead when showSuggestions is false", () => {
 		cy.mount(
-			<TabularInput showSuggestions={false}>
+			<InputTableSuggest showSuggestions={false}>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -590,15 +590,15 @@ describe("TabularInput - showSuggestions Property", () => {
 
 	it("shows value state popover when showSuggestions is false and has value state", () => {
 		cy.mount(
-			<TabularInput showSuggestions={false} valueState="Negative">
+			<InputTableSuggest showSuggestions={false} valueState="Negative">
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -614,18 +614,18 @@ describe("TabularInput - showSuggestions Property", () => {
 	});
 });
 
-describe("TabularInput - Disabled and Readonly", () => {
+describe("InputTableSuggest - Disabled and Readonly", () => {
 	it("does not open popover when disabled", () => {
 		cy.mount(
-			<TabularInput showSuggestions disabled>
+			<InputTableSuggest showSuggestions disabled>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick({ force: true });
 
@@ -637,15 +637,15 @@ describe("TabularInput - Disabled and Readonly", () => {
 
 	it("does not open popover when readonly", () => {
 		cy.mount(
-			<TabularInput showSuggestions readonly>
+			<InputTableSuggest showSuggestions readonly>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableRow slot="suggestionRows">
 					<TableCell>John</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 
@@ -656,10 +656,10 @@ describe("TabularInput - Disabled and Readonly", () => {
 	});
 });
 
-describe("TabularInput - Accessibility", () => {
+describe("InputTableSuggest - Accessibility", () => {
 	it("announces row position and all column values during navigation", () => {
 		cy.mount(
-			<TabularInput showSuggestions noTypeahead>
+			<InputTableSuggest showSuggestions noTypeahead>
 				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
 				<TableHeaderCell slot="suggestionColumns">Country</TableHeaderCell>
 				<TableRow slot="suggestionRows">
@@ -670,10 +670,10 @@ describe("TabularInput - Accessibility", () => {
 					<TableCell>Jane</TableCell>
 					<TableCell>UK</TableCell>
 				</TableRow>
-			</TabularInput>
+			</InputTableSuggest>
 		);
 
-		cy.get("[ui5-tabular-input]")
+		cy.get("[ui5-input-table-suggest]")
 			.as("input")
 			.realClick();
 

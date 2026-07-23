@@ -1,4 +1,4 @@
-import type TabularInput from "./TabularInput.js";
+import type InputTableSuggest from "./InputTableSuggest.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 
 import Icon from "./Icon.js";
@@ -20,7 +20,7 @@ import TableHeaderCell from "./TableHeaderCell.js";
 import TableRow from "./TableRow.js";
 import TableCell from "./TableCell.js";
 
-export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemplateResult {
+export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest): JsxTemplateResult {
 	return (
 		<>
 			<ResponsivePopover
@@ -114,7 +114,7 @@ export default function TabularInputPopoverTemplate(this: TabularInput): JsxTemp
 	);
 }
 
-function valueStateMessage(this: TabularInput, open: boolean) {
+function valueStateMessage(this: InputTableSuggest, open: boolean) {
 	const iconPerValueState = {
 		Negative: error,
 		Critical: alert,
@@ -132,12 +132,12 @@ function valueStateMessage(this: TabularInput, open: boolean) {
 	);
 }
 
-function tabularSuggestionsList(this: TabularInput): JsxTemplateResult {
+function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 	const isScrollMode = this._overflowMode === "Scroll";
 	const lastColumnIndex = this.suggestionColumns.length - 1;
 
 	return (
-		<div class="ui5-tabular-input-suggestions-wrapper">
+		<div class="ui5-input-table-suggest-suggestions-wrapper">
 			<Table
 				class="ui5-tabular-suggestions-table"
 				overflowMode={this._overflowMode}

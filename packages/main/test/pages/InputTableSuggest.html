@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>TabularInput - Test Page</title>
+	<title>InputTableSuggest - Test Page</title>
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 	<style>
 		body {
@@ -26,7 +26,7 @@
 			margin-bottom: 1rem;
 			font-size: 0.875rem;
 		}
-		ui5-tabular-input {
+		ui5-input-table-suggest {
 			width: 100%;
 			max-width: 600px;
 		}
@@ -48,8 +48,8 @@
 	</style>
 </head>
 <body>
-	<ui5-title level="H1">TabularInput Component - Test Page</ui5-title>
-	<ui5-text>This page demonstrates the TabularInput component with tabular suggestions.</ui5-text>
+	<ui5-title level="H1">InputTableSuggest Component - Test Page</ui5-title>
+	<ui5-text>This page demonstrates the InputTableSuggest component with tabular suggestions.</ui5-text>
 
 	<div class="section">
 		<ui5-title class="section-title" level="H2">Product Search</ui5-title>
@@ -58,7 +58,7 @@
 			Try typing "Laptop" or "Phone". Matching text is highlighted in the suggestions.
 		</p>
 
-		<ui5-tabular-input
+		<ui5-input-table-suggest
 			id="productSearch"
 			placeholder="Search for products..."
 			show-suggestions
@@ -99,7 +99,7 @@
 				<ui5-table-cell>Accessories</ui5-table-cell>
 				<ui5-table-cell>$29</ui5-table-cell>
 			</ui5-table-row>
-		</ui5-tabular-input>
+		</ui5-input-table-suggest>
 
 		<div class="output" id="productOutput">Selected: (none)</div>
 	</div>
@@ -110,7 +110,7 @@
 			Search for employees by name. Typed text is highlighted in all cells.
 		</p>
 
-		<ui5-tabular-input
+		<ui5-input-table-suggest
 			id="employeeSearch"
 			placeholder="Search employees..."
 			show-suggestions
@@ -150,7 +150,7 @@
 				<ui5-table-cell>Building A</ui5-table-cell>
 				<ui5-table-cell>x5678</ui5-table-cell>
 			</ui5-table-row>
-		</ui5-tabular-input>
+		</ui5-input-table-suggest>
 
 		<div class="output" id="employeeOutput">Selected: (none)</div>
 	</div>
@@ -163,7 +163,7 @@
 		</p>
 
 		<div class="narrow-container">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="popinSearch"
 				placeholder="Search in narrow space..."
 				show-suggestions
@@ -192,7 +192,7 @@
 					<ui5-table-cell>0</ui5-table-cell>
 					<ui5-table-cell>Out of Stock</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 
 		<div class="output" id="popinOutput">Selected: (none)</div>
@@ -206,7 +206,7 @@
 		</p>
 
 		<div class="narrow-container">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="scrollSearch"
 				placeholder="Search with scroll..."
 				show-suggestions
@@ -235,7 +235,7 @@
 					<ui5-table-cell>0</ui5-table-cell>
 					<ui5-table-cell>Out of Stock</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 
 		<div class="output" id="scrollOutput">Selected: (none)</div>
@@ -245,10 +245,10 @@
 	<div class="section">
 		<ui5-title class="section-title" level="H2">With Clear Icon</ui5-title>
 		<p class="description">
-			TabularInput with show-clear-icon enabled for easy value clearing.
+			InputTableSuggest with show-clear-icon enabled for easy value clearing.
 		</p>
 
-		<ui5-tabular-input
+		<ui5-input-table-suggest
 			id="clearIconSearch"
 			placeholder="Search with clear icon..."
 			show-suggestions
@@ -273,7 +273,7 @@
 				<ui5-table-cell>Fix login bug</ui5-table-cell>
 				<ui5-table-cell>Critical</ui5-table-cell>
 			</ui5-table-row>
-		</ui5-tabular-input>
+		</ui5-input-table-suggest>
 
 		<div class="output" id="clearIconOutput">Selected: (none)</div>
 	</div>
@@ -282,11 +282,11 @@
 	<div class="section">
 		<ui5-title class="section-title" level="H2">Example 7: Value States</ui5-title>
 		<p class="description">
-			TabularInput supports all value states: Negative (Error), Critical (Warning), Positive (Success), and Information.
+			InputTableSuggest supports all value states: Negative (Error), Critical (Warning), Positive (Success), and Information.
 		</p>
 
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="negativeState"
 				placeholder="Negative (Error) state..."
 				value-state="Negative"
@@ -297,9 +297,9 @@
 					<ui5-table-cell>Item A</ui5-table-cell>
 					<ui5-table-cell>Invalid</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="criticalState"
 				placeholder="Critical (Warning) state..."
 				value-state="Critical"
@@ -310,9 +310,9 @@
 					<ui5-table-cell>Item B</ui5-table-cell>
 					<ui5-table-cell>Pending</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="positiveState"
 				placeholder="Positive (Success) state..."
 				value-state="Positive"
@@ -323,9 +323,9 @@
 					<ui5-table-cell>Item C</ui5-table-cell>
 					<ui5-table-cell>Approved</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="informationState"
 				placeholder="Information state..."
 				value-state="Information"
@@ -336,7 +336,7 @@
 					<ui5-table-cell>Item D</ui5-table-cell>
 					<ui5-table-cell>Info</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 	</div>
 
@@ -348,7 +348,7 @@
 		</p>
 
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="negativeMessage"
 				placeholder="Error with message..."
 				value-state="Negative"
@@ -363,9 +363,9 @@
 					<ui5-table-cell>PRD-001</ui5-table-cell>
 					<ui5-table-cell>$99</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="criticalMessage"
 				placeholder="Warning with message..."
 				value-state="Critical"
@@ -380,9 +380,9 @@
 					<ui5-table-cell>Widget X</ui5-table-cell>
 					<ui5-table-cell>5 left</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="informationMessage"
 				placeholder="Information with message..."
 				value-state="Information"
@@ -396,7 +396,7 @@
 					<ui5-table-cell>Widget*</ui5-table-cell>
 					<ui5-table-cell>25 matches</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 	</div>
 
@@ -407,7 +407,7 @@
 		</p>
 
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="formattedNegative"
 				placeholder="Error with formatted message..."
 				value-state="Negative"
@@ -422,9 +422,9 @@
 					<ui5-table-cell>ABC-001</ui5-table-cell>
 					<ui5-table-cell>Valid Code</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="formattedCritical"
 				placeholder="Warning with formatted message..."
 				value-state="Critical"
@@ -443,7 +443,7 @@
 					<ui5-table-cell>New Widget</ui5-table-cell>
 					<ui5-table-cell>Active</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 	</div>
 
@@ -455,7 +455,7 @@
 		</p>
 
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="linkNegative"
 				placeholder="Error with help link..."
 				value-state="Negative"
@@ -472,9 +472,9 @@
 					<ui5-table-cell>PRD-001</ui5-table-cell>
 					<ui5-table-cell>Electronics</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="linkCritical"
 				placeholder="Warning with action links..."
 				value-state="Critical"
@@ -495,9 +495,9 @@
 					<ui5-table-cell>Beta Inc</ui5-table-cell>
 					<ui5-table-cell>Approved</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="linkInformation"
 				placeholder="Info with documentation link..."
 				value-state="Information"
@@ -512,7 +512,7 @@
 					<ui5-table-cell>name:Widget</ui5-table-cell>
 					<ui5-table-cell>15 matches</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 	</div>
 
@@ -523,7 +523,7 @@
 		</p>
 
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="disabledInput"
 				placeholder="Disabled input..."
 				value="PRD-001"
@@ -539,9 +539,9 @@
 					<ui5-table-cell>PRD-002</ui5-table-cell>
 					<ui5-table-cell>$149</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 
-			<ui5-tabular-input
+			<ui5-input-table-suggest
 				id="readonlyInput"
 				placeholder="Readonly input..."
 				value="Widget X"
@@ -557,7 +557,7 @@
 					<ui5-table-cell>Widget Y</ui5-table-cell>
 					<ui5-table-cell>25 units</ui5-table-cell>
 				</ui5-table-row>
-			</ui5-tabular-input>
+			</ui5-input-table-suggest>
 		</div>
 	</div>
 
@@ -568,7 +568,7 @@
 			The popover should handle scrolling smoothly.
 		</p>
 
-		<ui5-tabular-input
+		<ui5-input-table-suggest
 			id="manySearch"
 			placeholder="Search 112 products..."
 			show-suggestions
@@ -577,7 +577,7 @@
 			<ui5-table-header-cell slot="suggestionColumns" width="200px">Product Name</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
 			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
-		</ui5-tabular-input>
+		</ui5-input-table-suggest>
 
 		<div class="output" id="manyOutput">Selected: (none)</div>
 	</div>
@@ -615,7 +615,7 @@
 	</script>
 
 	<script>
-		document.querySelectorAll('ui5-tabular-input').forEach(input => {
+		document.querySelectorAll('ui5-input-table-suggest').forEach(input => {
 			const inputId = input.getAttribute('id') || '';
 			const output = inputId.includes('Search')
 				? document.getElementById(inputId.replace('Search', 'Output'))

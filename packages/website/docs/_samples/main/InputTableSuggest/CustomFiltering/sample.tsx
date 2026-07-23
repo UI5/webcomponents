@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
-import TabularInputClass from "@ui5/webcomponents/dist/TabularInput.js";
+import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 
-const TabularInput = createReactComponent(TabularInputClass);
+const InputTableSuggest = createReactComponent(InputTableSuggestClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
@@ -25,7 +25,7 @@ const employees = [
 function App() {
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
 
-  const handleInput = (e: UI5CustomEvent<TabularInputClass, "input">) => {
+  const handleInput = (e: UI5CustomEvent<InputTableSuggestClass, "input">) => {
     const value = e.currentTarget.value.toLowerCase();
 
     if (!value) {
@@ -43,7 +43,7 @@ function App() {
   };
 
   return (
-    <TabularInput
+    <InputTableSuggest
       placeholder="Search employees..."
       showSuggestions
       onInput={handleInput}
@@ -65,7 +65,7 @@ function App() {
           <TableCell>{emp.location}</TableCell>
         </TableRow>
       ))}
-    </TabularInput>
+    </InputTableSuggest>
   );
 }
 

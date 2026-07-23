@@ -1,17 +1,17 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
-import TabularInputClass from "@ui5/webcomponents/dist/TabularInput.js";
+import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 
-const TabularInput = createReactComponent(TabularInputClass);
+const InputTableSuggest = createReactComponent(InputTableSuggestClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
 
 function App() {
   return (
-    <TabularInput placeholder="Search for products..." showSuggestions>
+    <InputTableSuggest placeholder="Search for products..." showSuggestions>
       <TableHeaderCell slot="suggestionColumns" width="120px">Product ID</TableHeaderCell>
       <TableHeaderCell slot="suggestionColumns" width="200px">Name</TableHeaderCell>
       <TableHeaderCell slot="suggestionColumns" minWidth="100px">Category</TableHeaderCell>
@@ -35,7 +35,7 @@ function App() {
         <TableCell>Accessories</TableCell>
         <TableCell>$49</TableCell>
       </TableRow>
-    </TabularInput>
+    </InputTableSuggest>
   );
 }
 
