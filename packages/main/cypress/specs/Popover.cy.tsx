@@ -1969,4 +1969,265 @@ describe("Min Width via CSS", () => {
 				expect(currentWidth).to.be.at.least(400);
 			});
 	});
+
+	describe("Resize Alignment", () => {
+		it("should keep left edge aligned with opener when resizing from right with placement Bottom and horizontalAlign Start", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeBottom" style="position: absolute; left: 200px; top: 100px;">Opener</Button>
+					<Popover id="popResizeBottom" opener="btnResizeBottom" placement="Bottom" horizontalAlign="Start" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverLeft: number;
+			let openerLeft: number;
+
+			cy.get("#btnResizeBottom").then($opener => {
+				openerLeft = $opener[0].getBoundingClientRect().left;
+			});
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverLeft = $popover[0].getBoundingClientRect().left;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 100, clientY: 0 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverLeft = $popover[0].getBoundingClientRect().left;
+				expect(Math.abs(finalPopoverLeft - initialPopoverLeft)).to.be.lessThan(2);
+				expect(Math.abs(finalPopoverLeft - openerLeft)).to.be.lessThan(2);
+			});
+		});
+
+		it("should keep right edge aligned with opener when resizing from right with placement Bottom and horizontalAlign End", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeBottomEnd" style="position: absolute; left: 200px; top: 100px;">Opener</Button>
+					<Popover id="popResizeBottomEnd" opener="btnResizeBottomEnd" placement="Bottom" horizontalAlign="End" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverRight: number;
+			let openerRight: number;
+
+			cy.get("#btnResizeBottomEnd").then($opener => {
+				openerRight = $opener[0].getBoundingClientRect().right;
+			});
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverRight = $popover[0].getBoundingClientRect().right;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: -100, clientY: 0 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverRight = $popover[0].getBoundingClientRect().right;
+				expect(Math.abs(finalPopoverRight - initialPopoverRight)).to.be.lessThan(2);
+				expect(Math.abs(finalPopoverRight - openerRight)).to.be.lessThan(2);
+			});
+		});
+
+		it("should keep top edge aligned with opener when resizing from bottom with placement End and verticalAlign Top", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeEnd" style="position: absolute; left: 400px; top: 200px;">Opener</Button>
+					<Popover id="popResizeEnd" opener="btnResizeEnd" placement="End" verticalAlign="Top" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverTop: number;
+			let openerTop: number;
+
+			cy.get("#btnResizeEnd").then($opener => {
+				openerTop = $opener[0].getBoundingClientRect().top;
+			});
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverTop = $popover[0].getBoundingClientRect().top;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 0, clientY: 100 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverTop = $popover[0].getBoundingClientRect().top;
+				expect(Math.abs(finalPopoverTop - initialPopoverTop)).to.be.lessThan(2);
+				expect(Math.abs(finalPopoverTop - openerTop)).to.be.lessThan(2);
+			});
+		});
+
+		it("should keep bottom edge aligned with opener when resizing from bottom with placement End and verticalAlign Bottom", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeEndBottom" style="position: absolute; left: 400px; top: 200px;">Opener</Button>
+					<Popover id="popResizeEndBottom" opener="btnResizeEndBottom" placement="End" verticalAlign="Bottom" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverBottom: number;
+			let openerBottom: number;
+
+			cy.get("#btnResizeEndBottom").then($opener => {
+				openerBottom = $opener[0].getBoundingClientRect().bottom;
+			});
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverBottom = $popover[0].getBoundingClientRect().bottom;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 0, clientY: -100 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverBottom = $popover[0].getBoundingClientRect().bottom;
+				expect(Math.abs(finalPopoverBottom - initialPopoverBottom)).to.be.lessThan(2);
+				expect(Math.abs(finalPopoverBottom - openerBottom)).to.be.lessThan(2);
+			});
+		});
+
+		it("should keep left edge aligned when resizing from right with placement Top and horizontalAlign Start", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeTop" style="position: absolute; left: 200px; top: 300px;">Opener</Button>
+					<Popover id="popResizeTop" opener="btnResizeTop" placement="Top" horizontalAlign="Start" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverLeft: number;
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverLeft = $popover[0].getBoundingClientRect().left;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 100, clientY: 0 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverLeft = $popover[0].getBoundingClientRect().left;
+				expect(Math.abs(finalPopoverLeft - initialPopoverLeft)).to.be.lessThan(2);
+			});
+		});
+
+		it("should keep top edge aligned when resizing from bottom with placement Start and verticalAlign Top", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeStart" style="position: absolute; left: 100px; top: 200px;">Opener</Button>
+					<Popover id="popResizeStart" opener="btnResizeStart" placement="Start" verticalAlign="Top" resizable headerText="Resize Test">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverTop: number;
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverTop = $popover[0].getBoundingClientRect().top;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.should("be.visible")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 0, clientY: 100 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const finalPopoverTop = $popover[0].getBoundingClientRect().top;
+				expect(Math.abs(finalPopoverTop - initialPopoverTop)).to.be.lessThan(2);
+			});
+		});
+
+		it("should maintain alignment during multiple resize operations", () => {
+			cy.mount(
+				<>
+					<Button id="btnResizeMultiple" style="position: absolute; left: 200px; top: 100px;">Opener</Button>
+					<Popover id="popResizeMultiple" opener="btnResizeMultiple" placement="Bottom" horizontalAlign="Start" resizable headerText="Multiple Resize">
+						<div style="width: 200px; height: 150px;">Content</div>
+					</Popover>
+				</>
+			);
+
+			cy.get("[ui5-popover]").invoke("prop", "open", true);
+
+			let initialPopoverLeft: number;
+
+			cy.get("[ui5-popover]").then($popover => {
+				initialPopoverLeft = $popover[0].getBoundingClientRect().left;
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: 100, clientY: 0 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const afterFirstResize = $popover[0].getBoundingClientRect().left;
+				expect(Math.abs(afterFirstResize - initialPopoverLeft)).to.be.lessThan(2);
+			});
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.trigger("mousedown", { button: 0 })
+				.trigger("mousemove", { clientX: -50, clientY: 0 })
+				.trigger("mouseup");
+
+			cy.get("[ui5-popover]").then($popover => {
+				const afterSecondResize = $popover[0].getBoundingClientRect().left;
+				expect(Math.abs(afterSecondResize - initialPopoverLeft)).to.be.lessThan(2);
+			});
+		});
+	});
 });
