@@ -281,7 +281,9 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				ariaLabel += ` ${this._formatLongSecondary.format(tempSecondDate.toUTCJSDate(), true)}`;
 			}
 
-			ariaLabel += ` ${tooltip}`;
+			if (tooltip) {
+				ariaLabel += ` ${tooltip}`;
+			}
 
 			if (this.selectionMode === CalendarSelectionMode.Range) {
 				if (isSelected && this._isRangeEndDate(timestamp)) {
@@ -303,7 +305,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				_isSecondaryCalendarType: this.hasSecondaryCalendarType,
 				classes: `ui5-dp-item ui5-dp-wday${dayOfTheWeek}`,
 				tooltip,
-				ariaLabel: ariaLabel.trim(),
+				ariaLabel,
 				ariaSelected: isSelected || isSelectedBetween,
 				ariaDisabled: isDisabled || isOtherMonth,
 				disabled: isDisabled,
