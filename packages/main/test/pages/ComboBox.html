@@ -191,30 +191,29 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Toggle Loading State</span>
+		<span>Lazy loading using the 'load-items' event</span>
 
 		<br />
 		<br />
 
-		<ui5-combobox id="toggle-loading-cb" class="combobox2auto">
-			<ui5-cb-item text="Item 1"></ui5-cb-item>
-			<ui5-cb-item text="Item 2"></ui5-cb-item>
-			<ui5-cb-item text="Item 3"></ui5-cb-item>
+		<ui5-combobox id="lazy-loading-cb-1" class="combobox2auto"></ui5-combobox>
+		<ui5-button id="btn-clear-1">Clear items</ui5-button>
+	</div>
+
+	<div class="demo-section">
+		<span>Lazy loading using the 'load-items' event (with value state message)</span>
+
+		<br />
+		<br />
+
+		<ui5-combobox id="lazy-loading-cb-2" class="combobox2auto" value-state="Negative">
+			<div slot="valueStateMessage">Custom error.</div>
 		</ui5-combobox>
-		<ui5-button id="toggle-loading-btn">Toggle Loading</ui5-button>
+		<ui5-button id="btn-clear-2">Clear items</ui5-button>
 	</div>
 
 	<div class="demo-section">
-		<span>Lazy Loading - example does not work on IE11</span>
-
-		<br />
-		<br />
-
-		<ui5-combobox id="lazy" class="combobox2auto"></ui5-combobox>
-	</div>
-
-	<div class="demo-section">
-		<span>Lazy Loading with filter='None'</span>
+		<span>Lazy loading using the 'input' event and the entered text for creating items</span>
 
 		<br />
 		<br />
@@ -614,40 +613,6 @@
 	</div>
 
 	<script type="module">
-		document.getElementById("lazy").addEventListener("ui5-input", async event => {
-			const { value } = event.target;
-
-			// set busy state
-			event.target.loading = true;
-
-			if (!value) {
-				return;
-			}
-
-			// load data
-			const items = (await (await fetch(`https://restcountries.com/v3.1/name/${value}`)).json());
-
-			// cleanup old items
-			while (document.getElementById("lazy").firstChild) {
-				document.getElementById("lazy").removeChild(document.getElementById("lazy").firstChild);
-			}
-
-			// fill new items
-			items.map(data => {
-				const element = document.createElement("ui5-cb-item");
-				element.setAttribute("text", data.name.common);
-
-				document.getElementById("lazy").appendChild(element);
-			});
-
-			// remove busy state
-			event.target.loading = false;
-
-			// load the items once or turn off filtering
-		}, { once: true });
-	</script>
-
-	<script type="module">
 		const cb = document.getElementById("cb-filter-none");
 		let currentSearch,
 			debounce;
@@ -655,12 +620,15 @@
 		cb.addEventListener("input", (e) => {
 			// debounce by waiting till the user stops typing for more than 0.25 seconds
 			const debounceTime = 250;
+			const control = e.target;
 			if (debounce !== undefined) {
 				clearTimeout(debounce);
 			}
 			debounce = setTimeout(async () => {
 				debounce = undefined;
 				const value = e.target.value;
+				control.loading = true;
+				control.open = true;
 
 				if (currentSearch !== undefined) {
 					// Cancel any current search that might already be happening
@@ -684,6 +652,7 @@
 				} else {
 					reset();
 				}
+				control.loading = false;
 			}, debounceTime);
 		});
 
@@ -747,10 +716,94 @@
 			document.getElementById("combo").focus();
 		});
 
-		document.getElementById("toggle-loading-btn").addEventListener("click", function () {
-			const combo = document.getElementById("toggle-loading-cb");
-			combo.loading = !combo.loading;
+		const createItem = (cb, text) => {
+			const item = document.createElement("ui5-cb-item");
+			item.text = text;
+			cb.appendChild(item);
+		};
+
+		const createGroupItem = (cb, text) => {
+			const item = document.createElement("ui5-cb-item-group");
+			item.headerText = text;
+			cb.appendChild(item);
+			return item;
+		}
+
+		const fnClearItems = (control) => {
+			const itemSelector = "ui5-cb-item, ui5-cb-item-group";
+			let allClear = control.querySelectorAll(itemSelector).length === 0;
+			while (!allClear) {
+				const child = control.querySelector(itemSelector);
+				control.removeChild(child);
+				allClear = control.querySelectorAll(itemSelector).length === 0;
+			}
+			control.value = "";
+		} 
+
+		// Simulates a network fetch that resolves after a delay and honors an AbortSignal.
+		// Rejects with an "AbortError" when the signal is aborted (i.e. superseded by newer input).
+		const fetchItems = (value, signal) => new Promise((resolve, reject) => {
+			const timer = setTimeout(() => {
+				const items = [];
+				for (let i = 0; i < 5; i++) {
+					items.push(`${value || "Item"} #${i + 1}`);
+				}
+				resolve(items);
+			}, 2000);
+
+			signal.addEventListener("abort", () => {
+				clearTimeout(timer);
+				reject(new DOMException("Aborted", "AbortError"));
+			});
 		});
+
+		// Removes the loaded items without touching the current value.
+		const removeItems = (control) => {
+			[...control.querySelectorAll("ui5-cb-item, ui5-cb-item-group")].forEach(c => control.removeChild(c));
+		};
+
+		// The app owns the AbortController per control, so a newer request cancels the previous one.
+		const abortControllers = new WeakMap();
+
+		const fnLoadItems = async (e) => {
+			const control = e.target;
+			const { reason, value } = e.detail;
+
+			// Cancel any in-flight request for this control and create a fresh signal.
+			abortControllers.get(control)?.abort();
+			const abortController = new AbortController();
+			abortControllers.set(control, abortController);
+			const { signal } = abortController;
+
+			control.loading = true;
+			// On "input" the app opens the picker; on "open" (arrow down) the component opens it itself.
+			if (reason === "input") {
+				control.open = true;
+			}
+
+			try {
+				const items = await fetchItems(value, signal);
+				// A newer load-items event would have aborted this signal before we get here.
+				removeItems(control);
+				items.forEach((text) => createItem(control, text));
+				control.loading = false;
+			} catch (err) {
+				// Superseded by a newer load-items event - a fresh request is now in charge of loading state.
+				if (err.name !== "AbortError") {
+					throw err;
+				}
+			}
+		};
+
+		const cbLazyLoad1 = document.getElementById("lazy-loading-cb-1"); 
+		cbLazyLoad1.addEventListener("load-items", fnLoadItems);
+
+		const cbLazyLoad2 = document.getElementById("lazy-loading-cb-2"); 
+		cbLazyLoad2.addEventListener("load-items", fnLoadItems);
+
+		document.getElementById("btn-clear-1").addEventListener("click", () => fnClearItems(cbLazyLoad1));
+		document.getElementById("btn-clear-2").addEventListener("click", () => fnClearItems(cbLazyLoad2));
+
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;

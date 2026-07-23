@@ -10,6 +10,8 @@ import { isPhone, isAndroid, isMac } from "@ui5/webcomponents-base/dist/Device.j
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import type { LoadItemsReason } from "./features/ComboBoxLazyLoading.js";
+import ComboBoxLazyLoading from "./features/ComboBoxLazyLoading.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -60,6 +62,10 @@ import {
 	COMBOBOX_AVAILABLE_OPTIONS,
 	COMBOBOX_DIALOG_OK_BUTTON,
 	COMBOBOX_DIALOG_CANCEL_BUTTON,
+	COMBOBOX_LOADING,
+	COMBOBOX_LOADED,
+	COMBOBOX_LOADED_ITEMS,
+	COMBOBOX_LOADED_ITEM,
 	SELECT_OPTIONS,
 	LIST_ITEM_POSITION,
 	LIST_ITEM_GROUP_HEADER,
@@ -133,6 +139,11 @@ type ComboBoxSelectionChangeTrigger = "Typeahead" | "Click" | "Keyboard";
 type ComboBoxSelectionChangeEventDetail = {
 	item: ComboBoxItem | null,
 	trigger: ComboBoxSelectionChangeTrigger,
+};
+
+type ComboBoxLoadItemsEventDetail = {
+	reason: LoadItemsReason;
+	value: string;
 };
 
 /**
@@ -258,6 +269,17 @@ type ComboBoxSelectionChangeEventDetail = {
 	bubbles: true,
 })
 
+/**
+ * Fired when the application should provide items for the component to render.
+ * The event is fired either when text is input or when the user presses arrow down on a combo-box with no items.
+ * @param {string} reason the reason the event was fired - "input" when text is typed, "open" when the picker is about to open
+ * @param {string} value value of the input
+ * @public
+ */
+@event("load-items", {
+	bubbles: true,
+})
+
 class ComboBox extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		"change": void,
@@ -265,6 +287,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		"open": void,
 		"close": void,
 		"selection-change": ComboBoxSelectionChangeEventDetail,
+		"load-items": ComboBoxLoadItemsEventDetail,
 	}
 	/**
 	 * Defines the value of the component.
@@ -512,6 +535,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	icon!: Slot<IIcon>;
 
 	_initialRendering = true;
+	_loadingDelegate: ComboBoxLazyLoading;
+	_shouldFilterItemsAfterLoad = true;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -558,6 +583,24 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		// when an initial value is set it should be considered as a _lastValue
 		this._lastValue = this.getAttribute("value") || "";
+		this._loadingDelegate = new ComboBoxLazyLoading({
+			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
+			isLoading: () => this.loading,
+			isOpen: () => this.open,
+			fireLoadItems: reason => this.fireDecoratorEvent("load-items", { reason, value: this.value }),
+			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
+			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
+			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
+			loadedItemsMessage: count => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count),
+			onLoadingEnd: () => {
+				this._filteredItems = this._shouldFilterItemsAfterLoad ? this._filterItems(this.value) : this._getItems();
+				this._shouldFilterItemsAfterLoad = true;
+				if (this._filteredItems.length === 0 && this.value) {
+					this._closeRespPopover();
+				}
+			},
+		});
+		this._loadingDelegate.init(this.loading);
 	}
 
 	onBeforeRendering() {
@@ -608,6 +651,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		});
 
 		this._selectMatchingItem();
+		this._loadingDelegate.onBeforeRendering(this.loading);
 		this._initialRendering = false;
 
 		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
@@ -627,6 +671,8 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.storeResponsivePopoverWidth();
+
+		this._loadingDelegate.announceLoadingState();
 
 		if (!arraysAreEqual(this._valueStateLinks, this.linksInAriaValueStateHiddenText)) {
 			this._removeLinksEventListeners();
@@ -784,6 +830,11 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._lastValue = this.value;
 		}
 
+		if (!this.open && !this.loading && this._getItems().length === 0) {
+			this._loadingDelegate.fireOnDropdownOpen();
+		}
+
+		this._shouldFilterItemsAfterLoad = false;
 		this._toggleRespPopover();
 	}
 
@@ -825,12 +876,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+		this._loadingDelegate.fireOnInput();
 
 		if (isPhone()) {
 			return;
 		}
 
-		if (!this._filteredItems.length || value === "") {
+		if (!this.loading && (!this._filteredItems.length || value === "")) {
 			this._closeRespPopover();
 		} else {
 			this._openRespPopover();
@@ -1106,6 +1158,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			e.preventDefault();
 
 			this._resetFilter();
+			this._loadingDelegate.fireOnDropdownOpen();
 			this._toggleRespPopover();
 
 			const selectedItem = allItems.find(item => {
@@ -1197,6 +1250,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_click() {
 		if (isPhone() && !this.readonly) {
+			if (!this.loading && this._getItems().length === 0) {
+				this._loadingDelegate.fireOnDropdownOpen();
+			}
 			this._openRespPopover();
 		}
 	}
@@ -1747,7 +1803,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			suggestionPopoverHeader: {
-				"display": this._listWidth === 0 ? "none" : "inline-block",
+				"display": (!this._isPhone && this._listWidth === 0) ? "none" : "inline-block",
 				"width": `${this._listWidth || ""}px`,
 				"max-width": "inherit",
 			},
@@ -1785,5 +1841,6 @@ export default ComboBox;
 export type {
 	ComboBoxSelectionChangeEventDetail,
 	ComboBoxSelectionChangeTrigger,
+	ComboBoxLoadItemsEventDetail,
 	IComboBoxItem,
 };

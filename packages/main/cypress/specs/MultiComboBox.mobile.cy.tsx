@@ -964,6 +964,85 @@ describe("Dialog header title", () => {
     });
 });
 
+describe("Lazy loading", () => {
+    beforeEach(() => {
+        cy.ui5SimulateDevice("phone");
+    });
+
+    it("Should open the dialog and fire load-items when start typing with no items", () => {
+        cy.mount(
+            <MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-responsive-popover] [ui5-input]")
+            .realClick()
+            .realType("A");
+
+        cy.get("@loadItems").should("have.been.called");
+    });
+
+    it("Should open the dialog and fire load-items when pressing the arrow with no items", () => {
+        cy.mount(
+            <MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-icon][name='slim-arrow-down']")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("@loadItems")
+            .should("have.been.calledOnce")
+            .and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+                return event.detail.reason === "open";
+            }));
+    });
+
+    it("Should not fire load-items when typing and items are already present", () => {
+        cy.mount(
+            <MultiComboBox onLoadItems={cy.stub().as("loadItems")}>
+                <MultiComboBoxItem text="Algeria" />
+                <MultiComboBoxItem text="Argentina" />
+            </MultiComboBox>
+        );
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("input")
+            .realClick();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find<ResponsivePopover>("[ui5-responsive-popover]")
+            .ui5ResponsivePopoverOpened();
+
+        cy.get("[ui5-multi-combobox]")
+            .shadow()
+            .find("[ui5-responsive-popover] [ui5-input]")
+            .realClick()
+            .realType("A");
+
+        cy.get("@loadItems").should("not.have.been.called");
+    });
+});
+
 describe("Custom Items", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");

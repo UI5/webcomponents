@@ -5503,3 +5503,160 @@ describe("MultiComboBoxItemCustom - Mixed Selection", () => {
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
 	});
 });
+
+describe("load-items event", () => {
+	it("fires on arrow click when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("does not fire on arrow click when MultiComboBox has items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
+	it("fires on F4 when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("does not fire on F4 when MultiComboBox has items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<MultiComboBoxItem text="Algeria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
+	it("fires on Alt+Down when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress(["Alt", "ArrowDown"]);
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("fires on Alt+Up when MultiComboBox has no items", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiComboBox")
+			.realClick();
+
+		cy.get("@multiComboBox").realPress(["Alt", "ArrowUp"]);
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("fires on each new character typed in the input", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadItems")
+			.should("have.been.calledThrice")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "input";
+			}));
+	});
+});
+
+describe("Loading announcements", () => {
+	it("announces loading start when loading becomes true", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "loading", true);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Loading data");
+	});
+
+	it("announces loading end with item count when loading becomes false", () => {
+		cy.mount(
+			<MultiComboBox loading>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "loading", false);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "2 results are available");
+	});
+});

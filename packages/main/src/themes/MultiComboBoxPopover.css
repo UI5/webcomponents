@@ -54,6 +54,12 @@
 	display: none;
 }
 
+.ui5-multi-combobox-busy-container {
+	position: relative;
+	min-height: 2.5rem;
+	width: 100%;
+}
+
 [ui5-responsive-popover] [ui5-input] {
 	width: 100%;
 }
