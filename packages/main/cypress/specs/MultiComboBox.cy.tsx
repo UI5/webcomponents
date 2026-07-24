@@ -1547,7 +1547,7 @@ describe("Selection and filtering", () => {
 
 		cy.get("@popover")
 			.find(".ui5-mcb-select-all-checkbox")
-			.should("have.attr", "checked");
+			.should("not.have.attr", "checked");
 
 		cy.get("@popover")
 			.find("[ui5-list] slot")
