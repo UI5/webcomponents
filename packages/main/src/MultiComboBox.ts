@@ -1199,7 +1199,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		} else {
 			this._previouslySelectedItems = this._getSelectedItems();
-			this.selectedItems?.filter(item => !item.isGroupItem).forEach(item => {
+			// Operate on all selectable items, not the stale selectedItems snapshot
+			const allSelectableItems = this._getItems().filter(item => !item.isGroupItem);
+			allSelectableItems.forEach(item => {
 				item.selected = (e.target as CheckBox).checked;
 			});
 
@@ -1862,8 +1864,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (this.open) {
 			const list = this._getList();
-			const selectedListItemsCount = this.items.filter(item => item.selected).length;
-			this._allSelected = selectedListItemsCount > 0 && ((selectedListItemsCount === this.items.length) || (list?.getSlottedNodes("items").length === selectedListItemsCount));
+			const selectableItems = this._getItems().filter(item => !item.isGroupItem);
+			const selectedListItemsCount = selectableItems.filter(item => item.selected).length;
+			const listItemsCount = list?.getSlottedNodes("items").length || 0;
+			// When filterSelected is true, only check against total items count since the list shows only selected items
+			this._allSelected = selectedListItemsCount > 0 && (selectedListItemsCount === selectableItems.length || (!this.filterSelected && listItemsCount === selectedListItemsCount));
 		}
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
