@@ -406,11 +406,17 @@ slot[name="profile"] {
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-bell-button [slot="badge"] {
-    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
+    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset, 0);
 }
 
 .ui5-shellbar-overflow-container-right-child .ui5-shellbar-custom-item [slot="badge"] {
-    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset);
+    inset-inline-end: var(--_ui5-shellbar-notification-btn-count-offset, 0);
+}
+
+.ui5-shellbar-overflow-container-right-child .ui5-shellbar-bell-button [slot="badge"][design="OverlayText"],
+.ui5-shellbar-overflow-container-right-child .ui5-shellbar-custom-item [slot="badge"][design="OverlayText"] {
+    top: var(--_ui5-shellbar-badge-offset, 0);
+    margin: var(--_ui5-shellbar-badge-margin, -0.5rem);
 }
 
 .ui5-shellbar-menu-button {
