@@ -71,7 +71,29 @@ describe("API", () => {
 		cy.get("[ui5-file-uploader]")
 			.shadow()
 			.find("input[type='file']")
-			.should("have.attr", "aria-required", "true");
+			.as("nativeInput")
+			.should("have.attr", "required");
+
+		cy.get("@nativeInput")
+			.should("have.attr", "aria-invalid", "false");
+	});
+
+	it("aria-invalid reflects value state", () => {
+		(["None", "Positive", "Critical", "Information"] as const).forEach(valueState => {
+			cy.mount(<FileUploader required valueState={valueState}></FileUploader>);
+
+			cy.get("[ui5-file-uploader]")
+				.shadow()
+				.find("input[type='file']")
+				.should("have.attr", "aria-invalid", "false");
+		});
+
+		cy.mount(<FileUploader required valueState="Negative"></FileUploader>);
+
+		cy.get("[ui5-file-uploader]")
+			.shadow()
+			.find("input[type='file']")
+			.should("have.attr", "aria-invalid", "true");
 	});
 
 	it("accept property", () => {
