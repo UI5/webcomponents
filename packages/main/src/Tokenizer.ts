@@ -1214,7 +1214,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 
 		if (this._getVisibleTokens().length) {
-			return Tokenizer.i18nBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS, this._nMoreCount);
+			return Tokenizer.i18nBundle.getText("{0} moree", this._nMoreCount);
 		}
 
 		return Tokenizer.i18nBundle.getText(TOKENIZER_SHOW_ALL_ITEMS, this._nMoreCount);
