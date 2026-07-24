@@ -1,0 +1,2 @@
+"use strict";import{getTheme as n}from"../../config/Theme.js";import{getDefaultIconCollection as c}from"../../config/Icons.js";import{getIconCollectionByAlias as r}from"./IconCollectionsAlias.js";import{getIconCollectionForTheme as e}from"./IconCollectionsByTheme.js";const i=o=>{const t=c(n());return!o&&t?r(t):o?e(o):e("SAP-icons")};export default i;
+//# sourceMappingURL=getIconCollectionByTheme.js.map

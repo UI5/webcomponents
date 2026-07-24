@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Timeline</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+  <script type="module" crossorigin src="/webcomponents/assets/test/pages/Timeline.html-BS5TWcBi.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/assets/bundle.esm-Bnizv7Na.js">
+  <link rel="stylesheet" crossorigin href="/webcomponents/assets/Timeline-CfrlPcdf.css">
+</head>
+
+<body class="timeline1auto">
+
+	<header class="header">
+		<h1 class="header-title">ui5-timeline</h1>
+	</header>
+
+	<section style="padding: 1rem 2rem;">
+		<h2>Showcase — Timeline with header &amp; infoBar slots</h2>
+		<p style="max-width: 56rem;">
+			The Timeline exposes two named slots above the items area: <code>header</code> for a controls bar
+			(search / sort / filter triggers) and <code>infoBar</code> for a status bar that reflects the
+			applied state. The header area can be pinned at the top via <code>stickyHeader</code>.
+			The Timeline itself does not filter, sort or search — the application owns that logic.
+		</p>
+
+		<div style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start;">
+			<div style="width: 28rem; height: 24rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem; overflow: hidden;">
+				<ui5-timeline id="showcaseTimeline" sticky-header style="height: 100%;">
+					<ui5-bar slot="header" design="Subheader">
+						<ui5-input slot="startContent" id="showcaseSearch" placeholder="Search by author or title"></ui5-input>
+						<ui5-button slot="endContent" id="showcaseSortBtn" icon="sort">Sort: Ascending</ui5-button>
+						<ui5-button slot="endContent" id="showcaseFilterBtn" icon="filter">Filter</ui5-button>
+					</ui5-bar>
+
+					<ui5-bar slot="infoBar" design="Subheader">
+						<ui5-label slot="startContent" id="showcaseStatus">Sort: Ascending &middot; No filters &middot; No search</ui5-label>
+					</ui5-bar>
+
+					<ui5-timeline-item title-text="Project kickoff" subtitle-text="20.02.2017 09:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Design review" subtitle-text="22.02.2017 11:30" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Sprint planning" subtitle-text="24.02.2017 14:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Backlog grooming" subtitle-text="26.02.2017 10:00" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Demo to stakeholders" subtitle-text="28.02.2017 15:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Retrospective" subtitle-text="01.03.2017 16:00" icon="calendar" name="John Smith" data-author="John Smith"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Release planning" subtitle-text="03.03.2017 09:30" icon="calendar" name="Stanislava Baltova" data-author="Stanislava Baltova"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Deployment" subtitle-text="05.03.2017 12:00" icon="calendar" name="Sarah Kerrigan" data-author="Sarah Kerrigan"></ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+
+			<div style="max-width: 22rem; font-size: 0.875rem; line-height: 1.5;">
+				<h3 style="margin-top: 0;">Try it</h3>
+				<ul>
+					<li>Type in the search field — items filter live by author or title.</li>
+					<li>Click <strong>Sort</strong> — items reorder by date; the info bar updates.</li>
+					<li>Click <strong>Filter</strong> — pick authors in the dialog and apply.</li>
+					<li>Scroll the Timeline — both bars stick to the top of the scroll container.</li>
+				</ul>
+				<p style="color: var(--sapNeutralTextColor);">
+					The Timeline does not implement search/sort/filter itself. Application code listens to
+					events from the controls and reorders, hides or adds items in the default slot.
+				</p>
+			</div>
+		</div>
+
+		<ui5-dialog id="showcaseFilterDialog" header-text="Filter by author">
+			<ui5-list id="showcaseFilterList" selection-mode="Multiple">
+				<ui5-li>Stanislava Baltova</ui5-li>
+				<ui5-li>Sarah Kerrigan</ui5-li>
+				<ui5-li>John Smith</ui5-li>
+			</ui5-list>
+			<div slot="footer" style="display: flex; justify-content: flex-end; padding: 0.5rem; gap: 0.5rem;">
+				<ui5-button id="showcaseFilterApply" design="Emphasized">Apply</ui5-button>
+				<ui5-button id="showcaseFilterCancel">Cancel</ui5-button>
+			</div>
+		</ui5-dialog>
+
+	</section>
+
+	<section class="main">
+		<div class="samples">
+			<h2>Timeline within Card Vertical</h2>
+			<div class="sample">
+				<ui5-card>
+					<ui5-card-header slot="header" title-text="Upcoming Activities" subtitle-text="For Today">
+					</ui5-card-header>
+					<ui5-timeline layout="Vertical" accessible-name="vertical" id="timelineAccName">
+						<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="phone"
+							name="Stanislava Baltova" name-clickable>
+							 <ui5-input value="Input"></ui5-input>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="phone"
+							name="Stanislava Baltova"></ui5-timeline-item>
+						<ui5-timeline-item title-text="Weekly Sync - CP Design"
+							subtitle-text="27.08.2017 (11:00 - 12:00)" icon="calendar">
+							<ui5-label>MR SOF02 2.43</ui5-label>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Video Conference Call - UI5"
+							subtitle-text="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
+							Online meeting
+						</ui5-timeline-item>
+					</ui5-timeline>
+				</ui5-card>
+			</div>
+			<h2>Timeline within Card Horizontal</h2>
+			<div class="sample">
+				<ui5-card>
+					<ui5-card-header slot="header" title-text="Upcoming Activities" subtitle-text="For Today">
+					</ui5-card-header>
+					<ui5-timeline layout="Horizontal">
+						<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="phone"
+							name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+						<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="phone"
+							name="Stanislava Baltova"></ui5-timeline-item>
+						<ui5-timeline-item title-text="Weekly Sync - CP Design"
+							subtitle-text="27.08.2017 (11:00 - 12:00)" icon="calendar">
+							<ui5-label>MR SOF02 2.43</ui5-label>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Video Conference Call - UI5"
+							subtitle-text="31.01.2018 (12:00 - 13:00)" icon="calendar" name="Stanislava Baltova">
+							Online meeting
+						</ui5-timeline-item>
+					</ui5-timeline>
+				</ui5-card>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h2>Basic Timeline - Vertical</h2>
+		<ui5-timeline layout="Vertical" id="testTimeline">
+			<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" name="Stanislava Baltova"
+				name-clickable></ui5-timeline-item>
+			<ui5-timeline-item title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)"
+				icon="calendar">
+				<ui5-label>MR SOF02 2.43</ui5-label>
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (13:30 - 14:00)"
+				icon="calendar"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+		</ui5-timeline>
+	</section>
+
+	<section>
+		<h2>Basic Timeline - Horizontal</h2>
+		<ui5-timeline layout="Horizontal">
+			<ui5-timeline-item title-text="called" subtitle-text="20.02.2017 11:30" icon="calendar"
+				name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+			<ui5-timeline-item title-text="Weekly Sync - CP Design" subtitle-text="27.08.2017 (11:00 - 12:00)"
+				icon="calendar">
+				<ui5-label>MR SOF02 2.43</ui5-label>
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+			<ui5-timeline-item title-text="Video Conference Call - UI5" subtitle-text="31.01.2018 (12:00 - 13:00)"
+				icon="calendar" name="Stanislava Baltova">
+				Online meeting
+			</ui5-timeline-item>
+		</ui5-timeline>
+	</section>
+
+	<div style="display: flex; flex-direction: column; gap: 5rem;">
+
+		<section style="width: 100%;">
+			<h2>Basic Timeline - Vertical With groups</h2>
+			<div style="width: 600px;">
+				<ui5-timeline id="verticalWithGroups">
+					<!-- GROUP ITEM -->
+					<ui5-timeline-group-item group-name="Events">
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk">Morning event</ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk">
+							<ui5-avatar initials="SK"></ui5-avatar>
+							<ui5-label>Good morning</ui5-label>
+						</ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							name="SAP iXP Party">20.02.2017 11:30</ui5-timeline-item>
+					</ui5-timeline-group-item>
+
+					<ui5-timeline-group-item group-name="Meetings">
+						<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="Team Balkan Meeting"></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+							name="Team Balkan Meeting">20.02.2017 11:30</ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="Team Balkan Meeting"><ui5-avatar
+								initials="SK"></ui5-avatar></ui5-timeline-item>
+					</ui5-timeline-group-item>
+
+					<ui5-timeline-group-item>
+						<ui5-timeline-item class="group-item" title-text="called" subtitle-text="20.02.2017 11:30 11:30"
+							icon="calendar" name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="Calls">
+						<ui5-timeline-item class="group-item" title-text="made group call"
+							subtitle-text="20.02.2017 11:30" icon="calendar" name="Stoyan Kralimarkov"
+							name-clickable></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="made group call"
+							subtitle-text="20.02.2017 11:30" name="Stoyan Kralimarkov"
+							name-clickable></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="made group call"
+							subtitle-text="20.02.2017 11:30" icon="calendar" name="Stoyan Kralimarkov"
+							name-clickable></ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+		<section style="width: 100%;">
+			<h2>Basic Timeline - Vertical</h2>
+			<div style="width: 600px;">
+				<ui5-timeline>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">
+						<ui5-avatar initials="SK"></ui5-avatar>
+						<ui5-label>Good morning</ui5-label>
+					</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						name="SAP iXP Party">20.02.2017 11:30</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Team Balkan Meeting"></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						name="Team Balkan Meeting">20.02.2017 11:30</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Team Balkan Meeting"><ui5-avatar
+							initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="called" subtitle-text="20.02.2017 11:30 11:30"
+						icon="calendar" name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="made group call" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Stoyan Kralimarkov" name-clickable></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="made group call" subtitle-text="20.02.2017 11:30"
+						name="Stoyan Kralimarkov" name-clickable></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="made group call" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Stoyan Kralimarkov" name-clickable></ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+		<section style="width: 100%;">
+			<h2>Basic Timeline - Horizontal With Groups</h2>
+			<div style="width: 600px;">
+				<ui5-timeline layout="Horizontal" id="horizontalWithGrps">
+					<ui5-timeline-group-item group-name="SAP" collapsed>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk"></ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="SAP Events">
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk"></ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						name="Team Balkan Meeting">20.02.2017 11:30</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Team Balkan Meeting"><ui5-avatar
+							initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="called" subtitle-text="20.02.2017 11:30 11:30"
+						icon="calendar" name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+					<ui5-timeline-group-item group-name="Calls">
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk"></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP Talk"></ui5-timeline-item>
+						<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+							icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+		<section style="width: 100%;">
+			<h2>Basic Timeline - Horizontal</h2>
+			<div style="width: 600px;">
+				<ui5-timeline layout="Horizontal">
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Test item</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
+						sequi magnam nam sed numquam.</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
+						sequi magnam nam sed numquam.</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
+						sequi magnam nam sed numquam.</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						name="Team Balkan Meeting">20.02.2017 11:30</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="coming up" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="Team Balkan Meeting"><ui5-avatar
+							initials="SK"></ui5-avatar></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="called" subtitle-text="20.02.2017 11:30 11:30"
+						icon="calendar" name="Stanislava Baltova" name-clickable></ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
+						sequi magnam nam sed numquam.</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP Talk">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
+						sequi magnam nam sed numquam.</ui5-timeline-item>
+					<ui5-timeline-item class="group-item" title-text="Event" subtitle-text="20.02.2017 11:30"
+						icon="calendar" name="SAP D-com"><ui5-avatar initials="SK"></ui5-avatar></ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+		<section>
+			<h2>Advanced Timeline - Horizontal With Groups and Diverse Components</h2>
+			<div>
+				<ui5-timeline layout="Vertical" id="horizontalWithGroupsGrowing">
+					<ui5-timeline-group-item group-name="SAP Events">
+						<ui5-timeline-item title-text="Online Meeting" subtitle-text="20.02.2017 11:30" icon="calendar">
+							<div>Discussion about upcoming projects</div>
+							<ui5-link>Meeting Link</ui5-link>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Workshop" subtitle-text="21.02.2017 09:00" icon="calendar">
+							<ui5-badge color-scheme="1">Important</ui5-badge>
+							<div>Topics: UI5 Basics, Advanced Concepts</div>
+							<ui5-link>Workshop Details</ui5-link>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Webinar" subtitle-text="22.02.2017 14:00" icon="calendar">
+							<ui5-avatar initials="SK"></ui5-avatar>
+							<div>Speaker: Sarah Kerrigan</div>
+							<ui5-button design="Positive">Join Webinar</ui5-button>
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="Internal Meetings">
+						<ui5-timeline-item title-text="Team Sync" subtitle-text="20.02.2017 10:00" icon="group">
+							<ui5-avatar-group type="Group" avatar-size="S">
+								<ui5-avatar initials="JS"></ui5-avatar>
+								<ui5-avatar initials="MJ"></ui5-avatar>
+								<ui5-avatar initials="TK"></ui5-avatar>
+							</ui5-avatar-group>
+							<div>Quarterly planning session</div>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Budget Review" subtitle-text="20.02.2017 15:00"
+							icon="money-bills">
+							<ui5-input placeholder="Add notes..."></ui5-input>
+							<div>Reviewing the budget for Q1</div>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="One-on-One" subtitle-text="21.02.2017 11:00" icon="employee">
+							<ui5-avatar icon="employee"></ui5-avatar>
+							<div>Manager: John Smith</div>
+							<ui5-textarea placeholder="Meeting notes..."></ui5-textarea>
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="Project Deadlines">
+						<ui5-timeline-item title-text="Milestone 1" subtitle-text="23.02.2017 17:00" icon="checklist-2">
+							<ui5-badge color-scheme="5">High Priority</ui5-badge>
+							<div>Task progress update</div>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Final Submission" subtitle-text="25.02.2017 12:00" icon="upload">
+							<ui5-badge color-scheme="7">Deadline</ui5-badge>
+							<div>Upload final project documents</div>
+							<ui5-button design="Attention">Submit</ui5-button>
+						</ui5-timeline-item>
+						<ui5-timeline-item title-text="Review Meeting" subtitle-text="26.02.2017 09:30"
+							icon="meeting-room">
+							<ui5-avatar-group type="Group" avatar-size="S">
+								<ui5-avatar initials="LK"></ui5-avatar>
+								<ui5-avatar initials="AW"></ui5-avatar>
+								<ui5-avatar initials="BR"></ui5-avatar>
+							</ui5-avatar-group>
+							<div>Review project deliverables</div>
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+		<section style="width: 100%;">
+			<h2>Timeline with Various Timeline Item States</h2>
+			<div style="width: 50%; margin: 1rem;">
+				<ui5-timeline id="test-timeline">
+					<ui5-timeline-group-item group-name="Build">
+						<ui5-timeline-item title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" icon-tooltip="Compilation successful" name="Testing suite A" state="Positive">
+							Compilation succeeded.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="Lint" subtitle="Testing suite B" icon="sap-icon://message-information" name="Testing suite B" state="Information">
+							Lint completed with minor issues.
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+					<ui5-timeline-group-item group-name="Test">
+						<ui5-timeline-item title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
+							Unit tests failed.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="Integration Test" subtitle="Testing suite D" icon="sap-icon://message-warning" name="Testing suite D" state="Critical">
+							Integration tests have warnings.
+						</ui5-timeline-item>
+						<ui5-timeline-item title="E2E Test" subtitle="Testing suite E" icon="sap-icon://accept" name="Testing suite E" state="Positive">
+							End-to-end tests passed.
+						</ui5-timeline-item>
+					</ui5-timeline-group-item>
+				</ui5-timeline>
+			</div>
+		</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with Various Timeline Item States</h2>
+	<div style="width: 50%; margin: 1rem;">
+		<ui5-timeline id="test-timeline">
+			<ui5-timeline-group-item group-name="Build">
+				<ui5-timeline-item title="Compile" subtitle="Testing suite A" icon="sap-icon://accept" name="Testing suite A" state="Positive">
+					Compilation succeeded.
+				</ui5-timeline-item>
+				<ui5-timeline-item title="Lint" subtitle="Testing suite B" icon="sap-icon://message-information" name="Testing suite B" state="Information">
+					Lint completed with minor issues.
+				</ui5-timeline-item>
+			</ui5-timeline-group-item>
+			<ui5-timeline-group-item group-name="Test">
+				<ui5-timeline-item title="Unit Test" subtitle="Testing suite C" icon="sap-icon://decline" name="Testing suite C" state="Negative">
+					Unit tests failed.
+				</ui5-timeline-item>
+				<ui5-timeline-item title="Integration Test" subtitle="Testing suite D" icon="sap-icon://message-warning" name="Testing suite D" state="Critical">
+					Integration tests have warnings.
+				</ui5-timeline-item>
+				<ui5-timeline-item title="E2E Test" subtitle="Testing suite E" icon="sap-icon://accept" name="Testing suite E" state="Positive">
+					End-to-end tests passed.
+				</ui5-timeline-item>
+			</ui5-timeline-group-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with header and info-bar slots (sticky)</h2>
+	<p>Demonstrates the canonical pattern: a controls bar in <code>header</code> with search/sort/filter triggers, and an info bar in <code>info-bar</code> reflecting the applied state. Scroll the Timeline to see sticky behavior.</p>
+	<div style="width: 600px; height: 360px; margin: 1rem; border: 1px solid var(--sapList_BorderColor);">
+		<ui5-timeline id="timelineWithSlots" sticky-header style="height: 100%;">
+			<ui5-bar slot="header" design="Subheader">
+				<ui5-input slot="startContent" placeholder="Search timeline" id="timelineSearch"></ui5-input>
+				<ui5-button slot="endContent" icon="sort" id="timelineSortBtn" tooltip="Toggle sort"></ui5-button>
+				<ui5-button slot="endContent" icon="filter" id="timelineFilterBtn" tooltip="Filter"></ui5-button>
+			</ui5-bar>
+			<ui5-bar slot="infoBar" design="Subheader">
+				<ui5-label slot="startContent" id="timelineActiveFilters">Sort: Ascending &middot; No filters</ui5-label>
+			</ui5-bar>
+			<ui5-timeline-item title-text="Project kickoff" subtitle-text="20.02.2017 09:00" icon="calendar" name="Stanislava Baltova"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Design review" subtitle-text="22.02.2017 11:30" icon="calendar" name="Sarah Kerrigan"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Sprint planning" subtitle-text="24.02.2017 14:00" icon="calendar" name="John Smith"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Backlog grooming" subtitle-text="26.02.2017 10:00" icon="calendar" name="Stanislava Baltova"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Demo to stakeholders" subtitle-text="28.02.2017 15:00" icon="calendar" name="Sarah Kerrigan"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Retrospective" subtitle-text="01.03.2017 16:00" icon="calendar" name="John Smith"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Release planning" subtitle-text="03.03.2017 09:30" icon="calendar" name="Stanislava Baltova"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Deployment" subtitle-text="05.03.2017 12:00" icon="calendar" name="Sarah Kerrigan"></ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+
+<section style="width: 100%;">
+	<h2>Timeline with slots — ancestor owns the scroll</h2>
+	<p>When the Timeline is placed inside a scrolling ancestor without a constrained height of its own, it expands and the ancestor scrolls. <code>stickyHeader</code> still works — the header pins to the ancestor's scrollport.</p>
+	<div style="width: 600px; margin: 1rem; max-height: 320px; overflow: auto; border: 1px solid var(--sapList_BorderColor);">
+		<ui5-timeline id="timelineNotScrollable" sticky-header>
+			<ui5-bar slot="header" design="Subheader">
+				<ui5-label slot="startContent">Header sticks to the ancestor's scroll</ui5-label>
+			</ui5-bar>
+			<ui5-timeline-item title-text="Item 1" subtitle-text="01.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Item 2" subtitle-text="02.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Item 3" subtitle-text="03.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Item 4" subtitle-text="04.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Item 5" subtitle-text="05.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+			<ui5-timeline-item title-text="Item 6" subtitle-text="06.01.2017" icon="calendar" name="Author"></ui5-timeline-item>
+		</ui5-timeline>
+	</div>
+</section>
+	</div>
+</body>
+
+</html>

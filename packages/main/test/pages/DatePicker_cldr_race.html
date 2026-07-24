@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>DatePicker — CLDR race condition reproduction</title>
+
+
+	<style>
+		body { font-family: sans-serif; padding: 1rem; }
+		section { margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem; border-radius: 4px; }
+		h2 { margin-top: 0; }
+		button { margin: 0.25rem; padding: 0.4rem 0.8rem; cursor: pointer; }
+		pre { background: #f4f4f4; padding: 0.5rem; border-radius: 3px; white-space: pre-wrap; font-size: 0.85rem; }
+		.ok   { color: green; font-weight: bold; }
+		.fail { color: red;   font-weight: bold; }
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/test/pages/DatePicker_cldr_race.html-BhYd7IuT.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/assets/bundle.esm-BB4nwE8j.js">
+</head>
+<body>
+<h1>DatePicker — CLDR race condition</h1>
+<p>
+	Reproduces the bug where <code>getCachedLocaleDataInstance</code> creates a <code>LocaleData</code>
+	instance before CLDR data has finished loading, leaving <code>mData</code> undefined and
+	crashing on first render.
+</p>
+
+<section>
+	<h2>Scenario 1 — setLanguage("bg") then immediately mount</h2>
+	<p>
+		Calls <code>setLanguage("bg")</code> <strong>without awaiting</strong> it, then immediately
+		adds a <code>&lt;ui5-date-picker&gt;</code>. The race: the component renders before
+		<code>fetchCldr("bg")</code> resolves, so <code>mData</code> is undefined → crash.<br>
+		<em>Click the button to trigger the race.</em>
+	</p>
+	<button id="btn-race">Trigger race (no await)</button>
+	<button id="btn-safe">Trigger safe (await setLanguage)</button>
+	<button id="btn-reset">Reset (remove picker, set EN)</button>
+	<div id="container1" style="margin-top:1rem"></div>
+	<pre id="log1">— click a button —</pre>
+</section>
+
+<section>
+	<h2>Scenario 2 — language already set, normal mount</h2>
+	<p>
+		After <code>setLanguage("bg")</code> has fully resolved (awaited), mounting a new picker
+		should work correctly and show Monday as first day of week.
+	</p>
+	<button id="btn-scenario2">Mount after await</button>
+	<button id="btn-open2">Open picker</button>
+	<div id="container2" style="margin-top:1rem"></div>
+	<pre id="log2">— click "Mount after await" —</pre>
+</section>
+
+<section>
+	<h2>Scenario 3 — rapid language switches</h2>
+	<p>
+		Switches language multiple times in quick succession without awaiting each call,
+		then mounts. Stresses the cache-poisoning path.
+	</p>
+	<button id="btn-rapid">Rapid switch + mount</button>
+	<div id="container3" style="margin-top:1rem"></div>
+	<pre id="log3">— click "Rapid switch + mount" —</pre>
+</section>
+
+</body>
+</html>

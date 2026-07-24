@@ -1,0 +1,2 @@
+declare const _default: ".ui5-select-popover::part(content),.ui5-select-popover::part(header){padding:0}.ui5-select-popover .ui5-responsive-popover-header .row{justify-content:flex-start}.ui5-select-popover .ui5-valuestatemessage--error,.ui5-select-popover .ui5-valuestatemessage--warning,.ui5-select-popover .ui5-valuestatemessage--success,.ui5-select-popover .ui5-valuestatemessage--information{box-shadow:none}.ui5-select-popover .ui5-valuestatemessage-header{box-shadow:var(--sapContent_HeaderShadow)}\n";
+export default _default;

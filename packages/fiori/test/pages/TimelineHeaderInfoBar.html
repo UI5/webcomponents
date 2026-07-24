@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Timeline — header &amp; infoBar slots showcase</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: var(--sapBackgroundColor);
+			color: var(--sapTextColor);
+			font-family: var(--sapFontFamily);
+		}
+
+		.page-header {
+			padding: 1.5rem 2rem;
+			border-block-end: 1px solid var(--sapList_BorderColor);
+			background: var(--sapShellColor);
+			color: var(--sapShell_TextColor);
+		}
+
+		.page-header h1 {
+			margin: 0 0 0.25rem 0;
+			font-size: 1.5rem;
+		}
+
+		.page-header p {
+			margin: 0;
+			color: var(--sapShell_TextColor);
+			opacity: 0.85;
+		}
+
+		.scenarios {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr);
+			gap: 2rem;
+			padding: 2rem;
+		}
+
+		@media (min-width: 80rem) {
+			.scenarios {
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			}
+		}
+
+		.scenario {
+			border: 1px solid var(--sapList_BorderColor);
+			border-radius: 0.5rem;
+			background: var(--sapBaseColor);
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.scenario-header {
+			padding: 0.75rem 1rem;
+			border-block-end: 1px solid var(--sapList_BorderColor);
+			background: var(--sapInfobar_NonInteractive_Background);
+		}
+
+		.scenario-header h2 {
+			margin: 0 0 0.25rem 0;
+			font-size: 1rem;
+		}
+
+		.scenario-header p {
+			margin: 0;
+			font-size: 0.8125rem;
+			color: var(--sapNeutralTextColor);
+		}
+
+		.scenario-body {
+			height: 26rem;
+		}
+
+		.scenario-body--tall {
+			height: 32rem;
+		}
+
+		.ancestor-scroll {
+			max-height: 32rem;
+			overflow: auto;
+			border: 1px dashed var(--sapNeutralBorderColor);
+		}
+
+		.metrics {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
+		.metric {
+			display: inline-flex;
+			gap: 0.25rem;
+			align-items: center;
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.5rem;
+			font-size: 0.75rem;
+			background: var(--sapNeutralBackground);
+			color: var(--sapNeutralTextColor);
+		}
+
+		.metric--positive {
+			background: var(--sapPositiveBackground);
+			color: var(--sapPositiveTextColor);
+		}
+
+		.metric--negative {
+			background: var(--sapNegativeBackground);
+			color: var(--sapNegativeTextColor);
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/assets/test/pages/TimelineHeaderInfoBar.html-DqNcy2ki.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/assets/bundle.esm-Bnizv7Na.js">
+</head>
+
+<body>
+
+	<header class="page-header">
+		<h1>ui5-timeline — <code>header</code> &amp; <code>infoBar</code> slots</h1>
+		<p>
+			Three scenarios demonstrating the full capability of the new slots. The Timeline does not
+			search, sort or filter — applications place their own controls in the slots and update the
+			items in the default slot in response to events.
+		</p>
+	</header>
+
+	<section class="scenarios">
+
+		<!-- Scenario 1: full-feature filtering -->
+		<article class="scenario">
+			<div class="scenario-header">
+				<h2>1. Full filter pipeline (search + sort + multi-criteria filter)</h2>
+				<p>Activity log with type, priority, status and author. Header sticks to the top; info bar surfaces every applied criterion as removable tokens.</p>
+			</div>
+			<div class="scenario-body scenario-body--tall">
+				<ui5-timeline id="advancedTimeline" sticky-header style="height: 100%;">
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-input id="advSearch" placeholder="Search title, author or note" style="width: 18rem;"></ui5-input>
+						</ui5-toolbar-item>
+						<ui5-toolbar-spacer></ui5-toolbar-spacer>
+						<ui5-toolbar-button icon="sort" id="advSortBtn" text="Sort: Newest"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="filter" id="advFilterBtn" text="Filter"></ui5-toolbar-button>
+						<ui5-toolbar-button icon="refresh" id="advResetBtn" tooltip="Reset all filters" text="Reset"></ui5-toolbar-button>
+					</ui5-toolbar>
+
+					<ui5-bar slot="infoBar" design="Subheader">
+						<div slot="startContent" id="advStateTokens" class="metrics">
+							<span class="metric">Showing <span id="advCount">0</span> of <span id="advTotal">0</span></span>
+						</div>
+					</ui5-bar>
+
+					<!-- 14 items spanning multiple types/statuses/authors -->
+					<ui5-timeline-item title-text="Project kickoff" subtitle-text="2017-02-20 09:00" icon="meeting-room" name="Stanislava Baltova" data-author="Stanislava Baltova" data-type="Meeting" data-status="Done" data-priority="Medium" data-date="2017-02-20">Initial alignment with all stakeholders.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Design review" subtitle-text="2017-02-22 11:30" icon="palette" name="Sarah Kerrigan" data-author="Sarah Kerrigan" data-type="Review" data-status="Done" data-priority="High" data-date="2017-02-22">Visual design walk-through and feedback.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Sprint planning" subtitle-text="2017-02-24 14:00" icon="task" name="John Smith" data-author="John Smith" data-type="Meeting" data-status="Done" data-priority="Medium" data-date="2017-02-24">Backlog refinement and capacity planning.</ui5-timeline-item>
+					<ui5-timeline-item title-text="API breaking change" subtitle-text="2017-02-25 09:15" icon="alert" name="John Smith" data-author="John Smith" data-type="Incident" data-status="Open" data-priority="High" data-date="2017-02-25">Authentication endpoint signature changed.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Backlog grooming" subtitle-text="2017-02-26 10:00" icon="task" name="Stanislava Baltova" data-author="Stanislava Baltova" data-type="Meeting" data-status="Done" data-priority="Low" data-date="2017-02-26">Re-prioritised the next two sprints.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Hotfix deployed" subtitle-text="2017-02-27 16:45" icon="upload" name="Sarah Kerrigan" data-author="Sarah Kerrigan" data-type="Deploy" data-status="Done" data-priority="High" data-date="2017-02-27">v1.2.4 hotfix to production.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Demo to stakeholders" subtitle-text="2017-02-28 15:00" icon="present" name="Sarah Kerrigan" data-author="Sarah Kerrigan" data-type="Meeting" data-status="Done" data-priority="High" data-date="2017-02-28">Demo of new dashboard.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Retrospective" subtitle-text="2017-03-01 16:00" icon="discussion" name="John Smith" data-author="John Smith" data-type="Meeting" data-status="Done" data-priority="Low" data-date="2017-03-01">What went well, what to improve.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Performance regression" subtitle-text="2017-03-02 10:20" icon="performance" name="John Smith" data-author="John Smith" data-type="Incident" data-status="In Progress" data-priority="High" data-date="2017-03-02">Search latency up by 40%.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Release planning" subtitle-text="2017-03-03 09:30" icon="task" name="Stanislava Baltova" data-author="Stanislava Baltova" data-type="Meeting" data-status="Open" data-priority="Medium" data-date="2017-03-03">Scope and timing for the next release.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Code review — auth module" subtitle-text="2017-03-04 14:15" icon="source-code" name="Sarah Kerrigan" data-author="Sarah Kerrigan" data-type="Review" data-status="In Progress" data-priority="Medium" data-date="2017-03-04">Reviewing PR #482.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Production deployment" subtitle-text="2017-03-05 12:00" icon="upload" name="Sarah Kerrigan" data-author="Sarah Kerrigan" data-type="Deploy" data-status="Done" data-priority="High" data-date="2017-03-05">v1.3.0 rollout.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Customer feedback session" subtitle-text="2017-03-06 11:00" icon="customer" name="Stanislava Baltova" data-author="Stanislava Baltova" data-type="Meeting" data-status="Open" data-priority="Low" data-date="2017-03-06">Roundtable with three pilot customers.</ui5-timeline-item>
+					<ui5-timeline-item title-text="Security patch deployed" subtitle-text="2017-03-07 08:30" icon="locked" name="John Smith" data-author="John Smith" data-type="Deploy" data-status="Done" data-priority="High" data-date="2017-03-07">CVE-2017-XXXX mitigation.</ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</article>
+
+		<!-- Scenario 2: minimal — search-only with live count -->
+		<article class="scenario">
+			<div class="scenario-header">
+				<h2>2. Minimal — search only with live count</h2>
+				<p>Smallest meaningful use of the slots: a search input in <code>header</code>, a live count in <code>infoBar</code>. Sticky header only.</p>
+			</div>
+			<div class="scenario-body">
+				<ui5-timeline id="searchOnlyTimeline" sticky-header style="height: 100%;">
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-input id="simpleSearch" placeholder="Search activities…" icon="search" style="width: 100%;"></ui5-input>
+						</ui5-toolbar-item>
+					</ui5-toolbar>
+					<ui5-bar slot="infoBar" design="Subheader">
+						<ui5-label slot="startContent" id="simpleCount">8 of 8 activities</ui5-label>
+					</ui5-bar>
+					<ui5-timeline-item title-text="User signed up" subtitle-text="08:32" icon="employee" name="Lara Croft" data-haystack="user signed up lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Password reset requested" subtitle-text="08:55" icon="locked" name="Lara Croft" data-haystack="password reset lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Two-factor enabled" subtitle-text="09:12" icon="locked" name="Lara Croft" data-haystack="two-factor 2fa lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Profile updated" subtitle-text="09:34" icon="person-placeholder" name="Lara Croft" data-haystack="profile updated lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="API key created" subtitle-text="10:02" icon="key" name="Lara Croft" data-haystack="api key created lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Subscription upgraded" subtitle-text="10:45" icon="upload" name="Lara Croft" data-haystack="subscription upgraded plan lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Webhook configured" subtitle-text="11:08" icon="connected" name="Lara Croft" data-haystack="webhook integration lara croft"></ui5-timeline-item>
+					<ui5-timeline-item title-text="First report exported" subtitle-text="11:42" icon="download" name="Lara Croft" data-haystack="report exported lara croft"></ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</article>
+
+		<!-- Scenario 3: ancestor owns the scroll → bars scroll with the content -->
+		<article class="scenario">
+			<div class="scenario-header">
+				<h2>3. Ancestor scroll container</h2>
+				<p>The ancestor (dashed border) owns scrolling. The Timeline expands to its content and the <code>header</code> and <code>infoBar</code> slots scroll together with the items. <code>stickyHeader</code> is not used here — it pins to the Timeline's own scrollport, so it requires a Timeline that owns its scrollbar (see scenarios 1 and 2).</p>
+			</div>
+			<div class="ancestor-scroll">
+				<ui5-timeline id="ancestorScrollTimeline">
+					<ui5-toolbar slot="header">
+						<ui5-toolbar-item>
+							<ui5-label>Header sticks to the ancestor</ui5-label>
+						</ui5-toolbar-item>
+						<ui5-toolbar-spacer></ui5-toolbar-spacer>
+						<ui5-toolbar-button icon="add" id="ancestorAddBtn" text="Add row"></ui5-toolbar-button>
+					</ui5-toolbar>
+					<ui5-bar slot="infoBar" design="Subheader">
+						<ui5-label slot="startContent" id="ancestorCount">6 rows</ui5-label>
+					</ui5-bar>
+					<ui5-timeline-item title-text="Row 1" subtitle-text="2017-01-01" icon="calendar" name="Author"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Row 2" subtitle-text="2017-01-02" icon="calendar" name="Author"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Row 3" subtitle-text="2017-01-03" icon="calendar" name="Author"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Row 4" subtitle-text="2017-01-04" icon="calendar" name="Author"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Row 5" subtitle-text="2017-01-05" icon="calendar" name="Author"></ui5-timeline-item>
+					<ui5-timeline-item title-text="Row 6" subtitle-text="2017-01-06" icon="calendar" name="Author"></ui5-timeline-item>
+				</ui5-timeline>
+			</div>
+		</article>
+
+	</section>
+
+	<!-- Filter dialog for scenario 1 -->
+	<ui5-dialog id="advFilterDialog" header-text="Filter activities" style="width: 22rem;">
+		<div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem;">
+
+			<div>
+				<ui5-title level="H6">Type</ui5-title>
+				<ui5-list id="advTypeList" selection-mode="Multiple">
+					<ui5-li>Meeting</ui5-li>
+					<ui5-li>Review</ui5-li>
+					<ui5-li>Deploy</ui5-li>
+					<ui5-li>Incident</ui5-li>
+				</ui5-list>
+			</div>
+
+			<div>
+				<ui5-title level="H6">Status</ui5-title>
+				<ui5-list id="advStatusList" selection-mode="Multiple">
+					<ui5-li>Open</ui5-li>
+					<ui5-li>In Progress</ui5-li>
+					<ui5-li>Done</ui5-li>
+				</ui5-list>
+			</div>
+
+			<div>
+				<ui5-title level="H6">Author</ui5-title>
+				<ui5-list id="advAuthorList" selection-mode="Multiple">
+					<ui5-li>Stanislava Baltova</ui5-li>
+					<ui5-li>Sarah Kerrigan</ui5-li>
+					<ui5-li>John Smith</ui5-li>
+				</ui5-list>
+			</div>
+
+			<div>
+				<ui5-title level="H6">Priority</ui5-title>
+				<ui5-segmented-button id="advPrioritySegmented">
+					<ui5-segmented-button-item data-priority="Any" selected>Any</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-priority="Low">Low</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-priority="Medium">Medium</ui5-segmented-button-item>
+					<ui5-segmented-button-item data-priority="High">High</ui5-segmented-button-item>
+				</ui5-segmented-button>
+			</div>
+
+			<div>
+				<ui5-title level="H6">Date range</ui5-title>
+				<ui5-daterange-picker id="advDateRange" display-format="yyyy-MM-dd"></ui5-daterange-picker>
+			</div>
+		</div>
+
+		<div slot="footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding: 0.5rem;">
+			<ui5-button id="advFilterApply" design="Emphasized">Apply</ui5-button>
+			<ui5-button id="advFilterClear">Clear all</ui5-button>
+			<ui5-button id="advFilterCancel">Cancel</ui5-button>
+		</div>
+	</ui5-dialog>
+
+
+</body>
+
+</html>

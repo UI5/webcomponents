@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "sys-monitor";
+const pathData = "M14.25 0C15.216 0 16 .783 16 1.75v9.495a1.75 1.75 0 0 1-1.75 1.749H9v1.502l3.249-.003a.75.75 0 0 1 .002 1.5l-8.5.007a.75.75 0 1 1-.002-1.5L7 14.498v-1.503H1.75A1.75 1.75 0 0 1 0 11.244V1.75C0 .783.784 0 1.75 0h12.5ZM1.75 1.5a.25.25 0 0 0-.25.25v9.495c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.748a.25.25 0 0 0-.25-.25H1.75Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/sys-monitor";
+export { pathData, ltr, viewBox, accData };

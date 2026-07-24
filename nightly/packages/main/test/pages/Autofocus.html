@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>TextArea autofocus repro (#9063)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/Autofocus.html-DwKD78aq.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-CF94w3xv.js">
+</head>
+<body>
+	<section>
+		<ui5-textarea></ui5-textarea>
+		<ui5-select></ui5-select>
+		<ui5-input ></ui5-input>
+		<ui5-select autofocus></ui5-select>
+		<ui5-date-picker autofocus></ui5-date-picker>
+		<ui5-combobox autofocus></ui5-combobox>
+	</section>
+
+	<section>
+		<ui5-button id="openDialogBtn">Open Dialog</ui5-button>
+		<ui5-dialog id="myDialog" header-text="Dialog with TextArea">
+			<button id="openPopoverBtn">Press</button>
+			<input />
+			<ui5-textarea placeholder="TextArea in Dialog"></ui5-textarea>
+		</ui5-dialog>
+	</section>
+</body>
+</html>

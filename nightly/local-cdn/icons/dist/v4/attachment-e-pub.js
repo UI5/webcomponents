@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "attachment-e-pub";
+const pathData = "M1 3.992 5.032 0h7.057c.273 0 .509.094.708.28.2.188.3.427.3.718v1.996h-1.008V.998H6.04v2.994c0 .291-.1.53-.299.717-.2.187-.446.281-.74.281H2.008v9.98h10.08v-.998h1.009v.998c0 .291-.095.53-.284.717a.987.987 0 0 1-.724.281H2.009a.987.987 0 0 1-.725-.28A.966.966 0 0 1 1 14.97V3.992Zm6.363 4.304 3.277-3.181c.063-.125.189-.187.378-.187.147 0 .283.062.41.187l2.047 1.965-2.426 2.432-.85-.78 1.67-1.652-.82-.78-2.457 2.433 2.457 2.401 3.245-3.212.41.374c.104.166.157.312.157.437 0 .145-.053.27-.158.374l-3.276 3.243a.557.557 0 0 1-.41.156.518.518 0 0 1-.377-.156L7.363 9.107a.508.508 0 0 1-.157-.374c0-.188.052-.333.157-.437Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/attachment-e-pub";
+export { pathData, ltr, viewBox, accData };
