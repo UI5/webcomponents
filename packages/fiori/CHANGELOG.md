@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.24.2](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.24.2) (2026-07-24)
+
+
+### Bug Fixes
+
+* **ui5-shellbar-search:** keep ShellBar state in sync on empty Enter ([#13834](https://github.com/UI5/webcomponents/issues/13834)) ([4203500](https://github.com/UI5/webcomponents/commit/4203500121c287ed734c3adad978a32a06c77c3f))
+* **ui5-shellbar:** fix search-button-click event and getSearchButtonDomRef with ui5-shellbar-search ([#13843](https://github.com/UI5/webcomponents/issues/13843)) ([f2cd3a7](https://github.com/UI5/webcomponents/commit/f2cd3a7ebccb654d6c1b152f38f488a8b90915f0))
+
+
+
+
+
 # [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
 
 
