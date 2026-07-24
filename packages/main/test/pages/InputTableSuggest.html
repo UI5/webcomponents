@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>InputTableSuggest - Test Page</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			font-family: var(--sapFontFamily);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+		.section {
+			margin-bottom: 2rem;
+			padding: 1rem;
+			border: 1px solid var(--sapGroup_TitleBorderColor);
+			border-radius: 0.5rem;
+			background: var(--sapGroup_ContentBackground);
+		}
+		.section-title {
+			margin-bottom: 1rem;
+		}
+		.description {
+			color: var(--sapContent_LabelColor);
+			margin-bottom: 1rem;
+			font-size: 0.875rem;
+		}
+		ui5-input-table-suggest {
+			width: 100%;
+			max-width: 600px;
+		}
+		.output {
+			margin-top: 1rem;
+			padding: 0.5rem;
+			background: var(--sapField_Background);
+			border: 1px solid var(--sapField_BorderColor);
+			border-radius: 0.25rem;
+			font-family: monospace;
+			font-size: 0.875rem;
+			min-height: 2rem;
+		}
+		.narrow-container {
+			width: 350px;
+			border: 2px dashed var(--sapContent_ForegroundBorderColor);
+			padding: 1rem;
+		}
+	</style>
+</head>
+<body class="ui5-content-density-compact">
+	<ui5-title level="H1">InputTableSuggest Component - Test Page</ui5-title>
+	<ui5-text>This page demonstrates the InputTableSuggest component with tabular suggestions.</ui5-text>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Product Search</ui5-title>
+		<p class="description">
+			Search for products. The suggestions show Product ID, Name, Category, and Price in columns.
+			Try typing "Laptop" or "Phone". Matching text is highlighted in the suggestions.
+		</p>
+
+		<ui5-input-table-suggest
+			id="productSearch"
+			placeholder="Search for products..."
+			show-suggestions
+		>
+			<!-- Column Headers -->
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Product ID</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="200px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-001</ui5-table-cell>
+				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
+				<ui5-table-cell>Electronics</ui5-table-cell>
+				<ui5-table-cell>$1,299</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-002</ui5-table-cell>
+				<ui5-table-cell>Smartphone X</ui5-table-cell>
+				<ui5-table-cell>Electronics</ui5-table-cell>
+				<ui5-table-cell>$899</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-003</ui5-table-cell>
+				<ui5-table-cell>Wireless Mouse</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$49</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-004</ui5-table-cell>
+				<ui5-table-cell>USB-C Hub</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$79</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>PRD-005</ui5-table-cell>
+				<ui5-table-cell>Phone Case</ui5-table-cell>
+				<ui5-table-cell>Accessories</ui5-table-cell>
+				<ui5-table-cell>$29</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-input-table-suggest>
+
+		<div class="output" id="productOutput">Selected: (none)</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Employee Directory</ui5-title>
+		<p class="description">
+			Search for employees by name. Typed text is highlighted in all cells.
+		</p>
+
+		<ui5-input-table-suggest
+			id="employeeSearch"
+			placeholder="Search employees..."
+			show-suggestions
+		>
+			<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="120px">Department</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Location</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Extension</ui5-table-header-cell>
+
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>John Smith</ui5-table-cell>
+				<ui5-table-cell>Engineering</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x1234</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Jane Doe</ui5-table-cell>
+				<ui5-table-cell>Marketing</ui5-table-cell>
+				<ui5-table-cell>Building B</ui5-table-cell>
+				<ui5-table-cell>x2345</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>James Wilson</ui5-table-cell>
+				<ui5-table-cell>Sales</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x3456</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Sarah Johnson</ui5-table-cell>
+				<ui5-table-cell>HR</ui5-table-cell>
+				<ui5-table-cell>Building C</ui5-table-cell>
+				<ui5-table-cell>x4567</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>Mike Brown</ui5-table-cell>
+				<ui5-table-cell>Engineering</ui5-table-cell>
+				<ui5-table-cell>Building A</ui5-table-cell>
+				<ui5-table-cell>x5678</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-input-table-suggest>
+
+		<div class="output" id="employeeOutput">Selected: (none)</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Popin Overflow Mode (Default)</ui5-title>
+		<p class="description">
+			This example uses <code>overflow-mode="Popin"</code> (the default) in a narrow container.
+			Columns will stack vertically when there's not enough space.
+		</p>
+
+		<div class="narrow-container">
+			<ui5-input-table-suggest
+				id="popinSearch"
+				placeholder="Search in narrow space..."
+				show-suggestions
+				overflow-mode="Popin"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="0">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="120px" importance="1">Description</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="2" popin-text="Qty">Quantity</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px" importance="3" popin-text="Status">Status</ui5-table-header-cell>
+
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>A001</ui5-table-cell>
+					<ui5-table-cell>Widget Alpha</ui5-table-cell>
+					<ui5-table-cell>150</ui5-table-cell>
+					<ui5-table-cell>In Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>B002</ui5-table-cell>
+					<ui5-table-cell>Widget Beta</ui5-table-cell>
+					<ui5-table-cell>75</ui5-table-cell>
+					<ui5-table-cell>Low Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>C003</ui5-table-cell>
+					<ui5-table-cell>Widget Gamma</ui5-table-cell>
+					<ui5-table-cell>0</ui5-table-cell>
+					<ui5-table-cell>Out of Stock</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+
+		<div class="output" id="popinOutput">Selected: (none)</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Scroll Overflow Mode</ui5-title>
+		<p class="description">
+			This example uses <code>overflow-mode="Scroll"</code> in a narrow container.
+			A horizontal scrollbar appears when columns don't fit.
+		</p>
+
+		<div class="narrow-container">
+			<ui5-input-table-suggest
+				id="scrollSearch"
+				placeholder="Search with scroll..."
+				show-suggestions
+				overflow-mode="Scroll"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Description</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="80px">Quantity</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" width="100px">Status</ui5-table-header-cell>
+
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>A001</ui5-table-cell>
+					<ui5-table-cell>Widget Alpha</ui5-table-cell>
+					<ui5-table-cell>150</ui5-table-cell>
+					<ui5-table-cell>In Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>B002</ui5-table-cell>
+					<ui5-table-cell>Widget Beta</ui5-table-cell>
+					<ui5-table-cell>75</ui5-table-cell>
+					<ui5-table-cell>Low Stock</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>C003</ui5-table-cell>
+					<ui5-table-cell>Widget Gamma</ui5-table-cell>
+					<ui5-table-cell>0</ui5-table-cell>
+					<ui5-table-cell>Out of Stock</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+
+		<div class="output" id="scrollOutput">Selected: (none)</div>
+	</div>
+
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">With Clear Icon</ui5-title>
+		<p class="description">
+			InputTableSuggest with show-clear-icon enabled for easy value clearing.
+		</p>
+
+		<ui5-input-table-suggest
+			id="clearIconSearch"
+			placeholder="Search with clear icon..."
+			show-suggestions
+			show-clear-icon
+		>
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">ID</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="150px">Task</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">Priority</ui5-table-header-cell>
+
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-101</ui5-table-cell>
+				<ui5-table-cell>Review PR #123</ui5-table-cell>
+				<ui5-table-cell>High</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-102</ui5-table-cell>
+				<ui5-table-cell>Update documentation</ui5-table-cell>
+				<ui5-table-cell>Medium</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row slot="suggestionRows">
+				<ui5-table-cell>T-103</ui5-table-cell>
+				<ui5-table-cell>Fix login bug</ui5-table-cell>
+				<ui5-table-cell>Critical</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-input-table-suggest>
+
+		<div class="output" id="clearIconOutput">Selected: (none)</div>
+	</div>
+
+	<!-- Example 6: Value States -->
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Example 7: Value States</ui5-title>
+		<p class="description">
+			InputTableSuggest supports all value states: Negative (Error), Critical (Warning), Positive (Success), and Information.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="negativeState"
+				placeholder="Negative (Error) state..."
+				value-state="Negative"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item A</ui5-table-cell>
+					<ui5-table-cell>Invalid</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="criticalState"
+				placeholder="Critical (Warning) state..."
+				value-state="Critical"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item B</ui5-table-cell>
+					<ui5-table-cell>Pending</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="positiveState"
+				placeholder="Positive (Success) state..."
+				value-state="Positive"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item C</ui5-table-cell>
+					<ui5-table-cell>Approved</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="informationState"
+				placeholder="Information state..."
+				value-state="Information"
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Item D</ui5-table-cell>
+					<ui5-table-cell>Info</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Value State with Custom Message and suggestions</ui5-title>
+		<p class="description">
+			Custom value state messages are shown in a popover when the input is focused.
+			Focus on each input to see the message.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="negativeMessage"
+				placeholder="Error with message..."
+				value-state="Negative"
+				show-suggestions
+			>
+				<div slot="valueStateMessage">
+					This product ID is invalid. Please enter a valid ID starting with "PRD-".
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Price</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-001</ui5-table-cell>
+					<ui5-table-cell>$99</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="criticalMessage"
+				placeholder="Warning with message..."
+				value-state="Critical"
+				show-suggestions
+			>
+				<div slot="valueStateMessage">
+					Stock is running low. Consider reordering soon.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Stock</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget X</ui5-table-cell>
+					<ui5-table-cell>5 left</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="informationMessage"
+				placeholder="Information with message..."
+				value-state="Information"
+			>
+				<div slot="valueStateMessage">
+					Tip: You can use wildcards (*) for broader search results.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Search</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Results</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget*</ui5-table-cell>
+					<ui5-table-cell>25 matches</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Value State with Formatted Text</ui5-title>
+		<p class="description">
+			Value state messages can contain formatted text with bold, italic, and other styling.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="formattedNegative"
+				placeholder="Error with formatted message..."
+				value-state="Negative"
+			>
+				<div slot="valueStateMessage">
+					<strong>Invalid Entry:</strong> The value <em>"XYZ-999"</em> does not match any record.
+					Please check your input and try again.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Code</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Description</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>ABC-001</ui5-table-cell>
+					<ui5-table-cell>Valid Code</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="formattedCritical"
+				placeholder="Warning with formatted message..."
+				value-state="Critical"
+			>
+				<div slot="valueStateMessage">
+					<strong>Attention:</strong> This item will be <em>discontinued</em> on <strong>December 31, 2026</strong>.
+					Consider selecting an alternative.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Item</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">End Date</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Legacy Widget</ui5-table-cell>
+					<ui5-table-cell>Dec 31, 2026</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>New Widget</ui5-table-cell>
+					<ui5-table-cell>Active</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Value State with Links</ui5-title>
+		<p class="description">
+			Value state messages can contain interactive links for help, documentation, or actions.
+			Focus on the input to see the message with links.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="linkNegative"
+				placeholder="Error with help link..."
+				value-state="Negative"
+			>
+				<div slot="valueStateMessage">
+					Product not found in catalog.
+					<ui5-link href="https://example.com/help/products" target="_blank">View product guidelines</ui5-link>
+					or
+					<ui5-link href="https://example.com/contact" target="_blank">contact support</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-001</ui5-table-cell>
+					<ui5-table-cell>Electronics</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="linkCritical"
+				placeholder="Warning with action links..."
+				value-state="Critical"
+			>
+				<div slot="valueStateMessage">
+					This vendor requires approval.
+					<ui5-link id="approvalLink">Request approval</ui5-link>
+					or
+					<ui5-link id="alternativeLink">choose alternative vendor</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Vendor</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Acme Corp</ui5-table-cell>
+					<ui5-table-cell>Pending</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Beta Inc</ui5-table-cell>
+					<ui5-table-cell>Approved</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="linkInformation"
+				placeholder="Info with documentation link..."
+				value-state="Information"
+			>
+				<div slot="valueStateMessage">
+					New search syntax available!
+					<ui5-link href="https://example.com/docs/search" target="_blank">Learn about advanced search operators</ui5-link>.
+				</div>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Query</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Results</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>name:Widget</ui5-table-cell>
+					<ui5-table-cell>15 matches</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Disabled and Readonly</ui5-title>
+		<p class="description">
+			Disabled inputs cannot be focused or edited. Readonly inputs can be focused but not edited.
+		</p>
+
+		<div style="display: flex; flex-direction: column; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="disabledInput"
+				placeholder="Disabled input..."
+				value="PRD-001"
+				disabled
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Price</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-001</ui5-table-cell>
+					<ui5-table-cell>$99</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>PRD-002</ui5-table-cell>
+					<ui5-table-cell>$149</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+
+			<ui5-input-table-suggest
+				id="readonlyInput"
+				placeholder="Readonly input..."
+				value="Widget X"
+				readonly
+			>
+				<ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
+				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Stock</ui5-table-header-cell>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget X</ui5-table-cell>
+					<ui5-table-cell>50 units</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>Widget Y</ui5-table-cell>
+					<ui5-table-cell>25 units</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
+		</div>
+	</div>
+
+	<div class="section">
+		<ui5-title class="section-title" level="H2">Many Suggestions (112 rows)</ui5-title>
+		<p class="description">
+			This example demonstrates performance with a large number of suggestions (112 rows).
+			The popover should handle scrolling smoothly.
+		</p>
+
+		<ui5-input-table-suggest
+			id="manySearch"
+			placeholder="Search 112 products..."
+			show-suggestions
+		>
+			<ui5-table-header-cell slot="suggestionColumns" width="100px">SKU</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="200px">Product Name</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
+			<ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+		</ui5-input-table-suggest>
+
+		<div class="output" id="manyOutput">Selected: (none)</div>
+	</div>
+
+	<script>
+		(function() {
+			const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Toys', 'Food', 'Health'];
+			const adjectives = ['Premium', 'Classic', 'Deluxe', 'Basic', 'Pro', 'Elite', 'Compact', 'Ultra'];
+			const nouns = ['Widget', 'Gadget', 'Device', 'Tool', 'Item', 'Product', 'Gear', 'Thing'];
+
+			const manyInput = document.getElementById('manySearch');
+			if (manyInput) {
+				for (let i = 1; i <= 112; i++) {
+					const row = document.createElement('ui5-table-row');
+					row.slot = 'suggestionRows';
+
+					const sku = `SKU-${String(i).padStart(3, '0')}`;
+					const adj = adjectives[i % adjectives.length];
+					const noun = nouns[Math.floor(i / adjectives.length) % nouns.length];
+					const productName = `${adj} ${noun} ${i}`;
+					const category = categories[i % categories.length];
+					const price = `$${(Math.floor(Math.random() * 500) + 10).toFixed(2)}`;
+
+					row.innerHTML = `
+						<ui5-table-cell>${sku}</ui5-table-cell>
+						<ui5-table-cell>${productName}</ui5-table-cell>
+						<ui5-table-cell>${category}</ui5-table-cell>
+						<ui5-table-cell>${price}</ui5-table-cell>
+					`;
+
+					manyInput.appendChild(row);
+				}
+			}
+		})();
+	</script>
+
+	<script>
+		document.querySelectorAll('ui5-input-table-suggest').forEach(input => {
+			const inputId = input.getAttribute('id') || '';
+			const output = inputId.includes('Search')
+				? document.getElementById(inputId.replace('Search', 'Output'))
+				: null;
+
+			input.addEventListener('selection-change', (e) => {
+				const row = e.detail.row;
+				if (row && output) {
+					const cells = row.querySelectorAll('[ui5-table-cell]');
+					const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
+					output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
+				}
+			});
+		});
+
+		// Logging for first example
+		document.getElementById('productSearch').addEventListener('selection-change', (e) => {
+			console.log('selection-change event:', e.detail);
+		});
+		document.getElementById('productSearch').addEventListener('change', (e) => {
+			console.log('change event - value:', e.target.value);
+		});
+	</script>
+</body>
+</html>

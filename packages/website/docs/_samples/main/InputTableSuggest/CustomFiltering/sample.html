@@ -1,0 +1,25 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 350px;">
+<!-- playground-fold-end -->
+
+    <ui5-input-table-suggest id="employee-input" placeholder="Search employees..." show-suggestions>
+        <ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" width="120px">Department</ui5-table-header-cell>
+        <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Location</ui5-table-header-cell>
+    </ui5-input-table-suggest>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
