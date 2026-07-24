@@ -11,4 +11,8 @@
 	--_ui5_shellbar_search_field_background_hover: var(--sapShellColor);
 	--_ui5_shellbar_search_field_box_shadow_hover: none;
 	--_ui5_shellbar_menu_button_title_font_size: var(--sapFontHeader5Size);
+	/* Notification/count badge position adjustment for the OverlayText badge */
+	--_ui5-v2-15-5-shellbar-badge-offset: 0.25rem;
+	--_ui5-v2-15-5-shellbar-badge-margin: -0.375rem;
+	--_ui5-v2-15-5-shellbar-notification-btn-count-offset: 0;
 }

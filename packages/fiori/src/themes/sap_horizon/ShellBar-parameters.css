@@ -27,4 +27,8 @@
 	--_ui5_shellbar_input_border_radius: 1.125rem;
 	--_ui5_shellbar_input_focus_border_radius: 1.125rem;
 	--_ui5_shellbar_input_background_color: var(--sapShell_InteractiveBackground);
+	/* Notification/count badge position adjustment for the OverlayText badge */
+	--_ui5-v2-15-5-shellbar-badge-offset: 0.25rem;
+	--_ui5-v2-15-5-shellbar-badge-margin: -0.25rem;
+	--_ui5-v2-15-5-shellbar-notification-btn-count-offset: 0;
 }
