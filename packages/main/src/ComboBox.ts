@@ -519,6 +519,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_selectionPerformed = false;
 	_selectionTrigger?: ComboBoxSelectionChangeTrigger;
 	_lastValue: string;
+	_lastSelectedValue?: string;
 	_selectedItemText = "";
 	_userTypedValue = "";
 	_useSelectedValue = false;
@@ -650,6 +651,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (!e.relatedTarget || (e.relatedTarget !== this.shadowRoot!.querySelector(".ui5-input-clear-icon"))) {
 			this._lastValue = this.value;
+			this._lastSelectedValue = this.selectedValue;
 		}
 
 		!isPhone() && (e.target as HTMLInputElement).setSelectionRange(0, this.value.length);
@@ -713,6 +715,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (this._selectionPerformed) {
 			this._lastValue = this.value;
+			this._lastSelectedValue = this.selectedValue;
 			this._selectionPerformed = false;
 		}
 
@@ -782,6 +785,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (isPhone() && this.value && !this._lastValue) {
 			this._lastValue = this.value;
+			this._lastSelectedValue = this.selectedValue;
 		}
 
 		this._toggleRespPopover();
@@ -1400,9 +1404,13 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_fireChangeEvent() {
-		if (this.value !== this._lastValue) {
+		const valueChanged = this.value !== this._lastValue;
+		const selectedValueChanged = this._useSelectedValue && this.selectedValue !== this._lastSelectedValue;
+
+		if (valueChanged || selectedValueChanged) {
 			this.fireDecoratorEvent("change");
 			this._lastValue = this.value;
+			this._lastSelectedValue = this.selectedValue;
 		}
 	}
 
@@ -1500,6 +1508,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (this._isPhone) {
 			this._lastValue = "";
+			this._lastSelectedValue = undefined;
 			this.fireDecoratorEvent("change");
 		} else {
 			this.focus();
