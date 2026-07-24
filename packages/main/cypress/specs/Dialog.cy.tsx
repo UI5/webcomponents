@@ -719,11 +719,16 @@ describe("Dialog general interaction", () => {
 			const initialWidth = parseInt(dialog.css("width"));
 			const initialRightEdge = initialLeft + initialWidth;
 
-			// First resize to reach minimum width
+			// First resize to reach minimum width.
+			// Drive the pointer in steps so intermediate mousemove events reliably
+			// fire the resize handler (a single large jump can be missed on the
+			// 1px-wide handle, leaving the dialog at its initial width).
 			cy.get("#rtl-min-width-dialog")
 				.shadow()
 				.find(".ui5-popup-resize-handle")
-				.realMouseDown()
+				.should("be.visible")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(210, 0)
 				.realMouseMove(420, 0) // Large movement to ensure we hit min width
 				.realMouseUp();
 
@@ -732,13 +737,16 @@ describe("Dialog general interaction", () => {
 				const widthAtMinWidth = parseInt(dialogAtMinWidth.css("width"));
 				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
 
-				expect(widthAtMinWidth).to.equal(320);
-				expect(rightEdgeAtMinWidth).to.equal(initialRightEdge);
+				// closeTo absorbs sub-pixel rounding from getBoundingClientRect
+				expect(widthAtMinWidth).to.be.closeTo(320, 1);
+				expect(rightEdgeAtMinWidth).to.be.closeTo(initialRightEdge, 1);
 
 				cy.get("#rtl-min-width-dialog")
 					.shadow()
 					.find(".ui5-popup-resize-handle")
-					.realMouseDown()
+					.should("be.visible")
+					.realMouseDown({ position: "center" })
+					.realMouseMove(175, 0)
 					.realMouseMove(350, 0) // Additional rightward movement beyond min width
 					.realMouseUp();
 
@@ -747,10 +755,10 @@ describe("Dialog general interaction", () => {
 					const finalWidth = parseInt(dialogAfterExtraResize.css("width"));
 					const finalRightEdge = finalLeft + finalWidth;
 
-					expect(finalLeft).to.equal(leftAtMinWidth, "Dialog left position should not change when at min width");
-					expect(finalWidth).to.equal(widthAtMinWidth, "Dialog width should remain at min width");
-					expect(finalRightEdge).to.equal(rightEdgeAtMinWidth, "Dialog right edge should remain fixed");
-					expect(finalRightEdge).to.equal(initialRightEdge, "Dialog right edge should remain fixed from initial position");
+					expect(finalLeft).to.be.closeTo(leftAtMinWidth, 1, "Dialog left position should not change when at min width");
+					expect(finalWidth).to.be.closeTo(widthAtMinWidth, 1, "Dialog width should remain at min width");
+					expect(finalRightEdge).to.be.closeTo(rightEdgeAtMinWidth, 1, "Dialog right edge should remain fixed");
+					expect(finalRightEdge).to.be.closeTo(initialRightEdge, 1, "Dialog right edge should remain fixed from initial position");
 				});
 			});
 		});

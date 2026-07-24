@@ -9,7 +9,7 @@ import UserMenuAccount from "../../src/UserMenuAccount.js";
 import UserSettingsDialog from "../../src/UserSettingsDialog.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
-import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT} from "../../src/generated/i18n/i18n-defaults.js";
+import {USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT, USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
 	it("tests no config provided", () => {
@@ -35,6 +35,7 @@ describe("Initial rendering", () => {
 		cy.get("@dialog").should("exist");
 		cy.get("@dialog").find("[ui5-title]").contains("Settings");
 		cy.get("@dialog").find("[ui5-title]").should("have.length", 1);
+		cy.get("@dialog").find("[ui5-title]").should("have.attr", "size", "H5");
 	});
 
 	it("tests show-search-field provided", () => {
@@ -180,6 +181,7 @@ describe("Initial rendering", () => {
 		cy.get("@settingItem").shadow().find("[ui5-title]").as("title");
 		cy.get("@title").should("have.length", 1);
 		cy.get("@title").contains("Header title | Setting 3");
+		cy.get("@title").should("have.attr", "size", "H5");
 	});
 
 	it("tests setting tabs", () => {
@@ -780,6 +782,32 @@ describe("User account view", () => {
         cy.get("@settingView").shadow().find("[ui5-button]").should("have.length", 1);
     });
 
+    it("tests i18n texts are resolved (i18nBundle guard)", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsAccountView text="Setting1" showManageAccount={true}>
+                    <UserMenuAccount slot="account"
+                                     titleText="Alain Chevalier 1"
+                                     subtitleText="alian.chevalier@sap.com"
+                                     description="Delivery Manager, SAP SE">
+                    </UserMenuAccount>
+                </UserSettingsAccountView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+        cy.get("@settingItem").find("[ui5-user-settings-account-view]").as("settingView");
+        cy.get("@settingView").should("exist");
+
+        // _manageAccountButtonText resolves via the guarded i18nBundle getter
+        cy.get("@settingView").shadow().find("[ui5-button]")
+            .should("contain.text", USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT.defaultText);
+
+        // _editAvatarTooltip resolves via the guarded i18nBundle getter and is applied as the badge title
+        cy.get("@settingView").shadow().find("[ui5-avatar] [ui5-tag]")
+            .should("have.attr", "title", USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT.defaultText);
+    });
+
     it("tests avatar default", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Setting">
@@ -1047,10 +1075,11 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("item");
         cy.get("@item").shadow().find("[ui5-avatar]").as("avatar");
         cy.get("@avatar").should("exist");
-        cy.get("@avatar").should("have.length", 2); // Two avatars: one for cozy, one for compact mode
-        cy.get("@avatar").first().should("have.attr", "icon", "palette");
-        cy.get("@avatar").first().should("have.attr", "shape", "Square");
-        cy.get("@avatar").first().should("have.attr", "color-scheme", "Accent7");
+        cy.get("@avatar").should("have.length", 1);
+        cy.get("@avatar").should("have.attr", "icon", "palette");
+        cy.get("@avatar").should("have.attr", "shape", "Square");
+        cy.get("@avatar").should("have.attr", "color-scheme", "Accent7");
+        cy.get("@avatar").should("have.attr", "size", "S");
     });
 
     it("tests appearance view item text displayed", () => {
@@ -1494,4 +1523,98 @@ describe("F6 Navigation", () => {
             .find("[ui5-li]").first()
             .should("be.focused");
     });
+});
+
+describe("Save mode", () => {
+	it("renders the default single Close button when saveMode is not set", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.length", 1);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.attr", "design", "Transparent");
+	});
+
+	it("renders Save (Emphasized) + Cancel buttons when saveMode is set", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").should("have.length", 2);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(0).should("have.attr", "design", "Emphasized");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(1).should("have.attr", "design", "Transparent");
+	});
+
+	it("fires the save event when the Save button is clicked", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("save", cy.stub().as("saveEv"));
+		});
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(0)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@saveEv").should("have.been.calledOnce");
+	});
+
+	it("fires the cancel event when the Cancel button is clicked", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("cancel", cy.stub().as("cancelEv"));
+		});
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(1)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@cancelEv").should("have.been.calledOnce");
+	});
+
+	it("does not close the dialog automatically on Save or Cancel", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(0)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@dialog").should("have.attr", "open");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]").eq(1)
+			.shadow().find("[ui5-button]").click();
+		cy.get("@dialog").should("have.attr", "open");
+	});
+
+	it("still fires before-close on ESC in saveMode", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").then($d => {
+			$d.get(0).addEventListener("before-close", cy.stub().as("beforeClose"));
+		});
+		cy.realPress("Escape");
+		cy.get("@beforeClose").should("have.been.calledOnce");
+	});
 });

@@ -17,6 +17,10 @@ cypress-logs
 cypress/screenshots
 cypress/videos
 
+# Claude
+.claude/playwright-*
+.playwright-mcp/
+
 # scoping feature generated entry points for vite consumption
 packages/compat/test/pages/scoped
 packages/main/test/pages/scoped
