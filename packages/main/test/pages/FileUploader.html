@@ -102,14 +102,8 @@
 			<ui5-label for="infoInput">Choose files:</ui5-label>
 			<ui5-file-uploader id="infoInput" placeholder="Upload your files here" style="width: 350px;" multiple value-state="Information"></ui5-file-uploader>
 		</div>
-		<!-- ═══════════════════════════════════════════════════════════
-		     SCENARIO 1 — ElementInternals validity (UI5 validation API)
-		     checkValidity() / reportValidity() on the custom element.
-		     The native shadow <input type="file" required> is NOT involved here.
-		     ═══════════════════════════════════════════════════════════ -->
 		<div>
-			<ui5-title>Scenario 1 — ElementInternals validity (UI5 checkValidity)</ui5-title>
-			<p>Uses <code>element.checkValidity()</code> and <code>element.reportValidity()</code> on the <code>ui5-file-uploader</code> directly. Validation is driven by <code>ElementInternals</code>, not by the shadow <code>&lt;input&gt;</code>.</p>
+			<ui5-title>Form validation</ui5-title>
 			<form id="formValidation">
 				<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
 				<ui5-label for="formFileUploader">Choose files:</ui5-label>
@@ -119,27 +113,13 @@
 			</form>
 		</div>
 
-		<!-- ═══════════════════════════════════════════════════════════
-		     SCENARIO 2 — Native form submission
-		     Demonstrates that:
-		       a) the shadow <input type="file" required> is NOT in form.elements
-		          and does NOT independently block native form submission
-		       b) the ui5-file-uploader IS form-associated via ElementInternals
-		          and DOES participate in native form constraint validation
-		     Expected: submitting without a file → browser blocks via UI5 ElementInternals
-		               submitting with a file → form submits (action="#" reloads)
-		     ═══════════════════════════════════════════════════════════ -->
 		<div>
-			<ui5-title>Scenario 2 — Native form submission &amp; shadow input isolation</ui5-title>
-			<p>
-				The native <code>&lt;input type="file" required&gt;</code> inside Shadow DOM is <strong>not</strong> in <code>form.elements</code> and cannot independently block form submission.<br>
-				The <code>ui5-file-uploader</code> custom element is form-associated via <code>ElementInternals</code> and <strong>does</strong> participate in native form constraint validation.
-			</p>
+			<ui5-title>Form submission &amp; shadow input isolation</ui5-title>
 			<form id="nativeSubmitForm" action="#" method="get">
 				<ui5-label for="nativeFormUploader">Attachment (required):</ui5-label><br>
 				<ui5-file-uploader id="nativeFormUploader" name="file" style="width: 350px;" required></ui5-file-uploader>
 				<br><br>
-				<ui5-label for="nativeTextInput">Name (native required input):</ui5-label><br>
+				<ui5-label for="nativeTextInput">Name:</ui5-label><br>
 				<input id="nativeTextInput" name="name" required placeholder="Enter your name" style="width: 350px; padding: 6px; font-size: 14px; box-sizing: border-box;" />
 				<br><br>
 				<button type="submit" style="padding: 6px 16px;">Submit (native)</button>
@@ -149,72 +129,37 @@
 			<ui5-message-strip id="formElementsResult" hidden style="margin-top: 8px;"></ui5-message-strip>
 		</div>
 
-		<!-- ═══════════════════════════════════════════════════════════
-		     SCENARIO 3 — Screen reader announcement of "required"
-		     The fix: native required on shadow <input type="file"> so
-		     Chrome/Edge + NVDA/JAWS announce "required" correctly.
-		     Tab to each uploader and verify announcement.
-		     ═══════════════════════════════════════════════════════════ -->
 		<div>
-			<ui5-title>Scenario 3 — AT announcement: "required"</ui5-title>
-			<p>Tab to each file uploader and check whether your screen reader announces <strong>"required"</strong>. The fix adds <code>required</code> as a native HTML attribute on the shadow input.</p>
-
-			<div style="display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 16px;">
+			<ui5-title>Required — AT announcement</ui5-title>
+			<div style="display: flex; gap: 32px; flex-wrap: wrap;">
 				<div>
-					<p><strong>Required (no value state)</strong><br>Expected: announces "required", no premature "invalid"</p>
-					<ui5-label for="a11yRequired">Attachment:</ui5-label>
+					<ui5-label for="a11yRequired">Required:</ui5-label>
 					<ui5-file-uploader id="a11yRequired" style="width: 300px;" required></ui5-file-uploader>
 				</div>
-
 				<div>
-					<p><strong>Not required</strong><br>Expected: no "required" announcement</p>
-					<ui5-label for="a11yNotRequired">Attachment:</ui5-label>
+					<ui5-label for="a11yNotRequired">Not required:</ui5-label>
 					<ui5-file-uploader id="a11yNotRequired" style="width: 300px;"></ui5-file-uploader>
 				</div>
 			</div>
 		</div>
 
-		<!-- ═══════════════════════════════════════════════════════════
-		     SCENARIO 4 — aria-invalid interaction with required
-		     Concern: native required puts shadow input in valueMissing,
-		     which could cause premature "invalid" announcement on focus.
-		     aria-invalid is absent when valueState != Negative (overrides
-		     native constraint validation in the a11y tree).
-		     ═══════════════════════════════════════════════════════════ -->
 		<div>
-			<ui5-title>Scenario 4 — Premature "invalid" announcement check</ui5-title>
-			<p>Tab to each uploader before selecting any file and check whether the screen reader announces <strong>"invalid"</strong> prematurely.</p>
-
+			<ui5-title>Required with value states</ui5-title>
 			<div style="display: flex; gap: 32px; flex-wrap: wrap;">
 				<div>
-					<p><strong>Required, no value state</strong><br>
-					<code>aria-invalid</code> is absent → native <code>valueMissing</code> may surface<br>
-					Expected: <em>no</em> premature "invalid" (button role in Chromium a11y tree suppresses it)</p>
-					<ui5-label for="a11yNoValueState">Attachment:</ui5-label>
+					<ui5-label for="a11yNoValueState">Required, no value state:</ui5-label>
 					<ui5-file-uploader id="a11yNoValueState" style="width: 300px;" required></ui5-file-uploader>
 				</div>
-
 				<div>
-					<p><strong>Required + Negative value state</strong><br>
-					<code>aria-invalid="true"</code> is explicitly set<br>
-					Expected: announces "required" + "invalid"</p>
-					<ui5-label for="a11yNegativeState">Attachment:</ui5-label>
+					<ui5-label for="a11yNegativeState">Required, Negative:</ui5-label>
 					<ui5-file-uploader id="a11yNegativeState" style="width: 300px;" required value-state="Negative">
 						<div slot="valueStateMessage">This field is required</div>
 					</ui5-file-uploader>
-				</div>
-
-				<div>
-					<p><strong>Required + file selected (valid state)</strong><br>
-					Expected: no "required" removal announcement anomalies after selection</p>
-					<ui5-label for="a11yAfterSelect">Attachment:</ui5-label>
-					<ui5-file-uploader id="a11yAfterSelect" style="width: 300px;" required></ui5-file-uploader>
 				</div>
 			</div>
 		</div>
 
 		<script>
-			// Scenario 1 — ElementInternals validity
 			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
 			const formValidationMessage = document.getElementById('formValidationMessage');
 			const formFileUploader = document.getElementById('formFileUploader');
@@ -238,7 +183,6 @@
 				formValidationMessage.design = isValid ? "Positive" : "Negative";
 			}
 
-			// Scenario 2 — Inspect form.elements to prove shadow input isolation
 			document.getElementById('btnInspectFormElements').addEventListener('click', function() {
 				const form = document.getElementById('nativeSubmitForm');
 				const elements = Array.from(form.elements).map(el => {
@@ -250,7 +194,7 @@
 				const result = document.getElementById('formElementsResult');
 				result.hidden = false;
 				result.design = "Information";
-				result.innerText = `form.elements (${elements.length}): ${elements.join(', ')}\n\nNote: shadow <input type="file"> is NOT listed — it is isolated in Shadow DOM and cannot block form submission independently.`;
+				result.innerText = `form.elements (${elements.length}): ${elements.join(', ')}`;
 			});
 		</script>
 </body>

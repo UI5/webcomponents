@@ -625,7 +625,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	get accInfo(): InputAccInfo {
 		return {
 			"ariaRoledescription": FileUploader.i18nBundle.getText(FILEUPLOADER_ROLE_DESCRIPTION),
-			"ariaInvalid": this.valueState === ValueState.Negative || undefined,
+			"ariaInvalid": this.valueState === ValueState.Negative,
 			"ariaHasPopup": "dialog",
 			"ariaLabel": getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined,
 			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
