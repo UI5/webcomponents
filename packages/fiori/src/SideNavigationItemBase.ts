@@ -80,6 +80,9 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	sideNavCollapsed = false;
 
 	@property({ type: Boolean })
+	sideNavAnimating = false;
+
+	@property({ type: Boolean })
 	inPopover = false;
 
 	_sideNavigation!: SideNavigation;
