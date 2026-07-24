@@ -2,7 +2,7 @@
 
 > Enterprise-grade, framework-agnostic web components library implementing SAP Fiori design
 
-Version: 2.24.0
+Version: 2.24.2
 Website: https://ui5.github.io/webcomponents/
 GitHub: https://github.com/SAP/ui5-webcomponents
 
@@ -846,4 +846,4 @@ import "@ui5/webcomponents-icons/dist/add.js";
 
 ---
 
-Generated: 2026-07-06T12:04:40.521Z
+Generated: 2026-07-24T12:29:08.743Z
