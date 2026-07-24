@@ -19,7 +19,7 @@
 									  icon="home"
 									  href="#home"
 									  tooltip="Home 1 tooltip"></ui5-side-navigation-item>
-			<ui5-side-navigation-item text="People" href="#people" expanded icon="group" tooltip="People tooltip">
+			<ui5-side-navigation-item id="peopleItem" text="People" href="#people" expanded icon="group" tooltip="People tooltip">
 				<ui5-side-navigation-sub-item href="#disabled" disabled text="Disabled" icon="employee-approvals" title="Disabled item tooltip"></ui5-side-navigation-sub-item>
 				<ui5-side-navigation-sub-item text="From Other Teams" icon="employee-rejections"></ui5-side-navigation-sub-item>
 			</ui5-side-navigation-item>
@@ -109,6 +109,14 @@
 		<br>
 		<ui5-label for="slider" show-colon>Change width</ui5-label>
 		<ui5-slider id="slider" value="0" min="0" max="600" step="50" show-tickmarks label-interval="2"></ui5-slider>
+		<br>
+		<ui5-button id="toggleGroup1">Toggle "Group" programmatically</ui5-button>
+		<ui5-button id="toggleItem">Toggle "People" item programmatically</ui5-button>
+		<ui5-checkbox id="preventToggle" text="preventDefault on item-toggle"></ui5-checkbox>
+		<br>
+		<ui5-label show-colon>item-toggle log</ui5-label>
+		<div id="toggleLog"
+			 style="width: 320px; height: 200px; overflow: auto; border: 1px solid var(--sapList_BorderColor); padding: 0.25rem; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap;"></div>
 	</div>
 
 	<script>
@@ -131,6 +139,37 @@
 
 		slider.addEventListener("ui5-input", function (event) {
 			sn1.style.width = event.target.value + 'px';
+		});
+
+		// Demonstrate the "item-toggle" event
+		const toggleLog = document.getElementById("toggleLog");
+		const preventToggle = document.getElementById("preventToggle");
+
+		sn.addEventListener("item-toggle", e => {
+			const { item, expanded, programmatic } = e.detail;
+			const label = item.text || "(no text)";
+
+			toggleLog.textContent =
+				`${expanded ? "expand" : "collapse"} "${label}" `
+				+ `[${programmatic ? "programmatic" : "user"}]`
+				+ `${preventToggle.checked ? " - prevented" : ""}\n`
+				+ toggleLog.textContent;
+
+			if (preventToggle.checked) {
+				e.preventDefault();
+			}
+		});
+
+		// Toggle the first group programmatically (fires item-toggle with programmatic: true)
+		document.getElementById("toggleGroup1").addEventListener("click", () => {
+			const group1 = document.getElementById("group1");
+			group1.expanded = !group1.expanded;
+		});
+
+		// Toggle the "People" item programmatically (fires item-toggle with programmatic: true)
+		document.getElementById("toggleItem").addEventListener("click", () => {
+			const peopleItem = document.getElementById("peopleItem");
+			peopleItem.expanded = !peopleItem.expanded;
 		});
 	</script>
 </body>

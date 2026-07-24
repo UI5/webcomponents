@@ -11,7 +11,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import SideNavigationItemBase from "./SideNavigationItemBase.js";
+import SideNavigationItemBase, { toggleExpanded } from "./SideNavigationItemBase.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationGroupTemplate from "./SideNavigationGroupTemplate.js";
@@ -58,7 +58,17 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	 * @default false
 	 */
 	@property({ type: Boolean })
-	expanded = false;
+	get expanded(): boolean {
+		return this._expandedState;
+	}
+
+	set expanded(value: boolean) {
+		this._expandedState = toggleExpanded(this, value);
+	}
+
+	_expandedState = false;
+
+	_userToggle = false;
 
 	belowGroup = false;
 
@@ -154,24 +164,24 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 		if (isLeft(e)) {
 			e.preventDefault();
-			this.expanded = isRTL;
+			this._setExpandedByUser(isRTL);
 			return;
 		}
 
 		if (isRight(e)) {
 			e.preventDefault();
-			this.expanded = !isRTL;
+			this._setExpandedByUser(!isRTL);
 		}
 
 		if (isMinus(e)) {
 			e.preventDefault();
-			this.expanded = false;
+			this._setExpandedByUser(false);
 			return;
 		}
 
 		if (isPlus(e)) {
 			e.preventDefault();
-			this.expanded = true;
+			this._setExpandedByUser(true);
 		}
 	}
 
@@ -187,8 +197,14 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 	_toggle() {
 		if (!this.disabled) {
-			this.expanded = !this.expanded;
+			this._setExpandedByUser(!this.expanded);
 		}
+	}
+
+	_setExpandedByUser(value: boolean) {
+		this._userToggle = true;
+		this.expanded = value;
+		this._userToggle = false;
 	}
 
 	get isSideNavigationGroup() {
