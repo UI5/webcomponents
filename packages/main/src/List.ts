@@ -780,7 +780,13 @@ class List extends UI5Element {
 		}
 
 		return this.getItems().some(item => {
-			return item.getAttribute("type") === "Detail" || isInstanceOfListItemCustom(item);
+			if (item.getAttribute("type") === "Detail") {
+				return true;
+			}
+			if (isInstanceOfListItemCustom(item)) {
+				return item._hasFocusableElements();
+			}
+			return false;
 		});
 	}
 
