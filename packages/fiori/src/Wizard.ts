@@ -15,6 +15,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import type Button from "@ui5/webcomponents/dist/Button.js";
 import type WizardContentLayout from "./types/WizardContentLayout.js";
@@ -209,6 +210,24 @@ class Wizard extends UI5Element {
 	 */
 	@property()
 	contentLayout: `${WizardContentLayout}` = "MultipleSteps";
+
+	/**
+	 * Defines the accessible ARIA name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.14.0
+	 */
+	@property()
+	accessibleNameRef?: string;
 
 	/**
 	 * Defines the width of the `ui5-wizard`.
@@ -811,7 +830,11 @@ class Wizard extends UI5Element {
 		return Wizard.i18nBundle.getText(WIZARD_STEP_INACTIVE);
 	}
 
-	get ariaLabelText() {
+	get ariaLabelText(): string {
+		if (this.accessibleName || this.accessibleNameRef) {
+			return getEffectiveAriaLabelText(this) || Wizard.i18nBundle.getText(WIZARD_NAV_ARIA_ROLE_DESCRIPTION);
+		}
+
 		return Wizard.i18nBundle.getText(WIZARD_NAV_ARIA_ROLE_DESCRIPTION);
 	}
 
