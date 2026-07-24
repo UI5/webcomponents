@@ -99,6 +99,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes
 
@@ -225,6 +227,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes
 
@@ -326,6 +330,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run:  |
           major_minor=$(echo "${{ github.event.inputs.new_version }}" | cut -d. -f1,2)
           yarn lerna publish from-git --yes --dist-tag "hotfix-${major_minor}"
@@ -371,6 +377,8 @@ jobs:
         run: yarn ci:releasebuild
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes --dist-tag experimental --pre-dist-tag experimental
 
@@ -422,5 +430,7 @@ jobs:
         run: yarn ci:releasebuild
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes --dist-tag "v1"
