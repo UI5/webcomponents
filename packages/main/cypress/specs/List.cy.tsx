@@ -598,6 +598,27 @@ describe("List - Accessibility", () => {
 			});
 	});
 
+	it("does not announce F2 instruction for custom list items without tabbable content", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemCustom>Pineapple</ListItemCustom>
+				<ListItemCustom>Papaya</ListItemCustom>
+			</List>
+		);
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.invoke("attr", "aria-description")
+			.then((ariaDesc) => {
+				cy.get("[ui5-list]")
+					.should(($list) => {
+						const defaultText = $list.prop("defaultAriaDescriptionText") as string;
+						expect(ariaDesc ?? "").to.not.include(defaultText);
+					});
+			});
+	});
+
 	it("announces 'Selected' when an item is selected in Single mode via mouse click", () => {
 		cy.mount(
 			<List selectionMode="Single">
