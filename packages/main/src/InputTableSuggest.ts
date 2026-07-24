@@ -665,7 +665,7 @@ class InputTableSuggest extends Input {
 			return;
 		}
 
-		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-input-table-suggest-suggestions-wrapper");
+		const scrollContainer = popover.querySelector<HTMLElement>(".ui5-input-table-suggest-wrapper");
 		if (!scrollContainer) {
 			return;
 		}

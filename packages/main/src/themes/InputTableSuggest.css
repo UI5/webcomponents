@@ -16,53 +16,54 @@
 	box-shadow: var(--sapField_Hover_Shadow);
 }
 
-.ui5-input-table-suggest-suggestions-wrapper {
+.ui5-input-table-suggest-wrapper {
 	width: 100%;
-	max-height: var(--_ui5_tabular_suggestions_max_height, 20rem);
+	max-height: var(--_ui5_input_table_suggest_max_height, 20rem);
 	overflow: auto;
 }
 
-.ui5-tabular-suggestions-table {
+.ui5-input-table-suggest-table {
 	width: 100%;
 }
 
-.ui5-tabular-suggestions-table [ui5-table-header-row] {
+.ui5-input-table-suggest-table [ui5-table-header-row] {
 	border-top: none;
 }
 
-.ui5-tabular-suggestions-table [ui5-table-row]:last-of-type {
+.ui5-input-table-suggest-table [ui5-table-row]:last-of-type {
 	border-bottom: none;
 }
 
-.ui5-tabular-suggestions-table::part(before),
-.ui5-tabular-suggestions-table::part(after) {
+.ui5-input-table-suggest-table::part(before),
+.ui5-input-table-suggest-table::part(after) {
 	display: none;
 }
 
-.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused,
-.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--selected {
+.ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--focused,
+.ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--selected {
 	background-color: var(--sapList_SelectionBackgroundColor);
+	border-bottom: 1px solid var(--sapList_SelectionBorderColor);
 }
 
-.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused {
+.ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--focused {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	outline-offset: var(--_ui5_tabular_suggestions_focus_offset, -0.125rem);
+	outline-offset: -0.25rem;
 }
 
-.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--focused:hover,
-.ui5-tabular-suggestions-table [ui5-table-row].ui5-tabular-suggestions-row--selected:hover {
+.ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--focused:hover,
+.ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--selected:hover {
 	background-color: var(--sapList_Hover_SelectionBackground);
 }
 
-.ui5-tabular-suggestions-table [ui5-table-cell] b {
+.ui5-input-table-suggest-table [ui5-table-cell] b {
 	font-weight: bold;
 	color: var(--sapList_TextColor);
 }
 
-.ui5-tabular-suggestions-table [ui5-table-row] [ui5-table-cell]:first-of-type {
+.ui5-input-table-suggest-table [ui5-table-row] [ui5-table-cell]:first-of-type {
 	font-weight: 500;
 }
 
-:host([_isPhone]) .ui5-input-table-suggest-suggestions-wrapper {
+:host([_isPhone]) .ui5-input-table-suggest-wrapper {
 	max-height: none;
 }

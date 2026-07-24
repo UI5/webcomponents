@@ -137,9 +137,9 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 	const lastColumnIndex = this.suggestionColumns.length - 1;
 
 	return (
-		<div class="ui5-input-table-suggest-suggestions-wrapper">
+		<div class="ui5-input-table-suggest-wrapper">
 			<Table
-				class="ui5-tabular-suggestions-table"
+				class="ui5-input-table-suggest-table"
 				overflowMode={this._overflowMode}
 				accessibleName={this.suggestionsText}
 				onRowClick={this._onTableRowClick}
@@ -166,8 +166,8 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 						key={`row-${rowIndex}`}
 						id={`${this._id}-row-${rowIndex}`}
 						class={{
-							"ui5-tabular-suggestions-row--focused": processedRow.row.focused,
-							"ui5-tabular-suggestions-row--selected": processedRow.row.selected,
+							"ui5-input-table-suggest-row--focused": processedRow.row.focused,
+							"ui5-input-table-suggest-row--selected": processedRow.row.selected,
 						}}
 						data-row-index={rowIndex}
 						interactive
