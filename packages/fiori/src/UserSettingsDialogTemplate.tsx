@@ -28,7 +28,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-orientation="vertical" aria-roledescription={this.ariaRoleDescList}>
 					<div class="ui5-user-settings-side-header">
 						{this.headerText &&
-							<Title level="H1" size="H4">{this.headerText}</Title>
+							<Title level="H1" size="H5">{this.headerText}</Title>
 						}
 						{this.showSearchField &&
 							<Input placeholder="Search" type="Search" class="ui5-user-settings-side-search"
@@ -53,7 +53,14 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			</div>
 
 			<Toolbar slot="footer" design="Transparent" data-sap-ui-fastnavgroup="true">
-				<ToolbarButton design="Transparent" text={this.closeButtonText} tooltip={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+				{this.saveMode ? (
+					<>
+						<ToolbarButton design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
+						<ToolbarButton design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
+					</>
+				) : (
+					<ToolbarButton design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+				)}
 			</Toolbar>
 		</Dialog>
 	);
