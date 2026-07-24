@@ -280,6 +280,7 @@ class MultiInput extends Input implements IFormInputElement {
 		}
 
 		if (isShow(e)) {
+			e.preventDefault();
 			this.valueHelpPress();
 		}
 

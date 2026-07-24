@@ -161,6 +161,10 @@ class Slider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_onmousedown(e: TouchEvent | MouseEvent) {
+		if (this._isNonPrimaryClick(e)) {
+			return;
+		}
+
 		if (this.disabled || this.step === 0 || (e.target as HTMLElement).hasAttribute("ui5-slider-tooltip")) {
 			return;
 		}
