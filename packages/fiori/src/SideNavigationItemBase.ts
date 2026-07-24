@@ -170,3 +170,50 @@ export type {
 	SideNavigationItemClickEventDetail,
 };
 export const isInstanceOfSideNavigationItemBase = createInstanceChecker<SideNavigationItemBase>("isSideNavigationItemBase");
+
+type ExpandableItem = SideNavigationItemBase & {
+	_expandedState: boolean;
+	_userToggle: boolean;
+};
+
+/**
+ * Shared logic for the `expanded` property setter of the expandable items
+ * (`SideNavigationGroup` and `SideNavigationItem`).
+ *
+ * Fires the cancelable `item-toggle` event on the parent `ui5-side-navigation` and
+ * returns the effective value to be stored. When the event is prevented, the old value
+ * is kept (the toggle is suppressed). The `_userToggle` flag on the item distinguishes
+ * user interaction (`programmatic: false`) from programmatic assignments (`programmatic: true`).
+ *
+ * @private
+ */
+const toggleExpanded = (item: ExpandableItem, value: boolean): boolean => {
+	if (item._expandedState === value) {
+		return item._expandedState;
+	}
+
+	const sideNav = item.sideNavigation;
+
+	// Before the item is wired to a parent side navigation there is nothing to fire the
+	// event on - just store the value silently (e.g. when set before insertion in the DOM).
+	if (!sideNav) {
+		return value;
+	}
+
+	const executeEvent = sideNav.fireDecoratorEvent("item-toggle", {
+		item,
+		expanded: value,
+		programmatic: !item._userToggle,
+	});
+
+	// The event was prevented - keep the old value, suppressing the toggle.
+	if (!executeEvent) {
+		return item._expandedState;
+	}
+
+	return value;
+};
+
+export {
+	toggleExpanded,
+};

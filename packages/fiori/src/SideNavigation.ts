@@ -57,6 +57,12 @@ type SideNavigationItemClickEventDetail = {
 	item: SideNavigationSelectableItemBase,
 };
 
+type SideNavigationItemToggleEventDetail = {
+	item: SideNavigationItemBase,
+	expanded: boolean,
+	programmatic: boolean,
+};
+
 type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNavigationSelectableItemBase };
 
 /**
@@ -138,10 +144,29 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	cancelable: true,
 })
 
+/**
+ * Fired when a `ui5-side-navigation-item` or `ui5-side-navigation-group` is expanded or collapsed.
+ *
+ * **Note:** You can call `preventDefault()` on the event to suppress the expand/collapse.
+ * The `expanded` state stays unchanged. This is handy, for example, if you want to
+ * dynamically load child items before allowing a parent item to expand.
+ *
+ * @param {SideNavigationItemBase} item The toggled item.
+ * @param {boolean} expanded The new (requested) expanded state of the item.
+ * @param {boolean} programmatic Indicates whether the change was triggered programmatically (`true`) or by user interaction (`false`).
+ * @since 2.25.0
+ * @public
+ */
+@event("item-toggle", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class SideNavigation extends UI5Element {
 	eventDetails!: {
 		"selection-change": SideNavigationSelectionChangeEventDetail,
-		"item-click": SideNavigationItemClickEventDetail
+		"item-click": SideNavigationItemClickEventDetail,
+		"item-toggle": SideNavigationItemToggleEventDetail
 	}
 
 	/**
@@ -776,4 +801,5 @@ export default SideNavigation;
 export type {
 	SideNavigationSelectionChangeEventDetail,
 	SideNavigationItemClickEventDetail,
+	SideNavigationItemToggleEventDetail,
 };

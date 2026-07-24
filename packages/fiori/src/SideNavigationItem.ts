@@ -12,6 +12,7 @@ import {
 	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
+import { toggleExpanded } from "./SideNavigationItemBase.js";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationSubItem from "./SideNavigationSubItem.js";
 import {
@@ -62,7 +63,17 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 * @default false
 	 */
 	@property({ type: Boolean })
-	expanded = false;
+	get expanded(): boolean {
+		return this._expandedState;
+	}
+
+	set expanded(value: boolean) {
+		this._expandedState = toggleExpanded(this, value);
+	}
+
+	_expandedState = false;
+
+	_userToggle = false;
 
 	/**
 	 * Defines if the item should be collapsible or not.
@@ -304,25 +315,25 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 		if (isLeft(e)) {
 			e.preventDefault();
-			this.expanded = isRTL;
+			this._setExpandedByUser(isRTL);
 			return;
 		}
 
 		if (isRight(e)) {
 			e.preventDefault();
-			this.expanded = !isRTL;
+			this._setExpandedByUser(!isRTL);
 			return;
 		}
 
 		if (isMinus(e)) {
 			e.preventDefault();
-			this.expanded = false;
+			this._setExpandedByUser(false);
 			return;
 		}
 
 		if (isPlus(e)) {
 			e.preventDefault();
-			this.expanded = true;
+			this._setExpandedByUser(true);
 			return;
 		}
 
@@ -381,8 +392,14 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 	_toggle() {
 		if (this.items.length && !this.effectiveDisabled) {
-			this.expanded = !this.expanded;
+			this._setExpandedByUser(!this.expanded);
 		}
+	}
+
+	_setExpandedByUser(value: boolean) {
+		this._userToggle = true;
+		this.expanded = value;
+		this._userToggle = false;
 	}
 
 	get isSideNavigationItem() {

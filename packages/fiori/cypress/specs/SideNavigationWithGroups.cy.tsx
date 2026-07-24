@@ -317,4 +317,145 @@ describe("Component Behavior", () => {
 				.should("have.attr", "tabindex", "0");
 		});
 	});
+
+	describe("item-toggle event", () => {
+		it("fires on user click with programmatic: false", () => {
+			cy.mount(
+				<SideNavigation id="sn1">
+					<SideNavigationGroup id="group1" expanded text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn1").then($el => {
+				$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+			});
+
+			cy.get("#group1")
+				.shadow()
+				.find(".ui5-sn-item")
+				.realClick();
+
+			cy.get("@toggle").should("have.been.calledOnce");
+			cy.get("@toggle").its("firstCall.args.0.detail").should("deep.include", {
+				expanded: false,
+				programmatic: false,
+			});
+			cy.get("@toggle").its("firstCall.args.0.detail.item").should(item => {
+				expect(item.id).to.equal("group1");
+			});
+			cy.get("#group1").should("have.prop", "expanded", false);
+		});
+
+		it("fires on keyboard Plus/Minus with programmatic: false", () => {
+			cy.mount(
+				<SideNavigation id="sn">
+					<SideNavigationItem id="focusStart" text="focus start"></SideNavigationItem>
+					<SideNavigationGroup id="group1" text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn").then($el => {
+				$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+			});
+
+			cy.get("#focusStart").realClick();
+			cy.realPress("ArrowDown");
+			cy.realPress("+");
+
+			cy.get("@toggle").its("lastCall.args.0.detail").should("deep.include", {
+				expanded: true,
+				programmatic: false,
+			});
+			cy.get("#group1").should("have.attr", "expanded");
+
+			cy.realPress("-");
+
+			cy.get("@toggle").its("lastCall.args.0.detail").should("deep.include", {
+				expanded: false,
+				programmatic: false,
+			});
+			cy.get("#group1").should("not.have.attr", "expanded");
+		});
+
+		it("fires on programmatic change with programmatic: true", () => {
+			cy.mount(
+				<SideNavigation id="sn1">
+					<SideNavigationGroup id="group1" text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn1").then($el => {
+				$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+			});
+
+			cy.get("#group1").invoke("prop", "expanded", true);
+
+			cy.get("@toggle").should("have.been.calledOnce");
+			cy.get("@toggle").its("firstCall.args.0.detail").should("deep.include", {
+				expanded: true,
+				programmatic: true,
+			});
+			cy.get("#group1").should("have.prop", "expanded", true);
+		});
+
+		it("preventDefault suppresses the toggle", () => {
+			cy.mount(
+				<SideNavigation id="sn1">
+					<SideNavigationGroup id="group1" expanded text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn1").then($el => {
+				$el[0].addEventListener("item-toggle", (e: Event) => e.preventDefault());
+			});
+
+			cy.get("#group1")
+				.shadow()
+				.find(".ui5-sn-item")
+				.realClick();
+
+			cy.get("#group1").should("have.prop", "expanded", true);
+			cy.get("#group1")
+				.shadow()
+				.find(".ui5-sn-item-group")
+				.should("have.attr", "aria-expanded", "true");
+		});
+
+		it("preventDefault suppresses programmatic toggle", () => {
+			cy.mount(
+				<SideNavigation id="sn1">
+					<SideNavigationGroup id="group1" text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn1").then($el => {
+				$el[0].addEventListener("item-toggle", (e: Event) => e.preventDefault());
+			});
+
+			cy.get("#group1").invoke("prop", "expanded", true);
+
+			cy.get("#group1").should("have.prop", "expanded", false);
+		});
+
+		it("does not fire during initial rendering", () => {
+			cy.mount(
+				<SideNavigation id="sn1">
+					<SideNavigationGroup id="group1" expanded text="Group">
+						<SideNavigationItem text="Home 1" icon="home" />
+					</SideNavigationGroup>
+				</SideNavigation>);
+
+			cy.get("#sn1").then($el => {
+				$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+			});
+
+			cy.get("#group1").should("have.prop", "expanded", true);
+			cy.get("@toggle").should("not.have.been.called");
+		});
+	});
 });
