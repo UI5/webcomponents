@@ -21,7 +21,9 @@ import {
 	isEscape,
 	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
-import { SEGMENTEDBUTTON_ARIA_DESCRIPTION, SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "./generated/i18n/i18n-defaults.js";
+import { LIST_ITEM_SELECTED } from "./generated/i18n/i18n-defaults.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import "./SegmentedButtonItem.js";
 import type SegmentedButtonItem from "./SegmentedButtonItem.js";
 import SegmentedButtonSelectionMode from "./types/SegmentedButtonSelectionMode.js";
@@ -240,6 +242,10 @@ class SegmentedButton extends UI5Element {
 			selectedItems: this.selectedItems,
 		});
 
+		if (target.selected) {
+			announce(SegmentedButton.i18nBundle.getText(LIST_ITEM_SELECTED), InvisibleMessageMode.Assertive);
+		}
+
 		this._itemNavigation.setCurrentItem(target);
 
 		return this;
@@ -338,12 +344,9 @@ class SegmentedButton extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		return `${(getEffectiveAriaDescriptionText(this) || "")} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`.trim();
+		return getEffectiveAriaDescriptionText(this) || undefined;
 	}
 
-	get ariaRoleDescription() {
-		return SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIPTION);
-	}
 }
 
 SegmentedButton.define();
