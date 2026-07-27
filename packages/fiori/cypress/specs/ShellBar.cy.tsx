@@ -541,6 +541,33 @@ describe("Slots", () => {
 			cy.get("#search").should("have.prop", "collapsed", true);
 		});
 
+		it("Test pressing Enter on empty search collapses it and keeps ShellBar state in sync", () => {
+			cy.mount(
+				<ShellBar id="shellbar" showSearchField={true}>
+					<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				</ShellBar>
+			);
+
+			// Initially expanded, ShellBar reflects the expanded state
+			cy.get("#search").should("have.prop", "collapsed", false);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", true);
+
+			// Focus the input and press Enter without a value
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realClick();
+
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realPress("Enter");
+
+			// The search collapses AND the ShellBar's own state collapses in sync
+			cy.get("#search").should("have.prop", "collapsed", true);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
+		});
+
 		it("Test showSearchField property is false when using collapsed search field", () => {
 			cy.mount(
 				<ShellBar id="shellbar">
@@ -788,6 +815,50 @@ describe("Events", () => {
 
 		cy.get("@searchButtonClick")
 			.should("have.been.calledOnce");
+	});
+
+	it("fires search-button-click with correct targetRef when ui5-shellbar-search is used", () => {
+		cy.mount(
+			<ShellBar>
+				<ShellBarSearch slot="searchField" collapsed></ShellBarSearch>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").as("shellbar");
+
+		cy.get("@shellbar").then(shellbar => {
+			shellbar.get(0).addEventListener("ui5-search-button-click", cy.stub().as("searchButtonClick"));
+		});
+
+		// The toggle button lives inside ui5-shellbar-search's shadow DOM
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find(".ui5-shell-search-field-button")
+			.click();
+
+		cy.get("@searchButtonClick").should("have.been.calledOnce");
+
+		// Capture the event args before asserting — the toggle button leaves the DOM
+		// after the click expands the search field, which would break a chained assertion.
+		cy.get("@searchButtonClick").then(stub => {
+			const targetRef = (stub as sinon.SinonStub).firstCall.args[0].detail.targetRef;
+			expect(targetRef).to.not.be.null;
+		});
+	});
+
+	it("getSearchButtonDomRef returns the toggle button when ui5-shellbar-search is collapsed", () => {
+		cy.mount(
+			<ShellBar>
+				<ShellBarSearch slot="searchField" collapsed></ShellBarSearch>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").then(async $shellbar => {
+			const shellbar = $shellbar[0] as ShellBar;
+			const ref = await shellbar.getSearchButtonDomRef();
+			expect(ref).to.not.be.null;
+			expect(ref!.classList.contains("ui5-shell-search-field-button")).to.be.true;
+		});
 	});
 
 	it("Test logo click fires logo-click event only once", () => {

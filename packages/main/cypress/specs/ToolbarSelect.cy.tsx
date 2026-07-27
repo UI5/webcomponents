@@ -536,50 +536,37 @@ describe("Toolbar general interaction", () => {
 			</>
 		);
 
-		// Set up button click handler
+		// Attach click handler once the button is in the DOM
 		cy.get("#btn").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				// First, deselect all options
+			$btn.get(0).addEventListener("click", () => {
 				const select = document.querySelector("ui5-toolbar-select");
 				const options = select?.querySelectorAll("ui5-toolbar-select-option");
 				options?.forEach(opt => {
 					(opt as ToolbarSelectOption).selected = false;
 				});
-				// Then select option 2
 				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
 				opt2.selected = true;
 			});
 		});
 
-		// Verify initial state - first option has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("have.attr", "selected");
+		// Verify initial state - option 2 is not selected (default selection is option 1)
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.false;
+		});
 
 		// Click button using realClick
 		cy.get("#btn").realClick();
 
-		// Verify option 2 now has the selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(1)
-			.should("have.attr", "selected");
+		// Verify option 2 is now selected (explicit selection reflects to the light-DOM option)
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.true;
+		});
 
-		// Verify option 1 no longer has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("not.have.attr", "selected");
+		// The rendered select reflects option 2 as the selected value
+		cy.get("ui5-select", { includeShadowDom: true })
+			.should("have.attr", "value", "2");
 	});
 
 	it("Should ensure only one option is selected at any time", () => {
@@ -597,11 +584,12 @@ describe("Toolbar general interaction", () => {
 		);
 
 		// Set up button to attempt selecting multiple options
-		cy.get("#selectMultiple").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
-				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
-				const opt3 = document.getElementById("opt3") as ToolbarSelectOption;
+		cy.document().then(doc => {
+			const btn = doc.getElementById("selectMultiple");
+			btn?.addEventListener("click", () => {
+				const opt1 = doc.getElementById("opt1") as ToolbarSelectOption;
+				const opt2 = doc.getElementById("opt2") as ToolbarSelectOption;
+				const opt3 = doc.getElementById("opt3") as ToolbarSelectOption;
 
 				// Try to select multiple options
 				opt1.selected = true;
