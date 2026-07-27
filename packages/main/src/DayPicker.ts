@@ -217,16 +217,15 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	onBeforeRendering() {
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		this._buildWeeks(localeData);
+		this._buildWeeks();
 		this._buildDayNames(localeData);
 	}
 
 	/**
 	 * Builds the "_weeks" object that represents the month.
-	 * @param localeData
 	 * @private
 	 */
-	_buildWeeks(localeData: LocaleData) {
+	_buildWeeks() {
 		if (this._hidden) {
 			return; // Optimization to not do any work unless the current picker
 		}
@@ -235,8 +234,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
@@ -277,15 +274,16 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				: "";
 			const todayAriaLabel = isToday ? `${todayLabel} ` : "";
 
-			const tempSecondDateNumber = tempSecondDate ? tempSecondDate.getDate() : "";
-			const tempSecondYearNumber = tempSecondDate ? tempSecondDate.getYear() : "";
-			const secondaryMonthsNamesString = secondaryMonthsNames.length > 0 ? secondaryMonthsNames[tempSecondDate!.getMonth()] : "";
-
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
-			let ariaLabel = this.hasSecondaryCalendarType
-				? `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()}; ${secondaryMonthsNamesString} ${tempSecondDateNumber}, ${tempSecondYearNumber} ${tooltip}`.trim()
-				: `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()} ${tooltip}`.trim();
+			let ariaLabel = this._formatLong.format(tempDate.toUTCJSDate(), true);
+			if (this.hasSecondaryCalendarType && tempSecondDate) {
+				ariaLabel += ` ${this._formatLongSecondary.format(tempSecondDate.toUTCJSDate(), true)}`;
+			}
+
+			if (tooltip) {
+				ariaLabel += ` ${tooltip}`;
+			}
 
 			if (this.selectionMode === CalendarSelectionMode.Range) {
 				if (isSelected && this._isRangeEndDate(timestamp)) {
@@ -1003,6 +1001,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		return this.hasSecondaryCalendarType
 			? `${this._primaryCalendarType} calendar with secondary ${this.secondaryCalendarType as string} calendar`
 			: `${this._primaryCalendarType} calendar`;
+	}
+
+	get _formatLong() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._primaryCalendarType });
+	}
+
+	get _formatLongSecondary() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._secondaryCalendarType });
 	}
 }
 
