@@ -687,6 +687,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 
 	_updateValueAndValidate(inputValue: number) {
 		this.value = inputValue;
+		this._inputValue = undefined;
 		this._validate();
 		this._setButtonState();
 		this._fireChangeEvent();
