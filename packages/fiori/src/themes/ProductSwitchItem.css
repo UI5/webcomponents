@@ -89,7 +89,7 @@
 .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title {
 	line-height: 1.25rem;
 	white-space: normal;
-	overflow-wrap: anywhere;
+	overflow-wrap: break-word;
 	max-width: 100%;
 	pointer-events: none;
 	text-align: center;
