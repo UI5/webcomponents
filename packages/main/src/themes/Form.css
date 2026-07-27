@@ -1,6 +1,10 @@
 @import "./FormLayout.css";
 @import "./FormItemSpan.css";
 
+* {
+	box-sizing: border-box;
+}
+
 :host {
 	display: block;
 	container-type: inline-size;
@@ -38,12 +42,14 @@
 	height: var(--_ui5-form-group-heading-height);
 	line-height: var(--_ui5-form-group-heading-height);
 	padding-inline-start: 0.25rem;
+	overflow: hidden;
 }
 
 .ui5-form-column {
 	padding-top: 0.5rem;
     padding-bottom: 1rem;
     box-sizing: border-box;
+	min-width: 0;
 }
 
 ::slotted([ui5-form-group]) {
