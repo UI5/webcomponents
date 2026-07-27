@@ -440,6 +440,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 			this._languageChanged = true;
 			this._delimiter = undefined;
 			this._groupSeparator = undefined;
+			this._inputValue = undefined;
 			this.valueState = ValueState.None; // to reset the value state visual
 
 			return Promise.resolve();
