@@ -346,7 +346,6 @@ class SegmentedButton extends UI5Element {
 	get ariaDescriptionText() {
 		return getEffectiveAriaDescriptionText(this) || undefined;
 	}
-
 }
 
 SegmentedButton.define();
