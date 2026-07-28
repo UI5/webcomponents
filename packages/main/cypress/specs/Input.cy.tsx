@@ -3675,5 +3675,25 @@ describe("Input built-in filtering", () => {
 			cy.get("@iconClick")
 				.should("have.been.calledOnce");
 		});
+
+		it("should forward disabled state to slotted input icons via inherited CSS custom properties", () => {
+			cy.mount(
+				<Input disabled>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			// The parent Input publishes --_ui5_input_icon_state_pointer_events: none on :host([disabled]).
+			// That inherits into the icon's shadow root and natively blocks hover/active/click.
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.then($icon => {
+					const styles = getComputedStyle($icon[0]);
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_pointer_events").trim()).to.equal("none");
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_cursor").trim()).to.equal("default");
+					// Opacity inherited as a custom prop, and the icon's shadow root applies it via opacity: var(...)
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.not.equal("");
+				});
+		});
 	});
 });

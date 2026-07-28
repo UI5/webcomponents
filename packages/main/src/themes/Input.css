@@ -558,3 +558,13 @@
 	--_ui5_input_icon_state_pressed_color: var(--_ui5_input_icon_success_pressed_color);
 	--_ui5_input_icon_state_focus_outline_color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
 }
+
+/*
+ * Disabled forwarding for slotted <ui5-input-icon>. Same mechanism: parent publishes vars,
+ * icon reads them via var() with defaults, no JS DOM mutation.
+ */
+:host([disabled]) {
+	--_ui5_input_icon_state_opacity: var(--sapContent_DisabledOpacity);
+	--_ui5_input_icon_state_pointer_events: none;
+	--_ui5_input_icon_state_cursor: default;
+}

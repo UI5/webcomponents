@@ -5,7 +5,11 @@
 
 .inputIcon {
 	color: var(--_ui5_input_icon_color);
-	cursor: pointer;
+	/* cursor / opacity / pointer-events are state-aware — parent Input publishes overrides on :host([disabled]).
+	   Defaults preserve the plain interactive appearance. */
+	cursor: var(--_ui5_input_icon_state_cursor, pointer);
+	opacity: var(--_ui5_input_icon_state_opacity, 1);
+	pointer-events: var(--_ui5_input_icon_state_pointer_events, auto);
 	outline: none;
 	/* padding is state-aware; parent Input publishes the state-specific value via CSS custom property */
 	padding: var(--_ui5_input_icon_state_padding, var(--_ui5_input_icon_padding));
@@ -31,27 +35,21 @@
 	color: var(--_ui5_input_icon_state_pressed_color, var(--_ui5_input_icon_pressed_color));
 }
 
-.inputIcon:not(.inputIcon--disabled):active {
+.inputIcon:active {
 	background-color: var(--sapButton_Active_Background);
 	box-shadow: var(--_ui5_input_icon_state_pressed_shadow, var(--_ui5_input_icon_box_shadow));
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	color: var(--_ui5_input_icon_state_pressed_color, var(--_ui5_input_icon_pressed_color));
 }
 
-.inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
+.inputIcon:not(.inputIcon--pressed):not(:active):hover {
 	background: var(--_ui5_input_icon_hover_bg);
 	box-shadow: var(--_ui5_input_icon_state_pressed_shadow, var(--_ui5_input_icon_box_shadow));
 }
 
-.inputIcon:not(.inputIcon--disabled):hover {
+.inputIcon:hover {
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	box-shadow: var(--_ui5_input_icon_state_pressed_shadow, var(--_ui5_input_icon_box_shadow));
-}
-
-/* Disabled state styling */
-.inputIcon.inputIcon--disabled {
-	opacity: var(--sapContent_DisabledOpacity);
-	cursor: default;
 }
 
 
