@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite';
-import virtualIndex from "@ui5/webcomponents-tools/lib/dev-server/virtual-index-html-plugin.js";
-import customHotUpdate from "@ui5/webcomponents-tools/lib/dev-server/custom-hot-update-plugin.js";
+import virtualIndex from "@ui5/webcomponents-tools/lib/dev-server/virtual-index-html-plugin.mjs";
+import customHotUpdate from "@ui5/webcomponents-tools/lib/dev-server/custom-hot-update-plugin.mjs";
 import path, { dirname, join, resolve } from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { checker } from 'vite-plugin-checker';
 import istanbul from 'vite-plugin-istanbul';
 
@@ -102,41 +101,65 @@ const customResolver = (id, source, options) => {
 		return resolved;
 	}
 }
-export default defineConfig(async () => {
-	return {
-		build: {
-			emptyOutDir: false,
-		},
-		plugins: [
-			await virtualIndex(),
-			tsconfigPaths(),
-			customHotUpdate(),
-			!process.env.UI5_BASE && checker({
-				// e.g. use TypeScript check
-				typescript: {
-					tsconfigPath: "packages/fiori/tsconfig.json",
-					buildMode: true,
-				}
-			}),
-			istanbul({
-				include: ['packages/**/src/*','src/*'],
-				exclude: ['node_modules', 'test/'],
-				extension: ['.js', '.ts', '.tsx'],
-				requireEnv: true,
-				cypress: true,
-			}),
-		],
-		resolve: {
-			alias: [
-				// { find: /\@ui5\/webcomponents-base\/dist\/(.*)/, replacement: "../base/src/$1" },
-				// { find: /\@ui5\/webcomponents-icons\/dist\/(.*)/, replacement: "../icons/src/$1" },
-				// { find: /\@ui5\/webcomponents-icons-tnt\/dist\/(.*)/, replacement: "../icons-tnt/src/$1" },
-				// { find: /\@ui5\/webcomponents-icons-business-suite\/dist\/(.*)/, replacement: "../icons-business-suite/src/$1" },
-				{ find: /(\@ui5)(.*)/, replacement: "$1$2", customResolver },
-				{ find: /(..\/generated)(.*)/, replacement: "$1$2", customResolver },
-				// ../sap files are in dist, not src
-				{ find: /^(\..*)/, replacement: "$1", customResolver },
-			],
+const customResolverPlugin = {
+	name: 'ui5-custom-resolver',
+	enforce: 'pre',
+	resolveId(id, source) {
+		if (!source) {
+			return null;
 		}
+		// Only handle the same import patterns the old alias entries matched
+		const isUi5Import = /^@ui5/.test(id);
+		const isGeneratedImport = /^\.\.\/generated/.test(id);
+		const isRelativeImport = /^\./.test(id);
+		if (!isUi5Import && !isGeneratedImport && !isRelativeImport) {
+			return null;
+		}
+		const resolved = customResolver(id, source, {});
+		if (resolved) {
+			return resolved;
+		}
+		// For @ui5/*/dist/* imports coming from dist/ files, apply the same dist->src
+		// remapping that tsconfigPaths does for src/ files. This ensures module identity
+		// for singletons (e.g. asset registries) across src/ and dist/ importers.
+		if (isUi5Import && source.includes("/packages/") && source.includes("/dist/")) {
+			const distMatch = id.match(/^(@ui5\/[^/]+)\/dist\/(.+\.js)$/);
+			if (distMatch) {
+				const pkg = distMatch[1];
+				const subpath = distMatch[2].replace(/\.js$/, ".ts");
+				const repoRoot = source.replace(/packages\/.*/, "");
+				const pkgFolder = pkg.replace("@ui5/webcomponents-", "").replace("@ui5/webcomponents", "main");
+				return join(repoRoot, "packages", pkgFolder, "src", subpath);
+			}
+		}
+		return null;
 	}
+};
+
+export default defineConfig({
+	build: {
+		emptyOutDir: false,
+	},
+	resolve: {
+		tsconfigPaths: true,
+	},
+	plugins: [
+		virtualIndex(),
+		customHotUpdate(),
+		customResolverPlugin,
+		!process.env.UI5_BASE && checker({
+			// e.g. use TypeScript check
+			typescript: {
+				tsconfigPath: "packages/fiori/tsconfig.json",
+				buildMode: true,
+			}
+		}),
+		istanbul({
+			include: ['packages/**/src/*','src/*'],
+			exclude: ['node_modules', 'test/'],
+			extension: ['.js', '.ts', '.tsx'],
+			requireEnv: true,
+			cypress: true,
+		}),
+	],
 });

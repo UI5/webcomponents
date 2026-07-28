@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 /**
  * A change is observed on MacOS since 13.5, where the build generates a large amount
@@ -20,9 +20,9 @@ const fs = require("fs");
 const customHotUpdate = async () => {
 	return {
 		name: 'custom-hot-update',
-		handleHotUpdate(ctx) {
+		hotUpdate(ctx) {
 			// custom check for generated json files
-			if (ctx.file.endsWith(".json")) {
+			if (ctx.type === "update" && ctx.file.endsWith(".json")) {
 				const stat = fs.statSync(ctx.file);
 
 				// metadata change only
@@ -36,4 +36,4 @@ const customHotUpdate = async () => {
 	}
 };
 
-module.exports = customHotUpdate;
+export default customHotUpdate;

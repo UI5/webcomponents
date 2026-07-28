@@ -1,0 +1,13 @@
+diff --git a/dist/checkers/typescript/main.js b/dist/checkers/typescript/main.js
+index 99fe28ccb59cadef3d27cb4ac7c5380f61d058ff..2d7a790a604bec01869d8a2bc42910e1b45942a2 100644
+--- a/dist/checkers/typescript/main.js
++++ b/dist/checkers/typescript/main.js
+@@ -184,7 +184,7 @@ const createDiagnostic = (pluginConfig) => {
+ 			const createProgram = ts.createEmitAndSemanticDiagnosticsBuilderProgram;
+ 			if (typeof pluginConfig.typescript === "object" && pluginConfig.typescript.buildMode) {
+ 				const host = forceNoEmitOnSolutionBuilderHost(ts, ts.createSolutionBuilderWithWatchHost(ts.sys, createProgram, reportDiagnostic, void 0, reportWatchStatusChanged));
+-				ts.createSolutionBuilderWithWatch(host, [configFile], {}).build();
++				ts.createSolutionBuilderWithWatch(host, [configFile], {emitDeclarationOnly: true}).build();
+ 			} else {
+ 				const host = ts.createWatchCompilerHost(configFile, { noEmit: true }, ts.sys, createProgram, reportDiagnostic, reportWatchStatusChanged);
+ 				ts.createWatchProgram(host);
