@@ -62,6 +62,7 @@ import InputType from "./types/InputType.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
+import type { ToolbarArrowNavState, IToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 
 // Templates
 import InputTemplate from "./InputTemplate.js";
@@ -299,7 +300,7 @@ type InputSuggestionScrollEventDetail = {
  */
 @event("close")
 
-class Input extends UI5Element implements SuggestionComponent, IFormInputElement {
+class Input extends UI5Element implements SuggestionComponent, IFormInputElement, IToolbarArrowNavProvider {
 	eventDetails!: {
 		"change": InputEventDetail,
 		"input": InputEventDetail,
@@ -1667,6 +1668,29 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		}
 
 		return this.nativeInput;
+	}
+
+	getArrowNavState(): ToolbarArrowNavState | undefined {
+		const input = this.getInputDOMRefSync();
+		if (!input) {
+			return undefined;
+		}
+
+		const active = getActiveElement() as HTMLElement | null;
+		const isInputFocused = !!active && (active === input || input.contains(active));
+		if (!isInputFocused) {
+			return undefined;
+		}
+
+		const caret = input.selectionStart ?? 0;
+		const caretEnd = input.selectionEnd ?? caret;
+		const len = input.value?.length ?? 0;
+
+		// A non-collapsed selection is not a navigation boundary: Left/Right should
+		// collapse the selection (native behaviour), not exit to the next toolbar item.
+		const collapsed = caret === caretEnd;
+
+		return { atLeftEnd: collapsed && caret === 0, atRightEnd: collapsed && caretEnd >= len };
 	}
 
 	/**

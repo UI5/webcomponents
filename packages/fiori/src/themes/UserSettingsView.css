@@ -6,23 +6,10 @@
 	padding: 1rem;
 }
 
-@container (width > 37.5rem) {
-	.ui5-user-settings-view {
-		padding-inline: 2rem;
-	}
+.user-settings-appearance-view-top-header {
+	margin-top: 0.5rem;
 }
 
-.user-settings-appearance-view-list-header {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	box-sizing: border-box;
-	font-size: var(--sapFontHeader4Size);
-	font-family: var(--sapFontFamily);
-	color: var(--sapGroup_TitleTextColor);
-	height: 3rem;
-	line-height: 3rem;
-	padding: 0 1rem;
-	background-color: var(--sapGroup_TitleBackground);
-	border-bottom: 1px solid var(--sapGroup_TitleBorderColor);
+.user-settings-appearance-view-top-header::part(title) {
+	font-size: var(--sapFontHeader5Size);
 }
