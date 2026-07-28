@@ -19,9 +19,9 @@ yo easy-ui5 project
 
 Answer the prompts (project name, namespace, framework, etc.). To run it without a global install, you can also use `npx -p yo -p generator-easy-ui5 yo easy-ui5 project`. For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5) and the [UI5 CLI Getting Started guide](https://ui5.github.io/cli/stable/pages/GettingStarted/).
 
-### Step 2. Install the UI5 tooling extension
+### Step 2. Enhance the UI5 CLI setup 
 
-The [`ui5-tooling-modules`](https://www.npmjs.com/package/ui5-tooling-modules) CLI extension resolves and bundles Web Components modules during development and build.
+The [`ui5-tooling-modules`](https://www.npmjs.com/package/ui5-tooling-modules) package is a UI5 CLI extension resolving and bundling Web Components modules during development and build.
 
 ```bash
 npm install ui5-tooling-modules --save-dev --ignore-scripts=false -rte=ui5.yaml,ui5-local.yaml,ui5-deploy.yaml
