@@ -568,3 +568,13 @@
 	--_ui5_input_icon_state_pointer_events: none;
 	--_ui5_input_icon_state_cursor: default;
 }
+
+/*
+ * Readonly forwarding: the input is still readable but non-editable, so slotted interactive
+ * icons (search, voice, camera, …) should not fire either. No opacity change — the input
+ * itself does not dim in readonly.
+ */
+:host([readonly]:not([disabled])) {
+	--_ui5_input_icon_state_pointer_events: none;
+	--_ui5_input_icon_state_cursor: default;
+}

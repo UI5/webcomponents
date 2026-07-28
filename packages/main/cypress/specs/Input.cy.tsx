@@ -3695,5 +3695,24 @@ describe("Input built-in filtering", () => {
 					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.not.equal("");
 				});
 		});
+
+		it("should forward readonly state to slotted input icons via inherited CSS custom properties", () => {
+			cy.mount(
+				<Input readonly>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			// Readonly parent publishes pointer-events: none + cursor: default (no opacity change).
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.then($icon => {
+					const styles = getComputedStyle($icon[0]);
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_pointer_events").trim()).to.equal("none");
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_cursor").trim()).to.equal("default");
+					// Readonly does not dim — opacity var should remain unset.
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.equal("");
+				});
+		});
 	});
 });
