@@ -273,6 +273,20 @@
 		</ui5-input>
 	</ui5-shellbar>
 
+	<ui5-title>ShellBar with ui5-shellbar-search (new search path)</ui5-title>
+	<ui5-label>search-button-click fired:</ui5-label><ui5-input id="sb-new-search-event-out" placeholder="event output"></ui5-input><br>
+	<ui5-label>getSearchButtonDomRef result:</ui5-label><ui5-input id="sb-new-search-ref-out" placeholder="DOM ref result"></ui5-input><br>
+	<ui5-button id="sb-new-search-get-ref-btn">Call getSearchButtonDomRef()</ui5-button>
+
+	<ui5-shellbar id="sb-new-search">
+		<ui5-shellbar-branding slot="branding">Product Title</ui5-shellbar-branding>
+		<ui5-shellbar-search id="sb-new-search-field" slot="searchField">
+			<ui5-search-item text="Algeria"></ui5-search-item>
+			<ui5-search-item text="Bulgaria"></ui5-search-item>
+			<ui5-search-item text="Croatia"></ui5-search-item>
+		</ui5-shellbar-search>
+	</ui5-shellbar>
+
 	<script>
 
 		[...document.querySelectorAll("ui5-toggle-button")].forEach(el => {
@@ -396,6 +410,16 @@
 
 		sb.addEventListener("ui5-search-button-click", function(event) {
 			event.preventDefault();
+		});
+
+		var sbNewSearch = document.getElementById("sb-new-search");
+		sbNewSearch.addEventListener("ui5-search-button-click", function(event) {
+			document.getElementById("sb-new-search-event-out").value = "fired — searchFieldVisible: " + event.detail.searchFieldVisible + ", targetRef: " + (event.detail.targetRef ? event.detail.targetRef.tagName : "null");
+		});
+
+		document.getElementById("sb-new-search-get-ref-btn").addEventListener("click", async function() {
+			var ref = await sbNewSearch.getSearchButtonDomRef();
+			document.getElementById("sb-new-search-ref-out").value = ref ? ref.tagName + "." + ref.className : "null";
 		});
 
 	</script>

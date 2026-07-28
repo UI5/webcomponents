@@ -1,3 +1,8 @@
+.ui5-input-icon-root {
+	height: 100%;
+	box-sizing: border-box;
+}
+
 .inputIcon {
 	color: var(--_ui5_input_icon_color);
 	cursor: pointer;
@@ -7,6 +12,14 @@
 	min-width: 1rem;
 	min-height: 1rem;
 	border-radius: var(--_ui5_input_icon_border_radius);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.inputIcon:focus-visible {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: -0.125rem;
 }
 
 .inputIcon.inputIcon--pressed {
@@ -16,19 +29,107 @@
 	color: var(--_ui5_input_icon_pressed_color);
 }
 
-.inputIcon:active {
+.inputIcon:not(.inputIcon--disabled):active {
 	background-color: var(--sapButton_Active_Background);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	color: var(--_ui5_input_icon_pressed_color);
 }
 
-.inputIcon:not(.inputIcon--pressed):not(:active):hover {
+.inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
 	background: var(--_ui5_input_icon_hover_bg);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
 }
 
-.inputIcon:hover {
+.inputIcon:not(.inputIcon--disabled):hover {
 	border-inline-start: var(--_ui5_select_hover_icon_left_border);
 	box-shadow: var(--_ui5_input_icon_box_shadow);
+}
+
+/* Disabled state styling */
+.inputIcon.inputIcon--disabled {
+	opacity: var(--sapContent_DisabledOpacity);
+	cursor: default;
+}
+
+
+/* Style the inner Icon component */
+.ui5-input-icon-inner {
+	display: flex;
+	width: 1rem;
+	height: 1rem;
+	color: inherit;
+	pointer-events: none;
+	flex-shrink: 0;
+}
+
+/* Value state styling */
+:host([value-state="Negative"]) .inputIcon,
+:host([value-state="Critical"]) .inputIcon {
+	padding: var(--_ui5_input_error_warning_icon_padding);
+}
+
+:host([value-state="Information"]) .inputIcon {
+	padding: var(--_ui5_input_information_icon_padding);
+}
+
+:host([value-state="Negative"]) .inputIcon:not(.inputIcon--disabled):active,
+:host([value-state="Negative"]) .inputIcon.inputIcon--pressed {
+	box-shadow: var(--_ui5_input_error_icon_box_shadow);
+	color: var(--_ui5_input_icon_error_pressed_color);
+}
+
+:host([value-state="Negative"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
+	box-shadow: var(--_ui5_input_error_icon_box_shadow);
+}
+
+:host([value-state="Critical"]) .inputIcon:not(.inputIcon--disabled):active,
+:host([value-state="Critical"]) .inputIcon.inputIcon--pressed {
+	box-shadow: var(--_ui5_input_warning_icon_box_shadow);
+	color: var(--_ui5_input_icon_warning_pressed_color);
+}
+
+:host([value-state="Critical"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
+	box-shadow: var(--_ui5_input_warning_icon_box_shadow);
+}
+
+:host([value-state="Information"]) .inputIcon:not(.inputIcon--disabled):active,
+:host([value-state="Information"]) .inputIcon.inputIcon--pressed {
+	box-shadow: var(--_ui5_input_information_icon_box_shadow);
+	color: var(--_ui5_input_icon_information_pressed_color);
+}
+
+:host([value-state="Information"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
+	box-shadow: var(--_ui5_input_information_icon_box_shadow);
+}
+
+:host([value-state="Positive"]) .inputIcon:not(.inputIcon--disabled):active,
+:host([value-state="Positive"]) .inputIcon.inputIcon--pressed {
+	box-shadow: var(--_ui5_input_success_icon_box_shadow);
+	color: var(--_ui5_input_icon_success_pressed_color);
+}
+
+:host([value-state="Positive"]) .inputIcon:not(.inputIcon--pressed):not(:active):not(.inputIcon--disabled):hover {
+	box-shadow: var(--_ui5_input_success_icon_box_shadow);
+}
+
+/* Override focus outline colors for value states */
+:host([value-state="Negative"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+}
+
+:host([value-state="Critical"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+}
+
+:host([value-state="Information"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--sapContent_FocusColor);
+	border-inline-start-color: var(--sapContent_FocusColor);
+}
+
+:host([value-state="Positive"]) .inputIcon.inputIcon--focused {
+	outline-color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
+	border-inline-start-color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
 }

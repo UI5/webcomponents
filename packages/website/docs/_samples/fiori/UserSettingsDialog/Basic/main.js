@@ -20,6 +20,8 @@ import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents/dist/Panel.js";
 import "@ui5/webcomponents/dist/ComboBox.js";
 import "@ui5/webcomponents/dist/ComboBoxItem.js";
+import "@ui5/webcomponents/dist/Select.js";
+import "@ui5/webcomponents/dist/Option.js";
 import "@ui5/webcomponents/dist/RadioButton.js";
 import "@ui5/webcomponents/dist/Text.js";
 import "@ui5/webcomponents/dist/CheckBox.js";
@@ -27,6 +29,9 @@ import "@ui5/webcomponents/dist/Switch.js";
 import "@ui5/webcomponents/dist/Toast.js";
 import "@ui5/webcomponents/dist/List.js";
 import "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents/dist/MessageStrip.js";
+import "@ui5/webcomponents/dist/Form.js";
+import "@ui5/webcomponents/dist/FormItem.js";
 
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/user-settings.js";
@@ -45,12 +50,6 @@ const account = document.getElementById("account");
 const resetAllButton = document.getElementById("reset-all-button");
 // Theme change
 const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
-//Language and Region
-const languageRegion = document.getElementById("language-region-container");
-const language = document.getElementById("language");
-const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
-const additionalDialog = document.getElementById("additionalDialog");
-const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
 
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
@@ -91,33 +90,16 @@ account.addEventListener("manage-account-click", function () {
 });
 
 resetAllButton.addEventListener("click", function () {
-	additionalDialog.open = true;
-});
-
-//Language and Region
-language.addEventListener("selection-change",  function (event) {
-	additionalDialog.open = true;
+	toastReset.open = true;
 });
 
 // Theme change
 appearanceView.addEventListener("selection-change", (e) => {
 	const selectedItem = e.detail.item;
-			
+
 	if (selectedItem?.itemKey) {
 		setTheme(selectedItem.itemKey);
 	}
-});
-
-dialogClosers.forEach(btn => {
-	btn.addEventListener("click", () => {
-		additionalDialog.open = false;
-	});
-});
-
-regionSettings.forEach((settingsItem) => {
-	settingsItem.addEventListener("selection-change",  function (event) {
-		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
-	});
 });
 
 mobile1Button.addEventListener("click", function () {

@@ -225,6 +225,8 @@ jobs:
             });
 
       - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: false
         run: |
           yarn lerna publish from-git --yes
 

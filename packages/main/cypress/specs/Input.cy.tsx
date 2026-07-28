@@ -1,4 +1,5 @@
 import Input from "../../src/Input.js";
+import InputIcon from "../../src/InputIcon.js";
 import SuggestionItem from "../../src/SuggestionItem.js";
 import SuggestionItemCustom from "../../src/SuggestionItemCustom.js";
 import SuggestionItemGroup from "../../src/SuggestionItemGroup.js";
@@ -6,6 +7,8 @@ import Dialog from "../../src/Dialog.js";
 import Link from "../../src/Link.js";
 
 import add from "@ui5/webcomponents-icons/dist/add.js";
+import "@ui5/webcomponents-icons/dist/search.js";
+import "@ui5/webcomponents-icons/dist/microphone.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 import { INPUT_SUGGESTIONS_EXPANDED, INPUT_SUGGESTIONS_COLLAPSED, INPUT_SUGGESTIONS_MORE_HITS } from "../../src/generated/i18n/i18n-defaults.js";
 
@@ -3605,6 +3608,67 @@ describe("Input built-in filtering", () => {
 
 			cy.get("@input")
 				.should("have.value", "A");
+		});
+	});
+
+	describe("InputIcon Integration", () => {
+		it("should render input with interactive icon", () => {
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.should("exist");
+		});
+
+		it("should sync value-state to slotted input icons", () => {
+			cy.mount(
+				<Input valueState="Negative">
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.should("have.attr", "value-state", "Negative");
+		});
+
+		it("should work with multiple icons and clear icon", () => {
+			cy.mount(
+				<Input showClearIcon value="test">
+					<InputIcon slot="icon" name="microphone" accessibleName="Voice" />
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.should("have.length", 2);
+
+			cy.get("[ui5-input]")
+				.shadow()
+				.find("[ui5-icon].ui5-input-clear-icon")
+				.should("exist");
+		});
+
+		it("should fire click events on interactive icons", () => {
+			const onClick = cy.spy().as("iconClick");
+
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" onClick={onClick} />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.realClick();
+
+			cy.get("@iconClick")
+				.should("have.been.calledOnce");
 		});
 	});
 });

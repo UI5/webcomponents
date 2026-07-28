@@ -10,6 +10,8 @@ import CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
 	ARIA_LABEL_LIST_ITEM_CHECKBOX,
+	LIST_ITEM_SELECTED,
+	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 
 import styles from "./generated/themes/MultiComboBoxItem.css.js";
@@ -77,6 +79,13 @@ class MultiComboBoxItem extends ComboBoxItem implements IMultiComboBoxItem {
 
 	get isMultiComboBoxItem() {
 		return true;
+	}
+
+	get _selectionStateText(): string {
+		const stateText = this.selected
+			? MultiComboBoxItem.i18nBundle.getText(LIST_ITEM_SELECTED)
+			: MultiComboBoxItem.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
+		return `${stateText},`;
 	}
 
 	_onclick(e: MouseEvent) {

@@ -116,4 +116,5 @@
 .ui5-cp-default-color-button,
 .ui5-cp-more-colors {
 	padding: 0.0625rem;
+	border-radius: 0;
 }

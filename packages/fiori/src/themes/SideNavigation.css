@@ -35,6 +35,10 @@
 	border-radius: inherit;
 }
 
+.ui5-sn-root.ui5-sn-animating {
+	overflow: hidden;
+}
+
 .ui5-sn-flexible {
 	display: flex;
 	flex-direction: column;
@@ -46,6 +50,12 @@
 
 .ui5-sn-fixed {
 	position: relative;
+}
+
+.ui5-sn-root.ui5-sn-animating .ui5-sn-list.ui5-sn-flexible,
+.ui5-sn-root.ui5-sn-animating .ui5-sn-list.ui5-sn-fixed {
+	width: var(--_ui5_side_navigation_width);
+	overflow: hidden;
 }
 
 .ui5-sn-list {
