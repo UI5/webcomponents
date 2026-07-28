@@ -175,46 +175,34 @@ export type {
 export const isInstanceOfSideNavigationItemBase = createInstanceChecker<SideNavigationItemBase>("isSideNavigationItemBase");
 
 type ExpandableItem = SideNavigationItemBase & {
-	_expandedState: boolean;
-	_userToggle: boolean;
+	expanded: boolean;
 };
 
 /**
- * Shared logic for the `expanded` property setter of the expandable items
+ * Shared logic for the user-driven expand/collapse of the expandable items
  * (`SideNavigationGroup` and `SideNavigationItem`).
  *
- * Fires the cancelable `item-toggle` event on the parent `ui5-side-navigation` and
- * returns the effective value to be stored. When the event is prevented, the old value
- * is kept (the toggle is suppressed). The `_userToggle` flag on the item distinguishes
- * user interaction (`programmatic: false`) from programmatic assignments (`programmatic: true`).
+ * Fires the cancelable `item-toggle` event on the parent `ui5-side-navigation` and,
+ * unless the event is prevented, applies the new `expanded` value. The event is only
+ * fired for user interaction - programmatic changes to `expanded` stay silent.
  *
  * @private
  */
-const toggleExpanded = (item: ExpandableItem, value: boolean): boolean => {
-	if (item._expandedState === value) {
-		return item._expandedState;
+const toggleExpanded = (item: ExpandableItem, value: boolean): void => {
+	if (item.expanded === value) {
+		return;
 	}
 
 	const sideNav = item.sideNavigation;
 
-	// Before the item is wired to a parent side navigation there is nothing to fire the
-	// event on - just store the value silently (e.g. when set before insertion in the DOM).
-	if (!sideNav) {
-		return value;
-	}
-
-	const executeEvent = sideNav.fireDecoratorEvent("item-toggle", {
+	const executeToggle = sideNav ? sideNav.fireDecoratorEvent("item-toggle", {
 		item,
-		expanded: value,
-		programmatic: !item._userToggle,
-	});
+	}) : true;
 
 	// The event was prevented - keep the old value, suppressing the toggle.
-	if (!executeEvent) {
-		return item._expandedState;
+	if (executeToggle) {
+		item.expanded = value;
 	}
-
-	return value;
 };
 
 export {

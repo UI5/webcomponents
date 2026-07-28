@@ -63,17 +63,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	 * @default false
 	 */
 	@property({ type: Boolean })
-	get expanded(): boolean {
-		return this._expandedState;
-	}
-
-	set expanded(value: boolean) {
-		this._expandedState = toggleExpanded(this, value);
-	}
-
-	_expandedState = false;
-
-	_userToggle = false;
+	expanded = false;
 
 	/**
 	 * Defines if the item should be collapsible or not.
@@ -397,9 +387,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	_setExpandedByUser(value: boolean) {
-		this._userToggle = true;
-		this.expanded = value;
-		this._userToggle = false;
+		toggleExpanded(this, value);
 	}
 
 	get isSideNavigationItem() {

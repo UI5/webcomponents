@@ -58,17 +58,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	 * @default false
 	 */
 	@property({ type: Boolean })
-	get expanded(): boolean {
-		return this._expandedState;
-	}
-
-	set expanded(value: boolean) {
-		this._expandedState = toggleExpanded(this, value);
-	}
-
-	_expandedState = false;
-
-	_userToggle = false;
+	expanded = false;
 
 	belowGroup = false;
 
@@ -202,9 +192,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	}
 
 	_setExpandedByUser(value: boolean) {
-		this._userToggle = true;
-		this.expanded = value;
-		this._userToggle = false;
+		toggleExpanded(this, value);
 	}
 
 	get isSideNavigationGroup() {

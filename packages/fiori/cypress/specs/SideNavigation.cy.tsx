@@ -1053,7 +1053,7 @@ describe("Side Navigation interaction", () => {
 });
 
 describe("item-toggle event", () => {
-	it("fires on user toggle-icon click with programmatic: false", () => {
+	it("fires on user toggle-icon click", () => {
 		cy.mount(
 			<SideNavigation id="sideNav">
 				<SideNavigationItem id="item1" text="1" icon={group}>
@@ -1070,17 +1070,13 @@ describe("item-toggle event", () => {
 		cy.get("#item1").shadow().find(".ui5-sn-item-toggle-icon").realClick();
 
 		cy.get("@toggle").should("have.been.calledOnce");
-		cy.get("@toggle").its("firstCall.args.0.detail").should("deep.include", {
-			expanded: true,
-			programmatic: false,
-		});
 		cy.get("@toggle").its("firstCall.args.0.detail.item").should(item => {
 			expect(item.id).to.equal("item1");
 		});
 		cy.get("#item1").should("have.attr", "expanded");
 	});
 
-	it("fires on keyboard Plus/Minus with programmatic: false", () => {
+	it("fires on keyboard Plus/Minus", () => {
 		cy.mount(
 			<SideNavigation id="sideNav">
 				<SideNavigationItem id="focusStart" text="focus start"></SideNavigationItem>
@@ -1098,22 +1094,18 @@ describe("item-toggle event", () => {
 		cy.realPress("ArrowDown");
 		cy.realPress("+");
 
-		cy.get("@toggle").its("lastCall.args.0.detail").should("deep.include", {
-			expanded: true,
-			programmatic: false,
+		cy.get("@toggle").its("lastCall.args.0.detail.item").should(item => {
+			expect(item.id).to.equal("item1");
 		});
 		cy.get("#item1").should("have.attr", "expanded");
 
 		cy.realPress("-");
 
-		cy.get("@toggle").its("lastCall.args.0.detail").should("deep.include", {
-			expanded: false,
-			programmatic: false,
-		});
+		cy.get("@toggle").should("have.been.calledTwice");
 		cy.get("#item1").should("not.have.attr", "expanded");
 	});
 
-	it("fires on programmatic change with programmatic: true", () => {
+	it("does not fire on programmatic change", () => {
 		cy.mount(
 			<SideNavigation id="sideNav">
 				<SideNavigationItem id="item1" text="1" icon={group}>
@@ -1128,12 +1120,8 @@ describe("item-toggle event", () => {
 
 		cy.get("#item1").invoke("prop", "expanded", true);
 
-		cy.get("@toggle").should("have.been.calledOnce");
-		cy.get("@toggle").its("firstCall.args.0.detail").should("deep.include", {
-			expanded: true,
-			programmatic: true,
-		});
 		cy.get("#item1").should("have.prop", "expanded", true);
+		cy.get("@toggle").should("not.have.been.called");
 	});
 
 	it("preventDefault suppresses the toggle", () => {
