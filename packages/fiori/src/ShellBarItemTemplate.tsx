@@ -9,13 +9,13 @@ export default function ShellBarItemTemplate(this: ShellBarItem) {
 			<ListItemStandard
 				icon={this.icon ? `sap-icon://${this.icon}` : ""}
 				type="Active"
+				text={this.text}
+				wrappingType="Normal"
+				additionalText={this.count}
 				data-ui5-stable={this.stableDomRef}
 				accessibilityAttributes={this.accessibilityAttributes}
 				onClick={this.fireClickEvent}
-			>
-				<span class="ui5-shellbar-item-text">{this.text}</span>
-				{this.count && <span class="ui5-shellbar-item-badge">{this.count}</span>}
-			</ListItemStandard>
+			/>
 		);
 	}
 

@@ -1425,7 +1425,7 @@ describe("ButtonBadge in ShellBar", () => {
 			.should("have.attr", "text", "3");
 	});
 
-	it("Test if overflow list item renders badge span when count is set", () => {
+	it("Test if overflow list item renders badge when count is set", () => {
 		cy.mount(
 			<>
 				<ShellBarItem id="item-with-badge" icon="accept" text="Item" count="42" in-overflow />
@@ -1433,36 +1433,35 @@ describe("ButtonBadge in ShellBar", () => {
 			</>
 		);
 
-		// Item with count: badge span exists with correct text
+		// Item with count: additionalText on the ListItemStandard carries the badge value
 		cy.get("#item-with-badge")
 			.shadow()
-			.find(".ui5-shellbar-item-badge")
-			.should("exist")
-			.should("have.text", "42");
+			.find("[ui5-li]")
+			.should("have.attr", "additional-text", "42");
 
-		// Item without count: no badge span rendered
+		// Item without count: no additionalText attribute
 		cy.get("#item-no-badge")
 			.shadow()
-			.find(".ui5-shellbar-item-badge")
-			.should("not.exist");
+			.find("[ui5-li]")
+			.should("not.have.attr", "additional-text");
 	});
 
-	it("Test count updates propagate to overflow badge span", () => {
+	it("Test count updates propagate to overflow badge", () => {
 		cy.mount(
 			<ShellBarItem id="item-update" icon="accept" text="Item" count="1" in-overflow />
 		);
 
 		cy.get("#item-update")
 			.shadow()
-			.find(".ui5-shellbar-item-badge")
-			.should("have.text", "1");
+			.find("[ui5-li]")
+			.should("have.attr", "additional-text", "1");
 
 		cy.get("#item-update").invoke("attr", "count", "99+");
 
 		cy.get("#item-update")
 			.shadow()
-			.find(".ui5-shellbar-item-badge")
-			.should("have.text", "99+");
+			.find("[ui5-li]")
+			.should("have.attr", "additional-text", "99+");
 	});
 
 	it("Test if overflow button shows appropriate badge when items are overflowed", () => {

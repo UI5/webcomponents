@@ -25,22 +25,30 @@
 
 [ui5-li]::part(icon) {
 	color: var(--sapList_TextColor);
+	align-self: center;
 }
 
-[ui5-li]::part(title) {
-	display: flex;
+[ui5-li]::part(additional-text) {
+	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	overflow: visible;
-}
-
-.ui5-shellbar-item-text {
-	overflow: hidden;
-	text-overflow: ellipsis;
+	justify-content: center;
+	height: 1rem;
+	min-width: 1rem;
+	padding: 0 0.3125rem;
+	border-radius: 0.5rem;
+	border: var(--_ui5_shellbar_button_badge_border);
+	background: var(--sapContent_BadgeBackground) !important;
+	color: var(--sapContent_BadgeTextColor) !important;
+	font-size: var(--sapFontSmallSize);
+	font-family: var(--sapFontBoldFamily);
+	font-weight: bold;
 	white-space: nowrap;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	pointer-events: none;
+	text-shadow: none !important;
+	align-self: center;
 }
-
-.ui5-shellbar-item-badge {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
