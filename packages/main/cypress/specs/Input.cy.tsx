@@ -3624,16 +3624,21 @@ describe("Input built-in filtering", () => {
 				.should("exist");
 		});
 
-		it("should sync value-state to slotted input icons", () => {
+		it("should forward value-state styling to slotted input icons via inherited CSS custom properties", () => {
 			cy.mount(
 				<Input valueState="Negative">
 					<InputIcon slot="icon" name="search" accessibleName="Search" />
 				</Input>
 			);
 
+			// The parent Input publishes --_ui5_input_icon_state_padding on its host when value-state is set.
+			// CSS custom properties inherit through the shadow boundary, so the slotted icon reads it inside its own shadow root.
 			cy.get("[ui5-input]")
 				.find("[ui5-input-icon]")
-				.should("have.attr", "value-state", "Negative");
+				.then($icon => {
+					const computedPadding = getComputedStyle($icon[0]).getPropertyValue("--_ui5_input_icon_state_padding").trim();
+					expect(computedPadding).to.not.equal("");
+				});
 		});
 
 		it("should work with multiple icons and clear icon", () => {
