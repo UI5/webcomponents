@@ -571,7 +571,7 @@ class SideNavigation extends UI5Element {
 		}, 0);
 
 		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
-		const listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
+		let listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
 
 		if (itemsHeight < listHeight) {
 			return;
@@ -590,32 +590,61 @@ class SideNavigation extends UI5Element {
 				const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef);
 				itemsHeight += selectedItemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
 			}
+
+			const indexOf = overflowItems.indexOf(selectedItem);
+			const itemAfterSelected = overflowItems[indexOf + 1];
+			if (itemAfterSelected && !isInstanceOfSideNavigationItemBase(itemAfterSelected)) {
+				itemsHeight += itemAfterSelected.offsetHeight;
+			}
 		}
 
-		overflowItems.forEach(item => {
+		listHeight--;
+
+		const lastItem = overflowItems[overflowItems.length - 1];
+		if (!isInstanceOfSideNavigationItemBase(lastItem)) {
+			listHeight -= lastItem.offsetHeight;
+		}
+
+		for (let i = 0; i < overflowItems.length; i++) {
+			const item = overflowItems[i];
+			const nextItem = overflowItems[i + 1];
+			let nextItemDomRef;
+
 			if (!item || item === selectedItem) {
-				return;
+				continue;
 			}
 
 			let itemDomRef;
 
-			if (isInstanceOfSideNavigationItemBase(item) && item.getDomRef()) {
+			if (isInstanceOfSideNavigationItemBase(item)) {
 				itemDomRef = item.getDomRef();
-			} else {
-				itemDomRef = item;
 			}
 
 			if (!itemDomRef) {
-				return;
+				continue;
 			}
 
 			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
 			itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
 
+			if (nextItem && !isInstanceOfSideNavigationItemBase(nextItem)) {
+				nextItemDomRef = nextItem;
+				i++;
+
+				if (!nextItemDomRef) {
+					debugger;
+				}
+
+				itemsHeight += nextItemDomRef.offsetHeight;
+			}
+
 			if (itemsHeight > listHeight) {
 				item.classList.add("ui5-sn-item-hidden");
+				nextItemDomRef?.classList.add("ui5-sn-item-hidden");
 			}
-		});
+
+			nextItemDomRef = null;
+		}
 
 		this._flexibleItemNavigation._init();
 	}
