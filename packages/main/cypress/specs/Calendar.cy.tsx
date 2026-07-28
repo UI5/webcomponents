@@ -9,6 +9,8 @@ import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 import { resetConfiguration } from "@ui5/webcomponents-base/dist/InitialConfiguration.js";
 import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
 import CalendarSelectionMode from "../../src/types/CalendarSelectionMode.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
+import "../../src/Assets.js";
 
 const getDefaultCalendar = (date: Date) => {
 	const calDate = new Date(date);
@@ -1291,6 +1293,11 @@ describe("Calendar general interaction", () => {
 });
 
 describe("Calendar accessibility", () => {
+	beforeEach(() => {
+		cy.wrap({ setLanguage })
+			.then(api => { api.setLanguage("en"); });
+	});
+
 	it("Header prev/next buttons have correct title and tabindex", () => {
 		const date = new Date(Date.UTC(2025, 0, 15, 0, 0, 0));
 		cy.mount(getDefaultCalendar(date));
@@ -1604,6 +1611,57 @@ describe("Calendar accessibility", () => {
 					.and("contain", "Last date of range");
 			}
 		});
+	});
+
+	it("Should format day cell aria-label with en locale", () => {
+		const date = new Date(Date.UTC(2024, 0, 15, 0, 0, 0));
+		cy.mount(
+			<Calendar id="calendar1" timestamp={date.valueOf() / 1000} primaryCalendarType="Gregorian">
+				<CalendarDate value="Jan 15, 2024"></CalendarDate>
+			</Calendar>
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.attr", "aria-label", "January 15, 2024");
+	});
+
+	it("Should format day cell aria-label with bg locale", () => {
+		cy.wrap({ setLanguage })
+			.then(api => { api.setLanguage("bg"); });
+
+		const date = new Date(Date.UTC(2024, 0, 15, 0, 0, 0));
+		cy.mount(
+			<Calendar id="calendar1" timestamp={date.valueOf() / 1000} primaryCalendarType="Gregorian">
+				<CalendarDate value="Jan 15, 2024"></CalendarDate>
+			</Calendar>
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.attr", "aria-label", "15 януари 2024\u202fг.");
+	});
+
+	it("Should append secondary Islamic calendar date in day cell aria-label", () => {
+		const date = new Date(Date.UTC(2024, 0, 15, 0, 0, 0));
+		cy.mount(
+			<Calendar id="calendar1" timestamp={date.valueOf() / 1000} primaryCalendarType="Gregorian" secondaryCalendarType="Islamic">
+				<CalendarDate value="Jan 15, 2024"></CalendarDate>
+			</Calendar>
+		);
+
+		cy.get<Calendar>("#calendar1")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find("[tabindex='0']")
+			.should("have.attr", "aria-label", "January 15, 2024 Rajab 4, 1445 AH");
 	});
 });
 

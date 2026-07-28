@@ -2,7 +2,7 @@
 
 :host {
 	--_ui5_card_hover_box_shadow: var(--sapContent_Shadow2);
-	--_ui5_card_header_focus_offset: 0px;
+	--_ui5_card_header_focus_offset: 1px;
 	--_ui5_card_header_focus_radius: var(--_ui5_card_border-radius);
 	--_ui5_card_header_title_font_family: var(--sapFontHeaderFamily);
 	--_ui5_card_header_title_font_size: var(--sapFontHeader6Size);
