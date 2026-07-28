@@ -393,7 +393,6 @@ class IllustratedMessage extends UI5Element {
 	 * Checks if the current height of the component is enough to display the illustration, title, subtitle and actions.
 	 * If not, the minimum required height for the current media is stored in the `_contentHeightForMedia` object.
 	 * @private
-	 * @since 1.5.0
 	 */
 	_checkHeightConstraints() {
 		// The `scrollHeight > clientHeight` guard is load-bearing: the cache must be populated ONLY
@@ -436,8 +435,7 @@ class IllustratedMessage extends UI5Element {
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
-		const containerHeight = this.clientHeight || 0;
-		return !!this._contentHeightForMedia[media] && containerHeight < this._contentHeightForMedia[media];
+		return !!this._contentHeightForMedia[media] && this.clientHeight < this._contentHeightForMedia[media];
 	}
 
 	_setSVGAccAttrs() {
@@ -466,7 +464,12 @@ class IllustratedMessage extends UI5Element {
 
 	onAfterRendering() {
 		this._setSVGAccAttrs();
-		if (this.design === IllustrationMessageDesign.Auto) {
+		if (this.design !== IllustrationMessageDesign.Auto) {
+			return;
+		}
+		const heightMeasurementNeeded = this.media && !(this.media in this._contentHeightForMedia);
+		const mightOverflow = this.scrollHeight > this.clientHeight;
+		if (heightMeasurementNeeded || mightOverflow) {
 			this._checkHeightConstraints();
 			this._applyMedia();
 		}
