@@ -313,8 +313,6 @@ class SideNavigation extends UI5Element {
 		(popover?.opener as HTMLElement)?.classList.remove("ui5-sn-item-active");
 	}
 
-	_bn?: SideNavigationSelectableItemBase;
-
 	_onMenuClose() {
 		const menu = this.getOverflowPopover();
 		if (!menu._popover.preventFocusRestore) {
@@ -537,8 +535,48 @@ class SideNavigation extends UI5Element {
 		}
 	}
 
-	_resetAndCalculateItemsHeight() {
-		return this.overflowItems.reduce<number>((sum, itemRef) => {
+	_updateOverflowItems() {
+		const domRef = this.getDomRef();
+		if (!this.collapsed || !domRef) {
+			return null;
+		}
+
+		const overflowItem = this._overflowItem;
+		if (!overflowItem) {
+			return null;
+		}
+
+		overflowItem.classList.add("ui5-sn-item-hidden");
+
+		const overflowItems = this.overflowItems;
+
+		let itemsHeight = this._calculateItemsHeight(overflowItems);
+
+		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
+		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
+		const listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
+
+		if (itemsHeight < listHeight) {
+			return;
+		}
+
+		overflowItem.classList.remove("ui5-sn-item-hidden");
+
+		itemsHeight = overflowItem.offsetHeight;
+
+		const navItems = overflowItems.filter(isInstanceOfSideNavigationSelectableItemBase);
+		const selectedItem = navItems.find(item => item._selected);
+
+		itemsHeight += this._getSelectedItemHeight(overflowItems, selectedItem) + 1; // +1 for sub-pixel rounding
+		itemsHeight += this._getLastSeparatorHeight(navItems, overflowItems);
+
+		this._updateItemsVisibility(overflowItems, selectedItem, itemsHeight, listHeight);
+
+		this._flexibleItemNavigation._init();
+	}
+
+	_calculateItemsHeight(overflowItems: Array<HTMLElement>) {
+		return overflowItems.reduce<number>((sum, itemRef) => {
 			if (!itemRef) {
 				return sum;
 			}
@@ -556,10 +594,7 @@ class SideNavigation extends UI5Element {
 		}, 0);
 	}
 
-	_getSelectedItemHeight() {
-		const overflowItems = this.overflowItems;
-		const selectedItem = overflowItems.filter(isInstanceOfSideNavigationSelectableItemBase).find(item => item._selected);
-
+	_getSelectedItemHeight(overflowItems: Array<HTMLElement>, selectedItem: SideNavigationSelectableItemBase | undefined) {
 		if (!selectedItem) {
 			return 0;
 		}
@@ -584,9 +619,23 @@ class SideNavigation extends UI5Element {
 		return height;
 	}
 
-	_updateVisibility(selectedItem: SideNavigationSelectableItemBase | undefined, itemsHeight: number, listHeight: number) {
-		const overflowItems = this.overflowItems;
+	_getLastSeparatorHeight(navItems: Array<SideNavigationSelectableItemBase>, overflowItems: Array<HTMLElement>) {
+		const lastNonSelectedItem = navItems.findLast(item => !item._selected);
+		if (!lastNonSelectedItem) {
+			return 0;
+		}
 
+		const indexOf = overflowItems.indexOf(lastNonSelectedItem);
+		const nextSeparator = overflowItems[indexOf + 1];
+
+		if (nextSeparator && !isInstanceOfSideNavigationItemBase(nextSeparator)) {
+			return nextSeparator.offsetHeight;
+		}
+
+		return 0;
+	}
+
+	_updateItemsVisibility(overflowItems: Array<HTMLElement>, selectedItem: SideNavigationSelectableItemBase | undefined, itemsHeight: number, listHeight: number) {
 		for (let i = 0; i < overflowItems.length; i++) {
 			const item = overflowItems[i];
 			const nextItem = overflowItems[i + 1];
@@ -623,51 +672,6 @@ class SideNavigation extends UI5Element {
 
 			nextItemDomRef = null;
 		}
-	}
-
-	_updateOverflowItems() {
-		const domRef = this.getDomRef();
-		if (!this.collapsed || !domRef) {
-			return null;
-		}
-
-		const overflowItem = this._overflowItem;
-		if (!overflowItem) {
-			return null;
-		}
-
-		overflowItem.classList.add("ui5-sn-item-hidden");
-
-		const overflowItems = this.overflowItems;
-
-		let itemsHeight = this._resetAndCalculateItemsHeight();
-
-		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
-		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
-		let listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
-
-		if (itemsHeight < listHeight) {
-			return;
-		}
-
-		overflowItem.classList.remove("ui5-sn-item-hidden");
-
-		itemsHeight = overflowItem.offsetHeight;
-
-		const selectedItem = overflowItems.filter(isInstanceOfSideNavigationSelectableItemBase).find(item => item._selected);
-
-		itemsHeight += this._getSelectedItemHeight();
-
-		listHeight--; // account for sub-pixel rounding
-
-		const lastItem = overflowItems[overflowItems.length - 1];
-		if (!isInstanceOfSideNavigationItemBase(lastItem)) {
-			listHeight -= lastItem.offsetHeight;
-		}
-
-		this._updateVisibility(selectedItem, itemsHeight, listHeight);
-
-		this._flexibleItemNavigation._init();
 	}
 
 	_findFocusedItem(items: Array<SideNavigationItemBase>): SideNavigationItemBase | undefined {

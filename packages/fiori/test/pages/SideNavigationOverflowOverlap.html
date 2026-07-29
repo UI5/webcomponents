@@ -8,7 +8,7 @@
 </head>
 
 <body style="background-color: var(--sapBackgroundColor); height: 100vh;">
-<ui5-side-navigation id="sn1" collapsed>
+<ui5-side-navigation style="height: 440px" id="sn1" collapsed>
 	<!-- Top items: enough items to overflow into fixed bottom area on short screens -->
 	<ui5-side-navigation-item
 		text="Item 1"
@@ -41,19 +41,9 @@
 		></ui5-side-navigation-item>
 	</ui5-side-navigation-group>
 
-	<ui5-side-navigation-group>
-		<ui5-side-navigation-item
-			text="Item 7"
-			icon="home"
-		></ui5-side-navigation-item>
-		<ui5-side-navigation-item
-			text="Item 8"
-			icon="home"
-		></ui5-side-navigation-item>
-	</ui5-side-navigation-group>
-
 	<ui5-side-navigation-item
 		text="Outer"
+		selected
 		icon="home"
 	></ui5-side-navigation-item>
 
@@ -61,11 +51,6 @@
 	<ui5-side-navigation-item
 		slot="fixedItems"
 		text="Legal"
-		icon="home"
-	></ui5-side-navigation-item>
-	<ui5-side-navigation-item
-		slot="fixedItems"
-		text="Help"
 		icon="home"
 	></ui5-side-navigation-item>
 </ui5-side-navigation>
