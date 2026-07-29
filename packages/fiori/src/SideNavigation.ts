@@ -143,7 +143,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 })
 
 /**
- * Fired when a `ui5-side-navigation-item` or `ui5-side-navigation-group` is expanded or collapsed by user interaction.
+ * Fired when a `ui5-side-navigation-item` or `ui5-side-navigation-group` is expanded or collapsed.
  *
  * **Note:** You can call `preventDefault()` on the event to suppress the expand/collapse.
  * The `expanded` state stays unchanged. This is handy, for example, if you want to
@@ -825,6 +825,27 @@ class SideNavigation extends UI5Element {
 		});
 
 		item.selected = true;
+	}
+
+	/**
+	 * Handles the user-driven expand/collapse of an expandable item
+	 * (`SideNavigationGroup` or `SideNavigationItem`).
+	 *
+	 * Fires the cancelable `item-toggle` event and, unless it is prevented, applies the
+	 * new `expanded` value. The event is only fired for user interaction - programmatic
+	 * changes to `expanded` stay silent.
+	 *
+	 * @private
+	 */
+	_toggleItem(item: SideNavigationItemBase & { expanded: boolean }, value: boolean) {
+		if (item.expanded === value) {
+			return;
+		}
+
+		// The event was prevented - keep the old value, suppressing the toggle.
+		if (this.fireDecoratorEvent("item-toggle", { item })) {
+			item.expanded = value;
+		}
 	}
 
 	get _overflowItem() {

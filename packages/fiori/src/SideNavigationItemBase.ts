@@ -173,38 +173,3 @@ export type {
 	SideNavigationItemClickEventDetail,
 };
 export const isInstanceOfSideNavigationItemBase = createInstanceChecker<SideNavigationItemBase>("isSideNavigationItemBase");
-
-type ExpandableItem = SideNavigationItemBase & {
-	expanded: boolean;
-};
-
-/**
- * Shared logic for the user-driven expand/collapse of the expandable items
- * (`SideNavigationGroup` and `SideNavigationItem`).
- *
- * Fires the cancelable `item-toggle` event on the parent `ui5-side-navigation` and,
- * unless the event is prevented, applies the new `expanded` value. The event is only
- * fired for user interaction - programmatic changes to `expanded` stay silent.
- *
- * @private
- */
-const toggleExpanded = (item: ExpandableItem, value: boolean): void => {
-	if (item.expanded === value) {
-		return;
-	}
-
-	const sideNav = item.sideNavigation;
-
-	const executeToggle = sideNav ? sideNav.fireDecoratorEvent("item-toggle", {
-		item,
-	}) : true;
-
-	// The event was prevented - keep the old value, suppressing the toggle.
-	if (executeToggle) {
-		item.expanded = value;
-	}
-};
-
-export {
-	toggleExpanded,
-};

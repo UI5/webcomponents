@@ -11,7 +11,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import SideNavigationItemBase, { toggleExpanded } from "./SideNavigationItemBase.js";
+import SideNavigationItemBase from "./SideNavigationItemBase.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationGroupTemplate from "./SideNavigationGroupTemplate.js";
@@ -192,7 +192,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	}
 
 	_setExpandedByUser(value: boolean) {
-		toggleExpanded(this, value);
+		this.sideNavigation?._toggleItem(this, value);
 	}
 
 	get isSideNavigationGroup() {

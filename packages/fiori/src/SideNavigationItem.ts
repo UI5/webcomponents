@@ -12,7 +12,6 @@ import {
 	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
-import { toggleExpanded } from "./SideNavigationItemBase.js";
 import SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationSubItem from "./SideNavigationSubItem.js";
 import {
@@ -387,7 +386,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	_setExpandedByUser(value: boolean) {
-		toggleExpanded(this, value);
+		this.sideNavigation?._toggleItem(this, value);
 	}
 
 	get isSideNavigationItem() {
