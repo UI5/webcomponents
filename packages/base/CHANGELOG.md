@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.6](https://github.com/UI5/webcomponents/compare/v2.15.5...v2.15.6) (2026-07-29)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** fix badge misplacement of the ShellBar (2.15) ([#13864](https://github.com/UI5/webcomponents/issues/13864)) ([3ecdfe1](https://github.com/UI5/webcomponents/commit/3ecdfe1ef974a58dc1b849212d80f83f01e634fd)), closes [#13212](https://github.com/UI5/webcomponents/issues/13212) [#13212](https://github.com/UI5/webcomponents/issues/13212) [#12962](https://github.com/UI5/webcomponents/issues/12962) [#12962](https://github.com/UI5/webcomponents/issues/12962) [#13212](https://github.com/UI5/webcomponents/issues/13212) [#12962](https://github.com/UI5/webcomponents/issues/12962) [#12449](https://github.com/UI5/webcomponents/issues/12449) [#13612](https://github.com/UI5/webcomponents/issues/13612) [#12449](https://github.com/UI5/webcomponents/issues/12449)
+
+
+
+
+
 ## [2.15.5](https://github.com/UI5/webcomponents/compare/v2.15.4...v2.15.5) (2026-05-29)
 
 **Note:** Version bump only for package @ui5/webcomponents-base
