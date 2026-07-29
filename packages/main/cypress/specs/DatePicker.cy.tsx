@@ -868,10 +868,12 @@ describe("Date Picker Tests", () => {
 	it("placeholder, based on the formatPattern", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y"></DatePicker>);
 
+		const currentYear = new Date().getFullYear();
+
 		cy.get("[ui5-date-picker]")
 			.as("datePicker")
 			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "e.g. Dec 31, 2025");
+			.should("have.attr", "placeholder", `e.g. Dec 31, ${currentYear}`);
 
 		cy.get<DatePicker>("@datePicker")
 			.should("not.have.attr", "placeholder");
