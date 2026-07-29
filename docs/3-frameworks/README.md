@@ -7,4 +7,4 @@ You might want to check them before you start active development.
 
 ## Build once, reuse everywhere
 
-The idea is to build each UI element once as a UI5 Web Component and reuse it everywhere — React, Angular, Vue, SAPUI5, and any other framework or plain HTML page. Instead of reimplementing the same control for each framework, you maintain a single implementation and consume it wherever you need it.
+The idea is to build each UI element once as a UI5 Web Component and reuse it everywhere — React, Angular, Vue, OpenUI5/SAPUI5, and any other framework or plain HTML page. Instead of reimplementing the same control for each framework, you maintain a single implementation and consume it wherever you need it.
