@@ -76,6 +76,64 @@ describe("Side Navigation Rendering", () => {
 			.should("have.attr", "design", "Action");
 	});
 
+	it.only("Tests overflow item visibility and items in overflow", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed={true} style={{ height: "430px" }}>
+				<SideNavigationItem text="Item 1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" icon={home}></SideNavigationItem>
+
+				<SideNavigationGroup>
+					<SideNavigationItem text="Item 3" icon={home}></SideNavigationItem>
+					<SideNavigationItem text="Item 4" icon={home}></SideNavigationItem>
+				</SideNavigationGroup>
+
+				<SideNavigationGroup>
+					<SideNavigationItem text="Item 5" icon={home}></SideNavigationItem>
+					<SideNavigationItem text="Item 6" icon={home}></SideNavigationItem>
+				</SideNavigationGroup>
+
+				<SideNavigationItem text="Outer" selected={true} icon={home}></SideNavigationItem>
+
+				<SideNavigationItem slot="fixedItems" text="Legal" icon={home}></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.should("be.visible");
+
+		// the overflow item should be visible
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.should("be.visible")
+			.realClick();
+
+		// exactly 2 items should be in the overflow menu
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item]")
+			.should("have.length", 2);
+
+
+		// check the last separator calculations
+		// when the height is 440px, also 2 items should go to the overflow
+		cy.get("#sideNav")
+			.invoke("attr", "style", "height:440px");
+
+		// the overflow item should be visible
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.should("be.visible")
+			.realClick();
+
+		// exactly 2 items should be in the overflow menu
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item]")
+			.should("have.length", 2);
+	});
+
 	it("Tests accessibility", () => {
 		cy.mount(
 			<SideNavigation id="sideNav" accessibleName="Main">
@@ -1369,7 +1427,7 @@ describe("Side Navigation Accessibility", () => {
 			.shadow()
 			.find(".ui5-sn-item-overflow")
 			.realClick();
-	
+
 		// Assert
 		cy.get("#sideNav")
 			.shadow()
