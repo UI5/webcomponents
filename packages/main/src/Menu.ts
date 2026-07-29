@@ -377,8 +377,6 @@ class Menu extends UI5Element {
 		const popoverHeight = this._popover.getBoundingClientRect().height;
 		const visibleCount = Math.round(popoverHeight / itemHeight);
 		list._itemNavigation._skipItemsSize = visibleCount > 1 ? visibleCount - 1 : null;
-
-		console.warn(list._itemNavigation._skipItemsSize, visibleCount, popoverHeight, itemHeight);
 	}
 
 	_close() {
