@@ -111,4 +111,4 @@ By setting `forced-color-adjust` to `none`, the element's colors will not be aut
 
 **Q: How do I use UI5 Web Components with Tailwind CSS?**
 
-**A:** Tailwind's base reset (preflight) applies a comprehensive CSS reset to all elements. Since some UI5 components intentionally place styles on the `:host` element for easy customizability, preflight's resets override those `:host` styles — most visibly causing missing borders on components like `ui5-input`, `ui5-button`, `ui5-li`, and others. See the [Tailwind CSS integration guide](3-frameworks/04-Tailwind.md) for the one-step setup.
+**A:** Tailwind's base reset (preflight) applies a comprehensive CSS reset to all elements. Since some UI5 components intentionally place styles on the `:host` element for easy customizability, preflight's resets override those `:host` styles — most visibly causing missing borders on components like `ui5-input`, `ui5-button`, `ui5-li`, and others. See the [Tailwind CSS integration guide](3-frameworks/05-Tailwind.md) for the one-step setup.
