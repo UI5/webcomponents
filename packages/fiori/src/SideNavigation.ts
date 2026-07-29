@@ -638,8 +638,6 @@ class SideNavigation extends UI5Element {
 	_updateItemsVisibility(overflowItems: Array<HTMLElement>, selectedItem: SideNavigationSelectableItemBase | undefined, itemsHeight: number, listHeight: number) {
 		for (let i = 0; i < overflowItems.length; i++) {
 			const item = overflowItems[i];
-			const nextItem = overflowItems[i + 1];
-			let nextItemDomRef;
 
 			if (!item || item === selectedItem) {
 				continue;
@@ -658,19 +656,20 @@ class SideNavigation extends UI5Element {
 			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
 			itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
 
+			// if the next item is a separator, the item and the separator
+			// should be hidden together, so we need to add the separator height to the itemsHeight
+			const nextItem = overflowItems[i + 1];
+			let nextItemDomRef;
 			if (nextItem && !isInstanceOfSideNavigationItemBase(nextItem)) {
 				nextItemDomRef = nextItem;
-				i++;
-
 				itemsHeight += nextItemDomRef.offsetHeight;
+				i++;
 			}
 
 			if (itemsHeight > listHeight) {
 				item.classList.add("ui5-sn-item-hidden");
 				nextItemDomRef?.classList.add("ui5-sn-item-hidden");
 			}
-
-			nextItemDomRef = null;
 		}
 	}
 
