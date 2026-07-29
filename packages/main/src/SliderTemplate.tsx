@@ -78,6 +78,7 @@ export default function SliderTemplate(this: Slider) {
 					max={this.max}
 					step={this.step}
 					startValue={this.min}
+					progressAriaValueNow={this.value}
 					showTickmarks={this.showTickmarks || this._hasCustomTickmarks}
 					labelInterval={this._hasCustomTickmarks ? 1 : this.labelInterval}
 					tickmarks={this.tickmarks}
