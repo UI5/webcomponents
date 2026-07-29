@@ -2,6 +2,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: column;
+	margin-top: 2.5rem;
 }
 
 .ui5-user-settings-account-avatar {
@@ -16,6 +17,7 @@
 .ui5-user-settings-account-title {
 	text-align: center;
 	margin-top: 0.25rem;
+	margin-bottom: 0.25rem;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontLargeSize);
 	color: var(--sapTextColor);

@@ -210,22 +210,22 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	_focusableDay!: HTMLElement;
 
 	_autoFocus?: boolean;
+	_mousedownTimestamp?: number;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
 	onBeforeRendering() {
 		const localeData = getCachedLocaleDataInstance(getLocale());
-		this._buildWeeks(localeData);
+		this._buildWeeks();
 		this._buildDayNames(localeData);
 	}
 
 	/**
 	 * Builds the "_weeks" object that represents the month.
-	 * @param localeData
 	 * @private
 	 */
-	_buildWeeks(localeData: LocaleData) {
+	_buildWeeks() {
 		if (this._hidden) {
 			return; // Optimization to not do any work unless the current picker
 		}
@@ -234,8 +234,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const specialCalendarDates = this._specialCalendarDates;
-		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType);
-		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) : [];
 		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
 		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
@@ -276,15 +274,16 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 				: "";
 			const todayAriaLabel = isToday ? `${todayLabel} ` : "";
 
-			const tempSecondDateNumber = tempSecondDate ? tempSecondDate.getDate() : "";
-			const tempSecondYearNumber = tempSecondDate ? tempSecondDate.getYear() : "";
-			const secondaryMonthsNamesString = secondaryMonthsNames.length > 0 ? secondaryMonthsNames[tempSecondDate!.getMonth()] : "";
-
 			const tooltip = `${todayAriaLabel}${nonWorkingAriaLabel}${unnamedCalendarTypeLabel}`.trim();
 
-			let ariaLabel = this.hasSecondaryCalendarType
-				? `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()}; ${secondaryMonthsNamesString} ${tempSecondDateNumber}, ${tempSecondYearNumber} ${tooltip}`.trim()
-				: `${monthsNames[tempDate.getMonth()]} ${tempDate.getDate()}, ${tempDate.getYear()} ${tooltip}`.trim();
+			let ariaLabel = this._formatLong.format(tempDate.toUTCJSDate(), true);
+			if (this.hasSecondaryCalendarType && tempSecondDate) {
+				ariaLabel += ` ${this._formatLongSecondary.format(tempSecondDate.toUTCJSDate(), true)}`;
+			}
+
+			if (tooltip) {
+				ariaLabel += ` ${tooltip}`;
+			}
 
 			if (this.selectionMode === CalendarSelectionMode.Range) {
 				if (isSelected && this._isRangeEndDate(timestamp)) {
@@ -518,7 +517,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		const timestamp = this._getTimestampFromDom(target);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		this._mousedownTimestamp = undefined;
 
 		if (setTimestamp) {
 			this._safelySetTimestamp(timestamp);
@@ -612,7 +612,17 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			return;
 		}
 
-		this._safelySetTimestamp(this._getTimestampFromDom(target));
+		const timestamp = this._getTimestampFromDom(target);
+		const clickedDate = CalendarDate.fromTimestamp(timestamp * 1000, this._primaryCalendarType);
+		const isOtherMonth = clickedDate.getMonth() !== this._calendarDate.getMonth();
+
+		this._mousedownTimestamp = timestamp;
+		this._safelySetTimestamp(timestamp);
+
+		if (isOtherMonth) {
+			this._autoFocus = true;
+		}
+
 		this.fireDecoratorEvent("navigate", { timestamp: this.timestamp!, mouse: true });
 	}
 
@@ -991,6 +1001,14 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		return this.hasSecondaryCalendarType
 			? `${this._primaryCalendarType} calendar with secondary ${this.secondaryCalendarType as string} calendar`
 			: `${this._primaryCalendarType} calendar`;
+	}
+
+	get _formatLong() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._primaryCalendarType });
+	}
+
+	get _formatLongSecondary() {
+		return DateFormat.getDateInstance({ style: "long", calendarType: this._secondaryCalendarType });
 	}
 }
 

@@ -1,4 +1,5 @@
 import Input from "../../src/Input.js";
+import InputIcon from "../../src/InputIcon.js";
 import SuggestionItem from "../../src/SuggestionItem.js";
 import SuggestionItemCustom from "../../src/SuggestionItemCustom.js";
 import SuggestionItemGroup from "../../src/SuggestionItemGroup.js";
@@ -6,6 +7,8 @@ import Dialog from "../../src/Dialog.js";
 import Link from "../../src/Link.js";
 
 import add from "@ui5/webcomponents-icons/dist/add.js";
+import "@ui5/webcomponents-icons/dist/search.js";
+import "@ui5/webcomponents-icons/dist/microphone.js";
 import type ResponsivePopover from "../../src/ResponsivePopover.js";
 import { INPUT_SUGGESTIONS_EXPANDED, INPUT_SUGGESTIONS_COLLAPSED, INPUT_SUGGESTIONS_MORE_HITS } from "../../src/generated/i18n/i18n-defaults.js";
 
@@ -3605,6 +3608,111 @@ describe("Input built-in filtering", () => {
 
 			cy.get("@input")
 				.should("have.value", "A");
+		});
+	});
+
+	describe("InputIcon Integration", () => {
+		it("should render input with interactive icon", () => {
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.should("exist");
+		});
+
+		it("should forward value-state styling to slotted input icons via inherited CSS custom properties", () => {
+			cy.mount(
+				<Input valueState="Negative">
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			// The parent Input publishes --_ui5_input_icon_state_padding on its host when value-state is set.
+			// CSS custom properties inherit through the shadow boundary, so the slotted icon reads it inside its own shadow root.
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.then($icon => {
+					const computedPadding = getComputedStyle($icon[0]).getPropertyValue("--_ui5_input_icon_state_padding").trim();
+					expect(computedPadding).to.not.equal("");
+				});
+		});
+
+		it("should work with multiple icons and clear icon", () => {
+			cy.mount(
+				<Input showClearIcon value="test">
+					<InputIcon slot="icon" name="microphone" accessibleName="Voice" />
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.should("have.length", 2);
+
+			cy.get("[ui5-input]")
+				.shadow()
+				.find("[ui5-icon].ui5-input-clear-icon")
+				.should("exist");
+		});
+
+		it("should fire click events on interactive icons", () => {
+			const onClick = cy.spy().as("iconClick");
+
+			cy.mount(
+				<Input>
+					<InputIcon slot="icon" name="search" accessibleName="Search" onClick={onClick} />
+				</Input>
+			);
+
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.realClick();
+
+			cy.get("@iconClick")
+				.should("have.been.calledOnce");
+		});
+
+		it("should forward disabled state to slotted input icons via inherited CSS custom properties", () => {
+			cy.mount(
+				<Input disabled>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			// The parent Input publishes --_ui5_input_icon_state_pointer_events: none on :host([disabled]).
+			// That inherits into the icon's shadow root and natively blocks hover/active/click.
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.then($icon => {
+					const styles = getComputedStyle($icon[0]);
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_pointer_events").trim()).to.equal("none");
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_cursor").trim()).to.equal("default");
+					// Opacity inherited as a custom prop, and the icon's shadow root applies it via opacity: var(...)
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.not.equal("");
+				});
+		});
+
+		it("should forward readonly state to slotted input icons via inherited CSS custom properties", () => {
+			cy.mount(
+				<Input readonly>
+					<InputIcon slot="icon" name="search" accessibleName="Search" />
+				</Input>
+			);
+
+			// Readonly parent publishes pointer-events: none + cursor: default (no opacity change).
+			cy.get("[ui5-input]")
+				.find("[ui5-input-icon]")
+				.then($icon => {
+					const styles = getComputedStyle($icon[0]);
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_pointer_events").trim()).to.equal("none");
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_cursor").trim()).to.equal("default");
+					// Readonly does not dim — opacity var should remain unset.
+					expect(styles.getPropertyValue("--_ui5_input_icon_state_opacity").trim()).to.equal("");
+				});
 		});
 	});
 });

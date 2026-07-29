@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-hero-banner:** apply correct css params ([#13847](https://github.com/UI5/webcomponents/issues/13847)) ([613a326](https://github.com/UI5/webcomponents/commit/613a326ae5c8625ef6417ee230c9ee7cc58e5a25))
+* **ui5-illustrated-message:** correct grammar in empty-state titles ([#13831](https://github.com/UI5/webcomponents/issues/13831)) ([bffb084](https://github.com/UI5/webcomponents/commit/bffb084f0d379940b3a64bd4b94d76e236396726))
+* **ui5-media-gallery:** acc findings fixed  ([#13555](https://github.com/UI5/webcomponents/issues/13555)) ([07fa66d](https://github.com/UI5/webcomponents/commit/07fa66dea133382f19f8fe2c18a26e50fa5f1753))
+* **ui5-shellbar-search:** keep ShellBar state in sync on empty Enter ([#13834](https://github.com/UI5/webcomponents/issues/13834)) ([853038e](https://github.com/UI5/webcomponents/commit/853038ecb8757a001ee080abcbb9e5cf7243bdc6))
+* **ui5-shellbar:** fix search-button-click event and getSearchButtonDomRef with ui5-shellbar-search ([#13843](https://github.com/UI5/webcomponents/issues/13843)) ([95c0af8](https://github.com/UI5/webcomponents/commit/95c0af8802fc6783e77ea8b729a5dbcc9198242e))
+* **ui5-user-settings-dialog:** align dialog with latest design spec ([#13805](https://github.com/UI5/webcomponents/issues/13805)) ([8eac65f](https://github.com/UI5/webcomponents/commit/8eac65fc462834a4d4435762dfb239fefbb85642))
+
+
+### Features
+
+* **ui5-user-settings-dialog:** add saveMode with Save/Cancel footer ([#13845](https://github.com/UI5/webcomponents/issues/13845)) ([7a23598](https://github.com/UI5/webcomponents/commit/7a23598ddc60f53de5a63e3cd09a8ac6e889d528))
+
+
+
+
+
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+**Note:** Version bump only for package @ui5/webcomponents-fiori
+
+
+
+
+
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** prevent missing paddings at fractional breakpoint widths ([#13741](https://github.com/UI5/webcomponents/issues/13741)) ([4772719](https://github.com/UI5/webcomponents/commit/47727198a13deb0ab653da2d7155c722e0b4c5d0)), closes [#13725](https://github.com/UI5/webcomponents/issues/13725)
+* **ui5-flexible-column-layout:** add aria-orientation=vertical to separator ([#13735](https://github.com/UI5/webcomponents/issues/13735)) ([c4a5804](https://github.com/UI5/webcomponents/commit/c4a5804beff6c769fdd3017274ecf8ede208458d)), closes [#13702](https://github.com/UI5/webcomponents/issues/13702)
+* **ui5-flexible-column-layout:** correct desktop column widths for ThreeColumnsStartHiddenMidExpanded ([#13740](https://github.com/UI5/webcomponents/issues/13740)) ([2d7dcb1](https://github.com/UI5/webcomponents/commit/2d7dcb127447d9bcbdf2fed8a814e4060500eb68)), closes [#13693](https://github.com/UI5/webcomponents/issues/13693)
+* **ui5-flexible-column-layout:** expose separator accessible name via aria-label ([#13776](https://github.com/UI5/webcomponents/issues/13776)) ([7a44031](https://github.com/UI5/webcomponents/commit/7a44031c8086c43eeb07c3de783991f99ec3eeb9)), closes [#13775](https://github.com/UI5/webcomponents/issues/13775)
+* **ui5-search:** keep popup open on item click when search event is prevented ([#13750](https://github.com/UI5/webcomponents/issues/13750)) ([081f8fa](https://github.com/UI5/webcomponents/commit/081f8fae5b0b34e82c68679474970276ed19e6d5))
+* **ui5-shellbar-branding:** space key now triggers click event ([#13686](https://github.com/UI5/webcomponents/issues/13686)) ([c10d4e8](https://github.com/UI5/webcomponents/commit/c10d4e8782cacb4f9026794ec273bd6dd7d0b514))
+* **ui5-shellbar-item:** fire click event when item is clicked in overflow popover ([#13738](https://github.com/UI5/webcomponents/issues/13738)) ([890cffa](https://github.com/UI5/webcomponents/commit/890cffa3c621c12f23e4b04a4ec80700542ff458))
+* **ui5-shellbar-search:** fix closing popup on tapping magnifier icon in mobile ([#13728](https://github.com/UI5/webcomponents/issues/13728)) ([47c89c7](https://github.com/UI5/webcomponents/commit/47c89c7c26aa2aca3019ba88b7049585e46b9d3c))
+* **ui5-shellbar:** return overflow button from notificationsDomRef when action is in overflow ([#13752](https://github.com/UI5/webcomponents/issues/13752)) ([240b00d](https://github.com/UI5/webcomponents/commit/240b00d0b42cfae41eff558723f2476d3fda4176))
+
+
+### Features
+
+* **ui5-user-menu:** support non-interactive avatar state ([#13732](https://github.com/UI5/webcomponents/issues/13732)) ([101aaf2](https://github.com/UI5/webcomponents/commit/101aaf2dc78af551bec0d701db8c4d521d5f72ff))
+
+
+
+
+
 # [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

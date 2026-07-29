@@ -82,6 +82,7 @@ import TableRowAction from "./TableRowAction.js";
 import TableRowActionNavigation from "./TableRowActionNavigation.js";
 import Icon from "./Icon.js";
 import Input from "./Input.js";
+import InputIcon from "./InputIcon.js";
 import SuggestionItemCustom from "./SuggestionItemCustom.js";
 import MultiInput from "./MultiInput.js";
 import Label from "./Label.js";

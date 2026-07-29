@@ -542,7 +542,7 @@ abstract class Popup extends UI5Element {
 			|| document.getElementById(this.initialFocus);
 		}
 
-		element = element || await getFirstFocusableElement(this) || this._root; // in case of no focusable content focus the root
+		element = element || await this._getFirstFocusableElement() || this._root; // in case of no focusable content focus the root
 
 		if (element) {
 			if (element === this._root) {
@@ -550,6 +550,10 @@ abstract class Popup extends UI5Element {
 			}
 			element.focus();
 		}
+	}
+
+	async _getFirstFocusableElement() {
+		return getFirstFocusableElement(this);
 	}
 
 	isFocusWithin() {
@@ -718,6 +722,10 @@ abstract class Popup extends UI5Element {
 
 	get contentDOM(): HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-popup-content")!;
+	}
+
+	get footerDOM(): HTMLElement | null {
+		return this.shadowRoot!.querySelector(".ui5-popup-footer-root");
 	}
 
 	get styles() {

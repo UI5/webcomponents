@@ -482,6 +482,18 @@ describe("Testing events", () => {
 			.invoke('css', 'padding', '100px')
 	})
 
+	it("Should not change value on right-click", () => {
+		cy.mount(<Slider min={0} max={10} value={5} onChange={cy.stub().as("sliderChange")} onInput={cy.stub().as("sliderInput")} />);
+
+		cy.get("[ui5-slider]").as("slider");
+
+		cy.get("@slider").rightclick();
+
+		cy.get("@sliderChange").should("not.have.been.called");
+		cy.get("@sliderInput").should("not.have.been.called");
+		cy.get("@slider").should("have.value", 5);
+	});
+
 	it("Should fire input and change event on user interaction", () => {
 		cy.mount(<Slider min={0} max={10} value={0} onChange={cy.stub().as("sliderChange")} onInput={cy.stub().as("sliderInput")} />);
 
@@ -548,6 +560,19 @@ describe("Accessibility", () => {
 
 		cy.get("@sliderHandle")
 			.should("have.attr", "aria-valuenow", "0");
+	});
+
+	it("aria-valuenow is set on the progress bar with role='slider'", () => {
+		cy.mount(
+			<Slider accessibleName="Basic Slider" min={0} max={10} value={4}></Slider>
+		);
+
+		cy.get("[ui5-slider]")
+			.shadow()
+			.find("[ui5-slider-scale]")
+			.shadow()
+			.find(".ui5-slider-progress[role='slider']")
+			.should("have.attr", "aria-valuenow", "4");
 	});
 
 	it("Aria attributes are set correctly to the tooltip input", () => {
