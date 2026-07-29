@@ -1189,6 +1189,40 @@ describe("ButtonBadge in ShellBar", () => {
 			.should("exist")
 			.should("have.attr", "text", "42");
 	});
+
+	it("Notification badge and custom-item count badge stay within the ShellBar bounds (#12962)", () => {
+		cy.mount(
+			<ShellBar id="shellbar-badge-bounds"
+				primaryTitle="Product Title"
+				showNotifications={true}
+				notificationsCount="99+">
+				<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+				<ShellBarItem id="badged-item" icon="accept" text="Item" count="42" />
+			</ShellBar>
+		);
+
+		cy.get("#shellbar-badge-bounds").then($sb => {
+			const sbRect = $sb[0].getBoundingClientRect();
+
+			cy.get("#shellbar-badge-bounds")
+				.shadow()
+				.find(".ui5-shellbar-bell-button ui5-button-badge[slot='badge']")
+				.then($badge => {
+					const bRect = $badge[0].getBoundingClientRect();
+					expect(bRect.top, "bell badge top >= shellbar top").to.be.at.least(sbRect.top);
+					expect(bRect.bottom, "bell badge bottom <= shellbar bottom").to.be.at.most(sbRect.bottom);
+				});
+
+			cy.get("#shellbar-badge-bounds")
+				.shadow()
+				.find(".ui5-shellbar-custom-item ui5-button-badge[slot='badge']")
+				.then($badge => {
+					const bRect = $badge[0].getBoundingClientRect();
+					expect(bRect.top, "custom-item badge top >= shellbar top").to.be.at.least(sbRect.top);
+					expect(bRect.bottom, "custom-item badge bottom <= shellbar bottom").to.be.at.most(sbRect.bottom);
+				});
+		});
+	});
 });
 
 describe("Keyboard Navigation", () => {
