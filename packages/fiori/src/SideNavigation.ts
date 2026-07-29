@@ -640,6 +640,7 @@ class SideNavigation extends UI5Element {
 			const item = overflowItems[i];
 
 			if (!item || item === selectedItem) {
+				// eslint-disable-next-line no-continue
 				continue;
 			}
 
@@ -650,6 +651,7 @@ class SideNavigation extends UI5Element {
 			}
 
 			if (!itemDomRef) {
+				// eslint-disable-next-line no-continue
 				continue;
 			}
 
