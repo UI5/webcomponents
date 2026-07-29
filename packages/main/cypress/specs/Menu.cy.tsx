@@ -1512,3 +1512,99 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.should("be.focused");
 	});
 });
+
+describe("Menu - Page Up/Down navigation", () => {
+	function mountLongMenu() {
+		cy.viewport(800, 300);
+
+		const items = Array.from({ length: 25 }, (_, i) => (
+			<MenuItem key={i} text={`Item ${i + 1}`}></MenuItem>
+		));
+
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu id="menu" opener="btnOpen">
+					{items}
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]").ui5MenuOpen({ opener: "btnOpen" });
+	}
+
+	it("Page Down moves focus forward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		cy.focused().realPress("PageDown");
+
+		// Record which item was landed on, then PageUp should return exactly to item 0
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
+
+		cy.focused().realPress("PageUp");
+
+		cy.get("@items").first().should("be.focused");
+	});
+
+	it("Page Up moves focus backward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+		cy.focused().realPress("End");
+		cy.get("@items").last().should("be.focused");
+
+		cy.focused().realPress("PageUp");
+
+		// Verify we moved back more than one item, then PageDown should return exactly to last item
+		cy.get("@items").last().should("not.be.focused");
+		cy.get("@items").eq(-2).should("not.be.focused");
+
+		cy.focused().realPress("PageDown");
+
+		cy.get("@items").last().should("be.focused");
+	});
+
+	it("Page Down from last visible page focuses last item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		// Press Page Down enough times to reach the end
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+
+		cy.get("@items").last().should("be.focused");
+	});
+
+	it("Page Up from first visible page focuses first item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		// Go to last item first
+		cy.get("@items").first().should("be.focused");
+		cy.focused().realPress("End");
+		cy.get("@items").last().should("be.focused");
+
+		// Press Page Up enough times to reach the start
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageUp");
+
+		cy.get("@items").first().should("be.focused");
+	});
+});
