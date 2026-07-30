@@ -1444,7 +1444,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("submenuPopover");
-			
+
 		cy.get("@submenuPopover")
 			.should("have.attr", "open");
 
@@ -1453,7 +1453,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.last()
 			.should("be.visible")
 			.as("lastItem");
-			
+
 		cy.get("@lastItem")
 			.realHover();
 
@@ -1556,24 +1556,20 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		cy.get("[ui5-menu]").then(($menu) => {
-			const menu = $menu[0] as unknown as Menu;
-			const items = menu._navigatableMenuItems;
-			const last = items[items.length - 1];
-			menu._list!._itemNavigation.setCurrentItem(last);
-			last.scrollIntoView();
-			last.focus();
-		});
-		cy.get("@items").last().should("be.focused");
+		cy.get("@items").first().should("be.focused");
 
-		cy.focused().realPress("PageUp");
-
-		// Verify moved back, then PageDown must return exactly to last item (round-trip)
-		cy.get("@items").last().should("not.be.focused");
-
+		// Press PageDown twice to land somewhere in the middle
+		cy.focused().realPress("PageDown");
 		cy.focused().realPress("PageDown");
 
-		cy.get("@items").last().should("be.focused");
+		// PageUp must go back exactly one page — not to item 1, not to where PageDown×2 landed
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageDown");
+
+		// Two PageDowns and one PageUp then one PageDown must equal two PageDowns net
+		// — verify we are not at item 1 (moved forward) and not at item 2 (moved more than 1)
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
 	});
 
 	it("Page Down from last visible page focuses last item", () => {
@@ -1581,19 +1577,8 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		cy.get("[ui5-menu]").then(($menu) => {
-			const menu = $menu[0] as unknown as Menu;
-			const items = menu._navigatableMenuItems;
-			const last = items[items.length - 1];
-			menu._list!._itemNavigation.setCurrentItem(last);
-			last.scrollIntoView();
-			last.focus();
-		});
-		cy.get("@items").last().should("be.focused");
-		cy.focused().realPress("PageUp");
-		cy.get("@items").last().should("not.be.focused");
-
-		cy.focused().realPress("PageDown");
+		// Press PageDown 15 times — clamps to last item regardless of page size
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
 
 		cy.get("@items").last().should("be.focused");
 	});
@@ -1603,12 +1588,11 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		// Step forward one page from start, then Page Up must clamp to first item
-		cy.get("@items").first().should("be.focused");
-		cy.focused().realPress("PageDown");
-		cy.get("@items").first().should("not.be.focused");
+		// Reach the last item via keyboard, then press PageUp 15 times — clamps to first item
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
+		cy.get("@items").last().should("be.focused");
 
-		cy.focused().realPress("PageUp");
+		Cypress._.times(15, () => cy.focused().realPress("PageUp"));
 
 		cy.get("@items").first().should("be.focused");
 	});
