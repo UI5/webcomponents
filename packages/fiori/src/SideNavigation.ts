@@ -1,5 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createMultiInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -237,6 +237,17 @@ class SideNavigation extends UI5Element {
 	}
 
 	_handleResizeBound: () => void;
+	_fnTransitionEnd?: (event: TransitionEvent) => void;
+	_animationTimeoutId?: ReturnType<typeof setTimeout>;
+	_bAnimating = false;
+
+	onInvalidation(changeInfo: ChangeInfo) {
+		if (changeInfo.type === "property" && changeInfo.name === "collapsed") {
+			if (this.getDomRef()) {
+				this._bAnimating = true;
+			}
+		}
+	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
@@ -247,6 +258,7 @@ class SideNavigation extends UI5Element {
 				item.sideNavCollapsed = this.collapsed;
 				item.inPopover = this.inPopover;
 				item.sideNavigation = this;
+				item.sideNavAnimating = this._bAnimating;
 			});
 
 		this.initGroupsSettings(this.items);
@@ -497,6 +509,8 @@ class SideNavigation extends UI5Element {
 		if (this.collapsed) {
 			this.handleResize();
 		}
+
+		this._handleExpandCollapseAnimation();
 	}
 
 	onEnterDOM() {
@@ -505,6 +519,15 @@ class SideNavigation extends UI5Element {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
+		if (this._fnTransitionEnd) {
+			this.removeEventListener("transitionend", this._fnTransitionEnd);
+			this._fnTransitionEnd = undefined;
+		}
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+			this._animationTimeoutId = undefined;
+		}
+		this._bAnimating = false;
 	}
 
 	handleResize() {
@@ -620,6 +643,61 @@ class SideNavigation extends UI5Element {
 
 	private _isSmallScreen(): boolean {
 		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
+	_handleExpandCollapseAnimation() {
+		if (!this._bAnimating) {
+			return;
+		}
+
+		const oDomRef = this.getDomRef();
+		if (!oDomRef) {
+			return;
+		}
+
+		oDomRef.classList.add("ui5-sn-animating");
+
+		if (this._fnTransitionEnd) {
+			this.removeEventListener("transitionend", this._fnTransitionEnd);
+		}
+
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+		}
+
+		const cleanupAnimation = () => {
+			oDomRef.classList.remove("ui5-sn-animating");
+			if (this._fnTransitionEnd) {
+				this.removeEventListener("transitionend", this._fnTransitionEnd);
+				this._fnTransitionEnd = undefined;
+			}
+			if (this._animationTimeoutId) {
+				clearTimeout(this._animationTimeoutId);
+				this._animationTimeoutId = undefined;
+			}
+			this._bAnimating = false;
+
+			this._getAllItems(this.items)
+				.concat(this._getAllItems(this.fixedItems))
+				.forEach(item => {
+					item.sideNavAnimating = false;
+				});
+		};
+
+		this._fnTransitionEnd = (oEvent: TransitionEvent) => {
+			if (oEvent.propertyName !== "width" && oEvent.propertyName !== "min-width") {
+				return;
+			}
+
+			cleanupAnimation();
+		};
+
+		this.addEventListener("transitionend", this._fnTransitionEnd);
+
+		// Fallback timeout in case transitionend doesn't fire
+		this._animationTimeoutId = setTimeout(() => {
+			cleanupAnimation();
+		}, 500);
 	}
 
 	_handleItemClick(e: KeyboardEvent | MouseEvent, item: SideNavigationSelectableItemBase) {

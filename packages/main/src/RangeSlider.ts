@@ -534,7 +534,7 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_onmousedown(e: TouchEvent | MouseEvent) {
-		if ((e as MouseEvent)?.button && (e as MouseEvent)?.button !== 0) {
+		if (this._isNonPrimaryClick(e)) {
 			return;
 		}
 
