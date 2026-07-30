@@ -472,6 +472,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	onBeforeRendering() {
+		const clearIconCount = Number(this.showClearIcon && !this.readonly && !this.disabled);
+		const iconsCount = (this.readonly ? 0 : 1) + clearIconCount;
+		this.style.setProperty("--_ui5-input-icons-count", `${iconsCount}`);
+
 		["minDate", "maxDate"].forEach((prop: string) => {
 			const propValue = this[prop as keyof DatePicker] as string;
 

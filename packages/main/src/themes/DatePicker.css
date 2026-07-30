@@ -13,7 +13,8 @@
 }
 
 :host {
-	min-width: calc(var(--_ui5_input_min_width) + var(--_ui5_input_icon_width));
+	width: 100%;
+	min-width: calc(var(--_ui5_input_min_width) + (var(--_ui5-input-icons-count) * var(--_ui5_input_icon_width)));
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
 	border-radius: var(--_ui5-datepicker_border_radius);
@@ -41,6 +42,7 @@
 }
 
 :host .ui5-date-picker-input {
+	width: 100%;
 	color: inherit;
 	background-color: inherit;
 	border-radius: inherit;
