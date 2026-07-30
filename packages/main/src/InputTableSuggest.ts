@@ -3,13 +3,14 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
+import { isUp, isDown, isEnter, isBackSpace, isDelete, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
-import Input from "./Input.js";
-import type { IInputSuggestionItem } from "./Input.js";
+import InputField from "./InputField.js";
 import type Table from "./Table.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
@@ -23,6 +24,10 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 
 import {
 	ROW_ITEM_POSITION,
+	INPUT_SUGGESTIONS_TITLE,
+	INPUT_SUGGESTIONS,
+	INPUT_SUGGESTIONS_OK_BUTTON,
+	INPUT_SUGGESTIONS_CANCEL_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -100,7 +105,7 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/InputTableSuggest.js";`
  *
  * @constructor
- * @extends Input
+ * @extends InputField
  * @public
  * @experimental
  */
@@ -110,14 +115,74 @@ type InputTableSuggestSelectionChangeEventDetail = {
 	formAssociated: true,
 	renderer: jsxRenderer,
 	template: InputTableSuggestTemplate,
-	styles: [Input.styles, SuggestionsCss, InputTableSuggestStyles],
+	styles: [InputField.styles, SuggestionsCss, InputTableSuggestStyles],
 })
+@event("selection-change", { bubbles: true })
+@event("open", { bubbles: true })
+@event("close")
+@event("type-ahead")
 
-class InputTableSuggest extends Input {
-	// @ts-expect-error - Intentionally override selection-change to use 'row' instead of 'item'
-	eventDetails!: Omit<Input["eventDetails"], "selection-change"> & {
+class InputTableSuggest extends InputField {
+	eventDetails!: InputField["eventDetails"] & {
 		"selection-change": InputTableSuggestSelectionChangeEventDetail,
+		"open": void,
+		"close": void,
+		"type-ahead": void,
 	}
+
+	/**
+	 * Defines whether the suggestions picker is open.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	open = false;
+
+	/**
+	 * Defines whether suggestions should be shown.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	showSuggestions = false;
+
+	/**
+	 * Defines whether typeahead is disabled.
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	noTypeahead = false;
+
+	/**
+	 * The typed-in value before suggestion selection.
+	 * @private
+	 */
+	typedInValue = "";
+
+	/**
+	 * Value before any selection started.
+	 * @private
+	 */
+	valueBeforeSelectionStart = "";
+
+	/**
+	 * Whether autocomplete should run on next render.
+	 * @private
+	 */
+	_shouldAutocomplete?: boolean;
+
+	/**
+	 * Whether text selection should be performed.
+	 * @private
+	 */
+	_performTextSelection?: boolean;
+
+	/**
+	 * Whether key navigation is in progress.
+	 * @private
+	 */
+	_isKeyNavigation?: boolean;
 
 	/**
 	 * Defines the columns for the tabular suggestions.
@@ -179,21 +244,16 @@ class InputTableSuggest extends Input {
 	_matchedTabularRow?: ITableSuggestionRow;
 
 	get _effectiveShowSuggestions() {
-		if (this._useTableSuggestions) {
-			return this.showSuggestions;
-		}
-		return super._effectiveShowSuggestions;
+		return this.showSuggestions && this._useTableSuggestions;
 	}
 
-	/**
-	 * Override: Return tabular rows as suggestion items for the parent's hasItems check
-	 * Returns empty when showSuggestions is false to prevent parent from opening popover
-	 */
-	get _flattenItems(): Array<IInputSuggestionItem> {
-		if (this._useTableSuggestions) {
-			return this.showSuggestions ? this.suggestionRows as unknown as Array<IInputSuggestionItem> : [];
-		}
-		return super._flattenItems;
+	get _visibleRows(): ITableSuggestionRow[] {
+		return this.suggestionRows.filter(row => !(row as UI5Element).hidden);
+	}
+
+	get _visibleProcessedRows(): ProcessedSuggestionRow[] {
+		const visibleRowSet = new Set(this._visibleRows);
+		return this._processedRows.filter(pr => visibleRowSet.has(pr.row));
 	}
 
 	onBeforeRendering() {
@@ -206,6 +266,13 @@ class InputTableSuggest extends Input {
 		}
 
 		super.onBeforeRendering();
+	}
+
+	_input(e: CustomEvent | InputEvent, eventType: string) {
+		super._input(e, eventType);
+
+		this.typedInValue = this.value;
+		this.valueBeforeSelectionStart = this.value;
 	}
 
 	/**
@@ -232,7 +299,7 @@ class InputTableSuggest extends Input {
 	 * @private
 	 */
 	_handleTabularTypeAhead() {
-		if (!this._effectiveShowSuggestions) {
+		if (!this._effectiveShowSuggestions || this.noTypeahead) {
 			return;
 		}
 
@@ -335,14 +402,10 @@ class InputTableSuggest extends Input {
 	 * @private
 	 */
 	_adjustSelectionRange() {
-		if (this._useTableSuggestions) {
-			const innerInput = this.getInputDOMRefSync();
-			if (innerInput) {
-				innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
-			}
-			return;
+		const innerInput = this.getInputDOMRefSync();
+		if (innerInput && this.typedInValue.length && this.value.length) {
+			innerInput.setSelectionRange(this.typedInValue.length, this.value.length);
 		}
-		super._adjustSelectionRange();
 	}
 
 	/**
@@ -369,15 +432,6 @@ class InputTableSuggest extends Input {
 				cells: processedCells,
 			});
 		});
-	}
-
-	get _visibleRows(): ITableSuggestionRow[] {
-		return this.suggestionRows.filter(row => !(row as UI5Element).hidden);
-	}
-
-	get _visibleProcessedRows(): ProcessedSuggestionRow[] {
-		const visibleRowSet = new Set(this._visibleRows);
-		return this._processedRows.filter(pr => visibleRowSet.has(pr.row));
 	}
 
 	/**
@@ -446,28 +500,49 @@ class InputTableSuggest extends Input {
 		});
 	}
 
-	/**
-	 * @private
-	 */
-	_handleDown(e: KeyboardEvent) {
-		if (this._useTableSuggestions && this.open) {
-			e.preventDefault();
-			this._navigateRows(true);
-			return;
-		}
-		super._handleDown(e);
-	}
+	_onkeydown(e: KeyboardEvent) {
+		this._shouldAutocomplete = !this.noTypeahead && !(isBackSpace(e) || isDelete(e) || isEscape(e));
 
-	/**
-	 * @private
-	 */
-	_handleUp(e: KeyboardEvent) {
 		if (this._useTableSuggestions && this.open) {
-			e.preventDefault();
-			this._navigateRows(false);
-			return;
+			if (isDown(e)) {
+				e.preventDefault();
+				this._isKeyNavigation = true;
+				this._navigateRows(true);
+				return;
+			} else if (isUp(e)) {
+				e.preventDefault();
+				this._isKeyNavigation = true;
+				this._navigateRows(false);
+				return;
+			}
+
+			if (isEnter(e)) {
+				const visibleRows = this._visibleRows;
+				const focusedRow = visibleRows.find(row => row.focused);
+				const innerInput = this.getInputDOMRefSync();
+
+				let rowToSelect = focusedRow || this._matchedTabularRow;
+
+				if (!rowToSelect) {
+					rowToSelect = visibleRows.find(row => {
+						return this._getRowValue(row).toLowerCase() === this.value.toLowerCase();
+					});
+				}
+
+				if (rowToSelect && innerInput) {
+					const rowValue = this._getRowValue(rowToSelect);
+					innerInput.setSelectionRange(rowValue.length, rowValue.length);
+
+					e.preventDefault();
+					this._selectRow(rowToSelect, true);
+					return;
+				}
+
+				this.open = false;
+			}
 		}
-		super._handleUp(e);
+
+		super._onkeydown(e);
 	}
 
 	/**
@@ -518,46 +593,6 @@ class InputTableSuggest extends Input {
 		});
 	}
 
-	/**
-	 * @private
-	 */
-	_handleEnter(e: KeyboardEvent) {
-		if (!this._useTableSuggestions) {
-			return super._handleEnter(e);
-		}
-
-		const visibleRows = this._visibleRows;
-		const focusedRow = visibleRows.find(row => row.focused);
-		const innerInput = this.getInputDOMRefSync()!;
-
-		let rowToSelect = focusedRow || this._matchedTabularRow;
-
-		if (!rowToSelect) {
-			rowToSelect = visibleRows.find(row => {
-				return this._getRowValue(row).toLowerCase() === this.value.toLowerCase();
-			});
-		}
-
-		if (rowToSelect) {
-			const rowValue = this._getRowValue(rowToSelect);
-			innerInput.setSelectionRange(rowValue.length, rowValue.length);
-
-			if (this.open) {
-				e.preventDefault();
-			}
-			this._selectRow(rowToSelect, true);
-			return;
-		}
-
-		if (this.open) {
-			this.open = false;
-		}
-		this.lastConfirmedValue = this.value;
-	}
-
-	/**
-	 * @private
-	 */
 	_handleEscape() {
 		if (!this._useTableSuggestions || !this.open) {
 			return super._handleEscape();
@@ -576,12 +611,7 @@ class InputTableSuggest extends Input {
 	 * @private
 	 */
 	_clearPopoverFocusAndSelection() {
-		if (!this._useTableSuggestions) {
-			return super._clearPopoverFocusAndSelection();
-		}
-
 		this._deselectAllRows();
-		this.hasSuggestionItemSelected = false;
 	}
 
 	get _hasTabularSuggestions(): boolean {
@@ -596,11 +626,8 @@ class InputTableSuggest extends Input {
 		return this._useTableSuggestions && this._visibleRows.some(row => row.focused);
 	}
 
-	override get _isSuggestionsFocused(): boolean {
-		if (this._useTableSuggestions) {
-			return this._isRowFocused;
-		}
-		return super._isSuggestionsFocused || false;
+	get _isSuggestionsFocused(): boolean {
+		return this._isRowFocused;
 	}
 
 	/**
@@ -618,7 +645,7 @@ class InputTableSuggest extends Input {
 		const cells = row.cells || [];
 		const columns = this.suggestionColumns;
 
-		const positionText = Input.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
+		const positionText = InputField.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
 
 		const cellTexts = cells.map((cell, index) => {
 			const cellValue = cell.textContent?.trim() || "";
@@ -688,15 +715,19 @@ class InputTableSuggest extends Input {
 	 * Override focusout handler to prevent closing popover when clicking inside it
 	 * @private
 	 */
-	_onfocusout(e: FocusEvent) {
-		if (!this._useTableSuggestions) {
-			return super._onfocusout(e);
-		}
-
-		const toBeFocused = e.relatedTarget as HTMLElement;
+	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {
 		const popover = this._getTabularPopover();
+		return !!(popover?.contains(toBeFocused) || this.contains(toBeFocused));
+	}
 
-		if (popover?.contains(toBeFocused) || this.contains(toBeFocused)) {
+	/**
+	 * Override focusout handler for additional cleanup
+	 * @private
+	 */
+	_onfocusout(e: FocusEvent) {
+		const toBeFocused = e.relatedTarget as HTMLElement;
+
+		if (this._shouldSkipFocusOut(toBeFocused)) {
 			return;
 		}
 
@@ -706,6 +737,68 @@ class InputTableSuggest extends Input {
 		this.lastConfirmedValue = "";
 		this._rowFocused = false;
 		this._clearPopoverFocusAndSelection();
+	}
+
+	// ======================= Suggestion-specific getters =======================
+
+	get _headerTitleText() {
+		return this._associatedLabelsTexts || InputField.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+	}
+
+	get suggestionsText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS);
+	}
+
+	get _suggestionsOkButtonText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS_OK_BUTTON);
+	}
+
+	get _suggestionsCancelButtonText() {
+		return InputField.i18nBundle.getText(INPUT_SUGGESTIONS_CANCEL_BUTTON);
+	}
+
+	_afterOpenPicker() {
+		this.fireDecoratorEvent("open");
+	}
+
+	_afterClosePicker() {
+		this.fireDecoratorEvent("close");
+		this._deselectAllRows();
+		this._rowFocused = false;
+	}
+
+	_confirmMobileValue() {
+		const focusedRow = this._visibleRows.find(row => row.focused);
+		if (focusedRow) {
+			this._selectRow(focusedRow, false);
+		}
+		this.open = false;
+	}
+
+	_cancelMobileValue() {
+		this.value = this.typedInValue || "";
+		this.open = false;
+		this._deselectAllRows();
+	}
+
+	get styles() {
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
+		const inputWidth = this._inputWidth || 0;
+
+		return {
+			innerInput: {
+				"padding": "",
+			},
+			suggestionsPopover: {
+				"min-width": inputWidth ? `${inputWidth}px` : "",
+				"max-width": inputWidth && (inputWidth / remSizeInPx) > 40 ? `${inputWidth}px` : "40rem",
+			},
+			suggestionPopoverHeader: {
+				"display": "inline-block",
+				"width": "100%",
+				"max-width": "inherit",
+			},
+		};
 	}
 }
 
