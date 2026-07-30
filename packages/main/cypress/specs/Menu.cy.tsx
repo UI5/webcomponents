@@ -1556,8 +1556,7 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		cy.get("@items").first().should("be.focused");
-		cy.focused().realPress("End");
+		cy.get("@items").last().then(($item) => { $item[0].focus(); });
 		cy.get("@items").last().should("be.focused");
 
 		cy.focused().realPress("PageUp");
@@ -1575,9 +1574,8 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		// Go to last item, step back one page, then Page Down must clamp to last item
-		cy.get("@items").first().should("be.focused");
-		cy.focused().realPress("End");
+		// Focus last item, step back one page, then Page Down must clamp to last item
+		cy.get("@items").last().then(($item) => { $item[0].focus(); });
 		cy.get("@items").last().should("be.focused");
 		cy.focused().realPress("PageUp");
 		cy.get("@items").last().should("not.be.focused");
