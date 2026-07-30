@@ -154,14 +154,14 @@ class ToolbarSelect extends ToolbarItemBase {
 	 */
 	@property()
 	set value(newValue: string) {
-		if (!newValue) {
+		if (this.select) {
+			if (this.select.value !== newValue) {
+				this.select.value = newValue;
+			}
 			this._value = "";
-			return;
+		} else {
+			this._value = newValue;
 		}
-		if (this.select && this.select.value !== newValue) {
-			this.select.value = newValue;
-		}
-		this._value = newValue;
 	}
 
 	get value(): string | undefined {
@@ -221,7 +221,7 @@ class ToolbarSelect extends ToolbarItemBase {
 
 	onAfterRendering(): void {
 		super.onAfterRendering();
-		if (this._value && this.select && this.select.value !== this._value) {
+		if (this._value && this.select) {
 			this.select.value = this._value;
 			this._value = "";
 		}

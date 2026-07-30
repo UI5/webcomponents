@@ -613,4 +613,55 @@ describe("Toolbar general interaction", () => {
 			.eq(2)
 			.should("have.attr", "selected");
 	});
+
+	it("Should clear the inner select when value is set to empty string after render", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarSelect value="Option 2">
+					<ToolbarSelectOption>Option 1</ToolbarSelectOption>
+					<ToolbarSelectOption>Option 2</ToolbarSelectOption>
+					<ToolbarSelectOption>Option 3</ToolbarSelectOption>
+				</ToolbarSelect>
+			</Toolbar>
+		);
+
+		cy.get("ui5-toolbar-select").should("exist");
+
+		cy.get("ui5-toolbar-select").then($select => {
+			($select.get(0) as ToolbarSelect).value = "";
+		});
+
+		cy.get("ui5-select", { includeShadowDom: true })
+			.should("have.attr", "value", "");
+	});
+
+	it("Should not let stale _value override a later programmatic selected change", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarSelect value="Option 1">
+						<ToolbarSelectOption id="prog-opt1">Option 1</ToolbarSelectOption>
+						<ToolbarSelectOption id="prog-opt2">Option 2</ToolbarSelectOption>
+						<ToolbarSelectOption id="prog-opt3">Option 3</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+				<Button id="prog-btn">Select Option 3</Button>
+			</>
+		);
+
+		cy.get("#prog-btn").then($btn => {
+			$btn.get(0).addEventListener("click", () => {
+				const options = document.querySelectorAll("ui5-toolbar-select-option");
+				options.forEach(opt => { (opt as ToolbarSelectOption).selected = false; });
+				(document.getElementById("prog-opt3") as ToolbarSelectOption).selected = true;
+			});
+		});
+
+		cy.get("#prog-btn").realClick();
+
+		cy.get("ui5-select", { includeShadowDom: true })
+			.find("[ui5-option]")
+			.eq(2)
+			.should("have.attr", "selected");
+	});
 });
