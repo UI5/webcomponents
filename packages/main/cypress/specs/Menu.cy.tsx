@@ -3,6 +3,7 @@ import SplitButton from "../../src/SplitButton.js";
 import Menu from "../../src/Menu.js";
 import MenuItem from "../../src/MenuItem.js";
 import MenuItemGroup from "../../src/MenuItemGroup.js";
+import MenuSeparator from "../../src/MenuSeparator.js";
 
 import openFolder from "@ui5/webcomponents-icons/dist/open-folder.js";
 import addFolder from "@ui5/webcomponents-icons/dist/add-folder.js";
@@ -1141,6 +1142,103 @@ describe("Menu interaction", () => {
 				.shadow()
 				.find("[ui5-responsive-popover]")
 				.should("have.attr", "accessible-name", "Select an option from the menu");
+		});
+
+		it("aria-checked is applied to menuitemradio and menuitemcheckbox items", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Regular Item"></MenuItem>
+						<MenuItemGroup checkMode="Single" id="groupSingle">
+							<MenuItem text="Radio Checked" checked></MenuItem>
+							<MenuItem text="Radio Unchecked"></MenuItem>
+						</MenuItemGroup>
+						<MenuItemGroup checkMode="Multiple" id="groupMulti">
+							<MenuItem text="Checkbox Checked" checked></MenuItem>
+							<MenuItem text="Checkbox Unchecked"></MenuItem>
+						</MenuItemGroup>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu]").as("menu");
+
+			cy.get("@menu")
+				.find("[text='Regular Item']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitem")
+				.and("not.have.attr", "aria-checked");
+
+			cy.get("@menu")
+				.find("[id='groupSingle']")
+				.as("groupSingle");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "false");
+
+			cy.get("@menu")
+				.find("[id='groupMulti']")
+				.as("groupMulti");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "false");
+		});
+
+		it("Menu separator has correct accessibility semantics", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Item 1"></MenuItem>
+						<MenuSeparator></MenuSeparator>
+						<MenuItem text="Item 2"></MenuItem>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu-separator]")
+				.shadow()
+				.find("li")
+				.as("separator");
+
+			cy.get("@separator")
+				.should("have.attr", "role", "separator");
+
+			cy.get("@separator")
+				.should("not.have.attr", "tabindex");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-disabled");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-labelledby");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-describedby");
 		});
 
 		it("Menu items - navigation in endContent", () => {

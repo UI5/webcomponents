@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+
+### Bug Fixes
+
+* **framework:** await pending language change in connectedCallback instead of skipping first render ([#13798](https://github.com/UI5/webcomponents/issues/13798)) ([7086878](https://github.com/UI5/webcomponents/commit/7086878ee9bf047c9727d887a09897aabb09abe6)), closes [#13602](https://github.com/UI5/webcomponents/issues/13602)
+
+
+
+
+
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.24.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.1...v2.24.0-rc.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* ensure global styles are updated by the newest runtime ([#13720](https://github.com/UI5/webcomponents/issues/13720)) ([f75e906](https://github.com/UI5/webcomponents/commit/f75e9064903f3927feb1411d61fd57bb1296f1d8))
+
+
+
+
+
 # [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
 
 

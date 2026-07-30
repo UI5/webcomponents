@@ -284,4 +284,45 @@ describe("Search Field on mobile device", () => {
 		cy.get("[ui5-search]")
 			.should("have.prop", "value", "Item 1");
 	});
+
+	it("should keep the popup open on item selection when preventDefault is called", () => {
+		cy.mount(
+			<>
+				<Search showClearIcon={true}>
+					<SearchItem text="Item 1" />
+					<SearchItem text="Item 2" />
+					<SearchItem text="Item 3" />
+				</Search>
+			</>
+		);
+
+		cy.get("[ui5-search]")
+			.then(search => {
+				search.get(0).addEventListener("ui5-search", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		cy.get("[ui5-search]")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		// Click an item in the popup
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.realClick();
+
+		// preventDefault was called, so the picker should remain open on mobile
+		cy.get("[ui5-search]")
+			.should("have.prop", "open", true);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.prop", "open", true);
+	});
 });

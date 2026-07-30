@@ -146,6 +146,22 @@ function processClass(ts, classNode, moduleDoc) {
 
 	if (!currClass._ui5implements.length) delete currClass._ui5implements;
 
+	const cssStateTags = findAllTags(classParsedJsDoc, ["cssState", "cssstate"]);
+	if (cssStateTags.length) {
+		currClass.cssStates = cssStateTags.map(tag => ({
+			description: normalizeDescription(tag.description),
+			name: tag.name,
+		}));
+	}
+
+	const cssPartTags = findAllTags(classParsedJsDoc, "csspart");
+	if (cssPartTags.length) {
+		currClass.cssParts = cssPartTags.map(tag => ({
+			description: normalizeDescription(tag.description),
+			name: tag.name,
+		}));
+	}
+
 	// Slots
 
 	// Slots without accessort (defined in class comment)
@@ -175,6 +191,10 @@ function processClass(ts, classNode, moduleDoc) {
 	// Events
 	currClass.events = findAllDecorators(classNode, ["event", "eventStrict"])
 		?.map(event => processEvent(ts, event, classNode, moduleDoc));
+
+	if (currClass.events?.length && !currClass.customElement) {
+		logDocumentationError(moduleDoc.path, `Class '${className}' uses @event/@eventStrict but does not have @customElement decorator or extend UI5Element`);
+	}
 
 	const filename = classNode.getSourceFile().fileName;
 	const sourceFile = typeProgram.getSourceFile(filename);

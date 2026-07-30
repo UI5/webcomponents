@@ -39,11 +39,12 @@ import type { IShellBarSearchController } from "./shellbar/IShellBarSearchContro
 import ShellBarLegacy from "./shellbar/ShellBarLegacy.js";
 import ShellBarSearch from "./shellbar/ShellBarSearch.js";
 import ShellBarSearchLegacy from "./shellbar/ShellBarSearchLegacy.js";
+import type ShellBarSearchComponent from "./ShellBarSearch.js";
 import ShellBarOverflow from "./shellbar/ShellBarOverflow.js";
 import ShellBarAccessibility from "./shellbar/ShellBarAccessibility.js";
 import ShellBarItemNavigation from "./shellbar/ShellBarItemNavigation.js";
 
-import ShellBarItem from "./ShellBarItem.js";
+import ShellBarItem, { isInstanceOfShellBarItem } from "./ShellBarItem.js";
 import ShellBarSpacer from "./ShellBarSpacer.js";
 import type ShellBarBranding from "./ShellBarBranding.js";
 import type { ShellBarOverflowResult } from "./shellbar/ShellBarOverflow.js";
@@ -764,7 +765,7 @@ class ShellBar extends UI5Element {
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.sortContent(this.content),
-			customItems: this.items,
+			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
 			overflowOuter: this.overflowOuter!,
@@ -786,7 +787,7 @@ class ShellBar extends UI5Element {
 		const { hiddenItemsIds, showOverflowButton } = result;
 
 		// Update items overflow state
-		this.items.forEach(item => {
+		this._validItems.forEach(item => {
 			item.inOverflow = hiddenItemsIds.includes(item._id);
 			if (item.inOverflow) {
 				// clear the hidden class to ensure the item is visible in the overflow popover
@@ -862,9 +863,21 @@ class ShellBar extends UI5Element {
 	get overflowItems() {
 		return this.overflow.getOverflowItems({
 			actions: this.actions,
-			customItems: this.items,
+			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 		});
+	}
+
+	/**
+	 * Only entries that are actually `ui5-shellbar-item` instances participate in the
+	 * overflow calculation and template rendering. The default slot's type is
+	 * `HTMLElement`, so any stray child (e.g. a bare `<span>`) ends up in `this.items`;
+	 * if such an element reaches the overflow algorithm it has no `_id` / `stableDomRef`,
+	 * which writes `undefined` back into reactive properties on every pass and re-enters
+	 * the render queue until `RenderQueue` throws "processed too many times".
+	 */
+	get _validItems(): ShellBarItem[] {
+		return this.items.filter(isInstanceOfShellBarItem);
 	}
 
 	/**
@@ -902,6 +915,7 @@ class ShellBar extends UI5Element {
 			getSearchState: () => this.enabledFeatures.search && this.showSearchField,
 			getCSSVariable: (cssVar: string) => this.getCSSVariable(cssVar),
 			setSearchState: (expanded: boolean) => this.setSearchState(expanded),
+			handleSearchButtonClick: () => this.handleSearchButtonClick(),
 			getOverflowed: () => this.overflow.isOverflowing(this.overflowOuter!, this.overflowInner!),
 		};
 	}
@@ -914,7 +928,9 @@ class ShellBar extends UI5Element {
 	}
 
 	handleSearchButtonClick() {
-		const searchButton = this.shadowRoot!.querySelector<Button>(".ui5-shellbar-search-button");
+		const searchButton = this.isSelfCollapsibleSearch
+			? this.search?.shadowRoot?.querySelector<HTMLElement>(".ui5-shell-search-field-button") ?? null
+			: this.shadowRoot!.querySelector<Button>(".ui5-shellbar-search-button");
 		const defaultPrevented = !this.fireDecoratorEvent("search-button-click", {
 			targetRef: searchButton!,
 			searchFieldVisible: this.showSearchField,
@@ -1127,6 +1143,9 @@ class ShellBar extends UI5Element {
 	 * @since 1.0.0-rc.16
 	 */
 	get notificationsDomRef(): HTMLElement | null {
+		if (this.isHidden(ShellBarActions.Notifications)) {
+			return this.overflowDomRef;
+		}
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="notifications"]`);
 	}
 
@@ -1166,6 +1185,9 @@ class ShellBar extends UI5Element {
 	 */
 	async getSearchButtonDomRef(): Promise<HTMLElement | null> {
 		await renderFinished();
+		if (this.isSelfCollapsibleSearch) {
+			return (this.search as unknown as ShellBarSearchComponent).getSearchButtonDomRef();
+		}
 		return this.shadowRoot!.querySelector<HTMLElement>(`*[data-ui5-stable="toggle-search"]`);
 	}
 

@@ -71,7 +71,29 @@ describe("API", () => {
 		cy.get("[ui5-file-uploader]")
 			.shadow()
 			.find("input[type='file']")
-			.should("have.attr", "aria-required", "true");
+			.as("nativeInput")
+			.should("have.attr", "required");
+
+		cy.get("@nativeInput")
+			.should("have.attr", "aria-invalid", "false");
+	});
+
+	it("aria-invalid reflects value state", () => {
+		(["None", "Positive", "Critical", "Information"] as const).forEach(valueState => {
+			cy.mount(<FileUploader required valueState={valueState}></FileUploader>);
+
+			cy.get("[ui5-file-uploader]")
+				.shadow()
+				.find("input[type='file']")
+				.should("have.attr", "aria-invalid", "false");
+		});
+
+		cy.mount(<FileUploader required valueState="Negative"></FileUploader>);
+
+		cy.get("[ui5-file-uploader]")
+			.shadow()
+			.find("input[type='file']")
+			.should("have.attr", "aria-invalid", "true");
 	});
 
 	it("accept property", () => {
@@ -478,6 +500,31 @@ describe("Interaction", () => {
 });
 
 describe("Accessibility", () => {
+	it("value state hidden text contains type label and default message", () => {
+		cy.mount(
+			<FileUploader id="uploader" value-state="Negative"></FileUploader>
+		);
+
+		cy.get("#uploader")
+			.shadow()
+			.find("#valueStateDesc")
+			.should("have.text", "Value State Error Invalid entry");
+	});
+
+	it("value state hidden text contains type label and custom message", () => {
+		cy.mount(
+			<FileUploader id="uploader" value-state="Negative">
+				<div slot="valueStateMessage">Custom error message.</div>
+			</FileUploader>
+		);
+
+		cy.get("#uploader")
+			.shadow()
+			.find("#valueStateDesc")
+			.should("include.text", "Value State Error")
+			.and("include.text", "Custom error message.");
+	});
+
 	it("A11y attributes", () => {
 		cy.mount(
 			<>

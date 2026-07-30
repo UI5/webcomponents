@@ -20,7 +20,7 @@ import {
 	getAllAccessibleDescriptionRefTexts,
 	deregisterUI5Element,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { hasStyle, createStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
+import { createOrUpdateStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
 import { isEnter, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getFocusedElement, isFocusedElementWithinNode } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -37,9 +37,7 @@ import popupBlockLayerStyles from "./generated/themes/PopupBlockLayer.css.js";
 import globalStyles from "./generated/themes/PopupGlobal.css.js";
 
 const createBlockingStyle = (): void => {
-	if (!hasStyle("data-ui5-popup-scroll-blocker")) {
-		createStyle(globalStyles, "data-ui5-popup-scroll-blocker");
-	}
+	createOrUpdateStyle(globalStyles, "data-ui5-popup-scroll-blocker");
 };
 
 createBlockingStyle();
@@ -544,7 +542,7 @@ abstract class Popup extends UI5Element {
 			|| document.getElementById(this.initialFocus);
 		}
 
-		element = element || await getFirstFocusableElement(this) || this._root; // in case of no focusable content focus the root
+		element = element || await this._getFirstFocusableElement() || this._root; // in case of no focusable content focus the root
 
 		if (element) {
 			if (element === this._root) {
@@ -552,6 +550,10 @@ abstract class Popup extends UI5Element {
 			}
 			element.focus();
 		}
+	}
+
+	async _getFirstFocusableElement() {
+		return getFirstFocusableElement(this);
 	}
 
 	isFocusWithin() {
@@ -720,6 +722,10 @@ abstract class Popup extends UI5Element {
 
 	get contentDOM(): HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-popup-content")!;
+	}
+
+	get footerDOM(): HTMLElement | null {
+		return this.shadowRoot!.querySelector(".ui5-popup-footer-root");
 	}
 
 	get styles() {

@@ -859,6 +859,21 @@ describe("Testing events", () => {
 		cy.get("@changeEventSpy").should('have.been.called');
 	});
 
+	it("Should not change value on right-click", () => {
+		cy.mount(<RangeSlider min={0} max={10} startValue={2} endValue={8}
+			onChange={cy.stub().as("sliderChange")}
+			onInput={cy.stub().as("sliderInput")} />);
+
+		cy.get("[ui5-range-slider]").as("rangeSlider");
+
+		cy.get("@rangeSlider").rightclick();
+
+		cy.get("@sliderChange").should("not.have.been.called");
+		cy.get("@sliderInput").should("not.have.been.called");
+		cy.get("@rangeSlider").should("have.attr", "start-value", "2");
+		cy.get("@rangeSlider").should("have.attr", "end-value", "8");
+	});
+
 	it("Aria attributes of the start handle are set correctly", () => {
 		cy.mount(<RangeSlider min={0} max={40} step={1} showTickmarks></RangeSlider>);
 

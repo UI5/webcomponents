@@ -19,6 +19,15 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 @customElement("ui5-toolbar-select-option")
 class ToolbarSelectOption extends UI5Element {
 	/**
+	 * Defines the value of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.25.0
+	 */
+	@property()
+	value?: string;
+
+	/**
 	 * Defines the selected state of the component.
 	 * @default false
 	 * @public

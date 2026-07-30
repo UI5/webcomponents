@@ -119,6 +119,7 @@ describe("Table - Rendering", () => {
 		const expectedWidth = 100;
 		cy.get("ui5-table-header-cell").each(($cell) => {
 			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+			expect(getComputedStyle($cell[0]).minHeight).to.not.equal("auto");
 		});
 	});
 

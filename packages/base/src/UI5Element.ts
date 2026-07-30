@@ -357,17 +357,24 @@ abstract class UI5Element extends HTMLElement {
 			await ctor._definePromise;
 		}
 
-		// Skip rendering while a language change is in progress to avoid rendering with not fully loaded locale data.
-		// Once the locale data is loaded, the language-aware component will be re-rendered.
-		if (ctor.getMetadata().isLanguageAware() && getLanguageChangePending()) {
-			return;
+		// Wait for any pending language change to finish before rendering to avoid rendering
+		// with not fully loaded locale data. Once it resolves, proceed with the normal render
+		// path so onEnterDOM and the rest of the lifecycle fire exactly as they would otherwise.
+		// Note: the reRenderAllUI5Elements call that closes out the language change may already
+		// have rendered this element via the deferred queue (since it was registered above), so
+		// we skip renderImmediately if the first render has already happened.
+		const languageChangePending = getLanguageChangePending();
+		if (ctor.getMetadata().isLanguageAware() && languageChangePending) {
+			await languageChangePending;
 		}
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
 		}
 
-		renderImmediately(this);
+		if (!this._rendered) {
+			renderImmediately(this);
+		}
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
