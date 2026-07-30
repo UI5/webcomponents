@@ -6,7 +6,14 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isPhone, isAndroid } from "@ui5/webcomponents-base/dist/Device.js";
-import { isUp, isDown, isEnter, isBackSpace, isDelete, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isUp,
+	isDown,
+	isEnter,
+	isBackSpace,
+	isDelete,
+	isEscape,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
@@ -509,7 +516,9 @@ class InputTableSuggest extends InputField {
 				this._isKeyNavigation = true;
 				this._navigateRows(true);
 				return;
-			} else if (isUp(e)) {
+			}
+
+			if (isUp(e)) {
 				e.preventDefault();
 				this._isKeyNavigation = true;
 				this._navigateRows(false);

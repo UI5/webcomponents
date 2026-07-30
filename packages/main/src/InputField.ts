@@ -1,6 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -673,6 +672,8 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 		this._input(e, eventType);
 	}
 
+	// Base implementation - subclasses override and use eventType
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_input(e: CustomEvent<InputEventDetail> | InputEvent, eventType: string) {
 		const inputDomRef = this.getInputDOMRefSync();
 
@@ -895,7 +896,8 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	 * Called in _onfocusout to allow subclasses to skip focusout handling
 	 * (e.g., when clicking inside a suggestion popover)
 	 */
-	_shouldSkipFocusOut(_toBeFocused: HTMLElement): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {
 		return false;
 	}
 

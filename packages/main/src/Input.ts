@@ -1,5 +1,5 @@
 /* eslint-disable spaced-comment */
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -56,7 +56,6 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import { getEffectiveAriaDescriptionText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 
 // Styles
 import inputStyles from "./generated/themes/Input.css.js";
@@ -64,7 +63,6 @@ import SuggestionsCss from "./generated/themes/Suggestions.css.js";
 import type { ListItemClickEventDetail, ListSelectionChangeEventDetail } from "./List.js";
 import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
-import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
 import InputSuggestionsFilter from "./types/InputSuggestionsFilter.js";
 
 /**
@@ -605,6 +603,12 @@ class Input extends InputField implements SuggestionComponent {
 
 		if (this.filter && this.value === "") {
 			this.open = false;
+		}
+
+		// On mobile, keydown fires on the phone input inside ResponsivePopover, not on this component,
+		// so _shouldAutocomplete is never set. Enable it here unless explicitly disabled.
+		if (this._isPhone && this._shouldAutocomplete === undefined) {
+			this._shouldAutocomplete = !this.noTypeahead;
 		}
 	}
 
