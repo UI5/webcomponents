@@ -10,7 +10,6 @@ export default function CarouselTemplate(this: Carousel) {
 				"ui5-carousel-root": true,
 				[`ui5-carousel-background-${this._backgroundDesign}`]: true,
 			}}
-			role="region"
 			aria-label={this.ariaLabelTxt}
 			aria-roledescription={this._roleDescription}
 			onFocusIn={this._onfocusin}

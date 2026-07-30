@@ -890,6 +890,37 @@
 		</ui5-combobox>
 	</div>
 
+	<div class="demo-section" style="padding: 20px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px;">
+		<h3>Newline Normalization Test</h3>
+		<p>Items with newlines in text that normalize to same display. Use <b>Arrow keys + Enter</b> to test.</p>
+		<ui5-combobox id="newline-test-cb" placeholder="Select via keyboard..."></ui5-combobox>
+		<br/><br/>
+		<div><b>Change events:</b> <span id="newline-change-count">0</span></div>
+		<div id="newline-log" style="margin-top: 10px; font-family: monospace; background: #fff; padding: 10px; border-radius: 4px; min-height: 60px;"></div>
+		<script>
+			(function() {
+				const cb = document.getElementById("newline-test-cb");
+				const item1 = document.createElement("ui5-cb-item");
+				item1.setAttribute("text", "Item\nX");
+				item1.setAttribute("value", "first");
+				cb.appendChild(item1);
+
+				const item2 = document.createElement("ui5-cb-item");
+				item2.setAttribute("text", "Item X");
+				item2.setAttribute("value", "second");
+				cb.appendChild(item2);
+
+				let count = 0;
+				cb.addEventListener("ui5-change", function(e) {
+					count++;
+					document.getElementById("newline-change-count").textContent = count;
+					const log = document.getElementById("newline-log");
+					log.innerHTML = `#${count}: value="${e.target.value}", selectedValue="${e.target.selectedValue}"<br>` + log.innerHTML;
+				});
+			})();
+		</script>
+	</div>
+
 </body>
 
 </html>

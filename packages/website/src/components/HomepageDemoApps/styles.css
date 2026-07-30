@@ -38,22 +38,22 @@
 }
 
 .demo-apps__frameworks {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  column-gap: 6rem;
-  margin: 0 5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem 6rem;
+  /* Cap width to fit exactly 3 cards per row (3 x 8rem + 2 x 6rem gap = 36rem),
+     so 5 items always wrap as 3 + 2 — never 5-in-a-row or 4 + 1. */
+  max-width: 36rem;
+  margin: 0 auto 8rem;
 }
 
 .demo-apps__framework {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.demo-apps__framework:last-child {
-  margin-inline-end: 0;
-  margin-bottom:  10rem;
+  flex: 0 0 auto;
+  width: 8rem;
 }
 
 .demo-apps__logo {
@@ -77,17 +77,13 @@
 
 @media (max-width: 900px) {
   .demo-apps__frameworks {
-    grid-template-columns: 1fr;
+    /* fit 2 per row on narrow screens (2 x 8rem + 6rem gap = 22rem) */
+    max-width: 22rem;
+    column-gap: 6rem;
   }
 
   .demo-apps__desc {
     width: 80%;
-  }
-}
-
-@media (min-width: 900px) and (max-width: 1100px) {
-  .demo-apps__frameworks {
-    grid-template-columns: 1fr 1fr;
   }
 }
 

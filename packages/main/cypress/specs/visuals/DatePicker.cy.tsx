@@ -6,6 +6,7 @@ const FIXED_VALUE = "Jan 15, 2024";
 
 describe("DatePicker visual", () => {
 	beforeEach(() => {
+		cy.clock(new Date("Jan 15, 2024").getTime(), ["Date"]);
 		setAnimationMode(AnimationMode.None);
 	});
 
@@ -38,12 +39,52 @@ describe("DatePicker visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Negative — calendar open", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Negative">
+				<span slot="valueStateMessage">Invalid date</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").ui5DatePickerValueHelpIconPress();
+		cy.screenshot();
+	});
+
+	it("value state — Negative — focused", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Negative">
+				<span slot="valueStateMessage">Invalid date</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Critical", () => {
 		cy.mount(
 			<DatePicker value={FIXED_VALUE} valueState="Critical">
 				<span slot="valueStateMessage">Date outside range</span>
 			</DatePicker>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Critical — calendar open", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Critical">
+				<span slot="valueStateMessage">Date outside range</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").ui5DatePickerValueHelpIconPress();
+		cy.screenshot();
+	});
+
+	it("value state — Critical — focused", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Critical">
+				<span slot="valueStateMessage">Date outside range</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 
@@ -56,12 +97,52 @@ describe("DatePicker visual", () => {
 		cy.screenshot();
 	});
 
+	it("value state — Positive — calendar open", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Positive">
+				<span slot="valueStateMessage">Valid date</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").ui5DatePickerValueHelpIconPress();
+		cy.screenshot();
+	});
+
+	it("value state — Positive — focused", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Positive">
+				<span slot="valueStateMessage">Valid date</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
+		cy.screenshot();
+	});
+
 	it("value state — Information", () => {
 		cy.mount(
 			<DatePicker value={FIXED_VALUE} valueState="Information">
 				<span slot="valueStateMessage">Date will be used as reference</span>
 			</DatePicker>
 		);
+		cy.screenshot();
+	});
+
+	it("value state — Information — calendar open", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Information">
+				<span slot="valueStateMessage">Date will be used as reference</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").ui5DatePickerValueHelpIconPress();
+		cy.screenshot();
+	});
+
+	it("value state — Information — focused", () => {
+		cy.mount(
+			<DatePicker value={FIXED_VALUE} valueState="Information">
+				<span slot="valueStateMessage">Date will be used as reference</span>
+			</DatePicker>
+		);
+		cy.get("[ui5-date-picker]").shadow().find("ui5-datetime-input").shadow().find("input").realClick();
 		cy.screenshot();
 	});
 

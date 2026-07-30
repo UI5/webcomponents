@@ -19,6 +19,9 @@ import "@ui5/webcomponents/dist/RadioButton.js";
 import "@ui5/webcomponents/dist/CheckBox.js";
 import "@ui5/webcomponents/dist/Toast.js";
 import "@ui5/webcomponents/dist/Switch.js";
+import "@ui5/webcomponents/dist/MessageStrip.js";
+import "@ui5/webcomponents/dist/Form.js";
+import "@ui5/webcomponents/dist/FormItem.js";
 
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -287,12 +290,6 @@ const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings
 const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
 
 //Language and Region
-const languageRegion = document.getElementById("language-region-container");
-const language = document.getElementById("language");
-const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
-const additionalDialog = document.getElementById("additionalDialog");
-const additionalDialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
-
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
 const mobile2Button = document.getElementById("mobile2-button");
@@ -301,23 +298,6 @@ const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
-
-//Language and Region
-language.addEventListener("selection-change",  function (event) {
-	additionalDialog.open = true;
-});
-
-additionalDialogClosers.forEach(btn => {
-	btn.addEventListener("click", () => {
-		additionalDialog.open = false;
-	});
-});
-
-regionSettings.forEach((settingsItem) => {
-	settingsItem.addEventListener("selection-change",  function (event) {
-		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
-	});
-});
 
 // Theme change
 appearanceView.addEventListener("selection-change", (e) => {
@@ -339,7 +319,7 @@ mobile2Button.addEventListener("click", function () {
 });
 
 resetAllButton.addEventListener("click", function () {
-	additionalDialog.open = true;
+	toastReset.open = true;
 });
 
 resetPersonalization.addEventListener("click", function () {
