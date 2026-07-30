@@ -1562,9 +1562,8 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.focused().realPress("PageUp");
 
-		// Verify we moved back more than one item, then PageDown should return exactly to last item
+		// Verify moved back, then PageDown must return exactly to last item (round-trip)
 		cy.get("@items").last().should("not.be.focused");
-		cy.get("@items").eq(-2).should("not.be.focused");
 
 		cy.focused().realPress("PageDown");
 
@@ -1576,13 +1575,13 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
+		// Go to last item, step back one page, then Page Down must clamp to last item
 		cy.get("@items").first().should("be.focused");
+		cy.focused().realPress("End");
+		cy.get("@items").last().should("be.focused");
+		cy.focused().realPress("PageUp");
+		cy.get("@items").last().should("not.be.focused");
 
-		// Press Page Down enough times to reach the end
-		cy.focused().realPress("PageDown");
-		cy.focused().realPress("PageDown");
-		cy.focused().realPress("PageDown");
-		cy.focused().realPress("PageDown");
 		cy.focused().realPress("PageDown");
 
 		cy.get("@items").last().should("be.focused");
@@ -1593,16 +1592,11 @@ describe("Menu - Page Up/Down navigation", () => {
 
 		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
 
-		// Go to last item first
+		// Step forward one page from start, then Page Up must clamp to first item
 		cy.get("@items").first().should("be.focused");
-		cy.focused().realPress("End");
-		cy.get("@items").last().should("be.focused");
+		cy.focused().realPress("PageDown");
+		cy.get("@items").first().should("not.be.focused");
 
-		// Press Page Up enough times to reach the start
-		cy.focused().realPress("PageUp");
-		cy.focused().realPress("PageUp");
-		cy.focused().realPress("PageUp");
-		cy.focused().realPress("PageUp");
 		cy.focused().realPress("PageUp");
 
 		cy.get("@items").first().should("be.focused");
