@@ -625,13 +625,15 @@ describe("Toolbar general interaction", () => {
 			</Toolbar>
 		);
 
-		cy.get("ui5-toolbar-select").should("exist");
-
-		cy.get("ui5-toolbar-select").then($select => {
-			($select.get(0) as ToolbarSelect).value = "";
+		cy.document().then(doc => {
+			const select = doc.querySelector("ui5-toolbar-select") as ToolbarSelect;
+			select.value = "";
 		});
 
-		cy.get("ui5-select", { includeShadowDom: true })
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
 			.should("have.attr", "value", "");
 	});
 
@@ -659,7 +661,12 @@ describe("Toolbar general interaction", () => {
 
 		cy.get("#prog-btn").realClick();
 
-		cy.get("ui5-select", { includeShadowDom: true })
+		cy.get("[ui5-toolbar-select-option]").eq(2).should("have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
 			.find("[ui5-option]")
 			.eq(2)
 			.should("have.attr", "selected");
