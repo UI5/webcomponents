@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
+
+
+### Bug Fixes
+
+* **ui5-illustrated-message:** vertical responsiveness corrected ([#13795](https://github.com/UI5/webcomponents/issues/13795)) ([4a9418b](https://github.com/UI5/webcomponents/commit/4a9418b5397167ddc4ed39e6a31ecdf403aab110))
+* **ui5-side-navigation:** prevent text squeezing during expand animation ([#13774](https://github.com/UI5/webcomponents/issues/13774)) ([242aeec](https://github.com/UI5/webcomponents/commit/242aeecd2a029babb9c0a6865731b86c28837248))
+
+
+
+
+
 # [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

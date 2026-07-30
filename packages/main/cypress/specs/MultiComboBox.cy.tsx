@@ -1547,7 +1547,7 @@ describe("Selection and filtering", () => {
 
 		cy.get("@popover")
 			.find(".ui5-mcb-select-all-checkbox")
-			.should("have.attr", "checked");
+			.should("not.have.attr", "checked");
 
 		cy.get("@popover")
 			.find("[ui5-list] slot")
@@ -5501,5 +5501,92 @@ describe("MultiComboBoxItemCustom - Mixed Selection", () => {
 		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+});
+
+describe("Select All with Groups", () => {
+	it("should check the 'select all' checkbox when all items in groups are selected", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("not.have.attr", "checked");
+
+		cy.get("@selectAllCheckbox")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 4);
+	});
+
+	it("should uncheck the 'select all' checkbox when deselecting one item in a group", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("[ui5-mcb-item]")
+			.first()
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("not.have.attr", "checked");
 	});
 });

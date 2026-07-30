@@ -358,6 +358,9 @@ class Input extends InputField implements SuggestionComponent {
 			});
 		}
 
+		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
+
 		const hasItems = !!this._flattenItems.length;
 		const hasValue = !!this.value;
 		const isFocused = this.shadowRoot!.querySelector("input") === getActiveElement();
