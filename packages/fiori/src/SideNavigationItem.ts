@@ -287,7 +287,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	_onToggleClick(e: CustomEvent) {
 		e.stopPropagation();
 
-		this._toggle();
+		this._toggle(!this.expanded);
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -304,25 +304,25 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 		if (isLeft(e)) {
 			e.preventDefault();
-			this._setExpandedByUser(isRTL);
+			this._toggle(isRTL);
 			return;
 		}
 
 		if (isRight(e)) {
 			e.preventDefault();
-			this._setExpandedByUser(!isRTL);
+			this._toggle(!isRTL);
 			return;
 		}
 
 		if (isMinus(e)) {
 			e.preventDefault();
-			this._setExpandedByUser(false);
+			this._toggle(false);
 			return;
 		}
 
 		if (isPlus(e)) {
 			e.preventDefault();
-			this._setExpandedByUser(true);
+			this._toggle(true);
 			return;
 		}
 
@@ -349,7 +349,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 
 	_onclick(e: MouseEvent) {
 		if (!this.inPopover && this.unselectable) {
-			this._toggle();
+			this._toggle(!this.expanded);
 		}
 
 		super._onclick(e);
@@ -379,14 +379,24 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 		this.getDomRef()!.classList.add("ui5-sn-item-no-hover-effect");
 	}
 
-	_toggle() {
-		if (this.items.length && !this.effectiveDisabled) {
-			this._setExpandedByUser(!this.expanded);
+	/**
+	 * Handles the user-driven expand/collapse of the item.
+	 *
+	 * Fires the cancelable `item-toggle` event and, unless it is prevented, applies the
+	 * new `expanded` value. The event is only fired for user interaction - programmatic
+	 * changes to `expanded` stay silent.
+	 *
+	 * @private
+	 */
+	_toggle(expanded: boolean) {
+		if (!this.items.length || this.effectiveDisabled || this.expanded === expanded) {
+			return;
 		}
-	}
 
-	_setExpandedByUser(value: boolean) {
-		this.sideNavigation?._toggleItem(this, value);
+		// The event was prevented - keep the old value, suppressing the toggle.
+		if (this.sideNavigation?.fireDecoratorEvent("item-toggle", { item: this })) {
+			this.expanded = expanded;
+		}
 	}
 
 	get isSideNavigationItem() {
