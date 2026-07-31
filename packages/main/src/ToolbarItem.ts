@@ -1,4 +1,5 @@
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
@@ -115,6 +116,18 @@ class ToolbarItem extends ToolbarItemBase {
 	})
 	item!: DefaultSlot<IToolbarItemContent>;
 
+	/**
+	 * Defines whether the item should shrink to fit the available toolbar space
+	 * instead of pushing other items out of view.
+	 * Use this when the slotted content (e.g. a long title) should yield space
+	 * to other toolbar items rather than overflow them.
+	 * @default false
+	 * @public
+	 * @since 2.25.0
+	 */
+	@property({ type: Boolean })
+	shrinkContent = false;
+
 	// Method called by ui5-toolbar to inform about the existing toolbar wrapper
 	checkForWrapper() {
 		if (this._wrapperChecked) {
@@ -209,7 +222,11 @@ class ToolbarItem extends ToolbarItemBase {
 	}
 
 	get hasOverflow(): boolean {
-		return this.item[0]?.hasOverflow ?? false;
+		return this.item[0]?.hasOverflow || this.shrinkContent;
+	}
+
+	get clampMaxWidth(): boolean {
+		return !this.shrinkContent;
 	}
 
 	getFocusDomRef(): HTMLElement | undefined {

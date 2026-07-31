@@ -354,7 +354,7 @@ class Toolbar extends UI5Element {
 	addItemsAdditionalProperties(item: ToolbarItemBase) {
 		item.isOverflowed = this.overflowItems.indexOf(item) !== -1;
 		const itemWrapper = this.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
-		if (item.hasOverflow && !item.isOverflowed && itemWrapper) {
+		if (item.hasOverflow && item.clampMaxWidth && !item.isOverflowed && itemWrapper) {
 			// We need to set the max-width to the self-overflow element in order ot prevent it from taking all the available space,
 			// since, unlike the other items, it is allowed to grow and shrink
 			// We need to set the max-width to none and its position to absolute to allow the item to grow and measure its width,
@@ -433,8 +433,13 @@ class Toolbar extends UI5Element {
 
 		this.items.forEach(item => {
 			const itemWidth = this.getItemWidth(item);
+			// shrinkContent items (clampMaxWidth=false) are intentionally included in totalWidth:
+			// getItemWidth returns 0 on first render (_isRendering=true) and the cached flex-distributed
+			// width on subsequent renders, both of which keep overflowSpace non-positive so distributeItems
+			// is not incorrectly triggered. They are excluded from minWidth only, as their rendered
+			// width is not a stable natural-width value.
 			totalWidth += itemWidth;
-			if (item.overflowPriority === ToolbarItemOverflowBehavior.NeverOverflow) {
+			if (item.overflowPriority === ToolbarItemOverflowBehavior.NeverOverflow && item.clampMaxWidth) {
 				minWidth += itemWidth;
 			}
 			this.ITEMS_WIDTH_MAP.set(item._id, itemWidth);
