@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
+
+
+### Bug Fixes
+
+* **ui5-segmented-button:** remove aria-roledescription attribute ([#13867](https://github.com/UI5/webcomponents/issues/13867)) ([b78bdb9](https://github.com/UI5/webcomponents/commit/b78bdb99aafa513f189f1f3ec789d7f30119d74f))
+
+
+
+
+
 # [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
 
 
