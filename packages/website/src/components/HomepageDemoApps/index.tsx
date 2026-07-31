@@ -11,7 +11,8 @@ type Item = {
 const FramaworksList: Array<Item> = [
   {
     Svg: require('@site/static/img/demo-apps/OpenUI5-1920-2560.svg').default,
-    repository: "https://github.com/ui5-community/ui5-ecosystem-showcase/tree/main/showcases/ui5-tsapp-webc",
+    repository: "https://github.com/UI5/sample-webcomponents-openui5",
+    demo: "https://ui5.github.io/sample-webcomponents-openui5/",
   },
   {
     Svg: require('@site/static/img/demo-apps/React-1920-2560.svg').default,
