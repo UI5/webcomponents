@@ -8,7 +8,6 @@ function App() {
     <DatePicker
       primaryCalendarType="Japanese"
       secondaryCalendarType="Islamic"
-	  style={{ width: "14.5rem" }}
     />
   );
 }

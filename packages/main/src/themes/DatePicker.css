@@ -13,7 +13,7 @@
 }
 
 :host {
-	width: 100%;
+	width: var(--_ui5-datepicker-width);
 	min-width: calc(var(--_ui5_input_min_width) + (var(--_ui5-input-icons-count) * var(--_ui5_input_icon_width)));
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
