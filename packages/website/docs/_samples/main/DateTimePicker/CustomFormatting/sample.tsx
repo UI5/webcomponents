@@ -5,7 +5,7 @@ const DateTimePicker = createReactComponent(DateTimePickerClass);
 
 function App() {
   return (
-    <DateTimePicker displayFormat="medium" valueFormat="yyyy-MM-dd HH:mm:ss" />
+    <DateTimePicker displayFormat="medium" valueFormat="yyyy-MM-dd HH:mm:ss" style={{ width: "17.5rem" }} />
   );
 }
 

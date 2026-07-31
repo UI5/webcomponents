@@ -49,6 +49,7 @@ function App() {
           valueFormat="medium"
           displayFormat="medium"
           value="today"
+          style={{ width: "17.5rem" }}
         />
       </div>
     </>

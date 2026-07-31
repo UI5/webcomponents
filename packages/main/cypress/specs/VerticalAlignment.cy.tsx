@@ -11,7 +11,6 @@ import ComboBoxItem from "../../src/ComboBoxItem.js";
 import SegmentedButtonItem from "../../src/SegmentedButtonItem.js";
 import SegmentedButton from "../../src/SegmentedButton.js";
 import Input from "../../src/Input.js";
-import DatePicker from "../../src/DatePicker.js";
 import RadioButton from "../../src/RadioButton.js";
 import RangeSlider from "../../src/RangeSlider.js";
 import Slider from "../../src/Slider.js";
@@ -25,7 +24,6 @@ describe("Vertical Alignment", () => {
 			<>
 			<div id="container">
 				<Input value="value"></Input>
-				<DatePicker value="today"></DatePicker>
 				<SegmentedButton accessibleName="Geographic location">
 					<SegmentedButtonItem>Map</SegmentedButtonItem>
 					<SegmentedButtonItem selected>Satellite</SegmentedButtonItem>

@@ -10,30 +10,35 @@ function App() {
         value="2024-02-07 - 2024-02-10"
         displayFormat="yyyy-MM-dd"
 		valueFormat="yyyy-MM-dd"
+        style={{ width: "17.5rem" }}
       />
 
       <DateRangePicker
         value="06/02/2024 - 12/02/2024"
         displayFormat="dd/MM/yyyy"
         valueFormat="dd/MM/yyyy"
+        style={{ width: "17.5rem" }}
       />
 
-      <DateRangePicker 
+      <DateRangePicker
         value="02/2024 - 07/2024"
         displayFormat="MM/yyyy"
         valueFormat="MM/yyyy"
+        style={{ width: "17.5rem" }}
       />
 
-      <DateRangePicker 
+      <DateRangePicker
         value="2024 - 2028"
         displayFormat="yyyy"
-        valueFormat="yyyy" 
-      />	
+        valueFormat="yyyy"
+        style={{ width: "17.5rem" }}
+      />
 
       <DateRangePicker
         value="March 31, 2023 - April 9, 2023"
         displayFormat="long"
         valueFormat="long"
+        style={{ width: "17.5rem" }}
       />
     </>
   );

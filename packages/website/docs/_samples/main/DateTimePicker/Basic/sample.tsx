@@ -4,7 +4,7 @@ import DateTimePickerClass from "@ui5/webcomponents/dist/DateTimePicker.js";
 const DateTimePicker = createReactComponent(DateTimePickerClass);
 
 function App() {
-  return <DateTimePicker />;
+  return <DateTimePicker style={{ width: "17.5rem" }}/>;
 }
 
 export default App;

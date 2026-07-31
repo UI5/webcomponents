@@ -10,6 +10,7 @@ function App() {
       displayFormat="dd/MM/yyyy"
       minDate="1/1/2020"
       maxDate="4/5/2020"
+      style={{ width: "17.5rem" }}
     />
   );
 }
