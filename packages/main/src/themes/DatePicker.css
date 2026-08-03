@@ -24,6 +24,10 @@
 	-ms-user-select: none;
 }
 
+:host([show-clear-icon]) {
+	min-width: 15rem;
+}
+
 :host(:not([disabled]):not([readonly]):active) {
 	background: var(--_ui5-datepicker-hover-background);
 }
@@ -41,6 +45,7 @@
 }
 
 :host .ui5-date-picker-input {
+	width: 100%;
 	color: inherit;
 	background-color: inherit;
 	border-radius: inherit;
