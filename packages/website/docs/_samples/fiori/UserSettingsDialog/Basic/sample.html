@@ -229,13 +229,44 @@
 			</ui5-user-settings-notifications-view-group>
 		</ui5-user-settings-notifications-view>
 
-		<ui5-user-settings-notifications-view id="notification-detail" secondary>
+		<ui5-user-settings-notifications-view id="successfactors" secondary>
+			<ui5-text slot="additionalContent">
+				Configure how you want to receive SuccessFactors notifications across Compensation, Learning, and HR modules.
+			</ui5-text>
 			<ui5-user-settings-notifications-view-group header-text="Delivery Channels">
-				<ui5-user-settings-notifications-view-item item-key="detail-in-app" text="In-App" byline-text="Show inside the application" checked>
+				<ui5-user-settings-notifications-view-item item-key="sf-in-app" text="In-App" byline-text="Show inside the application" checked>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="detail-email" text="Email" byline-text="Send to your primary email address" checked>
+				<ui5-user-settings-notifications-view-item item-key="sf-email" text="Email" byline-text="Send to your primary email address" checked>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="detail-push" text="Push" byline-text="Push to your mobile device">
+				<ui5-user-settings-notifications-view-item item-key="sf-push" text="Push" byline-text="Push to your mobile device">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="s4-emea" secondary>
+			<ui5-text slot="additionalContent">
+				Configure how you want to receive S/4HANA Finance EMEA notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Delivery Channels">
+				<ui5-user-settings-notifications-view-item item-key="s4-in-app" text="In-App" byline-text="Show inside the application">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="s4-email" text="Email" byline-text="Send to your primary email address" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="s4-push" text="Push" byline-text="Push to your mobile device">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="in-app" secondary>
+			<ui5-text slot="additionalContent">
+				Control how in-app notifications are displayed inside the application.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Display Settings">
+				<ui5-user-settings-notifications-view-item item-key="inapp-panel" text="Notifications Panel" byline-text="Show in the central notifications panel" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="inapp-banner" text="Banner Alerts" byline-text="Show as a fly-in banner at the top of the screen" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="inapp-sound" text="Play Sound" byline-text="Play a sound when a notification arrives">
 				</ui5-user-settings-notifications-view-item>
 			</ui5-user-settings-notifications-view-group>
 		</ui5-user-settings-notifications-view>

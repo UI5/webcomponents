@@ -53,7 +53,6 @@
 		}
 		.ui5-user-settings-notifications-detail-description {
 			display: block;
-			padding: 0 0 1rem 0;
 			color: var(--sapContent_LabelColor);
 			font-size: var(--sapFontSize);
 			font-family: var(--sapFontFamily);
@@ -272,10 +271,10 @@
 				Some settings are managed by your organization. <ui5-link>Learn More</ui5-link>
 			</ui5-message-strip>
 
-			<ui5-user-settings-notifications-view-item item-key="allow-notifications" text="Allow Notifications" checked>
+			<ui5-user-settings-notifications-view-item item-key="allow-notifications" text="Allow Notifications" checked navigable>
 			</ui5-user-settings-notifications-view-item>
 			<ui5-user-settings-notifications-view-item item-key="allow-banner-alerts" text="Allow Banner Alerts"
-				byline-text="Switch on Banner for Notifications" checked>
+				byline-text="Switch on Banner for Notifications" checked navigable>
 			</ui5-user-settings-notifications-view-item>
 
 			<ui5-user-settings-notifications-view-group header-text="Sales">
@@ -299,6 +298,42 @@
 
 		<!-- One dedicated detail view per navigable item, matched via item-key ↔ id.
 		     Each view has its own switch state so toggling in one doesn't affect the others. -->
+
+		<ui5-user-settings-notifications-view id="allow-notifications" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Control how and where you receive notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Channels">
+				<ui5-user-settings-notifications-view-item item-key="an-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="allow-banner-alerts" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure banner alert behavior for incoming notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Banner Settings">
+				<ui5-user-settings-notifications-view-item item-key="ab-sound" text="Play Sound"
+					byline-text="Play a sound when a banner alert appears." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="ab-duration" text="Display Duration"
+					byline-text="Choose how long the banner stays on screen.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>5 seconds</ui5-option>
+						<ui5-option>10 seconds</ui5-option>
+						<ui5-option>Until dismissed</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 
 		<ui5-user-settings-notifications-view id="sales-order-updates" secondary>
 			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
