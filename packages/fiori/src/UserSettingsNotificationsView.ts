@@ -172,7 +172,6 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		});
 
 		if (eventPrevented) {
-			e.preventDefault();
 			return;
 		}
 

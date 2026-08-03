@@ -28,7 +28,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 })
 class UserSettingsNotificationsViewGroup extends ListItemGroup {
 	/**
-	 * Defines the items of the <code>ui5-user-settings-notifications-view-group</code>.
+	 * Defines the items of the `ui5-user-settings-notifications-view-group`.
 	 * @public
 	 */
 	@slot({

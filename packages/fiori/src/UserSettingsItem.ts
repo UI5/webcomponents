@@ -314,6 +314,7 @@ class UserSettingsItem extends UI5Element {
 
 	/**
 	 * @private
+	 * @since 2.26.0
 	 */
 	_focusBackButton() {
 		const backButton = this.shadowRoot?.querySelector<HTMLElement>(".ui5-user-settings-item-collapse-btn");

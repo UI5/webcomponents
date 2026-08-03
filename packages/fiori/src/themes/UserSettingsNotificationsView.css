@@ -12,7 +12,4 @@
 
 slot[name="additionalContent"]::slotted(*) {
 	display: block;
-	color: var(--sapContent_LabelColor);
-	font-size: var(--sapFontSize);
-	font-family: var(--sapFontFamily);
 }
