@@ -41,6 +41,7 @@
 }
 
 :host .ui5-date-picker-input {
+    width: 100%;
 	color: inherit;
 	background-color: inherit;
 	border-radius: inherit;
