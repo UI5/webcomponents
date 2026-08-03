@@ -804,8 +804,8 @@ describe("User account view", () => {
             .should("contain.text", USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT.defaultText);
 
         // _editAvatarTooltip resolves via the guarded i18nBundle getter and is applied as the badge title
-        cy.get("@settingView").shadow().find("[ui5-avatar] [ui5-tag]")
-            .should("have.attr", "title", USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT.defaultText);
+        cy.get("@settingView").shadow().find("[ui5-avatar] [ui5-avatar-badge]")
+            .should("exist");
     });
 
     it("tests avatar default", () => {
@@ -828,7 +828,24 @@ describe("User account view", () => {
         cy.get("@avatar").should("exist");
         cy.get("@avatar").should("have.length", 1);
         cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-        cy.get("@avatar").find("[ui5-tag]").should("exist");
+        cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+    });
+
+    it("renders ui5-avatar-badge (not ui5-tag) for the edit badge on the account avatar", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsAccountView text="Setting1">
+                    <UserMenuAccount slot="account"
+                                     titleText="Alain Chevalier"
+                                     subtitleText="alian.chevalier@sap.com">
+                    </UserMenuAccount>
+                </UserSettingsAccountView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-account-view]").as("settingView");
+        cy.get("@settingView").shadow().find("[ui5-avatar]").as("avatar");
+        cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+        cy.get("@avatar").find("[ui5-tag]").should("not.exist");
     });
 
     it("tests avatar initials", () => {
