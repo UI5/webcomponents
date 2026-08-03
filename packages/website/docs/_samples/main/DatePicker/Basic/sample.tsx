@@ -4,7 +4,7 @@ import DatePickerClass from "@ui5/webcomponents/dist/DatePicker.js";
 const DatePicker = createReactComponent(DatePickerClass);
 
 function App() {
-  return <DatePicker style={{ width: "17.5rem" }}/>;
+  return <DatePicker />;
 }
 
 export default App;

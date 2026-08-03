@@ -4,7 +4,7 @@ import DateRangePickerClass from "@ui5/webcomponents/dist/DateRangePicker.js";
 const DateRangePicker = createReactComponent(DateRangePickerClass);
 
 function App() {
-  return <DateRangePicker style={{ width: "17.5rem" }}/>;
+  return <DateRangePicker />;
 }
 
 export default App;

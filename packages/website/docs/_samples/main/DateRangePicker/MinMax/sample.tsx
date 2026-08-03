@@ -10,7 +10,6 @@ function App() {
       valueFormat="dd/MM/yyyy"
       minDate="1/2/2024"
       maxDate="1/7/2024"
-      style={{ width: "17.5rem" }}
     />
   );
 }

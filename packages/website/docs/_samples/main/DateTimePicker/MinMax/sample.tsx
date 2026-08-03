@@ -11,7 +11,6 @@ function App() {
       valueFormat="long"
       minDate="Jan 11, 2020, 00:00:00 AM"
       maxDate="Jan 31, 2020, 11:59:59 PM"
-      style={{ width: "17.5rem" }}
     />
   );
 }

@@ -31,7 +31,7 @@ function App() {
           WesternTraditional
         </Option>
       </Select>
-      <DatePicker ref={dpRef} id="dp" style={{ width: "17.5rem" }}/>
+      <DatePicker ref={dpRef} id="dp" />
     </>
   );
 }
