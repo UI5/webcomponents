@@ -212,9 +212,33 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-view>
-			<ui5-checkbox checked text="Show High-Priority Notification Alerts"></ui5-checkbox>
-		</ui5-user-settings-view>
+		<ui5-user-settings-notifications-view>
+			<ui5-user-settings-notifications-view-item item-key="successfactors"
+				text="SuccessFactors" byline-text="Compensation | Learning | HR" checked navigable>
+			</ui5-user-settings-notifications-view-item>
+			<ui5-user-settings-notifications-view-item item-key="s4-emea"
+				text="S/4HANA | EMEA" byline-text="Finance EMEA" navigable>
+			</ui5-user-settings-notifications-view-item>
+			<ui5-user-settings-notifications-view-group header-text="Channels">
+				<ui5-user-settings-notifications-view-item item-key="in-app" text="In-App Notification" byline-text="Delivered inside the app" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="email" text="E-Mail" byline-text="Sent to your primary e-mail" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="push" text="Push Notifications" byline-text="Pushed to your device immediately">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="notification-detail" secondary>
+			<ui5-user-settings-notifications-view-group header-text="Delivery Channels">
+				<ui5-user-settings-notifications-view-item item-key="detail-in-app" text="In-App" byline-text="Show inside the application" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="detail-email" text="Email" byline-text="Send to your primary email address" checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="detail-push" text="Push" byline-text="Push to your mobile device">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
