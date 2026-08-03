@@ -370,6 +370,32 @@ describe("CheckBox general interaction", () => {
 });
 
 describe("Font-size scaling", () => {
+    it("renders inner box at default size (pixel-identical to before)", () => {
+        cy.mount(<CheckBox />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(22, 1);
+                expect(size.height).to.be.closeTo(22, 1);
+            });
+    });
+
+    it("renders checkmark icon at default size (pixel-identical to before)", () => {
+        cy.mount(<CheckBox checked />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                const size = $icon[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(16, 1);
+                expect(size.height).to.be.closeTo(16, 1);
+            });
+    });
+
     it("scales inner box size when font-size is set on the host", () => {
         cy.mount(<CheckBox style={{ fontSize: "20px" }} />);
 
@@ -378,8 +404,8 @@ describe("Font-size scaling", () => {
             .find(".ui5-checkbox-inner")
             .then($inner => {
                 const size = $inner[0].getBoundingClientRect();
-                expect(size.width).to.be.greaterThan(22);
-                expect(size.height).to.be.greaterThan(22);
+                expect(size.width).to.be.closeTo(31, 1);
+                expect(size.height).to.be.closeTo(31, 1);
             });
     });
 
@@ -391,8 +417,8 @@ describe("Font-size scaling", () => {
             .find(".ui5-checkbox-icon")
             .then($icon => {
                 const size = $icon[0].getBoundingClientRect();
-                expect(size.width).to.be.greaterThan(16);
-                expect(size.height).to.be.greaterThan(16);
+                expect(size.width).to.be.closeTo(23, 1);
+                expect(size.height).to.be.closeTo(23, 1);
             });
     });
 
@@ -404,8 +430,8 @@ describe("Font-size scaling", () => {
             .find(".ui5-checkbox-display-only-icon-inner")
             .then($inner => {
                 const size = $inner[0].getBoundingClientRect();
-                expect(size.width).to.be.greaterThan(22);
-                expect(size.height).to.be.greaterThan(22);
+                expect(size.width).to.be.closeTo(31, 1);
+                expect(size.height).to.be.closeTo(31, 1);
             });
     });
 });

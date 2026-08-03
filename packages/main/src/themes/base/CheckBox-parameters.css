@@ -1,6 +1,5 @@
 :host {
 	--_ui5_checkbox_wrapper_padding: .8125rem;
-	--_ui5_checkbox_width_height: 3rem;
 	--_ui5_checkbox_transition: unset;
 	--_ui5_checkbox_disabled_opacity: .5;
 	--_ui5_checkbox_border_radius: 0;

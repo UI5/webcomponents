@@ -194,7 +194,6 @@
 
 		/* CheckBox */
 		--_ui5_checkbox_root_side_padding: var(--_ui5_checkbox_wrapped_focus_padding);
-		--_ui5_checkbox_width_height: var(--_ui5_checkbox_compact_width_height);
 		--_ui5_checkbox_wrapper_padding: var(--_ui5_checkbox_compact_wrapper_padding);
 		--_ui5_checkbox_focus_position: var(--_ui5_checkbox_compact_focus_position);
 		--_ui5_checkbox_wrapped_focus_inset_block: var(--_ui5_checkbox_focus_position);
