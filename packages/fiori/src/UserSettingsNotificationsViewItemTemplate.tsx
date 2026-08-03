@@ -28,14 +28,15 @@ function listItemContent(this: UserSettingsNotificationsViewItem) {
 					}
 				</div>
 			</div>
-			<div class="ui5-user-settings-notifications-item-end" onClick={this._handleEndClick}>
+			<div class="ui5-user-settings-notifications-item-end">
 				{this._hasEndContent
-					? <slot name="endContent"></slot>
+					? <slot name="endContent" onClick={this._handleEndClick}></slot>
 					: <Switch
 						class="ui5-user-settings-notifications-item-switch"
 						checked={this.checked}
 						onChange={this._handleSwitchChange}
 						accessibleName={this._accessibleSwitchName}
+						onClick={this._handleEndClick}
 					></Switch>
 				}
 				{this.navigable &&

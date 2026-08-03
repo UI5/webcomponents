@@ -77,7 +77,6 @@
 	margin-inline-start: 0.5rem;
 }
 
-/* Byline variant: taller row, texts distributed top/bottom */
 .ui5-user-settings-notifications-item.has-byline {
 	align-items: stretch;
 	min-height: 5rem;

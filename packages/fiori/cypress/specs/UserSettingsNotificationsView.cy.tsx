@@ -809,5 +809,82 @@ describe("Notifications view — drill-in edge cases", () => {
 		cy.get("#end-select").click();
 		cy.get("#drill").should("not.have.attr", "selected");
 	});
+
+	it("clicking the navigation arrow drills into the secondary view", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem itemKey="drill" text="Row" navigable />
+				</UserSettingsNotificationsView>
+				<UserSettingsNotificationsView id="drill" secondary>
+					<UserSettingsNotificationsViewItem text="Detail" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").eq(0).shadow()
+			.find(".ui5-user-settings-notifications-item-arrow").click();
+		cy.get("#drill").should("have.attr", "selected");
+	});
+
+	it("does not drill in when there are no secondary sibling views", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem itemKey="drill" text="Row" navigable />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view]").then($view => {
+			$view.get(0).addEventListener("item-click", cy.stub().as("itemClick"));
+		});
+
+		cy.get("[ui5-user-settings-notifications-view-item]").eq(0).click();
+		cy.get("[ui5-user-settings-notifications-view]").should("not.have.attr", "selected");
+	});
+});
+
+describe("Notifications view item — checked state", () => {
+	it("updates checked on the item after the switch is toggled", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Allow" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").shadow().find("[ui5-switch]").click();
+		cy.get("@item").should("have.attr", "checked");
+
+		cy.get("@item").shadow().find("[ui5-switch]").click();
+		cy.get("@item").should("not.have.attr", "checked");
+	});
+
+	it("switch-change detail.checked matches the new item.checked state", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Allow" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").then($item => {
+			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
+		});
+
+		cy.get("@item").shadow().find("[ui5-switch]").click();
+		cy.get("@changed").then((stub: any) => {
+			const call = stub.getCall(0);
+			expect(call.args[0].detail.checked).to.be.true;
+			cy.get("@item").then($item => {
+				expect(($item.get(0) as UserSettingsNotificationsViewItem).checked).to.be.true;
+			});
+		});
+	});
 });
 

@@ -1,13 +1,8 @@
-::part(header) {
-	background: transparent;
-	color: var(--sapList_TextColor);
-	height: auto;
-	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_GroupHeaderBorderColor);
+:host {
+	background: var(--sapList_Background);
 }
 
-::part(title) {
-	font-family: var(--sapFontFamily);
-	font-size: var(--sapFontSize);
-	font-weight: bold;
-	color: var(--sapList_TextColor);
+::part(header) {
+	background: var(--sapList_Background);
+	border-bottom: none;
 }
