@@ -1,6 +1,6 @@
 import type UserSettingsAccountView from "./UserSettingsAccountView.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
-import Tag from "@ui5/webcomponents/dist/Tag.js";
+import AvatarBadge from "@ui5/webcomponents/dist/AvatarBadge.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
@@ -18,10 +18,7 @@ export default function UserSettingsAccountViewTemplate(this: UserSettingsAccoun
 						{this._account?.avatarSrc &&
                             <img src={this._account.avatarSrc}/>
 						}
-						<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5"
-						     title={this._editAvatarTooltip}>
-							<Icon slot="icon" name={edit}></Icon>
-						</Tag>
+						<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
 
 					</Avatar>
 					{this._account?.titleText &&
