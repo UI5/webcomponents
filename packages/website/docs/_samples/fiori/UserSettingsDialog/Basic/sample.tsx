@@ -589,28 +589,27 @@ function App() {
             </UserSettingsNotificationsViewGroup>
           </UserSettingsNotificationsView>
 
-          <UserSettingsNotificationsView
-            id="notification-detail"
-            secondary={true}
-          >
+          <UserSettingsNotificationsView id="successfactors" secondary={true}>
             <UserSettingsNotificationsViewGroup headerText="Delivery Channels">
-              <UserSettingsNotificationsViewItem
-                itemKey="detail-in-app"
-                text="In-App"
-                bylineText="Show inside the application"
-                checked={true}
-              />
-              <UserSettingsNotificationsViewItem
-                itemKey="detail-email"
-                text="Email"
-                bylineText="Send to your primary email address"
-                checked={true}
-              />
-              <UserSettingsNotificationsViewItem
-                itemKey="detail-push"
-                text="Push"
-                bylineText="Push to your mobile device"
-              />
+              <UserSettingsNotificationsViewItem itemKey="sf-in-app" text="In-App" bylineText="Show inside the application" checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sf-email" text="Email" bylineText="Send to your primary email address" checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sf-push" text="Push" bylineText="Push to your mobile device" />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="s4-emea" secondary={true}>
+            <UserSettingsNotificationsViewGroup headerText="Delivery Channels">
+              <UserSettingsNotificationsViewItem itemKey="s4-in-app" text="In-App" bylineText="Show inside the application" />
+              <UserSettingsNotificationsViewItem itemKey="s4-email" text="Email" bylineText="Send to your primary email address" checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="s4-push" text="Push" bylineText="Push to your mobile device" />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="in-app" secondary={true}>
+            <UserSettingsNotificationsViewGroup headerText="Display Settings">
+              <UserSettingsNotificationsViewItem itemKey="ia-panel" text="Notifications Panel" bylineText="Show inside the application" checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="ia-banner" text="Banner Alerts" bylineText="Receive notifications instantly as a fly-in banner" checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="ia-sound" text="Play Sound" bylineText="Play a sound when a notification arrives" />
             </UserSettingsNotificationsViewGroup>
           </UserSettingsNotificationsView>
         </UserSettingsItem>
