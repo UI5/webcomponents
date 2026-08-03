@@ -4,7 +4,7 @@
 ### PR checklist
 - [ ] Check the [Development Hints](https://ui5.github.io/webcomponents/docs/contributing/DoD/)
 
-- [ ] Follow the [Commit message Guidelines](https://github.com/UI5/webcomponents/blob/main/docs/5-contributing/02-conventions-and-guidelines.md#commit-message-style)
+- [ ] Follow the [Commit message Guidelines](https://github.com/UI5/webcomponents/blob/main/docs/08-contributing/02-conventions-and-guidelines.md#commit-message-style)
 
 For example: `fix(ui5-*): correct/fix sth` or `feat(ui5-*): add/introduce sth`. If you don't want the change to be part of the release changelog - use `chore`, `refactor` or `docs`.
 
