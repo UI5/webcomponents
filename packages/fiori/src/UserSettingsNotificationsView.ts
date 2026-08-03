@@ -1,6 +1,7 @@
 import UserSettingsView from "./UserSettingsView.js";
 import UserSettingsNotificationsViewTemplate from "./UserSettingsNotificationsViewTemplate.js";
 import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
+import UserSettingsNotificationsViewCss from "./generated/themes/UserSettingsNotificationsView.css.js";
 import type UserSettingsNotificationsViewItem from "./UserSettingsNotificationsViewItem.js";
 import { isInstanceOfUserSettingsNotificationsViewItem } from "./UserSettingsNotificationsViewItem.js";
 import type UserSettingsNotificationsViewGroup from "./UserSettingsNotificationsViewGroup.js";
@@ -55,7 +56,7 @@ type UserSettingsNotificationsViewItemClickEventDetail = {
 	tag: "ui5-user-settings-notifications-view",
 	renderer: jsxRenderer,
 	template: UserSettingsNotificationsViewTemplate,
-	styles: [UserSettingViewCss],
+	styles: [UserSettingViewCss, UserSettingsNotificationsViewCss],
 })
 
 /**
@@ -143,7 +144,7 @@ class UserSettingsNotificationsView extends UserSettingsView {
 			return;
 		}
 
-		if (!matched) {
+		if (!matched || !target.text) {
 			target.text = item.text;
 		}
 
