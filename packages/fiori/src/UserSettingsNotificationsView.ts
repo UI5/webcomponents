@@ -8,7 +8,6 @@ import type UserSettingsNotificationsViewGroup from "./UserSettingsNotifications
 import { isInstanceOfUserSettingsNotificationsViewGroup } from "./UserSettingsNotificationsViewGroup.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
-import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 
 import {
