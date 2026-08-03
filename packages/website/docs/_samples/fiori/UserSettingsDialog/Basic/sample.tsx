@@ -11,6 +11,9 @@ import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSett
 import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import UserSettingsAppearanceViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import UserSettingsNotificationsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsView.js";
+import UserSettingsNotificationsViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewGroup.js";
+import UserSettingsNotificationsViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewItem.js";
 import UserSettingsDialogClass from "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
 import UserSettingsItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import UserSettingsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
@@ -49,6 +52,15 @@ const UserSettingsAppearanceViewGroup = createReactComponent(
 );
 const UserSettingsAppearanceViewItem = createReactComponent(
   UserSettingsAppearanceViewItemClass,
+);
+const UserSettingsNotificationsView = createReactComponent(
+  UserSettingsNotificationsViewClass,
+);
+const UserSettingsNotificationsViewGroup = createReactComponent(
+  UserSettingsNotificationsViewGroupClass,
+);
+const UserSettingsNotificationsViewItem = createReactComponent(
+  UserSettingsNotificationsViewItemClass,
 );
 const UserSettingsDialog = createReactComponent(UserSettingsDialogClass);
 const UserSettingsItem = createReactComponent(UserSettingsItemClass);
@@ -541,12 +553,66 @@ function App() {
           headerText="Notifications"
           onSelectionChange={handleSettingsDialogItemSelectionChange}
         >
-          <UserSettingsView>
-            <CheckBox
+          <UserSettingsNotificationsView>
+            <UserSettingsNotificationsViewItem
+              itemKey="successfactors"
+              text="SuccessFactors"
+              bylineText="Compensation | Learning | HR"
               checked={true}
-              text="Show High-Priority Notification Alerts"
+              navigable={true}
             />
-          </UserSettingsView>
+            <UserSettingsNotificationsViewItem
+              itemKey="s4-emea"
+              text="S/4HANA | EMEA"
+              bylineText="Finance EMEA"
+              navigable={true}
+            />
+            <UserSettingsNotificationsViewGroup headerText="Channels">
+              <UserSettingsNotificationsViewItem
+                itemKey="in-app"
+                text="In-App Notification"
+                bylineText="Delivered inside the app"
+                checked={true}
+                navigable={true}
+              />
+              <UserSettingsNotificationsViewItem
+                itemKey="email"
+                text="E-Mail"
+                bylineText="Sent to your primary e-mail"
+                checked={true}
+              />
+              <UserSettingsNotificationsViewItem
+                itemKey="push"
+                text="Push Notifications"
+                bylineText="Pushed to your device immediately"
+              />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView
+            id="notification-detail"
+            secondary={true}
+          >
+            <UserSettingsNotificationsViewGroup headerText="Delivery Channels">
+              <UserSettingsNotificationsViewItem
+                itemKey="detail-in-app"
+                text="In-App"
+                bylineText="Show inside the application"
+                checked={true}
+              />
+              <UserSettingsNotificationsViewItem
+                itemKey="detail-email"
+                text="Email"
+                bylineText="Send to your primary email address"
+                checked={true}
+              />
+              <UserSettingsNotificationsViewItem
+                itemKey="detail-push"
+                text="Push"
+                bylineText="Push to your mobile device"
+              />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
         </UserSettingsItem>
 
         <UserSettingsItem

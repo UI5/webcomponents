@@ -1,0 +1,13 @@
+::part(header) {
+	background: transparent;
+	color: var(--sapList_TextColor);
+	height: auto;
+	border-bottom: var(--sapList_BorderWidth) solid var(--sapList_GroupHeaderBorderColor);
+}
+
+::part(title) {
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	font-weight: bold;
+	color: var(--sapList_TextColor);
+}
