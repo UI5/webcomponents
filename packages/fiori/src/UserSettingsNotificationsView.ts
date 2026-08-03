@@ -162,7 +162,7 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	}
 
 	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
-		const listItem = e.detail.item as ListItemBase;
+		const listItem = e.detail.item;
 		if (!isInstanceOfUserSettingsNotificationsViewItem(listItem) || !listItem.navigable) {
 			return;
 		}
