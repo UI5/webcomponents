@@ -5,19 +5,24 @@ import './styles.css';
 type Item = {
   Svg?: React.ComponentType<React.ComponentProps<'svg'>>;
   repository: string,
-  demo: string,
+  demo?: string,
 }
 
 const FramaworksList: Array<Item> = [
   {
-    Svg: require('@site/static/img/demo-apps/Angular-1920-2560.svg').default,
-    repository: "https://github.com/UI5/sample-webcomponents-angular",
-    demo: "https://ui5.github.io/sample-webcomponents-angular/",
+    Svg: require('@site/static/img/demo-apps/OpenUI5-1920-2560.svg').default,
+    repository: "https://github.com/UI5/sample-webcomponents-openui5",
+    demo: "https://ui5.github.io/sample-webcomponents-openui5/",
   },
   {
     Svg: require('@site/static/img/demo-apps/React-1920-2560.svg').default,
     repository: "https://github.com/UI5/sample-webcomponents-react",
     demo: "https://ui5.github.io/sample-webcomponents-react/",
+  },
+  {
+    Svg: require('@site/static/img/demo-apps/Angular-1920-2560.svg').default,
+    repository: "https://github.com/UI5/sample-webcomponents-angular",
+    demo: "https://ui5.github.io/sample-webcomponents-angular/",
   },
   {
    Svg: require('@site/static/img/demo-apps/Vue-1920-2560.svg').default,
@@ -32,12 +37,12 @@ const FramaworksList: Array<Item> = [
 ];
 
 
-const Framework = ({ Svg, repository, demo }: Item) => {
+const Framework = ({ Svg, img, repository, demo }: Item) => {
   return (
     <div className="demo-apps__framework">
-        <Svg className="demo-apps__logo" />
+        {Svg ? <Svg className="demo-apps__logo" /> : <img src={img} className="demo-apps__logo" alt="" />}
         <a href={repository} className="demo-apps__link">Explore the Code</a>
-        <a href={demo} className="demo-apps__link">Run the Demo App</a>
+        {demo && <a href={demo} className="demo-apps__link">Run the Demo App</a>}
     </div>
   );
 }
@@ -48,7 +53,7 @@ export default function HomepageDemoApps(): JSX.Element {
         <div className="demo-apps__heading">
           <h2 className="demo-apps__title">Use the web framework of your choice</h2>
           <p className="demo-apps__desc"> UI5 Web Components are framework agnostic, working seamlessly with all popular frameworks,
-          including Angular, React, Vue, Svelte, etc.</p>
+          including Angular, React, OpenUI5/SAPUI5, Vue, Svelte, etc.</p>
         </div>
         <div className="demo-apps__frameworks">
             {FramaworksList.map((props, idx) => (

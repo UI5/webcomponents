@@ -523,10 +523,12 @@ class Table extends UI5Element {
 
 	_onResize() {
 		const { clientWidth, scrollWidth } = this._tableElement;
+		// Safari can report scrollWidth 1px greater than clientWidth during zoom transitions
+		// due to subpixel rounding, so a strict > check triggers spurious popin cycles.
+		const overflow = scrollWidth - clientWidth;
 
-		if (scrollWidth > clientWidth) {
+		if (overflow > 1) {
 			// Overflow Handling: Move columns into the popin until overflow is resolved
-			const overflow = scrollWidth - clientWidth;
 			const headers = this._getPopinOrderedColumns(false);
 			const poppedInWidth = headers.reduce((totalPoppedInWidth, headerCell) => {
 				if (totalPoppedInWidth < overflow && !headerCell._popin) {

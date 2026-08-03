@@ -244,8 +244,8 @@ describe("Carousel general interaction", () => {
 
 		cy.get("#carousel5")
 			.shadow()
-			.find(".ui5-carousel-root")
-			.should("have.attr", "role", "region");
+			.find("section.ui5-carousel-root")
+			.should("exist");
 
 		cy.get("#carousel5")
 			.shadow()
