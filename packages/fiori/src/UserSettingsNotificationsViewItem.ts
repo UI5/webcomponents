@@ -38,7 +38,7 @@ type UserSettingsNotificationsViewItemSwitchChangeEventDetail = {
  * @constructor
  * @extends ListItemCustom
  * @public
- * @since 2.25.0
+ * @since 2.26.0
  */
 @customElement({
 	tag: "ui5-user-settings-notifications-view-item",
