@@ -653,7 +653,7 @@ function App() {
           <SideNavigationItem slot="fixedItems" text="Product Settings" icon="settings" />
         </SideNavigation>
 
-        <div class="mainContent">
+        <div className="mainContent">
           <Title id="content-title">{contentTitle}</Title>
           <br />
           <Text>Content...</Text>
@@ -686,7 +686,7 @@ function App() {
         class="notificationsPopover"
         horizontalAlign="End"
       >
-        <div class="notificationsPopoverHeader" slot="header">
+        <div className="notificationsPopoverHeader" slot="header">
           <Bar class="notificationsPopoverBar" design="Header">
             <Title level="H5" slot="startContent">
               Notifications
@@ -946,7 +946,7 @@ function App() {
             onSelectionChange={handleAppearanceViewSelectionChange}
           >
             <div slot="additionalContent">
-              <div class="ui5-user-settings-appearance-view-additional-content-header">
+              <div className="ui5-user-settings-appearance-view-additional-content-header">
                 <Text id="touch-input-label">Optimize for Touch Input</Text>
                 <Switch accessibleNameRef="touch-input-label" />
               </div>
@@ -1006,8 +1006,8 @@ function App() {
             <MessageStrip id="language-region-strip" design="Information" hideCloseButton>
               Close to apply your chosen language – the page will reload.
             </MessageStrip>
-            <div class="language-region-form">
-              <div class="language-region-row">
+            <div className="language-region-form">
+              <div className="language-region-row">
                 <Label for="language" showColon>Display Language</Label>
                 <Select id="language">
                   <Option>Browser Language</Option>
@@ -1024,7 +1024,7 @@ function App() {
                   <Option>Spanish (Spain)</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="region" showColon>Region</Label>
                 <Select id="region">
                   <Option>United Kingdom</Option>
@@ -1040,7 +1040,7 @@ function App() {
                   <Option>Spain</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="dateFormat" showColon>Date Format</Label>
                 <Select id="dateFormat">
                   <Option>MM/DD/YYYY</Option>
@@ -1054,14 +1054,14 @@ function App() {
                   <Option>YYYY-MM-DD</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="timeFormat" showColon>Time Format</Label>
                 <Select id="timeFormat">
                   <Option>24 Hour</Option>
                   <Option selected>12 Hour</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="timeZone" showColon>Time Zone</Label>
                 <Select id="timeZone">
                   <Option>Pacific Time (UTC -08:00)</Option>
@@ -1075,7 +1075,7 @@ function App() {
                   <Option>Japan Standard Time (UTC +09:00)</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="currency" showColon>Currency</Label>
                 <Select id="currency">
                   <Option selected>USD – United States Dollar</Option>
@@ -1089,7 +1089,7 @@ function App() {
                   <Option>INR – Indian Rupee</Option>
                 </Select>
               </div>
-              <div class="language-region-row">
+              <div className="language-region-row">
                 <Label for="numberFormat" showColon>Number Format</Label>
                 <Select id="numberFormat">
                   <Option>1.234,56</Option>
