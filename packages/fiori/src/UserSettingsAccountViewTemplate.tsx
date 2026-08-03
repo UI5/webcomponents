@@ -1,7 +1,6 @@
 import type UserSettingsAccountView from "./UserSettingsAccountView.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import AvatarBadge from "@ui5/webcomponents/dist/AvatarBadge.js";
-import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import personPlaceholder from "@ui5/webcomponents-icons/dist/person-placeholder.js";
