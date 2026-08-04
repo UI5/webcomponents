@@ -148,7 +148,7 @@ class SearchField extends UI5Element {
 	 * component has no value.
 	 *
 	 * **Note:** When `scopes` are defined and no custom placeholder is provided,
-	 * the placeholder automatically displays "Search in: {selected scope name}".
+	 * the placeholder automatically displays "Search in: \{selected scope name\}".
 	 * Setting a custom placeholder will override this automatic behavior.
 	 *
 	 * @default undefined
