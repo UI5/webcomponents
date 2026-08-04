@@ -629,10 +629,14 @@ abstract class Popup extends UI5Element {
 	 * Asks the InvisibleMessage to render its aria-live region inside the popup, so that announcements
 	 * made while the popup is open (and the screen reader's accessibility tree is scoped to the popup)
 	 * are read out.
+	 *
+	 * Only modal popups need this: a screen reader scopes its accessibility tree to a modal popup's
+	 * subtree, so a body-level aria-live region would be silenced. Non-modal popups (e.g. suggestion
+	 * lists) leave focus and the accessibility tree in place, so the default region still works.
 	 * @protected
 	 */
 	_registerInvisibleMessageRegion() {
-		if (this._root) {
+		if (this.isModal && this._root) {
 			registerInvisibleMessageRegion(this._root);
 		}
 	}
