@@ -249,6 +249,7 @@ class UserSettingsDialog extends UI5Element {
 				this._selectedSetting = item;
 			}
 			item._siblingsWithIcon = siblingsWithIcon;
+			item._inMobileView = this._showSettingWithNavigation;
 		});
 
 		this.fixedItems.forEach(item => {
@@ -259,6 +260,7 @@ class UserSettingsDialog extends UI5Element {
 			if (item.selected) {
 				this._selectedSetting = item;
 			}
+			item._inMobileView = this._showSettingWithNavigation;
 		});
 
 		if (this._filteredItems.length === 0 && this._filteredFixedItems.length === 0) {
