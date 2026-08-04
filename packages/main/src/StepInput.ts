@@ -533,7 +533,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 
 	_updateValueState() {
 		const isWithinRange = (this.min === undefined || this._parseNumber(this.input.value) >= this.min)
-							  && (this.max === undefined || this._parseNumber(this.input.value) <= this.max);
+			&& (this.max === undefined || this._parseNumber(this.input.value) <= this.max);
 		const isValueWithCorrectPrecision = this._isValueWithCorrectPrecision;
 		const previousValueState = this.valueState;
 		const isValid = isWithinRange && isValueWithCorrectPrecision;
@@ -595,17 +595,17 @@ class StepInput extends UI5Element implements IFormInputElement {
 	}
 
 	/**
- 	 * Formats a number with thousands separator based on current locale
- 	 * @private
- 	 */
+	* Formats a number with thousands separator based on current locale
+	* @private
+	*/
 	_formatNumber(value: number): string {
 		return this.formatter.format(value);
 	}
 
 	/**
- 	 * Parses formatted number string back to numeric value
- 	 * @private
- 	*/
+	* Parses formatted number string back to numeric value
+	* @private
+	*/
 	_parseNumber(formattedValue: string): number {
 		return this.formatter.parse(formattedValue) as number;
 	}
