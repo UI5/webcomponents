@@ -224,7 +224,6 @@ class SearchField extends UI5Element {
 	@property({ type: Boolean })
 	_isMobileView = false;
 
-
 	/**
 	 * Indicates whether the scope selection popover is open on mobile.
 	 * @private
