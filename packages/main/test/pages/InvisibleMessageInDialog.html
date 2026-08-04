@@ -93,8 +93,7 @@
 	</ui5-dialog>
 
 	<script type="module">
-		import announce from "/packages/base/src/util/InvisibleMessage.ts";
-		import InvisibleMessageMode from "/packages/base/src/types/InvisibleMessageMode.ts";
+		const { announce } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
 
 		const logEl = document.getElementById("log");
 		let counter = 0;
@@ -109,7 +108,7 @@
 		// 1. announce() with no dialog open — heard.
 		document.getElementById("announceNoDialog").addEventListener("click", () => {
 			const msg = `No dialog announcement #${++counter}`;
-			announce(msg, InvisibleMessageMode.Polite);
+			announce(msg, "Polite");
 			log(`announce(): "${msg}"`);
 		});
 
@@ -134,7 +133,7 @@
 		// 3b. announce() via the framework API — with the fix, routed into the open dialog's region.
 		const announceApi = () => {
 			const msg = `API announcement #${++counter}`;
-			announce(msg, InvisibleMessageMode.Polite);
+			announce(msg, "Polite");
 			log(`announce(): "${msg}"  → rendered inside the open dialog (heard)`);
 		};
 		document.getElementById("announceApi").addEventListener("click", announceApi);
