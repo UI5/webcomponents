@@ -190,6 +190,9 @@ class UserSettingsItem extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_siblingsWithIcon = false;
 
+	@property({ type: Boolean, noAttribute: true })
+	_inMobileView = false;
+
 	/**
 	 * @private
 	 */
@@ -216,7 +219,7 @@ class UserSettingsItem extends UI5Element {
 	}
 
 	_handleBackButtonClick() {
-		if (this._shouldShowBackButton) {
+		if (this._hasSelectedPageView && this._selectedPageView.secondary) {
 			const selectedPageView = this._selectedPageView;
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 				view: selectedPageView,
@@ -248,7 +251,7 @@ class UserSettingsItem extends UI5Element {
 	}
 
 	get _shouldShowBackButton() {
-		return !!(this._hasSelectedPageView && this._selectedPageView.secondary);
+		return !!(this._inMobileView || (this._hasSelectedPageView && this._selectedPageView.secondary));
 	}
 
 	/**
