@@ -345,30 +345,48 @@ describe("General", () => {
 
 		cy.get("[ui5-multi-combobox]")
 			.as("mcb")
+			.then($mcb => {
+				$mcb.get(0).addEventListener("ui5-selection-change", cy.stub().as("selectionChange"));
+			});
+
+		// With new overflow logic, both tokens should be hidden and show "2 items"
+		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer]")
 			.as("tokenizer")
-			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
-
-		// The first token is the long one and should be hidden in the n-more, so we target the second token
-		cy.get("@tokenizer")
-			.find("[ui5-token]")
-			.eq(1)
-			.as("token")
-			.should("exist");
-
-		cy.get("@token")
 			.shadow()
-			.find("[ui5-icon]")
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.should("contain.text", "2")
 			.realClick();
 
-		cy.get("@tokenDelete")
-			.should("have.been.calledOnce")
-			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.tokens.length === 1;
-			}));
+		// In MultiComboBox, clicking "n items" opens the main dropdown
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
 
-		cy.get("@token")
+		// Find and click the first item (the long token) to deselect it
+		cy.get("@mcb")
+			.find("[ui5-mcb-item]")
+			.first()
+			.should("have.attr", "text", "This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable")
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		// After removing the long token, the remaining "Item" token should now be visible
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 1)
+			.should("have.attr", "text", "Item");
+
+		// No "n more" should be shown since the single token fits
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
 			.should("not.exist");
 	});
 
@@ -835,7 +853,7 @@ describe("General", () => {
 			.should("have.text", "BG");
 	});
 
-	it("N-more translation", () => {
+	it("N-items translation", () => {
 		cy.mount(
 			<MultiComboBox style="width: 100px">
 				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long text"></MultiComboBoxItem>
@@ -858,11 +876,12 @@ describe("General", () => {
 			})
 	});
 
-	it("N-items translation", () => {
+	it("N-more translation", () => {
 		cy.mount(
-			<MultiComboBox style="width: 100%">
-				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long text"></MultiComboBoxItem>
+			<MultiComboBox style="width: 400px">
+				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -877,7 +896,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 1));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
 			})
 	});
 

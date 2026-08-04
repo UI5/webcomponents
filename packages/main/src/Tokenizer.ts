@@ -1288,19 +1288,31 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			nMoreWidth = nMoreElement.getBoundingClientRect().width;
 		}
 
-		// Calculate overflow, reserving space for "n more" except on last token
-		return tokensArray.filter((token, index) => {
+		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
+		let firstOverflowIndex = -1;
+
+		tokensArray.forEach((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
 
 			const isLastToken = index === tokensArray.length - 1;
+
+			// For the last token, check if it fits without "n more"
+			// For other tokens, check if token + "n more" fits together
 			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
 
-			return token.overflows;
+			if (tokenOverflows && firstOverflowIndex === -1) {
+				firstOverflowIndex = index;
+			}
+
+			// Mark this and all subsequent tokens as overflow
+			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
+
+		return tokensArray.filter(token => token.overflows);
 	}
 
 	get _isPhone() {
