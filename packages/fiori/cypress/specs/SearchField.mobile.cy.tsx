@@ -82,6 +82,7 @@ describe("SearchField Responsive Scope Selector", () => {
 
 			cy.get("[ui5-search-field]")
 				.shadow()
+				.find("[ui5-busy-indicator]")
 				.find(".ui5-search-field-scope-popover")
 				.should("have.attr", "open");
 		});
@@ -98,11 +99,19 @@ describe("SearchField Responsive Scope Selector", () => {
 			cy.get("[ui5-search-field]")
 				.shadow()
 				.find(".ui5-search-field-scope-button")
+				.should("exist")
 				.realClick();
 
 			cy.get("[ui5-search-field]")
 				.shadow()
-				.find(".ui5-search-field-scope-popover [ui5-li-standard]")
+				.find("[ui5-busy-indicator]")
+				.find("[ui5-responsive-popover]")
+				.as("popover")
+				.should("have.attr", "open")
+				
+			cy.get("@popover")
+				.find("[ui5-list]")
+				.find("[ui5-li]")
 				.should("have.length", 3);
 		});
 
@@ -121,7 +130,10 @@ describe("SearchField Responsive Scope Selector", () => {
 
 			cy.get("[ui5-search-field]")
 				.shadow()
-				.find(".ui5-search-field-scope-popover [ui5-li-standard][selected]")
+				.find("[ui5-busy-indicator]")
+				.find("[ui5-responsive-popover]")
+				.find("[ui5-list]")
+				.find("[ui5-li][selected]")
 				.should("have.length", 1)
 				.should("contain.text", "Apps");
 		});
@@ -146,7 +158,10 @@ describe("SearchField Responsive Scope Selector", () => {
 
 			cy.get("[ui5-search-field]")
 				.shadow()
-				.find(".ui5-search-field-scope-popover [ui5-li-standard]")
+				.find("[ui5-busy-indicator]")
+				.find("[ui5-responsive-popover]")
+				.find("[ui5-list]")
+				.find("[ui5-li]")
 				.eq(1)
 				.realClick();
 
@@ -169,14 +184,19 @@ describe("SearchField Responsive Scope Selector", () => {
 
 			cy.get("[ui5-search-field]")
 				.shadow()
-				.find(".ui5-search-field-scope-popover [ui5-li-standard]")
+				.find("[ui5-busy-indicator]")
+				.find("[ui5-responsive-popover]")
+				.find("[ui5-list]")
+				.find("[ui5-li]")
 				.eq(1)
 				.realClick();
 
+			// Popover element is removed from DOM when closed
 			cy.get("[ui5-search-field]")
 				.shadow()
+				.find("[ui5-busy-indicator]")
 				.find(".ui5-search-field-scope-popover")
-				.should("not.have.attr", "open");
+				.should("not.exist");
 		});
 	});
 
