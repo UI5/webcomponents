@@ -55,6 +55,7 @@ import "./commands/DatePicker.commands.js";
 import "./commands/Menu.commands.js";
 import "./commands/SegmentedButton.commands.js";
 import "./commands/StepInput.commands.js";
+import "./commands/NumberInput.commands.js";
 import "./commands/Switch.commands.js";
 import "./commands/TabContainer.commands.js";
 import "./commands/TimeSelectionClocks.commands.js";
