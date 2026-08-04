@@ -327,7 +327,6 @@
 	background-color: var(--sapShell_Hover_Background);
 }
 
-.ui5-search-field-scope-button:active,
 .ui5-search-field-scope-button:focus-within {
 	box-shadow: var(--_ui5-search_input_scope_active_shadow);
 	background: var(--sapShell_Active_Background);

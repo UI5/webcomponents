@@ -11,8 +11,6 @@ import type Button from "@ui5/webcomponents/dist/Button.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { IOption, SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
-import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 
 import {
@@ -148,6 +146,11 @@ class SearchField extends UI5Element {
 	/**
 	 * Defines a short hint intended to aid the user with data entry when the
 	 * component has no value.
+	 *
+	 * **Note:** When `scopes` are defined and no custom placeholder is provided,
+	 * the placeholder automatically displays "Search in: {selected scope name}".
+	 * Setting a custom placeholder will override this automatic behavior.
+	 *
 	 * @default undefined
 	 * @public
 	 */
@@ -230,22 +233,25 @@ class SearchField extends UI5Element {
 	_scopePopoverOpen = false;
 
 	_scopeIconButton?: HTMLElement;
+	_resizeHandler?: () => void;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
 	onEnterDOM() {
-		ResizeHandler.register(this, this._handleResize.bind(this) as ResizeObserverCallback);
+		this._resizeHandler = this._handleResize.bind(this);
+		window.addEventListener("resize", this._resizeHandler);
 		this._isMobileView = this._isSmallScreen();
 	}
 
 	onExitDOM() {
-		ResizeHandler.deregister(this, this._handleResize.bind(this) as ResizeObserverCallback);
+		if (this._resizeHandler) {
+			window.removeEventListener("resize", this._resizeHandler);
+		}
 	}
 
 	onBeforeRendering() {
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value);
-		this._isMobileView = this._isSmallScreen();
 	}
 
 	private _isSmallScreen(): boolean {
@@ -390,7 +396,7 @@ class SearchField extends UI5Element {
 		const selectedScope = this.scopes.find((scope: ISearchScope) => scope.value === this.scopeValue);
 
 		return selectedScope
-			? `${this._translations.scope}: ${selectedScope.text}`
+			? `${this._translations.scope}, ${selectedScope.text}`
 			: this._translations.scope;
 	}
 
