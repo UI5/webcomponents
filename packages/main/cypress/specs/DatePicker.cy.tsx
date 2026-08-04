@@ -5,6 +5,13 @@ import Label from "../../src/Label.js";
 import { DATEPICKER_POPOVER_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Date Picker Tests", () => {
+	afterEach(() => {
+		cy.wrap({ setLanguage })
+			.then(async api => {
+				await api.setLanguage("en");
+			});
+	});
+    
 	it("input renders", () => {
 		cy.mount(<DatePicker></DatePicker>);
 

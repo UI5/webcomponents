@@ -11,6 +11,7 @@ export default function DynamicDateRangeInputTemplate(this: DynamicDateRange) {
 				id={`${this._id}-inner`}
 				class="ui5-dynamic-date-range-input"
 				value={this.value && this.getOption(this.value?.operator)?.format(this.value)}
+				_inputAccInfo={this._accInfo}
 				onChange={this.onInputChange}
 				onKeyDown={this.onInputKeyDown}
 			>

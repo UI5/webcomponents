@@ -198,13 +198,23 @@
 		<ui5-option>500px</ui5-option>
 		<ui5-option>700px</ui5-option>
 	</ui5-select>
+	Theme:
+	<ui5-select id="containerThemeSelect">
+		<ui5-option selected>sap_horizon</ui5-option>
+		<ui5-option>sap_horizon_hcb</ui5-option>
+		<ui5-option>sap_horizon_hcw</ui5-option>
+		<ui5-option>sap_fiori_3</ui5-option>
+		<ui5-option>sap_fiori_3_hcb</ui5-option>
+	</ui5-select>
 	<div id="container" class="border">
 		<ui5-illustrated-message id="illustratedMsg5" class="border contentBox">
 			<ui5-button>Action 1</ui5-button>
 		</ui5-illustrated-message>
 	</div>
 
-	<script>
+	<script type="module">
+		import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+
 		const illustrationSelect = document.getElementById("illustrationSelect");
 		const sizeSelect = document.getElementById("sizeSelect");
 		const illustratedMessage = document.querySelector("ui5-illustrated-message");
@@ -213,6 +223,7 @@
 		const dialogCloser = document.getElementById("closeDialogButton");
 		const containerHeightSelect = document.getElementById("containerHeightSelect");
 		const containerWidthSelect = document.getElementById("containerWidthSelect");
+		const containerThemeSelect = document.getElementById("containerThemeSelect");
 		const illustratedMessageContainer = document.getElementById("container");
 		const designs = {
 			base: 159,
@@ -246,6 +257,10 @@
 
 		containerWidthSelect.addEventListener("ui5-change", (event) => {
 			illustratedMessageContainer.style.width = event.detail.selectedOption.textContent;
+		});
+
+		containerThemeSelect.addEventListener("ui5-change", (event) => {
+			setTheme(event.detail.selectedOption.textContent);
 		});
 	</script>
 </body>
