@@ -211,7 +211,7 @@ class UserMenu extends UI5Element {
 	 *
 	 * @default false
 	 * @public
-	 * @since 2.25.0
+	 * @since 2.24.0
 	 */
 	@property({ type: Boolean })
 	avatarInteractive = false;
