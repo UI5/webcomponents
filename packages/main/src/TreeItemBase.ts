@@ -171,7 +171,7 @@ class TreeItemBase extends ListItem {
 	 * @since 1.8.0
 	 */
 	@property()
-	declare accessibleName?: string;
+	accessibleName?: string;
 
 	/**
 	 * @private

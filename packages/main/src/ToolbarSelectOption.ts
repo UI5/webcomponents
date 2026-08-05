@@ -20,6 +20,15 @@ import type ToolbarSelect from "./ToolbarSelect.js";
 @customElement("ui5-toolbar-select-option")
 class ToolbarSelectOption extends UI5Element {
 	/**
+	 * Defines the value of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.25.0
+	 */
+	@property()
+	value?: string;
+
+	/**
 	 * Defines the selected state of the component.
 	 * @default false
 	 * @public
@@ -47,7 +56,7 @@ class ToolbarSelectOption extends UI5Element {
 				}
 			});
 			if (parent.select) {
-				parent.select.value = this.textContent || "";
+				parent.select.value = this.value !== undefined && this.value !== "" ? this.value : (this.textContent || "");
 			}
 		}
 	}

@@ -172,6 +172,36 @@
 		<ui5-menu-item text="Exit"></ui5-menu-item>
 	</ui5-menu>
 
+	<ui5-title level="H5" class="header-title">Menu with long list of items</ui5-title>
+	<ui5-button id="btnOpenLongList">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menuLongList" header-text="Long List">
+		<ui5-menu-item text="Item 1"></ui5-menu-item>
+		<ui5-menu-item text="Item 2"></ui5-menu-item>
+		<ui5-menu-item text="Item 3"></ui5-menu-item>
+		<ui5-menu-item text="Item 4"></ui5-menu-item>
+		<ui5-menu-item text="Item 5"></ui5-menu-item>
+		<ui5-menu-item text="Item 6"></ui5-menu-item>
+		<ui5-menu-item text="Item 7"></ui5-menu-item>
+		<ui5-menu-item text="Item 8"></ui5-menu-item>
+		<ui5-menu-item text="Item 9"></ui5-menu-item>
+		<ui5-menu-item text="Item 10"></ui5-menu-item>
+		<ui5-menu-item text="Item 11"></ui5-menu-item>
+		<ui5-menu-item text="Item 12"></ui5-menu-item>
+		<ui5-menu-item text="Item 13"></ui5-menu-item>
+		<ui5-menu-item text="Item 14"></ui5-menu-item>
+		<ui5-menu-item text="Item 15"></ui5-menu-item>
+		<ui5-menu-item text="Item 16"></ui5-menu-item>
+		<ui5-menu-item text="Item 17"></ui5-menu-item>
+		<ui5-menu-item text="Item 18"></ui5-menu-item>
+		<ui5-menu-item text="Item 19"></ui5-menu-item>
+		<ui5-menu-item text="Item 20"></ui5-menu-item>
+		<ui5-menu-item text="Item 21"></ui5-menu-item>
+		<ui5-menu-item text="Item 22"></ui5-menu-item>
+		<ui5-menu-item text="Item 23"></ui5-menu-item>
+		<ui5-menu-item text="Item 24"></ui5-menu-item>
+		<ui5-menu-item text="Item 25"></ui5-menu-item>
+	</ui5-menu>
+
 	<ui5-popover id="detailsPopover" initialFocus="detailsLink">
 			<div>
 				<ui5-label for="detailsLink">For more information:</ui5-label>
@@ -210,6 +240,11 @@
 		btnOpenGroups.addEventListener("click", function() {
 			menuGroups.opener = "btnOpenGroups";
 			menuGroups.open = true;
+		});
+
+		btnOpenLongList.addEventListener("click", function() {
+			menuLongList.opener = "btnOpenLongList";
+			menuLongList.open = true;
 		});
 
 		btnOpenEndContent.addEventListener("click", function() {

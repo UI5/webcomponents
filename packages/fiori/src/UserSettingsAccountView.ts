@@ -88,11 +88,11 @@ class UserSettingsAccountView extends UserSettingsView {
 	}
 
 	get _manageAccountButtonText() {
-		return UserSettingsAccountView.i18nBundle.getText(USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT);
+		return UserSettingsAccountView.i18nBundle?.getText(USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT);
 	}
 
 	get _editAvatarTooltip() {
-		return UserSettingsAccountView.i18nBundle.getText(USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT);
+		return UserSettingsAccountView.i18nBundle?.getText(USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT);
 	}
 
 	get _account() {
