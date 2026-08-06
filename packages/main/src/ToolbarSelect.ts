@@ -223,7 +223,7 @@ class ToolbarSelect extends ToolbarItemBase {
 		}
 
 		// Last selected wins — mirrors Select._applyAutoSelection behaviour.
-		this._lastSelectedIndex = this.options.reduce((last, option, index) => option.selected ? index : last, -1);
+		this._lastSelectedIndex = this.options.reduce((last, option, index) => (option.selected ? index : last), -1);
 	}
 
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
