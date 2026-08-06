@@ -644,7 +644,7 @@ describe("Toolbar general interaction", () => {
 	it("Should apply value='' set before first render", () => {
 		cy.mount(
 			<Toolbar>
-				<ToolbarSelect id="pre-render-empty">
+				<ToolbarSelect value="">
 					<ToolbarSelectOption selected>Option 1</ToolbarSelectOption>
 					<ToolbarSelectOption>Option 2</ToolbarSelectOption>
 					<ToolbarSelectOption>Option 3</ToolbarSelectOption>
@@ -652,25 +652,9 @@ describe("Toolbar general interaction", () => {
 			</Toolbar>
 		);
 
-		cy.document().then(doc => {
-			const wrapper = doc.createElement("div");
-			const select = doc.createElement("ui5-toolbar-select") as ToolbarSelect;
-			(select as any).value = "";
-			const opt1 = doc.createElement("ui5-toolbar-select-option") as ToolbarSelectOption;
-			opt1.textContent = "A";
-			(opt1 as any).selected = true;
-			const opt2 = doc.createElement("ui5-toolbar-select-option") as ToolbarSelectOption;
-			opt2.textContent = "B";
-			select.appendChild(opt1);
-			select.appendChild(opt2);
-			wrapper.appendChild(select);
-			doc.body.appendChild(wrapper);
-		});
-
-		cy.get("[ui5-toolbar-select]").last()
-			.shadow()
-			.find("[ui5-select]")
-			.should("have.attr", "value", "");
+		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(1).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(2).should("not.have.attr", "selected");
 	});
 
 	it("Should not let stale _pendingValue override a later programmatic selected change", () => {
