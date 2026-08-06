@@ -28,7 +28,6 @@ import {
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import SelectTextSeparator from "./types/SelectTextSeparator.js";
-import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -353,15 +352,6 @@ class Select extends UI5Element implements IFormInputElement {
 	 */
 	@property()
 	textSeparator: `${SelectTextSeparator}` = "Dash";
-
-	/**
-	 * Determines the horizontal alignment of the component's dropdown menu relative to the component.
-	 * @default "Start"
-	 * @public
-	 * @since 2.26.0
-	 */
-	@property()
-	horizontalAlign: `${PopoverHorizontalAlign}` = "Start";
 
 	/**
 	 * Constantly updated value of texts collected from the associated description texts
