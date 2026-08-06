@@ -13,6 +13,65 @@
 	<script>// delete Document.prototype.adoptedStyleSheets;</script>
 
 	<link rel="stylesheet" type="text/css" href="./styles/CheckBox.css">
+
+	<style>
+		/* ── Customization sample styles ── */
+		.cust-section {
+			margin-top: 3rem;
+			padding-top: 2rem;
+			border-top: 2px solid var(--sapNeutralBorderColor, #ccc);
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.cust-section h2 {
+			font-family: var(--sapFontFamily);
+			font-size: var(--sapFontHeader4Size, 1rem);
+			font-weight: bold;
+			color: var(--sapTextColor);
+			margin: 0;
+		}
+
+		.cust-section p {
+			font-family: var(--sapFontFamily);
+			font-size: var(--sapFontSmallSize, 0.75rem);
+			color: var(--sapNeutralTextColor);
+			margin: 0;
+		}
+
+		.cust-row {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 1.5rem;
+		}
+
+		/* 1. Scale via font-size */
+		.cb-big {
+			font-size: 20px;
+		}
+
+		/* 2 & 3. Reduced padding + focus ring fix */
+		.cb-custom {
+			font-size: 20px;
+		}
+
+		.cb-custom::part(root) {
+			padding: 4px;
+		}
+
+		.cb-custom::part(root):focus::before,
+		.cb-custom::part(root):focus-visible::before {
+			inset: 0;
+		}
+
+		/* 4. Wrapping label */
+		.cb-wrap {
+			font-size: 24px;
+			width: 300px;
+		}
+	</style>
 </head>
 
 <body class="checkbox1auto">
@@ -171,6 +230,61 @@
 			formValidationMessage.design = isValid ? "Positive" : "Negative";
 		}
 	</script>
+
+
+	<!-- ============================================================ -->
+	<!-- CUSTOMIZATION SAMPLES                                        -->
+	<!-- ============================================================ -->
+
+	<div class="cust-section">
+		<h2>Customization 1 — font-size scaling (20px)</h2>
+		<p>Set font-size on the host element. The box, icon, and label all scale proportionally. Works with and without text, and in display-only mode.</p>
+		<div class="cust-row">
+			<ui5-checkbox class="cb-big"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" checked></ui5-checkbox>
+			<ui5-checkbox class="cb-big" text="Unchecked"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" checked text="Checked"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" checked indeterminate text="Indeterminate"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" disabled text="Disabled"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" readonly text="Readonly"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" display-only text="Display only"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" display-only checked text="Display only checked"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" display-only checked indeterminate text="Display only indeterminate"></ui5-checkbox>
+		</div>
+	</div>
+
+	<div class="cust-section">
+		<h2>Customization 2 — reduced padding via ::part(root) + focus ring fix (20px, 4px padding)</h2>
+		<p>Override padding on the root part to tighten the hit area. Apply inset: 0 on the focus ::before so the ring follows the new bounds. Tab to see the focus ring.</p>
+		<div class="cust-row">
+			<ui5-checkbox class="cb-custom"></ui5-checkbox>
+			<ui5-checkbox class="cb-custom" checked></ui5-checkbox>
+			<ui5-checkbox class="cb-custom" text="Unchecked"></ui5-checkbox>
+			<ui5-checkbox class="cb-custom" checked text="Checked"></ui5-checkbox>
+			<ui5-checkbox class="cb-custom" checked indeterminate text="Indeterminate"></ui5-checkbox>
+		</div>
+	</div>
+
+	<div class="cust-section">
+		<h2>Customization 3 — wrapping label with big font (24px, 300px wide)</h2>
+		<p>Block padding and label alignment both scale correctly when the label wraps to multiple lines.</p>
+		<div class="cust-row">
+			<ui5-checkbox class="cb-wrap" text="This is a long label that wraps to multiple lines"></ui5-checkbox>
+			<ui5-checkbox class="cb-wrap" checked text="This is a long label that wraps to multiple lines"></ui5-checkbox>
+		</div>
+	</div>
+
+	<div class="cust-section">
+		<h2>Customization 4 — value states at big size (20px)</h2>
+		<p>Value state colors and borders scale correctly at any font-size.</p>
+		<div class="cust-row">
+			<ui5-checkbox class="cb-big" value-state="Negative" checked text="Error"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" value-state="Critical" checked text="Warning"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" value-state="Positive" checked text="Success"></ui5-checkbox>
+			<ui5-checkbox class="cb-big" value-state="Information" checked text="Information"></ui5-checkbox>
+		</div>
+	</div>
+
 </body>
 
 </html>
