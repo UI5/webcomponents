@@ -19,7 +19,7 @@ export default function SelectPopoverTemplate(this: Select) {
 					part="popover"
 					style={this.styles.responsivePopover}
 					placement="Bottom"
-					horizontalAlign="Start"
+					horizontalAlign={this.horizontalAlign}
 					hideArrow={true}
 					preventInitialFocus={true}
 					onOpen={this._afterOpen}

@@ -921,6 +921,72 @@
 		</script>
 	</div>
 
+	<div class="demo-section" style="padding: 30px; background: #f5f5f5; border: 3px solid #0854a0; border-radius: 8px; margin: 20px 0;">
+		<h3 style="color: #0854a0; margin-top: 0;">Horizontal Align Property</h3>
+		<p>Control the horizontal alignment of the dropdown menu relative to the ComboBox.</p>
+		<br />
+
+		<div style="display: flex; justify-content: space-between; gap: 20px; margin-bottom: 40px;">
+			<div style="flex: 1;">
+				<ui5-label>Start (default) - Left side:</ui5-label>
+				<br />
+				<ui5-combobox id="align-start" horizontal-align="Start" style="width: 200px;">
+					<ui5-cb-item text="Algeria"></ui5-cb-item>
+					<ui5-cb-item text="Argentina"></ui5-cb-item>
+					<ui5-cb-item text="Australia"></ui5-cb-item>
+					<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+					<ui5-cb-item text="Austria"></ui5-cb-item>
+					<ui5-cb-item text="Bahrain"></ui5-cb-item>
+					<ui5-cb-item text="Belgium"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+
+			<div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+				<ui5-label>Center - Middle:</ui5-label>
+				<br />
+				<ui5-combobox id="align-center" horizontal-align="Center" style="width: 200px;">
+					<ui5-cb-item text="Algeria"></ui5-cb-item>
+					<ui5-cb-item text="Argentina"></ui5-cb-item>
+					<ui5-cb-item text="Australia"></ui5-cb-item>
+					<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+					<ui5-cb-item text="Austria"></ui5-cb-item>
+					<ui5-cb-item text="Bahrain"></ui5-cb-item>
+					<ui5-cb-item text="Belgium"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+
+			<div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+				<ui5-label>End - Right side:</ui5-label>
+				<br />
+				<ui5-combobox id="align-end" horizontal-align="End" style="width: 200px;">
+					<ui5-cb-item text="Algeria"></ui5-cb-item>
+					<ui5-cb-item text="Argentina"></ui5-cb-item>
+					<ui5-cb-item text="Australia"></ui5-cb-item>
+					<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+					<ui5-cb-item text="Austria"></ui5-cb-item>
+					<ui5-cb-item text="Bahrain"></ui5-cb-item>
+					<ui5-cb-item text="Belgium"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+		</div>
+
+		<div style="display: flex; justify-content: center;">
+			<div>
+				<ui5-label>Stretch - Matches ComboBox width:</ui5-label>
+				<br />
+				<ui5-combobox id="align-stretch" horizontal-align="Stretch" style="width: 200px;">
+					<ui5-cb-item text="Algeria"></ui5-cb-item>
+					<ui5-cb-item text="Argentina"></ui5-cb-item>
+					<ui5-cb-item text="Australia"></ui5-cb-item>
+					<ui5-cb-item text="Very long text that makes popover wider than the ComboBox"></ui5-cb-item>
+					<ui5-cb-item text="Austria"></ui5-cb-item>
+					<ui5-cb-item text="Bahrain"></ui5-cb-item>
+					<ui5-cb-item text="Belgium"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+		</div>
+	</div>
+
 </body>
 
 </html>
