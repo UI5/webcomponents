@@ -5613,18 +5613,18 @@ describe("Select All with Groups", () => {
 });
 
 describe("Tokenizer overflow calculation", () => {
-	it("should not cause render loop at specific widths with medium-length tokens", () => {
-		// This test verifies the fix for a render loop that occurred when:
-		// - MultiComboBox has a specific width (208px)
-		// - First token is medium-length (3-4 characters)
-		// - The "n more" indicator in Korean (wider text) causes oscillation
-		// Korean "1 more" = "1개 더" which is significantly wider than English
-		// The loop is reproducable in english as well but we need to change the english
-		// translation to be 1 character longer (instead of "more" use "moree")
+	afterEach(() => {
+		// Reset language regardless of test outcome to avoid leaking into other specs.
+		cy.wrap(setLanguage("en"));
+	});
 
-		// Set language to Korean and wait for it to load
-		cy.wrap({ setLanguage })
-			.then(api => api.setLanguage("ko"));
+	it("should not cause a render loop when the 'n more' width toggles overflow at boundary widths", () => {
+		// Regression for a render loop: at ~208px the number of overflowing tokens depends on
+		// the "n more" indicator width, which itself changes with the number of visible tokens,
+		// so the overflow count oscillates. Korean copy is wider than English, exposing the bug
+		// at this width. A loop trips RenderQueue's "processed too many times" guard, which
+		// surfaces as an uncaught exception and fails this test automatically — no polling needed.
+		cy.wrap(setLanguage("ko"));
 
 		cy.mount(
 			<MultiComboBox style="width: 208px">
@@ -5635,56 +5635,21 @@ describe("Tokenizer overflow calculation", () => {
 		);
 
 		cy.get("[ui5-multi-combobox]")
-			.as("mcb");
-
-		// Get the tokenizer element
-		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer]")
 			.as("tokenizer");
 
-		// Wait for language to fully apply and rendering to stabilize
-		cy.wait(300);
-
-		// Get the "n more" text element with timeout - should exist with 3 selected tokens at 208px
+		// The component must settle on a stable state: all three tokens overflow, so the
+		// indicator reports "3". Cypress retries this until it holds; a loop would throw first.
 		cy.get("@tokenizer")
 			.shadow()
 			.find(".ui5-tokenizer-more-text")
 			.should("exist")
-			.as("nMoreText");
+			.and("contain.text", "3");
 
-		// Verify Korean text is shown (contains Korean characters)
-		// Korean shows "N개 항목" (wider than English "N more")
-		cy.get("@nMoreText")
-			.invoke("text")
-			.should("match", /개|항목/); // Korean text contains these characters
-
-		// Capture the initial text of the "n more" indicator
-		cy.get("@nMoreText")
-			.invoke("text")
-			.as("initialText");
-
-		// Wait a bit to ensure no render loop is happening
-		cy.wait(500);
-
-		// Verify the "n more" text hasn't changed (would change continuously in a render loop)
-		cy.get("@nMoreText")
-			.invoke("text")
-			.then(currentText => {
-				cy.get("@initialText").should("equal", currentText);
-			});
-
-		// Verify the tokenizer state is stable
-		cy.get("@tokenizer")
-			.should("exist");
-
-		// Verify tokens exist in the tokenizer (tokens are created from selected items)
+		// All three tokens remain in the DOM (overflowing tokens are hidden, not removed).
 		cy.get("@tokenizer")
 			.find("[ui5-token]")
-			.should("have.length.at.least", 1);
-
-		// Reset language
-		cy.wrap({ setLanguage })
-			.then(api => api.setLanguage("en"));
+			.should("have.length", 3);
 	});
 });
