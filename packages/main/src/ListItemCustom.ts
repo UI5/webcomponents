@@ -25,6 +25,26 @@ import ListItemCustomCss from "./generated/themes/ListItemCustom.css.js";
  * the same way as the standard `ui5-li`.
  *
  * The component accepts arbitrary HTML content to allow full customization.
+ *
+ * ### Keyboard Handling
+ *
+ * Interactive elements placed in the default slot (buttons, links, inputs, etc.)
+ * are **not** reached by [Tab] from outside the list. This follows the SAP Fiori
+ * "Intentional Edit Pattern" and preserves fast keyboard navigation between items.
+ *
+ * To activate an interactive element inside a `ui5-li-custom`:
+ *
+ * - [F2] or [F7] on the focused item - moves focus to the first interactive element
+ *   inside the item (or to the last remembered position).
+ * - [Tab] or [Shift] + [Tab] then walks through the interactive elements within the item
+ *   and continues into the next/previous item.
+ * - [Up] or [Down] while focused on an interactive element moves focus to the element
+ *   at the same index in the previous/next item; items with no interactive elements
+ *   are skipped and `ui5-li-group` boundaries are crossed.
+ * - [F2] or [F7] again returns focus to the item level.
+ *
+ * See the `ui5-list` "Keyboard Handling" section for the full behavior.
+ *
  * @csspart native-li - Used to style the main li tag of the list item
  * @csspart content - Used to style the content area of the list item
  * @csspart detail-button - Used to style the button rendered when the list item is of type detail
