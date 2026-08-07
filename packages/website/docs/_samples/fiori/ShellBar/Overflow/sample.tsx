@@ -80,7 +80,7 @@ function App() {
 
           <ShellBarBranding slot="branding">
             Product
-            <img slot="logo" src="/images/sap-logo-svg.svg" alt="logo" />
+            <img slot="logo" src="/images/sap-r-grad-scrn.svg" alt="logo" />
           </ShellBarBranding>
 
           {hiddenItems.length > 0 && (
