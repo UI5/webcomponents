@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
+
+
+### Bug Fixes
+
+* **ui5-segmented-button:** remove aria-roledescription attribute ([#13867](https://github.com/UI5/webcomponents/issues/13867)) ([b78bdb9](https://github.com/UI5/webcomponents/commit/b78bdb99aafa513f189f1f3ec789d7f30119d74f))
+
+
+
+
+
+# [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** format aria-label day cell value ([#13838](https://github.com/UI5/webcomponents/issues/13838)) ([c553ada](https://github.com/UI5/webcomponents/commit/c553adaa95113beaf79b28234970d5bcc35a5e68))
+* **ui5-combobox:** fire 'change' event with normalized values ([#13828](https://github.com/UI5/webcomponents/issues/13828)) ([f6d99b0](https://github.com/UI5/webcomponents/commit/f6d99b01d26bdafe6ba19db8c489bc4bfbe67017)), closes [#13784](https://github.com/UI5/webcomponents/issues/13784)
+* **ui5-file-uploader:** replace aria-required with native required on shadow input ([#13846](https://github.com/UI5/webcomponents/issues/13846)) ([da78732](https://github.com/UI5/webcomponents/commit/da7873247f684ae957b5f6ad7c6e87c571fb3e45))
+* **ui5-illustrated-message:** vertical responsiveness corrected ([#13795](https://github.com/UI5/webcomponents/issues/13795)) ([4a9418b](https://github.com/UI5/webcomponents/commit/4a9418b5397167ddc4ed39e6a31ecdf403aab110))
+* **ui5-multi-combobox:** toggle 'select all' checkbox correctly with grouped suggestions ([#13827](https://github.com/UI5/webcomponents/issues/13827)) ([ffd674c](https://github.com/UI5/webcomponents/commit/ffd674c78573ddc315c0f6d7a92068aeb120b660)), closes [#13712](https://github.com/UI5/webcomponents/issues/13712)
+* **ui5-multi-input:** prevent F4 from focusing browser address bar in MS Edge ([#13860](https://github.com/UI5/webcomponents/issues/13860)) ([904647a](https://github.com/UI5/webcomponents/commit/904647a3ed457095649eb77a66c5880e0c1692ce))
+* **ui5-side-navigation:** prevent text squeezing during expand animation ([#13774](https://github.com/UI5/webcomponents/issues/13774)) ([242aeec](https://github.com/UI5/webcomponents/commit/242aeecd2a029babb9c0a6865731b86c28837248))
+* **ui5-slider:** prevent slider value change on right click ([#13848](https://github.com/UI5/webcomponents/issues/13848)) ([4357b54](https://github.com/UI5/webcomponents/commit/4357b546334669ebf278dd9ab0031c8d827904e4)), closes [#13836](https://github.com/UI5/webcomponents/issues/13836)
+
+
+
+
+
 # [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
 
 **Note:** Version bump only for package webcomponents

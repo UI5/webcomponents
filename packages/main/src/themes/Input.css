@@ -518,3 +518,63 @@
 [ui5-responsive-popover] [ui5-input] {
 	width: 100%;
 }
+
+/*
+ * Value-state forwarding for slotted <ui5-input-icon>.
+ *
+ * The parent Input publishes state-specific values via CSS custom properties on its host.
+ * CSS custom properties inherit through the shadow boundary, so a slotted <ui5-input-icon>
+ * automatically picks them up inside its own shadow root — no JS DOM mutation needed.
+ */
+:host([value-state="Negative"]),
+:host([value-state="Critical"]) {
+	--_ui5_input_icon_state_padding: var(--_ui5_input_error_warning_icon_padding);
+}
+
+:host([value-state="Information"]) {
+	--_ui5_input_icon_state_padding: var(--_ui5_input_information_icon_padding);
+}
+
+:host([value-state="Negative"]) {
+	--_ui5_input_icon_state_pressed_shadow: var(--_ui5_input_error_icon_box_shadow);
+	--_ui5_input_icon_state_pressed_color: var(--_ui5_input_icon_error_pressed_color);
+	--_ui5_input_icon_state_focus_outline_color: var(--_ui5_input_focused_value_state_error_focus_outline_color);
+}
+
+:host([value-state="Critical"]) {
+	--_ui5_input_icon_state_pressed_shadow: var(--_ui5_input_warning_icon_box_shadow);
+	--_ui5_input_icon_state_pressed_color: var(--_ui5_input_icon_warning_pressed_color);
+	--_ui5_input_icon_state_focus_outline_color: var(--_ui5_input_focused_value_state_warning_focus_outline_color);
+}
+
+:host([value-state="Information"]) {
+	--_ui5_input_icon_state_pressed_shadow: var(--_ui5_input_information_icon_box_shadow);
+	--_ui5_input_icon_state_pressed_color: var(--_ui5_input_icon_information_pressed_color);
+	--_ui5_input_icon_state_focus_outline_color: var(--sapContent_FocusColor);
+}
+
+:host([value-state="Positive"]) {
+	--_ui5_input_icon_state_pressed_shadow: var(--_ui5_input_success_icon_box_shadow);
+	--_ui5_input_icon_state_pressed_color: var(--_ui5_input_icon_success_pressed_color);
+	--_ui5_input_icon_state_focus_outline_color: var(--_ui5_input_focused_value_state_success_focus_outline_color);
+}
+
+/*
+ * Disabled forwarding for slotted <ui5-input-icon>. Same mechanism: parent publishes vars,
+ * icon reads them via var() with defaults, no JS DOM mutation.
+ */
+:host([disabled]) {
+	--_ui5_input_icon_state_opacity: var(--sapContent_DisabledOpacity);
+	--_ui5_input_icon_state_pointer_events: none;
+	--_ui5_input_icon_state_cursor: default;
+}
+
+/*
+ * Readonly forwarding: the input is still readable but non-editable, so slotted interactive
+ * icons (search, voice, camera, …) should not fire either. No opacity change — the input
+ * itself does not dim in readonly.
+ */
+:host([readonly]:not([disabled])) {
+	--_ui5_input_icon_state_pointer_events: none;
+	--_ui5_input_icon_state_cursor: default;
+}

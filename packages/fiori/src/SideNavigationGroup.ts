@@ -154,29 +154,29 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 		if (isLeft(e)) {
 			e.preventDefault();
-			this.expanded = isRTL;
+			this._toggle(isRTL);
 			return;
 		}
 
 		if (isRight(e)) {
 			e.preventDefault();
-			this.expanded = !isRTL;
+			this._toggle(!isRTL);
 		}
 
 		if (isMinus(e)) {
 			e.preventDefault();
-			this.expanded = false;
+			this._toggle(false);
 			return;
 		}
 
 		if (isPlus(e)) {
 			e.preventDefault();
-			this.expanded = true;
+			this._toggle(true);
 		}
 	}
 
 	_onclick() {
-		this._toggle();
+		this._toggle(!this.expanded);
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -185,9 +185,23 @@ class SideNavigationGroup extends SideNavigationItemBase {
 		this.sideNavigation?.focusItem(this);
 	}
 
-	_toggle() {
-		if (!this.disabled) {
-			this.expanded = !this.expanded;
+	/**
+	 * Handles the user-driven expand/collapse of the group.
+	 *
+	 * Fires the cancelable `item-toggle` event and, unless it is prevented, applies the
+	 * new `expanded` value. The event is only fired for user interaction - programmatic
+	 * changes to `expanded` stay silent.
+	 *
+	 * @private
+	 */
+	_toggle(expanded: boolean) {
+		if (this.disabled || this.expanded === expanded) {
+			return;
+		}
+
+		// The event was prevented - keep the old value, suppressing the toggle.
+		if (this.sideNavigation?.fireDecoratorEvent("item-toggle", { item: this })) {
+			this.expanded = expanded;
 		}
 	}
 

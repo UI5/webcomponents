@@ -15,7 +15,7 @@ import {
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import { SEGMENTEDBUTTONITEM_ARIA_DESCRIPTION } from "./generated/i18n/i18n-defaults.js";
+import { SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "./generated/i18n/i18n-defaults.js";
 import type { ISegmentedButtonItem } from "./SegmentedButton.js";
 import SegmentedButtonItemTemplate from "./SegmentedButtonItemTemplate.js";
 
@@ -205,10 +205,6 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	get ariaDescription() {
-		return SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTONITEM_ARIA_DESCRIPTION);
-	}
-
 	constructor() {
 		super();
 	}
@@ -268,7 +264,7 @@ class SegmentedButtonItem extends UI5Element implements IButton, ISegmentedButto
 	}
 
 	get ariaDescriptionText() {
-		return getEffectiveAriaDescriptionText(this) || undefined;
+		return `${(getEffectiveAriaDescriptionText(this) || "")} ${SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`.trim();
 	}
 
 	get showIconTooltip() {

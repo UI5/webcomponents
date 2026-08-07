@@ -112,6 +112,53 @@
 				<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 			</form>
 		</div>
+
+		<div>
+			<ui5-title>Form submission &amp; shadow input isolation</ui5-title>
+			<form id="nativeSubmitForm" action="#" method="get">
+				<ui5-label for="nativeFormUploader">Attachment (required):</ui5-label><br>
+				<ui5-file-uploader id="nativeFormUploader" name="file" style="width: 350px;" required></ui5-file-uploader>
+				<br><br>
+				<ui5-label for="nativeTextInput">Name:</ui5-label><br>
+				<input id="nativeTextInput" name="name" required placeholder="Enter your name" style="width: 350px; padding: 6px; font-size: 14px; box-sizing: border-box;" />
+				<br><br>
+				<button type="submit" style="padding: 6px 16px;">Submit (native)</button>
+				&nbsp;
+				<ui5-button id="btnInspectFormElements">Inspect form.elements</ui5-button>
+			</form>
+			<ui5-message-strip id="formElementsResult" hidden style="margin-top: 8px;"></ui5-message-strip>
+		</div>
+
+		<div>
+			<ui5-title>Required — AT announcement</ui5-title>
+			<div style="display: flex; gap: 32px; flex-wrap: wrap;">
+				<div>
+					<ui5-label for="a11yRequired">Required:</ui5-label>
+					<ui5-file-uploader id="a11yRequired" style="width: 300px;" required></ui5-file-uploader>
+				</div>
+				<div>
+					<ui5-label for="a11yNotRequired">Not required:</ui5-label>
+					<ui5-file-uploader id="a11yNotRequired" style="width: 300px;"></ui5-file-uploader>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<ui5-title>Required with value states</ui5-title>
+			<div style="display: flex; gap: 32px; flex-wrap: wrap;">
+				<div>
+					<ui5-label for="a11yNoValueState">Required, no value state:</ui5-label>
+					<ui5-file-uploader id="a11yNoValueState" style="width: 300px;" required></ui5-file-uploader>
+				</div>
+				<div>
+					<ui5-label for="a11yNegativeState">Required, Negative:</ui5-label>
+					<ui5-file-uploader id="a11yNegativeState" style="width: 300px;" required value-state="Negative">
+						<div slot="valueStateMessage">This field is required</div>
+					</ui5-file-uploader>
+				</div>
+			</div>
+		</div>
+
 		<script>
 			const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
 			const formValidationMessage = document.getElementById('formValidationMessage');
@@ -130,14 +177,25 @@
 			function checkFormValidity(elementId, delayed = false) {
 				const element = document.getElementById(elementId);
 				const isValid = element.checkValidity();
-
 				element.reportValidity();
-
-				// Show result
 				formValidationMessage.hidden = false;
-				formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '( Delayed check )' : ''}`;
+				formValidationMessage.innerText = `checkValidity(): ${isValid}${delayed ? ' (after change)' : ''}`;
 				formValidationMessage.design = isValid ? "Positive" : "Negative";
 			}
+
+			document.getElementById('btnInspectFormElements').addEventListener('click', function() {
+				const form = document.getElementById('nativeSubmitForm');
+				const elements = Array.from(form.elements).map(el => {
+					const tag = el.tagName.toLowerCase();
+					const id = el.id ? `#${el.id}` : '';
+					const name = el.name ? `[name="${el.name}"]` : '';
+					return `${tag}${id}${name}`;
+				});
+				const result = document.getElementById('formElementsResult');
+				result.hidden = false;
+				result.design = "Information";
+				result.innerText = `form.elements (${elements.length}): ${elements.join(', ')}`;
+			});
 		</script>
 </body>
 </html>
