@@ -51,6 +51,12 @@
 			display: block;
 			width: 100%;
 		}
+		.ui5-user-settings-notifications-detail-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSize);
+			font-family: var(--sapFontFamily);
+		}
 	</style>
 
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
@@ -249,251 +255,200 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-view>
-			<ui5-list class="custom-list-main">
+		<!-- Primary page: lists notification types. Each navigable item has an item-key
+		     that matches the id of a sibling secondary view below, so each type drills
+		     into its own detail page with independent state.
+		     If no id matches, the view falls back to the first secondary sibling. -->
+		<ui5-user-settings-notifications-view id="notifications-main-view">
+			<ui5-message-strip slot="additionalContent" design="Information" hide-close-button>
+				Some settings are managed by your organization. <ui5-link>Learn More</ui5-link>
+			</ui5-message-strip>
 
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<ui5-avatar shape="Square" icon="product" color-scheme="Accent5" size="XS"></ui5-avatar>
-							<div class="item-texts">
-								<span class="item-title">SuccessFactors</span>
-								<span class="item-subtitle">Compensation | Learning | HR</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
-							<div class="item-texts">
-								<span class="item-title">S/4HANA | EMEA</span>
-								<span class="item-subtitle">Finance EMEA</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch"></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<ui5-avatar shape="Square" icon="product" size="XS"></ui5-avatar>
-							<div class="item-texts">
-								<span class="item-title">S/4HANA | AJP</span>
-								<span class="item-subtitle">Finance AJP</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-			</ui5-list>
-		</ui5-user-settings-view>
+			<ui5-user-settings-notifications-view-item item-key="allow-notifications" text="Allow Notifications" checked navigable>
+			</ui5-user-settings-notifications-view-item>
+			<ui5-user-settings-notifications-view-item item-key="allow-banner-alerts" text="Allow Banner Alerts"
+				byline-text="Switch on Banner for Notifications" checked navigable>
+			</ui5-user-settings-notifications-view-item>
 
-		<ui5-user-settings-view id="notification-second-page" secondary>
-			<ui5-li-custom class="ui5-list-secondary">
-				<div class="list-item">
-					<div class="item-left">
-						<div class="item-texts">
-							<span>Allow Notifications</span>
-						</div>
-					</div>
-					<div class="item-right">
-						<ui5-switch class="switch" checked></ui5-switch>
-					</div>
-				</div>
-			</ui5-li-custom>
-		</ui5-list>
-			<ui5-list class="ui5-list-sales-order">
-				<ui5-title class="list-header" size="H3">Sales</ui5-title>
+			<ui5-user-settings-notifications-view-group header-text="Sales">
+				<ui5-user-settings-notifications-view-item item-key="sales-order-updates" text="Sales Order Updates" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sales-order-approvals" text="Sales Order Approvals" navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sales-order-release" text="Sales Order Release" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
 
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="sales-title">Sales Order Updates</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="sales-title">Sales Order Approvals</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="sales-title">Sales Order Release</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-			</ui5-list>
-			<ui5-list class="ui5-list-secondary">
-				<ui5-title class="list-header" size="H3">Purchasing</ui5-title>
+			<ui5-user-settings-notifications-view-group header-text="Purchasing">
+				<ui5-user-settings-notifications-view-item item-key="po-approval" text="Purchase Order Approval" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-rejection" text="Purchase Order Rejection" navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-overdue" text="Purchase Order Overdue" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="purchase-title">Purchase Order Approval</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="purchase-title">Purchase Order Rejection</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch"></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="purchase-title">Purchase Order Overdue</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-							<ui5-icon name="slim-arrow-right" class="nav-icon" title="Navigate"></ui5-icon>
-						</div>
-					</div>
-				</ui5-li-custom>
-			</ui5-list>
-		</ui5-user-settings-view>
+		<!-- One dedicated detail view per navigable item, matched via item-key ↔ id.
+		     Each view has its own switch state so toggling in one doesn't affect the others. -->
 
-		<ui5-user-settings-view id="sales-order-second-page" secondary>
-			<ui5-title class="list-header" level="H2" size="H2">Sales Order Updates</ui5-title>
+		<ui5-user-settings-notifications-view id="allow-notifications" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Control how and where you receive notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Channels">
+				<ui5-user-settings-notifications-view-item item-key="an-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 
-			<ui5-list class="ui5-list-secondary" separators="None">
+		<ui5-user-settings-notifications-view id="allow-banner-alerts" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure banner alert behavior for incoming notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Banner Settings">
+				<ui5-user-settings-notifications-view-item item-key="ab-sound" text="Play Sound"
+					byline-text="Play a sound when a banner alert appears." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="ab-duration" text="Display Duration"
+					byline-text="Choose how long the banner stays on screen.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>5 seconds</ui5-option>
+						<ui5-option>10 seconds</ui5-option>
+						<ui5-option>Until dismissed</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 
-				<ui5-li-custom >
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span>Allow Sales Order Updates</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-						</div>
-					</div>
-				</ui5-li-custom>
-				</ui5-list>
-			<ui5-list separators="None">
-				<ui5-title class="list-header" size="H3">Choose how you get notified</ui5-title>
+		<ui5-user-settings-notifications-view id="sales-order-updates" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Updates notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sou-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Hourly</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="item-text-title">In-App Notification</span>
-								<span class="item-subtitle">Delivered inside the app</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="item-text-title">Allow Fly-Inn</span>
-								<span class="item-subtitle">Notifications fly in as banner from the figth se of the application while working</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom class="push-notifications">
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="item-text-title">Push Notifications</span>
-								<span class="item-subtitle">Pushed to your device immediately</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="item-text-title">E-Mail</span>
-								<span class="item-subtitle">Send on your primary e-mail</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-switch class="switch" checked></ui5-switch>
-						</div>
-					</div>
-				</ui5-li-custom>
-				<ui5-li-custom>
-					<div class="list-item">
-						<div class="item-left">
-							<div class="item-texts">
-								<span class="item-text-title">Frequency</span>
-								<span class="item-subtitle">Pushed to your device immedietly</span>
-							</div>
-						</div>
-						<div class="item-right">
-							<ui5-combobox value="Immediate">
-								<ui5-cb-item text="Immediate"></ui5-cb-item>
-								<ui5-cb-item text="After 5 minutes"></ui5-cb-item>
-								<ui5-cb-item text="After 24 hours"></ui5-cb-item>
-							</ui5-combobox>
-						</div>
-					</div>
-				</ui5-li-custom>
-			</ui5-list>
-		</ui5-user-settings-view>
+		<ui5-user-settings-notifications-view id="sales-order-approvals" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Approvals notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="soa-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-release" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Release notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sor-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-email" text="Email"
+					byline-text="Receive notifications by email.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-approval" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Approval-specific channels. These settings apply only to Purchase Order Approval notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Approver Preferences">
+				<ui5-user-settings-notifications-view-item item-key="po-approval-mobile" text="Push to mobile"
+					byline-text="Approve or reject directly from your device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-summary" text="Daily summary email"
+					byline-text="Receive one email per day with all pending approvals.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-delegation" text="Delegation"
+					byline-text="Route approvals to a delegate when you are out of office.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-rejection" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Purchase Order Rejection notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="por-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="por-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-overdue" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Purchase Order Overdue notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="poo-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
@@ -642,14 +597,7 @@
 	const toastReset =  document.getElementById("toastReset");
 	const toastResetAll =  document.getElementById("toastResetAll");
 	const notificationsItem = document.getElementById("notifications");
-	const notificationNavIcon = document.querySelectorAll(".nav-icon");
-	const notificationSwitch = document.querySelectorAll(".switch");
-	const notificationSecondPage = document.getElementById("notification-second-page");
-	const salesOrderList = document.querySelectorAll(".ui5-list-sales-order");
-
-	const salesOrderSecondPage = document.getElementById("sales-order-second-page");
-
-	const notificationList = document.querySelectorAll(".custom-list-main");
+	const notificationsMainView = document.getElementById("notifications-main-view");
 	menuShellBar.addEventListener("item-click", function (event) {
 		const item = event.detail.item.getAttribute("data-id");
 
@@ -755,62 +703,15 @@
 
 
 	//Notification Tab
-	notificationNavIcon.forEach(icon => {
-		icon.addEventListener("click", (e) => {
-			const title = e.target.closest(".list-item").querySelector(".item-title").textContent;
-			console.log("Navigate to: " + title +" icon clicked");
-			notificationSecondPage.selected = true;
-			notificationSecondPage.text = title;
-		});
+	notificationsMainView.addEventListener("item-click", (e) => {
+		console.log("Navigate to: " + e.detail.item.text);
 	});
 
-	notificationList.forEach(item => {
-		item.addEventListener("item-click", (e) => {
-			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
-			console.log("Navigate to: " + title);
-			notificationSecondPage.selected = true;
-			notificationSecondPage.text = title;
-		});
-	});
-
-	salesOrderList.forEach(item => {
-		item.addEventListener("item-click", (e) => {
-			const title = e.detail?.item?.querySelector(".sales-title")?.textContent;
-			console.log("Navigate to: " + title);
-			notificationSecondPage.selected = false;
-			salesOrderSecondPage.selected = true;
-			salesOrderSecondPage.text = title;
-		});
-	});
-
-	notificationsItem.addEventListener("selection-change", (e) => {
-		if(e?.detail?.view?.id ==='sales-order-second-page'){
-			e.preventDefault();
-			console.log("Navigate back: " + notificationSecondPage.title);
-			salesOrderSecondPage.selected = false;
-			notificationSecondPage.selected = true;
-		}
-	});
-
-	notificationSwitch.forEach(sw => {
-		sw.addEventListener("change", (e) => {
-			var title = e.target.closest(".list-item").querySelector(".item-title")?.textContent;
-			if(!title){
-				title = e.target?.closest(".list-item").querySelector(".item-text-title")?.textContent;
-			}
-
-			const state = e.target.checked ? "ON" : "OFF";
-			console.log(title + " switch changed to " + state);
-		});
-	});
-
-	notificationList.forEach(item => {
-		item.addEventListener("item-click", (e) => {
-			const title = e.detail?.item?.querySelector(".item-title")?.textContent;
-			console.log("Navigate to: " + title);
-			notificationSecondPage.selected = true;
-			notificationSecondPage.text = title;
-		});
+	notificationsItem.addEventListener("switch-change", (e) => {
+		const item = e.detail.item;
+		const view = item.closest("[ui5-user-settings-notifications-view]");
+		const context = view?.text ? `${view.text} > ` : "";
+		console.log(`${context}${item.text} switch changed to ${e.detail.checked ? "ON" : "OFF"}`);
 	});
 
 	// Theme switching functionality

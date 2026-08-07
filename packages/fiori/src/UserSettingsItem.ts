@@ -254,6 +254,15 @@ class UserSettingsItem extends UI5Element {
 		return !!(this._inMobileView || (this._hasSelectedPageView && this._selectedPageView.secondary));
 	}
 
+	/**
+	 * @private
+	 * @since 2.26.0
+	 */
+	_focusBackButton() {
+		const backButton = this.shadowRoot?.querySelector<HTMLElement>(".ui5-user-settings-item-collapse-btn");
+		backButton?.focus();
+	}
+
 	captureRef(this: UserSettingsView, ref: HTMLElement & { associatedSettingView?: UserSettingsView} | null) {
 		if (ref) {
 			ref.associatedSettingView = this;
