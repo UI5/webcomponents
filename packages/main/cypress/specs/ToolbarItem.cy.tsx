@@ -11,6 +11,7 @@ import DatePicker from "../../src/DatePicker.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
 import CheckBox from "../../src/CheckBox.js";
+import Title from "../../src/Title.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 
 describe("Toolbar Item Properties", () => {
@@ -789,5 +790,107 @@ describe("ToolbarItem CSS Custom State", () => {
 			// @ts-ignore
 			expect(item._internals.states.has("overflowed")).to.be.true;
 		});
+	});
+});
+
+describe("ToolbarItem shrink-content", () => {
+	it("Should keep the toolbar button visible when shrink-content is set on a wide NeverOverflow item", () => {
+		cy.mount(
+			<div style={{ width: "400px" }}>
+				<Toolbar align-content="Start">
+					<ToolbarItem overflow-priority="NeverOverflow" shrink-content>
+						<Title wrapping-type="None">Super Super SuperSuperSuperSuper SuperSuperSuperSuper SuperSuperSuperSuper Long Text</Title>
+					</ToolbarItem>
+					<ToolbarButton text="Button 1"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// The button must be visible — the title shrinks to yield space
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.should("be.visible");
+
+		// No overflow button needed — the title shrinks instead of pushing items out
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("have.class", "ui5-tb-overflow-btn-hidden");
+	});
+
+	it("Should apply ui5-tb-self-overflow class to the item wrapper when shrink-content is set", () => {
+		cy.mount(
+			<div style={{ width: "400px" }}>
+				<Toolbar align-content="Start">
+					<ToolbarItem overflow-priority="NeverOverflow" shrink-content>
+						<Title wrapping-type="None">Super Super SuperSuperSuperSuper SuperSuperSuperSuper Long Text</Title>
+					</ToolbarItem>
+					<ToolbarButton text="Button 1"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// hasOverflow must be true when shrink-content is set
+		cy.get("[ui5-toolbar-item]").then($item => {
+			const item = $item[0] as ToolbarItem;
+			expect(item.hasOverflow).to.be.true;
+		});
+
+		// The toolbar wrapper div must carry the ui5-tb-self-overflow CSS class
+		cy.get("[ui5-toolbar]").then($toolbar => {
+			const toolbar = $toolbar[0] as Toolbar;
+			const item = document.querySelector("[ui5-toolbar-item]") as ToolbarItem;
+			const wrapper = toolbar.shadowRoot!.querySelector(`#${item._individualSlot}`) as HTMLElement;
+			expect(wrapper.classList.contains("ui5-tb-self-overflow")).to.be.true;
+		});
+	});
+
+	it("Should NOT apply shrink behavior when shrink-content is not set", () => {
+		cy.mount(
+			<div style={{ width: "400px" }}>
+				<Toolbar align-content="Start">
+					<ToolbarItem overflow-priority="NeverOverflow">
+						<Title wrapping-type="None">Super Super SuperSuperSuperSuper SuperSuperSuperSuper Long Text</Title>
+					</ToolbarItem>
+					<ToolbarButton text="Button 1"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// hasOverflow must be false when shrink-content is not set
+		cy.get("[ui5-toolbar-item]").then($item => {
+			const item = $item[0] as ToolbarItem;
+			expect(item.hasOverflow).to.be.false;
+		});
+	});
+
+	it("Should keep the button visible after the toolbar is resized", () => {
+		cy.mount(
+			<div id="shrink-resize-container" style={{ width: "300px" }}>
+				<Toolbar align-content="Start">
+					<ToolbarItem overflow-priority="NeverOverflow" shrink-content>
+						<Title wrapping-type="None">Super Super SuperSuperSuperSuper SuperSuperSuperSuper SuperSuperSuperSuper Long Text</Title>
+					</ToolbarItem>
+					<ToolbarButton text="Button 1"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// Button is visible at narrow width
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.should("be.visible");
+
+		// Widen the container
+		cy.get("#shrink-resize-container")
+			.invoke("css", "width", "800px");
+
+		// Button must still be visible after resize
+		cy.get("[ui5-toolbar-button][text='Button 1']")
+			.should("be.visible");
+
+		// Overflow button must remain hidden throughout
+		cy.get("[ui5-toolbar]")
+			.shadow()
+			.find(".ui5-tb-overflow-btn")
+			.should("have.class", "ui5-tb-overflow-btn-hidden");
 	});
 });
