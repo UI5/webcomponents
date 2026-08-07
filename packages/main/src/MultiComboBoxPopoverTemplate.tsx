@@ -12,6 +12,7 @@ import Popover from "./Popover.js";
 import CheckBox from "./CheckBox.js";
 import Title from "./Title.js";
 import BusyIndicator from "./BusyIndicator.js";
+import { LOADING_DELAY } from "./features/ComboBoxLazyLoading.js";
 
 export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 	return (<>
@@ -33,91 +34,10 @@ export default function MultiComboBoxPopoverTemplate(this: MultiComboBox) {
 			open={this.open}
 			opener={this}
 		>
-			{this.loading &&
-				<BusyIndicator active={true} class="ui5-multi-combobox-busy"/>
-			}
-
-			{!this.loading && this._isPhone && <>
-				<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
-					<div class="row">
-						<Title
-							level="H1"
-							wrappingType="None"
-							class="ui5-responsive-popover-header-text"
-						>
-							{this._headerTitleText}
-						</Title>
-					</div>
-					<div class="row">
-						<Input
-							onInput={this._handleMobileInput}
-							onKeyDown={this._onMobileInputKeydown}
-							placeholder={this.placeholder}
-							valueState={this._dialogInputValueState}
-							showClearIcon={this.showClearIcon}
-							noTypeahead={this.noTypeahead}
-						>
-							{this._filteredItems.map(item => (
-								<SuggestionItem text={item.text} additionalText={item.additionalText}></SuggestionItem>
-							))}
-						</Input>
-						<ToggleButton
-							slot="header"
-							class="ui5-multi-combobox-toggle-button"
-							icon={multiSelectAll}
-							design="Transparent"
-							pressed={this._showAllItemsButtonPressed}
-							disabled={this._getSelectedItems().length === 0}
-							onClick={this.filterSelectedItems}
-							accessibleName={this._showSelectedButtonAccessibleNameText}
-						></ToggleButton>
-					</div>
-				</div>				{this.hasValueStateMessage &&
-					<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
-						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
-						{this.open && valueStateMessage.call(this)}
-					</div>
-				}
-
-				{selectAllWrapper.call(this)}
-			</>}
-
-			{!this.loading && !this._isPhone && <>
-				{this.hasValueStateMessage &&
-					<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
-						<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
-						{this.open && valueStateMessage.call(this)}
-					</div>
-				}
-
-				{selectAllWrapper.call(this)}
-			</>}
-
-			{!this.loading && this.filterSelected ?
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox">
-					{this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
-				: !this.loading &&
-				<List separators="None" selectionMode="Multiple" class="ui5-multi-combobox-all-items-list" accessibleRole="ListBox" onKeyDown={this._onItemKeydown}>
-					{this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)}
-				</List>
-			}
-
-			{this._isPhone &&
-				<div slot="footer" class="ui5-responsive-popover-footer">
-					<Button
-						design="Emphasized"
-						onClick={this.handleOK}
-					>{this._dialogOkButton}</Button>
-					<Button
-						class="ui5-responsive-popover-close-btn"
-						design="Transparent"
-						onClick={this.handleCancel}
-					>
-						{this._dialogCancelButton}
-					</Button>
-				</div>
-			}
+			{this._isPhone && dialogHeader.call(this)}
+			{!this._isPhone && popoverHeader.call(this)}
+			{popoverContent.call(this)}
+			{this._isPhone && dialogFooter.call(this)}
 		</ResponsivePopover>
 
 		{this.hasValueStateMessage &&
@@ -160,4 +80,105 @@ function selectAllWrapper(this: MultiComboBox) {
 			</div>
 		);
 	}
+}
+
+function dialogHeader(this: MultiComboBox) {
+	return <>
+		<div slot="header" class="ui5-responsive-popover-header" style={this.styles.popoverHeader}>
+			<div class="row">
+				<Title
+					level="H1"
+					wrappingType="None"
+					class="ui5-responsive-popover-header-text"
+				>
+					{this._headerTitleText}
+				</Title>
+			</div>
+			<div class="row">
+				<Input
+					onInput={this._handleMobileInput}
+					onKeyDown={this._onMobileInputKeydown}
+					placeholder={this.placeholder}
+					valueState={this._dialogInputValueState}
+					showClearIcon={this.showClearIcon}
+					noTypeahead={this.noTypeahead}
+				>
+					{this._filteredItems.map(item => (
+						<SuggestionItem text={item.text} additionalText={item.additionalText}></SuggestionItem>
+					))}
+				</Input>
+				<ToggleButton
+					slot="header"
+					class="ui5-multi-combobox-toggle-button"
+					icon={multiSelectAll}
+					design="Transparent"
+					pressed={this._showAllItemsButtonPressed}
+					disabled={this._getSelectedItems().length === 0}
+					onClick={this.filterSelectedItems}
+					accessibleName={this._showSelectedButtonAccessibleNameText}
+				></ToggleButton>
+			</div>
+		</div>
+		{this.hasValueStateMessage &&
+			<div class={this.classes.popoverValueState} style={this.styles.popoverValueStateMessage}>
+				<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
+				{this.open && valueStateMessage.call(this)}
+			</div>
+		}
+	</>;
+}
+
+function popoverHeader(this: MultiComboBox) {
+	return this.hasValueStateMessage &&
+		<div slot="header" onKeyDown={this._onListHeaderKeydown} class={this.classes.responsivePopoverHeaderValueState} style={this.styles.popoverValueStateMessage}>
+			<Icon class="ui5-input-value-state-message-icon" name={this._valueStateMessageIcon}></Icon>
+			{this.open && valueStateMessage.call(this)}
+		</div>;
+}
+
+function dialogFooter(this: MultiComboBox) {
+	return <>
+		<div slot="footer" class="ui5-responsive-popover-footer">
+			<Button
+				design="Emphasized"
+				onClick={this.handleOK}
+			>{this._dialogOkButton}</Button>
+			<Button
+				class="ui5-responsive-popover-close-btn"
+				design="Transparent"
+				onClick={this.handleCancel}
+			>
+				{this._dialogCancelButton}
+			</Button>
+		</div>
+	</>;
+}
+
+function popoverContent(this: MultiComboBox) {
+	if (this.loading && (this._isPhone || !this.hasValueState)) {
+		return <BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={LOADING_DELAY} />;
+	}
+
+	return <>
+		{this.loading && !this._isPhone && this.hasValueState &&
+			<div class="ui5-multi-combobox-busy-container">
+				<BusyIndicator active={true} class="ui5-multi-combobox-busy" delay={LOADING_DELAY} />
+			</div>
+		}
+		{!this.loading && selectAllWrapper.call(this)}
+		{!this.loading &&
+			<List
+				separators="None"
+				selectionMode="Multiple"
+				class="ui5-multi-combobox-all-items-list"
+				accessibleRole="ListBox"
+				onKeyDown={this._onItemKeydown}
+			>
+				{this.filterSelected
+					? this.selectedItems.map(item => <slot name={item._individualSlot}></slot>)
+					: this._filteredItems.map(item => <slot name={item._individualSlot}></slot>)
+				}
+			</List>
+		}
+	</>;
 }
