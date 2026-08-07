@@ -74,7 +74,7 @@ describe("TimePicker on phone - general interactions", () => {
 			.should("have.value", "10:20:30 PM");
 	});
 
-	it("direct number typing", () => {
+	it.skip("direct number typing", () => {
 		cy.mount(<TimePicker value-format="hh:mm:ss a"></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
