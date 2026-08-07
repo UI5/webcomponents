@@ -27,6 +27,7 @@ import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.j
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import { registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import PopupTemplate from "./PopupTemplate.js";
 import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
 import { addOpenedPopup, removeOpenedPopup } from "./popup-utils/OpenedPopupsRegistry.js";
@@ -367,6 +368,8 @@ abstract class Popup extends UI5Element {
 
 		this._addOpenedPopup();
 
+		this._registerInvisibleMessageRegion();
+
 		this.classList.add("ui5-popup-opening");
 		setTimeout(() => {
 			this.classList.remove("ui5-popup-opening");
@@ -601,6 +604,8 @@ abstract class Popup extends UI5Element {
 
 		this._detachBrowserEvents();
 
+		this._deregisterInvisibleMessageRegion();
+
 		if (!preventRegistryUpdate) {
 			this._removeOpenedPopup();
 		}
@@ -618,6 +623,33 @@ abstract class Popup extends UI5Element {
 	 */
 	_removeOpenedPopup() {
 		removeOpenedPopup(this);
+	}
+
+	/**
+	 * Asks the InvisibleMessage to render its aria-live region inside the popup, so that announcements
+	 * made while the popup is open (and the screen reader's accessibility tree is scoped to the popup)
+	 * are read out.
+	 *
+	 * Only modal popups need this: a screen reader scopes its accessibility tree to a modal popup's
+	 * subtree, so a body-level aria-live region would be silenced. Non-modal popups (e.g. suggestion
+	 * lists) leave focus and the accessibility tree in place, so the default region still works.
+	 * @protected
+	 */
+	_registerInvisibleMessageRegion() {
+		if (this.isModal && this._root) {
+			registerInvisibleMessageRegion(this._root);
+		}
+	}
+
+	/**
+	 * Asks the InvisibleMessage to stop rendering its aria-live region inside the popup, restoring
+	 * the default region.
+	 * @protected
+	 */
+	_deregisterInvisibleMessageRegion() {
+		if (this._root) {
+			deregisterInvisibleMessageRegion(this._root);
+		}
 	}
 
 	/**

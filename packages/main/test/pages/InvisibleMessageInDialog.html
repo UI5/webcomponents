@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>InvisibleMessage in Dialog (issue #13613)</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		body {
+			font-family: var(--sapFontFamily);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+
+		.row {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+			max-width: 40rem;
+		}
+
+		.note {
+			color: var(--sapContent_LabelColor);
+			font-size: 0.875rem;
+			margin: 0.5rem 0 1rem;
+		}
+
+		.log {
+			margin-top: 1rem;
+			padding: 0.5rem;
+			border: 1px solid var(--sapList_BorderColor);
+			border-radius: 0.25rem;
+			min-height: 3rem;
+			white-space: pre-wrap;
+			font-family: monospace;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>InvisibleMessage announcements while a modal Dialog is open</h1>
+	<p class="note">
+		Reproduction for <a href="https://github.com/UI5/webcomponents/issues/13613" target="_blank" rel="noopener">issue #13613</a>.
+		Turn on VoiceOver (Cmd+F5 on macOS), then follow the steps below. With this branch's fix, the UI5 Dialog
+		renders its own aria-live region inside the dialog subtree, so <code>announce()</code> is heard while the dialog is open.
+	</p>
+
+	<div class="row">
+		<ui5-button id="announceNoDialog" design="Emphasized">1. Announce — no dialog open</ui5-button>
+
+		<ui5-button id="openDialog">2. Open modal dialog</ui5-button>
+
+		<ui5-button id="announceBodySpan">
+			3a. Announce into a span that lives in &lt;body&gt; (outside the dialog) — silenced by VoiceOver
+		</ui5-button>
+
+		<ui5-button id="announceApi" design="Positive">
+			3b. Announce via InvisibleMessage.announce() — routed inside the open dialog (FIXED)
+		</ui5-button>
+	</div>
+
+	<div class="log" id="log" aria-hidden="true">Log:
+</div>
+
+	<!-- A live region deliberately placed in <body>, OUTSIDE the dialog, to demonstrate the broken case. -->
+	<span
+		id="bodySpan"
+		aria-live="polite"
+		role="alert"
+		style="position:absolute;clip:rect(1px,1px,1px,1px);user-select:none;left:-1000px;top:-1000px;pointer-events:none;"
+	></span>
+
+	<ui5-dialog id="dialog" header-text="Modal dialog">
+		<div style="padding: 1rem; min-width: 20rem;">
+			<p>This dialog is modal (aria-modal="true"), so VoiceOver scopes its accessibility tree to this subtree.</p>
+			<p>Use buttons 3a and 3b below (they stay reachable) to compare the two live regions.</p>
+			<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+				<ui5-button id="announceBodySpanInner">3a. Announce into &lt;body&gt; span (silenced)</ui5-button>
+				<ui5-button id="announceApiInner" design="Positive">3b. Announce via API (heard — FIXED)</ui5-button>
+			</div>
+		</div>
+		<ui5-button id="closeDialog" slot="footer" design="Transparent">Close</ui5-button>
+	</ui5-dialog>
+
+	<script type="module">
+		const { announce } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
+
+		const logEl = document.getElementById("log");
+		let counter = 0;
+
+		const log = msg => {
+			logEl.textContent += `${msg}\n`;
+		};
+
+		const bodySpan = document.getElementById("bodySpan");
+		const dialog = document.getElementById("dialog");
+
+		// 1. announce() with no dialog open — heard.
+		document.getElementById("announceNoDialog").addEventListener("click", () => {
+			const msg = `No dialog announcement #${++counter}`;
+			announce(msg, "Polite");
+			log(`announce(): "${msg}"`);
+		});
+
+		// 2. open the modal dialog
+		document.getElementById("openDialog").addEventListener("click", () => {
+			dialog.open = true;
+		});
+		document.getElementById("closeDialog").addEventListener("click", () => {
+			dialog.open = false;
+		});
+
+		// 3a. write into a live region that lives in <body>, outside the dialog — silenced while modal is open.
+		const announceBody = () => {
+			const msg = `Body-span announcement #${++counter}`;
+			bodySpan.textContent = "";
+			bodySpan.textContent = msg;
+			log(`body span (outside dialog): "${msg}"  → silenced by VoiceOver while dialog open`);
+		};
+		document.getElementById("announceBodySpan").addEventListener("click", announceBody);
+		document.getElementById("announceBodySpanInner").addEventListener("click", announceBody);
+
+		// 3b. announce() via the framework API — with the fix, routed into the open dialog's region.
+		const announceApi = () => {
+			const msg = `API announcement #${++counter}`;
+			announce(msg, "Polite");
+			log(`announce(): "${msg}"  → rendered inside the open dialog (heard)`);
+		};
+		document.getElementById("announceApi").addEventListener("click", announceApi);
+		document.getElementById("announceApiInner").addEventListener("click", announceApi);
+	</script>
+</body>
+
+</html>
