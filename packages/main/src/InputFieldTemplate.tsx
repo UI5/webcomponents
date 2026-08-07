@@ -1,14 +1,23 @@
-import type Input from "./Input.js";
+import type InputField from "./InputField.js";
 import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
 import Icon from "./Icon.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
-import InputPopoverTemplate from "./InputPopoverTemplate.js";
+import error from "@ui5/webcomponents-icons/dist/error.js";
+import alert from "@ui5/webcomponents-icons/dist/alert.js";
+import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
+import information from "@ui5/webcomponents-icons/dist/information.js";
+
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import Popover from "./Popover.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 
 type TemplateHook = () => JsxTemplateResult;
 
-export default function InputTemplate(this: Input, hooks?: { preContent: TemplateHook, postContent: TemplateHook, suggestionsList?: TemplateHook, mobileHeader?: TemplateHook, popoverTemplate?: TemplateHook }) {
-	const suggestionsList = hooks?.suggestionsList;
-	const mobileHeader = hooks?.mobileHeader;
+export default function InputFieldTemplate(this: InputField, hooks?: {
+	preContent?: TemplateHook,
+	postContent?: TemplateHook,
+	popoverTemplate?: TemplateHook
+}) {
 	const preContent = hooks?.preContent || defaultPreContent;
 	const postContent = hooks?.postContent || defaultPostContent;
 	const popoverTemplate = hooks?.popoverTemplate;
@@ -95,14 +104,6 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 
 					{ postContent.call(this) }
 
-					{this._effectiveShowSuggestions &&
-						<>
-							<span id="suggestionsText" class="ui5-hidden-text">{this.suggestionsText}</span>
-							<span id="selectionText" class="ui5-hidden-text" aria-live="polite" role="status"></span>
-							<span id="suggestionsCount" class="ui5-hidden-text" aria-live="polite">{this.availableSuggestionsCount}</span>
-						</>
-					}
-
 					{this.accInfo.ariaDescription &&
 						<span id="descr" class="ui5-hidden-text">{this.accInfo.ariaDescription}</span>
 					}
@@ -121,7 +122,7 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 				</div>
 			</div>
 
-			{ popoverTemplate ? popoverTemplate.call(this) : InputPopoverTemplate.call(this, { suggestionsList, mobileHeader }) }
+			{ popoverTemplate ? popoverTemplate.call(this) : ValueStatePopover.call(this) }
 		</>
 	);
 }
@@ -129,3 +130,52 @@ export default function InputTemplate(this: Input, hooks?: { preContent: Templat
 function defaultPreContent() {}
 
 function defaultPostContent() {}
+
+function ValueStatePopover(this: InputField) {
+	return (
+		<>
+			{this.hasValueStateMessage && (
+				<Popover
+					preventInitialFocus={true}
+					preventFocusRestore={true}
+					hideArrow={true}
+					class="ui5-valuestatemessage-popover"
+					placement="Bottom"
+					tabindex={-1}
+					horizontalAlign={PopoverHorizontalAlign.Start}
+					opener={this}
+					open={this.valueStateOpen}
+					onClose={this._handleValueStatePopoverAfterClose}
+				>
+					<div slot="header" class={this.classes.popoverValueState}>
+						<Icon class="ui5-input-value-state-message-icon" name={valueStateMessageInputIcon.call(this)} />
+						{this.valueStateOpen && valueStateMessage.call(this)}
+					</div>
+				</Popover>
+			)}
+		</>
+	);
+}
+
+function valueStateMessage(this: InputField) {
+	return (
+		<>
+			{
+				this.shouldDisplayDefaultValueStateMessage ? this.valueStateText : <slot name="valueStateMessage"></slot>
+			}
+		</>
+	);
+}
+
+function valueStateMessageInputIcon(this: InputField) {
+	const iconPerValueState = {
+		Negative: error,
+		Critical: alert,
+		Positive: sysEnter2,
+		Information: information,
+	};
+
+	return this.valueState !== ValueState.None ? iconPerValueState[this.valueState] : "";
+}
+
+export { valueStateMessage, valueStateMessageInputIcon, ValueStatePopover };
