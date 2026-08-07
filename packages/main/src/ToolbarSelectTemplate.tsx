@@ -7,7 +7,6 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 		<Select
 			class={this.classes.root}
 			style={this.styles}
-			value={this.value}
 			data-ui5-external-action-item-id={this._id}
 			valueState={this.valueState}
 			disabled={this.disabled}
@@ -24,7 +23,7 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 			}
 			{this.options.map((option, index) => (
 				<Option
-					selected={option.selected}
+					selected={index === this._lastSelectedIndex}
 					value={option.value}
 					data-ui5-external-action-item-index={index}
 				>

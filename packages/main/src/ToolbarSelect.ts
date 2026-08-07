@@ -154,22 +154,36 @@ class ToolbarSelect extends ToolbarItemBase {
 	 */
 	@property()
 	set value(newValue: string) {
-		if (this.select && this.select.value !== newValue) {
-			this.select.value = newValue;
+		if (this.options.length) {
+			// Options are available: resolve immediately by setting selected on the matching outer option.
+			// Empty string clears all selections.
+			this.options.forEach(option => {
+				option.selected = newValue !== "" && (option.value === newValue || option.textContent?.trim() === newValue);
+			});
+			this._pendingValue = "";
+			this._hasPendingValue = false;
+		} else {
+			// Options not yet available (pre-render): stage for onBeforeRendering to resolve.
+			this._pendingValue = newValue;
+			this._hasPendingValue = true;
 		}
-		this._value = newValue;
 	}
 
 	get value(): string | undefined {
-		return this.select ? this.select.value : this._value;
+		const selectedOption = this.options.find(o => o.selected);
+		return selectedOption?.value || selectedOption?.textContent?.trim() || "";
 	}
 
 	get select(): Select | null {
 		return this.shadowRoot!.querySelector<Select>("[ui5-select]");
 	}
 
-	// Internal value storage, in case the composite select is not rendered on the the assignment happens
-	_value: string = "";
+	// Staging buffer for value= assignments that arrive before options are available.
+	_pendingValue: string = "";
+	_hasPendingValue: boolean = false;
+
+	// Computed in onBeforeRendering: index of the last selected option (-1 = none)
+	_lastSelectedIndex: number = -1;
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
@@ -195,6 +209,23 @@ class ToolbarSelect extends ToolbarItemBase {
 		}
 	}
 
+	onBeforeRendering(): void {
+		super.onBeforeRendering();
+
+		// Resolve a pending value= assignment now that options are available.
+		if (this._hasPendingValue && this.options.length) {
+			const pending = this._pendingValue;
+			this.options.forEach(option => {
+				option.selected = pending !== "" && (option.value === pending || option.textContent?.trim() === pending);
+			});
+			this._pendingValue = "";
+			this._hasPendingValue = false;
+		}
+
+		// Last selected wins — mirrors Select._applyAutoSelection behaviour.
+		this._lastSelectedIndex = this.options.reduce((last, option, index) => (option.selected ? index : last), -1);
+	}
+
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
 		e.stopImmediatePropagation();
 		const selectedOptionIndex = Number(e.detail.selectedOption?.getAttribute("data-ui5-external-action-item-index"));
@@ -208,6 +239,8 @@ class ToolbarSelect extends ToolbarItemBase {
 	}
 
 	_syncOptions(selectedOptionIndex: number): void {
+		this._pendingValue = "";
+		this._hasPendingValue = false;
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
 			option.selected = index === selectedOptionIndex;
 		});
