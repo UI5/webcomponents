@@ -5714,6 +5714,23 @@ describe("load-items event", () => {
 				return event.detail.reason === "input";
 			}));
 	});
+
+	it("fires with the current input value in the event detail on each character typed", () => {
+		cy.mount(
+			<MultiComboBox onLoadItems={cy.stub().as("loadItems")}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadItems").should("have.been.calledThrice");
+
+		cy.get("@loadItems").its("firstCall.args.0.detail").should("deep.include", { reason: "input", value: "A" });
+		cy.get("@loadItems").its("secondCall.args.0.detail").should("deep.include", { reason: "input", value: "Al" });
+		cy.get("@loadItems").its("thirdCall.args.0.detail").should("deep.include", { reason: "input", value: "Alg" });
+	});
 });
 
 describe("Loading announcements", () => {

@@ -803,8 +803,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this._loadingDelegate.fireOnInput();
-
 		const input = e.target as HTMLInputElement;
 		const value: string = input.value;
 		const filteredItems: Array<IMultiComboBoxItem> = this._filterItems(value);
@@ -852,6 +850,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+		this._loadingDelegate.fireOnInput();
 	}
 
 	_updateValueState(newValueState: `${ValueState}`) {
