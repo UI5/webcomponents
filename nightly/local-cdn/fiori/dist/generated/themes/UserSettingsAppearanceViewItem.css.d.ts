@@ -1,0 +1,2 @@
+declare const _default: ".list-item{display:flex;align-items:center;justify-content:space-between;padding:.625rem 0;width:100%}.item-left{display:flex;align-items:center;gap:.75rem;flex:1}.item-texts{display:flex;flex-direction:column}.item-title{font-family:var(--sapFontFamily);font-size:var(--sapFontLargeSize);font-weight:400;color:var(--sapList_TextColor);margin:.5rem}.item-subtitle{color:var(--sapContent_LabelColor);font-size:var(--sapFontSize);margin:.5rem}.item-right{display:flex;align-items:center;gap:.5rem}\n";
+export default _default;

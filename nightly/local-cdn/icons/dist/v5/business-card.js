@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "business-card";
+const pathData = "M13.25 2A2.75 2.75 0 0 1 16 4.75v6.5A2.75 2.75 0 0 1 13.25 14H2.75A2.75 2.75 0 0 1 0 11.25v-6.5A2.75 2.75 0 0 1 2.75 2h10.5ZM2.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H2.75Zm2.75 5A2.5 2.5 0 0 1 8 11a.5.5 0 0 1-.5.5h-4A.515.515 0 0 1 3 11a2.5 2.5 0 0 1 2.5-2.5Zm6.75-1a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1 0-1.5h2.5Zm-6.75-3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.75.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1 0-1.5h2.5Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/business-card";
+export { pathData, ltr, viewBox, accData };
