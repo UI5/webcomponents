@@ -536,7 +536,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_initialRendering = true;
 	_loadingDelegate: ComboBoxLazyLoading;
-	_shouldFilterItemsAfterLoad = true;
+	_isArrowClicked = false;
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -594,9 +594,11 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count),
 			onLoadingEnd: () => {
-				this._filteredItems = this._shouldFilterItemsAfterLoad ? this._filterItems(this.value) : this._getItems();
-				this._shouldFilterItemsAfterLoad = true;
-				if (this._filteredItems.length === 0 && this.value) {
+				const visibleItems = this._isArrowClicked
+					? this._getItems().filter(item => !item.isGroupItem && item._isVisible)
+					: this._filterItems(this.value);
+				this._isArrowClicked = false;
+				if (visibleItems.length === 0 && this.value) {
 					this._closeRespPopover();
 				}
 			},
@@ -838,7 +840,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this._loadingDelegate.fireOnDropdownOpen();
 		}
 
-		this._shouldFilterItemsAfterLoad = false;
+		this._isArrowClicked = true;
 		this._toggleRespPopover();
 	}
 

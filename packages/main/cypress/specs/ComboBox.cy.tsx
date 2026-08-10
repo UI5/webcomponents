@@ -4503,4 +4503,86 @@ describe("Loading announcements", () => {
 			.should("contain.text", "Data loaded")
 			.and("contain.text", "2 results are available");
 	});
+
+	it("announces the total item count after lazy loading grouped items via arrow click", () => {
+		// Loads 2 group items: the first with 2 child items, the second with 1 child item (3 items total).
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			setTimeout(() => {
+				const group1 = document.createElement("ui5-cb-item-group") as ComboBoxItemGroup;
+				group1.headerText = "Group 1";
+				["Item 1", "Item 2"].forEach(text => {
+					const item = document.createElement("ui5-cb-item") as ComboBoxItem;
+					item.text = text;
+					group1.appendChild(item);
+				});
+
+				const group2 = document.createElement("ui5-cb-item-group") as ComboBoxItemGroup;
+				group2.headerText = "Group 2";
+				const item3 = document.createElement("ui5-cb-item") as ComboBoxItem;
+				item3.text = "Item 3";
+				group2.appendChild(item3);
+
+				cb.appendChild(group1);
+				cb.appendChild(group2);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<ComboBox onLoadItems={loadItems}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		// 2 groups get created, holding 3 child items in total.
+		cy.get("[ui5-combobox]").find("[ui5-cb-item-group]").should("have.length", 2);
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 3);
+
+		// The announcement reflects the 3 loaded (group headers excluded) items.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "3 results are available");
+	});
+
+	it("applies the filter and announces the filtered item count after lazy loading triggered by typing", () => {
+		// Typing "a" loads 3 items - only "Albania" matches the default StartsWithPerTerm filter.
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			cb.open = true;
+			setTimeout(() => {
+				["Albania", "Bulgaria", "Canada"].forEach(text => {
+					const item = document.createElement("ui5-cb-item") as ComboBoxItem;
+					item.text = text;
+					cb.appendChild(item);
+				});
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<ComboBox onLoadItems={loadItems}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+		cy.realType("a");
+
+		// All 3 items are created, but the filter leaves only "Albania" visible.
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 3);
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1)
+			.and("have.attr", "text", "Albania");
+
+		// The announcement reflects the single item left after filtering.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "1 result is available");
+	});
 });

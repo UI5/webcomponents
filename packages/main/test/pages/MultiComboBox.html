@@ -929,10 +929,8 @@
 			try {
 				const items = await fetchMcbItems(value, signal);
 				// A newer load-items event would have aborted this signal before we get here.
-				[...mcbControl.querySelectorAll("ui5-mcb-item")].forEach(c => mcbControl.removeChild(c));
-				items.forEach((text) => {
-					mcbControl.appendChild(document.createElement("ui5-mcb-item")).text = text;
-				});
+				removeItems(mcbControl);
+				items.forEach((text) => createItem(mcbControl, text));
 				mcbControl.loading = false;
 			} catch (err) {
 				// Superseded by a newer load-items event - a fresh request is now in charge of loading state.
@@ -941,6 +939,28 @@
 				}
 			}
 		};
+		
+		const removeItems = (control) => {
+			[...control.children]
+				.filter(c => c.matches("ui5-mcb-item, ui5-mcb-item-group"))
+				.forEach(c => {
+					removeItems(c);
+					control.removeChild(c);
+				});
+		};
+
+		const createItem = (cb, text) => {
+			const item = document.createElement("ui5-mcb-item");
+			item.text = text;
+			cb.appendChild(item);
+		};
+
+		const createGroupItem = (cb, text) => {
+			const item = document.createElement("ui5-mcb-item-group");
+			item.headerText = text;
+			cb.appendChild(item);
+			return item;
+		}
 
 		document.getElementById("lazy-loading-mcb-1").addEventListener("load-items", fnLoadItems );
 		document.getElementById("lazy-loading-mcb-2").addEventListener("load-items", fnLoadItems );

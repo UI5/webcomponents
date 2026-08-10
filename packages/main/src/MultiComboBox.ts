@@ -669,7 +669,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		this._valueStateLinks = [];
 		this._suppressNextLiveChange = false;
 		this._loadingDelegate = new ComboBoxLazyLoading({
-			getItemCount: () => this._getItems().filter(item => item._isVisible).length,
+			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
 			fireLoadItems: reason => this.fireDecoratorEvent("load-items", { reason, value: this.value }),
@@ -678,9 +678,8 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			loadedItemMessage: () => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => MultiComboBox.i18nBundle.getText(MULTICOMBOBOX_LOADED_ITEMS, count),
 			onLoadingEnd: () => {
-				this._filteredItems = this._shouldFilterItems ? this._filterItems(this.value) : this._getItems();
-				this._shouldFilterItems = false;
-				if (this.open && this._filteredItems.length === 0) {
+				const visibleItems = this._filterItems(this.value);
+				if (this.open && visibleItems.length === 0) {
 					this.open = false;
 				}
 			},

@@ -5763,4 +5763,86 @@ describe("Loading announcements", () => {
 			.should("contain.text", "Data loaded")
 			.and("contain.text", "2 results are available");
 	});
+
+	it("announces the total item count after lazy loading grouped items via arrow click", () => {
+		// Loads 2 group items: the first with 2 child items, the second with 1 child item (3 items total).
+		const loadItems = (e: CustomEvent) => {
+			const mcb = e.target as MultiComboBox;
+			mcb.loading = true;
+			setTimeout(() => {
+				const group1 = document.createElement("ui5-mcb-item-group") as MultiComboBoxItemGroup;
+				group1.headerText = "Group 1";
+				["Item 1", "Item 2"].forEach(text => {
+					const item = document.createElement("ui5-mcb-item") as MultiComboBoxItem;
+					item.text = text;
+					group1.appendChild(item);
+				});
+
+				const group2 = document.createElement("ui5-mcb-item-group") as MultiComboBoxItemGroup;
+				group2.headerText = "Group 2";
+				const item3 = document.createElement("ui5-mcb-item") as MultiComboBoxItem;
+				item3.text = "Item 3";
+				group2.appendChild(item3);
+
+				mcb.appendChild(group1);
+				mcb.appendChild(group2);
+				mcb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<MultiComboBox onLoadItems={loadItems}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		// 2 groups get created, holding 3 child items in total.
+		cy.get("[ui5-multi-combobox]").find("[ui5-mcb-item-group]").should("have.length", 2);
+		cy.get("[ui5-multi-combobox]").find("[ui5-mcb-item]").should("have.length", 3);
+
+		// The announcement reflects the 3 loaded (group headers excluded) items.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "3 results are available");
+	});
+
+	it("applies the filter and announces the filtered item count after lazy loading triggered by typing", () => {
+		// Typing "a" loads 3 items - only "Albania" matches the default StartsWithPerTerm filter.
+		const loadItems = (e: CustomEvent) => {
+			const mcb = e.target as MultiComboBox;
+			mcb.loading = true;
+			mcb.open = true;
+			setTimeout(() => {
+				["Albania", "Bulgaria", "Canada"].forEach(text => {
+					const item = document.createElement("ui5-mcb-item") as MultiComboBoxItem;
+					item.text = text;
+					mcb.appendChild(item);
+				});
+				mcb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<MultiComboBox onLoadItems={loadItems}></MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]").realClick();
+		cy.realType("a");
+
+		// All 3 items are created, but the filter leaves only "Albania" visible.
+		cy.get("[ui5-multi-combobox]").find("[ui5-mcb-item]").should("have.length", 3);
+		cy.get("[ui5-multi-combobox]")
+			.find("[ui5-mcb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1)
+			.and("have.attr", "text", "Albania");
+
+		// The announcement reflects the single item left after filtering.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "1 result is available");
+	});
 });
