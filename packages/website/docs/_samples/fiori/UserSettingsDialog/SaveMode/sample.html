@@ -57,17 +57,7 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
-		<ui5-user-settings-appearance-view text="Themes">
-			<div slot="additionalContent">
-				<div class="ui5-user-settings-appearance-view-additional-content-header">
-					<ui5-text id="touch-input-label">Optimize for Touch Input</ui5-text>
-					<ui5-switch accessible-name-ref="touch-input-label"></ui5-switch>
-				</div>
-				<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
-					Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
-					This is useful for hybrid devices that combine touch and mouse events.
-				</ui5-text>
-			</div>
+		<ui5-user-settings-appearance-view slot="tabs" text="Themes" selected>
 			<ui5-user-settings-appearance-view-group header-text="Horizon">
 				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="Morning Horizon" selected></ui5-user-settings-appearance-view-item>
 				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="Evening Horizon"></ui5-user-settings-appearance-view-item>
@@ -81,6 +71,17 @@
 				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
 			</ui5-user-settings-appearance-view-group>
 		</ui5-user-settings-appearance-view>
+
+		<ui5-user-settings-view slot="tabs" text="Display Settings">
+			<div class="ui5-user-settings-appearance-view-additional-content-header">
+				<ui5-text id="touch-input-label">Optimize for Touch Input</ui5-text>
+				<ui5-switch accessible-name-ref="touch-input-label"></ui5-switch>
+			</div>
+			<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+				Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+				This is useful for hybrid devices that combine touch and mouse events.
+			</ui5-text>
+		</ui5-user-settings-view>
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
