@@ -98,6 +98,37 @@ dynamically in Dev Mode and what doesn't (with the reason + fix).
 **how to fix:**
 - owner exposes per-segment text as component text props.
 
+## Switch — ui5-switch (node 24087:10369)
+**works:** yes — `checked`, `disabled`, `design` (Type: Non-Semantic→Textual, Semantic→Graphical) map.
+
+**doesn't map:**
+- `textOn`/`textOff` aren't modeled in Figma.
+- the on/off icon is an instance-swap.
+
+**how to fix:**
+- owner exposes `textOn`/`textOff` as text props if dynamic labels are wanted.
+
+## Link — ui5-link (node 187:305)
+**works:** yes — `design` (Emphasized/Subtle; Regular & Icon Link → Default), `disabled`, and label text map.
+
+**doesn't map:**
+- the `Icon` (Icon Link type) is an instance-swap — name not readable (ui5-link has an `icon` slot).
+- Visited/Down are visual pseudo-states.
+
+**how to fix:**
+- owner adds an `Icon Name` string prop (or Code-Connect the icon set), same as Button.
+
+## Avatar — ui5-avatar (node 573:3623)
+**works:** yes — `size` (XS..XL 1:1), `color-scheme` (Color 1..10 → Accent1..10; Transparent/Placeholder 1:1), and `initials` map.
+
+**doesn't map:**
+- Person/Object icons are instance-swaps.
+- Badge is a slot; `Optional Border` has no direct prop.
+- Image/Tile colours have no `color-scheme` equivalent.
+
+**how to fix:**
+- owner adds an `Icon Name` string prop for the icon variant; model the badge as a readable prop.
+
 ## Icon — ui5-icon (node 983:5876) — UNPUBLISHABLE
 **works:** no — Figma rejects the publish: "corresponding node is not a component or component set".
 
