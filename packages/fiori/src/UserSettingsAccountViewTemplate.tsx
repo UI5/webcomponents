@@ -12,14 +12,19 @@ export default function UserSettingsAccountViewTemplate(this: UserSettingsAccoun
 		<div class="ui5-user-settings-view-container">
 			<div class="ui5-user-settings-view ui5-user-settings-account-view">
 				<div class="ui5-user-settings-account">
-					<Avatar size="XL" onClick={this._handleEditAvatarClick} initials={this._account?._initials}
-					        fallbackIcon={personPlaceholder} class="ui5-user-settings-account-avatar" interactive>
-						{this._account?.avatarSrc &&
-                            <img src={this._account.avatarSrc}/>
+					<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
+						<Avatar size="XL" onClick={this.showEditButton ? this._handleEditAvatarClick : undefined}
+						        initials={this._account?._initials} fallbackIcon={personPlaceholder}
+						        class="ui5-user-settings-account-avatar"
+						        mode={this.showEditButton ? "Interactive" : "Image"}>
+							{this._account?.avatarSrc &&
+							<img src={this._account.avatarSrc}/>
 						}
-						<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
-
-					</Avatar>
+							{this.showEditButton &&
+								<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
+							}
+						</Avatar>
+					</span>
 					{this._account?.titleText &&
                         <Text id="account-title" class="ui5-user-settings-account-title">{this._account.titleText}</Text>
 					}
