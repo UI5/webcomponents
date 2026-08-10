@@ -34,10 +34,21 @@ figma.connect(
         Image: undefined,
         Tile: undefined,
       }),
+      shape: figma.enum("Content", {
+        Person: "Circle",
+        Object: "Square",
+      }),
+      disabled: figma.enum("Interaction State", {
+        Disabled: true,
+        Regular: false,
+        Hover: false,
+        Active: false,
+        "Toggled Hover": false,
+      }),
       initials: figma.string("✏️ Initials"),
     },
-    example: ({ size, colorScheme, initials }) => (
-      <Avatar size={size} colorScheme={colorScheme} initials={initials} />
+    example: ({ size, colorScheme, shape, disabled, initials }) => (
+      <Avatar size={size} shape={shape} colorScheme={colorScheme} disabled={disabled} initials={initials} />
     ),
   }
 );
