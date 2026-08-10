@@ -199,50 +199,6 @@
 	</div>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Scroll Overflow Mode</ui5-title>
-		<p class="description">
-			This example uses <code>overflow-mode="Scroll"</code> in a narrow container.
-			A horizontal scrollbar appears when columns don't fit.
-		</p>
-
-		<div class="narrow-container">
-			<ui5-input-table-suggest
-				id="scrollSearch"
-				placeholder="Search with scroll..."
-				show-suggestions
-				overflow-mode="Scroll"
-			>
-				<ui5-table-header-cell slot="suggestionColumns" width="80px">Code</ui5-table-header-cell>
-				<ui5-table-header-cell slot="suggestionColumns" width="150px">Description</ui5-table-header-cell>
-				<ui5-table-header-cell slot="suggestionColumns" width="80px">Quantity</ui5-table-header-cell>
-				<ui5-table-header-cell slot="suggestionColumns" width="100px">Status</ui5-table-header-cell>
-
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>A001</ui5-table-cell>
-					<ui5-table-cell>Widget Alpha</ui5-table-cell>
-					<ui5-table-cell>150</ui5-table-cell>
-					<ui5-table-cell>In Stock</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>B002</ui5-table-cell>
-					<ui5-table-cell>Widget Beta</ui5-table-cell>
-					<ui5-table-cell>75</ui5-table-cell>
-					<ui5-table-cell>Low Stock</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>C003</ui5-table-cell>
-					<ui5-table-cell>Widget Gamma</ui5-table-cell>
-					<ui5-table-cell>0</ui5-table-cell>
-					<ui5-table-cell>Out of Stock</ui5-table-cell>
-				</ui5-table-row>
-			</ui5-input-table-suggest>
-		</div>
-
-		<div class="output" id="scrollOutput">Selected: (none)</div>
-	</div>
-
-
-	<div class="section">
 		<ui5-title class="section-title" level="H2">With Clear Icon</ui5-title>
 		<p class="description">
 			InputTableSuggest with show-clear-icon enabled for easy value clearing.

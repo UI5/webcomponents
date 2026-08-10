@@ -47,10 +47,10 @@ type HighlightedCellContent = {
 };
 
 /**
- * Represents a processed suggestion row with highlighted content
+ * Represents a suggestion row with highlighted content
  * @private
  */
-type ProcessedSuggestionRow = {
+type HighlightedSuggestionRow = {
 	row: ITableSuggestionRow;
 	cells: HighlightedCellContent[];
 };
@@ -77,7 +77,7 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * It displays suggestions in a table format with multiple columns, allowing users to
  * see more information about each suggestion before selecting it.
  *
- * Similar to the OpenUI5 sap.m.Input with tabular suggestions, this component supports:
+ * This component supports:
  * - Multiple columns via `suggestionColumns` slot
  * - Tabular rows via `suggestionRows` slot
  * - Automatic popin mode for responsive behavior
@@ -99,13 +99,6 @@ type InputTableSuggestSelectionChangeEventDetail = {
  *
  * **Note:** Autocomplete (typeahead) matches only the first column of suggestion rows.
  *
- * ### Keyboard Handling
- *
- * The component inherits keyboard handling from `ui5-input`:
- * - [Down] - Navigates to the next suggestion row
- * - [Up] - Navigates to the previous suggestion row
- * - [Enter] - Selects the focused suggestion row
- * - [Escape] - Closes the suggestion popover
  *
  * ### ES6 Module Import
  *
@@ -193,7 +186,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the columns for the tabular suggestions.
-	 * Use `ui5-table-header-cell` components to define the column headers.
+	 * Use `ui5-table-header-cell` component to define the column headers.
 	 *
 	 * **Note:** The columns define the structure of the suggestion table header.
 	 * Each column can have properties like `width`, `minWidth`, `importance` (for popin),
@@ -206,7 +199,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the rows for the tabular suggestions.
-	 * Use `ui5-table-row` components with `ui5-table-cell` children to define each suggestion row.
+	 * Use `ui5-table-row` component with `ui5-table-cell` children to define each suggestion row.
 	 *
 	 * **Note:** The cells in each row should correspond to the columns defined in `suggestionColumns`.
 	 *
@@ -242,7 +235,7 @@ class InputTableSuggest extends InputField {
 	 * Stores processed rows with highlighted cell content
 	 * @private
 	 */
-	_processedRows: ProcessedSuggestionRow[] = [];
+	_highlightedRows: HighlightedSuggestionRow[] = [];
 
 	/**
 	 * Stores the matched row for typeahead (similar to Input's _matchedSuggestionItem)
@@ -258,16 +251,16 @@ class InputTableSuggest extends InputField {
 		return this.suggestionRows.filter(row => !(row as UI5Element).hidden);
 	}
 
-	get _visibleProcessedRows(): ProcessedSuggestionRow[] {
+	get _visibleHighlightedRows(): HighlightedSuggestionRow[] {
 		const visibleRowSet = new Set(this._visibleRows);
-		return this._processedRows.filter(pr => visibleRowSet.has(pr.row));
+		return this._highlightedRows.filter(pr => visibleRowSet.has(pr.row));
 	}
 
 	onBeforeRendering() {
 		this._useTableSuggestions = this.suggestionColumns.length > 0;
 
 		if (this._useTableSuggestions) {
-			this._processRows();
+			this._highlightRows();
 			this._handleTabularPopoverOpen();
 			this._handleTabularTypeAhead();
 		}
@@ -419,13 +412,13 @@ class InputTableSuggest extends InputField {
 	 * Processes rows and generates highlighted markup for cell content.
 	 * @private
 	 */
-	_processRows() {
+	_highlightRows() {
 		const typedValue = this.typedInValue;
-		this._processedRows = [];
+		this._highlightedRows = [];
 
 		this.suggestionRows.forEach(row => {
 			const cells = row.cells || [];
-			const processedCells: HighlightedCellContent[] = cells.map(cell => {
+			const highlightedCells: HighlightedCellContent[] = cells.map(cell => {
 				const cellText = cell.textContent?.trim() || "";
 
 				return {
@@ -434,9 +427,9 @@ class InputTableSuggest extends InputField {
 				};
 			});
 
-			this._processedRows.push({
+			this._highlightedRows.push({
 				row,
-				cells: processedCells,
+				cells: highlightedCells,
 			});
 		});
 	}
