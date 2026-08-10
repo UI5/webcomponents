@@ -161,18 +161,18 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 					})}
 				</TableHeaderRow>
 
-				{this._visibleProcessedRows.map((processedRow, rowIndex) => (
+				{this._visibleHighlightedRows.map((highlightedRow, rowIndex) => (
 					<TableRow
 						key={`row-${rowIndex}`}
 						id={`${this._id}-row-${rowIndex}`}
 						class={{
-							"ui5-input-table-suggest-row--focused": processedRow.row.focused,
-							"ui5-input-table-suggest-row--selected": processedRow.row.selected,
+							"ui5-input-table-suggest-row--focused": highlightedRow.row.focused,
+							"ui5-input-table-suggest-row--selected": highlightedRow.row.selected,
 						}}
 						data-row-index={rowIndex}
 						interactive
 					>
-						{processedRow.cells.map((cell, cellIndex) => (
+						{highlightedRow.cells.map((cell, cellIndex) => (
 							<TableCell key={`cell-${rowIndex}-${cellIndex}`}>
 								<span dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}></span>
 							</TableCell>
