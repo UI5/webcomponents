@@ -18,8 +18,8 @@ export default function UserSettingsAccountViewTemplate(this: UserSettingsAccoun
 						        class="ui5-user-settings-account-avatar"
 						        mode={this.showEditButton ? "Interactive" : "Image"}>
 							{this._account?.avatarSrc &&
-							<img src={this._account.avatarSrc}/>
-						}
+								<img src={this._account.avatarSrc}/>
+							}
 							{this.showEditButton &&
 								<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
 							}
