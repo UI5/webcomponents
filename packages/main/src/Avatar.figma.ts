@@ -36,11 +36,29 @@ figma.connect(
         Image: "",
         Tile: "",
       }),
-      // Initials text (Type = Initials).
+      // Content → shape. Person → Circle, Object → Square.
+      // VERIFIED by screenshot of node 573:3623: Person column renders circles,
+      // Object column renders squares. NOTE misalignment: in Figma shape is
+      // COUPLED to Content (content source), but in the WC `shape` is an
+      // INDEPENDENT prop — Figma can't express e.g. a square person avatar.
+      shape: figma.enum("Content", {
+        Person: 'shape="Circle"',
+        Object: 'shape="Square"',
+      }),
+      // Interaction State = Disabled → disabled.
+      disabled: figma.enum("Interaction State", {
+        Disabled: "disabled",
+        Regular: "",
+        Hover: "",
+        Active: "",
+        "Toggled Hover": "",
+      }),
+      // Initials text. NOTE: emitted regardless of Type (parser can't gate one
+      // axis's attr on another) — consumer removes it for Image/Icon avatars.
       initials: figma.string("✏️ Initials"),
     },
     // Person/Object Icon are instance-swaps; Badge is a slot — omitted.
-    example: ({ size, colorScheme, initials }) =>
-      html`<ui5-avatar ${size} ${colorScheme} initials="${initials}"></ui5-avatar>`,
+    example: ({ size, colorScheme, shape, disabled, initials }) =>
+      html`<ui5-avatar ${size} ${shape} ${colorScheme} ${disabled} initials="${initials}"></ui5-avatar>`,
   }
 );
