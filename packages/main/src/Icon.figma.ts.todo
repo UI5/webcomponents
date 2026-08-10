@@ -1,0 +1,23 @@
+/**
+ * Web Components Code Connect mapping for the SAP Web UI Kit icons.
+ * Node: 983:5876 (the "SAP Icons" frame). Emits <ui5-icon>.
+ *
+ * ⚠️ MAJOR LIMITATION: this frame contains ~1400 INDIVIDUAL icon components,
+ * one per icon (accept, add, employee, …). Code Connect connects a NODE to a
+ * snippet — it cannot read "which icon" into the `name` attribute from a single
+ * mapping. To make the icon name dynamic, EACH icon component must get its own
+ * figma.connect emitting its own name (best generated, ~1400 entries).
+ * This single mapping is a placeholder for the frame. See FIGMA_CODE_CONNECT.md
+ * § "Icon is not dynamic" — this is the same registry/instance-swap problem as
+ * the Button icon.
+ */
+import figma, { html } from "@figma/code-connect/html";
+
+figma.connect(
+  "https://www.figma.com/design/SILcWzK5uFghKun9jx6D7c/SAP-Web-UI-Kit?node-id=983-5876",
+  {
+    props: {},
+    // Placeholder name — cannot reflect the selected icon (see limitation).
+    example: () => html`<ui5-icon name="add"></ui5-icon>`,
+  }
+);
