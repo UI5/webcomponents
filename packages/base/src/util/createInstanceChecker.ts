@@ -1,7 +1,7 @@
 // createInstanceChecker<A>("isAItem")
 function createChecker<T, P extends keyof T = keyof T>(prop: P) {
 	return (object: any): object is T => {
-		return object !== undefined && prop in object && object[prop] === true;
+		return object !== undefined && object !== null && prop in object && object[prop] === true;
 	};
 }
 

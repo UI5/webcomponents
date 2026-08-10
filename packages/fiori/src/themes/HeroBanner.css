@@ -16,13 +16,11 @@
 .ui5-banner-root {
 	box-sizing: border-box;
 	min-height: 5.75rem;
-	max-height: 24rem;
 	border-radius: inherit;
 	background-color: inherit;
 	background-image: inherit;
 	background-size: inherit;
 	box-shadow: var(--_ui5_banner_box_shadow);
-	border: var(--_ui5_banner_border);
 	overflow: hidden;
 	position: relative;
 }
@@ -43,8 +41,7 @@
 .ui5-banner-header {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1rem;
 }
@@ -52,7 +49,7 @@
 .ui5-banner-header-text {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
+	gap: 0.25rem;
 	flex: 1 1 auto;
 	min-width: 0;
 }
@@ -313,18 +310,6 @@
 	grid-row: 2;
 }
 
-/* L → XS (≤1024px): Heading max 3 lines */
-@container (max-width: 1024px) {
-	.ui5-banner-heading {
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-}
-
 /* XS (≤599px): collapse split layouts to stacked column */
 @container (max-width: 599px) {
 	.ui5-banner-content.ui5-banner-columns-equal,
@@ -333,12 +318,30 @@
 		flex-direction: column;
 	}
 
-	.ui5-banner-block-start {
+	:host([header-block-placement="Bottom"]) .ui5-banner-columns-first-wider:not(:has(.ui5-banner-block-start)):has(.ui5-banner-actions-grid-item) .ui5-banner-header,
+	:host([header-block-placement="Bottom"]) .ui5-banner-columns-equal:not(:has(.ui5-banner-block-start)) .ui5-banner-header {
+		align-self: flex-start;
+	}
+
+	.ui5-banner-header {
 		order: 1;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ui5-banner-actions,
+	.ui5-banner-actions-grid-item {
+		order: 2;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ui5-banner-block-start {
+		order: 3;
 	}
 
 	.ui5-banner-block-end {
-		order: 2;
+		order: 4;
 	}
 
 	/* BottomStart no-columnsRatio grid collapses to column */

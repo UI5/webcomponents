@@ -12,7 +12,7 @@ const Title = createReactComponent(TitleClass);
 function App() {
   return (
     <>
-      <Panel>
+      <Panel accessibleName="Countries">
         <div slot="header" className="header">
           <Title level="H4">Countries</Title>
           <div>

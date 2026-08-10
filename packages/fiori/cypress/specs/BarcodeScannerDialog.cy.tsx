@@ -279,11 +279,55 @@ describe("BarcodeScannerDialog", () => {
 			dlgScan.fireDecoratorEvent("scan-success", {
 				text: "mocked-scan-result",
 				rawBytes: new Uint8Array(),
+				format: "QR_CODE",
 			});
 		});
 
 		// Check that the scan result is displayed
 		cy.get("@scanResult").should("have.text", "mocked-scan-result");
+	});
+
+	it("includes barcode format string in scan-success event detail", () => {
+		let capturedDetail: { text: string; rawBytes: Uint8Array; format: string } | undefined;
+
+		handleScanSuccess = (event: CustomEvent) => {
+			capturedDetail = event.detail;
+		};
+
+		cy.get("@dialog").then($dialog => {
+			const dlgScan = $dialog.get(0) as BarcodeScannerDialog;
+			dlgScan.addEventListener("scan-success", handleScanSuccess as EventListener);
+		});
+
+		cy.get("@button").realClick();
+
+		// Wait for video to be ready (scan interval has started)
+		cy.get("@videoElement").should($video => {
+			const videoEl = $video[0] as HTMLVideoElement;
+			expect(videoEl.readyState, "Video readyState should be >= 1").to.be.at.least(1);
+		});
+
+		// Now stub _processFrame to call _handleScanSuccess with a mock Result returning QR_CODE format (11)
+		cy.get("@dialog").then($dialog => {
+			const dlgScan = $dialog.get(0) as BarcodeScannerDialog;
+			const stub = cy.stub(dlgScan, "_processFrame").callsFake(() => {
+				dlgScan._handleScanSuccess({
+					getText: () => "mock-value",
+					getRawBytes: () => new Uint8Array(),
+					getBarcodeFormat: () => 11, // BarcodeFormat.QR_CODE
+				} as any);
+			});
+			cy.wrap(stub).as("processFrameStub");
+		});
+
+		// Wait for the stub to be called at least once (scan interval is 200ms)
+		cy.get("@processFrameStub").should("have.been.called");
+
+		cy.then(() => {
+			expect(capturedDetail).to.not.be.undefined;
+			expect(capturedDetail!.text).to.equal("mock-value");
+			expect(capturedDetail!.format).to.equal("QR_CODE");
+		});
 	});
 
 	it("handles scan error event", () => {

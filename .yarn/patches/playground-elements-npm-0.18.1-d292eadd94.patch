@@ -117,6 +117,19 @@ index 1c2996fe16a91fe52074e65144aca9e1098043fd..4259730b04a73d0f5f5fec00d558d97c
  ], PlaygroundPreview.prototype, "iframe", void 0);
  __decorate([
      query('slot')
+diff --git a/playground-project.js b/playground-project.js
+index 6d6c8452286d3c0d2cde0c22d65327881bcb1fbd..0b5be95e67a41fbfd8a12b573b500253351d2b4a 100644
+--- a/playground-project.js
++++ b/playground-project.js
+@@ -178,7 +178,7 @@ let PlaygroundProject = class PlaygroundProject extends LitElement {
+         return this._validImportMap;
+     }
+     get _normalizedSandboxBaseUrl() {
+-        const url = new URL(this.sandboxBaseUrl, import.meta.url);
++        const url = new URL(this.sandboxBaseUrl, location.href);
+         url.pathname = endWithSlash(url.pathname);
+         return url;
+     }
 diff --git a/playground-typescript-worker.js b/playground-typescript-worker.js
 index 764edfea8a536a660ad983d0aeb369c064ebfc22..6ff369d0bd0c28f80d83868932171c3608806a8a 100644
 --- a/playground-typescript-worker.js

@@ -13,10 +13,15 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
-		cy.wait(100);
-
+		// Move focus to a button INSIDE the OpenUI5 dialog before opening
+		// the WebC ResponsivePopover, so the popover snapshots focus inside
+		// the dialog and restores it there on close. Otherwise the second
+		// Escape would land outside the dialog and the OpenUI5 Dialog's
+		// focus-based Escape handler would not fire.
 		cy.get("#openResPopoverButton")
-			.should('be.visible');
+			.should('be.visible')
+			.focus()
+			.should('be.focused');
 
 		cy.get("#respPopover").invoke("attr", "open", true);
 
@@ -25,6 +30,9 @@ describe("ui5 and web components integration", () => {
 		cy.realPress("Escape");
 
 		cy.get<ResponsivePopover>("#respPopover").ui5ResponsivePopoverClosed();
+
+		cy.get("#openResPopoverButton")
+			.should('be.focused');
 
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');

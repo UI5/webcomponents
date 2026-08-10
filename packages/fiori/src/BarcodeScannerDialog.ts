@@ -29,7 +29,7 @@ import BarcodeScannerDialogCss from "./generated/themes/BarcodeScannerDialog.css
 // other tools do not handle named exports (they are undefined after the import), but the window global is assigned and can be used (web dev server)
 const windowZXing = typeof window === "undefined" ? {} : window.ZXing;
 const effectiveZXing = { ...ZXing, ...windowZXing };
-const { BrowserMultiFormatReader, NotFoundException } = effectiveZXing;
+const { BrowserMultiFormatReader, NotFoundException, BarcodeFormat } = effectiveZXing;
 
 const defaultMediaConstraints = {
 	audio: false,
@@ -44,9 +44,12 @@ const defaultMediaConstraints = {
 	},
 };
 
+type BarcodeFormatString = keyof typeof BarcodeFormat;
+
 type BarcodeScannerDialogScanSuccessEventDetail = {
 	text: string,
 	rawBytes: Uint8Array,
+	format: BarcodeFormatString,
 };
 
 type BarcodeScannerDialogScanErrorEventDetail = {
@@ -90,9 +93,10 @@ type BarcodeScannerDialogScanErrorEventDetail = {
 })
 
 /**
- * Fires when the scan is completed successfuuly.
+ * Fires when the scan is completed successfully.
  * @param {string} text the scan result as string
  * @param {Object} rawBytes the scan result as a Uint8Array
+ * @param {string} format the format of the scanned barcode (e.g. "QR_CODE", "EAN_13", "CODE_128")
  * @public
  */
 @event("scan-success", {
@@ -393,6 +397,7 @@ class BarcodeScannerDialog extends UI5Element {
 		this.fireDecoratorEvent("scan-success", {
 			text: result.getText(),
 			rawBytes: result.getRawBytes(),
+			format: BarcodeFormat[result.getBarcodeFormat()] as BarcodeFormatString,
 		});
 	}
 
@@ -471,4 +476,5 @@ export default BarcodeScannerDialog;
 export type {
 	BarcodeScannerDialogScanErrorEventDetail,
 	BarcodeScannerDialogScanSuccessEventDetail,
+	BarcodeFormatString,
 };

@@ -1523,4 +1523,165 @@ describe("Popover Resize Functionality", () => {
 			});
 		});
 	});
+
+	describe("Resize with Max Width and Max Height Constraints", () => {
+		it("should respect inline max-width during resize", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover
+						id="popover"
+						opener="btnOpen"
+						placement="End"
+						resizable
+						open={true}
+						style={{ maxWidth: "300px" }}>
+						<div style={{ width: "150px", height: "100px", padding: "20px" }}>
+							Content with max-width constraint
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(200, 0)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const width = $popover[0].getBoundingClientRect().width;
+				expect(width).to.be.at.most(300);
+			});
+		});
+
+		it("should respect inline max-height during resize", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover
+						id="popover"
+						opener="btnOpen"
+						placement="End"
+						resizable
+						open={true}
+						style={{ maxHeight: "250px" }}>
+						<div style={{ width: "150px", height: "100px", padding: "20px" }}>
+							Content with max-height constraint
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(0, 200)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const height = $popover[0].getBoundingClientRect().height;
+				expect(height).to.be.at.most(250);
+			});
+		});
+
+		it("should respect both inline max-width and max-height during resize", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "200px", top: "200px" }}>
+						Open
+					</Button>
+					<Popover
+						id="popover"
+						opener="btnOpen"
+						placement="End"
+						resizable
+						open={true}
+						style={{ maxWidth: "300px", maxHeight: "250px" }}>
+						<div style={{ width: "150px", height: "100px", padding: "20px" }}>
+							Content with both constraints
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(200, 200)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).to.be.at.most(300);
+				expect(rect.height).to.be.at.most(250);
+			});
+		});
+
+		it("should respect all min/max inline constraints during resize", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen" style={{ position: "absolute", left: "300px", top: "300px" }}>
+						Open
+					</Button>
+					<Popover
+						id="popover"
+						opener="btnOpen"
+						placement="End"
+						resizable
+						open={true}
+						style={{ minWidth: "100px", maxWidth: "200px", minHeight: "100px", maxHeight: "200px" }}>
+						<div style={{ padding: "10px" }}>
+							Content with all constraints
+						</div>
+					</Popover>
+				</>
+			);
+
+			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
+
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(300, 300)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).to.be.at.most(200);
+				expect(rect.height).to.be.at.most(200);
+			});
+
+			cy.wait(300);
+
+			cy.get("[ui5-popover]")
+				.shadow()
+				.find(".ui5-popover-resize-handle")
+				.realMouseDown({ position: "center" })
+				.realMouseMove(-300, -300)
+				.realMouseUp();
+
+			cy.get("[ui5-popover]").then($popover => {
+				const rect = $popover[0].getBoundingClientRect();
+				expect(rect.width).to.be.at.least(99);
+				expect(rect.height).to.be.at.least(99);
+			});
+		});
+	});
 });

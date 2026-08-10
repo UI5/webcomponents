@@ -66,6 +66,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 						<Button id="overflow"
 							icon={iconOverflow}
 							design={ButtonDesign.Transparent}
+							tooltip={this._overflowButtonTooltip}
 							onClick={this._onOverflowButtonClick}
 						></Button>
 					}

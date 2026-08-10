@@ -74,9 +74,11 @@ class Bar extends UI5Element {
 	 *
 	 * **Note:**
 	 *
-	 * - Set accessibleRole to "toolbar" only when the component contains two or more active, interactive elements (such as buttons, links, or input fields) within the bar.
+	 * - By default, accessibleRole is set to "Toolbar", which renders the ARIA role "toolbar".
 	 *
-	 * - If there is only one or no active element, it is recommended to avoid using the "toolbar" role, as it implies a grouping of multiple interactive controls.
+	 * - Use the default accessibleRole value "Toolbar" only when the component contains two or more active, interactive elements (such as buttons, links, or input fields) within the bar.
+	 *
+	 * - If there is only one or no active element, set accessibleRole to "None" to avoid rendering the ARIA role "toolbar", as that role implies a grouping of multiple interactive controls.
 	 *
 	 * @public
 	 * @default "Toolbar"

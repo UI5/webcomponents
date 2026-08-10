@@ -3,6 +3,120 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.25.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.1...v2.25.0-rc.2) (2026-07-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.25.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.0...v2.25.0-rc.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ui5-user-settings-dialog:** align dialog with latest design spec ([#13805](https://github.com/UI5/webcomponents/issues/13805)) ([8eac65f](https://github.com/UI5/webcomponents/commit/8eac65fc462834a4d4435762dfb239fefbb85642))
+
+
+### Features
+
+* **ui5-input:** add styling to interactive custom icons ([#13674](https://github.com/UI5/webcomponents/issues/13674)) ([ce3fecd](https://github.com/UI5/webcomponents/commit/ce3fecd2fcfffcd1f989a2a54f8e640f43d44174))
+* **ui5-user-settings-dialog:** add saveMode with Save/Cancel footer ([#13845](https://github.com/UI5/webcomponents/issues/13845)) ([7a23598](https://github.com/UI5/webcomponents/commit/7a23598ddc60f53de5a63e3cd09a8ac6e889d528))
+
+
+
+
+
+# [2.25.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.24.0...v2.25.0-rc.0) (2026-07-13)
+
+
+### Features
+
+* **ui5-dialog:** add fullscreen toggle button ([#13691](https://github.com/UI5/webcomponents/issues/13691)) ([d9d329b](https://github.com/UI5/webcomponents/commit/d9d329b826cd85163486e589eb9514370eb6ce45))
+
+
+
+
+
+# [2.24.0](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.3...v2.24.0) (2026-07-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.24.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.2...v2.24.0-rc.3) (2026-06-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.24.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.1...v2.24.0-rc.2) (2026-06-25)
+
+
+### Features
+
+* **ui5-comobobox, ui5-multi-combobox:** add custom items ([#13640](https://github.com/UI5/webcomponents/issues/13640)) ([4f37e60](https://github.com/UI5/webcomponents/commit/4f37e60fc08fc789693da50e788c53ee67deb58e))
+
+
+
+
+
+# [2.24.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.24.0-rc.0...v2.24.0-rc.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* **ui5-slider, ui5-range-slider:** add samples in playground ([#13667](https://github.com/UI5/webcomponents/issues/13667)) ([0f9dc29](https://github.com/UI5/webcomponents/commit/0f9dc2997b9d39cfa970fc9f5d3e34ad75f96aa5))
+
+
+### Features
+
+* **ui5-user-menu:** introduce infoArea slot ([#13679](https://github.com/UI5/webcomponents/issues/13679)) ([83f7912](https://github.com/UI5/webcomponents/commit/83f79127d92de5786bc5d1b85ffb341d4071555f))
+
+
+
+
+
+# [2.24.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.23.0...v2.24.0-rc.0) (2026-06-11)
+
+
+### Features
+
+* **ui5-timeline:** introduce header and info-bar slots ([#13548](https://github.com/UI5/webcomponents/issues/13548)) ([7b71a03](https://github.com/UI5/webcomponents/commit/7b71a03ecfa5b80674ffde059716ce76531f219b))
+
+
+
+
+
 # [2.23.0](https://github.com/UI5/webcomponents/compare/v2.23.0-rc.2...v2.23.0) (2026-06-05)
 
 

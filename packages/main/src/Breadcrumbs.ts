@@ -136,6 +136,15 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	separators: `${BreadcrumbsSeparator}` = "Slash";
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.24.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
 	 * Holds the number of items in the overflow.
 	 * @default 0
 	 * @private
@@ -662,7 +671,7 @@ class Breadcrumbs extends UI5Element implements IToolbarItemContent {
 	}
 
 	get _accessibleNameText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
+		return this.accessibleName || Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
 	}
 
 	get _dropdownArrowAccessibleNameText() {

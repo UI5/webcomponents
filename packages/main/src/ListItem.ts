@@ -520,6 +520,7 @@ abstract class ListItem extends ListItemBase {
 			ariaLevel: undefined,
 			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
 			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON),
+			ariaSelected: this._ariaSelected,
 			ariaSelectedText: this.ariaSelectedText,
 			ariaHaspopup: this.accessibilityAttributes.hasPopup,
 			setsize: this.accessibilityAttributes.ariaSetsize,

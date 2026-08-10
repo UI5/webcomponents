@@ -59,6 +59,7 @@ import arraysAreEqual from "@ui5/webcomponents-base/dist/util/arraysAreEqual.js"
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import MultiComboBoxItem, { isInstanceOfMultiComboBoxItem } from "./MultiComboBoxItem.js";
+import "./MultiComboBoxItemCustom.js";
 import MultiComboBoxItemGroup, { isInstanceOfMultiComboBoxItemGroup } from "./MultiComboBoxItemGroup.js";
 import ListItemGroup from "./ListItemGroup.js";
 import Tokenizer, { getTokensCountText } from "./Tokenizer.js";
@@ -1198,7 +1199,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this.filterSelected = false;
 		} else {
 			this._previouslySelectedItems = this._getSelectedItems();
-			this.selectedItems?.filter(item => !item.isGroupItem).forEach(item => {
+			// Operate on all selectable items, not the stale selectedItems snapshot
+			const allSelectableItems = this._getItems().filter(item => !item.isGroupItem);
+			allSelectableItems.forEach(item => {
 				item.selected = (e.target as CheckBox).checked;
 			});
 
@@ -1622,6 +1625,13 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 		return this._getItems().filter(item => item.selected) as Array<MultiComboBoxItem>;
 	}
 
+	_getSelectedValues(): Array<string> {
+		return this._getItems()
+			.filter((i): i is MultiComboBoxItem => isInstanceOfMultiComboBoxItem(i) && i.selected)
+			.map(i => i.value)
+			.filter((v): v is string => !!v);
+	}
+
 	_listSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
 		let changePrevented;
 
@@ -1634,16 +1644,15 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			this._previouslySelectedItems = e.detail.previouslySelectedItems;
 		}
 
+		// Update selectedValues for both desktop and mobile
+		// On mobile, this provides visual feedback (checkbox state)
+		// On desktop, this happens before firing the selection-change event
+		if (this.selectedValues) {
+			this.selectedValues = this._getSelectedValues();
+		}
+
 		// don't call selection change right after selection as user can cancel it on phone
 		if (!isPhone()) {
-			if (this.selectedValues) {
-				// Get values from all selected items (not just filtered ones)
-				this.selectedValues = this._getItems()
-					.filter((i): i is MultiComboBoxItem => isInstanceOfMultiComboBoxItem(i) && i.selected)
-					.map(i => i.value)
-					.filter((v): v is string => !!v);
-			}
-
 			changePrevented = this.fireSelectionChange();
 
 			if (changePrevented) {
@@ -1855,8 +1864,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 		if (this.open) {
 			const list = this._getList();
-			const selectedListItemsCount = this.items.filter(item => item.selected).length;
-			this._allSelected = selectedListItemsCount > 0 && ((selectedListItemsCount === this.items.length) || (list?.getSlottedNodes("items").length === selectedListItemsCount));
+			const selectableItems = this._getItems().filter(item => !item.isGroupItem);
+			const selectedListItemsCount = selectableItems.filter(item => item.selected).length;
+			const listItemsCount = list?.getSlottedNodes("items").length || 0;
+			// When filterSelected is true, only check against total items count since the list shows only selected items
+			this._allSelected = selectedListItemsCount > 0 && (selectedListItemsCount === selectableItems.length || (!this.filterSelected && listItemsCount === selectedListItemsCount));
 		}
 
 		this._effectiveShowClearIcon = (this.showClearIcon && !!this.value && !this.readonly && !this.disabled);
@@ -1958,6 +1970,11 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 				item.ref.selected = item.selected;
 			}
 		});
+
+		// Revert selectedValues to match the restored selection state
+		if (this.selectedValues) {
+			this.selectedValues = this._getSelectedValues();
+		}
 
 		this._toggleTokenizerPopover();
 

@@ -105,6 +105,7 @@ const secondaryBoot = async (): Promise<void> => {
 	await boot(); // make sure we're not in the middle of boot before re-running the skipped parts
 	await initF6Navigation();
 	attachOpenUI5SupportListeners();
+	await applyTheme(getTheme()); // Re-apply theme to detect external theme from OpenUI5 and clean up
 };
 
 /**

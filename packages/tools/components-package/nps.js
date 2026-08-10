@@ -83,6 +83,7 @@ const getScripts = (options) => {
 			UI5_TS: `${tsOption}`,
 			CSS_VARIABLES_TARGET: options.cssVariablesTarget ?? "root",
 			CYPRESS_COVERAGE: !!(options.internal?.cypress_code_coverage),
+			CYPRESS_VISUAL: !!(options.internal?.cypress_visual),
 		},
 		clean: {
 			"default": "ui5nps clean.generated clean.dist scope.testPages.clean",

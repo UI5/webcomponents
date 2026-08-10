@@ -76,6 +76,7 @@ const OPENUI5_POLLING_INTERVAL = 100;
 
 class OpenUI5Support {
 	static enablePolling = false; // set to true for old OpenUI5 versions
+	static _loadedFirst: boolean | undefined;
 
 	static isAtLeastVersion(minor: number) {
 		if (!window.sap.ui!.version) {
@@ -93,12 +94,17 @@ class OpenUI5Support {
 		return typeof window.sap?.ui?.require === "function";
 	}
 
+	static isOpenUI5LoadedFirst() {
+		return OpenUI5Support._loadedFirst;
+	}
+
 	static initPromise?: Promise<void>;
 
 	/**
 	 * Important - if OpenUI5 is loaded after UI5 Web Components, configuration is not synchronized and it's up to the app to initialize OpenUI5 with the same settings as UI5 Web Components for consistency.
 	 */
 	static OpenUI5DelayedInit = async () => {
+		OpenUI5Support._loadedFirst = false;
 		OpenUI5Support.init(); // This ensures patchPopover and patchPatcher are called; and from this point OpenUI5 CSS vars start being detected
 		await secondaryBoot(); // Re-run the parts of boot that were skipped due to OpenUI5 not having been loaded
 	}
@@ -122,6 +128,8 @@ class OpenUI5Support {
 		if (!OpenUI5Support.isOpenUI5Detected()) {
 			return OpenUI5Support.awaitForOpenUI5();
 		}
+
+		OpenUI5Support._loadedFirst ??= true;
 
 		if (!OpenUI5Support.initPromise) {
 			OpenUI5Support.initPromise = new Promise<void>(resolve => {

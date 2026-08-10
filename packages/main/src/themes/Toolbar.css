@@ -6,7 +6,7 @@
 	justify-content: flex-end;
 	box-sizing: border-box;
 	border-bottom: var(--sapGroup_TitleBorderWidth) solid var(--sapGroup_TitleBorderColor);
-	padding: 0 var(--_ui5-toolbar-padding-left) 0 var(--_ui5-toolbar-padding-right);
+	padding: 0 var(--_ui5-toolbar-padding-right) 0 var(--_ui5-toolbar-padding-left);
 	background-color: var(--sapToolbar_Background);
 }
 

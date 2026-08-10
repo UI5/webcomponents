@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Vite + JS</title>
+
+	<script id="sap-ui-bootstrap" src="https://ui5.sap.com/resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.m, sap.ui.core, sap.f" data-sap-ui-preload="async"></script>
+
+	<script>
+		sap.ui.getCore().attachInit(function () {
+			sap.ui.require(
+				['sap/f/gen/ui5/webcomponents/dist/Button'],
+				(Button) => {
+					new Button({
+						text: `Web Component via OpenUI5 ${sap.ui.getVersionInfo().version
+							}`,
+					}).placeAt('content');
+				}
+			);
+
+			setTimeout(async () => {
+				const OpenUI5Support = (await import("../../../base/src/features/OpenUI5Support.ts")).default;
+				await OpenUI5Support.init();
+
+				await import("../../src/Popover.ts");
+				await import("../../src/Button.ts");
+			}, 1000);
+		});
+	</script>
+</head>
+
+<body class="openui51auto">
+	<div id="content"></div>
+	<br />
+	<div>1. Click the button</div>
+	<br />
+	<ui5-button id="btnPopup">Open Popover web component</ui5-button>
+	<ui5-popover id="popup" header-text="Popover">
+		<div>2. Click the button</div>
+		<ui5-button id="nestedOpener">Open Dialog OpenUI5</ui5-button>
+	</ui5-popover>
+
+	<script>
+		btnPopup.addEventListener('click', () => {
+			popup.opener = btnPopup;
+			popup.open = true;
+		});
+		nestedOpener.addEventListener('click', () => {
+			const dialog = new sap.m.Dialog({
+				content: new sap.m.Text({ text: 'Observe the backdrop' }),
+			});
+			dialog.open();
+			popup.open = false;
+		});
+	</script>
+</body>
+
+</html>

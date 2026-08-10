@@ -6,6 +6,7 @@ import "@ui5/webcomponents/dist/Avatar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
 import "@ui5/webcomponents/dist/Button.js";
+import "@ui5/webcomponents/dist/MessageStrip.js";
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/globe.js";
 import "@ui5/webcomponents-icons/dist/collaborate.js";

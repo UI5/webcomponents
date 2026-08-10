@@ -32,10 +32,17 @@ describe("ui5 and web components integration", () => {
 		cy.get("#openUI5Dialog1")
 			.should('be.visible');
 
+		// Wait for the Select to regain focus after its picker closes.
+		// Without this, the next Escape can be dispatched before focus returns
+		// inside the OpenUI5 Dialog and the dialog's Escape handler never fires.
+		cy.get("#webCSelect1")
+			.should('be.focused');
+
 		cy.realPress("Escape");
 
-		cy.get<ResponsivePopover>("#openUI5Dialog1")
-			.ui5ResponsivePopoverClosed();
+		// sap.m.Dialog destroys itself in afterClose, so the element is removed.
+		cy.get("#openUI5Dialog1")
+			.should('not.exist');
 
 		cy.get("#openUI5Button")
 			.should('be.focused');
