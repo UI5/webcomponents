@@ -50,7 +50,7 @@ Figma props: Content, Value State, Interaction State, ✏️ Placeholder, ✏️
 | `valueState` | Value State (None/Negative/Critical/Positive/Information) | ✅ mapped | figma-props; 1:1 |
 | `disabled` | Interaction State=Disabled | ✅ mapped | figma-props |
 | `readonly` | Interaction State=Read Only | ✅ mapped | figma-props |
-| `valueStateMessage` (slot) | Message Popover (BOOLEAN) → nested `✏️ Text`+`Value State` | 🔴 misalignment | figma-props; the popover instance **does** expose readable Text+Value State — currently only detected as presence; text could be mapped (improvement owed) |
+| `valueStateMessage` (slot) | Message Popover (BOOLEAN) → nested `✏️ Text`+`Value State` | ✅ mapped | figma-props; the popover instance exposes a readable Text — now mapped: slot gated on the boolean, text read via `figma.nestedProps`. Only present in Active-state variants |
 | `icon` (slot) | 2nd Action (BOOLEAN) | ❌ can't map | figma-props; slotted, instance-swap |
 | `showClearIcon` | Trailing Action (BOOLEAN) | ⚠️ partial | figma-props; approximated — Trailing Action is generic |
 | — | Content (Placeholder/Typed Text) | 🔴 misalignment | figma-props; Figma-only display toggle; can't gate which text emits → both attrs always emitted |
@@ -201,4 +201,4 @@ Figma props: Type (Image/Icon/Initials), Content (Person/Object), Size, Color, I
 
 ## Open TODOs surfaced by this audit
 - **Switch `design`** — RESOLVED: verified not mappable (screenshot), wrong mapping removed.
-- **Input `valueStateMessage`** — the popover text IS readable; upgrade from presence-only to mapping the text.
+- **Input `valueStateMessage`** — RESOLVED: nested popover text now mapped (WC + React). *Verify in Dev Mode on an Active-state variant that the slot renders cleanly (published, not yet Dev-Mode-confirmed).*
