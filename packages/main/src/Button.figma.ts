@@ -59,17 +59,18 @@ figma.connect(
       }),
 
       // Counter badge → slotted <ui5-button-badge>.
-      // LIMITATION: design="OverlayText" and text="1" are hardcoded. Figma has
-      // no badge-design enum (only a Counter Badge boolean) and the counter
-      // number lives in an unexposed nested text layer, so neither the design
-      // (Overlay vs Inline) nor the number can be read dynamically.
-      // See FIGMA_CODE_CONNECT.md § "Badge design/text is not dynamic".
-      counterBadge: figma.boolean("Counter Badge", {
-        true: html`<ui5-button-badge slot="badge" design="OverlayText" text="1"></ui5-button-badge>`,
-        false: "",
+      // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — must use
+      // figma.enum (figma.boolean silently fails to match a variant → no badge).
+      // LIMITATION: design="OverlayText" is hardcoded (Figma has no badge-design
+      // enum) and text is hardcoded to "72" to match the Figma nested layer,
+      // which isn't readable dynamically. See FIGMA_CODE_CONNECT.md § Button.
+      counterBadge: figma.enum("Counter Badge", {
+        True: html`<ui5-button-badge slot="badge" design="OverlayText" text="72"></ui5-button-badge>`,
+        False: "",
       }),
 
       // Attention badge → slotted <ui5-button-badge> attention dot.
+      // Attention Badge IS a real Figma BOOLEAN.
       attentionBadge: figma.boolean("Attention Badge", {
         true: html`<ui5-button-badge slot="badge" design="AttentionDot"></ui5-button-badge>`,
         false: "",
