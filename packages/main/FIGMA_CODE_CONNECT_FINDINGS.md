@@ -52,14 +52,13 @@ props are never modelled in the kit.
 - `value` ← ✏️ Typed Text, `placeholder` ← ✏️ Placeholder.
 - `value-state` ← Value State (None/Negative/Critical/Positive/Information, 1:1).
 - `disabled` / `readonly` ← Interaction State.
-- `valueStateMessage` ← nested "Input Message Popover" text (gated on Message Popover boolean).
 
 **Doesn't work:**
 - `icon` slot ← 2nd Action — slotted/instance-swap, not readable.
 - `showClearIcon` ← Trailing Action — approximated only (Trailing Action is generic).
+- `valueStateMessage` ← Message Popover — **attempted 2026-08-11, REVERTED.** The nested "Input Message Popover" *does* expose a readable ✏️ Text, but it can't be emitted into a `<div slot="valueStateMessage">` wrapper: a `figma.*` call nested inside a template literal / JSX emits **verbatim** (the Dev Mode snippet literally printed `figma.nestedProps(...)` source instead of the value). It also only exists on Active-state variants (unreachable in normal selection). Not practically mappable.
 
-**Assumed — check manually:**
-- `valueStateMessage` slot: published + parses, but **not Dev-Mode-confirmed** to render cleanly. It only appears on **Active** interaction-state variants in Figma. Please check an Active variant shows a clean `<div slot="valueStateMessage">…</div>`.
+**Assumed:** nothing.
 
 **Misalignment:**
 - `Content` (Placeholder vs Typed Text) — Figma-only display toggle; can't gate which text emits, so both `value` and `placeholder` are always emitted.
@@ -228,5 +227,13 @@ props are never modelled in the kit.
 
 ## Open items needing manual Dev-Mode check
 - **Button badge `design`** — confirm Compact→InlineText / Cozy→OverlayText renders correctly (design-rule assumption).
-- **Input `valueStateMessage`** — published; confirm the slot renders cleanly on an Active-state variant.
 - **Avatar `initials`** — confirm ungated emission is acceptable.
+
+## Parser lesson (applies to all mappings)
+A `figma.*` call nested inside a template literal (WC `html\`\``) or inside JSX
+emits **verbatim** — the generated snippet prints the source text (e.g.
+`figma.nestedProps(...)`) instead of the resolved value. This passes dry-run
+validation (it *parses*) but produces broken output. Any value that needs a
+`figma.*` read must be resolved into a top-level prop and referenced as a plain
+`${prop}` — it cannot be wrapped in surrounding markup in the same expression.
+This is why slot-wrapped nested reads (Input valueStateMessage) are not mappable.
