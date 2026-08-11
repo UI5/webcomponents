@@ -1412,6 +1412,18 @@ describe("F6 Navigation", () => {
             .should("have.attr", "data-sap-ui-fastnavgroup", "true");
     });
 
+    it("tests side panel does not have unsupported aria-orientation attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find(".ui5-user-settings-side")
+            .should("not.have.attr", "aria-orientation");
+    });
+
     it("tests footer toolbar has fastnavgroup attribute", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Setting">

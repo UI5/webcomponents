@@ -25,7 +25,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			initialFocus={`setting-${this._selectedSetting?._id}`}
 		>
 			<div class="ui5-user-settings-root">
-				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-orientation="vertical" aria-roledescription={this.ariaRoleDescList}>
+				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-roledescription={this.ariaRoleDescList}>
 					<div class="ui5-user-settings-side-header">
 						{this.headerText &&
 							<Title level="H1" size="H5">{this.headerText}</Title>
