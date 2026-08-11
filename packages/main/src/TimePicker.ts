@@ -374,6 +374,15 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	tempValue?: string;
 
 	/**
+	 * True when the effective viewport width is ≤ 320 px (~200% browser zoom on a phone).
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	_fnZoomResizeHandler?: () => void;
+
+	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
 	 * Used by the getISOFormat method to avoid creating a new DateFormat instance on each call.
 	 * @private
@@ -412,6 +421,49 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	get formFormattedValue(): FormData | string | null {
 		return this.value || "";
 	}
+
+	onEnterDOM() {
+		this._highZoom = this._isHighZoom();
+		this._startZoomWatch();
+	}
+
+	onExitDOM() {
+		this._stopZoomWatch();
+	}
+
+	_isHighZoom(): boolean {
+		return ((window.visualViewport?.width) ?? window.innerWidth) <= 320;
+	}
+
+	_startZoomWatch() {
+		if (this._fnZoomResizeHandler) {
+			window.removeEventListener("resize", this._fnZoomResizeHandler);
+			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
+		}
+
+		this._fnZoomResizeHandler = () => {
+			if (!this.isConnected) { return; }
+			const bHighZoom = this._isHighZoom();
+			if (bHighZoom !== this._highZoom) {
+				this._highZoom = bHighZoom;
+				this._onZoomChange(bHighZoom);
+			}
+		};
+
+		window.visualViewport?.addEventListener("resize", this._fnZoomResizeHandler);
+		window.addEventListener("resize", this._fnZoomResizeHandler);
+	}
+
+	_stopZoomWatch() {
+		if (this._fnZoomResizeHandler) {
+			window.removeEventListener("resize", this._fnZoomResizeHandler);
+			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
+			this._fnZoomResizeHandler = undefined;
+		}
+	}
+
+	// noop — override in later steps
+	_onZoomChange(_bHighZoom: boolean): void {}
 
 	onBeforeRendering() {
 		if (this.value) {

@@ -184,10 +184,12 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		ResizeHandler.register(document.body, this._handleResizeBound);
 	}
 
 	onExitDOM() {
+		super.onExitDOM();
 		ResizeHandler.deregister(document.body, this._handleResizeBound);
 	}
 

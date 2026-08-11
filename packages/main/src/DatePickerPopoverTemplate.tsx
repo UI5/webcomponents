@@ -4,6 +4,7 @@ import Calendar from "./Calendar.js";
 import Icon from "./Icon.js";
 import CalendarDate from "./CalendarDate.js";
 import ResponsivePopover from "./ResponsivePopover.js";
+import DateHighZoomInputs from "./DateHighZoomInputs.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import error from "@ui5/webcomponents-icons/dist/error.js";
@@ -59,6 +60,18 @@ function defaultHeader(this: DatePicker) {
 }
 
 function defaultContent(this: DatePicker) {
+	if (this._highZoom) {
+		return (
+			<DateHighZoomInputs
+				primaryCalendarType={this._primaryCalendarType}
+				dateValue={this.dateValue}
+				minDate={this._minDate.toLocalJSDate()}
+				maxDate={this._maxDate.toLocalJSDate()}
+				onChange={this._onHzInputsChange}
+			/>
+		);
+	}
+
 	return (
 		<Calendar
 			id={`${this._id}-calendar`}
@@ -128,14 +141,25 @@ function defaultFooter(this: DatePicker) {
 			slot="footer"
 			class={{
 				"ui5-dt-picker-footer": true,
-				"ui5-dt-picker-footer-time-hidden": isPhone()
+				"ui5-dt-picker-footer-time-hidden": isPhone() && !this._highZoom,
 			}}>
+
+			{ this._highZoom &&
+				<Button
+					id="ok"
+					class="ui5-dt-picker-action"
+					design="Emphasized"
+					onClick={this._onHzOk}
+				>
+					{this.btnOKLabel}
+				</Button>
+			}
 
 			<Button
 				id="cancel"
 				class="ui5-dt-picker-action"
 				design="Transparent"
-				onClick={this._togglePicker}
+				onClick={this._highZoom ? this._onHzCancel : this._togglePicker}
 			>
 				{this.btnCancelLabel}
 			</Button>

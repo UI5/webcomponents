@@ -124,9 +124,61 @@ class DateComponentBase extends UI5Element {
 	_cachedMinDate?: { key: string, value: CalendarDate };
 	_cachedMaxDate?: { key: string, value: CalendarDate };
 
+	/**
+	 * True when the effective viewport width is ≤ 320 px (corresponds to ~200% browser zoom on a phone).
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	_fnZoomResizeHandler?: () => void;
+
 	constructor() {
 		super();
 	}
+
+	onEnterDOM() {
+		this._highZoom = this._isHighZoom();
+		this._startZoomWatch();
+	}
+
+	onExitDOM() {
+		this._stopZoomWatch();
+	}
+
+	_isHighZoom(): boolean {
+		return ((window.visualViewport?.width) ?? window.innerWidth) <= 320;
+	}
+
+	_startZoomWatch() {
+		if (this._fnZoomResizeHandler) {
+			window.removeEventListener("resize", this._fnZoomResizeHandler);
+			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
+		}
+
+		this._fnZoomResizeHandler = () => {
+			if (!this.isConnected) { return; }
+			const bHighZoom = this._isHighZoom();
+			if (bHighZoom !== this._highZoom) {
+				this._highZoom = bHighZoom;
+				this._onZoomChange(bHighZoom);
+			}
+		};
+
+		window.visualViewport?.addEventListener("resize", this._fnZoomResizeHandler);
+		window.addEventListener("resize", this._fnZoomResizeHandler);
+	}
+
+	_stopZoomWatch() {
+		if (this._fnZoomResizeHandler) {
+			window.removeEventListener("resize", this._fnZoomResizeHandler);
+			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
+			this._fnZoomResizeHandler = undefined;
+		}
+	}
+
+	// noop — override per subclass
+	_onZoomChange(_bHighZoom: boolean): void {}
 
 	get _primaryCalendarType() {
 		const localeData = getCachedLocaleDataInstance(getLocale());

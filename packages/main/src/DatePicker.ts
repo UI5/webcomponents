@@ -57,6 +57,7 @@ import {
 	DATEPICKER_RANGE_UNDERFLOW,
 	DATEPICKER_RANGE_OVERFLOW,
 	TIMEPICKER_CANCEL_BUTTON,
+	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateComponentBase from "./DateComponentBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -66,6 +67,7 @@ import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import type DateTimeInput from "./DateTimeInput.js";
 import type { InputAccInfo } from "./Input.js";
 import InputType from "./types/InputType.js";
+import type DateHighZoomInputs from "./DateHighZoomInputs.js";
 import IconMode from "./types/IconMode.js";
 import DatePickerTemplate from "./DatePickerTemplate.js";
 
@@ -407,6 +409,9 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@query("[ui5-calendar]")
 	_calendar!: Calendar;
 
+	@query("[ui5-date-high-zoom-inputs]")
+	_hzInputs?: DateHighZoomInputs;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -467,8 +472,34 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	onResponsivePopoverBeforeOpen() {
+		if (this._highZoom) {
+			// Sync HZ inputs after render (element may not exist yet on first open)
+			requestAnimationFrame(() => {
+				if (this._hzInputs) {
+					const d = this.value ? this.getValueFormat().parse(this.value, true) as Date | null : null;
+					this._hzInputs.dateValue = d;
+					this._hzInputs.minDate = this._minDate.toLocalJSDate();
+					this._hzInputs.maxDate = this._maxDate.toLocalJSDate();
+					this._hzInputs.primaryCalendarType = this._primaryCalendarType;
+					this._hzInputs.syncStartDate();
+				}
+			});
+			return;
+		}
 		this._calendar.timestamp = this._calendarTimestamp;
 		this._calendarCurrentPicker = this.firstPicker;
+	}
+
+	_onHzFocusIn(e: FocusEvent) {
+		// At high zoom the input should not be editable — immediately blur and open picker
+		(e.target as HTMLElement).blur();
+		if (!this.open) {
+			this._togglePicker();
+		}
+	}
+
+	_onHzInputsChange() {
+		// called by DateHighZoomInputs change event — validation is on OK press
 	}
 
 	onBeforeRendering() {
@@ -694,10 +725,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_click(e: MouseEvent) {
-		if (isPhone()) {
+		if (isPhone() || this._highZoom) {
 			this.responsivePopover!.opener = this;
 			this.responsivePopover!.open = true;
-			e.preventDefault(); // prevent immediate selection of any item
+			e.preventDefault();
 		}
 	}
 
@@ -865,11 +896,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get showHeader() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	get showFooter() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	get displayValue(): string {
@@ -953,6 +984,28 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get btnCancelLabel() {
 		return DatePicker.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON);
+	}
+
+	get btnOKLabel() {
+		return DatePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	_onHzOk() {
+		if (!this._hzInputs) { return; }
+		if (!this._hzInputs.validate()) { return; }
+		const d = this._hzInputs.getDateObject();
+		if (d) {
+			this.value = this.getValueFormat().format(d);
+			this.fireDecoratorEvent("change", { value: this.value, valid: true });
+		}
+		this._togglePicker();
+	}
+
+	_onHzCancel() {
+		if (this._hzInputs) {
+			this._hzInputs.resetValueState();
+		}
+		this._togglePicker();
 	}
 
 	/**
@@ -1047,6 +1100,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_togglePicker(): void {
+		this._highZoom = this._isHighZoom();
 		this.open = !this.open;
 	}
 
@@ -1097,6 +1151,18 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get type() {
 		return InputType.Text;
+	}
+
+	_onZoomChange(bHighZoom: boolean): void {
+		if (this.open) {
+			// picker is open — re-render will pick up the new _highZoom value
+			// (already set by DateComponentBase before calling this)
+			this.open = false;
+			this.open = true;
+		} else {
+			// icon visibility is driven by _highZoom property — invalidate
+			void bHighZoom;
+		}
 	}
 }
 

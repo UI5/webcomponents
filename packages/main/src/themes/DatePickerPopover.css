@@ -23,6 +23,13 @@
 	padding: 0;
 }
 
+/* High-zoom mode: DateHighZoomInputs fills the full popover content area */
+[ui5-date-high-zoom-inputs] {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}
+
 .ui5-dt-picker-footer {
 	display: flex;
 	justify-content: flex-end;

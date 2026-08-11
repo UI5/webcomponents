@@ -1,6 +1,25 @@
 import type YearPicker from "./YearPicker.js";
+import CalendarHeaderTemplate from "./CalendarHeaderTemplate.js";
 
 export default function YearPickerTemplate(this: YearPicker) {
+	if (this._showHeader) {
+		return (
+			<div class="ui5-cal-root">
+				<div class="ui5-calheader" exportparts="calendar-header-arrow-button, calendar-header-middle-button">
+					{ CalendarHeaderTemplate.call(this) }
+				</div>
+				{ grid.call(this) }
+			</div>
+		);
+	}
+
+	return grid.call(this);
+}
+
+function grid(this: YearPicker) {
+	const rowSize = this._getRowSize();
+	const itemWidth = `calc(${(100 / rowSize).toFixed(4)}% - 0.125rem)`;
+
 	return (
 		<div
 			class="ui5-yp-root"
@@ -9,6 +28,7 @@ export default function YearPickerTemplate(this: YearPicker) {
 			aria-roledescription={this.roleDescription}
 			aria-readonly="false"
 			aria-multiselectable="false"
+			style={{ "--_ui5_yp_item_width": itemWidth } as Record<string, string>}
 			onMouseOver={this._onmouseover}
 			onKeyDown={this._onkeydown}
 			onKeyUp={this._onkeyup}
@@ -39,5 +59,6 @@ export default function YearPickerTemplate(this: YearPicker) {
 					)}
 				</div>
 			)}
-		</div>);
+		</div>
+	);
 }
