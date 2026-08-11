@@ -208,14 +208,17 @@ Applications address a named slot by the **camelCase member name** — `slot="en
 kebab-case. The default slot is a bare `<slot></slot>` in the template. With `individualSlots`, the
 template reads the generated name off each child: `<slot name={step._individualSlot}></slot>`.
 
-Read through a re-projected slot with `getSlottedNodes` from `util/SlotsHelper.js`. There is no
-`getSlottedElements`.
+Read through a re-projected slot with `this.getSlottedNodes<T>(slotName)` — a method inherited from
+`UI5Element` (the helper lives in `util/SlotsHelper.js`, but components call the method, they don't
+import it). There is no `getSlottedElements`.
 
 ### Typing slot children
 
 Constrain children with an interface, declared in the file of the component that *consumes* the slot
-and exported as a type from it. Extend `HTMLElement` when any element qualifies, `UI5Element` when
-framework services are needed.
+and exported as a type from it (e.g. `IMenuItem` in `Menu.ts`, `ITab` in `TabContainer.ts`). Extend
+`HTMLElement` when any element qualifies, `UI5Element` when framework services are needed. The one
+common exception is `IButton` below: it lives in `Button.ts` because `Button` is the shared building
+block many containers slot, so the interface travels with the implementer rather than each consumer.
 
 ```ts
 /**
@@ -290,8 +293,9 @@ Export every detail type from the module, or CEM rejects it as an undocumented p
 
 Up to four events, all with `composed: false`. For a multi-word name like `selection-change` it fires
 `ui5-selection-change` and `selection-change`, then repeats the pair PascalCased
-(`ui5-SelectionChange`, `SelectionChange`). A single-word name like `open` fires only the first pair,
-since the PascalCase form equals the original. The `ui5-` prefixed events always fire; the
+(`ui5-SelectionChange`, `SelectionChange`). A single-word name like `open` fires four too —
+`ui5-open`, `open`, `ui5-Open`, `Open` — because `kebabToPascalCase("open")` is `"Open"`, which
+differs from the original and so is not skipped. The `ui5-` prefixed events always fire; the
 un-prefixed ones are what no-conflict configuration suppresses, so listen to the prefixed name inside
 the library. The PascalCase alias exists so React's `onSelectionChange` binds to a real dispatched
 event.

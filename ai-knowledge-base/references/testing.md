@@ -45,9 +45,10 @@ cy.get("@badge").shadow().find("ui5-tag").as("tag");
 | `.realHover()` | `.trigger("mouseover")` |
 
 **`realPress` and `realType` take no subject.** They dispatch CDP key events to whatever currently has
-focus, so a piped subject is ignored — `cy.get("[ui5-input]").realType("abc")` is fine, and is the
-dominant pattern in the Input and ComboBox specs. Never chain them after another command in the same
-chain: the preceding command's focus change has not settled.
+focus, so a piped subject is ignored. In practice specs focus the target first, then type — most often
+against the native input inside the shadow root: `cy.get("@input").shadow().find("input").realType("abc")`.
+Never chain them after a *focus-changing* command in the same chain: the preceding command's focus
+change has not settled.
 
 ```tsx
 // wrong — realType chained after another command
@@ -60,7 +61,8 @@ cy.realType("23");
 
 A few such chains survive in the specs. Do not add more.
 
-**There is no `realClear()`.** Clear by selecting all and typing over it, by pressing Escape, or by
+**There is no `realClear()`.** For a native input inside the shadow root, Cypress's built-in
+`.clear()` works. Otherwise clear by selecting all and typing over it, by pressing Escape, or by
 clicking the component's own clear icon.
 
 **Never use `cy.wait(<number>)`.** Assert the condition instead; `should` retries. Numeric waits
@@ -143,7 +145,7 @@ package's `support/commands.ts`:
 | `cy.focus` | Overwritten — waits for render, then routes through the UI5 element's own `focus()` |
 | `realClick`, `realHover`, `realTouch`, `realSwipe`, `realMouseDown`, `realMouseUp`, `realMouseMove` | Overwritten — wait for render, then assert the element is visible and has a DOM ref |
 | `realPress`, `realType` | Overwritten — wait for render only |
-| `cy.screenshot` | Overwritten — honours `CYPRESS_SCREENSHOT_DELAY` |
+| `cy.screenshot` | Overwritten — honours the `SCREENSHOT_DELAY` env var |
 | `cy.ui5SimulateDevice("phone")` | Force phone behaviour; `"phone"` is the only device |
 | `cy.ui5AssertValidityState(partial)` | Assert any subset of form validity state |
 | `cy.ui5UserMenuOpen(options?)`, `cy.ui5UserMenuOpened()` | fiori UserMenu helpers |
@@ -156,7 +158,9 @@ Many `ui5*` commands exist, named `ui5<Component><Action>`. Read the existing
 Calendar, ColorPalette, ColorPalettePopover, ColorPicker, DatePicker, DateRangePicker, DateTimePicker,
 TimePicker, TimeSelectionClocks, DynamicDateRange, Dialog, Popover, ResponsivePopover, Menu, MenuItem,
 SegmentedButton, StepInput, Switch, TabContainer, ToggleButton, plus AI Button and UserMenu (fiori).
-Every popup family has `Open`/`Opened`/`Closed` state helpers — use them instead
+Most popup families have `Open`/`Opened` state helpers; the `Closed` variant is not universal —
+`Menu` and `ResponsivePopover` have it, but `Dialog` and `Popover` expose only `Opened`. Read the
+`support/commands/` file for the family before assuming a `Closed` helper exists. Use these instead
 of asserting the `open` attribute yourself.
 
 ## Visual tests

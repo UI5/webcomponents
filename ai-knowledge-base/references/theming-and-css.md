@@ -60,7 +60,7 @@ Themes: `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_
 
 Never use tag names — write `[ui5-button].accept`, not `ui5-button.accept`, or the selector breaks under tag scoping. `yarn lint:scope` enforces it.
 
-State comes from reflected attributes, not classes. Nothing calls `classList.add`. An internal property gets `noAttribute: true` only when CSS does *not* read it.
+Persistent state comes from reflected attributes, not classes. Transient classes for animation or measurement-driven layout are legitimate (`Popup`'s `ui5-popup-opening`, `Bar`'s `ui5-bar-root-shrinked`) — the rule is that *durable* state must be a reflected attribute, not that `classList` is never touched. An internal property gets `noAttribute: true` only when CSS does *not* read it.
 
 ```css
 :host([design="Transparent"]) {
@@ -118,7 +118,7 @@ return this.effectiveDir === "rtl" ? "right" : "left";
 
 Two densities: cozy (default) and compact. An ancestor carrying `data-ui5-compact-size`, `.ui5-content-density-compact` or `.sapUiSizeCompact` switches compact on by setting `--_ui5_content_density`.
 
-Scope compact values with a container style query — the pattern used across the theme CSS. `cssVariablesTarget: "host"` in the package build config is what makes it work: it runs a postcss plugin that strips the `@container` block and merges both densities into one `:host` declaration — `--_ui5_bar_base_height: var(--_ui5-compact-size, 2.5rem) var(--_ui5-cozy-size, 2.75rem)`.
+Scope compact values with a container style query — the pattern used across the theme CSS. Note the two distinct variables: `--ui5_content_density` (no leading `_`) is a **build-time** directive the postcss plugin reads; `--_ui5_content_density` (leading `_`) is the **runtime** signal set by `SystemCSSVars.css`. This matters: the `@container style(--ui5_content_density: compact)` block only works inside a `-parameters.css` file, where `cssVariablesTarget: "host"` runs the postcss plugin that strips the `@container` and merges both densities into one `:host` declaration — `--_ui5_bar_base_height: var(--_ui5-compact-size, 2.5rem) var(--_ui5-cozy-size, 2.75rem)`. The same block placed in component CSS (`themes/Foo.css`) is left unprocessed and never fires at runtime, because `--ui5_content_density` is never set on `:root`.
 
 ```css
 @container style(--ui5_content_density: compact) {
@@ -129,7 +129,7 @@ Scope compact values with a container style query — the pattern used across th
 }
 ```
 
-A density block that styles *slotted children* belongs in the component CSS, never in `<Component>-parameters.css`: a `-parameters.css` declaration is hoisted into the global bundle, where `::slotted()` matches nothing and `:host` leaks to the whole page. Same rule for any variable whose producer and consumer are different components. See `.claude/memory/Bar/2026-06-09-button-overlay-badge-density-scoping.md`.
+A density block that styles *slotted children* belongs in the component CSS, never in `<Component>-parameters.css`: a `-parameters.css` declaration is merged into a single shared `CSSStyleSheet` adopted into every component's shadow root, where `:host` applies to all of them and `::slotted()` would target slots across all of them. Same rule for any variable whose producer and consumer are different components. See `.claude/memory/Bar/2026-06-09-button-overlay-badge-density-scoping.md`.
 
 ```css
 @container style(--ui5_content_density: compact) {
@@ -143,7 +143,7 @@ A density block that styles *slotted children* belongs in the component CSS, nev
 
 | Concern | Rule |
 |---------|------|
-| Sizes | `rem`, never `px` |
+| Sizes | `rem` for element sizing; `px` is acceptable for hairline borders and small positioning offsets |
 | Animation | Gate on `getAnimationMode()`; see `performance.md` |
 | High contrast | `_hcb` and `_hcw` resolve most colours to pure black and white |
 

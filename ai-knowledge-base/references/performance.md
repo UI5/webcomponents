@@ -126,8 +126,8 @@ fresh arrow each time never matches and leaks. Gate registration on `open` insid
 ## Repo patterns to reuse
 
 - Size changes: `ResizeHandler`, one shared `ResizeObserver` whose callbacks are coalesced into a rAF. It resolves `getDomRef()` at registration, so register in `onEnterDOM`, not earlier.
-- Scroll handlers: `throttle()`, a rAF-based trailing call.
-- Infinite scroll: `debounce()`, a `setTimeout`-based call.
+- Scroll handlers: the base `throttle()` (`base/util/throttle.js`) is a `setTimeout`-based trailing call — used e.g. by `ShellBar` for resize. `TableUtils.ts` has a separate rAF-based throttle used only by `TableVirtualizer`; don't confuse the two.
+- Infinite scroll: `debounce()`, a `setTimeout`-based call. Caveat: it uses a single module-level timer shared by every caller on the page, so a second `debounce()` cancels the first pending one. Safe only when one component at a time calls it (as List's infinite-scroll trigger does).
 - End-of-list detection: `IntersectionObserver`.
 - Scroll and touch listeners: `{ passive: true }`.
 - State for many children: one pass in the parent's `onBeforeRendering` writing plain child fields, not a `@property` per child.
@@ -149,10 +149,10 @@ Animation state is global configuration, not a per-component decision.
 return this.noAnimation || getAnimationMode() === AnimationMode.None;
 ```
 
-`getAnimationMode` comes from `@ui5/webcomponents-base/dist/config/AnimationMode.js`. The enum values
-are lowercase: `"full"`, `"basic"`, `"minimal"`, `"none"`. Per `core-rules.md` rule 1, compare against
-the lowercase string literal — `getAnimationMode() === "none"`, not `=== "None"`. Existing callers
-import the enum object and write `AnimationMode.None`; that is the legacy shape, do not copy it.
+`getAnimationMode` comes from `@ui5/webcomponents-base/dist/config/AnimationMode.js`. Compare against
+the `AnimationMode` enum member — `getAnimationMode() === AnimationMode.None` — as every component does.
+The enum values are the lowercase strings `"full"`, `"basic"`, `"minimal"`, `"none"`, so a raw
+`=== "none"` is equivalent, but the enum member is the established pattern; import the enum object.
 
 A component that animates unconditionally produces timing-dependent tests, because the test
 environment may have animations disabled while the component waits for a transition that never fires.

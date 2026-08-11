@@ -1,8 +1,8 @@
 # Core Rules
 
-Every rule here is absolute for code you write. Where legacy code violates one, the count is given so
-you recognise it on sight — do not copy it, and do not migrate it as a drive-by. Counts are across
-`packages/{main,fiori,ai}/src`.
+Every rule here is what you follow in code you write. Legacy code violates many of them, sometimes at
+scale — do not copy those patterns, and do not migrate them as a drive-by. A rule being listed here
+does not mean the codebase is already clean; it means new code must not add to the debt.
 
 ## Blocking
 
@@ -10,7 +10,7 @@ you recognise it on sight — do not copy it, and do not migrate it as a drive-b
 |---|------|-------|-------|
 | 1 | Enum imports: type-only when the enum is only used as a type; runtime when members are compared at runtime | `import type ButtonDesign from "./types/ButtonDesign.js"` when you write `ButtonDesign.Default` in code | `import type` for property declarations only; `import` (runtime) when comparing `=== ButtonDesign.Default` |
 | 2 | Enum properties use template literal types | `design: ButtonDesign = ButtonDesign.Default` | ``design: `${ButtonDesign}` = "Default"`` |
-| 3 | Enum comparisons use dot notation | `if (this.design === "Transparent")` | `if (this.design === ButtonDesign.Transparent)` |
+| 3 | Enum comparisons use dot notation *when the enum is runtime-imported*; a string-literal compare is correct when the enum is type-only imported | `if (this.design === "Transparent")` while `ButtonDesign` is runtime-imported | `if (this.design === ButtonDesign.Transparent)` — or the literal when no runtime import exists |
 | 4 | Query and test by attribute | `querySelector("ui5-popover")`, `cy.get("ui5-button")` | `querySelector("[ui5-popover]")`, `cy.get("[ui5-button]")` |
 | 5 | Style by attribute | `ui5-button { }` | `[ui5-button] { }` |
 | 6 | Identify UI5 components with an instance checker | `el instanceof Button` | `isInstanceOfButton(el)` |
@@ -18,7 +18,7 @@ you recognise it on sight — do not copy it, and do not migrate it as a drive-b
 | 8 | Set child state through the template | `this._input.value = x` | `<Input value={x} />` |
 | 9 | No imperative attribute mutation on child UI5 elements | `childUi5El.setAttribute("disabled", "")` | `<El disabled={this.isDisabled} />` |
 | 10 | No class toggling for persistent state | `el.classList.add("active")` to track open/selected state | `:host([active]) { }` driven by a `@property` |
-| 11 | No `any` | `const d: any = f()` | `const d: MyType = f()`, or `unknown` plus narrowing |
+| 11 | No `any` — strongly discouraged; acceptable only as a documented workaround for an external/untyped API | `const d: any = f()` | `const d: MyType = f()`, or `unknown` plus narrowing |
 | 12 | Boolean properties default to `false` | `@property({ type: Boolean }) open = true` | `@property({ type: Boolean }) open = false` |
 
 ## Structural
@@ -29,7 +29,7 @@ you recognise it on sight — do not copy it, and do not migrate it as a drive-b
 | 14 | Non-rendered state is a plain field | `@property() _lastKey = ""` | `_lastKey = ""` |
 | 15 | Fire the event after the state update | fire, then mutate | mutate, then fire |
 | 16 | Revert state when a cancelable event is prevented | fire and ignore the return value | revert if `fireDecoratorEvent` returns `false` |
-| 17 | Focusable components set `delegatesFocus` | no `shadowRootOptions` | `shadowRootOptions: { delegatesFocus: true }` |
+| 17 | Focusable components are reachable via `focus()` — either `delegatesFocus: true`, or an inner focusable element found through `getFocusDomRef()` | neither `delegatesFocus` nor an inner focus target | `shadowRootOptions: { delegatesFocus: true }`, **or** `tabindex` on the inner element (the majority pattern) |
 | 18 | Children never reach for their parent | `this.parentElement as Table` | the child fires, the parent listens |
 | 19 | Public properties change only in response to user interaction | reassigns `this.value` from a timer or observer | update on user action, then fire the event |
 | 20 | State is declared, not commanded | `show(): void` | `@property({ type: Boolean }) open = false` |
@@ -72,11 +72,11 @@ you recognise it on sight — do not copy it, and do not migrate it as a drive-b
 | 14 | a `@property` whose name never appears in the `.tsx` or `.css` | review only |
 | 15 | `fireDecoratorEvent` above the assignments it describes | review only |
 | 16 | `fireDecoratorEvent` for a `cancelable` event with the result discarded | review only |
-| 17 | a template `tabindex` or a `focus()` override, with no `shadowRootOptions` | review only |
+| 17 | a template `tabindex`/`focus()` override **and** no `delegatesFocus` — only a problem if there is also no inner focus target; the inner-element pattern is valid and common | review only |
 | 18 | `this.parentElement`, `this.closest(`, `this.getRootNode().host` | review only |
 | 19 | a `@public` property assigned from a timer, observer, or fetch callback | review only |
 | 20 | a new `@public` method named `open`, `show`, `close`, `toggle`, `refresh`, `expand`, `reset` | review only |
-| 21 | `this.fireEvent(` | review only |
+| 21 | `.fireEvent(` on anything (`this` or a child element) | review only |
 | 22 | `decorators/slot.js`, `decorators/event.js` | review only |
 | 23 | a relative import with no extension | `yarn lint` — `import/extensions` |
 | 24 | `e.key ===`, `e.keyCode` when a `Keys.js` predicate covers that key | review only |
@@ -138,7 +138,8 @@ export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem"
 
 This applies to UI5 component classes only. `instanceof HTMLElement`, `instanceof Node`,
 `instanceof Date` and the like are fine. `tagName ===` against native tags (`INPUT`, `IMG`, `SLOT`,
-`IFRAME`, `TEXTAREA`) is also fine.
+`IFRAME`, `TEXTAREA`) is also fine. Some current code still uses `instanceof` against UI5 classes
+(Toolbar, NotificationList, ShellBar, UserMenuItem, Popover) — treat these as legacy, not precedent.
 
 ## Why `@query` is read-only
 
@@ -170,8 +171,9 @@ _isOpen = false;             // the template reads it — property is correct
 _lastPressedKey = "";        // only JS reads it — plain field is correct
 ```
 
-`noAttribute: true` is the default for internal state, but drop it when a CSS selector reads the
-attribute — `:host([_open])` needs the attribute to exist.
+`noAttribute: true` is the convention for internal state (not the framework default — the framework
+reflects by default), but drop it when a CSS selector reads the attribute — `:host([_open])` needs the
+attribute to exist.
 
 ## Why event ordering matters
 

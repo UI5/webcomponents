@@ -81,15 +81,16 @@ import Avatar from "./Avatar.js";
 import AvatarBadge from "./AvatarBadge.js";
 ```
 
-Use this form, not the side-effect `import "./Foo.js";` the scaffolder prints. Without it the
-component is absent from the dev server and the test bundle.
+Use this form, not the side-effect `import "./Foo.js";` the scaffolder prints. Either form registers the component (`.define()` runs on import either way), but every other entry in `bundle.esm.ts` uses the default-import form — match it for consistency.
 
 ## 5. Styles and theme parameters
 
 `src/themes/Foo.css` holds structure. Any value that differs per theme belongs in
 `src/themes/base/Foo-parameters.css`, plus a per-theme file wherever the base default is wrong.
 Then `@import` those files into the `parameters-bundle.css` of every theme folder in the package
-(excluding `*_auto`, which are generated composites). A theme whose bundle is missing
+(excluding `*_auto`, which are generated composites). In `packages/fiori` the `*_exp` folders
+(`sap_horizon_exp`, `sap_horizon_dark_exp`, `sap_horizon_hcb_exp`, `sap_horizon_hcw_exp`) are **not**
+generated — they need the manual `@import` too. A theme whose bundle is missing
 the import renders the component with unresolved custom properties. See `theming-and-css.md`.
 
 ```css

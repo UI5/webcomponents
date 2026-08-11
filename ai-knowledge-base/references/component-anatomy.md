@@ -146,7 +146,7 @@ The barrel `@ui5/webcomponents-base/dist/decorators.js` exports every decorator 
 |-----------|-----------|-------|
 | `@customElement(config)` | class | See config keys below |
 | `@property(options)` | field | `type`, `noAttribute`, `converter`. Default type is String |
-| `@slot(options)` | field | Use `decorators/slot-strict.js`, or `slotStrict` from the barrel. `type`, `default`, `invalidateOnChildChange`, `individualSlots` |
+| `@slot(options)` | field | Use `decorators/slot-strict.js`, or `slotStrict` from the barrel. `type`, `default`, `invalidateOnChildChange`, `individualSlots`, `propertyName` (rarely passed explicitly — `slot-strict` sets it for the default slot) |
 | `@event(name, options)` | class | Use `decorators/event-strict.js`, or `eventStrict` from the barrel. `bubbles`, `cancelable` |
 | `@i18n(bundleName)` | static field | e.g. `@i18n("@ui5/webcomponents")` |
 | `@query(selector)` | field | Shadow DOM `querySelector`, evaluated on access |
@@ -183,8 +183,8 @@ correct).
 | `constructor` | once, on creation | Field initialisation only. No DOM |
 | `static async onDefine()` | once, inside `define()` | Deprecated for new code — use `@i18n` and the `cldr` option instead. Still relied on by a few `ai` components; don't copy that pattern into a new component |
 | `onInvalidation(changeInfo)` | at invalidation time, before the deferred render | React to a specific property or slot change. Does not fire for language, theme, or RTL-direction changes — those bypass invalidation and re-render directly; see `performance.md` |
-| `onBeforeRendering` | before each render | Derive state the template needs. No DOM reads |
-| `onAfterRendering` | after each render | DOM measurement, positioning |
+| `onBeforeRendering` | before each render | Derive state the template needs. No DOM reads. May be declared `async` — several components do (`Button`, `Icon`, `AvatarBadge`) even though the base signature is `void` |
+| `onAfterRendering` | after each render | DOM measurement, positioning. Guard any `@property` write — an unconditional write re-invalidates and loops |
 | `onEnterDOM` | late in `connectedCallback`, after the first render, only if still connected | Listeners on `this`, `ResizeObserver`, delegate setup |
 | `onExitDOM` | `disconnectedCallback`, skipped if the element was never fully connected | Tear down everything `onEnterDOM` created |
 | `formAssociatedCallback()` | when the browser associates or disassociates the form, for `formAssociated: true` components | Calls `updateFormValue()`; override to react to the association changing |
