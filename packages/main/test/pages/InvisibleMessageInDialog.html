@@ -116,6 +116,51 @@
 		</div>
 	</dialog>
 
+	<h1 style="margin-top: 2rem;">Comparison: native popover (top layer, NON-modal) via showPopover()</h1>
+	<p class="note">
+		A native <code>&lt;div popover&gt;</code> opened with <code>showPopover()</code> renders in the <strong>top layer</strong>,
+		just like a modal dialog, but it is <strong>non-modal</strong>: it does NOT set <code>aria-modal</code> and does NOT
+		scope VoiceOver's accessibility tree to its subtree. This isolates the question — is the silencing caused by the
+		top layer, or by modality? Open it, then use 5a: the body-level span announcement should still be <strong>heard</strong>,
+		confirming that top-layer alone does not silence — only modal scoping (aria-modal) does. This is why non-modal
+		popups such as the ComboBox dropdown do not need their own registered region.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativePopover">5. Open native popover (showPopover, non-modal)</ui5-button>
+	</div>
+
+	<div id="nativePopover" popover="manual" style="padding: 1rem; min-width: 20rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem;">
+		<p>This is a native <code>&lt;div popover&gt;</code> shown with <code>showPopover()</code> — top layer, but non-modal.</p>
+		<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+			<ui5-button id="announceBodySpanNativePopover">5a. Announce into &lt;body&gt; span (heard — not modal)</ui5-button>
+			<ui5-button id="announceApiNativePopover" design="Positive">5b. Announce via API (heard — routed to body region)</ui5-button>
+			<ui5-button id="closeNativePopover" design="Transparent">Close</ui5-button>
+		</div>
+	</div>
+
+	<h1 style="margin-top: 2rem;">Comparison: native popover (top layer) WITH aria-modal="true"</h1>
+	<p class="note">
+		Same native <code>&lt;div popover&gt;</code> opened with <code>showPopover()</code>, but now carrying
+		<code>aria-modal="true"</code>. The element behaves non-modally (focus is not trapped), yet it <em>claims</em>
+		modality to the accessibility tree. If the body-level span (6a) is now <strong>silenced</strong> — unlike case 5 —
+		this proves the silencing is triggered by <code>aria-modal</code>, not by the top layer. That is the exact condition
+		the fix gates on with <code>isModal</code>.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativePopoverModal">6. Open native popover WITH aria-modal (showPopover)</ui5-button>
+	</div>
+
+	<div id="nativePopoverModal" popover="manual" aria-modal="true" role="dialog" style="padding: 1rem; min-width: 20rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem;">
+		<p>This is a native <code>&lt;div popover&gt;</code> with <code>aria-modal="true"</code> — top layer, claims modal.</p>
+		<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+			<ui5-button id="announceBodySpanNativePopoverModal">6a. Announce into &lt;body&gt; span (silenced — aria-modal)</ui5-button>
+			<ui5-button id="announceApiNativePopoverModal" design="Positive">6b. Announce via API into registered region (heard)</ui5-button>
+			<ui5-button id="closeNativePopoverModal" design="Transparent">Close</ui5-button>
+		</div>
+	</div>
+
 	<script type="module">
 		const { announce, registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
 
@@ -179,6 +224,42 @@
 			const msg = `Native-dialog API announcement #${++counter}`;
 			announce(msg, "Polite");
 			log(`announce(): "${msg}"  → rendered inside the registered native <dialog> (heard)`);
+		});
+
+		// 5. native <div popover> opened with showPopover(). This lives in the top layer like a modal dialog, but
+		// is NON-modal (no aria-modal), so VoiceOver does not scope its tree. No region is registered — this proves
+		// that the top layer alone does not silence a body-level live region; only modal scoping does.
+		const nativePopover = document.getElementById("nativePopover");
+		document.getElementById("openNativePopover").addEventListener("click", () => {
+			nativePopover.showPopover();
+		});
+		document.getElementById("closeNativePopover").addEventListener("click", () => {
+			nativePopover.hidePopover();
+		});
+		document.getElementById("announceBodySpanNativePopover").addEventListener("click", announceBody);
+		document.getElementById("announceApiNativePopover").addEventListener("click", () => {
+			const msg = `Native-popover API announcement #${++counter}`;
+			announce(msg, "Polite");
+			log(`announce(): "${msg}"  → body-level region (heard — popover is non-modal)`);
+		});
+
+		// 6. native <div popover> opened with showPopover() but carrying aria-modal="true". Top layer like case 5,
+		// but claims modality to the accessibility tree. Register it as a region so 6b routes into its subtree; 6a
+		// writes to the body span, which should now be silenced — isolating aria-modal as the true trigger.
+		const nativePopoverModal = document.getElementById("nativePopoverModal");
+		document.getElementById("openNativePopoverModal").addEventListener("click", () => {
+			nativePopoverModal.showPopover();
+			registerInvisibleMessageRegion(nativePopoverModal);
+		});
+		document.getElementById("closeNativePopoverModal").addEventListener("click", () => {
+			deregisterInvisibleMessageRegion(nativePopoverModal);
+			nativePopoverModal.hidePopover();
+		});
+		document.getElementById("announceBodySpanNativePopoverModal").addEventListener("click", announceBody);
+		document.getElementById("announceApiNativePopoverModal").addEventListener("click", () => {
+			const msg = `Native-popover(aria-modal) API announcement #${++counter}`;
+			announce(msg, "Polite");
+			log(`announce(): "${msg}"  → rendered inside the registered aria-modal popover (heard)`);
 		});
 	</script>
 </body>
