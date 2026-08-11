@@ -13,20 +13,12 @@
 	outline: none;
 }
 
-:host([readonly]) {
-	cursor: initial;
-}
-
+:host([readonly]),
 :host([display-only]) {
 	cursor: initial;
 }
 
-:host([readonly]) .ui5-rating-indicator-item-unsel {
-	padding-inline: var(--_ui5_rating_indicator_readonly_item_spacing);
-	width: var(--_ui5_rating_indicator_readonly_item_width);
-	height: var(--_ui5_rating_indicator_readonly_item_height);
-}
-
+:host([readonly]) .ui5-rating-indicator-item-unsel,
 :host([display-only]) .ui5-rating-indicator-item-unsel {
 	padding-inline: var(--_ui5_rating_indicator_readonly_item_spacing);
 	width: var(--_ui5_rating_indicator_readonly_item_width);
