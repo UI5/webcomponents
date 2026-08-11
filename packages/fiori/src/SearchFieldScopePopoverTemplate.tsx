@@ -7,10 +7,6 @@ import PopoverHorizontalAlign from "@ui5/webcomponents/dist/types/PopoverHorizon
 import type SearchField from "./SearchField.js";
 
 export default function SearchFieldScopePopoverTemplate(this: SearchField) {
-	if (!this._isMobileView || !this.scopes?.length || !this._scopePopoverOpen) {
-		return null;
-	}
-
 	return (
 		<ResponsivePopover
 			id={`${this._id}-scope-popover`}

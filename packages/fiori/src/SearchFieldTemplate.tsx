@@ -46,6 +46,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 											accessibleName={this._translations.scope}
 											tooltip={this._translations.scope}
 											value={this.scopeValue}
+											exportparts="label:scope-label"
 										>
 											{this.scopes.map(scopeOption => (
 												<Option
@@ -70,7 +71,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 											tooltip={this._scopeIconAccessibleName}
 											accessibleName={this._scopeIconAccessibleName}
 											accessibilityAttributes={{
-												hasPopup: "listbox",
+												hasPopup: "dialog",
 												expanded: this._scopePopoverOpen,
 											}}
 										/>

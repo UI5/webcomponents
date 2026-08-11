@@ -218,7 +218,7 @@ class SearchField extends UI5Element {
 	_effectiveShowClearIcon = false;
 
 	/**
-	 * Indicates whether the component is rendering on a small screen (mobile).
+	 * Indicates whether the component renders on a small screen (mobile).
 	 * @private
 	 */
 	@property({ type: Boolean })
