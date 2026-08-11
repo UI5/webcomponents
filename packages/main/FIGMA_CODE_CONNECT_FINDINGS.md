@@ -14,6 +14,11 @@ file `SILcWzK5uFghKun9jx6D7c`). Each row gets a verdict + evidence.
 **Evidence column:** `figma-props` = from the live property dump; `screenshot` = visually
 confirmed; `source` = from the `.ts` API. Assumptions are called out explicitly.
 
+**Verification status (2026-08-11):** all 11 component sets were screenshot-verified this pass
+(node renders compared against the mapping). Defects found & fixed: Avatar `disabled` (missing),
+Switch `design` (wrong Type→Textual/Graphical mapping, removed). MessageStrip
+ColorSet1/2↔Indication/Indication-b direction confirmed via CSS-token names.
+
 **Global conventions (apply to every component):**
 - **Form Factor (Compact/Cozy)** → ❌ density is a global UI5 setting, not a per-element attr.
 - **Interaction State = Hover/Active/Down/Focus/Visited** → ❌ visual pseudo-states, no attr. Only `Disabled`→`disabled`, `Read Only`→`readonly` are real.
@@ -100,7 +105,7 @@ Figma props: Value State (incl. Indication Color), Color (None + Indication 1..1
 | WC API prop | Figma property | Verdict | Evidence / note |
 |---|---|---|---|
 | `design` | Value State (Information/Positive/Critical/Negative) | ✅ mapped | figma-props; semantic 1:1 |
-| `design`=ColorSet1/2 | Color axis (Indication 1..10 / 1b..10b) | ✅ mapped (WC) | figma-props; single enum → `ColorSet1/2` + scheme; the `b` suffix encodes ColorSet2 |
+| `design`=ColorSet1/2 | Color axis (Indication 1..10 / 1b..10b) | ✅ mapped (WC) | figma-props + CSS-token correspondence: Figma "Indication N" ↔ `--sapIndicationColor_N` = **ColorSet1**; "Nb" ↔ MessageStrip's private set-2 tokens = **ColorSet2**. Direction confirmed |
 | `colorScheme` ("1".."10") | Color axis | ✅ mapped (WC) | figma-props; folded into the Color enum output |
 | `hideIcon` | Icon=False | ✅ mapped | figma-props |
 | `hideCloseButton` | Close Button=False | ✅ mapped | figma-props |
