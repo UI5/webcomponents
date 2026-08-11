@@ -61,12 +61,13 @@ figma.connect(
       // Counter badge → slotted <ui5-button-badge>.
       // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — must use
       // figma.enum (figma.boolean silently fails to match a variant → no badge).
-      // HARDCODED: design="OverlayText" (Figma has no badge-design enum) and
-      // text="72". The count is NOT read from Figma — it lives in an unexposed
-      // nested text layer, so text="72" is static and won't track the Figma
-      // number. See FIGMA_CODE_CONNECT_FINDINGS.md § Button.
+      // ASSUMPTION (design rule, per kit owners, NOT visually re-verified):
+      // Form Factor drives the badge design — Compact → InlineText, Cozy →
+      // OverlayText. HARDCODED: text="72" — the count is NOT read from Figma
+      // (unexposed nested layer), so it won't track the Figma number.
+      // See FIGMA_CODE_CONNECT_FINDINGS.md § Button.
       counterBadge: figma.enum("Counter Badge", {
-        True: html`<ui5-button-badge slot="badge" design="OverlayText" text="72"></ui5-button-badge>`,
+        True: html`<ui5-button-badge slot="badge" design="${figma.enum("Form Factor", { Compact: "InlineText", Cozy: "OverlayText" })}" text="72"></ui5-button-badge>`,
         False: "",
       }),
 
