@@ -45,15 +45,19 @@ figma.connect(
       }),
 
       // Counter badge presence → <ButtonBadge> child on the `badge` prop.
-      // LIMITATION: design (OverlayText) and text ("1") are hardcoded — Figma
-      // exposes only a Counter Badge boolean, no design enum or readable text.
-      // This mirrors the existing @ui5/webcomponents-react mapping, which also
-      // only emits the counter (OverlayText) badge. See FIGMA_CODE_CONNECT.md.
-      badge: figma.boolean("Counter Badge", {
-        true: (
-          <ButtonBadge design={ButtonBadgeDesign.OverlayText} text="1" />
-        ),
-        false: undefined,
+      // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — use
+      // figma.enum. LIMITATION: design (OverlayText) and text ("72", matching
+      // the Figma nested layer) are hardcoded — Figma exposes no design enum or
+      // readable text. See FIGMA_CODE_CONNECT.md § Button.
+      //
+      // REACT ASYMMETRY: the `badge` prop can only reference ONE Figma axis (the
+      // parser rejects compound placeholders like `counter ?? attention`), so
+      // React drives `badge` from Counter Badge only. The Attention Badge
+      // (a separate Figma boolean) is NOT expressible here — the WC mapping
+      // (Button.figma.ts) emits both. See findings § Button.
+      badge: figma.enum("Counter Badge", {
+        True: <ButtonBadge design={ButtonBadgeDesign.OverlayText} text="72" />,
+        False: undefined,
       }),
     },
     example: ({ label, design, disabled, badge }) => (
