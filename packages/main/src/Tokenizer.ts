@@ -1272,25 +1272,47 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		const tokensArray = this._tokens;
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
+		// Reset overflow to measure all tokens
 		tokensArray.forEach(token => {
 			token.overflows = false;
 		});
 
-		return tokensArray.filter(token => {
-			const parentRect = this.contentDom.getBoundingClientRect();
+		const parentRect = this.contentDom.getBoundingClientRect();
+		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentStart = Number(parentRect.left.toFixed(2));
+
+		// Measure "n more" width
+		let nMoreWidth = 0;
+		const nMoreElement = this.moreLink;
+		if (nMoreElement) {
+			nMoreWidth = nMoreElement.getBoundingClientRect().width;
+		}
+
+		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
+		let firstOverflowIndex = -1;
+
+		tokensArray.forEach((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const parentEnd = Number(parentRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
-			const parentStart = Number(parentRect.left.toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > parentEnd));
+			const isLastToken = index === tokensArray.length - 1;
 
-			return token.overflows;
+			// For the last token, check if it fits without "n more"
+			// For other tokens, check if token + "n more" fits together
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+
+			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+
+			if (tokenOverflows && firstOverflowIndex === -1) {
+				firstOverflowIndex = index;
+			}
+
+			// Mark this and all subsequent tokens as overflow
+			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
+
+		return tokensArray.filter(token => token.overflows);
 	}
 
 	get _isPhone() {
