@@ -32,18 +32,24 @@ figma.connect(
       // Text properties.
       placeholder: figma.string("✏️ Placeholder"),
       value: figma.string("✏️ Typed Text"),
+      // Value-state message text from the nested "Input Message Popover"
+      // instance. MUST be a TOP-LEVEL prop (not inlined in the template) — a
+      // figma.* call nested inside html`` emits verbatim. Referenced below as
+      // the plain resolved value ${msg.text}.
+      msg: figma.nestedProps("Input Message Popover", {
+        text: figma.string("✏️ Text"),
+      }),
     },
     // CANNOT MAP (see FIGMA_CODE_CONNECT_FINDINGS.md § Input):
     //  - `Content` (Placeholder vs Typed Text) can't pick which text to emit,
     //    so both are emitted;
     //  - `Trailing Action`, `2nd Action` reference slotted icon content;
-    //  - `Description Text` has no ui5-input attr;
-    //  - valueStateMessage: the nested "Input Message Popover" DOES expose a
-    //    readable ✏️ Text, BUT it cannot be emitted into a `<div slot=…>`
-    //    wrapper — a figma.* call nested inside a template literal emits
-    //    VERBATIM (prints the source, not the value). It also only exists on
-    //    Active-state variants. Not practically mappable — omitted.
-    example: ({ valueState, stateAttr, placeholder, value }) =>
-      html`<ui5-input value="${value}" placeholder="${placeholder}" ${valueState} ${stateAttr}></ui5-input>`,
+    //  - `Description Text` has no ui5-input attr.
+    // NOTE: the value-state message slot is ALWAYS emitted (can't be gated on
+    // the Message Popover boolean without re-breaking the text — gating +
+    // resolved-text can't coexist). The text only has meaningful content on
+    // variants where the popover exists; elsewhere it resolves to empty.
+    example: ({ valueState, stateAttr, placeholder, value, msg }) =>
+      html`<ui5-input value="${value}" placeholder="${placeholder}" ${valueState} ${stateAttr}><div slot="valueStateMessage">${msg.text}</div></ui5-input>`,
   }
 );

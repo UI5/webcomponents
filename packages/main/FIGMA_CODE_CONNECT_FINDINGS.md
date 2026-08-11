@@ -52,11 +52,11 @@ props are never modelled in the kit.
 - `value` ← ✏️ Typed Text, `placeholder` ← ✏️ Placeholder.
 - `value-state` ← Value State (None/Negative/Critical/Positive/Information, 1:1).
 - `disabled` / `readonly` ← Interaction State.
+- `valueStateMessage` ← nested "Input Message Popover" ✏️ Text (**Dev-Mode-confirmed**, WC + React). Read via a TOP-LEVEL `figma.nestedProps` prop and referenced as the resolved `${msg.text}`. NOTE: the slot is ALWAYS emitted — it can't be gated on the Message Popover boolean without re-breaking the resolved text (gating + resolved-text can't coexist); on non-popover variants the text resolves empty.
 
 **Doesn't work:**
 - `icon` slot ← 2nd Action — slotted/instance-swap, not readable.
 - `showClearIcon` ← Trailing Action — approximated only (Trailing Action is generic).
-- `valueStateMessage` ← Message Popover — **attempted 2026-08-11, REVERTED.** The nested "Input Message Popover" *does* expose a readable ✏️ Text, but it can't be emitted into a `<div slot="valueStateMessage">` wrapper: a `figma.*` call nested inside a template literal / JSX emits **verbatim** (the Dev Mode snippet literally printed `figma.nestedProps(...)` source instead of the value). It also only exists on Active-state variants (unreachable in normal selection). Not practically mappable.
 
 **Assumed:** nothing.
 
@@ -230,10 +230,13 @@ props are never modelled in the kit.
 - **Avatar `initials`** — confirm ungated emission is acceptable.
 
 ## Parser lesson (applies to all mappings)
-A `figma.*` call nested inside a template literal (WC `html\`\``) or inside JSX
-emits **verbatim** — the generated snippet prints the source text (e.g.
-`figma.nestedProps(...)`) instead of the resolved value. This passes dry-run
-validation (it *parses*) but produces broken output. Any value that needs a
-`figma.*` read must be resolved into a top-level prop and referenced as a plain
-`${prop}` — it cannot be wrapped in surrounding markup in the same expression.
-This is why slot-wrapped nested reads (Input valueStateMessage) are not mappable.
+A `figma.*` call **inlined** inside a template literal (WC `html\`\``) or inside a
+prop's value expression emits **verbatim** — the generated snippet prints the
+source text (e.g. `figma.nestedProps(...)`) instead of the resolved value. This
+passes dry-run validation (it *parses*) but produces broken output. The fix:
+declare every `figma.*` read as a **top-level prop** and reference it as a plain
+`${prop}` / `{prop}` in the example — then it resolves correctly (this is how
+Input `valueStateMessage` was fixed after an initial inlined attempt failed).
+Consequence: you can insert a resolved value into surrounding markup, but you
+can't ALSO gate that same markup on a boolean in the same expression — gating +
+resolved-nested-text can't coexist, so such slots emit unconditionally.

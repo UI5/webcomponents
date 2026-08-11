@@ -34,18 +34,23 @@ figma.connect(
       }),
       placeholder: figma.string("✏️ Placeholder"),
       value: figma.string("✏️ Typed Text"),
-      // valueStateMessage NOT mapped: the nested "Input Message Popover" text
-      // can't be emitted into a slot wrapper (figma.* nested in JSX/template
-      // emits verbatim), and it only exists on Active-state variants.
-      // See FIGMA_CODE_CONNECT_FINDINGS.md § Input.
+      // Value-state message text from the nested "Input Message Popover"
+      // instance. MUST be a top-level prop (a figma.* call inlined in JSX emits
+      // verbatim) — referenced below as the resolved {msg.text}.
+      msg: figma.nestedProps("Input Message Popover", {
+        text: figma.string("✏️ Text"),
+      }),
     },
-    example: ({ value, placeholder, valueState, disabled, readonly }) => (
+    // NOTE: the value-state message slot is always emitted (can't be gated on
+    // the Message Popover boolean without re-breaking the resolved text).
+    example: ({ value, placeholder, valueState, disabled, readonly, msg }) => (
       <Input
         value={value}
         placeholder={placeholder}
         valueState={valueState}
         disabled={disabled}
         readonly={readonly}
+        valueStateMessage={<div>{msg.text}</div>}
       />
     ),
   }
