@@ -92,6 +92,29 @@
 		<ui5-button id="closeDialog" slot="footer" design="Transparent">Close</ui5-button>
 	</ui5-dialog>
 
+	<h1 style="margin-top: 2rem;">Comparison: native &lt;dialog&gt; opened with showModal()</h1>
+	<p class="note">
+		A plain HTML <code>&lt;dialog&gt;</code> opened via <code>showModal()</code> also renders as modal, so VoiceOver
+		scopes its accessibility tree to the dialog subtree — the same condition that silences a body-level live region.
+		The framework fix does not apply to native dialogs, so <code>announce()</code> stays silenced here; use it to
+		confirm the scoping behavior is a platform effect, not a UI5-specific one.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativeDialog">4. Open native &lt;dialog&gt; (showModal)</ui5-button>
+	</div>
+
+	<dialog id="nativeDialog">
+		<div style="padding: 1rem; min-width: 20rem;">
+			<p>This is a native <code>&lt;dialog&gt;</code> shown with <code>showModal()</code>.</p>
+			<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+				<ui5-button id="announceBodySpanNative">4a. Announce into &lt;body&gt; span (silenced)</ui5-button>
+				<ui5-button id="announceApiNative" design="Positive">4b. Announce via API (still silenced — no UI5 fix)</ui5-button>
+				<ui5-button id="closeNativeDialog" design="Transparent">Close</ui5-button>
+			</div>
+		</div>
+	</dialog>
+
 	<script type="module">
 		const { announce } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
 
@@ -138,6 +161,21 @@
 		};
 		document.getElementById("announceApi").addEventListener("click", announceApi);
 		document.getElementById("announceApiInner").addEventListener("click", announceApi);
+
+		// 4. native <dialog> opened with showModal() — modal scoping is a platform effect (no UI5 fix here).
+		const nativeDialog = document.getElementById("nativeDialog");
+		document.getElementById("openNativeDialog").addEventListener("click", () => {
+			nativeDialog.showModal();
+		});
+		document.getElementById("closeNativeDialog").addEventListener("click", () => {
+			nativeDialog.close();
+		});
+		document.getElementById("announceBodySpanNative").addEventListener("click", announceBody);
+		document.getElementById("announceApiNative").addEventListener("click", () => {
+			const msg = `Native-dialog API announcement #${++counter}`;
+			announce(msg, "Polite");
+			log(`announce(): "${msg}"  → native <dialog> is not patched, still silenced`);
+		});
 	</script>
 </body>
 
