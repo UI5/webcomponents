@@ -46,17 +46,26 @@ figma.connect(
 
       // Counter badge presence → <ButtonBadge> child on the `badge` prop.
       // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — use
-      // figma.enum. HARDCODED: design (OverlayText) and text="72". The count is
-      // NOT read from Figma (unexposed nested layer) — text="72" is static and
-      // won't track the Figma number. See FIGMA_CODE_CONNECT_FINDINGS.md § Button.
+      // figma.enum. ASSUMPTION (design rule, per kit owners, NOT visually
+      // re-verified): Form Factor drives badge design — Compact → InlineText,
+      // Cozy → OverlayText. HARDCODED: text="72" — count is NOT read from Figma
+      // (unexposed nested layer), won't track the Figma number.
       //
-      // REACT ASYMMETRY: the `badge` prop can only reference ONE Figma axis (the
-      // parser rejects compound placeholders like `counter ?? attention`), so
-      // React drives `badge` from Counter Badge only. The Attention Badge
-      // (a separate Figma boolean) is NOT expressible here — the WC mapping
-      // (Button.figma.ts) emits both. See findings § Button.
+      // REACT ASYMMETRY: the `badge` prop can only reference ONE Figma axis for
+      // PRESENCE (parser rejects compound placeholders like `counter ??
+      // attention`), so React drives `badge` from Counter Badge only. The
+      // Attention Badge (a separate Figma boolean) is NOT expressible here — the
+      // WC mapping (Button.figma.ts) emits both. See findings § Button.
       badge: figma.enum("Counter Badge", {
-        True: <ButtonBadge design={ButtonBadgeDesign.OverlayText} text="72" />,
+        True: (
+          <ButtonBadge
+            design={figma.enum("Form Factor", {
+              Compact: ButtonBadgeDesign.InlineText,
+              Cozy: ButtonBadgeDesign.OverlayText,
+            })}
+            text="72"
+          />
+        ),
         False: undefined,
       }),
     },

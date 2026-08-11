@@ -25,13 +25,15 @@ props are never modelled in the kit.
 - Counter badge presence ← Counter Badge (WC + React).
 - Attention badge presence ← Attention Badge (**WC only** — see misalignment).
 
+**Works (ASSUMED — design rule, not visually re-verified):**
+- badge `design` ← Form Factor: **Compact → InlineText, Cozy → OverlayText** (per kit owners). Applied in both WC + React. *Please confirm in Dev Mode by toggling Form Factor with a counter badge on.*
+
 **Doesn't work:**
 - `icon` — instance-swap, name unreadable → hardcoded `icon="globe"`.
-- badge `design` — hardcoded `OverlayText`; Figma has no badge-design enum.
-- **badge `text` — HARDCODED to `"72"`. NOT read from Figma.** The count lives in an unexposed nested text layer that Code Connect cannot read, so the snippet always emits `text="72"` regardless of what number the Figma design shows. Chosen to match the current Figma layer; it will NOT track changes to the number in Figma. *Owner fix: expose the badge count as a readable component text prop.*
+- **badge `text` — HARDCODED to `"72"`. NOT read from Figma.** The count lives in an unexposed nested text layer that Code Connect cannot read, so the snippet always emits `text="72"` regardless of what number the Figma design shows. It will NOT track changes to the number in Figma. *Owner fix: expose the badge count as a readable component text prop.*
 - `endIcon` — no Figma equivalent.
 
-**Assumed:** nothing — badge fixes verified against live props; re-check in Dev Mode after this fix.
+**Assumed — check manually:** badge `design` ← Form Factor (Compact→InlineText, Cozy→OverlayText). Design rule per owners, applied but not visually re-verified.
 
 **Fixed 2026-08-11 (were bugs):**
 - `Counter Badge` is a Figma **VARIANT** (True/False), not a boolean — was `figma.boolean` (silently didn't match → no badge). Now `figma.enum`.
@@ -225,5 +227,6 @@ props are never modelled in the kit.
 6. **Parser asymmetry** — React parser can't merge two axes into one prop → MessageStrip ColorSet2 unreachable in React (works in WC).
 
 ## Open items needing manual Dev-Mode check
+- **Button badge `design`** — confirm Compact→InlineText / Cozy→OverlayText renders correctly (design-rule assumption).
 - **Input `valueStateMessage`** — published; confirm the slot renders cleanly on an Active-state variant.
 - **Avatar `initials`** — confirm ungated emission is acceptable.
