@@ -3,7 +3,12 @@ import ListItemBaseTemplate from "./ListItemBaseTemplate.js";
 import type Option from "./Option.js";
 
 export default function OptionTemplate(this: Option) {
-	return ListItemBaseTemplate.call(this, { listItemContent }, { role: "option", title: this.tooltip });
+	return ListItemBaseTemplate.call(this, { listItemContent }, {
+		role: "option",
+		title: this.tooltip,
+		ariaSetsize: this._forcedSetsize,
+		ariaPosinset: this._forcedPosinset,
+	});
 }
 
 function listItemContent(this: Option) {

@@ -90,6 +90,12 @@ export default function SelectTemplate(this: Select) {
 						{this.ariaDescriptionText}
 					</span>
 				}
+
+				{this.hasGroups &&
+					<span id={this._groupCountMessageId} class="ui5-hidden-text">
+						{this._groupCountText}
+					</span>
+				}
 			</div>
 			{SelectPopoverTemplate.call(this)}
 		</>
