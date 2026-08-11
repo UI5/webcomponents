@@ -34,14 +34,28 @@ figma.connect(
       }),
       placeholder: figma.string("✏️ Placeholder"),
       value: figma.string("✏️ Typed Text"),
+      // Value-state message from the nested "Input Message Popover" instance;
+      // gate the whole slot element on the Message Popover boolean (the parser
+      // rejects a ternary in the example, so resolve it into the prop here).
+      valueStateMessage: figma.boolean("Message Popover", {
+        true: (
+          <div>
+            {figma.nestedProps("Input Message Popover", {
+              text: figma.string("✏️ Text"),
+            }).text}
+          </div>
+        ),
+        false: undefined,
+      }),
     },
-    example: ({ value, placeholder, valueState, disabled, readonly }) => (
+    example: ({ value, placeholder, valueState, disabled, readonly, valueStateMessage }) => (
       <Input
         value={value}
         placeholder={placeholder}
         valueState={valueState}
         disabled={disabled}
         readonly={readonly}
+        valueStateMessage={valueStateMessage}
       />
     ),
   }
