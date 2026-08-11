@@ -27,7 +27,8 @@ props are never modelled in the kit.
 
 **Doesn't work:**
 - `icon` — instance-swap, name unreadable → hardcoded `icon="globe"`.
-- badge `design`/`text` — hardcoded (`OverlayText`, `text="72"`). Figma has no badge-design enum and the count lives in an unexposed nested layer, so neither is readable. Text hardcoded to "72" to match the Figma layer.
+- badge `design` — hardcoded `OverlayText`; Figma has no badge-design enum.
+- **badge `text` — HARDCODED to `"72"`. NOT read from Figma.** The count lives in an unexposed nested text layer that Code Connect cannot read, so the snippet always emits `text="72"` regardless of what number the Figma design shows. Chosen to match the current Figma layer; it will NOT track changes to the number in Figma. *Owner fix: expose the badge count as a readable component text prop.*
 - `endIcon` — no Figma equivalent.
 
 **Assumed:** nothing — badge fixes verified against live props; re-check in Dev Mode after this fix.

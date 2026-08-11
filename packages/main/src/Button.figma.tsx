@@ -46,9 +46,9 @@ figma.connect(
 
       // Counter badge presence → <ButtonBadge> child on the `badge` prop.
       // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — use
-      // figma.enum. LIMITATION: design (OverlayText) and text ("72", matching
-      // the Figma nested layer) are hardcoded — Figma exposes no design enum or
-      // readable text. See FIGMA_CODE_CONNECT.md § Button.
+      // figma.enum. HARDCODED: design (OverlayText) and text="72". The count is
+      // NOT read from Figma (unexposed nested layer) — text="72" is static and
+      // won't track the Figma number. See FIGMA_CODE_CONNECT_FINDINGS.md § Button.
       //
       // REACT ASYMMETRY: the `badge` prop can only reference ONE Figma axis (the
       // parser rejects compound placeholders like `counter ?? attention`), so
