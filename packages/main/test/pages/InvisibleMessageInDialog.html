@@ -96,8 +96,9 @@
 	<p class="note">
 		A plain HTML <code>&lt;dialog&gt;</code> opened via <code>showModal()</code> also renders as modal, so VoiceOver
 		scopes its accessibility tree to the dialog subtree — the same condition that silences a body-level live region.
-		The framework fix does not apply to native dialogs, so <code>announce()</code> stays silenced here; use it to
-		confirm the scoping behavior is a platform effect, not a UI5-specific one.
+		Here the native dialog is registered as an aria-live region on open (and deregistered on close), so
+		<code>announce()</code> routes into the dialog's subtree and stays audible. Use 4a vs 4b to compare the
+		still-silenced body span against the registered region.
 	</p>
 
 	<div class="row">
@@ -109,14 +110,14 @@
 			<p>This is a native <code>&lt;dialog&gt;</code> shown with <code>showModal()</code>.</p>
 			<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
 				<ui5-button id="announceBodySpanNative">4a. Announce into &lt;body&gt; span (silenced)</ui5-button>
-				<ui5-button id="announceApiNative" design="Positive">4b. Announce via API (still silenced — no UI5 fix)</ui5-button>
+				<ui5-button id="announceApiNative" design="Positive">4b. Announce via API (heard — dialog registered as region)</ui5-button>
 				<ui5-button id="closeNativeDialog" design="Transparent">Close</ui5-button>
 			</div>
 		</div>
 	</dialog>
 
 	<script type="module">
-		const { announce } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
+		const { announce, registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } = window["sap-ui-webcomponents-bundle"].invisibleMessage;
 
 		const logEl = document.getElementById("log");
 		let counter = 0;
@@ -162,19 +163,22 @@
 		document.getElementById("announceApi").addEventListener("click", announceApi);
 		document.getElementById("announceApiInner").addEventListener("click", announceApi);
 
-		// 4. native <dialog> opened with showModal() — modal scoping is a platform effect (no UI5 fix here).
+		// 4. native <dialog> opened with showModal(). Register the dialog as an aria-live region while it is open,
+		// so announce() routes into the dialog's subtree and stays audible under the modal scoping; deregister on close.
 		const nativeDialog = document.getElementById("nativeDialog");
 		document.getElementById("openNativeDialog").addEventListener("click", () => {
 			nativeDialog.showModal();
+			registerInvisibleMessageRegion(nativeDialog);
 		});
 		document.getElementById("closeNativeDialog").addEventListener("click", () => {
+			deregisterInvisibleMessageRegion(nativeDialog);
 			nativeDialog.close();
 		});
 		document.getElementById("announceBodySpanNative").addEventListener("click", announceBody);
 		document.getElementById("announceApiNative").addEventListener("click", () => {
 			const msg = `Native-dialog API announcement #${++counter}`;
 			announce(msg, "Polite");
-			log(`announce(): "${msg}"  → native <dialog> is not patched, still silenced`);
+			log(`announce(): "${msg}"  → rendered inside the registered native <dialog> (heard)`);
 		});
 	</script>
 </body>
