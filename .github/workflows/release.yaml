@@ -14,6 +14,7 @@ on:
           - 'hotfix'
           - 'experimental'
           - 'v1'
+          - 'cypress-ct'
         default: 'rc'
       new_version:
         description: 'version (relevant for stable, hotfix, and v1)'  # Updated description
@@ -426,3 +427,40 @@ jobs:
       - name: Publish
         run: |
           yarn lerna publish from-git --yes --dist-tag "v1"
+
+  # ✅ Job 6: Cypress CT Release Flow
+  # Publishes ONLY the @ui5/cypress-ct-ui5-webc package to npm.
+  # No lerna versioning, no changelog, no GitHub release, no deploy.
+  # The version published is whatever is committed in
+  # packages/cypress-ct-ui5-webc/package.json — bump it manually beforehand.
+  cypress-ct-release:
+    if: ${{ github.event.inputs.release_type == 'cypress-ct' }}
+    environment: "npmjs:@ui5/webcomponents"
+    permissions:
+      contents: read
+      id-token: write # required for npm OIDC trusted publishing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      # OIDC trusted publishing requires npm >= 11.5.1
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Install Dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn build
+        working-directory: packages/cypress-ct-ui5-webc
+
+      - name: Publish
+        run: npm publish --provenance --access public
+        working-directory: packages/cypress-ct-ui5-webc
