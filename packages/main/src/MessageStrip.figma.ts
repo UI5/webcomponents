@@ -63,8 +63,15 @@ figma.connect(
       }),
       // Message text — read the "Text Message" layer directly.
       message: figma.textContent("Text Message"),
+      // Custom icon slot when Icon=True. The icon NAME is a placeholder
+      // ("information") — the Icon instance-swap name isn't readable. Semantic
+      // designs show their own default icon; ColorSet1/2 need this explicit slot.
+      iconSlot: figma.enum("Icon", {
+        True: html`<ui5-icon slot="icon" name="information"></ui5-icon>`,
+        False: "",
+      }),
     },
-    example: ({ designSemantic, designColorSet, hideIcon, hideClose, message }) =>
-      html`<ui5-message-strip ${designSemantic} ${designColorSet} ${hideIcon} ${hideClose}>${message}</ui5-message-strip>`,
+    example: ({ designSemantic, designColorSet, hideIcon, hideClose, message, iconSlot }) =>
+      html`<ui5-message-strip ${designSemantic} ${designColorSet} ${hideIcon} ${hideClose}>${iconSlot}${message}</ui5-message-strip>`,
   }
 );

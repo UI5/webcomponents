@@ -11,7 +11,7 @@
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { MessageStrip } from "@ui5/webcomponents-react";
+import { MessageStrip, Icon } from "@ui5/webcomponents-react";
 
 figma.connect(
   MessageStrip,
@@ -61,9 +61,15 @@ figma.connect(
       }),
       // Message text — read the "Text Message" layer directly.
       message: figma.textContent("Text Message"),
+      // Custom icon slot when Icon=True. Name is a placeholder ("information") —
+      // the Icon instance-swap name isn't readable.
+      icon: figma.enum("Icon", {
+        True: <Icon slot="icon" name="information" />,
+        False: undefined,
+      }),
     },
-    example: ({ design, colorScheme, hideIcon, hideCloseButton, message }) => (
-      <MessageStrip design={design} colorScheme={colorScheme} hideIcon={hideIcon} hideCloseButton={hideCloseButton}>
+    example: ({ design, colorScheme, hideIcon, hideCloseButton, message, icon }) => (
+      <MessageStrip design={design} colorScheme={colorScheme} hideIcon={hideIcon} hideCloseButton={hideCloseButton} icon={icon}>
         {message}
       </MessageStrip>
     ),
