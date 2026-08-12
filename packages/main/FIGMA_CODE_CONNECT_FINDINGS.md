@@ -92,7 +92,7 @@ props are never modelled in the kit.
 
 **Assumed:** nothing — all verified.
 
-**Misalignment:** none. Cleanest component — every visual prop maps. (`name`/`value` are form-grouping, app-level, correctly absent from Figma.)
+**Misalignment:** none. Cleanest component — every visual Figma property maps.
 
 ---
 
@@ -104,11 +104,10 @@ props are never modelled in the kit.
 
 **Doesn't work:**
 - +/- button icons — instance-swaps (Subtract/Add Button → Icon), names unreadable.
-- `min`/`max`/`step` — behavioral, not modelled in Figma (expected).
 
 **Assumed:** nothing — all verified.
 
-**Misalignment:** `Description Text` (+✏️) — Figma-only, no equivalent.
+**Misalignment:** `Description Text` (+✏️) — Figma-only, no ui5-step-input equivalent.
 
 ---
 
@@ -168,15 +167,11 @@ props are never modelled in the kit.
 - `checked` ← Checked, `disabled` ← Interaction State=Disabled.
 - `design` ← Type: **Non-Semantic → Textual, Semantic → Graphical.** Key insight: `Textual` does NOT mean text — with no textOn/textOff it renders check/dash icons in blue/grey (= Non-Semantic); `Graphical` renders positive/negative icons green ✓ / red ✗ (= Semantic), matching the WC docs ("if Graphical, positive/negative icons replace textOn/textOff").
 
-**Doesn't work:**
-- `textOn` / `textOff` — not modelled in Figma.
+**Doesn't work:** — (no Figma-side property goes unreflected.)
 
 **Assumed:** nothing.
 
 **Corrected 2026-08-12:** an earlier pass WRONGLY removed the `Type→design` mapping, concluding "all switches are Graphical" from the screenshot (all render icons). That was wrong — Textual also renders icons (neutral-colored), so Non-Semantic=Textual / Semantic=Graphical is correct. Mapping restored.
-
-**Misalignment:**
-- `readonly` — WC has it; the Figma Switch has no Read Only state (Interaction State = Regular/Hover/Disabled only).
 
 ---
 
@@ -219,13 +214,12 @@ props are never modelled in the kit.
 
 ---
 
-## Cross-cutting misalignment classes
-1. **Instance-swap icons** (Button, Link, StepInput, Avatar) — selected icon name never readable. *Fix: owner adds `Icon Name` text prop, or generate per-icon Code Connect entries.*
-2. **Slotted content** (MessageStrip text, Select options, SegmentedButton labels, StepInput message) — light-DOM projection, not a readable prop.
-3. **Figma-only props, no WC equivalent** — Button `Toggled`, Input/StepInput `Description Text`, Avatar `Optional Border`, Select `Drop-Down`.
-4. **WC props absent from Figma** — Switch `readonly`, Select's own Value/Interaction State.
-5. **Concept mismatches** — Avatar `mode` vs Figma `Type`; Avatar shape/content coupling; Link icon-as-Type vs icon-as-slot; Switch `design` vs Figma colour-semantics `Type`.
-6. **Parser asymmetry** — React parser can't merge two axes into one prop → MessageStrip ColorSet2 unreachable in React (works in WC).
+## Cross-cutting classes — Figma properties that code can't fully reflect
+1. **Instance-swap icons** (Button, Link, StepInput, Avatar, SegmentedButton) — the selected icon's name is never readable → hardcoded placeholder name. *Fix: owner adds `Icon Name` text prop, or generate per-icon Code Connect entries.*
+2. **Slotted content** (MessageStrip text, Select options, SegmentedButton labels) — light-DOM projection, not a readable prop → placeholder text.
+3. **Figma-only props, no WC equivalent** — Button `Toggled`, Input/StepInput `Description Text`, Avatar `Optional Border`, Select `Drop-Down`. Present in Figma, nothing to emit.
+4. **Concept mismatches** — Avatar `mode` vs Figma `Type`; Avatar shape/content coupling; Link icon-as-Type vs icon-as-slot.
+5. **Parser asymmetry** — React parser can't merge two Figma axes into one prop → MessageStrip ColorSet2 and Button's second badge unreachable in React (both work in WC).
 
 ## Open items needing manual Dev-Mode check
 - **Button badge `design`** — confirm Compact→InlineText / Cozy→OverlayText renders correctly (design-rule assumption).
