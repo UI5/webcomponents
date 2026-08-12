@@ -875,6 +875,22 @@ describe("Events", () => {
 		cy.get("@opened").should("have.been.calledOnce");
 	});
 
+	it("focuses first menu item after open", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Privacy" data-id="privacy"></UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Setting']")
+			.should("be.focused");
+	});
+
 	it("tests close event", () => {
 		cy.mount(
 			<>
