@@ -40,7 +40,4 @@
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 	color: var(--sapContent_LabelColor);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }

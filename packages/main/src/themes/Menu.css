@@ -59,7 +59,10 @@
 }
 
 .ui5-menu-back-button {
-	margin-right: 1rem;
+}
+
+.ui5-menu-close-button {
+	margin-left: auto;
 }
 
 .ui5-menu-dialog-footer {

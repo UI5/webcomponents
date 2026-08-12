@@ -57,6 +57,13 @@ export default function UserMenuTemplate(this: UserMenu) {
 						onClick={this._closeUserMenu}
 						slot="endContent"
 					 />}
+
+					{this._isPhone && this._titleMovedToHeader && <Button
+						icon={decline}
+						design="Transparent"
+						slot="startContent"
+						style="visibility: hidden; pointer-events: none;"
+					/>}
 				</Bar>
 
 				<div class="ui5-user-menu-header">

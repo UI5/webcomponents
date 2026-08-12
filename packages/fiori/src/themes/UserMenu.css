@@ -12,6 +12,14 @@
     padding: 0;
 }
 
+.ui5-user-menu-rp::part(header)::before {
+    display: none;
+}
+
+.ui5-user-menu-rp {
+    --_ui5_popup_header_shadow: none;
+}
+
 .ui5-user-menu-header {
     display: flex;
     flex-direction: column;
@@ -28,6 +36,10 @@
 .ui5-user-menu-fixed-header::part(startContent),
 .ui5-user-menu-fixed-header::part(endContent) {
     padding: 0;
+}
+
+.ui5-user-menu-fixed-header::part(midContent) {
+    justify-content: center;
 }
 
 .ui5-user-menu-fixed-header [ui5-button] {
@@ -178,8 +190,7 @@
     flex-direction: column;
     align-self: stretch;
     margin-block: 0.5rem;
-    padding-block: 0.5rem;
-    padding-inline: 0.5rem;
+    padding: 0.5rem;
     margin-inline: -0.5rem;
 }
 

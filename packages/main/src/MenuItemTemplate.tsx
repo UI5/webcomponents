@@ -6,6 +6,7 @@ import Button from "./Button.js";
 import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
+import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Icon from "./Icon.js";
@@ -134,6 +135,13 @@ function listItemPostContent(this: MenuItem) {
 								{this.text}
 							</div>
 						</div>
+						<Button
+							icon={declineIcon}
+							class="ui5-menu-close-button"
+							design="Transparent"
+							aria-label={this.labelCancel}
+							onClick={this._closeAll}
+						/>
 					</div >
 				</>
 			)

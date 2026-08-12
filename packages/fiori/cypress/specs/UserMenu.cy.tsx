@@ -971,6 +971,28 @@ describe("Responsiveness", () => {
 		cy.get("@headerBar").find("[ui5-button]").should("have.length", 1);
 	});
 
+	it("popover header has no divider line (::before pseudo-element hidden)", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").shadow()
+			.find("[ui5-responsive-popover]")
+			.shadow()
+			.find("[ui5-dialog]")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.then($el => {
+				const before = window.getComputedStyle($el[0], "::before");
+				expect(before.height).to.equal("0px");
+			});
+	});
+
 	it("Event firing - 'ui5-check' after 'click' on user menu item", () => {
 			cy.mount(
 				<>
@@ -1313,6 +1335,26 @@ describe("InfoArea slot", () => {
 			});
 		});
 	});
+
+	it("info-area has 8px padding on all sides", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>
+						All actions are recorded under the proxy audit log.
+					</MessageStrip>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area")
+			.should("have.css", "padding-top", "8px")
+			.and("have.css", "padding-bottom", "8px")
+			.and("have.css", "padding-left", "8px")
+			.and("have.css", "padding-right", "8px");
+	});
 });
 
 describe("UserMenuItem", () => {
@@ -1578,7 +1620,7 @@ describe("UserMenuItem", () => {
 				.should("not.have.attr", "show-selection");
 		});
 
-		it("selection text has correct styling", () => {
+		it("selection text wraps instead of truncating", () => {
 			cy.mount(
 				<>
 					<Button id="openUserMenuBtn">Open User Menu</Button>
@@ -1596,9 +1638,8 @@ describe("UserMenuItem", () => {
 				.shadow()
 				.find(".ui5-user-menu-item-selection-text")
 				.should("have.css", "font-weight", "400")
-				.and("have.css", "white-space", "nowrap")
-				.and("have.css", "overflow", "hidden")
-				.and("have.css", "text-overflow", "ellipsis");
+				.and("not.have.css", "white-space", "nowrap")
+				.and("not.have.css", "text-overflow", "ellipsis");
 		});
 
 		it("text wrapper has column layout with gap", () => {
