@@ -25,13 +25,14 @@ Code-Connect the icon library (one entry per icon emitting its own name).*
 - `Content` (Placeholder vs Typed Text) — Figma-only display toggle; can't gate which text emits, so both `value` and `placeholder` are always emitted.
 
 
-## 3. MessageStrip — ui5-message-strip (node 910:2517) — DEFERRED
+## 3. MessageStrip — ui5-message-strip (node 910:2517)
 **Doesn't work:**
-- message text — default-slot content (placeholder).
-- **ColorSet2 in React only** — the React parser can't merge two axes into one `design`, so ColorSet2 (Indication "Nb") is unreachable in React (WC maps the full palette).
+- `icon` slot ← Icon (INSTANCE) — slotted custom icon, not readable.
+- **ColorSet2 in React only** — the React parser can't merge two axes into one `design`, so ColorSet2 (Indication "Nb") is unreachable in React (WC maps the full palette). React emits `design="ColorSet1"` for both "N" and "Nb".
 
 **Assumed / needs Dev-Mode check:**
-- custom-colour variants (Indication N / Nb) emit `design="ColorSet1|2" color-scheme="N"` in WC — not yet visually confirmed per-variant.
+- message text — now read via `figma.textContent("Text Message")` (the layer had empty references, so reading by name is unconfirmed — check it shows the real Figma text, not a hardcoded string).
+- custom-colour variants (Indication N / Nb) emit `design="ColorSet1|2" color-scheme="N"` in WC — confirm per-variant.
 
 ## 4. Select — ui5-select (node 181557:7507)
 **Doesn't work:**
@@ -67,11 +68,8 @@ Code-Connect the icon library (one entry per icon emitting its own name).*
 
 
 ## 6. Avatar — ui5-avatar (node 573:3623)
-**Doesn't work (emits placeholder — consumer edits):**
-- `image` (Type=Image) — actual image fill not readable → placeholder `<img src="https://via.placeholder.com/48">`.
-- `badge` (Badge boolean) — badge content not readable → placeholder `<ui5-avatar-badge icon="edit">` (presence maps, content doesn't).
-- Color=Image/Tile — no `color-scheme` equivalent (nothing emitted for those two Color values).
+**Doesn't work:**
+- `image` slot — slotted image, not readable.
+- `badge` slot ← Badge boolean — presence only, not content.
 
----
 
-*Components with no gaps: RadioButton CheckBox Switch StepInput
