@@ -4,7 +4,7 @@
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Avatar } from "@ui5/webcomponents-react";
+import { Avatar, AvatarBadge } from "@ui5/webcomponents-react";
 
 figma.connect(
   Avatar,
@@ -53,9 +53,22 @@ figma.connect(
         Image: undefined,
         Initials: undefined,
       }),
+      // Type=Image → slotted <img> placeholder (actual fill not readable).
+      image: figma.enum("Type", {
+        Image: <img src="https://via.placeholder.com/48" />,
+        Icon: undefined,
+        Initials: undefined,
+      }),
+      // Badge boolean → <AvatarBadge icon="edit"> placeholder (content not readable).
+      badge: figma.boolean("Badge", {
+        true: <AvatarBadge icon="edit" />,
+        false: undefined,
+      }),
     },
-    example: ({ size, colorScheme, shape, disabled, initials, icon }) => (
-      <Avatar size={size} shape={shape} colorScheme={colorScheme} disabled={disabled} initials={initials} icon={icon} />
+    example: ({ size, colorScheme, shape, disabled, initials, icon, image, badge }) => (
+      <Avatar size={size} shape={shape} colorScheme={colorScheme} disabled={disabled} initials={initials} icon={icon} badge={badge}>
+        {image}
+      </Avatar>
     ),
   }
 );
