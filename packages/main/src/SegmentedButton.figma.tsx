@@ -11,23 +11,43 @@ figma.connect(
   "https://www.figma.com/design/SILcWzK5uFghKun9jx6D7c/SAP-Web-UI-Kit?node-id=91702-11986",
   {
     props: {
+      // Type → text-vs-icon form. Item 1 keeps `selected` (representative
+      // default — not readable from Figma). Icon names are placeholders
+      // ("home") — instance-swap, not readable.
+      item1: figma.enum("Type", {
+        Text: <SegmentedButtonItem selected>Option 1</SegmentedButtonItem>,
+        Icon: <SegmentedButtonItem selected icon="home" />,
+      }),
+      item2: figma.enum("Type", {
+        Text: <SegmentedButtonItem>Option 2</SegmentedButtonItem>,
+        Icon: <SegmentedButtonItem icon="home" />,
+      }),
       thirdItem: figma.boolean("3rd Button", {
-        true: <SegmentedButtonItem>Option 3</SegmentedButtonItem>,
+        true: figma.enum("Type", {
+          Text: <SegmentedButtonItem>Option 3</SegmentedButtonItem>,
+          Icon: <SegmentedButtonItem icon="home" />,
+        }),
         false: undefined,
       }),
       fourthItem: figma.boolean("4th Button", {
-        true: <SegmentedButtonItem>Option 4</SegmentedButtonItem>,
+        true: figma.enum("Type", {
+          Text: <SegmentedButtonItem>Option 4</SegmentedButtonItem>,
+          Icon: <SegmentedButtonItem icon="home" />,
+        }),
         false: undefined,
       }),
       fifthItem: figma.boolean("5th Button", {
-        true: <SegmentedButtonItem>Option 5</SegmentedButtonItem>,
+        true: figma.enum("Type", {
+          Text: <SegmentedButtonItem>Option 5</SegmentedButtonItem>,
+          Icon: <SegmentedButtonItem icon="home" />,
+        }),
         false: undefined,
       }),
     },
-    example: ({ thirdItem, fourthItem, fifthItem }) => (
+    example: ({ item1, item2, thirdItem, fourthItem, fifthItem }) => (
       <SegmentedButton>
-        <SegmentedButtonItem selected>Option 1</SegmentedButtonItem>
-        <SegmentedButtonItem>Option 2</SegmentedButtonItem>
+        {item1}
+        {item2}
         {thirdItem}
         {fourthItem}
         {fifthItem}
