@@ -364,6 +364,12 @@ class SearchField extends UI5Element {
 		return this.value.length && this.focusedInnerInput;
 	}
 
+	get _shouldRenderScopePopover() {
+		// Only render scope popover when it's open on mobile with scopes
+		// The popover is conditionally rendered (not just hidden) to avoid conflicts with Search component's dialog
+		return this._isMobileView && !!this.scopes?.length && this._scopePopoverOpen;
+	}
+
 	get _searchButtonAccessibilityAttributes() {
 		return {
 			expanded: !this.collapsed,
