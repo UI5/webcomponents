@@ -838,9 +838,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (!this.open && !this.loading && this._getItems().length === 0) {
 			this._loadingDelegate.fireOnDropdownOpen();
+			this._isArrowClicked = true;
 		}
 
-		this._isArrowClicked = true;
 		this._toggleRespPopover();
 	}
 
@@ -882,6 +882,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
+		this._isArrowClicked = false;
 		this._loadingDelegate.fireOnInput();
 
 		if (isPhone()) {
