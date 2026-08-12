@@ -359,7 +359,7 @@ describe("Events", () => {
 	});
 });
 
-describe.only("Dialog general interaction", () => {
+describe("Dialog general interaction", () => {
 	it("tests dialog toggling", () => {
 
 
@@ -696,7 +696,7 @@ describe.only("Dialog general interaction", () => {
 		});
 	});
 
-	it.only("dialog remains anchored after resizing in RTL mode", () => {
+	it("dialog remains anchored after resizing in RTL mode", () => {
 		cy.mount(
 			<>
 				<div dir="rtl">
