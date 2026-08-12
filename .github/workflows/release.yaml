@@ -457,9 +457,10 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
+      # Build from root so workspace deps (e.g. @ui5/webcomponents-base)
+      # produce their dist/ that packages/cypress-ct-ui5-webc compiles against.
       - name: Build
-        run: yarn build
-        working-directory: packages/cypress-ct-ui5-webc
+        run: yarn ci:releasebuild
 
       - name: Publish
         run: npm publish --provenance --access public
