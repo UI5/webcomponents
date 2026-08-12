@@ -33,13 +33,19 @@ figma.connect(
         Disabled: false,
       }),
       value: figma.string("✏️ Value"),
+      // Value-state message text from the nested "Input Message Popover"
+      // instance (top-level prop → resolved {msg.text}, same as Input).
+      msg: figma.nestedProps("Input Message Popover", {
+        text: figma.string("✏️ Text"),
+      }),
     },
-    example: ({ value, valueState, disabled, readonly }) => (
+    example: ({ value, valueState, disabled, readonly, msg }) => (
       <StepInput
         value={value}
         valueState={valueState}
         disabled={disabled}
         readonly={readonly}
+        valueStateMessage={<div>{msg.text}</div>}
       />
     ),
   }

@@ -26,11 +26,18 @@ figma.connect(
       }),
       // Numeric value (Figma stores it as a text prop).
       value: figma.string("✏️ Value"),
+      // Value-state message text from the nested "Input Message Popover"
+      // instance (same pattern as Input). MUST be a top-level prop — a figma.*
+      // call inlined in the template emits verbatim. Referenced as ${msg.text}.
+      msg: figma.nestedProps("Input Message Popover", {
+        text: figma.string("✏️ Text"),
+      }),
     },
-    // CANNOT MAP (FIGMA_CODE_CONNECT.md § StepInput): min/max/step are not in
-    // Figma; `Message Popover` boolean references slotted content; the +/-
-    // button icons are instance-swaps (registry problem).
-    example: ({ valueState, stateAttr, value }) =>
-      html`<ui5-step-input value="${value}" ${valueState} ${stateAttr}></ui5-step-input>`,
+    // CANNOT MAP (FIGMA_CODE_CONNECT_FINDINGS.md § StepInput): min/max/step are
+    // not in Figma; the +/- button icons are instance-swaps (registry problem).
+    // NOTE: valueStateMessage slot is always emitted (gating + resolved text
+    // can't coexist); text resolves empty on non-popover variants.
+    example: ({ valueState, stateAttr, value, msg }) =>
+      html`<ui5-step-input value="${value}" ${valueState} ${stateAttr}><div slot="valueStateMessage">${msg.text}</div></ui5-step-input>`,
   }
 );
