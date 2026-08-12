@@ -11,9 +11,13 @@ figma.connect(
   "https://www.figma.com/design/SILcWzK5uFghKun9jx6D7c/SAP-Web-UI-Kit?node-id=24087-10369",
   {
     props: {
-      // NOTE: Figma "Type" (Non-Semantic/Semantic) = colour semantics, which
-      // ui5-switch has no prop for. It does NOT map to `design`; screenshot of
-      // node 24087:10369 shows all switches render icons (all `Graphical`).
+      // Figma "Type" → design. Non-Semantic (neutral ✓/dash icons) → Textual;
+      // Semantic (green ✓ / red ✗) → Graphical. "Textual" still renders icons
+      // in blue/grey when no textOn/textOff — matches the Non-Semantic group.
+      design: figma.enum("Type", {
+        "Non-Semantic": "Textual",
+        Semantic: "Graphical",
+      }),
       checked: figma.enum("Checked", {
         True: true,
         False: false,
@@ -24,8 +28,8 @@ figma.connect(
         Hover: false,
       }),
     },
-    example: ({ checked, disabled }) => (
-      <Switch checked={checked} disabled={disabled} />
+    example: ({ design, checked, disabled }) => (
+      <Switch design={design} checked={checked} disabled={disabled} />
     ),
   }
 );

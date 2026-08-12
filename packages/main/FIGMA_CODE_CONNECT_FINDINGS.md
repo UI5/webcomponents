@@ -166,16 +166,17 @@ props are never modelled in the kit.
 
 **Works (screenshot-verified):**
 - `checked` ← Checked, `disabled` ← Interaction State=Disabled.
+- `design` ← Type: **Non-Semantic → Textual, Semantic → Graphical.** Key insight: `Textual` does NOT mean text — with no textOn/textOff it renders check/dash icons in blue/grey (= Non-Semantic); `Graphical` renders positive/negative icons green ✓ / red ✗ (= Semantic), matching the WC docs ("if Graphical, positive/negative icons replace textOn/textOff").
 
 **Doesn't work:**
-- `design` (Textual/Graphical) — **NOT mappable.** Screenshot showed ALL Figma switches render icons (✓/✗), i.e. all are effectively `Graphical`. (Earlier `Type→design` mapping was WRONG and was removed.)
-- `textOn`/`textOff` — not modelled in Figma.
+- `textOn` / `textOff` — not modelled in Figma.
 
-**Assumed:** nothing — the design question was resolved by screenshot.
+**Assumed:** nothing.
+
+**Corrected 2026-08-12:** an earlier pass WRONGLY removed the `Type→design` mapping, concluding "all switches are Graphical" from the screenshot (all render icons). That was wrong — Textual also renders icons (neutral-colored), so Non-Semantic=Textual / Semantic=Graphical is correct. Mapping restored.
 
 **Misalignment:**
-- Figma `Type` (Non-Semantic/Semantic) = colour semantics (neutral vs green/red); ui5-switch has **no property** for this.
-- `readonly` — WC has it; the Figma Switch has no Read Only state.
+- `readonly` — WC has it; the Figma Switch has no Read Only state (Interaction State = Regular/Hover/Disabled only).
 
 ---
 
