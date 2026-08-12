@@ -196,6 +196,7 @@ props are never modelled in the kit.
 - `color-scheme` ← Color (1..10 → Accent1..10; Transparent/Placeholder 1:1).
 - `shape` ← Content — **screenshot-verified**: Person column renders circles, Object column renders squares.
 - `disabled` ← Interaction State=Disabled.
+- `initials` ← ✏️ Initials — **Dev-Mode-confirmed**: the Initials text layer only exists on `Type=Initials` variants, so `initials` is emitted only there and correctly omitted on Image/Icon avatars (no gating needed).
 
 **Doesn't work:**
 - `icon`/`fallbackIcon` ← Person/Object Icon (instance-swap) — name unreadable.
@@ -203,8 +204,7 @@ props are never modelled in the kit.
 - `badge` slot ← Badge boolean — presence only, not content.
 - Color=Image/Tile — no `color-scheme` equivalent.
 
-**Assumed — check manually:**
-- `initials` ← ✏️ Initials: emitted **regardless of Type** (parser can't gate one axis's attr on another), so it appears even on Image/Icon avatars. Check it's acceptable / consumer removes it there.
+**Assumed:** nothing — all verified.
 
 **Misalignment:**
 - `mode` (Image/Decorative/Interactive = a11y role) vs Figma `Type` (Image/Icon/Initials = content source) — different concepts.
@@ -222,7 +222,7 @@ props are never modelled in the kit.
 
 ## Open items needing manual Dev-Mode check
 - **Button badge `design`** — confirm Compact→InlineText / Cozy→OverlayText renders correctly (design-rule assumption).
-- **Avatar `initials`** — confirm ungated emission is acceptable.
+- **MessageStrip** — deferred: confirm custom-colour variants (Indication N / Nb) emit `design="ColorSet1|2" color-scheme="N"` in WC; decide on the React ColorSet2 gap.
 
 ## Parser lesson (applies to all mappings)
 A `figma.*` call **inlined** inside a template literal (WC `html\`\``) or inside a
