@@ -64,9 +64,21 @@ figma.connect(
         Image: "",
         Initials: "",
       }),
+      // Type=Image → slotted <img> with a placeholder URL (the actual image
+      // fill isn't readable). Consumer swaps the src.
+      image: figma.enum("Type", {
+        Image: html`<img src="https://via.placeholder.com/48" />`,
+        Icon: "",
+        Initials: "",
+      }),
+      // Badge boolean → slotted <ui5-avatar-badge> with placeholder icon="edit"
+      // (badge content isn't readable — presence only).
+      badge: figma.boolean("Badge", {
+        true: html`<ui5-avatar-badge slot="badge" icon="edit"></ui5-avatar-badge>`,
+        false: "",
+      }),
     },
-    // Person/Object Icon are instance-swaps; Badge is a slot — omitted.
-    example: ({ size, colorScheme, shape, disabled, initials, icon }) =>
-      html`<ui5-avatar ${size} ${shape} ${colorScheme} ${disabled} ${icon} initials="${initials}"></ui5-avatar>`,
+    example: ({ size, colorScheme, shape, disabled, initials, icon, image, badge }) =>
+      html`<ui5-avatar ${size} ${shape} ${colorScheme} ${disabled} ${icon} initials="${initials}">${image}${badge}</ui5-avatar>`,
   }
 );
