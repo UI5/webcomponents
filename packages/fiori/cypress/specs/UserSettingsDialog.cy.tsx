@@ -1511,22 +1511,14 @@ describe("F6 Navigation", () => {
             .should("have.attr", "data-sap-ui-fastnavgroup", "true");
     });
 
-    it("F6 navigation when dialog opened programmatically", () => {
-        cy.mount(<>
-            <Button id="open-btn">Open Settings</Button>
-            <UserSettingsDialog id="settings-dialog">
-                <UserSettingsItem text="Setting" selected>
-                    <UserSettingsView>
-                        <Button id="content-btn">Content</Button>
-                    </UserSettingsView>
-                </UserSettingsItem>
-            </UserSettingsDialog>
-        </>);
-
-        cy.get("#open-btn").realClick();
-        cy.get("[ui5-user-settings-dialog]").then($el => {
-            ($el[0] as any).open = true;
-        });
+    it("F6 navigation", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting" selected>
+                <UserSettingsView>
+                    <Button id="content-btn">Content</Button>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
 
         // Initial focus: side panel (first list item)
         cy.get("[ui5-user-settings-dialog]").shadow()
@@ -1537,14 +1529,30 @@ describe("F6 Navigation", () => {
         cy.realPress("F6");
         cy.get("#content-btn").should("be.focused");
 
-        // F6: content → footer
+        // F6: content → footer (Close button)
         cy.realPress("F6");
         cy.get("[ui5-user-settings-dialog]").shadow()
             .find("[ui5-toolbar-button]")
             .should("be.focused");
 
-        // F6: footer → side (wraps)
+        // F6: footer → side (wraps, focus stays inside dialog)
         cy.realPress("F6");
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-li]").first()
+            .should("be.focused");
+
+        // Shift+F6: side → footer (wraps backward)
+        cy.realPress(["Shift", "F6"]);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find("[ui5-toolbar-button]")
+            .should("be.focused");
+
+        // Shift+F6: footer → content
+        cy.realPress(["Shift", "F6"]);
+        cy.get("#content-btn").should("be.focused");
+
+        // Shift+F6: content → side (back to starting point)
+        cy.realPress(["Shift", "F6"]);
         cy.get("[ui5-user-settings-dialog]").shadow()
             .find("[ui5-li]").first()
             .should("be.focused");
