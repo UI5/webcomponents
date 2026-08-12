@@ -61,9 +61,10 @@ figma.connect(
         true: "",
         false: "hide-close-button",
       }),
+      // Message text — read the "Text Message" layer directly.
+      message: figma.textContent("Text Message"),
     },
-    // Text is a slotted node (default slot) — placeholder used.
-    example: ({ designSemantic, designColorSet, hideIcon, hideClose }) =>
-      html`<ui5-message-strip ${designSemantic} ${designColorSet} ${hideIcon} ${hideClose}>Information message</ui5-message-strip>`,
+    example: ({ designSemantic, designColorSet, hideIcon, hideClose, message }) =>
+      html`<ui5-message-strip ${designSemantic} ${designColorSet} ${hideIcon} ${hideClose}>${message}</ui5-message-strip>`,
   }
 );

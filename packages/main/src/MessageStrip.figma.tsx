@@ -59,10 +59,12 @@ figma.connect(
         true: false,
         false: true,
       }),
+      // Message text — read the "Text Message" layer directly.
+      message: figma.textContent("Text Message"),
     },
-    example: ({ design, colorScheme, hideIcon, hideCloseButton }) => (
+    example: ({ design, colorScheme, hideIcon, hideCloseButton, message }) => (
       <MessageStrip design={design} colorScheme={colorScheme} hideIcon={hideIcon} hideCloseButton={hideCloseButton}>
-        Information message
+        {message}
       </MessageStrip>
     ),
   }
