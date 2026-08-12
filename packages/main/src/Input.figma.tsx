@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Input". Node 148569:1004.
- * Mirrors Input.figma.ts under the "React" label. See FIGMA_CODE_CONNECT.md.
+ * Mirrors Input.figma.ts under the "React" label. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

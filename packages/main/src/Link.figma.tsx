@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Link".
- * Node 187:305. Mirrors Link.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 187:305. Mirrors Link.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

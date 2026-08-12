@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Link".
  * Node: 187:305. Emits <ui5-link>.
  *
- * See FIGMA_CODE_CONNECT.md § Link. Pseudo-states (Hover/Visited/Down) ignored.
+ * See FIGMA_CODE_CONNECT_FINDINGS.md § Link. Pseudo-states (Hover/Visited/Down) ignored.
  */
 import figma, { html } from "@figma/code-connect/html";
 

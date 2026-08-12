@@ -197,9 +197,10 @@ props are never modelled in the kit.
 - `shape` ← Content — **screenshot-verified**: Person column renders circles, Object column renders squares.
 - `disabled` ← Interaction State=Disabled.
 - `initials` ← ✏️ Initials — **Dev-Mode-confirmed**: the Initials text layer only exists on `Type=Initials` variants, so `initials` is emitted only there and correctly omitted on Image/Icon avatars (no gating needed).
+- `icon` ← Type=Icon → `icon="employee"` (WC default). Emitted only for the Icon type. The POSITION/presence maps; the icon NAME is a placeholder (Person/Object Icon are instance-swaps, not readable).
 
 **Doesn't work:**
-- `icon`/`fallbackIcon` ← Person/Object Icon (instance-swap) — name unreadable.
+- `icon`/`fallbackIcon` NAME ← Person/Object Icon (instance-swap) — name unreadable → placeholder `"employee"` (icon presence maps via Type=Icon; the name does not).
 - `image` slot — slotted image, not readable.
 - `badge` slot ← Badge boolean — presence only, not content.
 - Color=Image/Tile — no `color-scheme` equivalent.

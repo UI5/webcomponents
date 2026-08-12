@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Radio Button".
  * Node: 154597:1967. Emits <ui5-radio-button>.
  *
- * Cleanest of the set — every Figma axis maps. See FIGMA_CODE_CONNECT.md
+ * Cleanest of the set — every Figma axis maps. See FIGMA_CODE_CONNECT_FINDINGS.md
  * § RadioButton. Form Factor + Hover ignored.
  */
 import figma, { html } from "@figma/code-connect/html";

@@ -3,7 +3,7 @@
  * Node: 148569:1004. Emits <ui5-input> under the "Web Components" label.
  *
  * Every READABLE Figma property is mapped dynamically below. Properties that
- * cannot be made dynamic are listed in FIGMA_CODE_CONNECT.md § Input with the
+ * cannot be made dynamic are listed in FIGMA_CODE_CONNECT_FINDINGS.md § Input with the
  * reason. Form Factor (Compact/Cozy) and the Hover/Active visual states are
  * intentionally ignored (density is global in UI5; pseudo-states have no attr).
  */

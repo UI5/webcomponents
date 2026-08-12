@@ -52,7 +52,7 @@ figma.connect(
       // icon as an INSTANCE_SWAP whose swapped icon name cannot be read into a
       // string unless the Kit's icon components are themselves Code-Connected.
       // So this only toggles the attribute on/off; it can't reflect which icon
-      // is selected. See FIGMA_CODE_CONNECT.md § "Icon is not dynamic".
+      // is selected. See FIGMA_CODE_CONNECT_FINDINGS.md § "Icon is not dynamic".
       iconAttr: figma.boolean("Icon Left", {
         true: 'icon="globe"',
         false: "",

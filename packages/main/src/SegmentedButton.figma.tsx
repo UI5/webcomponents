@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Segmented Button".
- * Node 91702:11986. Mirrors SegmentedButton.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 91702:11986. Mirrors SegmentedButton.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

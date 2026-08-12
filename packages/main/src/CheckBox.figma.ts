@@ -3,7 +3,7 @@
  * Node: 154589:905. Emits <ui5-checkbox>.
  *
  * Every readable Figma prop mapped; unmappable ones documented in
- * FIGMA_CODE_CONNECT.md § CheckBox. Form Factor + Hover ignored.
+ * FIGMA_CODE_CONNECT_FINDINGS.md § CheckBox. Form Factor + Hover ignored.
  */
 import figma, { html } from "@figma/code-connect/html";
 
@@ -26,7 +26,7 @@ figma.connect(
       }),
       // Interaction State → disabled / readonly.
       // "Display Only" has NO ui5-checkbox equivalent — approximated as readonly
-      // (documented in FIGMA_CODE_CONNECT.md § CheckBox).
+      // (documented in FIGMA_CODE_CONNECT_FINDINGS.md § CheckBox).
       stateAttr: figma.enum("Interaction State", {
         Disabled: "disabled",
         "Read Only": "readonly",

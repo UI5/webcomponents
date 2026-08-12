@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Message Strip".
- * Node 910:2517. Mirrors MessageStrip.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 910:2517. Mirrors MessageStrip.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  *
  * NOTE (React vs WC asymmetry): the React parser requires each prop to be a
  * single enum ref and cannot merge two axes into one `design` attribute, so

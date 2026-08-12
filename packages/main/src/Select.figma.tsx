@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Select". Node 181557:7507.
- * Mirrors Select.figma.ts. Largely static — see FIGMA_CODE_CONNECT.md § Select.
+ * Mirrors Select.figma.ts. Largely static — see FIGMA_CODE_CONNECT_FINDINGS.md § Select.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
