@@ -968,7 +968,7 @@ describe("Responsiveness", () => {
 			.scrollTo("bottom");
 		cy.get("[ui5-user-menu]").shadow().find("[ui5-bar]").as("headerBar");
 		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier 1");
-		cy.get("@headerBar").find("[ui5-button]").should("have.length", 1);
+		cy.get("@headerBar").find("[ui5-button][slot='endContent']").should("have.length", 1);
 	});
 
 	it("popover header has no divider line (::before pseudo-element hidden)", () => {
@@ -984,12 +984,10 @@ describe("Responsiveness", () => {
 		cy.get("[ui5-user-menu]").shadow()
 			.find("[ui5-responsive-popover]")
 			.shadow()
-			.find("[ui5-dialog]")
-			.shadow()
 			.find(".ui5-popup-header-root")
 			.then($el => {
 				const before = window.getComputedStyle($el[0], "::before");
-				expect(before.height).to.equal("0px");
+				expect(before.display).to.equal("none");
 			});
 	});
 
