@@ -583,8 +583,8 @@ describe("Basic", () => {
 		});
 	});
 
-	describe.only("AI Button Focus Visibility", () => {
-		it.only("should show AI button only when textarea, button, or menu has focus", () => {
+	describe("AI Button Focus Visibility", () => {
+		it("should show AI button only when textarea, button, or menu has focus", () => {
 			cy.mount(
 				<TextArea>
 					<Menu slot="menu" id="test-menu">
@@ -632,6 +632,8 @@ describe("Basic", () => {
 			cy.get("[ui5-ai-textarea]")
 				.find("[ui5-menu]")
 				.ui5MenuOpened();
+
+			cy.wait(500); // Wait for the menu to open and focus to be set
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()

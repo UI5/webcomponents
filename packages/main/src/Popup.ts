@@ -343,11 +343,6 @@ abstract class Popup extends UI5Element {
 			return;
 		}
 
-		if (!this._isOpenerValid()) {
-			this.open = false;
-			return;
-		}
-
 		const prevented = !this.fireDecoratorEvent("before-open");
 
 		if (prevented) {
@@ -384,22 +379,9 @@ abstract class Popup extends UI5Element {
 
 		await renderFinished();
 
-		if (!this._isOpenerValid()) {
-			this.closePopup();
-			return;
-		}
-
 		if (this.isConnected) {
 			this.fireDecoratorEvent("open");
 		}
-	}
-
-	/**
-	 * Override in subclasses to prevent opening when the opener is invalid (hidden or removed from DOM).
-	 * @protected
-	 */
-	_isOpenerValid(): boolean {
-		return true;
 	}
 
 	_resize() {
