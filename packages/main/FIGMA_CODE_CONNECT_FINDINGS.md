@@ -100,10 +100,10 @@ props are never modelled in the kit.
 
 **Works (screenshot-verified):**
 - `value` ← ✏️ Value, `value-state` ← Value State (1:1), `disabled`/`readonly` ← Interaction State.
+- `valueStateMessage` ← nested "Input Message Popover" ✏️ Text (same top-level-prop pattern as Input; Dev-Mode-confirmed).
 
 **Doesn't work:**
 - +/- button icons — instance-swaps (Subtract/Add Button → Icon), names unreadable.
-- `valueStateMessage` ← Message Popover — nested text, not currently mapped.
 - `min`/`max`/`step` — behavioral, not modelled in Figma (expected).
 
 **Assumed:** nothing — all verified.
@@ -133,6 +133,7 @@ props are never modelled in the kit.
 
 **Works (screenshot-verified, via nested Input):**
 - `disabled` / `readonly` / `value-state` — only via the embedded Input instance's states.
+- `valueStateMessage` ← nested "Input Message Popover" ✏️ Text (deeply nested under Drop-Down > Value Message; `figma.nestedProps` resolves it by name — Dev-Mode-confirmed).
 
 **Doesn't work:**
 - `options` — slotted `ui5-option`s; Figma models a closed Input with no readable option list.
