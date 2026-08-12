@@ -25,9 +25,21 @@ figma.connect(
         Down: false,
       }),
       label: figma.textContent("Text"),
+      // Icon Position → icon (Left) / endIcon (Right). Name is a placeholder
+      // ("inspect") — the Icon instance-swap name isn't readable.
+      icon: figma.enum("Icon Position", {
+        Left: "inspect",
+        Right: undefined,
+        "N/A": undefined,
+      }),
+      endIcon: figma.enum("Icon Position", {
+        Right: "inspect",
+        Left: undefined,
+        "N/A": undefined,
+      }),
     },
-    example: ({ design, disabled, label }) => (
-      <Link design={design} disabled={disabled}>
+    example: ({ design, disabled, label, icon, endIcon }) => (
+      <Link design={design} disabled={disabled} icon={icon} endIcon={endIcon}>
         {label}
       </Link>
     ),

@@ -27,9 +27,16 @@ figma.connect(
       }),
       // Link label text (default slot).
       label: figma.textContent("Text"),
+      // Icon Position → icon (Left) / end-icon (Right). The icon NAME is a
+      // placeholder ("inspect", the kit's default) — the Icon instance-swap
+      // name isn't readable. Left→icon, Right→end-icon, N/A→neither.
+      iconAttr: figma.enum("Icon Position", {
+        Left: 'icon="inspect"',
+        Right: 'end-icon="inspect"',
+        "N/A": "",
+      }),
     },
-    // Icon slot (Icon Link type) is instance-swap — name not readable, omitted.
-    example: ({ design, disabled, label }) =>
-      html`<ui5-link ${design} ${disabled}>${label}</ui5-link>`,
+    example: ({ design, disabled, label, iconAttr }) =>
+      html`<ui5-link ${design} ${disabled} ${iconAttr}>${label}</ui5-link>`,
   }
 );
