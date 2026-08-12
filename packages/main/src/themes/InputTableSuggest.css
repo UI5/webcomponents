@@ -42,7 +42,7 @@
 .ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--focused,
 .ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--selected {
 	background-color: var(--sapList_SelectionBackgroundColor);
-	border-bottom: 1px solid var(--sapList_SelectionBorderColor);
+	box-shadow: inset 0 calc(-1 * var(--sapList_BorderWidth)) 0 0 var(--sapList_SelectionBorderColor);
 }
 
 .ui5-input-table-suggest-table [ui5-table-row].ui5-input-table-suggest-row--focused {

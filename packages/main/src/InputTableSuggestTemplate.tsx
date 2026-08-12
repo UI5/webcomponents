@@ -1,18 +1,19 @@
-import InputTemplate from "./InputTemplate.js";
-import type Input from "./Input.js";
+import InputFieldTemplate from "./InputFieldTemplate.js";
 import type InputTableSuggest from "./InputTableSuggest.js";
 import InputTableSuggestPopoverTemplate from "./InputTableSuggestPopoverTemplate.js";
 
 export default function InputTableSuggestTemplate(this: InputTableSuggest) {
-	return InputTemplate.call(this as unknown as Input, {
-		preContent: tabularPreContent.bind(this),
-		postContent: tabularPostContent.bind(this),
-		popoverTemplate: tabularPopoverTemplate.bind(this),
+	return InputFieldTemplate.call(this, {
+		postContent: () => (
+			<>
+				{this._effectiveShowSuggestions &&
+					<span id="selectionText" class="ui5-hidden-text" aria-live="polite" role="status"></span>
+				}
+			</>
+		),
+		popoverTemplate: () => tabularPopoverTemplate.call(this),
 	});
 }
-
-function tabularPreContent(this: InputTableSuggest) {}
-function tabularPostContent(this: InputTableSuggest) {}
 
 function tabularPopoverTemplate(this: InputTableSuggest) {
 	if (!this._useTableSuggestions) {
