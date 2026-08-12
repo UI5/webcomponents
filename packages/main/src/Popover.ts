@@ -23,6 +23,7 @@ import PopoverTemplate from "./PopoverTemplate.js";
 import PopupsCommonCss from "./generated/themes/PopupsCommon.css.js";
 import PopoverCss from "./generated/themes/Popover.css.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import isElementHidden from "@ui5/webcomponents-base/dist/util/isElementHidden.js";
 
 const ARROW_SIZE = 8;
 
@@ -269,6 +270,20 @@ class Popover extends Popup {
 		return this._opener;
 	}
 
+	_isOpenerValid(): boolean {
+		const opener = this.getOpenerHTMLElement(this.opener);
+
+		if (!opener) {
+			return false;
+		}
+
+		if (!opener.isConnected || isElementHidden(opener)) {
+			return false;
+		}
+
+		return !this.isOpenerOutsideViewport(opener.getBoundingClientRect());
+	}
+
 	async openPopup() {
 		if (this._opened) {
 			return;
@@ -280,7 +295,7 @@ class Popover extends Popup {
 			return;
 		}
 
-		if (!opener || this.isOpenerOutsideViewport(opener.getBoundingClientRect())) {
+		if (!opener || !this._isOpenerValid()) {
 			await renderFinished();
 			this.open = false;
 			this.fireDecoratorEvent("close");
