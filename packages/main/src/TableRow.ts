@@ -12,7 +12,7 @@ import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
-	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
+	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -206,6 +206,10 @@ class TableRow extends TableRowBase<TableCell> {
 			}
 			return renderableActionsCount > this._rowActionCount;
 		});
+	}
+
+	get _overflowButtonTooltip() {
+		return TableRowBase.i18nBundle.getText(TABLE_ROW_OVERFLOW_BUTTON);
 	}
 
 	get _flexibleActions() {
