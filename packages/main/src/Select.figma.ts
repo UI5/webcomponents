@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Select".
  * Node: 181557:7507. Emits <ui5-select>.
  *
- * ⚠️ LARGELY UNMAPPABLE — see FIGMA_CODE_CONNECT.md § Select. The only Figma
+ * ⚠️ LARGELY UNMAPPABLE — see FIGMA_CODE_CONNECT_FINDINGS.md § Select. The only Figma
  * axes are `Form Factor` (global density, ignored) and `Drop-Down` (open/closed
  * popover — a runtime visual state, NOT a component prop). The options are a
  * slotted Input instance with no readable option list. So there is nothing

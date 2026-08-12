@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Step Input".
  * Node: 148569:1727. Emits <ui5-step-input>.
  *
- * See FIGMA_CODE_CONNECT.md § StepInput. Form Factor + Hover/Active ignored.
+ * See FIGMA_CODE_CONNECT_FINDINGS.md § StepInput. Form Factor + Hover/Active ignored.
  */
 import figma, { html } from "@figma/code-connect/html";
 

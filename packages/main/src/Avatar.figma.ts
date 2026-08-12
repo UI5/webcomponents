@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Avatar".
  * Node: 573:3623. Emits <ui5-avatar>.
  *
- * See FIGMA_CODE_CONNECT.md § Avatar. Pseudo-states ignored.
+ * See FIGMA_CODE_CONNECT_FINDINGS.md § Avatar. Pseudo-states ignored.
  */
 import figma, { html } from "@figma/code-connect/html";
 
@@ -53,12 +53,20 @@ figma.connect(
         Active: "",
         "Toggled Hover": "",
       }),
-      // Initials text. NOTE: emitted regardless of Type (parser can't gate one
-      // axis's attr on another) — consumer removes it for Image/Icon avatars.
+      // Initials text — the Figma Initials layer only exists on Type=Initials
+      // variants, so this resolves empty (attribute omitted) on Image/Icon.
       initials: figma.string("✏️ Initials"),
+      // Type=Icon → icon="employee" (WC default). Icon NAME is a placeholder —
+      // Person/Object Icon are instance-swaps, not readable. Emitted only for
+      // the Icon type.
+      icon: figma.enum("Type", {
+        Icon: 'icon="employee"',
+        Image: "",
+        Initials: "",
+      }),
     },
     // Person/Object Icon are instance-swaps; Badge is a slot — omitted.
-    example: ({ size, colorScheme, shape, disabled, initials }) =>
-      html`<ui5-avatar ${size} ${shape} ${colorScheme} ${disabled} initials="${initials}"></ui5-avatar>`,
+    example: ({ size, colorScheme, shape, disabled, initials, icon }) =>
+      html`<ui5-avatar ${size} ${shape} ${colorScheme} ${disabled} ${icon} initials="${initials}"></ui5-avatar>`,
   }
 );

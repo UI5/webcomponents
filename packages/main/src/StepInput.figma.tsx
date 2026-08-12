@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Step Input".
- * Node 148569:1727. Mirrors StepInput.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 148569:1727. Mirrors StepInput.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

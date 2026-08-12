@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Avatar".
- * Node 573:3623. Mirrors Avatar.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 573:3623. Mirrors Avatar.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,9 +46,16 @@ figma.connect(
         "Toggled Hover": false,
       }),
       initials: figma.string("✏️ Initials"),
+      // Type=Icon → icon="employee" (WC default). Name is a placeholder —
+      // Person/Object Icon are instance-swaps, not readable. Icon type only.
+      icon: figma.enum("Type", {
+        Icon: "employee",
+        Image: undefined,
+        Initials: undefined,
+      }),
     },
-    example: ({ size, colorScheme, shape, disabled, initials }) => (
-      <Avatar size={size} shape={shape} colorScheme={colorScheme} disabled={disabled} initials={initials} />
+    example: ({ size, colorScheme, shape, disabled, initials, icon }) => (
+      <Avatar size={size} shape={shape} colorScheme={colorScheme} disabled={disabled} initials={initials} icon={icon} />
     ),
   }
 );

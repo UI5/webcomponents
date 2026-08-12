@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Check Box". Node 154589:905.
- * Mirrors CheckBox.figma.ts under the "React" label. See FIGMA_CODE_CONNECT.md.
+ * Mirrors CheckBox.figma.ts under the "React" label. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

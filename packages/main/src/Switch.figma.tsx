@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Switch".
- * Node 24087:10369. Mirrors Switch.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 24087:10369. Mirrors Switch.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

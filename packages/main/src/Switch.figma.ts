@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Switch".
  * Node: 24087:10369. Emits <ui5-switch>.
  *
- * See FIGMA_CODE_CONNECT.md § Switch. Form Factor + pseudo-states ignored.
+ * See FIGMA_CODE_CONNECT_FINDINGS.md § Switch. Form Factor + pseudo-states ignored.
  */
 import figma, { html } from "@figma/code-connect/html";
 

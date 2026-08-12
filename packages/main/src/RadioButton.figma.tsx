@@ -1,6 +1,6 @@
 /**
  * React Code Connect mapping for the SAP Web UI Kit "Radio Button".
- * Node 154597:1967. Mirrors RadioButton.figma.ts. See FIGMA_CODE_CONNECT.md.
+ * Node 154597:1967. Mirrors RadioButton.figma.ts. See FIGMA_CODE_CONNECT_FINDINGS.md.
  */
 import figma from "@figma/code-connect/react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

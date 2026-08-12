@@ -10,7 +10,7 @@
  * The React parser only reads the import string — @ui5/webcomponents-react does
  * not need to be installed here for publishing to succeed.
  *
- * NOTE: the same Figma-side limitations documented in FIGMA_CODE_CONNECT.md
+ * NOTE: the same Figma-side limitations documented in FIGMA_CODE_CONNECT_FINDINGS.md
  * apply here — the icon name and badge design/text are hardcoded because Figma
  * does not expose them as readable properties.
  */

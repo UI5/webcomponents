@@ -2,7 +2,7 @@
  * Web Components Code Connect mapping for the SAP Web UI Kit "Message Strip".
  * Node: 910:2517. Emits <ui5-message-strip>.
  *
- * See FIGMA_CODE_CONNECT.md § MessageStrip. Form Factor ignored.
+ * See FIGMA_CODE_CONNECT_FINDINGS.md § MessageStrip. Form Factor ignored.
  *
  * Design comes from TWO mutually-exclusive Figma axes:
  *  - "Value State" carries the 4 semantic designs (Information/Positive/
