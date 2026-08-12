@@ -180,13 +180,12 @@ props are never modelled in the kit.
 **Works (screenshot-verified):**
 - `design` ← Type — Emphasized→Emphasized, Subtle→Subtle, Regular→Default (confirmed by weight/colour); Icon Link→Default.
 - `disabled` ← Interaction State, label text ← ✏️ Text.
+- `icon` / `endIcon` ← Icon Position: Left→`icon`, Right→`end-icon`, N/A→neither. POSITION is dynamic.
 
 **Doesn't work:**
-- `icon`/`endIcon` ← Icon (instance-swap) + Icon Position — name unreadable.
+- icon NAME — instance-swap, not readable → hardcoded `"inspect"` placeholder (the position maps, the name does not).
 
 **Assumed:** nothing — verified.
-
-**Misalignment:** Figma models icon-only / position as `Type=Icon Link` + `Icon Position` variants; the WC uses `icon`/`endIcon` slots — no clean bridge.
 
 ---
 
