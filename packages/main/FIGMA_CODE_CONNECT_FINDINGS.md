@@ -1,30 +1,64 @@
 # Figma Code Connect — what doesn't work / what's assumed
 
-## How to connect a component (runbook)
+## How to connect a component (setup + runbook)
 
 **Figma file:** SAP Web UI Kit — fileKey `SILcWzK5uFghKun9jx6D7c`.
+**Everything below runs from `packages/main`.**
 
-**Two configs (run from `packages/main`):**
-- `figma.config.json` — parser `html`, label "Web Components", globs `src/*.figma.ts`
-- `figma.config.react.json` — parser `react`, label "React", globs `src/*.figma.tsx`
+### One-time setup
 
-**Steps to connect a new component:**
-1. Get the component's **node id** (from the Figma URL `?node-id=1-2` → `1:2`).
-2. Inspect its readable props (variants / booleans / text / nested instances) — either in Figma's properties panel, or scaffold a starter file that lists them:
-   ```
-   FIGMA_ACCESS_TOKEN=<token> npx figma connect create "<node-url>" --outDir /tmp/cc
-   ```
-   (`figma connect create` writes a `.figma.ts` pre-filled with the node's readable properties — a good starting point to edit.)
-3. Write `src/<Name>.figma.ts` (WC) and `src/<Name>.figma.tsx` (React) — one `figma.connect(<node-url>, {...})` each.
-4. **Dry-run** (no token): `npx figma connect publish --dry-run -c figma.config.json`
-5. **Publish** (needs token, run from `packages/main`):
-   ```
-   FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.json --force
-   FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.react.json --force
-   ```
-   - `--force` overwrites any pre-existing (UI-created) mapping on the node.
-   - MUST run from `packages/main` — from repo root the CLI silently falls back to the html parser. Always confirm `Using label "React"` in the output.
-6. **Verify in Dev Mode** — parsing ≠ correct output; check the real snippet.
+**1. Clone the repo and install** (from the repo root):
+```
+git clone https://github.com/SAP/ui5-webcomponents.git
+cd ui5-webcomponents
+yarn                       # installs all workspace deps (incl. @figma/code-connect)
+```
+`@figma/code-connect` (^1.4.9) is already a devDependency of `packages/main` — no
+separate install needed. (To add it to another package: `yarn add -D @figma/code-connect`.)
+
+**2. Config files** — already committed in `packages/main`, one per label:
+- `figma.config.json` → parser `html`, label **"Web Components"**, include `src/**/*.figma.ts`
+- `figma.config.react.json` → parser `react`, label **"React"**, include `src/**/*.figma.tsx`
+```jsonc
+// figma.config.json
+{ "codeConnect": {
+    "include": ["src/**/*.figma.ts"], "exclude": ["node_modules/**", "dist/**"],
+    "parser": "html", "label": "Web Components" } }
+```
+
+**3. Generate a Figma token:** figma.com → **profile → Settings → Security →
+Personal access tokens → Generate**. Scope: file content read/write for Code
+Connect. Keep it out of git; pass it inline (`FIGMA_ACCESS_TOKEN=…`) or export it.
+
+### Per component
+
+**4. Create the two mapping files** in `packages/main/src/`:
+- `src/<Name>.figma.ts` (Web Components) and `src/<Name>.figma.tsx` (React) —
+  each a single `figma.connect(<node-url>, { props, example })`.
+- Get the node id from the Figma URL (`?node-id=1-2` → `1:2`). To scaffold a
+  starter pre-filled with the node's readable props:
+  ```
+  FIGMA_ACCESS_TOKEN=<token> npx figma connect create "<node-url>" --outDir /tmp/cc
+  ```
+
+**5. Dry-run** (no token — catches parser errors):
+```
+npx figma connect publish --dry-run -c figma.config.json
+npx figma connect publish --dry-run -c figma.config.react.json
+```
+
+**6. Publish** (needs the token; run from `packages/main`):
+```
+FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.json --force
+FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.react.json --force
+```
+- `--force` overwrites any pre-existing (UI-created) mapping on the node.
+- ⚠️ MUST run from `packages/main` — from the repo root the CLI can't find the
+  config and silently falls back to the html parser. Always confirm the output
+  says `Using label "React"` (not "Web Components") for the React publish.
+
+**7. Verify in Figma Dev Mode** — parsing/upload success ≠ correct output. Open
+the node, check the real snippet under each framework label.
 
 **Connected so far (11, both WC + React):**
 Button `91702:11733` · Input `148569:1004` · CheckBox `154589:905` ·
