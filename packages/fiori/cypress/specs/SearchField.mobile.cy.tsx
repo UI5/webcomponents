@@ -84,7 +84,7 @@ describe("SearchField Responsive Scope Selector", () => {
 				.shadow()
 				.find("[ui5-busy-indicator]")
 				.find(".ui5-search-field-scope-popover")
-				.should("have.attr", "open");
+				.should("have.prop", "open", true);
 		});
 
 		it("should display all scope options in popover", () => {
@@ -191,12 +191,12 @@ describe("SearchField Responsive Scope Selector", () => {
 				.eq(1)
 				.realClick();
 
-			// Popover element is removed from DOM when closed
+			// Popover should be closed (not have open property set to true)
 			cy.get("[ui5-search-field]")
 				.shadow()
 				.find("[ui5-busy-indicator]")
 				.find(".ui5-search-field-scope-popover")
-				.should("not.exist");
+				.should("have.prop", "open", false);
 		});
 	});
 

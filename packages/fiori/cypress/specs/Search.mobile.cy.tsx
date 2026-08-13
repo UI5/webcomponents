@@ -48,7 +48,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -81,7 +81,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -129,7 +129,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -169,7 +169,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -189,7 +189,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("[ui5-search]")
@@ -259,7 +259,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -310,7 +310,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		// Click an item in the popup
@@ -324,7 +324,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.should("have.prop", "open", true);
 	});
 });

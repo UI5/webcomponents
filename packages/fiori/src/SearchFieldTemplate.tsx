@@ -126,7 +126,7 @@ export default function SearchFieldTemplate(this: SearchField, options?: SearchF
 						></Icon>
 					</div>
 				</div>
-				{this._shouldRenderScopePopover && SearchFieldScopePopoverTemplate.call(this)}
+				{SearchFieldScopePopoverTemplate.call(this)}
 			</BusyIndicator>
 		)
 	);
