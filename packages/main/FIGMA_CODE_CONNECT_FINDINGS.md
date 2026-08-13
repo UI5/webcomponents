@@ -33,16 +33,26 @@ Select `181557:7507` · SegmentedButton `91702:11986` · Switch `24087:10369` ·
 Link `187:305` · Avatar `573:3623`.
 (Icon `983:5876` is unpublishable — a plain frame, not a component set.)
 
-## ⚠️ Global: icon NAMES can never be read
+## ⚠️ Global: reading the swapped icon (nuanced — tested)
 In Figma an icon is an **INSTANCE_SWAP** property — the designer swaps in an icon
-*component* from the library. Code Connect can read variants, booleans, and text,
-but **cannot read which component was swapped into an instance-swap slot as a
-string**. So we can detect that an icon is present, and often *where* (Link's Icon
-Position, Avatar's Type=Icon), but never *which* icon. Every
-`icon=`/`endIcon=`/`fallback-icon=` therefore emits a **hardcoded placeholder
-name** (`"globe"`, `"inspect"`, `"home"`, `"employee"`); the consumer edits it.
-*Owner fixes: (a) add an `Icon Name` text property alongside the swap, or (b)
-Code-Connect the icon library (one entry per icon emitting its own name).*
+*component* from the library. What Code Connect can and can't do with it:
+
+- **As a name STRING → NO.** `figma.string`/`figma.enum` cannot read which
+  component was swapped in. So attribute-style icons (`icon="globe"`, `endIcon=`,
+  `fallback-icon=`) can't be made dynamic this way and stay **hardcoded**
+  placeholders (`"globe"`, `"inspect"`, `"home"`, `"employee"`); consumer edits.
+- **As an ELEMENT via `figma.instance()` → YES, conditionally.** If the icon
+  library is **Code-Connected** (each icon emits `<ui5-icon name="…">`) AND the
+  host's icon instance carries a `mainComponent` link, `figma.instance("Icon")`
+  resolves the **selected** icon's element. **Tested:** ✅ worked on Button
+  (`<ui5-icon name="globe">` resolved); ❌ empty on MessageStrip (its instance
+  had no `mainComponent` link). Only fits **slot/child** placements — its output
+  is an element, not a bare string, so it still can't feed an `icon=` attribute.
+
+**Owner fixes:** (a) add an `Icon Name` **text property** alongside the swap →
+`figma.string` reads it → works for the attribute cases; (b) **Code-Connect the
+icon library** (generated, ~1400 entries) → `figma.instance` resolves the
+element for slot cases on link-carrying hosts.
 
 
 ## 1. Button — ui5-button (node 91702:11733)
