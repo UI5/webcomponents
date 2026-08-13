@@ -9,30 +9,42 @@
 
 **1. Clone the repo and install** (from the repo root):
 ```
-git clone https://github.com/SAP/ui5-webcomponents.git
-cd ui5-webcomponents
-yarn                       # installs all workspace deps (incl. @figma/code-connect)
+git clone https://github.com/UI5/webcomponents.git
+cd webcomponents
+yarn                       # installs all workspace deps
 ```
-`@figma/code-connect` (^1.4.9) is already a devDependency of `packages/main` — no
-separate install needed. (To add it to another package: `yarn add -D @figma/code-connect`.)
+> On the branch that carries this Code Connect work, `@figma/code-connect` and the
+> config files are already present (skip steps 2–3). On a clean `main` checkout
+> they are **not** — do steps 2–3 first.
 
-**2. Config files** — already committed in `packages/main`, one per label:
-- `figma.config.json` → parser `html`, label **"Web Components"**, include `src/**/*.figma.ts`
-- `figma.config.react.json` → parser `react`, label **"React"**, include `src/**/*.figma.tsx`
+**2. Add the Code Connect dependency** to `packages/main` (only if not already there):
+```
+cd packages/main
+yarn add -D @figma/code-connect        # this repo uses ^1.4.9
+```
+
+**3. Create the two config files** in `packages/main`, one per label:
+
+`figma.config.json` (Web Components):
 ```jsonc
-// figma.config.json
 { "codeConnect": {
     "include": ["src/**/*.figma.ts"], "exclude": ["node_modules/**", "dist/**"],
     "parser": "html", "label": "Web Components" } }
 ```
+`figma.config.react.json` (React):
+```jsonc
+{ "codeConnect": {
+    "include": ["src/**/*.figma.tsx"], "exclude": ["node_modules/**", "dist/**"],
+    "parser": "react", "label": "React" } }
+```
 
-**3. Generate a Figma token:** figma.com → **profile → Settings → Security →
+**4. Generate a Figma token:** figma.com → **profile → Settings → Security →
 Personal access tokens → Generate**. Scope: file content read/write for Code
 Connect. Keep it out of git; pass it inline (`FIGMA_ACCESS_TOKEN=…`) or export it.
 
 ### Per component
 
-**4. Create the two mapping files** in `packages/main/src/`:
+**5. Create the two mapping files** in `packages/main/src/`:
 - `src/<Name>.figma.ts` (Web Components) and `src/<Name>.figma.tsx` (React) —
   each a single `figma.connect(<node-url>, { props, example })`.
 - Get the node id from the Figma URL (`?node-id=1-2` → `1:2`). To scaffold a
@@ -41,13 +53,13 @@ Connect. Keep it out of git; pass it inline (`FIGMA_ACCESS_TOKEN=…`) or export
   FIGMA_ACCESS_TOKEN=<token> npx figma connect create "<node-url>" --outDir /tmp/cc
   ```
 
-**5. Dry-run** (no token — catches parser errors):
+**6. Dry-run** (no token — catches parser errors):
 ```
 npx figma connect publish --dry-run -c figma.config.json
 npx figma connect publish --dry-run -c figma.config.react.json
 ```
 
-**6. Publish** (needs the token; run from `packages/main`):
+**7. Publish** (needs the token; run from `packages/main`):
 ```
 FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.json --force
 FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.react.json --force
@@ -57,7 +69,7 @@ FIGMA_ACCESS_TOKEN=<token> npx figma connect publish -c figma.config.react.json 
   config and silently falls back to the html parser. Always confirm the output
   says `Using label "React"` (not "Web Components") for the React publish.
 
-**7. Verify in Figma Dev Mode** — parsing/upload success ≠ correct output. Open
+**8. Verify in Figma Dev Mode** — parsing/upload success ≠ correct output. Open
 the node, check the real snippet under each framework label.
 
 **Connected so far (11, both WC + React):**
