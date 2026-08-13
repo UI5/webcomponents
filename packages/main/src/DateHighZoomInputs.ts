@@ -6,8 +6,8 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
+import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
 import {
 	DATEPICKER_HZ_YEAR_LABEL,
@@ -36,12 +36,14 @@ type DateHighZoomInputsChangeEventDetail = {
  * @class
  * Internal component used by date pickers at high zoom (≤320px viewport).
  * Renders Year/Month/Day selects instead of a calendar grid.
+ * State is held here; logic (min/max, formatting) stays in the parent picker.
  * @constructor
  * @extends UI5Element
  * @private
  */
 @customElement({
 	tag: "ui5-date-high-zoom-inputs",
+	languageAware: true,
 	renderer: jsxRenderer,
 	styles: DateHighZoomInputsCss,
 	template: DateHighZoomInputsTemplate,
@@ -52,42 +54,33 @@ class DateHighZoomInputs extends UI5Element {
 		change: DateHighZoomInputsChangeEventDetail;
 	};
 
-	/**
-	 * Selected start date
-	 * @private
-	 */
+	// ---- Props from parent picker ----
+
+	/** Current selected start date — parent sets this, component syncs display fields */
 	@property({ type: Object, noAttribute: true })
 	dateValue: Date | null = null;
 
-	/**
-	 * Selected end date (Range mode only)
-	 * @private
-	 */
+	/** Current selected end date (Range mode only) */
 	@property({ type: Object, noAttribute: true })
 	secondDateValue: Date | null = null;
 
-	/**
-	 * Minimum selectable date
-	 * @private
-	 */
-	@property({ type: Object, noAttribute: true })
-	minDate: Date | null = null;
+	/** Minimum selectable date as ISO string (yyyy-MM-dd) — already parsed by parent */
+	@property({ noAttribute: true })
+	minDate = "";
 
-	/**
-	 * Maximum selectable date
-	 * @private
-	 */
-	@property({ type: Object, noAttribute: true })
-	maxDate: Date | null = null;
+	/** Maximum selectable date as ISO string (yyyy-MM-dd) — already parsed by parent */
+	@property({ noAttribute: true })
+	maxDate = "";
 
-	/**
-	 * Single or Range mode
-	 * @private
-	 */
+	/** Primary calendar type forwarded from parent */
+	@property({ noAttribute: true })
+	primaryCalendarType?: `${CalendarType}`;
+
+	/** Single or Range mode */
 	@property()
 	mode: `${DateHighZoomInputsMode}` = DateHighZoomInputsMode.Single;
 
-	// --- Start date field states ---
+	// ---- Start date display state ----
 
 	@property({ noAttribute: true })
 	_yearValue = "";
@@ -116,7 +109,7 @@ class DateHighZoomInputs extends UI5Element {
 	@property({ noAttribute: true })
 	_dayValueStateMessage = "";
 
-	// --- End date field states (Range mode) ---
+	// ---- End date display state (Range mode) ----
 
 	@property({ noAttribute: true })
 	_endYearValue = "";
@@ -145,28 +138,39 @@ class DateHighZoomInputs extends UI5Element {
 	@property({ noAttribute: true })
 	_endDayValueStateMessage = "";
 
-	// --- Year picker dialog state ---
+	// ---- Year picker dialog state ----
 
-	/** Whether the year-picker dialog is open for the start date year field */
 	@property({ type: Boolean, noAttribute: true })
 	_yearPickerOpen = false;
 
-	/** Whether the year-picker dialog is open for the end date year field (Range mode) */
 	@property({ type: Boolean, noAttribute: true })
 	_endYearPickerOpen = false;
 
-	/** Primary calendar type forwarded from the parent picker */
-	@property({ noAttribute: true })
-	primaryCalendarType?: `${CalendarType}`;
-
-	// Plain instance vars — no @property to avoid re-render resetting the input
+	// Plain instance vars — not @property to avoid re-render resetting the input
 	_yearPickerTimestamp = 0;
 	_endYearPickerTimestamp = 0;
 	_pendingYear: number | null = null;
 	_endPendingYear: number | null = null;
 
+	// Track last synced dateValue to avoid overwriting user edits on every re-render
+	_syncedDateValue: Date | null = null;
+	_syncedSecondDateValue: Date | null = null;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	// ---- Lifecycle ----
+
+	onBeforeRendering() {
+		if (this.dateValue !== this._syncedDateValue) {
+			this._syncedDateValue = this.dateValue;
+			this.syncStartDate();
+		}
+		if (this._isRange && this.secondDateValue !== this._syncedSecondDateValue) {
+			this._syncedSecondDateValue = this.secondDateValue;
+			this.syncEndDate(this.secondDateValue);
+		}
+	}
 
 	// ---- Labels ----
 
@@ -182,21 +186,16 @@ class DateHighZoomInputs extends UI5Element {
 		return this.mode === DateHighZoomInputsMode.Range;
 	}
 
-	// ---- Month options ----
+	// ---- Month / Day options ----
 
 	get _monthOptions() {
 		const months = [];
 		for (let i = 0; i < 12; i++) {
 			const d = new Date(2000, i, 1);
-			months.push({
-				value: i,
-				text: d.toLocaleString("default", { month: "long" }),
-			});
+			months.push({ value: i, text: d.toLocaleString("default", { month: "long" }) });
 		}
 		return months;
 	}
-
-	// ---- Day options (computed from current year + month) ----
 
 	_getDaysInMonth(year: number, month: number) {
 		const y = isNaN(year) ? 2000 : year;
@@ -204,13 +203,11 @@ class DateHighZoomInputs extends UI5Element {
 	}
 
 	get _dayOptions() {
-		const count = this._getDaysInMonth(parseInt(this._yearValue), this._monthValue);
-		return Array.from({ length: count }, (_, i) => i + 1);
+		return Array.from({ length: this._getDaysInMonth(parseInt(this._yearValue), this._monthValue) }, (_, i) => i + 1);
 	}
 
 	get _endDayOptions() {
-		const count = this._getDaysInMonth(parseInt(this._endYearValue), this._endMonthValue);
-		return Array.from({ length: count }, (_, i) => i + 1);
+		return Array.from({ length: this._getDaysInMonth(parseInt(this._endYearValue), this._endMonthValue) }, (_, i) => i + 1);
 	}
 
 	// ---- Public API ----
@@ -235,27 +232,19 @@ class DateHighZoomInputs extends UI5Element {
 	}
 
 	getSelectedDate(): { year: number; month: number; day: number } {
-		return {
-			year: parseInt(this._yearValue),
-			month: this._monthValue,
-			day: this._dayValue,
-		};
+		return { year: parseInt(this._yearValue), month: this._monthValue, day: this._dayValue };
 	}
 
 	getSelectedSecondDate(): { year: number; month: number; day: number } | null {
 		if (!this._isRange) { return null; }
-		return {
-			year: parseInt(this._endYearValue),
-			month: this._endMonthValue,
-			day: this._endDayValue,
-		};
+		return { year: parseInt(this._endYearValue), month: this._endMonthValue, day: this._endDayValue };
 	}
 
 	getDateObject(): Date | null {
 		const { year, month, day } = this.getSelectedDate();
 		if (isNaN(year) || isNaN(month) || isNaN(day)) { return null; }
 		const d = new Date(year, month, day);
-		d.setFullYear(year); // guard for years 0-99
+		d.setFullYear(year);
 		return d;
 	}
 
@@ -288,17 +277,24 @@ class DateHighZoomInputs extends UI5Element {
 
 	// ---- Internal validation ----
 
+	_parseISO(iso: string): Date | null {
+		if (!iso) { return null; }
+		const d = new Date(iso);
+		return isNaN(d.getTime()) ? null : d;
+	}
+
 	_doValidate(bEndDate: boolean): boolean {
 		const yearStr = bEndDate ? this._endYearValue : this._yearValue;
 		const month = bEndDate ? this._endMonthValue : this._monthValue;
 		const day = bEndDate ? this._endDayValue : this._dayValue;
-
 		const year = parseInt(yearStr);
 
-		const minY = this.minDate ? this.minDate.getFullYear() : 1;
-		const maxY = this.maxDate ? this.maxDate.getFullYear() : 9999;
+		const minD = this._parseISO(this.minDate);
+		const maxD = this._parseISO(this.maxDate);
+		const minY = minD ? minD.getFullYear() : 1;
+		const maxY = maxD ? maxD.getFullYear() : 9999;
 
-		// 1. Validate year
+		// 1. Year
 		if (isNaN(year) || year < minY || year > maxY) {
 			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_YEAR_OUT_OF_RANGE, String(minY), String(maxY));
 			if (bEndDate) {
@@ -327,42 +323,36 @@ class DateHighZoomInputs extends UI5Element {
 			this._yearValueStateMessage = "";
 		}
 
-		// 2. Validate month bounds when min/max apply to the same year
-		if (this.minDate && year === minY) {
-			const minM = this.minDate.getMonth();
-			if (month < minM) {
-				const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
-				if (bEndDate) {
-					this._endMonthValueState = ValueState.Negative;
-					this._endMonthValueStateMessage = msg;
-					this._endDayValueState = ValueState.None;
-					this._endDayValueStateMessage = "";
-				} else {
-					this._monthValueState = ValueState.Negative;
-					this._monthValueStateMessage = msg;
-					this._dayValueState = ValueState.None;
-					this._dayValueStateMessage = "";
-				}
-				return false;
+		// 2. Month
+		if (minD && year === minY && month < minD.getMonth()) {
+			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
+			if (bEndDate) {
+				this._endMonthValueState = ValueState.Negative;
+				this._endMonthValueStateMessage = msg;
+				this._endDayValueState = ValueState.None;
+				this._endDayValueStateMessage = "";
+			} else {
+				this._monthValueState = ValueState.Negative;
+				this._monthValueStateMessage = msg;
+				this._dayValueState = ValueState.None;
+				this._dayValueStateMessage = "";
 			}
+			return false;
 		}
-		if (this.maxDate && year === maxY) {
-			const maxM = this.maxDate.getMonth();
-			if (month > maxM) {
-				const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
-				if (bEndDate) {
-					this._endMonthValueState = ValueState.Negative;
-					this._endMonthValueStateMessage = msg;
-					this._endDayValueState = ValueState.None;
-					this._endDayValueStateMessage = "";
-				} else {
-					this._monthValueState = ValueState.Negative;
-					this._monthValueStateMessage = msg;
-					this._dayValueState = ValueState.None;
-					this._dayValueStateMessage = "";
-				}
-				return false;
+		if (maxD && year === maxY && month > maxD.getMonth()) {
+			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
+			if (bEndDate) {
+				this._endMonthValueState = ValueState.Negative;
+				this._endMonthValueStateMessage = msg;
+				this._endDayValueState = ValueState.None;
+				this._endDayValueStateMessage = "";
+			} else {
+				this._monthValueState = ValueState.Negative;
+				this._monthValueStateMessage = msg;
+				this._dayValueState = ValueState.None;
+				this._dayValueStateMessage = "";
 			}
+			return false;
 		}
 
 		if (bEndDate) {
@@ -373,18 +363,14 @@ class DateHighZoomInputs extends UI5Element {
 			this._monthValueStateMessage = "";
 		}
 
-		// 3. Validate day bounds when min/max apply to same year+month
+		// 3. Day
 		const daysInMonth = this._getDaysInMonth(year, month);
-		let minD = 1;
-		let maxD = daysInMonth;
-		if (this.minDate && year === minY && month === this.minDate.getMonth()) {
-			minD = this.minDate.getDate();
-		}
-		if (this.maxDate && year === maxY && month === this.maxDate.getMonth()) {
-			maxD = this.maxDate.getDate();
-		}
+		let minDay = 1;
+		let maxDay = daysInMonth;
+		if (minD && year === minY && month === minD.getMonth()) { minDay = minD.getDate(); }
+		if (maxD && year === maxY && month === maxD.getMonth()) { maxDay = maxD.getDate(); }
 
-		if (day < minD || day > maxD) {
+		if (day < minDay || day > maxDay) {
 			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_DAY_OUT_OF_RANGE);
 			if (bEndDate) {
 				this._endDayValueState = ValueState.Negative;
@@ -411,11 +397,7 @@ class DateHighZoomInputs extends UI5Element {
 
 	_onYearInput(e: CustomEvent, isEnd: boolean) {
 		const input = e.target as HTMLElement & { value: string };
-		const val = input.value;
-		// Only update the picker timestamp (plain var, no re-render) so the
-		// dialog navigates to the typed year when opened. Do NOT update
-		// _yearValue here — that would trigger a re-render which resets the input.
-		const y = parseInt(val);
+		const y = parseInt(input.value);
 		if (!isNaN(y) && y > 0 && y < 10000) {
 			if (isEnd) {
 				this._endYearPickerTimestamp = Date.UTC(y, 0, 1, 12, 0, 0) / 1000;
@@ -426,7 +408,6 @@ class DateHighZoomInputs extends UI5Element {
 	}
 
 	_onYearChange(e: CustomEvent, isEnd: boolean) {
-		// Fires on blur / Enter — commit the value, recompute day count, validate
 		const input = e.target as HTMLElement & { value: string };
 		const val = input.value;
 		if (isEnd) {
@@ -499,28 +480,30 @@ class DateHighZoomInputs extends UI5Element {
 	_onYearPickerSelectionChange(e: CustomEvent<YearPickerChangeEventDetail>, isEnd: boolean) {
 		const ts = e.detail.timestamp;
 		if (ts === undefined) { return; }
-		const d = new Date(ts * 1000);
-		const year = d.getUTCFullYear();
-		const newTs = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
-		// Store as pending — confirm immediately (no separate OK needed in year picker)
+		const year = new Date(ts * 1000).getUTCFullYear();
 		if (isEnd) {
 			this._endPendingYear = year;
-			this._endYearPickerTimestamp = newTs;
+			this._endYearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
 		} else {
 			this._pendingYear = year;
-			this._yearPickerTimestamp = newTs;
+			this._yearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
 		}
-		// Auto-confirm on selection
 		this._confirmYearPicker(isEnd);
 	}
 
 	_confirmYearPicker(isEnd: boolean) {
 		const year = isEnd ? this._endPendingYear : this._pendingYear;
 		if (year === null) {
-			// No new selection — just close
 			this._closeYearPicker(isEnd);
 			return;
 		}
+
+		const minD = this._parseISO(this.minDate);
+		const maxD = this._parseISO(this.maxDate);
+		const minY = minD ? minD.getFullYear() : 1;
+		const maxY = maxD ? maxD.getFullYear() : 9999;
+		const isValid = year >= minY && year <= maxY;
+
 		const newTs = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
 		if (isEnd) {
 			this._endYearValue = String(year);
@@ -537,6 +520,18 @@ class DateHighZoomInputs extends UI5Element {
 			this._yearPickerOpen = false;
 			if (this._dayValue > this._getDaysInMonth(year, this._monthValue)) {
 				this._dayValue = 1;
+			}
+		}
+
+		if (!isValid) {
+			this._doValidate(isEnd);
+		} else {
+			if (isEnd) {
+				this._endYearValueState = ValueState.None;
+				this._endYearValueStateMessage = "";
+			} else {
+				this._yearValueState = ValueState.None;
+				this._yearValueStateMessage = "";
 			}
 		}
 		this.fireDecoratorEvent("change", { field: DateHighZoomInputsField.Year, isEndDate: isEnd });

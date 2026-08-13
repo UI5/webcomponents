@@ -143,8 +143,11 @@ function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 				id={ypId}
 				class="ui5-dhzi-yp"
 				primaryCalendarType={this.primaryCalendarType}
+				valueFormat="yyyy-MM-dd"
 				timestamp={selectedTs}
 				selectedDates={[selectedTs]}
+				minDate={this.minDate}
+				maxDate={this.maxDate}
 				_showHeader={true}
 				_rowSize={2}
 				_pageSize={8}

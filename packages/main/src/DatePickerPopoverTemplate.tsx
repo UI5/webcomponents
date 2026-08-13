@@ -3,6 +3,7 @@ import Button from "./Button.js";
 import Calendar from "./Calendar.js";
 import Icon from "./Icon.js";
 import CalendarDate from "./CalendarDate.js";
+import type CalendarDateLocale from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import ResponsivePopover from "./ResponsivePopover.js";
 import DateHighZoomInputs from "./DateHighZoomInputs.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
@@ -61,12 +62,17 @@ function defaultHeader(this: DatePicker) {
 
 function defaultContent(this: DatePicker) {
 	if (this._highZoom) {
+		const toISO = (cd: CalendarDateLocale) =>
+			`${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+		const minISO = this.minDate ? toISO(this._minDate) : "";
+		const maxISO = this.maxDate ? toISO(this._maxDate) : "";
 		return (
 			<DateHighZoomInputs
+				id={`${this._id}-hz-inputs`}
 				primaryCalendarType={this._primaryCalendarType}
 				dateValue={this.dateValue}
-				minDate={this._minDate.toLocalJSDate()}
-				maxDate={this._maxDate.toLocalJSDate()}
+				minDate={minISO}
+				maxDate={maxISO}
 				onChange={this._onHzInputsChange}
 			/>
 		);

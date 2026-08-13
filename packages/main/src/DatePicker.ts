@@ -473,17 +473,6 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	onResponsivePopoverBeforeOpen() {
 		if (this._highZoom) {
-			// Sync HZ inputs after render (element may not exist yet on first open)
-			requestAnimationFrame(() => {
-				if (this._hzInputs) {
-					const d = this.value ? this.getValueFormat().parse(this.value, true) as Date | null : null;
-					this._hzInputs.dateValue = d;
-					this._hzInputs.minDate = this._minDate.toLocalJSDate();
-					this._hzInputs.maxDate = this._maxDate.toLocalJSDate();
-					this._hzInputs.primaryCalendarType = this._primaryCalendarType;
-					this._hzInputs.syncStartDate();
-				}
-			});
 			return;
 		}
 		this._calendar.timestamp = this._calendarTimestamp;
