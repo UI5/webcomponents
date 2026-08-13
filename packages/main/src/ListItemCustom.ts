@@ -34,14 +34,16 @@ import ListItemCustomCss from "./generated/themes/ListItemCustom.css.js";
  *
  * To activate an interactive element inside a `ui5-li-custom`:
  *
- * - [F2] or [F7] on the focused item - moves focus to the first interactive element
- *   inside the item (or to the last remembered position).
+ * - [F2] on the focused item - moves focus to the first interactive element inside the item.
+ *   Pressing [F2] again returns focus to the item level.
+ * - [F7] on the focused item - moves focus to the last remembered interactive element
+ *   inside the item (or to the first interactive element if none is remembered).
+ *   Pressing [F7] again saves the current position and returns focus to the item level.
  * - [Tab] or [Shift] + [Tab] then walks through the interactive elements within the item
  *   and continues into the next/previous item.
  * - [Up] or [Down] while focused on an interactive element moves focus to the element
  *   at the same index in the previous/next item; items with no interactive elements
  *   are skipped and `ui5-li-group` boundaries are crossed.
- * - [F2] or [F7] again returns focus to the item level.
  *
  * See the `ui5-list` "Keyboard Handling" section for the full behavior.
  *
