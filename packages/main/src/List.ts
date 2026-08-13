@@ -178,7 +178,9 @@ type ListAccessibilityAttributes = {
  * Interactive elements inside a list item (buttons, links, inputs, etc.) are not reached
  * by [Tab] from navigation mode. To activate them, the user first enters edit mode.
  *
- * - [F2] - Toggles edit mode on the focused item. Pressing [F2] again returns focus to the item level.
+ * - [F2] - While focus is on an item, moves focus to the first interactive element inside it.
+ *   While focus is on an interactive element, moves focus back to the item level.
+ *   Unlike [F7], [F2] does not remember the previous position — it always lands on the first interactive element.
  * - [F7] - While focus is on an item, moves focus to the last remembered internal element
  *   (or to the first interactive element if none is remembered).
  *   While focus is on an interactive element, saves its position and moves focus back to the item level.
