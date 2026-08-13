@@ -56,7 +56,7 @@ export default function SplitButtonTemplate(this: SplitButton) {
 						onActiveStateChange={this._onArrowButtonActiveStateChange}
 					>
 					</Button>
-					<span id={`${this._id}-invisibleText`} class="ui5-hidden-text">{this.accessibleName} {this.accInfo.keyboardHint}</span>
+					<span id={`${this._id}-invisibleText`} class="ui5-hidden-text">{this.accessibleName} {this.accInfo.description} {this.accInfo.keyboardHint}</span>
 					<span id={`${this._id}-invisibleTextDefault`} class="ui5-hidden-text">{this.buttonTextContent}</span>
 				</>
 			)}

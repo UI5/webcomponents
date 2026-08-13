@@ -469,7 +469,7 @@ class SplitButton extends UI5Element {
 		return {
 			root: {
 				hasPopup: this.accessibilityAttributes?.root?.hasPopup,
-				roleDescription: this.accessibilityAttributes?.root?.roleDescription || (this._hideArrowButton ? undefined : SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION)),
+				roleDescription: this.accessibilityAttributes?.root?.roleDescription,
 				title: this.accessibilityAttributes?.root?.title,
 				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},
