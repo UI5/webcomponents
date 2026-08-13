@@ -799,16 +799,14 @@ describe("User account view", () => {
         cy.get("@settingItem").find("[ui5-user-settings-account-view]").as("settingView");
         cy.get("@settingView").should("exist");
 
-        // _manageAccountButtonText resolves via the guarded i18nBundle getter
         cy.get("@settingView").shadow().find("[ui5-button]")
             .should("contain.text", USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT.defaultText);
 
-        // _editAvatarTooltip resolves via the guarded i18nBundle getter and is applied as the badge title
         cy.get("@settingView").shadow().find("[ui5-avatar] [ui5-avatar-badge]")
-            .should("exist");
+            .should("not.exist");
     });
 
-    it("tests avatar default", () => {
+    it("tests avatar default - no edit button", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Setting">
                 <UserSettingsAccountView text="Setting1">
@@ -821,20 +819,19 @@ describe("User account view", () => {
             </UserSettingsItem>
         </UserSettingsDialog>);
         cy.get("[ui5-user-settings-dialog]").as("settings");
-        cy.get("@settings").should("exist");
         cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
         cy.get("@settingItem").find("[ui5-user-settings-account-view]").as("settingView");
         cy.get("@settingView").shadow().find("[ui5-avatar]").as("avatar");
         cy.get("@avatar").should("exist");
-        cy.get("@avatar").should("have.length", 1);
         cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-        cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+        cy.get("@avatar").should("have.attr", "mode", "Image");
+        cy.get("@avatar").find("[ui5-avatar-badge]").should("not.exist");
     });
 
-    it("renders ui5-avatar-badge (not ui5-tag) for the edit badge on the account avatar", () => {
+    it("tests show-edit-button - shows avatar badge and interactive mode", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Setting">
-                <UserSettingsAccountView text="Setting1">
+                <UserSettingsAccountView text="Setting1" showEditButton={true}>
                     <UserMenuAccount slot="account"
                                      titleText="Alain Chevalier"
                                      subtitleText="alian.chevalier@sap.com">
@@ -844,6 +841,7 @@ describe("User account view", () => {
         </UserSettingsDialog>);
         cy.get("[ui5-user-settings-account-view]").as("settingView");
         cy.get("@settingView").shadow().find("[ui5-avatar]").as("avatar");
+        cy.get("@avatar").should("have.attr", "mode", "Interactive");
         cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
         cy.get("@avatar").find("[ui5-tag]").should("not.exist");
     });
@@ -899,7 +897,7 @@ describe("User account view", () => {
     it("tests edit-avatar-click event", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Setting">
-                <UserSettingsAccountView text="Setting1">
+                <UserSettingsAccountView text="Setting1" showEditButton={true}>
                     <UserMenuAccount slot="account"
                                      titleText="Alain Chevalier 1">
                     </UserMenuAccount>
@@ -923,6 +921,25 @@ describe("User account view", () => {
         cy.get("@avatar").click();
 
         cy.get("@clicked").should("have.been.calledOnce");
+    });
+
+    it("tests edit-avatar-click event is not fired when showEditButton is false", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsAccountView text="Setting1">
+                    <UserMenuAccount slot="account"
+                                     titleText="Alain Chevalier 1">
+                    </UserMenuAccount>
+                </UserSettingsAccountView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").find("[ui5-user-settings-account-view]").as("settingView");
+        cy.get("@settingView")
+            .then($el => {
+                $el.get(0).addEventListener("edit-accounts-click", cy.stub().as("clicked"));
+            });
+        cy.get("@settingView").shadow().find("[ui5-avatar]").click({ force: true });
+        cy.get("@clicked").should("not.have.been.called");
     });
 
     it("tests manage-account-click event", () => {
@@ -1456,6 +1473,18 @@ describe("F6 Navigation", () => {
         cy.get("[ui5-user-settings-dialog]").shadow()
             .find(".ui5-user-settings-side")
             .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests side panel does not have unsupported aria-orientation attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find(".ui5-user-settings-side")
+            .should("not.have.attr", "aria-orientation");
     });
 
     it("tests footer toolbar has fastnavgroup attribute", () => {

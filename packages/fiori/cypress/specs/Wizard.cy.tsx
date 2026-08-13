@@ -105,6 +105,67 @@ describe("Wizard general interaction", () => {
             .should("have.attr", "role", "region");
     });
 
+    it("should use accessibleName property as aria-label", () => {
+        cy.mount(
+            <Wizard accessibleName="Registration Process">
+                <WizardStep icon="sap-icon://product" selected titleText="Product type"/>
+                <WizardStep titleText="Product Information" disabled/>
+            </Wizard>
+        );
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find(".ui5-wiz-root")
+            .should("have.attr", "aria-label", "Registration Process");
+    });
+
+    it("should use accessibleNameRef to reference external element for aria-label", () => {
+        cy.mount(
+            <div>
+                <h2 id="wizard-label">Order Completion Wizard</h2>
+                <Wizard accessibleNameRef="wizard-label">
+                    <WizardStep icon="sap-icon://product" selected titleText="Product type"/>
+                    <WizardStep titleText="Product Information" disabled/>
+                </Wizard>
+            </div>
+        );
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find(".ui5-wiz-root")
+            .should("have.attr", "aria-label", "Order Completion Wizard");
+    });
+
+    it("should use accessibleNameRef over accessibleName when both are provided", () => {
+        cy.mount(
+            <div>
+                <span id="external-label">External Wizard Label</span>
+                <Wizard accessibleName="Internal Label" accessibleNameRef="external-label">
+                    <WizardStep icon="sap-icon://product" selected titleText="Product type"/>
+                    <WizardStep titleText="Product Information" disabled/>
+                </Wizard>
+            </div>
+        );
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find(".ui5-wiz-root")
+            .should("have.attr", "aria-label", "External Wizard Label");
+    });
+
+    it("should fall back to default i18n label when no accessibleName or accessibleNameRef is provided", () => {
+        cy.mount(
+            <Wizard>
+                <WizardStep icon="sap-icon://product" selected titleText="Product type"/>
+            </Wizard>
+        );
+
+        cy.get("[ui5-wizard]")
+            .shadow()
+            .find(".ui5-wiz-root")
+            .should("have.attr", "aria-label", "Wizard");
+    });
+
     it("Disabled step should not be interactive", () => {
         cy.mount(
             <Wizard>
