@@ -63,9 +63,10 @@ figma.connect(
       }),
       // Message text — read the "Text Message" layer directly.
       message: figma.textContent("Text Message"),
-      // Custom icon slot when Icon=True. The icon NAME is a placeholder
-      // ("information") — the Icon instance-swap name isn't readable. Semantic
-      // designs show their own default icon; ColorSet1/2 need this explicit slot.
+      // Custom icon slot when Icon=True. Name is a placeholder ("information") —
+      // the Icon instance-swap name isn't readable. (figma.instance("Icon") was
+      // tried to resolve the real icon via Code-Connected icons — it emitted
+      // EMPTY, so the placeholder is kept. See FIGMA_ICON_NAME_PROPOSAL.md.)
       iconSlot: figma.enum("Icon", {
         True: html`<ui5-icon slot="icon" name="information"></ui5-icon>`,
         False: "",
