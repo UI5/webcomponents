@@ -48,26 +48,25 @@ figma.connect(
       }),
 
       // Leading icon presence → `icon="…"`.
-      // LIMITATION: the icon NAME is hardcoded to "globe". Figma models the
-      // icon as an INSTANCE_SWAP whose swapped icon name cannot be read into a
-      // string unless the Kit's icon components are themselves Code-Connected.
-      // So this only toggles the attribute on/off; it can't reflect which icon
-      // is selected. See FIGMA_CODE_CONNECT_FINDINGS.md § "Icon is not dynamic".
+      // LIMITATION: icon NAME hardcoded to "globe". Button takes the icon as a
+      // name-string attribute (icon="globe"), but Figma models it as an
+      // INSTANCE_SWAP. figma.instance() returns the icon ELEMENT (<ui5-icon>),
+      // not a bare string, so it can't feed icon="…". Only Option A (an
+      // `Icon Name` text prop + figma.string) makes this dynamic. See
+      // FIGMA_ICON_NAME_PROPOSAL.md.
       iconAttr: figma.boolean("Icon Left", {
         true: 'icon="globe"',
         false: "",
       }),
 
-      // Counter badge → slotted <ui5-button-badge>.
-      // Counter Badge is a Figma VARIANT (True/False), NOT a boolean — must use
-      // figma.enum (figma.boolean silently fails to match a variant → no badge).
-      // ASSUMPTION (design rule, per kit owners, NOT visually re-verified):
-      // Form Factor drives the badge design — Compact → InlineText, Cozy →
-      // OverlayText. HARDCODED: text="72" — the count is NOT read from Figma
-      // (unexposed nested layer), so it won't track the Figma number.
-      // See FIGMA_CODE_CONNECT_FINDINGS.md § Button.
+      // Counter badge → slotted <ui5-button-badge>. Counter Badge is a Figma
+      // VARIANT (True/False), NOT a boolean.
+      // design="OverlayText" HARDCODED: it CANNOT be driven by Form Factor —
+      // both a nested figma.enum in the template AND a cross-prop ${prop} ref
+      // emit VERBATIM (parser resolves neither inside a prop's template value).
+      // text="72" HARDCODED: count is in an unexposed nested layer, not readable.
       counterBadge: figma.enum("Counter Badge", {
-        True: html`<ui5-button-badge slot="badge" design="${figma.enum("Form Factor", { Compact: "InlineText", Cozy: "OverlayText" })}" text="72"></ui5-button-badge>`,
+        True: html`<ui5-button-badge slot="badge" design="OverlayText" text="72"></ui5-button-badge>`,
         False: "",
       }),
 
