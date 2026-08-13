@@ -2,9 +2,6 @@
 
 ## How to connect a component (setup + runbook)
 
-**Figma file:** SAP Web UI Kit — fileKey `SILcWzK5uFghKun9jx6D7c`.
-**Everything below runs from `packages/main`.**
-
 ### One-time setup
 
 **1. Clone the repo and install** (from the repo root):
@@ -44,8 +41,8 @@ Connect. Keep it out of git; pass it inline (`FIGMA_ACCESS_TOKEN=…`) or export
 
 ### Per component
 
-**5. Create the two mapping files** in `packages/main/src/`:
-- `src/<Name>.figma.ts` (Web Components) and `src/<Name>.figma.tsx` (React) —
+**5. Create the two mapping files** in `packages/main/src/figma/`:
+- `src/figma/<Name>.figma.ts` (Web Components) and `src/figma/<Name>.figma.tsx` (React) —
   each a single `figma.connect(<node-url>, { props, example })`.
 - Get the node id from the Figma URL (`?node-id=1-2` → `1:2`). To scaffold a
   starter pre-filled with the node's readable props:
@@ -79,7 +76,10 @@ Select `181557:7507` · SegmentedButton `91702:11986` · Switch `24087:10369` ·
 Link `187:305` · Avatar `573:3623`.
 (Icon `983:5876` is unpublishable — a plain frame, not a component set.)
 
-## ⚠️ Global: reading the swapped icon (nuanced — tested)
+
+## Issues
+
+## Global: reading the swapped icon (nuanced — tested)
 In Figma an icon is an **INSTANCE_SWAP** property — the designer swaps in an icon
 *component* from the library. What Code Connect can and can't do with it:
 
