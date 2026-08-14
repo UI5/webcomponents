@@ -7,6 +7,7 @@ export default function ToolbarSelectTemplate(this: ToolbarSelect) {
 		<Select
 			class={this.classes.root}
 			style={this.styles}
+			value={this._innerSelectValue}
 			data-ui5-external-action-item-id={this._id}
 			valueState={this.valueState}
 			disabled={this.disabled}

@@ -170,7 +170,7 @@ class ToolbarSelect extends ToolbarItemBase {
 	}
 
 	get value(): string | undefined {
-		const selectedOption = this.options.find(o => o.selected);
+		const selectedOption = this._lastSelectedIndex >= 0 ? this.options[this._lastSelectedIndex] : undefined;
 		return selectedOption?.value || selectedOption?.textContent?.trim() || "";
 	}
 
@@ -254,6 +254,17 @@ class ToolbarSelect extends ToolbarItemBase {
 
 	get hasCustomLabel() {
 		return !!this.label.length;
+	}
+
+	// The value to pass to the inner Select to prevent auto-selection when nothing is selected.
+	// When _lastSelectedIndex is -1 (nothing selected) we pass a sentinel that matches no option,
+	// so the inner Select's _applySelectionByValue path is taken and no option is forced selected.
+	get _innerSelectValue(): string | undefined {
+		if (this._lastSelectedIndex === -1) {
+			return "__no-selection__";
+		}
+		const opt = this.options[this._lastSelectedIndex];
+		return opt?.value || opt?.textContent?.trim() || "";
 	}
 }
 
