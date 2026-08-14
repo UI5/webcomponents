@@ -34,12 +34,41 @@ Load only what the task needs — each file is ~7,000 tokens:
 
 ## Quick Rules
 
-### Always use real events
-| Instead of | Use |
-|---|---|
-| `cy.click()` | `cy.realClick()` |
-| `cy.type('a')` | `cy.realPress('a')` |
-| `cy.type('text')` | `cy.realType('text')` |
+### Interacting — always use real events
+
+| Use | Not |
+|-----|-----|
+| `.realClick()` | `.click()` |
+| `.realPress("Enter")` | `.type("{enter}")` |
+| `.realType("hello")` | `.type("hello")` |
+| `.realHover()` | `.trigger("mouseover")` |
+
+**`realPress` and `realType` take no subject.** They dispatch CDP key events to whatever currently has focus — a piped subject is silently ignored. Focus the target first, then call them as a separate statement:
+
+```typescript
+// Wrong — realType is chained after realClick; the focus change hasn't settled
+cy.get("@input").realClick().realType("23");
+
+// Right — two statements
+cy.get("@input").realClick();
+cy.realType("23");
+```
+
+**There is no `realClear()`.** To clear a native input inside the shadow root use Cypress's built-in `.clear()`. Otherwise: select all and type over, press Escape, or click the component's own clear icon.
+
+**Never use `cy.wait(<number>)`.** Assert the condition instead — `should` retries automatically. To wait for a render cycle use `cy.waitRenderFinished()`:
+
+```typescript
+// Wrong — numeric wait
+cy.wait(3000);
+cy.get("[ui5-responsive-popover]").ui5ResponsivePopoverClosed();
+
+// Right — assert the condition; should retries
+cy.get("[ui5-responsive-popover]").ui5ResponsivePopoverClosed();
+
+// When you need to wait for a render cycle
+cy.waitRenderFinished();
+```
 
 ### Always use attribute selectors
 ```typescript
@@ -208,6 +237,19 @@ cy.ui5SimulateDevice("phone");
 cy.get("[ui5-my-component]").should("have.class", "ui5-my-component-mobile");
 ```
 
+### Available framework commands
+
+| Command | Behaviour |
+|---------|-----------|
+| `cy.mount(jsx)` | Mount, wait for render, wait for `document.fonts.ready` |
+| `cy.waitRenderFinished()` | Drain the render queue — use instead of `cy.wait(<number>)` |
+| `cy.ui5SimulateDevice("phone")` | Force phone behaviour; `"phone"` is the only valid device |
+| `cy.ui5AssertValidityState(partial)` | Assert any subset of form validity state |
+| `realClick`, `realHover`, `realPress`, `realType` | Wait for render before dispatching real events |
+| `cy.screenshot` | Honoured with `SCREENSHOT_DELAY` env var |
+
+**`cy.ui5DOMRef()` is declared in `support/commands.ts` but never implemented — it will fail at runtime. Do not call it.**
+
 ---
 
 ## Mount Helper Functions
@@ -364,6 +406,100 @@ afterEach(() => {
 - Do not mount in `beforeEach` when tests need different component configurations — use mount helper functions instead (see above).
 - Do not use `afterEach` to reset state that the next `cy.mount()` will implicitly reset anyway (e.g. component-local state).
 - Do not use `beforeEach` for setup that only one or two tests need — keep it inline.
+
+---
+
+## Asserting
+
+Use `have.attr` for reflected properties and ARIA attributes; use `have.prop` for state that is not reflected to an attribute:
+
+```typescript
+// Reflected to DOM attribute — use have.attr
+cy.get("[ui5-button]").should("have.attr", "title", "my tooltip");
+cy.get("[ui5-input]").should("have.attr", "aria-label", "Search");
+
+// Non-reflected JS property — use have.prop
+cy.get("#myInput").should("have.prop", "focused", true);
+```
+
+### Asserting on events
+
+No global event helper — attach a stub:
+
+```typescript
+cy.get("[ui5-tag]").then($tag => {
+  $tag[0].addEventListener("click", cy.stub().as("clicked"));
+});
+
+cy.get("[ui5-tag]").realClick();
+cy.get("@clicked").should("have.been.calledOnce");
+
+// Assert event payload
+cy.get("@clickHandler").should("be.calledWithMatch", { detail: { ctrlKey: true } });
+```
+
+### Asserting on focus
+
+`UI5Element.focus()` is asynchronous — an alias captured before the interaction can be stale and race in CI:
+
+```typescript
+// Wrong — races in CI
+cy.get("@defaultColorButton").should("have.focus");
+
+// Right — cy.focused() returns the live inner shadow focus ref
+cy.focused().should("have.attr", "aria-label").and("include", "cyan");
+```
+
+`cy.focused()` returns the inner shadow focus ref, not the host element — assert `aria-label` or other attributes present on that ref, not host-level properties.
+
+---
+
+## Text and i18n
+
+Never compare against English string literals. Compare against the i18n bundle so the test stays correct under locale changes:
+
+```typescript
+// Wrong — breaks if the bundle text ever changes
+cy.get("[ui5-form-group]").should("have.attr", "aria-label", "Group 1");
+
+// Right — compare against the bundle
+cy.get("[ui5-form-group]").should(
+  "have.attr",
+  "aria-label",
+  Form.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, "1")
+);
+```
+
+For non-default locales, always import `Assets.js` (see "Configuration" above).
+
+---
+
+## Flaky Tests
+
+Common causes of intermittent failures in Cypress UI5 tests:
+
+1. **Async focus / stale alias.** Use `cy.focused()` instead of asserting `have.focus` on a saved alias.
+
+2. **Animation.** `setAnimationMode(None)` disables JS-triggered animations but not CSS `@keyframes`. A component that waits for `animationend` must also branch on `getAnimationMode()`.
+
+3. **Deferred focus after render.** A handler that focuses in `onAfterRendering` can land after your assertion — insert `cy.waitRenderFinished()` before asserting. In component code prefer `getFocusDomRef().focus()` over `UI5Element.focus()`: it is synchronous and the caller stays in the stack trace.
+
+4. **`forcedTabIndex` re-render.** `ItemNavigation.setCurrentItem()` changes `forcedTabIndex`, which schedules an async re-render that races a synchronous focus call.
+
+5. **Container keydown handler.** A handler on a container receives events from every descendant — resolve the intended item through `event.composedPath()`, never `e.target`.
+
+6. **Preact event proxy.** Move the handler to a wrapper `div`.
+
+7. **A real race in the component.** Reproduce with CDP CPU throttling — if it reproduces at 5–6× it is a product bug:
+
+```typescript
+cy.wrap(null).then(() =>
+  Cypress.automation("remote:debugger:protocol", {
+    command: "Emulation.setCPUThrottlingRate",
+    params: { rate: 6 },
+  })
+);
+```
 
 ---
 

@@ -1,5 +1,28 @@
 # Custom Commands Guide
 
+## Existing Command Families — Do Not Recreate
+
+Before writing any new command, check whether a family already exists for that component. These families already have `ui5<Component><Action>` commands in `cypress/support/commands/`:
+
+**main package:**
+Calendar, ColorPalette, ColorPalettePopover, ColorPicker, DatePicker, DateRangePicker, DateTimePicker,
+TimePicker, TimeSelectionClocks, DynamicDateRange, Dialog, Popover, ResponsivePopover, Menu, MenuItem,
+SegmentedButton, StepInput, Switch, TabContainer, ToggleButton
+
+**fiori package:**
+UserMenu
+
+**AI package:**
+Button (AI)
+
+Most popup families have `Open`/`Opened` state helpers. The `Closed` variant is **not universal**:
+- `Menu` and `ResponsivePopover` — have `Closed`
+- `Dialog` and `Popover` — expose only `Opened`; no `Closed` variant
+
+Read the `support/commands/` file for the relevant family before assuming a `Closed` helper exists. Use these commands instead of asserting the `open` attribute yourself.
+
+---
+
 ## Identifying Repetitive Patterns → Custom Commands
 
 When writing or reviewing tests, look for:
