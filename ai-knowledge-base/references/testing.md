@@ -120,8 +120,7 @@ cy.focused().should("have.attr", "aria-label").and("include", "cyan");
 ```
 
 `cy.focused()` returns the inner shadow focus ref, not the host, so host-level `value` or
-`[ui5-color-palette-item]` are not on it — assert `aria-label`
-(`.claude/memory/ColorPalette/2026-04-02-flaky-home-end-navigation.md`).
+`[ui5-color-palette-item]` are not on it — assert `aria-label`.
 
 ## Text and i18n
 
@@ -166,7 +165,7 @@ of asserting the `open` attribute yourself.
 ## Visual tests
 
 Import the component; from `specs/visuals/` the source path is one level deeper than a normal spec.
-`/visual-test` in `.claude/skills/` lists the components that need a specific parent container.
+`/visual-test` skill lists the components that need a specific parent container.
 
 ```tsx
 import Avatar from "../../../src/Avatar.js";
@@ -185,8 +184,7 @@ keyboard path, not just the click path; ARIA attributes; disabled and read-only 
 
 1. **Async focus.** A stale alias instead of `cy.focused()`.
 2. **Animation.** `setAnimationMode(None)` does not disable CSS `@keyframes`; a component that waits
-   for `animationend` must also branch on `getAnimationMode()`
-   (`.claude/memory/DateTimePicker/2026-06-11-flaky-12-34-56-AM-test.md`).
+   for `animationend` must also branch on `getAnimationMode()`.
 3. **Deferred focus after render.** A handler focusing in `onAfterRendering` can land after your
    assertion — await `cy.waitRenderFinished()`. In component code prefer `getFocusDomRef().focus()`
    over the async `UI5Element.focus()`: synchronous, and the caller stays in the stack trace (same
@@ -194,14 +192,12 @@ keyboard path, not just the click path; ARIA attributes; disabled and read-only 
 4. **`forcedTabIndex` re-render.** `ItemNavigation.setCurrentItem()` changes `forcedTabIndex`, which
    schedules an async re-render that races the synchronous focus call (ColorPalette 2026-04-02 memory).
 5. **Container keydown handler.** A handler on a container receives events from every descendant;
-   resolve the intended item through `event.composedPath()`, never `e.target`
-   (`.claude/memory/ColorPalette/2026-07-08-focus-steal-after-keyboard-navigation.md`).
+   resolve the intended item through `event.composedPath()`, never `e.target`.
 6. **Preact event proxy.** Move the handler to a wrapper `div` — `component-anatomy.md`.
 7. **A real race in the component.** Reproduce with CDP CPU throttling. If it reproduces at 5-6x it is
    a product bug — switch to the bugfix workflow.
 
 ```ts
-// .claude/memory/Menu/MenuItem/2026-06-18-flaky-endcontent-click-closes-menu.md
 cy.wrap(null).then(() => Cypress.automation("remote:debugger:protocol", {
 	command: "Emulation.setCPUThrottlingRate",
 	params: { rate: 6 },

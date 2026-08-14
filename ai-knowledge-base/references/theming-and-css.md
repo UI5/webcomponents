@@ -129,7 +129,7 @@ Scope compact values with a container style query — the pattern used across th
 }
 ```
 
-A density block that styles *slotted children* belongs in the component CSS, never in `<Component>-parameters.css`: a `-parameters.css` declaration is merged into a single shared `CSSStyleSheet` adopted into every component's shadow root, where `:host` applies to all of them and `::slotted()` would target slots across all of them. Same rule for any variable whose producer and consumer are different components. See `.claude/memory/Bar/2026-06-09-button-overlay-badge-density-scoping.md`.
+A density block that styles *slotted children* belongs in the component CSS, never in `<Component>-parameters.css`: a `-parameters.css` declaration is merged into a single shared `CSSStyleSheet` adopted into every component's shadow root, where `:host` applies to all of them and `::slotted()` would target slots across all of them. Same rule for any variable whose producer and consumer are different components.
 
 ```css
 @container style(--ui5_content_density: compact) {

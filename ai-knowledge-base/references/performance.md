@@ -77,8 +77,7 @@ Assigning an `@property` there queues a second render, so cache into a plain fie
 
 The rule is `core-rules.md` rule 13. The invalidation consequence: the wasted render runs
 `onBeforeRendering`, which can overwrite input the user is still editing. A re-render on the first
-keystroke reset the value and moved the caret to the start of the field
-(`.claude/memory/DateTimePicker/2026-04-07-first-keystroke-caret-reset.md`).
+keystroke reset the value and moved the caret to the start of the field.
 
 `@property({ type: Object })` and `type: Array` never reflect to an attribute — the setter returns
 early ("Don't reflect arrays and objects to the DOM"). Reassigning still invalidates,
@@ -139,7 +138,7 @@ compounds; use it only where per-child `::slotted()` targeting is required.
 
 `DateFormat.getDateInstance()` is cached repo-wide by options and locale; a runtime locale or
 pattern change produces a new key and a new instance, and a caller holding the old instance keeps
-the old formatter — `.claude/memory/Calendar/2026-05-22-pr13550-dateformat-caching.md`.
+the old formatter.
 
 ## Animations
 

@@ -229,5 +229,4 @@ the component, so `this.foo` in the JSX reads the instance.
   (`MultiComboBoxPopoverTemplate.tsx`, `RangeSliderTemplate.tsx`, `SearchPopoverTemplate.tsx`) — it
   is not a pattern to avoid. If a container-level keydown or click handler misbehaves, check
   whether it reads `event.target` instead of `event.composedPath()` first; see the Debugging
-  section of `INDEX.md` and `.claude/memory/ColorPalette/2026-07-08-focus-steal-after-keyboard-navigation.md`
-  for a worked example.
+  section of `INDEX.md`.

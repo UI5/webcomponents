@@ -149,11 +149,11 @@ get _effectiveTabIndex() {
 
 `_focusable` is `!this.disabled`; filter the items callback on it so disabled items are skipped. If items are plain `{ id, forcedTabIndex }` objects rather than `UI5Element`s, name the owning root property in `affectedPropertiesNames` so the re-render happens.
 
-In a container `onKeyDown`, resolve the intended item from `event.composedPath()`, not `e.target` — the handler receives keydowns from every descendant, and treating a non-item target as an item steals focus back into the group. See `.claude/memory/ColorPalette/2026-07-08-focus-steal-after-keyboard-navigation.md`.
+In a container `onKeyDown`, resolve the intended item from `event.composedPath()`, not `e.target` — the handler receives keydowns from every descendant, and treating a non-item target as an item steals focus back into the group.
 
 ### `div` with `role="button"`
 
-Check disabled first and bail with `preventDefault`. Fire the action on Enter in `onKeyDown`; `preventDefault` Space in `onKeyDown` and fire it in `onKeyUp`, matching native button timing. Pairing these with `onMouseDown` does not double-fire, because browsers do not fire `mousedown` on keyboard activation of a `<div>`. See `.claude/memory/Calendar/2026-04-28-div-role-button-keyboard-activation.md`.
+Check disabled first and bail with `preventDefault`. Fire the action on Enter in `onKeyDown`; `preventDefault` Space in `onKeyDown` and fire it in `onKeyUp`, matching native button timing. Pairing these with `onMouseDown` does not double-fire, because browsers do not fire `mousedown` on keyboard activation of a `<div>`.
 
 ## Announcing dynamic changes
 
