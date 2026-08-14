@@ -155,31 +155,11 @@ this.fireDecoratorEvent("change", { value: this.value });
 
 ## Testing with Cypress
 
-Tests use Cypress component testing with JSX mounting:
+All component tests are Cypress component tests written in TSX. The full testing conventions — mounting, selectors, real events, custom commands, assertions, i18n, and flaky-test recipes — live in the **Cypress skill** at [`skills/cypress/SKILL.md`](../../skills/cypress/SKILL.md).
 
-```typescript
-import MyButton from "../../src/MyButton.js";
+**When to load it:** any time you are writing, modifying, or debugging a Cypress spec.
 
-describe("MyButton", () => {
-  it("fires click event", () => {
-    cy.mount(<MyButton>Click me</MyButton>);
-
-    // Use attribute selector for scoping safety
-    cy.get("[my-button]").then(($btn) => {
-      $btn[0].addEventListener("click", cy.stub().as("clicked"));
-    });
-
-    // Use cypress-real-events for realistic interaction
-    cy.get("[my-button]").realClick();
-    cy.get("@clicked").should("have.been.called");
-  });
-});
-```
-
-**Key testing patterns:**
-- Use `cypress-real-events`: `realClick()`, `realPress()`, `realType()` instead of Cypress simulated events
-- Always use attribute selectors `[my-component]` not tag selectors `my-component`
-- Use `.only` to run a single test case when debugging, remove before committing
+**How to use it:** open `SKILL.md`, read the routing table at the top, then open **only** the one reference file it names for your task. Do not read every file.
 
 ## Summary of Rules
 
