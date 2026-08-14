@@ -7,6 +7,7 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import ListItemBase from "./ListItemBase.js";
+import type { ListItemBasePressEventDetail } from "./ListItemBase.js";
 import type CheckBox from "./CheckBox.js";
 import type { IMultiComboBoxItem } from "./MultiComboBox.js";
 import {
@@ -18,6 +19,11 @@ import type { SelectionRequestEventDetail } from "./ListItem.js";
 import type { AriaRole } from "@ui5/webcomponents-base";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+
+type MultiComboBoxItemCustomClickEventDetail = {
+	item?: MultiComboBoxItemCustom,
+	originalEvent: Event,
+}
 
 /**
  * @class
@@ -40,14 +46,31 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
 		styles,
 	],
 })
-
+/**
+ * Fired when the component is activated either with a mouse/tap or by using the Enter or Space key.
+ *
+ * **Note:** The event will not be fired if the `disabled` property is set to `true`.
+ *
+ * @since 2.24.0
+ * @public
+ * @param {Event} originalEvent The original event from the user interaction.
+ */
+@event("click", {
+	bubbles: true,
+})
 @event("selection-requested", {
 	bubbles: true,
 })
 class MultiComboBoxItemCustom extends ListItemBase implements IMultiComboBoxItem {
-	eventDetails!: ListItemBase["eventDetails"] & {
+	eventDetails!: {
+		"click": MultiComboBoxItemCustomClickEventDetail,
 		"selection-requested": SelectionRequestEventDetail,
-	}
+		"request-tabindex-change": FocusEvent,
+		"_press": ListItemBasePressEventDetail,
+		"_focused": FocusEvent,
+		"forward-after": void,
+		"forward-before": void,
+	};
 
 	/**
 	 * Defines the text of the component.
@@ -131,3 +154,4 @@ MultiComboBoxItemCustom.define();
 
 export default MultiComboBoxItemCustom;
 export const isInstanceOfMultiComboBoxItemCustom = createInstanceChecker<MultiComboBoxItemCustom>("isMultiComboBoxItem");
+export type { MultiComboBoxItemCustomClickEventDetail };

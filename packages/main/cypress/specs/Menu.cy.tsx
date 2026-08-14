@@ -3,6 +3,7 @@ import SplitButton from "../../src/SplitButton.js";
 import Menu from "../../src/Menu.js";
 import MenuItem from "../../src/MenuItem.js";
 import MenuItemGroup from "../../src/MenuItemGroup.js";
+import MenuSeparator from "../../src/MenuSeparator.js";
 
 import openFolder from "@ui5/webcomponents-icons/dist/open-folder.js";
 import addFolder from "@ui5/webcomponents-icons/dist/add-folder.js";
@@ -1143,6 +1144,103 @@ describe("Menu interaction", () => {
 				.should("have.attr", "accessible-name", "Select an option from the menu");
 		});
 
+		it("aria-checked is applied to menuitemradio and menuitemcheckbox items", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Regular Item"></MenuItem>
+						<MenuItemGroup checkMode="Single" id="groupSingle">
+							<MenuItem text="Radio Checked" checked></MenuItem>
+							<MenuItem text="Radio Unchecked"></MenuItem>
+						</MenuItemGroup>
+						<MenuItemGroup checkMode="Multiple" id="groupMulti">
+							<MenuItem text="Checkbox Checked" checked></MenuItem>
+							<MenuItem text="Checkbox Unchecked"></MenuItem>
+						</MenuItemGroup>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu]").as("menu");
+
+			cy.get("@menu")
+				.find("[text='Regular Item']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitem")
+				.and("not.have.attr", "aria-checked");
+
+			cy.get("@menu")
+				.find("[id='groupSingle']")
+				.as("groupSingle");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupSingle")
+				.find("[text='Radio Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemradio")
+				.and("have.attr", "aria-checked", "false");
+
+			cy.get("@menu")
+				.find("[id='groupMulti']")
+				.as("groupMulti");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Checked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "true");
+
+			cy.get("@groupMulti")
+				.find("[text='Checkbox Unchecked']")
+				.shadow()
+				.find("li")
+				.should("have.attr", "role", "menuitemcheckbox")
+				.and("have.attr", "aria-checked", "false");
+		});
+
+		it("Menu separator has correct accessibility semantics", () => {
+			cy.mount(
+				<>
+					<Button id="btnOpen">Open Menu</Button>
+					<Menu open opener="btnOpen">
+						<MenuItem text="Item 1"></MenuItem>
+						<MenuSeparator></MenuSeparator>
+						<MenuItem text="Item 2"></MenuItem>
+					</Menu>
+				</>
+			);
+
+			cy.get("[ui5-menu-separator]")
+				.shadow()
+				.find("li")
+				.as("separator");
+
+			cy.get("@separator")
+				.should("have.attr", "role", "separator");
+
+			cy.get("@separator")
+				.should("not.have.attr", "tabindex");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-disabled");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-labelledby");
+
+			cy.get("@separator")
+				.should("not.have.attr", "aria-describedby");
+		});
+
 		it("Menu items - navigation in endContent", () => {
 			cy.mount(
 				<>
@@ -1346,7 +1444,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("submenuPopover");
-			
+
 		cy.get("@submenuPopover")
 			.should("have.attr", "open");
 
@@ -1355,7 +1453,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.last()
 			.should("be.visible")
 			.as("lastItem");
-			
+
 		cy.get("@lastItem")
 			.realHover();
 
@@ -1412,5 +1510,90 @@ describe("Menu - Submenu Focus Behavior", () => {
 
 		cy.get("@childItem")
 			.should("be.focused");
+	});
+});
+
+describe("Menu - Page Up/Down navigation", () => {
+	function mountLongMenu() {
+		cy.viewport(800, 300);
+
+		const items = Array.from({ length: 25 }, (_, i) => (
+			<MenuItem key={i} text={`Item ${i + 1}`}></MenuItem>
+		));
+
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu id="menu" opener="btnOpen">
+					{items}
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]").ui5MenuOpen({ opener: "btnOpen" });
+	}
+
+	it("Page Down moves focus forward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		cy.focused().realPress("PageDown");
+
+		// Record which item was landed on, then PageUp should return exactly to item 0
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
+
+		cy.focused().realPress("PageUp");
+
+		cy.get("@items").first().should("be.focused");
+	});
+
+	it("Page Up moves focus backward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		// Press PageDown twice to land somewhere in the middle
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+
+		// PageUp must go back exactly one page — not to item 1, not to where PageDown×2 landed
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageDown");
+
+		// Two PageDowns and one PageUp then one PageDown must equal two PageDowns net
+		// — verify we are not at item 1 (moved forward) and not at item 2 (moved more than 1)
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
+	});
+
+	it("Page Down from last visible page focuses last item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		// Press PageDown 15 times — clamps to last item regardless of page size
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
+
+		cy.get("@items").last().should("be.focused");
+	});
+
+	it("Page Up from first visible page focuses first item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		// Reach the last item via keyboard, then press PageUp 15 times — clamps to first item
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
+		cy.get("@items").last().should("be.focused");
+
+		Cypress._.times(15, () => cy.focused().realPress("PageUp"));
+
+		cy.get("@items").first().should("be.focused");
 	});
 });

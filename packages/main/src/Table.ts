@@ -14,7 +14,7 @@ import TableDragAndDrop from "./TableDragAndDrop.js";
 import TableCustomAnnouncement from "./TableCustomAnnouncement.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import {
-	findVerticalScrollContainer, scrollElementIntoView, isFeature, isValidColumnWidth,
+	findVerticalScrollContainer, computeAxisScrollDelta, isFeature, isValidColumnWidth,
 } from "./TableUtils.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import type DropIndicator from "./DropIndicator.js";
@@ -523,10 +523,12 @@ class Table extends UI5Element {
 
 	_onResize() {
 		const { clientWidth, scrollWidth } = this._tableElement;
+		// Safari can report scrollWidth 1px greater than clientWidth during zoom transitions
+		// due to subpixel rounding, so a strict > check triggers spurious popin cycles.
+		const overflow = scrollWidth - clientWidth;
 
-		if (scrollWidth > clientWidth) {
+		if (overflow > 1) {
 			// Overflow Handling: Move columns into the popin until overflow is resolved
-			const overflow = scrollWidth - clientWidth;
 			const headers = this._getPopinOrderedColumns(false);
 			const poppedInWidth = headers.reduce((totalPoppedInWidth, headerCell) => {
 				if (totalPoppedInWidth < overflow && !headerCell._popin) {
@@ -560,8 +562,23 @@ class Table extends UI5Element {
 			return;
 		}
 
-		// Handles focus in the table, when the focus is below a sticky element
-		scrollElementIntoView(this._scrollContainer, e.target as HTMLElement, this._stickyElements, this.effectiveDir === "rtl");
+		this._scrollElementIntoView(e.target as HTMLElement);
+	}
+
+	_scrollElementIntoView(element: HTMLElement) {
+		const verticalStickyElements = this.headerRow.filter(row => row.sticky);
+		if (verticalStickyElements.length) {
+			const verticalScrollContainer = findVerticalScrollContainer(this._tableElement, true);
+			const deltaY = computeAxisScrollDelta(element, verticalScrollContainer, verticalStickyElements, "y");
+			verticalScrollContainer.scrollBy({ top: deltaY });
+		}
+
+		const horizontalStickyElements = this.overflowMode === "Scroll" ? this.headerRow[0]._stickyCells : [];
+		if (horizontalStickyElements.length) {
+			const horizontalScrollContainer = this._tableElement;
+			const deltaX = computeAxisScrollDelta(element, horizontalScrollContainer, horizontalStickyElements, "x");
+			horizontalScrollContainer.scrollBy({ left: deltaX });
+		}
 	}
 
 	_onGrow() {
@@ -700,12 +717,6 @@ class Table extends UI5Element {
 
 	get _scrollContainer() {
 		return this._getVirtualizer() ? this._tableElement : findVerticalScrollContainer(this);
-	}
-
-	get _stickyElements() {
-		const stickyRows = this.headerRow.filter(row => row.sticky);
-		const stickyColumns = this.headerRow[0]._stickyCells as TableHeaderCell[];
-		return [...stickyRows, ...stickyColumns];
 	}
 
 	get _effectiveNoDataText() {

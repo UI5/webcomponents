@@ -195,12 +195,15 @@ class ColorPalettePopover extends UI5Element {
 
 	onAfterOpen() {
 		const colorPalette = this._colorPalette;
+
+		// Focus the last selected color (or first recent color) on reopen. The default color button
+		// and the first swatch are intentionally left to the popover's built-in initial focus: it
+		// already lands on them, and re-focusing those here fires on the "open" event a frame later,
+		// stealing focus back after the user has already started navigating with the keyboard.
 		if (colorPalette._currentlySelected) {
-			colorPalette._currentlySelected?.focus();
+			colorPalette._currentlySelected.getFocusDomRef()?.focus();
 		} else if (colorPalette.showRecentColors && colorPalette.recentColorsElements.length) {
-			colorPalette.recentColorsElements[0].focus();
-		} else if (colorPalette.showDefaultColor) {
-			colorPalette._defaultColorButton?.focus();
+			colorPalette.recentColorsElements[0].getFocusDomRef()?.focus();
 		}
 
 		// since height is dynamically determined by padding-block-start

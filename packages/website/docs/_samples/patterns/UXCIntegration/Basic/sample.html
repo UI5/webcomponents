@@ -336,114 +336,102 @@
 
 		<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
 			<ui5-user-settings-view>
-				<div id="language-region-container" class="language-region-container">
-					<ui5-label for="language" class="language-region-label" show-colon>Display Language</ui5-label>
-					<ui5-combobox id="language" class="language-region-control" placeholder="Language" value="English (United States)">
-						<ui5-cb-item text="Browser Language" selected additional-text="English"></ui5-cb-item>
-						<ui5-cb-item text="English (United Kingdom)" additional-text="English (United Kingdom)"></ui5-cb-item>
-						<ui5-cb-item text="English (United States)" additional-text="English (United States)"></ui5-cb-item>
-						<ui5-cb-item text="French (France)" additional-text="Français (France)"></ui5-cb-item>
-						<ui5-cb-item text="French (Canada)" additional-text="Français (Canada)"></ui5-cb-item>
-						<ui5-cb-item text="German (Germany)" additional-text="Deutsch (Deutschland)"></ui5-cb-item>
-						<ui5-cb-item text="German (Switzerland)" additional-text="Deutsch (Schweiz)"></ui5-cb-item>
-						<ui5-cb-item text="Japanese" additional-text="日本語 (日本)"></ui5-cb-item>
-						<ui5-cb-item text="Portuguese (Brazil)" additional-text="Português (Brasil)" ></ui5-cb-item>
-						<ui5-cb-item text="Simplified Chinese (China)" additional-text="简体中文（中国)"></ui5-cb-item>
-						<ui5-cb-item text="Spanish (Mexico)" additional-text="Español (América Latina)"></ui5-cb-item>
-						<ui5-cb-item text="Spanish (Spain)" additional-text="Español (España)"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="region" class="language-region-label" show-colon>Region</ui5-label>
-					<ui5-combobox id="region" class="language-region-control" placeholder="Region" value="United States">
-						<ui5-cb-item text="United Kingdom" additional-text="GB"></ui5-cb-item>
-						<ui5-cb-item text="United States" additional-text="US"></ui5-cb-item>
-						<ui5-cb-item text="French (France)" additional-text="FR"></ui5-cb-item>
-						<ui5-cb-item text="French (Canada)" additional-text="CA"></ui5-cb-item>
-						<ui5-cb-item text="German (Germany)" additional-text="DE"></ui5-cb-item>
-						<ui5-cb-item text="German (Switzerland)" additional-text="CH" ></ui5-cb-item>
-						<ui5-cb-item text="Japanese" additional-text="JP"></ui5-cb-item>
-						<ui5-cb-item text="Portuguese (Brazil)" additional-text="BR"></ui5-cb-item>
-						<ui5-cb-item text="Simplified Chinese (China)" additional-text="CN"></ui5-cb-item>
-						<ui5-cb-item text="Spanish (Mexico)" additional-text="MX"></ui5-cb-item>
-						<ui5-cb-item text="Spanish (Spain)" additional-text="ES"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="dateFormat" class="language-region-label" show-colon>Date Format</ui5-label>
-					<ui5-combobox  id="dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
-						<ui5-cb-item text="MM/DD/YYYY" additional-text="e.g. 10/23/2025"></ui5-cb-item>
-						<ui5-cb-item text="MM.DD.YYYY" additional-text="e.g. 10.23.2025"></ui5-cb-item>
-						<ui5-cb-item text="MM-DD-YYYY" additional-text="e.g. 10-23-2025"></ui5-cb-item>
-						<ui5-cb-item text="DD/MM/YYYY" additional-text="e.g. 23/10/2025"></ui5-cb-item>
-						<ui5-cb-item text="DD.MM.YYYY" additional-text="e.g. 23.10.2025"></ui5-cb-item>
-						<ui5-cb-item text="DD-MM-YYYY" additional-text="e.g. 23-10-2025"></ui5-cb-item>
-						<ui5-cb-item text="YYYY/MM/DD" additional-text="e.g. 2025/10/23"></ui5-cb-item>
-						<ui5-cb-item text="YYYY.MM.DD" additional-text="e.g. 2025.10.23"></ui5-cb-item>
-						<ui5-cb-item text="YYYY-MM-DD" additional-text="e.g. 2025-10-23"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="timeFormat" class="language-region-label" show-colon>Time Format</ui5-label>
-					<ui5-combobox id="timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
-						<ui5-cb-item text="24 Hour" additional-text="e.g. 12:05:10"></ui5-cb-item>
-						<ui5-cb-item text="12 Hour" additional-text="e.g. 12:05:10 PM"></ui5-cb-item>
-						<ui5-cb-item text="12 Hour (lowercase)" additional-text="e.g. 12:05:10 pm"></ui5-cb-item>
-						<ui5-cb-item text="Hours from 0 to 11" additional-text="e.g. 00:05:10 PM"></ui5-cb-item>
-						<ui5-cb-item text="Hours from 0 to 11 (lowercase)" additional-text="e.g. 00:05:10 pm"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="timeZone" class="language-region-label" show-colon>Time Zone</ui5-label>
-					<ui5-combobox id="timeZone" class="language-region-control" placeholder="Time Zone" value="Eastern Standard Time (UTC -05:00)">
-						<ui5-cb-item text="Pacific Time (UTC -08:00)" additional-text="Sacramento, United States"></ui5-cb-item>
-						<ui5-cb-item text="Mountain Time (UTC -07:00)" additional-text="Denver, United States"></ui5-cb-item>
-						<ui5-cb-item text="Central Time (UTC -06:00)" additional-text="Austin, United States"></ui5-cb-item>
-						<ui5-cb-item text="Eastern Standard Time (UTC -05:00)" additional-text="Washington, United States"></ui5-cb-item>
-						<ui5-cb-item text="Atlantic Time (UTC -04:00)" additional-text="Halifax, Canada"></ui5-cb-item>
-						<ui5-cb-item text="Newfoundland Time (UTC -03:30)" additional-text="St. John's, Canada"></ui5-cb-item>
-						<ui5-cb-item text="Brasilia Time (UTC -03:00)" additional-text="Brasília, Brazil"></ui5-cb-item>
-						<ui5-cb-item text="Argentina Time (UTC -03:00)" additional-text="Buenos Aires, Argentina"></ui5-cb-item>
-						<ui5-cb-item text="Greenwich Mean Time (UTC +00:00)" additional-text="London, United Kingdom"></ui5-cb-item>
-						<ui5-cb-item text="Central European Time (UTC +01:00)" additional-text="Berlin, Germany"></ui5-cb-item>
-						<ui5-cb-item text="Eastern European Time (UTC +02:00)" additional-text="Athens, Greece"></ui5-cb-item>
-						<ui5-cb-item text="Turkey Time (UTC +03:00)" additional-text="Ankara, Türkiye"></ui5-cb-item>
-						<ui5-cb-item text="Arabian Time (UTC +04:00)" additional-text="Abu Dhabi, United Arab Emirates"></ui5-cb-item>
-						<ui5-cb-item text="Pakistan Standard Time (UTC +05:00)" additional-text="Islamabad, Pakistan"></ui5-cb-item>
-						<ui5-cb-item text="India Standard Time (UTC +05:30)" additional-text="New Delhi, India"></ui5-cb-item>
-						<ui5-cb-item text="Bangladesh Standard Time (UTC +06:00)" additional-text="Dhaka, Bangladesh"></ui5-cb-item>
-						<ui5-cb-item text="Indochina Time (UTC +07:00)" additional-text="Bangkok, Thailand"></ui5-cb-item>
-						<ui5-cb-item text="China Standard Time (UTC +08:00)" additional-text="Beijing, China"></ui5-cb-item>
-						<ui5-cb-item text="Singapore Time (UTC +08:00)" additional-text="Singapore, Singapore"></ui5-cb-item>
-						<ui5-cb-item text="Hong Kong Time (UTC +08:00)" additional-text="Hong Kong, China"></ui5-cb-item>
-						<ui5-cb-item text="Japan Standard Time (UTC +09:00)" additional-text="Tokyo, Japan"></ui5-cb-item>
-						<ui5-cb-item text="Korea Standard Time (UTC +09:00)" additional-text="Seoul, South Korea"></ui5-cb-item>
-						<ui5-cb-item text="Australian Eastern Time (UTC +10:00)" additional-text="Canberra, Australia"></ui5-cb-item>
-						<ui5-cb-item text="New Zealand Time (UTC +12:00)" additional-text="Wellington, New Zealand"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="currency" class="language-region-label" show-colon>Currency</ui5-label>
-					<ui5-combobox id="currency" class="language-region-control" placeholder="Currency" value="USD - United States Dollar">
-						<ui5-cb-item text="USD - United States Dollar" additional-text="USD" value="USD"></ui5-cb-item>
-						<ui5-cb-item text="Euro" additional-text="EUR"></ui5-cb-item>
-						<ui5-cb-item text="British Pound" additional-text="GBP"></ui5-cb-item>
-						<ui5-cb-item text="Japanese Yen" additional-text="JPY"></ui5-cb-item>
-						<ui5-cb-item text="Swiss Franc" additional-text="CHF"></ui5-cb-item>
-						<ui5-cb-item text="Canadian Dollar" additional-text="CAD"></ui5-cb-item>
-						<ui5-cb-item text="Australian Dollar" additional-text="AUD"></ui5-cb-item>
-						<ui5-cb-item text="New Zealand Dollar" additional-text="NZD"></ui5-cb-item>
-						<ui5-cb-item text="Chinese Yuan Renminbi" additional-text="CNY"></ui5-cb-item>
-						<ui5-cb-item text="Indian Rupee" additional-text="INR"></ui5-cb-item>
-						<ui5-cb-item text="Brazilian Real" additional-text="BRL"></ui5-cb-item>
-						<ui5-cb-item text="South African Rand" additional-text="ZAR"></ui5-cb-item>
-						<ui5-cb-item text="Russian Ruble" additional-text="RUB"></ui5-cb-item>
-						<ui5-cb-item text="Mexican Peso" additional-text="MXN"></ui5-cb-item>
-						<ui5-cb-item text="Singapore Dollar" additional-text="SGD"></ui5-cb-item>
-						<ui5-cb-item text="Hong Kong Dollar" additional-text="HKD"></ui5-cb-item>
-						<ui5-cb-item text="Norwegian Krone" additional-text="NOK"></ui5-cb-item>
-						<ui5-cb-item text="Swedish Krona" additional-text="SEK"></ui5-cb-item>
-						<ui5-cb-item text="South Korean Won" additional-text="KRW"></ui5-cb-item>
-						<ui5-cb-item text="Turkish Lira" additional-text="TRY"></ui5-cb-item>
-					</ui5-combobox>
-					<ui5-label for="numberFormat" class="language-region-label" show-colon>Number Format</ui5-label>
-					<ui5-combobox id="numberFormat" class="language-region-control" placeholder="Number Format" value="1,234.56">
-						<ui5-cb-item text="1.234,56" additional-text="Germany"></ui5-cb-item>
-						<ui5-cb-item text="1,234.56" additional-text="US/UK"></ui5-cb-item>
-						<ui5-cb-item text="1 234,56" additional-text="France"></ui5-cb-item>
-						<ui5-cb-item text="1'234.56" additional-text="Switzerland"></ui5-cb-item>
-						<ui5-cb-item text="1234,56" additional-text="SI/SO Format"></ui5-cb-item>
-					</ui5-combobox>
+				<ui5-message-strip id="language-region-strip" design="Information" hide-close-button>
+					Close to apply your chosen language – the page will reload.
+				</ui5-message-strip>
+				<div class="language-region-form">
+					<div class="language-region-row">
+						<ui5-label for="language" show-colon>Display Language</ui5-label>
+						<ui5-select id="language">
+							<ui5-option>Browser Language</ui5-option>
+							<ui5-option>English (United Kingdom)</ui5-option>
+							<ui5-option selected>English (United States)</ui5-option>
+							<ui5-option>French (France)</ui5-option>
+							<ui5-option>French (Canada)</ui5-option>
+							<ui5-option>German (Germany)</ui5-option>
+							<ui5-option>German (Switzerland)</ui5-option>
+							<ui5-option>Japanese</ui5-option>
+							<ui5-option>Portuguese (Brazil)</ui5-option>
+							<ui5-option>Simplified Chinese (China)</ui5-option>
+							<ui5-option>Spanish (Mexico)</ui5-option>
+							<ui5-option>Spanish (Spain)</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="region" show-colon>Region</ui5-label>
+						<ui5-select id="region">
+							<ui5-option>United Kingdom</ui5-option>
+							<ui5-option selected>United States</ui5-option>
+							<ui5-option>France</ui5-option>
+							<ui5-option>Canada</ui5-option>
+							<ui5-option>Germany</ui5-option>
+							<ui5-option>Switzerland</ui5-option>
+							<ui5-option>Japan</ui5-option>
+							<ui5-option>Brazil</ui5-option>
+							<ui5-option>China</ui5-option>
+							<ui5-option>Mexico</ui5-option>
+							<ui5-option>Spain</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="dateFormat" show-colon>Date Format</ui5-label>
+						<ui5-select id="dateFormat">
+							<ui5-option>MM/DD/YYYY</ui5-option>
+							<ui5-option selected>MM.DD.YYYY</ui5-option>
+							<ui5-option>MM-DD-YYYY</ui5-option>
+							<ui5-option>DD/MM/YYYY</ui5-option>
+							<ui5-option>DD.MM.YYYY</ui5-option>
+							<ui5-option>DD-MM-YYYY</ui5-option>
+							<ui5-option>YYYY/MM/DD</ui5-option>
+							<ui5-option>YYYY.MM.DD</ui5-option>
+							<ui5-option>YYYY-MM-DD</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="timeFormat" show-colon>Time Format</ui5-label>
+						<ui5-select id="timeFormat">
+							<ui5-option>24 Hour</ui5-option>
+							<ui5-option selected>12 Hour</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="timeZone" show-colon>Time Zone</ui5-label>
+						<ui5-select id="timeZone">
+							<ui5-option>Pacific Time (UTC -08:00)</ui5-option>
+							<ui5-option>Mountain Time (UTC -07:00)</ui5-option>
+							<ui5-option>Central Time (UTC -06:00)</ui5-option>
+							<ui5-option selected>Eastern Standard Time (UTC -05:00)</ui5-option>
+							<ui5-option>Atlantic Time (UTC -04:00)</ui5-option>
+							<ui5-option>Greenwich Mean Time (UTC +00:00)</ui5-option>
+							<ui5-option>Central European Time (UTC +01:00)</ui5-option>
+							<ui5-option>India Standard Time (UTC +05:30)</ui5-option>
+							<ui5-option>Japan Standard Time (UTC +09:00)</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="currency" show-colon>Currency</ui5-label>
+						<ui5-select id="currency">
+							<ui5-option selected>USD – United States Dollar</ui5-option>
+							<ui5-option>EUR – Euro</ui5-option>
+							<ui5-option>GBP – British Pound</ui5-option>
+							<ui5-option>JPY – Japanese Yen</ui5-option>
+							<ui5-option>CHF – Swiss Franc</ui5-option>
+							<ui5-option>CAD – Canadian Dollar</ui5-option>
+							<ui5-option>AUD – Australian Dollar</ui5-option>
+							<ui5-option>CNY – Chinese Yuan Renminbi</ui5-option>
+							<ui5-option>INR – Indian Rupee</ui5-option>
+						</ui5-select>
+					</div>
+					<div class="language-region-row">
+						<ui5-label for="numberFormat" show-colon>Number Format</ui5-label>
+						<ui5-select id="numberFormat">
+							<ui5-option>1.234,56</ui5-option>
+							<ui5-option selected>1,234.56</ui5-option>
+							<ui5-option>1 234,56</ui5-option>
+							<ui5-option>1'234.56</ui5-option>
+							<ui5-option>1234,56</ui5-option>
+						</ui5-select>
+					</div>
 				</div>
 			</ui5-user-settings-view>
 		</ui5-user-settings-item>
@@ -480,22 +468,6 @@
 			</ui5-user-settings-view>
 		</ui5-user-settings-item>
 	</ui5-user-settings-dialog>
-
-	<ui5-dialog id="additionalDialog" state="Information" header-text="Change Display Language">
-		<ui5-text>Changing the display language to [New Language] will update the language across the user interface.</ui5-text>
-		<ui5-toolbar slot="footer">
-			<ui5-toolbar-button
-					class="dialogCloser"
-					design="Emphasized"
-					text="Change Language">
-			</ui5-toolbar-button>
-			<ui5-toolbar-button
-					class="dialogCloser"
-					design="Transparent"
-					text="Cancel">
-			</ui5-toolbar-button>
-		</ui5-toolbar>
-	</ui5-dialog>
 
 
 	<!-- playground-fold -->

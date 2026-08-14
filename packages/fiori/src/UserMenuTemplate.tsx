@@ -2,7 +2,7 @@ import type UserMenu from "./UserMenu.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
-import Tag from "@ui5/webcomponents/dist/Tag.js";
+import AvatarBadge from "@ui5/webcomponents/dist/AvatarBadge.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
@@ -106,14 +106,12 @@ function headerContent(this: UserMenu) {
 		{this._selectedAccount &&
 			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
 				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
-					<Avatar size="L" onClick={this._handleAvatarClick} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" interactive>
+					<Avatar size="L" onClick={this._isAvatarInteractive ? this._handleAvatarClick : undefined} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" mode={this._isAvatarInteractive ? "Interactive" : "Image"}>
 						{this._selectedAccount.avatarSrc &&
 							<img src={this._selectedAccount.avatarSrc}/>
 						}
 						{this.showEditButton &&
-						<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" >
-							<Icon slot="icon" name={edit}></Icon>
-						</Tag>
+						<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
 						}
 					</Avatar>
 				</span>

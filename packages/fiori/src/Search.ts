@@ -76,6 +76,7 @@ type SearchEventDetails = {
  * @since 2.9.0
  * @experimental
  * @csspart popover - Used to style the suggestions popup
+ * @since 2.24.0
  */
 @customElement({
 	tag: "ui5-search",
@@ -559,10 +560,6 @@ class Search extends SearchField {
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {
-			if (isPhone()) {
-				this.open = false;
-			}
-
 			return;
 		}
 

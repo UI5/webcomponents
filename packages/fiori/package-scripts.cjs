@@ -21,6 +21,7 @@ const options = {
 	standalone: false,
 	internal: {
 		cypress_code_coverage: false,
+		cypress_visual: process.env.CYPRESS_VISUAL === "true",
 	},
 	illustrationsData: [
 		{

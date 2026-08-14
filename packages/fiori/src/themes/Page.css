@@ -52,26 +52,24 @@
 	padding: 0;
 }
 
-/* S Size */
-@container (max-width: 599px) {
-	:host([floating-footer]) .ui5-page-footer-root,
-	.ui5-page-content-root {
-		padding: 0 1rem;
-	}
+/* S Size (default, progressively overridden by larger sizes) */
+:host([floating-footer]) .ui5-page-footer-root,
+.ui5-page-content-root {
+	padding: 0 1rem;
+}
 
-	::slotted([ui5-bar][slot="header"]),
-	::slotted([ui5-bar][design="Footer"]) {
-		box-sizing: border-box;
-		padding: 0 .25rem;
-	}
+::slotted([ui5-bar][slot="header"]),
+::slotted([ui5-bar][design="Footer"]) {
+	box-sizing: border-box;
+	padding: 0 .25rem;
+}
 
-	::slotted([ui5-bar][design="FloatingFooter"]) {
-		width: calc(100% - 0.5rem);
-	}
+::slotted([ui5-bar][design="FloatingFooter"]) {
+	width: calc(100% - 0.5rem);
 }
 
 /* M Size */
-@container (min-width: 600px) and (max-width: 1023px) {
+@container (min-width: 600px) {
 	:host([floating-footer]) .ui5-page-footer-root,
 	.ui5-page-content-root {
 		padding: 0 2rem;
@@ -89,7 +87,7 @@
 }
 
 /* L Size */
-@container (min-width: 1024px) and (max-width: 1439px) {
+@container (min-width: 1024px) {
 	:host([floating-footer]) .ui5-page-footer-root,
 	.ui5-page-content-root {
 		padding: 0 2rem;

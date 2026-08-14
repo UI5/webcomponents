@@ -1,3 +1,5 @@
+@import "./InvisibleTextStyles.css";
+
 :host([ui5-mcb-item]) {
 	height: auto;
 	min-height: var(--_ui5_list_item_base_height);
