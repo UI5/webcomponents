@@ -13,6 +13,8 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -25,6 +27,9 @@ import {
 	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
+	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
+	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
+	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -224,6 +229,13 @@ class UserSettingsDialog extends UI5Element {
 	_showNoSearchResult = false;
 
 	/**
+	 * Indicates that the user changed the search value and the search
+	 * results should be announced on the next rendering.
+	 * @private
+	 */
+	_announceSearchResults = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @private
 	 */
@@ -267,6 +279,11 @@ class UserSettingsDialog extends UI5Element {
 			this._showNoSearchResult = true;
 		} else {
 			this._showNoSearchResult = false;
+		}
+
+		if (this._announceSearchResults) {
+			this._announceSearchResults = false;
+			announce(this._searchResultsText, InvisibleMessageMode.Polite);
 		}
 
 		if (!this._selectedSetting) {
@@ -344,6 +361,19 @@ class UserSettingsDialog extends UI5Element {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
 	}
 
+	get _searchResultsText() {
+		const resultsCount = this._filteredItems.length + this._filteredFixedItems.length;
+
+		switch (resultsCount) {
+		case 0:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS);
+		case 1:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT);
+		default:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS, resultsCount);
+		}
+	}
+
 	get _selectedItemSlotName() {
 		return this._selectedSetting ? this._selectedSetting._individualSlot : "";
 	}
@@ -374,6 +404,7 @@ class UserSettingsDialog extends UI5Element {
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {
 		this._searchValue = (e.target as Input).value;
+		this._announceSearchResults = true;
 	}
 
 	captureRef(ref: HTMLElement & { associatedSettingItem?: UI5Element} | null) {
