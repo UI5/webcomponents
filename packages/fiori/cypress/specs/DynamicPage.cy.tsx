@@ -513,6 +513,41 @@ describe("DynamicPage", () => {
 			});
 		});
 	});
+
+	it("expands the header when focus moves into the title area while snapped", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "500px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+					<button data-testid="title-button">Title Action</button>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "100px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>
+					Page content with enough height to enable scrolling
+				</div>
+			</DynamicPage>
+		);
+
+		// Scroll to snap the header
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then(($container) => {
+				$container[0].scrollTop = 200;
+			});
+
+		cy.get("[ui5-dynamic-page]")
+			.should("have.prop", "headerSnapped", true);
+
+		// Focus an element inside the title area
+		cy.get("[data-testid='title-button']").focus();
+
+		// Header should now be expanded
+		cy.get("[ui5-dynamic-page]")
+			.should("have.prop", "headerSnapped", false);
+	});
 });
 
 describe("Scroll", () => {
