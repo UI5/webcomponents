@@ -31,4 +31,5 @@
 	--_ui5-search-loading-overlay-background: var(--sapBackgroundColor);
 	--_ui5-search-loading-overlay-transparency: 0.72;
 	--_ui5-search-field-text-color: var(--sapField_TextColor);
+	--_ui5-search-scope-spacing: 0 0.25rem;
 }
