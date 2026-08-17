@@ -55,11 +55,11 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			<Toolbar slot="footer" design="Transparent" data-sap-ui-fastnavgroup="true">
 				{this.saveMode ? (
 					<>
-						<ToolbarButton design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
-						<ToolbarButton design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
+						<ToolbarButton id={`${this._id}-save-btn`} design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
+						<ToolbarButton id={`${this._id}-cancel-btn`} design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
 					</>
 				) : (
-					<ToolbarButton design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+					<ToolbarButton id={`${this._id}-close-btn`} design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
 				)}
 			</Toolbar>
 		</Dialog>
