@@ -256,9 +256,9 @@ class ToolbarSelect extends ToolbarItemBase {
 		return !!this.label.length;
 	}
 
-	// The value to pass to the inner Select to prevent auto-selection when nothing is selected.
-	// When _lastSelectedIndex is -1 (nothing selected) we pass a sentinel that matches no option,
-	// so the inner Select's _applySelectionByValue path is taken and no option is forced selected.
+	// Drives the inner Select via its value= API (non-deprecated path).
+	// When nothing is selected, the sentinel prevents _applyAutoSelection from forcing index 0.
+	// The sentinel never leaks to a form: ToolbarSelect is not form-associated and the inner Select lives in shadow DOM.
 	get _innerSelectValue(): string | undefined {
 		if (this._lastSelectedIndex === -1) {
 			return "__no-selection__";
