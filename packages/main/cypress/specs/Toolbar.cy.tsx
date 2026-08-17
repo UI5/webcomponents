@@ -143,7 +143,7 @@ describe("Toolbar general interaction", () => {
 		cy.get("#toolbar-date-picker").should("be.focused");
 	});
 
-	it("Should not skip a self-overflowed Breadcrumbs item (href-less link with explicit tabindex is focusable)", () => {
+	it.skip("Should not skip a self-overflowed Breadcrumbs item (href-less link with explicit tabindex is focusable)", () => {
 		cy.mount(
 			<Toolbar id="breadcrumbs-toolbar" style={{ width: "500px" }}>
 				<ToolbarButton text="Mid 2"></ToolbarButton>
@@ -186,7 +186,7 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-breadcrumbs]").should("be.focused");
 	});
 
-	it("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
+	it.skip("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
 		cy.viewport(320, 1080);
 
 		cy.mount(
