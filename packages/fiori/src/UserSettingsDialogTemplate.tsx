@@ -67,7 +67,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 }
 
 function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [], classes: string) {
-	return <List accessibleRole="Menu" onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
+	return <List onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
 		{items.map(item => (
 			<ListItemStandard
 				class={!item._icon && item._siblingsWithIcon ? "ui5-user-settings-item-no-icon" : ""}
