@@ -37,7 +37,7 @@ describe("Accessibility", () => {
 			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-haspopup", "menu");
 	});
 
-	it("should set correct aria-roledescription to SplitButton root element", () => {
+	it("should not set aria-roledescription to SplitButton root element", () => {
 		cy.mount(
 			<Button accessibilityAttributes={{ root: { roleDescription: "Open Menu" } }}>
 				<ButtonState name="generate" text="Generate" icon="ai">Click me</ButtonState>
@@ -45,7 +45,7 @@ describe("Accessibility", () => {
 		);
 
 		cy.get("[ui5-ai-button]")
-			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-roledescription", "Open Menu");
+			.shadow().find(".ui5-split-button-root").should("not.have.attr", "aria-roledescription");
 	});
 
 	it("should set correct aria-haspopup to arrow button if shown", () => {
@@ -93,9 +93,6 @@ describe("Accessibility", () => {
 
 		cy.get("@button")
 			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-haspopup", "false");
-
-		cy.get("@button")
-			.ui5AIButtonCheckAttributeSplitButtonRoot("aria-roledescription", "Split Button");
 
 		cy.get("@button")
 			.ui5AIButtonCheckAttributeInArrowButton("aria-haspopup", "menu");
