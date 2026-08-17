@@ -1,4 +1,9 @@
+import CommonStylesCss from "../generated/css/CommonStyles.css.js";
+
 const packageMap = new Map<string, string>();
+
+packageMap.set("ui5-common-component-styles", CommonStylesCss);
+
 let componentsStyleSheet: CSSStyleSheet;
 
 const getComponentStyles = () => {
