@@ -25,7 +25,7 @@ SOFTWARE.
 const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
-const glob = require('glob');
+const { globSync } = require('glob');
 const globParent = require('glob-parent');
 
 /* CODE */
@@ -121,7 +121,7 @@ const copyAndWatchFn = async (argv) => {
 
 	// initial copy
 	if (!options['skip-initial-copy']) {
-		sources.forEach(s => glob.sync(s).forEach(copy));
+		sources.forEach(s => globSync(s).forEach(copy));
 	}
 
 	// watch
