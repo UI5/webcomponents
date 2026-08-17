@@ -17,9 +17,7 @@ const employees = [
 const input = document.getElementById("employee-input");
 
 function updateSuggestions(filterValue) {
-    while (input.querySelector("[slot='suggestionRows']")) {
-        input.querySelector("[slot='suggestionRows']").remove();
-    }
+    input.querySelectorAll("[slot='suggestionRows']").forEach(row => row.remove());
 
     const filtered = filterValue
         ? employees.filter(emp =>

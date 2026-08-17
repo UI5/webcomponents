@@ -156,7 +156,7 @@
 	</div>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Popin Overflow Mode (Default)</ui5-title>
+		<ui5-title class="section-title" level="H2">Popin Overflow Mode</ui5-title>
 		<p class="description">
 			This example uses <code>overflow-mode="Popin"</code> (the default) in a narrow container.
 			Columns will stack vertically when there's not enough space.
@@ -246,6 +246,7 @@
 				id="negativeState"
 				placeholder="Negative (Error) state..."
 				value-state="Negative"
+				show-suggestions
 			>
 				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
@@ -259,6 +260,7 @@
 				id="criticalState"
 				placeholder="Critical (Warning) state..."
 				value-state="Critical"
+				show-suggestions
 			>
 				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
@@ -272,6 +274,7 @@
 				id="positiveState"
 				placeholder="Positive (Success) state..."
 				value-state="Positive"
+				show-suggestions
 			>
 				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
@@ -285,6 +288,7 @@
 				id="informationState"
 				placeholder="Information state..."
 				value-state="Information"
+				show-suggestions
 			>
 				<ui5-table-header-cell slot="suggestionColumns" width="150px">Name</ui5-table-header-cell>
 				<ui5-table-header-cell slot="suggestionColumns" min-width="100px">Status</ui5-table-header-cell>
@@ -342,6 +346,7 @@
 				id="informationMessage"
 				placeholder="Information with message..."
 				value-state="Information"
+				show-suggestions
 			>
 				<div slot="valueStateMessage">
 					Tip: You can use wildcards (*) for broader search results.
@@ -367,6 +372,7 @@
 				id="formattedNegative"
 				placeholder="Error with formatted message..."
 				value-state="Negative"
+				show-suggestions
 			>
 				<div slot="valueStateMessage">
 					<strong>Invalid Entry:</strong> The value <em>"XYZ-999"</em> does not match any record.
@@ -384,6 +390,7 @@
 				id="formattedCritical"
 				placeholder="Warning with formatted message..."
 				value-state="Critical"
+				show-suggestions
 			>
 				<div slot="valueStateMessage">
 					<strong>Attention:</strong> This item will be <em>discontinued</em> on <strong>December 31, 2026</strong>.

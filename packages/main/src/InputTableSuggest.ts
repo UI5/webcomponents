@@ -288,10 +288,15 @@ class InputTableSuggest extends InputField {
 		const isFocused = this.shadowRoot?.querySelector("input") === getActiveElement();
 		const preventOpenPicker = this.disabled || this.readonly;
 
-		if (preventOpenPicker) {
+		if (preventOpenPicker || !hasValue) {
 			this.open = false;
 		} else if (!this._isPhone) {
-			this.open = hasItems && (this.open || (hasValue && isFocused && this.isTyping));
+			const isTyping = isFocused && this.isTyping;
+			if (isTyping) {
+				this.open = hasItems && !!this._getFirstMatchingRow(this.value);
+			} else {
+				this.open = hasItems && this.open;
+			}
 		}
 	}
 

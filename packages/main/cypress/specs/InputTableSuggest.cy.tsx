@@ -656,6 +656,93 @@ describe("InputTableSuggest - Disabled and Readonly", () => {
 	});
 });
 
+describe("InputTableSuggest - Popover open on match", () => {
+	it("does not open popover when typed value matches no suggestion", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>Jane</TableCell>
+				</TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("x");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+
+	it("closes popover when the value stops matching a suggestion", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions noTypeahead>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@input").realType("x");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+
+	it("closes popover when the value is deleted (empty)", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions noTypeahead>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.realPress("Backspace");
+
+		cy.get("@input").should("have.value", "");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+});
+
 describe("InputTableSuggest - Accessibility", () => {
 	it("announces row position and all column values during navigation", () => {
 		cy.mount(
