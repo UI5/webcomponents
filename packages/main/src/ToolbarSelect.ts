@@ -169,7 +169,7 @@ class ToolbarSelect extends ToolbarItemBase {
 		}
 	}
 
-	get value(): string | undefined {
+	get value(): string {
 		const selectedOption = this._lastSelectedIndex >= 0 ? this.options[this._lastSelectedIndex] : undefined;
 		return selectedOption?.value || selectedOption?.textContent?.trim() || "";
 	}
