@@ -1036,6 +1036,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		if (this.loading) {
 			return;
 		}
+
 		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
@@ -1058,6 +1059,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_handleArrowUp(e: KeyboardEvent, indexOfItem: number) {
+		if (this.loading) {
+			return;
+		}
+
 		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
 
@@ -1122,7 +1127,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._autocomplete = !(isBackSpace(e) || isDelete(e));
 		this._isKeyNavigation = false;
 
-		if (isNavKey && !this.readonly && this._filteredItems.length) {
+		if (isNavKey && !this.readonly) {
 			this.handleNavKeyPress(e);
 		}
 
