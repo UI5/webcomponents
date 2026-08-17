@@ -24,7 +24,7 @@ import {
 	displayDocumentationErrors,
 	toKebabCase
 } from "./utils.mjs";
-import { generateVsCodeCustomElementData } from "custom-element-vs-code-integration";
+import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
 import { customElementJetBrainsPlugin } from "custom-element-jet-brains-integration";
 
 const packageJSON = JSON.parse(fs.readFileSync("./package.json"));
@@ -628,7 +628,7 @@ export default {
 				});
 			}
 		},
-		wrapPluginForQuietMode(generateVsCodeCustomElementData({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),
+		wrapPluginForQuietMode(customElementVsCodePlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false })),
 		wrapPluginForQuietMode(customElementJetBrainsPlugin({ outdir: "dist", cssFileName: null, cssPropertiesDocs: false }))
 	],
 };
