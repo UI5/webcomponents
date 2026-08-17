@@ -1903,6 +1903,11 @@ describe("Input general interaction", () => {
 		cy.get("@popover")
 			.should("have.attr", "open");
 
+		cy.get("@popover")
+			.shadow()
+			.find(".ui5-popup-root")
+			.should("not.have.attr", "role", "dialog");
+
 		// type a
 		cy.get("@innerInput")
 			.realType("a");

@@ -1,6 +1,6 @@
 # UI5 Web Components & OpenUI5/SAPUI5
 
-UI5 Web Components are first-class citizens in OpenUI5/SAPUI5. A UI5 Web Component can be required and used like a regular OpenUI5/SAPUI5 control — its properties map to SAPUI5 properties, its slots to aggregations, and its events to SAPUI5 events. This means you can drop a Web Component into an XML view or a controller and use it side-by-side with the SAPUI5 controls you already know.
+UI5 Web Components are first-class citizens in OpenUI5/SAPUI5. A UI5 Web Component can be required and used like a regular OpenUI5/SAPUI5 control — its properties map to OpenUI5/SAPUI5 properties, its slots to aggregations, and its events to OpenUI5/SAPUI5 events. This means you can drop a Web Component into an XML view or a controller and use it side-by-side with the OpenUI5/SAPUI5 controls you already know.
 
 New or selected UI elements, over time, will be delivered as UI5 Web Components to avoid duplication.
 
@@ -62,11 +62,11 @@ Declare a namespace for the package and use the Web Component's class name as an
 </mvc:View>
 ```
 
-Data binding, formatters, and event handlers work exactly like they do for any other SAPUI5 control.
+Data binding, formatters, and event handlers work exactly like they do for any other OpenUI5/SAPUI5 control.
 
 ### Step 5. Use the components in controllers
 
-Require the Web Component classes just like SAPUI5 modules. Don't forget to include the `Assets` module of each `@ui5/webcomponents-*` package you use — it registers the theme styles and translations at runtime.
+Require the Web Component classes just like OpenUI5/SAPUI5 modules. Don't forget to include the `Assets` module of each `@ui5/webcomponents-*` package you use — it registers the theme styles and translations at runtime.
 
 ```js
 sap.ui.define([
@@ -87,14 +87,14 @@ sap.ui.define([
 
 OpenUI5/SAPUI5 already ships a large library of controls, so we don't recommend replacing them one-by-one with the equivalent UI5 Web Component. Our guidance is:
 
-- **Recommended** — use UI5 Web Components in SAPUI5 for components that don't exist there, not as a wholesale replacement for the SAPUI5 control library — for example, the AI-related components in `@ui5/webcomponents-ai` (`Button`, `PromptInput`, …).
-- **Not recommended** — using a UI5 Web Component to replace a basic SAPUI5 control that already exists (e.g. a plain button, input, or list). Mixing two implementations of the same primitive adds complexity without benefit.
+- **Recommended** — use UI5 Web Components in OpenUI5/SAPUI5 for components that don't exist there, not as a wholesale replacement for the OpenUI5/SAPUI5 control library — for example, the AI-related components in `@ui5/webcomponents-ai` (`Button`, `PromptInput`, …).
+- **Not recommended** — using a UI5 Web Component to replace a basic OpenUI5/SAPUI5 control that already exists (e.g. a plain button, input, or list). Mixing two implementations of the same primitive adds complexity without benefit.
 
 ## API Mapping
 
-For quick reference, this is how UI5 Web Components APIs surface in SAPUI5:
+For quick reference, this is how UI5 Web Components APIs surface in OpenUI5/SAPUI5:
 
-| UI5 Web Components | SAPUI5        | Notes                                                                                     |
+| UI5 Web Components | OpenUI5/SAPUI5 | Notes                                                                                     |
 |--------------------|---------------|-------------------------------------------------------------------------------------------|
 | properties         | properties    | Standard UI5 getters/setters, e.g. `Button#getText()`, `Button#setText()`                 |
 | readonly properties| getters       | Camel-cased getter, e.g. `AvatarGroup#getColorScheme()` — no setter                       |
@@ -105,7 +105,7 @@ For quick reference, this is how UI5 Web Components APIs surface in SAPUI5:
 
 A few additional naming differences:
 
-- The DOM `disabled` attribute is exposed as the SAPUI5 property `enabled`.
+- The DOM `disabled` attribute is exposed as the OpenUI5/SAPUI5 property `enabled`.
 - The default slot is exposed as the `content` aggregation.
 - Web Components that allow native text content expose a bindable `text` property.
 
