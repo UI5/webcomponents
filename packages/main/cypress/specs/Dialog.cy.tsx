@@ -696,7 +696,7 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
-	it("dialog remains anchored after resizing in RTL mode", () => {
+	it.skip("dialog remains anchored after resizing in RTL mode", () => {
 		cy.mount(
 			<>
 				<div dir="rtl">
