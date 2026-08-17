@@ -36,7 +36,7 @@
     "@ui5/webcomponents-tools": "2.26.0-rc.0",
     "globby": "^13.1.1",
     "json-beautify": "^1.1.1",
-    "postcss": "^8.4.5",
+    "postcss": "^8.5.26",
     "postcss-import": "^14.0.2"
   }
 }
