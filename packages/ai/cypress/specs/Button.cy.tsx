@@ -45,7 +45,8 @@ describe("Accessibility", () => {
 		);
 
 		cy.get("[ui5-ai-button]")
-			.shadow().find(".ui5-split-button-root").should("not.have.attr", "aria-roledescription");
+			.shadow().find("[ui5-split-button]").shadow().find(".ui5-split-button-root")
+			.should("not.have.attr", "aria-roledescription");
 	});
 
 	it("should set correct aria-haspopup to arrow button if shown", () => {
