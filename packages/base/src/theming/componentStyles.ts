@@ -9,6 +9,7 @@ let componentsStyleSheet: CSSStyleSheet;
 const getComponentStyles = () => {
 	if (!componentsStyleSheet) {
 		componentsStyleSheet = new CSSStyleSheet();
+		componentsStyleSheet.replaceSync(Array.from(packageMap.values()).join("\n"));
 	}
 
 	return componentsStyleSheet;

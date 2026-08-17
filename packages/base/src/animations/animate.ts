@@ -59,7 +59,9 @@ const animate = (options: AnimateOptions) => {
 	};
 };
 
-const duration = getAnimationMode() === "none" ? 0 : 400;
+const duration = () => {
+	return getAnimationMode() === "none" ? 0 : 400;
+};
 
 export { duration };
 export type { AnimateOptions };
