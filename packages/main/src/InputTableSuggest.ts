@@ -273,6 +273,14 @@ class InputTableSuggest extends InputField {
 
 		this.typedInValue = this.value;
 		this.valueBeforeSelectionStart = this.value;
+
+		this._isKeyNavigation = false;
+
+		if (this._rowFocused) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+		}
 	}
 
 	/**

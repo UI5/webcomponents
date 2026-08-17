@@ -170,6 +170,40 @@ describe("InputTableSuggest - Keyboard Navigation", () => {
 		});
 	});
 
+	it("moves visual focus back to the input when typing after navigating", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions noTypeahead>
+				<TableHeaderCell slot="suggestionColumns">Name</TableHeaderCell>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>Jane</TableCell>
+				</TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("j");
+
+		cy.realPress("ArrowDown");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-table-row].ui5-input-table-suggest-row--focused")
+			.should("exist");
+
+		cy.get("@input").realType("a");
+
+		cy.get("@input")
+			.shadow()
+			.find("[ui5-table-row].ui5-input-table-suggest-row--focused")
+			.should("not.exist");
+	});
+
 	it("restores typed value when pressing Arrow Up from first row", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>

@@ -1,5 +1,6 @@
 @import "./FormComponents.css";
 @import "./InputField.css";
+@import "./Input.css";
 @import "./InputIcon.css";
 
 .ui5-combobox-root {
