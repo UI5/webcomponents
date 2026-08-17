@@ -167,6 +167,8 @@ describe("Initial rendering", () => {
 		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
 		cy.get("@responsivePopover").should("exist");
 		cy.get("@responsivePopover").find("[ui5-panel]").contains(`${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+		cy.get("@responsivePopover").find("[ui5-panel]").should("have.attr", "accessible-name", `${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
 	});
 
