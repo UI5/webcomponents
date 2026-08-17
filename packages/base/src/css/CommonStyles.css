@@ -1,6 +1,6 @@
 @container style(--_ui5-animation-mode: none) {
 	* {
-		transition: none !important;
-		animation: none !important;
+		transition-duration: 0s !important;
+		animation-duration: 0s !important;
 	}
 }
