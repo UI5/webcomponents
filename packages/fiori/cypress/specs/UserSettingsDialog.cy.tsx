@@ -1389,6 +1389,52 @@ describe("Appearance view", () => {
         });
     });
 
+    it("tests appearance view item announces its text on focus (a11y)", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+
+        // accessibilityInfo exposes the item text so the accessible name is not empty
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .then($item => {
+                const item = $item.get(0) as any;
+                expect(item.accessibilityInfo.description).to.equal("SAP Morning Horizon");
+            });
+
+        // Focusing the item populates the shared invisible text used for the announcement
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .realClick();
+
+        cy.document().then(doc => {
+            const invisibleText = doc.getElementById("ui5-invisible-text");
+            expect(invisibleText).to.exist;
+            expect(invisibleText!.textContent).to.contain("SAP Morning Horizon");
+        });
+
+        // The li references the invisible text via aria-labelledby so it is part of the accessible name
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .shadow()
+            .find("li")
+            .then($li => {
+                const labelledBy = ($li.get(0) as any).ariaLabelledByElements as HTMLElement[] | null;
+                const ids = (labelledBy || []).map(el => el.id);
+                expect(ids).to.include("ui5-invisible-text");
+            });
+    });
+
     it("tests appearance view list renders correctly", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
@@ -1554,6 +1600,18 @@ describe("F6 Navigation", () => {
         cy.get("[ui5-user-settings-dialog]").shadow()
             .find(".ui5-user-settings-side")
             .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests side panel does not have unsupported aria-orientation attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find(".ui5-user-settings-side")
+            .should("not.have.attr", "aria-orientation");
     });
 
     it("tests footer toolbar has fastnavgroup attribute", () => {

@@ -1937,7 +1937,7 @@ describe("Events", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 	});
 
@@ -2069,7 +2069,7 @@ describe("Accessibility", () => {
 			.then((ariaControlsId) => {
 				cy.get("[ui5-search]")
 					.shadow()
-					.find("[ui5-responsive-popover]")
+					.find("#ui5-search-list")
 					.should("have.attr", "id", ariaControlsId);
 			});
 	});
