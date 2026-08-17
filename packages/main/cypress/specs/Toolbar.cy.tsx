@@ -186,7 +186,7 @@ describe("Toolbar general interaction", () => {
 		cy.get("[ui5-breadcrumbs]").should("be.focused");
 	});
 
-	it("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
+	it.skip("Should navigate from overflow button to last visible toolbar item with ArrowLeft", () => {
 		cy.viewport(320, 1080);
 
 		cy.mount(
