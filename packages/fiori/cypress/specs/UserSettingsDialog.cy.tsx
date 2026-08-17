@@ -1709,4 +1709,32 @@ describe("Save mode", () => {
 		cy.realPress("Escape");
 		cy.get("@beforeClose").should("have.been.calledOnce");
 	});
+
+	it("close button has the correct id", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
+			.should("have.attr", "id").and("match", /^.+-close-btn$/);
+	});
+
+	it("save and cancel buttons have the correct ids", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(0)
+			.should("have.attr", "id").and("match", /^.+-save-btn$/);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(1)
+			.should("have.attr", "id").and("match", /^.+-cancel-btn$/);
+	});
 });
