@@ -6,6 +6,10 @@
 * S max-width: 600px - container padding 24px
 */
 
+* {
+	box-sizing: border-box;
+}
+
 /* S - 1 column */
 @container (width < 600px) {
 	.ui5-form-layout {
