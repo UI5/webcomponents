@@ -1017,6 +1017,25 @@ describe("Responsiveness", () => {
 			.should("exist");
 	});
 
+	it("submenu header on desktop has no close button in UserMenuItem", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Settings">
+						<UserMenuItem text="Appearance"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find(".ui5-menu-close-button")
+			.should("not.exist");
+	});
+
 	it("popover header has no divider line (::before pseudo-element hidden)", () => {
 		cy.mount(
 			<>
