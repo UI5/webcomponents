@@ -1,4 +1,6 @@
 import type UserMenuItem from "./UserMenuItem.js";
+import MenuItemTemplate from "@ui5/webcomponents/dist/MenuItemTemplate.js";
+import type { MenuItemHooks } from "@ui5/webcomponents/dist/MenuItemTemplate.js";
 import ListItemTemplate from "@ui5/webcomponents/dist/ListItemTemplate.js";
 import type { ListItemHooks } from "@ui5/webcomponents/dist/ListItemTemplate.js";
 import ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover.js";
@@ -13,6 +15,18 @@ import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 export default function UserMenuItemTemplate(this: UserMenuItem) {
+	if (this.isPhone) {
+		return phoneTemplate.call(this);
+	}
+
+	const hooks: Partial<MenuItemHooks> = {};
+	if (this.showSelection) {
+		hooks.menuItemTextContent = userMenuItemTextContent;
+	}
+	return [MenuItemTemplate.call(this, hooks)];
+}
+
+function phoneTemplate(this: UserMenuItem) {
 	const hooks: Partial<ListItemHooks> = {
 		iconBegin: function (this: UserMenuItem) {
 			if (this.hasIcon) {
@@ -42,7 +56,7 @@ export default function UserMenuItemTemplate(this: UserMenuItem) {
 
 	return [
 		ListItemTemplate.call(this, hooks),
-		submenuPopover.call(this),
+		phoneSubmenuPopover.call(this),
 	];
 }
 
@@ -77,7 +91,7 @@ function rightContent(this: UserMenuItem) {
 	}
 }
 
-function submenuPopover(this: UserMenuItem) {
+function phoneSubmenuPopover(this: UserMenuItem) {
 	return this.hasSubmenu && <ResponsivePopover
 		id={`${this._id}-menu-rp`}
 		class="ui5-menu-rp ui5-menu-rp-sub-menu"
@@ -93,27 +107,25 @@ function submenuPopover(this: UserMenuItem) {
 		onBeforeClose={this._beforePopoverClose}
 		onClose={this._afterPopoverClose}
 	>
-		{this.isPhone && (
-			<div slot="header" class="ui5-menu-dialog-header">
-				<Button
-					icon={navBackIcon}
-					class="ui5-menu-back-button"
-					design="Transparent"
-					aria-label={this.labelBack}
-					onClick={this._close}
-				/>
-				<div class="ui5-menu-dialog-title">
-					<div>{this.text}</div>
-				</div>
-				<Button
-					icon={declineIcon}
-					class="ui5-menu-close-button"
-					design="Transparent"
-					aria-label={this.labelCancel}
-					onClick={this._closeAll}
-				/>
+		<div slot="header" class="ui5-menu-dialog-header">
+			<Button
+				icon={navBackIcon}
+				class="ui5-menu-back-button"
+				design="Transparent"
+				aria-label={this.labelBack}
+				onClick={this._close}
+			/>
+			<div class="ui5-menu-dialog-title">
+				<div>{this.text}</div>
 			</div>
-		)}
+			<Button
+				icon={declineIcon}
+				class="ui5-menu-close-button"
+				design="Transparent"
+				aria-label={this.labelCancel}
+				onClick={this._closeAll}
+			/>
+		</div>
 
 		<div
 			id={`${this._id}-menu-main`}
@@ -143,6 +155,16 @@ function submenuPopover(this: UserMenuItem) {
 				active={true}
 			/>}
 		</div>
-
 	</ResponsivePopover>;
+}
+
+function userMenuItemTextContent(this: UserMenuItem) {
+	return (
+		<div class="ui5-user-menu-item-text-wrapper">
+			{this.text && <div class="ui5-menu-item-text">{this.text}</div>}
+			{this._selectedSubItemText &&
+				<div class="ui5-user-menu-item-selection-text">{this._selectedSubItemText}</div>
+			}
+		</div>
+	);
 }
