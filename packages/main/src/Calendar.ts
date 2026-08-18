@@ -388,6 +388,7 @@ class Calendar extends CalendarPart {
 	}
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		ResizeHandler.register(document.body, this._handleResizeBound);
 		this._handleResize();
 	}
@@ -421,7 +422,12 @@ class Calendar extends CalendarPart {
 	}
 
 	onExitDOM() {
+		super.onExitDOM();
 		ResizeHandler.deregister(document.body, this._handleResizeBound);
+	}
+
+	_onZoomChange(): void {
+		// _highZoom property change triggers re-render automatically
 	}
 
 	/**
@@ -946,6 +952,21 @@ class Calendar extends CalendarPart {
 
 	_onLegendFocusOut() {
 		this._selectedItemType = "None";
+	}
+
+	get _hzDatePickerValue(): string {
+		const ts = this._selectedDatesTimestamps[0];
+		if (!ts) { return ""; }
+		return this.getFormat().format(UI5Date.getInstance(ts * 1000), true);
+	}
+
+	_onHzDatePickerChange(e: CustomEvent<{ value: string, valid: boolean }>) {
+		if (!e.detail.valid) { return; }
+		const parsed = this.getFormat().parse(e.detail.value, true) as Date | null;
+		if (!parsed) { return; }
+		const timestamp = CalendarDateComponent.fromLocalJSDate(parsed).valueOf() / 1000;
+		this.timestamp = timestamp;
+		this._fireEventAndUpdateSelectedDates([timestamp]);
 	}
 
 	get _specialDates() {
