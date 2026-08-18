@@ -43,3 +43,7 @@
 	white-space: normal;
 	text-overflow: initial;
 }
+
+.ui5-menu-close-button {
+	margin-left: auto;
+}

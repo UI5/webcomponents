@@ -6,7 +6,6 @@ import Button from "./Button.js";
 import List from "./List.js";
 import BusyIndicator from "./BusyIndicator.js";
 import navBackIcon from "@ui5/webcomponents-icons/dist/nav-back.js";
-import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 import checkIcon from "@ui5/webcomponents-icons/dist/accept.js";
 import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Icon from "./Icon.js";
@@ -15,11 +14,13 @@ import type { ListItemHooks } from "./ListItemTemplate.js";
 
 export type MenuItemHooks = ListItemHooks & {
 	menuItemTextContent: JsxTemplate;
+	menuItemDialogHeaderEnd: JsxTemplate;
 }
 
 const predefinedHooks: Partial<MenuItemHooks> = {
 	iconBegin,
 	menuItemTextContent,
+	menuItemDialogHeaderEnd: () => {},
 };
 
 export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
@@ -39,7 +40,7 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuIte
 	return <>
 		{ListItemTemplate.call(this, currentHooks)}
 
-		{listItemPostContent.call(this)}
+		{listItemPostContent.call(this, currentHooks)}
 	</>;
 }
 
@@ -103,7 +104,7 @@ function iconBegin(this: MenuItem) {
 	}
 }
 
-function listItemPostContent(this: MenuItem) {
+function listItemPostContent(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
 	return this.hasSubmenu && <ResponsivePopover
 		id={`${this._id}-menu-rp`}
 		class="ui5-menu-rp ui5-menu-rp-sub-menu"
@@ -135,13 +136,7 @@ function listItemPostContent(this: MenuItem) {
 								{this.text}
 							</div>
 						</div>
-						<Button
-							icon={declineIcon}
-							class="ui5-menu-close-button"
-							design="Transparent"
-							aria-label={this.labelCancel}
-							onClick={this._closeAll}
-						/>
+						{hooks?.menuItemDialogHeaderEnd?.call(this)}
 					</div >
 				</>
 			)

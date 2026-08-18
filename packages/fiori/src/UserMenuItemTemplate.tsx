@@ -1,9 +1,23 @@
 import type UserMenuItem from "./UserMenuItem.js";
 import MenuItemTemplate from "@ui5/webcomponents/dist/MenuItemTemplate.js";
 import type { MenuItemHooks } from "@ui5/webcomponents/dist/MenuItemTemplate.js";
+import Button from "@ui5/webcomponents/dist/Button.js";
+import declineIcon from "@ui5/webcomponents-icons/dist/decline.js";
 
 export default function UserMenuItemTemplate(this: UserMenuItem) {
-	const hooks: Partial<MenuItemHooks> = {};
+	const hooks: Partial<MenuItemHooks> = {
+		menuItemDialogHeaderEnd: function menuItemDialogHeaderEnd(this: UserMenuItem) {
+			return (
+				<Button
+					icon={declineIcon}
+					class="ui5-menu-close-button"
+					design="Transparent"
+					aria-label={this.labelCancel}
+					onClick={this._closeAll}
+				/>
+			);
+		},
+	};
 
 	if (this.showSelection) {
 		hooks.menuItemTextContent = userMenuItemTextContent;

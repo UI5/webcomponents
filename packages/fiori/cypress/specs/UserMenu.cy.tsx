@@ -989,6 +989,34 @@ describe("Responsiveness", () => {
 		cy.get("@headerBar").find("[ui5-button][slot='endContent']").should("have.length", 1);
 	});
 
+	it("submenu header on phone has close button in UserMenuItem", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Settings">
+						<UserMenuItem text="Appearance"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.ui5MenuItemClick();
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find(".ui5-menu-close-button")
+			.should("exist");
+	});
+
 	it("popover header has no divider line (::before pseudo-element hidden)", () => {
 		cy.mount(
 			<>
