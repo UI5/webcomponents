@@ -463,7 +463,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	// noop — override in later steps
-	_onZoomChange(_bHighZoom: boolean): void {}
+	_onZoomChange(bHighZoom: boolean): void {
+		if (this.open) {
+			this.open = false;
+			if (bHighZoom !== this._highZoom) {
+				this._highZoom = bHighZoom;
+			}
+			this.open = true;
+		}
+	}
+
+	_onHzFocusIn(e: FocusEvent) {
+		(e.target as HTMLElement).blur();
+		if (!this.open) {
+			this._togglePicker();
+		}
+	}
 
 	onBeforeRendering() {
 		if (this.value) {
@@ -596,6 +611,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_togglePicker() {
+		this._highZoom = this._isHighZoom();
 		this.open = !this.open;
 		if (this._isMobileDevice) {
 			this._inputsPopover.open = false;
@@ -680,6 +696,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	_handleInputClick(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		if (this.open) {
+			return;
+		}
+
+		if (this._highZoom) {
+			this._togglePicker();
 			return;
 		}
 
@@ -1079,7 +1100,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get showHeader() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	/**

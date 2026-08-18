@@ -8,6 +8,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import TimePickerInternals from "./TimePickerInternals.js";
 import type Input from "./Input.js";
+import Label from "./Label.js";
 
 import InputType from "./types/InputType.js";
 
@@ -15,6 +16,9 @@ import {
 	TIMEPICKER_INPUTS_ENTER_HOURS,
 	TIMEPICKER_INPUTS_ENTER_MINUTES,
 	TIMEPICKER_INPUTS_ENTER_SECONDS,
+	TIMEPICKER_HZ_HOURS,
+	TIMEPICKER_HZ_MINUTES,
+	TIMEPICKER_HZ_SECONDS,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -59,6 +63,10 @@ class TimeSelectionInputs extends TimePickerInternals {
 	@property()
 	_editedInputValue?: string;
 
+	/** When true, shows visible labels above each input (used in high-zoom mode) */
+	@property({ type: Boolean, noAttribute: true })
+	_showLabels = false;
+
 	get enterHoursLabel() {
 		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_INPUTS_ENTER_HOURS);
 	}
@@ -69,6 +77,18 @@ class TimeSelectionInputs extends TimePickerInternals {
 
 	get enterSecondsLabel() {
 		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_INPUTS_ENTER_SECONDS);
+	}
+
+	get hzHoursLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_HZ_HOURS);
+	}
+
+	get hzMinutesLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_HZ_MINUTES);
+	}
+
+	get hzSecondsLabel() {
+		return TimePickerInternals.i18nBundle.getText(TIMEPICKER_HZ_SECONDS);
 	}
 
 	get _numberType() {

@@ -10,6 +10,27 @@
 	align-items: center;
 }
 
+/* High-zoom labeled layout — only adds labels and wrapping, keeps input sizes */
+.ui5-time-selection-inputs--labeled {
+	min-width: 0;
+	width: 100%;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: flex-end;
+	box-sizing: border-box;
+}
+
+.ui5-time-selection-input-cell {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.ui5-time-selection-input-label {
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
 .ui5-time-selection-separator {
 	display: inline-block;
 	min-width: 0.5rem;
@@ -18,6 +39,11 @@
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	color: var(--sapTextColor);
+}
+
+/* In labeled mode align separator to center of input (input height ≈ 2.25rem, label ≈ 1.25rem) */
+.ui5-time-selection-inputs--labeled .ui5-time-selection-separator {
+	margin-bottom: calc((2.25rem / 2) - 0.5em);
 }
 
 .ui5-hidden-text {

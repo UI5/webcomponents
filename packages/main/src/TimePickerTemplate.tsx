@@ -7,7 +7,7 @@ import timeEntryRequest from "@ui5/webcomponents-icons/dist/time-entry-request.j
 export default function TimePickerTemplate(this: TimePicker) {
 	return (
 		<>
-			<div id={this._id} class="ui5-time-picker-root">
+			<div id={this._id} class="ui5-time-picker-root" onClick={this._highZoom ? this._handleInputClick : undefined}>
 				<DateTimeInput
 					data-sap-focus-ref
 					id={`${this._id}-inner`}
@@ -25,7 +25,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					onChange={this._handleInputChange}
 					onInput={this._handleInputLiveChange}
 					onui5-_request-submit={this._onInputRequestSubmit}
-					onFocusIn={this._onfocusin}
+					onFocusIn={this._highZoom ? this._onHzFocusIn : this._onfocusin}
 					onKeyDown={this._onkeydown}
 				>
 					{this.shouldDisplayValueStateMessageOnDesktop &&
@@ -35,7 +35,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 						></slot>
 					}
 
-					{!this.readonly &&
+					{!this.readonly && !this._highZoom &&
 						<Icon
 							slot="icon"
 							name={timeEntryRequest}
