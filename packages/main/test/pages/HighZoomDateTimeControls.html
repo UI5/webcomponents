@@ -98,9 +98,19 @@
 		</ui5-date-picker>
 	</div>
 	<div class="control-row">
+		<label>Min/Max narrow<br>(Jun 10–Aug 20, 2026):</label>
+		<ui5-date-picker id="dp-min-max-narrow"
+			value="15.07.2026"
+			format-pattern="dd.MM.yyyy"
+			min-date="10.06.2026"
+			max-date="20.08.2026">
+		</ui5-date-picker>
+	</div>
+	<div class="control-row">
 		<label>Secondary Cal (Islamic):</label>
 		<ui5-date-picker id="dp-secondary-cal"
 			value="19.05.2026"
+			format-pattern="dd.MM.yyyy"
 			secondary-calendar-type="Islamic">
 		</ui5-date-picker>
 	</div>
@@ -152,7 +162,7 @@
 		output.textContent = new Date().toLocaleTimeString() + " — " + msg + "\n" + output.textContent;
 	};
 
-	["tp-std", "dp-std", "dp-min-max", "dp-secondary-cal",
+	["tp-std", "dp-std", "dp-min-max", "dp-min-max-narrow", "dp-secondary-cal",
 	 "dtp-std", "dtp-datevalue", "drs-std", "cal-std"].forEach(id => {
 		document.getElementById(id)?.addEventListener("change", e => {
 			log(`[${id}] change: value="${e.target.value || ''}"`);

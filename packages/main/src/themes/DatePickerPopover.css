@@ -50,3 +50,12 @@
 	font-family: var(--_ui5_button_fontFamily);
 	text-align: left;
 }
+
+/* Calendar type toggle icon in high-zoom header */
+.ui5-dhzi-cal-toggle-btn {
+	color: var(--sapButton_Lite_TextColor);
+	cursor: pointer;
+	flex-shrink: 0;
+	margin-inline-start: auto;
+	padding: 0.25rem;
+}

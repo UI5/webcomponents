@@ -152,6 +152,11 @@ class DateHighZoomInputs extends UI5Element {
 	_pendingYear: number | null = null;
 	_endPendingYear: number | null = null;
 
+	// Gregorian source of truth — used to convert display values on calendar type toggle
+	_gregYear = 0;
+	_gregMonth = 0;
+	_gregDay = 1;
+
 	// Track last synced dateValue to avoid overwriting user edits on every re-render
 	_syncedDateValue: Date | null = null;
 	_syncedSecondDateValue: Date | null = null;
@@ -189,12 +194,27 @@ class DateHighZoomInputs extends UI5Element {
 	// ---- Month / Day options ----
 
 	get _monthOptions() {
-		const months = [];
-		for (let i = 0; i < 12; i++) {
-			const d = new Date(2000, i, 1);
-			months.push({ value: i, text: d.toLocaleString("default", { month: "long" }) });
-		}
-		return months;
+		// Map UI5 calendar type names to Intl calendar IDs
+		const calTypeMap: Record<string, string> = {
+			Islamic: "islamic-umalqura",
+			Buddhist: "buddhist",
+			Japanese: "japanese",
+			Persian: "persian",
+			Gregorian: "gregory",
+		};
+		const calType = this.primaryCalendarType || "Gregorian";
+		const intlCal = calTypeMap[calType] || "gregory";
+		const locale = navigator.language || "en";
+
+		return Array.from({ length: 12 }, (_, i) => {
+			// Use a fixed reference year to get month names
+			const refDate = new Date(2000, i, 1);
+			const text = new Intl.DateTimeFormat(locale, {
+				month: "long",
+				calendar: intlCal,
+			} as Intl.DateTimeFormatOptions).format(refDate);
+			return { value: i, text };
+		});
 	}
 
 	_getDaysInMonth(year: number, month: number) {
@@ -215,10 +235,79 @@ class DateHighZoomInputs extends UI5Element {
 	syncStartDate() {
 		if (!this.dateValue) { return; }
 		const year = this.dateValue.getFullYear();
-		this._yearValue = String(year);
+		const month = this.dateValue.getMonth();
+		const day = this.dateValue.getDate();
+		// Store Gregorian source of truth
+		this._gregYear = year;
+		this._gregMonth = month;
+		this._gregDay = day;
 		this._yearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
-		this._monthValue = this.dateValue.getMonth();
-		this._dayValue = this.dateValue.getDate();
+		// Show in current calendar type
+		this._applyCalendarTypeToDisplay(false);
+	}
+
+	/**
+	 * Converts Gregorian source (this._gregYear/Month/Day) to display values
+	 * in the current primaryCalendarType using Intl.DateTimeFormat.
+	 */
+	_applyCalendarTypeToDisplay(isEnd: boolean) {
+		const calTypeMap: Record<string, string> = {
+			Islamic: "islamic-umalqura",
+			Buddhist: "buddhist",
+			Japanese: "japanese",
+			Persian: "persian",
+			Gregorian: "gregory",
+		};
+		const calType = this.primaryCalendarType || "Gregorian";
+		const intlCal = calTypeMap[calType] || "gregory";
+		const isGregorian = intlCal === "gregory";
+
+		const srcYear = isEnd ? 0 : this._gregYear; // end date not yet supported
+		const srcMonth = isEnd ? 0 : this._gregMonth;
+		const srcDay = isEnd ? 1 : this._gregDay;
+
+		if (isGregorian) {
+			this._yearValue = String(srcYear);
+			this._monthValue = srcMonth;
+			this._dayValue = srcDay;
+			return;
+		}
+
+		const refDate = new Date(srcYear, srcMonth, srcDay);
+		refDate.setFullYear(srcYear);
+		const locale = navigator.language || "en";
+		const fmt = new Intl.DateTimeFormat(locale, {
+			year: "numeric",
+			month: "numeric",
+			day: "numeric",
+			calendar: intlCal,
+		} as Intl.DateTimeFormatOptions);
+
+		const parts = fmt.formatToParts(refDate);
+		const get = (type: string) => {
+			const part = parts.find(p => p.type === type);
+			return part ? parseInt(part.value) : NaN;
+		};
+
+		const newYear = get("year");
+		const newMonth = get("month") - 1; // Intl months are 1-based
+		const newDay = get("day");
+
+		if (!isNaN(newYear)) {
+			// Force ui5-input to pick up the new value by clearing first
+			this._yearValue = "";
+			requestAnimationFrame(() => { this._yearValue = String(newYear); });
+		}
+		if (!isNaN(newMonth)) { this._monthValue = newMonth; }
+		if (!isNaN(newDay)) { this._dayValue = newDay; }
+	}
+
+	/**
+	 * Re-derive display fields from Gregorian source when calendar type changes.
+	 * Does NOT modify the Gregorian source.
+	 */
+	convertToCalendarType() {
+		this._applyCalendarTypeToDisplay(false);
 	}
 
 	syncEndDate(date: Date | null) {
@@ -277,10 +366,15 @@ class DateHighZoomInputs extends UI5Element {
 
 	// ---- Internal validation ----
 
-	_parseISO(iso: string): Date | null {
+	_parseISO(iso: string): { getFullYear(): number; getMonth(): number; getDate(): number } | null {
 		if (!iso) { return null; }
-		const d = new Date(iso);
-		return isNaN(d.getTime()) ? null : d;
+		const parts = iso.split("-");
+		if (parts.length < 3) { return null; }
+		const y = parseInt(parts[0]);
+		const m = parseInt(parts[1]) - 1; // 0-based
+		const d = parseInt(parts[2]);
+		if (isNaN(y) || isNaN(m) || isNaN(d)) { return null; }
+		return { getFullYear: () => y, getMonth: () => m, getDate: () => d };
 	}
 
 	_doValidate(bEndDate: boolean): boolean {

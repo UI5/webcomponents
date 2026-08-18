@@ -12,6 +12,7 @@ import error from "@ui5/webcomponents-icons/dist/error.js";
 import alert from "@ui5/webcomponents-icons/dist/alert.js";
 import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import information from "@ui5/webcomponents-icons/dist/information.js";
+import appointmentIcon from "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 type TemplateHook = () => void;
 
@@ -56,6 +57,15 @@ function defaultHeader(this: DatePicker) {
 			<div class="row">
 				<span>{this._headerTitleText}</span>
 			</div>
+			{ this._hzShowCalToggle &&
+				<Icon
+					name={appointmentIcon}
+					class="ui5-dhzi-cal-toggle-btn"
+					mode="Interactive"
+					onClick={this._onHzCalToggle}
+					title={this._hzCalToggleLabel}
+				/>
+			}
 		</div>
 	);
 }
@@ -69,7 +79,7 @@ function defaultContent(this: DatePicker) {
 		return (
 			<DateHighZoomInputs
 				id={`${this._id}-hz-inputs`}
-				primaryCalendarType={this._primaryCalendarType}
+				primaryCalendarType={this._hzEffectiveCalType}
 				dateValue={this.dateValue}
 				minDate={minISO}
 				maxDate={maxISO}
@@ -155,6 +165,7 @@ function defaultFooter(this: DatePicker) {
 					id="ok"
 					class="ui5-dt-picker-action"
 					design="Emphasized"
+					disabled={!this._hzOkEnabled}
 					onClick={this._onHzOk}
 				>
 					{this.btnOKLabel}

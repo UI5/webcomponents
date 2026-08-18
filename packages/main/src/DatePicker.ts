@@ -68,6 +68,7 @@ import type DateTimeInput from "./DateTimeInput.js";
 import type { InputAccInfo } from "./Input.js";
 import InputType from "./types/InputType.js";
 import type DateHighZoomInputs from "./DateHighZoomInputs.js";
+import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
 import IconMode from "./types/IconMode.js";
 import DatePickerTemplate from "./DatePickerTemplate.js";
 
@@ -412,6 +413,13 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@query("[ui5-date-high-zoom-inputs]")
 	_hzInputs?: DateHighZoomInputs;
 
+	@property({ type: Boolean, noAttribute: true })
+	_hzOkEnabled = true;
+
+	/** Active calendar type in high-zoom mode — toggled by the header button */
+	@property({ noAttribute: true })
+	_hzActiveCalType?: `${CalendarType}`;
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -473,6 +481,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	onResponsivePopoverBeforeOpen() {
 		if (this._highZoom) {
+			this._hzOkEnabled = true;
+			this._hzActiveCalType = undefined; // reset to primary on each open
 			return;
 		}
 		this._calendar.timestamp = this._calendarTimestamp;
@@ -488,7 +498,9 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_onHzInputsChange() {
-		// called by DateHighZoomInputs change event — validation is on OK press
+		if (this._hzInputs) {
+			this._hzOkEnabled = this._hzInputs.validate();
+		}
 	}
 
 	onBeforeRendering() {
@@ -977,6 +989,32 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get btnOKLabel() {
 		return DatePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	get _hzEffectiveCalType(): `${CalendarType}` {
+		return this._hzActiveCalType || this._primaryCalendarType;
+	}
+
+	get _hzShowCalToggle(): boolean {
+		return this._highZoom && this.hasSecondaryCalendarType;
+	}
+
+	get _hzCalToggleLabel(): string {
+		const current = this._hzEffectiveCalType;
+		const other = current === this._primaryCalendarType ? this._secondaryCalendarType : this._primaryCalendarType;
+		return other ?? "";
+	}
+
+	_onHzCalToggle() {
+		const current = this._hzEffectiveCalType;
+		const next = current === this._primaryCalendarType
+			? this._secondaryCalendarType
+			: this._primaryCalendarType;
+		this._hzActiveCalType = next;
+		if (this._hzInputs) {
+			this._hzInputs.primaryCalendarType = this._hzActiveCalType;
+			this._hzInputs.convertToCalendarType();
+		}
 	}
 
 	_onHzOk() {
