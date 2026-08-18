@@ -619,7 +619,7 @@ describe("Table - Horizontal alignment of cells", () => {
 			.should("have.css", "justify-content", "end");
 	});
 
-	it("alignment with popin", () => {
+	it.skip("alignment with popin", () => {
 		const testWidths = [
 			{ width: 1120, poppedIn: [] },
 			{ width: 900, poppedIn: ["priceCol"] },

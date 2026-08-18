@@ -167,6 +167,35 @@ describe("Initial rendering", () => {
 		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.exist");
 	});
 
+	it("tests side list uses default list role, not menu (a11y)", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-dialog]")
+			.find("[ui5-list]")
+			.as("list");
+
+		// The list container must expose role="list", not "menu",
+		// so the surrounding dialog structure is announced correctly by screen readers.
+		cy.get("@list").shadow().find("ul").should("have.attr", "role", "list");
+		cy.get("@list").shadow().find("ul").should("not.have.attr", "role", "menu");
+
+		// The items must not inherit the "menuitem" role.
+		cy.get("@list").find("[ui5-li]").each($item => {
+			cy.wrap($item).shadow().find("li").should("not.have.attr", "role", "menuitem");
+		});
+	});
+
 	it("tests setting header-text", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem headerText="Header title | Setting 3">
@@ -508,6 +537,64 @@ describe("Events", () => {
 		cy.get("@dialog").find("[ui5-input]").as("search");
 		cy.get("@search").should("have.attr", "placeholder", "Search");
 		cy.get("@search").shadow().find("input").type("test");
+	});
+
+	it("tests search results announcement - no results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("zzz");
+
+		cy.get("@invisibleMessage").should("have.text", "No search results");
+	});
+
+	it("tests search results announcement - one result", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Payment");
+
+		cy.get("@invisibleMessage").should("have.text", "1 result available");
+	});
+
+	it("tests search results announcement - multiple results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Payment methods" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Pay");
+
+		cy.get("@invisibleMessage").should("have.text", "2 results are available");
 	});
 });
 
@@ -1389,6 +1476,52 @@ describe("Appearance view", () => {
         });
     });
 
+    it("tests appearance view item announces its text on focus (a11y)", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon_dark" text="SAP Evening Horizon" icon="palette"></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+
+        // accessibilityInfo exposes the item text so the accessible name is not empty
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .then($item => {
+                const item = $item.get(0) as any;
+                expect(item.accessibilityInfo.description).to.equal("SAP Morning Horizon");
+            });
+
+        // Focusing the item populates the shared invisible text used for the announcement
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .realClick();
+
+        cy.document().then(doc => {
+            const invisibleText = doc.getElementById("ui5-invisible-text");
+            expect(invisibleText).to.exist;
+            expect(invisibleText!.textContent).to.contain("SAP Morning Horizon");
+        });
+
+        // The li references the invisible text via aria-labelledby so it is part of the accessible name
+        cy.get("@appearanceView")
+            .find("[ui5-user-settings-appearance-view-item]")
+            .first()
+            .shadow()
+            .find("li")
+            .then($li => {
+                const labelledBy = ($li.get(0) as any).ariaLabelledByElements as HTMLElement[] | null;
+                const ids = (labelledBy || []).map(el => el.id);
+                expect(ids).to.include("ui5-invisible-text");
+            });
+    });
+
     it("tests appearance view list renders correctly", () => {
         cy.mount(<UserSettingsDialog open>
             <UserSettingsItem text="Appearance">
@@ -1427,6 +1560,18 @@ describe("F6 Navigation", () => {
         cy.get("[ui5-user-settings-dialog]").shadow()
             .find(".ui5-user-settings-side")
             .should("have.attr", "data-sap-ui-fastnavgroup", "true");
+    });
+
+    it("tests side panel does not have unsupported aria-orientation attribute", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Setting">
+                <UserSettingsView>
+                </UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow()
+            .find(".ui5-user-settings-side")
+            .should("not.have.attr", "aria-orientation");
     });
 
     it("tests footer toolbar has fastnavgroup attribute", () => {
@@ -1650,5 +1795,33 @@ describe("Save mode", () => {
 		});
 		cy.realPress("Escape");
 		cy.get("@beforeClose").should("have.been.calledOnce");
+	});
+
+	it("close button has the correct id", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
+			.should("have.attr", "id").and("match", /^.+-close-btn$/);
+	});
+
+	it("save and cancel buttons have the correct ids", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(0)
+			.should("have.attr", "id").and("match", /^.+-save-btn$/);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(1)
+			.should("have.attr", "id").and("match", /^.+-cancel-btn$/);
 	});
 });
