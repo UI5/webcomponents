@@ -25,7 +25,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 				preventFocusRestore={true}
 				preventInitialFocus={true}
 				placement="Bottom"
-				horizontalAlign="Start"
+				horizontalAlign={this.horizontalAlign}
 				accessibleName={this._popupLabel}
 				onBeforeOpen={this._beforeOpenPopover}
 				onOpen={this._afterOpenPopover}
