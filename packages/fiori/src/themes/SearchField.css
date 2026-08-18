@@ -45,6 +45,11 @@
 	background-color: var(--_ui5-search-wrapper-hover-background-color);
 }
 
+:host(:not([collapsed]):focus-within),
+.ui5-shellbar-search-field-wrapper:focus-within {
+	background-color: var(--_ui5-search-wrapper-active-background-color);
+}
+
 :host([focused-inner-input]) .ui5-search-field-root {
 	outline: var(--_ui5_search_wrapper_outline);
 	border-radius: var(--_ui5_search_input_border_radius);
