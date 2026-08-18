@@ -14,13 +14,11 @@ import type { ListItemHooks } from "./ListItemTemplate.js";
 
 export type MenuItemHooks = ListItemHooks & {
 	menuItemTextContent: JsxTemplate;
-	menuItemDialogHeaderEnd: JsxTemplate;
 }
 
 const predefinedHooks: Partial<MenuItemHooks> = {
 	iconBegin,
 	menuItemTextContent,
-	menuItemDialogHeaderEnd: () => {},
 };
 
 export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
@@ -40,7 +38,7 @@ export default function MenuItemTemplate(this: MenuItem, hooks?: Partial<MenuIte
 	return <>
 		{ListItemTemplate.call(this, currentHooks)}
 
-		{listItemPostContent.call(this, currentHooks)}
+		{listItemPostContent.call(this)}
 	</>;
 }
 
@@ -104,7 +102,7 @@ function iconBegin(this: MenuItem) {
 	}
 }
 
-function listItemPostContent(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
+function listItemPostContent(this: MenuItem) {
 	return this.hasSubmenu && <ResponsivePopover
 		id={`${this._id}-menu-rp`}
 		class="ui5-menu-rp ui5-menu-rp-sub-menu"
@@ -136,7 +134,6 @@ function listItemPostContent(this: MenuItem, hooks?: Partial<MenuItemHooks>) {
 								{this.text}
 							</div>
 						</div>
-						{hooks?.menuItemDialogHeaderEnd?.call(this)}
 					</div >
 				</>
 			)
