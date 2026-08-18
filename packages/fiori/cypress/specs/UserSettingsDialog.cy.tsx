@@ -538,6 +538,64 @@ describe("Events", () => {
 		cy.get("@search").should("have.attr", "placeholder", "Search");
 		cy.get("@search").shadow().find("input").type("test");
 	});
+
+	it("tests search results announcement - no results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("zzz");
+
+		cy.get("@invisibleMessage").should("have.text", "No search results");
+	});
+
+	it("tests search results announcement - one result", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Payment");
+
+		cy.get("@invisibleMessage").should("have.text", "1 result available");
+	});
+
+	it("tests search results announcement - multiple results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Payment methods" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Pay");
+
+		cy.get("@invisibleMessage").should("have.text", "2 results are available");
+	});
 });
 
 describe("Responsiveness", () => {
