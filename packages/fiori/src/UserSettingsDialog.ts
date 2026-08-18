@@ -13,6 +13,8 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -25,6 +27,7 @@ import {
 	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
+	USER_SETTINGS_LIST_ITEM_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -286,6 +289,7 @@ class UserSettingsDialog extends UI5Element {
 	_handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
+		const alreadySelected = settingItem.selected;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
@@ -299,6 +303,10 @@ class UserSettingsDialog extends UI5Element {
 				item.selected = false;
 			});
 			settingItem.selected = true;
+
+			if (!alreadySelected) {
+				announce(UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_LIST_ITEM_SELECTED), InvisibleMessageMode.Polite);
+			}
 		}
 	}
 
