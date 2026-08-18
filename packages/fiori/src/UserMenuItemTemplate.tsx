@@ -28,7 +28,7 @@ export default function UserMenuItemTemplate(this: UserMenuItem) {
 
 function phoneTemplate(this: UserMenuItem) {
 	const hooks: Partial<ListItemHooks> = {
-		iconBegin: function (this: UserMenuItem) {
+		iconBegin(this: UserMenuItem) {
 			if (this.hasIcon) {
 				return <Icon class="ui5-li-icon" name={this.icon} />;
 			}
@@ -36,7 +36,7 @@ function phoneTemplate(this: UserMenuItem) {
 				return <div class="ui5-menu-item-dummy-icon"></div>;
 			}
 		},
-		listItemContent: function (this: UserMenuItem) {
+		listItemContent(this: UserMenuItem) {
 			return (<>
 				{this.showSelection ? (
 					<div class="ui5-user-menu-item-text-wrapper">
