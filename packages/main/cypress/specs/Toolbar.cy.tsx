@@ -5,6 +5,7 @@ import ToolbarSelectOption from "../../src/ToolbarSelectOption.js";
 import ToolbarSeparator from "../../src/ToolbarSeparator.js";
 import ToolbarSpacer from "../../src/ToolbarSpacer.js";
 import ToolbarItem from "../../src/ToolbarItem.js";
+import type ToolbarItemBase from "../../src/ToolbarItemBase.js";
 import CheckBox from "../../src/CheckBox.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
@@ -1313,5 +1314,452 @@ describe("Toolbar overflow button accessible name", () => {
 			.find(".ui5-tb-overflow-btn")
 			.should("not.have.class", "ui5-tb-overflow-btn-hidden")
 			.should("have.attr", "accessible-name", "More actions for Opportunity 123");
+	});
+});
+
+describe("Toolbar overflow group", () => {
+	it("overflows both members of a contiguous group together when only one would otherwise overflow", () => {
+		// Four buttons + one container width chosen so that without grouping
+		// the rightmost button (and only the rightmost) would overflow. With both
+		// "GroupA"/"GroupB" tagged into the same group, both must overflow together.
+		cy.mount(
+			<div style="width: 260px;">
+				<Toolbar id="otb_contiguous_group">
+					<ToolbarButton text="Solo1" stableDomRef="solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Both grouped items must overflow together. At this container width an
+		// ungrouped clone would overflow exactly one item (the rightmost one);
+		// with the group present, BOTH must move into the popover.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='Solo1']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='Solo2']")
+			.should("have.prop", "isOverflowed", false);
+	});
+
+	it("keeps an ungrouped item between non-contiguous group members in the bar while both group members overflow", () => {
+		// Source order: [GroupA(g), Solo2(ungrouped), Solo3(ungrouped), GroupB(g)].
+		// With the chosen width, only the rightmost button would overflow naturally.
+		// With grouping, the entire group (A and B) goes to the popover and the
+		// ungrouped Solo2/Solo3 between them keep their slot positions in the bar.
+		cy.mount(
+			<div style="width: 290px;">
+				<Toolbar id="otb_noncontiguous_group">
+					<ToolbarButton text="Solo1" stableDomRef="ncg-solo1"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="ncg-ga"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="ncg-solo2"></ToolbarButton>
+					<ToolbarButton text="Solo3" stableDomRef="ncg-solo3"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="ncg-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Group members both in popover.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+		// Ungrouped items between them stay in the visible bar.
+		cy.get("[ui5-toolbar-button][text='Solo2']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='Solo3']")
+			.should("have.prop", "isOverflowed", false);
+
+		// In the popover, group members appear adjacent and in slot order
+		// (GroupA before GroupB), regardless of where ungrouped items sit
+		// between them in the source.
+		cy.get("#otb_noncontiguous_group").then($tb => {
+			const tb = $tb[0] as Toolbar;
+			const order = tb.overflowItems.map(it => (it as ToolbarButton).text);
+			expect(order).to.deep.equal(["GroupA", "GroupB"]);
+		});
+	});
+
+	it("returns both group members to the bar when the toolbar widens enough to fit them again", () => {
+		// Start wide enough so the group fits, narrow so both group members
+		// overflow together, then widen again — both members must come back.
+		cy.mount(
+			<div id="otb_resize_host" style="width: 600px;">
+				<Toolbar id="otb_resize_group">
+					<ToolbarButton text="Solo1" stableDomRef="rs-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="rs-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="rs-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="rs-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// At 600px, both group members fit in the bar.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", false);
+
+		// Narrow the host — both group members must overflow together.
+		cy.get("#otb_resize_host").invoke("attr", "style", "width: 220px;");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+
+		// Widen the host — both group members must return to the bar.
+		cy.get("#otb_resize_host").invoke("attr", "style", "width: 600px;");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", false);
+	});
+
+	it("mirrors the popover order in reverse-overflow mode while keeping the group contiguous", () => {
+		// A two-member group + ungrouped items, narrow enough that the group overflows.
+		// With reverseOverflow=true (popover placed above the toolbar) the popover list
+		// is mirrored: [GroupA, GroupB] becomes [GroupB, GroupA], but the group stays
+		// adjacent.
+		cy.mount(
+			<div style="width: 260px;">
+				<Toolbar id="otb_reverse_group">
+					<ToolbarButton text="Solo1" stableDomRef="rv-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="rv-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="rv-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="rv-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Flip reverseOverflow on and force a re-render via processOverflowLayout.
+		cy.get("#otb_reverse_group").then($tb => {
+			const tb = $tb[0] as Toolbar;
+			tb.reverseOverflow = true;
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// The popover items should appear in mirrored order: GroupB before GroupA.
+		cy.get("#otb_reverse_group").then($tb => {
+			const tb = $tb[0] as Toolbar;
+			const order = tb.overflowItems.map(it => (it as ToolbarButton).text);
+			expect(order).to.deep.equal(["GroupB", "GroupA"]);
+		});
+	});
+
+	it("re-distributes when overflowGroup changes on an item at runtime", () => {
+		// Start grouped: at this width both grouped items overflow together.
+		cy.mount(
+			<div style="width: 260px;">
+				<Toolbar id="otb_runtime_group">
+					<ToolbarButton text="Solo1" stableDomRef="rt-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="rt-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="rt-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="rt-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Baseline: both group members overflow.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+
+		// Remove the group from GroupA at runtime. The pair is no longer yoked,
+		// and only the rightmost item should remain in the popover.
+		cy.get("[ui5-toolbar-button][text='GroupA']").then($el => {
+			($el[0] as ToolbarItemBase).overflowGroup = "";
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+	});
+
+	it("preserves slot order in the visible bar regardless of grouping", () => {
+		// Layout in source order: [Solo1, GroupA(g), Solo2, Solo3, GroupB(g)].
+		// At the chosen width, the group (A+B) overflows together. The visible bar
+		// must keep Solo1, Solo2, Solo3 in that slot order — never reordered to put
+		// the group's "remaining" member next to its sibling.
+		cy.mount(
+			<div style="width: 290px;">
+				<Toolbar id="otb_slot_order">
+					<ToolbarButton text="Solo1" stableDomRef="so-solo1"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="so-ga"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="so-solo2"></ToolbarButton>
+					<ToolbarButton text="Solo3" stableDomRef="so-solo3"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="so-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// The visible bar's standardItems (items not in overflow) must be in slot order.
+		cy.get("#otb_slot_order").then($tb => {
+			const tb = $tb[0] as Toolbar;
+			const barOrder = tb.standardItems.map(it => (it as ToolbarButton).text);
+			expect(barOrder).to.deep.equal(["Solo1", "Solo2", "Solo3"]);
+		});
+	});
+
+	it("pushes a whole group into overflow even when one member's worth of width would have sufficed (atomic over-shoot)", () => {
+		// Five buttons in source order: [Solo1, Solo2, GroupA, GroupB, GroupC] where
+		// GroupA/B/C share `overflow-group="g"`. At the chosen container width an
+		// ungrouped clone would overflow ONLY the rightmost button (GroupC) — that's
+		// the worth of width the overflow algorithm "needs" to recover. With the group
+		// in place, the entire group (≈3× one button's width) must move to the popover
+		// atomically. The over-shoot is accepted by design (ADR-0001).
+		cy.mount(
+			<div style="width: 340px;">
+				<Toolbar id="otb_overshoot_group">
+					<ToolbarButton text="Solo1" stableDomRef="ovs-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="ovs-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="ovs-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="ovs-gb"></ToolbarButton>
+					<ToolbarButton text="GroupC" overflow-group="g" stableDomRef="ovs-gc"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// All three group members go to overflow, not just the rightmost one.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupC']")
+			.should("have.prop", "isOverflowed", true);
+		// Solo items remain in the bar — extra empty space is the accepted cost.
+		cy.get("[ui5-toolbar-button][text='Solo1']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='Solo2']")
+			.should("have.prop", "isOverflowed", false);
+	});
+
+	it("warns once for AlwaysOverflow on a grouped item and treats its priority as Default for the layout pass", () => {
+		// GroupA has both `overflow-group="g"` AND `overflowPriority="AlwaysOverflow"`.
+		// ADR-0001 forbids this combination: the warning fires once, the priority is
+		// dropped to `Default` for the layout pass, and the group's atomic-overflow
+		// contract is preserved (GroupA and GroupB go together — decided by space,
+		// not by the now-ignored absolute priority).
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 600px;">
+				<Toolbar id="otb_priority_violation_always">
+					<ToolbarButton text="Solo1" stableDomRef="pva-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="pva-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" overflow-priority="AlwaysOverflow" stableDomRef="pva-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="pva-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// At 600px both group members fit in the bar — the AlwaysOverflow priority
+		// would otherwise force GroupA into the popover; under the validation rule
+		// it is dropped to Default and the whole group stays atomically in the bar.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", false);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", false);
+
+		// Force another layout pass — the warning must NOT re-fire.
+		cy.get("#otb_priority_violation_always").then($tb => {
+			($tb[0] as Toolbar).onResize();
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// Exactly one warning, naming the offending element and the rule.
+		cy.get("@warn").should("have.been.calledOnce");
+		cy.get("@warn").its("firstCall.args.0").should("match", /overflow-group/i);
+		cy.get("@warn").its("firstCall.args.0").should("match", /AlwaysOverflow|priority/i);
+	});
+
+	it("warns once for NeverOverflow on a grouped item and treats its priority as Default for the layout pass", () => {
+		// GroupA has both `overflow-group="g"` AND `overflowPriority="NeverOverflow"`.
+		// Under the ADR-0001 rule, the warning fires once and the priority is dropped
+		// to `Default` for the layout pass — so when the toolbar is narrowed enough
+		// for the group to need overflow, GroupA can in fact overflow (alongside GroupB).
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 260px;">
+				<Toolbar id="otb_priority_violation_never">
+					<ToolbarButton text="Solo1" stableDomRef="pvn-solo1"></ToolbarButton>
+					<ToolbarButton text="Solo2" stableDomRef="pvn-solo2"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" overflow-priority="NeverOverflow" stableDomRef="pvn-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="pvn-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// With the priority dropped, both grouped items overflow atomically.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+
+		// Force another layout pass — the warning must NOT re-fire.
+		cy.get("#otb_priority_violation_never").then($tb => {
+			($tb[0] as Toolbar).onResize();
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// Exactly one warning, naming the offending element and the rule.
+		cy.get("@warn").should("have.been.calledOnce");
+		cy.get("@warn").its("firstCall.args.0").should("match", /overflow-group/i);
+		cy.get("@warn").its("firstCall.args.0").should("match", /NeverOverflow|priority/i);
+	});
+
+	it("warns once for a spacer with overflow-group and leaves the spacer's overflow behavior unchanged (not yoked to the group)", () => {
+		// A fixed-width spacer tagged with the same group as two buttons. The buttons
+		// overflow together; the spacer is NOT yoked — it stays in the visible bar.
+		// One spacer-rule warning fires once across re-renders.
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 220px;">
+				<Toolbar id="otb_spacer_violation">
+					<ToolbarButton text="Solo1" stableDomRef="spv-solo1"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="g" stableDomRef="spv-ga"></ToolbarButton>
+					<ToolbarSpacer width="40px" overflow-group="g"></ToolbarSpacer>
+					<ToolbarButton text="GroupB" overflow-group="g" stableDomRef="spv-gb"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Both grouped buttons overflow.
+		cy.get("[ui5-toolbar-button][text='GroupA']")
+			.should("have.prop", "isOverflowed", true);
+		cy.get("[ui5-toolbar-button][text='GroupB']")
+			.should("have.prop", "isOverflowed", true);
+
+		// The spacer is NOT yoked — it stays in the bar (its existing overflow
+		// behavior is unaffected by the group tag).
+		cy.get("#otb_spacer_violation").then($tb => {
+			const tb = $tb[0] as Toolbar;
+			const spacer = tb.items.find(it => it.isSpacer)!;
+			expect(spacer.isOverflowed, "spacer must not be yoked into the group's overflow").to.equal(false);
+			expect(tb.standardItems, "spacer must remain a standard (visible) item").to.include(spacer);
+		});
+
+		// Force another layout pass — the spacer warning must NOT re-fire.
+		cy.get("#otb_spacer_violation").then($tb => {
+			($tb[0] as Toolbar).onResize();
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		// Exactly one warning, naming the spacer and the rule.
+		cy.get("@warn").should("have.been.calledOnce");
+		cy.get("@warn").its("firstCall.args.0").should("match", /overflow-group/i);
+		cy.get("@warn").its("firstCall.args.0").should("match", /spacer/i);
+	});
+
+	it("warns for the canonical flex-spacer case (no width, default priority) with a non-empty overflow-group", () => {
+		// The default `<ui5-toolbar-spacer>` has no width and `overflow-priority="Default"` —
+		// so it sits in `movableItems` like a normal item. Putting `overflow-group` on it must
+		// still trip the spacer-rule warning even though `ignoreSpace` removes it from the
+		// popover render and visible bar regardless of the group.
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 600px;">
+				<Toolbar id="otb_spacer_violation_flex">
+					<ToolbarButton text="Solo1" stableDomRef="spvf-solo1"></ToolbarButton>
+					<ToolbarSpacer overflow-group="g"></ToolbarSpacer>
+					<ToolbarButton text="Solo2" stableDomRef="spvf-solo2"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		cy.get("@warn").should("have.been.calledOnce");
+		cy.get("@warn").its("firstCall.args.0").should("match", /spacer/i);
+	});
+
+	it("does not warn for valid configurations: grouped Default-priority items and ungrouped spacers", () => {
+		// All combinations here are valid by ADR-0001: two items share a non-empty
+		// group with the default priority, and a spacer carries no group tag.
+		// The toolbar must remain silent — no `console.warn` calls.
+		cy.window().then(win => {
+			cy.stub(win.console, "warn").as("warn");
+		});
+
+		cy.mount(
+			<div style="width: 600px;">
+				<Toolbar id="otb_no_warnings">
+					<ToolbarButton text="Solo1" stableDomRef="nw-solo1"></ToolbarButton>
+					<ToolbarButton text="GroupA" overflow-group="filters" stableDomRef="nw-ga"></ToolbarButton>
+					<ToolbarButton text="GroupB" overflow-group="filters" stableDomRef="nw-gb"></ToolbarButton>
+					<ToolbarSpacer></ToolbarSpacer>
+					<ToolbarButton text="Solo2" overflow-priority="NeverOverflow" stableDomRef="nw-solo2"></ToolbarButton>
+				</Toolbar>
+			</div>
+		);
+
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(500);
+
+		// Trigger an extra layout pass for good measure.
+		cy.get("#otb_no_warnings").then($tb => {
+			($tb[0] as Toolbar).onResize();
+		});
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(200);
+
+		cy.get("@warn").should("not.have.been.called");
 	});
 });

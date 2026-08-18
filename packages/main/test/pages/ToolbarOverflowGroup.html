@@ -1,0 +1,148 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar — overflow group</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: var(--sapFontFamily); padding: 1rem; }
+		section { max-width: 100%; margin-bottom: 2rem; }
+		.frame { border: 1px dashed var(--sapNeutralBorderColor); padding: 0.5rem; }
+		.frame ui5-toolbar { width: 100%; }
+		.controls { display: flex; gap: 0.5rem; align-items: center; margin: 0.25rem 0 0.75rem; }
+		h2, h3 { color: var(--sapTitleColor); }
+	</style>
+</head>
+
+<body>
+	<h1>Toolbar — grouped overflow</h1>
+	<p>
+		Items that share the same non-empty <code>overflow-group</code> attribute overflow
+		as one atomic unit. Drag the slider to narrow the toolbar and watch the group
+		yoke into the overflow popover together.
+	</p>
+
+	<section>
+		<h3>1. Contiguous group: "filters"</h3>
+		<p>The Filter label and its select share <code>overflow-group="filters"</code>. They
+			are slotted next to each other and always overflow together.</p>
+		<div class="controls">
+			<label>Width: <input id="w1" type="range" min="200" max="800" value="800"></label>
+			<span id="w1v">800</span>px
+		</div>
+		<div id="frame1" class="frame" style="width: 800px;">
+			<ui5-toolbar>
+				<ui5-toolbar-button text="New" icon="add"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Edit" icon="edit"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Delete" icon="delete"></ui5-toolbar-button>
+				<ui5-toolbar-separator></ui5-toolbar-separator>
+				<ui5-toolbar-button text="Filter:" overflow-group="filters"></ui5-toolbar-button>
+				<ui5-toolbar-select overflow-group="filters">
+					<ui5-toolbar-select-option>All</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option selected>Open</ui5-toolbar-select-option>
+					<ui5-toolbar-select-option>Closed</ui5-toolbar-select-option>
+				</ui5-toolbar-select>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<section>
+		<h3>2. Non-contiguous group</h3>
+		<p>Group members <em>need not be adjacent</em>. Here "Range" and "Date" share
+			<code>overflow-group="range"</code> with an unrelated "Sort" button between them.
+			The visible bar always preserves slot order; in the popover the group becomes
+			adjacent.</p>
+		<div class="controls">
+			<label>Width: <input id="w2" type="range" min="200" max="800" value="800"></label>
+			<span id="w2v">800</span>px
+		</div>
+		<div id="frame2" class="frame" style="width: 800px;">
+			<ui5-toolbar>
+				<ui5-toolbar-button text="Refresh" icon="refresh"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Range" overflow-group="range"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Sort"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Date" overflow-group="range" icon="calendar"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<section>
+		<h3>3. Runtime regrouping</h3>
+		<p>Toggle the group on/off at runtime. The toolbar re-distributes on the next
+			render cycle.</p>
+		<div class="controls">
+			<ui5-button id="toggleGroup">Disable group "g"</ui5-button>
+		</div>
+		<div id="frame3" class="frame" style="width: 270px;">
+			<ui5-toolbar id="runtimeTb">
+				<ui5-toolbar-button text="Solo1"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Solo2"></ui5-toolbar-button>
+				<ui5-toolbar-button id="rg-a" text="GroupA" overflow-group="g"></ui5-toolbar-button>
+				<ui5-toolbar-button id="rg-b" text="GroupB" overflow-group="g"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<section>
+		<h3>4. Reverse-overflow placement</h3>
+		<p>When the overflow popover is placed above the toolbar (<code>reverseOverflow</code>
+			mode), the list is mirrored end-to-end. The group remains contiguous, with its
+			internal order reversed alongside everything else.</p>
+		<div class="controls">
+			<ui5-button id="toggleReverse">Flip reverseOverflow</ui5-button>
+			<ui5-button id="openPopover">Open popover</ui5-button>
+		</div>
+		<div id="frame4" class="frame" style="width: 260px;">
+			<ui5-toolbar id="reverseTb">
+				<ui5-toolbar-button text="Solo1"></ui5-toolbar-button>
+				<ui5-toolbar-button text="Solo2"></ui5-toolbar-button>
+				<ui5-toolbar-button text="GroupA" overflow-group="g"></ui5-toolbar-button>
+				<ui5-toolbar-button text="GroupB" overflow-group="g"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</div>
+	</section>
+
+	<script>
+		// Width sliders for sections 1 and 2.
+		const wire = (sliderId, valueId, frameId) => {
+			const slider = document.getElementById(sliderId);
+			const value = document.getElementById(valueId);
+			const frame = document.getElementById(frameId);
+			slider.addEventListener("input", () => {
+				frame.style.width = slider.value + "px";
+				value.textContent = slider.value;
+			});
+		};
+		wire("w1", "w1v", "frame1");
+		wire("w2", "w2v", "frame2");
+
+		// Section 3: runtime regrouping.
+		const toggle = document.getElementById("toggleGroup");
+		const rgA = document.getElementById("rg-a");
+		const rgB = document.getElementById("rg-b");
+		toggle.addEventListener("ui5-click", () => {
+			if (rgA.overflowGroup === "g") {
+				rgA.overflowGroup = "";
+				rgB.overflowGroup = "";
+				toggle.textContent = `Enable group "g"`;
+			} else {
+				rgA.overflowGroup = "g";
+				rgB.overflowGroup = "g";
+				toggle.textContent = `Disable group "g"`;
+			}
+		});
+
+		// Section 4: reverse overflow + popover trigger.
+		const reverseTb = document.getElementById("reverseTb");
+		document.getElementById("toggleReverse").addEventListener("ui5-click", () => {
+			reverseTb.reverseOverflow = !reverseTb.reverseOverflow;
+		});
+		document.getElementById("openPopover").addEventListener("ui5-click", () => {
+			reverseTb.openOverflow();
+		});
+	</script>
+</body>
+
+</html>
