@@ -34,6 +34,7 @@ npm-debug.log
 # Ignore Mac files
 .DS_Store
 
+.claude/playwright-*
 # Ignore Visual Studio project and settings files
 *.sln
 *.suo
