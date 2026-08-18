@@ -167,6 +167,35 @@ describe("Initial rendering", () => {
 		cy.get("@settings").shadow().find("[ui5-li].ui5-user-settings-item-no-icon").should("not.exist");
 	});
 
+	it("tests side list uses default list role, not menu (a11y)", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-dialog]")
+			.find("[ui5-list]")
+			.as("list");
+
+		// The list container must expose role="list", not "menu",
+		// so the surrounding dialog structure is announced correctly by screen readers.
+		cy.get("@list").shadow().find("ul").should("have.attr", "role", "list");
+		cy.get("@list").shadow().find("ul").should("not.have.attr", "role", "menu");
+
+		// The items must not inherit the "menuitem" role.
+		cy.get("@list").find("[ui5-li]").each($item => {
+			cy.wrap($item).shadow().find("li").should("not.have.attr", "role", "menuitem");
+		});
+	});
+
 	it("tests setting header-text", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem headerText="Header title | Setting 3">
@@ -1708,5 +1737,33 @@ describe("Save mode", () => {
 		});
 		cy.realPress("Escape");
 		cy.get("@beforeClose").should("have.been.calledOnce");
+	});
+
+	it("close button has the correct id", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]")
+			.find("[ui5-toolbar-button]")
+			.should("have.attr", "id").and("match", /^.+-close-btn$/);
+	});
+
+	it("save and cancel buttons have the correct ids", () => {
+		cy.mount(<UserSettingsDialog open saveMode>
+			<UserSettingsItem text="Setting">
+				<UserSettingsView>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("dialog");
+		cy.get("@dialog").shadow().find("[ui5-toolbar]").as("toolbar");
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(0)
+			.should("have.attr", "id").and("match", /^.+-save-btn$/);
+		cy.get("@toolbar").find("[ui5-toolbar-button]").eq(1)
+			.should("have.attr", "id").and("match", /^.+-cancel-btn$/);
 	});
 });

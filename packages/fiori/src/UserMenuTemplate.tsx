@@ -152,7 +152,7 @@ function headerContent(this: UserMenu) {
 
 function otherAccountsContent(this: UserMenu) {
 	return (<>
-		<Panel collapsed={true} class="ui5-user-menu-other-accounts">
+		<Panel collapsed={true} class="ui5-user-menu-other-accounts" accessibleName={`${this._otherAccountsButtonText} (${this._otherAccounts.length})`}>
 			<div slot="header" class="ui5-user-menu-account-header">
 				<Title slot="header" level="H4" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
 				{this.showEditAccounts &&
