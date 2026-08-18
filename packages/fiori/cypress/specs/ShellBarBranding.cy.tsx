@@ -109,4 +109,21 @@ describe("ShellBarBranding", () => {
 				.should("have.attr", "tabIndex", "0");
 		});
 	});
+
+	it("fires click event on Enter and Space", () => {
+			basicTemplate();
+
+			cy.get("[slot='branding']").then(branding => {
+				branding.get(0).addEventListener("ui5-click", cy.stub().as("brandingClick"));
+			});
+
+			cy.get("@shellbarBranding")
+				.find("a")
+				.focus()
+				.realPress("Enter")
+				.realPress("Space");
+
+			cy.get("@brandingClick")
+				.should("have.been.calledTwice");
+		});
 });

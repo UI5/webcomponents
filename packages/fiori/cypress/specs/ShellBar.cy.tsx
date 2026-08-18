@@ -541,6 +541,33 @@ describe("Slots", () => {
 			cy.get("#search").should("have.prop", "collapsed", true);
 		});
 
+		it("Test pressing Enter on empty search collapses it and keeps ShellBar state in sync", () => {
+			cy.mount(
+				<ShellBar id="shellbar" showSearchField={true}>
+					<ShellBarSearch id="search" slot="searchField"></ShellBarSearch>
+				</ShellBar>
+			);
+
+			// Initially expanded, ShellBar reflects the expanded state
+			cy.get("#search").should("have.prop", "collapsed", false);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", true);
+
+			// Focus the input and press Enter without a value
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realClick();
+
+			cy.get("#search")
+				.shadow()
+				.find("input")
+				.realPress("Enter");
+
+			// The search collapses AND the ShellBar's own state collapses in sync
+			cy.get("#search").should("have.prop", "collapsed", true);
+			cy.get("#shellbar").invoke("prop", "showSearchField").should("equal", false);
+		});
+
 		it("Test showSearchField property is false when using collapsed search field", () => {
 			cy.mount(
 				<ShellBar id="shellbar">
@@ -693,7 +720,7 @@ describe("Slots", () => {
 				.shadow()
 				.find(".ui5-shellbar-overflow-popover [data-action-id='search']")
 				.should("exist")
-				.click();
+				.realClick();
 
 			// Verify search is expanded
 			cy.get("@shellbar")
@@ -788,6 +815,50 @@ describe("Events", () => {
 
 		cy.get("@searchButtonClick")
 			.should("have.been.calledOnce");
+	});
+
+	it("fires search-button-click with correct targetRef when ui5-shellbar-search is used", () => {
+		cy.mount(
+			<ShellBar>
+				<ShellBarSearch slot="searchField" collapsed></ShellBarSearch>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").as("shellbar");
+
+		cy.get("@shellbar").then(shellbar => {
+			shellbar.get(0).addEventListener("ui5-search-button-click", cy.stub().as("searchButtonClick"));
+		});
+
+		// The toggle button lives inside ui5-shellbar-search's shadow DOM
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find(".ui5-shell-search-field-button")
+			.click();
+
+		cy.get("@searchButtonClick").should("have.been.calledOnce");
+
+		// Capture the event args before asserting — the toggle button leaves the DOM
+		// after the click expands the search field, which would break a chained assertion.
+		cy.get("@searchButtonClick").then(stub => {
+			const targetRef = (stub as sinon.SinonStub).firstCall.args[0].detail.targetRef;
+			expect(targetRef).to.not.be.null;
+		});
+	});
+
+	it("getSearchButtonDomRef returns the toggle button when ui5-shellbar-search is collapsed", () => {
+		cy.mount(
+			<ShellBar>
+				<ShellBarSearch slot="searchField" collapsed></ShellBarSearch>
+			</ShellBar>
+		);
+
+		cy.get("[ui5-shellbar]").then(async $shellbar => {
+			const shellbar = $shellbar[0] as ShellBar;
+			const ref = await shellbar.getSearchButtonDomRef();
+			expect(ref).to.not.be.null;
+			expect(ref!.classList.contains("ui5-shell-search-field-button")).to.be.true;
+		});
 	});
 
 	it("Test logo click fires logo-click event only once", () => {
@@ -964,6 +1035,36 @@ describe("Events", () => {
 
 			cy.get("@notificationsClick")
 				.should("have.been.calledOnce");
+		});
+
+		it("notificationsDomRef returns overflow button when notifications are in overflow", () => {
+			cy.viewport(320, 800);
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					secondaryTitle="Second title"
+					showNotifications={true}
+					notificationsCount="5"
+					showProductSwitch={true}
+				>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Button 1</Button>
+					<ToggleButton icon="sap-icon://da" slot="assistant" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]").as("shellbar");
+
+			cy.get("@shellbar")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("exist")
+				.then(overflowBtn => {
+					cy.get("@shellbar").then($shellbar => {
+						const shellbar = $shellbar[0] as ShellBar;
+						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
+					});
+				});
 		});
 
 		it("tests profileClick event", () => {
@@ -1408,10 +1509,11 @@ describe("Search Controllers", () => {
 			</ShellBar>
 		);
 
-		// search not focused
-		cy.get("#search").should("not.be.focused");
-		// search field is empty
-		cy.get("#search").should("have.value", "");
+		// Wait for the initial resize cycle to complete so the SearchController's
+		// `initialRender` flag is cleared before we trigger further viewport changes.
+		// Without this, a resize fired while `initialRender` is still true bypasses
+		// the full-screen collapse guard and incorrectly collapses the search field.
+		cy.wait(RESIZE_THROTTLE_RATE);
 
 		cy.viewport(400, 800);
 		cy.wait(RESIZE_THROTTLE_RATE);
@@ -1434,10 +1536,9 @@ describe("Search Controllers", () => {
 			</ShellBar>
 		);
 
-		// search not focused
-		cy.get("#search").should("not.be.focused");
-		// search field is empty
-		cy.get("#search").should("have.value", "");
+		// Wait for the initial resize cycle to complete so the SearchController's
+		// `initialRender` flag is cleared before we trigger further viewport changes.
+		cy.wait(RESIZE_THROTTLE_RATE);
 
 		cy.viewport(400, 800);
 		cy.wait(RESIZE_THROTTLE_RATE);
@@ -1684,6 +1785,66 @@ describe("Component Behavior", () => {
 				.find("button")
 				.should("have.attr", "aria-haspopup", NOTIFICATIONS_BTN_ARIA_HASPOPUP);
 		});
+
+		it("forwards search expanded state to the inner search button", () => {
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar showSearchField={true}>
+					<Input slot="searchField" />
+				</ShellBar>
+			);
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-search-button")
+				.shadow()
+				.find("button")
+				.should("have.attr", "aria-expanded", "true");
+		});
+
+		it("provides accessible name for overflow popover when opened", () => {
+			// Use a narrow viewport to force overflow so the overflow button exists
+			// in the DOM. The Popover uses opener="ui5-shellbar-overflow-button" — if
+			// that element is absent (no overflow at wide viewports), the Popover never
+			// opens and the open property stays false.
+			cy.viewport(320, 800);
+
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					showNotifications
+					showProductSwitch
+				>
+					<ShellBarItem icon="disconnected" text="Item 1" />
+					<ShellBarItem icon="incoming-call" text="Item 2" />
+					<ShellBarItem icon="attachment" text="Item 3" />
+					<ShellBarItem icon="bell" text="Item 4" />
+					<Button icon={navBack} slot="startButton" />
+				</ShellBar>
+			);
+
+			// Wait for the initial render/overflow cycle so showOverflowButton is resolved
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			// Overflow button must exist — without it the popover opener is missing
+			// and the popover will never open
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("be.visible");
+
+			cy.get("[ui5-shellbar]")
+				.invoke("prop", "overflowPopoverOpen", true)
+				.then(() => cy.wait(100));
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.prop", "open", true)
+				.invoke("prop", "accessibleName")
+				.should("not.be.empty");
+		});
 	});
 
 	describe("ui5-shellbar menu", () => {
@@ -1815,6 +1976,70 @@ describe("Component Behavior", () => {
 				.should("have.been.calledOnce");
 		});
 
+		it("tests 'click' on custom action in overflow popover", () => {
+			cy.viewport(320, 800);
+
+			cy.mount(
+				<ShellBar
+					primaryTitle="Product Title"
+					showNotifications
+					showProductSwitch
+				>
+					<ShellBarBranding slot="branding">
+						Product Title
+						<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo" />
+					</ShellBarBranding>
+					<Button icon="nav-back" slot="startButton" />
+					<ShellBarItem id="overflow-accept" icon="accept" text="Accept" />
+					<ShellBarItem id="overflow-alert" icon="alert" text="Alert" />
+				</ShellBar>
+			);
+
+			cy.get("#overflow-accept").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("acceptClick"));
+			});
+			cy.get("#overflow-alert").then($item => {
+				$item[0].addEventListener("click", cy.stub().as("alertClick"));
+			});
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.should("be.visible")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-accept")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
+
+			cy.get("@acceptClick")
+				.should("have.been.calledOnce");
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-button")
+				.click();
+
+			cy.get("[ui5-shellbar]")
+				.shadow()
+				.find(".ui5-shellbar-overflow-popover")
+				.should("have.attr", "open");
+
+			cy.get("#overflow-alert")
+				.shadow()
+				.find("[ui5-li]")
+				.realClick();
+
+			cy.get("@alertClick")
+				.should("have.been.calledOnce");
+		});
+
 		it("renders items in insertion order regardless of icon name", () => {
 			cy.mount(
 				<ShellBar>
@@ -1876,5 +2101,57 @@ describe("Start button spacing", () => {
 		);
 
 		cy.get("[ui5-shellbar]").shadow().find(".ui5-shellbar-start-button").should("have.css", "gap", "8px");
+	});
+});
+
+describe("Non-ShellBarItem children in default slot", () => {
+	it("should not throw 'processed too many times' when resizing across the overflow breakpoint with a stray <span> in the default slot", () => {
+		// Capture any errors thrown during the run — the bug surfaced as an
+		// uncaught Error: "Web component processed too many times this task,
+		// max allowed is: 10" from RenderQueue when the overflow algorithm
+		// failed to converge.
+		const errors: string[] = [];
+		cy.on("uncaught:exception", (err) => {
+			errors.push(err.message);
+			return false; // don't fail the test here; we assert below
+		});
+
+		cy.mount(
+			<ShellBar id="shellbar-stray" notificationsCount="72" showNotifications={true}>
+				<Button icon="menu2" slot="startButton"></Button>
+				<ShellBarBranding slot="branding">
+					Product Identifier
+					<img slot="logo" src="https://ui5.github.io/webcomponents/images/sap-logo-svg.svg" />
+				</ShellBarBranding>
+				<ShellBarSearch slot="searchField" showClearIcon placeholder="Search Apps, Products"></ShellBarSearch>
+				{/* The problem child — a stray non-ShellBarItem element in the default slot. */}
+				<span></span>
+				<Avatar slot="profile">
+					<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_3.png" />
+				</Avatar>
+			</ShellBar>
+		);
+
+		cy.wait(RESIZE_THROTTLE_RATE);
+
+		// Oscillate across the overflow breakpoint several times. This is what
+		// triggered the runaway re-render in the regression — a single resize
+		// is not enough; the algorithm has to be invoked while the previous
+		// pass is still settling.
+		for (let i = 0; i < 6; i++) {
+			cy.viewport(1400, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			cy.viewport(320, 800);
+			cy.wait(RESIZE_THROTTLE_RATE);
+		}
+
+		// ShellBar must still be in the DOM and operating after the oscillation.
+		cy.get("#shellbar-stray").should("exist");
+
+		// And no "processed too many times" error must have fired.
+		cy.then(() => {
+			const matches = errors.filter(e => /processed too many times/i.test(e));
+			expect(matches, `unexpected RenderQueue errors:\n${matches.join("\n")}`).to.have.length(0);
+		});
 	});
 });

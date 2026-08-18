@@ -167,6 +167,8 @@ describe("Initial rendering", () => {
 		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
 		cy.get("@responsivePopover").should("exist");
 		cy.get("@responsivePopover").find("[ui5-panel]").contains(`${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+		cy.get("@responsivePopover").find("[ui5-panel]").should("have.attr", "accessible-name", `${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
 	});
 
@@ -357,7 +359,7 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").should("exist");
 		cy.get("@avatar").should("have.length", 1);
 		cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-		cy.get("@avatar").find("[ui5-tag]").should("not.exist");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("not.exist");
 	});
 
 	it("tests initials", () => {
@@ -428,8 +430,91 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").should("exist");
 		cy.get("@avatar").should("have.length", 1);
 		cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-		cy.get("@avatar").find("[ui5-tag]").should("exist");
-		cy.get("@avatar").find("[ui5-tag]").should("have.length", 1);
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("have.length", 1);
+	});
+
+	it("renders ui5-avatar-badge (not ui5-tag) for the edit badge when showEditButton is set", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showEditButton={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier"
+						subtitleText="alian.chevalier@sap.com">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+		cy.get("@avatar").find("[ui5-tag]").should("not.exist");
+	});
+
+	it("tests avatar is non-interactive by default", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1"
+						subtitleText="alian.chevalier@sap.com"
+						description="Delivery Manager, SAP SE">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("not.have.attr", "interactive");
+		cy.get("@avatar").should("have.attr", "mode", "Image");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "img");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("not.have.attr", "tabindex");
+	});
+
+	it("tests avatarInteractive=true exposes role='button' and fires avatar-click", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" avatarInteractive={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "mode", "Interactive");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "button");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "tabindex", "0");
+
+		cy.get("@userMenu").then($userMenu => {
+			$userMenu.get(0).addEventListener("avatar-click", cy.stub().as("clicked"));
+		});
+		cy.get("@avatar").click();
+		cy.get("@clicked").should("have.been.calledOnce");
+	});
+
+	it("tests showEditButton implies interactive avatar regardless of avatarInteractive", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showEditButton={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier 1">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").as("userMenu");
+		cy.get("@userMenu").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").should("have.attr", "mode", "Interactive");
+		cy.get("@avatar").shadow().find(".ui5-avatar-root").should("have.attr", "role", "button");
 	});
 
 	it("tests avatarColorScheme default value", () => {
@@ -505,7 +590,7 @@ describe("Events", () => {
 		cy.mount(
 			<>
 				<Button id="openUserMenuBtn">Open User Menu</Button>
-				<UserMenu open={true} opener="openUserMenuBtn">
+				<UserMenu open={true} opener="openUserMenuBtn" avatarInteractive={true}>
 					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
 				</UserMenu>
 			</>

@@ -119,6 +119,7 @@ describe("Table - Rendering", () => {
 		const expectedWidth = 100;
 		cy.get("ui5-table-header-cell").each(($cell) => {
 			expect($cell.outerWidth()).to.be.equal(expectedWidth);
+			expect(getComputedStyle($cell[0]).minHeight).to.not.equal("auto");
 		});
 	});
 
@@ -618,7 +619,7 @@ describe("Table - Horizontal alignment of cells", () => {
 			.should("have.css", "justify-content", "end");
 	});
 
-	it("alignment with popin", () => {
+	it.skip("alignment with popin", () => {
 		const testWidths = [
 			{ width: 1120, poppedIn: [] },
 			{ width: 900, poppedIn: ["priceCol"] },

@@ -66,7 +66,6 @@ import {
 	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 import type { YearRangePickerChangeEventDetail } from "./YearRangePicker.js";
-import getEffectiveContentDensity from "@ui5/webcomponents-base/dist/util/getEffectiveContentDensity.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 
 const PHONE_MODE_BREAKPOINT = 640; // px
@@ -777,10 +776,6 @@ class Calendar extends CalendarPart {
 			monthButtonText: secondMonthInfo.text,
 			monthButtonInfo: secondMonthInfo.textInfo,
 		};
-	}
-
-	get _isCompactMode() {
-		return getEffectiveContentDensity(this) === "compact";
 	}
 
 	get _monthsToShow() {

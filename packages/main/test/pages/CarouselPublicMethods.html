@@ -15,7 +15,9 @@
 		<ui5-button id="navigateLeft" icon="slim-arrow-left"></ui5-button>
 		<ui5-button id="navigateRight" icon="slim-arrow-right"></ui5-button>
 	</div>
-	<ui5-carousel id="carouselCards" items-per-page="S3 M3 L3 XL3" cyclic>
+	<ui5-carousel id="carouselCards"
+				  arrows-placement="Navigation"
+				  items-per-page="S3 M3 L3 XL3" cyclic>
 		<ui5-card id="card" class="myCard">
 			<ui5-card-header slot="header" status="1 of 23" title-text="1" subtitle-text="quick links"
 				interactive>
@@ -238,14 +240,16 @@
 				<ui5-li icon="learning-assistant">Tutorials</ui5-li>
 			</ui5-list>
 		</ui5-card>
-
 	</ui5-carousel>
+	<br>
+	<ui5-button id="btnNavigate">Check animation after resize - navigate to 5</ui5-button>
 </body>
 
 <script>
 	const navigateLeftBtn = document.getElementById("navigateLeft");
 	const navigateRightBtn = document.getElementById("navigateRight");
 	const carousel = document.getElementById("carouselCards");
+	const btnNavigate = document.getElementById("btnNavigate");
 
 	navigateLeftBtn.addEventListener("click", function() {
 		const newPageIndex = carousel.visibleItemsIndices[0] - 1;
@@ -255,6 +259,11 @@
 	navigateRightBtn.addEventListener("click", function() {
 		const newPageIndex = carousel.visibleItemsIndices[0] + 1;
 		carousel.navigateTo(newPageIndex);
+	});
+
+	btnNavigate.addEventListener("click", function() {
+		carousel.style.width = "90%";
+		carousel.navigateTo(5);
 	});
 </script>
 

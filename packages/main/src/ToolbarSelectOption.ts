@@ -3,7 +3,6 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type ToolbarSelect from "./ToolbarSelect.js";
 
 /**
  * @class
@@ -20,37 +19,21 @@ import type ToolbarSelect from "./ToolbarSelect.js";
 @customElement("ui5-toolbar-select-option")
 class ToolbarSelectOption extends UI5Element {
 	/**
+	 * Defines the value of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.25.0
+	 */
+	@property()
+	value?: string;
+
+	/**
 	 * Defines the selected state of the component.
 	 * @default false
 	 * @public
 	 */
 	@property({ type: Boolean })
-	set selected(value: boolean) {
-		if (value) {
-			this.setAttribute("selected", "");
-			this._clearSiblingsAndSync();
-		} else {
-			this.removeAttribute("selected");
-		}
-	}
-
-	get selected(): boolean {
-		return this.hasAttribute("selected");
-	}
-
-	_clearSiblingsAndSync(): void {
-		const parent = this.parentElement as ToolbarSelect;
-		if (parent) {
-			parent.options?.forEach(option => {
-				if (option !== this) {
-					option.removeAttribute("selected");
-				}
-			});
-			if (parent.select) {
-				parent.select.value = this.textContent || "";
-			}
-		}
-	}
+	selected = false;
 
 	/**
 	 * Defines the text of the component.

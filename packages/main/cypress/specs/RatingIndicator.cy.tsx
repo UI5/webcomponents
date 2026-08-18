@@ -6,6 +6,34 @@ import "@ui5/webcomponents-icons/dist/thumb-up.js";
 import "@ui5/webcomponents-icons/dist/thumb-down.js";
 
 describe("RatingIndicator", () => {
+	describe("Default Icons Loading", () => {
+		it("should load and render the default 'favorite' and 'unfavorite' icons without explicit imports", () => {
+			cy.mount(<RatingIndicator value={3}></RatingIndicator>);
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-sel [ui5-icon]")
+				.first()
+				.shadow()
+				.find("svg path[d]")
+				.should("exist")
+				.and($path => {
+					expect($path.attr("d")).to.have.length.greaterThan(0);
+				});
+
+			cy.get("[ui5-rating-indicator]")
+				.shadow()
+				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
+				.first()
+				.shadow()
+				.find("svg path[d]")
+				.should("exist")
+				.and($path => {
+					expect($path.attr("d")).to.have.length.greaterThan(0);
+				});
+		});
+	});
+
 	describe("Custom Icons", () => {
 		it("should render default icons when no custom icons are specified", () => {
 			cy.mount(<RatingIndicator value={3}></RatingIndicator>);
@@ -178,6 +206,27 @@ describe("RatingIndicator", () => {
 			cy.focused().should("contain", "Before");
 		});
 
+		it("should not be able to tab to displayOnly element", () => {
+			cy.mount(
+				<>
+					<button>Before</button>
+					<RatingIndicator value={3} displayOnly={true}></RatingIndicator>
+					<button>after</button>
+				</>
+			);
+
+			cy.get("button:first").realClick();
+			cy.focused().should("contain", "Before");
+
+			// press tab - should skip displayOnly and go to "after"
+			cy.realPress("Tab");
+			cy.focused().should("contain", "after");
+
+			// press shift + tab - should skip displayOnly and go back to "Before"
+			cy.realPress(["Shift", "Tab"]);
+			cy.focused().should("contain", "Before");
+		});
+
 		it("Tests ACC attrs", () => {
 			const TOOLTIP = "Rating";
 			const ARIA_LABEL = "Hello World";
@@ -186,6 +235,7 @@ describe("RatingIndicator", () => {
 				<>
 					<RatingIndicator id="rating-indicator1" accessibleName={ARIA_LABEL}></RatingIndicator>
 					<RatingIndicator id="rating-indicator-readonly" value={1} max={3} readonly></RatingIndicator>
+					<RatingIndicator id="rating-indicator-display-only" value={1} max={3} displayOnly></RatingIndicator>
 				</>
 			);
 
@@ -202,6 +252,20 @@ describe("RatingIndicator", () => {
 				.shadow()
 				.find(".ui5-rating-indicator-root")
 				.should("have.attr", "aria-readonly", "true");
+
+			cy.get("#rating-indicator-display-only")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.as("displayOnlyRoot");
+
+			cy.get("@displayOnlyRoot")
+				.should("not.have.attr", "aria-readonly");
+
+			cy.get("@displayOnlyRoot")
+				.should("have.attr", "tabindex", "-1");
+
+			cy.get("@displayOnlyRoot")
+				.should("have.attr", "aria-disabled", "true");
 
 			cy.get("@ri")
 				.shadow()
@@ -375,6 +439,52 @@ describe("RatingIndicator", () => {
 
 			cy.get("[ui5-rating-indicator]")
 				.should("have.attr", "value", 0);
-		})
+		});
+
+		it("displayOnly should prevent all interaction", () => {
+			cy.mount(
+				<RatingIndicator value={2} displayOnly></RatingIndicator>
+			);
+
+			cy.get("[ui5-rating-indicator]").as("ri");
+
+			// Try clicking on a star
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item")
+				.eq(3)
+				.realClick();
+
+			cy.get("@ri")
+				.should("have.attr", "value", "2"); // Value should not change
+
+			// Component should not be focusable
+			cy.get("@ri")
+				.shadow()
+				.find(".ui5-rating-indicator-root")
+				.should("have.attr", "tabindex", "-1");
+		});
+
+		it("displayOnly should render same as readonly", () => {
+			cy.mount(
+				<>
+					<RatingIndicator id="readonly-ri" value={2.5} readonly ratedIcon="heart" unratedIcon="heart-2"></RatingIndicator>
+					<RatingIndicator id="display-only-ri" value={2.5} displayOnly ratedIcon="heart" unratedIcon="heart-2"></RatingIndicator>
+				</>
+			);
+
+			// Both should render unselected stars with rated icon
+			cy.get("#readonly-ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
+				.first()
+				.should("have.attr", "name", "heart");
+
+			cy.get("#display-only-ri")
+				.shadow()
+				.find(".ui5-rating-indicator-item-unsel [ui5-icon]")
+				.first()
+				.should("have.attr", "name", "heart");
+		});
 	});
 });

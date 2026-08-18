@@ -13,6 +13,8 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -22,7 +24,12 @@ import {
 	USER_SETTINGS_DIALOG_ACCESSIBLE_NAME,
 	USER_SETTINGS_LIST_ARIA_ROLE_DESC,
 	USER_SETTINGS_DIALOG_CLOSE_BUTTON_TEXT,
+	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
+	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
+	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
+	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
+	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -63,13 +70,16 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
 })
 
 /**
- * Fired when a settings dialog is open.
+ * Fired when the settings dialog is opened.
  * @public
  */
 @event("open")
 
 /**
  * Fired before the settings dialog is closed.
+ *
+ * **Note:** This event is cancelable via `preventDefault()`, allowing the application to keep the
+ * dialog open — for example, to prompt the user about unsaved changes before dismissal.
  * @public
  */
 @event("before-close", {
@@ -77,10 +87,26 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
 })
 
 /**
- * Fired when a settings dialog is closed.
+ * Fired when the settings dialog is closed.
  * @public
  */
 @event("close")
+
+/**
+ * Fired when the Save button in the footer is clicked.
+ * The dialog does not close automatically — the application is responsible
+ * for closing it after persisting the changes.
+ * @public
+ */
+@event("save")
+
+/**
+ * Fired when the Cancel button in the footer is clicked.
+ * The dialog does not close automatically — the application is responsible
+ * for closing it after discarding the changes.
+ * @public
+ */
+@event("cancel")
 
 class UserSettingsDialog extends UI5Element {
 	eventDetails!: {
@@ -88,6 +114,8 @@ class UserSettingsDialog extends UI5Element {
 		"open": void,
 		"before-close": UserSettingsBeforeCloseEventDetail,
 		"close": void,
+		"save": void,
+		"cancel": void,
 	};
 	/**
 	 * Defines, if the User Settings Dialog is opened.
@@ -116,6 +144,20 @@ class UserSettingsDialog extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	showSearchField = false;
+
+	/**
+	 * Defines whether the dialog offers Save and Cancel actions in its footer.
+	 *
+	 * When true, the footer renders a Save (Emphasized) and a Cancel button
+	 * instead of the default Close button. Save and Cancel each fire a
+	 * corresponding event; the application is responsible for closing the
+	 * dialog (typically after persisting or discarding the changes).
+	 *
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	saveMode = false;
 
 	/**
 	 * Defines the user settings items.
@@ -187,6 +229,13 @@ class UserSettingsDialog extends UI5Element {
 	_showNoSearchResult = false;
 
 	/**
+	 * Indicates that the user changed the search value and the search
+	 * results should be announced on the next rendering.
+	 * @private
+	 */
+	_announceSearchResults = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @private
 	 */
@@ -212,6 +261,7 @@ class UserSettingsDialog extends UI5Element {
 				this._selectedSetting = item;
 			}
 			item._siblingsWithIcon = siblingsWithIcon;
+			item._inMobileView = this._showSettingWithNavigation;
 		});
 
 		this.fixedItems.forEach(item => {
@@ -222,12 +272,18 @@ class UserSettingsDialog extends UI5Element {
 			if (item.selected) {
 				this._selectedSetting = item;
 			}
+			item._inMobileView = this._showSettingWithNavigation;
 		});
 
 		if (this._filteredItems.length === 0 && this._filteredFixedItems.length === 0) {
 			this._showNoSearchResult = true;
 		} else {
 			this._showNoSearchResult = false;
+		}
+
+		if (this._announceSearchResults) {
+			this._announceSearchResults = false;
+			announce(this._searchResultsText, InvisibleMessageMode.Polite);
 		}
 
 		if (!this._selectedSetting) {
@@ -295,8 +351,27 @@ class UserSettingsDialog extends UI5Element {
 	get closeButtonText() {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_CLOSE_BUTTON_TEXT);
 	}
+	get saveButtonText() {
+		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT);
+	}
+	get cancelButtonText() {
+		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT);
+	}
 	get noSearchResultsText() {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
+	}
+
+	get _searchResultsText() {
+		const resultsCount = this._filteredItems.length + this._filteredFixedItems.length;
+
+		switch (resultsCount) {
+		case 0:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS);
+		case 1:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT);
+		default:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS, resultsCount);
+		}
 	}
 
 	get _selectedItemSlotName() {
@@ -315,12 +390,21 @@ class UserSettingsDialog extends UI5Element {
 		}
 	}
 
+	_handleSaveButtonClick() {
+		this.fireDecoratorEvent("save");
+	}
+
+	_handleCancelButtonClick() {
+		this.fireDecoratorEvent("cancel");
+	}
+
 	_handleCollapseClick() {
 		this._collapsed = false;
 	}
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {
 		this._searchValue = (e.target as Input).value;
+		this._announceSearchResults = true;
 	}
 
 	captureRef(ref: HTMLElement & { associatedSettingItem?: UI5Element} | null) {

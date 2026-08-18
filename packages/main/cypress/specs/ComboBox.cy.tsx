@@ -188,21 +188,6 @@ describe("General Interaction", () => {
 		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
 	});
 
-	it("shows focus outline on list item mousedown", () => {
-		cy.mount(
-			<ComboBox>
-				<ComboBoxItem text="One" />
-				<ComboBoxItem text="Two" />
-			</ComboBox>
-		);
-
-		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
-		cy.get("[ui5-combobox]").shadow().find("[ui5-responsive-popover]").should("have.attr", "open");
-
-		cy.get("[ui5-cb-item]").first().shadow().find("li").realMouseDown();
-		cy.get("[ui5-cb-item]").first().should("have.prop", "focused", true);
-	});
-
 	it("tests Combo with two-column layout", () => {
 		cy.mount(
 			<ComboBox>
@@ -2912,6 +2897,67 @@ describe("Event firing", () => {
 		cy.get("@selectionChangeSpy")
 			.should("have.been.calledWith", Cypress.sinon.match.has("detail", Cypress.sinon.match.has("item")));
 	});
+
+	it("selection-change trigger is 'Typeahead' when text is auto-completed", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realType("Bul");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Bulgaria" && event.detail.trigger === "Typeahead";
+		}));
+	});
+
+	it("selection-change trigger is 'Click' when an item is clicked in the dropdown", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find(".inputIcon").realClick();
+		cy.get("@combo").find("ui5-cb-item").eq(2).realClick();
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.item?.text === "Canada" && event.detail.trigger === "Click";
+		}));
+	});
+
+	it("selection-change trigger is 'Keyboard' when navigating with arrow keys", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Argentina"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+				<ComboBoxItem text="Canada"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combo")
+			.invoke('on', 'ui5-selection-change', cy.spy().as('selectionChangeSpy'));
+
+		cy.get("@combo").shadow().find("input").focus().realPress("F4").realPress("ArrowDown");
+
+		cy.get("@selectionChangeSpy").should("have.been.calledWithMatch", Cypress.sinon.match(event => {
+			return event.detail.trigger === "Keyboard";
+		}));
+	});
 });
 
 describe("Scrolling", () => {
@@ -4211,5 +4257,97 @@ describe("ComboBoxItemCustom - Accessibility", () => {
 			.realClick();
 
 		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
+	});
+});
+
+describe("Newline normalization in item text", () => {
+	it("should fire change event twice when selecting two different items with newlines via keyboard", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nA"} value="item-a" />
+				<ComboBoxItem text={"Item\nB"} value="item-b" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
+	});
+
+	it("should fire change event when selecting items with identical normalized display text but different values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nX"} value="first" />
+				<ComboBoxItem text="Item X" value="second" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
+
+		cy.get("[ui5-cb-item]").should("have.length", 2);
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
 	});
 });

@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
 import MultiComboBoxItemCustom from "../../src/MultiComboBoxItemCustom.js";
@@ -6,6 +7,7 @@ import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Button from "../../src/Button.js";
 import Link from "../../src/Link.js";
 import Input from "../../src/Input.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { MULTIINPUT_SHOW_MORE_TOKENS, TOKENIZER_ARIA_CONTAIN_ONE_TOKEN, TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS, TOKENIZER_ARIA_CONTAIN_TOKEN, TOKENIZER_SHOW_ALL_ITEMS, VALUE_STATE_ERROR, VALUE_STATE_TYPE_ERROR, VALUE_STATE_TYPE_SUCCESS, VALUE_STATE_TYPE_WARNING, VALUE_STATE_WARNING } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Security", () => {
@@ -343,36 +345,54 @@ describe("General", () => {
 
 		cy.get("[ui5-multi-combobox]")
 			.as("mcb")
+			.then($mcb => {
+				$mcb.get(0).addEventListener("ui5-selection-change", cy.stub().as("selectionChange"));
+			});
+
+		// With new overflow logic, both tokens should be hidden and show "2 items"
+		cy.get("@mcb")
 			.shadow()
 			.find("[ui5-tokenizer]")
 			.as("tokenizer")
-			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
-
-		// The first token is the long one and should be hidden in the n-more, so we target the second token
-		cy.get("@tokenizer")
-			.find("[ui5-token]")
-			.eq(1)
-			.as("token")
-			.should("exist");
-
-		cy.get("@token")
 			.shadow()
-			.find("[ui5-icon]")
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.should("contain.text", "2")
 			.realClick();
 
-		cy.get("@tokenDelete")
-			.should("have.been.calledOnce")
-			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.tokens.length === 1;
-			}));
+		// In MultiComboBox, clicking "n items" opens the main dropdown
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
 
-		cy.get("@token")
+		// Find and click the first item (the long token) to deselect it
+		cy.get("@mcb")
+			.find("[ui5-mcb-item]")
+			.first()
+			.should("have.attr", "text", "This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable")
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		// After removing the long token, the remaining "Item" token should now be visible
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 1)
+			.should("have.attr", "text", "Item");
+
+		// No "n more" should be shown since the single token fits
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
 			.should("not.exist");
 	});
 
 	it("Should delete token after focus change when tokenizer collapses", () => {
 		cy.mount(
-			<MultiComboBox style="width: 250px;">
+			<MultiComboBox style="width: 280px;">
 				<MultiComboBoxItem selected={true} text="Albania"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Argentina"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
@@ -833,7 +853,7 @@ describe("General", () => {
 			.should("have.text", "BG");
 	});
 
-	it("N-more translation", () => {
+	it("N-items translation", () => {
 		cy.mount(
 			<MultiComboBox style="width: 100px">
 				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long text"></MultiComboBoxItem>
@@ -856,11 +876,12 @@ describe("General", () => {
 			})
 	});
 
-	it("N-items translation", () => {
+	it("N-more translation", () => {
 		cy.mount(
-			<MultiComboBox style="width: 100%">
-				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long text"></MultiComboBoxItem>
+			<MultiComboBox style="width: 400px">
+				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -875,7 +896,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 1));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
 			})
 	});
 
@@ -1547,7 +1568,7 @@ describe("Selection and filtering", () => {
 
 		cy.get("@popover")
 			.find(".ui5-mcb-select-all-checkbox")
-			.should("have.attr", "checked");
+			.should("not.have.attr", "checked");
 
 		cy.get("@popover")
 			.find("[ui5-list] slot")
@@ -3246,6 +3267,31 @@ describe("Accessibility", () => {
 			.shadow()
 			.find(".ui5-checkbox-root")
 			.should("not.have.attr", "tabindex");
+	});
+
+	it("Should announce selected state to screen readers", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Selected Item"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Unselected Item"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(1)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Not Selected");
 	});
 });
 
@@ -5476,5 +5522,134 @@ describe("MultiComboBoxItemCustom - Mixed Selection", () => {
 		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
 
 		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+});
+
+describe("Select All with Groups", () => {
+	it("should check the 'select all' checkbox when all items in groups are selected", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("not.have.attr", "checked");
+
+		cy.get("@selectAllCheckbox")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 4);
+	});
+
+	it("should uncheck the 'select all' checkbox when deselecting one item in a group", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("[ui5-mcb-item]")
+			.first()
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("not.have.attr", "checked");
+	});
+});
+
+describe("Tokenizer overflow calculation", () => {
+	afterEach(() => {
+		// Reset language regardless of test outcome to avoid leaking into other specs.
+		cy.wrap(setLanguage("en"));
+	});
+
+	it("should not cause a render loop when the 'n more' width toggles overflow at boundary widths", () => {
+		// Regression for a render loop: at ~208px the number of overflowing tokens depends on
+		// the "n more" indicator width, which itself changes with the number of visible tokens,
+		// so the overflow count oscillates. Korean copy is wider than English, exposing the bug
+		// at this width. A loop trips RenderQueue's "processed too many times" guard, which
+		// surfaces as an uncaught exception and fails this test automatically — no polling needed.
+		cy.wrap(setLanguage("ko"));
+
+		cy.mount(
+			<MultiComboBox style="width: 208px">
+				<MultiComboBoxItem selected text="보기"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="임포트"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="편집"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		// The component must settle on a stable state: all three tokens overflow, so the
+		// indicator reports "3". Cypress retries this until it holds; a loop would throw first.
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.and("contain.text", "3");
+
+		// All three tokens remain in the DOM (overflowing tokens are hidden, not removed).
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 3);
 	});
 });

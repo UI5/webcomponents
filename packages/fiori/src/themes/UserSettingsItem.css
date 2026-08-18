@@ -10,11 +10,21 @@
 
 .ui5-user-settings-item-header {
 	display: flex;
-	gap: 0.5rem;
 	align-items: center;
-	padding: 1rem 1rem 0.5rem;
+	padding: 1rem;
+	position: relative;
 	font-size: var(--sapFontHeader5Size);
 	font-family: var(--sapFontBoldFamily);
+	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
+}
+
+.ui5-user-settings-item-collapse-btn {
+	position: absolute;
+	inset-inline-start: 1rem;
+}
+
+.ui5-user-settings-item-header--with-back [ui5-title] {
+	padding-inline-start: calc(var(--_ui5_button_base_min_width) + 0.5rem);
 }
 
 .ui5-user-settings-item-loading-container {
@@ -72,6 +82,6 @@
 
 @container (width > 37.5rem) {
 	.ui5-user-settings-item-header {
-		padding-inline: 2rem;
+		padding-inline: 1rem;
 	}
 }

@@ -83,21 +83,19 @@
 
 /* Responsive paddings */
 
-/* S Size */
-@container (max-width: 599px) {
-    .ui5-dynamic-page-fit-content {
-        padding: var(--_ui5_dynamic_page_content_padding_S);
-    }
-    ::slotted([slot="titleArea"]) {
-        padding: var(--_ui5_dynamic_page_title_padding_S);
-    }
-    ::slotted([slot="headerArea"]) {
-        padding: var(--_ui5_dynamic_page_header_padding_S);
-    }
+/* S Size (default, no container query needed) */
+.ui5-dynamic-page-fit-content {
+    padding: var(--_ui5_dynamic_page_content_padding_S);
+}
+::slotted([slot="titleArea"]) {
+    padding: var(--_ui5_dynamic_page_title_padding_S);
+}
+::slotted([slot="headerArea"]) {
+    padding: var(--_ui5_dynamic_page_header_padding_S);
 }
 
 /* M Size */
-@container (min-width: 600px) and (max-width: 1023px) {
+@container (min-width: 600px) {
     .ui5-dynamic-page-fit-content {
         padding: var(--_ui5_dynamic_page_content_padding_M);
     }
@@ -110,7 +108,7 @@
 }
 
 /* L Size */
-@container (min-width: 1024px) and (max-width: 1439px) {
+@container (min-width: 1024px) {
     .ui5-dynamic-page-fit-content {
         padding: var(--_ui5_dynamic_page_content_padding_L);
     }
