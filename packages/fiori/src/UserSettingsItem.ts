@@ -292,20 +292,16 @@ class UserSettingsItem extends UI5Element {
 			return;
 		}
 
-		// The content is rendered after the header (which holds the back button),
-		// so limit the focus lookup to the elements following the header.
+		// The content is rendered right after the header (which holds the back button),
+		// so start the focus lookup from the element following the header.
 		const header = root.querySelector<HTMLElement>(".ui5-user-settings-item-header-container");
-		const contentElements = Array.from(root.children).filter(child => child !== header) as Array<HTMLElement>;
-
-		/* eslint-disable no-await-in-loop */
-		for (const contentElement of contentElements) {
-			const focusable = await getFirstFocusableElement(contentElement, true);
-			if (focusable) {
-				focusable.focus();
-				return;
-			}
+		const contentElement = (header?.nextElementSibling || root.firstElementChild) as HTMLElement | null;
+		if (!contentElement) {
+			return;
 		}
-		/* eslint-enable no-await-in-loop */
+
+		const focusable = await getFirstFocusableElement(contentElement, true);
+		focusable?.focus();
 	}
 
 	captureRef(this: UserSettingsView, ref: HTMLElement & { associatedSettingView?: UserSettingsView} | null) {
