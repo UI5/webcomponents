@@ -12,6 +12,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
@@ -283,12 +284,13 @@ class UserSettingsDialog extends UI5Element {
 		});
 	}
 
-	_handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
+	async _handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
+		const shouldNavigate = this._showSettingWithNavigation;
 		this._collapsed = true;
 
 		if (!eventPrevented) {
@@ -299,6 +301,13 @@ class UserSettingsDialog extends UI5Element {
 				item.selected = false;
 			});
 			settingItem.selected = true;
+		}
+
+		// In navigation (single-column) mode the content replaces the list, so move the
+		// focus to the first interactive element of the content instead of losing it.
+		if (shouldNavigate) {
+			await renderFinished();
+			this._selectedSetting?.focusFirstContentElement();
 		}
 	}
 
@@ -368,8 +377,16 @@ class UserSettingsDialog extends UI5Element {
 		this.fireDecoratorEvent("cancel");
 	}
 
-	_handleCollapseClick() {
+	async _handleCollapseClick() {
 		this._collapsed = false;
+
+		// The side list replaces the content, so return the focus to the
+		// user settings item that was selected instead of losing it.
+		await renderFinished();
+		const selectedListItem = this._selectedSetting
+			? this.shadowRoot!.querySelector<HTMLElement>(`#setting-${this._selectedSetting._id}`)
+			: null;
+		selectedListItem?.focus();
 	}
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {

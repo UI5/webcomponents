@@ -6,6 +6,7 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import UserSettingsItemTemplate from "./UserSettingsItemTemplate.js";
 import type UserSettingsView from "./UserSettingsView.js";
 import UserSettingsItemCss from "./generated/themes/UserSettingsItem.css.js";
@@ -198,6 +199,20 @@ class UserSettingsItem extends UI5Element {
 	 */
 	_individualSlot?: string;
 
+	/**
+	 * Indicates that focus should be moved to the first interactive content element
+	 * once the content becomes available (e.g. after the loading state finishes).
+	 * @private
+	 */
+	_pendingContentFocus = false;
+
+	onAfterRendering() {
+		if (this._pendingContentFocus && !this.loading) {
+			this._pendingContentFocus = false;
+			this._focusFirstContentElement();
+		}
+	}
+
 	get _hasSelectedPageView() {
 		return this.pages.some(view => view.selected);
 	}
@@ -252,6 +267,45 @@ class UserSettingsItem extends UI5Element {
 
 	get _shouldShowBackButton() {
 		return !!(this._inMobileView || (this._hasSelectedPageView && this._selectedPageView.secondary));
+	}
+
+	/**
+	 * Moves the focus to the first interactive element of the item's content,
+	 * skipping the navigation back button in the header.
+	 *
+	 * If the content is not yet available because the item is in loading state,
+	 * the focus is deferred until the loading finishes and the content is rendered.
+	 * @private
+	 */
+	focusFirstContentElement() {
+		if (this.loading) {
+			this._pendingContentFocus = true;
+			return;
+		}
+
+		this._focusFirstContentElement();
+	}
+
+	async _focusFirstContentElement() {
+		const root = this.getDomRef();
+		if (!root) {
+			return;
+		}
+
+		// The content is rendered after the header (which holds the back button),
+		// so limit the focus lookup to the elements following the header.
+		const header = root.querySelector<HTMLElement>(".ui5-user-settings-item-header-container");
+		const contentElements = Array.from(root.children).filter(child => child !== header) as Array<HTMLElement>;
+
+		/* eslint-disable no-await-in-loop */
+		for (const contentElement of contentElements) {
+			const focusable = await getFirstFocusableElement(contentElement, true);
+			if (focusable) {
+				focusable.focus();
+				return;
+			}
+		}
+		/* eslint-enable no-await-in-loop */
 	}
 
 	captureRef(this: UserSettingsView, ref: HTMLElement & { associatedSettingView?: UserSettingsView} | null) {

@@ -1617,6 +1617,131 @@ describe("F6 Navigation", () => {
     });
 });
 
+describe("Focus handling in navigation mode", () => {
+	it("focuses the first interactive content element (not the back button) when a setting is selected", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+					<Button id="content-btn-2">Content 2</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").click();
+
+		// Focus moves to the first interactive element of the content, not the back button.
+		cy.get("#content-btn-2").should("be.focused");
+
+		cy.get("@settings").find("[ui5-user-settings-item]").last()
+			.shadow()
+			.find(".ui5-user-settings-item-collapse-btn")
+			.should("not.be.focused");
+	});
+
+	it("returns focus to the selected setting item when the back button is pressed", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+					<Button id="content-btn-2">Content 2</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").click();
+		cy.get("#content-btn-2").should("be.focused");
+
+		cy.get("@settings").find("[ui5-user-settings-item]").last()
+			.shadow()
+			.find(".ui5-user-settings-item-collapse-btn")
+			.first()
+			.as("backButton");
+
+		cy.get("@backButton").click();
+
+		// Focus returns to the selected user settings list item, not lost.
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.should("be.focused");
+	});
+
+	it("focuses the content once the loading state finishes when a setting is selected", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Language and Region">
+				<UserSettingsView>
+					<Button id="lazy-content-btn">Language</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+
+		// Simulate the app-side delayed loading: put the item in loading state on selection,
+		// then clear it after a short delay - mirroring the test page behaviour.
+		cy.get("@settings").find("[ui5-user-settings-item]").last().then($item => {
+			const item = $item.get(0) as any;
+			$item.get(0).addEventListener("selection-change", () => {
+				item.loading = true;
+				setTimeout(() => {
+					item.loading = false;
+				}, 300);
+			});
+		});
+
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").click();
+
+		// While loading, the content is not rendered yet.
+		cy.get("@settings").find("[ui5-user-settings-item]").last()
+			.should("have.attr", "loading");
+
+		// Once loading finishes, focus lands on the first interactive content element.
+		cy.get("#lazy-content-btn").should("be.focused");
+	});
+});
+
 describe("Save mode", () => {
 	it("renders the default single Close button when saveMode is not set", () => {
 		cy.mount(<UserSettingsDialog open>
