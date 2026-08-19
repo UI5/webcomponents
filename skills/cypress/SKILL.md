@@ -254,12 +254,6 @@ import type ResponsivePopover from "../../../src/ResponsivePopover.js"; // type-
 
 ---
 
-## Writing a Test File
-
-When writing or restructuring a spec file, load [`WRITING-SPECS.md`](./references/WRITING-SPECS.md). It covers file location, minimal structure, what makes a test meaningful, event testing, configuration (theme/language), device simulation, `cy.clock`, viewport sizing, disabling animations, form validity, the framework command reference, mount helper functions, and shared `beforeEach`/`afterEach` setup.
-
----
-
 ## Asserting
 
 Use `have.attr` for reflected properties and ARIA attributes; use `have.prop` for state that is not reflected to an attribute:
@@ -355,12 +349,6 @@ cy.get("[ui5-form-group]")
 ```
 
 For non-default locales, always import `Assets.js` (see "Configuration" above).
-
----
-
-## Flaky Tests
-
-See [`FLAKY-TESTS.md`](./references/FLAKY-TESTS.md) for a full list of causes and recipes. Load it only when debugging an intermittent failure.
 
 ---
 
