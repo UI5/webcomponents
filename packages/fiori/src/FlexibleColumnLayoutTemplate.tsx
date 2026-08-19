@@ -33,7 +33,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 				class="ui5-fcl-separator ui5-fcl-separator-start"
 				style={{ display: this.showStartSeparator ? "flex" : "none" }}
 				tabindex={this.startSeparatorTabIndex}
-				aria-valuenow={this.startSeparatorValue}
+				aria-valuenow={this.showStartSeparatorGrip ? this.startSeparatorValue : undefined}
 				aria-orientation="vertical"
 				onMouseDown={this.onSeparatorPress}
 				onTouchStart={this.onSeparatorPress}
@@ -65,7 +65,7 @@ export default function FlexibleColumnLayoutTemplate(this: FlexibleColumnLayout)
 				class="ui5-fcl-separator ui5-fcl-separator-end"
 				style={{ display: this.showEndSeparator ? "flex" : "none" }}
 				tabindex={this.endSeparatorTabIndex}
-				aria-valuenow={this.endSeparatorValue}
+				aria-valuenow={this.showEndSeparatorGrip ? this.endSeparatorValue : undefined}
 				aria-orientation="vertical"
 				onMouseDown={this.onSeparatorPress}
 				onTouchStart={this.onSeparatorPress}
@@ -101,6 +101,7 @@ function arrowStart(this: FlexibleColumnLayout) {
 			onClick={this.switchLayoutOnArrowPress}
 			onKeyDown={this._onArrowKeydown}
 			class="ui5-fcl-arrow ui5-fcl-arrow--start"
+			tooltip={this.accStartArrowText}
 		/>
 	);
 }
