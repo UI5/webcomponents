@@ -19,13 +19,14 @@ This skill helps write and review Cypress component tests for UI5 web components
 
 ### Which files to load
 
-| Task | Files to load |
+`SKILL.md` (this file) is always loaded. Load the additional references below that match your task — combine them when a task spans several.
+
+| When you are… | Also load |
 |---|---|
-| Writing a new spec file | This file + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) |
-| Adding or modifying custom commands | This file + [`COMMANDS.md`](./references/COMMANDS.md) |
-| Reviewing an existing spec | This file + [`REVIEWING.md`](./references/REVIEWING.md) |
-| Both writing a spec and adding commands | This file + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) + [`COMMANDS.md`](./references/COMMANDS.md) |
-| Debugging a flaky or intermittent test | This file + [`FLAKY-TESTS.md`](./references/FLAKY-TESTS.md) |
+| Writing or restructuring a spec file | [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) |
+| Adding or modifying custom commands | [`COMMANDS.md`](./references/COMMANDS.md) |
+| Reviewing an existing spec | [`REVIEWING.md`](./references/REVIEWING.md) (checklist) + [`WRITING-SPECS.md`](./references/WRITING-SPECS.md) (the standard) |
+| Debugging a flaky or intermittent test | [`FLAKY-TESTS.md`](./references/FLAKY-TESTS.md) |
 
 ---
 
