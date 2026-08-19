@@ -646,8 +646,8 @@ class InputTableSuggest extends InputField {
 	}
 
 	/**
-	 * Announces the currently selected row for screen readers using a live region.
-	 * Includes row position and all column values with their headers.
+	 * Announces the currently selected row to screen readers using a live region.
+	 * Includes the row position and all column values with their headers.
 	 * @private
 	 */
 	_announceSelectedRow(rowIndex: number) {
