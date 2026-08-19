@@ -18,5 +18,6 @@ When reviewing a test file, check:
 14. **File placement** — if all tests in the file require phone simulation, should this be a `.mobile.cy.tsx` file instead?
 15. **Icon imports** — is every icon used in `cy.mount()` explicitly imported?
 16. **Global state cleanup** — does every test that changes language or theme reset it in `afterEach`?
+17. **No stray `.only` / `.skip`** — is the file free of `it.only`, `describe.only`, `it.skip` left over from local debugging? They must be removed before committing.
 
 For each issue found, either fix it directly or explain what to extract and where to put it.

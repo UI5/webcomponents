@@ -310,15 +310,24 @@ cy.get("[ui5-button]")
 ```
 
 ### Testing events
+
+Two patterns exist — use JSX props when the event is exposed as a prop, `addEventListener` otherwise:
+
 ```typescript
+// When the event is exposed as a JSX prop — pass the stub directly
+const onNavigate = cy.stub().as("navigate");
+cy.mount(
+	<Carousel onNavigate={onNavigate}>
+		<Button>Slide 1</Button>
+	</Carousel>
+);
+
+cy.get("@navigate")
+	.should("have.been.calledOnce");
+
+// When the event is not exposed as a JSX prop — attach via addEventListener
 cy.mount(<Button></Button>);
 
-cy.get("[ui5-button]")
-	.then($button => {
-		cy.stub($button[0], "dispatchEvent").as("dispatchEvent");
-	});
-
-// Or use addEventListener with a stub
 cy.get("[ui5-button]")
 	.then($el => {
 		$el[0].addEventListener("click", cy.stub().as("clicked"));
@@ -359,7 +368,105 @@ cy.wrap({ setLanguage })
 ```typescript
 cy.mount(<MyComponent />);
 cy.ui5SimulateDevice("phone");
-cy.get("[ui5-my-component]").should("have.class", "ui5-my-component-mobile");
+cy.get("[ui5-my-component]")
+	.should("have.class", "ui5-my-component-mobile");
+```
+
+### Freezing time with `cy.clock`
+
+Components that depend on the current date/time (`Calendar`, `DatePicker`, `DateTimePicker`, `TimePicker`, `DateRangePicker`, `DynamicDateRange`) render differently every day. A test that mounts them without pinning the clock is non-deterministic — it passes today and fails on another date. Freeze the clock in `beforeEach` **before** `cy.mount()`, and only stub the `Date` object:
+
+```typescript
+describe("DatePicker", () => {
+	beforeEach(() => {
+		cy.clock(new Date("Jan 15, 2024").getTime(), ["Date"]);
+	});
+
+	it("renders the fixed value", () => {
+		cy.mount(<DatePicker value="Jan 15, 2024" />);
+		// today's date now resolves to Jan 15, 2024 everywhere in the component
+	});
+});
+```
+
+Rules:
+- Pass `["Date"]` as the second argument so only `Date` is faked — faking `setTimeout`/`setInterval` (the default) can freeze the component's own async rendering and hang the test.
+- Set the clock **before** `cy.mount()` so the component reads the frozen time during its first render.
+- Reuse a single `FIXED_VALUE` constant for the value and the clock date so they never drift apart.
+- Never assert against "today" computed at runtime — assert against the frozen date literal.
+
+### Viewport sizing for responsive tests
+
+`cy.ui5SimulateDevice("phone")` only flips the `isPhone` flag — it does **not** resize the window. To test overflow, breakpoints, or layout that reacts to the actual window size (e.g. `Toolbar`, `Carousel`, `Dialog`, `Tokenizer`, `Popover`), set the real viewport with `cy.viewport(width, height)`:
+
+```typescript
+it("overflows items into the menu below 400px", () => {
+	cy.viewport(300, 600);
+	cy.mount(
+		<Toolbar>
+			<ToolbarButton text="One" />
+			<ToolbarButton text="Two" />
+			<ToolbarButton text="Three" />
+		</Toolbar>
+	);
+
+	cy.get("[ui5-toolbar]")
+		.shadow()
+		.find(".ui5-tb-overflow-btn")
+		.should("be.visible");
+});
+```
+
+Rules:
+- Call `cy.viewport()` **before** `cy.mount()` when the first render must already reflect the size.
+- To restore the configured default within a test, use `cy.viewport(Cypress.config("viewportWidth"), Cypress.config("viewportHeight"))` rather than a hard-coded size.
+- Use `cy.viewport()` for pixel-size / overflow behavior; use `cy.ui5SimulateDevice("phone")` for phone-specific rendering paths. They are independent — combine them when a test needs both.
+
+### Disabling animations
+
+Use `setAnimationMode("none")` in a `before()` hook when testing components that have animations, to prevent timing-dependent failures:
+
+```typescript
+import { setAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
+
+before(() => {
+	cy.wrap({ setAnimationMode })
+		.then(async ({ setAnimationMode }) => {
+			await setAnimationMode("none");
+		});
+});
+```
+
+### Wrapper elements for layout testing
+
+When testing responsive or layout-dependent behavior, wrap the component in a `div` with inline styles:
+
+```typescript
+cy.mount(
+	<div style={{ width: "300px" }}>
+		<Breadcrumbs>
+			<BreadcrumbsItem href="#">Link 1</BreadcrumbsItem>
+			<BreadcrumbsItem href="#">Link 2</BreadcrumbsItem>
+		</Breadcrumbs>
+	</div>
+);
+```
+
+### Form validity testing
+
+For form components, test `validity`, `formValidity`, `checkValidity()`, `reportValidity()`, and the `:invalid` CSS pseudo-class:
+
+```typescript
+cy.get("#cb")
+	.then($el => {
+		const checkbox = $el[0] as CheckBox;
+		expect(checkbox.validity.valueMissing).to.be.true;
+		expect(checkbox.validity.valid).to.be.false;
+		expect(checkbox.checkValidity()).to.be.false;
+	});
+
+cy.get("#cb:invalid")
+	.should("exist");
 ```
 
 ### Available framework commands
@@ -554,6 +661,26 @@ cy.get("#myInput")
 	.should("have.prop", "focused", true);
 ```
 
+### Asserting on computed styles and CSS custom properties
+
+When a test needs to verify applied styling — a CSS class is not enough, or the component publishes a CSS custom property (`--_ui5_...`) on its host — read the computed style inside a `.then()` callback with `getComputedStyle(...).getPropertyValue(...)`. Trim the result, since custom-property values are returned with leading whitespace:
+
+```typescript
+cy.get<Input>("[ui5-input]")
+	.shadow()
+	.find("[ui5-icon]")
+	.then($icon => {
+		const padding = getComputedStyle($icon[0])
+			.getPropertyValue("--_ui5_input_icon_state_padding")
+			.trim();
+		expect(padding).to.not.equal("");
+	});
+```
+
+Rules:
+- Assert the specific declared value where one exists (`.to.equal("none")`), not just `.to.not.equal("")`.
+- Only reach for computed styles when a class assertion cannot express the check — prefer `should("have.class", ...)` when a class reflects the state.
+- Private custom properties (`--_ui5_*`) are internal contracts; when asserting on them, add a short comment explaining which selector publishes the value.
 
 ### Asserting on events
 
