@@ -131,7 +131,7 @@ type InputEventDetail = {
 })
 
 /**
- * Fired when the input operation has finished by pressing Enter or on focusout.
+ * Fired when the input operation has finished, either by pressing Enter or on focusout.
  * @public
  */
 @event("change", {
@@ -143,7 +143,7 @@ type InputEventDetail = {
 })
 
 /**
- * Fired when the value of the component changes at each keystroke.
+ * Fired when the value of the component changes with each keystroke.
  * @public
  */
 @event("input", {
@@ -180,7 +180,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	disabled = false;
 
 	/**
-	 * Defines a short hint intended to aid the user with data entry when the
+	 * Defines a short hint intended to help the user with data entry when the
 	 * component has no value.
 	 * @default undefined
 	 * @public
@@ -211,11 +211,11 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	/**
 	 * Defines the HTML type of the component.
 	 *
-	 * **Notes:**
+	 * **Note:**
 	 *
 	 * - The particular effect of this property differs depending on the browser
 	 * and the current language settings, especially for type `Number`.
-	 * - The property is mostly intended to be used with touch devices
+	 * - The property is mainly intended for touch devices
 	 * that use different soft keyboard layouts depending on the given input type.
 	 * @default "Text"
 	 * @public
@@ -274,7 +274,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	accessibleName?: string;
 
 	/**
-	 * Receives id(or many ids) of the elements that label the input.
+	 * Receives ID (or many IDs) of the elements that label the input.
 	 * @default undefined
 	 * @public
 	 * @since 1.0.0-rc.15
@@ -292,7 +292,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	accessibleDescription?: string;
 
 	/**
-	 * Receives id(or many ids) of the elements that describe the input.
+	 * Receives ID (or many IDs) of the elements that describe the input.
 	 * @default undefined
 	 * @public
 	 * @since 2.9.0
@@ -326,7 +326,7 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 
 	/**
 	 * Used to define enterkeyhint of the inner input.
-	 * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint
+	 *For more information, see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/enterkeyhint
 	 *
 	 * @private
 	 */
@@ -893,8 +893,8 @@ abstract class InputField extends UI5Element implements IFormInputElement, ITool
 	}
 
 	/**
-	 * Called in _onfocusout to allow subclasses to skip focusout handling
-	 * (e.g., when clicking inside a suggestion popover)
+	 * Called in `_onfocusout` to allow subclasses to skip focusout handling
+	 * (for example, when clicking inside a suggestion popover)
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {

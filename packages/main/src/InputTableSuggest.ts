@@ -73,13 +73,13 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * @class
  * ### Overview
  *
- * The `ui5-input-table-suggest` component is an input field with tabular suggestions support.
+ * The `ui5-input-table-suggest` component is an input field with tabular suggestion support.
  * It displays suggestions in a table format with multiple columns, allowing users to
  * see more information about each suggestion before selecting it.
  *
  * This component supports:
- * - Multiple columns via `suggestionColumns` slot
- * - Tabular rows via `suggestionRows` slot
+ * - Multiple columns via the `suggestionColumns` slot
+ * - Tabular rows via the `suggestionRows` slot
  * - Automatic popin mode for responsive behavior
  *
  * ### Usage
@@ -97,7 +97,7 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * - `suggestionColumns`: Table header cells defining the columns
  * - `suggestionRows`: Table rows with cells containing the suggestion data
  *
- * **Note:** Autocomplete (typeahead) matches only the first column of suggestion rows.
+ * **Note:** Autocomplete (typeahead) is base on the first column of suggestion rows only.
  *
  *
  * ### ES6 Module Import
@@ -147,7 +147,7 @@ class InputTableSuggest extends InputField {
 	showSuggestions = false;
 
 	/**
-	 * Defines whether typeahead is disabled.
+	 * Defines whether the typeahead feature is disabled.
 	 * @default false
 	 * @public
 	 */
@@ -186,10 +186,10 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the columns for the tabular suggestions.
-	 * Use `ui5-table-header-cell` component to define the column headers.
+	 * Use the `ui5-table-header-cell` component to define the column headers.
 	 *
 	 * **Note:** The columns define the structure of the suggestion table header.
-	 * Each column can have properties like `width`, `minWidth`, `importance` (for popin),
+	 * Each column can have properties such as `width`, `minWidth`, `importance` (for popin),
 	 * and `popinText`.
 	 *
 	 * @public
@@ -199,9 +199,9 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the rows for the tabular suggestions.
-	 * Use `ui5-table-row` component with `ui5-table-cell` children to define each suggestion row.
+	 * Use the `ui5-table-row` component with `ui5-table-cell` children to define each suggestion row.
 	 *
-	 * **Note:** The cells in each row should correspond to the columns defined in `suggestionColumns`.
+	 * **Note:** The cells in each row should correspond to the columns defined in the `suggestionColumns`.
 	 *
 	 * @public
 	 */
