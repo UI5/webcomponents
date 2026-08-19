@@ -256,9 +256,13 @@ import type ResponsivePopover from "../../../src/ResponsivePopover.js"; // type-
 ## Writing a Test File
 
 ### Location
-```
-packages/{package}/cypress/specs/{ComponentName}.cy.tsx
-```
+
+| File | Purpose |
+|------|---------|
+| `packages/{package}/cypress/specs/{ComponentName}.cy.tsx` | Main spec |
+| `packages/{package}/cypress/specs/{ComponentName}.mobile.cy.tsx` | Phone-only tests — use when tests require `cy.ui5SimulateDevice("phone")` for the entire file |
+
+Use a separate `.mobile.cy.tsx` file when all tests in it need phone simulation. Do not add `cy.ui5SimulateDevice("phone")` to a `beforeEach` in the main spec just to group mobile tests — put them in a dedicated mobile file instead.
 
 ### Minimal structure
 ```typescript
@@ -283,9 +287,11 @@ describe("{ComponentName}", () => {
 
 A test only asserting `"exist"` is not meaningful. A meaningful test asserts:
 - The **rendered state** reflects the props (e.g. `design="Negative"` adds the right CSS class)
-- **Events** fire when expected (use `cy.stub` or `cy.spy`)
+- **Events** fire when expected (use `cy.stub` or `cy.spy`), including the correct payload and call count
 - **Accessibility** attributes are correct (`aria-label`, `role`, `aria-disabled`)
 - **Behavior** after interaction (open/close, value change, focus movement)
+- The **keyboard path**, not just the click path — test `realPress` navigation as well as `realClick`
+- **Disabled and read-only states do not react** — assert that interactions produce no change
 
 **Weak (avoid):**
 ```typescript
@@ -368,6 +374,8 @@ cy.get("[ui5-my-component]").should("have.class", "ui5-my-component-mobile");
 | `cy.screenshot` | Honoured with `SCREENSHOT_DELAY` env var |
 
 **`cy.ui5DOMRef()` is declared in `support/commands.ts` but never implemented — it will fail at runtime. Do not call it.**
+
+**Import every icon you use.** The test bundle contains all icons, so a missing import passes locally and breaks in a real application.
 
 ---
 
