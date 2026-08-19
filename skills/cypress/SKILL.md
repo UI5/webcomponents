@@ -30,7 +30,7 @@ This skill helps write and review Cypress component tests for UI5 web components
 
 ---
 
-## Quick Rules
+## Core Rules
 
 ### Interacting — always use real events
 
