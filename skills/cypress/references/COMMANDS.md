@@ -75,9 +75,9 @@ Cypress.Commands.add("ui5CalendarGetDayPicker", { prevSubject: true }, (subject:
 Usage in a spec chains the two commands naturally:
 ```typescript
 cy.get<DatePicker>("@datePicker")
-  .ui5DatePickerGetCalendar()   // returns Chainable<JQuery<Calendar>>
-  .ui5CalendarGetDayPicker()    // subject is Calendar — correct
-  .should("be.visible");
+	.ui5DatePickerGetCalendar()   // returns Chainable<JQuery<Calendar>>
+	.ui5CalendarGetDayPicker()    // subject is Calendar — correct
+	.should("be.visible");
 ```
 
 ### Chaining pattern for nested sub-elements
@@ -85,18 +85,22 @@ cy.get<DatePicker>("@datePicker")
 ```typescript
 // Chain directly when result is used once
 cy.get<DatePicker>("@datePicker")
-  .ui5DatePickerGetCalendar()
-  .ui5CalendarGetDayPicker()
-  .shadow()
-  .find(".ui5-dp-content");
+	.ui5DatePickerGetCalendar()
+	.ui5CalendarGetDayPicker()
+	.shadow()
+	.find(".ui5-dp-content");
 
 // Alias the intermediate element for repeated access in one test
 cy.get<DatePicker>("@datePicker")
-  .ui5DatePickerGetCalendar()
-  .as("calendar");
+	.ui5DatePickerGetCalendar()
+	.as("calendar");
 
-cy.get<Calendar>("@calendar").ui5CalendarGetMonthPicker().should("be.visible");
-cy.get<Calendar>("@calendar").ui5CalendarGetYearPicker().should("be.visible");
+cy.get<Calendar>("@calendar")
+	.ui5CalendarGetMonthPicker()
+	.should("be.visible");
+cy.get<Calendar>("@calendar")
+	.ui5CalendarGetYearPicker()
+	.should("be.visible");
 ```
 
 ### Rule: no bare tag selectors in specs
@@ -104,12 +108,18 @@ cy.get<Calendar>("@calendar").ui5CalendarGetYearPicker().should("be.visible");
 In specs, **never** use bare tag names in `find()`:
 ```typescript
 // Wrong — bare tag selector, bypasses POM
-cy.get<DatePicker>("@datePicker").shadow().find("ui5-calendar")
-cy.get<Calendar>("@calendar").shadow().find("ui5-daypicker")
+cy.get<DatePicker>("@datePicker")
+	.shadow()
+	.find("ui5-calendar")
+cy.get<Calendar>("@calendar")
+	.shadow()
+	.find("ui5-daypicker")
 
 // Right — use POM commands
-cy.get<DatePicker>("@datePicker").ui5DatePickerGetCalendar()
-cy.get<Calendar>("@calendar").ui5CalendarGetDayPicker()
+cy.get<DatePicker>("@datePicker")
+	.ui5DatePickerGetCalendar()
+cy.get<Calendar>("@calendar")
+	.ui5CalendarGetDayPicker()
 ```
 
 The only exception: `find()` inside a getter command's own implementation — the command itself must reference the tag name to locate the element.
@@ -137,63 +147,68 @@ import type MyComponent from "../../../src/MyComponent.js";
 import type InnerElement from "../../../src/InnerElement.js";
 
 Cypress.Commands.add("ui5MyComponentGetInnerElement", { prevSubject: true }, (subject: JQuery<MyComponent>) => {
-  return cy.wrap(subject)
-    .shadow()
-    .find("[ui5-inner-element]");
+	return cy.wrap(subject)
+		.shadow()
+		.find("[ui5-inner-element]");
 });
 
 Cypress.Commands.add("ui5MyComponentOpen", { prevSubject: true }, (subject: JQuery<MyComponent>) => {
-  cy.wrap(subject)
-    .as("component")
-    .invoke("attr", "open", true);
+	cy.wrap(subject)
+		.as("component")
+		.invoke("attr", "open", true);
 
-  cy.get<MyComponent>("@component").ui5MyComponentOpened();
+	cy.get<MyComponent>("@component")
+		.ui5MyComponentOpened();
 });
 
 Cypress.Commands.add("ui5MyComponentOpened", { prevSubject: true }, (subject: JQuery<MyComponent>) => {
-  cy.wrap(subject).as("component");
-  cy.get<MyComponent>("@component").should("have.attr", "open");
-  cy.get<MyComponent>("@component")
-    .shadow()
-    .find("[ui5-responsive-popover]")
-    .should($rp => {
-      expect($rp.is(":popover-open")).to.be.true;
-      expect($rp.width()).to.not.equal(0);
-      expect($rp.height()).to.not.equal(0);
-    })
-    .and("have.attr", "open");
+	cy.wrap(subject)
+		.as("component");
+	cy.get<MyComponent>("@component")
+		.should("have.attr", "open");
+	cy.get<MyComponent>("@component")
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.should($rp => {
+			expect($rp.is(":popover-open")).to.be.true;
+			expect($rp.width()).to.not.equal(0);
+			expect($rp.height()).to.not.equal(0);
+		})
+		.and("have.attr", "open");
 });
 
 Cypress.Commands.add("ui5MyComponentClosed", { prevSubject: true }, (subject: JQuery<MyComponent>) => {
-  cy.wrap(subject).as("component");
-  cy.get<MyComponent>("@component").should("not.have.attr", "open");
-  cy.get<MyComponent>("@component")
-    .shadow()
-    .find("[ui5-responsive-popover]")
-    .should($rp => {
-      expect($rp.is(":popover-open")).to.be.false;
-    })
-    .and("not.have.attr", "open");
+	cy.wrap(subject)
+		.as("component");
+	cy.get<MyComponent>("@component")
+		.should("not.have.attr", "open");
+	cy.get<MyComponent>("@component")
+		.shadow()
+		.find("[ui5-responsive-popover]")
+		.should($rp => {
+			expect($rp.is(":popover-open")).to.be.false;
+		})
+		.and("not.have.attr", "open");
 });
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      ui5MyComponentGetInnerElement(
-        this: Chainable<JQuery<MyComponent>>
-      ): Chainable<JQuery<InnerElement>>
-      ui5MyComponentOpen(
-        this: Chainable<JQuery<MyComponent>>,
-        options?: { opener?: string }
-      ): Chainable<void>
-      ui5MyComponentOpened(
-        this: Chainable<JQuery<MyComponent>>
-      ): Chainable<void>
-      ui5MyComponentClosed(
-        this: Chainable<JQuery<MyComponent>>
-      ): Chainable<void>
-    }
-  }
+	namespace Cypress {
+		interface Chainable {
+			ui5MyComponentGetInnerElement(
+				this: Chainable<JQuery<MyComponent>>
+			): Chainable<JQuery<InnerElement>>
+			ui5MyComponentOpen(
+				this: Chainable<JQuery<MyComponent>>,
+				options?: { opener?: string }
+			): Chainable<void>
+			ui5MyComponentOpened(
+				this: Chainable<JQuery<MyComponent>>
+			): Chainable<void>
+			ui5MyComponentClosed(
+				this: Chainable<JQuery<MyComponent>>
+			): Chainable<void>
+		}
+	}
 }
 ```
 
@@ -227,11 +242,11 @@ These helpers verify the full set of conditions that mean a popup is truly open 
 import { isPopupOpen, isPopupClosed } from "./utils/popup-open.js";
 
 Cypress.Commands.add("ui5DialogOpened", { prevSubject: true }, (subject: JQuery<Dialog>) => {
-  isPopupOpen(() => cy.wrap(subject));
+	isPopupOpen(() => cy.wrap(subject));
 });
 
 Cypress.Commands.add("ui5DialogClosed", { prevSubject: true }, (subject: JQuery<Dialog>) => {
-  isPopupClosed(() => cy.wrap(subject));
+	isPopupClosed(() => cy.wrap(subject));
 });
 ```
 
@@ -239,13 +254,15 @@ When the popup is a shadow-DOM child (e.g. `ResponsivePopover` renders a `ui5-di
 
 ```typescript
 Cypress.Commands.add("ui5ResponsivePopoverOpened", { prevSubject: true }, (subject: JQuery<ResponsivePopover>) => {
-  if (isPhone()) {
-    isPopupOpen(() =>
-      cy.wrap(subject).shadow().find("[ui5-dialog]")
-    );
-  } else {
-    isPopupOpen(() => cy.wrap(subject));
-  }
+	if (isPhone()) {
+		isPopupOpen(() =>
+			cy.wrap(subject)
+				.shadow()
+				.find("[ui5-dialog]")
+		);
+	} else {
+		isPopupOpen(() => cy.wrap(subject));
+	}
 });
 ```
 

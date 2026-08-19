@@ -17,11 +17,7 @@ user-invocable: false
 
 This skill helps write and review Cypress component tests for UI5 web components. It encodes the project's testing conventions so every test file and command is consistent with the existing codebase.
 
-The primary reference for testing patterns is `docs/07-development/10-testing.md`. Read it when in doubt about a pattern.
-
 ### Which files to load
-
-Load only what the task needs — each file is ~7,000 tokens:
 
 | Task | Files to load |
 |---|---|
@@ -48,10 +44,13 @@ Load only what the task needs — each file is ~7,000 tokens:
 
 ```typescript
 // Wrong — realType is chained after realClick; the focus change hasn't settled
-cy.get("@input").realClick().realType("23");
+cy.get("@input")
+	.realClick()
+	.realType("23");
 
 // Right — two statements
-cy.get("@input").realClick();
+cy.get("@input")
+	.realClick();
 cy.realType("23");
 ```
 
@@ -62,10 +61,12 @@ cy.realType("23");
 ```typescript
 // Wrong — numeric wait
 cy.wait(3000);
-cy.get("[ui5-responsive-popover]").ui5ResponsivePopoverClosed();
+cy.get("[ui5-responsive-popover]")
+	.ui5ResponsivePopoverClosed();
 
 // Right — assert the condition; should retries
-cy.get("[ui5-responsive-popover]").ui5ResponsivePopoverClosed();
+cy.get("[ui5-responsive-popover]")
+	.ui5ResponsivePopoverClosed();
 
 // When you need to wait for a render cycle
 cy.waitRenderFinished();
@@ -87,28 +88,123 @@ The UI5 base API (`setLanguage`, `setTheme`, etc.) returns Promises. Never call 
 setLanguage("bg");
 
 // Wrong — .then(api => ...) does not await the promise
-cy.wrap({ setLanguage }).then(api => api.setLanguage("bg"));
+cy.wrap({ setLanguage })
+	.then(api => api.setLanguage("bg"));
 
 // Correct — async/await inside .then() ensures the promise is resolved before Cypress continues
 cy.wrap({ setLanguage })
-  .then(async ({ setLanguage }) => {
-    await setLanguage("bg");
-  });
+	.then(async ({ setLanguage }) => {
+		await setLanguage("bg");
+	});
 
 // Reading the result after an async call
 cy.wrap({ getLanguage })
-  .then(({ getLanguage }) => getLanguage())
-  .should("equal", "bg");
+	.then(({ getLanguage }) => getLanguage())
+	.should("equal", "bg");
+```
+
+### Setting properties and attributes
+
+Use `.invoke()` to set a property or attribute on a component:
+
+```typescript
+// Set a property
+cy.get("[ui5-button]")
+	.invoke("prop", "myProp", "newValue");
+
+// Set an attribute
+cy.get("[ui5-button]")
+	.invoke("attr", "open", true);
 ```
 
 ### DOM traversal
 ```typescript
 // Shadow DOM
-cy.get("[ui5-button]").shadow().find("button")
+cy.get("[ui5-button]")
+	.shadow()
+	.find("button")
 
 // Slots / light DOM children
-cy.get("[ui5-button]").find("[ui5-icon]")
+cy.get("[ui5-button]")
+	.find("[ui5-icon]")
 ```
+
+---
+
+## Formatting
+
+### One method per line
+
+Every chained method gets its own line with a leading tab. Never chain methods on the same line as `cy.get()`:
+
+```typescript
+// Wrong
+cy.get("[ui5-responsive-popover]").ui5ResponsivePopoverClosed();
+cy.get("[ui5-button]").shadow().find("button").should("be.visible");
+
+// Right
+cy.get("[ui5-responsive-popover]")
+	.ui5ResponsivePopoverClosed();
+
+cy.get("[ui5-button]")
+	.shadow()
+	.find("button")
+	.should("be.visible");
+```
+
+### Blank lines between steps
+
+Separate distinct test steps with a blank line:
+
+```typescript
+cy.get("[ui5-button]")
+	.as("button");
+
+cy.get("@button")
+	.realClick();
+
+cy.get("@clicked")
+	.should("have.been.calledOnce");
+```
+
+### Multiple assertions — use `.and()`
+
+```typescript
+cy.get("@clickHandler")
+	.should("have.been.calledOnce")
+	.and("be.calledWithMatch", {
+		type: "click"
+	});
+```
+
+### `.then()` callbacks
+
+Opening brace on the same line as the arrow function; body indented; closing brace on its own line:
+
+```typescript
+cy.get<Button>("[ui5-button]")
+	.then($button => {
+		const button = $button.get(0);
+		expect(button.accessibilityInfo.role).to.equal("button");
+	});
+```
+
+### `cy.mount()` with JSX
+
+JSX children indented, closing tag aligned with the component opening tag:
+
+```typescript
+cy.mount(
+	<ComboBox valueState="Negative">
+		<ComboBoxItem text="Albania" />
+		<ComboBoxItem text="Bulgaria" />
+	</ComboBox>
+);
+```
+
+### Indentation
+
+Use **tabs**, not spaces.
 
 ---
 
@@ -120,16 +216,24 @@ Pass the concrete component type as a generic to `cy.get<T>()` so TypeScript can
 
 ```typescript
 // Wrong — TypeScript cannot verify commands are valid for this element
-cy.get("[ui5-date-picker]").ui5DatePickerGetCalendar();
-cy.get("@datePicker").ui5DatePickerGetCalendar();
+cy.get("[ui5-date-picker]")
+	.ui5DatePickerGetCalendar();
+cy.get("@datePicker")
+	.ui5DatePickerGetCalendar();
 
 // Right — TypeScript knows the subject is a DatePicker
-cy.get<DatePicker>("[ui5-date-picker]").ui5DatePickerGetCalendar();
-cy.get<DatePicker>("@datePicker").ui5DatePickerGetCalendar();
+cy.get<DatePicker>("[ui5-date-picker]")
+	.ui5DatePickerGetCalendar();
+cy.get<DatePicker>("@datePicker")
+	.ui5DatePickerGetCalendar();
 
 // When a command returns a typed element, the next get must match
-cy.get<DatePicker>("@datePicker").ui5DatePickerGetCalendar().as("calendar");
-cy.get<Calendar>("@calendar").ui5CalendarGetDayPicker().should("be.visible");
+cy.get<DatePicker>("@datePicker")
+	.ui5DatePickerGetCalendar()
+	.as("calendar");
+cy.get<Calendar>("@calendar")
+	.ui5CalendarGetDayPicker()
+	.should("be.visible");
 ```
 
 ### `import type` vs plain import
@@ -161,12 +265,17 @@ packages/{package}/cypress/specs/{ComponentName}.cy.tsx
 import ComponentName from "../../src/ComponentName.js";
 
 describe("{ComponentName}", () => {
-  it("renders and shows expected default state", () => {
-    cy.mount(<ComponentName />);
-    cy.get<ComponentName>("[ui5-component-name]").should("exist");
-    // Add at least one meaningful assertion beyond "exist"
-    cy.get<ComponentName>("[ui5-component-name]").shadow().find(".ui5-component-root").should("be.visible");
-  });
+	it("renders and shows expected default state", () => {
+		cy.mount(<ComponentName />);
+
+		cy.get<ComponentName>("[ui5-component-name]")
+			.should("exist");
+		// Add at least one meaningful assertion beyond "exist"
+		cy.get<ComponentName>("[ui5-component-name]")
+			.shadow()
+			.find(".ui5-component-root")
+			.should("be.visible");
+	});
 });
 ```
 
@@ -180,30 +289,39 @@ A test only asserting `"exist"` is not meaningful. A meaningful test asserts:
 
 **Weak (avoid):**
 ```typescript
-cy.get("[ui5-button]").should("exist");
+cy.get("[ui5-button]")
+	.should("exist");
 ```
 
 **Strong (prefer):**
 ```typescript
-cy.get("[ui5-button]").should("have.attr", "disabled");
-cy.get("[ui5-button]").shadow().find("button").should("have.attr", "disabled");
+cy.get("[ui5-button]")
+	.should("have.attr", "disabled");
+cy.get("[ui5-button]")
+	.shadow()
+	.find("button")
+	.should("have.attr", "disabled");
 ```
 
 ### Testing events
 ```typescript
 cy.mount(<Button></Button>);
 
-cy.get("[ui5-button]").then($button => {
-  cy.stub($button[0], "dispatchEvent").as("dispatchEvent");
-});
+cy.get("[ui5-button]")
+	.then($button => {
+		cy.stub($button[0], "dispatchEvent").as("dispatchEvent");
+	});
 
 // Or use addEventListener with a stub
-cy.get("[ui5-button]").then($el => {
-  $el[0].addEventListener("click", cy.stub().as("clicked"));
-});
+cy.get("[ui5-button]")
+	.then($el => {
+		$el[0].addEventListener("click", cy.stub().as("clicked"));
+	});
 
-cy.get("[ui5-button]").realClick();
-cy.get("@clicked").should("have.been.called");
+cy.get("[ui5-button]")
+	.realClick();
+cy.get("@clicked")
+	.should("have.been.called");
 ```
 
 ### Configuration (theme, language)
@@ -212,13 +330,13 @@ cy.get("@clicked").should("have.been.called");
 import { setTheme, getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 cy.wrap({ setTheme })
-  .then(async ({ setTheme }) => {
-    await setTheme("sap_horizon_hcb");
-  });
+	.then(async ({ setTheme }) => {
+		await setTheme("sap_horizon_hcb");
+	});
 
 cy.wrap({ getTheme })
-  .then(({ getTheme }) => getTheme())
-  .should("equal", "sap_horizon_hcb");
+	.then(({ getTheme }) => getTheme())
+	.should("equal", "sap_horizon_hcb");
 ```
 
 For language tests, always import Assets.js:
@@ -226,9 +344,9 @@ For language tests, always import Assets.js:
 import "../../src/Assets.js"; // required for extra languages
 
 cy.wrap({ setLanguage })
-  .then(async ({ setLanguage }) => {
-    await setLanguage("bg");
-  });
+	.then(async ({ setLanguage }) => {
+		await setLanguage("bg");
+	});
 ```
 
 ### Mobile / device simulation
@@ -260,31 +378,31 @@ When a spec needs the same component configuration in many `it()` blocks, extrac
 ```typescript
 // Define helpers at the top of the spec file, before describe()
 const getDefaultCalendar = (date: Date) => {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
+	const day = String(date.getDate()).padStart(2, "0");
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const year = date.getFullYear();
 
-  return (
-    <Calendar id="calendar1" timestamp={date.valueOf() / 1000} formatPattern="dd/MM/yyyy">
-      <CalendarDate value={`${day}/${month}/${year}`} />
-    </Calendar>
-  );
+	return (
+		<Calendar id="calendar1" timestamp={date.valueOf() / 1000} formatPattern="dd/MM/yyyy">
+			<CalendarDate value={`${day}/${month}/${year}`} />
+		</Calendar>
+	);
 };
 
 const getCalendarWithDisabledDates = (id: string, formatPattern: string, ranges: DateRange[]) => (
-  <Calendar id={id} formatPattern={formatPattern}>
-    {ranges.map((range, idx) => (
-      <CalendarDateRange key={idx} slot="disabledDates" startValue={range.startValue} endValue={range.endValue} />
-    ))}
-  </Calendar>
+	<Calendar id={id} formatPattern={formatPattern}>
+		{ranges.map((range, idx) => (
+			<CalendarDateRange key={idx} slot="disabledDates" startValue={range.startValue} endValue={range.endValue} />
+		))}
+	</Calendar>
 );
 
 // Use in tests
 describe("Calendar", () => {
-  it("navigates to the current day", () => {
-    cy.mount(getDefaultCalendar(new Date(Date.UTC(2000, 10, 22))));
-    // ...
-  });
+	it("navigates to the current day", () => {
+		cy.mount(getDefaultCalendar(new Date(Date.UTC(2000, 10, 22))));
+		// ...
+	});
 });
 ```
 
@@ -292,12 +410,12 @@ Use fragment wrappers (`<>...</>`) when a helper needs to render multiple siblin
 
 ```typescript
 const getCalendarsWithWeekNumbers = () => (<>
-  <Calendar id="calendar1" calendarWeekNumbering="ISO_8601">
-    <CalendarDate value="Jan 1, 2023" />
-  </Calendar>
-  <Calendar id="calendar2" calendarWeekNumbering="MiddleEastern">
-    <CalendarDate value="Jan 1, 2023" />
-  </Calendar>
+	<Calendar id="calendar1" calendarWeekNumbering="ISO_8601">
+		<CalendarDate value="Jan 1, 2023" />
+	</Calendar>
+	<Calendar id="calendar2" calendarWeekNumbering="MiddleEastern">
+		<CalendarDate value="Jan 1, 2023" />
+	</Calendar>
 </>);
 ```
 
@@ -313,26 +431,28 @@ Use `beforeEach` and `afterEach` at the `describe` level to share setup and tear
 
 ```typescript
 describe("ComboBox - keyboard navigation", () => {
-  beforeEach(() => {
-    cy.mount(<>
-      <ComboBox valueState="Negative">
-        <ComboBoxItem text="Albania" />
-        <ComboBoxItem text="Bulgaria" />
-      </ComboBox>
-      <Input id="nextInput" placeholder="Next input" />
-    </>);
-  });
+	beforeEach(() => {
+		cy.mount(<>
+			<ComboBox valueState="Negative">
+				<ComboBoxItem text="Albania" />
+				<ComboBoxItem text="Bulgaria" />
+			</ComboBox>
+			<Input id="nextInput" placeholder="Next input" />
+		</>);
+	});
 
-  it("moves focus to the first link in the value state message", () => {
-    cy.get("[ui5-combobox]").realClick();
-    // ...
-  });
+	it("moves focus to the first link in the value state message", () => {
+		cy.get("[ui5-combobox]")
+			.realClick();
+		// ...
+	});
 
-  it("moves focus back on Escape", () => {
-    cy.get("[ui5-combobox]").realClick();
-    cy.realPress("Escape");
-    // ...
-  });
+	it("moves focus back on Escape", () => {
+		cy.get("[ui5-combobox]")
+			.realClick();
+		cy.realPress("Escape");
+		// ...
+	});
 });
 ```
 
@@ -340,14 +460,14 @@ describe("ComboBox - keyboard navigation", () => {
 
 ```typescript
 describe("ComboBox - mobile", () => {
-  beforeEach(() => {
-    cy.ui5SimulateDevice("phone");
-  });
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
 
-  it("renders the mobile picker", () => {
-    cy.mount(<ComboBox><ComboBoxItem text="Algeria" /></ComboBox>);
-    // ...
-  });
+	it("renders the mobile picker", () => {
+		cy.mount(<ComboBox><ComboBoxItem text="Algeria" /></ComboBox>);
+		// ...
+	});
 });
 ```
 
@@ -355,13 +475,13 @@ describe("ComboBox - mobile", () => {
 
 ```typescript
 describe("Calendar accessibility", () => {
-  beforeEach(() => {
-    cy.wrap({ setLanguage })
-      .then(async ({ setLanguage }) => {
-        await setLanguage("en");
-      });
-  });
-  // ...
+	beforeEach(() => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
+	// ...
 });
 ```
 
@@ -375,30 +495,30 @@ import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import "../../src/Assets.js"; // required for non-English languages
 
 describe("DatePicker - language", () => {
-  afterEach(() => {
-    cy.wrap({ setLanguage })
-      .then(async ({ setLanguage }) => {
-        await setLanguage("en");
-      });
-  });
+	afterEach(() => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("en");
+			});
+	});
 
-  it("displays Bulgarian month names", () => {
-    cy.wrap({ setLanguage })
-      .then(async ({ setLanguage }) => {
-        await setLanguage("bg");
-      });
-    // ...
-  });
+	it("displays Bulgarian month names", () => {
+		cy.wrap({ setLanguage })
+			.then(async ({ setLanguage }) => {
+				await setLanguage("bg");
+			});
+		// ...
+	});
 });
 ```
 
 **Theme reset** — same pattern, reset to `"sap_horizon"`:
 ```typescript
 afterEach(() => {
-  cy.wrap({ setTheme })
-    .then(async ({ setTheme }) => {
-      await setTheme("sap_horizon");
-    });
+	cy.wrap({ setTheme })
+		.then(async ({ setTheme }) => {
+			await setTheme("sap_horizon");
+		});
 });
 ```
 
@@ -416,27 +536,35 @@ Use `have.attr` for reflected properties and ARIA attributes; use `have.prop` fo
 
 ```typescript
 // Reflected to DOM attribute — use have.attr
-cy.get("[ui5-button]").should("have.attr", "title", "my tooltip");
-cy.get("[ui5-input]").should("have.attr", "aria-label", "Search");
+cy.get("[ui5-button]")
+	.should("have.attr", "title", "my tooltip");
+cy.get("[ui5-input]")
+	.should("have.attr", "aria-label", "Search");
 
 // Non-reflected JS property — use have.prop
-cy.get("#myInput").should("have.prop", "focused", true);
+cy.get("#myInput")
+	.should("have.prop", "focused", true);
 ```
+
 
 ### Asserting on events
 
 No global event helper — attach a stub:
 
 ```typescript
-cy.get("[ui5-tag]").then($tag => {
-  $tag[0].addEventListener("click", cy.stub().as("clicked"));
-});
+cy.get("[ui5-tag]")
+	.then($tag => {
+		$tag[0].addEventListener("click", cy.stub().as("clicked"));
+	});
 
-cy.get("[ui5-tag]").realClick();
-cy.get("@clicked").should("have.been.calledOnce");
+cy.get("[ui5-tag]")
+	.realClick();
+cy.get("@clicked")
+	.should("have.been.calledOnce");
 
 // Assert event payload
-cy.get("@clickHandler").should("be.calledWithMatch", { detail: { ctrlKey: true } });
+cy.get("@clickHandler")
+	.should("be.calledWithMatch", { detail: { ctrlKey: true } });
 ```
 
 ### Asserting on focus
@@ -445,10 +573,13 @@ cy.get("@clickHandler").should("be.calledWithMatch", { detail: { ctrlKey: true }
 
 ```typescript
 // Wrong — races in CI
-cy.get("@defaultColorButton").should("have.focus");
+cy.get("@defaultColorButton")
+	.should("have.focus");
 
 // Right — cy.focused() returns the live inner shadow focus ref
-cy.focused().should("have.attr", "aria-label").and("include", "cyan");
+cy.focused()
+	.should("have.attr", "aria-label")
+	.and("include", "cyan");
 ```
 
 `cy.focused()` returns the inner shadow focus ref, not the host element — assert `aria-label` or other attributes present on that ref, not host-level properties.
@@ -461,14 +592,16 @@ Never compare against English string literals. Compare against the i18n bundle s
 
 ```typescript
 // Wrong — breaks if the bundle text ever changes
-cy.get("[ui5-form-group]").should("have.attr", "aria-label", "Group 1");
+cy.get("[ui5-form-group]")
+	.should("have.attr", "aria-label", "Group 1");
 
 // Right — compare against the bundle
-cy.get("[ui5-form-group]").should(
-  "have.attr",
-  "aria-label",
-  Form.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, "1")
-);
+cy.get("[ui5-form-group]")
+	.should(
+		"have.attr",
+		"aria-label",
+		Form.i18nBundle.getText(FORM_GROUP_ACCESSIBLE_NAME, "1")
+	);
 ```
 
 For non-default locales, always import `Assets.js` (see "Configuration" above).
