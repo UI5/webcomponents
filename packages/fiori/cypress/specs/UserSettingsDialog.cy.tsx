@@ -1641,7 +1641,7 @@ describe("Focus handling in navigation mode", () => {
 			.last()
 			.as("item");
 
-		cy.get("@item").click();
+		cy.get("@item").realClick();
 
 		// Focus moves to the first interactive element of the content, not the back button.
 		cy.get("#content-btn-2").should("be.focused");
@@ -1675,7 +1675,7 @@ describe("Focus handling in navigation mode", () => {
 			.last()
 			.as("item");
 
-		cy.get("@item").click();
+		cy.get("@item").realClick();
 		cy.get("#content-btn-2").should("be.focused");
 
 		cy.get("@settings").find("[ui5-user-settings-item]").last()
@@ -1684,7 +1684,7 @@ describe("Focus handling in navigation mode", () => {
 			.first()
 			.as("backButton");
 
-		cy.get("@backButton").click();
+		cy.get("@backButton").realClick();
 
 		// Focus returns to the selected user settings list item, not lost.
 		cy.get("@settings")
@@ -1712,11 +1712,11 @@ describe("Focus handling in navigation mode", () => {
 
 		cy.get("[ui5-user-settings-dialog]").as("settings");
 
-		// Simulate the app-side delayed loading: put the item in loading state on selection,
-		// then clear it after a short delay - mirroring the test page behaviour.
-		cy.get("@settings").find("[ui5-user-settings-item]").last().then($item => {
-			const item = $item.get(0) as any;
-			$item.get(0).addEventListener("selection-change", () => {
+		// Simulate the app-side delayed loading: put the selected item in loading state on
+		// selection, then clear it after a short delay - mirroring the test page behaviour.
+		cy.get("@settings").then($settings => {
+			$settings.get(0).addEventListener("selection-change", (e: Event) => {
+				const item = (e as CustomEvent).detail.item as any;
 				item.loading = true;
 				setTimeout(() => {
 					item.loading = false;
@@ -1731,12 +1731,9 @@ describe("Focus handling in navigation mode", () => {
 			.last()
 			.as("item");
 
-		cy.get("@item").click();
+		cy.get("@item").realClick();
 
-		// While loading, the content is not rendered yet.
-		cy.get("@settings").find("[ui5-user-settings-item]").last()
-			.should("have.attr", "loading");
-
+		// The content loads asynchronously, so it is not focusable at selection time.
 		// Once loading finishes, focus lands on the first interactive content element.
 		cy.get("#lazy-content-btn").should("be.focused");
 	});

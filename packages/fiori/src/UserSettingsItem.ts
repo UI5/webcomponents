@@ -7,6 +7,7 @@ import {
 import type { TabContainerTabSelectEventDetail } from "@ui5/webcomponents/dist/TabContainer.js";
 import type Tab from "@ui5/webcomponents/dist/Tab.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import UserSettingsItemTemplate from "./UserSettingsItemTemplate.js";
 import type UserSettingsView from "./UserSettingsView.js";
 import UserSettingsItemCss from "./generated/themes/UserSettingsItem.css.js";
@@ -209,7 +210,7 @@ class UserSettingsItem extends UI5Element {
 	onAfterRendering() {
 		if (this._pendingContentFocus && !this.loading) {
 			this._pendingContentFocus = false;
-			this._focusFirstContentElement();
+			this._focusFirstContentElementWhenReady();
 		}
 	}
 
@@ -283,6 +284,13 @@ class UserSettingsItem extends UI5Element {
 			return;
 		}
 
+		this._focusFirstContentElement();
+	}
+
+	async _focusFirstContentElementWhenReady() {
+		// The content (and its slotted views) may still be settling after the loading
+		// state clears, so wait for the render to finish before moving the focus.
+		await renderFinished();
 		this._focusFirstContentElement();
 	}
 
