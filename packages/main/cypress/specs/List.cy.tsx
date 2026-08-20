@@ -3875,3 +3875,118 @@ describe("List - ListItem accessible role inheritance", () => {
 			.should("have.attr", "role", "listitem");
 	});
 });
+
+describe("List - _selectionWhileInactive", () => {
+	it("clicking an Inactive item WITH the flag toggles its selection (Multiple mode)", () => {
+		cy.mount(
+			<List id="list-with-flag" selectionMode="Multiple">
+				<ListItemStandard id="inactive1" type="Inactive">Inactive Item 1</ListItemStandard>
+				<ListItemStandard id="inactive2" type="Inactive">Inactive Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#list-with-flag").invoke("prop", "_selectionWhileInactive", true);
+
+		cy.get("#inactive1").should("not.have.attr", "selected");
+
+		cy.get("#inactive1").realClick();
+
+		cy.get("#inactive1").should("have.attr", "selected");
+
+		// Click again toggles off
+		cy.get("#inactive1").realClick();
+
+		cy.get("#inactive1").should("not.have.attr", "selected");
+	});
+
+	it("pressing Space on a focused Inactive item WITH the flag toggles selection", () => {
+		cy.mount(
+			<List id="list-with-flag-space" selectionMode="Multiple">
+				<ListItemStandard id="inactive-space" type="Inactive">Inactive Item</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#list-with-flag-space").invoke("prop", "_selectionWhileInactive", true);
+
+		cy.get("#inactive-space").shadow().find("li").focus();
+		cy.get("#inactive-space").should("not.have.attr", "selected");
+
+		cy.realPress("Space");
+
+		cy.get("#inactive-space").should("have.attr", "selected");
+
+		cy.realPress("Space");
+
+		cy.get("#inactive-space").should("not.have.attr", "selected");
+	});
+
+	it("item-click event is NOT fired for an Inactive item with the flag", () => {
+		cy.mount(
+			<List id="list-no-itemclick" selectionMode="Multiple">
+				<ListItemStandard id="inactive-no-click" type="Inactive">Inactive Item</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#list-no-itemclick").invoke("prop", "_selectionWhileInactive", true);
+
+		cy.get("#list-no-itemclick").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#inactive-no-click").realClick();
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("clicking an Inactive item WITHOUT the flag does NOT toggle selection (existing behavior)", () => {
+		cy.mount(
+			<List id="list-no-flag" selectionMode="Multiple">
+				<ListItemStandard id="inactive-no-flag" type="Inactive">Inactive Item</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#inactive-no-flag").realClick();
+
+		cy.get("#inactive-no-flag").should("not.have.attr", "selected");
+	});
+
+	it("Active items in a list with the flag still work normally", () => {
+		cy.mount(
+			<List id="list-active-flag" selectionMode="Multiple">
+				<ListItemStandard id="active-item" type="Active">Active Item</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#list-active-flag").invoke("prop", "_selectionWhileInactive", true);
+
+		cy.get("#list-active-flag").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#active-item").realClick();
+
+		cy.get("@itemClickStub").should("have.been.calledOnce");
+		cy.get("#active-item").should("have.attr", "selected");
+	});
+
+	it("selectionMode Single with the flag — clicking Inactive item selects it", () => {
+		cy.mount(
+			<List id="list-single-flag" selectionMode="Single">
+				<ListItemStandard id="inactive-single-1" type="Inactive">Inactive Item 1</ListItemStandard>
+				<ListItemStandard id="inactive-single-2" type="Inactive">Inactive Item 2</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#list-single-flag").invoke("prop", "_selectionWhileInactive", true);
+
+		cy.get("#inactive-single-1").realClick();
+
+		cy.get("#inactive-single-1").should("have.attr", "selected");
+
+		// Clicking second item selects it and deselects first
+		cy.get("#inactive-single-2").realClick();
+
+		cy.get("#inactive-single-2").should("have.attr", "selected");
+		cy.get("#inactive-single-1").should("not.have.attr", "selected");
+	});
+});
