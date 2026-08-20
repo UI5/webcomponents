@@ -3876,7 +3876,7 @@ describe("List - ListItem accessible role inheritance", () => {
 	});
 });
 
-describe("List - _selectionWhileInactive", () => {
+describe("List - selectionWhileInactive", () => {
 	it("clicking an Inactive item WITH the flag toggles its selection (Multiple mode)", () => {
 		cy.mount(
 			<List id="list-with-flag" selectionMode="Multiple">
@@ -3885,7 +3885,7 @@ describe("List - _selectionWhileInactive", () => {
 			</List>
 		);
 
-		cy.get("#list-with-flag").invoke("prop", "_selectionWhileInactive", true);
+		cy.get("#list-with-flag").invoke("prop", "selectionWhileInactive", true);
 
 		cy.get("#inactive1").should("not.have.attr", "selected");
 
@@ -3906,7 +3906,7 @@ describe("List - _selectionWhileInactive", () => {
 			</List>
 		);
 
-		cy.get("#list-with-flag-space").invoke("prop", "_selectionWhileInactive", true);
+		cy.get("#list-with-flag-space").invoke("prop", "selectionWhileInactive", true);
 
 		cy.get("#inactive-space").shadow().find("li").focus();
 		cy.get("#inactive-space").should("not.have.attr", "selected");
@@ -3927,7 +3927,7 @@ describe("List - _selectionWhileInactive", () => {
 			</List>
 		);
 
-		cy.get("#list-no-itemclick").invoke("prop", "_selectionWhileInactive", true);
+		cy.get("#list-no-itemclick").invoke("prop", "selectionWhileInactive", true);
 
 		cy.get("#list-no-itemclick").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
@@ -3957,7 +3957,7 @@ describe("List - _selectionWhileInactive", () => {
 			</List>
 		);
 
-		cy.get("#list-active-flag").invoke("prop", "_selectionWhileInactive", true);
+		cy.get("#list-active-flag").invoke("prop", "selectionWhileInactive", true);
 
 		cy.get("#list-active-flag").then(($list) => {
 			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
@@ -3977,7 +3977,7 @@ describe("List - _selectionWhileInactive", () => {
 			</List>
 		);
 
-		cy.get("#list-single-flag").invoke("prop", "_selectionWhileInactive", true);
+		cy.get("#list-single-flag").invoke("prop", "selectionWhileInactive", true);
 
 		cy.get("#inactive-single-1").realClick();
 

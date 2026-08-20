@@ -550,7 +550,7 @@ class List extends UI5Element {
 	 * @private
 	 */
 	@property({ type: Boolean })
-	_selectionWhileInactive = false;
+	selectionWhileInactive = false;
 
 	/**
 	 * Defines the current media query size.
@@ -920,7 +920,7 @@ class List extends UI5Element {
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
 				(item as ListItem)._inheritedAccessibleRole = inheritedItemRole;
-				(item as ListItem)._selectionWhileInactive = this._selectionWhileInactive;
+				(item as ListItem).selectionWhileInactive = this.selectionWhileInactive;
 			}
 			item.hasBorder = showBottomBorder;
 

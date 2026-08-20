@@ -205,7 +205,7 @@ abstract class ListItem extends ListItemBase {
 	 * @private
 	 */
 	@property({ type: Boolean })
-	_selectionWhileInactive = false;
+	selectionWhileInactive = false;
 
 	/**
 	 * Indicates whether the list item is in edit mode.
@@ -375,7 +375,7 @@ abstract class ListItem extends ListItemBase {
 	 * and Multi (ui5-checkbox) selection modes are used.
 	 */
 	onMultiSelectionComponentPress(e: CustomEvent) {
-		if (this.isInactive && !this._selectionWhileInactive) {
+		if (this.isInactive && !this.selectionWhileInactive) {
 			return;
 		}
 
@@ -383,7 +383,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	onSingleSelectionComponentPress(e: CustomEvent) {
-		if (this.isInactive && !this._selectionWhileInactive) {
+		if (this.isInactive && !this.selectionWhileInactive) {
 			return;
 		}
 
@@ -406,7 +406,7 @@ abstract class ListItem extends ListItemBase {
 
 	fireItemPress(e: Event) {
 		if (this.isInactive) {
-			if (this._selectionWhileInactive && this._selectionMode !== ListSelectionMode.None && this._selectionMode !== ListSelectionMode.Delete) {
+			if (this.selectionWhileInactive && this._selectionMode !== ListSelectionMode.None && this._selectionMode !== ListSelectionMode.Delete) {
 				this.fireDecoratorEvent("selection-requested", { item: this, selected: !this.selected, selectionComponentPressed: false });
 			}
 			return;
