@@ -76,8 +76,7 @@
 }
 
 /* Reserve space equal to the navigation icon min-width so the switch stays
-   consistently aligned across navigable and non-navigable items in the same list.
-   The 0.25rem base padding on the end div is already included in the calculation. */
+   consistently aligned across navigable and non-navigable items in the same list. */
 :host(:not([navigable])) .ui5-user-settings-notifications-item-end {
 	padding-inline-end: calc(var(--_ui5_list_item_icon_size, 1.125rem) + 0.25rem);
 }
