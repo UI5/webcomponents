@@ -50,6 +50,11 @@ describe("Some settings can be set via SAP UI URL params", () => {
 		cy.wrap({ getAnimationMode })
 			.invoke("getAnimationMode")
 			.should("equal", AnimationMode.Basic);
+
+		cy.window().should(win => {
+			const value = win.getComputedStyle(win.document.documentElement).getPropertyValue("--_ui5-animation-mode").trim();
+			expect(value).to.equal(AnimationMode.Basic);
+		});
 	});
 });
 
@@ -573,5 +578,10 @@ describe("URL parameters are ignored when ignoreUrlParams is set", () => {
 		cy.wrap({ getAnimationMode })
 			.invoke("getAnimationMode")
 			.should("equal", AnimationMode.Basic);
+
+		cy.window().should(win => {
+			const value = win.getComputedStyle(win.document.documentElement).getPropertyValue("--_ui5-animation-mode").trim();
+			expect(value).to.equal(AnimationMode.Basic);
+		});
 	});
 });
