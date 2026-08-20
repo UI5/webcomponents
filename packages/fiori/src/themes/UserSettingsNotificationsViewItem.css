@@ -3,6 +3,10 @@
 	min-height: var(--sapElement_LineHeight);
 }
 
+.ui5-li-content {
+	overflow: visible;
+}
+
 @container style(--ui5_content_density: compact) {
 	:host {
 		--_ui5_user_settings_notifications_item_end_margin: 1rem;
@@ -67,13 +71,13 @@
 	align-items: center;
 	flex-shrink: 0;
 	margin-inline-start: var(--_ui5_user_settings_notifications_item_end_margin);
+	overflow: visible;
 }
 
-/* Reserve space equal to the net navigation arrow area (2.5rem container minus the
-   1rem right padding it overlaps) so the switch stays consistently aligned across
-   navigable and non-navigable items in the same list. */
+/* Reserve space matching the navigation arrow icon (1rem) so the switch stays
+   consistently aligned across navigable and non-navigable items in the same list. */
 :host(:not([navigable])) .ui5-user-settings-notifications-item-end {
-	padding-inline-end: 1.5rem;
+	padding-inline-end: 1rem;
 }
 
 .ui5-user-settings-notifications-item.has-byline {
