@@ -201,6 +201,13 @@ abstract class ListItem extends ListItemBase {
 	_selectionMode: `${ListSelectionMode}` = "None";
 
 	/**
+	 * Propagated from the parent List. When `true`, inactive items can still be selected.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_selectionWhileInactive = false;
+
+	/**
 	 * Indicates whether the list item is in edit mode.
 	 * When active, Tab cycles through internal focusable elements
 	 * instead of navigating to the next list item.
@@ -368,7 +375,7 @@ abstract class ListItem extends ListItemBase {
 	 * and Multi (ui5-checkbox) selection modes are used.
 	 */
 	onMultiSelectionComponentPress(e: CustomEvent) {
-		if (this.isInactive) {
+		if (this.isInactive && !this._selectionWhileInactive) {
 			return;
 		}
 
@@ -376,7 +383,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	onSingleSelectionComponentPress(e: CustomEvent) {
-		if (this.isInactive) {
+		if (this.isInactive && !this._selectionWhileInactive) {
 			return;
 		}
 
@@ -399,6 +406,9 @@ abstract class ListItem extends ListItemBase {
 
 	fireItemPress(e: Event) {
 		if (this.isInactive) {
+			if (this._selectionWhileInactive && this._selectionMode !== ListSelectionMode.None && this._selectionMode !== ListSelectionMode.Delete) {
+				this.fireDecoratorEvent("selection-requested", { item: this, selected: !this.selected, selectionComponentPressed: false });
+			}
 			return;
 		}
 		super.fireItemPress(e);

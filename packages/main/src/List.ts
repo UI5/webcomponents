@@ -544,6 +544,15 @@ class List extends UI5Element {
 	_loadMoreActive = false;
 
 	/**
+	 * When set to `true`, allows list items with `type="Inactive"` to retain selection
+	 * (checkbox/radio) while suppressing the active press feedback and item-click event.
+	 * @default false
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_selectionWhileInactive = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @default "S"
 	 * @private
@@ -911,6 +920,7 @@ class List extends UI5Element {
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
 				(item as ListItem)._inheritedAccessibleRole = inheritedItemRole;
+				(item as ListItem)._selectionWhileInactive = this._selectionWhileInactive;
 			}
 			item.hasBorder = showBottomBorder;
 
