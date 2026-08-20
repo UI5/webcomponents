@@ -156,9 +156,8 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		// When focus is at the row level and Space is pressed, toggle the built-in switch.
-		// This supplements the native switch Space/Enter interaction that only fires when
-		// the switch itself is focused (F2/arrow-key navigation into the item).
+		// The switch only reacts to Space when it has focus itself (F2/arrow-key mode),
+		// so toggling at row level must be done here.
 		if (isSpace(e) && e.target === this.getFocusDomRef() && !this._hasEndContent) {
 			this.checked = !this.checked;
 			this.fireDecoratorEvent("switch-change", { item: this, checked: this.checked });

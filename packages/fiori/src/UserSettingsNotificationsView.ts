@@ -78,9 +78,6 @@ type UserSettingsNotificationsViewItemClickEventDetail = {
 })
 
 class UserSettingsNotificationsView extends UserSettingsView {
-	@i18n("@ui5/webcomponents-fiori")
-	static i18nBundle: I18nBundle;
-
 	eventDetails!: {
 		"item-click": UserSettingsNotificationsViewItemClickEventDetail;
 	}
@@ -124,11 +121,9 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	})
 	additionalContent!: Slot<HTMLElement>;
 
-	/**
-	 * Returns a flat list of all notification items, including items nested inside groups.
-	 *
-	 * @public
-	 */
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
 	getAllItems(): Array<UserSettingsNotificationsViewItem> {
 		const allItems: Array<UserSettingsNotificationsViewItem> = [...this.headerItems];
 
@@ -147,11 +142,6 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		return allItems;
 	}
 
-	/**
-	 * Returns the first item with the given `itemKey`, or `undefined` if none matches.
-	 *
-	 * @public
-	 */
 	getItemByKey(itemKey: string): UserSettingsNotificationsViewItem | undefined {
 		return this.getAllItems().find(item => item.itemKey === itemKey);
 	}
