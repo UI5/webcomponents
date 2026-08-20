@@ -20,7 +20,7 @@ import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  * @constructor
  * @extends ListItemGroup
  * @public
- * @since 2.26.0
+ * @since 2.27.0
  */
 @customElement({
 	tag: "ui5-user-settings-notifications-view-group",
