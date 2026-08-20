@@ -67,14 +67,13 @@
 	align-items: center;
 	flex-shrink: 0;
 	margin-inline-start: var(--_ui5_user_settings_notifications_item_end_margin);
-	padding-inline-end: 0.25rem;
 }
 
-.ui5-user-settings-notifications-item-arrow {
-	color: var(--sapContent_IconColor);
-	width: 0.75rem;
-	height: 0.75rem;
-	margin-inline-start: 0.5rem;
+/* Reserve space equal to the net navigation arrow area (2.5rem container minus the
+   1rem right padding it overlaps) so the switch stays consistently aligned across
+   navigable and non-navigable items in the same list. */
+:host(:not([navigable])) .ui5-user-settings-notifications-item-end {
+	padding-inline-end: 1.5rem;
 }
 
 .ui5-user-settings-notifications-item.has-byline {

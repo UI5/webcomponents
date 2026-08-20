@@ -46,7 +46,7 @@ describe("Notifications view", () => {
 		cy.get("@item").shadow().find(".ui5-user-settings-notifications-item-byline").contains("Compensation | Learning | HR");
 		cy.get("@item").shadow().find("[ui5-switch]").should("exist");
 		cy.get("@item").shadow().find("[ui5-switch]").should("have.attr", "checked");
-		cy.get("@item").shadow().find(".ui5-user-settings-notifications-item-arrow").should("exist");
+		cy.get("@item").shadow().find("[ui5-icon][name=\"slim-arrow-right\"]").should("exist");
 	});
 
 	it("renders items without arrow when not navigable", () => {
@@ -59,7 +59,7 @@ describe("Notifications view", () => {
 		</UserSettingsDialog>);
 
 		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
-		cy.get("@item").shadow().find(".ui5-user-settings-notifications-item-arrow").should("not.exist");
+		cy.get("@item").shadow().find("[ui5-icon][name=\"slim-arrow-right\"]").should("not.exist");
 	});
 
 	it("fires switch-change event when the switch is toggled", () => {
@@ -522,6 +522,19 @@ describe("Notifications view item", () => {
 			.find("[ui5-icon][name=\"slim-arrow-right\"]").should("exist");
 	});
 
+	it("does not render a slim-arrow-right icon when not navigable", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Allow Notifications" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").shadow()
+			.find("[ui5-icon][name=\"slim-arrow-right\"]").should("not.exist");
+	});
+
 	it("updates the title when text is changed programmatically", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem text="Notifications">
@@ -823,7 +836,7 @@ describe("Notifications view — drill-in edge cases", () => {
 		</UserSettingsDialog>);
 
 		cy.get("[ui5-user-settings-notifications-view-item]").eq(0).shadow()
-			.find(".ui5-user-settings-notifications-item-arrow").click();
+			.find("[ui5-icon][name=\"slim-arrow-right\"]").click();
 		cy.get("#drill").should("have.attr", "selected");
 	});
 
@@ -955,7 +968,7 @@ describe("Notifications view item — keyboard interaction (ACC)", () => {
 		cy.get("@changed").should("not.have.been.called");
 	});
 
-	it("Enter on a navigable row drills into the secondary view", () => {
+	it("Enter on a navigable row drills into the secondary view and focuses content", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem text="Notifications">
 				<UserSettingsNotificationsView>
@@ -971,6 +984,7 @@ describe("Notifications view item — keyboard interaction (ACC)", () => {
 		cy.realPress("Enter");
 
 		cy.get("#detail").should("have.attr", "selected");
+		cy.get("[ui5-user-settings-item]").should("include.focused");
 	});
 });
 
