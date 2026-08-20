@@ -167,6 +167,8 @@ describe("Initial rendering", () => {
 		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
 		cy.get("@responsivePopover").should("exist");
 		cy.get("@responsivePopover").find("[ui5-panel]").contains(`${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+		cy.get("@responsivePopover").find("[ui5-panel]").should("have.attr", "accessible-name", `${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
 	});
 
@@ -357,7 +359,7 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").should("exist");
 		cy.get("@avatar").should("have.length", 1);
 		cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-		cy.get("@avatar").find("[ui5-tag]").should("not.exist");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("not.exist");
 	});
 
 	it("tests initials", () => {
@@ -428,8 +430,26 @@ describe("Avatar configuration", () => {
 		cy.get("@avatar").should("exist");
 		cy.get("@avatar").should("have.length", 1);
 		cy.get("@avatar").should("have.attr", "fallback-icon", "person-placeholder");
-		cy.get("@avatar").find("[ui5-tag]").should("exist");
-		cy.get("@avatar").find("[ui5-tag]").should("have.length", 1);
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("have.length", 1);
+	});
+
+	it("renders ui5-avatar-badge (not ui5-tag) for the edit badge when showEditButton is set", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn" showEditButton={true}>
+					<UserMenuAccount
+						slot="accounts"
+						titleText="Alain Chevalier"
+						subtitleText="alian.chevalier@sap.com">
+					</UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+		cy.get("[ui5-user-menu]").shadow().find("[ui5-avatar]").as("avatar");
+		cy.get("@avatar").find("[ui5-avatar-badge]").should("exist");
+		cy.get("@avatar").find("[ui5-tag]").should("not.exist");
 	});
 
 	it("tests avatar is non-interactive by default", () => {

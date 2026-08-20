@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** input width is incorrect ([#13881](https://github.com/UI5/webcomponents/issues/13881)) ([f4c2675](https://github.com/UI5/webcomponents/commit/f4c26752dbefa5d04ed1082af051af6baaa72408))
+* **ui5-input:** remove role dialog from VSM ([#13875](https://github.com/UI5/webcomponents/issues/13875)) ([3b106d4](https://github.com/UI5/webcomponents/commit/3b106d4106cfef38db538d681e2c4e8a744a11cd))
+* **ui5-list:** suppress F2 aria description for custom items without tabbables ([#13865](https://github.com/UI5/webcomponents/issues/13865)) ([1b7be9b](https://github.com/UI5/webcomponents/commit/1b7be9b4c8fe858c6817d5c2ff01fd60f88e665b)), closes [#13489](https://github.com/UI5/webcomponents/issues/13489) [#13713](https://github.com/UI5/webcomponents/issues/13713)
+* **ui5-select:** fix acc finding ([#13559](https://github.com/UI5/webcomponents/issues/13559)) ([bdd790f](https://github.com/UI5/webcomponents/commit/bdd790fc94a5db99cfc9e56b31a36a8a93d4eae7))
+* **ui5-slider:** remove redundant accessibility role and attributes ([#13894](https://github.com/UI5/webcomponents/issues/13894)) ([69ad533](https://github.com/UI5/webcomponents/commit/69ad533fb29f969024c11537476ec1f264a4c666))
+* **ui5-table:** keep focused cell visible next to sticky columns ([#13850](https://github.com/UI5/webcomponents/issues/13850)) ([4a25d80](https://github.com/UI5/webcomponents/commit/4a25d80fca33f6a674eda0bcd41d8a5957327866))
+* **ui5-table:** set "More actions" tooltip on row action overflow button ([#13895](https://github.com/UI5/webcomponents/issues/13895)) ([17a64e4](https://github.com/UI5/webcomponents/commit/17a64e456dbac018f53bd8d661d05d495ac36b3c)), closes [#13839](https://github.com/UI5/webcomponents/issues/13839)
+* **ui5-tokenizer:** fix rare case when  n-more button cause loop error ([#13857](https://github.com/UI5/webcomponents/issues/13857)) ([d3bbb61](https://github.com/UI5/webcomponents/commit/d3bbb61b361bd5ce2def1c86562c0378e88aa7f7))
+
+
+### Features
+
+* **ui5-checkbox:** make component customizable ([#13617](https://github.com/UI5/webcomponents/issues/13617)) ([4062bc7](https://github.com/UI5/webcomponents/commit/4062bc708a8eab326226f68935bde4401816965d))
+* **ui5-menu:** page up/page down new behavior ([#13880](https://github.com/UI5/webcomponents/issues/13880)) ([cba4ffe](https://github.com/UI5/webcomponents/commit/cba4ffe2f3e4699f20d82b0c04a07a65ae88d9a3))
+* **ui5-rating-indicator:** add displayOnly mode ([#13910](https://github.com/UI5/webcomponents/issues/13910)) ([deffb10](https://github.com/UI5/webcomponents/commit/deffb103102978bbed65cd8de42be34161c50e2b))
+
+
+
+
+
+## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
+
+
+### Bug Fixes
+
+* **ui5-segmented-button:** remove aria-roledescription attribute ([#13867](https://github.com/UI5/webcomponents/issues/13867)) ([b78bdb9](https://github.com/UI5/webcomponents/commit/b78bdb99aafa513f189f1f3ec789d7f30119d74f))
+
+
+
+
+
+# [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** format aria-label day cell value ([#13838](https://github.com/UI5/webcomponents/issues/13838)) ([c553ada](https://github.com/UI5/webcomponents/commit/c553adaa95113beaf79b28234970d5bcc35a5e68))
+* **ui5-combobox:** fire 'change' event with normalized values ([#13828](https://github.com/UI5/webcomponents/issues/13828)) ([f6d99b0](https://github.com/UI5/webcomponents/commit/f6d99b01d26bdafe6ba19db8c489bc4bfbe67017)), closes [#13784](https://github.com/UI5/webcomponents/issues/13784)
+* **ui5-file-uploader:** replace aria-required with native required on shadow input ([#13846](https://github.com/UI5/webcomponents/issues/13846)) ([da78732](https://github.com/UI5/webcomponents/commit/da7873247f684ae957b5f6ad7c6e87c571fb3e45))
+* **ui5-multi-combobox:** toggle 'select all' checkbox correctly with grouped suggestions ([#13827](https://github.com/UI5/webcomponents/issues/13827)) ([ffd674c](https://github.com/UI5/webcomponents/commit/ffd674c78573ddc315c0f6d7a92068aeb120b660)), closes [#13712](https://github.com/UI5/webcomponents/issues/13712)
+* **ui5-multi-input:** prevent F4 from focusing browser address bar in MS Edge ([#13860](https://github.com/UI5/webcomponents/issues/13860)) ([904647a](https://github.com/UI5/webcomponents/commit/904647a3ed457095649eb77a66c5880e0c1692ce))
+* **ui5-slider:** prevent slider value change on right click ([#13848](https://github.com/UI5/webcomponents/issues/13848)) ([4357b54](https://github.com/UI5/webcomponents/commit/4357b546334669ebf278dd9ab0031c8d827904e4)), closes [#13836](https://github.com/UI5/webcomponents/issues/13836)
+
+
+
+
+
 # [2.25.0-rc.3](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.2...v2.25.0-rc.3) (2026-07-23)
 
 **Note:** Version bump only for package @ui5/webcomponents

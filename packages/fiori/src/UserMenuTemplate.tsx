@@ -2,7 +2,7 @@ import type UserMenu from "./UserMenu.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
-import Tag from "@ui5/webcomponents/dist/Tag.js";
+import AvatarBadge from "@ui5/webcomponents/dist/AvatarBadge.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 import Text from "@ui5/webcomponents/dist/Text.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
@@ -111,9 +111,7 @@ function headerContent(this: UserMenu) {
 							<img src={this._selectedAccount.avatarSrc}/>
 						}
 						{this.showEditButton &&
-						<Tag slot="badge" wrappingType="None" design="Set1" colorScheme="5" >
-							<Icon slot="icon" name={edit}></Icon>
-						</Tag>
+						<AvatarBadge slot="badge" icon={edit}></AvatarBadge>
 						}
 					</Avatar>
 				</span>
@@ -147,7 +145,7 @@ function headerContent(this: UserMenu) {
 
 function otherAccountsContent(this: UserMenu) {
 	return (<>
-		<Panel collapsed={true} class="ui5-user-menu-other-accounts">
+		<Panel collapsed={true} class="ui5-user-menu-other-accounts" accessibleName={`${this._otherAccountsButtonText} (${this._otherAccounts.length})`}>
 			<div slot="header" class="ui5-user-menu-account-header">
 				<Title slot="header" level="H4" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
 				{this.showEditAccounts &&

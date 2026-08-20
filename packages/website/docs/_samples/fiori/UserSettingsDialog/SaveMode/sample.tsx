@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback } from "react";
@@ -288,20 +289,11 @@ function App() {
           headerText="Appearance"
         >
           <UserSettingsAppearanceView
+            slot="tabs"
             text="Themes"
+            selected={true}
             onSelectionChange={handleAppearanceViewSelectionChange}
           >
-            <div slot="additionalContent">
-              <div className="ui5-user-settings-appearance-view-additional-content-header">
-                <Text id="touch-input-label">Optimize for Touch Input</Text>
-                <Switch accessibleNameRef="touch-input-label" />
-              </div>
-              <Text class="ui5-user-settings-appearance-view-additional-content-description">
-                Increases the size and spacing of controls to allow you to
-                interact with them more easily using your fingertip. This is
-                useful for hybrid devices that combine touch and mouse events.
-              </Text>
-            </div>
             <UserSettingsAppearanceViewGroup headerText="Horizon">
               <UserSettingsAppearanceViewItem
                 itemKey="sap_horizon"
@@ -340,6 +332,18 @@ function App() {
               />
             </UserSettingsAppearanceViewGroup>
           </UserSettingsAppearanceView>
+
+          <UserSettingsView slot="tabs" text="Display Settings">
+            <div className="ui5-user-settings-appearance-view-additional-content-header">
+              <Text id="touch-input-label">Optimize for Touch Input</Text>
+              <Switch accessibleNameRef="touch-input-label" />
+            </div>
+            <Text class="ui5-user-settings-appearance-view-additional-content-description">
+              Increases the size and spacing of controls to allow you to
+              interact with them more easily using your fingertip. This is
+              useful for hybrid devices that combine touch and mouse events.
+            </Text>
+          </UserSettingsView>
         </UserSettingsItem>
 
         <UserSettingsItem
