@@ -212,61 +212,174 @@
 	</ui5-user-settings-item>
 
 	<ui5-user-settings-item icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
-		<ui5-user-settings-notifications-view>
-			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="successfactors"
-				text="SuccessFactors" byline-text="Compensation | Learning | HR" checked navigable>
+		<ui5-user-settings-notifications-view id="notifications-main-view">
+			<ui5-message-strip slot="additionalContent" design="Information" hide-close-button>
+				Some settings are managed by your organization. <ui5-link>Learn More</ui5-link>
+			</ui5-message-strip>
+
+			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="allow-notifications" text="Allow Notifications" checked>
 			</ui5-user-settings-notifications-view-item>
-			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="s4-emea"
-				text="S/4HANA | EMEA" byline-text="Finance EMEA" navigable>
+			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="allow-banner-alerts" text="Allow Banner Alerts"
+				byline-text="Switch on Banner for Notifications" checked>
 			</ui5-user-settings-notifications-view-item>
-			<ui5-user-settings-notifications-view-group header-text="Channels">
-				<ui5-user-settings-notifications-view-item item-key="in-app" text="In-App Notification" byline-text="Delivered inside the app" checked navigable>
+
+			<ui5-user-settings-notifications-view-group header-text="Sales">
+				<ui5-user-settings-notifications-view-item item-key="sales-order-updates" text="Sales Order Updates" checked navigable>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="email" text="E-Mail" byline-text="Sent to your primary e-mail" checked>
+				<ui5-user-settings-notifications-view-item item-key="sales-order-approvals" text="Sales Order Approvals" navigable>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="push" text="Push Notifications" byline-text="Pushed to your device immediately">
+				<ui5-user-settings-notifications-view-item item-key="sales-order-release" text="Sales Order Release" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+
+			<ui5-user-settings-notifications-view-group header-text="Purchasing">
+				<ui5-user-settings-notifications-view-item item-key="po-approval" text="Purchase Order Approval" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-rejection" text="Purchase Order Rejection">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-overdue" text="Purchase Order Overdue" checked navigable>
 				</ui5-user-settings-notifications-view-item>
 			</ui5-user-settings-notifications-view-group>
 		</ui5-user-settings-notifications-view>
 
-		<ui5-user-settings-notifications-view id="successfactors" secondary>
-			<ui5-text slot="additionalContent">
-				Configure how you want to receive SuccessFactors notifications across Compensation, Learning, and HR modules.
-			</ui5-text>
-			<ui5-user-settings-notifications-view-group header-text="Delivery Channels">
-				<ui5-user-settings-notifications-view-item item-key="sf-in-app" text="In-App" byline-text="Show inside the application" checked>
+		<ui5-user-settings-notifications-view id="allow-notifications" secondary>
+			<ui5-text slot="additionalContent">Control how and where you receive notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Channels">
+				<ui5-user-settings-notifications-view-item item-key="an-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="sf-email" text="Email" byline-text="Send to your primary email address" checked>
+				<ui5-user-settings-notifications-view-item item-key="an-email" text="Email"
+					byline-text="Receive notifications by email." checked>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="sf-push" text="Push" byline-text="Push to your mobile device">
-				</ui5-user-settings-notifications-view-item>
-			</ui5-user-settings-notifications-view-group>
-		</ui5-user-settings-notifications-view>
-
-		<ui5-user-settings-notifications-view id="s4-emea" secondary>
-			<ui5-text slot="additionalContent">
-				Configure how you want to receive S/4HANA Finance EMEA notifications.
-			</ui5-text>
-			<ui5-user-settings-notifications-view-group header-text="Delivery Channels">
-				<ui5-user-settings-notifications-view-item item-key="s4-in-app" text="In-App" byline-text="Show inside the application">
-				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="s4-email" text="Email" byline-text="Send to your primary email address" checked>
-				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="s4-push" text="Push" byline-text="Push to your mobile device">
+				<ui5-user-settings-notifications-view-item item-key="an-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
 				</ui5-user-settings-notifications-view-item>
 			</ui5-user-settings-notifications-view-group>
 		</ui5-user-settings-notifications-view>
 
-		<ui5-user-settings-notifications-view id="in-app" secondary>
-			<ui5-text slot="additionalContent">
-				Control how in-app notifications are displayed inside the application.
-			</ui5-text>
-			<ui5-user-settings-notifications-view-group header-text="Display Settings">
-				<ui5-user-settings-notifications-view-item item-key="inapp-panel" text="Notifications Panel" byline-text="Show in the central notifications panel" checked>
+		<ui5-user-settings-notifications-view id="allow-banner-alerts" secondary>
+			<ui5-text slot="additionalContent">Configure banner alert behavior for incoming notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Banner Settings">
+				<ui5-user-settings-notifications-view-item item-key="ab-sound" text="Play Sound"
+					byline-text="Play a sound when a banner alert appears." checked>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="inapp-banner" text="Banner Alerts" byline-text="Show as a fly-in banner at the top of the screen" checked>
+				<ui5-user-settings-notifications-view-item item-key="ab-duration" text="Display Duration"
+					byline-text="Choose how long the banner stays on screen.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>5 seconds</ui5-option>
+						<ui5-option>10 seconds</ui5-option>
+						<ui5-option>Until dismissed</ui5-option>
+					</ui5-select>
 				</ui5-user-settings-notifications-view-item>
-				<ui5-user-settings-notifications-view-item item-key="inapp-sound" text="Play Sound" byline-text="Play a sound when a notification arrives">
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-updates" secondary>
+			<ui5-text slot="additionalContent">Configure how you want to receive Sales Order Updates notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sou-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Hourly</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-approvals" secondary>
+			<ui5-text slot="additionalContent">Configure how you want to receive Sales Order Approvals notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="soa-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-release" secondary>
+			<ui5-text slot="additionalContent">Configure how you want to receive Sales Order Release notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sor-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-email" text="Email"
+					byline-text="Receive notifications by email.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-approval" secondary>
+			<ui5-text slot="additionalContent">Approval-specific channels. These settings apply only to Purchase Order Approval notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Approver Preferences">
+				<ui5-user-settings-notifications-view-item item-key="po-approval-mobile" text="Push to mobile"
+					byline-text="Approve or reject directly from your device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-summary" text="Daily summary email"
+					byline-text="Receive one email per day with all pending approvals.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-delegation" text="Delegation"
+					byline-text="Route approvals to a delegate when you are out of office.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-rejection" secondary>
+			<ui5-text slot="additionalContent">Configure how you want to receive Purchase Order Rejection notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="por-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="por-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-overdue" secondary>
+			<ui5-text slot="additionalContent">Configure how you want to receive Purchase Order Overdue notifications.</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="poo-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-email" text="Email"
+					byline-text="Receive notifications by email." checked>
 				</ui5-user-settings-notifications-view-item>
 			</ui5-user-settings-notifications-view-group>
 		</ui5-user-settings-notifications-view>
