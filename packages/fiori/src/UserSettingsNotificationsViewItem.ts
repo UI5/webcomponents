@@ -6,11 +6,11 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ListItemCustom from "@ui5/webcomponents/dist/ListItemCustom.js";
-import ListItemType from "@ui5/webcomponents/dist/types/ListItemType.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type Switch from "@ui5/webcomponents/dist/Switch.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 
 type UserSettingsNotificationsViewItemSwitchChangeEventDetail = {
 	item: UserSettingsNotificationsViewItem;
@@ -131,9 +131,20 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 		return true;
 	}
 
-	onBeforeRendering() {
-		super.onBeforeRendering();
-		this.type = this.navigable ? ListItemType.Navigation : ListItemType.Active;
+	get typeNavigation(): boolean {
+		return this.navigable;
+	}
+
+	get _isHeaderItem(): boolean {
+		return this.getAttribute("slot") === "headerItems";
+	}
+
+	shouldForwardTabAfter(): boolean {
+		if (this._isHeaderItem) {
+			const tabbable = getTabbableElements(this.getFocusDomRef()!);
+			return tabbable.length === 0;
+		}
+		return super.shouldForwardTabAfter();
 	}
 
 	get _hasEndContent(): boolean {

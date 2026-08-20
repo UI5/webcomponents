@@ -6,6 +6,17 @@ export default function UserSettingsNotificationsViewTemplate(this: UserSettings
 		<div class="ui5-user-settings-view-container">
 			<div class="ui5-user-settings-view ui5-user-settings-notifications-view-content">
 				<slot name="additionalContent"></slot>
+				{this._hasHeaderItems && this.headerItems.map(item => (
+					<div role="form" class="ui5-user-settings-notifications-view-form">
+						<List
+							class="ui5-user-settings-notifications-view-list"
+							separators="None"
+							onItemClick={this._handleItemClick}
+						>
+							<slot name={item._individualSlot}></slot>
+						</List>
+					</div>
+				))}
 				<List
 					class="ui5-user-settings-notifications-view-list"
 					separators="All"

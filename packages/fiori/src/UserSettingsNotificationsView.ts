@@ -100,6 +100,21 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	items!: DefaultSlot<UserSettingsNotificationsViewGroup | UserSettingsNotificationsViewItem>;
 
 	/**
+	 * Defines header items rendered above the grouped items list.
+	 * Each item is wrapped in a `role="form"` landmark — a separate Tab stop.
+	 * Use this slot for product-level toggles (e.g. "Allow Notifications") that appear
+	 * above the notification-type groups.
+	 *
+	 * @public
+	 */
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: true,
+		individualSlots: true,
+	})
+	headerItems!: Slot<UserSettingsNotificationsViewItem>;
+
+	/**
 	 * Defines additional content displayed above the items list.
 	 *
 	 * @public
@@ -115,7 +130,7 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	 * @public
 	 */
 	getAllItems(): Array<UserSettingsNotificationsViewItem> {
-		const allItems: Array<UserSettingsNotificationsViewItem> = [];
+		const allItems: Array<UserSettingsNotificationsViewItem> = [...this.headerItems];
 
 		this.items.forEach(item => {
 			if (isInstanceOfUserSettingsNotificationsViewGroup(item)) {
@@ -139,6 +154,10 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	 */
 	getItemByKey(itemKey: string): UserSettingsNotificationsViewItem | undefined {
 		return this.getAllItems().find(item => item.itemKey === itemKey);
+	}
+
+	get _hasHeaderItems(): boolean {
+		return this.headerItems.length > 0;
 	}
 
 	get _listAccessibleName(): string {
@@ -170,7 +189,7 @@ class UserSettingsNotificationsView extends UserSettingsView {
 				if (!this.isConnected) {
 					return;
 				}
-				parentItem?._focusBackButton?.();
+				parentItem?.focusFirstContentElement();
 			});
 		}
 	}
