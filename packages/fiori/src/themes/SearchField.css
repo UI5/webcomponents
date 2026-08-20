@@ -294,6 +294,11 @@
 	--_ui5_input_focus_border_radius: var(--_ui5_search_input_border_radius);
 }
 
+.ui5-search-field-select::part(label) {
+	padding: 0 .25rem 0 .5rem;
+}
+
+
 .ui5-search-field-select::part(icon-wrapper) {
 	border-radius: var(--_ui5_search_input_border_radius);
 	height: 100%;
