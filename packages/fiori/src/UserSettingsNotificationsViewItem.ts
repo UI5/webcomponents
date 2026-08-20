@@ -6,9 +6,11 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ListItemCustom from "@ui5/webcomponents/dist/ListItemCustom.js";
+import ListItemType from "@ui5/webcomponents/dist/types/ListItemType.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type Switch from "@ui5/webcomponents/dist/Switch.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
 
 type UserSettingsNotificationsViewItemSwitchChangeEventDetail = {
 	item: UserSettingsNotificationsViewItem;
@@ -38,7 +40,7 @@ type UserSettingsNotificationsViewItemSwitchChangeEventDetail = {
  * @constructor
  * @extends ListItemCustom
  * @public
- * @since 2.26.0
+ * @since 2.27.0
  */
 @customElement({
 	tag: "ui5-user-settings-notifications-view-item",
@@ -129,12 +131,29 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 		return true;
 	}
 
+	onBeforeRendering() {
+		super.onBeforeRendering();
+		this.type = this.navigable ? ListItemType.Navigation : ListItemType.Active;
+	}
+
 	get _hasEndContent(): boolean {
 		return this.endContent.length > 0;
 	}
 
 	get _accessibleSwitchName(): string {
 		return this.bylineText ? `${this.text} ${this.bylineText}` : this.text;
+	}
+
+	_onkeyup(e: KeyboardEvent) {
+		// When focus is at the row level and Space is pressed, toggle the built-in switch.
+		// This supplements the native switch Space/Enter interaction that only fires when
+		// the switch itself is focused (F2/arrow-key navigation into the item).
+		if (isSpace(e) && e.target === this.getFocusDomRef() && !this._hasEndContent) {
+			this.checked = !this.checked;
+			this.fireDecoratorEvent("switch-change", { item: this, checked: this.checked });
+			return;
+		}
+		super._onkeyup(e);
 	}
 
 	_handleSwitchChange = (e: Event) => {

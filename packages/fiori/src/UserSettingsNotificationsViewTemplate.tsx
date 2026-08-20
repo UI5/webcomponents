@@ -11,6 +11,7 @@ export default function UserSettingsNotificationsViewTemplate(this: UserSettings
 					separators="All"
 					onItemClick={this._handleItemClick}
 					data-sap-ui-fastnavgroup="false"
+					accessibleName={this._listAccessibleName}
 				>
 					<slot></slot>
 				</List>

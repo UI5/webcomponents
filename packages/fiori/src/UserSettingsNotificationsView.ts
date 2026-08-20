@@ -9,12 +9,18 @@ import { isInstanceOfUserSettingsNotificationsViewGroup } from "./UserSettingsNo
 import type UserSettingsItem from "./UserSettingsItem.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 
 import {
 	customElement, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import {
+	USER_SETTINGS_NOTIFICATIONS_LIST_LABEL,
+	USER_SETTINGS_NOTIFICATIONS_PREFERENCES_LIST_LABEL,
+} from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsNotificationsViewItemClickEventDetail = {
 	item: UserSettingsNotificationsViewItem;
@@ -49,7 +55,7 @@ type UserSettingsNotificationsViewItemClickEventDetail = {
  * @constructor
  * @extends UserSettingsView
  * @public
- * @since 2.26.0
+ * @since 2.27.0
  */
 @customElement({
 	tag: "ui5-user-settings-notifications-view",
@@ -72,6 +78,9 @@ type UserSettingsNotificationsViewItemClickEventDetail = {
 })
 
 class UserSettingsNotificationsView extends UserSettingsView {
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
 	eventDetails!: {
 		"item-click": UserSettingsNotificationsViewItemClickEventDetail;
 	}
@@ -130,6 +139,12 @@ class UserSettingsNotificationsView extends UserSettingsView {
 	 */
 	getItemByKey(itemKey: string): UserSettingsNotificationsViewItem | undefined {
 		return this.getAllItems().find(item => item.itemKey === itemKey);
+	}
+
+	get _listAccessibleName(): string {
+		return this.secondary
+			? UserSettingsNotificationsView.i18nBundle.getText(USER_SETTINGS_NOTIFICATIONS_PREFERENCES_LIST_LABEL)
+			: UserSettingsNotificationsView.i18nBundle.getText(USER_SETTINGS_NOTIFICATIONS_LIST_LABEL);
 	}
 
 	_navigateToSecondaryView(item: UserSettingsNotificationsViewItem) {

@@ -43,6 +43,7 @@ function listItemContent(this: UserSettingsNotificationsViewItem) {
 					<Icon
 						class="ui5-user-settings-notifications-item-arrow"
 						name={slimArrowRight}
+						mode="Decorative"
 					></Icon>
 				}
 			</div>
