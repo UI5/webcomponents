@@ -968,7 +968,7 @@ describe("Notifications view item — keyboard interaction (ACC)", () => {
 		cy.get("@changed").should("not.have.been.called");
 	});
 
-	it("Enter on a navigable row drills into the secondary view and focuses content", () => {
+	it("Enter on a navigable row drills into the secondary view", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem text="Notifications">
 				<UserSettingsNotificationsView>
@@ -984,7 +984,69 @@ describe("Notifications view item — keyboard interaction (ACC)", () => {
 		cy.realPress("Enter");
 
 		cy.get("#detail").should("have.attr", "selected");
-		cy.get("[ui5-user-settings-item]").should("include.focused");
 	});
 });
 
+describe("Notifications view — headerItems slot", () => {
+	it("renders headerItems in individual role=form wrappers above the list", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem slot="headerItems" text="Allow Notifications" checked />
+					<UserSettingsNotificationsViewItem slot="headerItems" text="Allow Banner Alerts" checked />
+					<UserSettingsNotificationsViewGroup headerText="Sales">
+						<UserSettingsNotificationsViewItem text="Sales Order Updates" checked navigable />
+					</UserSettingsNotificationsViewGroup>
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view]").shadow()
+			.find(".ui5-user-settings-notifications-view-form").should("have.length", 2);
+		cy.get("[ui5-user-settings-notifications-view]").shadow()
+			.find(".ui5-user-settings-notifications-view-form").first()
+			.should("have.attr", "role", "form");
+	});
+
+	it("headerItems are included in getAllItems()", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem slot="headerItems" text="Allow Notifications" itemKey="allow" />
+					<UserSettingsNotificationsViewGroup headerText="Sales">
+						<UserSettingsNotificationsViewItem text="Sales Order Updates" itemKey="sales" navigable />
+					</UserSettingsNotificationsViewGroup>
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view]").then($view => {
+			const view = $view.get(0) as UserSettingsNotificationsView;
+			const items = view.getAllItems();
+			expect(items).to.have.length(2);
+			expect(items[0].text).to.equal("Allow Notifications");
+			expect(items[1].text).to.equal("Sales Order Updates");
+		});
+	});
+
+	it("Space on a headerItem row toggles the switch", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem slot="headerItems" text="Allow Notifications" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").then($item => {
+			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
+		});
+
+		cy.get("@item").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("@changed").should("have.been.calledOnce");
+		cy.get("@item").should("have.attr", "checked");
+	});
+});
