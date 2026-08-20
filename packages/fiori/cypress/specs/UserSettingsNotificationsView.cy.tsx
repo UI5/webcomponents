@@ -888,3 +888,89 @@ describe("Notifications view item — checked state", () => {
 	});
 });
 
+describe("Notifications view item — keyboard interaction (ACC)", () => {
+	it("Space on the focused row toggles the switch and fires switch-change", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Allow Notifications" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").then($item => {
+			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
+		});
+
+		cy.get("@item").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("@changed").should("have.been.calledOnce");
+		cy.get("@item").should("have.attr", "checked");
+	});
+
+	it("Space on row toggles switch back to unchecked", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Allow Notifications" checked />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").then($item => {
+			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
+		});
+
+		cy.get("@item").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("@changed").should("have.been.calledOnce");
+		cy.get("@item").should("not.have.attr", "checked");
+	});
+
+	it("Space on row does not fire switch-change when endContent is present", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem text="Frequency">
+						<Select slot="endContent" id="freq-select">
+							<Option selected>Daily</Option>
+						</Select>
+					</UserSettingsNotificationsViewItem>
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
+		cy.get("@item").then($item => {
+			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
+		});
+
+		cy.get("@item").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("@changed").should("not.have.been.called");
+	});
+
+	it("Enter on a navigable row drills into the secondary view", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Notifications">
+				<UserSettingsNotificationsView>
+					<UserSettingsNotificationsViewItem itemKey="detail" text="Open" navigable />
+				</UserSettingsNotificationsView>
+				<UserSettingsNotificationsView id="detail" secondary>
+					<UserSettingsNotificationsViewItem text="Detail item" />
+				</UserSettingsNotificationsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-notifications-view-item]").eq(0).shadow().find("li").focus();
+		cy.realPress("Enter");
+
+		cy.get("#detail").should("have.attr", "selected");
+	});
+});
+
