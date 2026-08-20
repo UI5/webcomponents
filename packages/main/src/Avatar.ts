@@ -28,6 +28,7 @@ import {
 import AvatarCss from "./generated/themes/Avatar.css.js";
 
 import type Icon from "./Icon.js";
+import type AvatarBadge from "./AvatarBadge.js";
 import AvatarSize from "./types/AvatarSize.js";
 import type AvatarShape from "./types/AvatarShape.js";
 import type AvatarColorScheme from "./types/AvatarColorScheme.js";
@@ -361,14 +362,20 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 		return null;
 	}
 
+	/**
+	 * Returns the accessible label for the avatar root element.
+	 * Uses `accessibleName` if provided, otherwise falls back to the default
+	 * "Avatar" text appended with `initials` if set.
+	 * The badge's effective tooltip, if present, is always appended at the end
+	 * so screen readers announce the badge state.
+	 */
 	get accessibleNameText() {
-		if (this.accessibleName) {
-			return this.accessibleName;
-		}
-
 		const defaultLabel = Avatar.i18nBundle.getText(AVATAR_TOOLTIP);
+		const baseLabel = this.accessibleName
+			|| (this.initials ? `${defaultLabel} ${this.initials}`.trim() : defaultLabel);
+		const badgeTooltip = (this.badge[0] as AvatarBadge | undefined)?.effectiveTooltip;
 
-		return this.initials ? `${defaultLabel} ${this.initials}`.trim() : defaultLabel;
+		return badgeTooltip ? `${baseLabel} ${badgeTooltip}` : baseLabel;
 	}
 
 	get hasImage() {
