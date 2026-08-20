@@ -14,6 +14,10 @@
 	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
 }
 
+.ui5-user-settings-notifications-view-form {
+	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
+}
+
 slot[name="additionalContent"]::slotted(*) {
 	display: block;
 }
