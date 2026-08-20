@@ -71,13 +71,15 @@
 	align-items: center;
 	flex-shrink: 0;
 	margin-inline-start: var(--_ui5_user_settings_notifications_item_end_margin);
+	padding-inline-end: 0.25rem;
 	overflow: visible;
 }
 
-/* Reserve space matching the navigation arrow icon (1rem) so the switch stays
-   consistently aligned across navigable and non-navigable items in the same list. */
+/* Reserve space equal to the navigation icon min-width so the switch stays
+   consistently aligned across navigable and non-navigable items in the same list.
+   The 0.25rem base padding on the end div is already included in the calculation. */
 :host(:not([navigable])) .ui5-user-settings-notifications-item-end {
-	padding-inline-end: 1rem;
+	padding-inline-end: calc(var(--_ui5_list_item_icon_size, 1.125rem) + 0.25rem);
 }
 
 .ui5-user-settings-notifications-item.has-byline {
