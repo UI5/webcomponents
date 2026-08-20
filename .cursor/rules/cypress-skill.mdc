@@ -1,0 +1,22 @@
+---
+description: UI5 Web Components Cypress testing conventions. Consult before writing or editing a Cypress spec.
+globs:
+  - packages/**/cypress/specs/**/*.cy.tsx
+  - packages/**/cypress/support/**/*.ts
+alwaysApply: false
+---
+
+# UI5 Web Components — Cypress Skill
+
+Full testing conventions — mounting, selectors, real events, custom commands, assertions, i18n, and flaky-test recipes — live in the **Cypress skill** at `skills/cypress/SKILL.md`.
+
+Before writing or editing a Cypress spec, open `skills/cypress/SKILL.md`, find your task in the routing table at the top, and open the **one** reference file it names. Do not read every file.
+
+Non-negotiables:
+
+- Never run the full test suite. Run one spec: `yarn test:cypress:single cypress/specs/<Component>.cy.tsx`.
+- Select by attribute, never tag name: `[ui5-button]` not `ui5-button` — in selectors and `.find()`.
+- Use real events: `realClick()`, `realPress()`, `realType()` — never `.click()` or `.type()`.
+- `realPress` and `realType` take no subject — call them as separate statements after focusing.
+- Never use `cy.wait(<number>)` — assert the condition instead; use `cy.waitRenderFinished()` for render cycles.
+- `cy.ui5DOMRef()` is declared but unimplemented — do not call it.
