@@ -247,7 +247,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	accessibleName?: string;
 
 	/**
-	 * Receives id(or many ids) of the elements that label the component.
+	 * Receives ID (or many IDs) of the elements that label the component.
 	 * @default undefined
 	 * @public
 	 * @since 1.0.0-rc.15
