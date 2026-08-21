@@ -293,7 +293,10 @@ class StepInput extends UI5Element implements IFormInputElement {
 			valueState: e.detail.valueState,
 			valid: e.detail.valid,
 		});
-		if (!prevented) {
+		if (prevented) {
+			// Inner already applied the new valueState — revert it back to the outer's current value
+			this._innerNumberInput.valueState = this.valueState;
+		} else {
 			this.valueState = e.detail.valueState;
 		}
 	}
