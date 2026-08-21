@@ -3875,3 +3875,230 @@ describe("List - ListItem accessible role inheritance", () => {
 			.should("have.attr", "role", "listitem");
 	});
 });
+
+describe("List - InactiveSelectable type", () => {
+	it("type='InactiveSelectable' + selectionMode='Multiple' — clicking item toggles checkbox selection", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+				<ListItemStandard id="item2" type="InactiveSelectable">Option B</ListItemStandard>
+			</List>
+		);
+
+		// Initially not selected
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		// Click item — should become selected (checkbox toggled)
+		cy.get("#item1").click();
+		cy.get("#item1").should("have.attr", "selected");
+
+		// Click again — should become deselected
+		cy.get("#item1").click();
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		// Second item is independent
+		cy.get("#item2").click();
+		cy.get("#item2").should("have.attr", "selected");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Multiple' — pressing Space toggles selection", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		// Focus item and press Space
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Space");
+		cy.get("#item1").should("have.attr", "selected");
+
+		// Press Space again — should deselect
+		cy.realPress("Space");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' — item-click event is NOT fired on click", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#item1").click();
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("type='InactiveSelectable' — item-click event is NOT fired on Space key", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
+
+	it("type='Inactive' — clicking item does NOT toggle selection (regression guard)", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="Inactive">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").click();
+
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='Inactive' + selectionMode='Single' — clicking item does NOT select it (regression guard)", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard id="item1" type="Inactive">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").click();
+
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Single' — clicking item selects it", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+				<ListItemStandard id="item2" type="InactiveSelectable">Option B</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").click();
+		cy.get("#item1").should("have.attr", "selected");
+
+		// Clicking second item moves selection
+		cy.get("#item2").click();
+		cy.get("#item2").should("have.attr", "selected");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Single' — pressing Space selects item", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Space");
+
+		cy.get("#item1").should("have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='None' — clicking item does nothing", () => {
+		cy.mount(
+			<List selectionMode="None">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").click();
+
+		cy.get("#item1").should("not.have.attr", "selected");
+		cy.get("@itemClickStub").should("not.have.been.called");
+		cy.get("@selectionChangeStub").should("not.have.been.called");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Delete' — clicking item does nothing", () => {
+		cy.mount(
+			<List selectionMode="Delete">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").click();
+
+		cy.get("#item1").should("not.have.attr", "selected");
+		cy.get("@itemClickStub").should("not.have.been.called");
+		cy.get("@selectionChangeStub").should("not.have.been.called");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Multiple' — selection-change event is fired", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").click();
+
+		cy.get("@selectionChangeStub").should("have.been.calledOnce");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='SingleStart' — clicking item selects it", () => {
+		cy.mount(
+			<List selectionMode="SingleStart">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+				<ListItemStandard id="item2" type="InactiveSelectable">Option B</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").click();
+		cy.get("#item1").should("have.attr", "selected");
+
+		cy.get("#item2").click();
+		cy.get("#item2").should("have.attr", "selected");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='SingleEnd' — clicking item selects it", () => {
+		cy.mount(
+			<List selectionMode="SingleEnd">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+				<ListItemStandard id="item2" type="InactiveSelectable">Option B</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").click();
+		cy.get("#item1").should("have.attr", "selected");
+
+		cy.get("#item2").click();
+		cy.get("#item2").should("have.attr", "selected");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+});
