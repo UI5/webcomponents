@@ -71,7 +71,7 @@ type NumberInputValueStateChangeEventDetail = {
  *
  * The default step is 1 but the app developer can set a different one.
  *
- * App developers can set a maximum and minimum value for the `NumberInput`.
+ * App developers can set a maximum and minimum value for `ui5-number-input`.
  * The increase/decrease button and the up/down keyboard navigation become disabled when
  * the value reaches the max/min or a new value is entered from the input which is greater/less than the max/min.
  *
