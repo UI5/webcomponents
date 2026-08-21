@@ -9,6 +9,7 @@ import TableHeaderCell from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRow from "@ui5/webcomponents/dist/TableRow.js";
 import TableCell from "@ui5/webcomponents/dist/TableCell.js";
 import TableRowAction from "@ui5/webcomponents/dist/TableRowAction.js";
+import TableGrowing from "@ui5/webcomponents/dist/TableGrowing.js";
 import { setAnimationMode } from "@ui5/webcomponents-base";
 
 before(() => {
@@ -511,6 +512,58 @@ describe("DynamicPage", () => {
 			cy.wait(100).then(() => {
 				cy.get("@scrollContainer").its("0.scrollTop").should("equal", scrollBefore);
 			});
+		});
+	});
+
+	it("keeps the first table row visible when Shift+Tab returns focus from the growing button", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "400px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div style={{ height: "120px" }}>Header Content</div>
+				</DynamicPageHeader>
+				<Table>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell>Col 1</TableHeaderCell>
+						<TableHeaderCell>Col 2</TableHeaderCell>
+					</TableHeaderRow>
+					<TableGrowing slot="features" mode="Button" text="More"></TableGrowing>
+					{Array.from({ length: 30 }, (_, i) => (
+						<TableRow key={i}>
+							<TableCell>Row {i + 1}, Col 1</TableCell>
+							<TableCell>Row {i + 1}, Col 2</TableCell>
+						</TableRow>
+					))}
+				</Table>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-table-row]").first().realClick();
+		cy.get("[ui5-table-row]").first().should("be.focused");
+
+		cy.realPress("Tab");
+
+		cy.get("[ui5-table-row]").first().should("not.be.focused");
+
+		cy.realPress(["Shift", "Tab"]);
+
+		cy.get("[ui5-table-row]").first().should("be.focused");
+
+		cy.wait(100);
+
+		cy.get("[ui5-dynamic-page]").then(($dp) => {
+			const dp = $dp[0] as DynamicPage;
+			const containerRect = dp.scrollContainer!.getBoundingClientRect();
+			const contentEl = dp.shadowRoot!.querySelector<HTMLElement>(".ui5-dynamic-page-content")!;
+			const contentRect = contentEl.getBoundingClientRect();
+			const rowRect = (dp.querySelector("[ui5-table-row]") as HTMLElement).getBoundingClientRect();
+			const visibleTop = Math.max(containerRect.top, contentRect.top);
+			const visibleBottom = containerRect.bottom - dp.endAreaHeight;
+
+			expect(rowRect.bottom).to.be.greaterThan(visibleTop);
+			expect(rowRect.top).to.be.lessThan(visibleBottom);
 		});
 	});
 });
