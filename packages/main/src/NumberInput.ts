@@ -91,7 +91,7 @@ type NumberInputValueStateChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/NumberInput.js";`
  * @constructor
  * @extends UI5Element
- * @since 2.24.0
+ * @since 2.25.0
  * @public
  */
 @customElement({
@@ -113,7 +113,6 @@ type NumberInputValueStateChangeEventDetail = {
 /**
  * Fired when the value of the component changes at each keystroke.
  * @public
- * @since 2.6.0
  */
 @event("input", {
 	cancelable: true,
@@ -123,7 +122,6 @@ type NumberInputValueStateChangeEventDetail = {
  * Fired before the value state of the component is updated internally.
  * The event is preventable, meaning that if its default action is
  * prevented, the component will not update the value state.
- * @since 1.23.0
  * @public
  * @param {string} valueState The new `valueState` that will be set.
  * @param {boolean} valid Indicator if the value is in between the min and max value.
@@ -241,7 +239,6 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
 	 */
 	@property()
 	accessibleName?: string;
@@ -250,7 +247,6 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	 * Receives ID (or many IDs) of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
 	 */
 	@property()
 	accessibleNameRef?: string;
