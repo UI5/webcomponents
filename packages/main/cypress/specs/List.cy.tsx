@@ -4080,4 +4080,53 @@ describe("List - InactiveSelectable type", () => {
 		cy.get("#item2").should("have.attr", "selected");
 		cy.get("#item1").should("not.have.attr", "selected");
 	});
+
+	it("type='InactiveSelectable' + selectionMode='Multiple' — pressing Enter toggles selection", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Enter");
+		cy.get("#item1").should("have.attr", "selected");
+
+		cy.realPress("Enter");
+		cy.get("#item1").should("not.have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='Single' — pressing Enter selects item", () => {
+		cy.mount(
+			<List selectionMode="Single">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Enter");
+
+		cy.get("#item1").should("have.attr", "selected");
+	});
+
+	it("type='InactiveSelectable' — item-click event is NOT fired on Enter key", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+		});
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Enter");
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+	});
 });
