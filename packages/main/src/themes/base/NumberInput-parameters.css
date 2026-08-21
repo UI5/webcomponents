@@ -7,7 +7,6 @@
 	--_ui5_number_input_error_warning_information_border_style: none;
 	--_ui5_number_input_after_border_style: var(--_ui5_input_error_warning_border_style);
 	--_ui5_number_input_error_background_color: var(--_ui5_input_input_background_color);
-	--_ui5_number_input_error_background_color_hover: var(--_ui5_number_input_input_error_background_color);
 	--_ui5_number_input_button_background_color:var(--sapField_Background);
 	--_ui5_number_input_input_border: 1px solid transparent;
 	--_ui5_number_input_input_margin_top: -0.0625rem;
