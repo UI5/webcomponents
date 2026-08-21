@@ -1,6 +1,6 @@
 @import "../base/CalendarLegendItem-parameters.css";
 
-:root {
+:host {
 	--_ui5-calendar-legend-item-root-focus-border: var(--sapContent_FocusWidth) solid var(--sapContent_FocusColor);
 	--_ui5-calendar-legend-item-root-focus-border-radius: 0.125rem;
 	--_ui5-calendar-legend-item-box-dot-display: block;

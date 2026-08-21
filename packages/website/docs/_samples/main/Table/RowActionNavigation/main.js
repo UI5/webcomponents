@@ -4,7 +4,7 @@ import "@ui5/webcomponents/dist/TableHeaderCell.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js";
 import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
-import "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents/dist/Text.js";
 
 const table = document.getElementById("table");
 table.addEventListener("row-action-click", (e) => {

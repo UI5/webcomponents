@@ -1,6 +1,6 @@
 @import "../base/SegmentedButtton-parameters.css";
 
-:root {
+:host {
 	--_ui5_segmented_btn_background_color: var(--sapButton_Lite_Background);
 	--_ui5_segmented_btn_border_color: var(--sapButton_Lite_BorderColor);
 	--_ui5_segmented_btn_hover_box_shadow: none;

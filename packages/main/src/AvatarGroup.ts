@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -7,7 +8,7 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
@@ -68,7 +69,7 @@ const offsets = {
 	},
 	[AvatarSize.L]: {
 		[AvatarGroupType.Individual]: "0.125rem",
-		[AvatarGroupType.Group]: " -2rem",
+		[AvatarGroupType.Group]: "-2rem",
 	},
 	[AvatarSize.XL]: {
 		[AvatarGroupType.Individual]: "0.25rem",
@@ -173,6 +174,12 @@ class AvatarGroup extends UI5Element {
 		"click": AvatarGroupClickEventDetail
 		"overflow": void
 	}
+
+	slotDetails!: {
+		overflowButton: IButton;
+		items: IAvatarGroupItem;
+	}
+
 	/**
 	 * Defines the mode of the `AvatarGroup`.
 	 * @default "Group"
@@ -231,7 +238,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: Array<IAvatarGroupItem>;
+	items!: DefaultSlot<IAvatarGroupItem>;
 
 	/**
 	 * Defines the overflow button of the component.
@@ -243,7 +250,7 @@ class AvatarGroup extends UI5Element {
 	 * @since 1.0.0-rc.13
 	 */
 	@slot()
-	overflowButton!: Array<IButton>;
+	overflowButton!: Slot<IButton>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -252,12 +259,20 @@ class AvatarGroup extends UI5Element {
 	_hiddenItems = 0;
 	_itemNavigation: ItemNavigation;
 
+	/**
+	 * Returns the actual avatar items, handling transitive slotting.
+	 * @private
+	 */
+	get _slottedItems(): IAvatarGroupItem[] {
+		return this.getSlottedNodes<IAvatarGroupItem>("items");
+	}
+
 	constructor() {
 		super();
 
 		this._itemNavigation = new ItemNavigation(this, {
 			getItemsCallback: () => {
-				return this._isGroup ? [] : this.items.slice(0, this._hiddenStartIndex);
+				return this._isGroup ? [] : this._slottedItems.slice(0, this._hiddenStartIndex);
 			},
 		});
 		this._onResizeHandler = this._onResize.bind(this);
@@ -269,7 +284,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	get hiddenItems(): IAvatarGroupItem[] {
-		return this.items.slice(this._hiddenStartIndex);
+		return this._slottedItems.slice(this._hiddenStartIndex);
 	}
 
 	/**
@@ -278,7 +293,7 @@ class AvatarGroup extends UI5Element {
 	 * @public
 	 */
 	get colorScheme(): AvatarColorScheme[] {
-		return this.items.map(avatar => avatar.effectiveBackgroundColor);
+		return this._slottedItems.map(avatar => avatar.effectiveBackgroundColor);
 	}
 
 	get _customOverflowButton() {
@@ -341,7 +356,7 @@ class AvatarGroup extends UI5Element {
 	}
 
 	get _itemsCount() {
-		return this.items.length;
+		return this._slottedItems.length;
 	}
 
 	get _groupTabIndex() {
@@ -369,7 +384,7 @@ class AvatarGroup extends UI5Element {
 		}
 
 		if (this._isGroup) {
-			let item: HTMLElement = this.items[1];
+			let item: HTMLElement = this._slottedItems[1];
 			const ltrEffectiveWidth = item.offsetLeft - this.offsetLeft;
 
 			// in some cases when second avatar is overflowed the offset of the button is the right one
@@ -384,7 +399,7 @@ class AvatarGroup extends UI5Element {
 	}
 
 	get firstAvatarSize() {
-		return this.items[0]?.size ?? AvatarSize.S;
+		return this._slottedItems[0]?.size ?? AvatarSize.S;
 	}
 
 	onAfterRendering() {
@@ -476,8 +491,10 @@ class AvatarGroup extends UI5Element {
 	_prepareAvatars() {
 		this._colorIndex = 0;
 
-		this.items.forEach((avatar, index) => {
+		this._slottedItems.forEach((avatar, index) => {
 			const colorIndex = this._getNextBackgroundColor();
+			// In Group mode: avatars are not individually interactive, but visual states are applied at group level
+			// In Individual mode: each avatar is interactive
 			avatar.interactive = !this._isGroup;
 
 			if (avatar.getAttribute("_color-scheme") === AvatarColorScheme.Auto) {
@@ -534,7 +551,7 @@ class AvatarGroup extends UI5Element {
 	 * @private
 	 */
 	_overflowItems() {
-		if (this.items.length < 2) {
+		if (this._slottedItems.length < 2) {
 			// no need to overflow avatars
 			this._setHiddenItems(0);
 			return;
@@ -543,7 +560,7 @@ class AvatarGroup extends UI5Element {
 		let hiddenItems = 0;
 
 		for (let index = 0; index < this._itemsCount; index++) {
-			const item: IAvatarGroupItem = this.items[index];
+			const item: IAvatarGroupItem = this._slottedItems[index];
 
 			// show item to determine if it will fit the new container size
 			item.hidden = false;
@@ -579,7 +596,7 @@ class AvatarGroup extends UI5Element {
 
 		this._hiddenItems = hiddenItems;
 
-		this.items.forEach((item, index) => {
+		this._slottedItems.forEach((item, index) => {
 			item.hidden = index >= this._hiddenStartIndex;
 		});
 

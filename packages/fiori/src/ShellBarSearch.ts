@@ -39,12 +39,33 @@ class ShellBarSearch extends Search {
 	autoOpen = false;
 
 	_handleSearchIconPress() {
+		if (isPhone() && this.open) {
+			this._handleSearchEvent();
+			this._closePopupAndResetState();
+			return;
+		}
+
 		super._handleSearchIconPress();
 
 		if (this.collapsed) {
 			this.collapsed = false;
 		} else if (!this.value) {
 			this.collapsed = true;
+		}
+	}
+
+	_handleEnter() {
+		if (!this.value && !this.collapsed) {
+			// Fire `ui5-search` so a host ShellBar collapses in sync; also collapse
+			// locally for standalone usage (host converges on the same state).
+			this._handleSearchEvent();
+			this.collapsed = true;
+
+			setTimeout(() => {
+				this.focus();
+			}, 0);
+		} else {
+			super._handleEnter();
 		}
 	}
 
@@ -80,6 +101,10 @@ class ShellBarSearch extends Search {
 		const domRef = this.shadowRoot;
 
 		return isPhone() ? domRef?.querySelector<HTMLInputElement>(`[ui5-responsive-popover] input`) : super.nativeInput;
+	}
+
+	getSearchButtonDomRef(): HTMLElement | null {
+		return this.shadowRoot?.querySelector<HTMLElement>(".ui5-shell-search-field-button") ?? null;
 	}
 
 	_onfocusin() {

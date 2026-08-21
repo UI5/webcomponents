@@ -1,17 +1,17 @@
 import type NavigationMenuItem from "./NavigationMenuItem.js";
 import MenuItemTemplate from "@ui5/webcomponents/dist/MenuItemTemplate.js";
+import type { MenuItemHooks } from "@ui5/webcomponents/dist/MenuItemTemplate.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import slimArrowRightIcon from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import arrowRightIcon from "@ui5/webcomponents-icons/dist/arrow-right.js";
-import type { ListItemHooks } from "@ui5/webcomponents/dist/ListItemTemplate.js";
 
-const predefinedHooks: Partial<ListItemHooks> = {
+const predefinedHooks: Partial<MenuItemHooks> = {
 	listItemContent,
 	iconBegin,
 	iconEnd,
 };
 
-export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hooks?: Partial<ListItemHooks>) {
+export default function NavigationMenuItemTemplate(this: NavigationMenuItem, hooks?: Partial<MenuItemHooks>) {
 	const currentHooks = { ...predefinedHooks, ...hooks, };
 
 	return <>
@@ -47,18 +47,24 @@ function iconBegin(this: NavigationMenuItem) {
 }
 
 function iconEnd(this: NavigationMenuItem) {
-	if (this.hasSubmenu) {
-		return <Icon
-			part="icon"
-			name={slimArrowRightIcon}
-			class="ui5-menu-item-icon-end"
-		/>;
-	}
-
-	if (this.isExternalLink) {
-		return <Icon
-			class="ui5-sn-item-external-link-icon"
-			name={arrowRightIcon}
-		/>;
-	}
+	return (<>
+		{this.hasTag &&
+			<span id={this._tagContainerId} class="ui5-navmenu-item-tag-container">
+				<slot name="tag"></slot>
+			</span>
+		}
+		{this.hasSubmenu &&
+			<Icon
+				part="icon"
+				name={slimArrowRightIcon}
+				class="ui5-menu-item-icon-end"
+			/>
+		}
+		{!this.hasSubmenu && this.isExternalLink &&
+			<Icon
+				class="ui5-sn-item-external-link-icon"
+				name={arrowRightIcon}
+			/>
+		}
+	</>);
 }

@@ -1,7 +1,7 @@
 @import "../base/ProgressIndicator-parameters.css";
 @import "./ProgressIndicatorLayout-parameters.css";
 
-:root {
+:host {
     --_ui5_progress_indicator_background_none: var(--sapProgress_Background);
     --_ui5_progress_indicator_background_error: var(--sapProgress_NegativeBackground);
     --_ui5_progress_indicator_background_warning: var(--sapProgress_CriticalBackground);

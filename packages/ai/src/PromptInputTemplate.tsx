@@ -26,6 +26,7 @@ export default function PromptInputTemplate(this: PromptInput) {
 						onInput={this._onInnerInput}
 						onChange={this._onInnerChange}
 						onTypeAhead={this._onTypeAhead}
+						data-sap-focus-ref
 					>
 						<slot></slot>
 						{this.valueStateMessage.length > 0 &&

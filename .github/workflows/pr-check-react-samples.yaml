@@ -1,0 +1,104 @@
+name: PR - React Samples Check
+
+on:
+  pull_request:
+    paths:
+      - 'packages/website/docs/_samples/**/sample.html'
+      - 'packages/website/docs/_samples/**/main.js'
+      - 'packages/website/docs/_samples/**/main.css'
+      - 'packages/website/docs/_samples/**/sample.tsx'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check sample sync
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 300,
+            });
+
+            const samplesDir = 'packages/website/docs/_samples/';
+            const htmlSampleDirs = new Set();
+            const reactSampleDirs = new Set();
+
+            for (const file of files) {
+              if (!file.filename.startsWith(samplesDir)) continue;
+
+              const rel = file.filename.slice(samplesDir.length);
+              const dir = rel.substring(0, rel.lastIndexOf('/'));
+
+              if (rel.endsWith('/sample.html') || rel.endsWith('/main.js') || rel.endsWith('/main.css')) {
+                htmlSampleDirs.add(dir);
+              }
+              if (rel.endsWith('/sample.tsx')) {
+                reactSampleDirs.add(dir);
+              }
+            }
+
+            const htmlOnly = [...htmlSampleDirs].filter(dir => !reactSampleDirs.has(dir)).sort();
+            const reactOnly = [...reactSampleDirs].filter(dir => !htmlSampleDirs.has(dir)).sort();
+
+            if (htmlOnly.length === 0 && reactOnly.length === 0) {
+              console.log('All changed samples are in sync.');
+              return;
+            }
+
+            const sections = ['### Sample sync reminder', ''];
+
+            if (htmlOnly.length > 0) {
+              sections.push(
+                'HTML sample changed but **React sample** (`sample.tsx`) not updated:',
+                '',
+                ...htmlOnly.map(dir => `- \`${dir}\``),
+                '',
+              );
+            }
+
+            if (reactOnly.length > 0) {
+              sections.push(
+                'React sample changed but **HTML sample** (`sample.html`/`main.js`/`main.css`) not updated:',
+                '',
+                ...reactOnly.map(dir => `- \`${dir}\``),
+                '',
+              );
+            }
+
+            sections.push('Please keep both samples in sync, or ignore if the change does not apply to both.');
+            const body = sections.join('\n');
+
+            // Check for existing comment to avoid duplicates
+            const marker = 'Sample sync reminder';
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

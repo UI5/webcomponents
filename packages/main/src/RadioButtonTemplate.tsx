@@ -7,10 +7,12 @@ export default function RadioButtonTemplate(this: RadioButton) {
 		<div
 			role="radio"
 			class="ui5-radio-root"
+			part="root"
 			aria-checked={this.checked}
 			aria-disabled={this.effectiveAriaDisabled}
 			aria-describedby={this.effectiveAriaDescribedBy}
 			aria-label={this.ariaLabelText}
+			aria-labelledby={this.ariaLabelledBy}
 			tabindex={this.effectiveTabIndex}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}

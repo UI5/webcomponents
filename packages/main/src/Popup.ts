@@ -1,11 +1,12 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import {
 	isChrome,
 	isDesktop,
@@ -19,13 +20,14 @@ import {
 	getAllAccessibleDescriptionRefTexts,
 	deregisterUI5Element,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
-import { hasStyle, createStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
+import { createOrUpdateStyle } from "@ui5/webcomponents-base/dist/ManagedStyles.js";
 import { isEnter, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getFocusedElement, isFocusedElementWithinNode } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
+import { registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import PopupTemplate from "./PopupTemplate.js";
 import PopupAccessibleRole from "./types/PopupAccessibleRole.js";
 import { addOpenedPopup, removeOpenedPopup } from "./popup-utils/OpenedPopupsRegistry.js";
@@ -36,9 +38,7 @@ import popupBlockLayerStyles from "./generated/themes/PopupBlockLayer.css.js";
 import globalStyles from "./generated/themes/PopupGlobal.css.js";
 
 const createBlockingStyle = (): void => {
-	if (!hasStyle("data-ui5-popup-scroll-blocker")) {
-		createStyle(globalStyles, "data-ui5-popup-scroll-blocker");
-	}
+	createOrUpdateStyle(globalStyles, "data-ui5-popup-scroll-blocker");
 };
 
 createBlockingStyle();
@@ -233,7 +233,7 @@ abstract class Popup extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * @private
@@ -309,7 +309,9 @@ abstract class Popup extends UI5Element {
 			this._removeOpenedPopup();
 		}
 
-		ResizeHandler.deregister(this, this._resizeHandler);
+		this._deregisterResizeHandler();
+		this._detachBrowserEvents();
+		this._deregisterInvisibleMessageRegion();
 		deregisterUI5Element(this);
 	}
 
@@ -350,6 +352,8 @@ abstract class Popup extends UI5Element {
 			return;
 		}
 
+		this._attachBrowserEvents();
+
 		if (this.isModal) {
 			Popup.blockPageScrolling(this);
 		}
@@ -364,6 +368,13 @@ abstract class Popup extends UI5Element {
 		}
 
 		this._addOpenedPopup();
+
+		this._registerInvisibleMessageRegion();
+
+		this.classList.add("ui5-popup-opening");
+		setTimeout(() => {
+			this.classList.remove("ui5-popup-opening");
+		}, 50);
 
 		this.open = true;
 
@@ -386,6 +397,14 @@ abstract class Popup extends UI5Element {
 	 */
 	_preventBlockLayerFocus(e: KeyboardEvent | MouseEvent) {
 		e.preventDefault();
+	}
+
+	_attachBrowserEvents() {
+
+	}
+
+	_detachBrowserEvents() {
+
 	}
 
 	/**
@@ -504,12 +523,17 @@ abstract class Popup extends UI5Element {
 	 * @returns Promise that resolves when the focus is applied
 	 */
 	async applyFocus(): Promise<void> {
-		// do nothing if the standard HTML autofocus is used
-		if (this.querySelector("[autofocus]")) {
+		await this._waitForDomRef();
+
+		const elementWithAutoFocus = this.querySelector("[autofocus]");
+		if (elementWithAutoFocus) {
+			// If the "autofocus" is set on UI5Element, focus it manually.
+			if ("isUI5Element" in elementWithAutoFocus) {
+				(elementWithAutoFocus as UI5Element).focus();
+			}
+			// Otherwise, the browser will focus it automatically.
 			return;
 		}
-
-		await this._waitForDomRef();
 
 		if (this.getRootNode() === this) {
 			return;
@@ -522,7 +546,7 @@ abstract class Popup extends UI5Element {
 			|| document.getElementById(this.initialFocus);
 		}
 
-		element = element || await getFirstFocusableElement(this) || this._root; // in case of no focusable content focus the root
+		element = element || await this._getFirstFocusableElement() || this._root; // in case of no focusable content focus the root
 
 		if (element) {
 			if (element === this._root) {
@@ -530,6 +554,10 @@ abstract class Popup extends UI5Element {
 			}
 			element.focus();
 		}
+	}
+
+	async _getFirstFocusableElement() {
+		return getFirstFocusableElement(this);
 	}
 
 	isFocusWithin() {
@@ -575,6 +603,10 @@ abstract class Popup extends UI5Element {
 		this.hide();
 		this.open = false;
 
+		this._detachBrowserEvents();
+
+		this._deregisterInvisibleMessageRegion();
+
 		if (!preventRegistryUpdate) {
 			this._removeOpenedPopup();
 		}
@@ -592,6 +624,33 @@ abstract class Popup extends UI5Element {
 	 */
 	_removeOpenedPopup() {
 		removeOpenedPopup(this);
+	}
+
+	/**
+	 * Asks the InvisibleMessage to render its aria-live region inside the popup, so that announcements
+	 * made while the popup is open are read out.
+	 *
+	 * A screen reader scopes its accessibility tree to a modal popup (aria-modal="true"), so a body-level
+	 * aria-live region is silenced while the popup is open. Non-modal popups (e.g. a ComboBox dropdown) do
+	 * not cause this scoping, so their announcements are still heard from the default body-level region and
+	 * must not be routed into the popup subtree.
+	 * @protected
+	 */
+	_registerInvisibleMessageRegion() {
+		if (this.isModal && this._root) {
+			registerInvisibleMessageRegion(this._root);
+		}
+	}
+
+	/**
+	 * Asks the InvisibleMessage to stop rendering its aria-live region inside the popup, restoring
+	 * the default region.
+	 * @protected
+	 */
+	_deregisterInvisibleMessageRegion() {
+		if (this._root) {
+			deregisterInvisibleMessageRegion(this._root);
+		}
 	}
 
 	/**
@@ -682,12 +741,24 @@ abstract class Popup extends UI5Element {
 		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
 	}
 
+	get _contentRole(): AriaRole | undefined {
+		return undefined;
+	}
+
+	get _contentAriaLabel(): string | undefined {
+		return undefined;
+	}
+
 	get _ariaModal(): "true" | undefined {
 		return this.accessibleRole === PopupAccessibleRole.None ? undefined : "true";
 	}
 
 	get contentDOM(): HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-popup-content")!;
+	}
+
+	get footerDOM(): HTMLElement | null {
+		return this.shadowRoot!.querySelector(".ui5-popup-footer-root");
 	}
 
 	get styles() {

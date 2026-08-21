@@ -66,7 +66,7 @@ module.exports = {
 		"es6": true
 	},
 	"root": true,
-	"extends": "airbnb-base",
+	"extends": require.resolve("eslint-config-airbnb-base"),
 	"overrides": tsMode ? getTsModeOverrides() : [],
 	"parserOptions": {
 		"ecmaVersion": 2018,

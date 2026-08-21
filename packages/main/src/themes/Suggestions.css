@@ -22,3 +22,7 @@
 .native-input-wrapper .ui5-input-inner-phone {
 	margin: 0;
 }
+
+.native-input-wrapper .ui5-multi-input-mobile-dialog-button {
+	margin-inline-start: 0.5rem;
+}

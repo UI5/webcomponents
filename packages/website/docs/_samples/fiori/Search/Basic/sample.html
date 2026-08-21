@@ -10,10 +10,10 @@
 
 <body style="background-color: var(--sapBackgroundColor); height: 350px">
 		<!-- playground-fold-end -->
-		<ui5-search id="search-scope" show-clear-icon placeholder="Search Apps, Products">
-			<ui5-search-scope text="All" selected slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Apps" slot="scopes"></ui5-search-scope>
-			<ui5-search-scope text="Products" slot="scopes"></ui5-search-scope>
+		<ui5-search id="search-scope" scope-value="all" show-clear-icon placeholder="Search Apps, Products">
+			<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
+			<ui5-search-scope text="Products" value="products" slot="scopes"></ui5-search-scope>
 		</ui5-search>
 	</div>
 		<!-- playground-fold -->

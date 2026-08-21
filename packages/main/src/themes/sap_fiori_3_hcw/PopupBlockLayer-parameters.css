@@ -1,5 +1,5 @@
 @import "../base/PopupBlockLayer-parameters.css";
 
-:root {
+:host {
 	--_ui5_popup_block_layer_opacity: 0.3;
 }

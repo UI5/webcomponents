@@ -1,7 +1,9 @@
 import Tokenizer from "../../src/Tokenizer.js";
 import Button from "../../src/Button.js";
 import Token from "../../src/Token.js";
-import { TOKENIZER_DIALOG_OK_BUTTON, TOKENIZER_DIALOG_CANCEL_BUTTON, TOKENIZER_POPOVER_REMOVE } from "../../src/generated/i18n/i18n-defaults.js";
+import { TOKENIZER_DIALOG_OK_BUTTON, TOKENIZER_DIALOG_CANCEL_BUTTON, INPUT_SUGGESTIONS_TITLE } from "../../src/generated/i18n/i18n-defaults.js";
+import Label from "../../src/Label.js";
+import ResponsivePopover from "../../src/ResponsivePopover.js";
 
 describe("Phone mode", () => {
     beforeEach(() => {
@@ -133,7 +135,7 @@ describe("Phone mode", () => {
 
         cy.get("@nMoreDialog")
             .find(".ui5-responsive-popover-header .ui5-responsive-popover-header-text")
-            .should("have.text", TOKENIZER_POPOVER_REMOVE.defaultText);
+            .should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
     });
 
     it("Should fire the ui5-token-delete event when the 'X' is pressed in the n-more picker and confirmed with OK", () => {
@@ -213,6 +215,7 @@ describe("Phone mode", () => {
         cy.get("@tokenDeleteSpy")
             .should("not.have.been.called");
     });
+
     it("Should NOT fire the ui5-token-delete event when the 'X' is pressed in the n-more picker and canceled", () => {
         cy.mount(
             <Tokenizer style={{ width: "50%" }}>
@@ -255,4 +258,69 @@ describe("Phone mode", () => {
         cy.get("@tokenDeleteSpy")
             .should("not.have.been.called");
     });
+
+	it("Should test popover title when accessibleName is set", () => {
+		cy.mount(
+            <>
+                <Tokenizer style={{ width: "50%" }} accessibleName="Animals">
+                    <Token text="Lion"></Token>
+                    <Token text="Dog"></Token>
+                    <Token text="Cat"></Token>
+                </Tokenizer>
+			</>
+		);
+
+        cy.get("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .as("nMoreLabel");
+
+        cy.get("@nMoreLabel")
+            .realClick();
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// When accessibleName is present, it should be used as the mobile dialog title
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", "Animals");
+	});
+
+	it("Should test popover title when accessibleNameRef is set", () => {
+		cy.mount(
+            <>
+                <Label id="countries-label">Countries</Label>
+                <Tokenizer style={{ width: "50%" }} accessibleNameRef="countries-label">
+                    <Token text="Andora"></Token>
+                    <Token text="Bulgaria"></Token>
+                    <Token text="Canada"></Token>
+                </Tokenizer>
+			</>
+		);
+
+        cy.get("[ui5-tokenizer]")
+            .shadow()
+            .find(".ui5-tokenizer-more-text")
+            .as("nMoreLabel");
+
+        cy.get("@nMoreLabel")
+            .realClick();
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// When accessibleNameRef is present, it should be used as the mobile dialog title
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find("[ui5-responsive-popover] [slot='header'] [ui5-title]")
+			.should("have.text", "Countries");
+	});
 })

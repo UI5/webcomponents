@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Table Grouping TestPage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		.toolbar {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: 0.5rem;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="toolbar">
+		<ui5-title level="H3">Table Grouping</ui5-title>
+		<ui5-button id="toggleGrouping">Group by Country</ui5-button>
+		<ui5-button id="toggleAlternate">Enable Alternating Colors</ui5-button>
+	</div>
+
+	<ui5-table id="table" accessible-name="Cities Table" overflow-mode="Popin" row-action-count="1">
+		<ui5-table-selection-multi slot="features"></ui5-table-selection-multi>
+		<ui5-table-header-row slot="headerRow">
+			<ui5-table-header-cell id="cityCol" width="200px">City</ui5-table-header-cell>
+			<ui5-table-header-cell id="areaCol" width="200px">Area (km²)</ui5-table-header-cell>
+			<ui5-table-header-cell id="popCol" width="200px">Population</ui5-table-header-cell>
+		</ui5-table-header-row>
+	</ui5-table>
+
+	<script>
+		const table = document.getElementById("table");
+		const toggleBtn = document.getElementById("toggleGrouping");
+		const alternateBtn = document.getElementById("toggleAlternate");
+		let isGrouped = false;
+
+		const data = [
+			{ city: "Berlin", country: "Germany", area: "891.20", population: "3,748,148" },
+			{ city: "Munich", country: "Germany", area: "310.71", population: "1,471,508" },
+			{ city: "Hamburg", country: "Germany", area: "755.22", population: "1,899,160" },
+			{ city: "Paris", country: "France", area: "105.40", population: "2,161,000" },
+			{ city: "Lyon", country: "France", area: "47.87", population: "513,275" },
+			{ city: "Marseille", country: "France", area: "240.62", population: "870,018" },
+			{ city: "Madrid", country: "Spain", area: "604.31", population: "3,223,334" },
+			{ city: "Barcelona", country: "Spain", area: "101.35", population: "1,620,343" },
+			{ city: "Seville", country: "Spain", area: "140.80", population: "688,711" },
+		];
+
+		function clearRows() {
+			table.rows?.forEach(el => el.remove());
+		}
+
+		function createDataRow(item, index) {
+			const row = document.createElement("ui5-table-row");
+			row.setAttribute("row-key", `row-${index}`);
+
+			const cityCell = document.createElement("ui5-table-cell");
+			const cityText = document.createElement("ui5-text");
+			cityText.textContent = item.city;
+			cityCell.append(cityText);
+
+			const areaCell = document.createElement("ui5-table-cell");
+			const areaText = document.createElement("ui5-text");
+			areaText.textContent = item.area;
+			areaCell.append(areaText);
+
+			const popCell = document.createElement("ui5-table-cell");
+			const popText = document.createElement("ui5-text");
+			popText.textContent = item.population;
+			popCell.append(popText);
+
+			const navAction = document.createElement("ui5-table-row-action-navigation");
+			navAction.setAttribute("interactive", "true");
+			navAction.setAttribute("slot", "actions");
+
+			row.append(cityCell, areaCell, popCell, navAction);
+			return row;
+		}
+
+		function renderFlat() {
+			clearRows();
+			table.append(...data.map(createDataRow));
+		}
+
+		function renderGrouped() {
+			clearRows();
+
+			// Group by country
+			const groups = Object.groupBy(data, item => item.country);
+
+			let rowIndex = 0;
+			Object.keys(groups).forEach(country => {
+				const groupRow = document.createElement("ui5-table-group-row");
+				groupRow.textContent = "Country: " + country;
+				table.append(groupRow);
+
+				groups[country].forEach(item => {
+					table.append(createDataRow(item, rowIndex++));
+				});
+			});
+		}
+
+		toggleBtn.addEventListener("click", () => {
+			isGrouped = !isGrouped;
+			if (isGrouped) {
+				renderGrouped();
+				toggleBtn.textContent = "Remove Grouping";
+			} else {
+				renderFlat();
+				toggleBtn.textContent = "Group by Country";
+			}
+		});
+
+		alternateBtn.addEventListener("click", () => {
+			const enabled = table.hasAttribute("alternate-row-colors");
+			table.toggleAttribute("alternate-row-colors", !enabled);
+			alternateBtn.textContent = enabled ? "Enable Alternating Colors" : "Disable Alternating Colors";
+		});
+
+		// Initial flat render
+		renderFlat();
+
+		table.addEventListener("row-action-click", (e) => {
+			table.rows.forEach(r => r.navigated = false);
+			e.detail.row.navigated = true;
+		});
+	</script>
+</body>
+
+</html>

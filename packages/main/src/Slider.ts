@@ -2,7 +2,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import { isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isEscape, isF2 } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import SliderBase from "./SliderBase.js";
@@ -10,6 +10,8 @@ import type SliderTooltip from "./SliderTooltip.js";
 
 // Template
 import SliderTemplate from "./SliderTemplate.js";
+import type { SliderTooltipChangeEventDetails } from "./SliderTooltip.js";
+import styles from "./generated/themes/Slider.css.js";
 
 // Texts
 import {
@@ -76,6 +78,7 @@ import {
 	tag: "ui5-slider",
 	languageAware: true,
 	formAssociated: true,
+	styles: [styles],
 	template: SliderTemplate,
 })
 class Slider extends SliderBase implements IFormInputElement {
@@ -89,16 +92,44 @@ class Slider extends SliderBase implements IFormInputElement {
 	@property({ type: Number })
 	value = 0;
 
+	/**
+	 * Defines the size of the slider's selection intervals (e.g. min = 0, max = 10, step = 5 would result in possible selection of the values 0, 5, 10).
+	 *
+	 * **Note:** If set to 0 the slider handle movement is disabled.
+	 * @default 1
+	 * @public
+	 */
+	@property({ type: Number })
+	step = 1;
+
+	@property()
+	tooltipValueState: `${ValueState}` = "None";
+
+	@property()
+	tooltipValue = "";
+
 	_valueInitial?: number;
 	_valueOnInteractionStart?: number;
 	_progressPercentage = 0;
 	_handlePositionFromStart = 0;
 	_lastValidInputValue: string;
-	_tooltipInputValue: string = this.value.toString();
-	_tooltipInputValueState: `${ValueState}` = "None";
 
 	get formFormattedValue() {
 		return this.value.toString();
+	}
+
+	get _isTooltipVisible(): boolean {
+		if (!this._tooltipsOpen) {
+			return false;
+		}
+		if (!this._hasCustomTickmarks) {
+			return true;
+		}
+		return this._getCustomLabel(this.value) !== undefined;
+	}
+
+	get _ariaValueText(): string | undefined {
+		return this._getCustomLabel(this.value);
 	}
 
 	@i18n("@ui5/webcomponents")
@@ -106,59 +137,23 @@ class Slider extends SliderBase implements IFormInputElement {
 
 	constructor() {
 		super();
-		this._stateStorage.value = undefined;
 		this._lastValidInputValue = this.min.toString();
 	}
 
 	/**
-	 *
-	 * Check if the previously saved state is outdated. That would mean
-	 * either it is the initial rendering or that a property has been changed
-	 * programmatically - because the previous state is always updated in
-	 * the interaction handlers.
-	 *
-	 * Normalize current properties, update the previously stored state.
-	 * Update the visual UI representation of the Slider.
-	 *
+	 * The value is visually clamped to min/max but the property is not modified.
+	 * @private
 	 */
 	onBeforeRendering() {
-		if (!this.isCurrentStateOutdated()) {
-			return;
-		}
-
-		this.notResized = true;
-		this.syncUIAndState();
-		this._updateHandleAndProgress(this.value);
+		const ctor = this.constructor as typeof Slider;
+		const clampedValue = ctor.clipValue(this.value, this.min, this.max);
+		this._updateHandleAndProgress(clampedValue);
 	}
 
-	syncUIAndState() {
-		// Validate step and update the stored state for the step property.
-		if (this.isPropertyUpdated("step")) {
-			this._validateStep(this.step);
-			this.storePropertyState("step");
-		}
+	onAfterRendering(): void {
+		super.onAfterRendering();
 
-		// Recalculate the tickmarks and labels and update the stored state.
-		if (this.isPropertyUpdated("min", "max", "value")) {
-			this.storePropertyState("min", "max");
-
-			// Here the value props are changed programmatically (not by user interaction)
-			// and it won't be "stepified" (rounded to the nearest step). 'Clip' them within
-			// min and max bounderies and update the previous state reference.
-			this.value = SliderBase.clipValue(this.value, this._effectiveMin, this._effectiveMax);
-			this.updateStateStorageAndFireInputEvent("value");
-			this.storePropertyState("value");
-		}
-
-		// Labels must be updated if any of the min/max/step/labelInterval props are changed
-		if (this.labelInterval && this.showTickmarks) {
-			this._createLabels();
-		}
-
-		// Update the stored state for the labelInterval, if changed
-		if (this.isPropertyUpdated("labelInterval")) {
-			this.storePropertyState("labelInterval");
-		}
+		this.tooltip?.repositionTooltip();
 	}
 
 	/**
@@ -166,8 +161,10 @@ class Slider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_onmousedown(e: TouchEvent | MouseEvent) {
-		// If step is 0 no interaction is available because there is no constant
-		// (equal for all user environments) quantitative representation of the value
+		if (this._isNonPrimaryClick(e)) {
+			return;
+		}
+
 		if (this.disabled || this.step === 0 || (e.target as HTMLElement).hasAttribute("ui5-slider-tooltip")) {
 			return;
 		}
@@ -175,17 +172,16 @@ class Slider extends SliderBase implements IFormInputElement {
 		const newValue = this.handleDownBase(e);
 		this._valueOnInteractionStart = this.value;
 
-		// Set initial value if one is not set previously on focus in.
-		// It will be restored if ESC key is pressed.
 		if (this._valueInitial === undefined) {
 			this._valueInitial = this.value;
 		}
 
-		// Do not yet update the Slider if press is over a handle. It will be updated if the user drags the mouse.
 		const ctor = this.constructor as typeof Slider;
 		if (!this._isHandlePressed(ctor.getPageXValueFromEvent(e))) {
+			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue);
 			this.value = newValue;
+			this.tooltipValue = this._getCustomLabel(newValue) || newValue.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
@@ -219,6 +215,53 @@ class Slider extends SliderBase implements IFormInputElement {
 		}
 	}
 
+	_onTooltipChange(e: CustomEvent<SliderTooltipChangeEventDetails>) {
+		const value = parseFloat(e.detail.value);
+		const isInvalid = (value < this.min || value > this.max) || Number.isNaN(value);
+
+		if (isInvalid) {
+			this.tooltipValueState = "Negative";
+			this.tooltipValue = `${value}`;
+			return;
+		}
+
+		this.tooltipValueState = "None";
+		this.value = value;
+		this.fireDecoratorEvent("change");
+	}
+
+	_onTooltipFocusChange() {
+		const value = parseFloat(this.tooltipValue);
+		const isInvalid = (value < this.min || value > this.max) || Number.isNaN(value);
+
+		if (isInvalid) {
+			this.tooltipValueState = "None";
+			this.tooltipValue = this.value.toString();
+		}
+	}
+
+	_onTooltipKeydown(e: KeyboardEvent) {
+		if (isF2(e)) {
+			e.preventDefault();
+			this._sliderHandle.focus();
+		}
+	}
+
+	_onTooltipOpen() {
+		const customLabel = this._getCustomLabel(this.value);
+		if (customLabel) {
+			this.tooltipValue = customLabel;
+			return;
+		}
+		const ctor = this.constructor as typeof Slider;
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
+		this.tooltipValue = this.value.toFixed(stepPrecision);
+	}
+
+	_onTooltipInput(e: CustomEvent) {
+		this.tooltipValue = e.detail.value;
+	}
+
 	/**
 	 * Called when the user moves the slider
 	 * @private
@@ -226,17 +269,13 @@ class Slider extends SliderBase implements IFormInputElement {
 	_handleMove(e: TouchEvent | MouseEvent) {
 		e.preventDefault();
 
-		// If step is 0 no interaction is available because there is no constant
-		// (equal for all user environments) quantitative representation of the value
-		if (this.disabled || this._effectiveStep === 0) {
-			return;
-		}
-
 		const ctor = this.constructor as typeof Slider;
-		const newValue = ctor.getValueFromInteraction(e, this._effectiveStep, this._effectiveMin, this._effectiveMax, this.getBoundingClientRect(), this.directionStart);
+		const newValue = ctor.getValueFromInteraction(e, this.step, this.min, this.max, this.getBoundingClientRect(), this.directionStart);
+		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 
 		this._updateHandleAndProgress(newValue);
 		this.value = newValue;
+		this.tooltipValue = this._getCustomLabel(newValue) || newValue.toFixed(stepPrecision);
 		this.updateStateStorageAndFireInputEvent("value");
 	}
 
@@ -276,25 +315,25 @@ class Slider extends SliderBase implements IFormInputElement {
 	 * @private
 	 */
 	_updateHandleAndProgress(newValue: number) {
-		const max = this._effectiveMax;
-		const min = this._effectiveMin;
+		const max = this.max;
+		const min = this.min;
 
-		// The progress (completed) percentage of the slider.
 		this._progressPercentage = (newValue - min) / (max - min);
-		// How many pixels from the left end of the slider will be the placed the affected  by the user action handle
 		this._handlePositionFromStart = this._progressPercentage * 100;
 	}
 
 	_handleActionKeyPress(e: KeyboardEvent) {
-		const min = this._effectiveMin;
-		const max = this._effectiveMax;
+		const min = this.min;
+		const max = this.max;
 		const currentValue = this.value;
 		const ctor = this.constructor as typeof Slider;
 		const newValue = isEscape(e) ? this._valueInitial : ctor.clipValue(this._handleActionKeyPressBase(e, "value") + currentValue, min, max);
 
 		if (newValue !== currentValue) {
+			const stepPrecision = ctor._getDecimalPrecisionOfNumber(this.step);
 			this._updateHandleAndProgress(newValue!);
 			this.value = newValue!;
+			this.tooltipValue = this._getCustomLabel(newValue!) || this.value.toFixed(stepPrecision);
 			this.updateStateStorageAndFireInputEvent("value");
 		}
 	}
@@ -309,26 +348,12 @@ class Slider extends SliderBase implements IFormInputElement {
 		return this.value.toString();
 	}
 
-	get styles() {
-		return {
-			progress: {
-				"transform": `scaleX(${this._progressPercentage})`,
-				"transform-origin": `${this.directionStart} top`,
-			},
-			handle: {
-				[this.directionStart]: `${this._handlePositionFromStart}%`,
-			},
-		};
+	get tooltip() {
+		return this.getDomRef()?.querySelector<SliderTooltip>("[ui5-slider-tooltip]");
 	}
 
-	get _sliderHandle() {
-		return this.shadowRoot!.querySelector(".ui5-slider-handle")!;
-	}
-
-	get tooltipValue() {
-		const ctor = this.constructor as typeof Slider;
-		const stepPrecision = ctor._getDecimalPrecisionOfNumber(this._effectiveStep);
-		return this.value.toFixed(stepPrecision);
+	get _sliderHandle() : HTMLElement {
+		return this.shadowRoot!.querySelector("[ui5-slider-handle]")!;
 	}
 
 	get _ariaDisabled() {
@@ -339,6 +364,22 @@ class Slider extends SliderBase implements IFormInputElement {
 		return Slider.i18nBundle.getText(SLIDER_ARIA_DESCRIPTION);
 	}
 
+	get tickmarksObject() {
+		const count = this._tickmarksCount;
+		const arr = [];
+
+		if (this._hiddenTickmarks) {
+			return [false, false];
+		}
+
+		for (let i = 0; i <= count; i++) {
+			const tickValue = this._effectiveMin + (i * this.step);
+			arr.push(tickValue <= this.value);
+		}
+
+		return arr;
+	}
+
 	get _ariaDescribedByInputText() {
 		return Slider.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_DESCRIPTION);
 	}
@@ -347,19 +388,19 @@ class Slider extends SliderBase implements IFormInputElement {
 		return Slider.i18nBundle.getText(SLIDER_TOOLTIP_INPUT_LABEL);
 	}
 
-	get tickmarksObject() {
-		const count = this._tickmarksCount;
-		const arr = [];
+	_onkeydown(e: KeyboardEvent) {
+		const target = e.target as HTMLElement;
 
-		if (this._hiddenTickmarks) {
-			return [true, false];
+		if (isF2(e) && target.hasAttribute("ui5-slider-handle")) {
+			(target.parentNode!.querySelector("[ui5-slider-tooltip]") as HTMLElement).focus();
 		}
 
-		for (let i = 0; i <= count; i++) {
-			arr.push(this._effectiveMin + (i * this.step) <= this.value);
-		}
+		if (SliderBase._isActionKey(e) && target && !target.hasAttribute("ui5-slider-tooltip")) {
+			e.preventDefault();
 
-		return arr;
+			this._isUserInteraction = true;
+			this._handleActionKeyPress(e);
+		}
 	}
 }
 

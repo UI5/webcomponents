@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import { useColorMode } from '@docusaurus/theme-common';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import HomepageDemoApps from '@site/src/components/HomepageDemoApps';
@@ -50,11 +49,10 @@ function HomepageHeader() {
 }
 
 export default function Home(): JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title="Enterprise-Grade Web Components"
+      description="An open-source UI components library implementing SAP Fiori design for building enterprise-ready web applications.">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

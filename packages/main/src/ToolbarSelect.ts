@@ -1,7 +1,7 @@
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ToolbarSelectCss from "./generated/themes/ToolbarSelect.css.js";
@@ -9,12 +9,15 @@ import type Select from "./Select.js";
 
 // Templates
 import ToolbarSelectTemplate from "./ToolbarSelectTemplate.js";
-import ToolbarItem from "./ToolbarItem.js";
-import type { ToolbarItemEventDetail } from "./ToolbarItem.js";
+import ToolbarItemBase from "./ToolbarItemBase.js";
+import type { ToolbarItemEventDetail } from "./ToolbarItemBase.js";
 import type ToolbarSelectOption from "./ToolbarSelectOption.js";
 import type { SelectChangeEventDetail } from "./Select.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
-type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail;
+type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEventDetail & {
+	selectedToolbarOption: ToolbarSelectOption | undefined;
+};
 
 /**
  * @class
@@ -29,7 +32,7 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * `import "@ui5/webcomponents/dist/ToolbarSelectOption.js";` (comes with `ui5-toolbar-select`)
  * @constructor
  * @abstract
- * @extends ToolbarItem
+ * @extends ToolbarItemBase
  * @public
  * @since 1.17.0
  */
@@ -43,6 +46,8 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
 /**
  * Fired when the selected option changes.
  * @param {HTMLElement} selectedOption the selected option.
+ * @param {HTMLElement} selectedToolbarOption the original toolbar select option.
+ * @since 2.25.0
  * @public
  */
 @event("change", {
@@ -63,12 +68,14 @@ type ToolbarSelectChangeEventDetail = ToolbarItemEventDetail & SelectChangeEvent
  * @public
  */
 @event("close")
-class ToolbarSelect extends ToolbarItem {
-	eventDetails!: ToolbarItem["eventDetails"] & {
+class ToolbarSelect extends ToolbarItemBase {
+	eventDetails!: ToolbarItemBase["eventDetails"] & {
 		change: ToolbarSelectChangeEventDetail;
 		open: ToolbarItemEventDetail;
 		close: ToolbarItemEventDetail;
+		"click": ToolbarItemEventDetail;
 	}
+
 	/**
 	 * Defines the width of the select.
 	 *
@@ -91,8 +98,9 @@ class ToolbarSelect extends ToolbarItem {
 	@slot({
 		"default": true,
 		type: HTMLElement,
+		invalidateOnChildChange: true,
 	})
-	options!: Array<ToolbarSelectOption>;
+	options!: DefaultSlot<ToolbarSelectOption>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -101,7 +109,7 @@ class ToolbarSelect extends ToolbarItem {
 	 * @since 2.15.0
 	*/
 	@slot()
-	label!: Array<HTMLElement>;
+	label!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the value state of the component.
@@ -146,22 +154,36 @@ class ToolbarSelect extends ToolbarItem {
 	 */
 	@property()
 	set value(newValue: string) {
-		if (this.select && this.select.value !== newValue) {
-			this.select.value = newValue;
+		if (this.options.length) {
+			// Options are available: resolve immediately by setting selected on the matching outer option.
+			// Empty string clears all selections.
+			this.options.forEach(option => {
+				option.selected = newValue !== "" && (option.value === newValue || option.textContent?.trim() === newValue);
+			});
+			this._pendingValue = "";
+			this._hasPendingValue = false;
+		} else {
+			// Options not yet available (pre-render): stage for onBeforeRendering to resolve.
+			this._pendingValue = newValue;
+			this._hasPendingValue = true;
 		}
-		this._value = newValue;
 	}
 
-	get value(): string | undefined {
-		return this.select ? this.select.value : this._value;
+	get value(): string {
+		const selectedOption = this._lastSelectedIndex >= 0 ? this.options[this._lastSelectedIndex] : undefined;
+		return selectedOption?.value || selectedOption?.textContent?.trim() || "";
 	}
 
 	get select(): Select | null {
 		return this.shadowRoot!.querySelector<Select>("[ui5-select]");
 	}
 
-	// Internal value storage, in case the composite select is not rendered on the the assignment happens
-	_value: string = "";
+	// Staging buffer for value= assignments that arrive before options are available.
+	_pendingValue: string = "";
+	_hasPendingValue: boolean = false;
+
+	// Computed in onBeforeRendering: index of the last selected option (-1 = none)
+	_lastSelectedIndex: number = -1;
 
 	onClick(e: Event): void {
 		e.stopImmediatePropagation();
@@ -187,24 +209,40 @@ class ToolbarSelect extends ToolbarItem {
 		}
 	}
 
+	onBeforeRendering(): void {
+		super.onBeforeRendering();
+
+		// Resolve a pending value= assignment now that options are available.
+		if (this._hasPendingValue && this.options.length) {
+			const pending = this._pendingValue;
+			this.options.forEach(option => {
+				option.selected = pending !== "" && (option.value === pending || option.textContent?.trim() === pending);
+			});
+			this._pendingValue = "";
+			this._hasPendingValue = false;
+		}
+
+		// Last selected wins — mirrors Select._applyAutoSelection behaviour.
+		this._lastSelectedIndex = this.options.reduce((last, option, index) => (option.selected ? index : last), -1);
+	}
+
 	onChange(e: CustomEvent<SelectChangeEventDetail>): void {
 		e.stopImmediatePropagation();
-		const prevented = !this.fireDecoratorEvent("change", { ...e.detail, targetRef: e.target as HTMLElement });
+		const selectedOptionIndex = Number(e.detail.selectedOption?.getAttribute("data-ui5-external-action-item-index"));
+		const selectedToolbarOption = this.options[selectedOptionIndex];
+		const prevented = !this.fireDecoratorEvent("change", { ...e.detail, targetRef: e.target as HTMLElement, selectedToolbarOption });
 		if (!prevented) {
 			this.fireDecoratorEvent("close-overflow");
 		}
 
-		this._syncOptions(e.detail.selectedOption);
+		this._syncOptions(selectedOptionIndex);
 	}
 
-	_syncOptions(selectedOption: HTMLElement): void {
-		const selectedOptionIndex = Number(selectedOption?.getAttribute("data-ui5-external-action-item-index"));
+	_syncOptions(selectedOptionIndex: number): void {
+		this._pendingValue = "";
+		this._hasPendingValue = false;
 		this.options.forEach((option: ToolbarSelectOption, index: number) => {
-			if (index === selectedOptionIndex) {
-				option.setAttribute("selected", "");
-			} else {
-				option.removeAttribute("selected");
-			}
+			option.selected = index === selectedOptionIndex;
 		});
 	}
 
@@ -216,6 +254,17 @@ class ToolbarSelect extends ToolbarItem {
 
 	get hasCustomLabel() {
 		return !!this.label.length;
+	}
+
+	// Drives the inner Select via its value= API (non-deprecated path).
+	// When nothing is selected, the sentinel prevents _applyAutoSelection from forcing index 0.
+	// The sentinel never leaks to a form: ToolbarSelect is not form-associated and the inner Select lives in shadow DOM.
+	get _innerSelectValue(): string | undefined {
+		if (this._lastSelectedIndex === -1) {
+			return "__no-selection__";
+		}
+		const opt = this.options[this._lastSelectedIndex];
+		return opt?.value || opt?.textContent?.trim() || "";
 	}
 }
 

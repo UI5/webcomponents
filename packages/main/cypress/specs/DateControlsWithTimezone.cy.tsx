@@ -33,7 +33,7 @@ describe("Date related components in different timezone", () => {
 	});
 
 	it("The time is with the correct offset in time picker", () => {
-		cy.mount(<TimePicker id="timePickerNow" value="now" formatPattern="HH:mm:ss"/>);
+		cy.mount(<TimePicker id="timePickerNow" value="now" formatPattern="HH:mm"/>);
 
 		const now = new Date();
 		const offset = now.getTimezoneOffset();
@@ -41,9 +41,8 @@ describe("Date related components in different timezone", () => {
 		now.setHours(now.getHours() + 13);
 		const hours = String(now.getHours()).padStart(2, "0");
 		const minutes = String(now.getMinutes()).padStart(2, "0");
-		const seconds = String(now.getSeconds()).padStart(2, "0");
 
-		const value = `${hours}:${minutes}:${seconds}`;
+		const value = `${hours}:${minutes}`;
 
 		cy.get("#timePickerNow")
 			.shadow()
@@ -52,7 +51,7 @@ describe("Date related components in different timezone", () => {
 	});
 
 	it("The date and time are with the correct offset in date time picker", () => {
-		cy.mount(<DateTimePicker id="dateTimePickerNow" value="now" formatPattern="dd/MM/yyyy HH:mm:ss"/>);
+		cy.mount(<DateTimePicker id="dateTimePickerNow" value="now" formatPattern="dd/MM/yyyy HH:mm"/>);
 
 		const now = new Date();
 		const offset = now.getTimezoneOffset();
@@ -63,9 +62,8 @@ describe("Date related components in different timezone", () => {
 		const year = now.getFullYear();
 		const hours = String(now.getHours()).padStart(2, "0");
 		const minutes = String(now.getMinutes()).padStart(2, "0");
-		const seconds = String(now.getSeconds()).padStart(2, "0");
 
-		const value = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+		const value = `${day}/${month}/${year} ${hours}:${minutes}`;
 
 		cy.get("#dateTimePickerNow")
 			.shadow()

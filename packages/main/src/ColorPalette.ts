@@ -1,12 +1,14 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import ItemNavigationBehavior from "@ui5/webcomponents-base/dist/types/ItemNavigationBehavior.js";
@@ -52,7 +54,7 @@ interface IColorPaletteItem extends UI5Element, ITabbable {
 	selected?: boolean,
 }
 
-type ColorPaletteNavigationItem = IColorPaletteItem | Button;
+type ColorPaletteNavigationItem = ColorPaletteItem | Button;
 
 type ColorPaletteItemClickEventDetail = {
 	color: string,
@@ -133,6 +135,24 @@ class ColorPalette extends UI5Element {
 	defaultColor?: string;
 
 	/**
+	 * Defines the accessible name of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleName?: string;
+
+	/**
+	 * Receives id(or many ids) of the elements that label the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.20.0
+	 */
+	@property()
+	accessibleNameRef?: string;
+
+	/**
 	 * Defines the selected color, only valid CSS color values accepted
 	 * @private
 	 */
@@ -183,8 +203,7 @@ class ColorPalette extends UI5Element {
 		invalidateOnChildChange: true,
 		individualSlots: true,
 	})
-
-	colors!: Array<IColorPaletteItem>;
+	colors!: DefaultSlot<ColorPaletteItem>;
 
 	_itemNavigation: ItemNavigation;
 	_itemNavigationRecentColors: ItemNavigation;
@@ -289,14 +308,11 @@ class ColorPalette extends UI5Element {
 		});
 	}
 
-	get effectiveColorItems() {
-		let colorItems = this.colors;
-
+	get effectiveColorItems(): ColorPaletteItem[] {
 		if (this.popupMode) {
-			colorItems = this.getSlottedNodes<ColorPaletteItem>("colors");
+			return this.getSlottedNodes<ColorPaletteItem>("colors");
 		}
-
-		return colorItems;
+		return this.colors;
 	}
 
 	/**
@@ -304,7 +320,7 @@ class ColorPalette extends UI5Element {
 	 * @private
 	 */
 	_ensureSingleSelectionOrDeselectAll() {
-		let lastSelectedItem: IColorPaletteItem;
+		let lastSelectedItem: ColorPaletteItem | undefined;
 
 		this.allColorsInPalette.forEach(item => {
 			if (item.selected) {
@@ -317,6 +333,10 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onclick(e: MouseEvent) {
+		if (e.defaultPrevented) {
+			return;
+		}
+
 		this.handleSelection(e.target as ColorPaletteItem);
 	}
 
@@ -487,8 +507,8 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onColorContainerKeyDown(e: KeyboardEvent) {
-		const target = e.target as ColorPaletteItem;
-		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(target, this.displayedColors);
+		const eventTarget = e.target as ColorPaletteItem;
+		const swatchTarget = this._getColorPaletteItemFromEvent(e, this.displayedColors);
 
 		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 		if (this._shouldPreventHomeEnd(e)) {
@@ -503,10 +523,16 @@ class ColorPalette extends UI5Element {
 
 		if (isTabNext(e) && this.popupMode) {
 			e.preventDefault();
-			this.selectColor(target);
+			this.selectColor(swatchTarget || eventTarget);
 		}
 
-		if (this._isPrevious(e) && this._isFirstSwatch(target, this.displayedColors)) {
+		if (!swatchTarget) {
+			return;
+		}
+
+		const isLastSwatchInSingleRow = this._isSingleRow() && this._isLastSwatch(swatchTarget, this.displayedColors);
+
+		if (this._isPrevious(e) && this._isFirstSwatch(swatchTarget, this.displayedColors)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -516,8 +542,8 @@ class ColorPalette extends UI5Element {
 				() => this._focusLastSwatchOfLastFullRow(),
 				() => this._focusLastDisplayedColor(),
 			);
-		} else if ((isRight(e) && this._isLastSwatch(target, this.displayedColors))
-			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(target) || isLastSwatchInSingleRow))
+		} else if ((isRight(e) && this._isLastSwatch(swatchTarget, this.displayedColors))
+			|| (isDown(e) && (this._isLastSwatchOfLastFullRow(swatchTarget) || isLastSwatchInSingleRow))
 		) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -527,7 +553,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isHome(e) && this._isFirstSwatchInRow(target)) {
+		} else if (isHome(e) && this._isFirstSwatchInRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -535,7 +561,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusMoreColors(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (isEnd(e) && this._isLastSwatchInRow(target)) {
+		} else if (isEnd(e) && this._isLastSwatchInRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -543,7 +569,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusDefaultColor(),
 				() => this._focusLastDisplayedColor(),
 			);
-		} else if (isEnd(e) && this._isSwatchInLastRow(target)) {
+		} else if (isEnd(e) && this._isSwatchInLastRow(swatchTarget)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusLastDisplayedColor();
@@ -551,7 +577,7 @@ class ColorPalette extends UI5Element {
 	}
 
 	_onRecentColorsContainerKeyDown(e: KeyboardEvent) {
-		const target = e.target as ColorPaletteItem;
+		const swatchTarget = this._getColorPaletteItemFromEvent(e, this.recentColorsElements);
 
 		// Prevent Home/End keys from working in embedded mode - they only work in popup mode as per design
 		if (this._shouldPreventHomeEnd(e)) {
@@ -564,7 +590,11 @@ class ColorPalette extends UI5Element {
 			this._currentlySelected = undefined;
 		}
 
-		if (this._isNext(e) && this._isLastSwatch(target, this.recentColorsElements)) {
+		if (!swatchTarget) {
+			return;
+		}
+
+		if (this._isNext(e) && this._isLastSwatch(swatchTarget, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -572,7 +602,7 @@ class ColorPalette extends UI5Element {
 				() => this._focusMoreColors(),
 				() => this._focusFirstDisplayedColor(),
 			);
-		} else if (this._isPrevious(e) && this._isFirstSwatch(target, this.recentColorsElements)) {
+		} else if (this._isPrevious(e) && this._isFirstSwatch(swatchTarget, this.recentColorsElements)) {
 			e.preventDefault();
 			e.stopPropagation();
 			this._focusFirstAvailable(
@@ -609,12 +639,17 @@ class ColorPalette extends UI5Element {
 		return isDown(e) || isRight(e);
 	}
 
-	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[0] === target;
+	_isFirstSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[0] === (target);
 	}
 
-	_isLastSwatch(target: ColorPaletteItem, swatches: Array<IColorPaletteItem>): boolean {
-		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === target;
+	_getColorPaletteItemFromEvent(e: KeyboardEvent, swatches: Array<ColorPaletteItem>): ColorPaletteItem | undefined {
+		const path = e.composedPath();
+		return swatches.find(swatch => path.includes(swatch));
+	}
+
+	_isLastSwatch(target: ColorPaletteItem, swatches: Array<ColorPaletteItem>): boolean {
+		return swatches && Boolean(swatches.length) && swatches[swatches.length - 1] === (target);
 	}
 
 	/**
@@ -877,13 +912,16 @@ class ColorPalette extends UI5Element {
 		return this._selectedColor;
 	}
 
-	get displayedColors(): Array<IColorPaletteItem> {
-		const colors = this.getSlottedNodes<IColorPaletteItem>("colors");
+	get displayedColors(): Array<ColorPaletteItem> {
+		const colors = this.getSlottedNodes<ColorPaletteItem>("colors");
 		return colors.filter(item => item.value).slice(0, 15);
 	}
 
 	get colorContainerLabel() {
-		return ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
+		const effectiveLabel = getEffectiveAriaLabelText(this);
+		return effectiveLabel
+			? `${ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL)} ${effectiveLabel}`
+			: ColorPalette.i18nBundle.getText(COLORPALETTE_CONTAINER_LABEL);
 	}
 
 	get colorPaletteMoreColorsText() {

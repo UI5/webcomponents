@@ -1,6 +1,6 @@
 @import "../base/Input-parameters.css";
 
-:root {
+:host {
 	--_ui5_input_focus_border_width: 0.125rem;
 	--_ui5_input_state_border_width: 0.125rem;
 	--_ui5-input-border: 1px solid var(--sapField_BorderColor);
@@ -20,9 +20,9 @@
 	--_ui5-input_error_placeholder_color: var(--sapField_TextColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_input_information_icon_padding: .25rem .4375rem;
-	--_ui5_input_information_custom_icon_padding: .25rem .5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_information_icon_padding: .25rem .4375rem;
+		--_ui5_input_information_custom_icon_padding: .25rem .5rem;
+	}
 }

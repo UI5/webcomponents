@@ -1,5 +1,6 @@
 import html from '!!raw-loader!./sample.html';
 import js from '!!raw-loader!./main.js';
+import react from '!!raw-loader!./sample.tsx';
 
 Enhance your table with virtualization capabilities by incorporating the **Virtualizer** feature.
 
@@ -13,4 +14,4 @@ For effective table virtualization, the `range-change` event with its `first` an
 
 By setting these attributes and handling the `range-change` event properly, the `TableVirtualizer` can efficiently manage and render only the rows that are visible when the user scrolls.
 
-<Editor html={html} js={js} />
+<Editor html={html} js={js} react={react} />

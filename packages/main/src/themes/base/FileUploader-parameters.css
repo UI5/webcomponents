@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_file_uploader_display_input_width: calc(100% - var(--_ui5_input_icon_width));
 	--_ui5_file_uploader_tokenizer_width: calc(100% - 2 * var(--_ui5_input_icon_width) - var(--_ui5_input_inner_space_to_tokenizer));
 }

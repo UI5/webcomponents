@@ -1,0 +1,53 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <ui5-side-navigation>
+        <ui5-side-navigation-item text="Home" icon="home" selected></ui5-side-navigation-item>
+
+        <ui5-side-navigation-item text="Dashboard" icon="bar-chart">
+            <ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+        </ui5-side-navigation-item>
+
+        <ui5-side-navigation-item text="Reports" icon="document" expanded>
+            <ui5-tag slot="tag" design="Set2" color-scheme="6" hide-state-icon>Beta</ui5-tag>
+            <ui5-side-navigation-sub-item text="Sales Reports"></ui5-side-navigation-sub-item>
+            <ui5-side-navigation-sub-item text="Financial Reports">
+                <ui5-tag slot="tag" design="Set2" color-scheme="7" hide-state-icon>Alpha</ui5-tag>
+            </ui5-side-navigation-sub-item>
+            <ui5-side-navigation-sub-item text="Custom Reports"></ui5-side-navigation-sub-item>
+        </ui5-side-navigation-item>
+
+        <ui5-side-navigation-item text="Analytics" icon="business-objects-experience" unselectable expanded>
+            <ui5-tag slot="tag" design="Set2" color-scheme="8" hide-state-icon>Preview</ui5-tag>
+            <ui5-side-navigation-sub-item text="Overview"></ui5-side-navigation-sub-item>
+            <ui5-side-navigation-sub-item text="Insights">
+                <ui5-tag slot="tag" design="Set2" color-scheme="9" hide-state-icon>Dev</ui5-tag>
+            </ui5-side-navigation-sub-item>
+        </ui5-side-navigation-item>
+
+        <ui5-side-navigation-item text="Legacy Tools" icon="chain-link">
+            <ui5-tag slot="tag" design="Set2" color-scheme="10" hide-state-icon>Sunset</ui5-tag>
+        </ui5-side-navigation-item>
+
+        <ui5-side-navigation-item slot="fixedItems" text="Settings" icon="action-settings"></ui5-side-navigation-item>
+        <ui5-side-navigation-item slot="fixedItems" text="Help" icon="sys-help">
+            <ui5-tag slot="tag" design="Set2" color-scheme="5" hide-state-icon>New</ui5-tag>
+        </ui5-side-navigation-item>
+    </ui5-side-navigation>
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

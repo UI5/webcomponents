@@ -13,7 +13,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					id={`${this._id}-inner`}
 					class="ui5-time-picker-input"
 					part="input"
-					value={this.value}
+					value={this.displayValue}
 					placeholder={this._placeholder}
 					disabled={this.disabled}
 					readonly={this.readonly}
@@ -24,6 +24,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 					onClick={this._handleInputClick}
 					onChange={this._handleInputChange}
 					onInput={this._handleInputLiveChange}
+					onui5-_request-submit={this._onInputRequestSubmit}
 					onFocusIn={this._onfocusin}
 					onKeyDown={this._onkeydown}
 				>
@@ -53,7 +54,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 				</DateTimeInput>
 			</div>
 
-			{ TimePickerPopoverTemplate.call(this) }
+			{TimePickerPopoverTemplate.call(this)}
 		</>
 	);
 }

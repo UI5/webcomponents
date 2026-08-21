@@ -78,7 +78,7 @@ const getDefaultLayoutsByMedia = (): DefaultLayoutConfiguration => {
 				],
 			},
 			"ThreeColumnsStartHiddenMidExpanded": {
-				layout: ["0px", "33%", "67%"],
+				layout: ["0px", "67%", "33%"],
 				separators: [
 					{
 						visible: true,

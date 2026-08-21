@@ -25,12 +25,13 @@ class SearchScope extends UI5Element implements ISearchScope {
 	text!: string;
 
 	/**
-	 * Indicates whether the item is selected
-	 * @default false
+	 * Defines the value of the `ui5-search-scope`.
+	 * Used for selection in Search scopes.
+	 * @default undefined
 	 * @public
 	 */
-	@property({ type: Boolean })
-	selected!: boolean;
+	@property()
+	value?: string;
 
 	get stableDomRef() {
 		return this.getAttribute("stable-dom-ref") || `${this._id}-stable-dom-ref`;

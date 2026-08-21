@@ -1,6 +1,6 @@
 @import "../base/Panel-parameters.css";
 
-:root {
+:host {
 	--_ui5_panel_border_radius: var(--sapGroup_BorderCornerRadius);
 	--_ui5_panel_border_bottom: none;
 	--_ui5_panel_default_header_border: 0.0625rem solid var(--sapGroup_TitleBorderColor);

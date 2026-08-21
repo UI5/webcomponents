@@ -1,8 +1,9 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import ListItemStandard from "./ListItemStandard.js";
 import SuggestionListItemTemplate from "./SuggestionListItemTemplate.js";
+import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -26,15 +27,15 @@ class SuggestionListItem extends ListItemStandard {
 	 * @since 1.0.0-rc.8
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	richDescription!: Array<HTMLElement>
+	@slot()
+	richDescription!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the title text of the suggestion item.
 	 * @public
 	 */
 	@slot({ type: Node, "default": true })
-	titleText!: Array<Node>;
+	titleText!: DefaultSlot<Node>;
 
 	onBeforeRendering() {
 		super.onBeforeRendering();

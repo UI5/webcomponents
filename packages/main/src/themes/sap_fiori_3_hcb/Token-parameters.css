@@ -1,6 +1,6 @@
 @import "../base/Token-parameters.css";
 
-:root {
+:host {
 	--_ui5_token_border_radius: 0.25rem;
 	--_ui5_token_focus_outline_width: 0.125rem;
 	--_ui5_token_readonly_background: var(--sapField_ReadOnly_Background);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
@@ -25,7 +26,8 @@
 <body class="icon1auto">
 	<ui5-toggle-button id="myBtn">Fiori 3/Next</ui5-toggle-button>
 	<br>
-	<ui5-icon title="add equipment" class="icon2auto" id="myIcon" show-tooltip accessible-name="Hello SVG Icon" name="add-equipment"></ui5-icon>
+	<ui5-icon title="add equipment" class="icon2auto" id="myIcon" show-tooltip accessible-name="Hello SVG Icon"
+		name="add-equipment"></ui5-icon>
 	<ui5-icon name="direction-arrows" class="icon-blue icon-medium"></ui5-icon>
 	<ui5-icon name="male" class="icon-blue icon-small"></ui5-icon>
 	<ui5-icon name="female" class="icon-red"></ui5-icon>
@@ -43,36 +45,26 @@
 	<ui5-icon name="female" class="icon3auto" design="Positive"></ui5-icon>
 
 	<h3>Icon with tooltip</h3>
-	<ui5-icon title="company view" class="icon3auto" show-tooltip accessible-name="This is the tooltip`s text" name="company-view"></ui5-icon>
+	<ui5-icon title="company view" class="icon3auto" show-tooltip accessible-name="This is the tooltip`s text"
+		name="company-view"></ui5-icon>
 
 	<h3>API: mode="Interactive"</h3>
 	<ui5-icon mode="Interactive" class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
-	<ui5-icon
-		id="myInteractiveIcon"
-		mode="Interactive"
-		name="add-equipment"
-		class="icon3auto">
+	<ui5-icon id="myInteractiveIcon" mode="Interactive" name="add-equipment" class="icon3auto">
 	</ui5-icon>
 
 	<br>
 
 	<h3>API: mode="Image" (by default)</h3>
 	<ui5-icon class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
-	<ui5-icon
-		id="imageIcon"
-		name="add-equipment"
-		class="icon3auto">
+	<ui5-icon id="imageIcon" name="add-equipment" class="icon3auto">
 	</ui5-icon>
 
 	<br>
 
 	<h3>API: mode="Decorative"</h3>
-	<ui5-icon  mode="Decorative" class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
-	<ui5-icon
-		id="decorativeIcon"
-		mode="Decorative"
-		name="add-equipment"
-		class="icon3auto">
+	<ui5-icon mode="Decorative" class="samples-margin" accessible-name="Hello World" name="horizon/accept"></ui5-icon>
+	<ui5-icon id="decorativeIcon" mode="Decorative" name="add-equipment" class="icon3auto">
 	</ui5-icon>
 
 	<br>
@@ -103,18 +95,18 @@
 	<ui5-date-picker class="icon6auto" value-state="Negative" value="Value State Error">
 	</ui5-date-picker>
 
-	<br/><br/>
+	<br /><br />
 
 	<ui5-title>Tests "click" and "ui5-click" events</ui5-title>
-	<br/>
+	<br />
 	<ui5-icon id="interactive-icon" name="add-equipment" class="icon-blue icon-medium" mode="Interactive"></ui5-icon>
 	<ui5-label>"click"</ui5-label><ui5-input id="click-event" value="0"></ui5-input>
 	<ui5-label>"ui5-click"</ui5-label><ui5-input id="ui5-click-event" value="0"></ui5-input>
-	<br/>
+	<br />
 	<ui5-icon id="non-interactive-icon" name="add-equipment" class="icon-blue icon-medium"></ui5-icon>
 	<ui5-label>"click"</ui5-label><ui5-input id="click-event-2" value="0"></ui5-input>
 	<ui5-label>"ui5-click"</ui5-label><ui5-input id="ui5-click-event-2" value="0"></ui5-input>
-	<br/>
+	<br />
 
 	<ui5-button icon="overflow"></ui5-button>
 	<ui5-icon name="overflow" class="icon7auto"></ui5-icon>
@@ -181,46 +173,151 @@
 			nonInteractiveIconClickCounter = 0,
 			nonInteractiveIconUI5ClickCounter = 0;
 
-		interactiveIcon.addEventListener("click", function() {
+		interactiveIcon.addEventListener("click", function () {
 			inpClickEventIteractive.value = `${++interactiveIconClickCounter}`;
 		});
-		interactiveIcon.addEventListener("ui5-click", function() {
+		interactiveIcon.addEventListener("ui5-click", function () {
 			inpUI5ClickEventIteractive.value = `${++interactiveIconUI5ClickCounter}`;
 		});
 
 
-		nonInteractiveIcon.addEventListener("click", function() {
+		nonInteractiveIcon.addEventListener("click", function () {
 			inpClickEventNonIteractive.value = `${++nonInteractiveIconClickCounter}`;
 		});
-		nonInteractiveIcon.addEventListener("ui5-click", function() {
+		nonInteractiveIcon.addEventListener("ui5-click", function () {
 			inpUI5ClickEventNonIteractive.value = `${++nonInteractiveIconUI5ClickCounter}`;
 		});
 	</script>
 
 	<script type="module">
 		(async () => {
-			var iconNames = await window["sap-ui-webcomponents-bundle"].getIconNames();
-			iconNames.forEach(iconName => {
-				var icon = document.createElement("ui5-icon");
-				icon.name = iconName;
-				allIcons.appendChild(icon);
-			});
+			// Add delay to ensure icons are registered
+			setTimeout(async () => {
+				var iconNames = await window["sap-ui-webcomponents-bundle"].getIconNames();
+				console.log(iconNames);
+
+				// Group icons by collection
+				const collections = {
+					'SAP-icons-v4': [],
+					'SAP-icons-v5': [],
+					'tnt-v2': [],
+					'tnt-v3': [],
+					'business-suite-v1': [],
+					'business-suite-v2': []
+				};
+
+				// Sort icons into collections
+				iconNames.forEach(iconName => {
+					if (iconName.startsWith('SAP-icons-v4/')) {
+						collections['SAP-icons-v4'].push(iconName);
+					} else if (iconName.startsWith('SAP-icons-v5/')) {
+						collections['SAP-icons-v5'].push(iconName);
+					} else if (iconName.startsWith('tnt-v2/')) {
+						collections['tnt-v2'].push(iconName);
+					} else if (iconName.startsWith('tnt-v3/')) {
+						collections['tnt-v3'].push(iconName);
+					} else if (iconName.startsWith('business-suite-v1/')) {
+						collections['business-suite-v1'].push(iconName);
+					} else if (iconName.startsWith('business-suite-v2/')) {
+						collections['business-suite-v2'].push(iconName);
+					}
+				});
+
+				// Render icons for each collection
+				Object.keys(collections).forEach(collectionName => {
+					const section = document.getElementById(collectionName);
+					if (section && collections[collectionName].length > 0) {
+						const countSpan = section.querySelector('.count');
+						if (countSpan) {
+							countSpan.textContent = collections[collectionName].length;
+						}
+						collections[collectionName].forEach(iconName => {
+							var icon = document.createElement("ui5-icon");
+							icon.name = iconName;
+							icon.className = "samples-margin";
+							section.appendChild(icon);
+						});
+					}
+				});
+			}, 2000);
 		})();
 	</script>
 
 	<script nomodule>
-		window["sap-ui-webcomponents-bundle"].getIconNames().then(function(iconNames) {
-			iconNames.forEach(function(iconName) {
-				var icon = document.createElement("ui5-icon");
-				icon.name = iconName;
-				allIcons.appendChild(icon);
-			});
+
+		// Add delay to ensure icons are registered
+		setTimeout(function () {
+			window["sap-ui-webcomponents-bundle"].getIconNames().then(function (iconNames) {
+				// Group icons by collection
+				var collections = {
+					'SAP-icons-v4': [],
+					'SAP-icons-v5': [],
+					'tnt-v2': [],
+					'tnt-v3': [],
+					'business-suite-v1': [],
+					'business-suite-v2': []
+				};
+
+				// Sort icons into collections
+				iconNames.forEach(function (iconName) {
+					if (iconName.startsWith('SAP-icons-v4/')) {
+						collections['SAP-icons-v4'].push(iconName);
+					} else if (iconName.startsWith('SAP-icons-v5/')) {
+						collections['SAP-icons-v5'].push(iconName);
+					} else if (iconName.startsWith('tnt-v2/')) {
+						collections['tnt-v2'].push(iconName);
+					} else if (iconName.startsWith('tnt-v3/')) {
+						collections['tnt-v3'].push(iconName);
+					} else if (iconName.startsWith('business-suite-v1/')) {
+						collections['business-suite-v1'].push(iconName);
+					} else if (iconName.startsWith('business-suite-v2/')) {
+						collections['business-suite-v2'].push(iconName);
+					}
+				});
+
+				// Render icons for each collection
+				Object.keys(collections).forEach(function (collectionName) {
+					var section = document.getElementById(collectionName);
+					if (section && collections[collectionName].length > 0) {
+						var countSpan = section.querySelector('.count');
+						if (countSpan) {
+							countSpan.textContent = collections[collectionName].length;
+						}
+						collections[collectionName].forEach(function (iconName) {
+							var icon = document.createElement("ui5-icon");
+							icon.name = iconName;
+							icon.className = "samples-margin";
+							section.appendChild(icon);
+						});
+					}
+				});
+			}, 2000);
 		});
 	</script>
 
 
-	<section id="allIcons">
-		<h3>All icons</h3>
+	<section id="SAP-icons-v4">
+		<h3>SAP-icons-v4 (<span class="count">0</span>)</h3>
+	</section>
+
+	<section id="SAP-icons-v5">
+		<h3>SAP-icons-v5 (<span class="count">0</span>)</h3>
+	</section>
+
+	<section id="tnt-v2">
+		<h3>tnt-v2 (<span class="count">0</span>)</h3>
+	</section>
+
+	<section id="tnt-v3">
+		<h3>tnt-v3 (<span class="count">0</span>)</h3>
+	</section>
+
+	<section id="business-suite-v1">
+		<h3>business-suite-v1 (<span class="count">0</span>)</h3>
+	</section>
+
+	<section id="business-suite-v2">
+		<h3>business-suite-v2 (<span class="count">0</span>)</h3>
 	</section>
 
 	<section class="sectionLTR1" dir="ltr">
@@ -292,11 +389,12 @@
 	</section>
 
 	<script>
-		myBtn.addEventListener("click", function(event) {
+		myBtn.addEventListener("click", function (event) {
 			var theme = event.target.pressed ? "sap_horizon" : "sap_fiori_3";
 			var Conf = window["sap-ui-webcomponents-bundle"].configuration;
 			Conf.setTheme(theme);
 		});
 	</script>
 </body>
+
 </html>

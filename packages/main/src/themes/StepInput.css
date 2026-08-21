@@ -5,14 +5,12 @@
 
 :host(:not([hidden])) {
 	display: inline-block;
-	width: 100%;
 	line-height: normal;
 	letter-spacing: normal;
 	word-spacing: normal;
 }
 
 :host {
-	--ui5_input_focus_pseudo_element_content: none;
 	color: var(--sapField_TextColor);
 	background-color: var(--sapField_Background);
 	border: var(--_ui5_step_input_border_style);
@@ -20,6 +18,7 @@
 	box-sizing: border-box;
 	height: var(--_ui5_input_height);
 	position: relative;
+	isolation: isolate;
 	margin: var(--_ui5_input_margin_top_bottom) 0;
 	min-width: var(--_ui5_step_input_min_width);
 	text-align: right;
@@ -27,6 +26,10 @@
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+}
+
+[ui5-input] {
+	--ui5_input_focus_pseudo_element_content: none;
 }
 
 :host .ui5-step-input-input {
@@ -97,7 +100,7 @@
 	pointer-events: none;
 	border-radius: var(--sapField_BorderCornerRadius);
 	border-style: var(--_ui5_input_error_warning_border_style);
-	z-index: 1;
+	z-index: 0;
 	border-width: 0px;
 }
 

@@ -1,7 +1,3 @@
-.ui5-suggestions-popover .ui5-multi-combobox-all-items-list {
-	--_ui5_checkbox_width_height: var(--_ui5_list_item_dropdown_base_height);
-}
-
 .ui5-mcb-select-all-header {
 	width: 100%;
 	height: 44px;
@@ -13,6 +9,21 @@
 	top: 0;
 	z-index: 2;
 	background: var(--sapPageHeader_Background);
+	box-sizing: border-box;
+}
+
+.ui5-mcb-select-all-header:focus,
+.ui5-mcb-select-all-header:focus-within {
+	outline: none;
+}
+
+.ui5-mcb-select-all-header:focus::after,
+.ui5-mcb-select-all-header:focus-within::after {
+	content: "";
+	position: absolute;
+	inset: 2px;
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	pointer-events: none;
 }
 
 .ui5-mcb-select-all-checkbox {
@@ -21,12 +32,7 @@
 }
 
 .ui5-mcb-select-all-checkbox::part(root):focus::before {
-	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	border-radius: 0;
-	right: 2px;
-	left: 2px;
-	bottom: 0;
-	top: 0;
+	display: none;
 }
 
 .ui5-mcb-select-all-checkbox::part(label) {
@@ -39,4 +45,25 @@
 
 [ui5-responsive-popover] .ui5-valuestatemessage-header, [ui5-popover] .ui5-valuestatemessage-header  {
 	max-width: inherit;
+}
+
+.ui5-multi-combobox-busy {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	z-index: 42;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: all;
+	width: 100%;
+}
+
+.ui5-multi-combobox-busy:not([active]) {
+	display: none;
+}
+
+[ui5-responsive-popover] [ui5-input] {
+	width: 100%;
 }

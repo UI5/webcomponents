@@ -1,4 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -7,10 +8,11 @@ import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseE
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import {
 	isTabNext,
 	isSpace,
@@ -21,6 +23,7 @@ import {
 	isHome,
 	isDown,
 	isUp,
+	isF7,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import type { MoveEventDetail } from "@ui5/webcomponents-base/dist/util/dragAndDrop/DragRegistry.js";
@@ -35,6 +38,7 @@ import {
 	getAllAccessibleNameRefTexts,
 } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalizedTarget.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
@@ -42,11 +46,11 @@ import ListSelectionMode from "./types/ListSelectionMode.js";
 import ListGrowingMode from "./types/ListGrowingMode.js";
 import ListAccessibleRole from "./types/ListAccessibleRole.js";
 import type ListItemBase from "./ListItemBase.js";
+import type ListItem from "./ListItem.js";
 import type {
 	ListItemBasePressEventDetail,
 } from "./ListItemBase.js";
 import type DropIndicator from "./DropIndicator.js";
-import type ListItem from "./ListItem.js";
 import type {
 	SelectionRequestEventDetail,
 } from "./ListItem.js";
@@ -61,20 +65,31 @@ import listCss from "./generated/themes/List.css.js";
 
 // Texts
 import {
+	LIST_ROLE_DESCRIPTION,
 	LIST_ROLE_LIST_GROUP_DESCRIPTION,
 	LIST_ROLE_LISTBOX_GROUP_DESCRIPTION,
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
 	ARIA_LABEL_LIST_DELETABLE,
+	LIST_ITEM_SELECTED,
+	LIST_ITEM_NOT_SELECTED,
 } from "./generated/i18n/i18n-defaults.js";
 import type CheckBox from "./CheckBox.js";
 import type RadioButton from "./RadioButton.js";
 import { isInstanceOfListItemGroup } from "./ListItemGroup.js";
 import type ListItemGroup from "./ListItemGroup.js";
+import { isInstanceOfListItemCustom } from "./ListItemCustom.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
 const PAGE_UP_DOWN_SIZE = 10;
+
+// Maps the List's accessible-role to the expected child item ARIA role (lowercase)
+const LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE: Partial<Record<`${ListAccessibleRole}`, string>> = {
+	Menu: "menuitem",
+	Tree: "treeitem",
+	ListBox: "option",
+};
 
 // ListItemBase-based events
 type ListItemFocusEventDetail = {
@@ -137,20 +152,47 @@ type ListAccessibilityAttributes = {
  *
  * ### Keyboard Handling
  *
+ * The `ui5-list` follows the SAP Fiori "Intentional Edit Pattern" (forms-editing variant)
+ * and exposes two interaction modes:
+ *
+ * - **Navigation mode** (default) - Arrow keys move focus between items; [Tab] leaves the list.
+ * - **Edit mode** (toggled by [F2] or [F7]) - [Tab] walks through the interactive elements
+ *   inside items (buttons, links, inputs, checkboxes, etc.) and continues into the next item.
+ *
  * #### Basic Navigation
- * The `ui5-list` provides advanced keyboard handling.
- * When a list is focused the user can use the following keyboard
- * shortcuts in order to perform a navigation:
+ * The `ui5-list` provides advanced keyboard handling for navigation between items.
+ * When an item is focused the user can use the following keyboard shortcuts:
  *
  * - [Up] or [Down] - Navigates up and down the items
  * - [Home] - Navigates to first item
  * - [End] - Navigates to the last item
+ * - [Tab] or [Shift] + [Tab] - Moves focus out of the list, to the next/previous control in the tab chain
  *
  * The user can use the following keyboard shortcuts to perform actions (such as select, delete),
  * when the `selectionMode` property is in use:
  *
  * - [Space] - Select an item (if `type` is 'Active') when `selectionMode` is selection
  * - [Delete] - Delete an item if `selectionMode` property is `Delete`
+ *
+ * #### Edit Mode - Reaching Interactive Elements Inside Items
+ * Interactive elements inside a list item (buttons, links, inputs, etc.) are not reached
+ * by [Tab] from navigation mode. To activate them, the user first enters edit mode.
+ *
+ * - [F2] - While focus is on an item, moves focus to the first interactive element inside it.
+ *   While focus is on an interactive element, moves focus back to the item level.
+ *   Unlike [F7], [F2] does not remember the previous position — it always lands on the first interactive element.
+ * - [F7] - While focus is on an item, moves focus to the last remembered internal element
+ *   (or to the first interactive element if none is remembered).
+ *   While focus is on an interactive element, saves its position and moves focus back to the item level.
+ * - [Tab] or [Shift] + [Tab] - While in edit mode, moves focus through the interactive
+ *   elements within an item, then continues into the next/previous item's interactive elements,
+ *   and exits the list after the last/first element.
+ * - [Up] or [Down] - While focus is on an interactive element inside an item, moves focus
+ *   to the element at the same index in the previous/next item. Items with no interactive
+ *   elements are skipped, and boundaries of `ui5-li-group` are crossed.
+ *
+ * **Note:** In `selectionMode="Delete"`, the per-item delete button is reachable through
+ * the edit-mode [Tab] flow described above, in addition to the [Delete] shortcut.
  *
  * #### Fast Navigation
  * This component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].
@@ -395,6 +437,17 @@ class List extends UI5Element {
 	loadingDelay = 1000;
 
 	/**
+	 * Indicates whether the List header is sticky or not.
+	 * If stickyHeader is set to true, then whenever you scroll the content or
+	 * the application, the header of the list will be always visible.
+	 * @default false
+	 * @public
+	 * @since 2.19.0
+	 */
+	 @property({ type: Boolean })
+	 stickyHeader = false;
+
+	/**
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
@@ -509,7 +562,7 @@ class List extends UI5Element {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<ListItemBase | ListItemGroup>;
+	items!: DefaultSlot<ListItemBase | ListItemGroup>;
 
 	/**
 	 * Defines the component header.
@@ -519,7 +572,7 @@ class List extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	header!: Array<HTMLElement>;
+	header!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -534,6 +587,7 @@ class List extends UI5Element {
 	_beforeElement?: HTMLElement | null;
 	_afterElement?: HTMLElement | null;
 	_startMarkerOutOfView: boolean = false;
+	_lastFocusedElementIndex?: number;
 
 	handleResizeCallback: ResizeObserverCallback;
 	onItemFocusedBound: (e: CustomEvent) => void;
@@ -724,7 +778,43 @@ class List extends UI5Element {
 	}
 
 	get ariaDescriptionText() {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._getDescriptionForGroups();
+		const parts = [];
+
+		if (this.accessibleRole === ListAccessibleRole.List && this._hasInteractiveItems) {
+			parts.push(this.defaultAriaDescriptionText);
+		}
+		const externalDescription = this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+
+		if (externalDescription) {
+			parts.push(externalDescription);
+		}
+
+		const groupDescription = this._getDescriptionForGroups();
+		if (groupDescription) {
+			parts.push(groupDescription);
+		}
+
+		return parts.join(" ");
+	}
+
+	get defaultAriaDescriptionText() {
+		return List.i18nBundle.getText(LIST_ROLE_DESCRIPTION);
+	}
+
+	get _hasInteractiveItems() {
+		if (this.selectionMode === ListSelectionMode.Delete) {
+			return true;
+		}
+
+		return this.getItems().some(item => {
+			if (item.getAttribute("type") === "Detail") {
+				return true;
+			}
+			if (isInstanceOfListItemCustom(item)) {
+				return item._hasFocusableElements();
+			}
+			return false;
+		});
 	}
 
 	get growingButtonAriaLabel() {
@@ -797,6 +887,10 @@ class List extends UI5Element {
 		return toLowercaseEnumValue(this.accessibleRole);
 	}
 
+	get noDataItemRole() {
+		return LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE[this.accessibleRole] || "listitem";
+	}
+
 	get classes(): ClassMap {
 		return {
 			root: {
@@ -807,6 +901,7 @@ class List extends UI5Element {
 
 	prepareListItems() {
 		const slottedItems = this.getItemsForProcessing();
+		const inheritedItemRole = LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE[this.accessibleRole];
 
 		slottedItems.forEach((item, key) => {
 			const isLastChild = key === slottedItems.length - 1;
@@ -815,6 +910,7 @@ class List extends UI5Element {
 
 			if (item.hasConfigurableMode) {
 				(item as ListItem)._selectionMode = this.selectionMode;
+				(item as ListItem)._inheritedAccessibleRole = inheritedItemRole;
 			}
 			item.hasBorder = showBottomBorder;
 
@@ -881,6 +977,12 @@ class List extends UI5Element {
 			});
 			if (changePrevented) {
 				this._revertSelection(previouslySelectedItems);
+			} else if (this.selectionMode !== ListSelectionMode.Delete) {
+				const item = e.detail.item;
+				const selectedText = item.selected
+					? List.i18nBundle.getText(LIST_ITEM_SELECTED)
+					: List.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
+				announce(selectedText, "Polite");
 			}
 		}
 	}
@@ -945,6 +1047,8 @@ class List extends UI5Element {
 				groupCount++;
 				// subtract group itself for proper group header item count
 				groupItemCount += groupItems.length - 1;
+			} else if (hasListItems(item)) {
+				item.assignedSlot && items.push(...item.listItems);
 			} else {
 				item.assignedSlot && items.push(item);
 			}
@@ -987,9 +1091,19 @@ class List extends UI5Element {
 			return;
 		}
 
+		// Handle Arrow Up/Down navigation between internal elements
+		const isArrowKey = isUp(e) || isDown(e);
+		const listItem = this._getClosestListItem(e.target as HTMLElement);
+		if (listItem?._isFocusOnInternalElement() && isArrowKey) {
+			const offset = isUp(e) ? -1 : 1;
+			if (this._navigateToAdjacentItem(listItem, offset)) {
+				e.preventDefault();
+				return;
+			}
+		}
+
 		if (isDown(e)) {
-			this._handleDown();
-			e.preventDefault();
+			this._handleDown(e);
 			return;
 		}
 
@@ -1001,6 +1115,38 @@ class List extends UI5Element {
 		if (isTabNext(e)) {
 			this._handleTabNext(e);
 		}
+
+		if (isF7(e)) {
+			this._handleF7(e);
+		}
+	}
+
+	_handleF7(e: KeyboardEvent) {
+		const listItem = this._getClosestListItem(e.target as HTMLElement);
+		if (!listItem || !listItem._hasFocusableElements()) {
+			return;
+		}
+
+		const listItemDomRef = listItem.getFocusDomRef()!;
+		const activeElement = getActiveElement();
+
+		e.preventDefault();
+		e.stopPropagation(); // Prevent Tokenizer's F7 handler from undoing the focus change set by this handler.
+
+		if (activeElement === listItemDomRef) {
+			listItem._editMode = true;
+			listItem._focusInternalElement(this._lastFocusedElementIndex ?? 0);
+			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
+		} else {
+			this._lastFocusedElementIndex = listItem._getFocusedElementIndex();
+			listItem._editMode = false;
+			listItemDomRef.focus();
+		}
+	}
+
+	_getClosestListItem(element: HTMLElement): ListItem | null {
+		const listItem = element.closest<ListItem>("[ui5-li], [ui5-li-custom]");
+		return listItem;
 	}
 
 	_moveItem(item: ListItemBase, e: KeyboardEvent) {
@@ -1163,15 +1309,42 @@ class List extends UI5Element {
 			return;
 		}
 
-		this._shouldFocusGrowingButton();
+		if (this._shouldFocusGrowingButton()) {
+			this.focusGrowingButton();
+		}
 	}
 
-	_handleDown() {
-		if (!this.growsWithButton) {
-			return;
+	_handleDown(e: KeyboardEvent) {
+		if (this._shouldFocusGrowingButton()) {
+			this.focusGrowingButton();
+			e.preventDefault();
+		}
+	}
+
+	_navigateToAdjacentItem(listItem: ListItem, offset: -1 | 1): boolean {
+		const targetInternalElementIndex = listItem?._getFocusedElementIndex();
+		if (targetInternalElementIndex === undefined || targetInternalElementIndex === -1) {
+			return false;
 		}
 
-		this._shouldFocusGrowingButton();
+		const allItems = this.getItems().filter(node => {
+			return "hasConfigurableMode" in node && node.hasConfigurableMode
+				&& (node as ListItem)._hasFocusableElements();
+		}) as ListItem[];
+
+		const itemIndex = allItems.indexOf(listItem) + offset;
+		const nextNode = allItems[itemIndex];
+
+		if (!nextNode) {
+			return false;
+		}
+
+		nextNode._editMode = listItem._editMode;
+		const focusedIndex = nextNode._focusInternalElement(targetInternalElementIndex);
+		if (focusedIndex !== undefined) {
+			this._lastFocusedElementIndex = focusedIndex;
+		}
+		return true;
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -1303,17 +1476,73 @@ class List extends UI5Element {
 			return;
 		}
 
-		this.fireDecoratorEvent("item-toggle", { item: e.detail.item });
+		const item = e.detail?.item;
+
+		if (!item) {
+			return;
+		}
+
+		this.fireDecoratorEvent("item-toggle", { item });
 	}
 
 	onForwardBefore(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : undefined;
+
+			if (prevItem) {
+				prevItem._editMode = true;
+				const focusables = prevItem._getFocusableElements();
+				prevItem._focusInternalElement(focusables.length - 1);
+				this._lastFocusedElementIndex = focusables.length - 1;
+				this.setPreviouslyFocusedItem(prevItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 		this.focusBeforeElement();
 		e.stopPropagation();
 	}
 
 	onForwardAfter(e: CustomEvent) {
-		this.setPreviouslyFocusedItem(e.target as ListItemBase);
+		const listItem = e.target as ListItemBase;
+
+		if (listItem.hasConfigurableMode && (listItem as ListItem)._editMode) {
+			const allItems = this.getItems().filter(node => {
+				return "hasConfigurableMode" in node && node.hasConfigurableMode
+					&& (node as ListItem)._hasFocusableElements();
+			}) as ListItem[];
+
+			const currentIndex = allItems.indexOf(listItem as ListItem);
+			const nextItem = currentIndex >= 0 && currentIndex < allItems.length - 1
+				? allItems[currentIndex + 1] : undefined;
+
+			if (nextItem) {
+				nextItem._editMode = true;
+				nextItem._focusInternalElement(0);
+				this._lastFocusedElementIndex = 0;
+				this.setPreviouslyFocusedItem(nextItem);
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			}
+
+			(listItem as ListItem)._editMode = false;
+		}
+
+		this.setPreviouslyFocusedItem(listItem);
 
 		if (!this.growsWithButton) {
 			this.focusAfterElement();
@@ -1344,13 +1573,14 @@ class List extends UI5Element {
 	}
 
 	_shouldFocusGrowingButton() {
+		if (!this.growsWithButton) {
+			return false;
+		}
 		const items = this.getItems();
 		const lastIndex = items.length - 1;
 		const currentIndex = this._itemNavigation._currentIndex;
 
-		if (currentIndex !== -1 && currentIndex === lastIndex) {
-			this.focusGrowingButton();
-		}
+		return currentIndex !== -1 && currentIndex === lastIndex;
 	}
 
 	getGrowingButton() {
@@ -1478,6 +1708,15 @@ class List extends UI5Element {
 }
 
 List.define();
+
+type ListItemWrapper = {
+	hasListItems: boolean;
+	listItems: Array<ListItemBase>;
+}
+
+const hasListItems = (item: object): item is ListItemWrapper => {
+	return "hasListItems" in item && (item as ListItemWrapper).hasListItems;
+};
 
 export default List;
 export type {

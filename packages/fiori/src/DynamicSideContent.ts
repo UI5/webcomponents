@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -37,7 +38,7 @@ type DynamicSideContentLayoutChangeEventDetail = {
 	sideContentVisible: boolean,
 }
 
-type DynamicSideContentAriaAccessibilityAttributes = Pick<AccessibilityAttributes, "ariaLabel">;
+type DynamicSideContentAriaAccessibilityAttributes = Pick<AccessibilityAttributes, "ariaLabel" | "role">;
 type DynamicSideContentAccessibilityAttributes = {
 	mainContent?: DynamicSideContentAriaAccessibilityAttributes,
 	sideContent?: DynamicSideContentAriaAccessibilityAttributes,
@@ -200,8 +201,13 @@ class DynamicSideContent extends UI5Element {
 	*
 	* The accessibilityAttributes object has the following fields:
 	*
-	*  - **mainContent**: `mainContent.ariaLabel` defines the aria-label of the main content area. Accepts any string.
-	*  - **sideContent**: `sideContent.ariaLabel` defines the aria-label of the side content area. Accepts any string.
+	* - **mainContent**:
+	*   - **ariaLabel**: defines the aria-label of the main content area. Accepts any string.
+	*   - **role**: defines the role of the main content area. When not set, defaults to `"main"`. Set to `undefined` to remove the role attribute.
+	*
+	* - **sideContent**:
+	*   - **ariaLabel**: defines the aria-label of the side content area. Accepts any string.
+	*   - **role**: defines the role of the side content area. When not set, defaults to `"complementary"`. Set to `undefined` to remove the role attribute.
 	*
 	* @default {}
 	* @public
@@ -233,7 +239,7 @@ class DynamicSideContent extends UI5Element {
 	 * @public
 	 */
 	@slot()
-	sideContent!: Array<HTMLElement>;
+	sideContent!: Slot<HTMLElement>;
 
 	@query(".ui5-dsc-main")
 	_mainContent!: HTMLElement;
@@ -369,12 +375,19 @@ class DynamicSideContent extends UI5Element {
 	}
 
 	get accInfo(): DynamicSideContentAccessibilityAttributes {
+		const mainContentAttr = this.accessibilityAttributes.mainContent || {};
+		const sideContentAttr = this.accessibilityAttributes.sideContent || {};
+		const hasMainRole = "role" in mainContentAttr;
+		const hasSideRole = "role" in sideContentAttr;
+
 		return {
 			mainContent: {
-				ariaLabel: this.accessibilityAttributes.mainContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+				ariaLabel: mainContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_MAIN_ARIA_LABEL),
+				role: hasMainRole ? mainContentAttr.role : "main",
 			},
 			sideContent: {
-				ariaLabel: this.accessibilityAttributes.sideContent?.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+				ariaLabel: sideContentAttr.ariaLabel || DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
+				role: hasSideRole ? sideContentAttr.role : "complementary",
 			},
 		};
 	}

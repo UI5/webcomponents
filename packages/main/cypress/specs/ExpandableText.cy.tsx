@@ -173,6 +173,28 @@ describe("ExpandableText", () => {
 				.should("exist");
 		});
 
+		it("Scrolls toggle link into view on expansion", () => {
+			const text = "A".repeat(5000);
+			const maxCharacters = 5;
+
+			cy.mount(
+				<div style={{ height: "200px", overflow: "auto" }}>
+					<ExpandableText text={text} maxCharacters={maxCharacters}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]").shadow().as("expTextShadow");
+			cy.get("@expTextShadow").find(".ui5-exp-text-toggle").as("toggle");
+
+			cy.get("@toggle")
+				.contains(EXPANDABLE_TEXT_SHOW_MORE.defaultText)
+				.realClick();
+
+			cy.get("@toggle")
+				.contains(EXPANDABLE_TEXT_SHOW_LESS.defaultText)
+				.should("be.visible");
+		});
+
 		it("ARIA attributes", () => {
 			const text = "This is a very long text that should be displayed";
 
@@ -198,6 +220,74 @@ describe("ExpandableText", () => {
 				.should("deep.equal", {
 					expanded: true,
 				});
+		});
+	});
+
+	describe("CSS Inheritance", () => {
+		it("Text element inherits white-space from host", () => {
+			const text = "This is a very long text that should be displayed";
+
+			cy.mount(
+				<div style={{ whiteSpace: "pre-wrap" }}>
+					<ExpandableText text={text} maxCharacters={9999}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]")
+				.shadow()
+				.find(".ui5-exp-text-text")
+				.should("have.css", "white-space", "pre-wrap")
+				.and("have.css", "display", "inline");
+		});
+
+		it("Text element inherits white-space 'nowrap' from host", () => {
+			const text = "This is a very long text that should be displayed";
+
+			cy.mount(
+				<div style={{ whiteSpace: "nowrap" }}>
+					<ExpandableText text={text} maxCharacters={9999}></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]")
+				.shadow()
+				.find(".ui5-exp-text-text")
+				.should("have.css", "white-space", "nowrap");
+		});
+
+		it("Popover and popover text inherit white-space, font-family, and font-size from host", () => {
+			const text = "This is a very long text that should be displayed";
+			const maxCharacters = 5;
+
+			cy.mount(
+				<div style={{ whiteSpace: "pre-line" }}>
+					<ExpandableText text={text} maxCharacters={maxCharacters} overflowMode="Popover"></ExpandableText>
+				</div>
+			);
+
+			cy.get("[ui5-expandable-text]").shadow().as("expTextShadow");
+
+			cy.get("@expTextShadow")
+				.find(".ui5-exp-text-toggle")
+				.realClick();
+
+			cy.get("[ui5-expandable-text]").then($host => {
+				const hostWhiteSpace = $host.css("white-space");
+				const hostFontFamily = $host.css("font-family");
+				const hostFontSize = $host.css("font-size");
+
+				cy.get("@expTextShadow")
+					.find(".ui5-exp-text-popover")
+					.should("have.css", "white-space", hostWhiteSpace)
+					.and("have.css", "font-family", hostFontFamily)
+					.and("have.css", "font-size", hostFontSize);
+
+				cy.get("@expTextShadow")
+					.find(".ui5-exp-text-popover-text")
+					.should("have.css", "white-space", hostWhiteSpace)
+					.and("have.css", "font-family", hostFontFamily)
+					.and("have.css", "font-size", hostFontSize);
+			});
 		});
 	});
 

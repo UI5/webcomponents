@@ -154,7 +154,7 @@
 }
 
 .ui5-tab-strip-item--selected .ui5-tab-strip-item-icon-outer::after {
-	bottom: -0.9375rem;
+	bottom: -1rem;
 }
 
 .ui5-tab-strip-item--disabled {

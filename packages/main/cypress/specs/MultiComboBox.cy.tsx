@@ -1,10 +1,13 @@
+import "../../src/Assets.js";
 import MultiComboBox from "../../src/MultiComboBox.js";
 import MultiComboBoxItem from "../../src/MultiComboBoxItem.js";
+import MultiComboBoxItemCustom from "../../src/MultiComboBoxItemCustom.js";
 import MultiComboBoxItemGroup from "../../src/MultiComboBoxItemGroup.js";
 import ResponsivePopover from "../../src/ResponsivePopover.js";
 import Button from "../../src/Button.js";
 import Link from "../../src/Link.js";
 import Input from "../../src/Input.js";
+import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { MULTIINPUT_SHOW_MORE_TOKENS, TOKENIZER_ARIA_CONTAIN_ONE_TOKEN, TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS, TOKENIZER_ARIA_CONTAIN_TOKEN, TOKENIZER_SHOW_ALL_ITEMS, VALUE_STATE_ERROR, VALUE_STATE_TYPE_ERROR, VALUE_STATE_TYPE_SUCCESS, VALUE_STATE_TYPE_WARNING, VALUE_STATE_WARNING } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Security", () => {
@@ -342,31 +345,111 @@ describe("General", () => {
 
 		cy.get("[ui5-multi-combobox]")
 			.as("mcb")
+			.then($mcb => {
+				$mcb.get(0).addEventListener("ui5-selection-change", cy.stub().as("selectionChange"));
+			});
+
+		// With new overflow logic, both tokens should be hidden and show "2 items"
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.should("contain.text", "2")
+			.realClick();
+
+		// In MultiComboBox, clicking "n items" opens the main dropdown
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Find and click the first item (the long token) to deselect it
+		cy.get("@mcb")
+			.find("[ui5-mcb-item]")
+			.first()
+			.should("have.attr", "text", "This is an extremely long token text that will definitely trigger the problematic code path in the deletion flow and should be properly deletable")
+			.realClick();
+
+		cy.get("@selectionChange")
+			.should("have.been.called");
+
+		// After removing the long token, the remaining "Item" token should now be visible
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 1)
+			.should("have.attr", "text", "Item");
+
+		// No "n more" should be shown since the single token fits
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("not.exist");
+	});
+
+	it("Should delete token after focus change when tokenizer collapses", () => {
+		cy.mount(
+			<MultiComboBox style="width: 280px;">
+				<MultiComboBoxItem selected={true} text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="England"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
 			.shadow()
 			.find("[ui5-tokenizer]")
 			.as("tokenizer")
 			.invoke('on', 'ui5-token-delete', cy.spy().as('tokenDelete'));
 
-		// The first token is the long one and should be hidden in the n-more, so we target the second token
+		// Verify initial state: 4 tokens
 		cy.get("@tokenizer")
 			.find("[ui5-token]")
-			.eq(1)
-			.as("token")
-			.should("exist");
+			.should("have.length", 4);
 
-		cy.get("@token")
+		// Click on Albania token to select it (make it focused and selected)
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.first()
+			.as("albaniaToken")
+			.realClick();
+
+		// Verify Albania token is focused
+		cy.get("@albaniaToken")
+			.should("have.attr", "focused");
+
+		// Press Arrow Right to move focus to Argentina
+		cy.realPress("ArrowRight");
+
+		// Wait a moment for tokenizer state to settle
+		cy.wait(100);
+
+		// Click delete icon on Albania token
+		cy.get("@albaniaToken")
 			.shadow()
 			.find("[ui5-icon]")
 			.realClick();
 
+		// Verify token-delete event was fired
 		cy.get("@tokenDelete")
-			.should("have.been.calledOnce")
-			.should("have.been.calledWithMatch", Cypress.sinon.match(event => {
-				return event.detail.tokens.length === 1;
-			}));
+			.should("have.been.calledOnce");
 
-		cy.get("@token")
-			.should("not.exist");
+		// Verify Albania token was removed (3 tokens remaining)
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 3);
+
+		// Verify Albania is no longer the first token
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.first()
+			.invoke("attr", "text")
+			.should("not.equal", "Albania");
 	});
 
 	it("Autocomplete (typeahead)", () => {
@@ -641,68 +724,6 @@ describe("General", () => {
 			}));
 	});
 
-	it.skip("Select All functionality + N-more integration", () => {
-		cy.mount(
-			<><MultiComboBox style="width: 100px" noValidation={true} showSelectAll={true}>
-				<MultiComboBoxItem selected={true} text="Very Very Very Very long Item 1"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
-				<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
-				<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
-			</MultiComboBox><Button id="dummyButton"></Button></>
-		);
-
-		cy.get("[ui5-multi-combobox]")
-			.realClick();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("be.focused");
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find(".inputIcon")
-			.as("icon");
-
-		cy.get("@icon")
-			.realClick();
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find<ResponsivePopover>("ui5-responsive-popover")
-			.as("popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@popover")
-			.find(".ui5-mcb-select-all-checkbox")
-			.should("not.have.attr", "checked");
-
-		cy.get("#dummyButton")
-			.realClick();
-
-		cy.get<ResponsivePopover>("@popover")
-			.ui5ResponsivePopoverClosed();
-
-		cy.get("[ui5-multi-combobox]")
-			.should("not.be.focused");
-
-		cy.get("[ui5-multi-combobox]")
-			.shadow()
-			.find("[ui5-tokenizer]")
-			.shadow()
-			.find(".ui5-tokenizer-more-text")
-			.as("moreButton");
-
-		cy.get("@moreButton")
-			.realClick();
-
-		cy.get<ResponsivePopover>("@popover")
-			.ui5ResponsivePopoverOpened();
-
-		cy.get("@popover")
-			.find(".ui5-mcb-select-all-checkbox")
-			.should("have.attr", "checked");
-	});
-
 	it("Tokenizer expansion on dynamically added tokens", () => {
 		const addTokens = () => {
 			const mcb = document.getElementById("mcb");
@@ -832,7 +853,7 @@ describe("General", () => {
 			.should("have.text", "BG");
 	});
 
-	it("N-more translation", () => {
+	it("N-items translation", () => {
 		cy.mount(
 			<MultiComboBox style="width: 100px">
 				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long text"></MultiComboBoxItem>
@@ -855,11 +876,12 @@ describe("General", () => {
 			})
 	});
 
-	it("N-items translation", () => {
+	it("N-more translation", () => {
 		cy.mount(
-			<MultiComboBox style="width: 100%">
-				<MultiComboBoxItem selected={true} text="This is a token with ridicilously long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long text"></MultiComboBoxItem>
+			<MultiComboBox style="width: 400px">
+				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -874,8 +896,260 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 1));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
 			})
+	});
+
+	it("preselects items based on selectedValues property", () => {
+		cy.mount(
+			<MultiComboBox style="width: 300px" selectedValues={["al", "en"]}>
+				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Denmark" value="dk"></MultiComboBoxItem>
+				<MultiComboBoxItem text="England" value="en"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("ui5-multi-combobox")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["al", "en"]);
+
+		cy.get("[ui5-mcb-item]")
+			.eq(0)
+			.should("be.selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(2)
+			.should("be.selected");
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", "2");
+	});
+
+	it("updates selectedValues when a token is deleted", () => {
+		cy.mount(
+			<MultiComboBox style="width: 300px" selectedValues={["dk", "en"]}>
+				<MultiComboBoxItem text="Albania" value="al"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Denmark" value="dk"></MultiComboBoxItem>
+				<MultiComboBoxItem text="England" value="en"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-mcb-item]")
+			.eq(1)
+			.should("be.selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(2)
+			.should("be.selected");
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.eq(1)
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", "1");
+
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["dk"]);
+	});
+
+	it("updates selectedValues when selecting items via checkbox", () => {
+		cy.mount(
+			<MultiComboBox style="width: 300px">
+				<MultiComboBoxItem text="Germany" value="DE"></MultiComboBoxItem>
+				<MultiComboBoxItem text="France" value="FR"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Italy" value="IT"></MultiComboBoxItem>
+				<MultiComboBoxItem text="United States" value="US"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
+
+		// Open the dropdown
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		// Select first item via checkbox
+		cy.get("[ui5-mcb-item]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE"]);
+
+		// Select second item via checkbox
+		cy.get("[ui5-mcb-item]")
+			.eq(1)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE", "FR"]);
+
+		// Select third and fourth items
+		cy.get("[ui5-mcb-item]")
+			.eq(2)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]")
+			.eq(3)
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["DE", "FR", "IT", "US"]);
+	});
+
+	it("selects correct items when selectedValues is set before items are added", () => {
+		// First mount with selectedValues but no items
+		cy.mount(
+			<MultiComboBox id="mcb-late-items" style="width: 300px" selectedValues={["FR", "US"]} />
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["FR", "US"]);
+
+		// No tokens yet since no items
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 0);
+
+		// Now add items dynamically
+		cy.get("@mcb").then($mcb => {
+			const mcb = $mcb[0];
+
+			const items = [
+				{ text: "Germany", value: "DE" },
+				{ text: "France", value: "FR" },
+				{ text: "Italy", value: "IT" },
+				{ text: "United States", value: "US" },
+			];
+
+			items.forEach(item => {
+				const mcbItem = document.createElement("ui5-mcb-item");
+				mcbItem.setAttribute("text", item.text);
+				mcbItem.setAttribute("value", item.value);
+				mcb.appendChild(mcbItem);
+			});
+		});
+
+		// Verify items with matching values are now selected
+		cy.get("[ui5-mcb-item]")
+			.eq(1) // France
+			.should("have.attr", "selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(3) // United States
+			.should("have.attr", "selected");
+
+		// Verify non-matching items are not selected
+		cy.get("[ui5-mcb-item]")
+			.eq(0) // Germany
+			.should("not.have.attr", "selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(2) // Italy
+			.should("not.have.attr", "selected");
+
+		// Verify tokens are created
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 2);
+	});
+
+	it("updates selectedValues when selecting item via Enter key (typeahead)", () => {
+		cy.mount(
+			<MultiComboBox style="width: 300px">
+				<MultiComboBoxItem text="Germany" value="DE"></MultiComboBoxItem>
+				<MultiComboBoxItem text="France" value="FR"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Canada" value="CA"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Japan" value="JP"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb");
+
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
+
+		// Type "Ca" to trigger typeahead for Canada
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.realClick()
+			.realType("Ca");
+
+		// Press Enter to select the autocompleted item
+		cy.realPress("Enter");
+
+		// Verify selectedValues is updated
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["CA"]);
+
+		// Verify token is created
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		// Type "Ja" to select Japan
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.realType("Ja");
+
+		cy.realPress("Enter");
+
+		// Verify selectedValues now has both values
+		cy.get("@mcb")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", ["CA", "JP"]);
 	});
 });
 
@@ -1291,6 +1565,11 @@ describe("Selection and filtering", () => {
 			.as("popover")
 			.ui5ResponsivePopoverOpened();
 
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("not.have.attr", "checked");
+
 		cy.get("@popover")
 			.find("[ui5-list] slot")
 			.should("have.length", 2);
@@ -1316,6 +1595,10 @@ describe("Selection and filtering", () => {
 
 		cy.get<ResponsivePopover>("@popover")
 			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.should("not.have.attr", "checked");
 
 		cy.get("@popover")
 			.find("[ui5-list] slot")
@@ -1420,6 +1703,72 @@ describe("Selection and filtering", () => {
 			.find("[ui5-token]")
 			.should("exist")
 			.and("have.length", 1);
+	});
+
+	it("Filters correctly when typing text that doesn't match typeahead but matches filter", () => {
+		// Bug: typing "k" showed all items because valueBeforeAutoComplete was empty
+		// "k" matches "Kingdom" in StartsWithPerTerm but no item starts with "k"
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("k");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "Kingdom" starting with "k")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
+	});
+
+	it("Filters correctly when continuing to type after typeahead match fails", () => {
+		// Bug: typing "and" showed items matching "a" because valueBeforeAutoComplete stayed "a"
+		// after typeahead matched "Albania" on first keystroke
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Argentina"></MultiComboBoxItem>
+				<MultiComboBoxItem text="The United Kingdom of Great Britain and Northern Ireland"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("and");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		// Should only show "The United Kingdom..." (has word "and")
+		// Not Albania or Argentina (which start with "a" but don't have word starting with "and")
+		cy.get("@popover")
+			.find("[ui5-list] slot")
+			.should("have.length", 1);
 	});
 });
 
@@ -1704,6 +2053,211 @@ describe("Validation & Value State", () => {
 			.find(".ui5-valuestatemessage--warning")
 			.should("not.exist");
 	});
+
+	it("Value state resets when selecting an item after invalid input", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.clear();
+
+		cy.realType("Item");
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@mcb")
+			.find("[ui5-mcb-item]")
+			.eq(0)
+			.realClick();
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+	});
+
+	it("Clears invalid/incomplete values on focus out when noValidation is not set", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox>
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "None");
+	});
+
+	it("Does not clear invalid values on focus out when noValidation is set", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox noValidation>
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("@mcb")
+			.should("be.focused");
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+	});
+
+	it("Preserves selected tokens when clearing input on focus out", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox>
+					<MultiComboBoxItem text="Item 1" selected></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+
+		cy.get("@mcb")
+			.realClick();
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 1);
+	});
+
+	it("Preserves initial Negative value state when clearing input on focus out", () => {
+		cy.mount(
+			<>
+				<Button id="btn">Focus target</Button>
+				<MultiComboBox valueState="Negative">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBox>
+			</>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.should("have.attr", "value-state", "Negative");
+
+		cy.get("@mcb")
+			.realClick();
+
+		cy.realType("xyz");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "xyz");
+
+		cy.get("#btn")
+			.realClick()
+			.should("be.focused");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("input")
+			.should("have.value", "");
+
+		cy.get("@mcb")
+			.should("have.attr", "value-state", "Negative");
+	});
 });
 
 describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", () => {
@@ -1847,7 +2401,7 @@ describe("Keyboard interaction when pressing Ctrl + Alt + F8 for navigation", ()
 
 	});
 
-	it.skip("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
+	it("When list item is selected and pressing [Ctrl + Alt + F8], first link is focused. [Arrow Down] moves focus to the first list item", () => {
 		cy.get("[ui5-multi-combobox]")
 			.as("multi-combobox");
 
@@ -2175,6 +2729,85 @@ describe("Event firing", () => {
 
 		cy.get("@submitEvent")
 			.should("have.been.called");
+	});
+
+	it("tests if value-state-change event is fired correctly", () => {
+		cy.mount(
+				<MultiComboBox onValueStateChange={cy.stub().as("valueStateChangeEvent")}>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 5"></MultiComboBoxItem>
+				</MultiComboBox>
+		);
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("input")
+			.as("input")
+			.realClick()
+			.realType("I");
+
+		cy.get("@valueStateChangeEvent")
+			.should("not.have.been.called");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.get("@input")
+			.realType("x");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledOnce");
+
+		cy.realPress("Backspace");
+		cy.realPress("Backspace");
+
+		cy.get("@valueStateChangeEvent")
+			.should("have.been.calledTwice");
+	});
+
+	it("fires selection-change and updates selectedValues on token deletion", () => {
+		const selectionChangeSpy = cy.stub().as("selectionChangeSpy");
+		cy.mount(
+			<MultiComboBox style="width: 300px" selectedValues={["1", "3"]} onSelectionChange={selectionChangeSpy}>
+				<MultiComboBoxItem text="Item 1" value="1"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 1" value="2"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Item 1" value="3"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.realPress("ArrowRight");
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.eq(1)
+			.should("be.focused");
+
+		cy.realPress("Space");
+		cy.realPress("Backspace");
+
+		cy.get("@tokenizer")
+			.should("be.empty");
+
+		cy.get("@selectionChangeSpy")
+			.should("have.been.calledOnce");
+		cy.get("@selectionChangeSpy").should('have.been.calledWithMatch', Cypress.sinon.match(event => {
+			return event.detail.item === undefined;
+		}));
+		cy.get("[ui5-multi-combobox]")
+			.invoke("prop", "selectedValues")
+			.should("deep.equal", []);
 	});
 });
 
@@ -2635,6 +3268,31 @@ describe("Accessibility", () => {
 			.find(".ui5-checkbox-root")
 			.should("not.have.attr", "tabindex");
 	});
+
+	it("Should announce selected state to screen readers", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Selected Item"></MultiComboBoxItem>
+				<MultiComboBoxItem text="Unselected Item"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]")
+			.eq(0)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Selected");
+
+		cy.get("[ui5-mcb-item]")
+			.eq(1)
+			.shadow()
+			.find(".ui5-hidden-text")
+			.should("contain.text", "Not Selected");
+	});
 });
 
 describe("Grouping", () => {
@@ -3021,7 +3679,7 @@ describe("Keyboard Handling", () => {
 		cy.mount(
 			<>
 				<Button id="btn"></Button>
-				<MultiComboBox style="width: 100%" noTypeahead={true}>
+				<MultiComboBox style="width: 100%" noTypeahead={true} noValidation={true}>
 					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
 					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
 				</MultiComboBox>
@@ -3054,6 +3712,54 @@ describe("Keyboard Handling", () => {
 			.shadow()
 			.find("input")
 			.should("have.value", "I");
+	});
+
+	it("should deselect all tokens on [Escape] key when focus is on tokenizer", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem selected={true} text="Andora"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Bulgaria"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Canada"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 3);
+
+		cy.get("[ui5-multi-combobox]")
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.last()
+			.should("be.focused");
+
+		cy.realPress(["Shift", "Home"]);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("have.attr", "selected");
+			});
+
+		cy.realPress("Escape");
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.each($token => {
+				cy.wrap($token).should("not.have.attr", "selected");
+			});
 	});
 
 	it("Selects an item when enter is pressed and value matches a text of an item in the list", () => {
@@ -3700,7 +4406,7 @@ describe("Keyboard Handling", () => {
 
 	it("Should select/deselect a token with CTRL+SPACE", () => {
 		cy.mount(
-			<MultiComboBox noValidation={true}>
+			<MultiComboBox style={{ width: "300px" }} noValidation={true}>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
 			</MultiComboBox>
@@ -4048,13 +4754,20 @@ describe("Keyboard Handling", () => {
 	});
 
 	describe("Copy/Cut/Paste keyboard shortcuts", () => {
-		const dispatchPasteEvent = () => {
+		const dispatchPasteEvent = (pastedText?: string) => {
 			cy.get("@input").then($input => {
 				const input = $input.get(0) as HTMLInputElement;
+
+				// Create clipboardData with the pasted text
+				const dataTransfer = new DataTransfer();
+				if (pastedText) {
+					dataTransfer.setData("text/plain", pastedText);
+				}
 
 				const pasteEvent = new ClipboardEvent("paste", {
 					bubbles: true,
 					cancelable: true,
+					clipboardData: dataTransfer,
 				});
 
 				input.dispatchEvent(pasteEvent);
@@ -4098,28 +4811,18 @@ describe("Keyboard Handling", () => {
 				</MultiComboBox>
 			</>)
 
-			cy.window().then(win => {
-				cy.stub(win.navigator.clipboard, "readText")
-					.as("clipboardRead")
-					.returns("22222");
-			});
-
 			cy.get("[ui5-multi-combobox]").as("mcb2");
 			cy.get("@mcb2").shadow().find("input").as("input");
 
 			cy.get("@input").realClick();
 			cy.get("@input").should("be.focused");
 
-			dispatchPasteEvent();
-
-			cy.get("@clipboardRead").should("have.been.calledOnce");
+			dispatchPasteEvent("22222");
 
 			cy.get("@input").should("have.value", "22222");
 			cy.get("@mcb2").should("have.prop", "open", true);
 
-			dispatchPasteEvent();
-
-			cy.get("@clipboardRead").should("have.been.calledTwice");
+			dispatchPasteEvent("22222");
 
 			cy.get("@input").should("have.value", "2222222222");
 		});
@@ -4390,5 +5093,563 @@ describe("MultiComboBox Composition", () => {
 			.shadow()
 			.find("[ui5-tokenizer] [ui5-token]")
 			.should("have.length", 0);
+	});
+});
+
+describe("Loading State", () => {
+	it("should display busy indicator when loading is true", () => {
+		cy.mount(
+			<MultiComboBox loading open>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("not.exist");
+	});
+
+	it("should hide busy indicator and show items when loading becomes false", () => {
+		cy.mount(
+			<MultiComboBox loading open>
+				<MultiComboBoxItem text="Item 1" />
+				<MultiComboBoxItem text="Item 2" />
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find("ui5-responsive-popover")
+			.as("popover");
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("exist");
+
+		cy.get("@mcb")
+			.invoke("prop", "loading", false);
+
+		cy.get("@popover")
+			.find("ui5-busy-indicator")
+			.should("not.exist");
+
+		cy.get("@popover")
+			.find("ui5-list")
+			.should("exist");
+	});
+});
+
+describe("Validation inside a form", () => {
+	it("has correct validity for valueMissing", () => {
+		cy.mount(
+			<form>
+				<MultiComboBox id="mcbInAForm" no-validation required>
+					<MultiComboBoxItem text="Albania"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Denmark"></MultiComboBoxItem>
+					<MultiComboBoxItem text="England"></MultiComboBoxItem>
+				</MultiComboBox>
+				<button type="submit" id="submitBtn">Submit</button>
+			</form>
+		);
+
+		cy.get("form").then($form => {
+			$form.get(0).addEventListener("submit", (e) => e.preventDefault());
+			$form.get(0).addEventListener("submit", cy.stub().as("submit"));
+		});
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.not.been.called");
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: true },
+				validity: { valueMissing: true, valid: false },
+				checkValidity: false,
+				reportValidity: false
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("exist");
+
+		cy.get("@mcb")
+			.realType("Albania");
+
+		cy.get("@mcb")
+			.ui5AssertValidityState({
+				formValidity: { valueMissing: false },
+				validity: { valueMissing: false, valid: true },
+				checkValidity: true,
+				reportValidity: true
+			});
+
+		cy.get("#mcbInAForm:invalid")
+			.should("not.exist");
+
+		cy.get("#submitBtn")
+			.realClick();
+
+		cy.get("@submit")
+			.should("have.been.calledOnce");
+	});
+});
+
+describe("MultiComboBoxItemCustom - Rendering", () => {
+	it("should render custom content correctly", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">
+					<span role="img" aria-label="Flag">🇩🇪</span> Germany
+				</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">
+					<span role="img" aria-label="Flag">🇫🇷</span> France
+				</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("contain.text", "🇩🇪 Germany");
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("contain.text", "🇫🇷 France");
+	});
+
+	it("should render checkbox for custom items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item-custom]").shadow().find("[ui5-checkbox]").should("exist");
+	});
+
+	it("should mix regular and custom items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Standard Item"></MultiComboBoxItem>
+				<MultiComboBoxItemCustom text="Custom Item">
+					<strong>Custom Item</strong>
+				</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]").should("have.length", 1);
+		cy.get("[ui5-mcb-item-custom]").should("have.length", 1);
+	});
+});
+
+describe("MultiComboBoxItemCustom - Filtering", () => {
+	it("should filter custom items by text property", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">🇫🇷 France</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="Spain">🇪🇸 Spain</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.realClick();
+
+		cy.get("@multiCombobox").realPress("G");
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(2).should("not.have.prop", "_isVisible", true);
+	});
+
+	it("should filter mixed regular and custom items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Austria"></MultiComboBoxItem>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItem text="France"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.realClick();
+
+		cy.get("@multiCombobox").realPress("G");
+
+		cy.get("[ui5-mcb-item]").eq(0).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-mcb-item]").eq(1).should("not.have.prop", "_isVisible", true);
+	});
+});
+
+describe("MultiComboBoxItemCustom - Selection", () => {
+	it("should select custom item via checkbox click", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">🇫🇷 France</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 1);
+	});
+
+	it("should select multiple custom items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">🇫🇷 France</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="Spain">🇪🇸 Spain</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(1).shadow().find("[ui5-checkbox]").realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("have.prop", "selected", true);
+		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+
+	it("should work with selectedValues property", () => {
+		cy.mount(
+			<MultiComboBox selectedValues={["DE", "FR"]}>
+				<MultiComboBoxItemCustom text="Germany" value="DE">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France" value="FR">🇫🇷 France</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="Spain" value="ES">🇪🇸 Spain</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(2).should("have.prop", "selected", false);
+
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+});
+
+describe("MultiComboBoxItemCustom - Tokens", () => {
+	it("should display token with text property", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany" selected>🇩🇪 Germany</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-token]")
+			.should("have.length", 1)
+			.and("have.prop", "text", "Germany");
+	});
+
+	it("should display tokens for multiple selected items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany" selected>🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France" selected>🇫🇷 France</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.shadow()
+			.find("[ui5-token]")
+			.should("have.length", 2);
+
+		cy.get("@multiCombobox").shadow().find("[ui5-token]").eq(0).should("have.prop", "text", "Germany");
+		cy.get("@multiCombobox").shadow().find("[ui5-token]").eq(1).should("have.prop", "text", "France");
+	});
+
+	it("should remove selection when token is deleted", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany" selected>🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">🇫🇷 France</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-token]")
+			.eq(0)
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", false);
+		cy.get("[ui5-multi-combobox]").shadow().find("[ui5-token]").should("have.length", 0);
+	});
+});
+
+describe("MultiComboBoxItemCustom - Navigation", () => {
+	it("should navigate through custom items with arrow keys", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="France">🇫🇷 France</MultiComboBoxItemCustom>
+				<MultiComboBoxItemCustom text="Spain">🇪🇸 Spain</MultiComboBoxItemCustom>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.realClick();
+
+		cy.get("@multiCombobox")
+			.should("be.focused");
+
+		cy.get("@multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@multiCombobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item-custom]").eq(1).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowUp"]);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
+	});
+
+	it("should navigate through mixed items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Austria"></MultiComboBoxItem>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItem text="France"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.realClick();
+
+		cy.get("@multiCombobox")
+			.should("be.focused");
+
+		cy.get("@multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@multiCombobox")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("be.focused");
+
+		cy.realPress(["Meta", "ArrowDown"]);
+		cy.get("[ui5-mcb-item]").eq(1).should("be.focused");
+	});
+});
+
+describe("MultiComboBoxItemCustom - Mixed Selection", () => {
+	it("should select both regular and custom items", () => {
+		cy.mount(
+			<MultiComboBox>
+				<MultiComboBoxItem text="Austria"></MultiComboBoxItem>
+				<MultiComboBoxItemCustom text="Germany">🇩🇪 Germany</MultiComboBoxItemCustom>
+				<MultiComboBoxItem text="France"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("multiCombobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-mcb-item]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+		cy.get("[ui5-mcb-item-custom]").eq(0).shadow().find("[ui5-checkbox]").realClick();
+
+		cy.get("[ui5-mcb-item]").eq(0).should("have.prop", "selected", true);
+		cy.get("[ui5-mcb-item-custom]").eq(0).should("have.prop", "selected", true);
+
+		cy.get("@multiCombobox").shadow().find("[ui5-token]").should("have.length", 2);
+	});
+});
+
+describe("Select All with Groups", () => {
+	it("should check the 'select all' checkbox when all items in groups are selected", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3"></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4"></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("not.have.attr", "checked");
+
+		cy.get("@selectAllCheckbox")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("@mcb")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.find("[ui5-token]")
+			.should("have.length", 4);
+	});
+
+	it("should uncheck the 'select all' checkbox when deselecting one item in a group", () => {
+		cy.mount(
+			<MultiComboBox showSelectAll={true}>
+				<MultiComboBoxItemGroup headerText="Group 1">
+					<MultiComboBoxItem text="Item 1" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 2" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+				<MultiComboBoxItemGroup headerText="Group 2">
+					<MultiComboBoxItem text="Item 3" selected={true}></MultiComboBoxItem>
+					<MultiComboBoxItem text="Item 4" selected={true}></MultiComboBoxItem>
+				</MultiComboBoxItemGroup>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.as("mcb")
+			.shadow()
+			.find(".inputIcon")
+			.realClick();
+
+		cy.get("@mcb")
+			.shadow()
+			.find<ResponsivePopover>("ui5-responsive-popover")
+			.as("popover")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@popover")
+			.find(".ui5-mcb-select-all-checkbox")
+			.as("selectAllCheckbox")
+			.should("have.attr", "checked");
+
+		cy.get("[ui5-mcb-item]")
+			.first()
+			.shadow()
+			.find("[ui5-checkbox]")
+			.realClick();
+
+		cy.get("@selectAllCheckbox")
+			.should("not.have.attr", "checked");
+	});
+});
+
+describe("Tokenizer overflow calculation", () => {
+	afterEach(() => {
+		// Reset language regardless of test outcome to avoid leaking into other specs.
+		cy.wrap(setLanguage("en"));
+	});
+
+	it("should not cause a render loop when the 'n more' width toggles overflow at boundary widths", () => {
+		// Regression for a render loop: at ~208px the number of overflowing tokens depends on
+		// the "n more" indicator width, which itself changes with the number of visible tokens,
+		// so the overflow count oscillates. Korean copy is wider than English, exposing the bug
+		// at this width. A loop trips RenderQueue's "processed too many times" guard, which
+		// surfaces as an uncaught exception and fails this test automatically — no polling needed.
+		cy.wrap(setLanguage("ko"));
+
+		cy.mount(
+			<MultiComboBox style="width: 208px">
+				<MultiComboBoxItem selected text="보기"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="임포트"></MultiComboBoxItem>
+				<MultiComboBoxItem selected text="편집"></MultiComboBoxItem>
+			</MultiComboBox>
+		);
+
+		cy.get("[ui5-multi-combobox]")
+			.shadow()
+			.find("[ui5-tokenizer]")
+			.as("tokenizer");
+
+		// The component must settle on a stable state: all three tokens overflow, so the
+		// indicator reports "3". Cypress retries this until it holds; a loop would throw first.
+		cy.get("@tokenizer")
+			.shadow()
+			.find(".ui5-tokenizer-more-text")
+			.should("exist")
+			.and("contain.text", "3");
+
+		// All three tokens remain in the DOM (overflowing tokens are hidden, not removed).
+		cy.get("@tokenizer")
+			.find("[ui5-token]")
+			.should("have.length", 3);
 	});
 });

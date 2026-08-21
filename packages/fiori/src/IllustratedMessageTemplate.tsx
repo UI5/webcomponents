@@ -5,7 +5,10 @@ export default function IllustratedMessageTemplate(this: IllustratedMessage) {
 	return (
 		<div class="ui5-illustrated-message-root">
 			<div class="ui5-illustrated-message-inner">
-				<div class="ui5-illustrated-message-illustration">
+				<div class="ui5-illustrated-message-illustration"
+					role={this.decorative ? "presentation" : "img"}
+					aria-hidden={this.decorative ? true : undefined}
+					aria-label={!this.decorative ? this.name : undefined}>
 					{renderIllustration.call(this)}
 				</div>
 				<div class="ui5-illustrated-message-text-and-actions-container">
@@ -36,7 +39,7 @@ export default function IllustratedMessageTemplate(this: IllustratedMessage) {
 				</div>
 			</div>
 
-			<svg xmlns="http://www.w3.org/2000/svg" class="ui5-illustrated-message-util">
+			<svg xmlns="http://www.w3.org/2000/svg" class="ui5-illustrated-message-util" aria-hidden="true">
 				<defs>
 					<pattern id="sapIllus_PatternShadow" data-name="sapIllus_PatternShadow" width="3" height="5.5"
 						patternUnits="userSpaceOnUse" viewBox="0 0 3 5.5">

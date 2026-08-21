@@ -1,4 +1,4 @@
-:root {
+:host {
 	--ui5-avatar-hover-box-shadow-offset: 0px 0px 0px 0.0625rem var();
 	--ui5-avatar-initials-color: var(--sapContent_ImagePlaceholderForegroundColor);
 	--ui5-avatar-border-radius: .25rem;

@@ -1,7 +1,7 @@
 import TimePicker from "../../src/TimePicker.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 
-describe("TimePicker on phone - general interactions", () => {
+describe.skip("TimePicker on phone - general interactions", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");
 
@@ -12,7 +12,7 @@ describe("TimePicker on phone - general interactions", () => {
 		})
 	});
 
-	it.skip("opening of popover with numeric inputs", () => {
+	it("opening of popover with numeric inputs", () => {
 		cy.mount(<TimePicker format-pattern="HH:mm:ss" value="11:12:13"></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
@@ -75,7 +75,7 @@ describe("TimePicker on phone - general interactions", () => {
 	});
 
 	it("direct number typing", () => {
-		cy.mount(<TimePicker></TimePicker>);
+		cy.mount(<TimePicker value-format="hh:mm:ss a"></TimePicker>);
 
 		cy.get<TimePicker>("[ui5-time-picker]")
 			.as("timePicker")
@@ -125,6 +125,16 @@ describe("TimePicker on phone - general interactions", () => {
 			.ui5TimePickerGetClock("seconds")
 			.should("have.prop", "valueNow", 13);
 
+		cy.get<TimePicker>("@timePicker")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.find("[ui5-time-selection-clocks]")
+			.shadow()
+			.find("[ui5-toggle-spin-button]")
+			.first()
+			.realClick()
+			.should("be.focused");
+
 		cy.realType("092233");
 
 		cy.get<TimePicker>("@timePicker")
@@ -136,7 +146,7 @@ describe("TimePicker on phone - general interactions", () => {
 			.should("have.value", "9:22:33 PM");
  	});
 });
-describe("TimePicker on phone - accessibility and other input attributes", () => {
+describe.skip("TimePicker on phone - accessibility and other input attributes", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");
 

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_wiz_tab_focus_outline: 1px dotted var(--sapContent_FocusColor);
 	--_ui5_wiz_tab_selected_bg: var(--sapSelectedColor);
 	--_ui5_wiz_tab_border: 1px solid var(--sapSelectedColor);

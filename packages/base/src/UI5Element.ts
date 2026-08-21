@@ -5,7 +5,7 @@ import merge from "./thirdparty/merge.js";
 import { boot } from "./Boot.js";
 import UI5ElementMetadata from "./UI5ElementMetadata.js";
 import type {
-	Slot,
+	Slot as SlotMetadata,
 	SlotValue,
 	State,
 	PropertyValue,
@@ -18,6 +18,8 @@ import {
 	renderDeferred,
 	renderImmediately,
 	cancelRender,
+	unregisterElement,
+	registerElement,
 } from "./Render.js";
 import { registerTag, isTagRegistered, recordTagRegistrationFailure } from "./CustomElementsRegistry.js";
 import { observeDOMNode, unobserveDOMNode } from "./DOMObserver.js";
@@ -44,6 +46,7 @@ import type I18nBundle from "./i18nBundle.js";
 import { fetchCldr } from "./asset-registries/LocaleData.js";
 import getLocale from "./locale/getLocale.js";
 import { getLanguageChangePending } from "./config/Language.js";
+import createInstanceChecker from "./util/createInstanceChecker.js";
 
 const DEV_MODE = true;
 let autoId = 0;
@@ -79,6 +82,15 @@ const defaultConverter = {
 		if (type === Number) {
 			return value === null ? undefined : parseFloat(value);
 		}
+
+		if (type === Object || type === Array) {
+			try {
+				return JSON.parse(value as string) as object | Array<unknown>;
+			} catch {
+				return value;
+			}
+		}
+
 		return value;
 	},
 	toAttribute(value: unknown, type: unknown) {
@@ -86,12 +98,14 @@ const defaultConverter = {
 			return value as boolean ? "" : null;
 		}
 
-		// don't set attributes for arrays and objects
+		// Don't reflect arrays and objects to the DOM. Attributes exist for CSS selectors
+		// (which don't apply to objects/arrays) and for debugging via the Elements panel
+		// (devs will use the console with property access for these). Declarative
+		// attribute -> property is still supported via fromAttribute (JSON.parse).
 		if (type === Object || type === Array) {
 			return null;
 		}
 
-		// object, array, other
 		if (value === null || value === undefined) {
 			return null;
 		}
@@ -169,6 +183,16 @@ type TargetedEventHandler<D, T> = {
 }["asMethod"];
 type Convert<T, K extends UI5Element> = { [Property in keyof T as `on${KebabToPascal<string & Property>}`]: IsAny<T[Property], any, TargetedEventHandler<T[Property], K>> }
 
+// Create a unique symbol as a marker
+declare const SlotMarker: unique symbol;
+declare const DefaultSlotMarker: unique symbol;
+
+export type Slot<T> = T[] & { [SlotMarker]: true };
+export type DefaultSlot<T> = T[] & { [DefaultSlotMarker]: true };
+
+export type IsSlot<T> = T extends { [SlotMarker]: true } ? true : T extends { [DefaultSlotMarker]: true } ? true : false;
+export type IsDefaultSlot<T> = T extends { [DefaultSlotMarker]: true } ? true : false;
+
 /**
  * @class
  * Base class for all UI5 Web Components
@@ -180,8 +204,9 @@ abstract class UI5Element extends HTMLElement {
 	eventDetails!: NotEqual<this, UI5Element> extends true ? object : {
 		[k: string]: any
 	};
-	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"], this> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"], this>
+	_jsxEvents!: Omit<JSX.DOMAttributes<this>, keyof Convert<this["eventDetails"], this> | "onClose" | "onToggle" | "onChange" | "onSelect" | "onInput"> & Convert<this["eventDetails"], this>;
 	_jsxProps!: Pick<JSX.AllHTMLAttributes<HTMLElement>, GlobalHTMLAttributeNames> & ElementProps<this> & Partial<this["_jsxEvents"]> & { key?: any };
+
 	__id?: string;
 	_suppressInvalidation: boolean;
 	_changedState: Array<ChangeInfo>;
@@ -277,9 +302,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	/**
-	 * Returns a unique ID for this UI5 Element
-	 *
-	 * @deprecated - This property is not guaranteed in future releases
+	 * Returns a unique ID for this UI5 Element.
 	 * @protected
 	 */
 	get _id() {
@@ -313,6 +336,8 @@ abstract class UI5Element extends HTMLElement {
 
 		const ctor = this.constructor as typeof UI5Element;
 
+		registerElement(this);
+
 		this.setAttribute(ctor.getMetadata().getPureTag(), "");
 		if (ctor.getMetadata().supportsF6FastNavigation() && !this.hasAttribute("data-sap-ui-fastnavgroup")) {
 			this.setAttribute("data-sap-ui-fastnavgroup", "true");
@@ -329,17 +354,48 @@ abstract class UI5Element extends HTMLElement {
 		}
 
 		if (!ctor.asyncFinished) {
-			await ctor.definePromise;
+			await ctor._definePromise;
+		}
+
+		// Wait for any pending language change to finish before rendering to avoid rendering
+		// with not fully loaded locale data. Once it resolves, proceed with the normal render
+		// path so onEnterDOM and the rest of the lifecycle fire exactly as they would otherwise.
+		// Note: the reRenderAllUI5Elements call that closes out the language change may already
+		// have rendered this element via the deferred queue (since it was registered above), so
+		// we skip renderImmediately if the first render has already happened.
+		const languageChangePending = getLanguageChangePending();
+		if (ctor.getMetadata().isLanguageAware() && languageChangePending) {
+			await languageChangePending;
 		}
 
 		if (!this._inDOM) { // Component removed from DOM while _processChildren was running
 			return;
 		}
 
-		renderImmediately(this);
+		if (!this._rendered) {
+			renderImmediately(this);
+		}
 		this._domRefReadyPromise._deferredResolve!();
 		this._fullyConnected = true;
 		this.onEnterDOM();
+
+		if (this.hasAttribute("autofocus")) {
+			// Honor the global `autofocus` HTML attribute. Done manually because
+			// Firefox/Safari close the autofocus window at end-of-parse, before
+			// async UI5 components have rendered their shadow DOM. Per HTML spec,
+			// only the first element with `autofocus` in document order wins.
+			requestAnimationFrame(() => {
+				this.focus();
+			});
+		}
+	}
+
+	get definePromise(): Promise<void> {
+		const ctor = this.constructor as typeof UI5Element;
+		if (!ctor.asyncFinished && ctor._definePromise) {
+			return ctor._definePromise;
+		}
+		return Promise.resolve();
 	}
 
 	/**
@@ -364,6 +420,7 @@ abstract class UI5Element extends HTMLElement {
 		this._domRefReadyPromise._deferredResolve!();
 
 		cancelRender(this);
+		unregisterElement(this);
 	}
 
 	/**
@@ -452,7 +509,7 @@ abstract class UI5Element extends HTMLElement {
 		const autoIncrementMap = new Map<string, number>();
 		const slottedChildrenMap = new Map<string, Array<{ child: Node, idx: number }>>();
 
-		const allChildrenUpgraded = domChildren.map(async (child, idx) => {
+		domChildren.forEach((child, idx) => {
 			// Determine the type of the child (mainly by the slot attribute)
 			const slotName = getSlotName(child);
 			const slotData = slotsMap[slotName];
@@ -464,6 +521,32 @@ abstract class UI5Element extends HTMLElement {
 					console.warn(`Unknown slotName: ${slotName}, ignoring`, child, `Valid values are: ${validValues}`); // eslint-disable-line
 				}
 
+				return;
+			}
+
+			const propertyName = slotData.propertyName || slotName;
+
+			if (slottedChildrenMap.has(propertyName)) {
+				slottedChildrenMap.get(propertyName)!.push({ child, idx });
+			} else {
+				slottedChildrenMap.set(propertyName, [{ child, idx }]);
+			}
+		});
+
+		// Distribute the child in the _state object, keeping the Light DOM order,
+		// not the order elements are defined.
+		slottedChildrenMap.forEach((children, propertyName) => {
+			this._state[propertyName] = children.sort((a, b) => a.idx - b.idx).map(_ => _.child);
+			this._state[kebabToCamelCase(propertyName)] = this._state[propertyName];
+		});
+
+		const allChildrenUpgraded = domChildren.map(async child => {
+			// Determine the type of the child (mainly by the slot attribute)
+			const slotName = getSlotName(child);
+			const slotData = slotsMap[slotName];
+
+			// Check if the slotName is supported
+			if (slotData === undefined) {
 				return;
 			}
 
@@ -506,24 +589,9 @@ abstract class UI5Element extends HTMLElement {
 			if (child instanceof HTMLSlotElement) {
 				this._attachSlotChange(child, slotName, !!slotData.invalidateOnChildChange);
 			}
-
-			const propertyName = slotData.propertyName || slotName;
-
-			if (slottedChildrenMap.has(propertyName)) {
-				slottedChildrenMap.get(propertyName)!.push({ child, idx });
-			} else {
-				slottedChildrenMap.set(propertyName, [{ child, idx }]);
-			}
 		});
 
 		await Promise.all(allChildrenUpgraded);
-
-		// Distribute the child in the _state object, keeping the Light DOM order,
-		// not the order elements are defined.
-		slottedChildrenMap.forEach((children, propertyName) => {
-			this._state[propertyName] = children.sort((a, b) => a.idx - b.idx).map(_ => _.child);
-			this._state[kebabToCamelCase(propertyName)] = this._state[propertyName];
-		});
 
 		// Compare the content of each slot with the cached values and invalidate for the ones that changed
 		let invalidated = false;
@@ -559,7 +627,7 @@ abstract class UI5Element extends HTMLElement {
 	 * Removes all children from the slot and detaches listeners, if any
 	 * @private
 	 */
-	_clearSlot(slotName: string, slotData: Slot) {
+	_clearSlot(slotName: string, slotData: SlotMetadata) {
 		const propertyName = slotData.propertyName || slotName;
 		const children = this._state[propertyName] as Array<SlotValue>;
 
@@ -669,6 +737,14 @@ abstract class UI5Element extends HTMLElement {
 
 		const properties = ctor.getMetadata().getProperties();
 		const propData = properties[name];
+
+		// Object and Array properties are not reflected to attributes. The attribute is only
+		// consumed as a declarative input (parsed via fromAttribute on attributeChangedCallback),
+		// so the framework must neither write nor remove it - leave any author-set attribute alone.
+		if (propData.type === Object || propData.type === Array) {
+			return;
+		}
+
 		const attrName = camelToKebabCase(name);
 		const converter = propData.converter || defaultConverter;
 
@@ -1331,7 +1407,7 @@ abstract class UI5Element extends HTMLElement {
 	}
 
 	static asyncFinished: boolean;
-	static definePromise: Promise<void> | undefined;
+	static _definePromise: Promise<void> | undefined;
 	static i18nBundleStorage: Record<string, I18nBundle> = {};
 
 	static get i18nBundles(): Record<string, I18nBundle> {
@@ -1357,7 +1433,7 @@ abstract class UI5Element extends HTMLElement {
 			});
 			this.asyncFinished = true;
 		};
-		this.definePromise = defineSequence();
+		this._definePromise = defineSequence();
 
 		const tag = this.getMetadata().getTag();
 
@@ -1406,9 +1482,7 @@ abstract class UI5Element extends HTMLElement {
 /**
  * Always use duck-typing to cover all runtimes on the page.
  */
-const instanceOfUI5Element = (object: any): object is UI5Element => {
-	return "isUI5Element" in object;
-};
+const instanceOfUI5Element = createInstanceChecker<UI5Element>("isUI5Element");
 
 export default UI5Element;
 export {

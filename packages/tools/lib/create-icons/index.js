@@ -1,40 +1,42 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const iconTemplate = (name, pathData, ltr, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+const iconTemplate = (name, pathData, ltr, viewBox, collection, packageName) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 const name = "${name}";
 const pathData = "${pathData}";
 const ltr = ${ltr};
 const accData = null;
+const viewBox = "${viewBox}";
 const collection = "${collection}";
 const packageName = "${packageName}";
 
-registerIcon(name, { pathData, ltr, collection, packageName });
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
 
 export default "${collection}/${name}";
-export { pathData, ltr, accData };`;
+export { pathData, ltr, viewBox, accData };`;
 
 
-const iconAccTemplate = (name, pathData, ltr, accData, collection, packageName, versioned) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+const iconAccTemplate = (name, pathData, ltr, viewBox, accData, collection, packageName, versioned) => `import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 import { ${accData.key} } from "${versioned ? "../" : "./"}generated/i18n/i18n-defaults.js";
 
 const name = "${name}";
 const pathData = "${pathData}";
 const ltr = ${ltr};
 const accData = ${accData.key};
+const viewBox = "${viewBox}";
 const collection = "${collection}";
 const packageName = "${packageName}";
 
-registerIcon(name, { pathData, ltr, accData, collection, packageName });
+registerIcon(name, { pathData, ltr, viewBox, accData, collection, packageName });
 
 export default "${collection}/${name}";
-export { pathData, ltr, accData };`;
+export { pathData, ltr, viewBox, accData };`;
 
 
 
 const collectionTemplate = (name, versions, fullName) => `import { isLegacyThemeFamilyAsync } from "@ui5/webcomponents-base/dist/config/Theme.js";
-import { pathData as pathData${versions[0]}, ltr, accData } from "./${versions[0]}/${name}.js";
+import { pathData as pathData${versions[0]}, ltr, viewBox, accData } from "./${versions[0]}/${name}.js";
 import { pathData as pathData${versions[1]} } from "./${versions[1]}/${name}.js";
 
 const getPathData = async() => {
@@ -42,27 +44,29 @@ const getPathData = async() => {
 };
 
 export default "${fullName}";
-export { getPathData, ltr, accData };`;
+export { getPathData, ltr, viewBox, accData };`;
 
 
 const typeDefinitionTemplate = (name, accData, collection) => `declare const pathData: string;
 declare const ltr: boolean;
+declare const viewBox: string;
 declare const accData: ${accData ? '{ key: string; defaultText: string; }' : null}
 declare const _default: "${collection}/${name}";
 
 export default _default;
-export { pathData, ltr, accData };`
+export { pathData, ltr, viewBox, accData };`
 
 const collectionTypeDefinitionTemplate = (name, accData) => `declare const getPathData: () => Promise<string>;
 declare const ltr: boolean;
+declare const viewBox: string;
 declare const accData: ${accData ? '{ key: string; defaultText: string; }' : null}
 declare const _default: "${name}";
 
 export default _default;
-export { getPathData, ltr, accData };`
+export { getPathData, ltr, viewBox, accData };`
 
 
-const svgTemplate = (pathData) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+const svgTemplate = (pathData, viewBox) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">
 	<path d="${pathData}"/>
 </svg>`;
 
@@ -80,15 +84,16 @@ const createIcons = async (argv) => {
 		const iconData = json.data[name];
 		const pathData = iconData.path;
 		const ltr = !!iconData.ltr;
+		const viewBox = iconData.viewBox || "0 0 512 512";
 		const acc = iconData.acc;
 		const packageName = json.packageName;
 		const collection = json.collection;
 		const versioned = json.version;
 
-		const content = acc ? iconAccTemplate(name, pathData, ltr, acc, collection, packageName, versioned) : iconTemplate(name, pathData, ltr, collection, packageName);
+		const content = acc ? iconAccTemplate(name, pathData, ltr, viewBox, acc, collection, packageName, versioned) : iconTemplate(name, pathData, ltr, viewBox, collection, packageName);
 
 		promises.push(fs.writeFile(path.join(destDir, `${name}.js`), content));
-		promises.push(fs.writeFile(path.join(destDir, `${name}.svg`), svgTemplate(pathData)));
+		promises.push(fs.writeFile(path.join(destDir, `${name}.svg`), svgTemplate(pathData, viewBox)));
 		promises.push(fs.writeFile(path.join(destDir, `${name}.d.ts`), typeDefinitionTemplate(name, acc, collection)));
 
 		// For versioned icons collections, the script creates top level (unversioned) module that internally imports the versioned ones.

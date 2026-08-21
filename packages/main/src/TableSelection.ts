@@ -178,7 +178,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 
 		const selectedArray = this.selectedAsArray;
-		return this._table.rows.every(row => {
+		return this._table.rows.filter(row => row._isSelectable).every(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedArray.includes(rowKey);
 		});
@@ -229,7 +229,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 	_selectHeaderRow(selected: boolean) {
 		const selectedSet = this.selectedAsSet;
-		this._table!.rows.forEach(row => {
+		this._table!.rows.filter(row => row._isSelectable).forEach(row => {
 			const rowKey = this.getRowKey(row);
 			selectedSet[selected ? "add" : "delete"](rowKey);
 		});

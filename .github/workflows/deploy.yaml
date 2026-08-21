@@ -17,6 +17,9 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
 
+permissions:
+  contents: write
+
 jobs:
   deploy-nightly:
     if: ${{ github.event.inputs.deploy_type == 'nightly' || github.event_name == 'schedule' }}
@@ -45,7 +48,7 @@ jobs:
         yarn ci:deploy:nightly
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.7.6
       with:
         branch: gh-pages # The branch the action should deploy to.
         folder: packages/website/build # The folder the action should deploy.
@@ -79,7 +82,7 @@ jobs:
         yarn ci:deploy
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.7.6
       with:
         branch: gh-pages # The branch the action should deploy to.
         folder: packages/website/build # The folder the action should deploy.

@@ -1,0 +1,7 @@
+:host {
+	height: 100%;
+}
+
+:host([is-overflowed]) ::slotted(*) {
+	width: 100%;
+}

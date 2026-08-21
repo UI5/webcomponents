@@ -511,5 +511,184 @@ describe("Timeline - getFocusDomRef", () => {
 	});
 });
 
+describe("TimelineItem iconTooltip", () => {
+	it("should render tooltip on the icon when iconTooltip is set", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemWithTooltip"
+					titleText="Deployment"
+					icon={accept}
+					iconTooltip="Success"
+				>
+					Deployed successfully.
+				</TimelineItem>
+			</Timeline>
+		);
 
+		cy.get("#itemWithTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("have.attr", "show-tooltip")
+			.and("exist");
+
+		cy.get("#itemWithTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("have.attr", "accessible-name", "Success");
+	});
+
+	it("should not render tooltip on icon when iconTooltip is not set", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemWithoutTooltip"
+					titleText="Deployment"
+					icon={accept}
+				>
+					Deployed successfully.
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("#itemWithoutTooltip")
+			.shadow()
+			.find("[ui5-icon]")
+			.should("not.have.attr", "show-tooltip");
+	});
+
+	it("should include iconTooltip in the accessible label of the bubble", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem
+					id="itemAccLabel"
+					titleText="Build"
+					subtitleText="Step 1"
+					icon={accept}
+					iconTooltip="Passed"
+					name="CI Pipeline"
+				>
+					Build completed.
+				</TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("#itemAccLabel")
+			.shadow()
+			.find(".ui5-tli-bubble")
+			.should("have.attr", "aria-label")
+			.and("include", "Passed");
+	});
+});
+
+describe("Timeline header and info-bar slots", () => {
+	it("renders the header slot when content is provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="header-content" data-testid="header">Controls</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("exist");
+
+		cy.get("#header-content").should("be.visible");
+	});
+
+	it("renders the info-bar slot when content is provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="infoBar" id="info-bar-content">Active filters: 2</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("exist");
+
+		cy.get("#info-bar-content").should("be.visible");
+	});
+
+	it("does not render header or info-bar wrappers when slots are empty", () => {
+		cy.mount(
+			<Timeline>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("not.exist");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("not.exist");
+	});
+
+	it("renders both slots side by side when both are provided", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="hdr">Search/Filter/Sort</div>
+				<div slot="infoBar" id="ifb">Status: 3 items</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header")
+			.should("exist");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-info-bar")
+			.should("exist");
+
+		cy.get("#hdr").should("be.visible");
+		cy.get("#ifb").should("be.visible");
+	});
+
+	it("reflects stickyHeader as the [sticky-header] host attribute and pins the whole header area", () => {
+		cy.mount(
+			<Timeline stickyHeader={true}>
+				<div slot="header" id="hdr">Header</div>
+				<div slot="infoBar" id="ifb">Info</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("have.attr", "sticky-header");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header-area")
+			.should("have.css", "position", "sticky");
+	});
+
+	it("does not apply sticky positioning when stickyHeader is false (default)", () => {
+		cy.mount(
+			<Timeline>
+				<div slot="header" id="hdr">Header</div>
+				<div slot="infoBar" id="ifb">Info</div>
+				<TimelineItem titleText="Item" subtitleText="now" icon={calendar}></TimelineItem>
+			</Timeline>
+		);
+
+		cy.get("[ui5-timeline]")
+			.should("not.have.attr", "sticky-header");
+
+		cy.get("[ui5-timeline]")
+			.shadow()
+			.find(".ui5-timeline-header-area")
+			.should("not.have.css", "position", "sticky");
+	});
+});
 

@@ -22,7 +22,9 @@ const generate = async () => {
 	await fs.mkdir("src/generated/", { recursive: true });
 	await fs.writeFile("src/generated/AssetParameters.ts", fileContent);
 
-	console.log("Assets parameters generated.");
+	if (process.env.UI5_VERBOSE === "true") {
+		console.log("Assets parameters generated.");
+	}
 }
 
 const filePath = process.argv[1];

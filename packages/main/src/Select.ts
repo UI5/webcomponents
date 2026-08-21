@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import {
 	isSpace,
@@ -34,9 +35,8 @@ import "@ui5/webcomponents-icons/dist/information.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
+import type { Timeout, AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
-import { getScopedVarName } from "@ui5/webcomponents-base/dist/CustomElementsScope.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import List from "./List.js";
 import type { ListItemClickEventDetail } from "./List.js";
@@ -49,9 +49,11 @@ import {
 	VALUE_STATE_TYPE_INFORMATION,
 	VALUE_STATE_TYPE_ERROR,
 	VALUE_STATE_TYPE_WARNING,
-	INPUT_SUGGESTIONS_TITLE,
 	LIST_ITEM_POSITION,
 	SELECT_ROLE_DESCRIPTION,
+	SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX,
+	SELECT_LISTBOX_LABEL,
+	SELECT_DIALOG_CANCEL_BUTTON,
 	FORM_SELECTABLE_REQUIRED,
 } from "./generated/i18n/i18n-defaults.js";
 import Label from "./Label.js";
@@ -89,6 +91,12 @@ type SelectChangeEventDetail = {
 type SelectLiveChangeEventDetail = {
 	selectedOption: IOption,
 }
+
+type I18nTextArg = Parameters<I18nBundle["getText"]>[0];
+
+const isPrintableCharacter = (e: KeyboardEvent) => {
+	return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+};
 
 /**
  * @class
@@ -399,7 +407,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ "default": true, type: HTMLElement, invalidateOnChildChange: true })
-	options!: Array<IOption>;
+	options!: DefaultSlot<IOption>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -414,7 +422,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @public
 	*/
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	/**
 	 * Defines the HTML element that will be displayed in the component input part,
@@ -429,7 +437,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * @since 1.17.0
 	*/
 	@slot()
-	label!: Array<HTMLElement>;
+	label!: Slot<HTMLElement>;
 
 	get formValidityMessage() {
 		return Select.i18nBundle.getText(FORM_SELECTABLE_REQUIRED);
@@ -469,7 +477,7 @@ class Select extends UI5Element implements IFormInputElement {
 	onBeforeRendering() {
 		this._applySelection();
 
-		this.style.setProperty(getScopedVarName("--_ui5-input-icons-count"), `${this.iconsCount}`);
+		this.style.setProperty("--_ui5-input-icons-count", `${this.iconsCount}`);
 	}
 
 	onAfterRendering() {
@@ -690,15 +698,20 @@ class Select extends UI5Element implements IFormInputElement {
 			this._handleHomeKey(e);
 		} else if (isEnd(e)) {
 			this._handleEndKey(e);
-		} else if (isEnter(e)) {
+		// When focus is on the list item, Enter triggers _handleItemPress via the List item-click
+		// event, which already calls _handleSelectionChange and prevents default.
+		// Skip here to avoid a double selection change.
+		} else if (isEnter(e) && !e.defaultPrevented) {
 			this._handleSelectionChange();
 		} else if (isUp(e) || isDown(e)) {
 			this._handleArrowNavigation(e);
+		} else if (isPrintableCharacter(e)) {
+			this._handleKeyboardNavigation(e);
 		}
 	}
 
 	_handleKeyboardNavigation(e: KeyboardEvent) {
-		if (isEnter(e) || this.readonly) {
+		if (this.readonly) {
 			return;
 		}
 
@@ -941,9 +954,9 @@ class Select extends UI5Element implements IFormInputElement {
 	_applyFocusToSelectedItem() {
 		this.options.forEach(option => {
 			option.focused = option.selected;
-			if (option.focused && isPhone()) {
-				// on phone, the popover opens full screen (dialog)
-				// move focus to option to read out dialog header
+			if (option.focused) {
+				// move focus to the selected option so screen readers
+				// can announce it when the popover opens
 				option.focus();
 			}
 		});
@@ -1037,7 +1050,11 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _headerTitleText() {
-		return Select.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
+		return Select.i18nBundle.getText(SELECT_LISTBOX_LABEL as I18nTextArg);
+	}
+
+	get _cancelButtonText() {
+		return Select.i18nBundle.getText(SELECT_DIALOG_CANCEL_BUTTON);
 	}
 
 	get _currentlySelectedOption() {
@@ -1085,6 +1102,7 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get styles() {
+		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			popoverHeader: {
 				"display": "block",
@@ -1096,12 +1114,27 @@ class Select extends UI5Element implements IFormInputElement {
 			},
 			responsivePopover: {
 				"min-width": `${this.offsetWidth}px`,
+				"max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
+				"margin-top": "var(--sapField_BorderWidth)",
 			},
 		};
 	}
 
 	get ariaLabelText() {
 		return getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this);
+	}
+
+	get _effectiveListAccessibleName() {
+		return this.ariaLabelText || this._headerTitleText;
+	}
+
+	get _effectivePopoverAccessibleName() {
+		const fieldName = this._effectiveListAccessibleName;
+		if (!fieldName) {
+			return undefined;
+		}
+		const prefix = Select.i18nBundle.getText(SELECT_POPOVER_ACCESSIBLE_NAME_PREFIX as I18nTextArg);
+		return `${prefix} ${fieldName}`;
 	}
 
 	get shouldDisplayDefaultValueStateMessage() {
@@ -1172,6 +1205,18 @@ class Select extends UI5Element implements IFormInputElement {
 	get ariaDescribedByIds() {
 		const ids = [this.valueStateTextId, this.ariaDescriptionTextId].filter(Boolean);
 		return ids.length ? ids.join(" ") : undefined;
+	}
+
+	get accessibilityInfo() {
+		return {
+			role: "combobox" as AriaRole,
+			type: this._ariaRoleDescription,
+			description: this.text,
+			label: this.ariaLabelText,
+			readonly: this.readonly,
+			required: this.required,
+			disabled: this.disabled,
+		};
 	}
 
 	_updateAssociatedLabelsTexts() {

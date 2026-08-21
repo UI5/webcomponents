@@ -1,6 +1,7 @@
 @import "./InvisibleTextStyles.css";
 @import "./InputIcon.css";
 @import "./InputSharedStyles.css";
+@import "./FormComponents.css";
 
 :host(:not([hidden])) {
 	display: inline-block;
@@ -21,6 +22,10 @@
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+}
+
+:host([show-clear-icon]) {
+	min-width: 15rem;
 }
 
 :host(:not([disabled]):not([readonly]):active) {

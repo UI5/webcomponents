@@ -4,6 +4,7 @@ import FormItem from "../../src/FormItem.js";
 import FormGroup from "../../src/FormGroup.js";
 import Label from "../../src/Label.js";
 import Text from "../../src/Text.js";
+import test from "../../src/form-utils/FormUtils.js";
 import Input from "../../src/Input.js";
 import { FORM_GROUP_ACCESSIBLE_NAME } from "../../src/generated/i18n/i18n-defaults.js";
 
@@ -433,246 +434,82 @@ describe("General API", () => {
 			.should("have.prop", "colsXl", 1);
 	});
 
-	describe("tests items ordering within a group", () => {
-		beforeEach(() => {
-			cy.mount(<Form layout="S3 M4 L5 XL6">
-				<FormGroup>
+	it("colSpan sets group column spans per breakpoint", () => {
+		cy.mount(
+			<Form layout="S1 M2 L3 XL4">
+				<FormGroup id="gr1" headerText="Group 1" col-span="S1 M2 L3 XL4">
 					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>1</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>2</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>3</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>4</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>5</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>6</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>7</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>8</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>9</span>
-					</FormItem>
-					<FormItem>
-						<span slot="labelContent">Item:</span>
-						<span>10</span>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
 					</FormItem>
 				</FormGroup>
-			</Form>);
-		});
 
-		it("10 items in 6 columns", () => {
-			cy.get("[ui5-form]")
-				.invoke("width", 1500);
+				<FormGroup id="gr2" headerText="Group 2">
+					<FormItem>
+						<Label slot="labelContent">Twitter</Label>
+						<Text>@sap</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
 
-			cy.get("[ui5-form-item]")
-				.as("items");
-
-			cy.get("@items")
-				.eq(0)
-				.should("have.css", "order", "0");
-
-			cy.get("@items")
-				.eq(1)
-				.should("have.css", "order", "6");
-
-			cy.get("@items")
-				.eq(2)
-				.should("have.css", "order", "1");
-
-			cy.get("@items")
-				.eq(3)
-				.should("have.css", "order", "7");
-
-			cy.get("@items")
-				.eq(4)
-				.should("have.css", "order", "2");
-
-			cy.get("@items")
-				.eq(5)
-				.should("have.css", "order", "8");
-
-			cy.get("@items")
-				.eq(6)
-				.should("have.css", "order", "3");
-
-			cy.get("@items")
-				.eq(7)
-				.should("have.css", "order", "9");
-
-			cy.get("@items")
-				.eq(8)
-				.should("have.css", "order", "4");
-
-			cy.get("@items")
-				.eq(9)
-				.should("have.css", "order", "5");
-		});
-
-		it("10 items in 5 columns", () => {
-			cy.get("[ui5-form]")
-				.invoke("width", 1300);
-
-			cy.get("[ui5-form-item]")
-				.as("items");
-
-			cy.get("@items")
-				.eq(0)
-				.should("have.css", "order", "0");
-
-			cy.get("@items")
-				.eq(1)
-				.should("have.css", "order", "5");
-
-			cy.get("@items")
-				.eq(2)
-				.should("have.css", "order", "1");
-
-			cy.get("@items")
-				.eq(3)
-				.should("have.css", "order", "6");
-
-			cy.get("@items")
-				.eq(4)
-				.should("have.css", "order", "2");
-
-			cy.get("@items")
-				.eq(5)
-				.should("have.css", "order", "7");
-
-			cy.get("@items")
-				.eq(6)
-				.should("have.css", "order", "3");
-
-			cy.get("@items")
-				.eq(7)
-				.should("have.css", "order", "8");
-
-			cy.get("@items")
-				.eq(8)
-				.should("have.css", "order", "4");
-
-			cy.get("@items")
-				.eq(9)
-				.should("have.css", "order", "9");
-		});
-
-		it("10 items in 4 columns", () => {
-			cy.get("[ui5-form]")
-				.invoke("width", 800);
-
-			cy.get("[ui5-form-item]")
-				.as("items");
-
-			cy.get("@items")
-				.eq(0)
-				.should("have.css", "order", "0");
-
-			cy.get("@items")
-				.eq(1)
-				.should("have.css", "order", "4");
-
-			cy.get("@items")
-				.eq(2)
-				.should("have.css", "order", "8");
-
-			cy.get("@items")
-				.eq(3)
-				.should("have.css", "order", "1");
-
-			cy.get("@items")
-				.eq(4)
-				.should("have.css", "order", "5");
-
-			cy.get("@items")
-				.eq(5)
-				.should("have.css", "order", "9");
-
-			cy.get("@items")
-				.eq(6)
-				.should("have.css", "order", "2");
-
-			cy.get("@items")
-				.eq(7)
-				.should("have.css", "order", "6");
-
-			cy.get("@items")
-				.eq(8)
-				.should("have.css", "order", "3");
-
-			cy.get("@items")
-				.eq(9)
-				.should("have.css", "order", "7");
-		});
-
-		it("10 items in 3 columns", () => {
-			cy.get("[ui5-form]")
-				.invoke("width", 500);
-
-			cy.get("[ui5-form-item]")
-				.as("items");
-
-			cy.get("@items")
-				.eq(0)
-				.should("have.css", "order", "0");
-
-			cy.get("@items")
-				.eq(1)
-				.should("have.css", "order", "3");
-
-			cy.get("@items")
-				.eq(2)
-				.should("have.css", "order", "6");
-
-			cy.get("@items")
-				.eq(3)
-				.should("have.css", "order", "9");
-
-			cy.get("@items")
-				.eq(4)
-				.should("have.css", "order", "1");
-
-			cy.get("@items")
-				.eq(5)
-				.should("have.css", "order", "4");
-
-			cy.get("@items")
-				.eq(6)
-				.should("have.css", "order", "7");
-
-			cy.get("@items")
-				.eq(7)
-				.should("have.css", "order", "2");
-
-			cy.get("@items")
-				.eq(8)
-				.should("have.css", "order", "5");
-
-			cy.get("@items")
-				.eq(9)
-				.should("have.css", "order", "8");
-		});
+		cy.get("#gr1")
+			.should("have.prop", "colsS", 1)
+			.and("have.prop", "colsM", 2)
+			.and("have.prop", "colsL", 3)
+			.and("have.prop", "colsXl", 4);
 	});
+
+	it("columnSpan takes priority over colSpan", () => {
+		cy.mount(
+			<Form layout="S1 M2 L3 XL4">
+				<FormGroup id="gr1" headerText="Group 1" columnSpan={2} col-span="S1 M1 L1 XL1">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+
+				<FormGroup id="gr2" headerText="Group 2">
+					<FormItem>
+						<Label slot="labelContent">Twitter</Label>
+						<Text>@sap</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("#gr1")
+			.should("have.prop", "colsS", 2)
+			.and("have.prop", "colsM", 2)
+			.and("have.prop", "colsL", 2)
+			.and("have.prop", "colsXl", 2);
+	});
+
+	it("partial colSpan falls back to auto-distribution for unspecified breakpoints", () => {
+		cy.mount(
+			<Form layout="S1 M2 L3 XL4">
+				<FormGroup id="gr1" headerText="Group 1" col-span="XL3">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+
+				<FormGroup id="gr2" headerText="Group 2">
+					<FormItem>
+						<Label slot="labelContent">Twitter</Label>
+						<Text>@sap</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("#gr1")
+			.should("have.prop", "colsXl", 3)
+			.and("have.prop", "colsS", 1);
+	});
+
 });
 
 describe("Accessibility", () => {
@@ -1121,5 +958,287 @@ describe("Accessibility", () => {
 		// assert: back to the first Form
 		cy.get("#nameInp")
 			.should("be.focused");
+	});
+});
+
+describe("Rendering", () => {
+	it("form root sets --ui5-form-columns-* CSS variables from layout", () => {
+		cy.mount(
+			<Form layout="S1 M2 L3 XL4">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-root")
+			.should($el => {
+				const style = $el[0].style;
+				expect(style.getPropertyValue("--ui5-form-columns-s")).to.equal("1");
+				expect(style.getPropertyValue("--ui5-form-columns-m")).to.equal("2");
+				expect(style.getPropertyValue("--ui5-form-columns-l")).to.equal("3");
+				expect(style.getPropertyValue("--ui5-form-columns-xl")).to.equal("4");
+			});
+	});
+
+	it("form root sets --ui5-form-item-layout-* CSS variables from label-span", () => {
+		cy.mount(
+			<Form labelSpan="S12 M4 L4 XL4">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-root")
+			.should($el => {
+				const style = $el[0].style;
+				expect(style.getPropertyValue("--ui5-form-item-layout-S")).to.equal("1fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-M")).to.equal("4fr 8fr 0fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-L")).to.equal("4fr 8fr 0fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-XL")).to.equal("4fr 8fr 0fr");
+			});
+	});
+
+	it("form root sets --ui5-form-item-layout-* to '1fr' when labelSpan is 12", () => {
+		cy.mount(
+			<Form labelSpan="S12 M12 L12 XL12">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-root")
+			.should($el => {
+				const style = $el[0].style;
+				expect(style.getPropertyValue("--ui5-form-item-layout-S")).to.equal("1fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-M")).to.equal("1fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-L")).to.equal("1fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-XL")).to.equal("1fr");
+			});
+	});
+
+	it("form root sets correct --ui5-form-item-layout-* when emptySpan is used", () => {
+		cy.mount(
+			<Form labelSpan="S4 M4 L4 XL4" emptySpan="S2 M2 L2 XL2">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-root")
+			.should($el => {
+				const style = $el[0].style;
+				expect(style.getPropertyValue("--ui5-form-item-layout-S")).to.equal("4fr 6fr 2fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-M")).to.equal("4fr 6fr 2fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-L")).to.equal("4fr 6fr 2fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-XL")).to.equal("4fr 6fr 2fr");
+			});
+	});
+
+	it("form column sets --ui5-form-column-span-* CSS variables", () => {
+		cy.mount(
+			<Form layout="S1 M2 L3 XL4">
+				<FormGroup id="gr1" headerText="Group 1" col-span="S1 M2 L3 XL4">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+
+				<FormGroup id="gr2" headerText="Group 2">
+					<FormItem>
+						<Label slot="labelContent">Twitter</Label>
+						<Text>@sap</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-column")
+			.first()
+			.should($el => {
+				const style = $el[0].style;
+				expect(style.getPropertyValue("--ui5-form-column-span-s")).to.equal("1");
+				expect(style.getPropertyValue("--ui5-form-column-span-m")).to.equal("2");
+				expect(style.getPropertyValue("--ui5-form-column-span-l")).to.equal("3");
+				expect(style.getPropertyValue("--ui5-form-column-span-xl")).to.equal("4");
+			});
+	});
+
+	it("renders custom header slot when header slot is provided", () => {
+		cy.mount(
+			<Form>
+				<div slot="header" id="custom-header">Custom Header</div>
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find("slot[name='header']")
+			.should("exist");
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-header [ui5-title]")
+			.should("not.exist");
+	});
+
+	it("renders dl group layout in Display mode with grouped items", () => {
+		cy.mount(
+			<Form>
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-group-layout")
+			.should("have.prop", "tagName", "DL");
+	});
+
+	it("renders div group layout in Edit mode with grouped items", () => {
+		cy.mount(
+			<Form accessibleMode="Edit">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Input value="Red Point Stores" />
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-group-layout")
+			.should("have.prop", "tagName", "DIV");
+	});
+
+	it("FormItem renders dt/dd in Display mode (default)", () => {
+		cy.mount(
+			<Form>
+				<FormItem id="fi">
+					<Label slot="labelContent">Name</Label>
+					<Text>Red Point Stores</Text>
+				</FormItem>
+			</Form>
+		);
+
+		cy.get("#fi")
+			.shadow()
+			.find(".ui5-form-item-label")
+			.should("have.prop", "tagName", "DT");
+
+		cy.get("#fi")
+			.shadow()
+			.find(".ui5-form-item-content")
+			.should("have.prop", "tagName", "DD");
+	});
+
+	it("FormItem renders div/div in Edit mode", () => {
+		cy.mount(
+			<Form accessibleMode="Edit">
+				<FormItem id="fi">
+					<Label slot="labelContent">Name</Label>
+					<Input value="Red Point Stores" />
+				</FormItem>
+			</Form>
+		);
+
+		cy.get("#fi")
+			.shadow()
+			.find(".ui5-form-item-label")
+			.should("have.prop", "tagName", "DIV");
+
+		cy.get("#fi")
+			.shadow()
+			.find(".ui5-form-item-content")
+			.should("have.prop", "tagName", "DIV");
+	});
+});
+
+describe("FormUtils", () => {
+	it("falls back to default layout when labelSpan + emptySpan combination is invalid (non-S breakpoint)", () => {
+		// labelSpan=6, emptySpan=7 => 6+7=13 > 11, invalid for non-S breakpoint
+		cy.mount(
+			<Form labelSpan="S6 M6 L6 XL6" emptySpan="S7 M7 L7 XL7">
+				<FormGroup headerText="Address">
+					<FormItem>
+						<Label slot="labelContent">Name</Label>
+						<Text>Red Point Stores</Text>
+					</FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		cy.get("[ui5-form]")
+			.shadow()
+			.find(".ui5-form-root")
+			.then($el => {
+				const style = $el[0].style;
+				// Invalid for S (6+7=13 > 12): falls back to "1fr"
+				expect(style.getPropertyValue("--ui5-form-item-layout-S")).to.equal("1fr");
+				// Invalid for M/L/XL (6+7=13 > 11): falls back to "4fr 8fr 0fr"
+				expect(style.getPropertyValue("--ui5-form-item-layout-M")).to.equal("4fr 8fr 0fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-L")).to.equal("4fr 8fr 0fr");
+				expect(style.getPropertyValue("--ui5-form-item-layout-XL")).to.equal("4fr 8fr 0fr");
+			});
+	});
+
+	it("getGroupsColSpan CASE 3 delta > groups (7 cols, 3 groups => 3, 2, 2)", () => {
+		cy.mount(
+			<Form layout="S1 M1 L1 XL7">
+				<FormGroup id="gr1" headerText="Group 1">
+					<FormItem><Label slot="labelContent">A</Label><Text>1</Text></FormItem>
+				</FormGroup>
+				<FormGroup id="gr2" headerText="Group 2">
+					<FormItem><Label slot="labelContent">B</Label><Text>2</Text></FormItem>
+				</FormGroup>
+				<FormGroup id="gr3" headerText="Group 3">
+					<FormItem><Label slot="labelContent">C</Label><Text>3</Text></FormItem>
+				</FormGroup>
+			</Form>
+		);
+
+		// 7 cols, 3 groups, delta=4 > groups=3 => index 0 gets 3, others get 2
+		cy.get("#gr1").should("have.prop", "colsXl", 3);
+		cy.get("#gr2").should("have.prop", "colsXl", 2);
+		cy.get("#gr3").should("have.prop", "colsXl", 2);
 	});
 });

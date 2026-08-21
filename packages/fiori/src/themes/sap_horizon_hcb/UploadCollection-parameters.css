@@ -1,6 +1,6 @@
 @import "../base/UploadCollection-parameters.css";
 
-:root {
+:host {
 	--ui5_upload_collection_drag_overlay_border: 0.1875rem dashed var(--sapField_BorderColor);
 	--ui5_upload_collection_drop_overlay_border: 0.1875rem solid var(--sapContent_DragAndDropActiveColor);
 	--ui5_upload_collection_drop_overlay_background: var(--sapContent_DragAndDropActiveColor);

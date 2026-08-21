@@ -1,5 +1,5 @@
 @import "../base/ProductSwitchItem-parameters.css";
 
-:root {
+:host {
 	--_ui5_product_switch_item_active_outline_color: var(--sapContent_FocusColor);
 }

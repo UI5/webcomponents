@@ -1,6 +1,6 @@
 @import "../base/Avatar-parameters.css";
 
-:root {
+:host {
 	--ui5-avatar-hover-box-shadow-offset: 0px;
 	--ui5-avatar-initials-color: var(--sapTextColor);
 	--ui5-avatar-initials-border: .0625rem solid var(--sapField_BorderColor);

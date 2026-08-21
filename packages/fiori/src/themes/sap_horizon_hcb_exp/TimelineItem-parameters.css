@@ -1,6 +1,6 @@
 @import "../base/TimelineItem-parameters.css";
 
-:root {
+:host {
 	--_ui5_TimelineItem_bubble_rtl_left_offset: -0.1875rem;
 	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.6875rem;
 }

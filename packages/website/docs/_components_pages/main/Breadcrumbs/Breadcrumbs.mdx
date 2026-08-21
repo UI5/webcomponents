@@ -6,6 +6,7 @@ import Basic from "../../../_samples/main/Breadcrumbs/Basic/Basic.md";
 import BreadcrumbsStyles from "../../../_samples/main/Breadcrumbs/BreadcrumbsStyles/BreadcrumbsStyles.md";
 import BreadcrumbsOverflow from "../../../_samples/main/Breadcrumbs/BreadcrumbsOverflow/BreadcrumbsOverflow.md";
 import NoCurrentPage from "../../../_samples/main/Breadcrumbs/NoCurrentPage/NoCurrentPage.md";
+import ClickEvent from "../../../_samples/main/Breadcrumbs/ClickEvent/ClickEvent.md";
 
 
 <%COMPONENT_OVERVIEW%>
@@ -32,3 +33,8 @@ Separator between the links can be easily changed.
 The Breadcrumbs supports two visual appearances for the last BreadcrumbsItem - as "current page" (bold and without separator) and as a regular link, followed by separator.
 
 <NoCurrentPage />
+
+### Item Click Event
+Each `ui5-breadcrumbs-item` fires its own `click` event, allowing framework consumers to attach handlers directly on the item.
+
+<ClickEvent />

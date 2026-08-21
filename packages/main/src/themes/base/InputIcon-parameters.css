@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_input_icon_padding: .5625rem;
 	--_ui5_input_icon_color: var(--sapField_TextColor);
 	--_ui5_input_icon_pressed_color: var(--sapButton_Active_TextColor);
@@ -17,8 +17,8 @@
 	--_ui5_input_icon_success_pressed_color: var(--sapButton_Active_TextColor);
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_input_icon_padding: .25rem .4375rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_icon_padding: .25rem .4375rem;
+	}
 }

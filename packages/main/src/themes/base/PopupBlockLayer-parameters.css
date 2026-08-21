@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_popup_block_layer_background: var(--sapBlockLayer_Background);
 	--_ui5_popup_block_layer_opacity: 0.2;
 }

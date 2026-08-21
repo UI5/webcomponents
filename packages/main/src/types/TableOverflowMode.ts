@@ -1,8 +1,7 @@
 /**
- * Overflow mode of the &lt;ui5-table&gt; component.
+ * Overflow mode of the `ui5-table` component.
  *
  * @public
- * @experimental
  */
 enum TableOverflowMode {
 	/**

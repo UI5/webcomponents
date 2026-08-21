@@ -3,6 +3,7 @@
 
 :host {
 	display: block;
+	container-type: inline-size;
 }
 
 .ui5-form-root {
@@ -10,7 +11,6 @@
 	flex-direction: column;
 	background-color: var(--sapGroup_ContentBackground);
     border-radius: 0.75rem;
-	container-type: inline-size;
 }
 
 .ui5-form-header {
@@ -30,7 +30,7 @@
 }
 
 .ui5-form-group-layout {
-	display: grid;
+	display: block;
 	column-gap: 1rem;
 }
 
@@ -51,5 +51,7 @@
 }
 
 dl {
-	all: unset;
+	padding: 0;
+	margin: 0;
+	border: 0 transparent;
 }

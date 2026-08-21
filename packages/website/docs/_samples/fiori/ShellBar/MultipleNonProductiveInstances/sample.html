@@ -31,9 +31,12 @@
             </ui5-avatar>
         </ui5-shellbar>
 
-        <ui5-shellbar primary-title="Product Identifier" notifications-count="72" show-notifications>
+        <ui5-shellbar notifications-count="72" show-notifications>
+            <ui5-shellbar-branding slot="branding">
+                Product Identifier
+                <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
+            </ui5-shellbar-branding>
             <ui5-button icon="menu2" slot="startButton"></ui5-button>
-            <img slot="logo" src="../assets/images/sap-logo-svg.svg" />
 
             <ui5-tag design="Set2" color-scheme="8" slot="content">Q System</ui5-tag>
             <ui5-text slot="content">Region APJ</ui5-text>

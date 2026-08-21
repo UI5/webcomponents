@@ -1,6 +1,6 @@
 @import "../base/ShellBar-parameters.css";
 
-:root {
+:host {
 	--_ui5_shellbar_button_border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
 	--_ui5_shellbar_button_border_radius: var(--sapButton_BorderCornerRadius);
 	--_ui5_shellbar_button_focused_border: 0.125rem dotted var(--sapContent_FocusColor);

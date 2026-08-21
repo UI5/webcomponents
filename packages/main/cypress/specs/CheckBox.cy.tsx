@@ -369,6 +369,73 @@ describe("CheckBox general interaction", () => {
     });
 });
 
+describe("Font-size scaling", () => {
+    it("renders inner box at default size (pixel-identical to before)", () => {
+        cy.mount(<CheckBox />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(22, 1);
+                expect(size.height).to.be.closeTo(22, 1);
+            });
+    });
+
+    it("renders checkmark icon at default size (pixel-identical to before)", () => {
+        cy.mount(<CheckBox checked />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                const size = $icon[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(16, 1);
+                expect(size.height).to.be.closeTo(16, 1);
+            });
+    });
+
+    it("scales inner box size when font-size is set on the host", () => {
+        cy.mount(<CheckBox style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(31, 1);
+                expect(size.height).to.be.closeTo(31, 1);
+            });
+    });
+
+    it("scales checkmark icon size when font-size is set on the host", () => {
+        cy.mount(<CheckBox checked style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-icon")
+            .then($icon => {
+                const size = $icon[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(23, 1);
+                expect(size.height).to.be.closeTo(23, 1);
+            });
+    });
+
+    it("scales display-only icon size when font-size is set on the host", () => {
+        cy.mount(<CheckBox displayOnly checked style={{ fontSize: "20px" }} />);
+
+        cy.get("[ui5-checkbox]")
+            .shadow()
+            .find(".ui5-checkbox-display-only-icon-inner")
+            .then($inner => {
+                const size = $inner[0].getBoundingClientRect();
+                expect(size.width).to.be.closeTo(31, 1);
+                expect(size.height).to.be.closeTo(31, 1);
+            });
+    });
+});
+
 describe("Accessibility", () => {
 	it("should announce the associated label when CheckBox is focused", () => {
 		cy.mount(
@@ -406,12 +473,14 @@ describe("Accessibility", () => {
 			const accInfo = checkbox.accessibilityInfo;
 			
             // Description should come from accessibleName property
-			expect(accInfo.description).to.equal("Custom Aria Label");
+			expect(accInfo.description).to.equal("Accessibility Test Not checked");
+            expect(accInfo.label).to.equal("Custom Aria Label");
 			
 			expect(accInfo.readonly).to.be.true;
 			expect(accInfo.required).to.be.true;
 			expect(accInfo.disabled).to.be.false;
-			
+
+            expect(accInfo.type).to.equal("Checkbox");
 			expect(accInfo.role).to.equal("checkbox");
 		});    
 	});
@@ -432,26 +501,8 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test");
-        });    
-    });
-
-    it("should provide correct accessibilityInfo description from text", () => {
-        cy.mount(
-            <>
-                <CheckBox 
-                    id="accessibilityTestCb2" 
-                    text="Accessibility Test Text" 
-                ></CheckBox>
-            </>
-        );
-
-        cy.get("#accessibilityTestCb2").then($checkbox => {
-            const checkbox = $checkbox[0] as CheckBox;
-            const accInfo = checkbox.accessibilityInfo;
-            
-            // Description should come from text property
-            expect(accInfo.description).to.equal("Accessibility Test Text");
+            expect(accInfo.description).to.equal("Not checked");
+            expect(accInfo.label).to.equal("Label For Accessibility Test");
         });    
     });
 
@@ -470,7 +521,8 @@ describe("Accessibility", () => {
             const accInfo = checkbox.accessibilityInfo;
             
             // Description should come from associated label
-            expect(accInfo.description).to.equal("Label For Accessibility Test");
+            expect(accInfo.description).to.equal("Not checked");
+            expect(accInfo.label).to.equal("Label For Accessibility Test");
         });    
     });
 });

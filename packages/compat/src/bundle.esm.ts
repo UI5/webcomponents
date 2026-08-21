@@ -8,6 +8,7 @@ import Avatar from "@ui5/webcomponents/dist/Avatar.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
 import Input from "@ui5/webcomponents/dist/Input.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
+import Text from "@ui5/webcomponents/dist/Text.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 import Link from "@ui5/webcomponents/dist/Link.js";
 

@@ -1,6 +1,7 @@
 :host {
 	display: block;
 	position: relative;
+	z-index: 0; /* create a stacking context for the sticky elements */
 	color: var(--sapList_TextColor);
 	font: var(--sapFontSize) var(--sapFontFamily);
 }

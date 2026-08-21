@@ -4,6 +4,7 @@ import EmbeddedBackNavigation from "../../../_samples/fiori/ShellBar/EmbeddedBac
 import MultipleNonProductiveInstances from "../../../_samples/fiori/ShellBar/MultipleNonProductiveInstances/MultipleNonProductiveInstances.md";
 import MultipleProductiveInstances from "../../../_samples/fiori/ShellBar/MultipleProductiveInstances/MultipleProductiveInstances.md";
 import TrialExample from "../../../_samples/fiori/ShellBar/TrialExample/TrialExample.md";
+import Overflow from "../../../_samples/fiori/ShellBar/Overflow/Overflow.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -40,3 +41,8 @@ ShellBar setup for multiple productive system instances with region indicators.
 ShellBar setup for multiple non-productive system instances with system and region tags.
 
 <MultipleNonProductiveInstances />
+
+### Application-Level Overflow
+This sample demonstrates how applications can implement custom overflow handling for content items. When the ShellBar becomes narrow, content items are hidden and the application renders them in a custom popover. The sample listens to the `content-item-visibility-change` event and manages its own overflow button and popover. Use the slider to resize and observe the overflow behavior.
+
+<Overflow />

@@ -17,6 +17,8 @@ import {
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import "@ui5/webcomponents-icons/dist/favorite.js";
+import "@ui5/webcomponents-icons/dist/unfavorite.js";
 import {
 	RATING_INDICATOR_TEXT,
 	RATING_INDICATOR_TOOLTIP_TEXT,
@@ -142,6 +144,18 @@ class RatingIndicator extends UI5Element {
 	readonly = false;
 
 	/**
+	 * Defines whether the component is in display-only mode.
+	 *
+	 * **Note:** A display-only component is visually identical to read-only
+	 * but cannot receive focus and is not announced by screen readers.
+	 * @default false
+	 * @public
+	 * @since 2.26.0
+	 */
+	@property({ type: Boolean })
+	displayOnly = false;
+
+	/**
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
@@ -178,9 +192,28 @@ class RatingIndicator extends UI5Element {
 	tooltip?: string;
 
 	/**
+	 * Defines the icon to be displayed for the selected (filled) rating symbol.
+	 *
+	 * @default "favorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	ratedIcon = "favorite";
+
+	/**
+	 * Defines the icon to be displayed for the unselected (empty) rating symbol.
+	 * @default "unfavorite"
+	 * @public
+	 * @since 2.20
+	 */
+	@property()
+	unratedIcon = "unfavorite";
+
+	/**
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
 	/**
@@ -229,7 +262,7 @@ class RatingIndicator extends UI5Element {
 	_onclick(e: MouseEvent) {
 		const target = e.target as UI5Element;
 
-		if (!(target instanceof HTMLElement) || this.disabled || this.readonly) {
+		if (!(target instanceof HTMLElement) || this.disabled || this.readonly || this.displayOnly) {
 			return;
 		}
 
@@ -249,7 +282,7 @@ class RatingIndicator extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || this.displayOnly) {
 			// prevent page scrolling
 			if (isSpace(e)) {
 				e.preventDefault();
@@ -289,7 +322,7 @@ class RatingIndicator extends UI5Element {
 	}
 
 	_onfocusin() {
-		if (this.disabled) {
+		if (this.disabled || this.displayOnly) {
 			return;
 		}
 
@@ -304,7 +337,7 @@ class RatingIndicator extends UI5Element {
 	get effectiveTabIndex() {
 		const tabindex = this.getAttribute("tabindex");
 
-		if (this.disabled) {
+		if (this.disabled || this.displayOnly) {
 			return -1;
 		}
 
@@ -327,7 +360,7 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get _ariaDisabled() {
-		return this.disabled || undefined;
+		return this.disabled || this.displayOnly || undefined;
 	}
 
 	get _ariaLabel() {
@@ -339,6 +372,9 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get ariaReadonly() {
+		if (this.displayOnly) {
+			return undefined;
+		}
 		return this.readonly ? "true" : undefined;
 	}
 }

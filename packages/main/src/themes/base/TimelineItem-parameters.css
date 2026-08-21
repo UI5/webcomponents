@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_TimelineItem_arrow_size: 1.625rem;
 	--_ui5_TimelineItem_bubble_rtl_left_offset: -0.125rem;
 	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.625rem;

@@ -48,6 +48,11 @@
 	<ui5-menu id="delaymenu" loading-delay="100" loading>
 	</ui5-menu>
 
+	<ui5-menu id="delaymenu2" loading-delay="100" loading>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+		<ui5-menu-item id="menuItemExit" text="Exit" icon="journey-arrive"></ui5-menu-item>
+	</ui5-menu>
+
 	<ui5-title level="H5" class="header-title">Clicked menu item text</ui5-title>
 	<ui5-input id="selectionInput"></ui5-input>
 
@@ -167,6 +172,36 @@
 		<ui5-menu-item text="Exit"></ui5-menu-item>
 	</ui5-menu>
 
+	<ui5-title level="H5" class="header-title">Menu with long list of items</ui5-title>
+	<ui5-button id="btnOpenLongList">Open Menu</ui5-button> <br/><br/>
+	<ui5-menu id="menuLongList" header-text="Long List">
+		<ui5-menu-item text="Item 1"></ui5-menu-item>
+		<ui5-menu-item text="Item 2"></ui5-menu-item>
+		<ui5-menu-item text="Item 3"></ui5-menu-item>
+		<ui5-menu-item text="Item 4"></ui5-menu-item>
+		<ui5-menu-item text="Item 5"></ui5-menu-item>
+		<ui5-menu-item text="Item 6"></ui5-menu-item>
+		<ui5-menu-item text="Item 7"></ui5-menu-item>
+		<ui5-menu-item text="Item 8"></ui5-menu-item>
+		<ui5-menu-item text="Item 9"></ui5-menu-item>
+		<ui5-menu-item text="Item 10"></ui5-menu-item>
+		<ui5-menu-item text="Item 11"></ui5-menu-item>
+		<ui5-menu-item text="Item 12"></ui5-menu-item>
+		<ui5-menu-item text="Item 13"></ui5-menu-item>
+		<ui5-menu-item text="Item 14"></ui5-menu-item>
+		<ui5-menu-item text="Item 15"></ui5-menu-item>
+		<ui5-menu-item text="Item 16"></ui5-menu-item>
+		<ui5-menu-item text="Item 17"></ui5-menu-item>
+		<ui5-menu-item text="Item 18"></ui5-menu-item>
+		<ui5-menu-item text="Item 19"></ui5-menu-item>
+		<ui5-menu-item text="Item 20"></ui5-menu-item>
+		<ui5-menu-item text="Item 21"></ui5-menu-item>
+		<ui5-menu-item text="Item 22"></ui5-menu-item>
+		<ui5-menu-item text="Item 23"></ui5-menu-item>
+		<ui5-menu-item text="Item 24"></ui5-menu-item>
+		<ui5-menu-item text="Item 25"></ui5-menu-item>
+	</ui5-menu>
+
 	<ui5-popover id="detailsPopover" initialFocus="detailsLink">
 			<div>
 				<ui5-label for="detailsLink">For more information:</ui5-label>
@@ -176,6 +211,7 @@
 
 	<ui5-title level="H5" class="header-title">Menu with delayed items loading</ui5-title>
 	<ui5-button id="btnAddOpenerDelay">Delayed</ui5-button>
+	<ui5-button id="btnAddOpenerDelay2">Delayed with pre-loaded items</ui5-button>
 	<br/><br/>
 
 	<ui5-title level="H5" class="header-title">Menu with right alignment</ui5-title>
@@ -206,6 +242,11 @@
 			menuGroups.open = true;
 		});
 
+		btnOpenLongList.addEventListener("click", function() {
+			menuLongList.opener = "btnOpenLongList";
+			menuLongList.open = true;
+		});
+
 		btnOpenEndContent.addEventListener("click", function() {
 			menuEndContent.opener = "btnOpenEndContent";
 			menuEndContent.open = !menu.open;
@@ -233,6 +274,11 @@
 			delaymenu.open = !delaymenu.open;
 		});
 
+		btnAddOpenerDelay2.addEventListener("click", function() {
+			delaymenu2.opener = "btnAddOpenerDelay2";
+			delaymenu2.open = !delaymenu2.open;
+		});
+
 		delaymenu.addEventListener("ui5-before-open", function(event) {
 			setTimeout(function() {
 				delaymenu.loading = false;
@@ -243,6 +289,14 @@
 				twoNode.setAttribute("text", "Open from Google Cloud");
 				delaymenu.append(oneNode, twoNode);
 				delaymenu.focus();
+			}, 1000);
+		});
+
+		delaymenu2.addEventListener("ui5-before-open", function(event) {
+			setTimeout(function() {
+				delaymenu2.loading = false;
+				delaymenu2.loadingDelay = 0;
+				delaymenu2.focus();
 			}, 1000);
 		});
 

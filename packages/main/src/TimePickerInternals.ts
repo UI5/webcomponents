@@ -134,7 +134,7 @@ class TimePickerInternals extends UI5Element {
 	 * Contains currently available Time Picker components depending on time format.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_entities: Array<TimePickerEntityProperties> = [];
 
 	/**
@@ -148,7 +148,7 @@ class TimePickerInternals extends UI5Element {
 	 * Contains currently available Button components depending on time format.
 	 * @private
 	 */
-	@property({ type: Array })
+	@property({ type: Array, noAttribute: true })
 	_periods: Array<TimeSelectionPeriodProperties> = [];
 
 	/**

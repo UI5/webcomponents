@@ -25,6 +25,7 @@ import {
 
 /**
  * @class
+ * @implements {IDynamicDateRangeOption}
  * @constructor
  * @public
  * @since 2.14.0

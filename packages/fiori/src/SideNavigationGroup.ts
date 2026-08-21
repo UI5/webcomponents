@@ -1,6 +1,6 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import {
 	isSpace,
@@ -15,6 +15,7 @@ import SideNavigationItemBase from "./SideNavigationItemBase.js";
 import type SideNavigationSelectableItemBase from "./SideNavigationSelectableItemBase.js";
 import type SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationGroupTemplate from "./SideNavigationGroupTemplate.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import {
 	SIDE_NAVIGATION_ICON_COLLAPSE,
@@ -23,6 +24,7 @@ import {
 
 // Styles
 import SideNavigationGroupCss from "./generated/themes/SideNavigationGroup.css.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 /**
  * @class
@@ -66,7 +68,7 @@ class SideNavigationGroup extends SideNavigationItemBase {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, invalidateOnChildChange: true, "default": true })
-	items!: Array<SideNavigationItem>;
+	items!: DefaultSlot<SideNavigationItem>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
@@ -152,29 +154,29 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 		if (isLeft(e)) {
 			e.preventDefault();
-			this.expanded = isRTL;
+			this._toggle(isRTL);
 			return;
 		}
 
 		if (isRight(e)) {
 			e.preventDefault();
-			this.expanded = !isRTL;
+			this._toggle(!isRTL);
 		}
 
 		if (isMinus(e)) {
 			e.preventDefault();
-			this.expanded = false;
+			this._toggle(false);
 			return;
 		}
 
 		if (isPlus(e)) {
 			e.preventDefault();
-			this.expanded = true;
+			this._toggle(true);
 		}
 	}
 
 	_onclick() {
-		this._toggle();
+		this._toggle(!this.expanded);
 	}
 
 	_onfocusin(e: FocusEvent) {
@@ -183,9 +185,23 @@ class SideNavigationGroup extends SideNavigationItemBase {
 		this.sideNavigation?.focusItem(this);
 	}
 
-	_toggle() {
-		if (!this.disabled) {
-			this.expanded = !this.expanded;
+	/**
+	 * Handles the user-driven expand/collapse of the group.
+	 *
+	 * Fires the cancelable `item-toggle` event and, unless it is prevented, applies the
+	 * new `expanded` value. The event is only fired for user interaction - programmatic
+	 * changes to `expanded` stay silent.
+	 *
+	 * @private
+	 */
+	_toggle(expanded: boolean) {
+		if (this.disabled || this.expanded === expanded) {
+			return;
+		}
+
+		// The event was prevented - keep the old value, suppressing the toggle.
+		if (this.sideNavigation?.fireDecoratorEvent("item-toggle", { item: this })) {
+			this.expanded = expanded;
 		}
 	}
 
@@ -196,9 +212,5 @@ class SideNavigationGroup extends SideNavigationItemBase {
 
 SideNavigationGroup.define();
 
-const isInstanceOfSideNavigationGroup = (object: any): object is SideNavigationGroup => {
-	return "isSideNavigationGroup" in object;
-};
-
+export const isInstanceOfSideNavigationGroup = createInstanceChecker<SideNavigationGroup>("isSideNavigationGroup");
 export default SideNavigationGroup;
-export { isInstanceOfSideNavigationGroup };

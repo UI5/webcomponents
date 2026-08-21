@@ -1,6 +1,6 @@
 @import "../base/Input-parameters.css";
 
-:root {
+:host {
 	--_ui5_input_focus_border_width: 0.125rem;
 	--_ui5_input_state_border_width: 0.125rem;
 	--_ui5_input_readonly_border: var(--sapElement_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);
@@ -23,8 +23,8 @@
 	--_ui5_input_icon_wrapper_height: 100%;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_input_custom_icon_padding: .1875rem .5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_custom_icon_padding: .1875rem .5rem;
+	}
 }

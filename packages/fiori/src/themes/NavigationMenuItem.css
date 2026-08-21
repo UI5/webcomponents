@@ -91,3 +91,11 @@
 ::slotted([ui5-navigation-menu-item]:not(:last-of-type)) {
 	margin-block-end: var(--_ui5_side_navigation_item_bottom_margin);
 }
+
+.ui5-navmenu-item-tag-container {
+	display: inline-flex;
+	align-items: center;
+	margin-inline-start: 0.5rem;
+	height: 1.375rem;
+	min-width: 1.375rem;
+}

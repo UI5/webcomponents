@@ -1,11 +1,11 @@
 @import "../base/InputIcon-parameters.css";
 
-:root {
+:host {
 	--_ui5_input_icon_padding: .5rem .5rem .5rem .5625rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_input_icon_padding: .1875rem .375rem .1875rem .4375rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_icon_padding: .1875rem .375rem .1875rem .4375rem;
+	}
 }

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_page_list_bg: var(--sapGroup_ContentBackground);
 	--_ui5_page_transparent_bg: var(--sapBackgroundColor);
 }

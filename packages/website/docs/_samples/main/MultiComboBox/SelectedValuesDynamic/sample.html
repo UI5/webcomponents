@@ -1,0 +1,36 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 400px;">
+    <!-- playground-fold-end -->
+
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+        <ui5-button id="btnSelectAll">Select All</ui5-button>
+        <ui5-button id="btnClearAll">Clear All</ui5-button>
+        <ui5-button id="btnSelectEurope">Select Europe</ui5-button>
+    </div>
+
+    <ui5-multi-combobox id="mcb" placeholder="Select countries" style="width: 100%;">
+        <ui5-mcb-item text="Germany" value="DE"></ui5-mcb-item>
+        <ui5-mcb-item text="France" value="FR"></ui5-mcb-item>
+        <ui5-mcb-item text="Italy" value="IT"></ui5-mcb-item>
+        <ui5-mcb-item text="United States" value="US"></ui5-mcb-item>
+        <ui5-mcb-item text="Canada" value="CA"></ui5-mcb-item>
+        <ui5-mcb-item text="Japan" value="JP"></ui5-mcb-item>
+    </ui5-multi-combobox>
+
+    <ui5-label id="output" style="display: block; margin-top: 1rem;">Selected values: []</ui5-label>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

@@ -6,7 +6,7 @@ import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign.js";
 import TagDesign from "@ui5/webcomponents/dist/types/TagDesign.js";
 
-export default function SearchFieldTemplate(this: SearchItem) {
+export default function SearchItemTemplate(this: SearchItem) {
 	return (
 		<li
 			part="native-li"

@@ -5,7 +5,7 @@ import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js";
 import "@ui5/webcomponents/dist/TableRowAction.js";
 import "@ui5/webcomponents/dist/TableRowActionNavigation.js";
-import "@ui5/webcomponents/dist/Label.js";
+import "@ui5/webcomponents/dist/Text.js";
 import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 import "@ui5/webcomponents-icons/dist/share.js";

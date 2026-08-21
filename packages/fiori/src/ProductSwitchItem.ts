@@ -1,11 +1,12 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isSpace, isEnter, isSpaceShift } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import ProductSwitchItemTemplate from "./ProductSwitchItemTemplate.js";
 import type { IProductSwitchItem } from "./ProductSwitch.js";
 
@@ -144,7 +145,7 @@ class ProductSwitchItem extends UI5Element implements IProductSwitchItem {
 	 * @since 2.14.0
 	 */
 	@slot({ type: HTMLElement })
-	image!: Array<HTMLElement>;
+	image!: Slot<HTMLElement>;
 
 	_deactivate: () => void;
 

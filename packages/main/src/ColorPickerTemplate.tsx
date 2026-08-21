@@ -6,13 +6,14 @@ import Button from "./Button.js";
 
 export default function ColorPickerTemplate(this: ColorPicker) {
 	return (
-		<section
+		<div
 			class="ui5-color-picker-root"
 			role="group"
 			aria-label={this.colorPickerLabel}
 		>
 			<div
 				class="ui5-color-picker-main-color"
+				role="presentation"
 				style={{ "background-color": `rgb(${this._mainValue.r}, ${this._mainValue.g}, ${this._mainValue.b})` }}
 				onMouseDown={this._handleMouseDown}
 				onMouseUp={this._handleMouseUp}
@@ -22,8 +23,8 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 				<div
 					class="ui5-color-picker-circle"
 					style={{
-						left: `${this._selectedCoordinates.x}px`,
-						top: `${this._selectedCoordinates.y}px`,
+						left: `${this._selectedCoordinates.x}%`,
+						top: `${this._selectedCoordinates.y}%`,
 					}}
 				></div>
 			</div>
@@ -111,7 +112,7 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 							id="alpha"
 							disabled={this.inputsDisabled}
 							class="ui5-color-channel-input"
-							value={String(this._alpha)}
+							value={this._alphaTemp ?? String(this._alpha)}
 							accessibleName={this.alphaInputLabel}
 							onChange={this._handleAlphaChange}
 							onInput={this._handleAlphaInput}
@@ -131,6 +132,6 @@ export default function ColorPickerTemplate(this: ColorPicker) {
 					</div>
 				</div>
 			}
-		</section>
+		</div>
 	);
 }

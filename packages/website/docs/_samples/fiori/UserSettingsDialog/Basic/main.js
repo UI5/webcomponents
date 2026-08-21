@@ -1,7 +1,12 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
+import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -16,12 +21,18 @@ import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents/dist/Panel.js";
 import "@ui5/webcomponents/dist/ComboBox.js";
 import "@ui5/webcomponents/dist/ComboBoxItem.js";
+import "@ui5/webcomponents/dist/Select.js";
+import "@ui5/webcomponents/dist/Option.js";
 import "@ui5/webcomponents/dist/RadioButton.js";
 import "@ui5/webcomponents/dist/Text.js";
 import "@ui5/webcomponents/dist/CheckBox.js";
+import "@ui5/webcomponents/dist/Switch.js";
 import "@ui5/webcomponents/dist/Toast.js";
 import "@ui5/webcomponents/dist/List.js";
 import "@ui5/webcomponents/dist/ListItemStandard.js";
+import "@ui5/webcomponents/dist/MessageStrip.js";
+import "@ui5/webcomponents/dist/Form.js";
+import "@ui5/webcomponents/dist/FormItem.js";
 
 import "@ui5/webcomponents-icons/dist/action-settings.js";
 import "@ui5/webcomponents-icons/dist/user-settings.js";
@@ -38,12 +49,8 @@ const settingsDialog = document.getElementById("settings");
 const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
 const account = document.getElementById("account");
 const resetAllButton = document.getElementById("reset-all-button");
-//Language and Region
-const languageRegion = document.getElementById("language-region-container");
-const language = document.getElementById("language");
-const regionSettings = [...languageRegion.querySelectorAll(".language-region-control")];
-const additionalDialog = document.getElementById("additionalDialog");
-const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+// Theme change
+const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
 
 const mobileSecondPage = document.getElementById("mobile-second-page");
 const mobile1Button = document.getElementById("mobile1-button");
@@ -51,10 +58,8 @@ const mobile2Button = document.getElementById("mobile2-button");
 
 const resetAll = document.getElementById("resetAll");
 const resetPersonalization = document.getElementById("resetPersonalization");
-const toast = [...document.getElementsByTagName("ui5-toast")][0];
 const toastReset =  document.getElementById("toastReset");
 const toastResetAll =  document.getElementById("toastResetAll");
-const themeSave =document.getElementById("themeSave");
 
 shellbar.addEventListener("ui5-profile-click", (event) => {
 	console.log(" menuShellBar ui5-profile-click")
@@ -86,24 +91,16 @@ account.addEventListener("manage-account-click", function () {
 });
 
 resetAllButton.addEventListener("click", function () {
-	additionalDialog.open = true;
+	toastReset.open = true;
 });
 
-//Language and Region
-language.addEventListener("selection-change",  function (event) {
-	additionalDialog.open = true;
-});
+// Theme change
+appearanceView.addEventListener("selection-change", (e) => {
+	const selectedItem = e.detail.item;
 
-dialogClosers.forEach(btn => {
-	btn.addEventListener("click", () => {
-		additionalDialog.open = false;
-	});
-});
-
-regionSettings.forEach((settingsItem) => {
-	settingsItem.addEventListener("selection-change",  function (event) {
-		console.log(`Selection change: ${event?.detail.item?.text}`, event.detail);
-	});
+	if (selectedItem?.itemKey) {
+		setTheme(selectedItem.itemKey);
+	}
 });
 
 mobile1Button.addEventListener("click", function () {
@@ -114,11 +111,6 @@ mobile1Button.addEventListener("click", function () {
 mobile2Button.addEventListener("click", function () {
 	mobileSecondPage.selected = true;
 	mobileSecondPage.text = "Android";
-});
-
-
-themeSave.addEventListener("click", function () {
-	toast.open = true;
 });
 
 resetPersonalization.addEventListener("click", function () {

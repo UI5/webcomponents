@@ -258,6 +258,34 @@
       ],
       "type": "object"
     },
+    "CssCustomState": {
+      "description": "The description of a CSS Custom State\nhttps://developer.mozilla.org/en-US/docs/Web/API/CustomStateSet",
+      "properties": {
+        "deprecated": {
+          "description": "Whether the CSS custom state is deprecated.\nIf the value is a string, it's the reason for the deprecation.",
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "description": {
+          "description": "A markdown description.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the state. Note: Unlike CSS custom properties, custom states\ndo not have a leading `--`.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "A markdown summary suitable for display in a listing.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
     "CssPart": {
       "description": "The description of a CSS Part",
       "properties": {
@@ -304,6 +332,12 @@
         "cssProperties": {
           "items": {
             "$ref": "#/definitions/CssCustomProperty"
+          },
+          "type": "array"
+        },
+        "cssStates": {
+          "items": {
+            "$ref": "#/definitions/CssCustomState"
           },
           "type": "array"
         },
@@ -448,6 +482,12 @@
         "cssProperties": {
           "items": {
             "$ref": "#/definitions/CssCustomProperty"
+          },
+          "type": "array"
+        },
+        "cssStates": {
+          "items": {
+            "$ref": "#/definitions/CssCustomState"
           },
           "type": "array"
         },
@@ -765,7 +805,7 @@
           "type": "string"
         },
         "path": {
-          "description": "Path to the javascript file needed to be imported. \n(not the path for example to a typescript file.)",
+          "description": "Path to the javascript file needed to be imported.\n(not the path for example to a typescript file.)",
           "type": "string"
         },
         "summary": {

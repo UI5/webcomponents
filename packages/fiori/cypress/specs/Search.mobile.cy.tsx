@@ -48,7 +48,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -81,7 +81,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -129,7 +129,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -169,7 +169,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -189,7 +189,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverClosed();
 
 		cy.get("[ui5-search]")
@@ -214,7 +214,7 @@ describe("Search Field on mobile device", () => {
 			.should("have.prop", "value", "initial");
 	});
 
-	it("should not open when clicking on the scopes select", () => {
+	it("should not open when clicking on the scopes button", () => {
 		cy.mount(
 			<>
 				<Search showClearIcon={true} value="initial">
@@ -226,16 +226,18 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find("[ui5-select]")
+			.find(".ui5-search-field-scope-button")
 			.realClick();
 
 		cy.get("[ui5-search]")
 			.should("have.prop", "open", false);
 
+		// The scope popover should open instead
 		cy.get("[ui5-search]")
 			.shadow()
-			.find("[ui5-select]")
-			.should("have.prop", "opened", true);
+			.find("[ui5-busy-indicator]")
+			.find(".ui5-search-field-scope-popover")
+			.should("have.attr", "open");
 	});
 
 	it("should accept autocompleted text after pressing go/enter on virtual keyboard", () => {
@@ -257,7 +259,7 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.shadow()
-			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.find<ResponsivePopover>("#ui5-search-list")
 			.ui5ResponsivePopoverOpened();
 
 		cy.get("[ui5-search]")
@@ -283,5 +285,46 @@ describe("Search Field on mobile device", () => {
 
 		cy.get("[ui5-search]")
 			.should("have.prop", "value", "Item 1");
+	});
+
+	it("should keep the popup open on item selection when preventDefault is called", () => {
+		cy.mount(
+			<>
+				<Search showClearIcon={true}>
+					<SearchItem text="Item 1" />
+					<SearchItem text="Item 2" />
+					<SearchItem text="Item 3" />
+				</Search>
+			</>
+		);
+
+		cy.get("[ui5-search]")
+			.then(search => {
+				search.get(0).addEventListener("ui5-search", (e: Event) => {
+					e.preventDefault();
+				});
+			});
+
+		cy.get("[ui5-search]")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		// Click an item in the popup
+		cy.get("[ui5-search-item]")
+			.eq(0)
+			.realClick();
+
+		// preventDefault was called, so the picker should remain open on mobile
+		cy.get("[ui5-search]")
+			.should("have.prop", "open", true);
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.should("have.prop", "open", true);
 	});
 });

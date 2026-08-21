@@ -16,13 +16,13 @@
 			<img src="https://ui5.github.io/webcomponents/images/avatars/man_avatar_1.png" slot="avatar" alt="avatar">
 		</ui5-card-header>
 		<section class="quickPromptSection">
-			<ui5-label required>To: </ui5-label>
+			<ui5-label required show-colon>To</ui5-label>
 			<div style="display: flex; gap: 0.125rem;">
 				<ui5-token selected text="Diana Mihaylova" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
 				<ui5-token selected text="DL Marketing Sector SAP" style="width: fit-content; margin-block-end: 1rem;"></ui5-token>
 			</div>
 			<div class="quickPromptLblBtn">
-				<ui5-label style="align-self: flex-end;" required>Offer: </ui5-label>
+				<ui5-label style="align-self: flex-end;" required show-colon>Offer</ui5-label>
 				<ui5-ai-button id="quickPromptAiButton" class="quickPromptAiButton" state="generate">
 					<ui5-ai-button-state name="generate" text="Generate" icon="ai"></ui5-ai-button-state>
 					<ui5-ai-button-state name="generating" text="Stop Generating" icon="stop"></ui5-ai-button-state>

@@ -536,7 +536,7 @@ describe("Versioning Component", () => {
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version");
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)");
 			});
 
 			it("should have translatable next button tooltip", () => {
@@ -545,7 +545,7 @@ describe("Versioning Component", () => {
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version");
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)");
 			});
 
 			it("should maintain tooltips when button states change", () => {
@@ -554,32 +554,28 @@ describe("Versioning Component", () => {
 				cy.get("[ui5-ai-versioning]")
 					.as("versioning");
 
-				// Previous button disabled at first step, but still has tooltip
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version")
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)")
 					.shadow()
 					.find("ui5-button")
 					.should("have.attr", "disabled");
 
-				// Next button enabled and has tooltip
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version")
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)")
 					.shadow()
 					.find("ui5-button")
 					.should("not.have.attr", "disabled");
 
-				// Move to middle step
 				cy.get("@versioning").invoke("prop", "currentStep", 2);
 
-				// Both buttons enabled and have tooltips
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version")
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)")
 					.shadow()
 					.find("ui5-button")
 					.should("not.have.attr", "disabled");
@@ -587,41 +583,37 @@ describe("Versioning Component", () => {
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version")
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)")
 					.shadow()
 					.find("ui5-button")
 					.should("not.have.attr", "disabled");
 
-				// Move to last step
 				cy.get("@versioning").invoke("prop", "currentStep", 3);
 
-				// Previous button enabled and has tooltip
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version")
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)")
 					.shadow()
 					.find("ui5-button")
 					.should("not.have.attr", "disabled");
 
-				// Next button disabled at last step, but still has tooltip
 				cy.get("@versioning")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version")
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)")
 					.shadow()
 					.find("ui5-button")
 					.should("have.attr", "disabled");
 			});
 
 			it("should maintain tooltips with edge cases", () => {
-				// Single step case
 				cy.mount(<Versioning currentStep={1} totalSteps={1} />);
 
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version")
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)")
 					.shadow()
 					.find("ui5-button")
 					.should("have.attr", "disabled");
@@ -629,23 +621,22 @@ describe("Versioning Component", () => {
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version")
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)")
 					.shadow()
 					.find("ui5-button")
 					.should("have.attr", "disabled");
 
-				// Zero steps case
 				cy.mount(<Versioning currentStep={0} totalSteps={0} />);
 
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="previous"]')
-					.should("have.attr", "tooltip", "Previous Version");
+					.should("have.attr", "tooltip", "Previous Version (Ctrl + Shift + Z)");
 
 				cy.get("[ui5-ai-versioning]")
 					.shadow()
 					.find('[data-ui5-versioning-button="next"]')
-					.should("have.attr", "tooltip", "Next Version");
+					.should("have.attr", "tooltip", "Next Version (Ctrl + Shift + Y)");
 			});
 		});
 	});

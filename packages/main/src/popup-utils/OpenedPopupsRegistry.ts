@@ -72,7 +72,7 @@ const _keydownListener = (event: KeyboardEvent) => {
 			return;
 		}
 
-		event.stopPropagation();
+		event.stopImmediatePropagation();
 		topmostPopup.closePopup(true);
 	}
 };

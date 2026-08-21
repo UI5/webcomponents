@@ -62,6 +62,7 @@ export default function ComboBoxTemplate(this: ComboBox) {
 						"inputIcon--pressed": this._iconPressed,
 					}}
 					accessibleName={this._iconAccessibleNameText}
+					onMouseDown={this._arrowMouseDown}
 					onClick={this._arrowClick}
 				/>
 				}

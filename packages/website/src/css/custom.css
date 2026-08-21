@@ -11,6 +11,7 @@
   --ifm-table-background: transparent;
   --ifm-table-stripe-background: transparent;
   --playground-toolbar-bg: #334eff;
+  --ifm-font-family-base: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -217,13 +218,16 @@ code {
 .expComponentBadge:before {
   color: #fff;
   position: absolute;
-  top: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
   inset-inline-end: 1rem;
-  border-radius: 0.5rem;
-  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  padding: 1px 5px;
   box-sizing: border-box;
-  font-size: 0.75rem;
-  content: "exp";
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  content: "EXP";
   background: #a100c2;
   pointer-events: none;
 }
@@ -231,13 +235,16 @@ code {
 .deprComponentBadge:before {
   color: #fff;
   position: absolute;
-  top: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
   inset-inline-end: 1rem;
-  border-radius: 0.5rem;
-  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  padding: 1px 5px;
   box-sizing: border-box;
-  font-size: 0.75rem;
-  content: "depr";
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  content: "DEPR";
   background: #ffb700e0;
   pointer-events: none;
 }
@@ -255,14 +262,17 @@ code {
 .newComponentBadge:after {
   color: #fff;
   position: absolute;
-  top: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
   inset-inline-end: 1rem;
-  border-radius: 0.5rem;
-  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  padding: 1px 5px;
   box-sizing: border-box;
-  font-size: 0.75rem;
-  content: "new";
-  background: #334eff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  content: "NEW";
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   pointer-events: none;
 }
 
@@ -270,11 +280,27 @@ code {
 .theme-doc-sidebar-item-category.expComponentBadge:before,
 .theme-doc-sidebar-item-category.deprComponentBadge:before {
     inset-inline-end: 2.25rem;
+    top: 0.45rem;
+    transform: none;
 }
 
 .theme-doc-sidebar-item-category.newComponentBadge.expComponentBadge:before,
 .theme-doc-sidebar-item-category.newComponentBadge.deprComponentBadge:before {
     inset-inline-end: 4.5rem;
+}
+
+/* Sparkle icon for new/trending sidebar items — add sidebar_class_name: sidebar-sparkle to frontmatter */
+.sidebar-sparkle > a::after {
+  content: "NEW";
+  margin-left: 0.5rem;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  vertical-align: middle;
 }
 
 

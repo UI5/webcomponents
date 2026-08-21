@@ -1,0 +1,117 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+	<style>
+		.avatar-container {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+			padding: 1rem;
+		}
+
+		.variant-group {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.variant-description {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		.variant-title {
+			font-weight: bold;
+			font-size: 0.875rem;
+		}
+
+		.variant-note {
+			font-size: 0.75rem;
+			color: var(--sapTextColor-Muted);
+		}
+	</style>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor);">
+	<!-- playground-fold-end -->
+
+	<div class="avatar-container">
+		<!-- Non-interactive Avatar -->
+		<div class="variant-group">
+			<ui5-avatar size="M" initials="AB" color-scheme="Accent1"></ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Non-interactive Avatar</div>
+				<div class="variant-note">Decorative with initials - no interaction</div>
+			</div>
+		</div>
+
+		<!-- Non-interactive with Image -->
+		<div class="variant-group">
+			<ui5-avatar size="M">
+				<img src="../assets/images/avatars/woman_avatar_1.png" alt="Woman Avatar" />
+			</ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Non-interactive Avatar with Image</div>
+				<div class="variant-note">Image-based avatar - no interaction</div>
+			</div>
+		</div>
+
+		<!-- Interactive Avatar -->
+		<div class="variant-group">
+			<ui5-avatar id="interactive-avt" size="M" mode="Interactive" initials="CD" color-scheme="Accent3"></ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Interactive Avatar</div>
+				<div class="variant-note">Clickable - supports user interaction and callbacks</div>
+			</div>
+		</div>
+
+		<!-- Interactive Avatar with Badge -->
+		<div class="variant-group">
+			<ui5-avatar size="M" mode="Interactive" initials="EF" color-scheme="Accent5">
+				<ui5-avatar-badge icon="edit" state="None" slot="badge"></ui5-avatar-badge>
+			</ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Interactive Avatar with Badge</div>
+				<div class="variant-note">Badge recommended on interactive avatars</div>
+			</div>
+		</div>
+
+		<!-- Interactive Avatar with Popup -->
+		<div class="variant-group">
+			<ui5-avatar 
+				id="popup-avt" 
+				size="M" 
+				mode="Interactive" 
+				initials="GH" 
+				color-scheme="Accent7" 
+				aria-label="User profile - click to open menu"
+				aria-haspopup="menu">
+			</ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Interactive Avatar with Popup Menu</div>
+				<div class="variant-note">Indicates menu availability via aria-haspopup</div>
+			</div>
+		</div>
+
+		<!-- Decorative Avatar -->
+		<div class="variant-group">
+			<ui5-avatar size="M" initials="IJ" role="presentation"></ui5-avatar>
+			<div class="variant-description">
+				<div class="variant-title">Decorative Avatar</div>
+				<div class="variant-note">Purely visual - hidden from screen readers</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

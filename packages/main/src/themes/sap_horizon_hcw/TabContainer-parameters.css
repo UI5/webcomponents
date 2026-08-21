@@ -1,6 +1,6 @@
 @import "../base/TabContainer-parameters.css";
 
-:root {
+:host {
 	--_ui5_tc_header_border_bottom: 0.125rem solid var(--sapPageHeader_BorderColor);
 
 	/* Header Item */

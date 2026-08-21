@@ -15,3 +15,34 @@
 #panel-expandable::part(header) {
     color: green;
 }
+
+#sticky-demo-container {
+    position: relative;
+    height: 300px;
+    border: 1px solid #ccc;
+}
+
+#sticky-demo-toolbar {
+    position: sticky;
+    top: 0;
+    height: 50px;
+    background: #0854a0;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    z-index: 2;
+}
+
+#sticky-demo-scroll-area {
+    height: 250px;
+    overflow: auto;
+}
+
+#panel-stickyHeader-customTop::part(header-wrapper) {
+    top: 50px;
+}
+
+#panel-stickyHeader-customTop::part(content) {
+    padding-top: 50px;
+}

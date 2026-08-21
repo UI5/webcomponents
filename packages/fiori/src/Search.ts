@@ -1,5 +1,5 @@
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
@@ -38,11 +38,14 @@ import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import type Select from "@ui5/webcomponents/dist/Select.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { ListItemBaseClickEventDetail } from "@ui5/webcomponents/dist/ListItemBase.js";
 
 interface ISearchSuggestionItem extends UI5Element {
 	selected: boolean;
 	text: string;
 	items?: ISearchSuggestionItem[];
+	eventDetails: { click?: ListItemBaseClickEventDetail };
 }
 
 type SearchEventDetails = {
@@ -72,6 +75,8 @@ type SearchEventDetails = {
  * @public
  * @since 2.9.0
  * @experimental
+ * @csspart popover - Used to style the suggestions popup
+ * @since 2.24.0
  */
 @customElement({
 	tag: "ui5-search",
@@ -132,7 +137,7 @@ class Search extends SearchField {
 		"default": true,
 		invalidateOnChildChange: true,
 	})
-	items!: Array<SearchItem | SearchItemGroup>;
+	items!: DefaultSlot<SearchItem | SearchItemGroup>;
 
 	/**
 	 * Defines the popup footer action button.
@@ -140,7 +145,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	action!: Array<Button>;
+	action!: Slot<Button>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -148,7 +153,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	illustration!: Array<IllustratedMessage>;
+	illustration!: Slot<IllustratedMessage>;
 
 	/**
 	 * Defines the illustrated message to be shown in the popup.
@@ -156,7 +161,7 @@ class Search extends SearchField {
 	 * @public
 	 */
 	@slot()
-	messageArea!: Array<SearchMessageArea>;
+	messageArea!: Slot<SearchMessageArea>;
 
 	/**
 	 * Indicates whether the items picker is open.
@@ -208,6 +213,13 @@ class Search extends SearchField {
 	_valueBeforeOpen: string;
 
 	/**
+	 * Holds the original typed value before arrow key navigation in dropdown.
+	 * Used to restore the value when navigating back to the input field.
+	 * @private
+	 */
+	_valueBeforeArrowNav?: string;
+
+	/**
 	 * Holds the currently proposed item which will be selected if the user presses Enter.
 	 * @private
 	 */
@@ -219,6 +231,12 @@ class Search extends SearchField {
 	 */
 	_isTyping: boolean;
 
+	/**
+	 * Bound reference to the delete handler for proper event listener removal.
+	 * @private
+	 */
+	_deleteHandler: (e: CustomEvent) => void;
+
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 
@@ -229,6 +247,8 @@ class Search extends SearchField {
 		this._typedInValue = "";
 		this._valueBeforeOpen = this.getAttribute("value") || "";
 		this._isTyping = false;
+
+		this._deleteHandler = this._onItemDelete.bind(this);
 	}
 
 	onBeforeRendering() {
@@ -266,8 +286,14 @@ class Search extends SearchField {
 			}
 		}
 
+		// Update highlight text and attach delete listeners
 		this._flattenItems.forEach(item => {
 			(item as SearchItem).highlightText = this._typedInValue;
+
+			// Listen for delete events on each item
+			// Using capture phase to ensure we catch it before application handlers
+			item.removeEventListener("ui5-delete", this._deleteHandler as EventListener, true);
+			item.addEventListener("ui5-delete", this._deleteHandler as EventListener, true);
 		});
 	}
 
@@ -359,13 +385,22 @@ class Search extends SearchField {
 		const focusableItems = this._getItemsList().listItems;
 		const firstListItem = focusableItems.at(0);
 
-		if (this.open) {
-			this._deselectItems();
-			this.value = this._typedInValue || this.value;
-			this._innerValue = this.value;
-
-			firstListItem?.focus();
+		// Store the original value before navigation starts
+		if (this._valueBeforeArrowNav === undefined) {
+			this._valueBeforeArrowNav = this._typedInValue || this.value;
 		}
+
+		this._deselectItems();
+		this.value = this._typedInValue || this.value;
+		this._innerValue = this.value;
+
+		// Clear any text selection to allow autocomplete to work again when navigating back
+		const innerInput = this.nativeInput;
+		if (innerInput) {
+			innerInput.setSelectionRange(this.value.length, this.value.length);
+		}
+
+		firstListItem?.focus();
 	}
 
 	_handleInnerClick() {
@@ -392,8 +427,8 @@ class Search extends SearchField {
 		const innerInput = this.nativeInput!;
 
 		innerInput.setSelectionRange(this.value.length, this.value.length);
-		this.open = false;
-		this._isTyping = false;
+
+		this._closePopupAndResetState();
 	}
 
 	_onMobileInputKeydown(e: KeyboardEvent) {
@@ -409,9 +444,22 @@ class Search extends SearchField {
 		this.fireDecoratorEvent("search", { item: this._proposedItem });
 	}
 
+	_closePopupAndResetState() {
+		this.open = false;
+		this._isTyping = false;
+		this._valueBeforeArrowNav = undefined;
+	}
+
 	_handleEscape() {
-		this.value = this._typedInValue || this.value;
-		this._innerValue = this.value;
+		// If arrow navigation was active, restore the original typed value
+		if (this._valueBeforeArrowNav !== undefined) {
+			this.value = this._valueBeforeArrowNav;
+			this._innerValue = this._valueBeforeArrowNav;
+			this._valueBeforeArrowNav = undefined;
+		} else {
+			this.value = this._typedInValue || this.value;
+			this._innerValue = this.value;
+		}
 		this._isTyping = false;
 	}
 
@@ -419,6 +467,7 @@ class Search extends SearchField {
 		super._handleInput(e);
 		this._typedInValue = this.value;
 		this._proposedItem = undefined;
+		this._valueBeforeArrowNav = undefined;
 
 		if (isPhone()) {
 			return;
@@ -434,6 +483,7 @@ class Search extends SearchField {
 		this._typedInValue = "";
 		this._innerValue = "";
 		this._shouldAutocomplete = false;
+		this._valueBeforeArrowNav = undefined;
 		this.open = false;
 	}
 
@@ -465,12 +515,43 @@ class Search extends SearchField {
 		e.preventDefault();
 
 		if (isFirstItem && isArrowUp) {
+			// Restore original value when navigating back to input
+			if (this._valueBeforeArrowNav !== undefined) {
+				this.value = this._valueBeforeArrowNav;
+				this._innerValue = this._valueBeforeArrowNav;
+				this._valueBeforeArrowNav = undefined;
+			}
+
 			this.nativeInput?.focus();
 			this._shouldAutocomplete = true;
 		}
 
+		if (isEscape(e)) {
+			this._handleEscape();
+		}
+
 		if ((isLastItem && isArrowDown) || isTab) {
 			this._getFooterButton()?.focus();
+		}
+	}
+
+	_onListItemFocusIn(e: FocusEvent) {
+		// Update input value when an item gets focus during arrow navigation
+		if (this._valueBeforeArrowNav === undefined) {
+			return;
+		}
+
+		const target = e.target as HTMLElement;
+		const item = target as ISearchSuggestionItem;
+
+		// Don't update input value when focus is on action buttons or delete button
+		if (target.hasAttribute("ui5-button") || target.hasAttribute("ui5-icon")) {
+			return;
+		}
+
+		if (item && item.text && !this._isShowMoreItem(item)) {
+			this.value = item.text;
+			this._innerValue = item.text;
 		}
 	}
 
@@ -479,10 +560,6 @@ class Search extends SearchField {
 		const prevented = !this.fireDecoratorEvent("search", { item });
 
 		if (prevented) {
-			if (isPhone()) {
-				this.open = false;
-			}
-
 			return;
 		}
 
@@ -491,9 +568,36 @@ class Search extends SearchField {
 		this._typedInValue = this.value;
 		this._shouldAutocomplete = false;
 		this._performTextSelection = true;
+		this._valueBeforeArrowNav = undefined;
 		this.open = false;
 		this._isTyping = false;
 		this.focus();
+	}
+
+	_onItemDelete(e: CustomEvent) {
+		// If we're in arrow navigation mode and an item was deleted,
+		// update the input to show the next matching item
+		if (this._valueBeforeArrowNav !== undefined) {
+			const deletedItem = e.target as ISearchSuggestionItem;
+
+			// Wait for the item to be removed from DOM
+			setTimeout(() => {
+				const nextItem = this._getFirstMatchingItem(this._valueBeforeArrowNav!);
+
+				if (nextItem && nextItem !== deletedItem) {
+					this.value = nextItem.text;
+					this._innerValue = nextItem.text;
+					this._selectMatchingItem(nextItem);
+					nextItem.focus();
+				} else {
+					// No more matching items, restore original typed value
+					this.value = this._valueBeforeArrowNav!;
+					this._innerValue = this._valueBeforeArrowNav!;
+					this._deselectItems();
+					this.nativeInput?.focus();
+				}
+			}, 0);
+		}
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -546,6 +650,7 @@ class Search extends SearchField {
 	_handleClose() {
 		this.open = false;
 		this._isTyping = false;
+		this._valueBeforeArrowNav = undefined;
 		this.fireDecoratorEvent("close");
 	}
 
@@ -586,7 +691,7 @@ class Search extends SearchField {
 	}
 
 	_getPicker() {
-		return this.shadowRoot!.querySelector<Popover>("[ui5-responsive-popover]")!;
+		return this.shadowRoot!.querySelector<Popover>("#ui5-search-list")!;
 	}
 
 	_getItemsList(): List {

@@ -2,7 +2,7 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -39,6 +39,7 @@ import UploadCollectionItemTemplate from "./UploadCollectionItemTemplate.js";
 
 // Styles
 import UploadCollectionItemCss from "./generated/themes/UploadCollectionItem.css.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 /**
  * @class
@@ -225,7 +226,7 @@ class UploadCollectionItem extends ListItem {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	thumbnail!: Array<HTMLElement>;
+	thumbnail!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nFioriBundle: I18nBundle;
@@ -236,6 +237,7 @@ class UploadCollectionItem extends ListItem {
 	async onDetailClick() {
 		super.onDetailClick();
 		this._editing = true;
+		this._editMode = true;
 
 		await this._initInputField();
 	}
@@ -299,6 +301,7 @@ class UploadCollectionItem extends ListItem {
 		this.fireDecoratorEvent("rename");
 
 		this._editing = false;
+		this._editMode = false;
 		this._focus();
 	}
 
@@ -310,6 +313,7 @@ class UploadCollectionItem extends ListItem {
 
 	async _onRenameCancel(e: KeyboardEvent | UI5CustomEvent<Button, "click">) {
 		this._editing = false;
+		this._editMode = false;
 
 		if (isEscape(e as KeyboardEvent)) {
 			await renderFinished();
@@ -322,6 +326,31 @@ class UploadCollectionItem extends ListItem {
 	_onRenameCancelKeyup(e: KeyboardEvent) {
 		if (isSpace(e)) {
 			this._onRenameCancel(e);
+		}
+	}
+
+	_handleTabNext(e: KeyboardEvent) {
+		if (this._editMode) {
+			return super._handleTabNext(e);
+		}
+
+		if (this.shouldForwardTabAfter()) {
+			if (!this.fireDecoratorEvent("forward-after")) {
+				e.preventDefault();
+			}
+		}
+	}
+
+	_handleTabPrevious(e: KeyboardEvent) {
+		if (this._editMode) {
+			return super._handleTabPrevious(e);
+		}
+
+		const target = e.target as HTMLElement;
+		if (this.shouldForwardTabBefore(target)) {
+			if (!this.fireDecoratorEvent("forward-before")) {
+				e.preventDefault();
+			}
 		}
 	}
 

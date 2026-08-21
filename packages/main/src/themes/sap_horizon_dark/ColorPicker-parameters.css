@@ -1,6 +1,6 @@
 @import "../base/ColorPicker-parameters.css";
 
-:root {
+:host {
     --_ui5_color_picker_slider_handle_border: 0.125rem solid var(--sapField_BorderColor);
     --_ui5_color_picker_slider_handle_outline_hover: 0.125rem solid var(--sapContent_FocusColor);
     --_ui5_color_picker_slider_handle_outline_focus: 0.125rem solid var(--sapContent_FocusColor);

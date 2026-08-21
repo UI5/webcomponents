@@ -20,6 +20,7 @@ There are several configuration settings that affect all UI5 Web Components glob
 | [enableDefaultTooltips](#enableDefaultTooltips) | `true`, `false`                                                                                                                                                                                                                                                                                | `true`               | Whether to display default tooltips                     | Components (Icon, Button, RatingIndicator, etc.)                                                      |
 | [timezone](#timezone)                         | `Asia/Tokyo`, `Pacific/Apia`, `Asia/Kolkata`, `Europe/Sofia` and etc.                                                                                                                                                                                                                          | Your local time zone. | Allows to override your local time zone.                               | Date/time components (`ui5-date-picker`, etc.)                 |
 | [themeRoot](#themeRoot)                       | String to a URL - see the [themeRoot](#themeRoot) section below                                                                                                                                                                                                                                | N/A                   | Allows to set a URL to a Theme-designer-created custom theme.          | All components                                                 |
+| [ignoreUrlParams](#ignoreUrlParams)           | `true`, `false`                                                                                                                                                                                                                                                                                | `false`               | Whether to ignore URL parameters during configuration initialization   | Framework                                                      |
 
 ### theme
 <a name="theme"></a>
@@ -304,6 +305,26 @@ or, the preferred new format:
 
 Failing to do so will result in a warning in the console and the theme root will not be set.
 
+### ignoreUrlParams
+<a name="ignoreUrlParams"></a>
+
+*Since 2.23.0*
+
+This configuration option controls whether URL parameters (e.g. `sap-ui-theme`, `sap-ui-language`, `sap-ui-animationMode`) are processed during framework initialization.
+
+By default, the framework reads `sap-*` and `sap-ui-*` URL parameters and uses them to override the configuration script settings. While useful during development and testing, production applications may prefer to disable this behavior to ensure consistent and predictable configuration.
+
+When set to `true`, all URL parameter processing is skipped and only the configuration script and module imports are used.
+
+Example:
+```html
+<script data-ui5-config type="application/json">
+{
+	"ignoreUrlParams": true
+}
+</script>
+```
+
 ## Configuration Script
 <a name="script"></a>
 
@@ -406,4 +427,10 @@ import { getTimezone } from "@ui5/webcomponents-base/dist/config/Timezone.js";
 
 ```js
 import { getThemeRoot, setThemeRoot } from "@ui5/webcomponents-base/dist/config/ThemeRoot.js";
+```
+
+ - `ignoreUrlParams`
+
+```js
+import { getIgnoreUrlParams, setIgnoreUrlParams } from "@ui5/webcomponents-base/dist/config/UrlParams.js";
 ```

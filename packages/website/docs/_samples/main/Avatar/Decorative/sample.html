@@ -1,0 +1,43 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+    <style>
+        .example-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <div class="example-row">
+        <ui5-avatar mode="Decorative" initials="AB"></ui5-avatar>
+        <ui5-label>Decorative avatar with initials - not in accessibility tree</ui5-label>
+    </div>
+
+    <div class="example-row">
+        <ui5-avatar mode="Image" initials="CD"></ui5-avatar>
+        <ui5-label>Image mode avatar (default) - announced as "Avatar CD"</ui5-label>
+    </div>
+
+    <div class="example-row">
+        <ui5-avatar mode="Interactive" initials="EF"></ui5-avatar>
+        <ui5-label>Interactive mode - focusable with role="button"</ui5-label>
+    </div>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

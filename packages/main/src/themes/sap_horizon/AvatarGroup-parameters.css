@@ -1,5 +1,22 @@
 @import "../base/AvatarGroup-parameters.css";
 
-:root {
-	--_ui5_avatar_group_focus_border_radius: 0.375rem;
+/* Context-aware border-radius - dynamically set based on avatar size (height / 2) */
+.ui5-avatar-group-items-xs {
+	--_ui5_avatar_group_focus_border_radius: 1rem; /* 2rem / 2 */
+}
+
+.ui5-avatar-group-items-s {
+	--_ui5_avatar_group_focus_border_radius: 1.5rem; /* 3rem / 2 */
+}
+
+.ui5-avatar-group-items-m {
+	--_ui5_avatar_group_focus_border_radius: 2rem; /* 4rem / 2 */
+}
+
+.ui5-avatar-group-items-l {
+	--_ui5_avatar_group_focus_border_radius: 2.5rem; /* 5rem / 2 */
+}
+
+.ui5-avatar-group-items-xl {
+	--_ui5_avatar_group_focus_border_radius: 3.5rem; /* 7rem / 2 */
 }

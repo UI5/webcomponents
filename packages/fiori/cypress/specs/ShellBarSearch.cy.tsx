@@ -76,4 +76,36 @@ describe("Behaviour", () => {
 		cy.get("[ui5-shellbar-search]")
 			.should("have.prop", "open", true);
 	});
+
+	it("should collapse and focus the button when Enter is pressed without value", () => {
+		cy.mount(
+			<ShellBarSearch/>
+		);
+
+		// Initially expanded
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "collapsed", false);
+
+		// Focus the input
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		// Press Enter without value
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("input")
+			.realPress("Enter");
+
+		// Should be collapsed
+		cy.get("[ui5-shellbar-search]")
+			.should("have.prop", "collapsed", true);
+
+		// Focus should be on the search button
+		cy.get("[ui5-shellbar-search]")
+			.shadow()
+			.find("[ui5-button]")
+			.should("have.focus");
+	});
 });

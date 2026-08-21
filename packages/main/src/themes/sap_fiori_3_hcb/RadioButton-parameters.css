@@ -1,6 +1,6 @@
 @import "../base/RadioButton-parameters.css";
 
-:root {
+:host {
 	--_ui5_radio_button_checked_fill: var(--sapContent_IconColor);
 	--_ui5_radio_button_checked_warning_fill: var(--sapContent_IconColor);
 	--_ui5_radio_button_checked_error_fill: var(--sapContent_IconColor);

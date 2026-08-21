@@ -10,7 +10,7 @@ const shouldUpdate = (runtimeIndex: string | undefined) => {
 	if (runtimeIndex === undefined) {
 		return true;
 	}
-	return compareRuntimes(getCurrentRuntimeIndex(), parseInt(runtimeIndex)) === 1; // 1 means the current is newer, 0 means the same, -1 means the resource's runtime is newer
+	return compareRuntimes(getCurrentRuntimeIndex(), parseInt(runtimeIndex)) >= 1; // 1 or larger means the current is newer, 0 means the same, -1 means the resource's runtime is newer
 };
 
 const createStyle = (content: string, name: string, value = "", theme?: string) => {
@@ -27,6 +27,10 @@ const createStyle = (content: string, name: string, value = "", theme?: string) 
 };
 
 const updateStyle = (content: string, name: string, value = "", theme?: string) => {
+	if (isSSR) {
+		return;
+	}
+
 	const currentRuntimeIndex = getCurrentRuntimeIndex();
 
 	const stylesheet = document.adoptedStyleSheets.find(sh => (sh as Record<string, any>)._ui5StyleId === getStyleId(name, value));

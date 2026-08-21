@@ -1,6 +1,6 @@
 @import "../base/Input-parameters.css";
 
-:root {
+:host {
 	--_ui5-input-border: none;
 	--_ui5_input_hover_border: none;
 	--_ui5_input_focus_border_radius: 0.25rem;
@@ -30,16 +30,16 @@
 	--_ui5_input_icon_wrapper_success_state_height: calc(100% - var(--_ui5_input_value_state_success_border_width));
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	--_ui5_input_information_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_information_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_error_warning_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_error_warning_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_custom_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_error_warning_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_error_warning_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
-	--_ui5_input_information_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
-	--_ui5_input_information_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_information_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_information_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_error_warning_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_error_warning_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_custom_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_error_warning_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_error_warning_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+		--_ui5_input_information_custom_icon_padding: .3125rem .5rem .1875rem .5rem;
+		--_ui5_input_information_custom_focused_icon_padding: .3125rem .5rem .25rem .5rem;
+	}
 }

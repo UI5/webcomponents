@@ -33,5 +33,5 @@ const filesToDelete = files.filter(f => {
     return f.isFile() && !f.name.endsWith(".js")&& !f.name.endsWith(".json") && !f.name.endsWith(".svg") && !f.name.endsWith(".d.ts") && !f.name.endsWith("package.json")
 });
 
-console.log(filesToDelete.filter(f => f.path.includes("localization/dist/generated/assets/cldr")))
+// console.log(filesToDelete.filter(f => f.path.includes("localization/dist/generated/assets/cldr")))
 filesToDelete.map(f => rm(path.join(f.path ?? f.parentPath, f.name)));

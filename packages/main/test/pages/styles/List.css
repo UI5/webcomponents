@@ -23,6 +23,10 @@
     justify-content: space-between
 }
 
+.list6auto {
+    height: 500px;
+}
+
 .largeTopMargin {
     margin-top: 2rem;
 }

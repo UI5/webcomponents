@@ -5,6 +5,7 @@ import {
 } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type SideNavigation from "./SideNavigation.js";
+import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type SideNavigationItemClickEventDetail = {
 	altKey: boolean;
@@ -62,11 +63,24 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	@property()
 	tooltip?: string;
 
+	/**
+	 * Defines the accessible ARIA name of the component.
+	 *
+	 * @default undefined
+	 * @public
+	 * @since 2.22.0
+	 */
+	@property()
+	accessibleName?: string;
+
 	@property({ noAttribute: true })
 	forcedTabIndex = "-1";
 
 	@property({ type: Boolean })
 	sideNavCollapsed = false;
+
+	@property({ type: Boolean })
+	sideNavAnimating = false;
 
 	@property({ type: Boolean })
 	inPopover = false;
@@ -154,12 +168,8 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	}
 }
 
-const isInstanceOfSideNavigationItemBase = (object: any): object is SideNavigationItemBase => {
-	return "isSideNavigationItemBase" in object;
-};
-
 export default SideNavigationItemBase;
 export type {
 	SideNavigationItemClickEventDetail,
 };
-export { isInstanceOfSideNavigationItemBase };
+export const isInstanceOfSideNavigationItemBase = createInstanceChecker<SideNavigationItemBase>("isSideNavigationItemBase");

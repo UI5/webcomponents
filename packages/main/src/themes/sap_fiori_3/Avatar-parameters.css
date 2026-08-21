@@ -1,6 +1,6 @@
 @import "../base/Avatar-parameters.css";
 
-:root {
+:host {
 	--_ui5_avatar_fontsize_XS: 1rem;
 	--_ui5_avatar_fontsize_S: 1.125rem;
 	--_ui5_avatar_fontsize_M: 1.5rem;

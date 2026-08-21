@@ -1,5 +1,5 @@
 export interface CompositionComponent {
-	getInputEl: () => HTMLInputElement | null;
+	getInputEl: () => HTMLInputElement | HTMLTextAreaElement | null;
 	updateCompositionState: (isComposing: boolean) => void;
 }
 

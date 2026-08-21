@@ -58,6 +58,7 @@ export default function TextAreaTemplate(this: TextArea) {
 								currentVersion={this.currentVersion}
 								totalVersions={this.totalVersions}
 								promptDescription={this.promptDescription}
+								focused={this.focused}
 								onButtonClick={this._handleAIButtonClick}
 								onStopGeneration={this.handleStopGeneration}
 								onVersionChange={this._handleVersionChange}

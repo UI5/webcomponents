@@ -80,6 +80,77 @@ describe("Accessibility", () => {
 			.find(".ui5-dsc-side")
 			.should("have.attr", "aria-label", customSideContentLabel);
 	});
+
+	it("tests no role when explicitly set to undefined via accessibilityAttributes", () => {
+		cy.mount(
+			<DynamicSideContent>
+				<div>
+					<h1>Main Content</h1>
+				</div>
+				<div slot="sideContent">
+					<h1>Side Content</h1>
+				</div>
+			</DynamicSideContent>
+		);
+
+		cy.get("[ui5-dynamic-side-content]")
+			.as("dsc");
+
+		cy.get<DynamicSideContent>("@dsc")
+			.then($dsc => {
+				$dsc.get(0).accessibilityAttributes = {
+					mainContent: { role: undefined },
+					sideContent: { role: undefined },
+				};
+			});
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("not.have.attr", "role");
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("not.have.attr", "role");
+	});
+
+	it("tests custom roles via accessibilityAttributes", () => {
+		const customMainRole = "region";
+		const customSideRole = "note";
+
+		cy.mount(
+			<DynamicSideContent>
+				<div>
+					<h1>Main Content</h1>
+				</div>
+				<div slot="sideContent">
+					<h1>Side Content</h1>
+				</div>
+			</DynamicSideContent>
+		);
+
+		cy.get("[ui5-dynamic-side-content]")
+			.as("dsc");
+
+		cy.get<DynamicSideContent>("@dsc")
+			.then($dsc => {
+				$dsc.get(0).accessibilityAttributes = {
+					mainContent: { role: customMainRole },
+					sideContent: { role: customSideRole },
+				};
+			});
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-main")
+			.should("have.attr", "role", customMainRole);
+
+		cy.get("@dsc")
+			.shadow()
+			.find(".ui5-dsc-side")
+			.should("have.attr", "role", customSideRole);
+	});
 });
 
 describe("'sideContentPosition' property", () => {

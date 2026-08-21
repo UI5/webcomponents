@@ -1,26 +1,17 @@
 @import "../base/sizes-parameters.css";
-:root {
-	/* Slider, Range Slider */
-	--_ui5_slider_handle_width: 1.25rem;
-	--_ui5_slider_handle_height: 1.25rem;
-	--_ui5_slider_handle_top: -0.5rem;
 
+:host {
 	/* ColorPicker */
 	--_ui5_color_picker_slider_handle_container_margin_top: -0.125rem;
 }
 
-[data-ui5-compact-size],
-.ui5-content-density-compact,
-.sapUiSizeCompact {
-	/* CheckBox */
-	--_ui5_checkbox_focus_position: 0.3125rem;
-	--_ui5_checkbox_wrapped_focus_inset_block: 0.1875rem;
+@container style(--ui5_content_density: compact) {
+	:host {
+		/* CheckBox */
+		--_ui5_checkbox_focus_position: 0.3125rem;
+		--_ui5_checkbox_wrapped_focus_inset_block: 0.1875rem;
 
-	/* ColorPicker */
-	--_ui5_color_picker_slider_handle_container_margin_top: none;
-
-	/* Timeline Item */
-	--_ui5_timeline_tli_indicator_after_height: 50%;
-	--_ui5_timeline_tli_indicator_after_top: -50%;
-	--_ui5_timeline_tli_horizontal_indicator_after_width: calc(100% - 1rem);
+		/* ColorPicker */
+		--_ui5_color_picker_slider_handle_container_margin_top: none;
+	}
 }

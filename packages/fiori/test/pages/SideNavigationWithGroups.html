@@ -13,7 +13,7 @@
 								  icon="home"
 								  href="#home"
 								  tooltip="Home tooltip"></ui5-side-navigation-item>
-		<ui5-side-navigation-group id="group1" expanded text="Group" tooltip="Group tooltip">
+		<ui5-side-navigation-group id="group1" expanded text="Group" tooltip="Group tooltip" accessible-name="Product Management Group">
 			<!-- Items -->
 			<ui5-side-navigation-item text="Home 1 lorem ipsum dolor sit amet, consectetur adipiscing elit"
 									  icon="home"
@@ -34,7 +34,7 @@
 			<ui5-side-navigation-sub-item text="Others" selected></ui5-side-navigation-sub-item>
 		</ui5-side-navigation-item>
 		<ui5-side-navigation-item href="#locations" text="Locations 2" icon="locate-me"></ui5-side-navigation-item>
-		<ui5-side-navigation-group expanded text="Group 2 lorem ipsum dolor sit amet, consectetur adipiscing elit">
+		<ui5-side-navigation-group expanded text="Group 2 lorem ipsum dolor sit amet, consectetur adipiscing elit" accessible-name="Administration and Settings">
 			<!-- Items -->
 			<ui5-side-navigation-item text="Home 1"
 									  icon="home"
@@ -109,6 +109,12 @@
 		<br>
 		<ui5-label for="slider" show-colon>Change width</ui5-label>
 		<ui5-slider id="slider" value="0" min="0" max="600" step="50" show-tickmarks label-interval="2"></ui5-slider>
+		<br>
+		<ui5-checkbox id="preventToggle" text="preventDefault on item-toggle"></ui5-checkbox>
+		<br>
+		<ui5-label show-colon>item-toggle log</ui5-label>
+		<div id="toggleLog"
+			 style="width: 320px; height: 200px; overflow: auto; border: 1px solid var(--sapList_BorderColor); padding: 0.25rem; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap;"></div>
 	</div>
 
 	<script>
@@ -131,6 +137,24 @@
 
 		slider.addEventListener("ui5-input", function (event) {
 			sn1.style.width = event.target.value + 'px';
+		});
+
+		// Demonstrate the "item-toggle" event
+		const toggleLog = document.getElementById("toggleLog");
+		const preventToggle = document.getElementById("preventToggle");
+
+		sn.addEventListener("item-toggle", e => {
+			const { item } = e.detail;
+			const label = item.text || "(no text)";
+
+			toggleLog.textContent =
+				`toggle "${label}"`
+				+ `${preventToggle.checked ? " - prevented" : ""}\n`
+				+ toggleLog.textContent;
+
+			if (preventToggle.checked) {
+				e.preventDefault();
+			}
 		});
 	</script>
 </body>

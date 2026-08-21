@@ -3,12 +3,15 @@ import ListItemBaseTemplate from "./ListItemBaseTemplate.js";
 import type MultiComboBoxItem from "./MultiComboBoxItem.js";
 
 export default function MultiComboBoxItemTemplate(this: MultiComboBoxItem) {
-	return ListItemBaseTemplate.call(this, { listItemContent }, { role: "option" });
+	return ListItemBaseTemplate.call(this, { listItemContent }, {
+		role: "option",
+	});
 }
 
 function listItemContent(this: MultiComboBoxItem) {
 	return (
 		<>
+			<span class="ui5-hidden-text">{this._selectionStateText}</span>
 			<CheckBox
 				disabled={this._readonly}
 				checked={this.selected}

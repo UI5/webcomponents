@@ -18,16 +18,23 @@ export default function SideNavigationSubItemTemplate(this: SideNavigationSubIte
 						  tabIndex={this.effectiveTabIndex}
 						  aria-current={this._ariaCurrent}
 						  aria-selected={this._ariaSelected}
+						  aria-label={this.accessibleName || undefined}
 						  title={this._tooltip}
 						  aria-disabled={this.effectiveDisabled}
 						  href={this._href}
 						  target={this._target}
 						  aria-haspopup={this._ariaHasPopup}
+						  aria-describedby={this._describedBy}
 			>
 				{this.icon &&
 					<Icon class="ui5-sn-item-icon" name={this.icon}/>
 				}
-				<div class="ui5-sn-item-text">{this.text}</div>
+				<div class="ui5-sn-item-text" id={this._textId}>{this.text}</div>
+				{this.hasTag &&
+					<div id={this._tagId} class="ui5-sn-item-tag-slot">
+						<slot name="tag"></slot>
+					</div>
+				}
 				{this.isExternalLink &&
 					<Icon class="ui5-sn-item-external-link-icon"
 						  name={arrowRight}

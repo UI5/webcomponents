@@ -125,7 +125,7 @@
 			{
 				text: "Regenerate",
 				action: "regenerate",
-				processingLabel: "Regenerating text...",
+				processingLabel: "Regenerating ...",
 				completedLabel: "Regenerated text",
 				textKey: "en",
 				replaces: "generate"
@@ -193,7 +193,7 @@
 				textarea.value = versionHistory[versionIndex].value;
 			}
 
-			textarea.currentVersion = currentIndexHistory;
+			textarea.currentVersion = currentIndexHistory + 1;
 			textarea.totalVersions = versionHistory.length;
 
 			if (versionHistory[currentIndexHistory]) {
@@ -237,7 +237,7 @@
 			
 			if (!hasHistory) {
 				const generateItem = document.createElement('ui5-menu-item');
-				generateItem.setAttribute('text', 'Generate text');
+				generateItem.setAttribute('text', 'Generate');
 				generateItem.dataset.action = 'generate';
 				generateItem.dataset.processingLabel = 'Generating...';
 				generateItem.dataset.completedLabel = 'Generated text';
@@ -366,13 +366,27 @@
 			stopTypingAnimation();
 			currentGenerationIndex += 1;
 			
-			// Restore the previous content instead of saving the cancelled action
-			textarea.value = contentBeforeGeneration;
+			const stoppedValue = textarea.value;
+			if (stoppedValue.trim()) {
+				const menuItem = findMenuItemByAction(currentActionInProgress);
+				const completedLabel = (menuItem && menuItem.dataset.completedLabel) 
+					? menuItem.dataset.completedLabel + " (stopped)" 
+					: "Generation stopped";
+
+				versionHistory.push({
+					value: stoppedValue,
+					action: currentActionInProgress,
+					endAction: completedLabel,
+					timestamp: new Date().toISOString()
+				});
+
+				currentIndexHistory = versionHistory.length - 1;
+				buildMenuFromConfig();
+				updateComponentState();
+			}
+
 			currentActionInProgress = null;
 			textarea.loading = false;
-			textarea.promptDescription = "";
-
-			updateComponentState();
 		}
 
 		function handleVersionChange(event) {

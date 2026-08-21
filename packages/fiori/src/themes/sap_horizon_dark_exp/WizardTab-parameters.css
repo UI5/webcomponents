@@ -1,6 +1,6 @@
 @import "../base/WizardTab-parameters.css";
 
-:root {
+:host {
 	--_ui5_wiz_tab_title_color: var(--sapTextColor);
 	--_ui5_wiz_tab_title_font_family: var(--sapFontBoldFamily);
 	--_ui5_wiz_tab_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);

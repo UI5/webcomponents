@@ -48,8 +48,8 @@
 }
 
 .ui5-dp-monthsectext {
-	font-size: 0.75rem;
-	color: var(--sapNeutralElementColor);
+	font-size: var(--sapFontSmallSize);
+	color: var(--sapTextColor);
 }
 
 .ui5-mp-item.ui5-mp-item--selected,

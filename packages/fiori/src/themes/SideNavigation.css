@@ -20,9 +20,12 @@
 	width: var(--_ui5_side_navigation_collapsed_width);
 }
 
-:host([is-phone]) {
-	width: 100%;
+@media (width < 600px) {
+	:host(:not([hidden])) {
+		width: 100%;
+	}
 }
+
 
 .ui5-sn-root {
 	height: 100%;
@@ -30,6 +33,10 @@
 	flex-direction: column;
 	box-sizing: inherit;
 	border-radius: inherit;
+}
+
+.ui5-sn-root.ui5-sn-animating {
+	overflow: hidden;
 }
 
 .ui5-sn-flexible {
@@ -43,6 +50,12 @@
 
 .ui5-sn-fixed {
 	position: relative;
+}
+
+.ui5-sn-root.ui5-sn-animating .ui5-sn-list.ui5-sn-flexible,
+.ui5-sn-root.ui5-sn-animating .ui5-sn-list.ui5-sn-fixed {
+	width: var(--_ui5_side_navigation_width);
+	overflow: hidden;
 }
 
 .ui5-sn-list {

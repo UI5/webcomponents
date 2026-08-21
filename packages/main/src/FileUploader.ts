@@ -1,8 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import {
@@ -34,6 +35,10 @@ import {
 	VALUE_STATE_INFORMATION,
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
+	VALUE_STATE_TYPE_SUCCESS,
+	VALUE_STATE_TYPE_INFORMATION,
+	VALUE_STATE_TYPE_ERROR,
+	VALUE_STATE_TYPE_WARNING,
 	FILEUPLOADER_DEFAULT_PLACEHOLDER,
 	FILEUPLOADER_DEFAULT_MULTIPLE_PLACEHOLDER,
 	FILEUPLOADER_ROLE_DESCRIPTION,
@@ -53,6 +58,8 @@ import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverComm
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
 
 const convertBytesToMegabytes = (bytes: number) => (bytes / 1024) / 1024;
+
+type MappedValueState = Exclude<`${ValueState}`, "None">;
 
 type FileData = {
 	fileName: string,
@@ -271,7 +278,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	content!: Array<HTMLElement>;
+	content!: DefaultSlot<HTMLElement>;
 
 	/**
 	 * Defines the value state message that will be displayed as pop up under the component.
@@ -284,7 +291,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	 * @public
 	 */
 	@slot()
-	valueStateMessage!: Array<HTMLElement>;
+	valueStateMessage!: Slot<HTMLElement>;
 
 	@query(".ui5-file-uploader-form")
 	_form!: HTMLFormElement;
@@ -303,8 +310,6 @@ class FileUploader extends UI5Element implements IFormInputElement {
 
 	@property({ type: Boolean, noAttribute: true })
 	_tokenizerOpen = false;
-
-	static emptyInput: HTMLInputElement;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -488,10 +493,6 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		this._clearFileSelection();
 	}
 
-	_onFormSubmit(e: SubmitEvent) {
-		e.preventDefault();
-	}
-
 	_openFileBrowser() {
 		this._input.click();
 	}
@@ -499,7 +500,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 	_clearFileSelection() {
 		this._selectedFilesNames = [];
 		this.value = "";
-		this._form?.reset();
+		this._input.files = new DataTransfer().files;
 		this.fireDecoratorEvent("change", {
 			files: this.files,
 		});
@@ -515,7 +516,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 			return this._input.files;
 		}
 
-		return FileUploader._emptyFilesList;
+		return null;
 	}
 
 	onAfterRendering() {
@@ -621,27 +622,40 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		}
 	}
 
-	/**
-	 * in case when the component is not placed in the DOM, return empty FileList, like native input would do
-	 * @private
-	 */
-	static get _emptyFilesList() {
-		if (!this.emptyInput) {
-			this.emptyInput = document.createElement("input");
-			this.emptyInput.type = "file";
-		}
-		return this.emptyInput.files;
-	}
-
 	get accInfo(): InputAccInfo {
 		return {
 			"ariaRoledescription": FileUploader.i18nBundle.getText(FILEUPLOADER_ROLE_DESCRIPTION),
-			"ariaRequired": this.required || undefined,
-			"ariaInvalid": this.valueState === ValueState.Negative || undefined,
+			"ariaInvalid": this.valueState === ValueState.Negative,
 			"ariaHasPopup": "dialog",
 			"ariaLabel": getAllAccessibleNameRefTexts(this) || getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this) || undefined,
 			"ariaDescription": getAllAccessibleDescriptionRefTexts(this) || getEffectiveAriaDescriptionText(this) || undefined,
+			"ariaDescribedBy": this.hasValueState ? "valueStateDesc" : undefined,
 		};
+	}
+
+	get valueStateTypeMappings(): Record<MappedValueState, string> {
+		return {
+			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_SUCCESS),
+			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_INFORMATION),
+			"Negative": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
+			"Critical": FileUploader.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
+		};
+	}
+
+	get ariaValueStateHiddenText(): string | undefined {
+		if (!this.hasValueState) {
+			return undefined;
+		}
+
+		const valueStateType = this.valueStateTypeMappings[this.valueState as MappedValueState];
+
+		if (this.shouldDisplayDefaultValueStateMessage) {
+			return this.valueStateText ? `${valueStateType} ${this.valueStateText}` : valueStateType;
+		}
+
+		return this.valueStateMessage.length
+			? `${valueStateType} ${this.valueStateMessage.map(el => el.textContent).join(" ")}`
+			: valueStateType;
 	}
 
 	get inputTitle(): string {
@@ -662,7 +676,7 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		return this.placeholder ?? (this.multiple ? multiplePlaceholder : singlePlaceholder);
 	}
 
-	get valueStateTextMappings(): Record<string, string> {
+	get valueStateTextMappings(): Record<MappedValueState, string> {
 		return {
 			"Positive": FileUploader.i18nBundle.getText(VALUE_STATE_SUCCESS),
 			"Information": FileUploader.i18nBundle.getText(VALUE_STATE_INFORMATION),
@@ -671,8 +685,8 @@ class FileUploader extends UI5Element implements IFormInputElement {
 		};
 	}
 
-	get valueStateText(): string {
-		return this.valueStateTextMappings[this.valueState];
+	get valueStateText(): string | undefined {
+		return this.valueStateTextMappings[this.valueState as MappedValueState];
 	}
 
 	get hasValueState(): boolean {

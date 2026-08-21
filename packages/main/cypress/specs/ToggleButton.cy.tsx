@@ -119,4 +119,40 @@ describe("Toggle Button keyboard interaction tests", () => {
 	it("should not toggle button to pressed state on click with meta key pressed when click is prevented", () => {
 		testClick(true, "metaKey");
 	});
+
+	it("Should toggle button to pressed state when SPACE + Shift are pressed", () => {
+		cy.mount(<ToggleButton>Toggle Button</ToggleButton>);
+
+		cy.get("[ui5-toggle-button]")
+			.as("toggleButton");
+
+		cy.get("@toggleButton")
+			.shadow()
+			.find(".ui5-button-root")
+			.focus()
+			.should("be.focused")
+			.realPress(["Space", "Escape"]);
+    
+
+		cy.get("@toggleButton")
+			.should("not.have.attr", "pressed");
+	});
+
+	it("Should toggle button to pressed state when SPACE + Escape are pressed", () => {
+		cy.mount(<ToggleButton>Toggle Button</ToggleButton>);
+
+		cy.get("[ui5-toggle-button]")
+			.as("toggleButton");
+
+		cy.get("@toggleButton")
+			.shadow()
+			.find(".ui5-button-root")
+			.focus()
+			.should("be.focused")
+			.realPress(["Space", "Escape"]);
+    
+
+		cy.get("@toggleButton")
+			.should("not.have.attr", "pressed");
+	});
 });

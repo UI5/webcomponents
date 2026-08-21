@@ -24,6 +24,7 @@ import {
 	getFetchDefaultLanguage,
 } from "./config/Language.js";
 import { getNoConflict, setNoConflict } from "./config/NoConflict.js";
+import { getIgnoreUrlParams, setIgnoreUrlParams } from "./config/UrlParams.js";
 import {
 	getTheme,
 	setTheme,
@@ -35,6 +36,7 @@ import customElement from "./decorators/customElement.js";
 import event from "./decorators/event.js";
 import property from "./decorators/property.js";
 import slot from "./decorators/slot.js";
+import slotStrict from "./decorators/slot-strict.js";
 
 // delegate/
 import ItemNavigation from "./delegate/ItemNavigation.js";
@@ -132,6 +134,8 @@ export {
 	getFetchDefaultLanguage,
 	getNoConflict,
 	setNoConflict,
+	getIgnoreUrlParams,
+	setIgnoreUrlParams,
 	getTheme,
 	setTheme,
 	getDefaultTheme,
@@ -141,6 +145,7 @@ export {
 	event,
 	property,
 	slot,
+	slotStrict,
 
 	// delegate/
 	ItemNavigation,

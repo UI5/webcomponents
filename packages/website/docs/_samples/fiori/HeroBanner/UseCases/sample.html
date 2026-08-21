@@ -1,0 +1,91 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+    <!-- playground-fold-end -->
+
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">Search</ui5-title>
+        <ui5-hero-banner
+            header-text="Good Morning, Anna"
+            overline-text="Monday, May 26, 2026">
+            <ui5-button slot="actions" icon="cart">Cart</ui5-button>
+            <ui5-search
+                placeholder="Search purchase orders, suppliers, materials..."
+                style="width: 100%; max-width: 100%;">
+            </ui5-search>
+        </ui5-hero-banner>
+
+        <br>
+
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">Header Actions Only</ui5-title>
+        <ui5-hero-banner
+            header-text="Welcome, Lisa"
+            overline-text="Tuesday, May 27, 2026">
+            <ui5-button slot="actions" icon="action-settings">Settings</ui5-button>
+            <ui5-button slot="actions" icon="log">Activity Log</ui5-button>
+        </ui5-hero-banner>
+
+        <br>
+
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">Content with Actions</ui5-title>
+        <ui5-hero-banner
+            header-text="Good Morning, Robert"
+            overline-text="Tuesday, May 27, 2026">
+            <div style="margin: 0;">You have 3 pending approvals and 12 new notifications since your last visit. Review your tasks below or use the quick actions to get started.</div>
+            <div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <ui5-button icon="task" design="Default">Review Approvals</ui5-button>
+                <ui5-button icon="add-document" design="Default">Create Report</ui5-button>
+                <ui5-button icon="collaborate" design="Default">Team Overview</ui5-button>
+            </div>
+        </ui5-hero-banner>
+
+        <br>
+
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">Actions Below Header (actionsPlacement="BottomStart")</ui5-title>
+        <ui5-hero-banner
+            header-text="Hello, Emma"
+            overline-text="Wednesday, May 28, 2026"
+            actions-placement="BottomStart"
+            columns-ratio="Equal">
+            <div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <ui5-button icon="create" design="Default">New Request</ui5-button>
+                <ui5-button icon="add-document" design="Default">Create Report</ui5-button>
+                <ui5-button icon="collaborate" design="Default">Team Overview</ui5-button>
+            </div>
+            <ui5-card slot="endContent" style="width: 100%;">
+                <ui5-card-header slot="header" title-text="Open Tickets" subtitle-text="Support"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold; color: var(--sapNegativeColor);">42</div>
+            </ui5-card>
+        </ui5-hero-banner>
+
+        <br>
+
+        <ui5-title size="H4" style="display: block; margin-bottom: 0.5rem;">Header at Bottom (headerBlockPlacement="Bottom")</ui5-title>
+        <ui5-hero-banner
+            header-text="Good Afternoon, James"
+            overline-text="Wednesday, May 28, 2026"
+            columns-ratio="FirstWider"
+            header-block-placement="Bottom">
+            <div slot="actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <ui5-button icon="cart" design="Default">Orders</ui5-button>
+                <ui5-button icon="task" design="Default">Tasks</ui5-button>
+            </div>
+            <ui5-card slot="endContent" style="width: 100%;">
+                <ui5-card-header slot="header" title-text="Revenue YTD" subtitle-text="Q2 2026"></ui5-card-header>
+                <div style="padding: 0.75rem; font-size: 1.5rem; font-weight: bold;">€4.2M</div>
+            </ui5-card>
+        </ui5-hero-banner>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

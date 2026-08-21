@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
+import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
@@ -61,7 +62,6 @@ import type Button from "./Button.js";
 import {
 	MULTIINPUT_SHOW_MORE_TOKENS,
 	TOKENIZER_ARIA_LABEL,
-	TOKENIZER_POPOVER_REMOVE,
 	TOKENIZER_ARIA_CONTAIN_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_ONE_TOKEN,
 	TOKENIZER_ARIA_CONTAIN_SEVERAL_TOKENS,
@@ -69,6 +69,7 @@ import {
 	TOKENIZER_CLEAR_ALL,
 	TOKENIZER_DIALOG_OK_BUTTON,
 	TOKENIZER_DIALOG_CANCEL_BUTTON,
+	INPUT_SUGGESTIONS_TITLE,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -305,6 +306,14 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	popoverMinWidth?: number;
 
 	/**
+	 * Sets the title of the nMore Popover on mobile.
+	 * **Note:** Used inside MultiInput component.
+	 * @private
+	 */
+	@property()
+	popoverTitle?: string;
+
+	/**
 	 * Prevents tokens to be part of the tab chain.
 	 * **Note:** Used inside MultiInput, MultiComboBox and FileUploader components.
 	 * @default false
@@ -350,7 +359,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			slots: false,
 		},
 	})
-	tokens!: Array<Token>;
+	tokens!: DefaultSlot<Token>;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -421,6 +430,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._tokens.forEach(token => {
 			token.singleToken = (tokensLength === 1) || this.multiLine;
 			token.readonly = this.readonly;
+			// Clear lastVisibleToken when expanding
+			if (this.expanded && token.lastVisibleToken) {
+				token.lastVisibleToken = false;
+			}
 		});
 	}
 
@@ -511,7 +524,35 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 
 		this._scrollToEndIfNeeded();
-		this._tokenDeleting = false;
+
+		// Only reset _tokenDeleting if no token is currently marked for deletion
+		// This prevents resetting the flag before the actual deletion logic executes
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!hasTokenToBeDeleted) {
+			this._tokenDeleting = false;
+		}
+
+		// Update lastVisibleToken after rendering is complete to avoid render loops
+		renderFinished().then(() => {
+			this._updateLastVisibleTokenAttribute();
+		});
+	}
+
+	/**
+	 * Updates the lastVisibleToken property on tokens.
+	 * When collapsed with overflow, marks the last visible token for proper spacing to the n-more indicator.
+	 * @private
+	 */
+	_updateLastVisibleTokenAttribute() {
+		const tokensArray = this._tokens;
+		const hasOverflow = this._nMoreCount > 0;
+		const visibleTokens = tokensArray.filter(token => !token.overflows);
+		const lastVisibleToken = visibleTokens.length > 0 ? visibleTokens[visibleTokens.length - 1] : undefined;
+
+		tokensArray.forEach(token => {
+			token.lastVisibleToken = (!this.expanded && hasOverflow && token === lastVisibleToken);
+		});
 	}
 
 	/**
@@ -544,7 +585,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_tokenClickDelete(e: CustomEvent<TokenDeleteEventDetail>, token: Token) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const target = e.target as Token;
 		const deletedTokenIndex = token ? tokens.indexOf(token) : tokens.indexOf(target); // The index of the token that just got deleted
 		const nextTokenIndex = deletedTokenIndex === tokens.length - 1 ? deletedTokenIndex - 1 : deletedTokenIndex + 1; // The index of the next token that needs to be focused next due to the deletion
@@ -560,6 +601,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		if (nextToken && !isPhone()) {
 			setTimeout(() => {
 				nextToken.focus();
+				this._itemNav.setCurrentItem(nextToken);
 			}, 0);
 		}
 	}
@@ -572,7 +614,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	 * @param forwardFocusToPrevious Indicates whether the focus will be forwarded to previous or next token after deletion.
 	 */
 	deleteToken(token: Token, forwardFocusToPrevious?: boolean) {
-		const tokens = this._getVisibleTokens();
+		const tokens = this._tokens;
 		const deletedTokenIndex = tokens.indexOf(token);
 		let nextTokenIndex = (deletedTokenIndex === tokens.length - 1) ? deletedTokenIndex - 1 : deletedTokenIndex + 1;
 		const notSelectedTokens = tokens.filter(t => !t.selected);
@@ -654,7 +696,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleBeforeOpen() {
 		const list = this._getList();
-		const firstListItem = list.querySelectorAll("[ui5-li]")[0]! as ListItem;
+		const firstListItem = list.querySelectorAll("[ui5-li]")[0] as ListItem;
 
 		list._itemNavigation.setCurrentItem(firstListItem);
 
@@ -663,7 +705,10 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	handleAfterClose() {
 		this.open = false;
-		this._preventCollapse = false;
+		// Don't reset _preventCollapse if we're in the middle of deleting a token
+		if (!this._tokenDeleting) {
+			this._preventCollapse = false;
+		}
 		this._focusedElementBeforeOpen = null;
 	}
 
@@ -681,22 +726,30 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	_onkeydown(e: KeyboardEvent) {
 		const isCtrl = !!(e.metaKey || e.ctrlKey);
 
+		if (isEscape(e)) {
+			return this._deselectAllTokens();
+		}
+
 		if ((isCtrl && ["c", "x"].includes(e.key.toLowerCase())) || isDeleteShift(e) || isInsertCtrl(e)) {
 			e.preventDefault();
 
 			const isCut = e.key.toLowerCase() === "x" || isDeleteShift(e);
 			const selectedTokens = this._tokens.filter(token => token.selected);
-			const focusedToken = selectedTokens.find(token => token.focused);
+			const focusedToken = this._tokens.find(token => token.focused);
+			let tokensToCopy = selectedTokens;
+			if (!tokensToCopy.length && focusedToken) {
+				tokensToCopy = [focusedToken];
+			}
 
-			if (isCut) {
-				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, selectedTokens);
+			if (isCut && !this.readonly && tokensToCopy.length) {
+				const cutResult = this._fillClipboard(ClipboardDataOperation.cut, tokensToCopy);
 
-				focusedToken && this.deleteToken(focusedToken);
+				this.deleteToken(tokensToCopy[0]);
 
 				return cutResult;
 			}
 
-			return this._fillClipboard(ClipboardDataOperation.copy, selectedTokens);
+			return this._fillClipboard(ClipboardDataOperation.copy, tokensToCopy);
 		}
 
 		if (isCtrl && e.key.toLowerCase() === "i" && this._tokens.length > 0) {
@@ -968,6 +1021,12 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 	_onfocusout(e: FocusEvent) {
 		const relatedTarget = e.relatedTarget as HTMLElement;
+		const tokenLosingFocus = e.target as Token;
+
+		// If the token losing focus is being deleted, prevent collapse
+		if (tokenLosingFocus?.toBeDeleted) {
+			this._preventCollapse = true;
+		}
 
 		this._tokens.forEach(token => {
 			token.forcedTabIndex = "-1";
@@ -976,13 +1035,15 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		this._itemNav._currentIndex = -1;
 		this._skipTabIndex = true;
 
-		if (!this.contains(relatedTarget)) {
+		if (!this.contains(relatedTarget) && !this.preventInitialFocus) {
 			this._tokens[0].forcedTabIndex = "0";
 			this._isFocusSetInternally = false;
 			this._skipTabIndex = false;
 		}
 
-		if (!this._tokenDeleting && !this._preventCollapse) {
+		const hasTokenToBeDeleted = this._tokens.some(token => token.toBeDeleted);
+
+		if (!this._tokenDeleting && !this._preventCollapse && !hasTokenToBeDeleted) {
 			this._preventCollapse = false;
 			this.expanded = false;
 		}
@@ -1035,6 +1096,17 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	_deselectAllTokens() {
+		const hadSelection = this._selectedTokens.length > 0;
+		this._tokens.forEach(token => { token.selected = false; });
+
+		if (hadSelection) {
+			this.fireDecoratorEvent("selection-change", {
+				tokens: [],
+			});
+		}
+	}
+
 	get hasTokens() {
 		return this._tokens.length > 0;
 	}
@@ -1044,17 +1116,29 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	_fillClipboard(shortcutName: ClipboardDataOperation, tokens: Array<IToken>) {
-		const tokensTexts = tokens.filter(token => token.selected).map(token => token.text).join("\r\n");
+		const tokensTexts = tokens.map(token => token.text).join("\r\n");
 
-		const cutToClipboard = (e: ClipboardEvent) => {
-			navigator.clipboard.writeText(tokensTexts);
+		// Async clipboard API (works in secure contexts - HTTPS/localhost)
+		if (navigator.clipboard?.writeText && window.isSecureContext) {
+			navigator.clipboard.writeText(tokensTexts)?.catch(() => {
+				// Silent fallback - user can retry
+			});
+			return;
+		}
 
+		// Fallback for HTTP: use ClipboardEvent with execCommand
+		// execCommand is deprecated but it is kept for compatibility reasons, as
+		// there is no other way to write to clipboard in non-secure contexts
+		const fillClipboardHandler = (e: ClipboardEvent) => {
+			if (e.clipboardData) {
+				e.clipboardData.setData("text/plain", tokensTexts);
+			}
 			e.preventDefault();
 		};
 
-		document.addEventListener(shortcutName, cutToClipboard);
+		document.addEventListener(shortcutName, fillClipboardHandler);
 		document.execCommand(shortcutName);
-		document.removeEventListener(shortcutName, cutToClipboard);
+		document.removeEventListener(shortcutName, fillClipboardHandler);
 	}
 
 	/**
@@ -1178,7 +1262,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 	}
 
 	get morePopoverTitle() {
-		return Tokenizer.i18nBundle.getText(TOKENIZER_POPOVER_REMOVE);
+		return this.popoverTitle || getEffectiveAriaLabelText(this) || Tokenizer.i18nBundle.getText(INPUT_SUGGESTIONS_TITLE);
 	}
 
 	get overflownTokens() {
@@ -1188,25 +1272,47 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 		const tokensArray = this._tokens;
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
+		// Reset overflow to measure all tokens
 		tokensArray.forEach(token => {
 			token.overflows = false;
 		});
 
-		return tokensArray.filter(token => {
-			const parentRect = this.contentDom.getBoundingClientRect();
+		const parentRect = this.contentDom.getBoundingClientRect();
+		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentStart = Number(parentRect.left.toFixed(2));
+
+		// Measure "n more" width
+		let nMoreWidth = 0;
+		const nMoreElement = this.moreLink;
+		if (nMoreElement) {
+			nMoreWidth = nMoreElement.getBoundingClientRect().width;
+		}
+
+		// Calculate overflow sequentially: show tokens only if token + "n more" indicator both fit
+		let firstOverflowIndex = -1;
+
+		tokensArray.forEach((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const parentEnd = Number(parentRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
-			const parentStart = Number(parentRect.left.toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > parentEnd));
+			const isLastToken = index === tokensArray.length - 1;
 
-			return token.overflows;
+			// For the last token, check if it fits without "n more"
+			// For other tokens, check if token + "n more" fits together
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+
+			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+
+			if (tokenOverflows && firstOverflowIndex === -1) {
+				firstOverflowIndex = index;
+			}
+
+			// Mark this and all subsequent tokens as overflow
+			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
+
+		return tokensArray.filter(token => token.overflows);
 	}
 
 	get _isPhone() {

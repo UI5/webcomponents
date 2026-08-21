@@ -1,6 +1,6 @@
 @import "../base/StepInput-parameters.css";
 
-:root {
+:host {
 	--_ui5_step_input_input_error_background_color: inherit;
 	--_ui5-step_input_button_state_hover_background_color: var(--sapField_Hover_Background);
 	--_ui5_step_input_border_style: none;

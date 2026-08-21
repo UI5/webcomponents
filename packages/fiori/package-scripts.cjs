@@ -13,13 +13,15 @@ const filterOut = [
 ];
 
 const options = {
-	port: 8081,
+	cssVariablesTarget: "host",
 	portStep: 2,
 	dev: true,
 	fioriPackage: true,
 	noWatchTS: true,
+	standalone: false,
 	internal: {
 		cypress_code_coverage: false,
+		cypress_visual: process.env.CYPRESS_VISUAL === "true",
 	},
 	illustrationsData: [
 		{

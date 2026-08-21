@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_shellbar_root_height: 3.25rem;
 	--_ui5_shellbar_logo_outline_color: var(--sapContent_FocusColor);
 	--_ui5_shellbar_logo_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--_ui5_shellbar_logo_outline_color);
@@ -21,7 +21,7 @@
 	--_ui5_shellbar_menu_button_title_font_size: var(--sapFontHeader5Size);
 }
 
-:root {
+:host {
 	--_ui5_shellbar_input_border_radius: 1.125rem;
 	--_ui5_shellbar_input_focus_border_radius: 1.125rem;
 	--_ui5_shellbar_input_background_color: var(--sapShell_InteractiveBackground);

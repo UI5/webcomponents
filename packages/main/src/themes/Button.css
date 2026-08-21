@@ -318,7 +318,7 @@ bdi {
 	position: absolute;
 	top: 0;
 	inset-inline-end: 0;
-	margin: -0.5rem;
+	margin: var(--_ui5_button_overlay_badge_offset, -0.5rem);
 	z-index: 1;
 	font-family: var(--sapButton_FontFamily);
 	font-size: var(--sapFontSmallSize);
@@ -377,7 +377,7 @@ bdi {
 	top:0;
 }
 
-:host([has-end-icon]) .ui5-button-root {
+:host([has-end-icon]:not([icon])) .ui5-button-root {
 	justify-content: flex-start;
 }
 
@@ -385,6 +385,7 @@ bdi {
 	justify-content: center;
 }
 
-:host([has-end-icon]) .ui5-button-end-icon {
-	margin-left: auto;
+:host([has-end-icon]:not([icon]):not(:empty)) .ui5-button-end-icon {
+	padding-inline-start: var(--_ui5_button_base_icon_margin);
+	margin-inline-start: auto;
 }

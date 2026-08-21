@@ -2,6 +2,13 @@
 	width: 20rem;
 }
 
+.ui5-time-picker-popover .ui5-responsive-popover-header .row {
+	justify-content: flex-start;
+	font-family: var(--sapFontHeaderFamily);
+	font-size: var(--sapFontHeader5Size);
+	color: var(--sapPageHeader_TextColor);
+}
+
 .ui5-time-picker-footer {
 	height: fit-content;
 	display: flex;

@@ -1,4 +1,4 @@
-:root {
+:host {
 	--_ui5_busy_indicator_color: var(--sapContent_IconColor);
 	--_ui5_busy_indicator_focus_outline:  var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 }
