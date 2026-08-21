@@ -38,7 +38,7 @@ import SplitButtonTemplate from "./SplitButtonTemplate.js";
 // Styles
 import SplitButtonCss from "./generated/themes/SplitButton.css.js";
 
-type SplitButtonRootAccAttributes = Pick<AccessibilityAttributes, "hasPopup" | "roleDescription" | "title" | "ariaKeyShortcuts">;
+type SplitButtonRootAccAttributes = Pick<AccessibilityAttributes, "hasPopup" | "title" | "ariaKeyShortcuts">;
 type SplitButtonArrowButtonAccAtributes = Pick<AccessibilityAttributes, "hasPopup" | "expanded" | "title">;
 type SplitButtonAccessibilityAttributes = {root?: SplitButtonRootAccAttributes, arrowButton?: SplitButtonArrowButtonAccAtributes}
 
@@ -224,8 +224,6 @@ class SplitButton extends UI5Element {
 	 * - **root**: Attributes that will be applied to the main (text) button.
 	 *   - **hasPopup**: Indicates the presence and type of popup triggered by the button.
 	 *     Accepts string values: `"dialog"`, `"grid"`, `"listbox"`, `"menu"`, or `"tree"`.
-	 *   - **roleDescription**: Provides a human-readable description for the role of the button.
-	 *     Accepts any string value.
 	 *   - **title**: Specifies a tooltip or description for screen readers.
 	 *     Accepts any string value.
 	 * 	- **ariaKeyShortcuts**: Defines keyboard shortcuts that activate or give focus to the button.
@@ -469,7 +467,6 @@ class SplitButton extends UI5Element {
 		return {
 			root: {
 				hasPopup: this.accessibilityAttributes?.root?.hasPopup,
-				roleDescription: this.accessibilityAttributes?.root?.roleDescription || (this._hideArrowButton ? undefined : SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION)),
 				title: this.accessibilityAttributes?.root?.title,
 				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},

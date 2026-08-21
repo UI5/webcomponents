@@ -10,7 +10,6 @@ export default function SplitButtonTemplate(this: SplitButton) {
 			tabindex={this._tabIndex}
 			aria-labelledby={!this._hideArrowButton ? `${this._id}-invisibleTextDefault ${this._id}-invisibleText` : undefined}
 			aria-haspopup={this._computedAccessibilityAttributes?.root?.hasPopup}
-			aria-roledescription={this._computedAccessibilityAttributes?.root?.roleDescription}
 			aria-label={this._computedAccessibilityAttributes?.root?.title}
 			aria-keyshortcuts={this._computedAccessibilityAttributes?.root?.ariaKeyShortcuts}
 			onFocusOut={this._onFocusOut}
@@ -56,7 +55,7 @@ export default function SplitButtonTemplate(this: SplitButton) {
 						onActiveStateChange={this._onArrowButtonActiveStateChange}
 					>
 					</Button>
-					<span id={`${this._id}-invisibleText`} class="ui5-hidden-text">{this.accInfo.keyboardHint} {this.accessibleName}</span>
+					<span id={`${this._id}-invisibleText`} class="ui5-hidden-text">{this.accessibleName} {this.accInfo.description} {this.accInfo.keyboardHint}</span>
 					<span id={`${this._id}-invisibleTextDefault`} class="ui5-hidden-text">{this.buttonTextContent}</span>
 				</>
 			)}
