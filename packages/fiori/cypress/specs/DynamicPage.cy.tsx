@@ -587,8 +587,8 @@ describe("Scroll", () => {
 
 		cy.get("[data-testid='scroll-down']").then(($btn) => {
 			$btn[0].addEventListener("click", () => {
-				const scrollContainer = document.querySelector("[ui5-dynamic-page]")
-					.shadowRoot.querySelector(".ui5-dynamic-page-scroll-container");
+				const scrollContainer = document.querySelector("[ui5-dynamic-page]")!
+					.shadowRoot!.querySelector(".ui5-dynamic-page-scroll-container");
 				if (scrollContainer) {
 					scrollContainer.scrollTo(0, 500);
 				}
@@ -619,8 +619,8 @@ describe("Scroll", () => {
 
 		cy.get("[data-testid='scroll-to-top']").then(($btn) => {
 			$btn[0].addEventListener("click", () => {
-				const scrollContainer = document.querySelector("[ui5-dynamic-page]")
-					.shadowRoot.querySelector(".ui5-dynamic-page-scroll-container");
+				const scrollContainer = document.querySelector("[ui5-dynamic-page]")!
+					.shadowRoot!.querySelector(".ui5-dynamic-page-scroll-container");
 				if (scrollContainer) {
 					scrollContainer.scrollTo(0, 0);
 				}
@@ -731,7 +731,7 @@ describe("Page general interaction", () => {
 
 		cy.get("[data-testid='toggle-footer']").then(($btn) => {
 			$btn[0].addEventListener("click", () => {
-				const dynamicPage = document.querySelector("[ui5-dynamic-page]");
+				const dynamicPage = document.querySelector("[ui5-dynamic-page]")!;
 				const hasFooter = dynamicPage.hasAttribute("show-footer");
 				if (hasFooter) {
 					dynamicPage.removeAttribute("show-footer");
