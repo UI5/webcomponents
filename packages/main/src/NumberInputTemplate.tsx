@@ -20,6 +20,9 @@ export default function NumberInputTemplate(this: NumberInput) {
 			<div
 				class="ui5-step-icon ui5-step-dec"
 				title={this.decIconTitle}
+				onMouseDown={this._decSpin}
+				onMouseUp={this._resetSpin}
+				onMouseOut={this._resetSpinOut}
 			>
 				<Icon
 					id={`${this._id}-dec`}
@@ -28,9 +31,6 @@ export default function NumberInputTemplate(this: NumberInput) {
 					accessibleName={this.decIconTitle}
 					onClick={this._decValue}
 					onFocusOut={this._onButtonFocusOut}
-					onMouseDown={this._decSpin}
-					onMouseUp={this._resetSpin}
-					onMouseOut={this._resetSpinOut}
 					class={{
 						"inputIcon": true,
 						"ui5-number-input-icon--clickable": this._decIconClickable,
@@ -71,6 +71,9 @@ export default function NumberInputTemplate(this: NumberInput) {
 				<div
 					class="ui5-step-icon ui5-step-inc"
 					title={this.incIconTitle}
+					onMouseDown={this._incSpin}
+					onMouseUp={this._resetSpin}
+					onMouseOut={this._resetSpinOut}
 				>
 					<Icon
 						id={`${this._id}-inc`}
@@ -83,9 +86,6 @@ export default function NumberInputTemplate(this: NumberInput) {
 						accessibleName={this.incIconTitle}
 						onClick={this._incValue}
 						onFocusOut={this._onButtonFocusOut}
-						onMouseDown={this._incSpin}
-						onMouseUp={this._resetSpin}
-						onMouseOut={this._resetSpinOut}
 						showTooltip={true}
 					/>
 				</div>
