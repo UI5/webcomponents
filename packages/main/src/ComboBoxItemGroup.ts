@@ -17,6 +17,8 @@ import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
  * @public
  * @implements {IComboBoxItem}
  * @since 1.0.0-rc.15
+ * @csspart header - Used to style the header item of the group
+ * @csspart title - Used to style the title of the group header
  */
 @customElement({
 	tag: "ui5-cb-item-group",
