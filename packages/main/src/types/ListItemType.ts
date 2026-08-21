@@ -10,6 +10,15 @@ enum ListItemType {
 	Inactive = "Inactive",
 
 	/**
+	 * Indicates the list item does not have any active feedback when item is pressed,
+	 * but selection (checkbox/radio) is still possible when a selection mode is active.
+	 * The `item-click` event is not fired for items of this type.
+	 * @public
+	 * @since 2.x.0
+	 */
+	InactiveSelectable = "InactiveSelectable",
+
+	/**
 	 * Indicates that the item is clickable via active feedback when item is pressed.
 	 * @public
 	 */
