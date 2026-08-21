@@ -11,7 +11,7 @@ import type TableRowActionBase from "./TableRowActionBase.js";
 import type Button from "./Button.js";
 import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 import {
-	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION,
+	TABLE_ROW_MULTIPLE_ACTIONS, TABLE_ROW_SINGLE_ACTION, TABLE_ROW_OVERFLOW_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -253,6 +253,10 @@ class TableRow extends TableRowBase {
 		return [...this._flexibleActions, ...this._fixedActions].filter(action => {
 			return !action.invisible && action._isInteractive;
 		}).length + (this._hasOverflowActions ? 1 : 0);
+	}
+
+	get _overflowButtonTooltip() {
+		return TableRowBase.i18nBundle.getText(TABLE_ROW_OVERFLOW_BUTTON);
 	}
 
 	get _actionCellAccText() {

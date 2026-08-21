@@ -210,6 +210,18 @@ describe("TableRowActions", () => {
 			cy.get("@actions").eq(1).should("have.attr", "name", "actions-3");
 		});
 
+		it("tests overflow button tooltip is 'More Actions'", () => {
+			mountTable(1, () => <>
+				<TableRow>
+					<TableRowAction slot="actions" icon={add} text="Add"></TableRowAction>
+					<TableRowAction slot="actions" icon={edit} text="Edit"></TableRowAction>
+				</TableRow>
+			</>
+			);
+
+			cy.get("@row1").shadow().find("#overflow").should("have.attr", "tooltip", "More Actions");
+		});
+
 		it("tests that the aligment of navigation is more important than avoiding overflow", () => {
 			mountTable(3, () => <>
 				<TableRow>
