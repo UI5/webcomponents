@@ -3207,15 +3207,15 @@ describe("Loading State", () => {
 
 		cy.get("[ui5-combobox]")
 			.shadow()
-			.find("ui5-responsive-popover")
+			.find("[ui5-responsive-popover]")
 			.as("popover");
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("exist");
 
 		cy.get("@popover")
-			.find("ui5-list")
+			.find("[ui5-list]")
 			.should("not.exist");
 	});
 
@@ -3230,22 +3230,22 @@ describe("Loading State", () => {
 		cy.get("[ui5-combobox]")
 			.as("combo")
 			.shadow()
-			.find("ui5-responsive-popover")
+			.find("[ui5-responsive-popover]")
 			.as("popover");
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("exist");
 
 		cy.get("@combo")
 			.invoke("prop", "loading", false);
 
 		cy.get("@popover")
-			.find("ui5-busy-indicator")
+			.find("[ui5-busy-indicator]")
 			.should("not.exist");
 
 		cy.get("@popover")
-			.find("ui5-list")
+			.find("[ui5-list]")
 			.should("exist");
 	});
 });
@@ -4349,5 +4349,225 @@ describe("Newline normalization in item text", () => {
 		cy.get("@combobox").realPress("Enter");
 
 		cy.get("@changeSpy").should("have.been.calledTwice");
+	});
+});
+
+describe("load-items event", () => {
+	it("fires on arrow click when ComboBox has no items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("does not fire on arrow click when ComboBox has items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
+	it("fires on F4 when ComboBox has no items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.realClick();
+
+		cy.get("@comboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("does not fire on F4 when ComboBox has items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<ComboBoxItem text="Algeria"></ComboBoxItem>
+				<ComboBoxItem text="Bulgaria"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("comboBox")
+			.realClick();
+
+		cy.get("@comboBox").realPress("F4");
+
+		cy.get("@loadItems")
+			.should("not.have.been.called");
+	});
+
+	it("fires on each new character typed in the input", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadItems")
+			.should("have.been.calledThrice")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "input";
+			}));
+	});
+
+	it("fires with the current input value in the event detail on each character typed", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.realClick();
+
+		cy.realType("Alg");
+
+		cy.get("@loadItems").should("have.been.calledThrice");
+
+		cy.get("@loadItems").its("firstCall.args.0.detail").should("deep.include", { reason: "input", value: "A" });
+		cy.get("@loadItems").its("secondCall.args.0.detail").should("deep.include", { reason: "input", value: "Al" });
+		cy.get("@loadItems").its("thirdCall.args.0.detail").should("deep.include", { reason: "input", value: "Alg" });
+	});
+});
+
+describe("Loading announcements", () => {
+	it("announces loading start when loading becomes true", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="Item 1" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.invoke("prop", "loading", true);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Loading data");
+	});
+
+	it("announces loading end with item count when loading becomes false", () => {
+		cy.mount(
+			<ComboBox loading>
+				<ComboBoxItem text="Item 1" />
+				<ComboBoxItem text="Item 2" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.invoke("prop", "loading", false);
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "2 results are available");
+	});
+
+	it("announces the total item count after lazy loading grouped items via arrow click", () => {
+		// Loads 2 group items: the first with 2 child items, the second with 1 child item (3 items total).
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			setTimeout(() => {
+				const group1 = document.createElement("ui5-cb-item-group") as ComboBoxItemGroup;
+				group1.headerText = "Group 1";
+				["Item 1", "Item 2"].forEach(text => {
+					const item = document.createElement("ui5-cb-item") as ComboBoxItem;
+					item.text = text;
+					group1.appendChild(item);
+				});
+
+				const group2 = document.createElement("ui5-cb-item-group") as ComboBoxItemGroup;
+				group2.headerText = "Group 2";
+				const item3 = document.createElement("ui5-cb-item") as ComboBoxItem;
+				item3.text = "Item 3";
+				group2.appendChild(item3);
+
+				cb.appendChild(group1);
+				cb.appendChild(group2);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<ComboBox onLoadItems={loadItems}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		// 2 groups get created, holding 3 child items in total.
+		cy.get("[ui5-combobox]").find("[ui5-cb-item-group]").should("have.length", 2);
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 3);
+
+		// The announcement reflects the 3 loaded (group headers excluded) items.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "3 results are available");
+	});
+
+	it("applies the filter and announces the filtered item count after lazy loading triggered by typing", () => {
+		// Typing "a" loads 3 items - only "Albania" matches the default StartsWithPerTerm filter.
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			cb.open = true;
+			setTimeout(() => {
+				["Albania", "Bulgaria", "Canada"].forEach(text => {
+					const item = document.createElement("ui5-cb-item") as ComboBoxItem;
+					item.text = text;
+					cb.appendChild(item);
+				});
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(
+			<ComboBox onLoadItems={loadItems}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+		cy.realType("a");
+
+		// All 3 items are created, but the filter leaves only "Albania" visible.
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 3);
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.filter((_, el: Element & { _isVisible?: boolean }) => !!el._isVisible)
+			.should("have.length", 1)
+			.and("have.attr", "text", "Albania");
+
+		// The announcement reflects the single item left after filtering.
+		cy.get(".ui5-invisiblemessage-polite")
+			.should("contain.text", "Data loaded")
+			.and("contain.text", "1 result is available");
 	});
 });
