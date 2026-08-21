@@ -273,13 +273,13 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return getAssociatedLabelForTexts(this) || undefined;
 	}
 
-	_onNiChange(e: Event) {
+	_onNumberInputChange(e: Event) {
 		e.stopPropagation();
 		this._syncFromInner();
 		this.fireDecoratorEvent("change");
 	}
 
-	_onNiInput(e: CustomEvent<InputEventDetail>) {
+	_onNumberInputInput(e: CustomEvent<InputEventDetail>) {
 		e.stopPropagation();
 		const prevented = !this.fireDecoratorEvent("input", { inputType: e.detail.inputType });
 		if (prevented) {
@@ -287,16 +287,13 @@ class StepInput extends UI5Element implements IFormInputElement {
 		}
 	}
 
-	_onNiValueStateChange(e: CustomEvent<StepInputValueStateChangeEventDetail>) {
+	_onNumberInputValueStateChange(e: CustomEvent<StepInputValueStateChangeEventDetail>) {
 		e.stopPropagation();
 		const prevented = !this.fireDecoratorEvent("value-state-change", {
 			valueState: e.detail.valueState,
 			valid: e.detail.valid,
 		});
-		if (prevented) {
-			// Inner already applied the new valueState — revert it back to the outer's current value
-			this._innerNumberInput.valueState = this.valueState;
-		} else {
+		if (!prevented) {
 			this.valueState = e.detail.valueState;
 		}
 	}

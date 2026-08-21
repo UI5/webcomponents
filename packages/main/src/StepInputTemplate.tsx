@@ -18,9 +18,9 @@ export default function StepInputTemplate(this: StepInput) {
 			valuePrecision={this.valuePrecision}
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
-			onChange={this._onNiChange}
-			onInput={this._onNiInput}
-			onValueStateChange={this._onNiValueStateChange}
+			onChange={this._onNumberInputChange}
+			onInput={this._onNumberInputInput}
+			onValueStateChange={this._onNumberInputValueStateChange}
 			onui5-_request-submit={this._onRequestSubmit}
 		>
 			{this.valueStateMessage.length > 0 &&

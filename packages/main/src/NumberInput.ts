@@ -487,10 +487,6 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		return this.input.shadowRoot!.querySelector<HTMLInputElement>("input")!;
 	}
 
-	get inputOuter() {
-		return this.shadowRoot!.querySelector(".ui5-number-input-input")!;
-	}
-
 	_onButtonFocusOut() {
 		setTimeout(() => {
 			if (!this._inputFocused && !this.shadowRoot!.activeElement) {
