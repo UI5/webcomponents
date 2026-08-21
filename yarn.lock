@@ -6700,10 +6700,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openui5/sap.ui.core@npm:1.146.0":
-  version: 1.146.0
-  resolution: "@openui5/sap.ui.core@npm:1.146.0"
-  checksum: 10c0/575123ea0b45462210460e5c16a72fb228a8d9321216b21395e191f6647564b272a04e0a32b5338cfc46e64f3ed545fecf0702dd7fd6173012af2b55122f923f
+"@openui5/sap.ui.core@npm:1.151.0":
+  version: 1.151.0
+  resolution: "@openui5/sap.ui.core@npm:1.151.0"
+  checksum: 10c0/0bf1fc6b5551c5c1ac13c63ea5f5f8298288b49c34cf7579ad926d3e4f124267caea8a3de6acf1aba599ff7cfb24d70c7eb78471a0aeafa880ce2f8af8d0a2c6
   languageName: node
   linkType: hard
 
@@ -8263,13 +8263,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/openui5@npm:^1.146.0":
-  version: 1.146.0
-  resolution: "@types/openui5@npm:1.146.0"
+"@types/openui5@npm:^1.151.0":
+  version: 1.151.0
+  resolution: "@types/openui5@npm:1.151.0"
   dependencies:
     "@types/jquery": "npm:~3.5.13"
     "@types/qunit": "npm:^2.5.4"
-  checksum: 10c0/c6b0a5c9d91ea5ce545a8b9acdbe963e0088f4957d3dd1abbedc20a6cca5dfc8f00e467e9f5495a9724ab2296928cb2b2e7a5ec3a583615cc37b272591ef5bc2
+  checksum: 10c0/03067416c31a49f8ae34bc8cb73b97d844d3a684e2c73378bcda01c1cded0b76ed1de4e68474ffc8c25e602913e9b2e419a57fe2df59b0f4d9177cb0051ee553
   languageName: node
   linkType: hard
 
@@ -8907,7 +8907,7 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": "npm:^0.10.10"
     "@lit-labs/ssr-dom-shim": "npm:^1.1.2"
-    "@openui5/sap.ui.core": "npm:1.146.0"
+    "@openui5/sap.ui.core": "npm:1.151.0"
     "@sap-theming/theming-base-content": "npm:11.36.4"
     "@ui5/cypress-internal": "npm:0.1.0"
     "@ui5/webcomponents-tools": "npm:2.26.0-rc.0"
@@ -8997,8 +8997,8 @@ __metadata:
     "@babel/core": "npm:^7.24.6"
     "@babel/generator": "npm:^7.24.6"
     "@babel/parser": "npm:^7.24.6"
-    "@openui5/sap.ui.core": "npm:1.146.0"
-    "@types/openui5": "npm:^1.146.0"
+    "@openui5/sap.ui.core": "npm:1.151.0"
+    "@types/openui5": "npm:^1.151.0"
     "@ui5/webcomponents-base": "npm:2.26.0-rc.0"
     "@ui5/webcomponents-tools": "npm:2.26.0-rc.0"
     babel-plugin-amd-to-esm: "npm:^2.0.3"
