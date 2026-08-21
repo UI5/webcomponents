@@ -134,13 +134,28 @@
 		<label>via dateValue property:</label>
 		<ui5-datetime-picker id="dtp-datevalue"></ui5-datetime-picker>
 	</div>
+	<div class="control-row">
+		<label>Secondary Cal (Islamic):</label>
+		<ui5-datetime-picker id="dtp-secondary-cal"
+			value="May 19, 2026, 2:30:00 PM"
+			secondary-calendar-type="Islamic">
+		</ui5-datetime-picker>
+	</div>
 </div>
 
 <div class="section">
 	<h2>DateRangePicker (Step 06)</h2>
 	<div class="control-row">
 		<label>Standard:</label>
-		<ui5-date-range-picker id="drs-std"></ui5-date-range-picker>
+		<ui5-daterange-picker id="drs-std" format-pattern="dd.MM.yyyy" value="02.02.2014 - 17.02.2014"></ui5-daterange-picker>
+	</div>
+	<div class="control-row">
+		<label>Secondary Cal (Islamic):</label>
+		<ui5-daterange-picker id="drs-secondary-cal"
+			format-pattern="dd.MM.yyyy"
+			value="02.02.2014 - 17.02.2014"
+			secondary-calendar-type="Islamic">
+		</ui5-daterange-picker>
 	</div>
 </div>
 
@@ -154,7 +169,7 @@
 <script type="module">
 	// Set dateValue for dtp-datevalue
 	const dtpDateValue = document.getElementById("dtp-datevalue");
-	dtpDateValue.dateValue = new Date(2026, 4, 19, 10, 0, 0);
+	dtpDateValue.value = "May 19, 2026, 10:00:00 AM";
 
 	// Log change events
 	const output = document.getElementById("output");
@@ -163,7 +178,7 @@
 	};
 
 	["tp-std", "dp-std", "dp-min-max", "dp-min-max-narrow", "dp-secondary-cal",
-	 "dtp-std", "dtp-datevalue", "drs-std", "cal-std"].forEach(id => {
+	 "dtp-std", "dtp-datevalue", "dtp-secondary-cal", "drs-std", "drs-secondary-cal", "cal-std"].forEach(id => {
 		document.getElementById(id)?.addEventListener("change", e => {
 			log(`[${id}] change: value="${e.target.value || ''}"`);
 		});
@@ -179,13 +194,29 @@
 	window.visualViewport?.addEventListener("resize", updateVP);
 	updateVP();
 
+	let _realVPWidth = null;
 	window.simulateHighZoom = () => {
 		document.documentElement.style.zoom = "200%";
-		setTimeout(updateVP, 100);
+		// Mock visualViewport.width to simulate narrow viewport (200% zoom)
+		if (!_realVPWidth) {
+			_realVPWidth = window.visualViewport.width;
+			Object.defineProperty(window.visualViewport, "width", { configurable: true, get: () => 320 });
+		}
+		window.visualViewport.dispatchEvent(new Event("resize"));
+		window.dispatchEvent(new Event("resize"));
+		setTimeout(updateVP, 150);
 	};
 	window.resetZoom = () => {
 		document.documentElement.style.zoom = "";
-		setTimeout(updateVP, 100);
+		// Restore real visualViewport.width
+		if (_realVPWidth !== null) {
+			const w = _realVPWidth;
+			_realVPWidth = null;
+			Object.defineProperty(window.visualViewport, "width", { configurable: true, get: () => w });
+		}
+		window.visualViewport.dispatchEvent(new Event("resize"));
+		window.dispatchEvent(new Event("resize"));
+		setTimeout(updateVP, 150);
 	};
 </script>
 

@@ -7,6 +7,9 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
+import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
+import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
+import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
 import {
@@ -156,10 +159,15 @@ class DateHighZoomInputs extends UI5Element {
 	_gregYear = 0;
 	_gregMonth = 0;
 	_gregDay = 1;
+	_gregEndYear = 0;
+	_gregEndMonth = 0;
+	_gregEndDay = 1;
+	_hasEndValue = false;
 
 	// Track last synced dateValue to avoid overwriting user edits on every re-render
 	_syncedDateValue: Date | null = null;
 	_syncedSecondDateValue: Date | null = null;
+	_syncedCalType?: `${CalendarType}`;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -174,6 +182,12 @@ class DateHighZoomInputs extends UI5Element {
 		if (this._isRange && this.secondDateValue !== this._syncedSecondDateValue) {
 			this._syncedSecondDateValue = this.secondDateValue;
 			this.syncEndDate(this.secondDateValue);
+		}
+		// When the calendar type changes (e.g. parent toggled primary/secondary), re-derive
+		// the display values from the unchanged Gregorian source of truth.
+		if (this.primaryCalendarType !== this._syncedCalType) {
+			this._syncedCalType = this.primaryCalendarType;
+			this.convertToCalendarType();
 		}
 	}
 
@@ -193,33 +207,30 @@ class DateHighZoomInputs extends UI5Element {
 
 	// ---- Month / Day options ----
 
-	get _monthOptions() {
-		// Map UI5 calendar type names to Intl calendar IDs
-		const calTypeMap: Record<string, string> = {
-			Islamic: "islamic-umalqura",
-			Buddhist: "buddhist",
-			Japanese: "japanese",
-			Persian: "persian",
-			Gregorian: "gregory",
-		};
-		const calType = this.primaryCalendarType || "Gregorian";
-		const intlCal = calTypeMap[calType] || "gregory";
-		const locale = navigator.language || "en";
-
-		return Array.from({ length: 12 }, (_, i) => {
-			// Use a fixed reference year to get month names
-			const refDate = new Date(2000, i, 1);
-			const text = new Intl.DateTimeFormat(locale, {
-				month: "long",
-				calendar: intlCal,
-			} as Intl.DateTimeFormatOptions).format(refDate);
-			return { value: i, text };
-		});
+	get _calType(): `${CalendarType}` {
+		return this.primaryCalendarType || "Gregorian";
 	}
 
+	get _monthOptions() {
+		const localeData = getCachedLocaleDataInstance(getLocale());
+		const monthsNames = localeData.getMonthsStandAlone("wide", this._calType);
+		return monthsNames.map((text, i) => ({ value: i, text }));
+	}
+
+	/**
+	 * Number of days in the given month of the given year, in the current calendar type.
+	 * Uses CalendarDate so non-Gregorian calendars (e.g. Islamic 29/30-day months) are correct.
+	 */
 	_getDaysInMonth(year: number, month: number) {
-		const y = isNaN(year) ? 2000 : year;
-		return new Date(y, month + 1, 0).getDate();
+		if (Number.isNaN(year)) {
+			// Fallback to the current year expressed in the active calendar type, so the
+			// day count matches the (possibly non-Gregorian) year the caller is working in.
+			year = CalendarDate.fromLocalJSDate(new Date(), this._calType).getYear();
+		}
+		// Day 0 of the next month is the last day of this month, in the target calendar.
+		const lastDay = new CalendarDate(year, month, 1, this._calType);
+		lastDay.setMonth(month + 1, 0);
+		return lastDay.getDate();
 	}
 
 	get _dayOptions() {
@@ -234,104 +245,97 @@ class DateHighZoomInputs extends UI5Element {
 
 	syncStartDate() {
 		if (!this.dateValue) { return; }
-		const year = this.dateValue.getFullYear();
-		const month = this.dateValue.getMonth();
-		const day = this.dateValue.getDate();
 		// Store Gregorian source of truth
-		this._gregYear = year;
-		this._gregMonth = month;
-		this._gregDay = day;
-		this._yearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
+		this._gregYear = this.dateValue.getFullYear();
+		this._gregMonth = this.dateValue.getMonth();
+		this._gregDay = this.dateValue.getDate();
 		// Show in current calendar type
 		this._applyCalendarTypeToDisplay(false);
 	}
 
 	/**
-	 * Converts Gregorian source (this._gregYear/Month/Day) to display values
-	 * in the current primaryCalendarType using Intl.DateTimeFormat.
+	 * Converts the Gregorian source (this._gregYear/Month/Day, or the end equivalents)
+	 * to display values in the current primaryCalendarType, using UI5 CalendarDate so
+	 * non-Gregorian calendars (Islamic, Buddhist, …) are handled correctly.
 	 */
 	_applyCalendarTypeToDisplay(isEnd: boolean) {
-		const calTypeMap: Record<string, string> = {
-			Islamic: "islamic-umalqura",
-			Buddhist: "buddhist",
-			Japanese: "japanese",
-			Persian: "persian",
-			Gregorian: "gregory",
-		};
-		const calType = this.primaryCalendarType || "Gregorian";
-		const intlCal = calTypeMap[calType] || "gregory";
-		const isGregorian = intlCal === "gregory";
+		const srcYear = isEnd ? this._gregEndYear : this._gregYear;
+		const srcMonth = isEnd ? this._gregEndMonth : this._gregMonth;
+		const srcDay = isEnd ? this._gregEndDay : this._gregDay;
 
-		const srcYear = isEnd ? 0 : this._gregYear; // end date not yet supported
-		const srcMonth = isEnd ? 0 : this._gregMonth;
-		const srcDay = isEnd ? 1 : this._gregDay;
+		// Build the Gregorian source date with setFullYear so years 1-99 are not
+		// remapped to 1901-1999 by the Date constructor.
+		const srcDate = new Date(2000, 0, 1);
+		srcDate.setFullYear(srcYear, srcMonth, srcDay);
 
-		if (isGregorian) {
-			this._yearValue = String(srcYear);
-			this._monthValue = srcMonth;
-			this._dayValue = srcDay;
-			return;
+		// Gregorian source → target calendar type
+		const calDate = CalendarDate.fromLocalJSDate(srcDate, this._calType);
+		const dispYear = calDate.getYear();
+		const dispMonth = calDate.getMonth();
+		const dispDay = calDate.getDate();
+		const pickerTs = this._yearToTimestamp(srcYear);
+
+		if (isEnd) {
+			this._endYearValue = String(dispYear);
+			this._endMonthValue = dispMonth;
+			this._endDayValue = dispDay;
+			this._endYearPickerTimestamp = pickerTs;
+		} else {
+			this._yearValue = String(dispYear);
+			this._monthValue = dispMonth;
+			this._dayValue = dispDay;
+			this._yearPickerTimestamp = pickerTs;
 		}
-
-		const refDate = new Date(srcYear, srcMonth, srcDay);
-		refDate.setFullYear(srcYear);
-		const locale = navigator.language || "en";
-		const fmt = new Intl.DateTimeFormat(locale, {
-			year: "numeric",
-			month: "numeric",
-			day: "numeric",
-			calendar: intlCal,
-		} as Intl.DateTimeFormatOptions);
-
-		const parts = fmt.formatToParts(refDate);
-		const get = (type: string) => {
-			const part = parts.find(p => p.type === type);
-			return part ? parseInt(part.value) : NaN;
-		};
-
-		const newYear = get("year");
-		const newMonth = get("month") - 1; // Intl months are 1-based
-		const newDay = get("day");
-
-		if (!isNaN(newYear)) {
-			// Force ui5-input to pick up the new value by clearing first
-			this._yearValue = "";
-			requestAnimationFrame(() => { this._yearValue = String(newYear); });
-		}
-		if (!isNaN(newMonth)) { this._monthValue = newMonth; }
-		if (!isNaN(newDay)) { this._dayValue = newDay; }
 	}
 
 	/**
-	 * Re-derive display fields from Gregorian source when calendar type changes.
+	 * Re-derive display fields from the Gregorian source when the calendar type changes.
 	 * Does NOT modify the Gregorian source.
 	 */
 	convertToCalendarType() {
 		this._applyCalendarTypeToDisplay(false);
+		if (this._isRange && this._hasEndValue) {
+			this._applyCalendarTypeToDisplay(true);
+		}
 	}
 
 	syncEndDate(date: Date | null) {
-		this.secondDateValue = date;
-		if (!date) { return; }
-		const year = date.getFullYear();
-		this._endYearValue = String(year);
-		this._endYearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
-		this._endMonthValue = date.getMonth();
-		this._endDayValue = date.getDate();
+		if (!date) { this._hasEndValue = false; return; }
+		this._hasEndValue = true;
+		// Store Gregorian source of truth for the end date
+		this._gregEndYear = date.getFullYear();
+		this._gregEndMonth = date.getMonth();
+		this._gregEndDay = date.getDate();
+		this._applyCalendarTypeToDisplay(true);
+	}
+
+	/**
+	 * Converts the current display values (in this._calType) back to a Gregorian
+	 * {year, month, day}. Returns null if the display values are not a valid date.
+	 */
+	_displayToGregorian(isEnd: boolean): { year: number; month: number; day: number } | null {
+		const yearStr = isEnd ? this._endYearValue : this._yearValue;
+		const month = isEnd ? this._endMonthValue : this._monthValue;
+		const day = isEnd ? this._endDayValue : this._dayValue;
+		const year = parseInt(yearStr);
+		if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) { return null; }
+		const jsDate = new CalendarDate(year, month, day, this._calType).toLocalJSDate();
+		return { year: jsDate.getFullYear(), month: jsDate.getMonth(), day: jsDate.getDate() };
 	}
 
 	getSelectedDate(): { year: number; month: number; day: number } {
-		return { year: parseInt(this._yearValue), month: this._monthValue, day: this._dayValue };
+		const greg = this._displayToGregorian(false);
+		return greg || { year: NaN, month: NaN, day: NaN };
 	}
 
 	getSelectedSecondDate(): { year: number; month: number; day: number } | null {
 		if (!this._isRange) { return null; }
-		return { year: parseInt(this._endYearValue), month: this._endMonthValue, day: this._endDayValue };
+		return this._displayToGregorian(true);
 	}
 
 	getDateObject(): Date | null {
 		const { year, month, day } = this.getSelectedDate();
-		if (isNaN(year) || isNaN(month) || isNaN(day)) { return null; }
+		if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) { return null; }
 		const d = new Date(year, month, day);
 		d.setFullYear(year);
 		return d;
@@ -373,130 +377,115 @@ class DateHighZoomInputs extends UI5Element {
 		const y = parseInt(parts[0]);
 		const m = parseInt(parts[1]) - 1; // 0-based
 		const d = parseInt(parts[2]);
-		if (isNaN(y) || isNaN(m) || isNaN(d)) { return null; }
+		if (Number.isNaN(y) || Number.isNaN(m) || Number.isNaN(d)) { return null; }
 		return { getFullYear: () => y, getMonth: () => m, getDate: () => d };
 	}
 
 	_doValidate(bEndDate: boolean): boolean {
+		// Flag one field as invalid (or clear all when field is null).
+		const applyState = (field: "year" | "month" | "day" | null, msg: string) => {
+			if (bEndDate) {
+				this._endYearValueState = field === "year" ? ValueState.Negative : ValueState.None;
+				this._endYearValueStateMessage = field === "year" ? msg : "";
+				this._endMonthValueState = field === "month" ? ValueState.Negative : ValueState.None;
+				this._endMonthValueStateMessage = field === "month" ? msg : "";
+				this._endDayValueState = field === "day" ? ValueState.Negative : ValueState.None;
+				this._endDayValueStateMessage = field === "day" ? msg : "";
+			} else {
+				this._yearValueState = field === "year" ? ValueState.Negative : ValueState.None;
+				this._yearValueStateMessage = field === "year" ? msg : "";
+				this._monthValueState = field === "month" ? ValueState.Negative : ValueState.None;
+				this._monthValueStateMessage = field === "month" ? msg : "";
+				this._dayValueState = field === "day" ? ValueState.Negative : ValueState.None;
+				this._dayValueStateMessage = field === "day" ? msg : "";
+			}
+		};
+
 		const yearStr = bEndDate ? this._endYearValue : this._yearValue;
-		const month = bEndDate ? this._endMonthValue : this._monthValue;
-		const day = bEndDate ? this._endDayValue : this._dayValue;
-		const year = parseInt(yearStr);
+		const displayYear = parseInt(yearStr);
 
 		const minD = this._parseISO(this.minDate);
 		const maxD = this._parseISO(this.maxDate);
 		const minY = minD ? minD.getFullYear() : 1;
 		const maxY = maxD ? maxD.getFullYear() : 9999;
+		const yearMsg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_YEAR_OUT_OF_RANGE, String(minY), String(maxY));
+		const monthMsg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
+		const dayMsg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_DAY_OUT_OF_RANGE);
 
-		// 1. Year
-		if (isNaN(year) || year < minY || year > maxY) {
-			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_YEAR_OUT_OF_RANGE, String(minY), String(maxY));
-			if (bEndDate) {
-				this._endYearValueState = ValueState.Negative;
-				this._endYearValueStateMessage = msg;
-				this._endMonthValueState = ValueState.None;
-				this._endMonthValueStateMessage = "";
-				this._endDayValueState = ValueState.None;
-				this._endDayValueStateMessage = "";
-			} else {
-				this._yearValueState = ValueState.Negative;
-				this._yearValueStateMessage = msg;
-				this._monthValueState = ValueState.None;
-				this._monthValueStateMessage = "";
-				this._dayValueState = ValueState.None;
-				this._dayValueStateMessage = "";
-			}
+		// Convert current display values to a Gregorian date for range comparison.
+		const greg = this._displayToGregorian(bEndDate);
+		if (Number.isNaN(displayYear) || !greg) {
+			applyState("year", yearMsg);
 			return false;
 		}
 
-		if (bEndDate) {
-			this._endYearValueState = ValueState.None;
-			this._endYearValueStateMessage = "";
-		} else {
-			this._yearValueState = ValueState.None;
-			this._yearValueStateMessage = "";
-		}
-
-		// 2. Month
-		if (minD && year === minY && month < minD.getMonth()) {
-			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
-			if (bEndDate) {
-				this._endMonthValueState = ValueState.Negative;
-				this._endMonthValueStateMessage = msg;
-				this._endDayValueState = ValueState.None;
-				this._endDayValueStateMessage = "";
-			} else {
-				this._monthValueState = ValueState.Negative;
-				this._monthValueStateMessage = msg;
-				this._dayValueState = ValueState.None;
-				this._dayValueStateMessage = "";
-			}
-			return false;
-		}
-		if (maxD && year === maxY && month > maxD.getMonth()) {
-			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_MONTH_OUT_OF_RANGE);
-			if (bEndDate) {
-				this._endMonthValueState = ValueState.Negative;
-				this._endMonthValueStateMessage = msg;
-				this._endDayValueState = ValueState.None;
-				this._endDayValueStateMessage = "";
-			} else {
-				this._monthValueState = ValueState.Negative;
-				this._monthValueStateMessage = msg;
-				this._dayValueState = ValueState.None;
-				this._dayValueStateMessage = "";
-			}
+		// 1. Year bound (compare in Gregorian)
+		if (greg.year < minY || greg.year > maxY) {
+			applyState("year", yearMsg);
 			return false;
 		}
 
-		if (bEndDate) {
-			this._endMonthValueState = ValueState.None;
-			this._endMonthValueStateMessage = "";
-		} else {
-			this._monthValueState = ValueState.None;
-			this._monthValueStateMessage = "";
-		}
+		const selected = new CalendarDate(greg.year, greg.month, greg.day);
 
-		// 3. Day
-		const daysInMonth = this._getDaysInMonth(year, month);
-		let minDay = 1;
-		let maxDay = daysInMonth;
-		if (minD && year === minY && month === minD.getMonth()) { minDay = minD.getDate(); }
-		if (maxD && year === maxY && month === maxD.getMonth()) { maxDay = maxD.getDate(); }
-
-		if (day < minDay || day > maxDay) {
-			const msg = DateHighZoomInputs.i18nBundle.getText(DATEPICKER_HZ_DAY_OUT_OF_RANGE);
-			if (bEndDate) {
-				this._endDayValueState = ValueState.Negative;
-				this._endDayValueStateMessage = msg;
-			} else {
-				this._dayValueState = ValueState.Negative;
-				this._dayValueStateMessage = msg;
+		// 2. Full-date lower bound
+		if (minD) {
+			const minDate = new CalendarDate(minD.getFullYear(), minD.getMonth(), minD.getDate());
+			if (selected.isBefore(minDate)) {
+				applyState(greg.month < minD.getMonth() ? "month" : "day", greg.month < minD.getMonth() ? monthMsg : dayMsg);
+				return false;
 			}
-			return false;
 		}
 
-		if (bEndDate) {
-			this._endDayValueState = ValueState.None;
-			this._endDayValueStateMessage = "";
-		} else {
-			this._dayValueState = ValueState.None;
-			this._dayValueStateMessage = "";
+		// 3. Full-date upper bound
+		if (maxD) {
+			const maxDate = new CalendarDate(maxD.getFullYear(), maxD.getMonth(), maxD.getDate());
+			if (selected.isAfter(maxDate)) {
+				applyState(greg.month > maxD.getMonth() ? "month" : "day", greg.month > maxD.getMonth() ? monthMsg : dayMsg);
+				return false;
+			}
 		}
 
+		// All good — clear all states.
+		applyState(null, "");
 		return true;
 	}
 
 	// ---- Event handlers ----
 
+	/**
+	 * After a user edits year/month/day, re-derive the Gregorian source of truth from
+	 * the current display values so calendar-type toggles don't revert the edit.
+	 */
+	_syncGregorianFromDisplay(isEnd: boolean) {
+		const greg = this._displayToGregorian(isEnd);
+		if (!greg) { return; }
+		if (isEnd) {
+			this._gregEndYear = greg.year;
+			this._gregEndMonth = greg.month;
+			this._gregEndDay = greg.day;
+			this._hasEndValue = true;
+		} else {
+			this._gregYear = greg.year;
+			this._gregMonth = greg.month;
+			this._gregDay = greg.day;
+		}
+	}
+
+	/** Builds a picker timestamp (seconds) for Jan 1 of the given year, safe for years < 100. */
+	_yearToTimestamp(year: number): number {
+		const d = new Date(2000, 0, 1, 12, 0, 0);
+		d.setFullYear(year, 0, 1);
+		return d.getTime() / 1000;
+	}
+
 	_onYearInput(e: CustomEvent, isEnd: boolean) {
 		const input = e.target as HTMLElement & { value: string };
 		const y = parseInt(input.value);
-		if (!isNaN(y) && y > 0 && y < 10000) {
+		if (!Number.isNaN(y) && y > 0 && y < 10000) {
 			if (isEnd) {
-				this._endYearPickerTimestamp = Date.UTC(y, 0, 1, 12, 0, 0) / 1000;
+				this._endYearPickerTimestamp = this._yearToTimestamp(y);
 			} else {
-				this._yearPickerTimestamp = Date.UTC(y, 0, 1, 12, 0, 0) / 1000;
+				this._yearPickerTimestamp = this._yearToTimestamp(y);
 			}
 		}
 	}
@@ -506,12 +495,16 @@ class DateHighZoomInputs extends UI5Element {
 		const val = input.value;
 		if (isEnd) {
 			this._endYearValue = val;
+			if (this._endDayValue > this._getDaysInMonth(parseInt(val), this._endMonthValue)) {
+				this._endDayValue = 1;
+			}
 		} else {
 			this._yearValue = val;
 			if (this._dayValue > this._getDaysInMonth(parseInt(val), this._monthValue)) {
 				this._dayValue = 1;
 			}
 		}
+		this._syncGregorianFromDisplay(isEnd);
 		this._doValidate(isEnd);
 		this.fireDecoratorEvent("change", { field: DateHighZoomInputsField.Year, isEndDate: isEnd });
 	}
@@ -530,6 +523,8 @@ class DateHighZoomInputs extends UI5Element {
 				this._dayValue = 1;
 			}
 		}
+		this._syncGregorianFromDisplay(isEnd);
+		this._doValidate(isEnd);
 		this.fireDecoratorEvent("change", { field: DateHighZoomInputsField.Month, isEndDate: isEnd });
 	}
 
@@ -541,19 +536,28 @@ class DateHighZoomInputs extends UI5Element {
 		} else {
 			this._dayValue = val;
 		}
+		this._syncGregorianFromDisplay(isEnd);
+		this._doValidate(isEnd);
 		this.fireDecoratorEvent("change", { field: DateHighZoomInputsField.Day, isEndDate: isEnd });
 	}
 
 	// ---- Year picker dialog ----
 
+	/**
+	 * The timestamp (seconds) the year picker should open on: the stored picker timestamp,
+	 * or one derived from the current year field (falling back to the current year).
+	 */
+	_yearPickerSelectedTimestamp(isEnd: boolean): number {
+		const ts = isEnd ? this._endYearPickerTimestamp : this._yearPickerTimestamp;
+		if (ts) { return ts; }
+		const yearStr = isEnd ? this._endYearValue : this._yearValue;
+		const year = parseInt(yearStr);
+		const safeYear = Number.isNaN(year) || year <= 0 ? new Date().getFullYear() : year;
+		return this._yearToTimestamp(safeYear);
+	}
+
 	_openYearPicker(isEnd: boolean) {
-		let ts = isEnd ? this._endYearPickerTimestamp : this._yearPickerTimestamp;
-		if (!ts) {
-			const yearStr = isEnd ? this._endYearValue : this._yearValue;
-			const year = parseInt(yearStr);
-			const safeYear = isNaN(year) || year <= 0 ? new Date().getFullYear() : year;
-			ts = Date.UTC(safeYear, 0, 1, 12, 0, 0) / 1000;
-		}
+		const ts = this._yearPickerSelectedTimestamp(isEnd);
 		if (isEnd) {
 			this._endYearPickerTimestamp = ts;
 			this._endYearPickerOpen = true;
@@ -574,60 +578,56 @@ class DateHighZoomInputs extends UI5Element {
 	_onYearPickerSelectionChange(e: CustomEvent<YearPickerChangeEventDetail>, isEnd: boolean) {
 		const ts = e.detail.timestamp;
 		if (ts === undefined) { return; }
-		const year = new Date(ts * 1000).getUTCFullYear();
+		// The YearPicker runs in this._calType, so derive the display year from the timestamp
+		// in that calendar type (not Gregorian).
+		const displayYear = CalendarDate.fromTimestamp(ts * 1000, this._calType).getYear();
 		if (isEnd) {
-			this._endPendingYear = year;
-			this._endYearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
+			this._endPendingYear = displayYear;
+			this._endYearPickerTimestamp = ts;
 		} else {
-			this._pendingYear = year;
-			this._yearPickerTimestamp = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
+			this._pendingYear = displayYear;
+			this._yearPickerTimestamp = ts;
 		}
 		this._confirmYearPicker(isEnd);
 	}
 
 	_confirmYearPicker(isEnd: boolean) {
-		const year = isEnd ? this._endPendingYear : this._pendingYear;
-		if (year === null) {
+		const displayYear = isEnd ? this._endPendingYear : this._pendingYear;
+		if (displayYear === null) {
 			this._closeYearPicker(isEnd);
 			return;
 		}
 
-		const minD = this._parseISO(this.minDate);
-		const maxD = this._parseISO(this.maxDate);
-		const minY = minD ? minD.getFullYear() : 1;
-		const maxY = maxD ? maxD.getFullYear() : 9999;
-		const isValid = year >= minY && year <= maxY;
-
-		const newTs = Date.UTC(year, 0, 1, 12, 0, 0) / 1000;
 		if (isEnd) {
-			this._endYearValue = String(year);
-			this._endYearPickerTimestamp = newTs;
+			this._endYearValue = String(displayYear);
 			this._endPendingYear = null;
 			this._endYearPickerOpen = false;
-			if (this._endDayValue > this._getDaysInMonth(year, this._endMonthValue)) {
+			if (this._endDayValue > this._getDaysInMonth(displayYear, this._endMonthValue)) {
 				this._endDayValue = 1;
 			}
 		} else {
-			this._yearValue = String(year);
-			this._yearPickerTimestamp = newTs;
+			this._yearValue = String(displayYear);
 			this._pendingYear = null;
 			this._yearPickerOpen = false;
-			if (this._dayValue > this._getDaysInMonth(year, this._monthValue)) {
+			if (this._dayValue > this._getDaysInMonth(displayYear, this._monthValue)) {
 				this._dayValue = 1;
 			}
 		}
 
-		if (!isValid) {
-			this._doValidate(isEnd);
+		// Update Gregorian source of truth and the picker timestamp from the display values.
+		this._syncGregorianFromDisplay(isEnd);
+		const greg = isEnd
+			? { year: this._gregEndYear }
+			: { year: this._gregYear };
+		const pickerTs = this._yearToTimestamp(greg.year);
+		if (isEnd) {
+			this._endYearPickerTimestamp = pickerTs;
 		} else {
-			if (isEnd) {
-				this._endYearValueState = ValueState.None;
-				this._endYearValueStateMessage = "";
-			} else {
-				this._yearValueState = ValueState.None;
-				this._yearValueStateMessage = "";
-			}
+			this._yearPickerTimestamp = pickerTs;
 		}
+
+		// Re-validate so out-of-range years are flagged (and in-range ones cleared).
+		this._doValidate(isEnd);
 		this.fireDecoratorEvent("change", { field: DateHighZoomInputsField.Year, isEndDate: isEnd });
 	}
 

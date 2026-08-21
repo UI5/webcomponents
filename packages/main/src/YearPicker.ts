@@ -188,7 +188,9 @@ class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeader
 	}
 
 	get _isHeaderYearRangeButtonHidden() {
-		return false;
+		// In standalone (high-zoom) mode there is no Calendar parent to handle the
+		// year-range button press, so hide it to avoid a dead, focusable control.
+		return this._showHeader;
 	}
 
 	get _headerYearRangeButtonText() {
@@ -225,7 +227,7 @@ class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeader
 		};
 	}
 
-	onPrevButtonClick(_e: MouseEvent) {
+	onPrevButtonClick() {
 		this._showPreviousPage();
 	}
 
@@ -235,9 +237,9 @@ class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeader
 		}
 	}
 
-	onPrevButtonKeyUp(_e: KeyboardEvent) { /* noop */ }
+	onPrevButtonKeyUp() { /* noop */ }
 
-	onNextButtonClick(_e: MouseEvent) {
+	onNextButtonClick() {
 		this._showNextPage();
 	}
 
@@ -247,7 +249,7 @@ class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeader
 		}
 	}
 
-	onNextButtonKeyUp(_e: KeyboardEvent) { /* noop */ }
+	onNextButtonKeyUp() { /* noop */ }
 
 	get roleDescription() {
 		return YearPicker.i18nBundle.getText(YEAR_PICKER_DESCRIPTION);

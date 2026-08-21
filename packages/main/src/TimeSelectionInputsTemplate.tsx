@@ -53,7 +53,7 @@ export default function TimeSelectionInputsTemplate(this: TimeSelectionInputs) {
 			{this._periods.length > 0 &&
 			<>
 				{ !this._showLabels && <span class="ui5-time-selection-separator"></span> }
-				<div class={{ "ui5-time-selection-input-cell": this._showLabels }}>
+				<div class={{ "ui5-time-selection-input-cell": this._showLabels, "ui5-time-selection-ampm-cell": this._showLabels }}>
 					{ this._showLabels && <Label class="ui5-time-selection-input-label">&nbsp;</Label> }
 					<SegmentedButton id={`${this._id}_AmPm`} onClick={this._periodChange}>
 						{this._periods.map(period =>

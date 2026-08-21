@@ -387,6 +387,10 @@ class Calendar extends CalendarPart {
 		this._handleResizeBound = this._handleResize.bind(this);
 	}
 
+	override get _shouldWatchZoom(): boolean {
+		return true;
+	}
+
 	onEnterDOM() {
 		super.onEnterDOM();
 		ResizeHandler.register(document.body, this._handleResizeBound);
@@ -424,10 +428,6 @@ class Calendar extends CalendarPart {
 	onExitDOM() {
 		super.onExitDOM();
 		ResizeHandler.deregister(document.body, this._handleResizeBound);
-	}
-
-	_onZoomChange(): void {
-		// _highZoom property change triggers re-render automatically
 	}
 
 	/**

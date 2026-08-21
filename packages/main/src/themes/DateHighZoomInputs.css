@@ -57,7 +57,7 @@
 
 /* Year picker dialog */
 .ui5-dhzi-year-dialog::part(content) {
-	padding: 0;
+	padding: 0.5rem;
 	overflow: hidden;
 }
 

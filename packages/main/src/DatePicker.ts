@@ -420,6 +420,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@property({ noAttribute: true })
 	_hzActiveCalType?: `${CalendarType}`;
 
+	override get _shouldWatchZoom(): boolean {
+		return true;
+	}
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -727,8 +731,9 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	_click(e: MouseEvent) {
 		if (isPhone() || this._highZoom) {
-			this.responsivePopover!.opener = this;
-			this.responsivePopover!.open = true;
+			if (!this.open) {
+				this.open = true;
+			}
 			e.preventDefault();
 		}
 	}
@@ -1010,11 +1015,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		const next = current === this._primaryCalendarType
 			? this._secondaryCalendarType
 			: this._primaryCalendarType;
+		// Setting _hzActiveCalType re-renders and passes the new type to DateHighZoomInputs
+		// via primaryCalendarType={this._hzEffectiveCalType}; the child re-derives its
+		// display values from its Gregorian source of truth in onBeforeRendering.
 		this._hzActiveCalType = next;
-		if (this._hzInputs) {
-			this._hzInputs.primaryCalendarType = this._hzActiveCalType;
-			this._hzInputs.convertToCalendarType();
-		}
 	}
 
 	_onHzOk() {
@@ -1022,8 +1026,10 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		if (!this._hzInputs.validate()) { return; }
 		const d = this._hzInputs.getDateObject();
 		if (d) {
-			this.value = this.getValueFormat().format(d);
-			this.fireDecoratorEvent("change", { value: this.value, valid: true });
+			const newValue = this.getValueFormat().format(d);
+			// Route through _updateValueAndFireEvents (like the calendar-selection path) so
+			// value-state, liveValue sync and preventable change handling stay consistent.
+			this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
 		}
 		this._togglePicker();
 	}
@@ -1178,18 +1184,6 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get type() {
 		return InputType.Text;
-	}
-
-	_onZoomChange(bHighZoom: boolean): void {
-		if (this.open) {
-			// picker is open — re-render will pick up the new _highZoom value
-			// (already set by DateComponentBase before calling this)
-			this.open = false;
-			this.open = true;
-		} else {
-			// icon visibility is driven by _highZoom property — invalidate
-			void bHighZoom;
-		}
 	}
 }
 

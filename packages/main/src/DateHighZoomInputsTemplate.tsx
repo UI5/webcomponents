@@ -1,4 +1,5 @@
 import type DateHighZoomInputs from "./DateHighZoomInputs.js";
+import type { YearPickerChangeEventDetail } from "./YearPicker.js";
 import Dialog from "./Dialog.js";
 import YearPicker from "./YearPicker.js";
 import Icon from "./Icon.js";
@@ -124,11 +125,7 @@ function dateFields(this: DateHighZoomInputs, isEnd: boolean) {
 
 function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 	const isOpen = isEnd ? this._endYearPickerOpen : this._yearPickerOpen;
-	const ts = isEnd ? this._endYearPickerTimestamp : this._yearPickerTimestamp;
-	const yearStr = isEnd ? this._endYearValue : this._yearValue;
-	const year = parseInt(yearStr);
-	const safeYear = isNaN(year) || year <= 0 ? new Date().getFullYear() : year;
-	const selectedTs = ts || Date.UTC(safeYear, 0, 1, 12, 0, 0) / 1000;
+	const selectedTs = this._yearPickerSelectedTimestamp(isEnd);
 	const ypId = `${this._id}-yearpicker${isEnd ? "-end" : ""}`;
 
 	return (
@@ -151,7 +148,7 @@ function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 				_showHeader={true}
 				_rowSize={2}
 				_pageSize={8}
-				onChange={(e: CustomEvent) => this._onYearPickerSelectionChange(e, isEnd)}
+				onChange={(e: CustomEvent<YearPickerChangeEventDetail>) => this._onYearPickerSelectionChange(e, isEnd)}
 			/>
 		</Dialog>
 	);

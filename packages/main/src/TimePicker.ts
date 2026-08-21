@@ -69,6 +69,8 @@ import TimePickerCss from "./generated/themes/TimePicker.css.js";
 import TimePickerPopoverCss from "./generated/themes/TimePickerPopover.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
+import { isHighZoom, startHighZoomWatch } from "./util/HighZoomWatch.js";
+import type { HighZoomWatcher } from "./util/HighZoomWatch.js";
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 
@@ -380,7 +382,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_highZoom = false;
 
-	_fnZoomResizeHandler?: () => void;
+	_zoomWatcher?: HighZoomWatcher;
 
 	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
@@ -423,7 +425,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	onEnterDOM() {
-		this._highZoom = this._isHighZoom();
+		this._highZoom = isHighZoom();
 		this._startZoomWatch();
 	}
 
@@ -432,44 +434,26 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_isHighZoom(): boolean {
-		return ((window.visualViewport?.width) ?? window.innerWidth) <= 320;
+		return isHighZoom();
 	}
 
 	_startZoomWatch() {
-		if (this._fnZoomResizeHandler) {
-			window.removeEventListener("resize", this._fnZoomResizeHandler);
-			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
-		}
-
-		this._fnZoomResizeHandler = () => {
-			if (!this.isConnected) { return; }
-			const bHighZoom = this._isHighZoom();
-			if (bHighZoom !== this._highZoom) {
+		this._stopZoomWatch();
+		this._zoomWatcher = startHighZoomWatch(
+			() => this._highZoom,
+			bHighZoom => {
+				// _highZoom is a reactive @property — changing it re-renders the
+				// component and swaps the picker content / input icon accordingly.
 				this._highZoom = bHighZoom;
-				this._onZoomChange(bHighZoom);
-			}
-		};
-
-		window.visualViewport?.addEventListener("resize", this._fnZoomResizeHandler);
-		window.addEventListener("resize", this._fnZoomResizeHandler);
+			},
+			() => this.isConnected,
+		);
 	}
 
 	_stopZoomWatch() {
-		if (this._fnZoomResizeHandler) {
-			window.removeEventListener("resize", this._fnZoomResizeHandler);
-			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
-			this._fnZoomResizeHandler = undefined;
-		}
-	}
-
-	// noop — override in later steps
-	_onZoomChange(bHighZoom: boolean): void {
-		if (this.open) {
-			this.open = false;
-			if (bHighZoom !== this._highZoom) {
-				this._highZoom = bHighZoom;
-			}
-			this.open = true;
+		if (this._zoomWatcher) {
+			this._zoomWatcher.stop();
+			this._zoomWatcher = undefined;
 		}
 	}
 

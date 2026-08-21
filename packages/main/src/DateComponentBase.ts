@@ -13,6 +13,8 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import { getMaxCalendarDate, getMinCalendarDate } from "@ui5/webcomponents-localization/dist/dates/ExtremeDates.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type CalendarWeekNumbering from "./types/CalendarWeekNumbering.js";
+import { isHighZoom, startHighZoomWatch } from "./util/HighZoomWatch.js";
+import type { HighZoomWatcher } from "./util/HighZoomWatch.js";
 
 /**
  * @class
@@ -131,14 +133,25 @@ class DateComponentBase extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_highZoom = false;
 
-	_fnZoomResizeHandler?: () => void;
+	_zoomWatcher?: HighZoomWatcher;
 
 	constructor() {
 		super();
 	}
 
+	/**
+	 * Whether this component reacts to high-zoom (switches its UI at ≤320px). Only the
+	 * top-level pickers and the standalone Calendar do; the internal sub-pickers
+	 * (day/month/year) inherit this base but never consume _highZoom, so they opt out
+	 * to avoid attaching redundant resize listeners.
+	 */
+	get _shouldWatchZoom(): boolean {
+		return false;
+	}
+
 	onEnterDOM() {
-		this._highZoom = this._isHighZoom();
+		if (!this._shouldWatchZoom) { return; }
+		this._highZoom = isHighZoom();
 		this._startZoomWatch();
 	}
 
@@ -147,38 +160,28 @@ class DateComponentBase extends UI5Element {
 	}
 
 	_isHighZoom(): boolean {
-		return ((window.visualViewport?.width) ?? window.innerWidth) <= 320;
+		return isHighZoom();
 	}
 
 	_startZoomWatch() {
-		if (this._fnZoomResizeHandler) {
-			window.removeEventListener("resize", this._fnZoomResizeHandler);
-			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
-		}
-
-		this._fnZoomResizeHandler = () => {
-			if (!this.isConnected) { return; }
-			const bHighZoom = this._isHighZoom();
-			if (bHighZoom !== this._highZoom) {
+		this._stopZoomWatch();
+		this._zoomWatcher = startHighZoomWatch(
+			() => this._highZoom,
+			bHighZoom => {
+				// _highZoom is a reactive @property — changing it re-renders the
+				// component and swaps the picker content / input icon accordingly.
 				this._highZoom = bHighZoom;
-				this._onZoomChange(bHighZoom);
-			}
-		};
-
-		window.visualViewport?.addEventListener("resize", this._fnZoomResizeHandler);
-		window.addEventListener("resize", this._fnZoomResizeHandler);
+			},
+			() => this.isConnected,
+		);
 	}
 
 	_stopZoomWatch() {
-		if (this._fnZoomResizeHandler) {
-			window.removeEventListener("resize", this._fnZoomResizeHandler);
-			window.visualViewport?.removeEventListener("resize", this._fnZoomResizeHandler);
-			this._fnZoomResizeHandler = undefined;
+		if (this._zoomWatcher) {
+			this._zoomWatcher.stop();
+			this._zoomWatcher = undefined;
 		}
 	}
-
-	// noop — override per subclass
-	_onZoomChange(_bHighZoom: boolean): void {}
 
 	get _primaryCalendarType() {
 		const localeData = getCachedLocaleDataInstance(getLocale());

@@ -57,9 +57,10 @@
 
 .ui5-dt-picker-footer {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-end;
 	align-items: center;
-	height: 2.75rem;
+	min-height: 2.75rem;
 	width: 100%;
 }
 
@@ -98,4 +99,21 @@
 
 .ui5-dt-picker-content--phone .ui5-dt-time {
 	min-width: var(--_ui5_datetime_timeview_phonemode_width);
+}
+
+/* High-zoom time inputs — same sizing as .ui5-dt-time but without clocks */
+.ui5-dt-hz-time-inputs {
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* High-zoom content — override fixed height/min-width so content fits the narrow screen */
+.ui5-dt-picker-content--hz.ui5-dt-picker-content {
+	height: auto;
+	min-width: 0;
+	width: 100%;
+	flex-direction: column;
 }

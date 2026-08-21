@@ -32,9 +32,10 @@
 
 .ui5-dt-picker-footer {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-end;
 	align-items: center;
-	height: 2.75rem;
+	min-height: 2.75rem;
 	width: 100%;
 }
 

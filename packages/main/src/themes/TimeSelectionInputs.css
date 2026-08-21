@@ -26,6 +26,12 @@
 	align-items: stretch;
 }
 
+/* In labeled mode all cells same width so separators are equidistant */
+.ui5-time-selection-inputs--labeled .ui5-time-selection-input-cell {
+	width: 2.875rem;
+	align-items: center;
+}
+
 .ui5-time-selection-input-label {
 	display: block;
 	margin-bottom: 0.25rem;
@@ -44,6 +50,15 @@
 /* In labeled mode align separator to center of input (input height ≈ 2.25rem, label ≈ 1.25rem) */
 .ui5-time-selection-inputs--labeled .ui5-time-selection-separator {
 	margin-bottom: calc((2.25rem / 2) - 0.5em);
+}
+
+/* AM/PM always on its own row in labeled mode */
+.ui5-time-selection-inputs--labeled .ui5-time-selection-ampm-cell {
+	flex-basis: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 0.5rem;
 }
 
 .ui5-hidden-text {

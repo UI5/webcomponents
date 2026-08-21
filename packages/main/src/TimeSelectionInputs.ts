@@ -8,7 +8,6 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import TimePickerInternals from "./TimePickerInternals.js";
 import type Input from "./Input.js";
-import Label from "./Label.js";
 
 import InputType from "./types/InputType.js";
 
