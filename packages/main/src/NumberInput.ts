@@ -121,7 +121,7 @@ type NumberInputValueStateChangeEventDetail = {
 })
 /**
  * Fired before the value state of the component is updated internally.
- * The event is preventable, meaning that if it's default action is
+ * The event is preventable, meaning that if its default action is
  * prevented, the component will not update the value state.
  * @since 1.23.0
  * @public
