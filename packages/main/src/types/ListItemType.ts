@@ -14,7 +14,7 @@ enum ListItemType {
 	 * but selection (checkbox/radio) is still possible when a selection mode is active.
 	 * The `item-click` event is not fired for items of this type.
 	 * @public
-	 * @since 2.x.0
+	 * @since 2.26.0
 	 */
 	InactiveSelectable = "InactiveSelectable",
 
