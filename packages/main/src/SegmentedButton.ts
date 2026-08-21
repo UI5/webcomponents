@@ -235,7 +235,7 @@ class SegmentedButton extends UI5Element {
 			target.selected = !target.selected;
 			break;
 		default:
-			this._applySingleSelection(target);
+			this._applySingleSelection(target as unknown as ISegmentedButtonItem);
 		}
 
 		this.fireDecoratorEvent("selection-change", {
