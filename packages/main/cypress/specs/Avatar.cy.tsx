@@ -27,6 +27,38 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-label", expectedLabel);
 	});
 
+	it("includes badge tooltip in aria-label", () => {
+		const INITIALS = "JD";
+		const TOOLTIP = "Approved";
+
+		cy.mount(
+			<Avatar id="avatar-badge-tooltip" initials={INITIALS}>
+				<AvatarBadge slot="badge" icon="accept" tooltip={TOOLTIP}></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-badge-tooltip")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "aria-label", `Avatar ${INITIALS} ${TOOLTIP}`);
+	});
+
+	it("appends badge tooltip to accessibleName", () => {
+		const ACCESSIBLE_NAME = "John Doe";
+		const TOOLTIP = "Approved";
+
+		cy.mount(
+			<Avatar id="avatar-accessiblename-badge" accessibleName={ACCESSIBLE_NAME}>
+				<AvatarBadge slot="badge" icon="accept" tooltip={TOOLTIP}></AvatarBadge>
+			</Avatar>
+		);
+
+		cy.get("#avatar-accessiblename-badge")
+			.shadow()
+			.find(".ui5-avatar-root")
+			.should("have.attr", "aria-label", `${ACCESSIBLE_NAME} ${TOOLTIP}`);
+	});
+
 	it("should return correct accessibilityInfo object when avatar is interactive", () => {
 		const INITIALS = "JD";
 		const hasPopup = "menu";
