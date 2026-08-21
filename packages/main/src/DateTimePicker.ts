@@ -184,10 +184,12 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 	 */
 
 	onEnterDOM() {
+		super.onEnterDOM();
 		ResizeHandler.register(document.body, this._handleResizeBound);
 	}
 
 	onExitDOM() {
+		super.onExitDOM();
 		ResizeHandler.deregister(document.body, this._handleResizeBound);
 	}
 
@@ -377,6 +379,63 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 
 	get _submitDisabled() {
 		return !this._calendarSelectedDates || !this._calendarSelectedDates.length;
+	}
+
+	get _hzMinISO(): string {
+		if (!this.minDate) { return ""; }
+		const cd = this._minDate;
+		return `${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+	}
+
+	get _hzMaxISO(): string {
+		if (!this.maxDate) { return ""; }
+		const cd = this._maxDate;
+		return `${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+	}
+
+	/**
+	 * @override — validate the date inputs in high-zoom mode (the time inputs are
+	 * range-bounded numeric fields and cannot be invalid)
+	 */
+	override _onHzInputsChange() {
+		if (this._hzInputs) {
+			const dateOk = this._hzInputs.validate();
+			this._hzOkEnabled = dateOk;
+		}
+	}
+
+	/**
+	 * @override — combine selected date + time and fire change
+	 */
+	override _onHzOk() {
+		if (!this._hzInputs) { return; }
+		if (!this._hzInputs.validate()) { return; }
+
+		const dateObj = this._hzInputs.getDateObject();
+		if (!dateObj) { return; }
+
+		// Reuse the same time source + parsing as the normal path (getSelectedDateTime),
+		// so the value/display format handling stays consistent between the two flows.
+		const selectedTime = this.getValueFormat().parse(this._timeSelectionValue) as Date;
+		if (selectedTime) {
+			dateObj.setHours(selectedTime.getHours(), selectedTime.getMinutes(), selectedTime.getSeconds());
+		}
+
+		const newValue = this.getValueFormat().format(dateObj);
+		if (this.value !== newValue) {
+			this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+		}
+		this._togglePicker();
+	}
+
+	/**
+	 * @override — reset hz inputs on cancel
+	 */
+	override _onHzCancel() {
+		if (this._hzInputs) {
+			this._hzInputs.resetValueState();
+		}
+		this._togglePicker();
 	}
 
 	/**

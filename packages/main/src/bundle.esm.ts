@@ -49,6 +49,7 @@ import ColorPicker from "./ColorPicker.js";
 import ComboBox from "./ComboBox.js";
 import ComboBoxItemCustom from "./ComboBoxItemCustom.js";
 import DatePicker from "./DatePicker.js";
+import DateHighZoomInputs from "./DateHighZoomInputs.js";
 import DateRangePicker from "./DateRangePicker.js";
 import DateTimePicker from "./DateTimePicker.js";
 import Dialog from "./Dialog.js";

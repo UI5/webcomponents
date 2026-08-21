@@ -1,0 +1,83 @@
+:host {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui5-dhzi-root {
+	padding: 0.5rem;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+.ui5-dhzi-range {
+	padding: 0;
+}
+
+.ui5-dhzi-group {
+	padding: 0.5rem;
+	border-bottom: 1px solid var(--sapList_BorderColor);
+}
+
+.ui5-dhzi-group:last-child {
+	border-bottom: none;
+}
+
+.ui5-dhzi-group-label {
+	font-size: var(--sapFontSmallSize, 0.75rem);
+	font-weight: bold;
+	color: var(--sapContent_LabelColor);
+	margin-bottom: 0.375rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.ui5-dhzi-fields {
+	width: 100%;
+}
+
+.ui5-dhzi-row {
+	padding: 0.375rem 0;
+	width: 100%;
+}
+
+.ui5-dhzi-label {
+	display: block;
+	font-family: var(--sapFontFamily);
+	font-size: var(--sapFontSize);
+	color: var(--sapContent_LabelColor);
+	margin-bottom: 0.25rem;
+}
+
+.ui5-dhzi-year-input,
+.ui5-dhzi-select {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Year picker dialog */
+.ui5-dhzi-year-dialog::part(content) {
+	padding: 0.5rem;
+	overflow: hidden;
+}
+
+/* YearPicker fills the dialog width — override Calendar's fixed 20rem */
+.ui5-dhzi-yp {
+	display: block;
+	width: 100%;
+	--_ui5_calendar_width: 100%;
+	--_ui5_calendar_height: auto;
+}
+
+.ui5-dhzi-field-message {
+	font-size: var(--sapFontSmallSize, 0.75rem);
+	color: var(--sapNegativeTextColor);
+	margin-top: 0.125rem;
+}
+
+.ui5-dhzi-yp-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	padding: 0.25rem 0.5rem;
+}

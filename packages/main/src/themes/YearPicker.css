@@ -7,6 +7,16 @@
 	height: 100%;
 }
 
+/* When YearPicker renders its own header (standalone mode), fill parent width */
+.ui5-cal-root {
+	width: 100%;
+	height: auto;
+}
+
+.ui5-calheader {
+	height: var(--_ui5_calendar_header_height);
+}
+
 .ui5-yp-root {
 	padding: 2rem 0 1rem 0;
 	display: flex;
@@ -27,7 +37,7 @@
 .ui5-yp-item {
 	display: flex;
 	margin: var(--_ui5_yearpicker_item_margin);
-	width: calc(25% - 0.125rem);
+	width: var(--_ui5_yp_item_width, calc(25% - 0.125rem));
 	height: var(--_ui5_year_picker_item_height);
 	color: var(--sapButton_Lite_TextColor);
 	background-color: var(--sapButton_Lite_Background);

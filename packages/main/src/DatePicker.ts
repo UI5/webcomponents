@@ -57,6 +57,7 @@ import {
 	DATEPICKER_RANGE_UNDERFLOW,
 	DATEPICKER_RANGE_OVERFLOW,
 	TIMEPICKER_CANCEL_BUTTON,
+	CALENDAR_FOOTER_OK_BUTTON,
 } from "./generated/i18n/i18n-defaults.js";
 import DateComponentBase from "./DateComponentBase.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -66,6 +67,8 @@ import type CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 import type DateTimeInput from "./DateTimeInput.js";
 import type { InputAccInfo } from "./Input.js";
 import InputType from "./types/InputType.js";
+import type DateHighZoomInputs from "./DateHighZoomInputs.js";
+import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
 import IconMode from "./types/IconMode.js";
 import DatePickerTemplate from "./DatePickerTemplate.js";
 
@@ -407,6 +410,20 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	@query("[ui5-calendar]")
 	_calendar!: Calendar;
 
+	@query("[ui5-date-high-zoom-inputs]")
+	_hzInputs?: DateHighZoomInputs;
+
+	@property({ type: Boolean, noAttribute: true })
+	_hzOkEnabled = true;
+
+	/** Active calendar type in high-zoom mode — toggled by the header button */
+	@property({ noAttribute: true })
+	_hzActiveCalType?: `${CalendarType}`;
+
+	override get _shouldWatchZoom(): boolean {
+		return true;
+	}
+
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
@@ -467,8 +484,27 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	onResponsivePopoverBeforeOpen() {
+		if (this._highZoom) {
+			this._hzOkEnabled = true;
+			this._hzActiveCalType = undefined; // reset to primary on each open
+			return;
+		}
 		this._calendar.timestamp = this._calendarTimestamp;
 		this._calendarCurrentPicker = this.firstPicker;
+	}
+
+	_onHzFocusIn(e: FocusEvent) {
+		// At high zoom the input should not be editable — immediately blur and open picker
+		(e.target as HTMLElement).blur();
+		if (!this.open) {
+			this._togglePicker();
+		}
+	}
+
+	_onHzInputsChange() {
+		if (this._hzInputs) {
+			this._hzOkEnabled = this._hzInputs.validate();
+		}
 	}
 
 	onBeforeRendering() {
@@ -694,10 +730,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_click(e: MouseEvent) {
-		if (isPhone()) {
-			this.responsivePopover!.opener = this;
-			this.responsivePopover!.open = true;
-			e.preventDefault(); // prevent immediate selection of any item
+		if (isPhone() || this._highZoom) {
+			if (!this.open) {
+				this.open = true;
+			}
+			e.preventDefault();
 		}
 	}
 
@@ -865,11 +902,11 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	get showHeader() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	get showFooter() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	get displayValue(): string {
@@ -953,6 +990,55 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	get btnCancelLabel() {
 		return DatePicker.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON);
+	}
+
+	get btnOKLabel() {
+		return DatePicker.i18nBundle.getText(CALENDAR_FOOTER_OK_BUTTON);
+	}
+
+	get _hzEffectiveCalType(): `${CalendarType}` {
+		return this._hzActiveCalType || this._primaryCalendarType;
+	}
+
+	get _hzShowCalToggle(): boolean {
+		return this._highZoom && this.hasSecondaryCalendarType;
+	}
+
+	get _hzCalToggleLabel(): string {
+		const current = this._hzEffectiveCalType;
+		const other = current === this._primaryCalendarType ? this._secondaryCalendarType : this._primaryCalendarType;
+		return other ?? "";
+	}
+
+	_onHzCalToggle() {
+		const current = this._hzEffectiveCalType;
+		const next = current === this._primaryCalendarType
+			? this._secondaryCalendarType
+			: this._primaryCalendarType;
+		// Setting _hzActiveCalType re-renders and passes the new type to DateHighZoomInputs
+		// via primaryCalendarType={this._hzEffectiveCalType}; the child re-derives its
+		// display values from its Gregorian source of truth in onBeforeRendering.
+		this._hzActiveCalType = next;
+	}
+
+	_onHzOk() {
+		if (!this._hzInputs) { return; }
+		if (!this._hzInputs.validate()) { return; }
+		const d = this._hzInputs.getDateObject();
+		if (d) {
+			const newValue = this.getValueFormat().format(d);
+			// Route through _updateValueAndFireEvents (like the calendar-selection path) so
+			// value-state, liveValue sync and preventable change handling stay consistent.
+			this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+		}
+		this._togglePicker();
+	}
+
+	_onHzCancel() {
+		if (this._hzInputs) {
+			this._hzInputs.resetValueState();
+		}
+		this._togglePicker();
 	}
 
 	/**
@@ -1047,6 +1133,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_togglePicker(): void {
+		this._highZoom = this._isHighZoom();
 		this.open = !this.open;
 	}
 

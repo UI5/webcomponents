@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>High-Zoom Date/Time Controls</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<script data-ui5-config type="application/json">
+		{ "language": "EN" }
+	</script>
+
+	<style>
+		body {
+			font-family: var(--sapFontFamily, sans-serif);
+			padding: 1rem;
+			background: var(--sapBackgroundColor, #f5f6f7);
+		}
+
+		h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+		h2 { font-size: 1rem; margin: 1rem 0 0.5rem; }
+
+		.section {
+			margin-bottom: 1.5rem;
+			padding-bottom: 1rem;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.control-row {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			margin-bottom: 0.75rem;
+			flex-wrap: wrap;
+		}
+
+		label {
+			min-width: 12rem;
+			font-size: 0.875rem;
+			color: #333;
+		}
+
+		.zoom-controls {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: 1.5rem;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.zoom-status {
+			font-size: 0.875rem;
+			color: #666;
+			margin-left: 0.5rem;
+		}
+
+		#output {
+			font-family: monospace;
+			font-size: 0.75rem;
+			background: #f0f0f0;
+			padding: 0.5rem;
+			border-radius: 4px;
+			min-height: 3rem;
+			white-space: pre-wrap;
+			word-break: break-all;
+			margin-bottom: 1rem;
+		}
+	</style>
+</head>
+<body>
+
+<h1>High-Zoom Date/Time Controls — Test Page</h1>
+
+<p>Open on mobile at 200% zoom, or use Chrome DevTools → Device Toolbar → 320px width.</p>
+
+<div class="zoom-controls">
+	<button onclick="simulateHighZoom()">Simulate 320px zoom</button>
+	<button onclick="resetZoom()">Reset zoom</button>
+	<span class="zoom-status" id="zoom-status">Viewport: <span id="vp-width">-</span>px — High zoom: <strong id="hz-state">-</strong></span>
+</div>
+
+<div id="output">Events will appear here...</div>
+
+<div class="section">
+	<h2>DatePicker (Step 04)</h2>
+	<div class="control-row">
+		<label>Standard:</label>
+		<ui5-date-picker id="dp-std" value="19.05.2026"></ui5-date-picker>
+	</div>
+	<div class="control-row">
+		<label>Min/Max (2026):</label>
+		<ui5-date-picker id="dp-min-max"
+			value="15.06.2026"
+			format-pattern="dd.MM.yyyy"
+			min-date="01.01.2026"
+			max-date="31.12.2026">
+		</ui5-date-picker>
+	</div>
+	<div class="control-row">
+		<label>Min/Max narrow<br>(Jun 10–Aug 20, 2026):</label>
+		<ui5-date-picker id="dp-min-max-narrow"
+			value="15.07.2026"
+			format-pattern="dd.MM.yyyy"
+			min-date="10.06.2026"
+			max-date="20.08.2026">
+		</ui5-date-picker>
+	</div>
+	<div class="control-row">
+		<label>Secondary Cal (Islamic):</label>
+		<ui5-date-picker id="dp-secondary-cal"
+			value="19.05.2026"
+			format-pattern="dd.MM.yyyy"
+			secondary-calendar-type="Islamic">
+		</ui5-date-picker>
+	</div>
+</div>
+
+<div class="section">
+	<h2>TimePicker (Step 03)</h2>
+	<div class="control-row">
+		<label>Standard:</label>
+		<ui5-time-picker id="tp-std" value="14:30:00"></ui5-time-picker>
+	</div>
+</div>
+
+<div class="section">
+	<h2>DateTimePicker (Step 05)</h2>
+	<div class="control-row">
+		<label>Standard (value=):</label>
+		<ui5-datetime-picker id="dtp-std" value="May 19, 2026, 2:30:00 PM"></ui5-datetime-picker>
+	</div>
+	<div class="control-row">
+		<label>via dateValue property:</label>
+		<ui5-datetime-picker id="dtp-datevalue"></ui5-datetime-picker>
+	</div>
+	<div class="control-row">
+		<label>Secondary Cal (Islamic):</label>
+		<ui5-datetime-picker id="dtp-secondary-cal"
+			value="May 19, 2026, 2:30:00 PM"
+			secondary-calendar-type="Islamic">
+		</ui5-datetime-picker>
+	</div>
+</div>
+
+<div class="section">
+	<h2>DateRangePicker (Step 06)</h2>
+	<div class="control-row">
+		<label>Standard:</label>
+		<ui5-daterange-picker id="drs-std" format-pattern="dd.MM.yyyy" value="02.02.2014 - 17.02.2014"></ui5-daterange-picker>
+	</div>
+	<div class="control-row">
+		<label>Secondary Cal (Islamic):</label>
+		<ui5-daterange-picker id="drs-secondary-cal"
+			format-pattern="dd.MM.yyyy"
+			value="02.02.2014 - 17.02.2014"
+			secondary-calendar-type="Islamic">
+		</ui5-daterange-picker>
+	</div>
+</div>
+
+<div class="section">
+	<h2>Calendar standalone (Step 07)</h2>
+	<div class="control-row">
+		<ui5-calendar id="cal-std"></ui5-calendar>
+	</div>
+</div>
+
+<script type="module">
+	// Set dateValue for dtp-datevalue
+	const dtpDateValue = document.getElementById("dtp-datevalue");
+	dtpDateValue.value = "May 19, 2026, 10:00:00 AM";
+
+	// Log change events
+	const output = document.getElementById("output");
+	const log = (msg) => {
+		output.textContent = new Date().toLocaleTimeString() + " — " + msg + "\n" + output.textContent;
+	};
+
+	["tp-std", "dp-std", "dp-min-max", "dp-min-max-narrow", "dp-secondary-cal",
+	 "dtp-std", "dtp-datevalue", "dtp-secondary-cal", "drs-std", "drs-secondary-cal", "cal-std"].forEach(id => {
+		document.getElementById(id)?.addEventListener("change", e => {
+			log(`[${id}] change: value="${e.target.value || ''}"`);
+		});
+	});
+
+	// Viewport display
+	const updateVP = () => {
+		const w = window.visualViewport?.width ?? window.innerWidth;
+		document.getElementById("vp-width").textContent = Math.round(w);
+		document.getElementById("hz-state").textContent = w <= 320 ? "YES" : "no";
+	};
+	window.addEventListener("resize", updateVP);
+	window.visualViewport?.addEventListener("resize", updateVP);
+	updateVP();
+
+	let _realVPWidth = null;
+	window.simulateHighZoom = () => {
+		document.documentElement.style.zoom = "200%";
+		// Mock visualViewport.width to simulate narrow viewport (200% zoom)
+		if (!_realVPWidth) {
+			_realVPWidth = window.visualViewport.width;
+			Object.defineProperty(window.visualViewport, "width", { configurable: true, get: () => 320 });
+		}
+		window.visualViewport.dispatchEvent(new Event("resize"));
+		window.dispatchEvent(new Event("resize"));
+		setTimeout(updateVP, 150);
+	};
+	window.resetZoom = () => {
+		document.documentElement.style.zoom = "";
+		// Restore real visualViewport.width
+		if (_realVPWidth !== null) {
+			const w = _realVPWidth;
+			_realVPWidth = null;
+			Object.defineProperty(window.visualViewport, "width", { configurable: true, get: () => w });
+		}
+		window.visualViewport.dispatchEvent(new Event("resize"));
+		window.dispatchEvent(new Event("resize"));
+		setTimeout(updateVP, 150);
+	};
+</script>
+
+</body>
+</html>

@@ -5,8 +5,23 @@ import YearPicker from "./YearPicker.js";
 import YearRangePicker from "./YearRangePicker.js";
 import CalendarHeaderTemplate from "./CalendarHeaderTemplate.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
+import DatePicker from "./DatePicker.js";
 
 export default function CalendarTemplate(this: Calendar) {
+	if (this._highZoom && this.selectionMode === "Single") {
+		return (
+			<DatePicker
+				value={this._hzDatePickerValue}
+				formatPattern={this._formatPattern}
+				primaryCalendarType={this.primaryCalendarType}
+				secondaryCalendarType={this.secondaryCalendarType}
+				minDate={this.minDate}
+				maxDate={this.maxDate}
+				onChange={this._onHzDatePickerChange}
+			/>
+		);
+	}
+
 	const showMultipleMonths = this._monthsToShow > 1 && !this._isDayPickerHidden;
 	const shouldRenderSeparateHeaders = this._isDefaultHeaderModeInMultipleMonths && !this._portraitView;
 	const shouldRenderInlineHeaders = this._isDefaultHeaderModeInMultipleMonths && this._portraitView;

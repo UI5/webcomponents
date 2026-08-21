@@ -13,6 +13,8 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import { getMaxCalendarDate, getMinCalendarDate } from "@ui5/webcomponents-localization/dist/dates/ExtremeDates.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type CalendarWeekNumbering from "./types/CalendarWeekNumbering.js";
+import { isHighZoom, startHighZoomWatch } from "./util/HighZoomWatch.js";
+import type { HighZoomWatcher } from "./util/HighZoomWatch.js";
 
 /**
  * @class
@@ -124,8 +126,61 @@ class DateComponentBase extends UI5Element {
 	_cachedMinDate?: { key: string, value: CalendarDate };
 	_cachedMaxDate?: { key: string, value: CalendarDate };
 
+	/**
+	 * True when the effective viewport width is ≤ 320 px (corresponds to ~200% browser zoom on a phone).
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	_zoomWatcher?: HighZoomWatcher;
+
 	constructor() {
 		super();
+	}
+
+	/**
+	 * Whether this component reacts to high-zoom (switches its UI at ≤320px). Only the
+	 * top-level pickers and the standalone Calendar do; the internal sub-pickers
+	 * (day/month/year) inherit this base but never consume _highZoom, so they opt out
+	 * to avoid attaching redundant resize listeners.
+	 */
+	get _shouldWatchZoom(): boolean {
+		return false;
+	}
+
+	onEnterDOM() {
+		if (!this._shouldWatchZoom) { return; }
+		this._highZoom = isHighZoom();
+		this._startZoomWatch();
+	}
+
+	onExitDOM() {
+		this._stopZoomWatch();
+	}
+
+	_isHighZoom(): boolean {
+		return isHighZoom();
+	}
+
+	_startZoomWatch() {
+		this._stopZoomWatch();
+		this._zoomWatcher = startHighZoomWatch(
+			() => this._highZoom,
+			bHighZoom => {
+				// _highZoom is a reactive @property — changing it re-renders the
+				// component and swaps the picker content / input icon accordingly.
+				this._highZoom = bHighZoom;
+			},
+			() => this.isConnected,
+		);
+	}
+
+	_stopZoomWatch() {
+		if (this._zoomWatcher) {
+			this._zoomWatcher.stop();
+			this._zoomWatcher = undefined;
+		}
 	}
 
 	get _primaryCalendarType() {
