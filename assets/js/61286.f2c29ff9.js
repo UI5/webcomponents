@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_ui5_webcomponents_website=globalThis.webpackChunk_ui5_webcomponents_website||[]).push([[61286],{38905(e,t,a){a.d(t,{default:()=>n});var s=a(18390),c=a(25495);function n(e){const{className:t,text:a,maxCharacters:n,part:r}=e;return(0,s.Y)(c.A,{part:r,class:t,text:a,maxCharacters:n})}}}]);

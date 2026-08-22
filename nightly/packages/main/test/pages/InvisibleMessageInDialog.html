@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>InvisibleMessage in Dialog (issue #13613)</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"language": "EN"
+		}
+	</script>
+
+
+	<style>
+		body {
+			font-family: var(--sapFontFamily);
+			padding: 1rem;
+			background-color: var(--sapBackgroundColor);
+		}
+
+		.row {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+			max-width: 40rem;
+		}
+
+		.note {
+			color: var(--sapContent_LabelColor);
+			font-size: 0.875rem;
+			margin: 0.5rem 0 1rem;
+		}
+
+		.log {
+			margin-top: 1rem;
+			padding: 0.5rem;
+			border: 1px solid var(--sapList_BorderColor);
+			border-radius: 0.25rem;
+			min-height: 3rem;
+			white-space: pre-wrap;
+			font-family: monospace;
+		}
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/InvisibleMessageInDialog.html-2mSH3IA4.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-Bsf3RCe4.js">
+</head>
+
+<body>
+	<h1>InvisibleMessage announcements while a modal Dialog is open</h1>
+	<p class="note">
+		Reproduction for <a href="https://github.com/UI5/webcomponents/issues/13613" target="_blank" rel="noopener">issue #13613</a>.
+		Turn on VoiceOver (Cmd+F5 on macOS), then follow the steps below. With this branch's fix, the UI5 Dialog
+		renders its own aria-live region inside the dialog subtree, so <code>announce()</code> is heard while the dialog is open.
+	</p>
+
+	<div class="row">
+		<ui5-button id="announceNoDialog" design="Emphasized">1. Announce — no dialog open</ui5-button>
+
+		<ui5-button id="openDialog">2. Open modal dialog</ui5-button>
+
+		<ui5-button id="announceBodySpan">
+			3a. Announce into a span that lives in &lt;body&gt; (outside the dialog) — silenced by VoiceOver
+		</ui5-button>
+
+		<ui5-button id="announceApi" design="Positive">
+			3b. Announce via InvisibleMessage.announce() — routed inside the open dialog (FIXED)
+		</ui5-button>
+	</div>
+
+	<div class="log" id="log" aria-hidden="true">Log:
+</div>
+
+	<!-- A live region deliberately placed in <body>, OUTSIDE the dialog, to demonstrate the broken case. -->
+	<span
+		id="bodySpan"
+		aria-live="polite"
+		role="alert"
+		style="position:absolute;clip:rect(1px,1px,1px,1px);user-select:none;left:-1000px;top:-1000px;pointer-events:none;"
+	></span>
+
+	<ui5-dialog id="dialog" header-text="Modal dialog">
+		<div style="padding: 1rem; min-width: 20rem;">
+			<p>This dialog is modal (aria-modal="true"), so VoiceOver scopes its accessibility tree to this subtree.</p>
+			<p>Use buttons 3a and 3b below (they stay reachable) to compare the two live regions.</p>
+			<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+				<ui5-button id="announceBodySpanInner">3a. Announce into &lt;body&gt; span (silenced)</ui5-button>
+				<ui5-button id="announceApiInner" design="Positive">3b. Announce via API (heard — FIXED)</ui5-button>
+			</div>
+		</div>
+		<ui5-button id="closeDialog" slot="footer" design="Transparent">Close</ui5-button>
+	</ui5-dialog>
+
+	<h1 style="margin-top: 2rem;">Comparison: native &lt;dialog&gt; opened with showModal()</h1>
+	<p class="note">
+		A plain HTML <code>&lt;dialog&gt;</code> opened via <code>showModal()</code> also renders as modal, so VoiceOver
+		scopes its accessibility tree to the dialog subtree — the same condition that silences a body-level live region.
+		Here the native dialog is registered as an aria-live region on open (and deregistered on close), so
+		<code>announce()</code> routes into the dialog's subtree and stays audible. Use 4a vs 4b to compare the
+		still-silenced body span against the registered region.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativeDialog">4. Open native &lt;dialog&gt; (showModal)</ui5-button>
+	</div>
+
+	<dialog id="nativeDialog">
+		<div style="padding: 1rem; min-width: 20rem;">
+			<p>This is a native <code>&lt;dialog&gt;</code> shown with <code>showModal()</code>.</p>
+			<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+				<ui5-button id="announceBodySpanNative">4a. Announce into &lt;body&gt; span (silenced)</ui5-button>
+				<ui5-button id="announceApiNative" design="Positive">4b. Announce via API (heard — dialog registered as region)</ui5-button>
+				<ui5-button id="closeNativeDialog" design="Transparent">Close</ui5-button>
+			</div>
+		</div>
+	</dialog>
+
+	<h1 style="margin-top: 2rem;">Comparison: native popover (top layer, NON-modal) via showPopover()</h1>
+	<p class="note">
+		A native <code>&lt;div popover&gt;</code> opened with <code>showPopover()</code> renders in the <strong>top layer</strong>,
+		just like a modal dialog, but it is <strong>non-modal</strong>: it does NOT set <code>aria-modal</code> and does NOT
+		scope VoiceOver's accessibility tree to its subtree. This isolates the question — is the silencing caused by the
+		top layer, or by modality? Open it, then use 5a: the body-level span announcement should still be <strong>heard</strong>,
+		confirming that top-layer alone does not silence — only modal scoping (aria-modal) does. This is why non-modal
+		popups such as the ComboBox dropdown do not need their own registered region.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativePopover">5. Open native popover (showPopover, non-modal)</ui5-button>
+	</div>
+
+	<div id="nativePopover" popover="manual" style="padding: 1rem; min-width: 20rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem;">
+		<p>This is a native <code>&lt;div popover&gt;</code> shown with <code>showPopover()</code> — top layer, but non-modal.</p>
+		<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+			<ui5-button id="announceBodySpanNativePopover">5a. Announce into &lt;body&gt; span (heard — not modal)</ui5-button>
+			<ui5-button id="announceApiNativePopover" design="Positive">5b. Announce via API (heard — routed to body region)</ui5-button>
+			<ui5-button id="closeNativePopover" design="Transparent">Close</ui5-button>
+		</div>
+	</div>
+
+	<h1 style="margin-top: 2rem;">Comparison: native popover (top layer) WITH aria-modal="true"</h1>
+	<p class="note">
+		Same native <code>&lt;div popover&gt;</code> opened with <code>showPopover()</code>, but now carrying
+		<code>aria-modal="true"</code>. The element behaves non-modally (focus is not trapped), yet it <em>claims</em>
+		modality to the accessibility tree. If the body-level span (6a) is now <strong>silenced</strong> — unlike case 5 —
+		this proves the silencing is triggered by <code>aria-modal</code>, not by the top layer. That is the exact condition
+		the fix gates on with <code>isModal</code>.
+	</p>
+
+	<div class="row">
+		<ui5-button id="openNativePopoverModal">6. Open native popover WITH aria-modal (showPopover)</ui5-button>
+	</div>
+
+	<div id="nativePopoverModal" popover="manual" aria-modal="true" role="dialog" style="padding: 1rem; min-width: 20rem; border: 1px solid var(--sapList_BorderColor); border-radius: 0.5rem;">
+		<p>This is a native <code>&lt;div popover&gt;</code> with <code>aria-modal="true"</code> — top layer, claims modal.</p>
+		<div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+			<ui5-button id="announceBodySpanNativePopoverModal">6a. Announce into &lt;body&gt; span (silenced — aria-modal)</ui5-button>
+			<ui5-button id="announceApiNativePopoverModal" design="Positive">6b. Announce via API into registered region (heard)</ui5-button>
+			<ui5-button id="closeNativePopoverModal" design="Transparent">Close</ui5-button>
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+import { jsx as _jsx, jsxs as _jsxs } from "@ui5/webcomponents-base/jsx-runtime";
+import Icon from "@ui5/webcomponents/dist/Icon.js";
+export default function WizardTabTemplate() {
+    return (_jsxs("div", { class: "ui5-wiz-step-root", role: "listitem", tabIndex: this.effectiveTabIndex, "aria-current": this.accInfo.ariaCurrent, "aria-setsize": this.accInfo.ariaSetsize, "aria-posinset": this.accInfo.ariaPosinset, "aria-label": this.accInfo.ariaLabel, onClick: this._onclick, onKeyUp: this._onkeyup, onFocusIn: this._onfocusin, children: [_jsxs("div", { class: "ui5-wiz-step-main", children: [_jsx("div", { class: "ui5-wiz-step-icon-circle", children: this.icon ? (_jsx(Icon, { class: "ui5-wiz-step-icon", mode: "Decorative", name: this.icon })) : (_jsx("span", { class: "ui5-wiz-step-number", children: this.number })) }), this.hasTexts && (_jsxs("div", { class: "ui5-wiz-step-texts", children: [_jsx("div", { class: "ui5-wiz-step-title-text", children: this.titleText }), this.subtitleText &&
+                                _jsx("div", { class: "ui5-wiz-step-subtitle-text", children: this.subtitleText })] }))] }), !this.hideSeparator && (_jsx("div", { class: "ui5-wiz-step-hr" }))] }));
+}
+//# sourceMappingURL=WizardTabTemplate.js.map
