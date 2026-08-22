@@ -5,6 +5,7 @@ slug: ../TextArea
 import Basic from "../../_samples/main/TextArea/Basic/Basic.md";
 import Growing from "../../_samples/main/TextArea/Growing/Growing.md";
 import MaxLength from "../../_samples/main/TextArea/MaxLength/MaxLength.md";
+import ExceededText from "../../_samples/main/TextArea/ExceededText/ExceededText.md";
 import States from "../../_samples/main/TextArea/States/States.md";
 
 <%COMPONENT_OVERVIEW%>
@@ -26,6 +27,15 @@ You can use the <b>maxlength</b> and <b>showExceededText</b> properties to defin
 and to indicates how many characters are remaining before the limit or exceeding after the limit.
 
 <MaxLength />
+
+### Exceeded Text
+Use the <b>showExceededTextFocus</b> property to show the character counter only when the TextArea is focused
+or when the character limit is exceeded. The counter is also always visible when
+<b>valueState</b> is "Critical" or "Negative".
+
+The application can control threshold-based coloring by setting <b>valueState</b> based on character count.
+
+<ExceededText />
 
 ### States
 TextArea supports several semantic value states, readonly, disabled, etc.

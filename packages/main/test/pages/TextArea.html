@@ -254,6 +254,32 @@ some text line 9">
 	</section>
 		<br><br>
 
+	<!-- POC: showExceededTextFocus examples -->
+	<section class="group">
+		<ui5-title>showExceededTextFocus - Counter visible on focus only</ui5-title>
+		<p>Counter appears when focused, disappears on blur</p>
+		<ui5-textarea
+			id="textarea-focus-counter-basic"
+			class="fixed-width"
+			maxlength="100"
+			show-exceeded-text-focus
+			placeholder="Click to see counter, blur to hide">
+		</ui5-textarea>
+	</section>
+
+	<section class="group">
+		<ui5-title>App-controlled threshold</ui5-title>
+		<p>App sets valueState based on character count threshold (75%)</p>
+		<ui5-textarea
+			id="textarea-threshold-coloring"
+			class="fixed-width"
+			maxlength="100"
+			show-exceeded-text-focus
+			placeholder="Type to see threshold coloring at 75%">
+		</ui5-textarea>
+		<div id="threshold-info">0/100 characters (0%)</div>
+	</section>
+
 	<script>
 		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
 		const formValidationMessage = document.getElementById('formValidationMessage');
@@ -297,6 +323,26 @@ some text line 9">
 		document.getElementById('textarea-prevent-escape').addEventListener("ui5-input", function (event) {
 			if (event.detail.escapePressed) {
 				event.preventDefault();
+			}
+		});
+
+		// POC: App-controlled threshold coloring
+		const thresholdTextarea = document.getElementById('textarea-threshold-coloring');
+		const thresholdInfo = document.getElementById('threshold-info');
+
+		thresholdTextarea.addEventListener('ui5-input', function(e) {
+			const maxLength = 100;
+			const currentLength = e.target.value.length;
+			const percentage = (currentLength / maxLength) * 100;
+
+			// Update info display
+			thresholdInfo.textContent = `${currentLength}/${maxLength} characters (${Math.round(percentage)}%)`;
+
+			// App-controlled threshold logic - warning state only
+			if (percentage >= 75) {
+				e.target.valueState = 'Critical';  // Orange - approaching or exceeding limit
+			} else {
+				e.target.valueState = 'None';      // Normal
 			}
 		});
 	</script>
