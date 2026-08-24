@@ -1,4 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -6,6 +6,14 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import isElementHidden from "@ui5/webcomponents-base/dist/util/isElementHidden.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import {
+	isLeft,
+	isRight,
+	isHome,
+	isEnd,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import type BarDesign from "./types/BarDesign.js";
 import type BarAccessibleRole from "./types/BarAccessibleRole.js";
 
@@ -35,6 +43,13 @@ import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
  * therefore it might not always be centered in the entire bar.
  *
  * ### Keyboard Handling
+ *
+ * The `ui5-bar` provides advanced keyboard handling among interactive components inside it, no matter in which slot they are placed.
+ *
+ * #### Regular Navigation
+ * - [Left] / [Right] - navigate backward/forward among interactive components
+ * - [Home] / [End] - move to first/last interactive components
+ * - [Tab] / [Shift]+[Tab] - navigate forward/backward among interactive components
  *
  * #### Fast Navigation
  * This component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].
@@ -128,6 +143,7 @@ class Bar extends UI5Element {
 	endContent!: Slot<HTMLElement>;
 
 	_handleResizeBound: () => void;
+	_onKeyDownBound: (e: KeyboardEvent) => void;
 
 	get accInfo() {
 		return {
@@ -148,6 +164,7 @@ class Bar extends UI5Element {
 		super();
 
 		this._handleResizeBound = this.handleResize.bind(this);
+		this._onKeyDownBound = this._onKeyDown.bind(this);
 	}
 
 	handleResize() {
@@ -166,6 +183,8 @@ class Bar extends UI5Element {
 		this.getDomRef()!.querySelectorAll(".ui5-bar-content-container").forEach(child => {
 			ResizeHandler.register(child as HTMLElement, this._handleResizeBound);
 		}, this);
+
+		this.addEventListener("keydown", this._onKeyDownBound, true);
 	}
 
 	onExitDOM() {
@@ -174,11 +193,151 @@ class Bar extends UI5Element {
 		this.getDomRef()!.querySelectorAll(".ui5-bar-content-container").forEach(child => {
 			ResizeHandler.deregister(child as HTMLElement, this._handleResizeBound);
 		}, this);
+
+		this.removeEventListener("keydown", this._onKeyDownBound, true);
 	 }
 
 	 get effectiveRole() {
 		return this.accessibleRole.toLowerCase() === "toolbar" ? "toolbar" as AriaRole : undefined;
 	 }
+
+	_collectFocusableElements(): Array<HTMLElement> {
+		const slotSelectors = [
+			"slot[name=\"startContent\"]",
+			"slot:not([name])",
+			"slot[name=\"endContent\"]",
+		];
+		const result: Array<HTMLElement> = [];
+
+		slotSelectors.forEach(sel => {
+			const slotEl = this.shadowRoot!.querySelector<HTMLSlotElement>(sel);
+			if (!slotEl) {
+				return;
+			}
+			(slotEl.assignedElements({ flatten: true }) as HTMLElement[]).forEach(el => {
+				result.push(...this._getFocusableFromElement(el));
+			});
+		});
+		return result;
+	}
+
+	_getFocusableFromElement(el: HTMLElement): Array<HTMLElement> {
+		if (isElementHidden(el)) {
+			return [];
+		}
+
+		if (instanceOfUI5Element(el)) {
+			const focusRef = el.getFocusDomRef();
+			if (focusRef && focusRef.tabIndex >= 0 && !isElementHidden(focusRef) && !(focusRef as HTMLInputElement).disabled) {
+				return [focusRef];
+			}
+			return [];
+		}
+
+		if (el.tabIndex >= 0 && !(el as HTMLInputElement).disabled) {
+			return [el];
+		}
+
+		// Non-focusable container: recurse into children
+		const nested: Array<HTMLElement> = [];
+		Array.from(el.children).forEach(child => {
+			nested.push(...this._getFocusableFromElement(child as HTMLElement));
+		});
+		return nested;
+	}
+
+	_hasCaretNavigation(el: EventTarget | null): el is HTMLInputElement | HTMLTextAreaElement {
+		if (!(el instanceof HTMLElement)) {
+			return false;
+		}
+		const tag = el.tagName.toLowerCase();
+		if (tag === "textarea") {
+			return true;
+		}
+		if (tag !== "input") {
+			return false;
+		}
+		const type = (el as HTMLInputElement).type.toLowerCase();
+		return ["text", "search", "url", "tel", "password", ""].includes(type);
+	}
+
+	_onKeyDown(e: KeyboardEvent) {
+		if (this.effectiveRole !== "toolbar") {
+			return;
+		}
+
+		const isForward = this.effectiveDir === "rtl" ? isLeft(e) : isRight(e);
+		const isBackward = this.effectiveDir === "rtl" ? isRight(e) : isLeft(e);
+		const isHomeKey = isHome(e);
+		const isEndKey = isEnd(e);
+
+		if (!isForward && !isBackward && !isHomeKey && !isEndKey) {
+			return;
+		}
+
+		const items = this._collectFocusableElements();
+		if (items.length === 0) {
+			return;
+		}
+
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			return;
+		}
+
+		const currentIndex = items.findIndex(item => this._isNodeInsideElement(active, item));
+		if (currentIndex === -1) {
+			return;
+		}
+
+		if (this._hasCaretNavigation(active)) {
+			const input = active as HTMLInputElement;
+			if (isHomeKey || isEndKey) {
+				return;
+			}
+			if (isForward && input.selectionStart !== input.value.length) {
+				return;
+			}
+			if (isBackward && input.selectionStart !== 0) {
+				return;
+			}
+		}
+
+		let nextIndex: number;
+		if (isHomeKey) {
+			nextIndex = 0;
+		} else if (isEndKey) {
+			nextIndex = items.length - 1;
+		} else if (isForward) {
+			nextIndex = Math.min(currentIndex + 1, items.length - 1);
+		} else {
+			nextIndex = Math.max(currentIndex - 1, 0);
+		}
+
+		if (nextIndex === currentIndex) {
+			return;
+		}
+
+		items[nextIndex].focus();
+		e.preventDefault();
+		e.stopPropagation();
+	}
+
+	_isNodeInsideElement(node: Node, element: HTMLElement): boolean {
+		let current: Node | null = node;
+		while (current) {
+			if (current === element) {
+				return true;
+			}
+			const root = current.getRootNode?.();
+			if (root instanceof ShadowRoot) {
+				current = root.host;
+			} else {
+				current = current.parentNode;
+			}
+		}
+		return false;
+	}
 }
 
 Bar.define();
