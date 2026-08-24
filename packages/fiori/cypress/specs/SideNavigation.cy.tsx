@@ -76,7 +76,7 @@ describe("Side Navigation Rendering", () => {
 			.should("have.attr", "design", "Action");
 	});
 
-	it.only("Tests overflow item visibility and items in overflow", () => {
+	it("Tests overflow item visibility and items in overflow", () => {
 		cy.mount(
 			<SideNavigation id="sideNav" collapsed={true} style={{ height: "430px" }}>
 				<SideNavigationItem text="Item 1" icon={home}></SideNavigationItem>
