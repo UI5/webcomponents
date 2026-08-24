@@ -159,10 +159,6 @@ class DateComponentBase extends UI5Element {
 		this._stopZoomWatch();
 	}
 
-	_isHighZoom(): boolean {
-		return isHighZoom();
-	}
-
 	_startZoomWatch() {
 		this._stopZoomWatch();
 		this._zoomWatcher = startHighZoomWatch(

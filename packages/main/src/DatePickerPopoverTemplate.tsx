@@ -16,6 +16,10 @@ import appointmentIcon from "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 type TemplateHook = () => void;
 
+function calendarDateToISO(cd: CalendarDateLocale): string {
+	return `${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+}
+
 export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { header?: TemplateHook, content?: TemplateHook, footer?: TemplateHook, initialFocus?: string }) {
 	const header = hooks?.header || defaultHeader;
 	const content = hooks?.content || defaultContent;
@@ -72,10 +76,8 @@ function defaultHeader(this: DatePicker) {
 
 function defaultContent(this: DatePicker) {
 	if (this._highZoom) {
-		const toISO = (cd: CalendarDateLocale) =>
-			`${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
-		const minISO = this.minDate ? toISO(this._minDate) : "";
-		const maxISO = this.maxDate ? toISO(this._maxDate) : "";
+		const minISO = this.minDate ? calendarDateToISO(this._minDate) : "";
+		const maxISO = this.maxDate ? calendarDateToISO(this._maxDate) : "";
 		return (
 			<DateHighZoomInputs
 				id={`${this._id}-hz-inputs`}

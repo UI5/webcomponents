@@ -1,0 +1,47 @@
+export interface CalendarHeaderHost {
+	_previousButtonDisabled: boolean;
+	_nextButtonDisabled: boolean;
+	_portraitView: boolean;
+	_isHeaderMonthButtonHidden: boolean;
+	_isHeaderYearButtonHidden: boolean;
+	_isHeaderYearRangeButtonHidden: boolean;
+	_headerMonthButtonText?: string;
+	_headerYearButtonText?: string;
+	_headerYearButtonTextSecType?: string;
+	_headerYearRangeButtonText?: string;
+	_headerYearRangeButtonTextSecType?: string;
+	secondMonthButtonText?: string;
+	hasSecondaryCalendarType: boolean;
+	onPrevButtonClick: (e: MouseEvent) => void;
+	onPrevButtonKeyDown: (e: KeyboardEvent) => void;
+	onPrevButtonKeyUp: (e: KeyboardEvent) => void;
+	onNextButtonClick: (e: MouseEvent) => void;
+	onNextButtonKeyDown: (e: KeyboardEvent) => void;
+	onNextButtonKeyUp: (e: KeyboardEvent) => void;
+	onHeaderMonthButtonPress?: (e: Event) => void;
+	onMonthButtonKeyDown?: (e: KeyboardEvent) => void;
+	onMonthButtonKeyUp?: (e: KeyboardEvent) => void;
+	onHeaderYearButtonPress?: (e: Event) => void;
+	onYearButtonKeyDown?: (e: KeyboardEvent) => void;
+	onYearButtonKeyUp?: (e: KeyboardEvent) => void;
+	onHeaderYearRangeButtonPress?: (e: Event) => void;
+	onYearRangeButtonKeyDown?: (e: KeyboardEvent) => void;
+	onYearRangeButtonKeyUp?: (e: KeyboardEvent) => void;
+	accInfo: {
+		ariaLabelMonthButton?: string;
+		ariaLabelYearButton?: string;
+		ariaLabelYearRangeButton?: string;
+		ariaLabelNextButton?: string;
+		ariaLabelPrevButton?: string;
+		keyShortcutMonthButton?: string;
+		keyShortcutYearButton?: string;
+		keyShortcutYearRangeButton?: string;
+		keyShortcutNextButton?: string;
+		keyShortcutPrevButton?: string;
+		tooltipMonthButton?: string;
+		tooltipYearButton?: string;
+		tooltipYearRangeButton?: string;
+		tooltipNextButton?: string;
+		tooltipPrevButton?: string;
+	};
+}

@@ -31,7 +31,7 @@ import {
 	CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT,
 	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT,
 } from "./generated/i18n/i18n-defaults.js";
-import type { CalendarHeaderHost } from "./CalendarHeaderTemplate.js";
+import type { CalendarHeaderHost } from "./CalendarHeaderTypes.js";
 
 // Template
 import YearPickerTemplate from "./YearPickerTemplate.js";

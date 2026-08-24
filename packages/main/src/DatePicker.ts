@@ -38,6 +38,7 @@ import {
 	isF6Previous,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isPhone, isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
+import { isHighZoom } from "./util/HighZoomWatch.js";
 import CalendarPickersMode from "./types/CalendarPickersMode.js";
 import "@ui5/webcomponents-icons/dist/appointment-2.js";
 
@@ -421,7 +422,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	_hzActiveCalType?: `${CalendarType}`;
 
 	override get _shouldWatchZoom(): boolean {
-		return true;
+		return isPhone();
 	}
 
 	@i18n("@ui5/webcomponents")
@@ -1133,7 +1134,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	_togglePicker(): void {
-		this._highZoom = this._isHighZoom();
+		this._highZoom = isHighZoom();
 		this.open = !this.open;
 	}
 

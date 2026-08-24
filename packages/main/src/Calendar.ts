@@ -388,7 +388,7 @@ class Calendar extends CalendarPart {
 	}
 
 	override get _shouldWatchZoom(): boolean {
-		return true;
+		return isPhone();
 	}
 
 	onEnterDOM() {

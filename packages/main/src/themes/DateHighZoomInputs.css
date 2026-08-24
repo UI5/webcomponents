@@ -61,12 +61,10 @@
 	overflow: hidden;
 }
 
-/* YearPicker fills the dialog width — override Calendar's fixed 20rem */
-.ui5-dhzi-yp {
+/* YearPicker fills the dialog width */
+.ui5-dhzi-year-picker {
 	display: block;
 	width: 100%;
-	--_ui5_calendar_width: 100%;
-	--_ui5_calendar_height: auto;
 }
 
 .ui5-dhzi-field-message {
@@ -75,7 +73,7 @@
 	margin-top: 0.125rem;
 }
 
-.ui5-dhzi-yp-footer {
+.ui5-dhzi-year-picker-footer {
 	display: flex;
 	justify-content: flex-end;
 	gap: 0.5rem;

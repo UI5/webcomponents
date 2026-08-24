@@ -138,7 +138,7 @@ function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 		>
 			<YearPicker
 				id={ypId}
-				class="ui5-dhzi-yp"
+				class="ui5-dhzi-year-picker"
 				primaryCalendarType={this.primaryCalendarType}
 				valueFormat="yyyy-MM-dd"
 				timestamp={selectedTs}
