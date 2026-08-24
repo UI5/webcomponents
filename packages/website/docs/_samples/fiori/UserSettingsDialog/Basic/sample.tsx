@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback } from "react";

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
+
+
+### Bug Fixes
+
+* **ui5-search-item-show-more, localization:** correct property type and suppress overlay logs ([#13919](https://github.com/UI5/webcomponents/issues/13919)) ([11bd048](https://github.com/UI5/webcomponents/commit/11bd04868d6fec848079e3caf820c13073fecb01))
+
+
+
+
+
 ## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
 
 **Note:** Version bump only for package @ui5/webcomponents-localization

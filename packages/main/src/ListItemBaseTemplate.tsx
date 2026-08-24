@@ -18,6 +18,7 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			draggable={this.movable}
 			role={injectedProps?.role}
 			title={injectedProps?.title}
+			aria-selected={injectedProps?.role === "option" ? this.selected : undefined}
 			{...(injectedProps?.ariaSetsize !== undefined && { "aria-setsize": injectedProps.ariaSetsize })}
 			{...(injectedProps?.ariaPosinset !== undefined && { "aria-posinset": injectedProps.ariaPosinset })}
 			onFocusIn={this._onfocusin}

@@ -152,20 +152,47 @@ type ListAccessibilityAttributes = {
  *
  * ### Keyboard Handling
  *
+ * The `ui5-list` follows the SAP Fiori "Intentional Edit Pattern" (forms-editing variant)
+ * and exposes two interaction modes:
+ *
+ * - **Navigation mode** (default) - Arrow keys move focus between items; [Tab] leaves the list.
+ * - **Edit mode** (toggled by [F2] or [F7]) - [Tab] walks through the interactive elements
+ *   inside items (buttons, links, inputs, checkboxes, etc.) and continues into the next item.
+ *
  * #### Basic Navigation
- * The `ui5-list` provides advanced keyboard handling.
- * When a list is focused the user can use the following keyboard
- * shortcuts in order to perform a navigation:
+ * The `ui5-list` provides advanced keyboard handling for navigation between items.
+ * When an item is focused the user can use the following keyboard shortcuts:
  *
  * - [Up] or [Down] - Navigates up and down the items
  * - [Home] - Navigates to first item
  * - [End] - Navigates to the last item
+ * - [Tab] or [Shift] + [Tab] - Moves focus out of the list, to the next/previous control in the tab chain
  *
  * The user can use the following keyboard shortcuts to perform actions (such as select, delete),
  * when the `selectionMode` property is in use:
  *
  * - [Space] - Select an item (if `type` is 'Active') when `selectionMode` is selection
  * - [Delete] - Delete an item if `selectionMode` property is `Delete`
+ *
+ * #### Edit Mode - Reaching Interactive Elements Inside Items
+ * Interactive elements inside a list item (buttons, links, inputs, etc.) are not reached
+ * by [Tab] from navigation mode. To activate them, the user first enters edit mode.
+ *
+ * - [F2] - While focus is on an item, moves focus to the first interactive element inside it.
+ *   While focus is on an interactive element, moves focus back to the item level.
+ *   Unlike [F7], [F2] does not remember the previous position — it always lands on the first interactive element.
+ * - [F7] - While focus is on an item, moves focus to the last remembered internal element
+ *   (or to the first interactive element if none is remembered).
+ *   While focus is on an interactive element, saves its position and moves focus back to the item level.
+ * - [Tab] or [Shift] + [Tab] - While in edit mode, moves focus through the interactive
+ *   elements within an item, then continues into the next/previous item's interactive elements,
+ *   and exits the list after the last/first element.
+ * - [Up] or [Down] - While focus is on an interactive element inside an item, moves focus
+ *   to the element at the same index in the previous/next item. Items with no interactive
+ *   elements are skipped, and boundaries of `ui5-li-group` are crossed.
+ *
+ * **Note:** In `selectionMode="Delete"`, the per-item delete button is reachable through
+ * the edit-mode [Tab] flow described above, in addition to the [Delete] shortcut.
  *
  * #### Fast Navigation
  * This component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].
@@ -858,6 +885,10 @@ class List extends UI5Element {
 
 	get listAccessibleRole() {
 		return toLowercaseEnumValue(this.accessibleRole);
+	}
+
+	get noDataItemRole() {
+		return LIST_ACCESSIBLE_ROLE_TO_ITEM_ROLE[this.accessibleRole] || "listitem";
 	}
 
 	get classes(): ClassMap {
