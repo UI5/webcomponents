@@ -112,7 +112,7 @@ describe("Select - OptionGroup selection", () => {
 });
 
 describe("Select - OptionGroup ARIA", () => {
-	it("options inside groups have per-group aria-setsize and aria-posinset", () => {
+	it("options inside groups have global aria-setsize and aria-posinset", () => {
 		cy.mount(
 			<Select id="sel">
 				<OptionGroup headerText="Oceania">
@@ -129,21 +129,20 @@ describe("Select - OptionGroup ARIA", () => {
 
 		cy.get("#sel").realClick();
 
-		// Oceania group: setsize=2
+		// setsize = total options (5), posinset = global position
 		cy.get("#au").shadow().find("[role='option']")
-			.should("have.attr", "aria-setsize", "2")
+			.should("have.attr", "aria-setsize", "5")
 			.and("have.attr", "aria-posinset", "1");
 		cy.get("#nz").shadow().find("[role='option']")
-			.should("have.attr", "aria-setsize", "2")
+			.should("have.attr", "aria-setsize", "5")
 			.and("have.attr", "aria-posinset", "2");
 
-		// Europe group: setsize=3
 		cy.get("#de").shadow().find("[role='option']")
-			.should("have.attr", "aria-setsize", "3")
-			.and("have.attr", "aria-posinset", "1");
-		cy.get("#es").shadow().find("[role='option']")
-			.should("have.attr", "aria-setsize", "3")
+			.should("have.attr", "aria-setsize", "5")
 			.and("have.attr", "aria-posinset", "3");
+		cy.get("#es").shadow().find("[role='option']")
+			.should("have.attr", "aria-setsize", "5")
+			.and("have.attr", "aria-posinset", "5");
 	});
 
 	it("trigger has aria-describedby pointing to group count message when groups present", () => {

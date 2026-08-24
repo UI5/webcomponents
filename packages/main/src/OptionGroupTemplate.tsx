@@ -6,7 +6,7 @@ export default function OptionGroupTemplate(this: OptionGroup) {
 		<div
 			class="ui5-option-group-root"
 			role="group"
-			aria-label={this.headerText}
+			aria-label={this.headerText || undefined}
 			aria-roledescription={this._groupHeaderRoleDescription}
 		>
 			{this.headerText &&

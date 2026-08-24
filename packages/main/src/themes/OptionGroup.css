@@ -10,11 +10,11 @@
 }
 
 .ui5-option-group-header {
-	display: block;
-	height: var(--_ui5_group_header_list_item_height);
-	line-height: var(--_ui5_group_header_list_item_height);
-	padding: 0 1rem;
+	display: flex;
+	align-items: flex-end;
+	padding: 1.25rem 1rem 0.5rem;
 	box-sizing: border-box;
+	border-bottom: 1px solid var(--sapList_GroupHeaderBorderColor);
 	background: var(--sapList_GroupHeaderBackground);
 	color: var(--sapList_TableGroupHeaderTextColor);
 	font-family: var(--sapFontHeaderFamily);

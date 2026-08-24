@@ -495,7 +495,7 @@ class Select extends UI5Element implements IFormInputElement {
 			if (isInstanceOfOptionGroup(item as OptionGroup)) {
 				return (item as IOptionGroup).items;
 			}
-			return [item as IOption];
+			return item as IOption;
 		});
 	}
 
@@ -508,26 +508,31 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	get _groupCountText(): string {
-		if (!this.hasGroups) {
-			return "";
-		}
 		const groups = this.options.filter(item => isInstanceOfOptionGroup(item as OptionGroup)) as Array<IOptionGroup>;
 		return Select.i18nBundle.getText(SELECT_OPTIONS_IN_GROUPS, this._flatOptions.length, groups.length);
 	}
 
 	_applyGroupAriaPositions() {
+		const flatOptions = this._flatOptions;
+		flatOptions.forEach(o => {
+			o._forcedSetsize = undefined;
+			o._forcedPosinset = undefined;
+		});
 		if (!this.hasGroups) {
 			return;
 		}
-		this.options
-			.filter(item => isInstanceOfOptionGroup(item as OptionGroup))
-			.forEach(item => {
-				const group = item as IOptionGroup;
-				group.items.forEach((option, idx) => {
-					option._forcedSetsize = group.items.length;
-					option._forcedPosinset = idx + 1;
+		const totalCount = flatOptions.length;
+		let globalPosition = 0;
+		this.options.forEach(item => {
+			if (isInstanceOfOptionGroup(item as OptionGroup)) {
+				(item as IOptionGroup).items.forEach(opt => {
+					opt._forcedSetsize = totalCount;
+					opt._forcedPosinset = ++globalPosition;
 				});
-			});
+			} else {
+				globalPosition++;
+			}
+		});
 	}
 
 	onBeforeRendering() {
@@ -577,10 +582,11 @@ class Select extends UI5Element implements IFormInputElement {
 	 * or selects the last option if multiple options are selected.
 	 */
 	_applyAutoSelection() {
-		let selectedIndex = this._flatOptions.findLastIndex(option => option.selected);
+		const flatOptions = this._flatOptions;
+		let selectedIndex = flatOptions.findLastIndex(option => option.selected);
 		selectedIndex = selectedIndex === -1 ? 0 : selectedIndex;
-		for (let i = 0; i < this._flatOptions.length; i++) {
-			this._flatOptions[i].selected = selectedIndex === i;
+		for (let i = 0; i < flatOptions.length; i++) {
+			flatOptions[i].selected = selectedIndex === i;
 			if (selectedIndex === i) {
 				break;
 			}
@@ -853,14 +859,15 @@ class Select extends UI5Element implements IFormInputElement {
 
 	_select(index: number) {
 		const selectedIndex = this._selectedIndex;
-		if (index < 0 || index >= this._flatOptions.length || this._flatOptions.length === 0) {
+		const flatOptions = this._flatOptions;
+		if (index < 0 || index >= flatOptions.length || flatOptions.length === 0) {
 			return;
 		}
-		if (this._flatOptions[selectedIndex]) {
-			this._flatOptions[selectedIndex].selected = false;
+		if (flatOptions[selectedIndex]) {
+			flatOptions[selectedIndex].selected = false;
 		}
 
-		const selectedOption = this._flatOptions[index];
+		const selectedOption = flatOptions[index];
 		if (selectedIndex !== index) {
 			this.fireDecoratorEvent("live-change", { selectedOption });
 		}
@@ -1007,7 +1014,8 @@ class Select extends UI5Element implements IFormInputElement {
 	}
 
 	_applyFocusToSelectedItem() {
-		this._flatOptions.forEach(option => {
+		const flatOptions = this._flatOptions;
+		flatOptions.forEach(option => {
 			option.focused = option.selected;
 			if (option.focused) {
 				// move focus to the selected option so screen readers
@@ -1158,13 +1166,14 @@ class Select extends UI5Element implements IFormInputElement {
 
 	get styles() {
 		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
+		const flatOptionsCount = this._flatOptions.length;
 		return {
 			popoverHeader: {
 				"display": "block",
 			},
 			responsivePopoverHeader: {
-				"display": this._flatOptions.length && this._listWidth === 0 ? "none" : "inline-block",
-				"width": `${this._flatOptions.length ? this._listWidth : this.offsetWidth}px`,
+				"display": flatOptionsCount && this._listWidth === 0 ? "none" : "inline-block",
+				"width": `${flatOptionsCount ? this._listWidth : this.offsetWidth}px`,
 				"max-width": "100%",
 			},
 			responsivePopover: {

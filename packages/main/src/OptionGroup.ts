@@ -23,7 +23,7 @@ import OptionGroupCss from "./generated/themes/OptionGroup.css.js";
  * @constructor
  * @extends ListItemGroup
  * @public
- * @since 2.10.0
+ * @since 2.26.0
  */
 @customElement({
 	tag: "ui5-option-group",
