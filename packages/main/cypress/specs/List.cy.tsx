@@ -3961,6 +3961,29 @@ describe("List - InactiveSelectable type", () => {
 		cy.get("#item1").should("not.have.attr", "selected");
 	});
 
+	it("type='Inactive' — Space and Enter do NOT toggle selection (regression guard)", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="Inactive">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").shadow().find("li").focus();
+		cy.realPress("Space");
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.realPress("Enter");
+		cy.get("#item1").should("not.have.attr", "selected");
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+		cy.get("@selectionChangeStub").should("not.have.been.called");
+	});
+
 	it("type='InactiveSelectable' + selectionMode='Single' — clicking item selects it", () => {
 		cy.mount(
 			<List selectionMode="Single">
