@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **framework:** ensure animation mode work ([#13941](https://github.com/UI5/webcomponents/issues/13941)) ([bef00ed](https://github.com/UI5/webcomponents/commit/bef00ed4ef5e296d9b1dcfdbc076841226c3c82b))
+* **ui5-popup:** announce invisible messages inside open popups ([#13889](https://github.com/UI5/webcomponents/issues/13889)) ([db416cf](https://github.com/UI5/webcomponents/commit/db416cf0dfeda4176bdf3f4766dd17dd8fee690e))
+
+
+
+
+
+# [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
+
+
+### Bug Fixes
+
+* **ui5-input:** use element root node for form lookup ([#13921](https://github.com/UI5/webcomponents/issues/13921)) ([cc679ad](https://github.com/UI5/webcomponents/commit/cc679ad6a11100321113727b912a968c632855ca))
+
+
+
+
+
 ## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

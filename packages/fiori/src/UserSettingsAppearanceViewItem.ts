@@ -1,6 +1,7 @@
 import UserSettingViewCss from "./generated/themes/UserSettingsView.css.js";
 import UserSettingsAppearanceViewItemTemplate from "./UserSettingsAppearanceViewItemTemplate.js";
 import UserSettingsAppearanceViewItemCss from "./generated/themes/UserSettingsAppearanceViewItem.css.js";
+import type { AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
 import {
 	customElement, property,
 } from "@ui5/webcomponents-base/dist/decorators.js";
@@ -70,6 +71,13 @@ class UserSettingsAppearanceViewItem extends ListItemCustom {
 
 	get isUserSettingsAppearanceViewItem(): boolean {
 		return true;
+	}
+
+	get accessibilityInfo(): AccessibilityInfo {
+		return {
+			...super.accessibilityInfo,
+			description: this.text,
+		};
 	}
 }
 
