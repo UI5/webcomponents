@@ -4150,4 +4150,56 @@ describe("List - InactiveSelectable type", () => {
 
 		cy.get("@itemClickStub").should("not.have.been.called");
 	});
+
+	it("type='InactiveSelectable' + selectionMode='Multiple' — clicking checkbox directly toggles selection", () => {
+		cy.mount(
+			<List selectionMode="Multiple">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").shadow().find("ui5-checkbox").click();
+
+		cy.get("#item1").should("have.attr", "selected");
+		cy.get("@selectionChangeStub").should("have.been.calledOnce");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='SingleStart' — clicking radio directly selects item", () => {
+		cy.mount(
+			<List selectionMode="SingleStart">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").shadow().find("ui5-radio-button").click();
+
+		cy.get("#item1").should("have.attr", "selected");
+		cy.get("@selectionChangeStub").should("have.been.calledOnce");
+	});
+
+	it("type='InactiveSelectable' + selectionMode='SingleAuto' — clicking item does nothing", () => {
+		cy.mount(
+			<List selectionMode="SingleAuto">
+				<ListItemStandard id="item1" type="InactiveSelectable">Option A</ListItemStandard>
+			</List>
+		);
+
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
+
+		cy.get("#item1").click();
+
+		cy.get("@itemClickStub").should("not.have.been.called");
+		cy.get("@selectionChangeStub").should("have.been.calledOnce");
+	});
 });

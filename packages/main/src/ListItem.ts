@@ -405,7 +405,7 @@ abstract class ListItem extends ListItemBase {
 			return;
 		}
 		if (this.isInactiveSelectable) {
-			if (this._selectionMode !== ListSelectionMode.None && this._selectionMode !== ListSelectionMode.Delete) {
+			if (this.modeSingleSelect || this.modeMultiple) {
 				this.fireDecoratorEvent("selection-requested", { item: this, selected: !this.selected, selectionComponentPressed: false });
 			}
 			return;
