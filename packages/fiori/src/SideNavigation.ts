@@ -577,7 +577,7 @@ class SideNavigation extends UI5Element {
 		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
 		const listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
 
-		if (itemsHeight < listHeight) {
+		if (itemsHeight <= listHeight) {
 			return;
 		}
 
