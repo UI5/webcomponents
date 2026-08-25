@@ -52,13 +52,13 @@ describe("Toolbar general interaction", () => {
     it("Should render the button with the correct accessibilityAttributes", () => {
         cy.mount(
             <Toolbar>
-                <ToolbarButton 
+                <ToolbarButton
                     accessibleName="Add"
                     accessibilityAttributes={{ expanded: "true", controls: "btn", hasPopup: "dialog" }}
                 />
             </Toolbar>
         );
-    
+
         cy.get("[ui5-toolbar]")
             .find("[ui5-toolbar-button][accessible-name]")
             .shadow()
@@ -67,5 +67,41 @@ describe("Toolbar general interaction", () => {
             .then((accessibilityAttributes) => {
                 expect(accessibilityAttributes).to.have.property("expanded", "true");
             });
+    });
+
+    it("Should forward accessibleRole to the inner button", () => {
+        cy.mount(
+            <Toolbar>
+                <ToolbarButton
+                    text="Navigate"
+                    accessibleRole="Link"
+                />
+            </Toolbar>
+        );
+
+        cy.get("[ui5-toolbar]")
+            .find("[ui5-toolbar-button]")
+            .shadow()
+            .find("[ui5-button]")
+            .should("have.prop", "accessibleRole", "Link");
+    });
+
+    it("Should apply role=link on the inner button when accessibleRole is Link", () => {
+        cy.mount(
+            <Toolbar>
+                <ToolbarButton
+                    text="Navigate"
+                    accessibleRole="Link"
+                />
+            </Toolbar>
+        );
+
+        cy.get("[ui5-toolbar]")
+            .find("[ui5-toolbar-button]")
+            .shadow()
+            .find("[ui5-button]")
+            .shadow()
+            .find("[role='link']")
+            .should("exist");
     });
 });
