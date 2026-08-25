@@ -201,18 +201,6 @@
 	</div>
 
 	<div class="demo-section">
-		<span>Lazy loading using the 'load-items' event (with value state message)</span>
-
-		<br />
-		<br />
-
-		<ui5-combobox id="lazy-loading-cb-2" class="combobox2auto" value-state="Negative">
-			<div slot="valueStateMessage">Custom error.</div>
-		</ui5-combobox>
-		<ui5-button id="btn-clear-2">Clear items</ui5-button>
-	</div>
-
-	<div class="demo-section">
 		<span>Lazy loading using the 'input' event and the entered text for creating items</span>
 
 		<br />
@@ -802,12 +790,7 @@
 		const cbLazyLoad1 = document.getElementById("lazy-loading-cb-1"); 
 		cbLazyLoad1.addEventListener("load-items", fnLoadItems);
 
-		const cbLazyLoad2 = document.getElementById("lazy-loading-cb-2"); 
-		cbLazyLoad2.addEventListener("load-items", fnLoadItems);
-
 		document.getElementById("btn-clear-1").addEventListener("click", () => fnClearItems(cbLazyLoad1));
-		document.getElementById("btn-clear-2").addEventListener("click", () => fnClearItems(cbLazyLoad2));
-
 
 		document.getElementById("selected-value-cb").addEventListener("ui5-change", function (event) {
 			const combo = event.target;
