@@ -146,7 +146,7 @@ class ToolbarButton extends ToolbarItemBase {
 	 * Defines the accessible description of the component.
 	 * @default undefined
 	 * @public
-	 * @since 2.26.0
+	 * @since 2.27.0
 	 */
 	@property()
 	accessibleDescription?: string;
