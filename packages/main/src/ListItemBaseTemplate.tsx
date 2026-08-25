@@ -4,6 +4,8 @@ import type { AriaRole, JsxTemplate } from "@ui5/webcomponents-base/";
 export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listItemContent: JsxTemplate }, injectedProps?: {
 	role?: AriaRole,
 	title?: string,
+	ariaSetsize?: number,
+	ariaPosinset?: number,
 }) {
 	const listItemContent = hooks?.listItemContent || defaultListItemContent;
 
@@ -17,6 +19,8 @@ export default function ListItemBaseTemplate(this: ListItemBase, hooks?: { listI
 			role={injectedProps?.role}
 			title={injectedProps?.title}
 			aria-selected={injectedProps?.role === "option" ? this.selected : undefined}
+			{...(injectedProps?.ariaSetsize !== undefined && { "aria-setsize": injectedProps.ariaSetsize })}
+			{...(injectedProps?.ariaPosinset !== undefined && { "aria-posinset": injectedProps.ariaPosinset })}
 			onFocusIn={this._onfocusin}
 			onKeyUp={this._onkeyup}
 			onKeyDown={this._onkeydown}
