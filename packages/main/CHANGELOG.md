@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1) (2026-08-25)
+
+
+### Features
+
+* **ui5-list:** downport InactiveSelectable list item type to 2.25.1 ([#13975](https://github.com/UI5/webcomponents/issues/13975)) ([7f0addc](https://github.com/UI5/webcomponents/commit/7f0addc0985d0a0eb4a9f921ecc51436d854516f))
+
+
+
+
+
 # [2.25.0](https://github.com/UI5/webcomponents/compare/v2.25.0-rc.3...v2.25.0) (2026-07-29)
 
 
