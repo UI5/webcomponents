@@ -12,11 +12,12 @@ export default function CalendarTemplate(this: Calendar) {
 		return (
 			<DatePicker
 				value={this._hzDatePickerValue}
-				formatPattern={this._formatPattern}
-				primaryCalendarType={this._primaryCalendarType}
-				secondaryCalendarType={this._secondaryCalendarType}
-				minDate={this.minDate}
-				maxDate={this.maxDate}
+				valueFormat="yyyy-MM-dd"
+				formatPattern={this.formatPattern || "medium"}
+				primaryCalendarType={this.primaryCalendarType}
+				secondaryCalendarType={this.secondaryCalendarType}
+				minDate={this._hzMinISO}
+				maxDate={this._hzMaxISO}
 				onChange={this._onHzDatePickerChange}
 			/>
 		);

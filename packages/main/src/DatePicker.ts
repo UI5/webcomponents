@@ -547,6 +547,21 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	}
 
 	/**
+	 * The date shown in the high-zoom Year/Month/Day inputs.
+	 * Derived from `_calendarTimestamp` (the same canonical focus date the calendar uses),
+	 * so the dialog and the input field always stay in sync. Returns a local Date carrying
+	 * the Gregorian Y/M/D of that timestamp (DateHighZoomInputs treats the date as Gregorian).
+	 * @protected
+	 */
+	get _hzInputsDateValue(): Date | null {
+		const utc = UI5Date.getInstance(this._calendarTimestamp * 1000);
+		const local = UI5Date.getInstance();
+		local.setFullYear(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate());
+		local.setHours(0, 0, 0, 0);
+		return local;
+	}
+
+	/**
 	 * Used to provide selectedDates to the calendar based on the component's state
 	 * Override in derivatives to provide different rules for setting the calendar's selected dates
 	 * @protected

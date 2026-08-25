@@ -955,18 +955,27 @@ class Calendar extends CalendarPart {
 	}
 
 	get _hzDatePickerValue(): string {
-		const ts = this._selectedDatesTimestamps[0];
-		if (!ts) { return ""; }
-		return this.getFormat().format(UI5Date.getInstance(ts * 1000), true);
+		const ts = this._selectedDatesTimestamps[0] ?? this._timestamp;
+		const calDate = CalendarDateComponent.fromTimestamp(ts * 1000, this._primaryCalendarType);
+		return calDate.toUTCJSDate().toISOString().slice(0, 10);
 	}
 
 	_onHzDatePickerChange(e: CustomEvent<{ value: string, valid: boolean }>) {
 		if (!e.detail.valid) { return; }
-		const parsed = this.getFormat().parse(e.detail.value, true) as Date | null;
-		if (!parsed) { return; }
-		const timestamp = CalendarDateComponent.fromLocalJSDate(parsed).valueOf() / 1000;
+		const isoDate = this.getISOFormat().parse(e.detail.value, true) as Date | null;
+		if (!isoDate) { return; }
+		const calDate = CalendarDateComponent.fromLocalJSDate(isoDate, this._primaryCalendarType);
+		const timestamp = calDate.valueOf() / 1000;
 		this.timestamp = timestamp;
 		this._fireEventAndUpdateSelectedDates([timestamp]);
+	}
+
+	get _hzMinISO(): string {
+		return this.minDate ? this._minDate.toUTCJSDate().toISOString().slice(0, 10) : "";
+	}
+
+	get _hzMaxISO(): string {
+		return this.maxDate ? this._maxDate.toUTCJSDate().toISOString().slice(0, 10) : "";
 	}
 
 	get _specialDates() {

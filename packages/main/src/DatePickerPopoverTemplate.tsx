@@ -82,7 +82,7 @@ function defaultContent(this: DatePicker) {
 			<DateHighZoomInputs
 				id={`${this._id}-hz-inputs`}
 				primaryCalendarType={this._hzEffectiveCalType}
-				dateValue={this.dateValue}
+				dateValue={this._hzInputsDateValue}
 				minDate={minISO}
 				maxDate={maxISO}
 				onChange={this._onHzInputsChange}

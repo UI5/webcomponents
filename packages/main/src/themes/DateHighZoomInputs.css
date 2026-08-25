@@ -1,10 +1,15 @@
 :host {
 	display: block;
 	width: 100%;
+	height: 100%;
 	box-sizing: border-box;
 }
 
+/* Fill the (stretched) popover content and scroll vertically when the fields
+   exceed the available height — needed for Range mode, where two From/To groups
+   stack and won't fit at high zoom. */
 .ui5-dhzi-root {
+	height: 100%;
 	padding: 0.5rem;
 	overflow-y: auto;
 	box-sizing: border-box;
@@ -58,13 +63,27 @@
 /* Year picker dialog */
 .ui5-dhzi-year-dialog::part(content) {
 	padding: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* The picker is sized to fit (auto height + compact cells below), so explicitly
+	   suppress the popup's default overflow:auto — the dialog must never scroll. */
 	overflow: hidden;
 }
 
-/* YearPicker fills the dialog width */
+/* YearPicker fills the dialog width and sizes to its content (no clipping).
+   The YearPicker bundles Calendar.css, whose :host sets a FIXED width/height via
+   --_ui5_calendar_width / --_ui5_calendar_height. Override them so the picker
+   collapses to its content height and fits the dialog without scrolling.
+   Compress the year cells so the grid + navigation arrows fit at high zoom. */
 .ui5-dhzi-year-picker {
 	display: block;
 	width: 100%;
+	height: auto;
+	--_ui5_calendar_width: 100%;
+	--_ui5_calendar_height: auto;
+	--_ui5_year_picker_item_height: 2rem;
+	--_ui5_yearpicker_item_margin: 0.0625rem;
 }
 
 .ui5-dhzi-field-message {

@@ -175,11 +175,11 @@ class DateHighZoomInputs extends UI5Element {
 	// ---- Lifecycle ----
 
 	onBeforeRendering() {
-		if (this.dateValue !== this._syncedDateValue) {
+		if (!this._sameDate(this.dateValue, this._syncedDateValue)) {
 			this._syncedDateValue = this.dateValue;
 			this.syncStartDate();
 		}
-		if (this._isRange && this.secondDateValue !== this._syncedSecondDateValue) {
+		if (this._isRange && !this._sameDate(this.secondDateValue, this._syncedSecondDateValue)) {
 			this._syncedSecondDateValue = this.secondDateValue;
 			this.syncEndDate(this.secondDateValue);
 		}
@@ -189,6 +189,19 @@ class DateHighZoomInputs extends UI5Element {
 			this._syncedCalType = this.primaryCalendarType;
 			this.convertToCalendarType();
 		}
+	}
+
+	/**
+	 * Compares two dates by their calendar Y/M/D. Parents pass a fresh Date object on every
+	 * render, so a reference check would re-sync (and clobber the user's in-progress edits)
+	 * on each re-render — compare by value instead.
+	 */
+	_sameDate(a: Date | null, b: Date | null): boolean {
+		if (a === b) { return true; }
+		if (!a || !b) { return false; }
+		return a.getFullYear() === b.getFullYear()
+			&& a.getMonth() === b.getMonth()
+			&& a.getDate() === b.getDate();
 	}
 
 	// ---- Labels ----
