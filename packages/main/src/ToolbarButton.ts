@@ -143,6 +143,15 @@ class ToolbarButton extends ToolbarItemBase {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.26.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
 	 * Defines the additional accessibility attributes that will be applied to the component.
 	 *
 	 * The following fields are supported:

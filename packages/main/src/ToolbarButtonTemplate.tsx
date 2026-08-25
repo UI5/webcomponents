@@ -14,6 +14,7 @@ export default function ToolbarButtonTemplate(this: ToolbarButton) {
 			tooltip={this.tooltip}
 			accessibleName={this.accessibleName}
 			accessibleNameRef={this.accessibleNameRef}
+			accessibleDescription={this.accessibleDescription}
 			accessibilityAttributes={this.accessibilityAttributes}
 			design={this.design}
 			disabled={this.disabled}

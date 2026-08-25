@@ -52,13 +52,13 @@ describe("Toolbar general interaction", () => {
     it("Should render the button with the correct accessibilityAttributes", () => {
         cy.mount(
             <Toolbar>
-                <ToolbarButton 
+                <ToolbarButton
                     accessibleName="Add"
                     accessibilityAttributes={{ expanded: "true", controls: "btn", hasPopup: "dialog" }}
                 />
             </Toolbar>
         );
-    
+
         cy.get("[ui5-toolbar]")
             .find("[ui5-toolbar-button][accessible-name]")
             .shadow()
@@ -67,5 +67,41 @@ describe("Toolbar general interaction", () => {
             .then((accessibilityAttributes) => {
                 expect(accessibilityAttributes).to.have.property("expanded", "true");
             });
+    });
+
+    it("Should render the button with the correct accessibleDescription", () => {
+        cy.mount(
+            <Toolbar>
+                <ToolbarButton
+                    text="Go"
+                    accessibleDescription="Submits the filter bar"
+                />
+            </Toolbar>
+        );
+
+        cy.get("[ui5-toolbar]")
+            .find("[ui5-toolbar-button]")
+            .shadow()
+            .find("[ui5-button]")
+            .should("have.prop", "accessibleDescription", "Submits the filter bar");
+    });
+
+    it("Should apply aria-describedby on the inner button when accessibleDescription is set", () => {
+        cy.mount(
+            <Toolbar>
+                <ToolbarButton
+                    text="Go"
+                    accessibleDescription="Submits the filter bar"
+                />
+            </Toolbar>
+        );
+
+        cy.get("[ui5-toolbar]")
+            .find("[ui5-toolbar-button]")
+            .shadow()
+            .find("[ui5-button]")
+            .shadow()
+            .find("[aria-describedby]")
+            .should("exist");
     });
 });
