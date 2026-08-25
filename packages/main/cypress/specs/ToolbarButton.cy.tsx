@@ -86,7 +86,7 @@ describe("Toolbar general interaction", () => {
             .should("have.prop", "accessibleDescription", "Submits the filter bar");
     });
 
-    it("Should apply aria-describedby on the inner button when accessibleDescription is set", () => {
+    it("Should apply aria-description on the inner button when accessibleDescription is set", () => {
         cy.mount(
             <Toolbar>
                 <ToolbarButton
@@ -101,7 +101,7 @@ describe("Toolbar general interaction", () => {
             .shadow()
             .find("[ui5-button]")
             .shadow()
-            .find("[aria-describedby]")
+            .find("[aria-description]")
             .should("exist");
     });
 });
