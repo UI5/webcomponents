@@ -64,6 +64,7 @@ type SegmentedButtonSelectionChangeEventDetail = {
  * @extends UI5Element
  * @since 1.0.0
  * @public
+ * @ui5subcomponent SegmentedButtonItem
  */
 @customElement({
 	tag: "ui5-segmented-button",

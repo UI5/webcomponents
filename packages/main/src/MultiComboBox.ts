@@ -191,6 +191,9 @@ type MultiComboBoxValueStateChangeEventDetail = {
  * @public
  * @since 1.0.0
  * @csspart token-\{index\} - Used to style each token(where `token-0` corresponds to the first item)
+ * @ui5subcomponent MultiComboBoxItem
+ * @ui5subcomponent MultiComboBoxItemCustom
+ * @ui5subcomponent MultiComboBoxItemGroup
  */
 @customElement({
 	tag: "ui5-multi-combobox",

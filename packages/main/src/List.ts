@@ -213,6 +213,9 @@ type ListAccessibilityAttributes = {
  * @public
  * @csspart growing-button - Used to style the button, that is used for growing of the component
  * @csspart growing-button-inner - Used to style the button inner element
+ * @ui5subcomponent ListItemCustom
+ * @ui5subcomponent ListItemGroup
+ * @ui5subcomponent ListItemStandard
  */
 @customElement({
 	tag: "ui5-list",

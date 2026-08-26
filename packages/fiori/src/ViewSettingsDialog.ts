@@ -122,6 +122,11 @@ type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettings
  * @since 1.0.0
  * @public
  * @csspart header - Used to style the header.
+ * @ui5subcomponent FilterItem
+ * @ui5subcomponent FilterItemOption
+ * @ui5subcomponent GroupItem
+ * @ui5subcomponent SortItem
+ * @ui5subcomponent ViewSettingsDialogCustomTab
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",

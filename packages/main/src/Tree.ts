@@ -101,6 +101,8 @@ type WalkCallback = (item: TreeItemBase, level: number, index: number) => void;
  * @extends UI5Element
  * @public
  * @since 1.0.0
+ * @ui5subcomponent TreeItem
+ * @ui5subcomponent TreeItemCustom
  */
 @customElement({
 	tag: "ui5-tree",

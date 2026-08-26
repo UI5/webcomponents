@@ -39,6 +39,7 @@ import cardCss from "./generated/themes/Card.css.js";
  * @public
  * @csspart root - Used to style the root DOM element of the card component
  * @csspart content - Used to style the content of the card
+ * @ui5subcomponent CardHeader
  */
 @customElement({
 	tag: "ui5-card",

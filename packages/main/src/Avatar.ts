@@ -60,6 +60,7 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  * @since 1.0.0
  * @implements {IAvatarGroupItem}
  * @public
+ * @ui5subcomponent AvatarBadge
  */
 @customElement({
 	tag: "ui5-avatar",

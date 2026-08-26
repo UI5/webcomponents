@@ -225,6 +225,9 @@ type DisabledDateRangeT = {
  * @csspart calendar-header-middle-button - Used to style the calendar header middle buttons (month/year/year-range buttons).
  * @csspart calendar-header-arrow-button - Used to style the calendar header navigation arrow buttons (previous/next buttons).
  * @since 1.0.0
+ * @ui5subcomponent CalendarDate
+ * @ui5subcomponent CalendarDateRange
+ * @ui5subcomponent SpecialCalendarDate
  */
 @customElement({
 	tag: "ui5-calendar",

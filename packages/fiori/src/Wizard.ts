@@ -173,6 +173,7 @@ type StepInfo = {
  * @public
  * @csspart navigator - Used to style the progress navigator of the `ui5-wizard`.
  * @csspart step-content - Used to style a `ui5-wizard-step` container.
+ * @ui5subcomponent WizardStep
  */
 @customElement({
 	tag: "ui5-wizard",

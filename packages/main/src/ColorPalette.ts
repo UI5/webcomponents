@@ -78,6 +78,7 @@ type ColorPaletteItemClickEventDetail = {
  * @extends UI5Element
  * @since 1.0.0
  * @public
+ * @ui5subcomponent ColorPaletteItem
  */
 @customElement({
 	tag: "ui5-color-palette",

@@ -109,6 +109,9 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * @extends UI5Element
  * @since 1.0.0
  * @public
+ * @ui5subcomponent SideNavigationGroup
+ * @ui5subcomponent SideNavigationItem
+ * @ui5subcomponent SideNavigationSubItem
  */
 
 @customElement({

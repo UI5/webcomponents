@@ -91,6 +91,8 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * @extends UI5Element
  * @public
  * @since 1.0.0
+ * @ui5subcomponent TimelineGroupItem
+ * @ui5subcomponent TimelineItem
  */
 @customElement({
 	tag: "ui5-timeline",

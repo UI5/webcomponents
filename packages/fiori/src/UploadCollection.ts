@@ -57,6 +57,7 @@ type UploadCollectionItemDeleteEventDetail = {
  * @extends UI5Element
  * @public
  * @since 1.0.0
+ * @ui5subcomponent UploadCollectionItem
  */
 @customElement({
 	tag: "ui5-upload-collection",

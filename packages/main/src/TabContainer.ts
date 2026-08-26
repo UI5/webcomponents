@@ -154,6 +154,8 @@ interface ITab extends UI5Element {
  * @public
  * @csspart content - Used to style the content of the component
  * @csspart tabstrip - Used to style the tabstrip of the component
+ * @ui5subcomponent Tab
+ * @ui5subcomponent TabSeparator
  */
 @customElement({
 	tag: "ui5-tabcontainer",

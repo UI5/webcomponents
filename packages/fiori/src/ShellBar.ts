@@ -179,6 +179,10 @@ type ShellBarSearchFieldClearEventDetail = {
  * @extends UI5Element
  * @public
  * @since 1.0.0
+ * @ui5subcomponent ShellBarBranding
+ * @ui5subcomponent ShellBarItem
+ * @ui5subcomponent ShellBarSearch
+ * @ui5subcomponent ShellBarSpacer
  */
 
 @customElement({

@@ -105,6 +105,7 @@ type ButtonClickEventDetail = {
  * @extends UI5Element
  * @implements { IButton }
  * @public
+ * @ui5subcomponent ButtonBadge
  */
 @customElement({
 	tag: "ui5-button",

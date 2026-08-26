@@ -168,6 +168,9 @@ const isPrintableCharacter = (e: KeyboardEvent) => {
  * @public
  * @csspart popover - Used to style the popover element
  * @since 1.0.0
+ * @ui5subcomponent Option
+ * @ui5subcomponent OptionCustom
+ * @ui5subcomponent OptionGroup
  */
 @customElement({
 	tag: "ui5-select",

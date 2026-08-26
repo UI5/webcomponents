@@ -53,6 +53,12 @@ type UserSettingsBeforeCloseEventDetail = PopupBeforeCloseEventDetail;
  * @extends UI5Element
  * @public
  * @since 2.8.0
+ * @ui5subcomponent UserSettingsAccountView
+ * @ui5subcomponent UserSettingsAppearanceView
+ * @ui5subcomponent UserSettingsAppearanceViewGroup
+ * @ui5subcomponent UserSettingsAppearanceViewItem
+ * @ui5subcomponent UserSettingsItem
+ * @ui5subcomponent UserSettingsView
  */
 @customElement({
 	tag: "ui5-user-settings-dialog",

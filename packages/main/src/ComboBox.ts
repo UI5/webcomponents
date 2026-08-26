@@ -199,6 +199,9 @@ type ComboBoxSelectionChangeEventDetail = {
  * @extends UI5Element
  * @public
  * @since 1.0.0
+ * @ui5subcomponent ComboBoxItem
+ * @ui5subcomponent ComboBoxItemCustom
+ * @ui5subcomponent ComboBoxItemGroup
  */
 @customElement({
 	tag: "ui5-combobox",

@@ -206,6 +206,10 @@ type InputSuggestionScrollEventDetail = {
  * @csspart root - Used to style the root DOM element of the Input component
  * @csspart input - Used to style the native input element
  * @csspart clear-icon - Used to style the clear icon, which can be pressed to clear user input text
+ * @ui5subcomponent InputIcon
+ * @ui5subcomponent SuggestionItem
+ * @ui5subcomponent SuggestionItemCustom
+ * @ui5subcomponent SuggestionItemGroup
  */
 @customElement({
 	tag: "ui5-input",
