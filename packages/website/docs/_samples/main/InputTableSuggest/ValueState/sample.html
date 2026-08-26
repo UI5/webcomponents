@@ -14,8 +14,10 @@
     <div style="display: flex; flex-direction: column; gap: 1rem;">
         <ui5-input-table-suggest placeholder="Error state..." value-state="Negative" show-suggestions>
             <div slot="valueStateMessage">Product ID is invalid. Please enter a valid ID.</div>
-            <ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
-            <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Price</ui5-table-header-cell>
+            <ui5-table-header-row slot="suggestionColumns">
+                <ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
+                <ui5-table-header-cell min-width="100px">Price</ui5-table-header-cell>
+            </ui5-table-header-row>
             <ui5-table-row slot="suggestionRows">
                 <ui5-table-cell>PRD-001</ui5-table-cell>
                 <ui5-table-cell>$99</ui5-table-cell>
@@ -24,8 +26,10 @@
 
         <ui5-input-table-suggest placeholder="Warning state..." value-state="Critical" show-suggestions>
             <div slot="valueStateMessage">Stock is running low. Consider reordering soon.</div>
-            <ui5-table-header-cell slot="suggestionColumns" width="150px">Product</ui5-table-header-cell>
-            <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Stock</ui5-table-header-cell>
+            <ui5-table-header-row slot="suggestionColumns">
+                <ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
+                <ui5-table-header-cell min-width="100px">Stock</ui5-table-header-cell>
+            </ui5-table-header-row>
             <ui5-table-row slot="suggestionRows">
                 <ui5-table-cell>Widget X</ui5-table-cell>
                 <ui5-table-cell>5 left</ui5-table-cell>
@@ -34,8 +38,10 @@
 
         <ui5-input-table-suggest placeholder="Information state..." value-state="Information" show-suggestions>
             <div slot="valueStateMessage">Tip: You can use wildcards (*) for broader search.</div>
-            <ui5-table-header-cell slot="suggestionColumns" width="150px">Search</ui5-table-header-cell>
-            <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Results</ui5-table-header-cell>
+            <ui5-table-header-row slot="suggestionColumns">
+                <ui5-table-header-cell width="150px">Search</ui5-table-header-cell>
+                <ui5-table-header-cell min-width="100px">Results</ui5-table-header-cell>
+            </ui5-table-header-row>
             <ui5-table-row slot="suggestionRows">
                 <ui5-table-cell>Widget*</ui5-table-cell>
                 <ui5-table-cell>25 matches</ui5-table-cell>

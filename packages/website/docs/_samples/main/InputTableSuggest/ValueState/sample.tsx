@@ -1,10 +1,12 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
+import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 
 const InputTableSuggest = createReactComponent(InputTableSuggestClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
@@ -14,8 +16,10 @@ function App() {
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <InputTableSuggest placeholder="Error state..." valueState="Negative" showSuggestions>
         <div slot="valueStateMessage">Product ID is invalid. Please enter a valid ID.</div>
-        <TableHeaderCell slot="suggestionColumns" width="150px">Product</TableHeaderCell>
-        <TableHeaderCell slot="suggestionColumns" minWidth="100px">Price</TableHeaderCell>
+        <TableHeaderRow slot="suggestionColumns">
+          <TableHeaderCell width="150px">Product</TableHeaderCell>
+          <TableHeaderCell minWidth="100px">Price</TableHeaderCell>
+        </TableHeaderRow>
         <TableRow slot="suggestionRows">
           <TableCell>PRD-001</TableCell>
           <TableCell>$99</TableCell>
@@ -24,8 +28,10 @@ function App() {
 
       <InputTableSuggest placeholder="Warning state..." valueState="Critical" showSuggestions>
         <div slot="valueStateMessage">Stock is running low. Consider reordering soon.</div>
-        <TableHeaderCell slot="suggestionColumns" width="150px">Product</TableHeaderCell>
-        <TableHeaderCell slot="suggestionColumns" minWidth="100px">Stock</TableHeaderCell>
+        <TableHeaderRow slot="suggestionColumns">
+          <TableHeaderCell width="150px">Product</TableHeaderCell>
+          <TableHeaderCell minWidth="100px">Stock</TableHeaderCell>
+        </TableHeaderRow>
         <TableRow slot="suggestionRows">
           <TableCell>Widget X</TableCell>
           <TableCell>5 left</TableCell>
@@ -33,9 +39,11 @@ function App() {
       </InputTableSuggest>
 
       <InputTableSuggest placeholder="Information state..." valueState="Information" showSuggestions>
-        <div slot="valueStateMessage">Tip: You can use wildcards (*) for broader search.</div>
-        <TableHeaderCell slot="suggestionColumns" width="150px">Search</TableHeaderCell>
-        <TableHeaderCell slot="suggestionColumns" minWidth="100px">Results</TableHeaderCell>
+        <div slot="valueStateMessage">This is just an information value state message</div>
+        <TableHeaderRow slot="suggestionColumns">
+          <TableHeaderCell width="150px">Search</TableHeaderCell>
+          <TableHeaderCell minWidth="100px">Results</TableHeaderCell>
+        </TableHeaderRow>
         <TableRow slot="suggestionRows">
           <TableCell>Widget*</TableCell>
           <TableCell>25 matches</TableCell>

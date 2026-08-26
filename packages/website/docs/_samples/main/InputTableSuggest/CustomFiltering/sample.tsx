@@ -2,11 +2,13 @@ import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
+import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 
 const InputTableSuggest = createReactComponent(InputTableSuggestClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
@@ -49,24 +51,26 @@ function App() {
       style={{ width: "420px" }}
       onInput={handleInput}
     >
-      <TableHeaderCell slot="suggestionColumns" width="150px" importance={10}>
-        Name
-      </TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="130px" importance={5} popinText="Department">
-        Department
-      </TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="110px" importance={4} popinText="Location">
-        Location
-      </TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" minWidth="180px" importance={1} popinText="Email">
-        Email
-      </TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="120px" importance={2} popinText="Phone">
-        Phone
-      </TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="90px" importance={3} popinText="Office">
-        Office
-      </TableHeaderCell>
+      <TableHeaderRow slot="suggestionColumns">
+        <TableHeaderCell width="150px" importance={10}>
+          Name
+        </TableHeaderCell>
+        <TableHeaderCell width="130px" importance={5} popinText="Department">
+          Department
+        </TableHeaderCell>
+        <TableHeaderCell width="110px" importance={4} popinText="Location">
+          Location
+        </TableHeaderCell>
+        <TableHeaderCell minWidth="180px" importance={1} popinText="Email">
+          Email
+        </TableHeaderCell>
+        <TableHeaderCell width="120px" importance={2} popinText="Phone">
+          Phone
+        </TableHeaderCell>
+        <TableHeaderCell width="90px" importance={3} popinText="Office">
+          Office
+        </TableHeaderCell>
+      </TableHeaderRow>
 
       {filteredEmployees.map((emp) => (
         <TableRow key={emp.name} slot="suggestionRows">

@@ -12,12 +12,14 @@
 <!-- playground-fold-end -->
 
     <ui5-input-table-suggest id="employee-input" placeholder="Search employees..." show-suggestions style="width: 420px;">
-        <ui5-table-header-cell slot="suggestionColumns" width="150px" importance="10">Name</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="130px" importance="5" popin-text="Department">Department</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="110px" importance="4" popin-text="Location">Location</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" min-width="180px" importance="1" popin-text="Email">Email</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="120px" importance="2" popin-text="Phone">Phone</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="90px" importance="3" popin-text="Office">Office</ui5-table-header-cell>
+        <ui5-table-header-row slot="suggestionColumns">
+            <ui5-table-header-cell width="150px" importance="10">Name</ui5-table-header-cell>
+            <ui5-table-header-cell width="130px" importance="5" popin-text="Department">Department</ui5-table-header-cell>
+            <ui5-table-header-cell width="110px" importance="4" popin-text="Location">Location</ui5-table-header-cell>
+            <ui5-table-header-cell min-width="180px" importance="1" popin-text="Email">Email</ui5-table-header-cell>
+            <ui5-table-header-cell width="120px" importance="2" popin-text="Phone">Phone</ui5-table-header-cell>
+            <ui5-table-header-cell width="90px" importance="3" popin-text="Office">Office</ui5-table-header-cell>
+        </ui5-table-header-row>
     </ui5-input-table-suggest>
 
 <!-- playground-fold -->

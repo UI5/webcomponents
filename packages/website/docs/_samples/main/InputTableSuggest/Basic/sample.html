@@ -12,10 +12,12 @@
 <!-- playground-fold-end -->
 
     <ui5-input-table-suggest placeholder="Search for products..." show-suggestions>
-        <ui5-table-header-cell slot="suggestionColumns" width="120px">Product ID</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="200px">Name</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" min-width="100px">Category</ui5-table-header-cell>
-        <ui5-table-header-cell slot="suggestionColumns" width="80px">Price</ui5-table-header-cell>
+        <ui5-table-header-row slot="suggestionColumns">
+            <ui5-table-header-cell width="120px">Product ID</ui5-table-header-cell>
+            <ui5-table-header-cell width="200px">Name</ui5-table-header-cell>
+            <ui5-table-header-cell min-width="100px">Category</ui5-table-header-cell>
+            <ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
+        </ui5-table-header-row>
 
         <ui5-table-row slot="suggestionRows">
             <ui5-table-cell>PRD-001</ui5-table-cell>

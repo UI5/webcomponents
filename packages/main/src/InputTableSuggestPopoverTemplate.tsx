@@ -15,10 +15,6 @@ import Button from "./Button.js";
 import Title from "./Title.js";
 import Input from "./Input.js";
 import Table from "./Table.js";
-import TableHeaderRow from "./TableHeaderRow.js";
-import TableHeaderCell from "./TableHeaderCell.js";
-import TableRow from "./TableRow.js";
-import TableCell from "./TableCell.js";
 
 export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest): JsxTemplateResult {
 	return (
@@ -133,52 +129,15 @@ function valueStateMessage(this: InputTableSuggest, open: boolean) {
 }
 
 function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
-	const isScrollMode = this._overflowMode === "Scroll";
-	const lastColumnIndex = this.suggestionColumns.length - 1;
-
 	return (
-		<div class="ui5-input-table-suggest-wrapper">
+		<div class="ui5-input-table-suggest-wrapper" onClick={this._onTableRowClick}>
 			<Table
 				class="ui5-input-table-suggest-table"
 				overflowMode={this._overflowMode}
 				accessibleName={this.suggestionsText}
-				onRowClick={this._onTableRowClick}
 			>
-				<TableHeaderRow slot="headerRow" sticky>
-					{this.suggestionColumns.map((col, index) => {
-						const width = (isScrollMode && index === lastColumnIndex) ? undefined : col.width;
-						return (
-							<TableHeaderCell
-								key={`col-${index}`}
-								width={width}
-								minWidth={col.minWidth || col.width}
-								importance={col.importance}
-								popinText={col.popinText}
-							>
-								{col.textContent}
-							</TableHeaderCell>
-						);
-					})}
-				</TableHeaderRow>
-
-				{this._visibleHighlightedRows.map((highlightedRow, rowIndex) => (
-					<TableRow
-						key={`row-${rowIndex}`}
-						id={`${this._id}-row-${rowIndex}`}
-						class={{
-							"ui5-input-table-suggest-row--focused": highlightedRow.row.focused,
-							"ui5-input-table-suggest-row--selected": highlightedRow.row.selected,
-						}}
-						data-row-index={rowIndex}
-						interactive
-					>
-						{highlightedRow.cells.map((cell, cellIndex) => (
-							<TableCell key={`cell-${rowIndex}-${cellIndex}`}>
-								<span dangerouslySetInnerHTML={{ __html: cell.highlightedMarkup }}></span>
-							</TableCell>
-						))}
-					</TableRow>
-				))}
+				<slot name="suggestionColumns" slot="headerRow"></slot>
+				<slot name="suggestionRows"></slot>
 			</Table>
 		</div>
 	);

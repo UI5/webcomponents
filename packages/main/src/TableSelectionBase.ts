@@ -81,9 +81,9 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	}
 
 	onTableBeforeRendering() {
-		if (this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
-			this._rowsLength = this._table.rows.length;
-			this._table.headerRow[0]._invalidate++;
+		if (this._table && this._table._headerRow[0] && this._rowsLength !== this._table._rows.length) {
+			this._rowsLength = this._table._rows.length;
+			this._table._headerRow[0]._invalidate++;
 		}
 	}
 
@@ -110,7 +110,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 * Returns the ARIA description of the Table as an alternative to aria-multiselectable.
 	 */
 	getAriaDescriptionForTable(): string | undefined {
-		if (!this._table || !this._table.rows.length) {
+		if (!this._table || !this._table._rows.length) {
 			return undefined;
 		}
 
@@ -142,7 +142,7 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 */
 	getRowByKey(rowKey: string): TableRow | undefined {
 		if (this._table && rowKey) {
-			return this._table.rows.find(row => this.getRowKey(row) === rowKey);
+			return this._table._rows.find(row => this.getRowKey(row) === rowKey);
 		}
 	}
 
@@ -168,8 +168,8 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	protected _invalidateTableAndRows() {
 		if (this._table) {
 			this._table._invalidate++;
-			this._table.rows.forEach(row => row._invalidate++);
-			this._table.headerRow.forEach(row => row._invalidate++);
+			this._table._rows.forEach(row => row._invalidate++);
+			this._table._headerRow.forEach(row => row._invalidate++);
 		}
 	}
 }

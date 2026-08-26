@@ -15,13 +15,11 @@ import {
 	isEscape,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
-import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 import InputField from "./InputField.js";
-import type Table from "./Table.js";
+import type TableHeaderRow from "./TableHeaderRow.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
-import type TableRow from "./TableRow.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
 import type TableOverflowMode from "./types/TableOverflowMode.js";
 
@@ -38,24 +36,6 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
- * Represents highlighted cell content for a row
- * @private
- */
-type HighlightedCellContent = {
-	text: string;
-	highlightedMarkup: string;
-};
-
-/**
- * Represents a suggestion row with highlighted content
- * @private
- */
-type HighlightedSuggestionRow = {
-	row: ITableSuggestionRow;
-	cells: HighlightedCellContent[];
-};
-
-/**
  * Interface for tabular suggestion row items
  * @public
  */
@@ -63,6 +43,7 @@ interface ITableSuggestionRow extends UI5Element {
 	cells: TableCell[];
 	selected?: boolean;
 	focused?: boolean;
+	interactive?: boolean;
 }
 
 type InputTableSuggestSelectionChangeEventDetail = {
@@ -186,16 +167,15 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the columns for the tabular suggestions.
-	 * Use the `ui5-table-header-cell` component to define the column headers.
+	 * Use a single `ui5-table-header-row` component with `ui5-table-header-cell` children to define the columns.
 	 *
-	 * **Note:** The columns define the structure of the suggestion table header.
-	 * Each column can have properties such as `width`, `minWidth`, `importance` (for popin),
-	 * and `popinText`.
+	 * **Note:** This is a single-element slot. Provide exactly one `ui5-table-header-row`; if more than one is
+	 * provided, only the first one is used.
 	 *
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	suggestionColumns!: Slot<TableHeaderCell>;
+	suggestionColumns!: Slot<TableHeaderRow>;
 
 	/**
 	 * Defines the rows for the tabular suggestions.
@@ -232,13 +212,7 @@ class InputTableSuggest extends InputField {
 	_rowFocused = false;
 
 	/**
-	 * Stores processed rows with highlighted cell content
-	 * @private
-	 */
-	_highlightedRows: HighlightedSuggestionRow[] = [];
-
-	/**
-	 * Stores the matched row for typeahead (similar to Input's _matchedSuggestionItem)
+	 * Stores the matched row for typeahead
 	 * @private
 	 */
 	_matchedTabularRow?: ITableSuggestionRow;
@@ -247,20 +221,46 @@ class InputTableSuggest extends InputField {
 		return this.showSuggestions && this._useTableSuggestions;
 	}
 
-	get _visibleRows(): ITableSuggestionRow[] {
-		return this.suggestionRows.filter(row => !(row as UI5Element).hidden);
+	/**
+	 * The header cells of the app-provided `ui5-table-header-row`. Read straight from the
+	 * light DOM so the value is available synchronously, before the header row's own slots
+	 * have been processed.
+	 *
+	 * @private
+	 */
+	get _columns(): TableHeaderCell[] {
+		const headerRow = this.suggestionColumns[0];
+
+		if (!headerRow) {
+			return [];
+		}
+
+		return Array.from(headerRow.querySelectorAll<TableHeaderCell>(":scope > [ui5-table-header-cell]"));
 	}
 
-	get _visibleHighlightedRows(): HighlightedSuggestionRow[] {
-		const visibleRowSet = new Set(this._visibleRows);
-		return this._highlightedRows.filter(pr => visibleRowSet.has(pr.row));
+	get _allRows(): ITableSuggestionRow[] {
+		return this.suggestionRows as unknown as ITableSuggestionRow[];
+	}
+
+	get _visibleRows(): ITableSuggestionRow[] {
+		return this._allRows.filter(row => !(row as UI5Element).hidden);
+	}
+
+	_applyTableProperties() {
+		const headerRow = this.suggestionColumns[0];
+		if (headerRow) {
+			headerRow.sticky = true;
+		}
+
+		this.suggestionRows.forEach(row => {
+			row.interactive = true;
+		});
 	}
 
 	onBeforeRendering() {
-		this._useTableSuggestions = this.suggestionColumns.length > 0;
+		this._useTableSuggestions = this._columns.length > 0;
 
 		if (this._useTableSuggestions) {
-			this._highlightRows();
 			this._handleTabularPopoverOpen();
 			this._handleTabularTypeAhead();
 		}
@@ -296,12 +296,18 @@ class InputTableSuggest extends InputField {
 		const isFocused = this.shadowRoot?.querySelector("input") === getActiveElement();
 		const preventOpenPicker = this.disabled || this.readonly;
 
-		if (preventOpenPicker || !hasValue) {
+		// While navigating rows, the previewed value can be empty (e.g. the first cell
+		// holds a non-text component like an avatar). Don't treat that as "cleared
+		// input" and close the picker mid-navigation.
+		if (preventOpenPicker || (!hasValue && !this._isKeyNavigation)) {
 			this.open = false;
 		} else if (!this._isPhone) {
 			const isTyping = isFocused && this.isTyping;
 			if (isTyping) {
-				this.open = hasItems && !!this._getFirstMatchingRow(this.value);
+				// Filtering is the application's responsibility (it hides non-matching
+				// rows). The component does not match internally, so it opens with all
+				// currently provided rows whenever there is something to show.
+				this.open = hasItems;
 			} else {
 				this.open = hasItems && this.open;
 			}
@@ -368,17 +374,22 @@ class InputTableSuggest extends InputField {
 		this._shouldAutocomplete = false;
 	}
 
-	/**
-	 * @private
-	 */
 	_selectMatchingRow(row: ITableSuggestionRow) {
 		this._deselectAllRows();
 
 		row.selected = true;
 		this._matchedTabularRow = row;
+		this._updateRowClasses();
 
 		this.fireDecoratorEvent("selection-change", {
 			row,
+		});
+	}
+
+	_updateRowClasses() {
+		this._allRows.forEach(row => {
+			row.classList.toggle("ui5-input-table-suggest-row--focused", !!row.focused);
+			row.classList.toggle("ui5-input-table-suggest-row--selected", !!row.selected);
 		});
 	}
 
@@ -386,6 +397,8 @@ class InputTableSuggest extends InputField {
 		if (!this._useTableSuggestions) {
 			return super.onAfterRendering();
 		}
+
+		this._applyTableProperties();
 
 		if (this._performTextSelection) {
 			if (this.typedInValue.length && this.value.length) {
@@ -421,49 +434,16 @@ class InputTableSuggest extends InputField {
 		}
 	}
 
-	/**
-	 * Processes rows and generates highlighted markup for cell content.
-	 * @private
-	 */
-	_highlightRows() {
-		const typedValue = this.typedInValue;
-		this._highlightedRows = [];
+	_onTableRowClick(e: MouseEvent) {
+		const clickedRow = e.composedPath().find(el => {
+			return el instanceof HTMLElement && el.hasAttribute("ui5-table-row");
+		}) as ITableSuggestionRow | undefined;
 
-		this.suggestionRows.forEach(row => {
-			const cells = row.cells || [];
-			const highlightedCells: HighlightedCellContent[] = cells.map(cell => {
-				const cellText = cell.textContent?.trim() || "";
-
-				return {
-					text: cellText,
-					highlightedMarkup: generateHighlightedMarkup(cellText, typedValue),
-				};
-			});
-
-			this._highlightedRows.push({
-				row,
-				cells: highlightedCells,
-			});
-		});
-	}
-
-	/**
-	 * Handles row-click event from the table to select the corresponding suggestion.
-	 * @private
-	 */
-	_onTableRowClick(e: CustomEvent<{ row: TableRow }>) {
-		const clickedRow = e.detail.row;
-		const rowIndex = parseInt(clickedRow.dataset.rowIndex || "0");
-		const suggestionRow = this._visibleRows[rowIndex];
-
-		if (suggestionRow) {
-			this._selectRow(suggestionRow, false);
+		if (clickedRow && this._visibleRows.includes(clickedRow)) {
+			this._selectRow(clickedRow, false);
 		}
 	}
 
-	/**
-	 * @private
-	 */
 	_selectRow(row: ITableSuggestionRow, keyboardUsed: boolean) {
 		const rowValue = this._getRowValue(row);
 		const isAlreadySelected = row.focused || row.selected;
@@ -484,15 +464,13 @@ class InputTableSuggest extends InputField {
 		this._matchedTabularRow = undefined;
 		this._rowFocused = false;
 		this.isTyping = false;
+		this._updateRowClasses();
 
 		if (!keyboardUsed && !isPhone()) {
 			this.focus();
 		}
 	}
 
-	/**
-	 * @private
-	 */
 	_getRowValue(row: ITableSuggestionRow): string {
 		const cells = row.cells || [];
 
@@ -503,14 +481,12 @@ class InputTableSuggest extends InputField {
 		return "";
 	}
 
-	/**
-	 * @private
-	 */
 	_deselectAllRows() {
-		this.suggestionRows.forEach(row => {
+		this._allRows.forEach(row => {
 			row.selected = false;
 			row.focused = false;
 		});
+		this._updateRowClasses();
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -560,9 +536,6 @@ class InputTableSuggest extends InputField {
 		super._onkeydown(e);
 	}
 
-	/**
-	 * @private
-	 */
 	_navigateRows(forward: boolean) {
 		const visibleRows = this._visibleRows;
 
@@ -595,6 +568,7 @@ class InputTableSuggest extends InputField {
 
 		visibleRows[nextIndex].focused = true;
 		this._rowFocused = true;
+		this._updateRowClasses();
 
 		const previewValue = this._getRowValue(visibleRows[nextIndex]);
 		this.value = previewValue;
@@ -622,9 +596,6 @@ class InputTableSuggest extends InputField {
 		this._clearAnnouncement();
 	}
 
-	/**
-	 * @private
-	 */
 	_clearPopoverFocusAndSelection() {
 		this._deselectAllRows();
 	}
@@ -634,7 +605,7 @@ class InputTableSuggest extends InputField {
 	}
 
 	get _columnsCount(): number {
-		return this.suggestionColumns.length;
+		return this._columns.length;
 	}
 
 	get _isRowFocused(): boolean {
@@ -648,6 +619,7 @@ class InputTableSuggest extends InputField {
 	/**
 	 * Announces the currently selected row to screen readers using a live region.
 	 * Includes the row position and all column values with their headers.
+	 *
 	 * @private
 	 */
 	_announceSelectedRow(rowIndex: number) {
@@ -658,7 +630,7 @@ class InputTableSuggest extends InputField {
 
 		const row = this._visibleRows[rowIndex];
 		const cells = row.cells || [];
-		const columns = this.suggestionColumns;
+		const columns = this._columns;
 
 		const positionText = InputField.i18nBundle.getText(ROW_ITEM_POSITION, rowIndex + 1, this._visibleRows.length);
 
@@ -673,6 +645,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Clears the announcement text when closing the popover.
+	 *
 	 * @private
 	 */
 	_clearAnnouncement() {
@@ -684,6 +657,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Returns the tabular suggestions popover element
+	 *
 	 * @private
 	 */
 	_getTabularPopover() {
@@ -692,6 +666,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Scrolls the row at the given index into view within the suggestions popover.
+	 *
 	 * @private
 	 */
 	_scrollRowIntoView(rowIndex: number) {
@@ -700,8 +675,7 @@ class InputTableSuggest extends InputField {
 			return;
 		}
 
-		const table = popover.querySelector<Table>("[ui5-table]");
-		const rowElement = table?.rows[rowIndex];
+		const rowElement = this._visibleRows[rowIndex] as unknown as HTMLElement | undefined;
 
 		if (!rowElement) {
 			return;
@@ -728,6 +702,7 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Override focusout handler to prevent closing popover when clicking inside it
+	 *
 	 * @private
 	 */
 	_shouldSkipFocusOut(toBeFocused: HTMLElement): boolean {
@@ -735,10 +710,6 @@ class InputTableSuggest extends InputField {
 		return !!(popover?.contains(toBeFocused) || this.contains(toBeFocused));
 	}
 
-	/**
-	 * Override focusout handler for additional cleanup
-	 * @private
-	 */
 	_onfocusout(e: FocusEvent) {
 		const toBeFocused = e.relatedTarget as HTMLElement;
 

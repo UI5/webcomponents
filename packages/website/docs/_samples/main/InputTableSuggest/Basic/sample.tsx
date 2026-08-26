@@ -1,10 +1,12 @@
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
+import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
 import TableRowClass from "@ui5/webcomponents/dist/TableRow.js";
 import TableCellClass from "@ui5/webcomponents/dist/TableCell.js";
 
 const InputTableSuggest = createReactComponent(InputTableSuggestClass);
+const TableHeaderRow = createReactComponent(TableHeaderRowClass);
 const TableHeaderCell = createReactComponent(TableHeaderCellClass);
 const TableRow = createReactComponent(TableRowClass);
 const TableCell = createReactComponent(TableCellClass);
@@ -12,10 +14,12 @@ const TableCell = createReactComponent(TableCellClass);
 function App() {
   return (
     <InputTableSuggest placeholder="Search for products..." showSuggestions>
-      <TableHeaderCell slot="suggestionColumns" width="120px">Product ID</TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="200px">Name</TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" minWidth="100px">Category</TableHeaderCell>
-      <TableHeaderCell slot="suggestionColumns" width="80px">Price</TableHeaderCell>
+      <TableHeaderRow slot="suggestionColumns">
+        <TableHeaderCell width="120px">Product ID</TableHeaderCell>
+        <TableHeaderCell width="200px">Name</TableHeaderCell>
+        <TableHeaderCell minWidth="100px">Category</TableHeaderCell>
+        <TableHeaderCell width="80px">Price</TableHeaderCell>
+      </TableHeaderRow>
 
       <TableRow slot="suggestionRows">
         <TableCell>PRD-001</TableCell>

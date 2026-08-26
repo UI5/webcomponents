@@ -4,6 +4,7 @@ slug: ../../InputTableSuggest
 
 import Basic from "../../../_samples/main/InputTableSuggest/Basic/Basic.md";
 import CustomFiltering from "../../../_samples/main/InputTableSuggest/CustomFiltering/CustomFiltering.md";
+import RichCells from "../../../_samples/main/InputTableSuggest/RichCells/RichCells.md";
 import ValueState from "../../../_samples/main/InputTableSuggest/ValueState/ValueState.md";
 
 <%COMPONENT_OVERVIEW%>
@@ -19,6 +20,11 @@ import ValueState from "../../../_samples/main/InputTableSuggest/ValueState/Valu
 This sample demonstrates how to implement custom filtering logic for tabular suggestions. The application filters employees by name, department, or location as the user types. With more columns than the fixed-width input can fit, the lower-importance columns move into the popin area.
 
 <CustomFiltering />
+
+### Rich Cells
+This sample shows suggestion rows built from rich UI5 components (avatar, title, text, label, tag) while keeping the first column as plain text. The application highlights the matched substring in the plain-text column and filters rows by name as the user types.
+
+<RichCells />
 
 ### Value State
 The component supports different value states to indicate validation status.
