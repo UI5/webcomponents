@@ -383,7 +383,7 @@ class Table extends UI5Element {
 	 * Determines whether the table rows are displayed with alternating background colors.
 	 *
 	 * @default false
-	 * @since 2.17
+	 * @since 2.17.0
 	 * @public
 	 */
 	@property({ type: Boolean })

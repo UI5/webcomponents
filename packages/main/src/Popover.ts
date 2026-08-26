@@ -86,7 +86,7 @@ type CalculatedPlacement = {
  *
  * @constructor
  * @extends Popup
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @public
  * @csspart header - Used to style the header of the component
  * @csspart content - Used to style the content of the component
@@ -151,7 +151,7 @@ class Popover extends Popup {
 	 * Determines whether the component arrow is hidden.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideArrow = false;

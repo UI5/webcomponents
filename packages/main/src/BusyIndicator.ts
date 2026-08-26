@@ -57,7 +57,7 @@ import busyIndicatorCss from "./generated/themes/BusyIndicator.css.js";
  * @extends UI5Element
  * @public
  * @slot {Array<Node>} default - Determines the content over which the component will appear.
- * @since 0.12.0
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-busy-indicator",
@@ -71,7 +71,7 @@ class BusyIndicator extends UI5Element {
 	 * Defines text to be displayed below the component. It can be used to inform the user of the current operation.
 	 * @public
 	 * @default undefined
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 */
 	@property()
 	text?: string;

@@ -169,7 +169,7 @@ type StepInfo = {
  * `import "@ui5/webcomponents-fiori/dist/Wizard.js";` (includes <ui5-wizard-step/>)
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.10
+ * @since 1.0.0
  * @public
  * @csspart navigator - Used to style the progress navigator of the `ui5-wizard`.
  * @csspart step-content - Used to style a `ui5-wizard-step` container.
@@ -248,7 +248,7 @@ class Wizard extends UI5Element {
 	 * and values out of the range will be normalized to 0.5 and 1 respectively.
 	 * @private
 	 * @default 0.7
-	 * @since 1.0.0-rc.13
+	 * @since 1.0.0
 	 */
 	@property({ type: Number })
 	stepSwitchThreshold = STEP_SWITCH_THRESHOLDS.DEFAULT;

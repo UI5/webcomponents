@@ -75,7 +75,7 @@ const getEffectiveIllustrationName = (name: string): string => {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  */
 
 @customElement({
@@ -257,7 +257,7 @@ class IllustratedMessage extends UI5Element {
 	*
 	* **Note:** Using this slot, the default subtitle text of illustration and the value of `subtitleText` property will be overwritten.
 	* @public
-	* @since 1.0.0-rc.16
+	* @since 1.0.0
 	*/
 	@slot({ type: HTMLElement })
 	subtitle!: Slot<HTMLElement>;

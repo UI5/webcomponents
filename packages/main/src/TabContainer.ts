@@ -267,7 +267,7 @@ class TabContainer extends UI5Element {
 	 * layout for most scenarios. Set to `Bottom` only when the component is at the
 	 * bottom of the page and you want the tab strip to act as a menu.
 	 * @default "Top"
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @private
 	 */
 	@property()
@@ -336,7 +336,7 @@ class TabContainer extends UI5Element {
 	 * Defines the button which will open the overflow menu. If nothing is provided to this slot,
 	 * the default button will be used.
 	 * @public
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 */
 	@slot()
 	overflowButton!: Slot<IButton>;

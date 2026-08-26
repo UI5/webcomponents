@@ -198,7 +198,7 @@ type ComboBoxSelectionChangeEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-combobox",
@@ -412,7 +412,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -421,7 +421,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the component
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -497,7 +497,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the `ui5-combobox` is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()
@@ -506,7 +506,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	/**
 	 * Defines the icon to be displayed in the input field.
 	 * @public
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 */
 	@slot()
 	icon!: Slot<IIcon>;

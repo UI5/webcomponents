@@ -142,7 +142,7 @@ const DEFAULT_ISO_FORMAT = "HH:mm:ss";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @csspart input - Used to style the input element. This part is forwarded to the underlying ui5-input element.
  */
 @customElement({
@@ -356,7 +356,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the `ui5-time-picker` is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

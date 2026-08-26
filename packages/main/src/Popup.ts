@@ -145,7 +145,7 @@ abstract class Popup extends UI5Element {
 	 * when the popup closes.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	*/
 	@property({ type: Boolean })
 	preventFocusRestore = false;
@@ -154,7 +154,7 @@ abstract class Popup extends UI5Element {
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;

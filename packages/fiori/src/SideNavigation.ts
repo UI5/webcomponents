@@ -107,7 +107,7 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
  * `import "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";` (for `ui5-side-navigation-sub-item`)
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  */
 
@@ -214,7 +214,7 @@ class SideNavigation extends UI5Element {
 	 * **Note:** The header is displayed when the component is expanded - the property `collapsed` is false;
 	 *
 	 * @public
-	 * @since 1.0.0-rc.11
+	 * @since 1.0.0
 	 */
 	@slot()
 	header!: Slot<HTMLElement>;

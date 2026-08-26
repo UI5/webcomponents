@@ -90,7 +90,7 @@ const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
  * @constructor
  * @extends UI5Element
  * @public
- * @since 0.8.0
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-timeline",
@@ -118,7 +118,7 @@ class Timeline extends UI5Element {
 	/**
 	 * Defines the items orientation.
 	 * @default "Vertical"
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()

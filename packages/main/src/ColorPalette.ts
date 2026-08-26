@@ -76,7 +76,7 @@ type ColorPaletteItemClickEventDetail = {
  * `import "@ui5/webcomponents/dist/ColorPalette.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.12
+ * @since 1.0.0
  * @public
  */
 @customElement({
@@ -89,7 +89,7 @@ type ColorPaletteItemClickEventDetail = {
 /**
  * Fired when the user selects a color.
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  * @param {string} color the selected color
  */
 @event("item-click")
@@ -101,7 +101,7 @@ class ColorPalette extends UI5Element {
 	/**
 	 * Defines whether the user can see the last used colors in the bottom of the component
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	showRecentColors = false;
@@ -110,7 +110,7 @@ class ColorPalette extends UI5Element {
 	 * Defines whether the user can choose a custom color from a color picker
 	 *
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	showMoreColors = false;
@@ -119,7 +119,7 @@ class ColorPalette extends UI5Element {
 	 * Defines whether the user can choose the default color from a button.
 	 * @default false
 	 * @private
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	showDefaultColor = false;
@@ -129,7 +129,7 @@ class ColorPalette extends UI5Element {
 	 *
 	 * **Note:** The default color should be a part of the ColorPalette colors`
 	 * @private
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	@property()
 	defaultColor?: string;

@@ -232,7 +232,7 @@ class Button extends UI5Element implements IButton {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -298,7 +298,7 @@ class Button extends UI5Element implements IButton {
 	 *
 	 * @default "Button"
 	 * @public
-	 * @since 1.23
+	 * @since 1.23.0
 	 */
 	@property()
 	accessibleRole: `${ButtonAccessibleRole}` = "Button";
@@ -380,7 +380,7 @@ class Button extends UI5Element implements IButton {
 	forcedTabIndex = "0";
 
 	/**
-	 * @since 1.0.0-rc.13
+	 * @since 1.0.0
 	 * @private
 	 */
 	@property({ type: Boolean })

@@ -167,7 +167,7 @@ const isPrintableCharacter = (e: KeyboardEvent) => {
  * @extends UI5Element
  * @public
  * @csspart popover - Used to style the popover element
- * @since 0.8.0
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-select",
@@ -297,7 +297,7 @@ class Select extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Defines whether the component is required.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @default false
 	 * @public
 	 */
@@ -318,7 +318,7 @@ class Select extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Defines the accessible ARIA name of the component.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @public
 	 * @default undefined
 	 */
@@ -329,7 +329,7 @@ class Select extends UI5Element implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the select.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;

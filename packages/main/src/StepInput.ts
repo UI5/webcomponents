@@ -98,7 +98,7 @@ type StepInputValueStateChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/StepInput.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.13
+ * @since 1.0.0
  * @public
  */
 @customElement({
@@ -244,7 +244,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -253,7 +253,7 @@ class StepInput extends UI5Element implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;

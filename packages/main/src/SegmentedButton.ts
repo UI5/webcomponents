@@ -62,7 +62,7 @@ type SegmentedButtonSelectionChangeEventDetail = {
  * `import "@ui5/webcomponents/dist/SegmentedButton.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @public
  */
 @customElement({
