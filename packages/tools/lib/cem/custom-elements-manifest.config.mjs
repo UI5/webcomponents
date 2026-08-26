@@ -6,6 +6,7 @@ import {
 	getDeprecatedStatus,
 	getExperimentalStatus,
 	getSinceStatus,
+	getSubcomponentStatus,
 	getPrivacyStatus,
 	getReference,
 	validateJSDocComment,
@@ -105,9 +106,10 @@ function processClass(ts, classNode, moduleDoc) {
 	currClass.kind = "class";
 	currClass.deprecated = getDeprecatedStatus(classParsedJsDoc);
 	currClass._ui5experimental = getExperimentalStatus(classParsedJsDoc);
-	currClass._ui5since = getSinceStatus(classParsedJsDoc);
+	currClass._ui5since = getSinceStatus(classParsedJsDoc, moduleDoc.path);
 	currClass._ui5privacy = getPrivacyStatus(classParsedJsDoc);
 	currClass._ui5abstract = hasTag(classParsedJsDoc, "abstract") ? true : undefined;
+	currClass._ui5subcomponents = getSubcomponentStatus(classParsedJsDoc);
 	currClass.description = normalizeDescription(classParsedJsDoc.description || findTag(classParsedJsDoc, "class")?.description);
 	currClass._ui5implements = findAllTags(classParsedJsDoc, "implements")
 		.map(tag => {
@@ -210,7 +212,7 @@ function processClass(ts, classNode, moduleDoc) {
 
 		const memberParsedJsDoc = parse(classNodeMemberJSdoc?.getText())[0];
 
-		member._ui5since = getSinceStatus(memberParsedJsDoc);
+		member._ui5since = getSinceStatus(memberParsedJsDoc, moduleDoc.path);
 		member.deprecated === "true" && (member.deprecated = true)
 
 		// Slots with accessors are treated like fields by the tool, so we have to convert them into slots.
@@ -386,7 +388,7 @@ function processInterface(ts, interfaceNode, moduleDoc) {
 		description: normalizeDescription(interfaceParsedJsDoc?.description),
 		_ui5experimental: getExperimentalStatus(interfaceParsedJsDoc),
 		_ui5privacy: getPrivacyStatus(interfaceParsedJsDoc),
-		_ui5since: getSinceStatus(interfaceParsedJsDoc),
+		_ui5since: getSinceStatus(interfaceParsedJsDoc, moduleDoc.path),
 		deprecated: getDeprecatedStatus(interfaceParsedJsDoc),
 	});
 }
@@ -407,7 +409,7 @@ function processEnum(ts, enumNode, moduleDoc) {
 		description: normalizeDescription(enumJSdoc?.comment),
 		_ui5experimental: getExperimentalStatus(enumParsedJsDoc),
 		_ui5privacy: getPrivacyStatus(enumParsedJsDoc),
-		_ui5since: getSinceStatus(enumParsedJsDoc),
+		_ui5since: getSinceStatus(enumParsedJsDoc, moduleDoc.path),
 		deprecated: getDeprecatedStatus(enumParsedJsDoc) || undefined,
 		members: (enumNode?.members || []).map(member => {
 			const memberJSdoc = member?.jsDoc?.[0];
@@ -422,7 +424,7 @@ function processEnum(ts, enumNode, moduleDoc) {
 				kind: "field",
 				static: true,
 				privacy: getPrivacyStatus(memberParsedJsDoc),
-				_ui5since: getSinceStatus(memberParsedJsDoc),
+				_ui5since: getSinceStatus(memberParsedJsDoc, moduleDoc.path),
 				description: memberJSdoc?.comment,
 				default: member.initializer?.text,
 				deprecated: getDeprecatedStatus(memberParsedJsDoc),
@@ -447,7 +449,7 @@ const processPublicAPI = object => {
 		if (((key === "privacy" && object[key] !== "public") || (key === "_ui5privacy" && object[key] !== "public")) && !object.customElement) {
 			return true;
 		} else if (typeof object[key] === "object") {
-			if (key === "cssParts" || key === "cssStates" || key === "attributes" || key === "_ui5implements") {
+			if (key === "cssParts" || key === "cssStates" || key === "attributes" || key === "_ui5implements" || key === "_ui5subcomponents") {
 				continue;
 			}
 
@@ -589,6 +591,25 @@ export default {
 							}
 						}
 					})
+				});
+
+				const publicCustomElements = new Set(
+					customElementsManifest.modules.flatMap(m => m.declarations)
+						.filter(d => d.customElement && d.tagName && d._ui5privacy === "public")
+						.map(d => d.name)
+				);
+
+				customElementsManifest.modules.forEach(moduleDoc => {
+					moduleDoc.declarations.forEach(declaration => {
+						declaration._ui5subcomponents?.forEach(name => {
+							if (!publicCustomElements.has(name)) {
+								logDocumentationError(
+									moduleDoc.path?.replace(/^dist/, "src").replace(/\.js$/, ".ts"),
+									`@ui5subcomponent '${name}' is not a public custom element with a tag name in this package.`
+								);
+							}
+						});
+					});
 				});
 
 				if (devMode) {
