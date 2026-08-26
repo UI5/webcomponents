@@ -34,7 +34,7 @@ import ProductSwitchItemCss from "./generated/themes/ProductSwitchItem.css.js";
  * @extends UI5Element
  * @public
  * @implements {IProductSwitchItem}
- * @since 1.0.0-rc.5
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-product-switch-item",
@@ -61,7 +61,7 @@ class ProductSwitchItem extends UI5Element implements IProductSwitchItem {
 	/**
 	 * Defines the title of the component.
 	 * @default undefined
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()
@@ -70,7 +70,7 @@ class ProductSwitchItem extends UI5Element implements IProductSwitchItem {
 	/**
 	 * Defines the subtitle of the component.
 	 * @default undefined
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property()

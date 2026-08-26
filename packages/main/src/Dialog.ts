@@ -170,7 +170,7 @@ class Dialog extends Popup {
 	 * When "draggable" is set to true, the native browser "draggable"
 	 * behavior is prevented and only the Dialog custom logic ("draggable by its header") works.
 	 * @default false
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property({ type: Boolean })
@@ -185,7 +185,7 @@ class Dialog extends Popup {
 	 *
 	 * **Note:** Upon resizing, externally defined height and width styling will be ignored.
 	 * @default false
-	 * @since 1.0.0-rc.10
+	 * @since 1.0.0
 	 * @public
 	 */
 	@property({ type: Boolean })
@@ -213,7 +213,7 @@ class Dialog extends Popup {
 	 * accessibility role to "alertdialog", if the accessibleRole property is set to `"Dialog"`.
 	 * @default "None"
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	state: `${ValueState}` = "None";

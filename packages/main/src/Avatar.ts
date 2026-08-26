@@ -57,9 +57,10 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  * `import "@ui5/webcomponents/dist/Avatar.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @implements {IAvatarGroupItem}
  * @public
+ * @ui5subcomponent AvatarBadge
  */
 @customElement({
 	tag: "ui5-avatar",
@@ -120,7 +121,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * In that case, the avatar will always be rendered as interactive.
 	 * @default "Image"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	mode: `${AvatarMode}` = "Image";
@@ -214,7 +215,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * If not provided a default text alternative will be set, if present.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -256,7 +257,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * &nbsp;&nbsp;&nbsp;&nbsp;`visibility: hidden;`<br/>
 	 * `}`
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@slot({ type: HTMLElement, "default": true })
 	image!: DefaultSlot<HTMLElement>;

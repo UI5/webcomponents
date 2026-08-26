@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "generate-local-cdn": "rimraf ./local-cdn && node ./build-scripts/local-cdn.mjs",
-    "generate-api-reference": "rimraf ./docs/components/fiori && rimraf ./docs/components/main && rimraf ./docs/components/compat && rimraf ./docs/components/ai && node ./build-scripts/api-reference-generation/index.mjs",
+    "generate-api-reference": "node ./build-scripts/clean-components.mjs  && node ./build-scripts/api-reference-generation/index.mjs",
     "generate-documentation": "rimraf ./docs/docs && node ./build-scripts/documentation-generation/index.mjs",
     "generate-icons": "rimraf ./icons && rimraf ./icons-tnt && rimraf ./icons-business-suite && node ./build-scripts/icons-generation/index.mjs",
     "generate-illustrations": "rimraf ./illustrations && rimraf ./illustrations-tnt && node ./build-scripts/illustrations-generation/index.mjs",

@@ -77,6 +77,11 @@ type SearchEventDetails = {
  * @experimental
  * @csspart popover - Used to style the suggestions popup
  * @since 2.24.0
+ * @ui5subcomponent SearchItem
+ * @ui5subcomponent SearchItemGroup
+ * @ui5subcomponent SearchItemShowMore
+ * @ui5subcomponent SearchMessageArea
+ * @ui5subcomponent SearchScope
  */
 @customElement({
 	tag: "ui5-search",

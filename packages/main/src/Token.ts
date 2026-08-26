@@ -39,7 +39,7 @@ type TokenDeleteEventDetail = {
  * `import "@ui5/webcomponents/dist/Token.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.9
+ * @since 1.0.0
  * @implements {IToken}
  * @public
  */
@@ -146,7 +146,7 @@ class Token extends UI5Element implements IToken {
 	 * Defines the close icon for the token. If nothing is provided to this slot, the default close icon will be used.
 	 * Accepts `ui5-icon`.
 	 * @public
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 */
 	@slot()
 	closeIcon!: Slot<IIcon>;

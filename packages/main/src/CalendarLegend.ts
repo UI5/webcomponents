@@ -43,6 +43,7 @@ type CalendarLegendItemSelectionChangeEventDetail = {
  * @extends UI5Element
  * @public
  * @since 1.23.0
+ * @ui5subcomponent CalendarLegendItem
  */
 @customElement({
 	tag: "ui5-calendar-legend",

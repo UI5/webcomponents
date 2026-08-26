@@ -24,7 +24,7 @@ import SideNavigationSubItemCss from "./generated/themes/SideNavigationSubItem.c
  * @extends SideNavigationSelectableItemBase
  * @public
  * @abstract
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-side-navigation-sub-item",

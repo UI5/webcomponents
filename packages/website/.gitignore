@@ -6,10 +6,14 @@ src/components/Editor/ui5-autocomplete.json
 
 # Production
 /build
-/docs/components/fiori
-/docs/components/main
-/docs/components/compat
-/docs/components/ai
+/docs/components/fiori/*
+!/docs/components/fiori/samples.json
+/docs/components/main/*
+!/docs/components/main/samples.json
+/docs/components/compat/*
+!/docs/components/compat/samples.json
+/docs/components/ai/*
+!/docs/components/ai/samples.json
 /docs/docs/
 /docs/samples/**/*.mdx
 /local-cdn

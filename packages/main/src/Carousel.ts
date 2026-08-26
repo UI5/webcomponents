@@ -117,7 +117,7 @@ type ItemsInfo = {
  * `import "@ui5/webcomponents/dist/Carousel.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @public
  * @csspart content - Used to style the content of the component
  */
@@ -135,7 +135,7 @@ type ItemsInfo = {
  * based on the `items-per-page` property.
  * @param {Integer} selectedIndex the current selected index
  * @public
- * @since 1.0.0-rc.7
+ * @since 1.0.0
  */
 @event("navigate", {
 	bubbles: true,
@@ -149,7 +149,7 @@ class Carousel extends UI5Element {
 	 * Defines the accessible name of the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.24
+	 * @since 1.24.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -158,7 +158,7 @@ class Carousel extends UI5Element {
 	 * Defines the IDs of the elements that label the input.
 	 * @default undefined
 	 * @public
-	 * @since 1.24
+	 * @since 1.24.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -190,7 +190,7 @@ class Carousel extends UI5Element {
 	 * Defines the visibility of the navigation arrows.
 	 * If set to true the navigation arrows will be hidden.
 	 *
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @default false
 	 * @public
 	 */
@@ -200,7 +200,7 @@ class Carousel extends UI5Element {
 	/**
 	 * Defines the visibility of the page indicator.
 	 * If set to true the page indicator will be hidden.
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @default false
 	 * @public
 	 */
@@ -213,7 +213,7 @@ class Carousel extends UI5Element {
 	 *
 	 * - `Default` - The page indicator will be visualized as dots if there are fewer than 9 pages. If there are more pages, the page indicator will switch to displaying the current page and the total number of pages. (e.g. X of Y)
 	 * - `Numeric` - The page indicator will display the current page and the total number of pages. (e.g. X of Y)
-	 * @since 1.10
+	 * @since 1.10.0
 	 * @default "Default"
 	 * @public
 	 */
@@ -222,7 +222,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Defines the carousel's background design.
-	 * @since 1.14
+	 * @since 1.14.0
 	 * @default "Translucent"
 	 * @public
 	 */
@@ -231,7 +231,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Defines the page indicator background design.
-	 * @since 1.14
+	 * @since 1.14.0
 	 * @default "Solid"
 	 * @public
 	 */
@@ -240,7 +240,7 @@ class Carousel extends UI5Element {
 
 	/**
 	 * Defines the page indicator border design.
-	 * @since 1.14
+	 * @since 1.14.0
 	 * @default "Solid"
 	 * @public
 	 */
@@ -285,7 +285,7 @@ class Carousel extends UI5Element {
 	/**
 	 * If set to true navigation arrows are shown.
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean, noAttribute: true })
 	_visibleNavigationArrows = false;
@@ -301,7 +301,7 @@ class Carousel extends UI5Element {
 	/**
 	 * Defines the current page index, which determines the first visible item.
 	 * @private
-	 * @since 2.16.0-r.c1
+	 * @since 2.16.0
 	 */
 	@property({ type: Number, noAttribute: true })
 	_currentPageIndex: number = 0;
@@ -675,7 +675,7 @@ class Carousel extends UI5Element {
 	/**
 	 * Changes the currently displayed page.
 	 * @param itemIndex The index of the target item
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @public
 	 */
 	navigateTo(itemIndex: number): void {
@@ -725,7 +725,7 @@ class Carousel extends UI5Element {
 	/**
 	 * The indices of the currently visible items of the component.
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 * @default []
 	 */
 	get visibleItemsIndices() : Array<number> {

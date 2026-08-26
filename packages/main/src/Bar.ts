@@ -51,7 +51,7 @@ import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.11
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-bar",

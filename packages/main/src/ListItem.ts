@@ -168,7 +168,7 @@ abstract class ListItem extends ListItemBase {
 	 * Available options are: `"None"` (by default), `"Positive"`, `"Critical"`, `"Information"` and `"Negative"`.
 	 * @default "None"
 	 * @public
-	 * @since 1.24
+	 * @since 1.24.0
 	 */
 	@property()
 	highlight: `${Highlight}` = "None";

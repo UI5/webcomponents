@@ -75,6 +75,12 @@ function parsePxValue(styleSet: CSSStyleDeclaration, propertyName: string): numb
  * @extends UI5Element
  * @public
  * @since 1.17.0
+ * @ui5subcomponent ToolbarButton
+ * @ui5subcomponent ToolbarItem
+ * @ui5subcomponent ToolbarSelect
+ * @ui5subcomponent ToolbarSelectOption
+ * @ui5subcomponent ToolbarSeparator
+ * @ui5subcomponent ToolbarSpacer
  */
 @customElement({
 	tag: "ui5-toolbar",

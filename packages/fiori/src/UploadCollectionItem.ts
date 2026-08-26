@@ -54,7 +54,7 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
  * @extends ListItem
  * @public
  * @slot {Node[]} default - Hold the description of the `ui5-upload-collection-item`. Will be shown below the file name.
- * @since 1.0.0-rc.7
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-upload-collection-item",
@@ -106,7 +106,7 @@ import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 })
 
 /**
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @private
  */
 @event("focus-requested", {

@@ -60,6 +60,7 @@ type AIButtonAccessibilityAttributes = { root?: AIButtonRootAccessibilityAttribu
  * @public
  * @experimental The **@ui5/webcomponents-ai** package (including Button and ButtonState) is under active development and considered experimental. Component APIs are subject to change.
  * Furthermore, the package supports **Horizon** themes only.
+ * @ui5subcomponent ButtonState
  */
 
 @customElement({

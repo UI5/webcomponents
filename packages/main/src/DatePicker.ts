@@ -265,7 +265,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 
 	/**
 	 * Defines whether the component is required.
-	 * @since 1.0.0-rc.9
+	 * @since 1.0.0
 	 * @default false
 	 * @public
 	 */
@@ -317,7 +317,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * the week numbers are not displayed regardless of what is set.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideWeekNumbers = false;
@@ -335,7 +335,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Defines the aria-label attribute for the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -344,7 +344,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 * Receives id(or many ids) of the elements that label the component.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;
@@ -393,7 +393,7 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 	 *
 	 * **Note:** The `valueStateMessage` would be displayed,
 	 * when the component is in `Information`, `Critical` or `Negative` value state.
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 * @public
 	 */
 	@slot()

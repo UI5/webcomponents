@@ -301,7 +301,7 @@ class Tab extends UI5Element implements ITabbable, ITab {
 	 *
 	 * **Note:** If you need a DOM ref to the tab content please use the `getDomRef` method.
 	 * @public
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	getDomRefInStrip(): HTMLElement | undefined {
 		return this._getElementInStrip?.();

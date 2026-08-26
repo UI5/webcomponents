@@ -16,7 +16,7 @@ import ComboBoxItemGroupTemplate from "./ComboBoxItemGroupTemplate.js";
  * @abstract
  * @public
  * @implements {IComboBoxItem}
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-cb-item-group",

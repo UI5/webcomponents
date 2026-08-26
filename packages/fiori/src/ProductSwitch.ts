@@ -61,7 +61,8 @@ interface IProductSwitchItem extends HTMLElement, ITabbable {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.5
+ * @since 1.0.0
+ * @ui5subcomponent ProductSwitchItem
  */
 @customElement({
 	tag: "ui5-product-switch",

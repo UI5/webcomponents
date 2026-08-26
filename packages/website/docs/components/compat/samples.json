@@ -1,0 +1,46 @@
+{
+	"Table": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ActiveRows",
+				"title": "Active Rows"
+			},
+			{
+				"name": "Popin",
+				"title": "Columns Popin"
+			},
+			{
+				"name": "SingleSelection",
+				"title": "Single Selection"
+			},
+			{
+				"name": "MultipleSelection",
+				"title": "Multiple Selection"
+			},
+			{
+				"name": "Grouping",
+				"title": "Grouping"
+			},
+			{
+				"name": "GrowingOnButtonPress",
+				"title": "Growing on Button Press"
+			},
+			{
+				"name": "GrowingOnScroll",
+				"title": "Growing on Scroll"
+			},
+			{
+				"name": "NoData",
+				"title": "No Data"
+			},
+			{
+				"name": "StickyHeader",
+				"title": "Sticky Header"
+			}
+		]
+	}
+}

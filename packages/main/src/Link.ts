@@ -194,7 +194,7 @@ class Link extends UI5Element implements ITabbable {
 	 * Receives id(or many ids) of the elements that label the input
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleNameRef?: string;

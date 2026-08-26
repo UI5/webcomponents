@@ -1,3 +1,30 @@
+import { readFileSync } from "fs";
+import { resolve } from "path";
+
+const { version: currentVersion } = JSON.parse(readFileSync(resolve("./package.json"), { encoding: "utf-8" }));
+
+const newComponentCssClass = "newComponentBadge";
+
+// Returns true if sinceVersion is within the last minorWindow minor releases of currentVersion.
+const isNewComponent = (sinceVersion, minorWindow = 6) => {
+    if (!sinceVersion) return false;
+    const parse = v => {
+        const [major, minor] = v.replace(/-.*$/, "").split(".").map(Number);
+        return { major, minor };
+    };
+    const current = parse(currentVersion);
+    const since = parse(sinceVersion);
+    if (since.major !== current.major) return false;
+    return current.minor - since.minor < minorWindow;
+};
+
+const addNewComponentClassName = (fileContent, declaration) => {
+    if (!isNewComponent(declaration._ui5since)) {
+        return fileContent;
+    }
+    return enhanceFrontMatter(fileContent, "sidebar_class_name", newComponentCssClass);
+};
+
 const parseDeclarationDescription = (description) => {
     if (!description) {
         return "";
@@ -421,6 +448,10 @@ ${experimentalText(declaration)}
 ${parseDeclarationDescription(declaration.description)}`)
     } else {
         fileContent = fileContent.replace("<%COMPONENT_OVERVIEW%>", parseDeclarationDescription(declaration.description))
+    }
+
+    if (!declaration.deprecated) {
+        fileContent = addNewComponentClassName(fileContent, declaration);
     }
 
     const metadataSections = [

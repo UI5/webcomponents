@@ -1,0 +1,414 @@
+{
+	"BarcodeScannerDialog": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			}
+		]
+	},
+	"DynamicPage": {
+		"samples": [
+			{
+				"name": "Basic",
+				"title": "Basic Usage",
+				"isBasic": true
+			}
+		]
+	},
+	"DynamicSideContent": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SideContentPosition",
+				"title": "Side Content Position",
+				"description": "The side content can be placed at the \"Start\" or at the \"End\" via the `sideContentPosition` property."
+			},
+			{
+				"name": "EqualSplit",
+				"title": "Equal Split",
+				"description": "When `equalSplit` property is set, the main and side contents take equal space."
+			}
+		]
+	},
+	"FlexibleColumnLayout": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "LayoutsConfiguration",
+				"title": "Layouts Configuration",
+				"description": "The FlexibleColumnLayout supports customization of the column sizes within the limits of the current layout."
+			}
+		]
+	},
+	"HeroBanner": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ColumnsRatio",
+				"title": "Columns Ratio"
+			},
+			{
+				"name": "HeaderBlockAndActionsPlacement",
+				"title": "Header Block and Actions Placement"
+			},
+			{
+				"name": "BackgroundImage",
+				"title": "Custom Background Image"
+			},
+			{
+				"name": "UseCases",
+				"title": "Different Use Cases"
+			}
+		]
+	},
+	"IllustratedMessage": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "CustomTitle",
+				"title": "Custom Title",
+				"description": "By default the IllustratedMessage displays built-in title, but a custom title can be also set."
+			},
+			{
+				"name": "WithDialog",
+				"title": "IllustratedMessage in Dialog",
+				"description": "In general IllustratedMessage can be displayed in many places and cases - one of them is inside Dialog."
+			}
+		]
+	},
+	"MediaGallery": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Vertical",
+				"title": "Vertical Layout",
+				"description": "The thumbnails and selected item are vertically placed. To enable this layout - set `layout=\"Vertical\"`."
+			},
+			{
+				"name": "Horizontal",
+				"title": "Horizontal Layout",
+				"description": "The thumbnails and selected item are horizontally placed. To enable this layout - set `layout=\"Horizontal\"`. You can also define on which side of the selected item to place the thumbnails."
+			},
+			{
+				"name": "ThumbnailCustom",
+				"title": "Custom Thumbnail",
+				"description": "By default the image passed to the MediaGalleryItem is reused as a thumbnail. You can display another image as thumbnail via the `thumbnail` slot of the `MediaGalleryItem`."
+			},
+			{
+				"name": "WithSelectedItem",
+				"title": "Selected Item",
+				"description": "You can predefine the selected item."
+			},
+			{
+				"name": "WithDisabledItem",
+				"title": "Disabled Item",
+				"description": "The MediaGallery can show disabled items as well."
+			},
+			{
+				"name": "Interactive",
+				"title": "Interactive Display Area",
+				"description": "Setting `interactiveDisplayArea` property makes the display area interactive, e.g. clickable."
+			},
+			{
+				"name": "VideoContent",
+				"title": "Show Video Content"
+			}
+		]
+	},
+	"NavigationLayout": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			}
+		]
+	},
+	"NotificationList": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "GroupItems",
+				"title": "Notification List with Group Items"
+			},
+			{
+				"name": "InShellBar",
+				"title": "Notifications in ShellBar",
+				"description": "The main usage of the Notifications is in the ShellBar. Press the \"notifications\" icon on the right side of the ShellBar to show the Notifications."
+			}
+		]
+	},
+	"Page": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "FixedFooter",
+				"title": "Fixed Footer"
+			}
+		]
+	},
+	"ProductSwitch": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "WithShellBar",
+				"title": "ProductSwitch in ShellBar",
+				"description": "Press the \"grid\" on the right-most part of the ShellBar to show the ProductSwitch."
+			},
+			{
+				"name": "WithImageSlot",
+				"title": "ProductSwitchItem with \"image\" slot"
+			}
+		]
+	},
+	"Search": {
+		"samples": [
+			{
+				"name": "Basic",
+				"title": "Basic Sample",
+				"description": "A Search component with enabled scope and items and filtering by scope.",
+				"isBasic": true
+			},
+			{
+				"name": "Advanced",
+				"title": "Filtering",
+				"description": "The examples show the search message area, the search action, filtering per user input, typeahead and highlighting suggestions per user input."
+			},
+			{
+				"name": "AdvancedFilter",
+				"title": "Advanced Filtering Button",
+				"description": "This example shows how to use a custom advanced filtering button via the `filterButton` slot."
+			},
+			{
+				"name": "Byline",
+				"title": "Byline items",
+				"description": "The example shows how to display byline items with an image and description."
+			},
+			{
+				"name": "ShowMore",
+				"title": "Show More Item",
+				"description": "This example shows how to use a Show More Item."
+			},
+			{
+				"name": "Actions",
+				"title": "Actions",
+				"description": "This example shows how to use interactive elements in search items."
+			},
+			{
+				"name": "Loading",
+				"title": "Loading State",
+				"description": "This example shows the loading indicator during async search operations."
+			}
+		]
+	},
+	"ShellBar": {
+		"samples": [
+			{
+				"name": "Basic",
+				"title": "Basic Sample",
+				"description": "The ShellBar includes Back button, Logo, Title and Profile image.",
+				"isBasic": true
+			},
+			{
+				"name": "Advanced",
+				"title": "All Features",
+				"description": "A comprehensive ShellBar demonstrating all available features including notifications, search, content items, and profile."
+			},
+			{
+				"name": "EmbeddedBackNavigation",
+				"title": "Embedded Back Navigation",
+				"description": "ShellBar with embedded back navigation button in the start area."
+			},
+			{
+				"name": "TrialExample",
+				"title": "Trial Example",
+				"description": "ShellBar configured for trial environments with trial tags and remaining days indicator."
+			},
+			{
+				"name": "MultipleProductiveInstances",
+				"title": "Multiple Productive Instances",
+				"description": "ShellBar setup for multiple productive system instances with region indicators."
+			},
+			{
+				"name": "MultipleNonProductiveInstances",
+				"title": "Multiple Non-Productive Instances",
+				"description": "ShellBar setup for multiple non-productive system instances with system and region tags."
+			},
+			{
+				"name": "Overflow",
+				"title": "Application-Level Overflow",
+				"description": "This sample demonstrates how applications can implement custom overflow handling for content items."
+			}
+		]
+	},
+	"SideNavigation": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "UnselectableParentItems",
+				"title": "Unselectable Parent Items",
+				"description": "When a parent item is selected, it will expand or collapse the list of child items, instead of the parent being selected itself."
+			},
+			{
+				"name": "QuickAction",
+				"title": "Quick Action",
+				"description": "Quick action items allow for providing access to frequent functionality."
+			},
+			{
+				"name": "OverlayMode",
+				"title": "Overlay Mode",
+				"description": "SideNavigation is enabled to be used inside a responsive popover. This example shows how to achieve overlay mode with correct design and interaction."
+			},
+			{
+				"name": "CustomWidth",
+				"title": "Defining Custom Width",
+				"description": "The width of the side navigation panel can be customized using CSS. The panel must be at least 16 rem wide to maintain readability and layout stability."
+			},
+			{
+				"name": "Tags",
+				"title": "Indication Tags",
+				"description": "Navigation items can display indication tags to highlight status or phases such as \"New\", \"Beta\", or \"Deprecated\"."
+			}
+		]
+	},
+	"Timeline": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Horizontal",
+				"title": "Horizontal layout"
+			},
+			{
+				"name": "WithState",
+				"title": "Timeline with State"
+			},
+			{
+				"name": "InCard",
+				"title": "Timeline in Card"
+			},
+			{
+				"name": "WithGroups",
+				"title": "Timeline with Groups"
+			},
+			{
+				"name": "WithGrowing",
+				"title": "Timeline with Growing"
+			},
+			{
+				"name": "WithHeader",
+				"title": "Timeline with Header and Info Bar"
+			},
+			{
+				"name": "WithFilter",
+				"title": "Timeline with Filter"
+			},
+			{
+				"name": "StickyInPage",
+				"title": "Sticky in Page"
+			}
+		]
+	},
+	"UploadCollection": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "RenamingFiles",
+				"title": "Renaming Files"
+			},
+			{
+				"name": "VariousUploadStates",
+				"title": "Upload States"
+			},
+			{
+				"name": "DragAndDrop",
+				"title": "Drag and Drop"
+			}
+		]
+	},
+	"UserMenu": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Advanced",
+				"title": "Advanced"
+			}
+		]
+	},
+	"UserSettingsDialog": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SaveMode",
+				"title": "Save Mode",
+				"description": "By default the dialog shows a single **Close** button and follows an implicit-save flow. Setting `saveMode` replaces the footer with **Save** and **Cancel** buttons."
+			}
+		]
+	},
+	"ViewSettingsDialog": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "CustomTabs",
+				"title": "Custom Tabs",
+				"description": "The ViewSettingsDialog supports custom tabs alongside the built-in Sort, Filter, and Group tabs."
+			}
+		]
+	},
+	"Wizard": {
+		"samples": [
+			{
+				"name": "Basic",
+				"title": "Basic Sample",
+				"description": "By default the navigation to another step happens with scrolling or pressing the given step in the Wizard header.",
+				"isBasic": true
+			},
+			{
+				"name": "PageMode",
+				"title": "Page Mode",
+				"description": "Instead of scrolling each step is shown as a separate page."
+			}
+		]
+	}
+}

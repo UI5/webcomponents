@@ -19,7 +19,7 @@ import {
  * The base class of the `NotificationListItem` and `NotificationListGroupItem`.
  * @constructor
  * @extends ListItemBase
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  * @public
  */
 @customElement({})
@@ -48,7 +48,7 @@ class NotificationListItemBase extends ListItemBase {
 	 * Defines if a busy indicator would be displayed over the item.
 	 * @default false
 	 * @public
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	loading = false;

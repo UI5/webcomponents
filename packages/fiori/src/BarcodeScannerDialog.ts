@@ -73,7 +73,7 @@ type BarcodeScannerDialogScanErrorEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.15
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-barcode-scanner-dialog",

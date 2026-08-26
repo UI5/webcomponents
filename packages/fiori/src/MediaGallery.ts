@@ -84,6 +84,7 @@ const COLUMNS_COUNT: Record<string, number> = {
  * @extends UI5Element
  * @public
  * @since 1.1.0
+ * @ui5subcomponent MediaGalleryItem
  */
 @customElement({
 	tag: "ui5-media-gallery",

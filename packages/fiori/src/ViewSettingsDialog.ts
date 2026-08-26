@@ -119,9 +119,14 @@ type ViewSettingsDialogInternalMode = `${ViewSettingsDialogMode}` | ViewSettings
  * `import "@ui5/webcomponents-fiori/dist/ViewSettingsDialog.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.16
+ * @since 1.0.0
  * @public
  * @csspart header - Used to style the header.
+ * @ui5subcomponent FilterItem
+ * @ui5subcomponent FilterItemOption
+ * @ui5subcomponent GroupItem
+ * @ui5subcomponent SortItem
+ * @ui5subcomponent ViewSettingsDialogCustomTab
  */
 @customElement({
 	tag: "ui5-view-settings-dialog",
@@ -292,7 +297,7 @@ class ViewSettingsDialog extends UI5Element {
 
 	/**
 	 * Defnies the current mode of the component.
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 * @private
 	 */
 	@property({ noAttribute: true })
@@ -300,7 +305,7 @@ class ViewSettingsDialog extends UI5Element {
 
 	/**
 	 * When in Filter By mode, defines whether we need to show the list of keys, or the list with values.
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 * @private
 	 */
 	@property({ type: Boolean, noAttribute: true })

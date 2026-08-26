@@ -72,7 +72,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
  * @constructor
  * @extends UI5Element
  * @public
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @slot {Array<Node>} default
  * Defines the text of the component.
  *

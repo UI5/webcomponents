@@ -163,7 +163,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * **Note:** For calendars other than Gregorian,
 	 * the week numbers are not displayed regardless of what is set.
 	 * @default false
-	 * @since 1.0.0-rc.8
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	hideWeekNumbers = false;

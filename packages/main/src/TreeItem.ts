@@ -24,7 +24,7 @@ import treeItemCss from "./generated/themes/TreeItem.css.js";
  * @constructor
  * @extends TreeItemBase
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	renderer: jsxRenderer,
@@ -45,7 +45,7 @@ class TreeItem extends TreeItemBase {
 	 * Defines the `additionalText`, displayed in the end of the tree item.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	additionalText?: string;

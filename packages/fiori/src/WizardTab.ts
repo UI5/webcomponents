@@ -66,7 +66,7 @@ class WizardTab extends UI5Element implements ITabbable {
 	 * Defines the `titleText` of the step.
 	 * @default undefined
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	titleText?: string
@@ -75,7 +75,7 @@ class WizardTab extends UI5Element implements ITabbable {
 	 * Defines the `subtitleText` of the step.
 	 * @default undefined
 	 * @private
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@property()
 	subtitleText?: string
