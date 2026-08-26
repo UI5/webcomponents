@@ -1,0 +1,1571 @@
+{
+	"Avatar": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Shapes",
+				"title": "Shapes",
+				"description": "The Avatar comes in two shapes (Square and Circle)."
+			},
+			{
+				"name": "Sizes",
+				"title": "Sizes",
+				"description": "The Avatar comes in several sizes (S to XL)."
+			},
+			{
+				"name": "Interactive",
+				"title": "Interactive Mode",
+				"description": "The Avatar can be made interactive via `mode=\"Interactive\"` or the `interactive` property."
+			},
+			{
+				"name": "Decorative",
+				"title": "Decorative Mode",
+				"description": "The Avatar can be set to decorative mode with `mode=\"Decorative\"`, making it purely visual without semantic content."
+			},
+			{
+				"name": "ColorSchemes",
+				"title": "Color Schemes",
+				"description": "The Avatar can be displayed in multiple color schemes."
+			},
+			{
+				"name": "WithIcon",
+				"title": "With Icon",
+				"description": "The Avatar can show icons."
+			},
+			{
+				"name": "WithImage",
+				"title": "With Image",
+				"description": "The Avatar can show images."
+			},
+			{
+				"name": "WithBadge",
+				"title": "With Badge",
+				"description": "The Avatar supports visual affordance through badges using the `ui5-avatar-badge` component."
+			},
+			{
+				"name": "Variants",
+				"title": "All Variants",
+				"description": "A comprehensive overview of all Avatar variants with their recommended use cases and accessibility annotations."
+			},
+			{
+				"name": "Styles",
+				"title": "Custom Styling",
+				"description": "The Avatar allows customization with pure CSS on tag level."
+			}
+		]
+	},
+	"AvatarGroup": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "TypesAndSizes",
+				"title": "Types And Sizes"
+			},
+			{
+				"name": "IndividualWithPopover",
+				"title": "Individual"
+			},
+			{
+				"name": "GroupWithPopover",
+				"title": "Grouping"
+			}
+		]
+	},
+	"Bar": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "AccessibleRole",
+				"title": "Bar with accessible role"
+			}
+		]
+	},
+	"Breadcrumbs": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "BreadcrumbsOverflow",
+				"title": "Overflow",
+				"description": "When the links don't fit the available space, they overflow."
+			},
+			{
+				"name": "BreadcrumbsStyles",
+				"title": "Separator Styles",
+				"description": "Separator between the links can be easily changed."
+			},
+			{
+				"name": "NoCurrentPage",
+				"title": "Current Page Appearance",
+				"description": "The Breadcrumbs supports two visual appearances for the last BreadcrumbsItem - as \"current page\" and as a regular link."
+			},
+			{
+				"name": "ClickEvent",
+				"title": "Item Click Event",
+				"description": "Each `ui5-breadcrumbs-item` fires its own `click` event, allowing framework consumers to attach handlers directly on the item."
+			}
+		]
+	},
+	"BusyIndicator": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Sizes",
+				"title": "Sizes",
+				"description": "The BusyIndicator comes in several sizes - S, M and L."
+			},
+			{
+				"name": "TextPlacement",
+				"title": "Text Placement with display text",
+				"description": "The BusyIndicator can display text either above (via `text-placement=\"Top\"`) or below the animated dots (by default)."
+			},
+			{
+				"name": "WithComponent",
+				"title": "Busy component",
+				"description": "The BusyIndicator can be placed over another web component."
+			}
+		]
+	},
+	"Button": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design",
+				"description": "The Button supports several designs to indicate the priority or the nature of the action."
+			},
+			{
+				"name": "IconOnly",
+				"title": "Icon Only"
+			},
+			{
+				"name": "TextAndIcon",
+				"title": "Text and Icon"
+			},
+			{
+				"name": "EndIcon",
+				"title": "Icon at the End",
+				"description": "Button allows adding of second Icon at the end."
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "To some extent, the Button allows customization with pure CSS as shown in the sample."
+			},
+			{
+				"name": "MenuButton",
+				"title": "Menu Button",
+				"description": "Achieve Menu Button functionality."
+			},
+			{
+				"name": "ButtonBadge",
+				"title": "Button with badge",
+				"description": "Add a badge to the button."
+			},
+			{
+				"name": "Loading",
+				"title": "Button with Loading"
+			}
+		]
+	},
+	"Calendar": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SelectionModes",
+				"title": "Selection Modes",
+				"description": "The Calendar supports **Single**, **Multiple** and **Range** selection."
+			},
+			{
+				"name": "Bounds",
+				"title": "Min and Max Dates",
+				"description": "Define min and max date boundaries to constrain user choice."
+			},
+			{
+				"name": "CalendarTypes",
+				"title": "Calendar Types",
+				"description": "Several calendars are supported: Gregorian, Islamic, Persian and Japanese."
+			},
+			{
+				"name": "CalendarWithLegend",
+				"title": "Calendar with Legend",
+				"description": "You can use the CalendarLegend component in addition to the Calendar to highlight specific days."
+			},
+			{
+				"name": "CalendarInDifferentTimezone",
+				"title": "Timezones",
+				"description": "You can set to the configuration the preferred time zone, such as: Asia/Tokyo, Pacific/Apia, Asia/Kolkata, Europe/Sofia and etc."
+			},
+			{
+				"name": "CalendarWeekNumbering",
+				"title": "CalendarWeekNumbering",
+				"description": "You can use the component, the preferred week numbering and first day of week."
+			},
+			{
+				"name": "CalendarWithDisabledDates",
+				"title": "Calendar with Disabled Dates",
+				"description": "Define disabled dates."
+			}
+		]
+	},
+	"CalendarLegend": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ItemTypes",
+				"title": "CalendarLegendItem Types"
+			},
+			{
+				"name": "HideToday",
+				"title": "Hide CalendarLegendItems",
+				"description": "By default, the CalendarLegend shows **Today**, **SelectedDay**, **WorkingDay** and **NonWorkingDay** items. However, you can hide them as shown in the sample."
+			}
+		]
+	},
+	"Card": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "WithList",
+				"title": "List Card"
+			},
+			{
+				"name": "WithTable",
+				"title": "Table Card"
+			},
+			{
+				"name": "WithTimeline",
+				"title": "Timeline Card"
+			},
+			{
+				"name": "MoreCards",
+				"title": "Object Card"
+			}
+		]
+	},
+	"Carousel": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Cyclic",
+				"title": "Cyclic",
+				"description": "When the last page is reached, pressing \"Forward\" will navigate to the start."
+			},
+			{
+				"name": "ArrowsPlacement",
+				"title": "Arrows Placement",
+				"description": "When `arrowsPlacement` is set to \"Content\", the arrows are placed on the sides of the current page. When set to \"Navigation\", the arrows are placed on the sides of the page indicator."
+			},
+			{
+				"name": "PageIndicatorType",
+				"title": "Page Indicator",
+				"description": "When `pageIndicatorType` is set to \"Default\", the page indicator appear as dots. When set to \"Numeric\" - as numbers."
+			},
+			{
+				"name": "MultipleItemsPerPage",
+				"title": "Multiple Items per Page",
+				"description": "The `items-per-page` property defines the number of items per page for given breakpoint."
+			},
+			{
+				"name": "AccessibleName",
+				"title": "Accessible name",
+				"description": "Use the `accessibleName` or the `accessibleNameRef` properties to label the Carousel and improve its accessibility."
+			},
+			{
+				"name": "CardsWithHidden",
+				"title": "Carousel with Hidden Items",
+				"description": "A Carousel containing cards where some are hidden using the `hidden` attribute. Hidden items will not be included in the carousel navigation."
+			}
+		]
+	},
+	"CheckBox": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Indeterminate",
+				"title": "Indeterminate",
+				"description": "The CheckBox can also display an indeterminate state. It's useful to indicate that not all tasks/items are done/checked."
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "CheckBox supports several semantic value states, readonly, disabled, etc."
+			},
+			{
+				"name": "TextWrapping",
+				"title": "Text Truncation and Wrapping",
+				"description": "The CheckBox text wraps by default. To make it truncate - set `wrapping-type=\"None\"`."
+			},
+			{
+				"name": "Group",
+				"title": "Group of Checkboxes in a Form",
+				"description": "Checkboxes can be logically grouped using the same `name` attribute to create a multi-selection form field."
+			}
+		]
+	},
+	"ColorPalette": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			}
+		]
+	},
+	"ColorPalettePopover": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "DefaultColor",
+				"title": "Show Default Color"
+			},
+			{
+				"name": "MoreColors",
+				"title": "Show More & Recent Colors",
+				"description": "Recent colors shows the last five colors that have been selected. More colors opens a dialog to manually choose a color from a ColorPicker."
+			}
+		]
+	},
+	"ColorPicker": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Simplified",
+				"title": "Simplified Picker"
+			}
+		]
+	},
+	"ComboBox": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "The ComboBox can show a clear icon, visible when there is a value typed by the user."
+			},
+			{
+				"name": "Filters",
+				"title": "Filters",
+				"description": "You can choose a Filter that the items will be matched against on user input (StartsWith, Contains, etc.)"
+			},
+			{
+				"name": "TwoColumnsLayout",
+				"title": "Items with additional text",
+				"description": "The ComboBox items can show additional text."
+			},
+			{
+				"name": "Grouping",
+				"title": "Items Grouping",
+				"description": "Grouping of items can be implemented via the `ui5-cb-group-item` web component."
+			},
+			{
+				"name": "SuggestionsWrapping",
+				"title": "Items Text Wrapping",
+				"description": "The sample demonstrates how the text of the items wrap when too long."
+			},
+			{
+				"name": "SelectedValue",
+				"title": "Selected Value",
+				"description": "Use the `value` property on items and `selected-value` on the ComboBox to decouple the display text from the underlying selection value."
+			},
+			{
+				"name": "SameTextDifferentValues",
+				"title": "Items with Same Text but Different Values",
+				"description": "When you have multiple items with identical display text, use the `value` property to uniquely identify each item."
+			},
+			{
+				"name": "CustomItems",
+				"title": "Custom Items with Rich Content",
+				"description": "Use `ui5-cb-item-custom` to create custom item templates with complex layouts, multiple icons, images, or any HTML content."
+			}
+		]
+	},
+	"DatePicker": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "State",
+				"title": "States"
+			},
+			{
+				"name": "MinMax",
+				"title": "Min and Max Dates",
+				"description": "Define min and max date boundaries to constrain user choice."
+			},
+			{
+				"name": "CalendarTypes",
+				"title": "Calendar Types",
+				"description": "You can set the preferred calendar, such as: Gregorian, Islamic, Japanese and Persian."
+			},
+			{
+				"name": "DatePickerInDifferentTimezone",
+				"title": "Timezones",
+				"description": "You can set to the configuration the preferred time zone, such as: Asia/Tokyo, Pacific/Apia, Asia/Kolkata, Europe/Sofia and etc."
+			},
+			{
+				"name": "CalendarWeekNumbering",
+				"title": "CalendarWeekNumbering",
+				"description": "You can use the component, the preferred week numbering and first day of week."
+			},
+			{
+				"name": "CustomFormatting",
+				"title": "CustomFormatting",
+				"description": "You can have custom formatting for the display value and the value property. Supported format options are pattern-based on Unicode LDML Date Format notation."
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "This sample demonstrates the component with the `show-clear-icon` property enabled, which displays a clear button to reset the selected date."
+			}
+		]
+	},
+	"DateRangePicker": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "DateFormat",
+				"title": "Date Formats"
+			},
+			{
+				"name": "MinMax",
+				"title": "Min and Max Dates",
+				"description": "Define min and max date boundaries to constrain user choice."
+			},
+			{
+				"name": "CustomFormatting",
+				"title": "CustomFormatting",
+				"description": "You can have custom formatting for the display value and the value property."
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "This sample demonstrates the component with the `show-clear-icon` property enabled."
+			},
+			{
+				"name": "ShowTwoMonths",
+				"title": "Show Two Months",
+				"description": "This sample demonstrates the component with the `show-two-months` property enabled, which displays two consecutive months."
+			}
+		]
+	},
+	"DateTimePicker": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "MinMax",
+				"title": "Min and Max Dates",
+				"description": "Define min and max date-time boundaries to constrain user choice."
+			},
+			{
+				"name": "DateTimePickerInDifferentTimezone",
+				"title": "Timezones",
+				"description": "You can set to the configuration the preferred time zone."
+			},
+			{
+				"name": "CustomFormatting",
+				"title": "CustomFormatting",
+				"description": "You can have custom formatting for the display value and the value property."
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "This sample demonstrates the component with the `show-clear-icon` property enabled."
+			}
+		]
+	},
+	"Dialog": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "DraggableAndResizable",
+				"title": "Draggable and Resizable"
+			},
+			{
+				"name": "Fullscreen",
+				"title": "Fullscreen",
+				"description": "Users can toggle between standard and full screen size. The full screen button is positioned top-right in the dialog's title bar."
+			},
+			{
+				"name": "BarInDialog",
+				"title": "Usage of Bar as header/footer",
+				"description": "The Bar component can be used as header and/or footer of the Dialog."
+			},
+			{
+				"name": "WithState",
+				"title": "States",
+				"description": "The Dialog supports \"Positive\", \"Critical\", \"Negative\" and \"None\" states via the \"state\" property."
+			}
+		]
+	},
+	"DynamicDateRange": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "DynamicDateRangeValueSample",
+				"title": "DynamicDateRangeValueSample"
+			}
+		]
+	},
+	"ExpandableText": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "OverflowModePopover",
+				"title": "Overflow Mode Popover"
+			}
+		]
+	},
+	"FileUploader": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "MultipleFiles",
+				"title": "Upload Multiple Files",
+				"description": "By default, only one file can be selected. To allow multiple files to be uploaded - set the `multiple` property."
+			},
+			{
+				"name": "FilesFilter",
+				"title": "Files Filter",
+				"description": "You can define the files allowed for uploading via the `accept` property."
+			},
+			{
+				"name": "FileSizeLimit",
+				"title": "File Size Upload Limit",
+				"description": "You can define the maximum file size the uploader will accept."
+			},
+			{
+				"name": "WithoutInput",
+				"title": "Button Only",
+				"description": "You can hide the input part via the `hide-input` property."
+			}
+		]
+	},
+	"Form": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Layout",
+				"title": "Layout",
+				"description": "Use the Form `layout` property to define the number of columns to distribute the form content by breakpoint."
+			},
+			{
+				"name": "Groups",
+				"title": "Groups",
+				"description": "You can define groups via the `ui5-form-group` web component."
+			},
+			{
+				"name": "LabelSpan",
+				"title": "Label Span",
+				"description": "Use the `labelSpan` property to define the width proportion of the labels and fields of a FormItem by breakpoint."
+			},
+			{
+				"name": "EmptySpan",
+				"title": "Empty Span",
+				"description": "Use the `emptySpan` property to define the empty space at the FormItem's end."
+			},
+			{
+				"name": "LabelsOnTop",
+				"title": "Labels On Top",
+				"description": "Force labels always on top with `Form#labelSpan=S12 M12 L12 XL12`."
+			},
+			{
+				"name": "Edit",
+				"title": "Edit",
+				"description": "The Form has no built-in functionality to transform texts into inputs to implement editable forms. This is delegated to the consumers as shown in the sample."
+			},
+			{
+				"name": "GroupColumnSpan",
+				"title": "Column Span",
+				"description": "The `FormGroup#columnSpan` and `FormItem#columnSpan` properties define how many columns the form group or item should expand to."
+			},
+			{
+				"name": "HeaderTextWrapping",
+				"title": "Header Text Wrapping",
+				"description": "The Form header text **is wrapping** when it doesn't fit the available space."
+			},
+			{
+				"name": "CustomHeader",
+				"title": "Custom Header",
+				"description": "The Form provides a `header` slot that allows the usage of custom form header."
+			},
+			{
+				"name": "FreeStyleForm",
+				"title": "Freestyle Form"
+			}
+		]
+	},
+	"Icon": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design",
+				"description": "The Icon supports multiple designs."
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "The Icon allows style customization via pure CSS, applied on the tag."
+			},
+			{
+				"name": "Interactive",
+				"title": "Interactive",
+				"description": "The Icon can be interactive - clickable and focusable."
+			},
+			{
+				"name": "TntIcons",
+				"title": "SAP Fiori Tools Icons",
+				"description": "The SAP Fiori Tools Icons are available in the `@ui5/webcomponents-icons-tnt` package."
+			},
+			{
+				"name": "BSIcons",
+				"title": "SAP Business Suite Icons",
+				"description": "The SAP Business Suite Icons are available in the `@ui5/webcomponents-icons-business-suite` package."
+			}
+		]
+	},
+	"Input": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "The Input can show a clear icon, visible when there is a value typed by the user."
+			},
+			{
+				"name": "InteractiveIcons",
+				"title": "Interactive Icons",
+				"description": "The Input can display interactive icons that users can click. Use the `ui5-input-icon` component for interactive icons with hover, focus, and active states."
+			},
+			{
+				"name": "Suggestions",
+				"title": "Input with Suggestions",
+				"description": "The Input can show a dropdown with suggestions upon user input - see the `showSuggestions` property for more information."
+			},
+			{
+				"name": "SuggestionsWrapping",
+				"title": "Suggestions Wrapping",
+				"description": "The sample demonstrates how the text of the suggestions wrap when too long."
+			},
+			{
+				"name": "DynamicSuggestions",
+				"title": "Dynamic Suggestion Control",
+				"description": "This sample demonstrates how applications can control when suggestions appear by dynamically toggling the `showSuggestions` property."
+			},
+			{
+				"name": "Label",
+				"title": "Input and Label"
+			},
+			{
+				"name": "ValueStateMessage",
+				"title": "Value State Message"
+			},
+			{
+				"name": "ValueHelpDialog",
+				"title": "Value-help Dialog"
+			},
+			{
+				"name": "CustomSuggestions",
+				"title": "Custom Suggestions"
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "To some extent, the Input allows customization with pure CSS as shown in the sample."
+			},
+			{
+				"name": "BuiltInFiltering",
+				"title": "Built-in Filtering",
+				"description": "This input has built-in filtering of type Contains."
+			}
+		]
+	},
+	"Label": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "TextWrapping",
+				"title": "Text Truncation and Wrapping",
+				"description": "The `ui5-label` wraps by default. To truncate it - set `wrapping-type=\"None\"`."
+			},
+			{
+				"name": "UsageWithInputs",
+				"title": "Label with Input",
+				"description": "The labels `for`, `required` and `showColon` properties can be used to reference inputs."
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "The labels can be customized with pure CSS, applied on the tag."
+			}
+		]
+	},
+	"Link": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design",
+				"description": "The Link supports **Default**, **Subtle** and **Emphasized** designs."
+			},
+			{
+				"name": "TextWrapping",
+				"title": "Text Truncation and Wrapping",
+				"description": "The `ui5-link` wraps by default. To truncate it - set `wrapping-type=\"None\"`."
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "The links can be customized with pure CSS, applied on the tag."
+			},
+			{
+				"name": "WithIcons",
+				"title": "Icons",
+				"description": "You can add icons to the Link."
+			}
+		]
+	},
+	"List": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Growing",
+				"title": "Growing On Scroll",
+				"description": "The List fires a `load-more` event when the user scrolls to the bottom. The event can be used for loading more data (items) as shown in the sample."
+			},
+			{
+				"name": "GrowingOnButtonPress",
+				"title": "Growing On Button Press",
+				"description": "The List fires a `load-more` event when the user clicks to the \"Load More\" button at the bottom."
+			},
+			{
+				"name": "Modes",
+				"title": "Selection Modes",
+				"description": "The List supports several selection modes: **None**, **Single**, **SingleStart**, **SingleEnd**, **SingleAuto**, **Multiple** and **Delete**."
+			},
+			{
+				"name": "NoData",
+				"title": "No data",
+				"description": "You can show a text when there aren't items (data) via the `noDataText` property."
+			},
+			{
+				"name": "GroupHeaders",
+				"title": "Grouping",
+				"description": "The `ListItemGroup` can be used to start a group section and implement grouping."
+			},
+			{
+				"name": "GroupHeaderStyling",
+				"title": "Styling Group Headers",
+				"description": "You can customize the appearance of group headers using CSS Shadow Parts."
+			},
+			{
+				"name": "SeparationTypes",
+				"title": "Separators",
+				"description": "The `separators` options (**All**, **Inner**, **None**) allows the outer lines (Inner) or all the lines (None) to be hidden."
+			},
+			{
+				"name": "DragAndDrop",
+				"title": "Drag And Drop",
+				"description": "The list items are draggable through the use of the `movable` property on `ListItem`."
+			},
+			{
+				"name": "MultipleDrag",
+				"title": "Multiple Item Drag",
+				"description": "You can select and drag multiple items at once when using `selection-mode=\"Multiple\"`."
+			},
+			{
+				"name": "WrappingBehavior",
+				"title": "Wrapping Behavior",
+				"description": "The standard list item and the list item group support text wrapping through the `wrappingType` property."
+			},
+			{
+				"name": "StickyHeader",
+				"title": "Sticky Header",
+				"description": "Use the `stickyHeader` property to keep the header visible during scrolling."
+			},
+			{
+				"name": "AccessibleRole",
+				"title": "Accessible Role",
+				"description": "Use the `accessibleRole` property on `ui5-list` to set the ARIA role of the list element."
+			},
+			{
+				"name": "KeyboardHandling",
+				"title": "Keyboard Handling",
+				"description": "The `ui5-list` implements the SAP Fiori **Intentional Edit Pattern**. Interactive elements inside a list item are not reached by Tab from outside the list."
+			}
+		]
+	},
+	"Menu": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SubMenu",
+				"title": "Sub-menu",
+				"description": "You can nest menu items to create sub menus."
+			},
+			{
+				"name": "AditionalText",
+				"title": "Menu Item with Additional Text"
+			},
+			{
+				"name": "MenuEndContent",
+				"title": "Menu Item with End Content"
+			},
+			{
+				"name": "DynamicallyAddedItems",
+				"title": "Handling focus behaviour when adding items dynamically"
+			},
+			{
+				"name": "ItemGroups",
+				"title": "Item Groups with Checkable Menu Items"
+			}
+		]
+	},
+	"MessageStrip": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design"
+			},
+			{
+				"name": "HideIconAndButton",
+				"title": "Hide Icon and Close Button",
+				"description": "Use `hideIcon` and `hideCloseButton` properties to hide some parts of the MessageStrip."
+			},
+			{
+				"name": "Custom",
+				"title": "Custom Icon"
+			},
+			{
+				"name": "CustomColors",
+				"title": "Custom visualisation"
+			}
+		]
+	},
+	"MultiComboBox": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SelectedValues",
+				"title": "Programmatic Selection with selectedValues",
+				"description": "Use the `selectedValues` property to pre-select items by their `value` attribute."
+			},
+			{
+				"name": "SelectedValuesDynamic",
+				"title": "Dynamic Selection Manipulation",
+				"description": "The `selectedValues` property can be updated programmatically to change the selection."
+			},
+			{
+				"name": "ClearIcon",
+				"title": "Clear Icon",
+				"description": "The MultiComboBox can show a clear icon, visible when there is a value typed by the user."
+			},
+			{
+				"name": "MultiComboBoxCustomValue",
+				"title": "Custom values",
+				"description": "Use `noValidation` to allow typing values that are not present as items."
+			},
+			{
+				"name": "MultiComboBoxSelectAll",
+				"title": "Select All Items",
+				"description": "When `showSelectAll` is enabled, a \"Select All\" checkbox is displayed to allow users to select all items at once."
+			},
+			{
+				"name": "MultiComboBoxGrouping",
+				"title": "Items Grouping",
+				"description": "The `ui5-mcb-item-group` can be used to implement grouping."
+			},
+			{
+				"name": "SuggestionsWrapping",
+				"title": "Items Text Wrapping",
+				"description": "The sample demonstrates how the text of the items wrap when too long."
+			},
+			{
+				"name": "CustomItems",
+				"title": "Custom Items with Rich Content",
+				"description": "Use `ui5-mcb-item-custom` to create custom item templates with complex layouts, multiple icons, images, or any HTML content."
+			}
+		]
+	},
+	"MultiInput": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "TokenCreation",
+				"title": "Add/Remove Tokens"
+			},
+			{
+				"name": "SuggestionsWrapping",
+				"title": "Items Text Wrapping",
+				"description": "The sample demonstrates how the text of the items wrap when too long."
+			}
+		]
+	},
+	"Panel": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Fixed",
+				"title": "Fixed Panel",
+				"description": "The fixed panel can't be collapsed when expanded, and can't be expanded if collapsed."
+			},
+			{
+				"name": "StickyHeader",
+				"title": "Sticky Header",
+				"description": "The header remains visible upon scrolling the Panel's content."
+			},
+			{
+				"name": "CustomHeader",
+				"title": "Custom Header",
+				"description": "You can replace the built-in header using the `header` slot."
+			}
+		]
+	},
+	"Popover": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Placement",
+				"title": "Placement",
+				"description": "You can influence the placement of the popup. Note: if there is not enough space for the popup on the defined side, it will open on the side with enough space."
+			},
+			{
+				"name": "Resizable",
+				"title": "Resizable",
+				"description": "The Resizable sample demonstrates how the Popover component can be resized by dragging its edges."
+			}
+		]
+	},
+	"ProgressIndicator": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "DisplayValue",
+				"title": "Display Value",
+				"description": "Use the `displayValue` property to define an alternative of the value, that is actually displayed."
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "ProgressIndicator supports several semantic value states."
+			}
+		]
+	},
+	"RadioButton": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "The RadioButton supports several semantic value states, readonly, disabled, etc."
+			},
+			{
+				"name": "TextWrapping",
+				"title": "Text Truncation and Wrapping",
+				"description": "The RadioButton text wraps by default. To make it truncate - set `wrapping-type=\"None\"`."
+			}
+		]
+	},
+	"RangeSlider": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ShowTickmarks",
+				"title": "Show Tickmarks",
+				"description": "Tickmarks, marking the step can be displayed on the Range Slider. In addition, labels with the given step can be displayed."
+			},
+			{
+				"name": "ShowTooltip",
+				"title": "Show Tooltips",
+				"description": "Tooltip with the current value can be displayed upon handles hover."
+			},
+			{
+				"name": "CustomTickmarks",
+				"title": "Custom Tickmarks",
+				"description": "Custom tickmarks with labels can be displayed at specific positions on the Range Slider scale."
+			}
+		]
+	},
+	"RatingIndicator": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Sizes",
+				"title": "Sizes",
+				"description": "The RatingIndicator supports several sizes of the Icons (S, M and L)."
+			},
+			{
+				"name": "CustomIcons",
+				"title": "Custom Icons",
+				"description": "The RatingIndicator supports custom icons for both selected and unselected states using the `rated-icon` and `unrated-icon` properties."
+			}
+		]
+	},
+	"ResponsivePopover": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Placement",
+				"title": "Placement",
+				"description": "You can influence the placement of the popup. Note: if there is not enough space for the popup on the defined side, it will open on the side with enough space."
+			}
+		]
+	},
+	"SegmentedButton": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "SelectionModes",
+				"title": "Selection Modes",
+				"description": "You can define if single or multiple buttons can be pressed."
+			},
+			{
+				"name": "ItemsFitContent",
+				"title": "Items Fit Content",
+				"description": "You can define a property that allows each item to be sized according to its content."
+			}
+		]
+	},
+	"Select": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Selection",
+				"title": "Selection",
+				"description": "Use the `value` property on the Select component to control which option is selected. The value should match the `value` attribute of the desired Option or Option's text."
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "Select supports several semantic value states, readonly, disabled, etc."
+			},
+			{
+				"name": "AdditionalText",
+				"title": "Options with additional text",
+				"description": "Options can display additional text."
+			},
+			{
+				"name": "OptionGroups",
+				"title": "Grouped Options",
+				"description": "Use the `ui5-option-group` component to group options inside a Select."
+			},
+			{
+				"name": "CustomOptions",
+				"title": "Custom Options",
+				"description": "You can define completely custom options via the `ui5-option-custom` component."
+			}
+		]
+	},
+	"Slider": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ShowTickmarks",
+				"title": "Show Tickmarks",
+				"description": "Tickmarks, marking the step can be displayed on the slider. In addition, labels with the given step can be displayed."
+			},
+			{
+				"name": "ShowTooltip",
+				"title": "Show Tooltip",
+				"description": "Tooltip with the current value can be displayed upon handle hover."
+			},
+			{
+				"name": "CustomTickmarks",
+				"title": "Custom Tickmarks",
+				"description": "Custom tickmarks with labels can be displayed at specific positions on the slider scale."
+			}
+		]
+	},
+	"SplitButton": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design",
+				"description": "The SplitButton supports several designs to indicate the priority or the nature of the action."
+			},
+			{
+				"name": "OpeningMenu",
+				"title": "Opening Menu",
+				"description": "The main use-case of SplitButton is to open a menu by clicking the arrow."
+			}
+		]
+	},
+	"StepInput": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "MinMax",
+				"title": "Min Max"
+			},
+			{
+				"name": "ValuePrecision",
+				"title": "Value Precision"
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "StepInput supports several semantic value states, readonly, disabled, etc."
+			}
+		]
+	},
+	"Switch": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design"
+			}
+		]
+	},
+	"TabContainer": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "TabLayout",
+				"title": "Tab Layout",
+				"description": "The `tabLayout` is \"Standard\" by default and can be switched to \"Inline\"."
+			},
+			{
+				"name": "TextOnlyTabs",
+				"title": "Text-only Tabs"
+			},
+			{
+				"name": "NestedTabs",
+				"title": "Nested Tabs"
+			},
+			{
+				"name": "OverflowMode",
+				"title": "Tabs Overflow Mode",
+				"description": "The `overflowMode` is \"End\" by default and can be switched to \"StartAndEnd\"."
+			},
+			{
+				"name": "ReorderTabs",
+				"title": "Reorder Tabs"
+			},
+			{
+				"name": "ReorderTabsMaxNestingLevel",
+				"title": "Reorder Tabs with Max Nesting Level"
+			},
+			{
+				"name": "ReorderTabsFixedTabs",
+				"title": "Reorder Tabs with Fixed Tabs"
+			},
+			{
+				"name": "TransparentDesign",
+				"title": "Transparent design",
+				"description": "The inner TabContainer has `headerBackgroundDesign` and `contentBackgroundDesign` set to \"Transparent\"."
+			}
+		]
+	},
+	"Table": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "ScrollMode",
+				"title": "Overflow Mode - Scroll",
+				"description": "The table provides two horizontal overflow modes: Scroll (default) or Popin."
+			},
+			{
+				"name": "Popin",
+				"title": "Overflow Mode - Popin"
+			},
+			{
+				"name": "StickyHeader",
+				"title": "Sticky Header Row",
+				"description": "Enable a sticky header by utilizing the `sticky` and `sticky-top` properties of the `ui5-table-header-row`."
+			},
+			{
+				"name": "NoDataSlot",
+				"title": "No Data",
+				"description": "You can provide an illustration or a custom text that is shown when the table has no data using the `noData` slot."
+			},
+			{
+				"name": "Interactive",
+				"title": "Interactive Rows",
+				"description": "Create an interactive table by marking `ui5-table-row` components as `interactive`. Pressing on an interactive row will fire the `row-click` event."
+			},
+			{
+				"name": "DragAndDrop",
+				"title": "Drag and Drop",
+				"description": "Enable Drag and Drop by using the `move-over` and `move` events in combination with the `movable` property on the `ui5-table-row`."
+			},
+			{
+				"name": "Grouping",
+				"title": "Row Grouping",
+				"description": "Use `ui5-table-group-row` to visually group rows."
+			}
+		]
+	},
+	"Tag": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Designs",
+				"title": "Designs"
+			},
+			{
+				"name": "Interactive",
+				"title": "Interactive Tag",
+				"description": "An Interactive tag responds to focus, hover and press."
+			},
+			{
+				"name": "WrappingTypes",
+				"title": "Text Wrapping"
+			},
+			{
+				"name": "Set1",
+				"title": "Color Scheme Set 1",
+				"description": "You can use color schemes from different sets, here is the set \"1\"."
+			},
+			{
+				"name": "Set2",
+				"title": "Color Scheme Set 2",
+				"description": "You can use color schemes from different sets, here is the set \"2\"."
+			},
+			{
+				"name": "Size",
+				"title": "Size"
+			}
+		]
+	},
+	"Text": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "MaxLines",
+				"title": "Max Lines",
+				"description": "The `maxLines` property defines the number of lines the text would wrap before start truncating."
+			},
+			{
+				"name": "EmptyIndicatorMode",
+				"title": "Empty Indicator Mode",
+				"description": "The `emptyIndicatorMode` property specifies if an empty indicator should be displayed when there is no text."
+			},
+			{
+				"name": "CustomStyling",
+				"title": "Custom Styling",
+				"description": "The text can be customized with pure CSS, applied on the tag."
+			},
+			{
+				"name": "RenderWhiteSpace",
+				"title": "Render white space with custom styling",
+				"description": "Handle white spaces in the text with standard CSS, applied on the tag."
+			},
+			{
+				"name": "Hyphenation",
+				"title": "Hyphenation with custom styling",
+				"description": "The text hyphenation can be customized with pure CSS, applied on the tag."
+			}
+		]
+	},
+	"TextArea": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Growing",
+				"title": "Growing",
+				"description": "The TextArea can grow when entering new lines."
+			},
+			{
+				"name": "MaxLength",
+				"title": "Max Length",
+				"description": "You can use the `maxlength` and `showExceededText` properties to define a characters limit and to indicate how many characters are remaining before or exceeding the limit."
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "TextArea supports several semantic value states, readonly, disabled, etc."
+			}
+		]
+	},
+	"TimePicker": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "CustomFormatting",
+				"title": "CustomFormatting",
+				"description": "You can have custom formatting for the display value and the value property. Supported format options are pattern-based on Unicode LDML Date Format notation."
+			},
+			{
+				"name": "States",
+				"title": "States",
+				"description": "TimePicker supports several semantic value states, readonly, disabled, etc."
+			},
+			{
+				"name": "TimePickerInDifferentTimezone",
+				"title": "Timezones",
+				"description": "You can set to the configuration the preferred time zone."
+			}
+		]
+	},
+	"Title": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "WrappingType",
+				"title": "WrappingType"
+			}
+		]
+	},
+	"Toast": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Duration",
+				"title": "Duration"
+			},
+			{
+				"name": "Placement",
+				"title": "Placement"
+			}
+		]
+	},
+	"ToggleButton": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "Design",
+				"title": "Design",
+				"description": "Toggle Buttons have a `design` property with several options that defines their visual appearance."
+			},
+			{
+				"name": "IconOnly",
+				"title": "Icon Only"
+			}
+		]
+	},
+	"Token": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "TokenInMultiInput",
+				"title": "Token in MultiInput",
+				"description": "You can remove tokens by clicking the \"X\" button and add tokens by typing something in the input field, followed by \"ENTER\"."
+			}
+		]
+	},
+	"Tokenizer": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "MultiLine",
+				"title": "Multi-line and Clear All",
+				"description": "With `multiLine` enabled, tokens are displayed across multiple lines. The `showClearAll` option adds a \"Clear All\" button, allowing users to remove all tokens at once."
+			}
+		]
+	},
+	"Toolbar": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "AlwaysOverflowingItems",
+				"title": "Always Overflowing Items",
+				"description": "To force items into the overflow, set `overflow-priority='AlwaysOverflow'` on the Toolbar items."
+			},
+			{
+				"name": "NeverOverflowingItems",
+				"title": "Never Overflowing Items",
+				"description": "To force items staying always visible and never overflow, set `overflow-priority='NeverOverflow'` on the Toolbar items."
+			},
+			{
+				"name": "SpacerAndSeparator",
+				"title": "Spacers and Separators"
+			},
+			{
+				"name": "ItemsAlignment",
+				"title": "Items Alignment",
+				"description": "You can align items to the Start, or to the End via the `align-content` property."
+			},
+			{
+				"name": "ToolbarItem",
+				"title": "ToolbarItem",
+				"description": "ToolbarItem wrapper used to add any component to Toolbar."
+			}
+		]
+	},
+	"Tree": {
+		"samples": [
+			{
+				"name": "Basic",
+				"isBasic": true
+			},
+			{
+				"name": "CustomTreeItems",
+				"title": "Custom Tree Items"
+			},
+			{
+				"name": "DragAndDrop",
+				"title": "Drag And Drop",
+				"description": "The tree items are draggable through the use of the `movable` property on `TreeItem`."
+			}
+		]
+	}
+}
