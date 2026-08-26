@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **tools:** normalize path separators in copy-and-watch for Windows ([#13976](https://github.com/UI5/webcomponents/issues/13976)) ([1823576](https://github.com/UI5/webcomponents/commit/1823576b12feed8560e26bb7f4b4fa70e6f2ee8c))
+* **ui5-dynamic-page:** ignore zero-box focus sentinels in scroll handler ([#13965](https://github.com/UI5/webcomponents/issues/13965)) ([8b26b36](https://github.com/UI5/webcomponents/commit/8b26b366b6f8b9615503d893c0eefadd56932105)), closes [#13935](https://github.com/UI5/webcomponents/issues/13935)
+* **ui5-icon:** replace size containment with font-size for icon sizing ([#13986](https://github.com/UI5/webcomponents/issues/13986)) ([52ff411](https://github.com/UI5/webcomponents/commit/52ff4117b6c06ea9e6e41d72133ea655ae131508))
+
+
+### Features
+
+* **ui5-list:** add InactiveSelectable list item type ([#13962](https://github.com/UI5/webcomponents/issues/13962)) ([fc75e84](https://github.com/UI5/webcomponents/commit/fc75e84a32fe4efe5eefe16de0a3df9eacb78e68))
+
+
+
+
+
 # [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
 
 
