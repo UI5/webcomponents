@@ -32,7 +32,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 
 				<div
 					class="ui5-dynamic-page-header-actions-wrapper"
-					style={this.actionsInTitle ? `position:sticky;top:${this._actionsBarStickyTop}px;z-index:2` : undefined}
+					style={this.actionsInTitle ? `position:sticky;top:${this._actionsBarStickyTop}px;z-index:4` : undefined}
 				>
 					{headerActions.call(this)}
 				</div>

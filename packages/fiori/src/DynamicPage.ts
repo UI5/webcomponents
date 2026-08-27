@@ -29,6 +29,8 @@ import type DynamicPageHeaderActions from "./DynamicPageHeaderActions.js";
 import {
 	DYNAMIC_PAGE_ARIA_LABEL_EXPANDED_HEADER,
 	DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER,
+	DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER,
+	DYNAMIC_PAGE_ARIA_LABEL_UNPIN_HEADER,
 } from "./generated/i18n/i18n-defaults.js";
 
 import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -462,6 +464,10 @@ class DynamicPage extends UI5Element {
 		this.fireDecoratorEvent("pin-button-toggle");
 		await renderFinished();
 		this.headerActions?.focusPinButton();
+		announce(
+			DynamicPage.i18nBundle.getText(this.headerPinned ? DYNAMIC_PAGE_ARIA_LABEL_UNPIN_HEADER : DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER),
+			InvisibleMessageMode.Polite,
+		);
 	}
 
 	async onToggleTitle() {
