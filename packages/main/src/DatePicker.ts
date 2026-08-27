@@ -139,8 +139,8 @@ type Picker = "day" | "month" | "year";
  * - Month: "this month", "last month", "next month"
  * - Year: "this year", "last year", "next year"
  *
- * The recognized expressions are locale-specific — the equivalent terms in the user's language are used (e.g. "heute" in German, "bugün" in Turkish).
- * Week, month, and year expressions resolve to an offset from today (e.g. "next week" = today + 7 days).
+ * The recognized expressions are locale-specific — the equivalent terms in the user's language are used (for example, "heute" in German, "bugün" in Turkish).
+ * Week, month, and year expressions resolve to an offset from today (for example, "next week" = today + 7 days).
  * For the full list of supported fields and patterns, see [CLDR Date Fields](https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Fields).
  *
  * ### Keyboard Handling
