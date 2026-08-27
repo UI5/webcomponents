@@ -411,6 +411,46 @@ describe("InputTableSuggest - Typeahead", () => {
 		});
 	});
 
+	it("resets row selection on backspace after typeahead", () => {
+		cy.mount(
+			<InputTableSuggest showSuggestions>
+				<TableHeaderRow slot="suggestionColumns">
+					<TableHeaderCell>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>John</TableCell>
+				</TableRow>
+				<TableRow slot="suggestionRows">
+					<TableCell>Jane</TableCell>
+				</TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]")
+			.as("input")
+			.realClick();
+
+		cy.get("@input").realType("jo");
+
+		cy.get("@input").should("have.value", "john");
+
+		// The matching row is selected after typeahead
+		cy.get("@input")
+			.find("[ui5-table-row]")
+			.first()
+			.should("have.prop", "selected", true);
+
+		cy.realPress("Backspace");
+
+		// The autocompleted portion is removed and the selection is reset
+		cy.get("@input").should("have.value", "jo");
+
+		cy.get("@input")
+			.find("[ui5-table-row]")
+			.first()
+			.should("have.prop", "selected", false);
+	});
+
 	it("disables typeahead with noTypeahead property", () => {
 		cy.mount(
 			<InputTableSuggest showSuggestions noTypeahead>

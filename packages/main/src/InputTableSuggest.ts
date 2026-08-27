@@ -276,11 +276,12 @@ class InputTableSuggest extends InputField {
 
 		this._isKeyNavigation = false;
 
-		if (this._rowFocused) {
-			this._deselectAllRows();
-			this._matchedTabularRow = undefined;
-			this._rowFocused = false;
-		}
+		// Clear any previous row selection/focus on every input (typing or deleting).
+		// When typeahead applies, onBeforeRendering re-selects the matching row; on
+		// backspace/delete autocomplete is off, so the selection is correctly reset.
+		this._deselectAllRows();
+		this._matchedTabularRow = undefined;
+		this._rowFocused = false;
 	}
 
 	/**

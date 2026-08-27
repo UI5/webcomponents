@@ -1,0 +1,27 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 300px;">
+<!-- playground-fold-end -->
+
+    <ui5-input-table-suggest id="highlight-input" placeholder="Search for products..." show-suggestions style="width: 420px;">
+        <ui5-table-header-row slot="suggestionColumns">
+            <ui5-table-header-cell width="200px">Name</ui5-table-header-cell>
+            <ui5-table-header-cell width="120px">Product ID</ui5-table-header-cell>
+            <ui5-table-header-cell min-width="100px">Category</ui5-table-header-cell>
+        </ui5-table-header-row>
+    </ui5-input-table-suggest>
+
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
