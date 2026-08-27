@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **ui5-icon:** replace size containment with font-size for icon sizing ([#13986](https://github.com/UI5/webcomponents/issues/13986)) ([52ff411](https://github.com/UI5/webcomponents/commit/52ff4117b6c06ea9e6e41d72133ea655ae131508))
+
+
+### Features
+
+* **ui5-list:** add InactiveSelectable list item type ([#13962](https://github.com/UI5/webcomponents/issues/13962)) ([fc75e84](https://github.com/UI5/webcomponents/commit/fc75e84a32fe4efe5eefe16de0a3df9eacb78e68))
+
+
+
+
+
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **ui5-link:** adjust focus outline in HC themes ([#13968](https://github.com/UI5/webcomponents/issues/13968)) ([9faf49d](https://github.com/UI5/webcomponents/commit/9faf49ddecb8b2204748eb1169c407449ef4519a))
+* **ui5-list:** fix acc finding ([#13558](https://github.com/UI5/webcomponents/issues/13558)) ([d8afe1f](https://github.com/UI5/webcomponents/commit/d8afe1f89da4f3f783c2c21dd430c48faf249bc3))
+* **ui5-popup:** announce invisible messages inside open popups ([#13889](https://github.com/UI5/webcomponents/issues/13889)) ([db416cf](https://github.com/UI5/webcomponents/commit/db416cf0dfeda4176bdf3f4766dd17dd8fee690e))
+* **ui5-toolbar-select:** display not updating on programmatic option selection ([#13751](https://github.com/UI5/webcomponents/issues/13751)) ([920e66a](https://github.com/UI5/webcomponents/commit/920e66a6352cd7b6d3e2ccff30f37f8d76d26c73)), closes [#12619](https://github.com/UI5/webcomponents/issues/12619)
+
+
+### Features
+
+* **ui5-shellbar-search:** add search scope adaptive width ([#13787](https://github.com/UI5/webcomponents/issues/13787)) ([a18eb19](https://github.com/UI5/webcomponents/commit/a18eb19d630e490554fc232ef217ec996c4dd584))
+
+
+
+
+
 # [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
 
 

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob");
+const { globSync } = require("glob");
 
 const getTag = file => {
 	const fileContent = String(fs.readFileSync(file)).replace(/\n/g, "");
@@ -17,7 +17,7 @@ const getTag = file => {
 
 const getPackageTags = (packageDir) => {
 	const srcDir = path.join(packageDir, "src/");
-	return glob.sync(path.join(srcDir, "/**/*.ts")).flatMap(file => {
+	return globSync(path.join(srcDir, "/**/*.ts")).flatMap(file => {
 		const tag = getTag(file);
 		return [tag];
 	}).filter(item => !!item);
