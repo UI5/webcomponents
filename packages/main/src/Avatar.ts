@@ -274,7 +274,13 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * @public
 	 * @since 1.7.0
 	 */
-	@slot()
+	@slot({
+		type: HTMLElement,
+		invalidateOnChildChange: {
+			properties: ["icon", "tooltip", "effectiveTooltip"],
+			slots: false,
+		},
+	})
 	badge!: Slot<HTMLElement>;
 
 	@i18n("@ui5/webcomponents")
