@@ -1,6 +1,7 @@
 import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
+import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
 import InputTableSuggestClass from "@ui5/webcomponents/dist/InputTableSuggest.js";
 import TableHeaderRowClass from "@ui5/webcomponents/dist/TableHeaderRow.js";
 import TableHeaderCellClass from "@ui5/webcomponents/dist/TableHeaderCell.js";
@@ -25,24 +26,25 @@ const employees = [
 ];
 
 function App() {
-  const [filteredEmployees, setFilteredEmployees] = useState(employees);
+  const [search, setSearch] = useState("");
 
   const handleInput = (e: UI5CustomEvent<InputTableSuggestClass, "input">) => {
-    const value = e.currentTarget.value.toLowerCase();
-
-    if (!value) {
-      setFilteredEmployees(employees);
-      return;
-    }
-
-    const filtered = employees.filter(
-      (emp) =>
-        emp.name.toLowerCase().includes(value) ||
-        emp.department.toLowerCase().includes(value) ||
-        emp.location.toLowerCase().includes(value),
-    );
-    setFilteredEmployees(filtered);
+    setSearch(e.currentTarget.value);
   };
+
+  const query = search.trim().toLowerCase();
+  const filteredEmployees = query
+    ? employees.filter(
+        (emp) =>
+          emp.name.toLowerCase().includes(query) ||
+          emp.department.toLowerCase().includes(query) ||
+          emp.location.toLowerCase().includes(query),
+      )
+    : employees;
+
+  // App-side highlighting using the same utility the component uses internally.
+  // It escapes the text and wraps every matching substring in a <b> tag.
+  const markup = (text: string) => generateHighlightedMarkup(text, search);
 
   return (
     <InputTableSuggest
@@ -74,12 +76,24 @@ function App() {
 
       {filteredEmployees.map((emp) => (
         <TableRow key={emp.name} slot="suggestionRows">
-          <TableCell>{emp.name}</TableCell>
-          <TableCell>{emp.department}</TableCell>
-          <TableCell>{emp.location}</TableCell>
-          <TableCell>{emp.email}</TableCell>
-          <TableCell>{emp.phone}</TableCell>
-          <TableCell>{emp.office}</TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.name) }} />
+          </TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.department) }} />
+          </TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.location) }} />
+          </TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.email) }} />
+          </TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.phone) }} />
+          </TableCell>
+          <TableCell>
+            <span dangerouslySetInnerHTML={{ __html: markup(emp.office) }} />
+          </TableCell>
         </TableRow>
       ))}
     </InputTableSuggest>

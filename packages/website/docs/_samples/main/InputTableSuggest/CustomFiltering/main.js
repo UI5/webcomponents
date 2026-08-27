@@ -3,6 +3,7 @@ import "@ui5/webcomponents/dist/TableHeaderRow.js";
 import "@ui5/webcomponents/dist/TableHeaderCell.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js";
+import generateHighlightedMarkup from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkup.js";
 
 const employees = [
     { name: "John Smith", department: "Engineering", location: "Building A", email: "john.smith@example.com", phone: "x1234", office: "A-101" },
@@ -34,7 +35,9 @@ function updateSuggestions(filterValue) {
 
         [emp.name, emp.department, emp.location, emp.email, emp.phone, emp.office].forEach(value => {
             const cell = document.createElement("ui5-table-cell");
-            cell.textContent = value;
+            // App-side highlighting: wrap every matching substring in <b> using the same
+            // utility the component uses internally (it escapes the text, then bolds matches).
+            cell.innerHTML = filterValue ? generateHighlightedMarkup(value, filterValue) : value;
             row.appendChild(cell);
         });
 

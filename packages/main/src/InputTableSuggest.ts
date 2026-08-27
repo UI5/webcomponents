@@ -169,8 +169,7 @@ class InputTableSuggest extends InputField {
 	 * Defines the columns for the tabular suggestions.
 	 * Use a single `ui5-table-header-row` component with `ui5-table-header-cell` children to define the columns.
 	 *
-	 * **Note:** This is a single-element slot. Provide exactly one `ui5-table-header-row`; if more than one is
-	 * provided, only the first one is used.
+	 * **Note:** This is a single-element slot. Provide exactly one `ui5-table-header-row`.
 	 *
 	 * @public
 	 */

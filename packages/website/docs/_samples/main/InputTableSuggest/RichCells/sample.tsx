@@ -30,7 +30,7 @@ const members = [
   { name: "Adam Davis", initials: "AD", color: "Accent8", role: "Account Manager", team: "Sales", location: "Building C", status: "Away", statusDesign: "Critical", statusColor: "2" },
   { name: "Brian Evans", initials: "BE", color: "Accent3", role: "QA Engineer", team: "Engineering", location: "Building A", status: "Active", statusDesign: "Positive", statusColor: "8" },
   { name: "Bella Fox", initials: "BF", color: "Accent4", role: "Recruiter", team: "HR", location: "Building B", status: "Away", statusDesign: "Critical", statusColor: "2" },
-];
+] as const;
 
 function App() {
   const [search, setSearch] = useState("");
