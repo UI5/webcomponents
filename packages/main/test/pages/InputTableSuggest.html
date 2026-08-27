@@ -52,18 +52,12 @@
 	<ui5-text>This page demonstrates the InputTableSuggest component with tabular suggestions.</ui5-text>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Product Search</ui5-title>
-		<p class="description">
-			Search for products. The suggestions show Product ID, Name, Category, and Price in columns.
-			Try typing "Laptop" or "Phone". Matching text is highlighted in the suggestions.
-		</p>
-
+		<ui5-title class="section-title" level="H2">Basic example. No filtering, No Highlighting</ui5-title>
 		<ui5-input-table-suggest
 			id="productSearch"
 			placeholder="Search for products..."
 			show-suggestions
 		>
-			<!-- Column Headers -->
 			<ui5-table-header-row slot="suggestionColumns">
 				<ui5-table-header-cell width="100px">Product ID</ui5-table-header-cell>
 				<ui5-table-header-cell width="200px">Name</ui5-table-header-cell>
@@ -107,65 +101,11 @@
 	</div>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Employee Directory</ui5-title>
-		<p class="description">
-			Search for employees by name. Typed text is highlighted in all cells.
-		</p>
-
-		<ui5-input-table-suggest
-			id="employeeSearch"
-			placeholder="Search employees..."
-			show-suggestions
-		>
-			<ui5-table-header-row slot="suggestionColumns">
-				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell width="120px">Department</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="100px">Location</ui5-table-header-cell>
-				<ui5-table-header-cell width="100px">Extension</ui5-table-header-cell>
-			</ui5-table-header-row>
-
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>John Smith</ui5-table-cell>
-				<ui5-table-cell>Engineering</ui5-table-cell>
-				<ui5-table-cell>Building A</ui5-table-cell>
-				<ui5-table-cell>x1234</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>Jane Doe</ui5-table-cell>
-				<ui5-table-cell>Marketing</ui5-table-cell>
-				<ui5-table-cell>Building B</ui5-table-cell>
-				<ui5-table-cell>x2345</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>James Wilson</ui5-table-cell>
-				<ui5-table-cell>Sales</ui5-table-cell>
-				<ui5-table-cell>Building A</ui5-table-cell>
-				<ui5-table-cell>x3456</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>Sarah Johnson</ui5-table-cell>
-				<ui5-table-cell>HR</ui5-table-cell>
-				<ui5-table-cell>Building C</ui5-table-cell>
-				<ui5-table-cell>x4567</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>Mike Brown</ui5-table-cell>
-				<ui5-table-cell>Engineering</ui5-table-cell>
-				<ui5-table-cell>Building A</ui5-table-cell>
-				<ui5-table-cell>x5678</ui5-table-cell>
-			</ui5-table-row>
-		</ui5-input-table-suggest>
-
-		<div class="output" id="employeeOutput">Selected: (none)</div>
-	</div>
-
-	<div class="section">
 		<ui5-title class="section-title" level="H2">Rich Cell Content</ui5-title>
 		<p class="description">
 			Cells can host other UI5 components. This example combines
 			<code>ui5-avatar</code>, <code>ui5-title</code>, <code>ui5-label</code>, and
-			<code>ui5-text</code> inside the suggestion cells. Type "a" to open the suggestions.
-			Typeahead and selection use the cell's text content.
+			No typeahead and selection as they use the first column's text content of the cell, but here it is an image.
 		</p>
 
 		<ui5-input-table-suggest
@@ -232,15 +172,13 @@
 		<p class="description">
 			The component does not filter internally &mdash; it opens with whatever rows are
 			visible. The application decides what to show by toggling each row's
-			<code>hidden</code> property. Type to filter by any column (name, department, or
-			location). Rows that don't match are hidden.
+			<code>hidden</code> property. Results are filtered by 'startsWithPerTerm' method from all columns.
 		</p>
 
 		<ui5-input-table-suggest
 			id="filterSearch"
 			placeholder="Filter employees by any column..."
 			show-suggestions
-			no-typeahead
 		>
 			<ui5-table-header-row slot="suggestionColumns">
 				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
@@ -281,13 +219,13 @@
 			<code>ui5-input</code> uses for custom app filtering in <code>Input.html</code>
 			(<code>removeChild</code> loop, then <code>createElement</code> + <code>appendChild</code>).
 			No rows are declared in markup; they are generated from the data array.
+			Results are filtered by 'startsWithPerTerm' method from all columns.
 		</p>
 
 		<ui5-input-table-suggest
 			id="rebuildSearch"
 			placeholder="Filter by any column (rebuild)..."
 			show-suggestions
-			no-typeahead
 		>
 			<ui5-table-header-row slot="suggestionColumns">
 				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
@@ -300,7 +238,7 @@
 	</div>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Custom Highlighting (app-side)</ui5-title>
+		<ui5-title class="section-title" level="H2">Custom Highlighting (app-side). No filtering.</ui5-title>
 		<p class="description">
 			The component no longer highlights matches itself. Apps can reproduce the effect by
 			wrapping the matched text in <code>&lt;b&gt;</code> via the bundle's
@@ -342,9 +280,8 @@
 		<p class="description">
 			Combines rich cell content (<code>ui5-avatar</code>, <code>ui5-title</code>,
 			<code>ui5-text</code>, <code>ui5-label</code>, <code>ui5-tag</code>) with app-side
-			highlighting and filtering. The first column is plain text &mdash; it drives typeahead,
-			gets the matched substring highlighted, and is what the filter matches against. Type a
-			name (e.g. "a" or "bri") to filter and highlight.
+			highlighting and filtering. The first column is plain text &mdash; it enables typeahead and row selection. 
+			Results are filtered only against the first column.
 		</p>
 
 		<ui5-input-table-suggest
@@ -453,51 +390,6 @@
 		</ui5-input-table-suggest>
 
 		<div class="output" id="teamOutput">Selected: (none)</div>
-	</div>
-
-	<div class="section">
-		<ui5-title class="section-title" level="H2">Popin Overflow Mode</ui5-title>
-		<p class="description">
-			This example uses <code>overflow-mode="Popin"</code> (the default) in a narrow container.
-			Columns will stack vertically when there's not enough space.
-		</p>
-
-		<div class="narrow-container">
-			<ui5-input-table-suggest
-				id="popinSearch"
-				placeholder="Search in narrow space..."
-				show-suggestions
-				overflow-mode="Popin"
-			>
-				<ui5-table-header-row slot="suggestionColumns">
-					<ui5-table-header-cell width="80px" importance="0">Code</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="120px" importance="1">Description</ui5-table-header-cell>
-					<ui5-table-header-cell width="80px" importance="2" popin-text="Qty">Quantity</ui5-table-header-cell>
-					<ui5-table-header-cell width="80px" importance="3" popin-text="Status">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>A001</ui5-table-cell>
-					<ui5-table-cell>Widget Alpha</ui5-table-cell>
-					<ui5-table-cell>150</ui5-table-cell>
-					<ui5-table-cell>In Stock</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>B002</ui5-table-cell>
-					<ui5-table-cell>Widget Beta</ui5-table-cell>
-					<ui5-table-cell>75</ui5-table-cell>
-					<ui5-table-cell>Low Stock</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row slot="suggestionRows">
-					<ui5-table-cell>C003</ui5-table-cell>
-					<ui5-table-cell>Widget Gamma</ui5-table-cell>
-					<ui5-table-cell>0</ui5-table-cell>
-					<ui5-table-cell>Out of Stock</ui5-table-cell>
-				</ui5-table-row>
-			</ui5-input-table-suggest>
-		</div>
-
-		<div class="output" id="popinOutput">Selected: (none)</div>
 	</div>
 
 	<div class="section">
@@ -865,36 +757,38 @@
 			popover without reopening it.
 		</p>
 
-		<ui5-input-table-suggest
-			id="liveSearch"
-			placeholder="Type 'w' to open, then click the button..."
-			show-suggestions
-		>
-			<ui5-table-header-row slot="suggestionColumns">
-				<ui5-table-header-cell width="100px">SKU</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="200px">Product Name</ui5-table-header-cell>
-				<ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
-			</ui5-table-header-row>
+		<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;">
+			<ui5-input-table-suggest
+				id="liveSearch"
+				placeholder="Type 'w' to open, then click the button..."
+				show-suggestions
+			>
+				<ui5-table-header-row slot="suggestionColumns">
+					<ui5-table-header-cell width="100px">SKU</ui5-table-header-cell>
+					<ui5-table-header-cell min-width="200px">Product Name</ui5-table-header-cell>
+					<ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
+				</ui5-table-header-row>
 
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>SKU-001</ui5-table-cell>
-				<ui5-table-cell id="liveCell">Widget Alpha</ui5-table-cell>
-				<ui5-table-cell>$19</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row slot="suggestionRows">
-				<ui5-table-cell>SKU-002</ui5-table-cell>
-				<ui5-table-cell>Widget Beta</ui5-table-cell>
-				<ui5-table-cell>$29</ui5-table-cell>
-			</ui5-table-row>
-		</ui5-input-table-suggest>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>SKU-001</ui5-table-cell>
+					<ui5-table-cell id="liveCell">Widget Alpha</ui5-table-cell>
+					<ui5-table-cell>$19</ui5-table-cell>
+				</ui5-table-row>
+				<ui5-table-row slot="suggestionRows">
+					<ui5-table-cell>SKU-002</ui5-table-cell>
+					<ui5-table-cell>Widget Beta</ui5-table-cell>
+					<ui5-table-cell>$29</ui5-table-cell>
+				</ui5-table-row>
+			</ui5-input-table-suggest>
 
-		<ui5-button id="liveMutateBtn" style="margin-top: 1rem;">Rename first product</ui5-button>
+			<ui5-button id="liveMutateBtn">Rename first product</ui5-button>
+		</div>
 
 		<div class="output" id="liveOutput">Selected: (none)</div>
 	</div>
 
 	<div class="section">
-		<ui5-title class="section-title" level="H2">Many Suggestions (112 rows)</ui5-title>
+		<ui5-title class="section-title" level="H2">Many Suggestions (112 rows). No filtering</ui5-title>
 		<p class="description">
 			This example demonstrates performance with a large number of suggestions (112 rows).
 			The popover should handle scrolling smoothly.
@@ -1104,14 +998,19 @@
 				return { cell, text: cell.textContent };
 			});
 
+			// startsWithPerTerm: the typed value must match the start of any word in
+			// the first column's text (same semantics as ui5-input's StartsWithPerTerm filter).
+			const escapeRegExp = str => str.replace(/[[\]{}()*+?.\\^$|]/g, "\\$&");
+
 			input.addEventListener('input', () => {
 				const value = input.value.trim();
 				const query = value.toLowerCase();
+				const reg = new RegExp(`(^|\\s)${escapeRegExp(query)}`);
 				const highlight = window["sap-ui-webcomponents-bundle"].generateHighlightedMarkup;
 
 				rows.forEach((row, index) => {
 					const { cell, text } = nameCells[index];
-					row.hidden = query.length > 0 && !text.toLowerCase().includes(query);
+					row.hidden = query.length > 0 && !reg.test(text.toLowerCase());
 					cell.innerHTML = value ? highlight(text, value) : text;
 				});
 			});
