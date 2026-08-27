@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** ignore zero-box focus sentinels in scroll handler ([#13965](https://github.com/UI5/webcomponents/issues/13965)) ([8b26b36](https://github.com/UI5/webcomponents/commit/8b26b366b6f8b9615503d893c0eefadd56932105)), closes [#13935](https://github.com/UI5/webcomponents/issues/13935)
+
+
+
+
+
 # [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
 
 
