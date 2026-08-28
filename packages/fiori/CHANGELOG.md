@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Bug Fixes
+
+* **ui5-cb-item-group:** expose 'title' CSS shadow part via exportparts ([#13958](https://github.com/UI5/webcomponents/issues/13958)) ([5919eb7](https://github.com/UI5/webcomponents/commit/5919eb7bb0203e5d02c2acd85fdc2521ab60a8a3)), closes [#13936](https://github.com/UI5/webcomponents/issues/13936)
+* **ui5-dynamic-page:** ignore zero-box focus sentinels in scroll handler ([#13965](https://github.com/UI5/webcomponents/issues/13965)) ([8b26b36](https://github.com/UI5/webcomponents/commit/8b26b366b6f8b9615503d893c0eefadd56932105)), closes [#13935](https://github.com/UI5/webcomponents/issues/13935)
+
+
+
+
+
 # [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
 
 
