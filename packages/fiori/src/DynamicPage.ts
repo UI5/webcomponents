@@ -466,7 +466,7 @@ class DynamicPage extends UI5Element {
 		this.headerActions?.focusPinButton();
 		announce(
 			DynamicPage.i18nBundle.getText(this.headerPinned ? DYNAMIC_PAGE_ARIA_LABEL_UNPIN_HEADER : DYNAMIC_PAGE_ARIA_LABEL_PIN_HEADER),
-			InvisibleMessageMode.Polite,
+			InvisibleMessageMode.Assertive,
 		);
 	}
 
