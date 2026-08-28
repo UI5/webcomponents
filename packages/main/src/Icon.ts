@@ -249,6 +249,10 @@ class Icon extends UI5Element implements IIcon {
 
 	_onclick(e: MouseEvent) {
 		if (this.mode !== IconMode.Interactive) {
+			// Non-interactive modes (Image/Decorative) must not let the native
+			// browser click escape the shadow root to the host/application,
+			// otherwise the icon is treated as clickable (issue #13972).
+			e.stopPropagation();
 			return;
 		}
 
