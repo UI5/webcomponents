@@ -129,6 +129,20 @@ type Picker = "day" | "month" | "year";
  * For example, if the valueFormat is "yyyy-MM-dd", the displayFormat is "MMM d, y", and the used locale is English, a valid value string is "2015-07-30", which leads to an output of "Jul 30, 2015".
  * If no placeholder is set to the DatePicker, the used displayFormat is displayed as a placeholder. If another placeholder is needed, it must be set.
  *
+ * ### Relative date input
+ *
+ * The input field also accepts locale-aware relative date expressions sourced from the Unicode CLDR.
+ * The following expressions are supported in English:
+ *
+ * - Day: "today", "yesterday", "tomorrow"
+ * - Week: "this week", "last week", "next week"
+ * - Month: "this month", "last month", "next month"
+ * - Year: "this year", "last year", "next year"
+ *
+ * The recognized expressions are locale-specific — the equivalent terms in the user's language are used (for example, "heute" in German, "bugün" in Turkish).
+ * Week, month, and year expressions resolve to an offset from today (for example, "next week" = today + 7 days).
+ * For the full list of supported fields and patterns, see [CLDR Date Fields](https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Fields).
+ *
  * ### Keyboard Handling
  * The `ui5-date-picker` provides advanced keyboard handling.
  * If the `ui5-date-picker` is focused,
