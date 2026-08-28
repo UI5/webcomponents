@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>Custom Theme</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<style>
+		/* Custom theme metadata - detected by getThemeDesignerTheme via getComputedStyle */
+		.sapThemeMetaData-Base-baseLib {
+			background-image: url('data:text/plain;utf-8, { "Path": "Base.baseLib.mytheme.css_variables", "Extends": ["sap_horizon","baseTheme"]}');
+		}
+
+		:root {
+			--sapBrandColor: green;
+			--sapHighlightColor: #006700;
+			--sapBaseColor: #fff;
+			--sapShellColor: #fff;
+			--sapBackgroundColor: #f5f6f7;
+			--sapFontFamily: "72", "72full", Arial, Helvetica, sans-serif;
+			--sapFontSize: 0.875rem;
+			--sapTextColor: #131e29;
+			--sapLinkColor: #006700;
+			--sapSelectedColor: #006700;
+			--sapHoverColor: #eaecee;
+			--sapActiveColor: #dee2e5;
+			--sapTitleColor: #131e29;
+			--sapNegativeColor: #aa0808;
+			--sapCriticalColor: #e76500;
+			--sapPositiveColor: #256f3a;
+			--sapInformativeColor: #0070f2;
+			--sapNeutralColor: #788fa6;
+			--sapContent_FocusColor: #0032a5;
+			--sapContent_FocusStyle: solid;
+			--sapContent_FocusWidth: 0.125rem;
+			--sapButton_Background: #ffffff;
+			--sapButton_BorderColor: #bcc3ca;
+			--sapButton_BorderWidth: 0.0625rem;
+			--sapButton_BorderCornerRadius: 0.5rem;
+			--sapButton_TextColor: #006700;
+			--sapButton_Hover_Background: #eaecee;
+			--sapButton_Hover_BorderColor: #bcc3ca;
+			--sapButton_Hover_TextColor: #006700;
+			--sapButton_IconColor: #006700;
+			--sapButton_Active_Background: #ffffff;
+			--sapButton_Active_BorderColor: #006700;
+			--sapButton_Active_TextColor: #006700;
+			--sapButton_Emphasized_Background: green;
+			--sapButton_Emphasized_BorderColor: green;
+			--sapButton_Emphasized_BorderWidth: 0.0625rem;
+			--sapButton_Emphasized_TextColor: #fff;
+			--sapButton_Emphasized_Hover_Background: #006700;
+			--sapButton_Emphasized_Hover_BorderColor: #006700;
+			--sapButton_Emphasized_Hover_TextColor: #fff;
+			--sapButton_Emphasized_Active_Background: #ffffff;
+			--sapButton_Emphasized_Active_BorderColor: #006700;
+			--sapButton_Emphasized_Active_TextColor: #006700;
+			--sapButton_Emphasized_TextShadow: transparent;
+			--sapButton_Reject_Background: #ffd6e9;
+			--sapButton_Reject_BorderColor: #ffc1df;
+			--sapButton_Reject_TextColor: #aa0808;
+			--sapButton_Accept_Background: #ebf5cb;
+			--sapButton_Accept_BorderColor: #dbeda1;
+			--sapButton_Accept_TextColor: #256f3a;
+			--sapButton_Positive_Background: #30914c;
+			--sapButton_Positive_TextColor: #fff;
+			--sapButton_Negative_Background: #f53232;
+			--sapButton_Negative_TextColor: #fff;
+			--sapButton_Attention_Background: #fff3b7;
+			--sapButton_Attention_TextColor: #b44f00;
+			--sapField_Background: #ffffff;
+			--sapField_TextColor: #131e29;
+			--sapField_BorderColor: #556b81;
+			--sapField_BorderWidth: 0.0625rem;
+			--sapField_BorderCornerRadius: 0.25rem;
+			--sapField_Hover_Background: #fff;
+			--sapField_Hover_BorderColor: #006700;
+			--sapField_Focus_BorderColor: #0032a5;
+			--sapList_Background: #fff;
+			--sapList_BorderColor: #e5e5e5;
+			--sapList_TextColor: #131e29;
+			--sapList_Active_Background: #dee2e5;
+			--sapList_SelectionBackgroundColor: green;
+			--sapList_SelectionBorderColor: #006700;
+			--sapList_Hover_Background: #eaecee;
+			--sapGroup_ContentBackground: #fff;
+			--sapGroup_ContentBorderColor: #d9d9d9;
+			--sapGroup_BorderCornerRadius: 0.75rem;
+			--sapPopover_BorderCornerRadius: 0.5rem;
+			--sapShell_Background: #eff1f2;
+			--sapShell_TextColor: #131e29;
+			--sapContent_IconColor: #131e29;
+			--sapContent_LabelColor: #556b82;
+			--sapSapThemeId: sap_horizon;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" style="padding: 2rem;">
+		<ui5-title>Custom Theme Test</ui5-title>
+		<br /><br />
+
+		<section>
+			<ui5-title level="H5">Theme switching</ui5-title>
+			<ui5-button id="change-theme-btn" design="Emphasized">Switch to mytheme</ui5-button>
+			<ui5-button id="reset-theme-btn">Reset to sap_horizon</ui5-button>
+			<div style="margin-top: 0.5rem;">Active theme: <strong id="theme"></strong></div>
+		</section>
+
+		<br /><br />
+
+		<ui5-title level="H5">Buttons</ui5-title>
+		<ui5-button>Default</ui5-button>
+		<ui5-button design="Emphasized">Emphasized</ui5-button>
+		<ui5-button design="Transparent">Transparent</ui5-button>
+		<ui5-button disabled>Disabled</ui5-button>
+		<ui5-button design="Positive">Agree</ui5-button>
+		<ui5-button design="Negative">Decline</ui5-button>
+		<ui5-button design="Attention">Warning</ui5-button>
+
+		<br /><br />
+
+		<ui5-title level="H5">Inputs</ui5-title><br />
+		<ui5-input placeholder="Enter value"></ui5-input>
+		<ui5-select>
+			<ui5-option>Cozy</ui5-option>
+			<ui5-option>Compact</ui5-option>
+			<ui5-option selected>Condensed</ui5-option>
+		</ui5-select>
+		<ui5-date-picker></ui5-date-picker>
+
+		<br /><br />
+
+		<ui5-title level="H5">Avatars</ui5-title><br />
+		<ui5-avatar size="XS" initials="XS"></ui5-avatar>
+		<ui5-avatar size="S" initials="S"></ui5-avatar>
+		<ui5-avatar size="M" initials="M"></ui5-avatar>
+		<ui5-avatar size="L" initials="L"></ui5-avatar>
+
+		<br /><br />
+
+		<ui5-title level="H5">Messages</ui5-title><br />
+		<ui5-message-strip design="Negative">Negative with default icon and close button</ui5-message-strip>
+		<br />
+		<ui5-message-strip design="Warning">Warning with default icon and close button</ui5-message-strip>
+		<br />
+		<ui5-message-strip design="Positive">Positive with default icon and close button</ui5-message-strip>
+
+		<br /><br />
+
+		<ui5-title level="H5">Dialog</ui5-title><br />
+		<ui5-button id="opener">Open dialog</ui5-button>
+		<ui5-dialog id="dialog" header-text="Title">
+			<ui5-title level="H5">I am a Dialog <ui5-label>(press ESC to close)</ui5-label></ui5-title>
+		</ui5-dialog>
+
+		<br /><br />
+
+		<ui5-title level="H5">List</ui5-title><br />
+		<ui5-list selection-mode="Multi">
+			<ui5-li>item 1</ui5-li>
+			<ui5-li>item 2</ui5-li>
+		</ui5-list>
+
+	</div>
+
+	<script type="module">
+		import { setTheme, getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+
+		const themeSpan = document.getElementById("theme");
+		themeSpan.innerText = getTheme();
+
+		document.getElementById("opener").addEventListener("click", () => {
+			document.getElementById("dialog").open = true;
+		});
+
+		document.getElementById("change-theme-btn").addEventListener("click", async () => {
+			await setTheme("mytheme");
+			themeSpan.innerText = getTheme();
+		});
+
+		document.getElementById("reset-theme-btn").addEventListener("click", async () => {
+			await setTheme("sap_horizon");
+			themeSpan.innerText = getTheme();
+		});
+	</script>
+</body>
+
+</html>

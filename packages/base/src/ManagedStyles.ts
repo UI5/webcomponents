@@ -13,15 +13,21 @@ const shouldUpdate = (runtimeIndex: string | undefined) => {
 	return compareRuntimes(getCurrentRuntimeIndex(), parseInt(runtimeIndex)) >= 1; // 1 or larger means the current is newer, 0 means the same, -1 means the resource's runtime is newer
 };
 
+// Safari strips expando properties from CSSStyleSheet objects returned by document.adoptedStyleSheets.
+// Use external Maps to preserve stylesheet metadata across reads.
+const styleSheetIds = new Map<CSSStyleSheet, string>();
+const styleSheetRuntimeIndexes = new Map<CSSStyleSheet, string>();
+const styleSheetThemes = new Map<CSSStyleSheet, string>();
+
 const createStyle = (content: string, name: string, value = "", theme?: string) => {
 	const currentRuntimeIndex = getCurrentRuntimeIndex();
 
 	const stylesheet = new CSSStyleSheet();
 	stylesheet.replaceSync(content);
-	(stylesheet as Record<string, any>)._ui5StyleId = getStyleId(name, value); // set an id so that we can find the style later
+	styleSheetIds.set(stylesheet, getStyleId(name, value));
 	if (theme) {
-		(stylesheet as Record<string, any>)._ui5RuntimeIndex = currentRuntimeIndex;
-		(stylesheet as Record<string, any>)._ui5Theme = theme;
+		styleSheetRuntimeIndexes.set(stylesheet, String(currentRuntimeIndex));
+		styleSheetThemes.set(stylesheet, theme);
 	}
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
@@ -33,7 +39,7 @@ const updateStyle = (content: string, name: string, value = "", theme?: string) 
 
 	const currentRuntimeIndex = getCurrentRuntimeIndex();
 
-	const stylesheet = document.adoptedStyleSheets.find(sh => (sh as Record<string, any>)._ui5StyleId === getStyleId(name, value));
+	const stylesheet = document.adoptedStyleSheets.find(sh => styleSheetIds.get(sh) === getStyleId(name, value));
 	if (!stylesheet) {
 		return;
 	}
@@ -41,12 +47,12 @@ const updateStyle = (content: string, name: string, value = "", theme?: string) 
 	if (!theme) {
 		stylesheet.replaceSync(content || "");
 	} else {
-		const stylesheetRuntimeIndex: string | undefined = (stylesheet as Record<string, any>)._ui5RuntimeIndex;
-		const stylesheetTheme: string | undefined = (stylesheet as Record<string, any>)._ui5Theme;
+		const stylesheetRuntimeIndex: string | undefined = styleSheetRuntimeIndexes.get(stylesheet);
+		const stylesheetTheme: string | undefined = styleSheetThemes.get(stylesheet);
 		if (stylesheetTheme !== theme || shouldUpdate(stylesheetRuntimeIndex)) {
 			stylesheet.replaceSync(content || "");
-			(stylesheet as Record<string, any>)._ui5RuntimeIndex = String(currentRuntimeIndex);
-			(stylesheet as Record<string, any>)._ui5Theme = theme;
+			styleSheetRuntimeIndexes.set(stylesheet, String(currentRuntimeIndex));
+			styleSheetThemes.set(stylesheet, theme);
 		}
 	}
 };
@@ -56,11 +62,24 @@ const hasStyle = (name: string, value = ""): boolean => {
 		return true;
 	}
 
-	return !!document.adoptedStyleSheets.find(sh => (sh as Record<string, any>)._ui5StyleId === getStyleId(name, value));
+	return !!document.adoptedStyleSheets.find(sh => styleSheetIds.get(sh) === getStyleId(name, value));
 };
 
 const removeStyle = (name: string, value = "") => {
-	document.adoptedStyleSheets = document.adoptedStyleSheets.filter(sh => (sh as Record<string, any>)._ui5StyleId !== getStyleId(name, value));
+	const styleId = getStyleId(name, value);
+	const removed: Array<CSSStyleSheet> = [];
+	document.adoptedStyleSheets = document.adoptedStyleSheets.filter(sh => {
+		if (styleSheetIds.get(sh) === styleId) {
+			removed.push(sh);
+			return false;
+		}
+		return true;
+	});
+	removed.forEach(sh => {
+		styleSheetIds.delete(sh);
+		styleSheetRuntimeIndexes.delete(sh);
+		styleSheetThemes.delete(sh);
+	});
 };
 
 const createOrUpdateStyle = (content: string, name: string, value = "", theme?: string) => {
