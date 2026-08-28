@@ -124,15 +124,15 @@ describe("Icon general interaction", () => {
         cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "3");
 
-        // Non-interactive icon: mouse click fires neither native click nor ui5-click
+        // Non-interactive icon (Decorative): mouse click fires native click but NOT ui5-click
         cy.get("@nonInteractiveIcon").click();
-        cy.get("[ui5-input]").eq(2).should("have.prop", "value", "0");
+        cy.get("[ui5-input]").eq(2).should("have.prop", "value", "1");
         cy.get("[ui5-input]").eq(3).should("have.prop", "value", "0");
 
         cy.get("@interactiveClickStub").should("have.been.calledThrice");
         cy.get("@interactiveUI5ClickStub").should("have.been.calledThrice");
 
-        cy.get("@nonInteractiveClickStub").should("not.have.been.called");
+        cy.get("@nonInteractiveClickStub").should("have.been.calledOnce");
         cy.get("@nonInteractiveUI5ClickStub").should("not.have.been.called");
     });
 
