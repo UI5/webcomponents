@@ -25,9 +25,12 @@ const createStyle = (content: string, name: string, value = "", theme?: string) 
 	const stylesheet = new CSSStyleSheet();
 	stylesheet.replaceSync(content);
 	styleSheetIds.set(stylesheet, getStyleId(name, value));
+	(stylesheet as Record<string, any>)._ui5StyleId = getStyleId(name, value);
 	if (theme) {
 		styleSheetRuntimeIndexes.set(stylesheet, String(currentRuntimeIndex));
 		styleSheetThemes.set(stylesheet, theme);
+		(stylesheet as Record<string, any>)._ui5RuntimeIndex = currentRuntimeIndex;
+		(stylesheet as Record<string, any>)._ui5Theme = theme;
 	}
 	document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 };
@@ -53,6 +56,8 @@ const updateStyle = (content: string, name: string, value = "", theme?: string) 
 			stylesheet.replaceSync(content || "");
 			styleSheetRuntimeIndexes.set(stylesheet, String(currentRuntimeIndex));
 			styleSheetThemes.set(stylesheet, theme);
+			(stylesheet as Record<string, any>)._ui5RuntimeIndex = currentRuntimeIndex;
+			(stylesheet as Record<string, any>)._ui5Theme = theme;
 		}
 	}
 };

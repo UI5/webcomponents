@@ -12,6 +12,12 @@ describe("ManagedStyles", () => {
 			cy.wrap({ createStyle }).invoke("createStyle", ":root { --test: 1; }", "test-style", "val1");
 
 			cy.wrap({ hasStyle }).invoke("hasStyle", "test-style", "val1").should("equal", true);
+
+			cy.document().its("adoptedStyleSheets").then(sheets => {
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === "test-style|val1");
+				expect(sheet).to.exist;
+			});
 		});
 
 		it("removeStyle removes the sheet and hasStyle returns false", () => {
@@ -19,9 +25,21 @@ describe("ManagedStyles", () => {
 
 			cy.wrap({ hasStyle }).invoke("hasStyle", "test-style-remove", "val2").should("equal", true);
 
+			cy.document().its("adoptedStyleSheets").then(sheets => {
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === "test-style-remove|val2");
+				expect(sheet).to.exist;
+			});
+
 			cy.wrap({ removeStyle }).invoke("removeStyle", "test-style-remove", "val2");
 
 			cy.wrap({ hasStyle }).invoke("hasStyle", "test-style-remove", "val2").should("equal", false);
+
+			cy.document().its("adoptedStyleSheets").then(sheets => {
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === "test-style-remove|val2");
+				expect(sheet).to.not.exist;
+			});
 		});
 
 		it("updateStyle changes the sheet content", () => {
@@ -30,11 +48,10 @@ describe("ManagedStyles", () => {
 			cy.wrap({ updateStyle }).invoke("updateStyle", ":root { --test-update: new; }", "test-style-update", "val3");
 
 			cy.document().its("adoptedStyleSheets").then(sheets => {
-				// Find the sheet by iterating — without expando reliance
-				const match = [...sheets].find(sh => {
-					try { return sh.cssRules[0]?.cssText?.includes("--test-update: new"); } catch { return false; }
-				});
-				expect(match).to.exist;
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === "test-style-update|val3");
+				expect(sheet).to.exist;
+				expect(sheet!.cssRules[0].cssText).to.include("--test-update: new");
 			});
 		});
 
@@ -48,10 +65,10 @@ describe("ManagedStyles", () => {
 			cy.wrap({ createOrUpdateStyle }).invoke("createOrUpdateStyle", ":root { --cou: 2; }", "test-style-cou", "val4");
 
 			cy.document().its("adoptedStyleSheets").then(sheets => {
-				const match = [...sheets].find(sh => {
-					try { return sh.cssRules[0]?.cssText?.includes("--cou: 2"); } catch { return false; }
-				});
-				expect(match).to.exist;
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === "test-style-cou|val4");
+				expect(sheet).to.exist;
+				expect(sheet!.cssRules[0].cssText).to.include("--cou: 2");
 			});
 		});
 	});
@@ -66,21 +83,18 @@ describe("ManagedStyles", () => {
 			cy.wrap({ setTheme }).invoke("setTheme", "sap_horizon");
 
 			cy.document().its("adoptedStyleSheets").then(sheets => {
-				const match = [...sheets].find(sh => {
-					try { return sh.cssRules[0]?.cssText?.includes("--var1"); } catch { return false; }
-				});
-				expect(match).to.exist;
-				expect(match!.cssRules[0].cssText).to.include("--var1: grey");
+				// eslint-disable-next-line
+				const sheet = [...sheets].find(sh => (sh as Record<string, any>)._ui5StyleId === `${dataPropAttr}|@ui5/webcomponents-base-test`);
+				expect(sheet).to.exist;
+				expect(sheet!.cssRules[0].cssText).to.include("--var1: grey");
 			});
 
 			cy.wrap({ setTheme }).invoke("setTheme", "sap_fiori_3_hcb");
 
 			cy.document().its("adoptedStyleSheets").then(sheets => {
-				// Same sheet should now have updated content — number of sheets should not grow
-				const matches = [...sheets].filter(sh => {
-					try { return sh.cssRules[0]?.cssText?.includes("--var1"); } catch { return false; }
-				});
-				// Only one sheet for this package (no duplicates)
+				// eslint-disable-next-line
+				const matches = [...sheets].filter(sh => (sh as Record<string, any>)._ui5StyleId === `${dataPropAttr}|@ui5/webcomponents-base-test`);
+				// Same sheet updated in place — no duplicates
 				expect(matches).to.have.length(1);
 				expect(matches[0].cssRules[0].cssText).to.include("--var1: yellow");
 			});
