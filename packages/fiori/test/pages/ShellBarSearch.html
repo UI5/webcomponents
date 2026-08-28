@@ -20,7 +20,7 @@
 
 	<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 
-	<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" show-clear-icon
+	<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" no-typeahead
 		placeholder="Search Apps, Products">
 		<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
 		<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
@@ -55,5 +55,80 @@
 
 <body>
 </body>
+
+<script type="module">
+	const search = document.getElementById("search-scope");
+
+	// Sample data pool used to generate suggestions dynamically.
+	const APPS = [
+		{ text: "Manage Products", description: "Products", icon: "product" },
+		{ text: "Manage Sales Orders", description: "Sales", icon: "sales-order" },
+		{ text: "My Inbox", description: "Workflow", icon: "inbox" },
+		{ text: "Purchase Requisitions", description: "Procurement", icon: "cart" },
+		{ text: "Supplier Invoices", description: "Finance", icon: "money-bills" },
+		{ text: "Analytical Reports", description: "Analytics", icon: "bar-chart" },
+		{ text: "Customer Master", description: "Master Data", icon: "customer" },
+		{ text: "Travel Requests", description: "HR", icon: "flight" },
+	];
+
+	let debounceTimer;
+	let requestId = 0;
+
+	// Removes all dynamically generated suggestion items from the search field.
+	function removeSearchItems() {
+		search.querySelectorAll("ui5-search-item").forEach(item => item.remove());
+	}
+
+	search.addEventListener("ui5-input", () => {
+		const query = search.value.trim();
+
+		// Remove previously generated suggestions.
+		removeSearchItems();
+
+		if (!query) {
+			search.loading = false;
+			return;
+		}
+
+		// Enter the loading state and open the suggestions popup.
+		search.loading = true;
+
+		// Debounce the "server" request and track it so stale responses are ignored.
+		clearTimeout(debounceTimer);
+		const currentRequest = ++requestId;
+
+		debounceTimer = setTimeout(() => {
+			// Ignore results if the user has typed again in the meantime.
+			if (currentRequest !== requestId) {
+				return;
+			}
+
+			const matches = APPS.filter(app => app.text.toLowerCase().includes(query.toLowerCase()));
+
+			if(matches.length !== 0 ){
+				matches.forEach(match => {
+					const item = document.createElement("ui5-search-item");
+					item.text = match.text;
+					item.description = match.description;
+					item.icon = `sap-icon://${match.icon}`;
+					search.appendChild(item);
+				});
+			}
+
+			search.loading = false;
+		}, 800);
+	});
+
+	// Prevent the search from being triggered when a suggestion item is clicked.
+	// The `ui5-search` event is cancelable and carries the chosen item in its detail,
+	// so calling preventDefault() stops the default search action for item selection.
+	search.addEventListener("ui5-search", e => {
+		if (e.detail.item) {
+			e.preventDefault();
+			removeSearchItems();
+			setTimeout(() => {e.target.value = "";}, 100)
+		}
+	});
+</script>
 
 </html>
