@@ -218,6 +218,14 @@ class SplitButton extends UI5Element {
 	_hideArrowButton = false;
 
 	/**
+	 * Overrides the default role description announced by screen readers.
+	 * @default undefined
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	_roleDescription?: string;
+
+	/**
 	 * Defines the additional accessibility attributes that will be applied to the component.
 	 * The `accessibilityAttributes` property accepts an object with the following optional fields:
 	 *
@@ -481,7 +489,7 @@ class SplitButton extends UI5Element {
 	get accInfo() {
 		return {
 			"keyboardHint": SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT),
-			"description": SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION),
+			"description": this._roleDescription || SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION),
 		};
 	}
 
