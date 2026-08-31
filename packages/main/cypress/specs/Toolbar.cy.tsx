@@ -1537,7 +1537,7 @@ describe("Toolbar overflow group", () => {
 		// ungrouped clone would overflow ONLY the rightmost button (GroupC) — that's
 		// the worth of width the overflow algorithm "needs" to recover. With the group
 		// in place, the entire group (≈3× one button's width) must move to the popover
-		// atomically. The over-shoot is accepted by design (ADR-0001).
+		// atomically. The over-shoot is accepted by design because a group is indivisible.
 		cy.mount(
 			<div style="width: 340px;">
 				<Toolbar id="otb_overshoot_group">
@@ -1569,7 +1569,7 @@ describe("Toolbar overflow group", () => {
 
 	it("warns once for AlwaysOverflow on a grouped item and treats its priority as Default for the layout pass", () => {
 		// GroupA has both `overflow-group="g"` AND `overflowPriority="AlwaysOverflow"`.
-		// ADR-0001 forbids this combination: the warning fires once, the priority is
+		// This combination is invalid: the warning fires once, the priority is
 		// dropped to `Default` for the layout pass, and the group's atomic-overflow
 		// contract is preserved (GroupA and GroupB go together — decided by space,
 		// not by the now-ignored absolute priority).
@@ -1614,7 +1614,7 @@ describe("Toolbar overflow group", () => {
 
 	it("warns once for NeverOverflow on a grouped item and treats its priority as Default for the layout pass", () => {
 		// GroupA has both `overflow-group="g"` AND `overflowPriority="NeverOverflow"`.
-		// Under the ADR-0001 rule, the warning fires once and the priority is dropped
+		// This combination is invalid: the warning fires once and the priority is dropped
 		// to `Default` for the layout pass — so when the toolbar is narrowed enough
 		// for the group to need overflow, GroupA can in fact overflow (alongside GroupB).
 		cy.window().then(win => {
@@ -1731,7 +1731,7 @@ describe("Toolbar overflow group", () => {
 	});
 
 	it("does not warn for valid configurations: grouped Default-priority items and ungrouped spacers", () => {
-		// All combinations here are valid by ADR-0001: two items share a non-empty
+		// All combinations here are valid: two items share a non-empty
 		// group with the default priority, and a spacer carries no group tag.
 		// The toolbar must remain silent — no `console.warn` calls.
 		cy.window().then(win => {

@@ -127,7 +127,43 @@ class ToolbarItemBase extends UI5Element {
 
 	onAfterRendering(): void {
 		this._isRendering = false;
+		this.validateOverflowGroupConstraints();
 	}
+
+	/**
+	 * Emits one-time developer warnings for invalid `overflowGroup` configurations.
+	 * Called once per render from `onAfterRendering` so getters stay pure.
+	 * Each warning fires at most once per element lifetime via one-shot guards.
+	 */
+	validateOverflowGroupConstraints(): void {
+		if (
+			!this.isSpacer
+			&& this.overflowGroup !== ""
+			&& (this.overflowPriority === "AlwaysOverflow" || this.overflowPriority === "NeverOverflow")
+		) {
+			if (!this._overflowGroupPriorityWarned) {
+				this._overflowGroupPriorityWarned = true;
+				// eslint-disable-next-line no-console
+				console.warn(
+					`[ui5-toolbar] ${this.tagName.toLowerCase()} has both overflow-group="${this.overflowGroup}" and overflow-priority="${this.overflowPriority}". `
+					+ `Items in a non-empty overflow-group must use overflow-priority="Default"; priority dropped to Default for layout.`,
+					this,
+				);
+			}
+		}
+		if (this.isSpacer && this.overflowGroup !== "") {
+			if (!this._overflowGroupSpacerWarned) {
+				this._overflowGroupSpacerWarned = true;
+				// eslint-disable-next-line no-console
+				console.warn(
+					`[ui5-toolbar] ${this.tagName.toLowerCase()} has overflow-group="${this.overflowGroup}". `
+					+ `Spacers cannot participate in an overflow-group; the group tag is ignored.`,
+					this,
+				);
+			}
+		}
+	}
+
 	/**
 	* Defines if the width of the item should be ignored in calculating the whole width of the toolbar
 	* @protected
@@ -184,12 +220,10 @@ class ToolbarItemBase extends UI5Element {
 
 	/**
 	 * Returns the `overflowPriority` actually used by the toolbar's distribution
-	 * algorithm. Items in a non-empty `overflowGroup` must have `Default` priority
-	 * (ADR-0001); when a developer puts `AlwaysOverflow` or `NeverOverflow` on a
-	 * grouped non-spacer item, this getter emits a one-shot `console.warn` and
-	 * downgrades the priority to `"Default"` for layout. Spacers are exempt
-	 * from the priority-violation rule — they get their own spacer-rule warning
-	 * elsewhere and keep their declared priority here.
+	 * algorithm. Items in a non-empty `overflowGroup` must have `Default` priority;
+	 * when a developer puts `AlwaysOverflow` or `NeverOverflow` on a
+	 * grouped non-spacer item, the priority is treated as `"Default"` for layout.
+	 * Spacers are exempt from this rule and keep their declared priority.
 	 *
 	 * @protected
 	 */
@@ -200,15 +234,6 @@ class ToolbarItemBase extends UI5Element {
 			&& this.overflowGroup !== ""
 			&& (declared === "AlwaysOverflow" || declared === "NeverOverflow")
 		) {
-			if (!this._overflowGroupPriorityWarned) {
-				this._overflowGroupPriorityWarned = true;
-				// eslint-disable-next-line no-console
-				console.warn(
-					`[ui5-toolbar] ${this.tagName.toLowerCase()} has both overflow-group="${this.overflowGroup}" and overflow-priority="${declared}". `
-					+ `Items in a non-empty overflow-group must use overflow-priority="Default"; priority dropped to Default for layout.`,
-					this,
-				);
-			}
 			return "Default";
 		}
 		return declared;
@@ -216,27 +241,17 @@ class ToolbarItemBase extends UI5Element {
 
 	/**
 	 * Returns the `overflowGroup` actually used by the toolbar's distribution
-	 * algorithm. Spacers cannot participate in grouping (ADR-0001); a spacer
-	 * with a non-empty `overflowGroup` emits a one-shot `console.warn` and this
-	 * getter returns `""` so the spacer is treated as ungrouped by the algorithm.
+	 * algorithm. Spacers cannot participate in grouping; a spacer
+	 * with a non-empty `overflowGroup` returns `""` so the spacer is treated
+	 * as ungrouped by the algorithm.
 	 *
 	 * @protected
 	 */
 	get effectiveOverflowGroup(): string {
-		const declared = this.overflowGroup;
-		if (this.isSpacer && declared !== "") {
-			if (!this._overflowGroupSpacerWarned) {
-				this._overflowGroupSpacerWarned = true;
-				// eslint-disable-next-line no-console
-				console.warn(
-					`[ui5-toolbar] ${this.tagName.toLowerCase()} has overflow-group="${declared}". `
-					+ `Spacers cannot participate in an overflow-group; the group tag is ignored.`,
-					this,
-				);
-			}
+		if (this.isSpacer && this.overflowGroup !== "") {
 			return "";
 		}
-		return declared;
+		return this.overflowGroup;
 	}
 
 	get stableDomRef() {

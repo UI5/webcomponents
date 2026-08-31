@@ -53,7 +53,6 @@ type ToolbarMinWidthChangeEventDetail = {
  * width is the sum of member widths.
  */
 type DistributionUnit = {
-	group: string,
 	members: Array<ToolbarItemBase>,
 	width: number,
 	rightmostIndex: number,
@@ -336,7 +335,7 @@ class Toolbar extends UI5Element {
 	onInvalidation(changeInfo: ChangeInfo) {
 		if (changeInfo.reason === "childchange") {
 			const currentItemsWidth = this.items.reduce((total, item) => total + this.getItemWidth(item), 0);
-			const currentGroupingKey = this.items.map(item => item.overflowGroup).join("|");
+			const currentGroupingKey = this.items.map(item => item.effectiveOverflowGroup).join("|");
 			if (currentItemsWidth !== this.itemsWidth || currentGroupingKey !== this._groupingKey) {
 				this.onToolbarItemChange();
 			}
@@ -474,7 +473,7 @@ class Toolbar extends UI5Element {
 
 		this.itemsWidth = totalWidth;
 		this.minContentWidth = minWidth;
-		this._groupingKey = this.items.map(item => item.overflowGroup).join("|");
+		this._groupingKey = this.items.map(item => item.effectiveOverflowGroup).join("|");
 	}
 
 	distributeItems(overflowSpace = 0) {
@@ -489,12 +488,14 @@ class Toolbar extends UI5Element {
 		// when it is pushed into overflow, all its members move together.
 		// The unit's representative slot position is its rightmost member's
 		// index — that index is what orders the unit during distribution.
-		const units = this.buildDistributionUnits();
+		const slotIndex = new Map<ToolbarItemBase, number>();
+		this.items.forEach((item, idx) => slotIndex.set(item, idx));
+		const units = this.buildDistributionUnits(slotIndex);
 
 		// Walk units from rightmost to leftmost, pushing each atomically.
 		// A unit is pushed in full as soon as overflowSpace is still positive;
 		// the post-push budget is allowed to go negative — over-shoot is accepted
-		// by design (ADR-0001 §Consequences) because a group is indivisible.
+		// by design because a group is indivisible.
 		const overflowedItems: Array<ToolbarItemBase> = [];
 		let nextNonOverflowedUnitIndex = units.length - 1;
 		for (let i = units.length - 1; i >= 0; i--) {
@@ -525,8 +526,6 @@ class Toolbar extends UI5Element {
 
 		// itemsToOverflow must be in slot order so popover rendering matches
 		// the developer's source order (group members adjacent by construction).
-		const slotIndex = new Map<ToolbarItemBase, number>();
-		this.items.forEach((item, idx) => slotIndex.set(item, idx));
 		overflowedItems.sort((a, b) => (slotIndex.get(a)! - slotIndex.get(b)!));
 		this.itemsToOverflow.push(...overflowedItems);
 
@@ -539,10 +538,8 @@ class Toolbar extends UI5Element {
 	 * non-empty `overflowGroup`. A unit's order key is its rightmost member's
 	 * slot index. Returned units are sorted ascending by that key.
 	 */
-	buildDistributionUnits(): Array<DistributionUnit> {
+	buildDistributionUnits(slotIndex: Map<ToolbarItemBase, number>): Array<DistributionUnit> {
 		const movable = this.movableItems;
-		const slotIndex = new Map<ToolbarItemBase, number>();
-		this.items.forEach((item, idx) => slotIndex.set(item, idx));
 
 		const groupUnits = new Map<string, DistributionUnit>();
 		const units: Array<DistributionUnit> = [];
@@ -553,7 +550,6 @@ class Toolbar extends UI5Element {
 			const groupKey = item.effectiveOverflowGroup;
 			if (groupKey === "") {
 				units.push({
-					group: "",
 					members: [item],
 					width: itemWidth,
 					rightmostIndex: slotIdx,
@@ -569,7 +565,6 @@ class Toolbar extends UI5Element {
 				}
 			} else {
 				const unit: DistributionUnit = {
-					group: groupKey,
 					members: [item],
 					width: itemWidth,
 					rightmostIndex: slotIdx,
