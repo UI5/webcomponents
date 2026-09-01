@@ -1,6 +1,7 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { property, eventStrict } from "@ui5/webcomponents-base/dist/decorators.js";
 import { isInstanceOfTable } from "./TableUtils.js";
+import type Icon from "./Icon.js";
 import type Table from "./Table.js";
 import type TableRowBase from "./TableRowBase.js";
 import type TableRow from "./TableRow.js";
@@ -104,6 +105,27 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	 */
 	isRowSelectorRequired(): boolean {
 		return this.behavior === TableSelectionBehavior.RowSelector;
+	}
+
+	/**
+	 * Returns the component used to render the row selector (for example, `CheckBox` or `RadioButton`).
+	 */
+	getSelectionComponent(): typeof UI5Element | undefined {
+		return undefined;
+	}
+
+	/**
+	 * Returns the component used to render the "Clear All" selector in the column header.
+	 */
+	getClearAllComponent(): typeof Icon | undefined {
+		return undefined;
+	}
+
+	/**
+	 * Returns the icon name used for the "Clear All" selector in the column header.
+	 */
+	getClearAllIcon(): string | undefined {
+		return undefined;
 	}
 
 	/**
