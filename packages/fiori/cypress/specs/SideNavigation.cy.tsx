@@ -76,6 +76,64 @@ describe("Side Navigation Rendering", () => {
 			.should("have.attr", "design", "Action");
 	});
 
+	it("Tests overflow item visibility and items in overflow", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed={true} style={{ height: "430px" }}>
+				<SideNavigationItem text="Item 1" icon={home}></SideNavigationItem>
+				<SideNavigationItem text="Item 2" icon={home}></SideNavigationItem>
+
+				<SideNavigationGroup>
+					<SideNavigationItem text="Item 3" icon={home}></SideNavigationItem>
+					<SideNavigationItem text="Item 4" icon={home}></SideNavigationItem>
+				</SideNavigationGroup>
+
+				<SideNavigationGroup>
+					<SideNavigationItem text="Item 5" icon={home}></SideNavigationItem>
+					<SideNavigationItem text="Item 6" icon={home}></SideNavigationItem>
+				</SideNavigationGroup>
+
+				<SideNavigationItem text="Outer" selected={true} icon={home}></SideNavigationItem>
+
+				<SideNavigationItem slot="fixedItems" text="Legal" icon={home}></SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.should("be.visible");
+
+		// the overflow item should be visible
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.should("be.visible")
+			.realClick();
+
+		// exactly 2 items should be in the overflow menu
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item]")
+			.should("have.length", 2);
+
+
+		// check the last separator calculations
+		// when the height is 440px, also 2 items should go to the overflow
+		cy.get("#sideNav")
+			.invoke("attr", "style", "height:440px");
+
+		// the overflow item should be visible
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-overflow:not(.ui5-sn-item-hidden)")
+			.should("be.visible")
+			.realClick();
+
+		// exactly 2 items should be in the overflow menu
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-side-navigation-overflow-menu [ui5-navigation-menu-item]")
+			.should("have.length", 2);
+	});
+
 	it("Tests accessibility", () => {
 		cy.mount(
 			<SideNavigation id="sideNav" accessibleName="Main">
@@ -1052,6 +1110,138 @@ describe("Side Navigation interaction", () => {
 	});
 });
 
+describe("item-toggle event", () => {
+	it("fires on user toggle-icon click", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="1" icon={group}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+					<SideNavigationSubItem id="subItem2" text="1.2" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+		});
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-toggle-icon").realClick();
+
+		cy.get("@toggle").should("have.been.calledOnce");
+		cy.get("@toggle").its("firstCall.args.0.detail.item").should(item => {
+			expect(item.id).to.equal("item1");
+		});
+		cy.get("#item1").should("have.attr", "expanded");
+	});
+
+	it("fires on keyboard Plus/Minus", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="focusStart" text="focus start"></SideNavigationItem>
+				<SideNavigationItem id="item1" text="1" icon={group}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+		});
+
+		cy.get("#focusStart").realClick();
+		cy.realPress("ArrowDown");
+		cy.realPress("+");
+
+		cy.get("@toggle").its("lastCall.args.0.detail.item").should(item => {
+			expect(item.id).to.equal("item1");
+		});
+		cy.get("#item1").should("have.attr", "expanded");
+
+		cy.realPress("-");
+
+		cy.get("@toggle").should("have.been.calledTwice");
+		cy.get("#item1").should("not.have.attr", "expanded");
+	});
+
+	it("does not fire on programmatic change", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="1" icon={group}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+		});
+
+		cy.get("#item1").invoke("prop", "expanded", true);
+
+		cy.get("#item1").should("have.prop", "expanded", true);
+		cy.get("@toggle").should("not.have.been.called");
+	});
+
+	it("preventDefault suppresses the toggle", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="1" icon={group}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", (e: Event) => e.preventDefault());
+		});
+
+		cy.get("#item1").shadow().find(".ui5-sn-item-toggle-icon").realClick();
+
+		cy.get("#item1").should("have.prop", "expanded", false);
+		cy.get("#item1").should("not.have.attr", "expanded");
+	});
+
+	it("does not fire during initial rendering", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="1" icon={group} expanded={true}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+		});
+
+		cy.get("#item1").should("have.prop", "expanded", true);
+		cy.get("@toggle").should("not.have.been.called");
+	});
+
+	it("does not fire on the outer side navigation when a collapsed parent opens the picker", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" collapsed={true}>
+				<SideNavigationItem id="item1" text="1" icon={group}>
+					<SideNavigationSubItem id="subItem1" text="1.1" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav").then($el => {
+			$el[0].addEventListener("item-toggle", cy.stub().as("toggle"));
+		});
+
+		cy.get("#item1").realClick();
+
+		cy.get("#sideNav")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("be.visible");
+
+		cy.get("@toggle").should("not.have.been.called");
+	});
+});
+
 describe("Side Navigation Accessibility", () => {
 	it("SideNavigationItem ariaHasPopup", () => {
 		cy.mount(
@@ -1369,7 +1559,7 @@ describe("Side Navigation Accessibility", () => {
 			.shadow()
 			.find(".ui5-sn-item-overflow")
 			.realClick();
-	
+
 		// Assert
 		cy.get("#sideNav")
 			.shadow()

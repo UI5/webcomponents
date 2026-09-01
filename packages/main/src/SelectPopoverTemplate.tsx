@@ -9,7 +9,7 @@ import Title from "./Title.js";
 export default function SelectPopoverTemplate(this: Select) {
 	return (
 		<>
-			{this.options.length > 0 &&
+			{this._flatOptions.length > 0 &&
 				<ResponsivePopover
 					id={this.responsivePopoverId}
 					class={{
@@ -26,7 +26,7 @@ export default function SelectPopoverTemplate(this: Select) {
 					onBeforeOpen={this._beforeOpen}
 					onClose={this._afterClose}
 					onKeyDown={this._onkeydown}
-					accessibleName={this._isPhone ? this._headerTitleText : undefined}
+					accessibleName={this._isPhone ? this._effectivePopoverAccessibleName : undefined}
 				>
 					{this._isPhone &&
 						<div slot="header" class="ui5-responsive-popover-header">
@@ -62,6 +62,7 @@ export default function SelectPopoverTemplate(this: Select) {
 						onMouseDown={this._itemMousedown}
 						onItemClick={this._handleItemPress}
 						accessibleRole="ListBox"
+						accessibleName={this._effectiveListAccessibleName}
 					>
 						<slot></slot>
 					</List>

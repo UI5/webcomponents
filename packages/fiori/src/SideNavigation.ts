@@ -1,5 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot, ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { createMultiInstanceChecker } from "@ui5/webcomponents-base/dist/util/createMultiInstanceChecker.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -55,6 +55,10 @@ type SideNavigationSelectionChangeEventDetail = {
 
 type SideNavigationItemClickEventDetail = {
 	item: SideNavigationSelectableItemBase,
+};
+
+type SideNavigationItemToggleEventDetail = {
+	item: SideNavigationItemBase,
 };
 
 type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNavigationSelectableItemBase };
@@ -138,10 +142,27 @@ type PopupSideNavigationItem = SideNavigationItem & { associatedItem: SideNaviga
 	cancelable: true,
 })
 
+/**
+ * Fired when a `ui5-side-navigation-item` or `ui5-side-navigation-group` is expanded or collapsed.
+ *
+ * **Note:** You can call `preventDefault()` on the event to suppress the expand/collapse.
+ * The `expanded` state stays unchanged. This is handy, for example, if you want to
+ * dynamically load child items before allowing a parent item to expand.
+ *
+ * @param {SideNavigationItemBase} item The toggled item.
+ * @since 2.26.0
+ * @public
+ */
+@event("item-toggle", {
+	bubbles: true,
+	cancelable: true,
+})
+
 class SideNavigation extends UI5Element {
 	eventDetails!: {
 		"selection-change": SideNavigationSelectionChangeEventDetail,
-		"item-click": SideNavigationItemClickEventDetail
+		"item-click": SideNavigationItemClickEventDetail,
+		"item-toggle": SideNavigationItemToggleEventDetail
 	}
 
 	/**
@@ -237,6 +258,17 @@ class SideNavigation extends UI5Element {
 	}
 
 	_handleResizeBound: () => void;
+	_fnTransitionEnd?: (event: TransitionEvent) => void;
+	_animationTimeoutId?: ReturnType<typeof setTimeout>;
+	_bAnimating = false;
+
+	onInvalidation(changeInfo: ChangeInfo) {
+		if (changeInfo.type === "property" && changeInfo.name === "collapsed") {
+			if (this.getDomRef()) {
+				this._bAnimating = true;
+			}
+		}
+	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
@@ -247,6 +279,7 @@ class SideNavigation extends UI5Element {
 				item.sideNavCollapsed = this.collapsed;
 				item.inPopover = this.inPopover;
 				item.sideNavigation = this;
+				item.sideNavAnimating = this._bAnimating;
 			});
 
 		this.initGroupsSettings(this.items);
@@ -300,8 +333,6 @@ class SideNavigation extends UI5Element {
 		const popover = this.getOverflowPopover();
 		(popover?.opener as HTMLElement)?.classList.remove("ui5-sn-item-active");
 	}
-
-	_bn?: SideNavigationSelectableItemBase;
 
 	_onMenuClose() {
 		const menu = this.getOverflowPopover();
@@ -497,6 +528,8 @@ class SideNavigation extends UI5Element {
 		if (this.collapsed) {
 			this.handleResize();
 		}
+
+		this._handleExpandCollapseAnimation();
 	}
 
 	onEnterDOM() {
@@ -505,6 +538,15 @@ class SideNavigation extends UI5Element {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this._handleResizeBound);
+		if (this._fnTransitionEnd) {
+			this.removeEventListener("transitionend", this._fnTransitionEnd);
+			this._fnTransitionEnd = undefined;
+		}
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+			this._animationTimeoutId = undefined;
+		}
+		this._bAnimating = false;
 	}
 
 	handleResize() {
@@ -520,8 +562,7 @@ class SideNavigation extends UI5Element {
 			return null;
 		}
 
-		const overflowItem = this._overflowItem!;
-		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
+		const overflowItem = this._overflowItem;
 		if (!overflowItem) {
 			return null;
 		}
@@ -530,14 +571,9 @@ class SideNavigation extends UI5Element {
 
 		const overflowItems = this.overflowItems;
 
-		let itemsHeight = overflowItems.reduce<number>((sum, itemRef) => {
-			if (!itemRef) {
-				return sum;
-			}
-			itemRef.classList.remove("ui5-sn-item-hidden");
-			return sum + itemRef.offsetHeight;
-		}, 0);
+		let itemsHeight = this._calculateItemsHeight(overflowItems);
 
+		const flexibleContentDomRef: HTMLElement = domRef.querySelector(".ui5-sn-flexible")!;
 		const { paddingTop, paddingBottom } = window.getComputedStyle(flexibleContentDomRef);
 		const listHeight = flexibleContentDomRef?.offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
 
@@ -549,41 +585,115 @@ class SideNavigation extends UI5Element {
 
 		itemsHeight = overflowItem.offsetHeight;
 
-		const selectedItem = overflowItems.filter(isInstanceOfSideNavigationSelectableItemBase).find(item => item._selected);
+		const navItems = overflowItems.filter(isInstanceOfSideNavigationSelectableItemBase);
+		const selectedItem = navItems.find(item => item._selected);
+
+		itemsHeight += this._getSelectedItemHeight(overflowItems, selectedItem) + 1; // +1 for sub-pixel rounding
+		itemsHeight += this._getLastSeparatorHeight(navItems, overflowItems);
+
+		this._updateItemsVisibility(overflowItems, selectedItem, itemsHeight, listHeight);
+
+		this._flexibleItemNavigation._init();
+	}
+
+	_calculateItemsHeight(overflowItems: Array<HTMLElement>) {
+		return overflowItems.reduce<number>((sum, itemRef) => {
+			if (!itemRef) {
+				return sum;
+			}
+			itemRef.classList.remove("ui5-sn-item-hidden");
+
+			let itemDomRef = itemRef;
+
+			if (isInstanceOfSideNavigationItemBase(itemRef) && itemRef.getDomRef()) {
+				itemDomRef = itemRef.getDomRef()!;
+			}
+
+			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
+
+			return sum + itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+		}, 0);
+	}
+
+	_getSelectedItemHeight(overflowItems: Array<HTMLElement>, selectedItem: SideNavigationSelectableItemBase | undefined) {
+		if (!selectedItem) {
+			return 0;
+		}
+
+		let height = 0;
 
 		if (selectedItem) {
 			const selectedItemDomRef = selectedItem.getDomRef();
 
 			if (selectedItemDomRef) {
 				const { marginTop, marginBottom } = window.getComputedStyle(selectedItemDomRef);
-				itemsHeight += selectedItemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+				height += selectedItemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+			}
+
+			const indexOf = overflowItems.indexOf(selectedItem);
+			const itemAfterSelected = overflowItems[indexOf + 1];
+			if (itemAfterSelected && !isInstanceOfSideNavigationItemBase(itemAfterSelected)) {
+				height += itemAfterSelected.offsetHeight;
 			}
 		}
 
-		overflowItems.forEach(item => {
+		return height;
+	}
+
+	_getLastSeparatorHeight(navItems: Array<SideNavigationSelectableItemBase>, overflowItems: Array<HTMLElement>) {
+		const lastNonSelectedItem = navItems.findLast(item => !item._selected);
+		if (!lastNonSelectedItem) {
+			return 0;
+		}
+
+		const indexOf = overflowItems.indexOf(lastNonSelectedItem);
+		const nextSeparator = overflowItems[indexOf + 1];
+
+		if (nextSeparator && !isInstanceOfSideNavigationItemBase(nextSeparator)) {
+			return nextSeparator.offsetHeight;
+		}
+
+		return 0;
+	}
+
+	_updateItemsVisibility(overflowItems: Array<HTMLElement>, selectedItem: SideNavigationSelectableItemBase | undefined, itemsHeight: number, listHeight: number) {
+		for (let i = 0; i < overflowItems.length; i++) {
+			const item = overflowItems[i];
+
 			if (!item || item === selectedItem) {
-				return;
+				// eslint-disable-next-line no-continue
+				continue;
 			}
 
 			let itemDomRef;
 
-			if (isInstanceOfSideNavigationItemBase(item) && item.getDomRef()) {
+			if (isInstanceOfSideNavigationItemBase(item)) {
 				itemDomRef = item.getDomRef();
-			} else {
-				itemDomRef = item;
 			}
 
-			if (itemDomRef) {
-				const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
-				itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
-
-				if (itemsHeight > listHeight) {
-					item.classList.add("ui5-sn-item-hidden");
-				}
+			if (!itemDomRef) {
+				// eslint-disable-next-line no-continue
+				continue;
 			}
-		});
 
-		this._flexibleItemNavigation._init();
+			const { marginTop, marginBottom } = window.getComputedStyle(itemDomRef);
+			itemsHeight += itemDomRef.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom);
+
+			// if the next item is a separator, the item and the separator
+			// should be hidden together, so we need to add the separator height to the itemsHeight
+			const nextItem = overflowItems[i + 1];
+			let nextItemDomRef;
+			if (nextItem && !isInstanceOfSideNavigationItemBase(nextItem)) {
+				nextItemDomRef = nextItem;
+				itemsHeight += nextItemDomRef.offsetHeight;
+				i++;
+			}
+
+			if (itemsHeight > listHeight) {
+				item.classList.add("ui5-sn-item-hidden");
+				nextItemDomRef?.classList.add("ui5-sn-item-hidden");
+			}
+		}
 	}
 
 	_findFocusedItem(items: Array<SideNavigationItemBase>): SideNavigationItemBase | undefined {
@@ -620,6 +730,61 @@ class SideNavigation extends UI5Element {
 
 	private _isSmallScreen(): boolean {
 		return isPhone() || window.innerWidth < SCREEN_WIDTH_BREAKPOINT;
+	}
+
+	_handleExpandCollapseAnimation() {
+		if (!this._bAnimating) {
+			return;
+		}
+
+		const oDomRef = this.getDomRef();
+		if (!oDomRef) {
+			return;
+		}
+
+		oDomRef.classList.add("ui5-sn-animating");
+
+		if (this._fnTransitionEnd) {
+			this.removeEventListener("transitionend", this._fnTransitionEnd);
+		}
+
+		if (this._animationTimeoutId) {
+			clearTimeout(this._animationTimeoutId);
+		}
+
+		const cleanupAnimation = () => {
+			oDomRef.classList.remove("ui5-sn-animating");
+			if (this._fnTransitionEnd) {
+				this.removeEventListener("transitionend", this._fnTransitionEnd);
+				this._fnTransitionEnd = undefined;
+			}
+			if (this._animationTimeoutId) {
+				clearTimeout(this._animationTimeoutId);
+				this._animationTimeoutId = undefined;
+			}
+			this._bAnimating = false;
+
+			this._getAllItems(this.items)
+				.concat(this._getAllItems(this.fixedItems))
+				.forEach(item => {
+					item.sideNavAnimating = false;
+				});
+		};
+
+		this._fnTransitionEnd = (oEvent: TransitionEvent) => {
+			if (oEvent.propertyName !== "width" && oEvent.propertyName !== "min-width") {
+				return;
+			}
+
+			cleanupAnimation();
+		};
+
+		this.addEventListener("transitionend", this._fnTransitionEnd);
+
+		// Fallback timeout in case transitionend doesn't fire
+		this._animationTimeoutId = setTimeout(() => {
+			cleanupAnimation();
+		}, 500);
 	}
 
 	_handleItemClick(e: KeyboardEvent | MouseEvent, item: SideNavigationSelectableItemBase) {
@@ -776,4 +941,5 @@ export default SideNavigation;
 export type {
 	SideNavigationSelectionChangeEventDetail,
 	SideNavigationItemClickEventDetail,
+	SideNavigationItemToggleEventDetail,
 };

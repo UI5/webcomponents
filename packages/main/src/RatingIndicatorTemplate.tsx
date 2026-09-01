@@ -49,7 +49,7 @@ function starLi(this: RatingIndicator, star: Star) {
 				</div>
 			</li>
 		);
-	} if (this.readonly) {
+	} if (this.readonly || this.displayOnly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
 				<Icon data-ui5-value={star.index} name={this.ratedIcon} />

@@ -233,6 +233,15 @@ abstract class SliderBase extends UI5Element {
 
 	_handleActionKeyPress(e: Event) {} // eslint-disable-line
 
+	/**
+	 * Checks if the mouse event is a non-primary button click (e.g., right-click).
+	 * Returns true if the event should be ignored.
+	 * @protected
+	 */
+	_isNonPrimaryClick(e: TouchEvent | MouseEvent): boolean {
+		return !!(e as MouseEvent)?.button && (e as MouseEvent)?.button !== 0;
+	}
+
 	abstract tickmarksObject: Array<boolean>;
 	abstract _ariaLabelledByText: string;
 

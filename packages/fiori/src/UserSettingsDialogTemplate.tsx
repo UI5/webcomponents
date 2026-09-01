@@ -25,7 +25,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			initialFocus={`setting-${this._selectedSetting?._id}`}
 		>
 			<div class="ui5-user-settings-root">
-				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-orientation="vertical" aria-roledescription={this.ariaRoleDescList}>
+				<div class="ui5-user-settings-side" data-sap-ui-fastnavgroup="true" aria-roledescription={this.ariaRoleDescList}>
 					<div class="ui5-user-settings-side-header">
 						{this.headerText &&
 							<Title level="H1" size="H5">{this.headerText}</Title>
@@ -53,14 +53,21 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			</div>
 
 			<Toolbar slot="footer" design="Transparent" data-sap-ui-fastnavgroup="true">
-				<ToolbarButton design="Transparent" text={this.closeButtonText} tooltip={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+				{this.saveMode ? (
+					<>
+						<ToolbarButton id={`${this._id}-save-btn`} design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
+						<ToolbarButton id={`${this._id}-cancel-btn`} design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
+					</>
+				) : (
+					<ToolbarButton id={`${this._id}-close-btn`} design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+				)}
 			</Toolbar>
 		</Dialog>
 	);
 }
 
 function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [], classes: string) {
-	return <List accessibleRole="Menu" onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
+	return <List onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
 		{items.map(item => (
 			<ListItemStandard
 				class={!item._icon && item._siblingsWithIcon ? "ui5-user-settings-item-no-icon" : ""}

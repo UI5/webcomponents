@@ -691,7 +691,7 @@ class Search extends SearchField {
 	}
 
 	_getPicker() {
-		return this.shadowRoot!.querySelector<Popover>("[ui5-responsive-popover]")!;
+		return this.shadowRoot!.querySelector<Popover>("#ui5-search-list")!;
 	}
 
 	_getItemsList(): List {

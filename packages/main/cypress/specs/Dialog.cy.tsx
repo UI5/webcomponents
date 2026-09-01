@@ -100,8 +100,8 @@ describe("Initial Focus", () => {
 			<>
 				<Dialog id="dialogId" headerText="Tokens">
 					<Tokenizer id="tokenizer">
-						<Token text="Token 1" id="token1"/>
-						<Token text="Token 2" id="token2"/>
+						<Token text="Token 1" id="token1" />
+						<Token text="Token 2" id="token2" />
 					</Tokenizer>
 				</Dialog>
 			</>
@@ -544,21 +544,21 @@ describe("Dialog general interaction", () => {
 						expect(leftBeforeDragging).not.to.equal(leftAfterDragging);
 					});
 
-					// Close dialog
-					cy.get("#draggable-dialog").invoke("attr", "open", false);
+				// Close dialog
+				cy.get("#draggable-dialog").invoke("attr", "open", false);
 
-					// Reopen dialog
-					cy.get("#draggable-dialog").invoke("attr", "open", true);
+				// Reopen dialog
+				cy.get("#draggable-dialog").invoke("attr", "open", true);
 
-					// Capture position after reopening
-					cy.get("#draggable-dialog")
-						.should(dialogAfterReopening => {
-							const topAfterReopening = parseInt(dialogAfterReopening.css("top"));
-							const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
+				// Capture position after reopening
+				cy.get("#draggable-dialog")
+					.should(dialogAfterReopening => {
+						const topAfterReopening = parseInt(dialogAfterReopening.css("top"));
+						const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
 
-							// Assert position resets
-							expect(topBeforeDragging).to.equal(topAfterReopening);
-							expect(leftBeforeDragging).to.equal(leftAfterReopening);
+						// Assert position resets
+						expect(topBeforeDragging).to.equal(topAfterReopening);
+						expect(leftBeforeDragging).to.equal(leftAfterReopening);
 					});
 			});
 	});
@@ -614,7 +614,7 @@ describe("Dialog general interaction", () => {
 							expect(topAfterLeft).to.equal(topAfterUp);
 							expect(leftAfterLeft).not.to.equal(leftAfterUp);
 						});
-					});
+				});
 
 				// Close dialog
 				cy.get("#draggable-dialog").invoke("attr", "open", false);
@@ -628,7 +628,7 @@ describe("Dialog general interaction", () => {
 						const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
 
 						expect(leftAfterReopen).to.equal(initialLeft);
-				});
+					});
 			});
 	});
 
@@ -696,7 +696,7 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
-	it.skip("dialog remains anchored after resizing in RTL mode", () => {
+	it("dialog remains anchored after resizing in RTL mode", () => {
 		cy.mount(
 			<>
 				<div dir="rtl">
@@ -709,48 +709,58 @@ describe("Dialog general interaction", () => {
 			</>
 		);
 
-		// Open dialog
 		cy.get("#rtl-min-width-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#rtl-min-width-dialog").ui5DialogOpened();
 
-		// Capture initial dimensions and position
-		cy.get("#rtl-min-width-dialog").then(dialog => {
-			const initialLeft = parseInt(dialog.css("left"));
-			const initialWidth = parseInt(dialog.css("width"));
-			const initialRightEdge = initialLeft + initialWidth;
-
-			// First resize to reach minimum width
+		// Use explicit clientX/clientY via .trigger() instead of realMouse: mousedown
+		// on the handle, mousemove/mouseup on the body bubble to the window listeners.
+		// This avoids the CDP hit-test occasionally missing the still-settling handle.
+		const dragResizeHandle = (deltaX: number) => {
 			cy.get("#rtl-min-width-dialog")
 				.shadow()
 				.find(".ui5-popup-resize-handle")
-				.realMouseDown()
-				.realMouseMove(420, 0) // Large movement to ensure we hit min width
-				.realMouseUp();
+				.should("be.visible")
+				.then(($handle) => {
+					const rect = $handle[0].getBoundingClientRect();
+					const startX = rect.left + rect.width / 2;
+					const startY = rect.top + rect.height / 2;
 
-			cy.get("#rtl-min-width-dialog").then(dialogAtMinWidth => {
-				const leftAtMinWidth = parseInt(dialogAtMinWidth.css("left"));
-				const widthAtMinWidth = parseInt(dialogAtMinWidth.css("width"));
+					cy.wrap($handle).trigger("mousedown", { clientX: startX, clientY: startY, which: 1, force: true });
+					cy.get("body").trigger("mousemove", { clientX: startX + deltaX, clientY: startY, force: true });
+					cy.get("body").trigger("mouseup", { force: true });
+				});
+		};
+
+		cy.get("#rtl-min-width-dialog").then(($dialog) => {
+			const initialLeft = parseInt($dialog.css("left"));
+			const initialWidth = parseInt($dialog.css("width"));
+			const initialRightEdge = initialLeft + initialWidth;
+
+			// First resize: drag the bottom-left handle far to the right to reach min width.
+			dragResizeHandle(800);
+
+			cy.get("#rtl-min-width-dialog").should(($atMin) => {
+				expect(parseInt($atMin.css("width"))).to.be.closeTo(320, 1);
+				expect(parseInt($atMin.css("left")) + parseInt($atMin.css("width"))).to.be.closeTo(initialRightEdge, 1);
+			});
+
+			cy.get("#rtl-min-width-dialog").then(($atMin) => {
+				const leftAtMinWidth = parseInt($atMin.css("left"));
+				const widthAtMinWidth = parseInt($atMin.css("width"));
 				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
 
-				expect(widthAtMinWidth).to.equal(320);
-				expect(rightEdgeAtMinWidth).to.equal(initialRightEdge);
+				// Second resize: attempt to shrink further while already at min width.
+				dragResizeHandle(400);
 
-				cy.get("#rtl-min-width-dialog")
-					.shadow()
-					.find(".ui5-popup-resize-handle")
-					.realMouseDown()
-					.realMouseMove(350, 0) // Additional rightward movement beyond min width
-					.realMouseUp();
-
-				cy.get("#rtl-min-width-dialog").then(dialogAfterExtraResize => {
-					const finalLeft = parseInt(dialogAfterExtraResize.css("left"));
-					const finalWidth = parseInt(dialogAfterExtraResize.css("width"));
+				cy.get("#rtl-min-width-dialog").should(($final) => {
+					const finalLeft = parseInt($final.css("left"));
+					const finalWidth = parseInt($final.css("width"));
 					const finalRightEdge = finalLeft + finalWidth;
 
-					expect(finalLeft).to.equal(leftAtMinWidth, "Dialog left position should not change when at min width");
-					expect(finalWidth).to.equal(widthAtMinWidth, "Dialog width should remain at min width");
-					expect(finalRightEdge).to.equal(rightEdgeAtMinWidth, "Dialog right edge should remain fixed");
-					expect(finalRightEdge).to.equal(initialRightEdge, "Dialog right edge should remain fixed from initial position");
+					expect(finalLeft).to.be.closeTo(leftAtMinWidth, 1, "Dialog left position should not change when at min width");
+					expect(finalWidth).to.be.closeTo(widthAtMinWidth, 1, "Dialog width should remain at min width");
+					expect(finalRightEdge).to.be.closeTo(rightEdgeAtMinWidth, 1, "Dialog right edge should remain fixed");
+					expect(finalRightEdge).to.be.closeTo(initialRightEdge, 1, "Dialog right edge should remain fixed from initial position");
 				});
 			});
 		});
@@ -809,7 +819,7 @@ describe("Dialog general interaction", () => {
 					cy.get("#resizable-dialog").invoke("attr", "open", false);
 
 					// Reopen dialog
-				cy.get("#resizable-dialog").invoke("attr", "open", true);
+					cy.get("#resizable-dialog").invoke("attr", "open", true);
 
 					// Assert - Dimensions reset to initial
 					cy.get("#resizable-dialog").then(dialogAfterReopen => {
@@ -829,7 +839,7 @@ describe("Dialog general interaction", () => {
 	it("RTL resizable - should not move dialog when resizing from the left with max-width is set", () => {
 		cy.mount(
 			<div dir="rtl">
-				<Dialog id="resizable-dialog" resizable style={{maxWidth: "300px"}}>
+				<Dialog id="resizable-dialog" resizable style={{ maxWidth: "300px" }}>
 					<div id="header-slot" slot="header">Header</div>
 					<div>Content</div>
 					<Button id="resizable-close">Close</Button>

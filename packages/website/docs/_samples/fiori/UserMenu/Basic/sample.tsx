@@ -102,7 +102,7 @@ function App() {
           description="Delivery Manager"
           selected={true}
         />
-        <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
+        <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
         <UserMenuItem
           icon="collaborate"
           text="Product-specific account action"

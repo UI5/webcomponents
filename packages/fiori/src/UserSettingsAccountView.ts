@@ -66,6 +66,16 @@ class UserSettingsAccountView extends UserSettingsView {
 	account!: Slot<UserMenuAccount>;
 
 	/**
+	 * Defines if the User Settings Account View shows the edit button on the avatar.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.26.0
+	 */
+	@property({ type: Boolean })
+	showEditButton = false;
+
+	/**
 	 * Defines if the User Menu shows the `Manage Account` option.
 	 *
 	 * @default false
@@ -88,11 +98,11 @@ class UserSettingsAccountView extends UserSettingsView {
 	}
 
 	get _manageAccountButtonText() {
-		return UserSettingsAccountView.i18nBundle.getText(USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT);
+		return UserSettingsAccountView.i18nBundle?.getText(USER_SETTINGS_ACCOUNT_MANAGE_ACCOUNT_BUTTON_TXT);
 	}
 
 	get _editAvatarTooltip() {
-		return UserSettingsAccountView.i18nBundle.getText(USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT);
+		return UserSettingsAccountView.i18nBundle?.getText(USER_SETTINGS_ACCOUNT_EDIT_AVATAR_TXT);
 	}
 
 	get _account() {

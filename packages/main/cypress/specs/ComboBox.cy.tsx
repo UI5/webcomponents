@@ -188,21 +188,6 @@ describe("General Interaction", () => {
 		cy.get("[ui5-combobox]").should("have.prop", "focused", true);
 	});
 
-	it("shows focus outline on list item mousedown", () => {
-		cy.mount(
-			<ComboBox>
-				<ComboBoxItem text="One" />
-				<ComboBoxItem text="Two" />
-			</ComboBox>
-		);
-
-		cy.get("[ui5-combobox]").shadow().find(".inputIcon").realClick();
-		cy.get("[ui5-combobox]").shadow().find("[ui5-responsive-popover]").should("have.attr", "open");
-
-		cy.get("[ui5-cb-item]").first().shadow().find("li").realMouseDown();
-		cy.get("[ui5-cb-item]").first().should("have.prop", "focused", true);
-	});
-
 	it("tests Combo with two-column layout", () => {
 		cy.mount(
 			<ComboBox>
@@ -4272,5 +4257,97 @@ describe("ComboBoxItemCustom - Accessibility", () => {
 			.realClick();
 
 		cy.get("[ui5-cb-item-custom]").shadow().find("li").should("not.have.attr", "tabindex", "0");
+	});
+});
+
+describe("Newline normalization in item text", () => {
+	it("should fire change event twice when selecting two different items with newlines via keyboard", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nA"} value="item-a" />
+				<ComboBoxItem text={"Item\nB"} value="item-b" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
+	});
+
+	it("should fire change event when selecting items with identical normalized display text but different values", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text={"Item\nX"} value="first" />
+				<ComboBoxItem text="Item X" value="second" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.invoke("on", "ui5-change", cy.spy().as("changeSpy"));
+
+		cy.get("[ui5-cb-item]").should("have.length", 2);
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledOnce");
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("@combobox")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("ArrowDown");
+		cy.get("@combobox").realPress("Enter");
+
+		cy.get("@changeSpy").should("have.been.calledTwice");
 	});
 });

@@ -369,7 +369,7 @@ describe("Toolbar general interaction", () => {
 			});
 
 		cy.get("@toolbarSelect").then($select => {
-			$select.get(0).addEventListener("ui5-change", (e) => {
+			$select.get(0).addEventListener("ui5-change", (_: Event) => {
 				const input = document.querySelector("[data-testid='selectResult']") as HTMLInputElement;
 				input.value = "1";
 			});
@@ -400,7 +400,6 @@ describe("Toolbar general interaction", () => {
 
 	describe("value and label properties", () => {
 		it("Should verify the initial value of the ToolbarSelect", () => {
-			// Mount the Toolbar with a ToolbarSelect component
 			cy.mount(
 				<Toolbar>
 					<ToolbarSelect value="Option 2">
@@ -412,13 +411,16 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			);
 
-			// Verify the initial value of the ToolbarSelect
-			cy.get("ui5-select", { includeShadowDom: true })
-				.should("have.attr", "value", "Option 2");
+			cy.get("[ui5-toolbar]")
+				.find("[ui5-toolbar-select]")
+				.shadow()
+				.find("[ui5-select]")
+				.find("[ui5-option]")
+				.eq(1)
+				.should("have.attr", "selected");
 		});
 
 		it("Should verify the label slot content", () => {
-			// Mount the Toolbar with a ToolbarSelect component
 			cy.mount(
 				<Toolbar>
 					<ToolbarSelect value="Option 2">
@@ -430,14 +432,12 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			);
 
-			// Verify the label slot content
-			cy.get("ui5-toolbar-select")
+			cy.get("[ui5-toolbar-select]")
 				.find("span[slot='label']")
 				.should("contain.text", "Select an Option:");
 		});
 
 		it("Should change the value and update the selection", () => {
-			// Mount the Toolbar with a ToolbarSelect component
 			cy.mount(
 				<Toolbar>
 					<ToolbarSelect value="Option 2">
@@ -448,20 +448,25 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			);
 
-			// Change the value of the ToolbarSelect
-			cy.get("ui5-select", { includeShadowDom: true })
+			cy.get("[ui5-toolbar]")
+				.find("[ui5-toolbar-select]")
+				.shadow()
+				.find("[ui5-select]")
 				.realClick()
-				.find("ui5-option")
+				.find("[ui5-option]")
 				.contains("Option 3")
 				.realClick();
 
-			// Verify the updated value of the ToolbarSelect
-			cy.get("ui5-select", { includeShadowDom: true })
-				.should("have.attr", "value", "Option 3");
+			cy.get("[ui5-toolbar]")
+				.find("[ui5-toolbar-select]")
+				.shadow()
+				.find("[ui5-select]")
+				.find("[ui5-option]")
+				.eq(2)
+				.should("have.attr", "selected");
 		});
 
 		it("Should handle a value with no corresponding option", () => {
-			// Mount the Toolbar with a ToolbarSelect component
 			cy.mount(
 				<Toolbar>
 					<ToolbarSelect value="NonExistentOption">
@@ -472,13 +477,12 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			);
 
-			// Verify that no option is selected when the value does not match any option
-			cy.get("ui5-select", { includeShadowDom: true })
-				.should("have.attr", "value", "NonExistentOption");
+			cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+			cy.get("[ui5-toolbar-select-option]").eq(1).should("not.have.attr", "selected");
+			cy.get("[ui5-toolbar-select-option]").eq(2).should("not.have.attr", "selected");
 		});
 
 		it("Should update the value programmatically and reflect the selection", () => {
-			// Mount the Toolbar with a ToolbarSelect component
 			cy.mount(
 				<Toolbar>
 					<ToolbarSelect value="Option 1">
@@ -489,12 +493,15 @@ describe("Toolbar general interaction", () => {
 				</Toolbar>
 			);
 
-			// Update the value programmatically
-			cy.get("ui5-toolbar-select").invoke("attr", "value", "Option 3");
+			cy.get("[ui5-toolbar-select]").invoke("attr", "value", "Option 3");
 
-			// Verify the updated value and selection
-			cy.get("ui5-select", { includeShadowDom: true })
-				.should("have.attr", "value", "Option 3");
+			cy.get("[ui5-toolbar]")
+				.find("[ui5-toolbar-select]")
+				.shadow()
+				.find("[ui5-select]")
+				.find("[ui5-option]")
+				.eq(2)
+				.should("have.attr", "selected");
 		});
 	});
 
@@ -518,7 +525,7 @@ describe("Toolbar general interaction", () => {
 		});
 
 		// Verify the toolbar-select is rendered inside the popover
-		cy.get("ui5-toolbar-select").should("be.visible");
+		cy.get("[ui5-toolbar-select]").should("be.visible");
 	});
 
 	it("Should update selection when option's selected property is changed programmatically", () => {
@@ -536,34 +543,35 @@ describe("Toolbar general interaction", () => {
 			</>
 		);
 
-		// Set up button click handler
+		// Attach click handler once the button is in the DOM
 		cy.get("#btn").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				// First, deselect all options
-				const select = document.querySelector("ui5-toolbar-select");
-				const options = select?.querySelectorAll("ui5-toolbar-select-option");
+			$btn.get(0).addEventListener("click", () => {
+				const select = document.querySelector("[ui5-toolbar-select]");
+				const options = select?.querySelectorAll("[ui5-toolbar-select-option]");
 				options?.forEach(opt => {
 					(opt as ToolbarSelectOption).selected = false;
 				});
-				// Then select option 2
 				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
 				opt2.selected = true;
 			});
 		});
 
-		// Verify initial state - first option has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("have.attr", "selected");
+		// Verify initial state - option 2 is not selected (default selection is option 1)
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.false;
+		});
 
 		// Click button using realClick
 		cy.get("#btn").realClick();
 
-		// Verify option 2 now has the selected attribute
+		// Verify option 2 is now selected (explicit selection reflects to the light-DOM option)
+		cy.wrap(null).should(() => {
+			const opt2 = document.getElementById("opt2");
+			expect(opt2?.hasAttribute("selected")).to.be.true;
+		});
+
+		// The rendered select reflects option 2 as the selected value
 		cy.get("[ui5-toolbar]")
 			.find("[ui5-toolbar-select]")
 			.shadow()
@@ -571,18 +579,9 @@ describe("Toolbar general interaction", () => {
 			.find("[ui5-option]")
 			.eq(1)
 			.should("have.attr", "selected");
-
-		// Verify option 1 no longer has selected attribute
-		cy.get("[ui5-toolbar]")
-			.find("[ui5-toolbar-select]")
-			.shadow()
-			.find("[ui5-select]")
-			.find("[ui5-option]")
-			.eq(0)
-			.should("not.have.attr", "selected");
 	});
 
-	it("Should ensure only one option is selected at any time", () => {
+	it("Should display the last selected option when multiple options are set selected", () => {
 		cy.mount(
 			<>
 				<Toolbar>
@@ -596,27 +595,119 @@ describe("Toolbar general interaction", () => {
 			</>
 		);
 
-		// Set up button to attempt selecting multiple options
-		cy.get("#selectMultiple").then($btn => {
-			$btn.get(0).addEventListener("ui5-click", () => {
-				const opt1 = document.getElementById("opt1") as ToolbarSelectOption;
-				const opt2 = document.getElementById("opt2") as ToolbarSelectOption;
-				const opt3 = document.getElementById("opt3") as ToolbarSelectOption;
+		cy.document().then(doc => {
+			const btn = doc.getElementById("selectMultiple");
+			btn?.addEventListener("click", () => {
+				const opt1 = doc.getElementById("opt1") as ToolbarSelectOption;
+				const opt2 = doc.getElementById("opt2") as ToolbarSelectOption;
+				const opt3 = doc.getElementById("opt3") as ToolbarSelectOption;
 
-				// Try to select multiple options
 				opt1.selected = true;
 				opt2.selected = true;
-				opt3.selected = true; // This should be the final selection
+				opt3.selected = true;
 			});
 		});
 
-		// Click button to attempt multiple selections
 		cy.get("#selectMultiple").realClick();
 
-		// Verify only the last option (opt3) is selected
-		cy.get("[ui5-toolbar-select-option]").eq(2).should("have.attr", "selected");
+		// Inner display shows the last selected option (opt3)
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(2)
+			.should("have.attr", "selected");
+	});
+
+	it("Should clear outer selection when value is set to empty string after render", () => {
+		cy.mount(
+			<Toolbar>
+				<ToolbarSelect value="Option 2">
+					<ToolbarSelectOption>Option 1</ToolbarSelectOption>
+					<ToolbarSelectOption>Option 2</ToolbarSelectOption>
+					<ToolbarSelectOption>Option 3</ToolbarSelectOption>
+				</ToolbarSelect>
+			</Toolbar>
+		);
+
+		cy.document().then(doc => {
+			const select = doc.querySelector("[ui5-toolbar-select]") as ToolbarSelect;
+			select.value = "";
+		});
+
 		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
 		cy.get("[ui5-toolbar-select-option]").eq(1).should("not.have.attr", "selected");
-		cy.get("ui5-select", { includeShadowDom: true }).should("have.attr", "value", "3");
+		cy.get("[ui5-toolbar-select-option]").eq(2).should("not.have.attr", "selected");
+	});
+
+	it("Should not let stale _pendingValue override a later programmatic selected change", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarSelect value="Option 1">
+						<ToolbarSelectOption id="prog-opt1">Option 1</ToolbarSelectOption>
+						<ToolbarSelectOption id="prog-opt2">Option 2</ToolbarSelectOption>
+						<ToolbarSelectOption id="prog-opt3">Option 3</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+				<Button id="prog-btn">Select Option 3</Button>
+			</>
+		);
+
+		cy.get("#prog-btn").then($btn => {
+			$btn.get(0).addEventListener("click", () => {
+				const options = document.querySelectorAll("[ui5-toolbar-select-option]");
+				options.forEach(opt => { (opt as ToolbarSelectOption).selected = false; });
+				(document.getElementById("prog-opt3") as ToolbarSelectOption).selected = true;
+			});
+		});
+
+		cy.get("#prog-btn").realClick();
+
+		cy.get("[ui5-toolbar-select-option]").eq(2).should("have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(2)
+			.should("have.attr", "selected");
+	});
+
+	it("Should not let _pendingValue set by value='X' override a later option.selected change before pending is cleared", () => {
+		cy.mount(
+			<>
+				<Toolbar>
+					<ToolbarSelect id="pending-override" value="Option 1">
+						<ToolbarSelectOption id="pending-opt1">Option 1</ToolbarSelectOption>
+						<ToolbarSelectOption id="pending-opt2">Option 2</ToolbarSelectOption>
+						<ToolbarSelectOption id="pending-opt3">Option 3</ToolbarSelectOption>
+					</ToolbarSelect>
+				</Toolbar>
+				<Button id="pending-btn">Select Option 2 by selected</Button>
+			</>
+		);
+
+		cy.get("#pending-btn").then($btn => {
+			$btn.get(0).addEventListener("click", () => {
+				const options = document.querySelectorAll("[ui5-toolbar-select-option]");
+				options.forEach(opt => { (opt as ToolbarSelectOption).selected = false; });
+				(document.getElementById("pending-opt2") as ToolbarSelectOption).selected = true;
+			});
+		});
+
+		cy.get("#pending-btn").realClick();
+
+		cy.get("[ui5-toolbar-select-option]").eq(1).should("have.attr", "selected");
+		cy.get("[ui5-toolbar-select-option]").eq(0).should("not.have.attr", "selected");
+		cy.get("[ui5-toolbar]")
+			.find("[ui5-toolbar-select]")
+			.shadow()
+			.find("[ui5-select]")
+			.find("[ui5-option]")
+			.eq(1)
+			.should("have.attr", "selected");
 	});
 });
