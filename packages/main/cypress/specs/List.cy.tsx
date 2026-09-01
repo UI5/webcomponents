@@ -4013,20 +4013,16 @@ describe("List - InactiveSelectable type", () => {
 			</List>
 		);
 
-		cy.get("#item1").should("not.have.attr", "selected");
+		cy.get("[ui5-list]").then(($list) => {
+			$list[0].addEventListener("ui5-item-click", cy.stub().as("itemClickStub"));
+			$list[0].addEventListener("ui5-selection-change", cy.stub().as("selectionChangeStub"));
+		});
 
-		// Click item body — should NOT select
+		// Single mode renders no radio button — clicking item body does nothing
 		cy.get("#item1").click();
 		cy.get("#item1").should("not.have.attr", "selected");
-
-		// Clicking radio directly selects
-		cy.get("#item1").shadow().find("ui5-radio-button").click();
-		cy.get("#item1").should("have.attr", "selected");
-
-		// Clicking second item's radio moves selection
-		cy.get("#item2").shadow().find("ui5-radio-button").click();
-		cy.get("#item2").should("have.attr", "selected");
-		cy.get("#item1").should("not.have.attr", "selected");
+		cy.get("@itemClickStub").should("not.have.been.called");
+		cy.get("@selectionChangeStub").should("not.have.been.called");
 	});
 
 	it("type='InactiveSelectable' + selectionMode='Single' — pressing Space on item body does NOT select it", () => {
@@ -4113,10 +4109,10 @@ describe("List - InactiveSelectable type", () => {
 		cy.get("#item1").click();
 		cy.get("#item1").should("not.have.attr", "selected");
 
-		cy.get("#item1").shadow().find("ui5-radio-button").click();
+		cy.get("#item1").shadow().find("[id$='-singleSelectionElement']").click();
 		cy.get("#item1").should("have.attr", "selected");
 
-		cy.get("#item2").shadow().find("ui5-radio-button").click();
+		cy.get("#item2").shadow().find("[id$='-singleSelectionElement']").click();
 		cy.get("#item2").should("have.attr", "selected");
 		cy.get("#item1").should("not.have.attr", "selected");
 	});
@@ -4132,10 +4128,10 @@ describe("List - InactiveSelectable type", () => {
 		cy.get("#item1").click();
 		cy.get("#item1").should("not.have.attr", "selected");
 
-		cy.get("#item1").shadow().find("ui5-radio-button").click();
+		cy.get("#item1").shadow().find("[id$='-singleSelectionElement']").click();
 		cy.get("#item1").should("have.attr", "selected");
 
-		cy.get("#item2").shadow().find("ui5-radio-button").click();
+		cy.get("#item2").shadow().find("[id$='-singleSelectionElement']").click();
 		cy.get("#item2").should("have.attr", "selected");
 		cy.get("#item1").should("not.have.attr", "selected");
 	});
@@ -4234,6 +4230,7 @@ describe("List - InactiveSelectable type", () => {
 
 		cy.get("#item1").click();
 
+		cy.get("#item1").should("not.have.attr", "selected");
 		cy.get("@itemClickStub").should("not.have.been.called");
 		cy.get("@selectionChangeStub").should("not.have.been.called");
 	});
