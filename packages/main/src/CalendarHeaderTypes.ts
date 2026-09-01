@@ -5,6 +5,7 @@ export interface CalendarHeaderHost {
 	_isHeaderMonthButtonHidden: boolean;
 	_isHeaderYearButtonHidden: boolean;
 	_isHeaderYearRangeButtonHidden: boolean;
+	_isHeaderYearRangeButtonReadonly?: boolean;
 	_headerMonthButtonText?: string;
 	_headerYearButtonText?: string;
 	_headerYearButtonTextSecType?: string;

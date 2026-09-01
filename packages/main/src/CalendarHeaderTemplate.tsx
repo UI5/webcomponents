@@ -127,15 +127,15 @@ function renderMiddleButtons(
 				class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
 				part="calendar-header-middle-button"
 				hidden={this._isHeaderYearRangeButtonHidden}
-				tabindex={0}
-				role="button"
-				aria-label={this.accInfo.ariaLabelYearRangeButton}
-				aria-description={this.accInfo.ariaLabelYearRangeButton}
-				title={this.accInfo.tooltipYearRangeButton}
-				aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
-				onClick={this.onHeaderYearRangeButtonPress}
-				onKeyDown={this.onYearRangeButtonKeyDown}
-				onKeyUp={this.onYearRangeButtonKeyUp}
+				tabindex={this._isHeaderYearRangeButtonReadonly ? -1 : 0}
+				role={this._isHeaderYearRangeButtonReadonly ? undefined : "button"}
+				aria-label={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.ariaLabelYearRangeButton}
+				aria-description={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.ariaLabelYearRangeButton}
+				title={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.tooltipYearRangeButton}
+				aria-keyshortcuts={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.keyShortcutYearRangeButton}
+				onClick={this._isHeaderYearRangeButtonReadonly ? undefined : this.onHeaderYearRangeButtonPress}
+				onKeyDown={this._isHeaderYearRangeButtonReadonly ? undefined : this.onYearRangeButtonKeyDown}
+				onKeyUp={this._isHeaderYearRangeButtonReadonly ? undefined : this.onYearRangeButtonKeyUp}
 			>
 				<span>{this._headerYearRangeButtonText}</span>
 				{this.hasSecondaryCalendarType &&

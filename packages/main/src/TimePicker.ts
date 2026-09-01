@@ -69,8 +69,7 @@ import TimePickerCss from "./generated/themes/TimePicker.css.js";
 import TimePickerPopoverCss from "./generated/themes/TimePickerPopover.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
-import { isHighZoom, startHighZoomWatch } from "./util/HighZoomWatch.js";
-import type { HighZoomWatcher } from "./util/HighZoomWatch.js";
+import { isHighZoom, subscribeHighZoom, unsubscribeHighZoom } from "./util/HighZoomWatch.js";
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 
@@ -382,8 +381,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	@property({ type: Boolean, noAttribute: true })
 	_highZoom = false;
 
-	_zoomWatcher?: HighZoomWatcher;
-
 	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
 	 * Used by the getISOFormat method to avoid creating a new DateFormat instance on each call.
@@ -426,35 +423,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onEnterDOM() {
 		this._highZoom = isHighZoom();
-		this._startZoomWatch();
+		subscribeHighZoom(this);
 	}
 
 	onExitDOM() {
-		this._stopZoomWatch();
-	}
-
-	_isHighZoom(): boolean {
-		return isHighZoom();
-	}
-
-	_startZoomWatch() {
-		this._stopZoomWatch();
-		this._zoomWatcher = startHighZoomWatch(
-			() => this._highZoom,
-			bHighZoom => {
-				// _highZoom is a reactive @property — changing it re-renders the
-				// component and swaps the picker content / input icon accordingly.
-				this._highZoom = bHighZoom;
-			},
-			() => this.isConnected,
-		);
-	}
-
-	_stopZoomWatch() {
-		if (this._zoomWatcher) {
-			this._zoomWatcher.stop();
-			this._zoomWatcher = undefined;
-		}
+		unsubscribeHighZoom(this);
 	}
 
 	_onHzFocusIn(e: FocusEvent) {
@@ -595,7 +568,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_togglePicker() {
-		this._highZoom = this._isHighZoom();
+		this._highZoom = isHighZoom();
 		this.open = !this.open;
 		if (this._isMobileDevice) {
 			this._inputsPopover.open = false;

@@ -2,6 +2,7 @@ import type DateHighZoomInputs from "./DateHighZoomInputs.js";
 import type { YearPickerChangeEventDetail } from "./YearPicker.js";
 import Dialog from "./Dialog.js";
 import YearPicker from "./YearPicker.js";
+import Button from "./Button.js";
 import Icon from "./Icon.js";
 import Input from "./Input.js";
 import Select from "./Select.js";
@@ -150,6 +151,9 @@ function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 				_pageSize={8}
 				onChange={(e: CustomEvent<YearPickerChangeEventDetail>) => this._onYearPickerSelectionChange(e, isEnd)}
 			/>
+			<div slot="footer" class="ui5-dt-picker-footer">
+				<Button design="Transparent" class="ui5-dt-picker-action" onClick={() => this._cancelYearPicker(isEnd)}>{this._cancelLabel}</Button>
+			</div>
 		</Dialog>
 	);
 }

@@ -188,8 +188,12 @@ class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeader
 	}
 
 	get _isHeaderYearRangeButtonHidden() {
-		// In standalone (high-zoom) mode there is no Calendar parent to handle the
-		// year-range button press, so hide it to avoid a dead, focusable control.
+		return false;
+	}
+
+	get _isHeaderYearRangeButtonReadonly() {
+		// In standalone (high-zoom) mode there is no Calendar parent to handle year-range
+		// button presses, so show the text as non-interactive to avoid a dead focusable control.
 		return this._showHeader;
 	}
 

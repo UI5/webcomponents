@@ -13,8 +13,7 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import { getMaxCalendarDate, getMinCalendarDate } from "@ui5/webcomponents-localization/dist/dates/ExtremeDates.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type CalendarWeekNumbering from "./types/CalendarWeekNumbering.js";
-import { isHighZoom, startHighZoomWatch } from "./util/HighZoomWatch.js";
-import type { HighZoomWatcher } from "./util/HighZoomWatch.js";
+import { isHighZoom, subscribeHighZoom, unsubscribeHighZoom } from "./util/HighZoomWatch.js";
 
 /**
  * @class
@@ -133,8 +132,6 @@ class DateComponentBase extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_highZoom = false;
 
-	_zoomWatcher?: HighZoomWatcher;
-
 	constructor() {
 		super();
 	}
@@ -143,7 +140,7 @@ class DateComponentBase extends UI5Element {
 	 * Whether this component reacts to high-zoom (switches its UI at ≤320px). Only the
 	 * top-level pickers and the standalone Calendar do; the internal sub-pickers
 	 * (day/month/year) inherit this base but never consume _highZoom, so they opt out
-	 * to avoid attaching redundant resize listeners.
+	 * to avoid subscribing to the shared zoom watcher.
 	 */
 	get _shouldWatchZoom(): boolean {
 		return false;
@@ -152,31 +149,11 @@ class DateComponentBase extends UI5Element {
 	onEnterDOM() {
 		if (!this._shouldWatchZoom) { return; }
 		this._highZoom = isHighZoom();
-		this._startZoomWatch();
+		subscribeHighZoom(this);
 	}
 
 	onExitDOM() {
-		this._stopZoomWatch();
-	}
-
-	_startZoomWatch() {
-		this._stopZoomWatch();
-		this._zoomWatcher = startHighZoomWatch(
-			() => this._highZoom,
-			bHighZoom => {
-				// _highZoom is a reactive @property — changing it re-renders the
-				// component and swaps the picker content / input icon accordingly.
-				this._highZoom = bHighZoom;
-			},
-			() => this.isConnected,
-		);
-	}
-
-	_stopZoomWatch() {
-		if (this._zoomWatcher) {
-			this._zoomWatcher.stop();
-			this._zoomWatcher = undefined;
-		}
+		unsubscribeHighZoom(this);
 	}
 
 	get _primaryCalendarType() {

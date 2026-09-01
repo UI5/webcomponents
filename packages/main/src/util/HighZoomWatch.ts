@@ -4,8 +4,6 @@
  * At ~200% browser zoom on a narrow viewport the calendar/clock grids no longer fit, so the
  * pickers switch to a select-based UI. Detection is based on the effective viewport width
  * rather than a true zoom API (which browsers do not expose).
- *
- * TimePicker cannot extend DateComponentBase, so this logic lives here and is shared by both.
  */
 
 /** Effective viewport width (CSS px) at or below which pickers switch to their high-zoom UI. */
@@ -19,51 +17,64 @@ const isHighZoom = (): boolean => {
 	return ((window.visualViewport?.width) ?? window.innerWidth) <= HIGH_ZOOM_MAX_VIEWPORT_WIDTH;
 };
 
-type HighZoomWatcher = {
-	/** Removes the resize listeners and cancels any pending animation frame. */
-	stop: () => void;
+/**
+ * Implemented by any component that wants to be notified of high-zoom state changes.
+ * Implementors MUST declare `_highZoom` with `@property({ type: Boolean, noAttribute: true })`
+ * so that assigning it triggers component invalidation and re-render.
+ */
+interface HighZoomObserver {
+	_highZoom: boolean;
+}
+
+// --- Singleton pub/sub ---------------------------------------------------------
+
+const observers = new Set<HighZoomObserver>();
+let rafId = 0;
+
+const handler = () => {
+	if (rafId) {
+		cancelAnimationFrame(rafId);
+	}
+	rafId = requestAnimationFrame(() => {
+		rafId = 0;
+		const bHighZoom = isHighZoom();
+		observers.forEach(obs => {
+			if (obs._highZoom !== bHighZoom) {
+				obs._highZoom = bHighZoom;
+			}
+		});
+	});
 };
 
 /**
- * Starts watching for viewport changes that cross the high-zoom threshold.
- * `onChange` is called (with the new value) only when the high-zoom state actually flips,
- * deferred to the next animation frame so `visualViewport.width` reflects the settled layout.
+ * Registers a component to receive high-zoom state updates.
+ * The shared window listeners are created on the first subscription.
+ * Call in `onEnterDOM`.
  */
-const startHighZoomWatch = (
-	getCurrent: () => boolean,
-	onChange: (highZoom: boolean) => void,
-	isConnected: () => boolean,
-): HighZoomWatcher => {
-	let rafId = 0;
-
-	const handler = () => {
-		if (rafId) {
-			cancelAnimationFrame(rafId);
-		}
-		rafId = requestAnimationFrame(() => {
-			rafId = 0;
-			if (!isConnected()) { return; }
-			const bHighZoom = isHighZoom();
-			if (bHighZoom !== getCurrent()) {
-				onChange(bHighZoom);
-			}
-		});
-	};
-
-	window.visualViewport?.addEventListener("resize", handler);
-	window.addEventListener("resize", handler);
-
-	return {
-		stop() {
-			if (rafId) {
-				cancelAnimationFrame(rafId);
-				rafId = 0;
-			}
-			window.visualViewport?.removeEventListener("resize", handler);
-			window.removeEventListener("resize", handler);
-		},
-	};
+const subscribeHighZoom = (observer: HighZoomObserver): void => {
+	if (observers.size === 0) {
+		window.visualViewport?.addEventListener("resize", handler);
+		window.addEventListener("resize", handler);
+	}
+	observers.add(observer);
 };
 
-export { HIGH_ZOOM_MAX_VIEWPORT_WIDTH, isHighZoom, startHighZoomWatch };
-export type { HighZoomWatcher };
+/**
+ * Removes a component from high-zoom state updates.
+ * The shared window listeners are torn down when the last subscriber leaves.
+ * Call in `onExitDOM`.
+ */
+const unsubscribeHighZoom = (observer: HighZoomObserver): void => {
+	observers.delete(observer);
+	if (observers.size === 0) {
+		if (rafId) {
+			cancelAnimationFrame(rafId);
+			rafId = 0;
+		}
+		window.visualViewport?.removeEventListener("resize", handler);
+		window.removeEventListener("resize", handler);
+	}
+};
+
+export { HIGH_ZOOM_MAX_VIEWPORT_WIDTH, isHighZoom, subscribeHighZoom, unsubscribeHighZoom };
+export type { HighZoomObserver };
