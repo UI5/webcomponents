@@ -10,7 +10,8 @@
    stack and won't fit at high zoom. */
 .ui5-dhzi-root {
 	height: 100%;
-	padding: 0.5rem;
+	padding: 1rem;
+	overflow-x: hidden;
 	overflow-y: auto;
 	box-sizing: border-box;
 }
@@ -20,7 +21,7 @@
 }
 
 .ui5-dhzi-group {
-	padding: 0.5rem;
+	padding: 1rem;
 	border-bottom: 1px solid var(--sapList_BorderColor);
 }
 
@@ -62,7 +63,7 @@
 
 /* Year picker dialog */
 .ui5-dhzi-year-dialog::part(content) {
-	padding: 0.5rem;
+	padding: 1rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -92,9 +93,15 @@
 	margin-top: 0.125rem;
 }
 
-.ui5-dhzi-year-picker-footer {
+.ui5-dt-picker-footer {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-end;
-	gap: 0.5rem;
-	padding: 0.25rem 0.5rem;
+	align-items: center;
+	min-height: 2.75rem;
+	width: 100%;
+}
+
+.ui5-dt-picker-action {
+	margin: 0.25rem;
 }
