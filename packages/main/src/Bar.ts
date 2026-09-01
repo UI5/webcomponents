@@ -14,6 +14,8 @@ import {
 	isHome,
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
+import { isToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 import type BarDesign from "./types/BarDesign.js";
 import type BarAccessibleRole from "./types/BarAccessibleRole.js";
 
@@ -144,6 +146,10 @@ class Bar extends UI5Element {
 
 	_handleResizeBound: () => void;
 	_onKeyDownBound: (e: KeyboardEvent) => void;
+	_captureActiveElementBound: (e: KeyboardEvent) => void;
+	_activeAtKeyDown: HTMLElement | null = null;
+	_hasArrowNavProvider = false;
+	_arrowNavStateAtKeyDown: ToolbarArrowNavState | undefined = undefined;
 
 	get accInfo() {
 		return {
@@ -165,6 +171,7 @@ class Bar extends UI5Element {
 
 		this._handleResizeBound = this.handleResize.bind(this);
 		this._onKeyDownBound = this._onKeyDown.bind(this);
+		this._captureActiveElementBound = this._captureActiveElement.bind(this);
 	}
 
 	handleResize() {
@@ -184,7 +191,8 @@ class Bar extends UI5Element {
 			ResizeHandler.register(child as HTMLElement, this._handleResizeBound);
 		}, this);
 
-		this.addEventListener("keydown", this._onKeyDownBound, true);
+		this.addEventListener("keydown", this._captureActiveElementBound, true);
+		this.addEventListener("keydown", this._onKeyDownBound);
 	}
 
 	onExitDOM() {
@@ -194,7 +202,8 @@ class Bar extends UI5Element {
 			ResizeHandler.deregister(child as HTMLElement, this._handleResizeBound);
 		}, this);
 
-		this.removeEventListener("keydown", this._onKeyDownBound, true);
+		this.removeEventListener("keydown", this._captureActiveElementBound, true);
+		this.removeEventListener("keydown", this._onKeyDownBound);
 	 }
 
 	 get effectiveRole() {
@@ -202,63 +211,90 @@ class Bar extends UI5Element {
 	 }
 
 	_collectFocusableElements(): Array<HTMLElement> {
+		const contentSlotSelectors = [
+			"slot[name=\"startContent\"]",
+			"slot:not([name])",
+			"slot[name=\"endContent\"]",
+		];
+		const focusableElements: Array<HTMLElement> = [];
+
+		contentSlotSelectors.forEach(slotSelector => {
+			const contentSlot = this.shadowRoot!.querySelector<HTMLSlotElement>(slotSelector);
+			if (!contentSlot) {
+				return;
+			}
+			(contentSlot.assignedElements({ flatten: true }) as HTMLElement[]).forEach(assignedElement => {
+				focusableElements.push(...this._getFocusableFromElement(assignedElement));
+			});
+		});
+		return focusableElements;
+	}
+
+	_getFocusableFromElement(element: HTMLElement): Array<HTMLElement> {
+		if (isElementHidden(element)) {
+			return [];
+		}
+
+		if (instanceOfUI5Element(element)) {
+			const focusDomRef = element.getFocusDomRef();
+			if (focusDomRef && focusDomRef.tabIndex >= 0 && !isElementHidden(focusDomRef) && !(focusDomRef as HTMLInputElement).disabled) {
+				return [focusDomRef];
+			}
+			return [];
+		}
+
+		if (element.tabIndex >= 0 && !(element as HTMLInputElement).disabled) {
+			return [element];
+		}
+
+		// Non-focusable container: recurse into children
+		const childFocusables: Array<HTMLElement> = [];
+		Array.from(element.children).forEach(child => {
+			childFocusables.push(...this._getFocusableFromElement(child as HTMLElement));
+		});
+		return childFocusables;
+	}
+
+	_hasCaretNavigation(element: EventTarget | null): element is HTMLInputElement | HTMLTextAreaElement {
+		if (!(element instanceof HTMLElement)) {
+			return false;
+		}
+		const tagName = element.tagName.toLowerCase();
+		if (tagName === "textarea") {
+			return true;
+		}
+		if (tagName !== "input") {
+			return false;
+		}
+		const inputType = (element as HTMLInputElement).type.toLowerCase();
+		return ["text", "search", "url", "tel", "password", ""].includes(inputType);
+	}
+
+	_findOwnerArrowNavProvider(activeElement: HTMLElement) {
 		const slotSelectors = [
 			"slot[name=\"startContent\"]",
 			"slot:not([name])",
 			"slot[name=\"endContent\"]",
 		];
-		const result: Array<HTMLElement> = [];
-
-		slotSelectors.forEach(sel => {
-			const slotEl = this.shadowRoot!.querySelector<HTMLSlotElement>(sel);
-			if (!slotEl) {
-				return;
+		for (const slotSelector of slotSelectors) {
+			const slotElement = this.shadowRoot!.querySelector<HTMLSlotElement>(slotSelector);
+			if (!slotElement) {
+				continue;
 			}
-			(slotEl.assignedElements({ flatten: true }) as HTMLElement[]).forEach(el => {
-				result.push(...this._getFocusableFromElement(el));
-			});
-		});
-		return result;
+			for (const slottedElement of slotElement.assignedElements({ flatten: true }) as HTMLElement[]) {
+				if (isToolbarArrowNavProvider(slottedElement) && this._isNodeInsideElement(activeElement, slottedElement)) {
+					return slottedElement;
+				}
+			}
+		}
+		return null;
 	}
 
-	_getFocusableFromElement(el: HTMLElement): Array<HTMLElement> {
-		if (isElementHidden(el)) {
-			return [];
-		}
-
-		if (instanceOfUI5Element(el)) {
-			const focusRef = el.getFocusDomRef();
-			if (focusRef && focusRef.tabIndex >= 0 && !isElementHidden(focusRef) && !(focusRef as HTMLInputElement).disabled) {
-				return [focusRef];
-			}
-			return [];
-		}
-
-		if (el.tabIndex >= 0 && !(el as HTMLInputElement).disabled) {
-			return [el];
-		}
-
-		// Non-focusable container: recurse into children
-		const nested: Array<HTMLElement> = [];
-		Array.from(el.children).forEach(child => {
-			nested.push(...this._getFocusableFromElement(child as HTMLElement));
-		});
-		return nested;
-	}
-
-	_hasCaretNavigation(el: EventTarget | null): el is HTMLInputElement | HTMLTextAreaElement {
-		if (!(el instanceof HTMLElement)) {
-			return false;
-		}
-		const tag = el.tagName.toLowerCase();
-		if (tag === "textarea") {
-			return true;
-		}
-		if (tag !== "input") {
-			return false;
-		}
-		const type = (el as HTMLInputElement).type.toLowerCase();
-		return ["text", "search", "url", "tel", "password", ""].includes(type);
+	_captureActiveElement() {
+		this._activeAtKeyDown = getActiveElement() as HTMLElement | null;
+		const provider = this._activeAtKeyDown ? this._findOwnerArrowNavProvider(this._activeAtKeyDown) : null;
+		this._hasArrowNavProvider = provider !== null;
+		this._arrowNavStateAtKeyDown = provider ? provider.getArrowNavState() : undefined;
 	}
 
 	_onKeyDown(e: KeyboardEvent) {
@@ -273,6 +309,27 @@ class Bar extends UI5Element {
 
 		if (!isForward && !isBackward && !isHomeKey && !isEndKey) {
 			return;
+		}
+
+		if (isForward || isBackward) {
+			if (this._hasArrowNavProvider) {
+				const navState = this._arrowNavStateAtKeyDown;
+				if (!navState) {
+					return;
+				}
+				if (isForward && !navState.atRightEnd) {
+					return;
+				}
+				if (isBackward && !navState.atLeftEnd) {
+					return;
+				}
+			} else if (e.defaultPrevented) {
+				// Fallback for composite widgets not implementing IToolbarArrowNavProvider.
+				// Focus stayed on the same element → component was at its boundary.
+				if (getActiveElement() !== this._activeAtKeyDown) {
+					return;
+				}
+			}
 		}
 
 		const items = this._collectFocusableElements();
@@ -295,10 +352,11 @@ class Bar extends UI5Element {
 			if (isHomeKey || isEndKey) {
 				return;
 			}
-			if (isForward && input.selectionStart !== input.value.length) {
+			const selectionStart = input.selectionStart ?? 0;
+			if (isForward && selectionStart !== input.value.length) {
 				return;
 			}
-			if (isBackward && input.selectionStart !== 0) {
+			if (isBackward && selectionStart !== 0) {
 				return;
 			}
 		}
@@ -325,6 +383,7 @@ class Bar extends UI5Element {
 
 	_isNodeInsideElement(node: Node, element: HTMLElement): boolean {
 		let current: Node | null = node;
+
 		while (current) {
 			if (current === element) {
 				return true;
@@ -336,6 +395,7 @@ class Bar extends UI5Element {
 				current = current.parentNode;
 			}
 		}
+
 		return false;
 	}
 }
