@@ -240,9 +240,11 @@ class DateHighZoomInputs extends UI5Element {
 			// day count matches the (possibly non-Gregorian) year the caller is working in.
 			year = CalendarDate.fromLocalJSDate(new Date(), this._calType).getYear();
 		}
-		// Day 0 of the next month is the last day of this month, in the target calendar.
-		const lastDay = new CalendarDate(year, month, 1, this._calType);
-		lastDay.setMonth(month + 1, 0);
+		// CalendarDate(y,m,d,type) treats y/m/d as Gregorian values, so start from a
+		// known valid Gregorian date and use setYear/setMonth to work in the target type.
+		const lastDay = CalendarDate.fromLocalJSDate(new Date(2000, 0, 1), this._calType);
+		lastDay.setYear(year);
+		lastDay.setMonth(month + 1, 0); // day 0 of next month = last day of this month
 		return lastDay.getDate();
 	}
 
@@ -332,7 +334,13 @@ class DateHighZoomInputs extends UI5Element {
 		const day = isEnd ? this._endDayValue : this._dayValue;
 		const year = parseInt(yearStr);
 		if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) { return null; }
-		const jsDate = new CalendarDate(year, month, day, this._calType).toLocalJSDate();
+		// CalendarDate(y,m,d,type) treats y/m/d as Gregorian values, so start from a
+		// known valid Gregorian date and use setYear/setMonth to set values in the
+		// current calendar type before converting back to a local Gregorian JS Date.
+		const calDate = CalendarDate.fromLocalJSDate(new Date(2000, 0, 1), this._calType);
+		calDate.setYear(year);
+		calDate.setMonth(month, day);
+		const jsDate = calDate.toLocalJSDate();
 		return { year: jsDate.getFullYear(), month: jsDate.getMonth(), day: jsDate.getDate() };
 	}
 
