@@ -6,7 +6,7 @@ import AvatarBadgeClass from "@ui5/webcomponents/dist/AvatarBadge.js";
 const Avatar = createReactComponent(AvatarClass);
 const AvatarBadge = createReactComponent(AvatarBadgeClass);
 
-const accents = ["Accent1", "Accent2", "Accent3", "Accent4", "Accent5", "Accent6", "Accent7", "Accent8", "Accent9", "Accent10"];
+const accents = ["Accent1", "Accent2", "Accent3", "Accent4", "Accent5", "Accent6", "Accent7", "Accent8", "Accent9", "Accent10"] as const;
 
 function App() {
   return (
