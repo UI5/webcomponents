@@ -383,14 +383,12 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 
 	get _hzMinISO(): string {
 		if (!this.minDate) { return ""; }
-		const cd = this._minDate;
-		return `${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+		return this._minDate.toUTCJSDate().toISOString().slice(0, 10);
 	}
 
 	get _hzMaxISO(): string {
 		if (!this.maxDate) { return ""; }
-		const cd = this._maxDate;
-		return `${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+		return this._maxDate.toUTCJSDate().toISOString().slice(0, 10);
 	}
 
 	/**

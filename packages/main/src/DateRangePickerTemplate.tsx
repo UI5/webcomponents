@@ -17,8 +17,7 @@ export default function DateRangePickerTemplate(this: DateRangePicker) {
 
 function content(this: DateRangePicker) {
 	if (this._highZoom) {
-		const toISO = (cd: CalendarDateLocale) =>
-			`${String(cd.getYear()).padStart(4, "0")}-${String(cd.getMonth() + 1).padStart(2, "0")}-${String(cd.getDate()).padStart(2, "0")}`;
+		const toISO = (cd: CalendarDateLocale) => cd.toUTCJSDate().toISOString().slice(0, 10);
 		const minISO = this.minDate ? toISO(this._minDate) : "";
 		const maxISO = this.maxDate ? toISO(this._maxDate) : "";
 		const startDate = this._startDateTimestamp ? this.startDateValue : null;

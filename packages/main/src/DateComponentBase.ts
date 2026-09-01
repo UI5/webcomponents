@@ -153,7 +153,9 @@ class DateComponentBase extends UI5Element {
 	}
 
 	onExitDOM() {
-		unsubscribeHighZoom(this);
+		if (this._shouldWatchZoom) {
+			unsubscribeHighZoom(this);
+		}
 	}
 
 	get _primaryCalendarType() {
