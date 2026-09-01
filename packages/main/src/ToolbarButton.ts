@@ -144,6 +144,15 @@ class ToolbarButton extends ToolbarItemBase {
 	accessibleNameRef?: string;
 
 	/**
+	 * Defines the accessible description of the component.
+	 * @default undefined
+	 * @public
+	 * @since 2.27.0
+	 */
+	@property()
+	accessibleDescription?: string;
+
+	/**
 	 * Defines the ARIA role of the component.
 	 *
 	 * **Note:** Use `ButtonAccessibleRole.Link` role only with a press handler that performs navigation.
