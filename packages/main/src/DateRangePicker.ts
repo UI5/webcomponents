@@ -324,18 +324,14 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		this._togglePicker();
 	}
 
-	/**
-	 * @override — range mode: validate both dates
-	 */
+	// range mode: validate both dates
 	override _onHzInputsChange() {
 		if (this._hzInputs) {
 			this._hzOkEnabled = this._hzInputs.validate() && this._hzInputs.validateEndDate();
 		}
 	}
 
-	/**
-	 * @override — range mode: build "startDate - endDate" value string
-	 */
+	// range mode: build "startDate - endDate" value string
 	override _onHzOk() {
 		if (!this._hzInputs) { return; }
 		if (!this._hzInputs.validate() || !this._hzInputs.validateEndDate()) { return; }

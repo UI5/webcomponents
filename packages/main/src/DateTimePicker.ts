@@ -391,10 +391,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		return this._maxDate.toUTCJSDate().toISOString().slice(0, 10);
 	}
 
-	/**
-	 * @override — validate the date inputs in high-zoom mode (the time inputs are
-	 * range-bounded numeric fields and cannot be invalid)
-	 */
+	// validate the date inputs in high-zoom mode
 	override _onHzInputsChange() {
 		if (this._hzInputs) {
 			const dateOk = this._hzInputs.validate();
@@ -402,9 +399,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		}
 	}
 
-	/**
-	 * @override — combine selected date + time and fire change
-	 */
+	// combine selected date + time and fire change
 	override _onHzOk() {
 		if (!this._hzInputs) { return; }
 		if (!this._hzInputs.validate()) { return; }
@@ -426,9 +421,7 @@ class DateTimePicker extends DatePicker implements IFormInputElement {
 		this._togglePicker();
 	}
 
-	/**
-	 * @override — reset hz inputs on cancel
-	 */
+	// reset hz inputs on cancel
 	override _onHzCancel() {
 		if (this._hzInputs) {
 			this._hzInputs.resetValueState();

@@ -76,5 +76,7 @@ const unsubscribeHighZoom = (observer: HighZoomObserver): void => {
 	}
 };
 
-export { HIGH_ZOOM_MAX_VIEWPORT_WIDTH, isHighZoom, subscribeHighZoom, unsubscribeHighZoom };
+export {
+	HIGH_ZOOM_MAX_VIEWPORT_WIDTH, isHighZoom, subscribeHighZoom, unsubscribeHighZoom,
+};
 export type { HighZoomObserver };
