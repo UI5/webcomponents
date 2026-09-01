@@ -95,7 +95,7 @@ describe("AvatarBadge visual", () => {
 	it("extended color palette - all accents", () => {
 		cy.mount(
 			<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-				{["Accent1", "Accent2", "Accent3", "Accent4", "Accent5", "Accent6", "Accent7", "Accent8", "Accent9", "Accent10"].map((scheme) => (
+				{["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].map((scheme) => (
 					<Avatar key={scheme}>
 						<AvatarBadge slot="badge" icon="employee" colorScheme={scheme} />
 					</Avatar>
@@ -108,14 +108,14 @@ describe("AvatarBadge visual", () => {
 	it("extended color palette - semantic state overrides colorScheme", () => {
 		cy.mount(
 			<Avatar>
-				<AvatarBadge slot="badge" icon="alert" state="Negative" colorScheme="Accent3" />
+				<AvatarBadge slot="badge" icon="alert" state="Negative" colorScheme="3" />
 			</Avatar>
 		);
 		// semantic state wins - Negative red styling should apply
 		cy.get("[ui5-avatar]")
 			.find("[ui5-avatar-badge]")
 			.should("have.attr", "state", "Negative")
-			.should("have.attr", "color-scheme", "Accent3");
+			.should("have.attr", "color-scheme", "3");
 		cy.screenshot();
 	});
 });

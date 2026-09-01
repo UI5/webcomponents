@@ -12,7 +12,6 @@ import AvatarBadgeTemplate from "./AvatarBadgeTemplate.js";
 import AvatarBadgeCss from "./generated/themes/AvatarBadge.css.js";
 
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
-import type AvatarColorScheme from "./types/AvatarColorScheme.js";
 
 const ICON_NOT_FOUND = "ICON_NOT_FOUND";
 
@@ -98,20 +97,20 @@ class AvatarBadge extends UI5Element {
 	state: `${ValueState}` = ValueState.None;
 
 	/**
-	 * Defines the color scheme of the badge from the extended color palette.
+	 * Defines the color scheme of the badge using the indication color palette.
 	 *
-	 * Available options are `Accent1` through `Accent10`.
+	 * Available options are `"1"` through `"10"`, matching the indication colors
+	 * used by components such as `ui5-tag`.
 	 *
-	 * **Note:** This is a decorative property. `state` takes precedence - when
-	 * `state` is set to any value other than `None`, the semantic state styling
-	 * applies and `colorScheme` is ignored.
+	 * **Note:** `state` takes precedence - when `state` is set to any value other than `None`,
+	 * the semantic state styling applies and `colorScheme` is ignored.
 	 *
 	 * @default undefined
 	 * @public
 	 * @since 2.27.0
 	 */
 	@property()
-	colorScheme?: `${AvatarColorScheme}`;
+	colorScheme?: string;
 
 	/**
 	 * @private
