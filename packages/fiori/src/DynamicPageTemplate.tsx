@@ -21,6 +21,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 							name="headerArea"
 						></slot>
 					}
+					{headerActions.call(this)}
 				</div>
 
 				{this.headerInContent &&
@@ -29,13 +30,6 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 						name="headerArea"
 					></slot>
 				}
-
-				<div
-					class="ui5-dynamic-page-header-actions-wrapper"
-					style={this.actionsInTitle ? `position:sticky;top:${this._actionsBarStickyTop}px` : undefined}
-				>
-					{headerActions.call(this)}
-				</div>
 
 				<div
 					part="content"

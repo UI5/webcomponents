@@ -358,12 +358,6 @@ class DynamicPage extends UI5Element {
 		return this.hidePinButton || isPhone();
 	}
 
-	get _actionsBarStickyTop(): number {
-		const titleHeight = this.dynamicPageTitle?.getBoundingClientRect().height || 0;
-		const headerHeight = this.headerInTitle ? (this.dynamicPageHeader?.getBoundingClientRect().height || 0) : 0;
-		return titleHeight + headerHeight;
-	}
-
 	/**
 	 * Defines if the header is snapped.
 	 *
