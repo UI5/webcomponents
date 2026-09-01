@@ -401,13 +401,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	fireItemPress(e: Event) {
-		if (this.isInactive) {
-			return;
-		}
-		if (this.isInactiveSelectable) {
-			if (this.modeSingleSelect || this.modeMultiple) {
-				this.fireDecoratorEvent("selection-requested", { item: this, selected: !this.selected, selectionComponentPressed: false });
-			}
+		if (this.isInactive || this.isInactiveSelectable) {
 			return;
 		}
 		super.fireItemPress(e);
