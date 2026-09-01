@@ -312,6 +312,10 @@ class DynamicPage extends UI5Element {
 		return !this.showHeaderInStickArea && !this.headerInTitle && !this.hasSnappedTitleOnMobile;
 	}
 
+	get headerActionsAfterHeader(): boolean {
+		return this.headerInContent && !this._headerSnapped;
+	}
+
 	get _headerLabel() {
 		return this._headerSnapped
 			? DynamicPage.i18nBundle.getText(DYNAMIC_PAGE_ARIA_LABEL_SNAPPED_HEADER)

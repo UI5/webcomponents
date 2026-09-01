@@ -21,7 +21,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 							name="headerArea"
 						></slot>
 					}
-					{headerActions.call(this)}
+					{!this.headerActionsAfterHeader && headerActions.call(this)}
 				</div>
 
 				{this.headerInContent &&
@@ -30,6 +30,7 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 						name="headerArea"
 					></slot>
 				}
+				{this.headerActionsAfterHeader && headerActions.call(this)}
 
 				<div
 					part="content"
