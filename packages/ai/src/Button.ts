@@ -365,7 +365,6 @@ class Button extends UI5Element {
 		return {
 			root: {
 				hasPopup: this.accessibilityAttributes?.root?.hasPopup || "false",
-				roleDescription,
 				title: this.accessibilityAttributes?.root?.title || effectiveTitle,
 				ariaKeyShortcuts: this.accessibilityAttributes?.root?.ariaKeyShortcuts,
 			},
