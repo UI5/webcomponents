@@ -99,8 +99,7 @@ class AvatarBadge extends UI5Element {
 	/**
 	 * Defines the color scheme of the badge using the indication color palette.
 	 *
-	 * Available options are `"1"` through `"10"`, matching the indication colors
-	 * used by components such as `ui5-tag`.
+	 * Available options are `"1"` through `"10"`, matching the indication colors.
 	 *
 	 * **Note:** `state` takes precedence - when `state` is set to any value other than `None`,
 	 * the semantic state styling applies and `colorScheme` is ignored.
