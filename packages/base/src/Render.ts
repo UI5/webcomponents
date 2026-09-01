@@ -74,7 +74,7 @@ const cancelRender = (webComponent: UI5Element) => {
 const scheduleRenderTask = async () => {
 	if (!queuePromise) {
 		queuePromise = new Promise<void>(resolve => {
-			window.requestAnimationFrame(() => {
+			queueMicrotask(() => {
 				// Render all components in the queue
 
 				// console.log(`--------------------RENDER TASK START------------------------------`); // eslint-disable-line
