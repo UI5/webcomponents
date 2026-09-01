@@ -6,6 +6,10 @@
 * The ratio can be changed via the labelSpan and the emptySpan properties.
 */
 
+* {
+	box-sizing: border-box;
+}
+
 :host {
 	--ui5-form-item-label-justify-internal: start;
 	--ui5-form-item-label-padding-internal: 0.625rem 0.25rem 0 0.25rem;
