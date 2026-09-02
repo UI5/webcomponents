@@ -182,7 +182,6 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 		if (!this.navigable) {
 			return;
 		}
-		// Stop the switch from also triggering navigation
 		if ((e.target as HTMLElement)?.closest("[ui5-switch]")) {
 			return;
 		}
