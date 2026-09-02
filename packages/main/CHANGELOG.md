@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Bug Fixes
+
+* **ui5-avatar:** include badge tooltip in aria-label ([#13960](https://github.com/UI5/webcomponents/issues/13960)) ([a2d835f](https://github.com/UI5/webcomponents/commit/a2d835f3aae2299c84d7a0095334ee515668a57d))
+* **ui5-cb-item-group:** expose 'title' CSS shadow part via exportparts ([#13958](https://github.com/UI5/webcomponents/issues/13958)) ([5919eb7](https://github.com/UI5/webcomponents/commit/5919eb7bb0203e5d02c2acd85fdc2521ab60a8a3)), closes [#13936](https://github.com/UI5/webcomponents/issues/13936)
+* **ui5-icon:** replace size containment with font-size for icon sizing ([#13981](https://github.com/UI5/webcomponents/issues/13981)) ([b604bb3](https://github.com/UI5/webcomponents/commit/b604bb323071db5896a119365d4044c5044d0745))
+* **ui5-time-picker:** correct color and font tokens per UXC visual spec ([#13980](https://github.com/UI5/webcomponents/issues/13980)) ([8357e8d](https://github.com/UI5/webcomponents/commit/8357e8dba9703d689cfb0aa7fbdf88f895f511fe))
+
+
+### Features
+
+* **ui5-list:** add InactiveSelectable list item type ([#13962](https://github.com/UI5/webcomponents/issues/13962)) ([fc75e84](https://github.com/UI5/webcomponents/commit/fc75e84a32fe4efe5eefe16de0a3df9eacb78e68))
+* **ui5-number-input:** introduce NumberInput component ([#13799](https://github.com/UI5/webcomponents/issues/13799)) ([4c73dd5](https://github.com/UI5/webcomponents/commit/4c73dd576f4bd1093178a1f77949225e4b51f763))
+* **ui5-select:** add ui5-option-group component for grouped options ([#13913](https://github.com/UI5/webcomponents/issues/13913)) ([2fb0efd](https://github.com/UI5/webcomponents/commit/2fb0efd0052679400af0785d2ca09dcfa5b47756))
+
+
+
+
+
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **ui5-icon:** replace size containment with font-size for icon sizing ([#13986](https://github.com/UI5/webcomponents/issues/13986)) ([52ff411](https://github.com/UI5/webcomponents/commit/52ff4117b6c06ea9e6e41d72133ea655ae131508))
+
+
+### Features
+
+* **ui5-list:** add InactiveSelectable list item type ([#13962](https://github.com/UI5/webcomponents/issues/13962)) ([fc75e84](https://github.com/UI5/webcomponents/commit/fc75e84a32fe4efe5eefe16de0a3df9eacb78e68))
+
+
+
+
+
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **ui5-link:** adjust focus outline in HC themes ([#13968](https://github.com/UI5/webcomponents/issues/13968)) ([9faf49d](https://github.com/UI5/webcomponents/commit/9faf49ddecb8b2204748eb1169c407449ef4519a))
+* **ui5-list:** fix acc finding ([#13558](https://github.com/UI5/webcomponents/issues/13558)) ([d8afe1f](https://github.com/UI5/webcomponents/commit/d8afe1f89da4f3f783c2c21dd430c48faf249bc3))
+* **ui5-popup:** announce invisible messages inside open popups ([#13889](https://github.com/UI5/webcomponents/issues/13889)) ([db416cf](https://github.com/UI5/webcomponents/commit/db416cf0dfeda4176bdf3f4766dd17dd8fee690e))
+* **ui5-toolbar-select:** display not updating on programmatic option selection ([#13751](https://github.com/UI5/webcomponents/issues/13751)) ([920e66a](https://github.com/UI5/webcomponents/commit/920e66a6352cd7b6d3e2ccff30f37f8d76d26c73)), closes [#12619](https://github.com/UI5/webcomponents/issues/12619)
+
+
+### Features
+
+* **ui5-shellbar-search:** add search scope adaptive width ([#13787](https://github.com/UI5/webcomponents/issues/13787)) ([a18eb19](https://github.com/UI5/webcomponents/commit/a18eb19d630e490554fc232ef217ec996c4dd584))
+
+
+
+
+
+# [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
+
+
+### Bug Fixes
+
+* **ui5-date-picker:** input width is incorrect ([#13881](https://github.com/UI5/webcomponents/issues/13881)) ([f4c2675](https://github.com/UI5/webcomponents/commit/f4c26752dbefa5d04ed1082af051af6baaa72408))
+* **ui5-input:** remove role dialog from VSM ([#13875](https://github.com/UI5/webcomponents/issues/13875)) ([3b106d4](https://github.com/UI5/webcomponents/commit/3b106d4106cfef38db538d681e2c4e8a744a11cd))
+* **ui5-list:** suppress F2 aria description for custom items without tabbables ([#13865](https://github.com/UI5/webcomponents/issues/13865)) ([1b7be9b](https://github.com/UI5/webcomponents/commit/1b7be9b4c8fe858c6817d5c2ff01fd60f88e665b)), closes [#13489](https://github.com/UI5/webcomponents/issues/13489) [#13713](https://github.com/UI5/webcomponents/issues/13713)
+* **ui5-select:** fix acc finding ([#13559](https://github.com/UI5/webcomponents/issues/13559)) ([bdd790f](https://github.com/UI5/webcomponents/commit/bdd790fc94a5db99cfc9e56b31a36a8a93d4eae7))
+* **ui5-slider:** remove redundant accessibility role and attributes ([#13894](https://github.com/UI5/webcomponents/issues/13894)) ([69ad533](https://github.com/UI5/webcomponents/commit/69ad533fb29f969024c11537476ec1f264a4c666))
+* **ui5-table:** keep focused cell visible next to sticky columns ([#13850](https://github.com/UI5/webcomponents/issues/13850)) ([4a25d80](https://github.com/UI5/webcomponents/commit/4a25d80fca33f6a674eda0bcd41d8a5957327866))
+* **ui5-table:** set "More actions" tooltip on row action overflow button ([#13895](https://github.com/UI5/webcomponents/issues/13895)) ([17a64e4](https://github.com/UI5/webcomponents/commit/17a64e456dbac018f53bd8d661d05d495ac36b3c)), closes [#13839](https://github.com/UI5/webcomponents/issues/13839)
+* **ui5-tokenizer:** fix rare case when  n-more button cause loop error ([#13857](https://github.com/UI5/webcomponents/issues/13857)) ([d3bbb61](https://github.com/UI5/webcomponents/commit/d3bbb61b361bd5ce2def1c86562c0378e88aa7f7))
+
+
+### Features
+
+* **ui5-checkbox:** make component customizable ([#13617](https://github.com/UI5/webcomponents/issues/13617)) ([4062bc7](https://github.com/UI5/webcomponents/commit/4062bc708a8eab326226f68935bde4401816965d))
+* **ui5-menu:** page up/page down new behavior ([#13880](https://github.com/UI5/webcomponents/issues/13880)) ([cba4ffe](https://github.com/UI5/webcomponents/commit/cba4ffe2f3e4699f20d82b0c04a07a65ae88d9a3))
+* **ui5-rating-indicator:** add displayOnly mode ([#13910](https://github.com/UI5/webcomponents/issues/13910)) ([deffb10](https://github.com/UI5/webcomponents/commit/deffb103102978bbed65cd8de42be34161c50e2b))
+
+
+
+
+
 ## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
 
 

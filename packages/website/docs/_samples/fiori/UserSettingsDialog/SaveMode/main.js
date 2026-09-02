@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
