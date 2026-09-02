@@ -14,11 +14,6 @@ export default function UserSettingsNotificationsViewItemTemplate(this: UserSett
 }
 
 function headerItemContent(this: UserSettingsNotificationsViewItem) {
-	const rootClasses = ["ui5-user-settings-notifications-item"];
-	if (this.bylineText && this.text) {
-		rootClasses.push("has-byline");
-	}
-
 	return (
 		<div
 			class="ui5-user-settings-notifications-form-item"
@@ -32,30 +27,7 @@ function headerItemContent(this: UserSettingsNotificationsViewItem) {
 			onKeyDown={this._onkeydown}
 			onClick={this._handleFormItemClick}
 		>
-			<div class={rootClasses.join(" ")}>
-				<div class="ui5-user-settings-notifications-item-start">
-					<div class="ui5-user-settings-notifications-item-texts">
-						{this.text &&
-							<span class="ui5-user-settings-notifications-item-title">{this.text}</span>
-						}
-						{this.bylineText &&
-							<span class="ui5-user-settings-notifications-item-byline">{this.bylineText}</span>
-						}
-					</div>
-				</div>
-				<div class="ui5-user-settings-notifications-item-end">
-					{this._hasEndContent
-						? <slot name="endContent" onClick={this._handleEndClick}></slot>
-						: <Switch
-							class="ui5-user-settings-notifications-item-switch"
-							checked={this.checked}
-							onChange={this._handleSwitchChange}
-							accessibleName={this._accessibleSwitchName}
-							onClick={this._handleEndClick}
-						></Switch>
-					}
-				</div>
-			</div>
+			{itemBody.call(this)}
 			{this.navigable &&
 				<Icon
 					class="ui5-user-settings-notifications-item-arrow"
@@ -68,13 +40,12 @@ function headerItemContent(this: UserSettingsNotificationsViewItem) {
 }
 
 function listItemContent(this: UserSettingsNotificationsViewItem) {
-	const rootClasses = ["ui5-user-settings-notifications-item"];
-	if (this.bylineText && this.text) {
-		rootClasses.push("has-byline");
-	}
+	return itemBody.call(this);
+}
 
+function itemBody(this: UserSettingsNotificationsViewItem) {
 	return (
-		<div class={rootClasses.join(" ")}>
+		<div class={`ui5-user-settings-notifications-item${this.bylineText && this.text ? " has-byline" : ""}`}>
 			<div class="ui5-user-settings-notifications-item-start">
 				<div class="ui5-user-settings-notifications-item-texts">
 					{this.text &&

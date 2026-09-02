@@ -142,7 +142,7 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 	}
 
 	get _isHeaderItem(): boolean {
-		return this.getAttribute("slot")?.startsWith("headerItems") ?? false;
+		return this._individualSlot?.startsWith("headerItems") ?? false;
 	}
 
 	shouldForwardTabAfter(): boolean {
@@ -193,11 +193,9 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 	};
 
 	get accessibilityInfo(): AccessibilityInfo {
-		const description = this.bylineText ? `${this.text} ${this.bylineText}` : this.text;
-
 		return {
 			...super.accessibilityInfo,
-			description,
+			description: this._accessibleSwitchName,
 		};
 	}
 }

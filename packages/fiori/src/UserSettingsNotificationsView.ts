@@ -183,43 +183,27 @@ class UserSettingsNotificationsView extends UserSettingsView {
 				return;
 			}
 			await target._waitForDomRef();
-			const targetDomRef = target.getDomRef();
-			if (targetDomRef) {
-				const focusable = await getFirstFocusableElement(targetDomRef);
-				focusable?.focus();
-			}
+			const focusable = await getFirstFocusableElement(target.getDomRef()!);
+			focusable?.focus();
 		});
 	}
 
-	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
-		const listItem = e.detail.item;
-		if (!isInstanceOfUserSettingsNotificationsViewItem(listItem) || !listItem.navigable) {
-			return;
-		}
-
-		const eventPrevented = !this.fireDecoratorEvent("item-click", {
-			item: listItem,
-		});
-
-		if (eventPrevented) {
-			return;
-		}
-
-		this._navigateToSecondaryView(listItem);
-	};
-
-	_handleFormItemClick = (e: CustomEvent<{ item: UserSettingsNotificationsViewItem }>) => {
-		const item = e.detail.item;
+	_processItemClick(item: UserSettingsNotificationsViewItem) {
 		if (!isInstanceOfUserSettingsNotificationsViewItem(item) || !item.navigable) {
 			return;
 		}
-
-		const eventPrevented = !this.fireDecoratorEvent("item-click", { item });
-		if (eventPrevented) {
+		if (!this.fireDecoratorEvent("item-click", { item })) {
 			return;
 		}
-
 		this._navigateToSecondaryView(item);
+	}
+
+	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
+		this._processItemClick(e.detail.item as UserSettingsNotificationsViewItem);
+	};
+
+	_handleFormItemClick = (e: CustomEvent<{ item: UserSettingsNotificationsViewItem }>) => {
+		this._processItemClick(e.detail.item);
 	};
 }
 
