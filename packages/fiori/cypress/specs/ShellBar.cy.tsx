@@ -1050,6 +1050,11 @@ describe("Events", () => {
 					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
 					<Button slot="content">Button 1</Button>
 					<ToggleButton icon="sap-icon://da" slot="assistant" />
+					<ShellBarItem icon={activities} text="Action 1"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 2"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 3"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 4"></ShellBarItem>
+					<ShellBarItem icon={activities} text="Action 5"></ShellBarItem>
 				</ShellBar>
 			);
 
