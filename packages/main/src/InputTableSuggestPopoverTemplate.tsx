@@ -1,0 +1,144 @@
+import type InputTableSuggest from "./InputTableSuggest.js";
+import type { JsxTemplateResult } from "@ui5/webcomponents-base/dist/index.js";
+
+import Icon from "./Icon.js";
+import error from "@ui5/webcomponents-icons/dist/error.js";
+import alert from "@ui5/webcomponents-icons/dist/alert.js";
+import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
+import information from "@ui5/webcomponents-icons/dist/information.js";
+
+import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
+import Popover from "./Popover.js";
+import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
+import ResponsivePopover from "./ResponsivePopover.js";
+import Button from "./Button.js";
+import Title from "./Title.js";
+import Input from "./Input.js";
+import Table from "./Table.js";
+
+export default function InputTableSuggestPopoverTemplate(this: InputTableSuggest): JsxTemplateResult {
+	return (
+		<>
+			<ResponsivePopover
+				class="ui5-suggestions-popover"
+				hideArrow={true}
+				preventFocusRestore={true}
+				preventInitialFocus={true}
+				placement="Bottom"
+				horizontalAlign="Start"
+				tabindex={-1}
+				style={this.styles.suggestionsPopover}
+				onOpen={this._afterOpenPicker}
+				onClose={this._afterClosePicker}
+				open={this.open}
+				opener={this}
+				accessibleName={this.suggestionsText}
+			>
+				{this._isPhone &&
+					<div slot="header" class="ui5-responsive-popover-header">
+						<div class="row">
+							<Title level="H1" wrappingType="None" class="ui5-responsive-popover-header-text">
+								{this._headerTitleText}
+							</Title>
+						</div>
+						<div class="row">
+							<div class="input-root-phone native-input-wrapper">
+								<Input
+									class="ui5-input-inner-phone"
+									type={this.inputType}
+									value={this.value}
+									showClearIcon={this.showClearIcon}
+									placeholder={this.placeholder}
+									onInput={this._handleInput}
+								/>
+							</div>
+						</div>
+						{this.hasValueStateMessage &&
+						<div class={this.classes.popoverValueState} style={this.styles.suggestionPopoverHeader}>
+							{valueStateMessage.call(this, this.open)}
+						</div>
+						}
+					</div>
+				}
+
+				{!this._isPhone && this.hasValueStateMessage &&
+					<div
+						slot="header"
+						class={{
+							"ui5-responsive-popover-header": true,
+							...this.classes.popoverValueState,
+						}}
+						style={this.styles.suggestionPopoverHeader}
+					>
+						{valueStateMessage.call(this, this.open)}
+					</div>
+				}
+
+				{tabularSuggestionsList.call(this)}
+
+				{this._isPhone &&
+					<div slot="footer" class="ui5-responsive-popover-footer">
+						<Button design="Emphasized" onClick={this._confirmMobileValue}>
+							{this._suggestionsOkButtonText}
+						</Button>
+						<Button class="ui5-responsive-popover-close-btn" design="Transparent" onClick={this._cancelMobileValue}>
+							{this._suggestionsCancelButtonText}
+						</Button>
+					</div>
+				}
+			</ResponsivePopover>
+
+			{this.hasValueStateMessage && (
+				<Popover
+					preventInitialFocus={true}
+					preventFocusRestore={true}
+					hideArrow={true}
+					class="ui5-valuestatemessage-popover"
+					placement="Bottom"
+					tabindex={-1}
+					horizontalAlign={PopoverHorizontalAlign.Start}
+					opener={this}
+					open={this.valueStateOpen}
+					onClose={this._handleValueStatePopoverAfterClose}
+				>
+					<div slot="header" class={this.classes.popoverValueState}>
+						{valueStateMessage.call(this, this.valueStateOpen)}
+					</div>
+				</Popover>
+			)}
+		</>
+	);
+}
+
+function valueStateMessage(this: InputTableSuggest, open: boolean) {
+	const iconPerValueState = {
+		Negative: error,
+		Critical: alert,
+		Positive: sysEnter2,
+		Information: information,
+	};
+
+	const iconName = this.valueState !== ValueState.None ? iconPerValueState[this.valueState as keyof typeof iconPerValueState] : "";
+
+	return (
+		<>
+			<Icon class="ui5-input-value-state-message-icon" name={iconName} />
+			{open && (this.shouldDisplayDefaultValueStateMessage ? this.valueStateText : <slot name="valueStateMessage"></slot>)}
+		</>
+	);
+}
+
+function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
+	return (
+		<div class="ui5-input-table-suggest-wrapper" onClick={this._onTableRowClick}>
+			<Table
+				class="ui5-input-table-suggest-table"
+				overflowMode={this._overflowMode}
+				accessibleName={this.suggestionsText}
+			>
+				<slot name="suggestionColumns" slot="headerRow"></slot>
+				<slot name="suggestionRows"></slot>
+			</Table>
+		</div>
+	);
+}

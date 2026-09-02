@@ -150,7 +150,7 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 				focusRow ||= this.getFocusDomRef() as HTMLElement;
 			}
 
-			focusRow ||= this._table?.rows[0] as HTMLElement;
+			focusRow ||= this._table?._rows[0] as HTMLElement;
 
 			focusRow?.focus();
 		}
@@ -194,7 +194,7 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	loadMore(): void {
 		// remembers the last row. only do this when the table has a growing component rendered.
 		if (this._table && this.hasGrowingComponent()) {
-			this._currentLastRow = this._table.rows[this._table.rows.length - 1];
+			this._currentLastRow = this._table._rows[this._table._rows.length - 1];
 			this._shouldFocusRow = true;
 		}
 

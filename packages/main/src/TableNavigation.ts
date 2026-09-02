@@ -45,15 +45,15 @@ class TableNavigation extends TableExtension {
 
 	_getNavigationItemsOfGrid() {
 		const items = [];
-		if (this._table.headerRow[0] && !isElementHidden(this._table.headerRow[0])) {
-			items.push(this._getNavigationItemsOfRow(this._table.headerRow[0]));
+		if (this._table._headerRow[0] && !isElementHidden(this._table._headerRow[0])) {
+			items.push(this._getNavigationItemsOfRow(this._table._headerRow[0]));
 			this._gridWalker.setFirstRowPos(1);
 		} else {
 			this._gridWalker.setFirstRowPos(0);
 		}
 
-		if (this._table.rows.length) {
-			this._table.rows.forEach(row => items.push(this._getNavigationItemsOfRow(row)));
+		if (this._table._rows.length) {
+			this._table._rows.forEach(row => items.push(this._getNavigationItemsOfRow(row)));
 		} else if (this._table._noDataRow) {
 			items.push(this._getNavigationItemsOfRow(this._table._noDataRow));
 		}
@@ -161,7 +161,7 @@ class TableNavigation extends TableExtension {
 			return false;
 		}
 
-		const lastRow = this._table.rows.at(-1);
+		const lastRow = this._table._rows.at(-1);
 		const growingButton = this._table._getGrowing()?.getFocusDomRef();
 		const shouldFocusGrowingButton = direction === 1 && eventOrigin === lastRow;
 		const shouldFocusLastRow = direction === -1 && eventOrigin === growingButton;

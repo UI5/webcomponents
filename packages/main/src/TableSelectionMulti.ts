@@ -108,7 +108,7 @@ class TableSelectionMulti extends TableSelectionBase {
 			return;
 		}
 
-		const tableRows = row.isHeaderRow() ? this._table!.rows : [row as TableRow];
+		const tableRows = row.isHeaderRow() ? this._table!._rows : [row as TableRow];
 		const selectedSet = this.getSelectedAsSet();
 		const selectionChanged = tableRows.reduce((selectedSetChanged, tableRow) => {
 			const rowKey = this.getRowKey(tableRow);
@@ -133,19 +133,19 @@ class TableSelectionMulti extends TableSelectionBase {
 	 * @public
 	 */
 	getSelectedRows(): TableRow[] {
-		return this._table ? this._table.rows.filter(row => this.isSelected(row)) : [];
+		return this._table ? this._table._rows.filter(row => this.isSelected(row)) : [];
 	}
 
 	/**
 	 * Determines whether all rows are selected.
 	 */
 	areAllRowsSelected(): boolean {
-		if (!this._table || !this._table.rows.length) {
+		if (!this._table || !this._table._rows.length) {
 			return false;
 		}
 
 		const selectedSet = this.getSelectedAsSet();
-		return this._table.rows.filter(row => row._isSelectable).every(row => {
+		return this._table._rows.filter(row => row._isSelectable).every(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedSet.has(rowKey);
 		});
@@ -176,7 +176,7 @@ class TableSelectionMulti extends TableSelectionBase {
 	 * Returns the ARIA description of the selection component displayed in the column header.
 	 */
 	getAriaDescriptionForColumnHeader(): string | undefined {
-		if (!this._table || !this._table.rows.length || this.behavior === "RowOnly") {
+		if (!this._table || !this._table._rows.length || this.behavior === "RowOnly") {
 			return undefined;
 		}
 
@@ -253,8 +253,8 @@ class TableSelectionMulti extends TableSelectionBase {
 
 		if (e.shiftKey && this._rangeSelection?.isMouse) {
 			const startRow = this._rangeSelection.rows[0];
-			const startIndex = this._table.rows.indexOf(startRow);
-			const endIndex = this._table.rows.indexOf(row);
+			const startIndex = this._table._rows.indexOf(startRow);
+			const endIndex = this._table._rows.indexOf(row);
 
 			// Set checkbox to the selection state of the start row (if it is selected)
 			const selectionState = this.isSelected(startRow);
@@ -311,11 +311,11 @@ class TableSelectionMulti extends TableSelectionBase {
 		if (shouldReverseSelection) {
 			this._reverseRangeSelection();
 		} else {
-			const rowIndex = this._table!.rows.indexOf(targetRow);
+			const rowIndex = this._table!._rows.indexOf(targetRow);
 			const [startIndex, endIndex] = [rowIndex, rowIndex - change].sort((a, b) => a - b);
 			const selectedSet = this.getSelectedAsSet();
 
-			selectionChanged = this._table?.rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
+			selectionChanged = this._table?._rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
 				const isRowNotInSelection = !this._rangeSelection?.rows.includes(row);
 				const isRowSelectionDifferent = this.isSelected(row) !== this._rangeSelection!.selected;
 

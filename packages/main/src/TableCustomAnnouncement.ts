@@ -142,7 +142,7 @@ class TableCustomAnnouncement extends TableExtension {
 	}
 
 	private _findGroupRow(row: TableRow): TableGroupRow | undefined {
-		const rows = this._table.rows;
+		const rows = this._table._rows;
 		const rowIndex = rows.indexOf(row);
 		for (let i = rowIndex; i >= 0; i--) {
 			if (rows[i].isGroupRow()) {

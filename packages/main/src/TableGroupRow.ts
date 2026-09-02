@@ -112,7 +112,7 @@ class TableGroupRow extends TableRow {
 	}
 
 	get _ariaColSpan(): number {
-		const colSpan = this._table?.headerRow[0]?._visibleCells.length ?? 1;
+		const colSpan = this._table?._headerRow[0]?._visibleCells.length ?? 1;
 		return (this._renderDummyCell) ? colSpan - 1 : colSpan;
 	}
 }
