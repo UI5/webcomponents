@@ -775,7 +775,7 @@ class ShellBar extends UI5Element {
 			const wasHidden = brandingEl.hasAttribute("_title-hidden");
 			if (wasHidden) {
 				brandingEl.removeAttribute("_title-hidden");
-				// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+				// eslint-disable-next-line no-unused-expressions
 				brandingEl.offsetWidth;
 			}
 			const result = titleEl.scrollWidth > logoEl.offsetWidth * 2;
@@ -803,7 +803,7 @@ class ShellBar extends UI5Element {
 							brandingEl.toggleAttribute("_stacked", true);
 							// Force synchronous layout flush so the next isOverflowing() call
 							// reads the post-stack offsetWidth, not the stale pre-stack value.
-							// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+							// eslint-disable-next-line no-unused-expressions
 							brandingEl.offsetWidth;
 						}
 					} else if (brandingEl && visible) {

@@ -64,9 +64,9 @@ class ShellBarOverflow {
 		CONTENT: 1000,		// Then content (except last)
 		SEARCH: 2000,		// Then search button
 		LAST_CONTENT: 3000,	// Last content item hides last
-		BRANDING_STACKED: 3500,    // Branding stacks (title below logo) before identifier hides
+		BRANDING_STACKED: 3500, // Branding stacks (title below logo) before identifier hides
 		BRANDING_IDENTIFIER: 4000, // Branding identifier hides after all actions
-		BRANDING_LOGO: 5000,       // Logo hides last
+		BRANDING_LOGO: 5000, // Logo hides last
 	};
 
 	private readonly OPEN_SEARCH_STRATEGY = {
@@ -274,7 +274,9 @@ class ShellBarOverflow {
 		hiddenItemsIds: readonly string[];
 		hasBranding: boolean;
 	}): ReadonlyArray<ShellBarOverflowItem> {
-		const { actions, customItems, hiddenItemsIds, hasBranding } = params;
+		const {
+			actions, customItems, hiddenItemsIds, hasBranding,
+		} = params;
 		const result: ShellBarOverflowItem[] = [];
 
 		// Branding goes first when identifier or logo is hidden
