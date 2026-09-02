@@ -1,10 +1,61 @@
 :host {
 	--_ui5_user_settings_notifications_item_end_margin: 0.75rem;
 	min-height: var(--sapElement_LineHeight);
+	overflow: visible;
 }
 
+.ui5-li-root,
 .ui5-li-content {
 	overflow: visible;
+}
+
+.ui5-user-settings-notifications-form-item {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-height: var(--sapElement_LineHeight);
+	padding: var(--_ui5_list_item_base_padding, 0 1rem);
+	box-sizing: border-box;
+	background: var(--sapList_Background);
+	outline: none;
+	position: relative;
+	cursor: default;
+}
+
+@media (hover: hover) {
+	.ui5-user-settings-notifications-form-item:hover {
+		background: var(--sapList_Hover_Background);
+	}
+}
+
+:host([navigable]) .ui5-user-settings-notifications-form-item {
+	cursor: pointer;
+}
+
+.ui5-user-settings-notifications-form-item .ui5-user-settings-notifications-item-end {
+	padding-inline-end: var(--_ui5_list_item_icon_size, 1.125rem);
+}
+
+:host([navigable]) .ui5-user-settings-notifications-form-item .ui5-user-settings-notifications-item-end {
+	padding-inline-end: 0.25rem;
+}
+
+.ui5-user-settings-notifications-form-item .ui5-user-settings-notifications-item {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.ui5-user-settings-notifications-item-arrow {
+	flex-shrink: 0;
+}
+
+:host([desktop]) .ui5-user-settings-notifications-form-item:focus::after,
+.ui5-user-settings-notifications-form-item:focus-visible::after {
+	content: "";
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	position: absolute;
+	inset: 0.125rem;
+	pointer-events: none;
 }
 
 @container style(--ui5_content_density: compact) {

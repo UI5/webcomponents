@@ -11,9 +11,12 @@
 }
 
 .ui5-user-settings-notifications-view-form {
+	background: var(--sapGroup_ContentBackground);
 	border-bottom: 0.0625rem solid var(--sapList_BorderColor);
+	overflow: visible;
 }
 
 slot[name="additionalContent"]::slotted(*) {
 	display: block;
 }
+

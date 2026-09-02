@@ -9,6 +9,7 @@ import ListItemCustom from "@ui5/webcomponents/dist/ListItemCustom.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 import type Switch from "@ui5/webcomponents/dist/Switch.js";
 import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { AccessibilityInfo } from "@ui5/webcomponents-base/dist/types.js";
 import { isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 
@@ -62,9 +63,14 @@ type UserSettingsNotificationsViewItemSwitchChangeEventDetail = {
 	bubbles: true,
 })
 
+@event("_form-item-click", {
+	bubbles: true,
+})
+
 class UserSettingsNotificationsViewItem extends ListItemCustom {
 	eventDetails!: ListItemCustom["eventDetails"] & {
 		"switch-change": UserSettingsNotificationsViewItemSwitchChangeEventDetail;
+		"_form-item-click": { item: UserSettingsNotificationsViewItem };
 	}
 
 	/**
@@ -136,7 +142,7 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 	}
 
 	get _isHeaderItem(): boolean {
-		return this.getAttribute("slot") === "headerItems";
+		return this.getAttribute("slot")?.startsWith("headerItems") ?? false;
 	}
 
 	shouldForwardTabAfter(): boolean {
@@ -172,9 +178,29 @@ class UserSettingsNotificationsViewItem extends ListItemCustom {
 		this.fireDecoratorEvent("switch-change", { item: this, checked: this.checked });
 	};
 
+	_handleFormItemClick = (e: MouseEvent) => {
+		if (!this.navigable) {
+			return;
+		}
+		// Stop the switch from also triggering navigation
+		if ((e.target as HTMLElement)?.closest("[ui5-switch]")) {
+			return;
+		}
+		this.fireDecoratorEvent("_form-item-click", { item: this });
+	};
+
 	_handleEndClick = (e: MouseEvent) => {
 		e.stopPropagation();
 	};
+
+	get accessibilityInfo(): AccessibilityInfo {
+		const description = this.bylineText ? `${this.text} ${this.bylineText}` : this.text;
+
+		return {
+			...super.accessibilityInfo,
+			description,
+		};
+	}
 }
 
 UserSettingsNotificationsViewItem.define();

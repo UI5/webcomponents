@@ -243,6 +243,19 @@ class UserSettingsItem extends UI5Element {
 
 			if (!eventPrevented) {
 				selectedPageView.selected = false;
+				renderFinished().then(() => {
+					if (!this.isConnected) {
+						return;
+					}
+					// Try to focus the specific item that triggered drill-in
+					const primaryView = this.pages?.find(view => !view.secondary && view !== selectedPageView);
+					const lastItem = (primaryView as any)?._lastNavigatedItem;
+					if (lastItem?.getFocusDomRef) {
+						lastItem.getFocusDomRef()?.focus();
+					} else {
+						this._focusFirstContentElement();
+					}
+				});
 			}
 		} else {
 			this.fireDecoratorEvent("_collapse");

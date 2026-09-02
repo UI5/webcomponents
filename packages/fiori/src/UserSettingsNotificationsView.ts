@@ -8,6 +8,7 @@ import type UserSettingsNotificationsViewGroup from "./UserSettingsNotifications
 import { isInstanceOfUserSettingsNotificationsViewGroup } from "./UserSettingsNotificationsViewGroup.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -150,6 +151,8 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		return this.headerItems.length > 0;
 	}
 
+	_lastNavigatedItem: UserSettingsNotificationsViewItem | null = null;
+
 	get _listAccessibleName(): string {
 		return this.secondary
 			? UserSettingsNotificationsView.i18nBundle.getText(USER_SETTINGS_NOTIFICATIONS_PREFERENCES_LIST_LABEL)
@@ -172,16 +175,20 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		}
 
 		this.selected = false;
+		this._lastNavigatedItem = item;
 		target.selected = true;
 
-		if (item.matches(":focus-visible")) {
-			renderFinished().then(() => {
-				if (!this.isConnected) {
-					return;
-				}
-				parentItem?.focusFirstContentElement();
-			});
-		}
+		renderFinished().then(async () => {
+			if (!this.isConnected) {
+				return;
+			}
+			await target._waitForDomRef();
+			const targetDomRef = target.getDomRef();
+			if (targetDomRef) {
+				const focusable = await getFirstFocusableElement(targetDomRef);
+				focusable?.focus();
+			}
+		});
 	}
 
 	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
@@ -199,6 +206,20 @@ class UserSettingsNotificationsView extends UserSettingsView {
 		}
 
 		this._navigateToSecondaryView(listItem);
+	};
+
+	_handleFormItemClick = (e: CustomEvent<{ item: UserSettingsNotificationsViewItem }>) => {
+		const item = e.detail.item;
+		if (!isInstanceOfUserSettingsNotificationsViewItem(item) || !item.navigable) {
+			return;
+		}
+
+		const eventPrevented = !this.fireDecoratorEvent("item-click", { item });
+		if (eventPrevented) {
+			return;
+		}
+
+		this._navigateToSecondaryView(item);
 	};
 }
 
