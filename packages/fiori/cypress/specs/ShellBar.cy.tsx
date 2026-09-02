@@ -1038,7 +1038,7 @@ describe("Events", () => {
 		});
 
 		it("notificationsDomRef returns overflow button when notifications are in overflow", () => {
-			cy.viewport(320, 800);
+			cy.viewport(200, 800);
 			cy.mount(
 				<ShellBar
 					primaryTitle="Product Title"
