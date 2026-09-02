@@ -1,5 +1,6 @@
 import SingleDateTemplate from "./SingleDateTemplate.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicDateRange.js";
 import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import {
@@ -76,7 +77,7 @@ class SingleDate implements IDynamicDateRangeOption {
 		currentValue.operator = this.operator;
 
 		if (e.detail.selectedDates[0]) {
-			currentValue.values[0] = new Date(e.detail.selectedDates[0] * 1000);
+			currentValue.values[0] = CalendarDate.fromTimestamp(e.detail.selectedDates[0] * 1000).toLocalJSDate();
 		}
 
 		return currentValue;
