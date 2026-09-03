@@ -41,6 +41,7 @@ import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/reset.js";
 import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
