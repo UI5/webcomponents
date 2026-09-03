@@ -3,22 +3,19 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import DragAndDropHandler from "./delegate/DragAndDropHandler.js";
 import MovePlacement from "@ui5/webcomponents-base/dist/types/MovePlacement.js";
 import type DropIndicator from "./DropIndicator.js";
 import type ListItemBase from "./ListItemBase.js";
-import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
+import ListItemGroupBase from "./ListItemGroupBase.js";
 
 // Template
 import ListItemGroupTemplate from "./ListItemGroupTemplate.js";
 
 // Styles
 import ListItemGroupCss from "./generated/themes/ListItemGroup.css.js";
-import type ListItemGroupHeader from "./ListItemGroupHeader.js";
 import WrappingType from "./types/WrappingType.js";
-import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
 
 type ListItemGroupMoveEventDetail = {
 	source: {
@@ -42,7 +39,7 @@ type ListItemGroupMoveEventDetail = {
  * @csspart header - Used to style the header item of the group
  * @csspart title - Used to style the title of the group header
  * @constructor
- * @extends UI5Element
+ * @extends ListItemGroupBase
  * @public
  * @since 2.0.0
  */
@@ -82,19 +79,11 @@ type ListItemGroupMoveEventDetail = {
 	bubbles: true,
 })
 
-class ListItemGroup extends UI5Element {
-	eventDetails!: {
-		"click"?: ListItemBaseClickEventDetail,
+class ListItemGroup extends ListItemGroupBase {
+	eventDetails!: ListItemGroupBase["eventDetails"] & {
 		"move-over": ListItemGroupMoveEventDetail,
 		"move": ListItemGroupMoveEventDetail,
 	}
-	/**
-	 * Defines the header text of the <code>ui5-li-group</code>.
-	 * @public
-	 * @default undefined
-	 */
-	@property()
-	headerText?: string;
 
 	/**
 	 * Defines the accessible name of the header.
@@ -103,17 +92,6 @@ class ListItemGroup extends UI5Element {
 	 */
 	@property()
 	headerAccessibleName?: string;
-
-	/**
-	 * Defines the items of the <code>ui5-li-group</code>.
-	 * @public
-	 */
-	@slot({
-		"default": true,
-		invalidateOnChildChange: true,
-		type: HTMLElement,
-	})
-	items!: DefaultSlot<ListItemBase>;
 
 	/**
 	 * Defines if the text of the component should wrap when it's too long.
@@ -165,20 +143,12 @@ class ListItemGroup extends UI5Element {
 		});
 	}
 
-	get groupHeaderItem() {
-		return this.shadowRoot!.querySelector<ListItemGroupHeader>("[ui5-li-group-header]")!;
-	}
-
 	get hasHeader(): boolean {
 		return !!this.headerText || this.hasFormattedHeader;
 	}
 
 	get hasFormattedHeader(): boolean {
 		return !!this.header.length;
-	}
-
-	get isListItemGroup() {
-		return true;
 	}
 
 	get dropIndicatorDOM(): DropIndicator | null {
@@ -219,5 +189,5 @@ class ListItemGroup extends UI5Element {
 ListItemGroup.define();
 
 export default ListItemGroup;
-export const isInstanceOfListItemGroup = createInstanceChecker<ListItemGroup>("isListItemGroup");
+export { isInstanceOfListItemGroup } from "./ListItemGroupBase.js";
 export type { ListItemGroupMoveEventDetail };
