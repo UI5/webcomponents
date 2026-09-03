@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-flexible-column-layout:** acc findings fixed  ([#13553](https://github.com/UI5/webcomponents/issues/13553)) ([fe1482d](https://github.com/UI5/webcomponents/commit/fe1482d129bef2eea370a0963978c3648ddc6ceb))
+* **ui5-side-navigation:** correct overflow items visibility calculation ([#13871](https://github.com/UI5/webcomponents/issues/13871)) ([e486764](https://github.com/UI5/webcomponents/commit/e48676441edb2abe5313c1d9272defc2d5bd3f94))
+* **ui5-user-menu:** replace invalid aria-label of div with accessible name on Bar ([#14016](https://github.com/UI5/webcomponents/issues/14016)) ([4608e14](https://github.com/UI5/webcomponents/commit/4608e14cab8d4cba871f428500ab959569cf4535))
+
+
+
+
+
 # [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
 
 
