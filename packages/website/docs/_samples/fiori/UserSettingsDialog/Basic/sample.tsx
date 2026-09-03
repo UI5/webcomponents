@@ -8,7 +8,6 @@ import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBrandin
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
-import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
@@ -40,7 +39,6 @@ import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/reset.js";
-import "@ui5/webcomponents-icons/dist/home.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
@@ -48,7 +46,6 @@ const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const UserMenu = createReactComponent(UserMenuClass);
 const UserMenuAccount = createReactComponent(UserMenuAccountClass);
 const UserMenuItem = createReactComponent(UserMenuItemClass);
-const UserMenuItemGroup = createReactComponent(UserMenuItemGroupClass);
 const UserSettingsAccountView = createReactComponent(UserSettingsAccountViewClass);
 const UserSettingsAppearanceView = createReactComponent(
   UserSettingsAppearanceViewClass,
@@ -291,13 +288,6 @@ function App() {
           selected={true}
         />
         <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
-        <UserMenuItem icon="home" text="Default Landing Page" data-id="default-landing-page" showSelection={true}>
-          <UserMenuItemGroup checkMode="Single">
-            <UserMenuItem text="Home Page" data-id="home-page" checked={true} />
-            <UserMenuItem text="Dashboard" data-id="dashboard" />
-            <UserMenuItem text="Admin Settings" data-id="admin-settings" />
-          </UserMenuItemGroup>
-        </UserMenuItem>
       </UserMenu>
 
       <UserSettingsDialog
