@@ -8,11 +8,13 @@ import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBrandin
 import UserMenuClass from "@ui5/webcomponents-fiori/dist/UserMenu.js";
 import UserMenuAccountClass from "@ui5/webcomponents-fiori/dist/UserMenuAccount.js";
 import UserMenuItemClass from "@ui5/webcomponents-fiori/dist/UserMenuItem.js";
-import UserMenuItemGroupClass from "@ui5/webcomponents-fiori/dist/UserMenuItemGroup.js";
 import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import UserSettingsAppearanceViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import UserSettingsNotificationsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsView.js";
+import UserSettingsNotificationsViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewGroup.js";
+import UserSettingsNotificationsViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewItem.js";
 import UserSettingsDialogClass from "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
 import UserSettingsItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import UserSettingsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
@@ -24,6 +26,7 @@ import OptionClass from "@ui5/webcomponents/dist/Option.js";
 import IconClass from "@ui5/webcomponents/dist/Icon.js";
 import LabelClass from "@ui5/webcomponents/dist/Label.js";
 import MessageStripClass from "@ui5/webcomponents/dist/MessageStrip.js";
+import LinkClass from "@ui5/webcomponents/dist/Link.js";
 import PanelClass from "@ui5/webcomponents/dist/Panel.js";
 import SwitchClass from "@ui5/webcomponents/dist/Switch.js";
 import TextClass from "@ui5/webcomponents/dist/Text.js";
@@ -36,14 +39,13 @@ import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/reset.js";
-import "@ui5/webcomponents-icons/dist/home.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
 const UserMenu = createReactComponent(UserMenuClass);
 const UserMenuAccount = createReactComponent(UserMenuAccountClass);
 const UserMenuItem = createReactComponent(UserMenuItemClass);
-const UserMenuItemGroup = createReactComponent(UserMenuItemGroupClass);
 const UserSettingsAccountView = createReactComponent(UserSettingsAccountViewClass);
 const UserSettingsAppearanceView = createReactComponent(
   UserSettingsAppearanceViewClass,
@@ -53,6 +55,15 @@ const UserSettingsAppearanceViewGroup = createReactComponent(
 );
 const UserSettingsAppearanceViewItem = createReactComponent(
   UserSettingsAppearanceViewItemClass,
+);
+const UserSettingsNotificationsView = createReactComponent(
+  UserSettingsNotificationsViewClass,
+);
+const UserSettingsNotificationsViewGroup = createReactComponent(
+  UserSettingsNotificationsViewGroupClass,
+);
+const UserSettingsNotificationsViewItem = createReactComponent(
+  UserSettingsNotificationsViewItemClass,
 );
 const UserSettingsDialog = createReactComponent(UserSettingsDialogClass);
 const UserSettingsItem = createReactComponent(UserSettingsItemClass);
@@ -65,6 +76,7 @@ const Option = createReactComponent(OptionClass);
 const Icon = createReactComponent(IconClass);
 const Label = createReactComponent(LabelClass);
 const MessageStrip = createReactComponent(MessageStripClass);
+const Link = createReactComponent(LinkClass);
 const Panel = createReactComponent(PanelClass);
 const Switch = createReactComponent(SwitchClass);
 const Text = createReactComponent(TextClass);
@@ -276,13 +288,6 @@ function App() {
           selected={true}
         />
         <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
-        <UserMenuItem icon="home" text="Default Landing Page" data-id="default-landing-page" showSelection={true}>
-          <UserMenuItemGroup checkMode="Single">
-            <UserMenuItem text="Home Page" data-id="home-page" checked={true} />
-            <UserMenuItem text="Dashboard" data-id="dashboard" />
-            <UserMenuItem text="Admin Settings" data-id="admin-settings" />
-          </UserMenuItemGroup>
-        </UserMenuItem>
       </UserMenu>
 
       <UserSettingsDialog
@@ -552,12 +557,116 @@ function App() {
           headerText="Notifications"
           onSelectionChange={handleSettingsDialogItemSelectionChange}
         >
-          <UserSettingsView>
-            <CheckBox
-              checked={true}
-              text="Show High-Priority Notification Alerts"
-            />
-          </UserSettingsView>
+          <UserSettingsNotificationsView id="notifications-main-view">
+            <MessageStrip slot="additionalContent" design="Information" hideCloseButton={true}>
+              Some settings are managed by your organization. <Link>Learn More</Link>
+            </MessageStrip>
+            <UserSettingsNotificationsViewItem slot="headerItems" itemKey="allow-notifications" text="Allow Notifications" checked={true} />
+            <UserSettingsNotificationsViewItem slot="headerItems" itemKey="allow-banner-alerts" text="Allow Banner Alerts" bylineText="Switch on Banner for Notifications" checked={true} />
+            <UserSettingsNotificationsViewGroup headerText="Sales">
+              <UserSettingsNotificationsViewItem itemKey="sales-order-updates" text="Sales Order Updates" checked={true} navigable={true} />
+              <UserSettingsNotificationsViewItem itemKey="sales-order-approvals" text="Sales Order Approvals" navigable={true} />
+              <UserSettingsNotificationsViewItem itemKey="sales-order-release" text="Sales Order Release" checked={true} navigable={true} />
+            </UserSettingsNotificationsViewGroup>
+            <UserSettingsNotificationsViewGroup headerText="Purchasing">
+              <UserSettingsNotificationsViewItem itemKey="po-approval" text="Purchase Order Approval" checked={true} navigable={true} />
+              <UserSettingsNotificationsViewItem itemKey="po-rejection" text="Purchase Order Rejection" />
+              <UserSettingsNotificationsViewItem itemKey="po-overdue" text="Purchase Order Overdue" checked={true} navigable={true} />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="allow-notifications" secondary={true}>
+            <Text slot="additionalContent">Control how and where you receive notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Channels">
+              <UserSettingsNotificationsViewItem itemKey="an-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="an-email" text="Email" bylineText="Receive notifications by email." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="an-push" text="Push Notifications" bylineText="Receive notifications instantly on your mobile device." />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="allow-banner-alerts" secondary={true}>
+            <Text slot="additionalContent">Configure banner alert behavior for incoming notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Banner Settings">
+              <UserSettingsNotificationsViewItem itemKey="ab-sound" text="Play Sound" bylineText="Play a sound when a banner alert appears." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="ab-duration" text="Display Duration" bylineText="Choose how long the banner stays on screen.">
+                <Select slot="endContent">
+                  <Option selected={true}>5 seconds</Option>
+                  <Option>10 seconds</Option>
+                  <Option>Until dismissed</Option>
+                </Select>
+              </UserSettingsNotificationsViewItem>
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="sales-order-updates" secondary={true}>
+            <Text slot="additionalContent">Configure how you want to receive Sales Order Updates notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Preferences">
+              <UserSettingsNotificationsViewItem itemKey="sou-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sou-banner" text="Banner Alerts" bylineText="Receive notifications instantly as a fly-in banner." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sou-push" text="Push Notifications" bylineText="Receive notifications instantly on your mobile device." />
+              <UserSettingsNotificationsViewItem itemKey="sou-email" text="Email" bylineText="Receive notifications by email." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sou-frequency" text="Frequency" bylineText="Choose the frequency of receiving a notification.">
+                <Select slot="endContent">
+                  <Option selected={true}>Immediate</Option>
+                  <Option>Every 15 minutes</Option>
+                  <Option>Hourly</Option>
+                  <Option>Daily digest</Option>
+                </Select>
+              </UserSettingsNotificationsViewItem>
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="sales-order-approvals" secondary={true}>
+            <Text slot="additionalContent">Configure how you want to receive Sales Order Approvals notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Preferences">
+              <UserSettingsNotificationsViewItem itemKey="soa-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="soa-banner" text="Banner Alerts" bylineText="Receive notifications instantly as a fly-in banner." />
+              <UserSettingsNotificationsViewItem itemKey="soa-push" text="Push Notifications" bylineText="Receive notifications instantly on your mobile device." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="soa-email" text="Email" bylineText="Receive notifications by email." checked={true} />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="sales-order-release" secondary={true}>
+            <Text slot="additionalContent">Configure how you want to receive Sales Order Release notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Preferences">
+              <UserSettingsNotificationsViewItem itemKey="sor-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="sor-email" text="Email" bylineText="Receive notifications by email." />
+              <UserSettingsNotificationsViewItem itemKey="sor-frequency" text="Frequency" bylineText="Choose the frequency of receiving a notification.">
+                <Select slot="endContent">
+                  <Option selected={true}>Immediate</Option>
+                  <Option>Every 15 minutes</Option>
+                  <Option>Daily digest</Option>
+                </Select>
+              </UserSettingsNotificationsViewItem>
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="po-approval" secondary={true}>
+            <Text slot="additionalContent">Approval-specific channels. These settings apply only to Purchase Order Approval notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Approver Preferences">
+              <UserSettingsNotificationsViewItem itemKey="po-approval-mobile" text="Push to mobile" bylineText="Approve or reject directly from your device." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="po-approval-summary" text="Daily summary email" bylineText="Receive one email per day with all pending approvals." />
+              <UserSettingsNotificationsViewItem itemKey="po-approval-delegation" text="Delegation" bylineText="Route approvals to a delegate when you are out of office." />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="po-rejection" secondary={true}>
+            <Text slot="additionalContent">Configure how you want to receive Purchase Order Rejection notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Preferences">
+              <UserSettingsNotificationsViewItem itemKey="por-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." />
+              <UserSettingsNotificationsViewItem itemKey="por-email" text="Email" bylineText="Receive notifications by email." checked={true} />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
+
+          <UserSettingsNotificationsView id="po-overdue" secondary={true}>
+            <Text slot="additionalContent">Configure how you want to receive Purchase Order Overdue notifications.</Text>
+            <UserSettingsNotificationsViewGroup headerText="Notification Preferences">
+              <UserSettingsNotificationsViewItem itemKey="poo-panel" text="Notifications Panel" bylineText="Receive notifications through the central notifications panel." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="poo-banner" text="Banner Alerts" bylineText="Receive notifications instantly as a fly-in banner." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="poo-push" text="Push Notifications" bylineText="Receive notifications instantly on your mobile device." checked={true} />
+              <UserSettingsNotificationsViewItem itemKey="poo-email" text="Email" bylineText="Receive notifications by email." checked={true} />
+            </UserSettingsNotificationsViewGroup>
+          </UserSettingsNotificationsView>
         </UserSettingsItem>
 
         <UserSettingsItem
