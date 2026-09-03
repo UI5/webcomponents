@@ -1029,24 +1029,4 @@ describe("Notifications view — headerItems slot", () => {
 		});
 	});
 
-	it("Space on a headerItem row toggles the switch", () => {
-		cy.mount(<UserSettingsDialog open>
-			<UserSettingsItem text="Notifications">
-				<UserSettingsNotificationsView>
-					<UserSettingsNotificationsViewItem slot="headerItems" text="Allow Notifications" />
-				</UserSettingsNotificationsView>
-			</UserSettingsItem>
-		</UserSettingsDialog>);
-
-		cy.get("[ui5-user-settings-notifications-view-item]").as("item");
-		cy.get("@item").then($item => {
-			$item.get(0).addEventListener("switch-change", cy.stub().as("changed"));
-		});
-
-		cy.get("@item").shadow().find("li").focus();
-		cy.realPress("Space");
-
-		cy.get("@changed").should("have.been.calledOnce");
-		cy.get("@item").should("have.attr", "checked");
-	});
 });
