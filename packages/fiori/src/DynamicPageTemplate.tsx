@@ -16,24 +16,19 @@ export default function DynamicPageTemplate(this: DynamicPage) {
 				>
 					<slot name="titleArea"></slot>
 					{this.headerInTitle &&
-						<div role={!this.headerAriaHidden ? "region" : undefined} aria-label={!this.headerAriaHidden ? this.headerAriaLabel : undefined}>
-							<slot tabIndex={this.headerTabIndex}
-								aria-hidden={this.headerAriaHidden}
-								name="headerArea"
-							></slot>
-						</div>
-					}
-					{!this.headerActionsAfterHeader && headerActions.call(this)}
-				</div>
-
-				{this.headerInContent &&
-					<div role={!this.headerAriaHidden ? "region" : undefined} aria-label={!this.headerAriaHidden ? this.headerAriaLabel : undefined}>
 						<slot tabIndex={this.headerTabIndex}
 							aria-hidden={this.headerAriaHidden}
 							name="headerArea"
 						></slot>
-						{this.headerActionsAfterHeader && headerActions.call(this)}
-					</div>
+					}
+					{headerActions.call(this)}
+				</div>
+
+				{this.headerInContent &&
+					<slot tabIndex={this.headerTabIndex}
+						aria-hidden={this.headerAriaHidden}
+						name="headerArea"
+					></slot>
 				}
 
 				<div
