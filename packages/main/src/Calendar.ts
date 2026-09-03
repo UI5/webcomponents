@@ -957,12 +957,13 @@ class Calendar extends CalendarPart {
 	get _hzDatePickerValue(): string {
 		const ts = this._selectedDatesTimestamps[0] ?? this._timestamp;
 		const calDate = CalendarDateComponent.fromTimestamp(ts * 1000, this._primaryCalendarType);
-		return calDate.toUTCJSDate().toISOString().slice(0, 10);
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(calDate.toUTCJSDate()) as string;
 	}
 
 	_onHzDatePickerChange(e: CustomEvent<{ value: string, valid: boolean }>) {
 		if (!e.detail.valid) { return; }
-		const isoDate = this.getISOFormat().parse(e.detail.value, true) as Date | null;
+		const fmt = DateFormat.getDateInstance({ strictParsing: true, pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType });
+		const isoDate = fmt.parse(e.detail.value, true) as Date | null;
 		if (!isoDate) { return; }
 		const calDate = CalendarDateComponent.fromLocalJSDate(isoDate, this._primaryCalendarType);
 		const timestamp = calDate.valueOf() / 1000;
@@ -971,11 +972,13 @@ class Calendar extends CalendarPart {
 	}
 
 	get _hzMinISO(): string {
-		return this.minDate ? this._minDate.toUTCJSDate().toISOString().slice(0, 10) : "";
+		if (!this.minDate) { return ""; }
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(this._minDate.toUTCJSDate()) as string;
 	}
 
 	get _hzMaxISO(): string {
-		return this.maxDate ? this._maxDate.toUTCJSDate().toISOString().slice(0, 10) : "";
+		if (!this.maxDate) { return ""; }
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(this._maxDate.toUTCJSDate()) as string;
 	}
 
 	get _specialDates() {

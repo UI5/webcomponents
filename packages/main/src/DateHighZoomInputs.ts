@@ -362,7 +362,7 @@ class DateHighZoomInputs extends UI5Element {
 	getDateObject(): Date | null {
 		const { year, month, day } = this.getSelectedDate();
 		if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) { return null; }
-		const d = new Date(year, month, day);
+		const d = UI5Date.getInstance(year, month, day);
 		d.setFullYear(year);
 		return d;
 	}
@@ -508,10 +508,15 @@ class DateHighZoomInputs extends UI5Element {
 		const input = e.target as HTMLElement & { value: string };
 		const y = parseInt(input.value);
 		if (!Number.isNaN(y) && y > 0 && y < 10000) {
+			// y is a display year in the active calendar — convert via CalendarDate so
+			// non-Gregorian years (e.g. Islamic 1445) navigate to the correct position.
+			const calDate = CalendarDate.fromLocalJSDate(new Date(2000, 0, 1), this._calType);
+			calDate.setYear(y);
+			const ts = calDate.toLocalJSDate().getTime() / 1000;
 			if (isEnd) {
-				this._endYearPickerTimestamp = this._yearToTimestamp(y);
+				this._endYearPickerTimestamp = ts;
 			} else {
-				this._yearPickerTimestamp = this._yearToTimestamp(y);
+				this._yearPickerTimestamp = ts;
 			}
 		}
 	}
@@ -578,8 +583,14 @@ class DateHighZoomInputs extends UI5Element {
 		if (ts) { return ts; }
 		const yearStr = isEnd ? this._endYearValue : this._yearValue;
 		const year = parseInt(yearStr);
-		const safeYear = Number.isNaN(year) || year <= 0 ? new Date().getFullYear() : year;
-		return this._yearToTimestamp(safeYear);
+		if (!Number.isNaN(year) && year > 0) {
+			// year is a display year in the active calendar — convert so non-Gregorian
+			// calendars (e.g. Islamic 1445) navigate to the correct position.
+			const calDate = CalendarDate.fromLocalJSDate(new Date(2000, 0, 1), this._calType);
+			calDate.setYear(year);
+			return calDate.toLocalJSDate().getTime() / 1000;
+		}
+		return this._yearToTimestamp(UI5Date.getInstance().getFullYear());
 	}
 
 	_openYearPicker(isEnd: boolean) {

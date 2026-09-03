@@ -338,7 +338,7 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		const startD = this._hzInputs.getDateObject();
 		const endSel = this._hzInputs.getSelectedSecondDate();
 		if (!startD || !endSel) { return; }
-		const endD = new Date(endSel.year, endSel.month, endSel.day);
+		const endD = UI5Date.getInstance(endSel.year, endSel.month, endSel.day);
 		endD.setFullYear(endSel.year);
 		// Format the local Date objects directly (like the base single-date _onHzOk),
 		// ordering start/end chronologically. Do NOT route through _buildValue, which
