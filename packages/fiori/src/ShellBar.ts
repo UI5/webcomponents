@@ -651,11 +651,6 @@ class ShellBar extends UI5Element {
 		if (!this.legacyAdaptor) {
 			this.initLegacyController();
 		}
-		// Sync branding breakpoint state
-		this.branding.forEach(brandingEl => {
-			brandingEl._isSBreakPoint = this.isSBreakPoint;
-		});
-
 		this.buildActions();
 
 		this.searchAdaptor?.syncShowSearchFieldState();
@@ -762,15 +757,78 @@ class ShellBar extends UI5Element {
 			return;
 		}
 
+		const brandingEl = this.branding[0];
+
+		// Measure before the loop squeezes the branding. If the title's natural single-line
+		// width exceeds the logo width, stacking is visually meaningful (title will wrap).
+		// Temporarily remove _title-hidden so scrollWidth is readable even if it was hidden
+		// by the previous overflow pass.
+		const brandingTitleWouldWrap = (() => {
+			if (!brandingEl) {
+				return false;
+			}
+			const titleEl = brandingEl.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-title");
+			const logoEl = brandingEl.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-logo");
+			if (!titleEl || !logoEl) {
+				return false;
+			}
+			const wasHidden = brandingEl.hasAttribute("_title-hidden");
+			if (wasHidden) {
+				brandingEl.removeAttribute("_title-hidden");
+				// eslint-disable-next-line no-unused-expressions
+				brandingEl.offsetWidth;
+			}
+			const result = titleEl.scrollWidth > logoEl.offsetWidth * 2;
+			if (wasHidden) {
+				brandingEl.setAttribute("_title-hidden", "");
+			}
+			return result;
+		})();
+
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
 			content: this.sortContent(this.content),
 			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
+			hasBranding: this.enabledFeatures.branding && !!brandingEl,
 			overflowOuter: this.overflowOuter!,
 			overflowInner: this.overflowInner!,
 			setVisible: (selector: string, visible: boolean) => {
+				if (selector === "[data-ui5-stable='branding-stacked']") {
+					if (brandingEl && !visible) {
+						// Only stack if the title is wider than the logo — meaning it will
+						// actually wrap in the stacked (column) layout. Short titles go to overflow.
+						if (brandingTitleWouldWrap) {
+							brandingEl.toggleAttribute("_stacked", true);
+							// Force synchronous layout flush so the next isOverflowing() call
+							// reads the post-stack offsetWidth, not the stale pre-stack value.
+							// eslint-disable-next-line no-unused-expressions
+							brandingEl.offsetWidth;
+						}
+					} else if (brandingEl && visible) {
+						brandingEl.removeAttribute("_stacked");
+					}
+					return;
+				}
+				if (selector === "[data-ui5-stable='branding-identifier']") {
+					if (brandingEl) {
+						brandingEl.toggleAttribute("_measure-title-hidden", !visible);
+						if (visible) {
+							brandingEl.removeAttribute("_title-hidden");
+						}
+					}
+					return;
+				}
+				if (selector === "[data-ui5-stable='branding-logo']") {
+					if (brandingEl) {
+						brandingEl.toggleAttribute("_measure-logo-hidden", !visible);
+						if (visible) {
+							brandingEl.removeAttribute("_logo-hidden");
+						}
+					}
+					return;
+				}
 				const element = this.shadowRoot!.querySelector(selector);
 				if (element) {
 					element.classList[visible ? "remove" : "add"]("ui5-shellbar-hidden");
@@ -779,6 +837,13 @@ class ShellBar extends UI5Element {
 		});
 
 		this.handleUpdateOverflowResult(result);
+
+		// Sync overflow button CSS class immediately after measurement — the measurement loop
+		// manipulates it directly via setVisible, and the template won't fix it until next render.
+		const overflowBtn = this.shadowRoot!.querySelector<HTMLElement>(ShellBarActionsSelectors.Overflow);
+		if (overflowBtn) {
+			overflowBtn.classList.toggle("ui5-shellbar-hidden", !result.showOverflowButton);
+		}
 
 		return result.hiddenItemsIds;
 	}
@@ -795,11 +860,20 @@ class ShellBar extends UI5Element {
 			}
 		});
 
+		// Sync branding hidden state
+		const brandingEl = this.branding[0];
+		if (brandingEl) {
+			brandingEl.removeAttribute("_measure-title-hidden");
+			brandingEl.removeAttribute("_measure-logo-hidden");
+			brandingEl.toggleAttribute("_title-hidden", hiddenItemsIds.includes("branding-identifier"));
+			brandingEl.toggleAttribute("_logo-hidden", hiddenItemsIds.includes("branding-logo"));
+		}
+
 		if (!arraysAreEqual(this.hiddenItemsIds, hiddenItemsIds)) {
 			this.handleContentVisibilityChanged(this.hiddenItemsIds, hiddenItemsIds);
 			this.hiddenItemsIds = hiddenItemsIds;
-			this.showOverflowButton = showOverflowButton;
 		}
+		this.showOverflowButton = showOverflowButton;
 		this.showFullWidthSearch = this.searchAdaptor?.shouldShowFullScreen() || false;
 	}
 
@@ -843,6 +917,14 @@ class ShellBar extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
+	handleBrandingOverflowClick() {
+		const brandingEl = this.branding[0];
+		if (brandingEl) {
+			brandingEl._fireClick();
+		}
+		this.overflowPopoverOpen = false;
+	}
+
 	handleOverflowItemClick(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
@@ -865,7 +947,39 @@ class ShellBar extends UI5Element {
 			actions: this.actions,
 			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
+			hasBranding: this.enabledFeatures.branding && !!this.branding[0],
 		});
+	}
+
+	get brandingOverflowTitle(): string | undefined {
+		return this.branding[0]?.textContent?.trim() || undefined;
+	}
+
+	get brandingOverflowLabel(): string | undefined {
+		const title = this.brandingOverflowTitle;
+		if (title) {
+			return `${title} Home`;
+		}
+		const accessibleName = this.branding[0]?.accessibleName?.trim();
+		return accessibleName ? `${accessibleName} Home` : undefined;
+	}
+
+	get brandingOverflowLogoSrc(): string | undefined {
+		const brandingEl = this.branding[0];
+		if (!brandingEl) {
+			return undefined;
+		}
+		const img = brandingEl.querySelector<HTMLImageElement>("[slot='logo']");
+		return img?.src || undefined;
+	}
+
+	get brandingOverflowLogoAlt(): string | undefined {
+		const brandingEl = this.branding[0];
+		if (!brandingEl) {
+			return undefined;
+		}
+		const img = brandingEl.querySelector<HTMLImageElement>("[slot='logo']");
+		return img?.alt || undefined;
 	}
 
 	/**
@@ -885,7 +999,8 @@ class ShellBar extends UI5Element {
 	 * Shows count if only one item with count is overflowed, otherwise shows attention dot.
 	 */
 	get overflowBadge(): string | undefined {
-		const itemsWithCount = this.overflowItems.filter(item => item.data.count);
+		const countableItems = this.overflowItems.filter(item => item.type !== "branding");
+		const itemsWithCount = countableItems.filter(item => item.data.count !== undefined);
 		if (itemsWithCount.length === 1) {
 			return itemsWithCount[0].data.count;
 		}

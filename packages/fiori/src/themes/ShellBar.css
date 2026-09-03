@@ -135,6 +135,8 @@
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
+	/* Push all subsequent items (actions) to the right */
+	margin-inline-end: auto;
 }
 
 /* ============================================================================
@@ -156,7 +158,6 @@
 .ui5-shellbar-overflow-container-inner {
 	display: flex;
 	align-items: center;
-	justify-content: end;
 	flex-shrink: 0;
 	min-width: 100%;
 }
@@ -355,6 +356,50 @@ slot[name="profile"] {
 
 :host([breakpoint-size="M"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 2rem;
+}
+
+/* ============================================================================
+   OVERFLOW BRANDING (branding shown at top of overflow popover)
+   ============================================================================ */
+
+.ui5-shellbar-overflow-branding {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem;
+	min-height: 2.5rem;
+	padding: 0.25rem 2rem;
+	box-sizing: border-box;
+	cursor: pointer;
+	overflow-x: auto;
+}
+
+.ui5-shellbar-overflow-branding:hover {
+	background: var(--sapList_Hover_Background);
+}
+
+.ui5-shellbar-overflow-branding:active {
+	background: var(--sapList_Active_Background);
+}
+
+.ui5-shellbar-overflow-branding-logo {
+	max-height: 1.5625rem;
+	width: auto;
+	flex-shrink: 0;
+}
+
+.ui5-shellbar-overflow-branding-title {
+	font-family: var(--sapFontSemiboldDuplexFamily);
+	font-size: var(--sapFontHeader6Size);
+	color: var(--sapList_TextColor);
+	white-space: normal;
+	word-break: break-word;
+}
+
+.ui5-shellbar-overflow-branding-separator {
+	height: 1px;
+	background-color: var(--_ui5-shellbar_separator-color);
+	margin: 0 1rem;
 }
 
 /* ============================================================================

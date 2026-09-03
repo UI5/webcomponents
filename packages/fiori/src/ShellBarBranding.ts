@@ -89,14 +89,6 @@ class ShellBarBranding extends UI5Element {
 	accessibleName?: string;
 
 	/**
-     * Defines if the title of the branding is shown on an S breakpoint.
-     * @default false
-     * @private
-     */
-	@property({ type: Boolean })
-	_isSBreakPoint = false;
-
-	/**
 	 * Defines the title for the ui5-shellbar-branding component.
 	 *
 	 * **Note:** Although this slot accepts HTML Elements, it is strongly recommended that you only use text in order to preserve the intended design.
