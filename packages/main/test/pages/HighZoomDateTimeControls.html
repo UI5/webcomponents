@@ -85,11 +85,11 @@
 <div class="section">
 	<h2>DatePicker (Step 04)</h2>
 	<div class="control-row">
-		<label>Standard:</label>
+		<ui5-label for="dp-std">Standard</ui5-label>
 		<ui5-date-picker id="dp-std" value="19.05.2026"></ui5-date-picker>
 	</div>
 	<div class="control-row">
-		<label>Min/Max (2026):</label>
+		<ui5-label for="dp-min-max">Min/Max (2026)</ui5-label>
 		<ui5-date-picker id="dp-min-max"
 			value="15.06.2026"
 			format-pattern="dd.MM.yyyy"
@@ -98,7 +98,7 @@
 		</ui5-date-picker>
 	</div>
 	<div class="control-row">
-		<label>Min/Max narrow<br>(Jun 10–Aug 20, 2026):</label>
+		<ui5-label for="dp-min-max-narrow">Min/Max narrow (Jun 10–Aug 20, 2026)</ui5-label>
 		<ui5-date-picker id="dp-min-max-narrow"
 			value="15.07.2026"
 			format-pattern="dd.MM.yyyy"
@@ -107,62 +107,94 @@
 		</ui5-date-picker>
 	</div>
 	<div class="control-row">
-		<label>Secondary Cal (Islamic):</label>
+		<ui5-label for="dp-secondary-cal">Secondary Cal (Islamic)</ui5-label>
 		<ui5-date-picker id="dp-secondary-cal"
 			value="19.05.2026"
 			format-pattern="dd.MM.yyyy"
 			secondary-calendar-type="Islamic">
 		</ui5-date-picker>
 	</div>
+	<div class="control-row">
+		<ui5-label for="dp-no-value">No value (today)</ui5-label>
+		<ui5-date-picker id="dp-no-value" format-pattern="dd.MM.yyyy"></ui5-date-picker>
+	</div>
 </div>
 
 <div class="section">
 	<h2>TimePicker (Step 03)</h2>
 	<div class="control-row">
-		<label>Standard:</label>
+		<ui5-label for="tp-std">Standard</ui5-label>
 		<ui5-time-picker id="tp-std" value="14:30:00"></ui5-time-picker>
+	</div>
+	<div class="control-row">
+		<ui5-label for="tp-no-value">No value (now)</ui5-label>
+		<ui5-time-picker id="tp-no-value"></ui5-time-picker>
 	</div>
 </div>
 
 <div class="section">
 	<h2>DateTimePicker (Step 05)</h2>
 	<div class="control-row">
-		<label>Standard (value=):</label>
+		<ui5-label for="dtp-std">Standard (value=)</ui5-label>
 		<ui5-datetime-picker id="dtp-std" value="May 19, 2026, 2:30:00 PM"></ui5-datetime-picker>
 	</div>
 	<div class="control-row">
-		<label>via dateValue property:</label>
+		<ui5-label for="dtp-datevalue">via dateValue property</ui5-label>
 		<ui5-datetime-picker id="dtp-datevalue"></ui5-datetime-picker>
 	</div>
 	<div class="control-row">
-		<label>Secondary Cal (Islamic):</label>
+		<ui5-label for="dtp-secondary-cal">Secondary Cal (Islamic)</ui5-label>
 		<ui5-datetime-picker id="dtp-secondary-cal"
 			value="May 19, 2026, 2:30:00 PM"
 			secondary-calendar-type="Islamic">
 		</ui5-datetime-picker>
+	</div>
+	<div class="control-row">
+		<ui5-label for="dtp-no-value">No value (today/now)</ui5-label>
+		<ui5-datetime-picker id="dtp-no-value"></ui5-datetime-picker>
 	</div>
 </div>
 
 <div class="section">
 	<h2>DateRangePicker (Step 06)</h2>
 	<div class="control-row">
-		<label>Standard:</label>
+		<ui5-label for="drs-std">Standard</ui5-label>
 		<ui5-daterange-picker id="drs-std" format-pattern="dd.MM.yyyy" value="02.02.2014 - 17.02.2014"></ui5-daterange-picker>
 	</div>
 	<div class="control-row">
-		<label>Secondary Cal (Islamic):</label>
+		<ui5-label for="drs-secondary-cal">Secondary Cal (Islamic)</ui5-label>
 		<ui5-daterange-picker id="drs-secondary-cal"
 			format-pattern="dd.MM.yyyy"
 			value="02.02.2014 - 17.02.2014"
 			secondary-calendar-type="Islamic">
 		</ui5-daterange-picker>
 	</div>
+	<div class="control-row">
+		<ui5-label for="drs-no-value">No value (today)</ui5-label>
+		<ui5-daterange-picker id="drs-no-value" format-pattern="dd.MM.yyyy"></ui5-daterange-picker>
+	</div>
 </div>
 
 <div class="section">
 	<h2>Calendar standalone (Step 07)</h2>
 	<div class="control-row">
-		<ui5-calendar id="cal-std"></ui5-calendar>
+		<ui5-label>Single (zoom → DatePicker inputs)</ui5-label>
+		<ui5-calendar id="cal-std" selection-mode="Single"></ui5-calendar>
+	</div>
+	<div class="control-row">
+		<ui5-label>Multiple (zoom → normal calendar)</ui5-label>
+		<ui5-calendar id="cal-multiple" selection-mode="Multiple"></ui5-calendar>
+	</div>
+	<div class="control-row">
+		<ui5-label>Range (zoom → normal calendar)</ui5-label>
+		<ui5-calendar id="cal-range" selection-mode="Range"></ui5-calendar>
+	</div>
+	<div class="control-row" style="gap:0.5rem; flex-wrap:wrap;">
+		<ui5-label>Toggle cal-std selectionMode:</ui5-label>
+		<button onclick="setCalMode('Single')">Single</button>
+		<button onclick="setCalMode('Multiple')">Multiple</button>
+		<button onclick="setCalMode('Range')">Range</button>
+		<span id="cal-mode-status" style="font-size:0.8rem;color:#555;"></span>
 	</div>
 </div>
 
@@ -177,12 +209,23 @@
 		output.textContent = new Date().toLocaleTimeString() + " — " + msg + "\n" + output.textContent;
 	};
 
-	["tp-std", "dp-std", "dp-min-max", "dp-min-max-narrow", "dp-secondary-cal",
-	 "dtp-std", "dtp-datevalue", "dtp-secondary-cal", "drs-std", "drs-secondary-cal", "cal-std"].forEach(id => {
-		document.getElementById(id)?.addEventListener("change", e => {
-			log(`[${id}] change: value="${e.target.value || ''}"`);
+	["tp-std", "tp-no-value",
+	 "dp-std", "dp-min-max", "dp-min-max-narrow", "dp-secondary-cal", "dp-no-value",
+	 "dtp-std", "dtp-datevalue", "dtp-secondary-cal", "dtp-no-value",
+	 "drs-std", "drs-secondary-cal", "drs-no-value",
+	 "cal-std", "cal-multiple", "cal-range"].forEach(controlId => {
+		document.getElementById(controlId)?.addEventListener("change", changeEvent => {
+			const selDates = changeEvent.detail?.selectedDates?.map(ts => new Date(ts * 1000).toLocaleDateString()).join(", ") || "";
+			log(`[${controlId}] change: selectedDates=[${selDates}]`);
 		});
 	});
+
+	window.setCalMode = (mode) => {
+		const cal = document.getElementById("cal-std");
+		cal.selectionMode = mode;
+		document.getElementById("cal-mode-status").textContent = `selectionMode="${mode}"`;
+		log(`[cal-std] selectionMode changed to "${mode}"`);
+	};
 
 	// Viewport display
 	const updateVP = () => {

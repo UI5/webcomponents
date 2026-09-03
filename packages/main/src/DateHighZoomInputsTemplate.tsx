@@ -90,6 +90,7 @@ function dateFields(this: DateHighZoomInputs, isEnd: boolean) {
 					class="ui5-dhzi-select"
 					value={String(monthVal)}
 					valueState={monthVS}
+					accessibleName={this._monthLabel}
 					onChange={(e: CustomEvent) => this._onMonthChange(e, isEnd)}
 				>
 					{ monthVS === ValueState.Negative && monthMsg &&
@@ -109,6 +110,7 @@ function dateFields(this: DateHighZoomInputs, isEnd: boolean) {
 					class="ui5-dhzi-select"
 					value={String(dayVal)}
 					valueState={dayVS}
+					accessibleName={this._dayLabel}
 					onChange={(e: CustomEvent) => this._onDayChange(e, isEnd)}
 				>
 					{ dayVS === ValueState.Negative && dayMsg &&
@@ -133,6 +135,7 @@ function yearPickerDialog(this: DateHighZoomInputs, isEnd: boolean) {
 		<Dialog
 			id={`${this._id}-yearpicker-dialog${isEnd ? "-end" : ""}`}
 			class="ui5-dhzi-year-dialog"
+			headerText={this._yearLabel}
 			open={isOpen}
 			stretch={isPhone()}
 			onClose={() => this._closeYearPicker(isEnd)}

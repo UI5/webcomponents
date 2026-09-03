@@ -10,6 +10,7 @@ import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.j
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
+import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js";
 
 import {
@@ -168,6 +169,8 @@ class DateHighZoomInputs extends UI5Element {
 	_syncedDateValue: Date | null = null;
 	_syncedSecondDateValue: Date | null = null;
 	_syncedCalType?: `${CalendarType}`;
+	_startDateInitialized = false;
+	_endDateInitialized = false;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
@@ -175,11 +178,13 @@ class DateHighZoomInputs extends UI5Element {
 	// ---- Lifecycle ----
 
 	onBeforeRendering() {
-		if (!this._sameDate(this.dateValue, this._syncedDateValue)) {
+		if (!this._startDateInitialized || !this._sameDate(this.dateValue, this._syncedDateValue)) {
+			this._startDateInitialized = true;
 			this._syncedDateValue = this.dateValue;
 			this.syncStartDate();
 		}
-		if (this._isRange && !this._sameDate(this.secondDateValue, this._syncedSecondDateValue)) {
+		if (this._isRange && (!this._endDateInitialized || !this._sameDate(this.secondDateValue, this._syncedSecondDateValue))) {
+			this._endDateInitialized = true;
 			this._syncedSecondDateValue = this.secondDateValue;
 			this.syncEndDate(this.secondDateValue);
 		}
@@ -259,11 +264,11 @@ class DateHighZoomInputs extends UI5Element {
 	// ---- Public API ----
 
 	syncStartDate() {
-		if (!this.dateValue) { return; }
+		const d = this.dateValue ?? UI5Date.getInstance();
 		// Store Gregorian source of truth
-		this._gregYear = this.dateValue.getFullYear();
-		this._gregMonth = this.dateValue.getMonth();
-		this._gregDay = this.dateValue.getDate();
+		this._gregYear = d.getFullYear();
+		this._gregMonth = d.getMonth();
+		this._gregDay = d.getDate();
 		// Show in current calendar type
 		this._applyCalendarTypeToDisplay(false);
 	}
@@ -315,12 +320,12 @@ class DateHighZoomInputs extends UI5Element {
 	}
 
 	syncEndDate(date: Date | null) {
-		if (!date) { this._hasEndValue = false; return; }
-		this._hasEndValue = true;
+		const endDate = date ?? UI5Date.getInstance();
+		this._hasEndValue = !!date;
 		// Store Gregorian source of truth for the end date
-		this._gregEndYear = date.getFullYear();
-		this._gregEndMonth = date.getMonth();
-		this._gregEndDay = date.getDate();
+		this._gregEndYear = endDate.getFullYear();
+		this._gregEndMonth = endDate.getMonth();
+		this._gregEndDay = endDate.getDate();
 		this._applyCalendarTypeToDisplay(true);
 	}
 

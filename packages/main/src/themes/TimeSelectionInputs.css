@@ -45,11 +45,14 @@
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
 	color: var(--sapTextColor);
+	line-height: 1;
 }
 
-/* In labeled mode align separator to center of input (input height ≈ 2.25rem, label ≈ 1.25rem) */
+/* In labeled mode align separator to center of input */
 .ui5-time-selection-inputs--labeled .ui5-time-selection-separator {
-	margin-bottom: calc((2.25rem / 2) - 0.5em);
+	height: var(--_ui5_input_height, 2.25rem);
+	line-height: var(--_ui5_input_height, 2.25rem);
+	padding-bottom: 0.25rem;
 }
 
 /* AM/PM always on its own row in labeled mode */

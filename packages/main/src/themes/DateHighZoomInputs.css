@@ -63,10 +63,11 @@
 
 /* Year picker dialog */
 .ui5-dhzi-year-dialog::part(content) {
-	padding: 1rem;
+	padding: 0 1rem 1rem 1rem;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
 	/* The picker is sized to fit (auto height + compact cells below), so explicitly
 	   suppress the popup's default overflow:auto — the dialog must never scroll. */
 	overflow: hidden;
