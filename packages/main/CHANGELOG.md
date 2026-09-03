@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.2](https://github.com/UI5/webcomponents/compare/v2.25.1...v2.25.2) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-list:** suppress hidden text announcement for InactiveSelectable items [2.25.1] ([#14022](https://github.com/UI5/webcomponents/issues/14022)) ([10cb0de](https://github.com/UI5/webcomponents/commit/10cb0de34a4bab4818d7eb49d903365a63443c9f)), closes [#14011](https://github.com/UI5/webcomponents/issues/14011)
+
+
+
+
+
 ## [2.25.1](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1) (2026-08-25)
 
 
