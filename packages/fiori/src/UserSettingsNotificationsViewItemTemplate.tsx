@@ -6,29 +6,29 @@ import slimArrowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 export default function UserSettingsNotificationsViewItemTemplate(this: UserSettingsNotificationsViewItem) {
 	if (this._isHeaderItem) {
-		return headerItemContent.call(this);
+		return headerItemContent(this);
 	}
 	return ListItemCustomTemplate.call(this, {
 		listItemContent: listItemContent.bind(this),
 	});
 }
 
-function headerItemContent(this: UserSettingsNotificationsViewItem) {
+function headerItemContent(item: UserSettingsNotificationsViewItem) {
 	return (
 		<div
 			class="ui5-user-settings-notifications-form-item"
 			role="group"
-			aria-label={this._accessibleSwitchName}
+			aria-label={item._accessibleSwitchName}
 			data-sap-focus-ref
-			tabindex={this._effectiveTabIndex}
-			onFocusIn={this._onfocusin}
-			onFocusOut={this._onfocusout}
-			onKeyUp={this._onkeyup}
-			onKeyDown={this._onkeydown}
-			onClick={this._handleFormItemClick}
+			tabindex={item._effectiveTabIndex}
+			onFocusIn={item._onfocusin}
+			onFocusOut={item._onfocusout}
+			onKeyUp={item._onkeyup}
+			onKeyDown={item._onkeydown}
+			onClick={item._handleFormItemClick}
 		>
-			{itemBody.call(this)}
-			{this.navigable &&
+			{itemBody(item)}
+			{item.navigable &&
 				<Icon
 					class="ui5-user-settings-notifications-item-arrow"
 					name={slimArrowRight}
@@ -40,31 +40,31 @@ function headerItemContent(this: UserSettingsNotificationsViewItem) {
 }
 
 function listItemContent(this: UserSettingsNotificationsViewItem) {
-	return itemBody.call(this);
+	return itemBody(this);
 }
 
-function itemBody(this: UserSettingsNotificationsViewItem) {
+function itemBody(item: UserSettingsNotificationsViewItem) {
 	return (
-		<div class={`ui5-user-settings-notifications-item${this.bylineText && this.text ? " has-byline" : ""}`}>
+		<div class={`ui5-user-settings-notifications-item${item.bylineText && item.text ? " has-byline" : ""}`}>
 			<div class="ui5-user-settings-notifications-item-start">
 				<div class="ui5-user-settings-notifications-item-texts">
-					{this.text &&
-						<span class="ui5-user-settings-notifications-item-title">{this.text}</span>
+					{item.text &&
+						<span class="ui5-user-settings-notifications-item-title">{item.text}</span>
 					}
-					{this.bylineText &&
-						<span class="ui5-user-settings-notifications-item-byline">{this.bylineText}</span>
+					{item.bylineText &&
+						<span class="ui5-user-settings-notifications-item-byline">{item.bylineText}</span>
 					}
 				</div>
 			</div>
 			<div class="ui5-user-settings-notifications-item-end">
-				{this._hasEndContent
-					? <slot name="endContent" onClick={this._handleEndClick}></slot>
+				{item._hasEndContent
+					? <slot name="endContent" onClick={item._handleEndClick}></slot>
 					: <Switch
 						class="ui5-user-settings-notifications-item-switch"
-						checked={this.checked}
-						onChange={this._handleSwitchChange}
-						accessibleName={this._accessibleSwitchName}
-						onClick={this._handleEndClick}
+						checked={item.checked}
+						onChange={item._handleSwitchChange}
+						accessibleName={item._accessibleSwitchName}
+						onClick={item._handleEndClick}
 					></Switch>
 				}
 			</div>
