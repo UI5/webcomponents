@@ -67,7 +67,7 @@ export default function DayPickerTemplate(this: DayPicker) {
 										<div
 											className="ui5-dp-weekname-container"
 											role="rowheader"
-											aria-label={`Calendar Week ${day.weekNum}`}
+											aria-label={this._getCalendarWeekLabel(day.weekNum)}
 										>
 											<span className="ui5-dp-weekname">{day.weekNum}</span>
 										</div>
