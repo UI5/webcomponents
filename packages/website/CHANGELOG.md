@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-option-group:** remove unrelated inherited public APIs ([#13998](https://github.com/UI5/webcomponents/issues/13998)) ([f2ab028](https://github.com/UI5/webcomponents/commit/f2ab028a281a4205b0074ecee019eacf35f1852e)), closes [#13992](https://github.com/UI5/webcomponents/issues/13992) [#13991](https://github.com/UI5/webcomponents/issues/13991)
+
+
+
+
+
 # [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
 
 
