@@ -10,6 +10,7 @@ import MessageStrip from "@ui5/webcomponents/dist/MessageStrip.js";
 import {
 	USER_MENU_MANAGE_ACCOUNT_BUTTON_TXT,
 	USER_MENU_OTHER_ACCOUNT_BUTTON_TXT,
+	USER_MENU_CURRENT_INFORMATION_TXT,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
@@ -167,6 +168,8 @@ describe("Initial rendering", () => {
 		cy.get("@userMenu").shadow().find("[ui5-responsive-popover]").as("responsivePopover");
 		cy.get("@responsivePopover").should("exist");
 		cy.get("@responsivePopover").find("[ui5-panel]").contains(`${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+		cy.get("@responsivePopover").find("[ui5-panel]").should("have.attr", "accessible-name", `${USER_MENU_OTHER_ACCOUNT_BUTTON_TXT.defaultText} (2)`);
+
 		cy.get("@responsivePopover").find("[ui5-button]").should("have.length", 1);
 	});
 
@@ -255,6 +258,9 @@ describe("Initial rendering", () => {
 			.scrollTo("bottom");
 		cy.get("[ui5-user-menu]").shadow().find("[ui5-bar]").as("headerBar");
 		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier 1");
+		cy.get("@headerBar").should("have.attr", "accessible-name", USER_MENU_CURRENT_INFORMATION_TXT.defaultText);
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-selected-account").should("not.have.attr", "aria-label");
+
 	});
 });
 
@@ -875,6 +881,22 @@ describe("Events", () => {
 		cy.get("@opened").should("have.been.calledOnce");
 	});
 
+	it("focuses first menu item after open", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<UserMenuItem text="Setting" data-id="setting"></UserMenuItem>
+					<UserMenuItem text="Privacy" data-id="privacy"></UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Setting']")
+			.should("be.focused");
+	});
+
 	it("tests close event", () => {
 		cy.mount(
 			<>
@@ -968,7 +990,74 @@ describe("Responsiveness", () => {
 			.scrollTo("bottom");
 		cy.get("[ui5-user-menu]").shadow().find("[ui5-bar]").as("headerBar");
 		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier 1");
-		cy.get("@headerBar").find("[ui5-button]").should("have.length", 1);
+		cy.get("@headerBar").find("[ui5-button][slot='endContent']").should("have.length", 1);
+	});
+
+	it("submenu header on phone has close button in UserMenuItem", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Settings">
+						<UserMenuItem text="Appearance"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.ui5MenuItemClick();
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find(".ui5-menu-close-button")
+			.should("exist");
+	});
+
+	it("submenu header on desktop has no close button in UserMenuItem", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+					<UserMenuItem text="Settings">
+						<UserMenuItem text="Appearance"></UserMenuItem>
+					</UserMenuItem>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu-item][text='Settings']")
+			.shadow()
+			.find(".ui5-menu-close-button")
+			.should("not.exist");
+	});
+
+	it("popover header has no divider line (::before pseudo-element hidden)", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier 1"></UserMenuAccount>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").shadow()
+			.find("[ui5-responsive-popover]")
+			.shadow()
+			.find(".ui5-popup-header-root")
+			.then($el => {
+				const before = window.getComputedStyle($el[0], "::before");
+				expect(before.display).to.equal("none");
+			});
 	});
 
 	it("Event firing - 'ui5-check' after 'click' on user menu item", () => {
@@ -1313,6 +1402,26 @@ describe("InfoArea slot", () => {
 			});
 		});
 	});
+
+	it("info-area has 8px padding on all sides", () => {
+		cy.mount(
+			<>
+				<Button id="openUserMenuBtn">Open User Menu</Button>
+				<UserMenu open={true} opener="openUserMenuBtn">
+					<UserMenuAccount slot="accounts" titleText="Alain Chevalier"></UserMenuAccount>
+					<MessageStrip slot="infoArea" design="Information" hideCloseButton={true}>
+						All actions are recorded under the proxy audit log.
+					</MessageStrip>
+				</UserMenu>
+			</>
+		);
+
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-info-area")
+			.should("have.css", "padding-top", "8px")
+			.and("have.css", "padding-bottom", "8px")
+			.and("have.css", "padding-left", "8px")
+			.and("have.css", "padding-right", "8px");
+	});
 });
 
 describe("UserMenuItem", () => {
@@ -1578,7 +1687,7 @@ describe("UserMenuItem", () => {
 				.should("not.have.attr", "show-selection");
 		});
 
-		it("selection text has correct styling", () => {
+		it("selection text wraps instead of truncating", () => {
 			cy.mount(
 				<>
 					<Button id="openUserMenuBtn">Open User Menu</Button>
@@ -1596,9 +1705,8 @@ describe("UserMenuItem", () => {
 				.shadow()
 				.find(".ui5-user-menu-item-selection-text")
 				.should("have.css", "font-weight", "400")
-				.and("have.css", "white-space", "nowrap")
-				.and("have.css", "overflow", "hidden")
-				.and("have.css", "text-overflow", "ellipsis");
+				.and("not.have.css", "white-space", "nowrap")
+				.and("not.have.css", "text-overflow", "ellipsis");
 		});
 
 		it("text wrapper has column layout with gap", () => {

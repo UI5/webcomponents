@@ -24,6 +24,7 @@ export default function SelectTemplate(this: Select) {
 
 				<div
 					class="ui5-select-label-root"
+					part="label"
 					data-sap-focus-ref
 					tabindex={this._effectiveTabIndex}
 					role="combobox"
@@ -88,6 +89,12 @@ export default function SelectTemplate(this: Select) {
 				{this.ariaDescriptionText &&
 					<span id="accessibleDescription" class="ui5-hidden-text">
 						{this.ariaDescriptionText}
+					</span>
+				}
+
+				{this.hasGroups &&
+					<span id={this._groupCountMessageId} class="ui5-hidden-text">
+						{this._groupCountText}
 					</span>
 				}
 			</div>

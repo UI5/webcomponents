@@ -1,11 +1,11 @@
 const fs = require("fs");
-const glob = require("glob");
+const { globSync } = require("glob");
 const path = require("path");
 const process = require("process");
 
 // gather all tags from all files
 const tags = new Set();
-const files = glob.sync(path.join(process.argv[2], "src/**/*.js"));
+const files = globSync(path.join(process.argv[2], "src/**/*.js"));
 files.forEach(file => {
 	const content = `${fs.readFileSync(file)}`;
 	const matches = content.match(/tag: "(.*?)",/);

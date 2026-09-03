@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Bug Fixes
+
+* **tools:** normalize path separators in copy-and-watch for Windows ([#13976](https://github.com/UI5/webcomponents/issues/13976)) ([1823576](https://github.com/UI5/webcomponents/commit/1823576b12feed8560e26bb7f4b4fa70e6f2ee8c))
+
+
+
+
+
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **tools:** normalize path separators in copy-and-watch for Windows ([#13976](https://github.com/UI5/webcomponents/issues/13976)) ([1823576](https://github.com/UI5/webcomponents/commit/1823576b12feed8560e26bb7f4b4fa70e6f2ee8c))
+
+
+
+
+
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+**Note:** Version bump only for package @ui5/webcomponents-tools
+
+
+
+
+
 # [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
 
 **Note:** Version bump only for package @ui5/webcomponents-tools

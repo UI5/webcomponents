@@ -733,6 +733,13 @@ class Popover extends Popup {
 		this._maxHeight = Math.round(maxHeight - Popover.VIEWPORT_MARGIN);
 		this._maxWidth = Math.round(maxWidth - Popover.VIEWPORT_MARGIN);
 
+		const borderRadius = Number.parseInt(window.getComputedStyle(this).getPropertyValue("border-radius"));
+		const arrowPos = this.getArrowPosition(targetRect, popoverSize, left, top, isVertical, borderRadius);
+
+		// Apply the RTL correction before the dead-band check so it is baked into `this._left`
+		// once. Adding it after would re-apply it every reposition, causing the position to drift.
+		left += this.getRTLCorrectionLeft();
+
 		if (this._left === undefined || Math.abs(this._left - left) > 1.5) {
 			this._left = Math.round(left);
 		}
@@ -740,11 +747,6 @@ class Popover extends Popup {
 		if (this._top === undefined || Math.abs(this._top - top) > 1.5) {
 			this._top = Math.round(top);
 		}
-
-		const borderRadius = Number.parseInt(window.getComputedStyle(this).getPropertyValue("border-radius"));
-		const arrowPos = this.getArrowPosition(targetRect, popoverSize, left, top, isVertical, borderRadius);
-
-		this._left += this.getRTLCorrectionLeft();
 
 		return {
 			arrow: arrowPos,
