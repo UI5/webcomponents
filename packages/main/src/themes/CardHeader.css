@@ -155,6 +155,6 @@
 
 .ui5-card-header-action-and-additional-text ::slotted([slot="action"]) {
 	position: relative;
-	top: -8px;
-	inset-inline-end: -8px;
+	top: -0.5rem;
+	inset-inline-end: -0.5rem;
 }
