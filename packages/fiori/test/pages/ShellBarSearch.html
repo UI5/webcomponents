@@ -20,7 +20,7 @@
 
 	<ui5-toggle-button icon="sap-icon://da" slot="assistant"></ui5-toggle-button>
 
-	<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" show-clear-icon
+	<ui5-shellbar-search slot="searchField" id="search-scope" scope-value="all" no-typeahead
 		placeholder="Search Apps, Products">
 		<ui5-search-scope text="All" value="all" slot="scopes"></ui5-search-scope>
 		<ui5-search-scope text="Apps" value="apps" slot="scopes"></ui5-search-scope>
@@ -54,6 +54,43 @@
 </ui5-shellbar>
 
 <body>
+	<div style="padding: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+		<ui5-button id="app-open">Open search (from app)</ui5-button>
+		<ui5-button id="app-close">Close search (from app)</ui5-button>
+		<ui5-text id="open-state"></ui5-text>
+	</div>
 </body>
+
+<script type="module">
+	const search = document.getElementById("search-scope");
+	const openBtn = document.getElementById("app-open");
+	const closeBtn = document.getElementById("app-close");
+	const state = document.getElementById("open-state");
+
+	["Manage Products", "Manage Sales Orders", "My Inbox", "Purchase Requisitions"].forEach(text => {
+		const item = document.createElement("ui5-search-item");
+		item.text = text;
+		search.appendChild(item);
+	});
+
+	function reflectState() {
+		state.textContent = `open = ${search.open}`;
+	}
+
+	openBtn.addEventListener("click", () => {
+		search.open = true;
+		reflectState();
+	});
+
+	closeBtn.addEventListener("click", () => {
+		search.open = false;
+		reflectState();
+	});
+
+	search.addEventListener("ui5-open", reflectState);
+	search.addEventListener("ui5-close", reflectState);
+
+	reflectState();
+</script>
 
 </html>
