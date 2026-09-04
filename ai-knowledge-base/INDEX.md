@@ -28,12 +28,11 @@ Find your task in the routing table and open the one file it names.
 | Adding or changing a property, slot, event, or public method | `references/api-design.md` |
 | Understanding how a component is assembled, or which file does what | `references/component-anatomy.md` |
 | Creating a brand-new component | `references/new-component.md` |
-| Writing, fixing, or debugging a Cypress test | `references/testing.md` |
 | CSS, theming, design tokens, RTL, `::part`, `:host` | `references/theming-and-css.md` |
 | Keyboard navigation, ARIA, focus, screen reader output | `references/accessibility.md` |
 | Any text a user can see | `references/i18n.md` |
 | Unnecessary re-renders, slow interaction, invalidation | `references/performance.md` |
-| A test that passes locally and fails in CI | `references/testing.md`, then `references/performance.md` |
+| A test that passes locally and fails in CI | `references/performance.md` |
 | Build fails with a documentation error | `references/api-design.md` (CEM validation) |
 
 ## Commands
@@ -76,7 +75,7 @@ el.isUI5Element     // confirm it upgraded
 
 When a spec fails, in order: read the assertion rather than the stack; rerun that case with `.only`;
 confirm the component upgraded, since one missing from `bundle.esm.ts` mounts with an empty shadow
-root; check for async focus (`references/testing.md`); then throttle the CPU. If it still
+root; then throttle the CPU. If it still
 fails under throttling it is a product bug, not a test bug.
 
 One thing accounts for most interaction bugs here: handlers that read `event.target` break when the

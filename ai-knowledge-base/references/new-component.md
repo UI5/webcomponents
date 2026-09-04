@@ -53,15 +53,16 @@ Set these in `@customElement` up front:
 
 | Question | If yes |
 |----------|--------|
-| Can it receive focus? | `shadowRootOptions: { delegatesFocus: true }` |
+| Can it receive focus? | `tabindex` on the inner focusable element (`data-sap-focus-ref` or first shadow child). Add `shadowRootOptions: { delegatesFocus: true }` only if the app may call native `element.focus()` on the host — see `accessibility.md` |
 | Does it show translated text? | `languageAware: true`, plus an `@i18n` bundle |
 | Does it format dates or numbers? | `cldr: true` |
 | Does it take part in form submission? | `formAssociated: true` |
 | Is it an F6 navigation group? | `fastNavigation: true` |
 
-A component slotted inside an existing one also changes that parent: the parent's slot JSDoc must
-name the new tag and its CSS must style the new child. `AvatarBadge` changed `Avatar.ts` and
-`themes/Avatar.css`.
+A component slotted inside an existing one may also need changes to that parent — for example, the
+parent's slot JSDoc may need to name the new tag and its CSS may need `::slotted` rules for the new
+child, as `AvatarBadge` did with `Avatar.ts` and `themes/Avatar.css`. This is not universal — e.g.
+`TabContainer` styles internal clones rather than slotted children.
 
 ## 3. Types
 
@@ -81,17 +82,20 @@ import Avatar from "./Avatar.js";
 import AvatarBadge from "./AvatarBadge.js";
 ```
 
-Use this form, not the side-effect `import "./Foo.js";` the scaffolder prints. Either form registers the component (`.define()` runs on import either way), but every other entry in `bundle.esm.ts` uses the default-import form — match it for consistency.
+Use `import Foo from "./Foo.js"` rather than `import "./Foo.js"` — both register the component, but
+the default-import form matches every other entry in `bundle.esm.ts`.
 
 ## 5. Styles and theme parameters
 
-`src/themes/Foo.css` holds structure. Any value that differs per theme belongs in
-`src/themes/base/Foo-parameters.css`, plus a per-theme file wherever the base default is wrong.
-Then `@import` those files into the `parameters-bundle.css` of every theme folder in the package
-(excluding `*_auto`, which are generated composites). In `packages/fiori` the `*_exp` folders
-(`sap_horizon_exp`, `sap_horizon_dark_exp`, `sap_horizon_hcb_exp`, `sap_horizon_hcw_exp`) are **not**
-generated — they need the manual `@import` too. A theme whose bundle is missing
-the import renders the component with unresolved custom properties. See `theming-and-css.md`.
+`src/themes/Foo.css` holds structure. Prefer existing `--sap*` variables there — most themes already
+define them. Add `Foo-parameters.css` only when a private `--_ui5_*` custom property must differ per
+theme: a base file at `src/themes/base/Foo-parameters.css`, plus a per-theme override wherever the
+base default is wrong. Then `@import` those files into the `parameters-bundle.css` of every theme
+folder in the package (excluding `*_auto`, which are generated composites). In `packages/fiori` the
+`*_exp` folders (`sap_horizon_exp`, `sap_horizon_dark_exp`, `sap_horizon_hcb_exp`,
+`sap_horizon_hcw_exp`) are **not** generated — they need the manual `@import` too. A theme whose
+bundle is missing the import renders the component with unresolved custom properties. See
+`theming-and-css.md`.
 
 ```css
 /* sap_horizon/parameters-bundle.css */
@@ -112,13 +116,16 @@ Work through the checklist at the end of `accessibility.md` before you consider 
 ## 8. Tests
 
 `cypress/specs/Foo.cy.tsx` covers rendering, every property, every event and payload, the keyboard
-path, and ARIA. A new visual component also gets `cypress/specs/visuals/Foo.cy.tsx` (`testing.md`).
+path, and ARIA. A new visual component also gets `cypress/specs/visuals/Foo.cy.tsx`.
 
 ## 9. Manual test page
 
 `packages/main/test/pages/Foo.html`, to exercise the component across themes and text directions.
 
 ## 10. Website
+
+Sample file layout (`sample.html`, `main.js`, `sample.tsx`, `<SampleName>.md`) is in `AGENTS.md`.
+This section covers the wiring that file does not list.
 
 **API page.** One `.mdx` under `packages/website/docs/_components_pages/<package>/` — top-level
 (`main/ExpandableText.mdx`) or nested under the parent for a subcomponent
@@ -138,18 +145,6 @@ import Basic from "../../_samples/main/ExpandableText/Basic/Basic.md";
 <Basic />
 
 <%COMPONENT_METADATA%>
-```
-
-**Samples.** `packages/website/docs/_samples/<package>/Foo/<SampleName>/` with `sample.html`,
-`main.js`, `sample.tsx`, and `<SampleName>.md`:
-
-```md
-// _samples/main/AvatarBadge/Basic/Basic.md
-import html from '!!raw-loader!./sample.html';
-import js from '!!raw-loader!./main.js';
-import react from '!!raw-loader!./sample.tsx';
-
-<Editor html={html} js={js} react={react} />
 ```
 
 **React playground.** Add `import FooClass from "@ui5/webcomponents/dist/Foo.js";` and `FooClass` to

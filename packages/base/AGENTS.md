@@ -24,7 +24,6 @@ The relevant references for base-package work:
 | How a component is assembled, which file does what | `references/component-anatomy.md` |
 | A property, slot, event, or public method | `references/api-design.md` |
 | A brand-new component | `references/new-component.md` |
-| A Cypress test | `references/testing.md` |
 | CSS, theming, design tokens, `themeAware` | `references/theming-and-css.md` |
 | Keyboard, ARIA, focus | `references/accessibility.md` |
 | Any user-visible text, `languageAware` | `references/i18n.md` |

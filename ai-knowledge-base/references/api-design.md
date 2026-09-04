@@ -6,8 +6,9 @@ JSDoc is validated when the Custom Elements Manifest is generated, by `yarn gene
 `yarn ts` nor `yarn start` runs it, so a documentation error is invisible while you type and fails
 later. Run `yarn generateAPI` before declaring an API change done.
 
-`core-rules.md` carries the declarative-API rule and the rules on event ordering, boolean defaults,
-and strict decorators. This file covers how to shape and document the API, not why.
+Load alongside `core-rules.md` for any API task — this file covers how to shape and document the
+API; that one covers invariants (declarative API, event ordering, boolean defaults, strict
+decorators).
 
 ## Choosing the mechanism
 
@@ -15,7 +16,7 @@ and strict decorators. This file covers how to shape and document the API, not w
 |---------------------------|-----|
 | Configure a value or a mode | property — `design`, `disabled`, `placeholder` |
 | Put the component into a state | property — `open`, `collapsed`, `selected` |
-| Supply markup, or a component the host must talk to | slot — `content`, `header`, `valueStateMessage` |
+| Compose child components, or supply markup, that the host renders and may talk to | slot — `content`, `header`, `valueStateMessage` |
 | React to something the user did | event — `click`, `selection-change` |
 | Restyle an internal element | CSS part |
 | Add an optional capability that carries its own API | a slotted subcomponent — see Features below |
@@ -26,17 +27,18 @@ an argument (`isValidValue(value)`, `formatValue(date)`), a transient action wit
 (`navigateTo`, `reset`, `closeOverflow`), or handing out a DOM reference. A method that would only
 flip a boolean the application already owns should be a property.
 
-`open` is the canonical state property. It is inherited from `Popup` by `Popover`, `Dialog`, and
-`ResponsivePopover` rather than redeclared, and also exists on `Menu`, `Input`, `ComboBox`,
-`MultiComboBox`, `Toast`, and the pickers. `Select` does **not** expose one — it tracks open state
-in `opened`, marked `@private` (so it's out of the public API and docs), though it still reflects as
-an attribute since it isn't `noAttribute`.
+`open` is the standard example of a state property. It is inherited from `Popup` by `Popover`,
+`Dialog`, and `ResponsivePopover` rather than redeclared, and also exists on `Menu`, `Input`,
+`ComboBox`, `MultiComboBox`, `Toast`, and the pickers. `Select` tracks open state in `opened`
+(`@private`), so it is absent from the public API and docs. It still reflects as an attribute
+because `@property({ type: Boolean })` does not set `noAttribute: true` — `@private` is a
+doc-visibility flag only, not a reflection guard.
 
 ### Writing your own public property
 
 A component writes its own public property when a user interaction or its own lifecycle changes that
-state, then fires the matching event in the same handler. This is the normal pattern, not an
-exception — `CheckBox.checked`, `Panel.collapsed`, and `Input.value` all follow it.
+state, then fires the matching event in the same handler. For example, `CheckBox.checked`,
+`Panel.collapsed`, and `Input.value` all follow it.
 
 ```ts
 _afterPopoverClose() {
@@ -70,20 +72,22 @@ design: `${ButtonDesign}` = "Default";
 
 `type`, `noAttribute`, and `converter` are the only options that exist.
 
-| Option | Effect |
-|--------|--------|
-| `@property()` | String, reflected as an attribute. `{ type: String }` is the same thing written out |
-| `{ type: Number }` | Reflected. Never coerces — assigning a string stores the string |
-| `{ type: Boolean }` | Presence-based attribute |
-| `{ type: Object }`, `{ type: Array }` | Not reflected outbound. An author-set attribute is still parsed inbound with `JSON.parse` |
-| `{ noAttribute: true }` | No attribute in either direction |
-| `{ converter: { fromAttribute, toAttribute } }` | Custom serialisation. `converters/DOMReference.js` already exists for `opener`-style properties that accept an element or an id string |
+When a property is **reflected**, its value is mirrored on the host element as an HTML attribute
+(`<ui5-button design="Emphasized">`) and stays in sync when you change the property in JavaScript.
 
-Reflection notes that cause bug reports: `undefined` and `null` remove the attribute, while `""`
-leaves a present, empty one. Nothing is reflected before the first render, so reading `getAttribute`
-in a constructor or early in a test sees nothing. In dev mode a type mismatch logs a `[UI5-FWK]`
-console error and stops converting that attribute — that message is the fastest way to spot a
-missing `type`.
+| Option | What it does |
+|--------|--------------|
+| `@property()` | A **string** property — the default when you pass no options. `{ type: String }` is optional and changes nothing. Reflected to an attribute. |
+| `{ type: Number }` | A **number** property. Reading an attribute runs `parseFloat`; assigning in JS stores the value as-is (no coercion). Reflected back as a string attribute. |
+| `{ type: Boolean }` | A **boolean** property. Attribute present means `true`, absent means `false`. When `true`, reflected as an empty attribute (`disabled=""`). |
+| `{ type: Object }`, `{ type: Array }` | Parsed from a JSON attribute if the author sets one in HTML. Never written back to the attribute. |
+| `{ noAttribute: true }` | Property only — no attribute in either direction. |
+| `{ converter: { fromAttribute, toAttribute } }` | Custom parse/serialize logic. `converters/DOMReference.js` already handles `opener`-style properties that accept an element or an id string. |
+
+Common surprises: `undefined` and `null` remove the attribute; `""` leaves a present, empty one.
+Nothing is reflected before the first render, so `getAttribute` in a constructor or early in a test
+returns nothing. In dev mode, assigning the wrong JS type without the matching `type` option logs a
+`[UI5-FWK]` error — the fastest way to spot a missing `type`.
 
 ### `@default`
 
@@ -99,7 +103,7 @@ need no tag. A property with **no** initializer needs the tag written explicitly
 icon?: string;
 ```
 
-Public getters need it too. This is the most common CEM failure on a new API.
+Public getters need it too. A missing `@default` is a frequent CEM failure on a new API.
 
 ### Boolean polarity
 
@@ -109,21 +113,22 @@ what is being turned off:
 
 | Prefix | For | Examples |
 |--------|-----|----------|
+| `show*` | a non-default rendered element | `showSuggestions`, `showClearIcon` |
 | `hide*` | a rendered sub-element that is shown by default | `hideArrow`, `hideCloseButton`, `hideWeekNumbers` |
 | `no*` | an automatic behaviour | `noTypeahead`, `noAnimation`, `noAutoSelection` |
 | `prevent*` | a focus or closing side effect | `preventFocusRestore`, `preventInitialFocus` |
 | `disable*` | a whole capability, distinct from `disabled` | `disableResizing`, `disableSearchCollapse` |
 
-The mirror case is `show*` with a `false` default (`showSuggestions`, `showClearIcon`). Pick the
-polarity that makes `false` correct, then name accordingly. `suppress*`, `without*`, and `omit*` are
-not used here.
+Pick the polarity that makes `false` correct, then name accordingly. `suppress*`, `without*`, and
+`omit*` are not used here.
 
 ### `@property` on a setter
 
 The decorator works on an accessor pair, and this is how every state property with a side effect is
 written — `Popup.open` calls the open and close routines from its setter, `Popover.opener` re-opens
 when it changes, `Select.value` stores into a backing field and reconciles against the slotted
-options during `onBeforeRendering`. Put the JSDoc above the setter.
+options during `onBeforeRendering`. Put the JSDoc above the setter. A plain field is correct when
+the property change needs no side effect beyond invalidation.
 
 ### Naming
 
@@ -146,16 +151,19 @@ Import the enum type-only, type the property as `` `${Enum}` ``, default it to a
 compare against string literals. The attribute path assigns a raw string, so a property typed as the
 enum itself is a type lie. One enum per file in `src/types/`.
 
-Much of the existing code violates this — importing enums as runtime values and comparing against
-members like `ButtonDesign.Default`. Write the correct form; do not migrate neighbours as a drive-by.
+Much of the existing code differs from the form recommended here — importing enums as runtime values
+and comparing against members like `ButtonDesign.Default`. Write the correct form; do not migrate
+neighbours as a drive-by. If the file you are editing already uses the old pattern, follow the new
+form only in the code you write — do not mix styles within a single expression.
 
 ### Accessibility properties
 
 An interactive component carries `accessibleName` and `accessibleNameRef` as optional strings with no
 default, `accessibleRole` typed to a component-specific enum rather than a raw ARIA role, and
 `accessibilityAttributes` as `{ type: Object }` defaulting to `{}` and narrowed with
-`Pick<AccessibilityAttributes, …>` to the fields it actually applies. `accessibleNameRef` needs a
-registration in `onEnterDOM` to resolve — see `accessibility.md`.
+`Pick<AccessibilityAttributes, …>` to the fields it actually applies. Call `registerUI5Element` in
+`onEnterDOM` only when `accessibleNameRef`, `accessibleDescriptionRef`, or `<label for>` targets can
+change after mount — see `accessibility.md`.
 
 ### Form-associated components
 
@@ -177,8 +185,8 @@ invalidating, and the console warns that the property is "shadowed by the instan
 
 ## Slots
 
-Import the default export of `decorators/slot-strict.js`. From the `decorators.js` barrel the plain
-`slot` export is the deprecated decorator, so alias: `slotStrict as slot`.
+Import the default export of `decorators/slot-strict.js`. The `decorators.js` barrel also exports
+`slotStrict` if you need it, but the plain `slot` export there is the deprecated decorator.
 
 Two member types, both exported from `UI5Element.js`. Getting this wrong is the most common slot
 mistake:
@@ -201,8 +209,8 @@ badge!: Slot<ButtonBadge>;
 | `individualSlots: true` | Each child gets a generated slot name in `_individualSlot`, for templates that place children at unrelated positions |
 | `invalidateOnChildChange` | `true`, or `{ properties, slots }` where each is a boolean or an array of names. An absent key means `false`. Omitting the option entirely means child changes never invalidate |
 
-Blanket `true` on a slot holding hundreds of children is a performance bug — scope it to the
-properties you read, as `Table` does for its rows. See `performance.md`.
+Blanket `invalidateOnChildChange: true` on a slot holding hundreds of children is a performance
+bug — scope it to the properties you read, as `Table` does for its rows. See `performance.md`.
 
 Applications address a named slot by the **camelCase member name** — `slot="endContent"`, not
 kebab-case. The default slot is a bare `<slot></slot>` in the template. With `individualSlots`, the
@@ -214,41 +222,56 @@ import it). There is no `getSlottedElements`.
 
 ### Typing slot children
 
-Constrain children with an interface, declared in the file of the component that *consumes* the slot
-and exported as a type from it (e.g. `IMenuItem` in `Menu.ts`, `ITab` in `TabContainer.ts`). Extend
-`HTMLElement` when any element qualifies, `UI5Element` when framework services are needed. The one
-common exception is `IButton` below: it lives in `Button.ts` because `Button` is the shared building
-block many containers slot, so the interface travels with the implementer rather than each consumer.
+When a component accepts specific child elements in a slot, type the slot with a shared interface
+(e.g. `items!: DefaultSlot<IMenuItem>`), not the concrete class. Keep `type: HTMLElement` (or `Node`
+for the default slot) in the `@slot` decorator — the interface is a compile-time contract only.
+
+Declare the interface in whichever file owns the reusable building block: the consumer when one
+component defines both slot and item type (`IMenuItem` in `Menu.ts`, `ITab` in `TabContainer.ts`),
+the implementer when many unrelated containers slot the same element (`IButton` in `Button.ts`,
+`IIcon` in `Icon.ts`).
+
+On every implementing class, add `implements ITheInterface` and `@implements {ITheInterface}` JSDoc.
+For runtime checks across module boundaries, add a duck-typing marker getter (e.g.
+`get isMenuItem() { return true; }`) and export a `createInstanceChecker` helper from the same file
+— see `MenuItem.ts`.
 
 ```ts
+// Menu.ts — interface lives with the consumer
+interface IMenuItem extends UI5Element { /* ... */ }
+
+@slot({ type: HTMLElement, "default": true })
+items!: DefaultSlot<IMenuItem>;
+
+// MenuItem.ts — implementing class
 /**
- * Interface for components that may be used as a button inside numerous higher-order components
- * @public
+ * @implements {IMenuItem}
  */
-interface IButton extends HTMLElement, ITabbable {
-	nonInteractive: boolean;
+class MenuItem extends ListItem implements IMenuItem {
+	get isMenuItem() { return true; }
 }
+
+export const isInstanceOfMenuItem = createInstanceChecker<MenuItem>("isMenuItem");
 ```
 
-The slot references the interface while `type` stays `HTMLElement` — the interface is a compile-time
-contract only: `startButton!: Slot<IButton>`. The implementing class adds `implements IButton`, an
-`@implements {IButton}` JSDoc tag, and a duck-typing marker getter (`get isMenuItem() { return
-true; }`) paired with `createInstanceChecker` exported from the bottom of its file. Never pass a
-component class as a slot `type` — it reintroduces `instanceof` and breaks under scoping.
+Never pass a component class as the slot `type` — it reintroduces `instanceof` and breaks under
+scoping.
 
 A slot with no accessor is documented with a class-level tag instead:
 `@slot {Array<Node>} default - Defines the content…`
 
 ## Events
 
-Import the default export of `decorators/event-strict.js`; from the barrel, `eventStrict as event`.
+Import the default export of `decorators/event-strict.js`. The `decorators.js` barrel also exports
+`eventStrict` if you need it.
 Omitted options default to `bubbles: false` and `cancelable: false`. Write the booleans as literals —
 CEM reads them literally and records anything that is not a literal `false` as `true`.
 
-`@customElement` must be present or CEM rejects the class, but the decorator order does not matter.
-What does matter is that each JSDoc block sits immediately **above the decorator it documents**. An
-`@event` with no JSDoc block is silently private: no error, and the event never reaches the docs or
-the framework wrappers.
+A class that declares events must be a custom element — via `@customElement` or by extending
+`UI5Element` — or CEM errors, but the decorator order does not matter. What does matter is that
+each JSDoc block sits immediately **above the decorator it documents**. An `@event` with no JSDoc
+block is silently private: no error, and the event never reaches the docs or the framework
+wrappers.
 
 ```ts
 @customElement({ tag: "ui5-button", renderer: jsxRenderer, template: ButtonTemplate })
@@ -272,15 +295,17 @@ Every event needs an `eventDetails` entry — `void` when there is no payload, o
 exported type. `@event("open")` with no options object is the right form for a plain, non-bubbling
 event.
 
-### Subclasses must re-declare `eventDetails`
+### Subclasses must extend `eventDetails` when adding events
 
-The strict decorator resolves event names from `keyof this["eventDetails"]`, so a subclass that does
-not re-declare it cannot fire its parent's events and cannot compile a new `@event`. Re-declare even
-when adding nothing (`eventDetails!: Popup["eventDetails"];`), and put your own events **last** in
-the intersection — CEM reads only the final member, so the reversed order compiles and then fails
-validation:
+The strict decorator resolves event names from `keyof this["eventDetails"]`. A subclass that adds a
+new `@event` must re-declare `eventDetails` with the parent's map in the intersection. A subclass
+that fires only inherited events needs nothing — `ToggleButton` inherits `Button`'s `eventDetails`
+and only fires `click`, without re-declaring. Put your own events **last** in the intersection — CEM
+reads only the final member, so the reversed order compiles and then fails validation. `MenuItem` is
+the pattern:
 
 ```ts
+// MenuItem.ts — adds events on top of ListItem
 eventDetails!: ListItem["eventDetails"] & {
 	"before-open": MenuBeforeOpenEventDetail,
 	"open": void,
@@ -291,18 +316,22 @@ Export every detail type from the module, or CEM rejects it as an undocumented p
 
 ### What one `fireDecoratorEvent` dispatches
 
-Up to four events, all with `composed: false`. For a multi-word name like `selection-change` it fires
-`ui5-selection-change` and `selection-change`, then repeats the pair PascalCased
-(`ui5-SelectionChange`, `SelectionChange`). A single-word name like `open` fires four too —
-`ui5-open`, `open`, `ui5-Open`, `Open` — because `kebabToPascalCase("open")` is `"Open"`, which
-differs from the original and so is not skipped. The `ui5-` prefixed events always fire; the
-un-prefixed ones are what no-conflict configuration suppresses, so listen to the prefixed name inside
-the library. The PascalCase alias exists so React's `onSelectionChange` binds to a real dispatched
-event.
+Each call to `_fireEvent` fires up to two events with `composed: false`: `ui5-{name}` and `{name}`.
+For multi-word names like `selection-change`, a second `_fireEvent` call fires the PascalCase pair
+(`ui5-SelectionChange`, `SelectionChange`) when `kebabToPascalCase(name)` differs from `name`. A
+single-word name like `open` gets the same second call because `kebabToPascalCase("open")` is
+`"Open"`. So a four-event name is two independent `_fireEvent` calls, not one call with four
+variants — suppressing the kebab-named event via no-conflict configuration does not suppress the
+PascalCase pair from the second call.
+
+The `ui5-` prefixed events always fire; the un-prefixed ones are what no-conflict configuration
+suppresses, so listen to the prefixed name inside the library. The PascalCase alias exists so
+React's `onSelectionChange` binds to a real dispatched event.
 
 Two consequences: a bubbling event stops at the first shadow boundary, so a host listening to its own
-slotted children attaches listeners directly; and preventing the kebab-named event suppresses the
-PascalCase form too, so a React consumer's handler silently does not run.
+slotted children attaches listeners directly; and preventing one kebab-named event from the first
+call does not prevent the PascalCase event from the second call, so a React consumer's handler may
+silently not run.
 
 `fireDecoratorEvent` returns `false` when prevented:
 
@@ -318,10 +347,10 @@ const prevented = !this.fireDecoratorEvent("item-click", { item, text: item.text
 
 ### Cancelable events
 
-Two idioms coexist. Lifecycle events fire first and act only if not prevented (`Popup.openPopup`,
+Two patterns coexist. Lifecycle events fire first and act only if not prevented (`Popup.openPopup`,
 `TabContainer.selectTab`). Value and selection changes apply the change, fire, and revert if prevented
-(`CheckBox.toggle`, `List` selection) — so a `change` listener sees the new value while a `before-open`
-listener sees the old state. Use fire-then-act for new lifecycle events.
+(`CheckBox.toggle`, `List` selection) — so a `change` listener sees the new value while a
+`before-open` listener sees the old state. Use fire-then-act for new lifecycle events.
 
 Setting `open` on a popup from application code runs the full event sequence, since the setter drives
 it. Events here are not user-interaction-only.
@@ -337,8 +366,7 @@ getSelectedRows(): TableRow[] {
 }
 ```
 
-Expose focus by overriding `getFocusDomRef()`, not `focus()`. A named public focus entry point
-(`Popup.applyFocus`) is rare and needs a reason.
+Expose focus by overriding `getFocusDomRef()`, not `focus()`.
 
 ## JSDoc that passes CEM
 
@@ -346,9 +374,16 @@ Every tag is checked twice: it must be allowed for that kind of member, and it m
 shape. A tag in the wrong shape fails with the same "Incorrect use of @tag" error as a disallowed
 one, so the shape rules matter more than the error list.
 
+The table below is **CEM shape** — what `yarn generateAPI` accepts — not how you would write
+TypeScript in general. Put types on the function signature; CEM reads JSDoc separately. Method
+`@param` is prose only (no `{type}` braces — adding them fails the build). Event `@param` is the
+opposite: braces are required because CEM has no signature to read.
+
+### CEM tag shape (not TypeScript syntax)
+
 | Tag | Shape |
 |-----|-------|
-| `@param` on a **method** | no braces — `@param selectedSet A set of row keys` |
+| `@param` on a **method** | prose only, no braces — `@param selectedSet A set of row keys` |
 | `@param` on an **event** | braces required — `@param {HTMLElement} item The previewed item` |
 | `@returns` | text, no braces |
 | `@implements` | braces — `@implements {IButton}` |

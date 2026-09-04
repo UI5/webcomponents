@@ -10,7 +10,7 @@
 
 No `--sap*` token is defined in this monorepo — the theme's `parameters-bundle.css` only `@import`s the `--sap*` variables from `@sap-theming/theming-base-content`.
 
-`--_ui5_*` component parameters are by far the most common variable in the theme CSS. `--ui5_*` / `--ui5-*` cross-boundary variables (no leading underscore) are rare and reserved for a value another component or the build reads across a boundary — for example `--ui5_content_density` (read by the build, below), `--ui5-form-column-span-s`, and `--ui5_value_state-background`.
+For a **new** component, start with `Foo.css` and existing `--sap*` tokens — they already resolve across themes. Component-specific `--_ui5_*` parameters and `-parameters.css` files exist throughout the codebase, but add them only when values differ per theme in ways that cannot be expressed with existing UI5 CSS parameters. Shared `--ui5_*` / `--ui5-*` cross-boundary variables (no leading underscore) are rare and reserved for a value another component or the build reads across a boundary — for example `--ui5_content_density` (read by the build, below), `--ui5-form-column-span-s`, and `--ui5_value_state-background`.
 
 ```css
 :host {
@@ -43,8 +43,15 @@ Shared partials come in through `@import` at the top of the component CSS instea
 
 ## Where each file goes
 
+Most components need only `Foo.css`:
+
 ```
-src/themes/Foo.css                         structure and layout, theme-independent
+src/themes/Foo.css    structure and layout — use --sap* and existing shared --_ui5_* parameters
+```
+
+Add `-parameters.css` only when structural values differ per theme and cannot be covered by existing UI5 CSS parameters:
+
+```
 src/themes/base/Foo-parameters.css         default --_ui5_foo_* values
 src/themes/sap_horizon/Foo-parameters.css  overrides
 src/themes/sap_fiori_3/Foo-parameters.css  overrides
@@ -52,9 +59,9 @@ src/themes/sap_fiori_3/Foo-parameters.css  overrides
 
 A per-theme file usually `@import`s the base one and overrides only what changes, but chains exist: `sap_horizon_hcw/rtl-parameters.css` imports `../sap_horizon/rtl-parameters.css`.
 
-Themes: `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`). A new `--_ui5_*` parameter needs a value in `base/`; central compact overrides live in `base/sizes-parameters.css` onward.
+Themes: `sap_horizon` (+ `_dark`, `_hcb`, `_hcw`, `_auto`, `_hc_auto`) and `sap_fiori_3` (+ `_dark`, `_hcb`, `_hcw`). When you do add a new `--_ui5_*` parameter, it needs a value in `base/`; central compact overrides live in `base/sizes-parameters.css` onward.
 
-`parameters-bundle.css` is the registration unit — `sap_horizon/parameters-bundle.css` aggregates every `-parameters.css` plus `sizes-parameters.css` and `rtl-parameters.css`. A parameters file that is not imported there does nothing. Add it in every theme folder.
+`parameters-bundle.css` is the registration unit — `sap_horizon/parameters-bundle.css` aggregates every `-parameters.css` plus `sizes-parameters.css` and `rtl-parameters.css`. A parameters file that is not imported there does nothing. Add the `@import` in every theme folder that should load it.
 
 ## Selectors
 

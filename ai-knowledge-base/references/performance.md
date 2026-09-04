@@ -130,7 +130,8 @@ fresh arrow each time never matches and leaks. Gate registration on `open` insid
 - End-of-list detection: `IntersectionObserver`.
 - Scroll and touch listeners: `{ passive: true }`.
 - State for many children: one pass in the parent's `onBeforeRendering` writing plain child fields, not a `@property` per child.
-- Derived objects: a key-guarded field on the instance.
+- Derived objects: a key-guarded field on the instance — cache lazily: store `null` in the
+  constructor, compute on first access, return the cached value when the guard key is unchanged.
 
 `individualSlots: true` runs a `setAttribute("slot", …)` pass over every child on every render.
 Combined with an unscoped `invalidateOnChildChange` on a high-cardinality slot it
@@ -167,8 +168,7 @@ timeout, not a `MutationObserver`). Do not call `renderFinished()` in a hot path
 `onAfterRendering` runs synchronously at the end of `_render()`: after the DOM
 patch, still before the next paint. Measure your own DOM there, not through `renderFinished()`.
 
-In tests use `cy.waitRenderFinished()`. `cy.mount` and
-the wrapped real-event commands already wait — see `testing.md`.
+In tests use `cy.waitRenderFinished()`. `cy.mount` and the wrapped real-event commands already wait.
 
 ## Large lists
 
