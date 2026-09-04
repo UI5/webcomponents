@@ -451,6 +451,14 @@ class Search extends SearchField {
 	 * @private
 	 */
 	_setInternalOpen(value: boolean) {
+		// Only flag the change when `open` actually changes. A no-op assignment
+		// does not invalidate the component (see UI5Element property setter), so
+		// no reconciliation would run to clear the flag - leaving it stale and
+		// causing a later application-driven change to be misread as internal.
+		if (value === this.open) {
+			return;
+		}
+
 		this._openChangedInternally = true;
 		this.open = value;
 	}
