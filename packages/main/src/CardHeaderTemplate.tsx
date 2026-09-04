@@ -49,7 +49,7 @@ export default function CardHeaderTemplate(this: CardHeader) {
 
 			{(this.hasAction || this.additionalText) &&
 				<div
-					class="ui5-card-header-action"
+					class="ui5-card-header-action-and-additional-text"
 					onFocusIn={this._actionsFocusin}
 					onFocusOut={this._actionsFocusout}
 				>

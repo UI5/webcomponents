@@ -4,6 +4,7 @@
 	position: relative;
 	display: flex;
 	align-items: center;
+	gap: 1rem;
 	padding: var(--_ui5_card_header_padding);
 	outline: none;
 }
@@ -144,11 +145,16 @@
 	-webkit-line-clamp: 3;
 }
 
-.ui5-card-header-action {
+.ui5-card-header-action-and-additional-text {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
 	gap: 0.25rem;
-	padding-inline-start: 1rem;
 	align-self: flex-start;
+}
+
+.ui5-card-header-action-and-additional-text ::slotted([slot="action"]) {
+	position: relative;
+	top: -8px;
+	inset-inline-end: -8px;
 }
