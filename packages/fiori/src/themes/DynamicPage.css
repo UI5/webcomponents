@@ -6,7 +6,8 @@
 }
 
 .ui5-dynamic-page-header-actions-wrapper {
-    position: relative;
+    position: sticky;
+    top: var(--_ui5_dp_header_actions_top, auto);
     z-index: 4;
 }
 

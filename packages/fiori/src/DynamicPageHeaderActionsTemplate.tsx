@@ -12,6 +12,7 @@ export default function DynamicPageHeaderActionsTemplate(this: DynamicPageHeader
 					icon={this.arrowButtonIcon}
 					accessibleName={this.expandLabel}
 					accessibilityAttributes={this.accessibilityAttributes}
+					tooltip={this.expandLabel}
 					onMouseOver={this.onExpandHoverIn}
 					onMouseOut={this.onExpandHoverOut}
 				/>
@@ -23,6 +24,7 @@ export default function DynamicPageHeaderActionsTemplate(this: DynamicPageHeader
 						pressed={this.pinned}
 						accessibilityAttributes={this.accessibilityAttributes}
 						accessibleName={this.pinLabel}
+						tooltip={this.pinLabel}
 					/>
 				}
 			</div>
