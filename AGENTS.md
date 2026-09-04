@@ -84,6 +84,7 @@ For detailed component architecture, development rules, and testing patterns, se
 | CSS selectors | `ui5-tag { }` | `[ui5-tag] { }` |
 | Type checks | `instanceof Component` | `isInstanceOfComponent(el)` |
 | DOM mutation | `this._ref.value = x` | Template: `<Comp value={x} />` |
+| Current date | `new Date()` | `UI5Date.getInstance()` (import from `@ui5/webcomponents-localization/dist/dates/UI5Date.js`) |
 
 ## Commit Message Format
 

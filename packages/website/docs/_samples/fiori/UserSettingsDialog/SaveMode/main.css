@@ -42,7 +42,7 @@
 .language-region-container{
 	display: flex;
 	min-height: 2.5rem;
-	align-item:flex-start;
+	align-items:flex-start;
 	flex-direction: column;
 	gap: 0.563rem;
 }

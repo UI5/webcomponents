@@ -1,5 +1,5 @@
-import type Calendar from "./Calendar.js";
 import Icon from "./Icon.js";
+import type { CalendarHeaderHost } from "./CalendarHeaderTypes.js";
 
 import slimArowLeft from "@ui5/webcomponents-icons/dist/slim-arrow-left.js";
 import slimArowRight from "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
@@ -16,7 +16,7 @@ interface CalendarHeaderOptions {
 	isMultiple?: boolean;
 }
 
-export default function CalendarHeaderTemplate(this: Calendar, options?: CalendarHeaderOptions) {
+export default function CalendarHeaderTemplate(this: CalendarHeaderHost, options?: CalendarHeaderOptions) {
 	const headerText = options?.headerText;
 	const isFirst = options?.isFirst ?? true;
 	const isLast = options?.isLast ?? true;
@@ -41,7 +41,7 @@ export default function CalendarHeaderTemplate(this: Calendar, options?: Calenda
 	);
 }
 
-function renderPrevButton(this: Calendar, isFirst: boolean, isMultiple: boolean) {
+function renderPrevButton(this: CalendarHeaderHost, isFirst: boolean, isMultiple: boolean) {
 	if (!isFirst && isMultiple) {
 		return <div class="ui5-calheader-spacer"></div>;
 	}
@@ -70,7 +70,7 @@ function renderPrevButton(this: Calendar, isFirst: boolean, isMultiple: boolean)
 }
 
 function renderMiddleButtons(
-	this: Calendar,
+	this: CalendarHeaderHost,
 	headerText: {
 		monthText: string;
 		yearText: string;
@@ -127,15 +127,15 @@ function renderMiddleButtons(
 				class="ui5-calheader-arrowbtn ui5-calheader-middlebtn"
 				part="calendar-header-middle-button"
 				hidden={this._isHeaderYearRangeButtonHidden}
-				tabindex={0}
-				role="button"
-				aria-label={this.accInfo.ariaLabelYearRangeButton}
-				aria-description={this.accInfo.ariaLabelYearRangeButton}
-				title={this.accInfo.tooltipYearRangeButton}
-				aria-keyshortcuts={this.accInfo.keyShortcutYearRangeButton}
-				onClick={this.onHeaderYearRangeButtonPress}
-				onKeyDown={this.onYearRangeButtonKeyDown}
-				onKeyUp={this.onYearRangeButtonKeyUp}
+				tabindex={this._isHeaderYearRangeButtonReadonly ? -1 : 0}
+				role={this._isHeaderYearRangeButtonReadonly ? undefined : "button"}
+				aria-label={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.ariaLabelYearRangeButton}
+				aria-description={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.ariaLabelYearRangeButton}
+				title={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.tooltipYearRangeButton}
+				aria-keyshortcuts={this._isHeaderYearRangeButtonReadonly ? undefined : this.accInfo.keyShortcutYearRangeButton}
+				onClick={this._isHeaderYearRangeButtonReadonly ? undefined : this.onHeaderYearRangeButtonPress}
+				onKeyDown={this._isHeaderYearRangeButtonReadonly ? undefined : this.onYearRangeButtonKeyDown}
+				onKeyUp={this._isHeaderYearRangeButtonReadonly ? undefined : this.onYearRangeButtonKeyUp}
 			>
 				<span>{this._headerYearRangeButtonText}</span>
 				{this.hasSecondaryCalendarType &&
@@ -146,7 +146,7 @@ function renderMiddleButtons(
 	);
 }
 
-function renderNextButton(this: Calendar, isFirst: boolean, isLast: boolean, isMultiple: boolean) {
+function renderNextButton(this: CalendarHeaderHost, isFirst: boolean, isLast: boolean, isMultiple: boolean) {
 	// In landscape mode, show next button only on last calendar
 	const isVertical = this._portraitView;
 	const shouldShowNextButton = !isMultiple || (isVertical ? isFirst : isLast);

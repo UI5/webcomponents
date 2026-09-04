@@ -387,7 +387,12 @@ class Calendar extends CalendarPart {
 		this._handleResizeBound = this._handleResize.bind(this);
 	}
 
+	override get _shouldWatchZoom(): boolean {
+		return isPhone();
+	}
+
 	onEnterDOM() {
+		super.onEnterDOM();
 		ResizeHandler.register(document.body, this._handleResizeBound);
 		this._handleResize();
 	}
@@ -421,6 +426,7 @@ class Calendar extends CalendarPart {
 	}
 
 	onExitDOM() {
+		super.onExitDOM();
 		ResizeHandler.deregister(document.body, this._handleResizeBound);
 	}
 
@@ -946,6 +952,33 @@ class Calendar extends CalendarPart {
 
 	_onLegendFocusOut() {
 		this._selectedItemType = "None";
+	}
+
+	get _hzDatePickerValue(): string {
+		const ts = this._selectedDatesTimestamps[0] ?? this._timestamp;
+		const calDate = CalendarDateComponent.fromTimestamp(ts * 1000, this._primaryCalendarType);
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(calDate.toUTCJSDate()) as string;
+	}
+
+	_onHzDatePickerChange(e: CustomEvent<{ value: string, valid: boolean }>) {
+		if (!e.detail.valid) { return; }
+		const fmt = DateFormat.getDateInstance({ strictParsing: true, pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType });
+		const isoDate = fmt.parse(e.detail.value, true) as Date | null;
+		if (!isoDate) { return; }
+		const calDate = CalendarDateComponent.fromLocalJSDate(isoDate, this._primaryCalendarType);
+		const timestamp = calDate.valueOf() / 1000;
+		this.timestamp = timestamp;
+		this._fireEventAndUpdateSelectedDates([timestamp]);
+	}
+
+	get _hzMinISO(): string {
+		if (!this.minDate) { return ""; }
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(this._minDate.toUTCJSDate()) as string;
+	}
+
+	get _hzMaxISO(): string {
+		if (!this.maxDate) { return ""; }
+		return DateFormat.getDateInstance({ pattern: "yyyy-MM-dd", calendarType: this._primaryCalendarType }).format(this._maxDate.toUTCJSDate()) as string;
 	}
 
 	get _specialDates() {
