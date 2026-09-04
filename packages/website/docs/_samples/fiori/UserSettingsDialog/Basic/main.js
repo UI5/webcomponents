@@ -3,6 +3,9 @@ import "@ui5/webcomponents-fiori/dist/UserSettingsAccountView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsView.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewGroup.js";
+import "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsView.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsItem.js";
 import "@ui5/webcomponents-fiori/dist/UserSettingsDialog.js";
@@ -42,6 +45,7 @@ import "@ui5/webcomponents-icons/dist/iphone.js";
 import "@ui5/webcomponents-icons/dist/qr-code.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/reset.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 
 const shellbar = document.getElementById("shellbar");
 const menuShellBar = document.getElementById("userMenuShellBar");

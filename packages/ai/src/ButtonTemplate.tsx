@@ -10,6 +10,7 @@ export default function ButtonTemplate(this: Button) {
 			disabled={this.disabled}
 			_endIcon={this._stateEndIcon}
 			_hideArrowButton={this._hideArrowButton}
+			_roleDescription={this.accessibilityAttributes?.root?.roleDescription}
 			onClick={this._onClick}
 			onArrowClick={this._onArrowClick}
 			accessibilityAttributes={this._computedAccessibilityAttributes}

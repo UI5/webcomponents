@@ -124,7 +124,7 @@ describe("Icon general interaction", () => {
         cy.get("[ui5-input]").eq(0).should("have.prop", "value", "3");
         cy.get("[ui5-input]").eq(1).should("have.prop", "value", "3");
 
-        // Non-interactive icon: mouse click fires native click but NOT ui5-click
+        // Non-interactive icon (Decorative): mouse click fires native click but NOT ui5-click
         cy.get("@nonInteractiveIcon").click();
         cy.get("[ui5-input]").eq(2).should("have.prop", "value", "1");
         cy.get("[ui5-input]").eq(3).should("have.prop", "value", "0");
@@ -134,6 +134,32 @@ describe("Icon general interaction", () => {
 
         cy.get("@nonInteractiveClickStub").should("have.been.calledOnce");
         cy.get("@nonInteractiveUI5ClickStub").should("not.have.been.called");
+    });
+
+    it("Tests mode='Image' does not propagate native click to the host (#13972)", () => {
+        cy.mount(
+            <div style={{ padding: "20px" }}>
+                <Icon
+                    name="add-equipment"
+                    mode="Image"
+                    accessibleName="an alt text"
+                    style={{ display: "inline-block", margin: "10px" }}
+                />
+            </div>
+        );
+
+        cy.get("[ui5-icon][mode='Image']")
+            .as("imageIcon")
+            .then($icon => {
+                $icon.get(0).addEventListener("click", cy.stub().as("imageClickStub"));
+                $icon.get(0).addEventListener("ui5-click", cy.stub().as("imageUI5ClickStub"));
+            });
+
+        // Mouse click on an Image-mode icon must not reach an external click listener
+        cy.get("@imageIcon").realClick();
+
+        cy.get("@imageClickStub").should("not.have.been.called");
+        cy.get("@imageUI5ClickStub").should("not.have.been.called");
     });
 
     it("Tests switch to sap_horizon", () => {
