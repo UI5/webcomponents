@@ -2,12 +2,11 @@ import DateRangeTemplate from "./DateRangeTemplate.js";
 import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicDateRange.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import type UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
-import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import type { JsxTemplate } from "@ui5/webcomponents-base/dist/index.js";
 import {
 	DYNAMIC_DATE_RANGE_DATERANGE_TEXT,
 } from "../generated/i18n/i18n-defaults.js";
-import { dateRangeOptionToDates } from "./toDates.js";
+import { dateRangeOptionToDates, calendarTimestampToLocalDate } from "./toDates.js";
 import DynamicDateRange from "../DynamicDateRange.js";
 
 /**
@@ -86,11 +85,11 @@ class DateRange implements IDynamicDateRangeOption {
 		currentValue.operator = this.operator;
 
 		if (e.detail.selectedDates[0]) {
-			currentValue.values[0] = CalendarDate.fromTimestamp(e.detail.selectedDates[0] * 1000).toLocalJSDate();
+			currentValue.values[0] = calendarTimestampToLocalDate(e.detail.selectedDates[0] as number);
 		}
 
 		if (e.detail.selectedDates[1]) {
-			currentValue.values[1] = CalendarDate.fromTimestamp(e.detail.selectedDates[1] * 1000).toLocalJSDate();
+			currentValue.values[1] = calendarTimestampToLocalDate(e.detail.selectedDates[1] as number);
 		}
 
 		// Handle backwards date ranges by automatically flipping them
