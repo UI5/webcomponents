@@ -1,3 +1,4 @@
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 
 interface ShellBarSearchLegacyConstructorParams {
@@ -85,7 +86,7 @@ class ShellBarSearchLegacy implements IShellBarSearchController {
 
 		if (hiddenItems > 0 && !preventCollapse) {
 			this.setSearchState(false);
-		} else if (availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
+		} else if (isDesktop() && availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
 			this.setSearchState(true);
 		}
 
