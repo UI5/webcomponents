@@ -203,6 +203,8 @@ class Icon extends UI5Element implements IIcon {
 	 * When this slot is used, the component renders a `<span>` instead of an `<svg>`.
 	 * Accessibility is fully delegated to the application — set `accessible-name` and `mode` explicitly.
 	 *
+	 * **Note:** To control the glyph size, set `font-size` on the `ui5-icon` host element.
+	 *
 	 * **Example:**
 	 * ```html
 	 * <ui5-icon mode="Image" accessible-name="Home">
@@ -247,6 +249,9 @@ class Icon extends UI5Element implements IIcon {
 
 	_onclick(e: MouseEvent) {
 		if (this.mode !== IconMode.Interactive) {
+			if (this.mode === IconMode.Image) {
+				e.stopPropagation();
+			}
 			return;
 		}
 

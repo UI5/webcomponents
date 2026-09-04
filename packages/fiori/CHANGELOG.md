@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-flexible-column-layout:** acc findings fixed  ([#13553](https://github.com/UI5/webcomponents/issues/13553)) ([fe1482d](https://github.com/UI5/webcomponents/commit/fe1482d129bef2eea370a0963978c3648ddc6ceb))
+* **ui5-side-navigation:** correct overflow items visibility calculation ([#13871](https://github.com/UI5/webcomponents/issues/13871)) ([e486764](https://github.com/UI5/webcomponents/commit/e48676441edb2abe5313c1d9272defc2d5bd3f94))
+* **ui5-user-menu:** replace invalid aria-label of div with accessible name on Bar ([#14016](https://github.com/UI5/webcomponents/issues/14016)) ([4608e14](https://github.com/UI5/webcomponents/commit/4608e14cab8d4cba871f428500ab959569cf4535))
+
+
+
+
+
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Bug Fixes
+
+* **ui5-cb-item-group:** expose 'title' CSS shadow part via exportparts ([#13958](https://github.com/UI5/webcomponents/issues/13958)) ([5919eb7](https://github.com/UI5/webcomponents/commit/5919eb7bb0203e5d02c2acd85fdc2521ab60a8a3)), closes [#13936](https://github.com/UI5/webcomponents/issues/13936)
+* **ui5-dynamic-page:** ignore zero-box focus sentinels in scroll handler ([#13965](https://github.com/UI5/webcomponents/issues/13965)) ([8b26b36](https://github.com/UI5/webcomponents/commit/8b26b366b6f8b9615503d893c0eefadd56932105)), closes [#13935](https://github.com/UI5/webcomponents/issues/13935)
+
+
+
+
+
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** ignore zero-box focus sentinels in scroll handler ([#13965](https://github.com/UI5/webcomponents/issues/13965)) ([8b26b36](https://github.com/UI5/webcomponents/commit/8b26b366b6f8b9615503d893c0eefadd56932105)), closes [#13935](https://github.com/UI5/webcomponents/issues/13935)
+
+
+
+
+
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **ui5-search-field:** Align hover/active background with design spec ([#13951](https://github.com/UI5/webcomponents/issues/13951)) ([86b7100](https://github.com/UI5/webcomponents/commit/86b7100b3c64c37f001a5bb3ae786b990f4d5d3e))
+* **ui5-shellbar-search:** add label spacing ([#13955](https://github.com/UI5/webcomponents/issues/13955)) ([efdc8fb](https://github.com/UI5/webcomponents/commit/efdc8fbb82a9a9c9707be77e605678aba4addeb9))
+* **ui5-shellbar:** align legacy logo styles with branding ([#13929](https://github.com/UI5/webcomponents/issues/13929)) ([58b42ef](https://github.com/UI5/webcomponents/commit/58b42ef22eb5c9d39bd724c8c0e5ade38d5ded20)), closes [#13010](https://github.com/UI5/webcomponents/issues/13010) [#13535](https://github.com/UI5/webcomponents/issues/13535) [#12499](https://github.com/UI5/webcomponents/issues/12499)
+* **ui5-user-menu:** add accessible name on other accounts panel ([#13932](https://github.com/UI5/webcomponents/issues/13932)) ([b6c93b9](https://github.com/UI5/webcomponents/commit/b6c93b9a65bd24d5090d35ec5725839f3922fdc1))
+* **ui5-user-settings-dialog:** announce search results to screen readers ([#13946](https://github.com/UI5/webcomponents/issues/13946)) ([f72c9a0](https://github.com/UI5/webcomponents/commit/f72c9a0af9b7630c595ee484fd73434371bfc5eb))
+* **ui5-user-settings-dialog:** keep focus on navigation in single-column mode ([#13953](https://github.com/UI5/webcomponents/issues/13953)) ([cc5991c](https://github.com/UI5/webcomponents/commit/cc5991cc1d2af536156f78f10d0da9401c1504ed))
+* **ui5-user-settings-dialog:** use default list role instead of menu ([#13934](https://github.com/UI5/webcomponents/issues/13934)) ([3d81780](https://github.com/UI5/webcomponents/commit/3d817803d497e1897add60f0d32192f7fdc5d4cd))
+
+
+### Features
+
+* **ui5-shellbar-search:** add search scope adaptive width ([#13787](https://github.com/UI5/webcomponents/issues/13787)) ([a18eb19](https://github.com/UI5/webcomponents/commit/a18eb19d630e490554fc232ef217ec996c4dd584))
+
+
+
+
+
 # [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
 
 

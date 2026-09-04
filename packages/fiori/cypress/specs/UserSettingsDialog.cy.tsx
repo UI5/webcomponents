@@ -538,6 +538,64 @@ describe("Events", () => {
 		cy.get("@search").should("have.attr", "placeholder", "Search");
 		cy.get("@search").shadow().find("input").type("test");
 	});
+
+	it("tests search results announcement - no results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("zzz");
+
+		cy.get("@invisibleMessage").should("have.text", "No search results");
+	});
+
+	it("tests search results announcement - one result", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Payment");
+
+		cy.get("@invisibleMessage").should("have.text", "1 result available");
+	});
+
+	it("tests search results announcement - multiple results", () => {
+		cy.mount(<UserSettingsDialog showSearchField open>
+			<UserSettingsItem text="Payment" />
+			<UserSettingsItem text="Payment methods" />
+			<UserSettingsItem text="Appearance" />
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").shadow().find("[ui5-dialog]").as("dialog");
+		cy.get("@dialog").find("[ui5-input]").as("search");
+
+		cy.get(".ui5-invisiblemessage-polite")
+			.as("invisibleMessage")
+			.should("have.text", "");
+
+		cy.get("@search").shadow().find("input").type("Pay");
+
+		cy.get("@invisibleMessage").should("have.text", "2 results are available");
+	});
 });
 
 describe("Responsiveness", () => {
@@ -1644,6 +1702,128 @@ describe("F6 Navigation", () => {
             .find("[ui5-li]").first()
             .should("be.focused");
     });
+});
+
+describe("Focus handling in navigation mode", () => {
+	it("focuses the first interactive content element (not the back button) when a setting is selected", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+					<Button id="content-btn-2">Content 2</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").realClick();
+
+		// Focus moves to the first interactive element of the content, not the back button.
+		cy.get("#content-btn-2").should("be.focused");
+
+		cy.get("@settings").find("[ui5-user-settings-item]").last()
+			.shadow()
+			.find(".ui5-user-settings-item-collapse-btn")
+			.should("not.be.focused");
+	});
+
+	it("returns focus to the selected setting item when the back button is pressed", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Setting 2">
+				<UserSettingsView>
+					<Button id="content-btn-2">Content 2</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").realClick();
+		cy.get("#content-btn-2").should("be.focused");
+
+		cy.get("@settings").find("[ui5-user-settings-item]").last()
+			.shadow()
+			.find(".ui5-user-settings-item-collapse-btn")
+			.first()
+			.as("backButton");
+
+		cy.get("@backButton").realClick();
+
+		// Focus returns to the selected user settings list item, not lost.
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.should("be.focused");
+	});
+
+	it("focuses the content once the loading state finishes when a setting is selected", () => {
+		cy.ui5SimulateDevice("phone");
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem text="Setting 1">
+				<UserSettingsView>
+					<Button id="content-btn-1">Content 1</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+			<UserSettingsItem text="Language and Region">
+				<UserSettingsView>
+					<Button id="lazy-content-btn">Language</Button>
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+
+		// Simulate the app-side delayed loading: put the selected item in loading state on
+		// selection, then clear it after a short delay - mirroring the test page behaviour.
+		cy.get("@settings").then($settings => {
+			$settings.get(0).addEventListener("selection-change", (e: Event) => {
+				const item = (e as CustomEvent).detail.item as any;
+				item.loading = true;
+				setTimeout(() => {
+					item.loading = false;
+				}, 300);
+			});
+		});
+
+		cy.get("@settings")
+			.shadow()
+			.find("[ui5-list]")
+			.find("[ui5-li]")
+			.last()
+			.as("item");
+
+		cy.get("@item").realClick();
+
+		// The content loads asynchronously, so it is not focusable at selection time.
+		// Once loading finishes, focus lands on the first interactive content element.
+		cy.get("#lazy-content-btn").should("be.focused");
+	});
 });
 
 describe("Save mode", () => {

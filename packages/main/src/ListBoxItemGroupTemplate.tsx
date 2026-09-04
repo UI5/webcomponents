@@ -15,7 +15,7 @@ export default function ListItemGroupTemplate(this: ListItemGroup, hooks?: { ite
 			onDragLeave={this._ondragleave}
 		>
 			{this.hasHeader &&
-				<ListItemGroupHeader focused={this.focused} part="header" accessibleRole="Group" wrappingType={this.getGroupHeaderWrapping()} >
+				<ListItemGroupHeader focused={this.focused} part="header" exportparts="title" accessibleRole="Group" wrappingType={this.getGroupHeaderWrapping()} >
 					{ this.hasFormattedHeader ? <slot name="header"></slot> : this.headerText }
 				</ListItemGroupHeader>
 			}
