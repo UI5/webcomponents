@@ -4,6 +4,7 @@
 	position: relative;
 	display: flex;
 	align-items: center;
+	gap: 1rem;
 	padding: var(--_ui5_card_header_padding);
 	outline: none;
 }
@@ -74,15 +75,6 @@
 	pointer-events: none;
 }
 
-.ui5-card-header-first-line {
-	display: flex;
-	flex-flow: row;
-	justify-content: space-between;
-}
-
-.ui5-card-header-additionalText {
-	flex: none;
-}
 
 .ui5-card-header .ui5-card-header-avatar {
 	height: 3rem;
@@ -112,13 +104,11 @@
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
 	color: var(--sapTile_TextColor);
-	text-align: left;
+	text-align: end;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
 	vertical-align: middle;
-	margin-inline-start: 1rem;
-	margin-block-start: 0.125rem;
 }
 
 .ui5-card-header .ui5-card-header-text .ui5-card-header-title {
@@ -155,8 +145,16 @@
 	-webkit-line-clamp: 3;
 }
 
-.ui5-card-header-action {
+.ui5-card-header-action-and-additional-text {
 	display: flex;
-	padding-inline-start: 1rem;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.25rem;
 	align-self: flex-start;
+}
+
+.ui5-card-header-action-and-additional-text ::slotted([slot="action"]) {
+	position: relative;
+	top: -0.5rem;
+	inset-inline-end: -0.5rem;
 }
