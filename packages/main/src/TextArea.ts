@@ -236,6 +236,25 @@ class TextArea extends UI5Element implements IFormInputElement {
 	showExceededText = false;
 
 	/**
+	 * Determines whether the character counter is displayed only when the component is focused
+	 * or when the character limit is exceeded.
+	 *
+	 * When set to `true`:
+	 * - The counter is shown when the component is focused
+	 * - The counter is shown when the character limit is exceeded (regardless of focus)
+	 * - The counter is always shown when `valueState` is "Critical" or "Negative" (for accessibility)
+	 * - Space is always reserved for the counter to prevent layout shifts
+	 *
+	 * **Note:** If both `showExceededText` and `showExceededTextFocus` are set,
+	 * `showExceededTextFocus` takes precedence.
+	 * @default false
+	 * @public
+	 * @since 2.24.0
+	 */
+	@property({ type: Boolean })
+	showExceededTextFocus = false;
+
+	/**
 	 * Enables the component to automatically grow and shrink dynamically with its content.
 	 * @default false
 	 * @public
@@ -375,7 +394,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	get formValidity(): ValidityStateFlags {
 		return {
 			valueMissing: this.required && !this.value,
-			tooLong: this.showExceededText && (this.value.length > (this.maxlength ?? 0)),
+			tooLong: this._hasExceededText && (this.value.length > (this.maxlength ?? 0)),
 		};
 	}
 
@@ -571,7 +590,8 @@ class TextArea extends UI5Element implements IFormInputElement {
 			exceededText,
 			leftCharactersCount;
 
-		if (this.showExceededText) {
+		// showExceededTextFocus takes precedence over showExceededText
+		if (this.showExceededTextFocus || this.showExceededText) {
 			const maxLength = this.maxlength;
 
 			if (maxLength !== null && maxLength !== undefined) {
@@ -622,6 +642,10 @@ class TextArea extends UI5Element implements IFormInputElement {
 			root: {
 				"ui5-textarea-root": true,
 			},
+			exceededText: {
+				"ui5-textarea-exceeded-text": true,
+				"ui5-textarea-exceeded-text--hidden": this.showExceededTextFocus && !this._isExceededTextVisible,
+			},
 			valueStateMsg: {
 				"ui5-valuestatemessage-header": true,
 				"ui5-valuestatemessage--error": this.valueState === ValueState.Negative,
@@ -638,7 +662,7 @@ class TextArea extends UI5Element implements IFormInputElement {
 	get ariaLabelText() {
 		const effectiveAriaLabelText = getEffectiveAriaLabelText(this) || getAssociatedLabelForTexts(this);
 
-		if (this.showExceededText) {
+		if (this._hasExceededText) {
 			if (effectiveAriaLabelText) {
 				return effectiveAriaLabelText.concat(" ", this._exceededTextProps.exceededText!);
 			}
@@ -726,6 +750,31 @@ class TextArea extends UI5Element implements IFormInputElement {
 			"Negative": TextArea.i18nBundle.getText(VALUE_STATE_TYPE_ERROR),
 			"Critical": TextArea.i18nBundle.getText(VALUE_STATE_TYPE_WARNING),
 		};
+	}
+
+	/**
+	 * Determines whether the exceeded text counter should be visible.
+	 * Used when `showExceededTextFocus` is enabled.
+	 *
+	 * The counter is visible when:
+	 * - The component is focused, OR
+	 * - The character limit is exceeded, OR
+	 * - The valueState is "Critical" or "Negative" (for accessibility - users should always see warnings/errors)
+	 * @private
+	 */
+	get _isExceededTextVisible(): boolean {
+		return this.focused
+			|| this.exceeding
+			|| this.valueState === ValueState.Critical
+			|| this.valueState === ValueState.Negative;
+	}
+
+	/**
+	 * Determines whether the exceeded text feature is active (either mode).
+	 * @private
+	 */
+	get _hasExceededText(): boolean {
+		return this.showExceededTextFocus || this.showExceededText;
 	}
 }
 
