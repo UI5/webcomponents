@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>User Settings Dialog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">
+		{
+			"rtl": false
+		}
+
+	</script>
+	<style>
+		.ui5-user-settings-appearance-view-additional-content-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 0.5rem;
+			width: 100%;
+		}
+		.ui5-user-settings-appearance-view-additional-content-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSmallSize);
+		}
+		#language-region-strip {
+			display: block;
+			margin-bottom: 1rem;
+		}
+		.language-region-form {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+		.language-region-row {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+		.language-region-row > ui5-label,
+		.language-region-row > [ui5-label] {
+			padding: 0.5rem 0 0.125rem 0;
+		}
+		.language-region-row:first-child > ui5-label,
+		.language-region-row:first-child > [ui5-label] {
+			padding-top: 0;
+		}
+		.language-region-row > ui5-select,
+		.language-region-row > [ui5-select] {
+			display: block;
+			width: 100%;
+		}
+		.ui5-user-settings-notifications-detail-description {
+			display: block;
+			color: var(--sapContent_LabelColor);
+			font-size: var(--sapFontSize);
+			font-family: var(--sapFontFamily);
+		}
+	</style>
+
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-C2ckmOE9.js"></script>
+  <link rel="stylesheet" crossorigin href="/webcomponents/nightly/assets/UserSettingsDialog-3ad_38EE.css">
+</head>
+
+<body>
+<ui5-shellbar id="shellbar">
+	<ui5-shellbar-branding slot="branding">
+		Corporate Portal
+		<img slot="logo" src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='92'%20height='45'%20viewBox='0%200%2092%2045'%3e%3clinearGradient%20id='a'%20gradientUnits='userSpaceOnUse'%20x1='45.483'%20x2='45.483'%20y2='45.001'%3e%3cstop%20offset='0'%20stop-color='%2300AEEF'/%3e%3cstop%20offset='.212'%20stop-color='%230097DC'/%3e%3cstop%20offset='.519'%20stop-color='%23007CC5'/%3e%3cstop%20offset='.792'%20stop-color='%23006CB8'/%3e%3cstop%20offset='1'%20stop-color='%230066B3'/%3e%3c/linearGradient%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20fill='url(%23a)'%20d='M0%2045h45.974L90.966%200H0v45'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20fill='%23fff'%20d='M53.984%209H45l.03%2021.13-7.823-21.137H29.45l-6.678%2017.653c-.71-4.492-5.354-6.042-9.008-7.203-2.413-.775-4.974-1.915-4.948-3.175.02-1.034%201.37-1.993%204.053-1.85%201.8.097%203.39.242%206.553%201.77l3.11-5.42C19.648%209.3%2015.66%208.373%2012.39%208.37h-.02c-3.813%200-6.988%201.235-8.956%203.27-1.372%201.42-2.112%203.226-2.142%205.223-.05%202.748.957%204.696%203.073%206.253%201.788%201.31%204.075%202.16%206.09%202.784%202.485.77%204.515%201.44%204.49%202.866-.02.52-.216%201.006-.59%201.398-.62.64-1.57.88-2.885.906-2.537.054-4.417-.345-7.413-2.116L1.27%2034.444C4.263%2036.146%207.44%2037%2011.05%2037l.812-.006c3.142-.057%205.692-.81%207.718-2.44.116-.093.22-.187.328-.282l-.34%201.752%207.58-.024%201.36-3.482c1.43.488%203.056.758%204.782.758%201.682%200%203.264-.256%204.667-.716l.948%203.44%2013.6.013.033-7.938h2.894c6.995%200%2011.13-3.56%2011.13-9.53C66.56%2011.896%2062.54%209%2053.984%209zM33.29%2027.062c-1.045%200-2.025-.182-2.868-.502l2.836-8.955h.055l2.79%208.98c-.84.3-1.797.477-2.814.477zm21.22-5.145h-1.974V14.7h1.975c2.63%200%204.73.876%204.73%203.562-.002%202.78-2.1%203.655-4.73%203.655'/%3e%3cpath%20fill='none'%20d='M0%200h92v45H0z'/%3e%3c/svg%3e" />
+	</ui5-shellbar-branding>
+	<ui5-avatar slot="profile">
+		<img src="/webcomponents/nightly/assets/man_avatar_1-NFeJdB17.png"/>
+	</ui5-avatar>
+</ui5-shellbar>
+<ui5-user-menu id="userMenuShellBar">
+	<ui5-user-menu-account slot="accounts"
+						   avatar-src="./img/man_avatar_1.png"
+						   title-text="Alain Chevalier"
+						   subtitle-text="alian.chevalier@sap.com"
+						   description="Delivery Manager, SAP SE"
+						   selected>
+	</ui5-user-menu-account>
+	<ui5-user-menu-item icon="action-settings" text="Settings" data-id="setting"></ui5-user-menu-item>
+	<ui5-user-menu-item icon="home" text="Default Landing Page" data-id="default-landing-page" show-selection>
+		<ui5-user-menu-item-group check-mode="Single">
+			<ui5-user-menu-item text="Home Page" data-id="home-page" checked></ui5-user-menu-item>
+			<ui5-user-menu-item text="Dashboard" data-id="dashboard"></ui5-user-menu-item>
+			<ui5-user-menu-item text="Admin Settings" data-id="admin-settings"></ui5-user-menu-item>
+		</ui5-user-menu-item-group>
+	</ui5-user-menu-item>
+</ui5-user-menu>
+
+<div style="border:1px solid black"></div>
+<ui5-button id="btnOpenSettings">User settings</ui5-button>
+<ui5-button id="btnOpenSaveModeSettings">User settings (Save mode)</ui5-button>
+<ui5-user-settings-dialog id="setting" header-text="Settings" show-search-field>
+	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" selected>
+		<ui5-user-settings-account-view id="account" show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+
+				<ui5-panel fixed class="ua-panel">
+					<ui5-text>
+						Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+					</ui5-text>
+				</ui5-panel>
+
+		</ui5-user-settings-account-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
+		<ui5-user-settings-appearance-view text="Themes">
+			<div slot="additionalContent">
+				<div class="ui5-user-settings-appearance-view-additional-content-header">
+					<ui5-text id="touch-input-label">Optimize for Touch Input</ui5-text>
+					<ui5-switch accessible-name-ref="touch-input-label"></ui5-switch>
+				</div>
+				<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+					Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+					This is useful for hybrid devices that combine touch and mouse events.
+				</ui5-text>
+			</div>
+			<ui5-user-settings-appearance-view-group header-text="Custom">
+				<ui5-user-settings-appearance-view-item item-key="custom_blue" text="Custom Theme Blue"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="custom_dark" text="Custom Theme Dark"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+			<ui5-user-settings-appearance-view-group header-text="Horizon">
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="Morning Horizon" selected></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="Evening Horizon"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+			<ui5-user-settings-appearance-view-group header-text="Quartz">
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="Quartz Light"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="Quartz Dark"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+
+		</ui5-user-settings-appearance-view>
+
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
+		<ui5-user-settings-view>
+			<ui5-message-strip id="language-region-strip" design="Information" hide-close-button>
+				Close to apply your chosen language – the page will reload.
+			</ui5-message-strip>
+			<div class="language-region-form">
+				<div class="language-region-row">
+					<ui5-label for="language" show-colon>Display Language</ui5-label>
+					<ui5-select id="language">
+						<ui5-option>Browser Language</ui5-option>
+						<ui5-option>English (United Kingdom)</ui5-option>
+						<ui5-option selected>English (United States)</ui5-option>
+						<ui5-option>French (France)</ui5-option>
+						<ui5-option>French (Canada)</ui5-option>
+						<ui5-option>German (Germany)</ui5-option>
+						<ui5-option>German (Switzerland)</ui5-option>
+						<ui5-option>Japanese</ui5-option>
+						<ui5-option>Portuguese (Brazil)</ui5-option>
+						<ui5-option>Simplified Chinese (China)</ui5-option>
+						<ui5-option>Spanish (Mexico)</ui5-option>
+						<ui5-option>Spanish (Spain)</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="region" show-colon>Region</ui5-label>
+					<ui5-select id="region">
+						<ui5-option>United Kingdom</ui5-option>
+						<ui5-option selected>United States</ui5-option>
+						<ui5-option>France</ui5-option>
+						<ui5-option>Canada</ui5-option>
+						<ui5-option>Germany</ui5-option>
+						<ui5-option>Switzerland</ui5-option>
+						<ui5-option>Japan</ui5-option>
+						<ui5-option>Brazil</ui5-option>
+						<ui5-option>China</ui5-option>
+						<ui5-option>Mexico</ui5-option>
+						<ui5-option>Spain</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="dateFormat" show-colon>Date Format</ui5-label>
+					<ui5-select id="dateFormat">
+						<ui5-option>MM/DD/YYYY</ui5-option>
+						<ui5-option selected>MM.DD.YYYY</ui5-option>
+						<ui5-option>MM-DD-YYYY</ui5-option>
+						<ui5-option>DD/MM/YYYY</ui5-option>
+						<ui5-option>DD.MM.YYYY</ui5-option>
+						<ui5-option>DD-MM-YYYY</ui5-option>
+						<ui5-option>YYYY/MM/DD</ui5-option>
+						<ui5-option>YYYY.MM.DD</ui5-option>
+						<ui5-option>YYYY-MM-DD</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="timeFormat" show-colon>Time Format</ui5-label>
+					<ui5-select id="timeFormat">
+						<ui5-option>24 Hour</ui5-option>
+						<ui5-option selected>12 Hour</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="timeZone" show-colon>Time Zone</ui5-label>
+					<ui5-select id="timeZone">
+						<ui5-option>Pacific Time (UTC -08:00)</ui5-option>
+						<ui5-option>Mountain Time (UTC -07:00)</ui5-option>
+						<ui5-option>Central Time (UTC -06:00)</ui5-option>
+						<ui5-option selected>Eastern Standard Time (UTC -05:00)</ui5-option>
+						<ui5-option>Atlantic Time (UTC -04:00)</ui5-option>
+						<ui5-option>Greenwich Mean Time (UTC +00:00)</ui5-option>
+						<ui5-option>Central European Time (UTC +01:00)</ui5-option>
+						<ui5-option>India Standard Time (UTC +05:30)</ui5-option>
+						<ui5-option>Japan Standard Time (UTC +09:00)</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="currency" show-colon>Currency</ui5-label>
+					<ui5-select id="currency">
+						<ui5-option selected>USD – United States Dollar</ui5-option>
+						<ui5-option>EUR – Euro</ui5-option>
+						<ui5-option>GBP – British Pound</ui5-option>
+						<ui5-option>JPY – Japanese Yen</ui5-option>
+						<ui5-option>CHF – Swiss Franc</ui5-option>
+						<ui5-option>CAD – Canadian Dollar</ui5-option>
+						<ui5-option>AUD – Australian Dollar</ui5-option>
+						<ui5-option>CNY – Chinese Yuan Renminbi</ui5-option>
+						<ui5-option>INR – Indian Rupee</ui5-option>
+					</ui5-select>
+				</div>
+				<div class="language-region-row">
+					<ui5-label for="numberFormat" show-colon>Number Format</ui5-label>
+					<ui5-select id="numberFormat">
+						<ui5-option>1.234,56</ui5-option>
+						<ui5-option selected>1,234.56</ui5-option>
+						<ui5-option>1 234,56</ui5-option>
+						<ui5-option>1'234.56</ui5-option>
+						<ui5-option>1234,56</ui5-option>
+					</ui5-select>
+				</div>
+			</div>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="iphone" text="SAP Mobile Start Application" tooltip="SAP Mobile Start Application" header-text="SAP Mobile Start Application">
+		<ui5-user-settings-view >
+			<ui5-button id="mobile1-button">iOS</ui5-button>
+			<ui5-button id="mobile2-button">Android</ui5-button>
+		</ui5-user-settings-view>
+
+		<ui5-user-settings-view text="Inner Page" id="mobile-second-page" secondary>
+			<ui5-text>Enable access to your site from the SAP Mobile Start application.</ui5-text>
+			<ui5-button id="mobile-install">Install</ui5-button><ui5-button id="mobile-register">Register</ui5-button>
+			<ui5-text>Scan the QR Code to install the mobile application</ui5-text>
+			<ui5-icon name="qr-code" style="width: 20rem; height: 20rem;"></ui5-icon>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item id="notifications" icon="bell" text="Notifications" tooltip="Notifications" header-text="Notifications">
+		<!-- Primary page: lists notification types. Each navigable item has an item-key
+		     that matches the id of a sibling secondary view below, so each type drills
+		     into its own detail page with independent state.
+		     If no id matches, the view falls back to the first secondary sibling. -->
+		<ui5-user-settings-notifications-view id="notifications-main-view">
+			<ui5-message-strip slot="additionalContent" design="Information" hide-close-button>
+				Some settings are managed by your organization. <ui5-link>Learn More</ui5-link>
+			</ui5-message-strip>
+
+			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="allow-notifications" text="Allow Notifications" checked>
+			</ui5-user-settings-notifications-view-item>
+			<ui5-user-settings-notifications-view-item slot="headerItems" item-key="allow-banner-alerts" text="Allow Banner Alerts"
+				byline-text="Switch on Banner for Notifications" checked>
+			</ui5-user-settings-notifications-view-item>
+
+			<ui5-user-settings-notifications-view-group header-text="Sales">
+				<ui5-user-settings-notifications-view-item item-key="sales-order-updates" text="Sales Order Updates" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sales-order-approvals" text="Sales Order Approvals" navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sales-order-release" text="Sales Order Release" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+
+			<ui5-user-settings-notifications-view-group header-text="Purchasing">
+				<ui5-user-settings-notifications-view-item item-key="po-approval" text="Purchase Order Approval" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-rejection" text="Purchase Order Rejection">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-overdue" text="Purchase Order Overdue" checked navigable>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<!-- One dedicated detail view per navigable item, matched via item-key ↔ id.
+		     Each view has its own switch state so toggling in one doesn't affect the others. -->
+
+		<ui5-user-settings-notifications-view id="allow-notifications" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Control how and where you receive notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Channels">
+				<ui5-user-settings-notifications-view-item item-key="an-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="an-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="allow-banner-alerts" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure banner alert behavior for incoming notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Banner Settings">
+				<ui5-user-settings-notifications-view-item item-key="ab-sound" text="Play Sound"
+					byline-text="Play a sound when a banner alert appears." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="ab-duration" text="Display Duration"
+					byline-text="Choose how long the banner stays on screen.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>5 seconds</ui5-option>
+						<ui5-option>10 seconds</ui5-option>
+						<ui5-option>Until dismissed</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-updates" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Updates notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sou-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sou-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Hourly</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-approvals" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Approvals notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="soa-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="soa-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="sales-order-release" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Sales Order Release notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="sor-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-email" text="Email"
+					byline-text="Receive notifications by email.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="sor-frequency" text="Frequency"
+					byline-text="Choose the frequency of receiving a notification.">
+					<ui5-select slot="endContent">
+						<ui5-option selected>Immediate</ui5-option>
+						<ui5-option>Every 15 minutes</ui5-option>
+						<ui5-option>Daily digest</ui5-option>
+					</ui5-select>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-approval" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Approval-specific channels. These settings apply only to Purchase Order Approval notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Approver Preferences">
+				<ui5-user-settings-notifications-view-item item-key="po-approval-mobile" text="Push to mobile"
+					byline-text="Approve or reject directly from your device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-summary" text="Daily summary email"
+					byline-text="Receive one email per day with all pending approvals.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="po-approval-delegation" text="Delegation"
+					byline-text="Route approvals to a delegate when you are out of office.">
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-rejection" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Purchase Order Rejection notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="por-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel.">
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="por-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+
+		<ui5-user-settings-notifications-view id="po-overdue" secondary>
+			<ui5-text slot="additionalContent" class="ui5-user-settings-notifications-detail-description">
+				Configure how you want to receive Purchase Order Overdue notifications.
+			</ui5-text>
+			<ui5-user-settings-notifications-view-group header-text="Notification Preferences">
+				<ui5-user-settings-notifications-view-item item-key="poo-panel" text="Notifications Panel"
+					byline-text="Receive notifications through the central notifications panel." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-banner" text="Banner Alerts"
+					byline-text="Receive notifications instantly as a fly-in banner." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-push" text="Push Notifications"
+					byline-text="Receive notifications instantly on your mobile device." checked>
+				</ui5-user-settings-notifications-view-item>
+				<ui5-user-settings-notifications-view-item item-key="poo-email" text="Email"
+					byline-text="Receive notifications by email." checked>
+				</ui5-user-settings-notifications-view-item>
+			</ui5-user-settings-notifications-view-group>
+		</ui5-user-settings-notifications-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
+		<ui5-user-settings-view text="Reset Personalization">
+			<ui5-button id="resetPersonalization">Reset Personalization content</ui5-button>
+			<ui5-toast id="toastReset" design="Emphasized">Changes Reset.</ui5-toast>
+		</ui5-user-settings-view>
+		<ui5-user-settings-view text="Reset All Settings">
+			<ui5-button id="resetAll">Reset All Settings content</ui5-button>
+			<ui5-toast id="toastResetAll" design="Emphasized">All changes Reset.</ui5-toast>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+</ui5-user-settings-dialog>
+
+<!-- Second dialog: same content, save-mode enabled to demonstrate the Save + Cancel footer -->
+<ui5-user-settings-dialog id="saveModeSettings" header-text="Settings" show-search-field save-mode>
+	<ui5-user-settings-item icon="user-settings" text="User Account" tooltip="User Account" header-text="User Account" selected>
+		<ui5-user-settings-account-view show-manage-account="true">
+			<ui5-user-menu-account slot="account"
+								   avatar-src="./img/man_avatar_1.png"
+								   title-text="Alain Chevalier"
+								   subtitle-text="alian.chevalier@sap.com"
+								   description="Delivery Manager, SAP SE">
+			</ui5-user-menu-account>
+			<ui5-panel fixed class="ua-panel">
+				<ui5-text>
+					Reset your personalization settings for the launchpad (such as theme, language, user activities, and home page content).
+				</ui5-text>
+			</ui5-panel>
+		</ui5-user-settings-account-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="palette" text="Appearance" tooltip="Appearance" header-text="Appearance">
+		<ui5-user-settings-appearance-view slot="tabs" text="Themes" selected>
+			<ui5-user-settings-appearance-view-group header-text="Horizon">
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon" text="Morning Horizon" selected></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_dark" text="Evening Horizon"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcb" text="Horizon High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_horizon_hcw" text="Horizon High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+			<ui5-user-settings-appearance-view-group header-text="Quartz">
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3" text="Quartz Light"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_dark" text="Quartz Dark"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcb" text="Quartz High Contrast Black"></ui5-user-settings-appearance-view-item>
+				<ui5-user-settings-appearance-view-item item-key="sap_fiori_3_hcw" text="Quartz High Contrast White"></ui5-user-settings-appearance-view-item>
+			</ui5-user-settings-appearance-view-group>
+		</ui5-user-settings-appearance-view>
+
+		<ui5-user-settings-view slot="tabs" text="Display Settings">
+			<div class="ui5-user-settings-appearance-view-additional-content-header">
+				<ui5-text id="sm-touch-input-label">Optimize for Touch Input</ui5-text>
+				<ui5-switch accessible-name-ref="sm-touch-input-label"></ui5-switch>
+			</div>
+			<ui5-text class="ui5-user-settings-appearance-view-additional-content-description">
+				Increases the size and spacing of controls to allow you to interact with them more easily using your fingertip.
+			</ui5-text>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item text="Language and Region" tooltip="Language and Region" header-text="Language and Region">
+		<ui5-user-settings-view>
+			<div class="language-region-container">
+				<ui5-label for="sm-language" class="language-region-label">Display Language:</ui5-label>
+				<ui5-combobox id="sm-language" class="language-region-control" placeholder="Language" value="English (United States)">
+					<ui5-cb-item text="English (United States)" selected></ui5-cb-item>
+					<ui5-cb-item text="English (United Kingdom)"></ui5-cb-item>
+					<ui5-cb-item text="German (Germany)"></ui5-cb-item>
+					<ui5-cb-item text="French (France)"></ui5-cb-item>
+					<ui5-cb-item text="Japanese"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-region" class="language-region-label">Region:</ui5-label>
+				<ui5-combobox id="sm-region" class="language-region-control" placeholder="Region" value="United States">
+					<ui5-cb-item text="United States"></ui5-cb-item>
+					<ui5-cb-item text="United Kingdom"></ui5-cb-item>
+					<ui5-cb-item text="Germany"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-dateFormat" class="language-region-label">Date Format:</ui5-label>
+				<ui5-combobox id="sm-dateFormat" class="language-region-control" placeholder="Date Format" value="MM.DD.YYYY">
+					<ui5-cb-item text="MM.DD.YYYY"></ui5-cb-item>
+					<ui5-cb-item text="DD.MM.YYYY"></ui5-cb-item>
+					<ui5-cb-item text="YYYY-MM-DD"></ui5-cb-item>
+				</ui5-combobox>
+				<ui5-label for="sm-timeFormat" class="language-region-label">Time Format:</ui5-label>
+				<ui5-combobox id="sm-timeFormat" class="language-region-control" placeholder="Time Format" value="12 Hour">
+					<ui5-cb-item text="12 Hour"></ui5-cb-item>
+					<ui5-cb-item text="24 Hour"></ui5-cb-item>
+				</ui5-combobox>
+			</div>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+
+	<ui5-user-settings-item icon="reset" slot="fixedItems" text="Reset Settings" tooltip="Reset Settings" header-text="Reset Settings">
+		<ui5-user-settings-view text="Reset Personalization">
+			<ui5-button>Reset Personalization content</ui5-button>
+		</ui5-user-settings-view>
+		<ui5-user-settings-view text="Reset All Settings">
+			<ui5-button>Reset All Settings content</ui5-button>
+		</ui5-user-settings-view>
+	</ui5-user-settings-item>
+</ui5-user-settings-dialog>
+
+<!-- Confirmation dialog shown after Save: asks whether to close the settings dialog. -->
+<ui5-dialog id="confirmSaveDialog" state="Information" header-text="Save Settings">
+	<ui5-text>Do you want to save your changes and close the dialog?</ui5-text>
+	<ui5-toolbar slot="footer">
+		<ui5-toolbar-button id="confirmSaveYes" design="Emphasized" text="Yes"></ui5-toolbar-button>
+		<ui5-toolbar-button id="confirmSaveNo" design="Transparent" text="No"></ui5-toolbar-button>
+	</ui5-toolbar>
+</ui5-dialog>
+
+<ui5-dialog id="additionalDialog" state="Information" header-text="Change Display Language">
+	<ui5-text>Changing the display language to [New Language] will update the language across the user interface.</ui5-text>
+		<ui5-toolbar slot="footer">
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Emphasized"
+					text="Change Language">
+			</ui5-toolbar-button>
+			<ui5-toolbar-button
+					class="dialogCloser"
+					design="Transparent"
+					text="Cancel">
+			</ui5-toolbar-button>
+		</ui5-toolbar>
+</ui5-dialog>
+
+<ui5-title level="H5" class="header-title">Text Direction</ui5-title>
+<ui5-switch id="direction" text-on="RTL" text-off="LTR"></ui5-switch>
+<script>
+	const direction = document.getElementById("direction");
+	const menuShellBar = document.getElementById("userMenuShellBar");
+	const settingsDialog = document.getElementById("setting");
+	const settingsDialogItems = [...document.getElementsByTagName("ui5-user-settings-item")];
+	const account = document.getElementById("account");
+
+	//Language and Region
+	const language = document.getElementById("language");
+
+
+	const mobileSecondPage = document.getElementById("mobile-second-page");
+	const mobile1Button = document.getElementById("mobile1-button");
+	const mobile2Button = document.getElementById("mobile2-button");
+
+	const resetAll = document.getElementById("resetAll");
+	const resetPersonalization = document.getElementById("resetPersonalization");
+	const toast = [...document.getElementsByTagName("ui5-toast")][0];
+	const toastReset =  document.getElementById("toastReset");
+	const toastResetAll =  document.getElementById("toastResetAll");
+	const notificationsItem = document.getElementById("notifications");
+	const notificationsMainView = document.getElementById("notifications-main-view");
+	menuShellBar.addEventListener("item-click", function (event) {
+		const item = event.detail.item.getAttribute("data-id");
+
+		switch (item) {
+			case "setting":
+				settingsDialog.open = true;
+		}
+	});
+
+	shellbar.addEventListener("ui5-profile-click", (event) => {
+		menuShellBar.opener = event.detail.targetRef;
+		if(menuShellBar.open){
+			menuShellBar.open = false;
+		} else {
+			menuShellBar.open = true;
+		}
+	});
+
+	account.addEventListener("edit-accounts-click", function () {
+		console.log("Avatar clicked");
+	});
+
+	account.addEventListener("manage-account-click", function () {
+		console.log("Manage account clicked");
+	});
+
+
+	//Language and Region
+	const additionalDialog = document.getElementById("additionalDialog");
+	const dialogClosers = [...additionalDialog.querySelectorAll(".dialogCloser")];
+
+	language.addEventListener("selection-change",  function (event) {
+		console.log(`Language change: ${event.detail?.item?.text}`, event.detail);
+		additionalDialog.open = true;
+	});
+
+	dialogClosers.forEach(btn => {
+		btn.addEventListener("click", () => {
+			additionalDialog.open = false;
+		});
+	});
+
+	direction.addEventListener("ui5-change", function() {
+		document.body.setAttribute("dir", direction.checked ? "rtl" : "ltr");
+		window["sap-ui-webcomponents-bundle"].applyDirection();
+	});
+
+	document.getElementById("btnOpenSettings").addEventListener("click", function () {
+		settingsDialog.open = true;
+	});
+
+	mobile1Button.addEventListener("click", function () {
+		mobileSecondPage.selected = true;
+		mobileSecondPage.text = "iOS";
+	});
+
+	mobile2Button.addEventListener("click", function () {
+		mobileSecondPage.selected = true;
+		mobileSecondPage.text = "Android";
+	});
+
+	resetPersonalization.addEventListener("click", function () {
+		toastReset.open = true;
+	});
+
+	resetAll.addEventListener("click", function () {
+		toastResetAll.open = true;
+	});
+
+	settingsDialog.addEventListener("selection-change", function (event) {
+		console.log(`Selection change: ${event.detail.item?.text}`, event.detail);
+		if(event.detail.item?.text ==="Language and Region"){
+			event.detail.item.loading=true;
+			event.detail.item.loadingReason="Language & Region loading data...";
+			setTimeout(function(){
+				event.detail.item.loading=false;
+				}, 500);
+		}
+	});
+
+	settingsDialogItems.forEach((settingsDialogItem) => {
+		settingsDialogItem.addEventListener("selection-change", function (event) {
+			console.log(`Selection change: ${event.detail?.view?.text}`, event.detail);
+		});
+	});
+
+	settingsDialog.addEventListener("open", function (event) {
+		console.log("Settings dialog opened", event);
+	});
+
+	settingsDialog.addEventListener("before-close", function (event) {
+		console.log("Settings dialog before close", event.detail);
+		if (!confirm("Are you sure you want to close the dialog?")) {
+			event.preventDefault();
+		}
+	});
+
+	settingsDialog.addEventListener("close", function (event) {
+		console.log("Settings dialog closed", event);
+	});
+
+	//Language and Region
+
+
+	//Notification Tab
+	notificationsMainView.addEventListener("item-click", (e) => {
+		console.log("Navigate to: " + e.detail.item.text);
+	});
+
+	notificationsItem.addEventListener("switch-change", (e) => {
+		const item = e.detail.item;
+		const view = item.closest("[ui5-user-settings-notifications-view]");
+		const context = view?.text ? `${view.text} > ` : "";
+		console.log(`${context}${item.text} switch changed to ${e.detail.checked ? "ON" : "OFF"}`);
+	});
+
+	// Theme switching functionality
+	const appearanceView = document.querySelector("ui5-user-settings-appearance-view");
+
+	appearanceView.addEventListener("selection-change", (e) => {
+		const selectedItem = e.detail.item;
+				
+		if (selectedItem?.itemKey) {
+			window["sap-ui-webcomponents-bundle"].configuration.setTheme(selectedItem.itemKey);
+		}
+	});
+
+	// Save-mode demo: opens the second dialog with save-mode enabled.
+	const saveModeSettings = document.getElementById("saveModeSettings");
+	const btnOpenSaveModeSettings = document.getElementById("btnOpenSaveModeSettings");
+	const confirmSaveDialog = document.getElementById("confirmSaveDialog");
+	const confirmSaveYes = document.getElementById("confirmSaveYes");
+	const confirmSaveNo = document.getElementById("confirmSaveNo");
+
+	btnOpenSaveModeSettings.addEventListener("click", () => {
+		saveModeSettings.open = true;
+	});
+
+	// Save: ask the user whether to close the dialog. In a real app this is where
+	// the backend save call would happen; the confirmation only demonstrates that
+	// closing is an app decision.
+	saveModeSettings.addEventListener("save", () => {
+		console.log("save clicked");
+		confirmSaveDialog.open = true;
+	});
+
+	// Cancel: discard changes and close the dialog directly.
+	saveModeSettings.addEventListener("cancel", () => {
+		console.log("cancel clicked — closing dialog");
+		saveModeSettings.open = false;
+	});
+
+	confirmSaveYes.addEventListener("click", () => {
+		confirmSaveDialog.open = false;
+		saveModeSettings.open = false;
+	});
+	confirmSaveNo.addEventListener("click", () => {
+		confirmSaveDialog.open = false;
+	});
+</script>
+</body>
+</html>

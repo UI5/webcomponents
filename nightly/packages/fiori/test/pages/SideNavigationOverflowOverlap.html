@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Side Navigation Only</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/bundle.esm-C2ckmOE9.js"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 100vh;">
+<ui5-side-navigation style="height: 430px" id="sn1" collapsed>
+	<!-- Top items: enough items to overflow into fixed bottom area on short screens -->
+	<ui5-side-navigation-item
+		text="Item 1"
+		icon="home"
+	></ui5-side-navigation-item>
+	<ui5-side-navigation-item
+		text="Item 2"
+		icon="home"
+	></ui5-side-navigation-item>
+
+	<ui5-side-navigation-group>
+		<ui5-side-navigation-item
+			text="Item 3"
+			icon="home"
+		></ui5-side-navigation-item>
+		<ui5-side-navigation-item
+			text="Item 4"
+			icon="home"
+		></ui5-side-navigation-item>
+	</ui5-side-navigation-group>
+
+	<ui5-side-navigation-group>
+		<ui5-side-navigation-item
+			text="Item 5"
+			icon="home"
+		></ui5-side-navigation-item>
+		<ui5-side-navigation-item
+			text="Item 6"
+			icon="home"
+		></ui5-side-navigation-item>
+	</ui5-side-navigation-group>
+
+	<ui5-side-navigation-item
+		text="Outer"
+		selected
+		icon="home"
+	></ui5-side-navigation-item>
+
+	<!-- Fixed bottom items: these should never be overlapped by top items -->
+	<ui5-side-navigation-item
+		slot="fixedItems"
+		text="Legal"
+		icon="home"
+	></ui5-side-navigation-item>
+</ui5-side-navigation>
+</body>
+</html>
