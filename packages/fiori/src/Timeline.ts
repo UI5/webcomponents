@@ -370,6 +370,18 @@ class Timeline extends UI5Element {
 		}
 
 		this._itemNavigation.setCurrentItem(target);
+
+		if (this.layout === TimelineLayout.Horizontal) {
+			this._scrollFocusedListItemIntoView(e);
+		}
+	}
+
+	_scrollFocusedListItemIntoView(e: FocusEvent) {
+		const listItem = e.composedPath().find(el => el instanceof HTMLElement && el.classList.contains("ui5-timeline-list-item"));
+
+		if (listItem instanceof HTMLElement) {
+			listItem.scrollIntoView({ block: "nearest", inline: "nearest" });
+		}
 	}
 
 	_onwheel(e: WheelEvent) {
