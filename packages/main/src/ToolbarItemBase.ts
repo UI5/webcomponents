@@ -133,6 +133,17 @@ class ToolbarItemBase extends UI5Element {
 	}
 
 	/**
+	 * Returns whether the toolbar should apply a max-width cap to this item
+	 * during the self-overflow measurement cycle.
+	 * Override to return false for items that must remain free to grow and shrink
+	 * (i.e. items that use flex-shrink to yield space rather than overflowing).
+	 * @protected
+	 */
+	get clampMaxWidth(): boolean {
+		return true;
+	}
+
+	/**
 	 * Returns if the item is separator.
 	 * @protected
 	 */
