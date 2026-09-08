@@ -31,23 +31,15 @@ export default function CardHeaderTemplate(this: CardHeader) {
 				}
 
 				<div class="ui5-card-header-text">
-					<div class="ui5-card-header-first-line">
-						{this.titleText &&
-							<div
-								id={`${this._id}-title`}
-								class="ui5-card-header-title"
-								part="title"
-								role="heading"
-								aria-level={3}
-							>{this.titleText}</div>
-						}
-
-						{this.additionalText &&
-							<div class="ui5-card-header-additionalText">
-								<span id={`${this._id}-additionalText`} part="additional-text" dir="auto">{this.additionalText}</span>
-							</div>
-						}
-					</div>
+					{this.titleText &&
+						<div
+							id={`${this._id}-title`}
+							class="ui5-card-header-title"
+							part="title"
+							role="heading"
+							aria-level={3}
+						>{this.titleText}</div>
+					}
 
 					{this.subtitleText &&
 						<div id={`${this._id}-subtitle`} class="ui5-card-header-subtitle" part="subtitle">{this.subtitleText}</div>
@@ -55,13 +47,20 @@ export default function CardHeaderTemplate(this: CardHeader) {
 				</div>
 			</div>
 
-			{this.hasAction &&
+			{(this.hasAction || this.additionalText) &&
 				<div
-					class="ui5-card-header-action"
+					class="ui5-card-header-action-and-additional-text"
 					onFocusIn={this._actionsFocusin}
 					onFocusOut={this._actionsFocusout}
 				>
-					<slot name="action"></slot>
+					{this.hasAction &&
+						<slot name="action"></slot>
+					}
+					{this.additionalText &&
+						<div class="ui5-card-header-additionalText">
+							<span id={`${this._id}-additionalText`} part="additional-text" dir="auto">{this.additionalText}</span>
+						</div>
+					}
 				</div>
 			}
 		</div>

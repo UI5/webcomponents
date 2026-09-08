@@ -3,7 +3,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
-import type ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import InputIconTemplate from "./InputIconTemplate.js";
 import inputIconCss from "./generated/themes/InputIcon.css.js";
@@ -63,56 +62,13 @@ class InputIcon extends UI5Element {
 	 * Defines the accessible name of the icon.
 	 *
 	 * **Note:** This property is used for accessibility purposes and will be announced by screen readers.
+	 * When set, it is also rendered as a native `title` tooltip.
 	 *
 	 * @default undefined
 	 * @public
 	 */
 	@property()
 	accessibleName?: string;
-
-	/**
-	 * Defines whether the tooltip is shown.
-	 *
-	 * **Note:** The tooltip text should be provided via the `accessible-name` property.
-	 *
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	showTooltip = false;
-
-	/**
-	 * Defines the value state of the icon.
-	 *
-	 * **Note:** This property should match the parent input's value state for consistent styling.
-	 *
-	 * @default "None"
-	 * @public
-	 */
-	@property()
-	valueState: `${ValueState}` = "None";
-
-	/**
-	 * Defines whether the icon is disabled.
-	 *
-	 * **Note:** Disabled icons are not interactive and do not fire click events.
-	 *
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	disabled = false;
-
-	/**
-	 * Defines whether the icon is readonly.
-	 *
-	 * **Note:** Readonly icons are not interactive and do not fire click events.
-	 *
-	 * @default false
-	 * @public
-	 */
-	@property({ type: Boolean })
-	readonly = false;
 
 	/**
 	 * @private
@@ -126,27 +82,13 @@ class InputIcon extends UI5Element {
 	@property({ type: Boolean, noAttribute: true })
 	_focused = false;
 
-	/**
-	 * @private
-	 */
-	@property({ type: Boolean, noAttribute: true })
-	_parentDisabled = false;
-
 	_onclick(e: MouseEvent) {
-		if (this.disabled || this.readonly || this._parentDisabled) {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-			return;
-		}
-
 		e.stopImmediatePropagation();
 		this.fireDecoratorEvent("click");
 	}
 
 	_onmousedown() {
-		if (!this.disabled && !this.readonly && !this._parentDisabled) {
-			this._pressed = true;
-		}
+		this._pressed = true;
 	}
 
 	_onmouseup() {
@@ -167,10 +109,6 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.disabled || this.readonly || this._parentDisabled) {
-			return;
-		}
-
 		if (isEnter(e) || isSpace(e)) {
 			this._pressed = true;
 			e.preventDefault(); // Prevent scrolling on Space
@@ -178,18 +116,10 @@ class InputIcon extends UI5Element {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
-		if (this.disabled || this.readonly || this._parentDisabled) {
-			return;
-		}
-
 		if (isEnter(e) || isSpace(e)) {
 			this._pressed = false;
 			this.fireDecoratorEvent("click");
 		}
-	}
-
-	get effectiveTabIndex() {
-		return (this.disabled || this.readonly || this._parentDisabled) ? -1 : 0;
 	}
 
 	get effectiveAriaLabel() {
@@ -197,7 +127,7 @@ class InputIcon extends UI5Element {
 	}
 
 	get effectiveTitle() {
-		return this.showTooltip && this.accessibleName ? this.accessibleName : undefined;
+		return this.accessibleName || undefined;
 	}
 }
 

@@ -181,9 +181,6 @@
 						</ui5-input>
 					</div>
 					<div class="example-row">
-						<ui5-button id="toggle-icon-disabled">Toggle Icon Disabled</ui5-button>
-					</div>
-					<div class="example-row">
 						<span class="example-label">Negative state:</span>
 						<ui5-input id="interactive-negative" value="Error" show-clear-icon value-state="Negative">
 							<ui5-input-icon slot="icon" name="search" accessible-name="Search"></ui5-input-icon>
@@ -536,11 +533,7 @@
 		});
 
 		// Toggle disabled for a single icon
-		const toggleIconDisabledBtn = document.getElementById("toggle-icon-disabled");
-		const toggleIcon = document.getElementById("toggle-icon");
-		toggleIconDisabledBtn.addEventListener("click", () => {
-			toggleIcon.toggleAttribute("disabled");
-		});
+		// (Removed: ui5-input-icon no longer exposes a `disabled` property.)
 
 		// Event logging for accessibility demo
 		const eventLog = document.getElementById("event-log-content");

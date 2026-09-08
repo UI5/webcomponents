@@ -18,7 +18,6 @@ export default function SegmentedButtonTemplate(this: SegmentedButton) {
 			aria-orientation="horizontal"
 			aria-description={this.ariaDescriptionText}
 			aria-label={this.ariaLabelText}
-			aria-roledescription={this.ariaRoleDescription}
 		>
 			<slot></slot>
 		</ul>

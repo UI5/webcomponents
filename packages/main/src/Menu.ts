@@ -358,6 +358,27 @@ class Menu extends UI5Element {
 		}
 	}
 
+	_updatePageSize() {
+		const list = this._list;
+		if (!list) {
+			return;
+		}
+
+		const firstItem = this._navigatableMenuItems[0];
+		if (!firstItem) {
+			return;
+		}
+
+		const itemHeight = firstItem.offsetHeight;
+		if (itemHeight === 0) {
+			return;
+		}
+
+		const popoverHeight = this._popover.getBoundingClientRect().height;
+		const visibleCount = Math.round(popoverHeight / itemHeight);
+		list._itemNavigation._skipItemsSize = visibleCount > 1 ? visibleCount - 1 : null;
+	}
+
 	_close() {
 		this.open = false;
 	}
@@ -501,6 +522,7 @@ class Menu extends UI5Element {
 
 	_afterPopoverOpen() {
 		this._allMenuItems[0]?.focus();
+		this._updatePageSize();
 		if (this.loading) {
 			announce(Menu.i18nBundle.getText(MENU_ITEM_LOADING), InvisibleMessageMode.Polite);
 		}

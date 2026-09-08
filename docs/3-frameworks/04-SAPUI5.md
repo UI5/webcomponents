@@ -1,16 +1,16 @@
-# UI5 Web Components & SAPUI5
+# UI5 Web Components & OpenUI5/SAPUI5
 
-UI5 Web Components are first-class citizens in SAPUI5 (and OpenUI5). A UI5 Web Component can be required and used like a regular SAPUI5 control — its properties map to SAPUI5 properties, its slots to aggregations, and its events to SAPUI5 events. This means you can drop a Web Component into an XML view or a controller and use it side-by-side with the SAPUI5 controls you already know.
+UI5 Web Components are first-class citizens in OpenUI5/SAPUI5. A UI5 Web Component can be required and used like a regular OpenUI5/SAPUI5 control — its properties map to OpenUI5/SAPUI5 properties, its slots to aggregations, and its events to OpenUI5/SAPUI5 events. This means you can drop a Web Component into an XML view or a controller and use it side-by-side with the OpenUI5/SAPUI5 controls you already know.
 
 New or selected UI elements, over time, will be delivered as UI5 Web Components to avoid duplication.
 
 ## How to Integrate
 
-The full, up-to-date instructions live in the SAPUI5 documentation: [Using Web Components](https://ui5.sap.com/#/topic/1c80793df5bb424091954697fc0b2828). A working sample project is also available in the [UI5 ecosystem showcase (`ui5-tsapp-webc`)](https://github.com/ui5-community/ui5-ecosystem-showcase/tree/main/showcases/ui5-tsapp-webc). Here is a short summary.
+The full, up-to-date instructions live in the OpenUI5/SAPUI5 documentation: [Using Web Components](https://sdk.openui5.org/#/topic/1c80793df5bb424091954697fc0b2828?q=Using%20Web%20Components). A working sample project is also available in the [UI5 ecosystem showcase (`ui5-tsapp-webc`)](https://github.com/ui5-community/ui5-ecosystem-showcase/tree/main/showcases/ui5-tsapp-webc). Here is a short summary.
 
-### Step 1. Create a SAPUI5 app
+### Step 1. Create an OpenUI5/SAPUI5 app
 
-If you don't already have one, scaffold a SAPUI5 app with the community [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5), a [Yeoman](https://yeoman.io/)-based generator:
+If you don't already have one, scaffold an OpenUI5/SAPUI5 app with the community [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5), a [Yeoman](https://yeoman.io/)-based generator:
 
 ```bash
 npm install --global yo generator-easy-ui5
@@ -19,9 +19,9 @@ yo easy-ui5 project
 
 Answer the prompts (project name, namespace, framework, etc.). To run it without a global install, you can also use `npx -p yo -p generator-easy-ui5 yo easy-ui5 project`. For more scaffolding options and details, see the [Easy UI5 generator](https://github.com/ui5-community/generator-easy-ui5) and the [UI5 CLI Getting Started guide](https://ui5.github.io/cli/stable/pages/GettingStarted/).
 
-### Step 2. Install the UI5 tooling extension
+### Step 2. Enhance the UI5 CLI setup 
 
-The [`ui5-tooling-modules`](https://www.npmjs.com/package/ui5-tooling-modules) CLI extension resolves and bundles Web Components modules during development and build.
+The [`ui5-tooling-modules`](https://www.npmjs.com/package/ui5-tooling-modules) package is a UI5 CLI extension resolving and bundling Web Components modules during development and build.
 
 ```bash
 npm install ui5-tooling-modules --save-dev --ignore-scripts=false -rte=ui5.yaml,ui5-local.yaml,ui5-deploy.yaml
@@ -62,11 +62,11 @@ Declare a namespace for the package and use the Web Component's class name as an
 </mvc:View>
 ```
 
-Data binding, formatters, and event handlers work exactly like they do for any other SAPUI5 control.
+Data binding, formatters, and event handlers work exactly like they do for any other OpenUI5/SAPUI5 control.
 
 ### Step 5. Use the components in controllers
 
-Require the Web Component classes just like SAPUI5 modules. Don't forget to include the `Assets` module of each `@ui5/webcomponents-*` package you use — it registers the theme styles and translations at runtime.
+Require the Web Component classes just like OpenUI5/SAPUI5 modules. Don't forget to include the `Assets` module of each `@ui5/webcomponents-*` package you use — it registers the theme styles and translations at runtime.
 
 ```js
 sap.ui.define([
@@ -85,28 +85,28 @@ sap.ui.define([
 
 ## When to Use
 
-SAPUI5 already ships a large library of controls, so we don't recommend replacing them one-by-one with the equivalent UI5 Web Component. Our guidance is:
+OpenUI5/SAPUI5 already ships a large library of controls, so we don't recommend replacing them one-by-one with the equivalent UI5 Web Component. Our guidance is:
 
-- **Recommended** — use UI5 Web Components in SAPUI5 for components that don't exist there, not as a wholesale replacement for the SAPUI5 control library — for example, the AI-related components in `@ui5/webcomponents-ai` (`Button`, `PromptInput`, …).
-- **Not recommended** — using a UI5 Web Component to replace a basic SAPUI5 control that already exists (e.g. a plain button, input, or list). Mixing two implementations of the same primitive adds complexity without benefit.
+- **Recommended** — use UI5 Web Components in OpenUI5/SAPUI5 for components that don't exist there, not as a wholesale replacement for the OpenUI5/SAPUI5 control library — for example, the AI-related components in `@ui5/webcomponents-ai` (`Button`, `PromptInput`, …).
+- **Not recommended** — using a UI5 Web Component to replace a basic OpenUI5/SAPUI5 control that already exists (e.g. a plain button, input, or list). Mixing two implementations of the same primitive adds complexity without benefit.
 
 ## API Mapping
 
-For quick reference, this is how UI5 Web Components APIs surface in SAPUI5:
+For quick reference, this is how UI5 Web Components APIs surface in OpenUI5/SAPUI5:
 
-| UI5 Web Components | SAPUI5        | Notes                                                                                     |
+| UI5 Web Components | OpenUI5/SAPUI5 | Notes                                                                                     |
 |--------------------|---------------|-------------------------------------------------------------------------------------------|
 | properties         | properties    | Standard UI5 getters/setters, e.g. `Button#getText()`, `Button#setText()`                 |
 | readonly properties| getters       | Camel-cased getter, e.g. `AvatarGroup#getColorScheme()` — no setter                       |
 | slots              | aggregations  | Standard UI5 aggregations with `add*`, `get*`, `remove*` accessors                        |
 | events             | events        | Standard UI5 events; dashed names become camelCase (e.g. `selected-item` → `selectedItem`)|
 | methods            | methods       | Any Web Component API is available, e.g. `Tree#walk()`                                    |
-| —                  | associations  | SAPUI5-only concept; any Web Component property that takes an element `id` is exposed as an association |
+| —                  | associations  | OpenUI5/SAPUI5-only concept; any Web Component property that takes an element `id` is exposed as an association |
 
 A few additional naming differences:
 
-- The DOM `disabled` attribute is exposed as the SAPUI5 property `enabled`.
+- The DOM `disabled` attribute is exposed as the OpenUI5/SAPUI5 property `enabled`.
 - The default slot is exposed as the `content` aggregation.
 - Web Components that allow native text content expose a bindable `text` property.
 
-For all details, edge cases, and the most current guidance, refer to the [SAPUI5 documentation topic on Using Web Components](https://ui5.sap.com/#/topic/1c80793df5bb424091954697fc0b2828).
+For all details, edge cases, and the most current guidance, refer to the [OpenUI5/SAPUI5 documentation topic on Using Web Components](https://sdk.openui5.org/#/topic/1c80793df5bb424091954697fc0b2828?q=Using%20Web%20Components).

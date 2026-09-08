@@ -9,7 +9,7 @@ const scroll = (element: HTMLElement, dx: number, dy: number) => {
 			scrollLeft = element.scrollLeft;
 			scrollTop = element.scrollTop;
 		},
-		duration,
+		duration: duration(),
 		element,
 		advance: progress => {
 			element.scrollLeft = scrollLeft + (progress * dx); // easing - linear

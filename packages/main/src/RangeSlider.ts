@@ -278,6 +278,10 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		return Math.abs(this.endValue - this.startValue);
 	}
 
+	get _progressRole() {
+		return "slider" as const;
+	}
+
 	/**
 	 * Check if the previously saved state is outdated. That would mean
 	 * either it is the initial rendering or that a property has been changed

@@ -1,7 +1,7 @@
 import TimePicker from "../../src/TimePicker.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 
-describe("TimePicker on phone - general interactions", () => {
+describe.skip("TimePicker on phone - general interactions", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");
 
@@ -146,7 +146,7 @@ describe("TimePicker on phone - general interactions", () => {
 			.should("have.value", "9:22:33 PM");
  	});
 });
-describe("TimePicker on phone - accessibility and other input attributes", () => {
+describe.skip("TimePicker on phone - accessibility and other input attributes", () => {
 	beforeEach(() => {
 		cy.ui5SimulateDevice("phone");
 

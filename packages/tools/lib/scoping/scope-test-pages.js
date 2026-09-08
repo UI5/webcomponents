@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob");
+const { globSync } = require("glob");
 const getAllTags = require("./get-all-tags.js");
 
 const root = process.argv[2];
@@ -26,7 +26,7 @@ const replaceTagsAny = content => {
 };
 
 // Replace bundle names and HTML tag names in test pages
-glob.sync(path.join(root, "/**/*.html")).forEach(file => {
+globSync(path.join(root, "/**/*.html")).forEach(file => {
 	let content = String(fs.readFileSync(file));
 	content = content.replace("%VITE_BUNDLE_PATH%", "%VITE_BUNDLE_PATH_SCOPED%");
 	content = replaceTagsHTML(content);
@@ -34,7 +34,7 @@ glob.sync(path.join(root, "/**/*.html")).forEach(file => {
 });
 
 // Replace tag names everywhere
-glob.sync(path.join(root, "/**/*.{html,css,js}")).forEach(file => {
+globSync(path.join(root, "/**/*.{html,css,js}")).forEach(file => {
 	let content = String(fs.readFileSync(file));
 	content = replaceTagsAny(content);
 	fs.writeFileSync(file, content);

@@ -527,6 +527,15 @@ class DynamicPage extends UI5Element {
 		// composedPath()[0] is the actual focused element inside shadow DOM (e.g. a button inside
 		// a web component host). Must be captured synchronously - composedPath() returns [] inside RAF.
 		const target = e.composedPath()[0] as HTMLElement;
+
+		// Ignore transient focus-trap sentinels (e.g. the Table's roving-tabindex before/after
+		// elements) which have no layout box on at least one axis. Scrolling such an element into
+		// view would fight the real focus target's own scroll handling and move the viewport away
+		// from the focused element. Real focusables have a non-zero box on both axes.
+		if (!target || target.offsetWidth === 0 || target.offsetHeight === 0) {
+			return;
+		}
+
 		this.setScrollPadding({ start: this.scrollPaddingTop, end: this.endAreaHeight });
 
 		// Elements partially hidden behind sticky header/footer appear "in view" to the browser

@@ -17,7 +17,8 @@ const getAssociatedForm = (element: UI5Element): HTMLFormElement | null => {
 	const formAttribute = element.getAttribute("form");
 
 	if (formAttribute) {
-		const form = document.getElementById(formAttribute);
+		const rootNode = element.getRootNode() as Document | ShadowRoot;
+		const form = rootNode.getElementById?.(formAttribute) || document.getElementById(formAttribute);
 		return form instanceof HTMLFormElement ? form : null;
 	}
 

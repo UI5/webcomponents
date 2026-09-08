@@ -10,7 +10,6 @@ export default function SegmentedButtonItemTemplate(this: SegmentedButtonItem) {
 			aria-setsize={this.sizeOfSet}
 			aria-selected={this.selected}
 			aria-disabled={this.disabled}
-			aria-roledescription={this.ariaDescription}
 			data-sap-focus-ref
 			onClick={this._onclick}
 			onKeyUp={this._onkeyup}

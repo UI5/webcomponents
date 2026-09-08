@@ -1,0 +1,60 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+	<link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<!-- playground-fold-end -->
+	<ui5-list header-text="Products (focus a row, then press F2 or F7)">
+		<ui5-li-custom accessible-name="Ergonomic keyboard">
+			<div class="kbd-sample__row">
+				<div class="kbd-sample__text">
+					<ui5-title size="H6">Ergonomic Keyboard</ui5-title>
+					<ui5-label>In stock</ui5-label>
+				</div>
+				<ui5-button icon="edit" design="Transparent" accessible-name="Edit ergonomic keyboard" tooltip="Edit"></ui5-button>
+				<ui5-button icon="delete" design="Transparent" accessible-name="Delete ergonomic keyboard" tooltip="Delete"></ui5-button>
+			</div>
+		</ui5-li-custom>
+		<ui5-li-custom accessible-name="Wireless mouse">
+			<div class="kbd-sample__row">
+				<div class="kbd-sample__text">
+					<ui5-title size="H6">Wireless Mouse</ui5-title>
+					<ui5-label>In stock</ui5-label>
+				</div>
+				<ui5-button icon="edit" design="Transparent" accessible-name="Edit wireless mouse" tooltip="Edit"></ui5-button>
+				<ui5-button icon="delete" design="Transparent" accessible-name="Delete wireless mouse" tooltip="Delete"></ui5-button>
+			</div>
+		</ui5-li-custom>
+		<ui5-li-custom accessible-name="27-inch monitor">
+			<div class="kbd-sample__row">
+				<div class="kbd-sample__text">
+					<ui5-title size="H6">27-inch Monitor</ui5-title>
+					<ui5-label>Low stock</ui5-label>
+				</div>
+				<ui5-button icon="edit" design="Transparent" accessible-name="Edit 27-inch monitor" tooltip="Edit"></ui5-button>
+				<ui5-button icon="delete" design="Transparent" accessible-name="Delete 27-inch monitor" tooltip="Delete"></ui5-button>
+			</div>
+		</ui5-li-custom>
+	</ui5-list>
+
+	<br>
+
+	<ui5-list header-text="Delete mode - per-item delete button is Tab-reachable in edit mode" selection-mode="Delete">
+		<ui5-li>Draft: Q3 report</ui5-li>
+		<ui5-li>Draft: Onboarding checklist</ui5-li>
+		<ui5-li>Draft: Release notes</ui5-li>
+	</ui5-list>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->

@@ -1,4 +1,4 @@
-import ToggleButton from "../../../src/ToggleButton.js";
+import type ToggleButton from "../../../src/ToggleButton.js";
 import { ModifierKey } from "./common/types.js";
 
 Cypress.Commands.add("ui5ToggleButtonRealClick", { prevSubject: true }, (subject: JQuery<ToggleButton>, isClickPrevented: boolean, pressedKey?: ModifierKey) => {

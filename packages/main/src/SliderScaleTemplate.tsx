@@ -34,14 +34,14 @@ export default function SliderScaleTemplate(this: SliderScale) {
 				part="progress"
 				style={this._progressStyle}
 				tabIndex={this.progressTabIndex}
-				role="slider"
-				aria-orientation="horizontal"
-				aria-valuemin={this.min}
-				aria-valuemax={this.max}
-				aria-valuenow={this.progressAriaValueNow}
-				aria-valuetext={this.progressAriaValueText}
-				aria-label={this.progressAriaLabel}
-				aria-disabled={this.progressAriaDisabled}
+				role={this.progressRole}
+				aria-orientation={this.progressRole ? "horizontal" : undefined}
+				aria-valuemin={this.progressRole ? this.min : undefined}
+				aria-valuemax={this.progressRole ? this.max : undefined}
+				aria-valuenow={this.progressRole ? this.progressAriaValueNow : undefined}
+				aria-valuetext={this.progressRole ? this.progressAriaValueText : undefined}
+				aria-label={this.progressRole ? this.progressAriaLabel : undefined}
+				aria-disabled={this.progressRole ? this.progressAriaDisabled : undefined}
 				onMouseEnter={this._onProgressMouseEnter}
 				onMouseLeave={this._onProgressMouseLeave}
 			></div>

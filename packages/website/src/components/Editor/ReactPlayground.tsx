@@ -121,6 +121,7 @@ import RatingIndicatorClass from "@ui5/webcomponents/dist/RatingIndicator.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import RangeSliderClass from "@ui5/webcomponents/dist/RangeSlider.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
+import NumberInputClass from "@ui5/webcomponents/dist/NumberInput.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
@@ -249,6 +250,9 @@ import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSett
 import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import UserSettingsAppearanceViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import UserSettingsNotificationsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsView.js";
+import UserSettingsNotificationsViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewGroup.js";
+import UserSettingsNotificationsViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewItem.js";
 
 // Import AI package
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
@@ -302,7 +306,7 @@ const ComponentClasses: Record<string, any> = {
   ListItemGroupClass, DialogClass, IconClass, AvatarClass, AvatarGroupClass, AvatarBadgeClass,
   DatePickerClass, TimePickerClass, DateTimePickerClass, DateRangePickerClass, TextAreaClass,
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
-  StepInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
+  StepInputClass, NumberInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
   TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,
@@ -330,7 +334,9 @@ const ComponentClasses: Record<string, any> = {
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
   ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
   UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,
-  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass, HeroBannerClass,
+  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass,
+  UserSettingsNotificationsViewClass, UserSettingsNotificationsViewGroupClass,
+  UserSettingsNotificationsViewItemClass, HeroBannerClass,
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package

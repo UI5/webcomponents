@@ -72,7 +72,7 @@ import applyDirection from "@ui5/webcomponents-base/dist/locale/applyDirection.j
 import { attachDirectionChange } from "@ui5/webcomponents-base/dist/locale/directionChange.js";
 import { attachLanguageChange, detachLanguageChange } from "@ui5/webcomponents-base/dist/locale/languageChange.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import announce, { registerInvisibleMessageRegion, deregisterInvisibleMessageRegion } from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import { ignoreCustomElements, shouldIgnoreCustomElement } from "@ui5/webcomponents-base/dist/IgnoreCustomElements.js";
 import { startMultipleDrag } from "@ui5/webcomponents-base/dist/DragAndDrop.js";
 import getElementSelection from "@ui5/webcomponents-base/dist/util/SelectionAssistant.js";
@@ -110,6 +110,8 @@ const testAssets = {
 	},
 	invisibleMessage: {
 		announce,
+		registerInvisibleMessageRegion,
+		deregisterInvisibleMessageRegion,
 	},
 	getElementSelection,
 	getLocaleData,

@@ -366,7 +366,7 @@ describe("SegmentedButton Accessibility", () => {
 		cy.get("[ui5-segmented-button]")
 			.shadow()
 			.find(".ui5-segmented-button-root")
-			.should("have.attr", "aria-description", SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY));
+			.should("not.have.attr", "aria-description");
 	});
 
 	it("segmented button should have correct aria description when accessibleDescription is set", () => {
@@ -381,7 +381,7 @@ describe("SegmentedButton Accessibility", () => {
 		cy.get("[ui5-segmented-button]")
 			.shadow()
 			.find(".ui5-segmented-button-root")
-			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+			.should("have.attr", "aria-description", DESCRIPTION);
 	});
 
 	it("segmented button should have correct aria description when accessibleDescriptionRef is set", () => {
@@ -399,7 +399,7 @@ describe("SegmentedButton Accessibility", () => {
 		cy.get("[ui5-segmented-button]")
 			.shadow()
 			.find(".ui5-segmented-button-root")
-			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButton.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+			.should("have.attr", "aria-description", DESCRIPTION);
 	});
 
 	it("segmented button should have correct aria-multiselectable", () => {
@@ -504,13 +504,27 @@ describe("SegmentedButtonItem Accessibility", () => {
 			.eq(0)
 			.shadow()
 			.find("li")
-			.should("have.attr", "aria-description", DESCRIPTION);
+			.should("have.attr", "aria-description", `${DESCRIPTION} ${SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
 
 		cy.get<SegmentedButtonItem>("@items")
 			.eq(1)
 			.shadow()
 			.find("li")
-			.should("have.attr", "aria-description", REF_DESCRIPTION);
+			.should("have.attr", "aria-description", `${REF_DESCRIPTION} ${SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTON_ARIA_DESCRIBEDBY)}`);
+	});
+
+	it("segmented button items should not have aria-roledescription", () => {
+		cy.mount(
+			<SegmentedButton>
+				<SegmentedButtonItem>First</SegmentedButtonItem>
+				<SegmentedButtonItem>Second</SegmentedButtonItem>
+			</SegmentedButton>
+		);
+
+		cy.get("[ui5-segmented-button-item]")
+			.shadow()
+			.find("li")
+			.should("not.have.attr", "aria-roledescription");
 	});
 
 	it("should set title attribute to slot text when tooltip is not provided", () => {

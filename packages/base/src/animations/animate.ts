@@ -1,3 +1,4 @@
+import { getAnimationMode } from "../config/AnimationMode.js";
 import AnimationQueue from "./AnimationQueue.js";
 
 type AnimateOptions = {
@@ -57,7 +58,10 @@ const animate = (options: AnimateOptions) => {
 		stop: () => stop,
 	};
 };
-const duration = 400;
+
+const duration = () => {
+	return getAnimationMode() === "none" ? 0 : 400;
+};
 
 export { duration };
 export type { AnimateOptions };

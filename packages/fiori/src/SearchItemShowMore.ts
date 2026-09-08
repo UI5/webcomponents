@@ -68,8 +68,8 @@ If a number is provided, it displays "Show more (N)", where N is that number.
 	 * @public
 	 * @default undefined
 	 */
-	@property()
-	itemsToShowCount ?: number;
+	@property({ type: Number })
+	itemsToShowCount?: number;
 
 	/**
 	 * Defines whether the show more item is selected.

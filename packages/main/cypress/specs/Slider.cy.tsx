@@ -562,7 +562,7 @@ describe("Accessibility", () => {
 			.should("have.attr", "aria-valuenow", "0");
 	});
 
-	it("aria-valuenow is set on the progress bar with role='slider'", () => {
+	it("progress bar is not exposed as a slider (role and value attributes are absent)", () => {
 		cy.mount(
 			<Slider accessibleName="Basic Slider" min={0} max={10} value={4}></Slider>
 		);
@@ -571,8 +571,13 @@ describe("Accessibility", () => {
 			.shadow()
 			.find("[ui5-slider-scale]")
 			.shadow()
-			.find(".ui5-slider-progress[role='slider']")
-			.should("have.attr", "aria-valuenow", "4");
+			.find(".ui5-slider-progress")
+			.as("progress");
+
+		cy.get("@progress").should("not.have.attr", "role");
+		cy.get("@progress").should("not.have.attr", "aria-valuenow");
+		cy.get("@progress").should("not.have.attr", "aria-valuemin");
+		cy.get("@progress").should("not.have.attr", "aria-valuemax");
 	});
 
 	it("Aria attributes are set correctly to the tooltip input", () => {

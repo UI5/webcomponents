@@ -1444,7 +1444,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.shadow()
 			.find("[ui5-responsive-popover]")
 			.as("submenuPopover");
-			
+
 		cy.get("@submenuPopover")
 			.should("have.attr", "open");
 
@@ -1453,7 +1453,7 @@ describe("Menu - Submenu Focus Behavior", () => {
 			.last()
 			.should("be.visible")
 			.as("lastItem");
-			
+
 		cy.get("@lastItem")
 			.realHover();
 
@@ -1510,5 +1510,90 @@ describe("Menu - Submenu Focus Behavior", () => {
 
 		cy.get("@childItem")
 			.should("be.focused");
+	});
+});
+
+describe("Menu - Page Up/Down navigation", () => {
+	function mountLongMenu() {
+		cy.viewport(800, 300);
+
+		const items = Array.from({ length: 25 }, (_, i) => (
+			<MenuItem key={i} text={`Item ${i + 1}`}></MenuItem>
+		));
+
+		cy.mount(
+			<>
+				<Button id="btnOpen">Open Menu</Button>
+				<Menu id="menu" opener="btnOpen">
+					{items}
+				</Menu>
+			</>
+		);
+
+		cy.get("[ui5-menu]").ui5MenuOpen({ opener: "btnOpen" });
+	}
+
+	it("Page Down moves focus forward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		cy.focused().realPress("PageDown");
+
+		// Record which item was landed on, then PageUp should return exactly to item 0
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
+
+		cy.focused().realPress("PageUp");
+
+		cy.get("@items").first().should("be.focused");
+	});
+
+	it("Page Up moves focus backward by page size", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		cy.get("@items").first().should("be.focused");
+
+		// Press PageDown twice to land somewhere in the middle
+		cy.focused().realPress("PageDown");
+		cy.focused().realPress("PageDown");
+
+		// PageUp must go back exactly one page — not to item 1, not to where PageDown×2 landed
+		cy.focused().realPress("PageUp");
+		cy.focused().realPress("PageDown");
+
+		// Two PageDowns and one PageUp then one PageDown must equal two PageDowns net
+		// — verify we are not at item 1 (moved forward) and not at item 2 (moved more than 1)
+		cy.get("@items").first().should("not.be.focused");
+		cy.get("@items").eq(1).should("not.be.focused");
+	});
+
+	it("Page Down from last visible page focuses last item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		// Press PageDown 15 times — clamps to last item regardless of page size
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
+
+		cy.get("@items").last().should("be.focused");
+	});
+
+	it("Page Up from first visible page focuses first item", () => {
+		mountLongMenu();
+
+		cy.get("[ui5-menu] > [ui5-menu-item]").as("items");
+
+		// Reach the last item via keyboard, then press PageUp 15 times — clamps to first item
+		Cypress._.times(15, () => cy.focused().realPress("PageDown"));
+		cy.get("@items").last().should("be.focused");
+
+		Cypress._.times(15, () => cy.focused().realPress("PageUp"));
+
+		cy.get("@items").first().should("be.focused");
 	});
 });
