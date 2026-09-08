@@ -19,7 +19,7 @@ decorators).
 | Compose child components, or supply markup, that the host renders and may talk to | slot — `content`, `header`, `valueStateMessage` |
 | React to something the user did | event — `click`, `selection-change` |
 | Restyle an internal element | CSS part |
-| Add an optional capability that carries its own API | a slotted subcomponent — see Features below |
+| Let the app switch an extra feature on or off | a slotted subcomponent with its own API — `Button`'s `badge`, `Table`'s `features`; see Features below |
 | Compute something the property model cannot express | public method |
 
 Prefer a property. A public method is justified in three cases and no others: a pure computation over
@@ -55,8 +55,19 @@ timer, observer, or fetch callback. See `core-rules.md`.
 
 When an optional capability carries its own properties, events, state, and bundle cost, model it as a
 subcomponent the application slots in rather than as properties on the host.
+For example in `Button`'s `badge` slot case: `ButtonBadge` owns `design` and `text`, and a button without a badge never
+declares them.
 
-For example `Table` has one `features` slot typed to an `ITableFeature` interface that declares lifecycle hooks (`onTableActivate`, `onTableBeforeRendering`, `onTableAfterRendering`), and looks features up by a string `identifier`, never by class. Because `TableSelectionMulti`, `TableGrowing`, and `TableVirtualizer` are separate imports, a table that does not select does not pay for selection.
+`Table` is the other, bigger case. It has one `features` slot typed to `ITableFeature`, an interface of lifecycle hooks (`onTableActivate`, `onTableBeforeRendering`, `onTableAfterRendering`). The table looks each feature up by a string `identifier`, never by class.
+
+`TableSelectionMulti`, `TableGrowing`, and `TableVirtualizer` are separate imports, so a table that does not select does not pay for selection.
+
+**This is not the same as extending a class.** A subclass adds API too, but it gives you a new
+element: `ToggleButton` extends `Button` to add `pressed`, `ListItemCustom` extends `ListItem`.
+
+The app opts in by writing a different tag, and is then stuck with it. With a slot the tag stays the
+same, and the app can add or remove the feature whenever it likes. So extend when the feature
+decides what the element *is*, and slot when the element works fine without it.
 
 ## Properties
 
@@ -295,14 +306,13 @@ Every event needs an `eventDetails` entry — `void` when there is no payload, o
 exported type. `@event("open")` with no options object is the right form for a plain, non-bubbling
 event.
 
-### Subclasses must extend `eventDetails` when adding events
+### Subclasses and `eventDetails`
 
-The strict decorator resolves event names from `keyof this["eventDetails"]`. A subclass that adds a
-new `@event` must re-declare `eventDetails` with the parent's map in the intersection. A subclass
-that fires only inherited events needs nothing — `ToggleButton` inherits `Button`'s `eventDetails`
-and only fires `click`, without re-declaring. Put your own events **last** in the intersection — CEM
-reads only the final member, so the reversed order compiles and then fails validation. `MenuItem` is
-the pattern:
+**No new events?** Skip `eventDetails`. `ListItemCustom` extends `ListItem` and inherits its events
+without re-declaring anything.
+
+**Adding new `@event`s?** List them in `eventDetails`. If the parent already has events, merge with
+the parent's map and put yours last — CEM reads only the final member in the intersection:
 
 ```ts
 // MenuItem.ts — adds events on top of ListItem
@@ -311,6 +321,8 @@ eventDetails!: ListItem["eventDetails"] & {
 	"open": void,
 }
 ```
+
+If the parent has no events of its own, listing only your new events is enough.
 
 Export every detail type from the module, or CEM rejects it as an undocumented public type.
 
