@@ -21,6 +21,8 @@ import {
 	isEscape,
 	isSpaceShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import type { ToolbarArrowNavState, IToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 import { LIST_ITEM_SELECTED } from "./generated/i18n/i18n-defaults.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
@@ -81,7 +83,7 @@ type SegmentedButtonSelectionChangeEventDetail = {
 	bubbles: true,
 })
 
-class SegmentedButton extends UI5Element {
+class SegmentedButton extends UI5Element implements IToolbarArrowNavProvider {
 	eventDetails!: {
 		"selection-change": SegmentedButtonSelectionChangeEventDetail,
 	}
@@ -215,6 +217,24 @@ class SegmentedButton extends UI5Element {
 
 	getFocusDomRef(): HTMLElement | undefined {
 		return this._itemNavigation._getCurrentItem();
+	}
+
+	getArrowNavState(): ToolbarArrowNavState | undefined {
+		const items = this.navigatableItems;
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			return undefined;
+		}
+		const idx = items.findIndex(item =>
+			item === active || item.shadowRoot?.contains(active) || item.contains(active)
+		);
+		if (idx === -1) {
+			return undefined;
+		}
+		return {
+			atLeftEnd: idx === 0,
+			atRightEnd: idx === items.length - 1,
+		};
 	}
 
 	_selectItem(e: MouseEvent | KeyboardEvent) {
