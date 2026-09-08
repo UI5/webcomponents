@@ -43,7 +43,7 @@ function App() {
 
         <ShellBarBranding slot="branding">
           Product Identifier
-          <img slot="logo" src="/images/sap-logo-svg.svg" alt="SAP Logo" />
+          <img slot="logo" src="/images/sap-r-grad-scrn.svg" alt="SAP Logo" />
         </ShellBarBranding>
         <Tag design="Set2" colorScheme="7" slot="content">
           Trial
