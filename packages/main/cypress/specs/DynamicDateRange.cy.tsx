@@ -347,6 +347,8 @@ describe("DynamicDateRange Last/Next Options", () => {
 
 		cy.get("@stepInput")
 			.shadow()
+			.find("[ui5-number-input]")
+			.shadow()
 			.find("[ui5-input]")
 			.shadow()
 			.find("input")
@@ -396,6 +398,8 @@ describe("DynamicDateRange Last/Next Options", () => {
 			.as("stepInput");
 
 		cy.get("@stepInput")
+			.shadow()
+			.find("[ui5-number-input]")
 			.shadow()
 			.find("[ui5-input]")
 			.shadow()

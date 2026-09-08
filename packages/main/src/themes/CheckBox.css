@@ -240,6 +240,7 @@
 .ui5-checkbox-icon {
 	width: var(--_ui5_checkbox_icon_size);
 	height: var(--_ui5_checkbox_icon_size);
+	font-size: inherit;
 	color: currentColor;
 	cursor: inherit;
 	position: absolute;

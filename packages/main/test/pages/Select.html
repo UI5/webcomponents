@@ -324,6 +324,42 @@
 		</ui5-select>
 	</section>
 
+<h2>Select with option groups</h2>
+
+<ui5-select id="selectWithGroups">
+	<ui5-option-group id="oceaniaGroup" header-text="Oceania">
+		<ui5-option value="au">Australia</ui5-option>
+		<ui5-option value="nz">New Zealand</ui5-option>
+	</ui5-option-group>
+	<ui5-option-group id="europeGroup" header-text="Europe">
+		<ui5-option value="fr">France</ui5-option>
+		<ui5-option value="de" selected>Germany</ui5-option>
+	</ui5-option-group>
+</ui5-select>
+
+<h2>Select with option groups and additional text</h2>
+
+<ui5-select id="selectWithGroupsAdditionalText">
+	<ui5-option-group header-text="Asia Pacific">
+		<ui5-option value="au" additional-text="AU">Australia</ui5-option>
+		<ui5-option value="jp" additional-text="JP">Japan</ui5-option>
+	</ui5-option-group>
+	<ui5-option-group header-text="Europe">
+		<ui5-option value="bg" additional-text="BG">Bulgaria</ui5-option>
+		<ui5-option value="pt" additional-text="PT" selected>Portugal</ui5-option>
+	</ui5-option-group>
+</ui5-select>
+
+<h2>Mixed: flat options and groups</h2>
+
+<ui5-select id="selectMixed">
+	<ui5-option value="all">All Regions</ui5-option>
+	<ui5-option-group header-text="Europe">
+		<ui5-option value="de">Germany</ui5-option>
+		<ui5-option value="fr">France</ui5-option>
+	</ui5-option-group>
+</ui5-select>
+
 </body>
 <script>
 	var countries =  [{ key: "Aus", text: "Australia" }, { key: "Aruba", text: "Aruba" }, { key: "Antigua", text: "Antigua and Barbuda" }, { key: "Bel", text: "Belgium" }, { key: "Bg", text: "Bulgaria" }, { key: "Bra", text: "Brazil" }];
@@ -492,4 +528,5 @@
 		});
 	});
 </script>
+
 </html>

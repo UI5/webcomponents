@@ -9,7 +9,7 @@ import Title from "./Title.js";
 export default function SelectPopoverTemplate(this: Select) {
 	return (
 		<>
-			{this.options.length > 0 &&
+			{this._flatOptions.length > 0 &&
 				<ResponsivePopover
 					id={this.responsivePopoverId}
 					class={{

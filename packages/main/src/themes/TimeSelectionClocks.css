@@ -24,7 +24,7 @@
 	text-align: center;
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSize);
-	color: var(--sapContent_LabelColor);
+	color: var(--sapTextColor);
 }
 
 .ui5-time-picker-tsc-clocks {

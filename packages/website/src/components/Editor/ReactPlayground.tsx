@@ -121,6 +121,7 @@ import RatingIndicatorClass from "@ui5/webcomponents/dist/RatingIndicator.js";
 import SliderClass from "@ui5/webcomponents/dist/Slider.js";
 import RangeSliderClass from "@ui5/webcomponents/dist/RangeSlider.js";
 import StepInputClass from "@ui5/webcomponents/dist/StepInput.js";
+import NumberInputClass from "@ui5/webcomponents/dist/NumberInput.js";
 import PopoverClass from "@ui5/webcomponents/dist/Popover.js";
 import ResponsivePopoverClass from "@ui5/webcomponents/dist/ResponsivePopover.js";
 import ToastClass from "@ui5/webcomponents/dist/Toast.js";
@@ -302,7 +303,7 @@ const ComponentClasses: Record<string, any> = {
   ListItemGroupClass, DialogClass, IconClass, AvatarClass, AvatarGroupClass, AvatarBadgeClass,
   DatePickerClass, TimePickerClass, DateTimePickerClass, DateRangePickerClass, TextAreaClass,
   RadioButtonClass, ProgressIndicatorClass, RatingIndicatorClass, SliderClass, RangeSliderClass,
-  StepInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
+  StepInputClass, NumberInputClass, PopoverClass, ResponsivePopoverClass, ToastClass, MessageStripClass, BusyIndicatorClass,
   TabContainerClass, TabClass, TabSeparatorClass, TableClass, TableHeaderRowClass, TableHeaderCellClass,
   TableRowClass, TableCellClass, TableGroupRowClass, TreeClass, TreeItemClass, TreeItemCustomClass, PanelClass,
   ToolbarClass, ToolbarButtonClass, ToolbarSpacerClass, ToolbarSeparatorClass, ToolbarSelectClass,

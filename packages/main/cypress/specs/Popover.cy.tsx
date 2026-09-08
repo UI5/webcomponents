@@ -1681,6 +1681,44 @@ describe("Alignment", () => {
 				expect(Math.abs(openerRightEdge - popoverRightEdge)).to.be.lessThan(1);
 			});
 		});
+
+		describe("Reposition stability", () => {
+			it("does not drift horizontally when a persistent sub-pixel correction is applied on each reposition", () => {
+				cy.mount(
+					<>
+						<Button id="equalWidthBtn" style="width: 200px;">Open</Button>
+						<Popover id="popoverEqualWidth" placement="Bottom" opener="equalWidthBtn" horizontalAlign="Center" style="width: 200px;">
+							<span></span>
+						</Popover>
+					</>);
+
+				cy.get("[ui5-popover]").invoke("prop", "open", "true");
+				cy.get<Popover>("[ui5-popover]").should("be.visible");
+
+				// Simulate the persistent sub-pixel correction seen at fractional zoom.
+				// This below-dead-band (< 1.5px) value must NOT accumulate across repositions.
+				cy.get<Popover>("[ui5-popover]").then($popover => {
+					const popover = $popover[0] as unknown as Popover;
+					popover.getRTLCorrectionLeft = () => 0.4;
+				});
+
+				// With the bug the left creeps ~0.4px per tick, so assert the full spread
+				// stays stable rather than only the final position.
+				const lefts: number[] = [];
+				for (let i = 0; i < 20; i++) {
+					cy.get<Popover>("[ui5-popover]").then($popover => {
+						const popover = $popover[0] as unknown as Popover;
+						popover.reposition();
+						lefts.push(popover.getBoundingClientRect().left);
+					});
+				}
+
+				cy.wrap(null).should(() => {
+					const spread = Math.max(...lefts) - Math.min(...lefts);
+					expect(spread).to.be.lessThan(1);
+				});
+			});
+		});
 	});
 
 	describe("Arrow Horizontal Alignment", () => {

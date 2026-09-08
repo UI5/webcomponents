@@ -433,6 +433,7 @@ class UserMenu extends UI5Element {
 		this._titleMovedToHeader = false;
 		this._isScrolled = false;
 		this._setupObserver();
+		this._menuItems[0]?.getFocusDomRef()?.focus();
 		this.fireDecoratorEvent("open");
 	}
 
