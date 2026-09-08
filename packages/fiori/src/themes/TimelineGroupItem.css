@@ -24,6 +24,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 0.125rem;
+	margin-inline-end: calc(-1 * var(--_ui5_TimelineItem_bubble_border_right));
 }
 
 .ui5-tlgi-icon-placeholder {
