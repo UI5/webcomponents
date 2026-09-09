@@ -250,6 +250,9 @@ import UserSettingsAccountViewClass from "@ui5/webcomponents-fiori/dist/UserSett
 import UserSettingsAppearanceViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceView.js";
 import UserSettingsAppearanceViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewGroup.js";
 import UserSettingsAppearanceViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsAppearanceViewItem.js";
+import UserSettingsNotificationsViewClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsView.js";
+import UserSettingsNotificationsViewGroupClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewGroup.js";
+import UserSettingsNotificationsViewItemClass from "@ui5/webcomponents-fiori/dist/UserSettingsNotificationsViewItem.js";
 
 // Import AI package
 import AIButtonClass from "@ui5/webcomponents-ai/dist/Button.js";
@@ -331,7 +334,9 @@ const ComponentClasses: Record<string, any> = {
   SearchItemGroupClass, SearchItemShowMoreClass, SearchScopeClass, ShellBarBrandingClass,
   ShellBarSearchClass, ShellBarSpacerClass, UserSettingsDialogClass, UserSettingsItemClass,
   UserSettingsViewClass, UserSettingsAccountViewClass, UserSettingsAppearanceViewClass,
-  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass, HeroBannerClass,
+  UserSettingsAppearanceViewGroupClass, UserSettingsAppearanceViewItemClass,
+  UserSettingsNotificationsViewClass, UserSettingsNotificationsViewGroupClass,
+  UserSettingsNotificationsViewItemClass, HeroBannerClass,
   // ai package
   AIButtonClass, AIButtonStateClass, AIInputClass, AITextAreaClass, AIPromptInputClass,
   // compat package

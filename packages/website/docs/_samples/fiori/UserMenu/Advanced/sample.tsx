@@ -15,6 +15,7 @@ import "@ui5/webcomponents-icons/dist/collaborate.js";
 import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
+import "@ui5/webcomponents-icons/dist/home.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
@@ -149,7 +150,7 @@ function App() {
           subtitleText="davud,wilson@sap.com"
           description="Project Manager"
         />
-        <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
+        <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
         <UserMenuItem
           icon="collaborate"
           text="Product-specific account action"
@@ -158,14 +159,15 @@ function App() {
           <UserMenuItem text="Terms of Use" data-id="terms-of-use" />
           <UserMenuItem text="Private Policy" data-id="privacy-policy" />
         </UserMenuItem>
-        <UserMenuItem icon="official-service" text="Legal Information" />
-        <UserMenuItem icon="message-information" text="About" data-id="about" />
-        <UserMenuItem icon="globe" text="Language" data-id="single-select" showSelection={true}>
+        <UserMenuItem icon="home" text="Default Landing Page" data-id="default-landing-page" showSelection={true}>
           <UserMenuItemGroup checkMode="Single">
-            <UserMenuItem text="English" data-id="single-select-item1" checked={true} />
-            <UserMenuItem text="Deutsch" data-id="single-select-item2" />
+            <UserMenuItem text="Home Page" data-id="home-page" checked={true} />
+            <UserMenuItem text="Dashboard" data-id="dashboard" />
+            <UserMenuItem text="Admin Settings" data-id="admin-settings" />
           </UserMenuItemGroup>
         </UserMenuItem>
+        <UserMenuItem icon="official-service" text="Legal Information" />
+        <UserMenuItem icon="message-information" text="About" data-id="about" />
       </UserMenu>
     </>
   );

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** translate week number aria-label in DayPicker ([#14014](https://github.com/UI5/webcomponents/issues/14014)) ([ba03d30](https://github.com/UI5/webcomponents/commit/ba03d30eef0111d4ce56d095b1687ab917cb51b2))
+* **ui5-icon:** suppress native click propagation for Image mode ([#13997](https://github.com/UI5/webcomponents/issues/13997)) ([9ed07b6](https://github.com/UI5/webcomponents/commit/9ed07b62621e7d639259c87c3cbaca8c49363621)), closes [#13972](https://github.com/UI5/webcomponents/issues/13972)
+* **ui5-list:** suppress hidden text announcement for InactiveSelectable items ([#14011](https://github.com/UI5/webcomponents/issues/14011)) ([2a15c4d](https://github.com/UI5/webcomponents/commit/2a15c4d6999e41e860a96a663127bebf4ae4d64f))
+* **ui5-option-group:** remove unrelated inherited public APIs ([#13998](https://github.com/UI5/webcomponents/issues/13998)) ([f2ab028](https://github.com/UI5/webcomponents/commit/f2ab028a281a4205b0074ecee019eacf35f1852e)), closes [#13992](https://github.com/UI5/webcomponents/issues/13992) [#13991](https://github.com/UI5/webcomponents/issues/13991)
+* **ui5-popover:** prevent horizontal position drift on reposition ([#13987](https://github.com/UI5/webcomponents/issues/13987)) ([e85de78](https://github.com/UI5/webcomponents/commit/e85de78e22646435c562fb161ba4ca304a4b0d81)), closes [#13863](https://github.com/UI5/webcomponents/issues/13863)
+* **ui5-split-button:** announce accessible name before instructions ([#13901](https://github.com/UI5/webcomponents/issues/13901)) ([36f505f](https://github.com/UI5/webcomponents/commit/36f505f0e159b2fc39ab10020c749495fb3f6d6b))
+
+
+### Features
+
+* **ui5-toolbar-button:** add accessibleDescription property ([#13978](https://github.com/UI5/webcomponents/issues/13978)) ([3d2e281](https://github.com/UI5/webcomponents/commit/3d2e281a93ba66652e317015f48dfd3e523ed6ac)), closes [#13591](https://github.com/UI5/webcomponents/issues/13591)
+* **ui5-toolbar-button:** add accessibleRole property ([#13979](https://github.com/UI5/webcomponents/issues/13979)) ([e9c91e9](https://github.com/UI5/webcomponents/commit/e9c91e9618477d75de059227158722aa3feb6ff8)), closes [#13070](https://github.com/UI5/webcomponents/issues/13070)
+
+
+
+
+
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Bug Fixes
+
+* **ui5-avatar:** include badge tooltip in aria-label ([#13960](https://github.com/UI5/webcomponents/issues/13960)) ([a2d835f](https://github.com/UI5/webcomponents/commit/a2d835f3aae2299c84d7a0095334ee515668a57d))
+* **ui5-cb-item-group:** expose 'title' CSS shadow part via exportparts ([#13958](https://github.com/UI5/webcomponents/issues/13958)) ([5919eb7](https://github.com/UI5/webcomponents/commit/5919eb7bb0203e5d02c2acd85fdc2521ab60a8a3)), closes [#13936](https://github.com/UI5/webcomponents/issues/13936)
+* **ui5-icon:** replace size containment with font-size for icon sizing ([#13981](https://github.com/UI5/webcomponents/issues/13981)) ([b604bb3](https://github.com/UI5/webcomponents/commit/b604bb323071db5896a119365d4044c5044d0745))
+* **ui5-time-picker:** correct color and font tokens per UXC visual spec ([#13980](https://github.com/UI5/webcomponents/issues/13980)) ([8357e8d](https://github.com/UI5/webcomponents/commit/8357e8dba9703d689cfb0aa7fbdf88f895f511fe))
+
+
+### Features
+
+* **ui5-list:** add InactiveSelectable list item type ([#13962](https://github.com/UI5/webcomponents/issues/13962)) ([fc75e84](https://github.com/UI5/webcomponents/commit/fc75e84a32fe4efe5eefe16de0a3df9eacb78e68))
+* **ui5-number-input:** introduce NumberInput component ([#13799](https://github.com/UI5/webcomponents/issues/13799)) ([4c73dd5](https://github.com/UI5/webcomponents/commit/4c73dd576f4bd1093178a1f77949225e4b51f763))
+* **ui5-select:** add ui5-option-group component for grouped options ([#13913](https://github.com/UI5/webcomponents/issues/13913)) ([2fb0efd](https://github.com/UI5/webcomponents/commit/2fb0efd0052679400af0785d2ca09dcfa5b47756))
+
+
+
+
+
 # [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
 
 

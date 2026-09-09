@@ -249,6 +249,9 @@ class Icon extends UI5Element implements IIcon {
 
 	_onclick(e: MouseEvent) {
 		if (this.mode !== IconMode.Interactive) {
+			if (this.mode === IconMode.Image) {
+				e.stopPropagation();
+			}
 			return;
 		}
 
