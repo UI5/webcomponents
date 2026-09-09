@@ -13,8 +13,6 @@ Detailed conventions for authoring a Cypress spec: file layout, meaningful asser
 | `packages/{package}/cypress/specs/{ComponentName}.cy.tsx` | Main spec |
 | `packages/{package}/cypress/specs/{ComponentName}.mobile.cy.tsx` | Phone-only tests — use when tests require `cy.ui5SimulateDevice("phone")` for the entire file |
 
-Use a separate `.mobile.cy.tsx` file when all tests in it need phone simulation. Do not add `cy.ui5SimulateDevice("phone")` to a `beforeEach` in the main spec just to group mobile tests — put them in a dedicated mobile file instead.
-
 ### Minimal structure
 ```typescript
 import ComponentName from "../../src/ComponentName.js";
@@ -24,9 +22,12 @@ describe("{ComponentName}", () => {
 		cy.mount(<ComponentName />);
 
 		cy.get<ComponentName>("[ui5-component-name]")
+			.as("component");
+
+		cy.get("@component")
 			.should("exist");
 		// Add at least one meaningful assertion beyond "exist"
-		cy.get<ComponentName>("[ui5-component-name]")
+		cy.get("@component")
 			.shadow()
 			.find(".ui5-component-root")
 			.should("be.visible");
@@ -44,20 +45,133 @@ A test only asserting `"exist"` is not meaningful. A meaningful test asserts:
 - The **keyboard path**, not just the click path — test `realPress` navigation as well as `realClick`
 - **Disabled and read-only states do not react** — assert that interactions produce no change
 
+#### Rendered state reflects the props
+
 **Weak (avoid):**
 ```typescript
+cy.mount(<Button design="Negative">Delete</Button>);
+
 cy.get("[ui5-button]")
 	.should("exist");
 ```
 
 **Strong (prefer):**
 ```typescript
+cy.mount(<Button design="Negative">Delete</Button>);
+
 cy.get("[ui5-button]")
-	.should("have.attr", "disabled");
+	.shadow()
+	.find(".ui5-button-root")
+	.should("have.class", "ui5-button-negative");
+```
+
+#### Events fire when expected
+
+**Weak (avoid):**
+```typescript
+cy.mount(<Button>Press</Button>);
+
+cy.get("[ui5-button]")
+	.realClick();
+// no assertion that anything happened
+```
+
+**Strong (prefer):**
+```typescript
+cy.mount(<Button onClick={cy.stub().as("click")}>Press</Button>);
+
+cy.get("[ui5-button]")
+	.realClick();
+cy.get("@click")
+	.should("have.been.calledOnce");
+```
+
+#### Accessibility attributes are correct
+
+**Weak (avoid):**
+```typescript
+cy.mount(<Button accessibleName="Close dialog" />);
+
+cy.get("[ui5-button]")
+	.should("exist");
+```
+
+**Strong (prefer):**
+```typescript
+cy.mount(<Button accessibleName="Close dialog" />);
+
 cy.get("[ui5-button]")
 	.shadow()
 	.find("button")
+	.should("have.attr", "aria-label", "Close dialog");
+```
+
+#### Behavior after interaction
+
+**Weak (avoid):**
+```typescript
+cy.mount(<Popover opener="btn"><span>Content</span></Popover>);
+
+cy.get("[ui5-popover]")
+	.should("exist");
+```
+
+**Strong (prefer):**
+```typescript
+cy.mount(<Popover opener="btn" open><span>Content</span></Popover>);
+
+cy.get("[ui5-popover]")
+	.should("have.attr", "open");
+cy.get("[ui5-popover]")
+	.shadow()
+	.find(".ui5-popup-root")
+	.should("be.visible");
+```
+
+#### Keyboard path, not just the click path
+
+**Weak (avoid):**
+```typescript
+cy.mount(<Button>Press</Button>);
+
+cy.get("[ui5-button]")
+	.realClick();
+cy.get("@click")
+	.should("have.been.calledOnce");
+```
+
+**Strong (prefer):**
+```typescript
+cy.mount(<Button onClick={cy.stub().as("click")}>Press</Button>);
+
+cy.get("[ui5-button]")
+	.realClick();
+cy.get("[ui5-button]")
+	.realPress("Space");
+cy.get("[ui5-button]")
+	.realPress("Enter");
+cy.get("@click")
+	.should("have.been.calledThrice");
+```
+
+#### Disabled and read-only states do not react
+
+**Weak (avoid):**
+```typescript
+cy.mount(<Button disabled>Press</Button>);
+
+cy.get("[ui5-button]")
 	.should("have.attr", "disabled");
+```
+
+**Strong (prefer):**
+```typescript
+cy.mount(<Button disabled onClick={cy.stub().as("click")}>Press</Button>);
+
+cy.get("[ui5-button]")
+	.realClick({ force: true });
+cy.get("@click")
+	.should("not.have.been.called");
 ```
 
 ### Testing events
