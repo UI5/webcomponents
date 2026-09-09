@@ -30,6 +30,19 @@ This skill helps write and review Cypress component tests for UI5 web components
 
 ---
 
+## Running tests
+
+Run tests from the package folder (`packages/main`, `packages/fiori`, etc.), scoping the run to the component you are working on rather than the whole suite — the full suite is slow and rarely what you need locally:
+
+```bash
+cd packages/main
+yarn test:cypress:single cypress/specs/<Component>.cy.tsx
+```
+
+While iterating on a single failing case, add `.only` to that `it()` so only it runs, then remove it and run the full spec once before committing.
+
+---
+
 ## Core Rules
 
 ### Interacting — always use real events
@@ -55,10 +68,6 @@ cy.get("@input")
 cy.realType("23");
 ```
 
-**There is no `realClear()`.** To clear a native input inside the shadow root use Cypress's built-in `.clear()`. Otherwise: select all and type over, press Escape, or click the component's own clear icon.
-
-**Never use `cy.wait(<number>)`.** Assert the condition instead — `should` retries automatically. To wait for a render cycle use `cy.waitRenderFinished()`:
-
 ```typescript
 // Wrong — numeric wait
 cy.wait(3000);
@@ -68,9 +77,6 @@ cy.get("[ui5-responsive-popover]")
 // Right — assert the condition; should retries
 cy.get("[ui5-responsive-popover]")
 	.ui5ResponsivePopoverClosed();
-
-// When you need to wait for a render cycle
-cy.waitRenderFinished();
 ```
 
 ### Always use attribute selectors
@@ -168,16 +174,6 @@ cy.get("@clicked")
 	.should("have.been.calledOnce");
 ```
 
-### Multiple assertions — use `.and()`
-
-```typescript
-cy.get("@clickHandler")
-	.should("have.been.calledOnce")
-	.and("be.calledWithMatch", {
-		type: "click"
-	});
-```
-
 ### `.then()` callbacks
 
 Opening brace on the same line as the arrow function; body indented; closing brace on its own line:
@@ -216,6 +212,10 @@ Use **tabs**, not spaces.
 Pass the concrete component type as a generic to `cy.get<T>()` so TypeScript can verify that the commands chained on the result are valid for that element type. Do this for every `cy.get` that selects a UI5 component — both selector strings and aliases.
 
 ```typescript
+// Assume the DatePicker was aliased once after mount:
+cy.get<DatePicker>("[ui5-date-picker]")
+	.as("datePicker");
+
 // Wrong — TypeScript cannot verify commands are valid for this element
 cy.get("[ui5-date-picker]")
 	.ui5DatePickerGetCalendar();
@@ -282,14 +282,13 @@ cy.get<Input>("[ui5-input]")
 		const padding = getComputedStyle($icon[0])
 			.getPropertyValue("--_ui5_input_icon_state_padding")
 			.trim();
-		expect(padding).to.not.equal("");
+		expect(padding).to.equal("0.5rem");
 	});
 ```
 
 Rules:
 - Assert the specific declared value where one exists (`.to.equal("none")`), not just `.to.not.equal("")`.
 - Only reach for computed styles when a class assertion cannot express the check — prefer `should("have.class", ...)` when a class reflects the state.
-- Private custom properties (`--_ui5_*`) are internal contracts; when asserting on them, add a short comment explaining which selector publishes the value.
 
 ### Asserting on events
 
@@ -313,20 +312,20 @@ cy.get("@clickHandler")
 
 ### Asserting on focus
 
-`UI5Element.focus()` is asynchronous — an alias captured before the interaction can be stale and race in CI:
+Focus assertions on a saved alias are unreliable across the shadow boundary. When an element inside a shadow root is focused, `document.activeElement` **retargets** to the nearest host — so `have.focus` on a *nested* aliased element fails (its focus is attributed to the outer host), while `have.focus` on a *top-level* host may pass unexpectedly. Assert against the truly-focused element with `cy.focused()`, which drills through shadow roots to the innermost focused node:
 
 ```typescript
-// Wrong — races in CI
+// Wrong — @defaultColorButton is nested in a shadow root; focus retargets to the outer host
 cy.get("@defaultColorButton")
 	.should("have.focus");
 
-// Right — cy.focused() returns the live inner shadow focus ref
+// Right — cy.focused() drills through shadow roots to the innermost focused element
 cy.focused()
 	.should("have.attr", "aria-label")
 	.and("include", "cyan");
 ```
 
-`cy.focused()` returns the inner shadow focus ref, not the host element — assert `aria-label` or other attributes present on that ref, not host-level properties.
+`cy.focused()` returns the innermost shadow focus ref, not the host element — assert `aria-label` or other attributes present on that ref, not host-level properties.
 
 ---
 

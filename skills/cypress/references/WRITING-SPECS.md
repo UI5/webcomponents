@@ -176,10 +176,10 @@ cy.get("@click")
 
 ### Testing events
 
-Two patterns exist — use JSX props when the event is exposed as a prop, `addEventListener` otherwise:
+Every event dispatched by the framework is available as a JSX prop — prefer passing the stub directly as a prop. `addEventListener` is the older approach and is only worth using for native DOM events or when you must attach a listener after mount:
 
 ```typescript
-// When the event is exposed as a JSX prop — pass the stub directly
+// Preferred — every framework event is exposed as a JSX prop, pass the stub directly
 const onNavigate = cy.stub().as("navigate");
 cy.mount(
 	<Carousel onNavigate={onNavigate}>
@@ -190,7 +190,7 @@ cy.mount(
 cy.get("@navigate")
 	.should("have.been.calledOnce");
 
-// When the event is not exposed as a JSX prop — attach via addEventListener
+// Legacy alternative — attach via addEventListener (e.g. for native DOM events)
 cy.mount(<Button></Button>);
 
 cy.get("[ui5-button]")
@@ -230,16 +230,29 @@ cy.wrap({ setLanguage })
 ```
 
 ### Mobile / device simulation
+
+Phone-only tests belong in a separate `{ComponentName}.mobile.cy.tsx` file (see [Location](#location)), and `cy.ui5SimulateDevice("phone")` must run in a `beforeEach` **before** `cy.mount()` so the component renders its mobile path from the first render:
+
 ```typescript
-cy.mount(<MyComponent />);
-cy.ui5SimulateDevice("phone");
-cy.get("[ui5-my-component]")
-	.should("have.class", "ui5-my-component-mobile");
+describe("MyComponent - mobile", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("renders the mobile layout", () => {
+		cy.mount(<MyComponent />);
+
+		cy.get("[ui5-my-component]")
+			.should("have.class", "ui5-my-component-mobile");
+	});
+});
 ```
 
 ### Freezing time with `cy.clock`
 
-Components that depend on the current date/time (`Calendar`, `DatePicker`, `DateTimePicker`, `TimePicker`, `DateRangePicker`, `DynamicDateRange`) render differently every day. A test that mounts them without pinning the clock is non-deterministic — it passes today and fails on another date. Freeze the clock in `beforeEach` **before** `cy.mount()`, and only stub the `Date` object:
+Components that depend on the current date/time (`Calendar`, `DatePicker`, `DateTimePicker`, `TimePicker`, `DateRangePicker`, `DynamicDateRange`) render differently every day. A test that mounts them without pinning the clock is non-deterministic — it passes today and fails on another date. The critical rule is that the clock must be frozen **before** `cy.mount()`, and only the `Date` object should be stubbed.
+
+Use `beforeEach` when every test in the block shares the same frozen time:
 
 ```typescript
 describe("DatePicker", () => {
@@ -254,6 +267,17 @@ describe("DatePicker", () => {
 });
 ```
 
+Set it inline when only one test needs a frozen clock, or when tests in the block need different dates — just keep it before `cy.mount()`:
+
+```typescript
+it("marks a specific day as today", () => {
+	cy.clock(new Date("Jan 15, 2024").getTime(), ["Date"]);
+
+	cy.mount(<DatePicker value="Jan 15, 2024" />);
+	// ...
+});
+```
+
 Rules:
 - Pass `["Date"]` as the second argument so only `Date` is faked — faking `setTimeout`/`setInterval` (the default) can freeze the component's own async rendering and hang the test.
 - Set the clock **before** `cy.mount()` so the component reads the frozen time during its first render.
@@ -262,7 +286,7 @@ Rules:
 
 ### Viewport sizing for responsive tests
 
-`cy.ui5SimulateDevice("phone")` only flips the `isPhone` flag — it does **not** resize the window. To test overflow, breakpoints, or layout that reacts to the actual window size (e.g. `Toolbar`, `Carousel`, `Dialog`, `Tokenizer`, `Popover`), set the real viewport with `cy.viewport(width, height)`:
+`cy.ui5SimulateDevice("phone")` is **not** a substitute here — it only flips the `isPhone` flag and does **not** resize the window. To test overflow, breakpoints, or layout that reacts to the actual window size (e.g. `Toolbar`, `Carousel`, `Dialog`, `Tokenizer`, `Popover`), set the real viewport with `cy.viewport(width, height)`:
 
 ```typescript
 it("overflows items into the menu below 400px", () => {
@@ -339,13 +363,11 @@ cy.get("#cb:invalid")
 | Command | Behaviour |
 |---------|-----------|
 | `cy.mount(jsx)` | Mount, wait for render, wait for `document.fonts.ready` |
-| `cy.waitRenderFinished()` | Drain the render queue — use instead of `cy.wait(<number>)` |
+| `cy.waitRenderFinished()` | Drain the render queue. **Rarely needed** — `cy.mount()` and the `real*` interactions already wait for rendering. Only reach for it after a direct property/attribute mutation that isn't followed by a `real*` call. Never use `cy.wait(<number>)`. |
 | `cy.ui5SimulateDevice("phone")` | Force phone behaviour; `"phone"` is the only valid device |
 | `cy.ui5AssertValidityState(partial)` | Assert any subset of form validity state |
 | `realClick`, `realHover`, `realPress`, `realType` | Wait for render before dispatching real events |
 | `cy.screenshot` | Honoured with `SCREENSHOT_DELAY` env var |
-
-**`cy.ui5DOMRef()` is declared in `support/commands.ts` but never implemented — it will fail at runtime. Do not call it.**
 
 **Import every icon you use.** The test bundle contains all icons, so a missing import passes locally and breaks in a real application.
 
@@ -368,14 +390,6 @@ const getDefaultCalendar = (date: Date) => {
 		</Calendar>
 	);
 };
-
-const getCalendarWithDisabledDates = (id: string, formatPattern: string, ranges: DateRange[]) => (
-	<Calendar id={id} formatPattern={formatPattern}>
-		{ranges.map((range, idx) => (
-			<CalendarDateRange key={idx} slot="disabledDates" startValue={range.startValue} endValue={range.endValue} />
-		))}
-	</Calendar>
-);
 
 // Use in tests
 describe("Calendar", () => {

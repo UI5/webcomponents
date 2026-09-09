@@ -26,10 +26,10 @@ Read the `support/commands/` file for the relevant family before assuming a `Clo
 ## Identifying Repetitive Patterns → Custom Commands
 
 When writing or reviewing tests, look for:
-- The same sequence of `cy.get` + `cy.invoke("attr", ...)` + assertion appearing in 2+ tests
+- The same sequence of getting an element, mutating an attribute, and asserting on the result appearing in 2+ tests
+- Repetitive identical actions repeated across tests (the same interaction steps copy-pasted between `it()` blocks)
 - Open/close sequences for overlay components (dialogs, popovers, menus, pickers)
 - "Wait for component to be ready" sequences (shadow DOM existence + popover open + size > 0)
-- Multi-step form interactions (type, blur, assert validation)
 
 When you find such a pattern, extract it into a custom command.
 
@@ -37,26 +37,17 @@ When you find such a pattern, extract it into a custom command.
 
 ## POM Coverage: Every Internal Sub-Element Needs a Command
 
-When creating or reviewing a commands file for a component, **every internal sub-element the tests interact with must have a dedicated getter command**. Do not leave raw `.shadow().find("ui5-...")` chains in the spec file.
+When creating or reviewing a commands file for a component, **every internal sub-element that tests need to get in order to chain further actions off it, and that is accessed in more than one place, must have a dedicated getter command**. Do not leave such repeated `.shadow().find("ui5-...")` chains in the spec file. A one-off access used a single time in a single test does not need its own command — inline it there.
 
 ### What to cover
 
-For a picker-type component (DatePicker, DateTimePicker, etc.):
-- The input element (`ui5DatePickerGetDateTimeInput`)
-- The native input inside the input (`ui5DatePickerGetInnerInput`)
-- The icon (`ui5DatePickerGetIcon`)
-- The popover/responsive-popover (`ui5DatePickerGetPopover`)
-- The calendar (`ui5DatePickerGetCalendar`) — chains off datePicker
-- Navigation buttons (`ui5DatePickerGetNextButton`, `ui5DatePickerGetPreviousButton`)
-- Header buttons (`ui5DatePickerGetMonthButton`, `ui5DatePickerGetYearButton`)
+Cover the internal sub-elements that tests repeatedly reach into, regardless of component type. Typical categories:
+- **Interactive parts** — the input, trigger, icon, buttons, or handles a test drives
+- **Overlay parts** — the popover / responsive-popover / dialog a component opens
+- **Nested components** — a child custom element rendered in the shadow root (its own sub-elements belong in *its* commands file — see "Commands belong to the subject's component" below)
+- **Collection items** — rows, cells, list items, tokens, tabs, or menu items a test selects or asserts on
 
-Sub-elements of `ui5-calendar` belong in `Calendar.commands.ts`, not in the picker's commands file (see "Commands belong to the subject's component" below):
-- The day picker (`ui5CalendarGetDayPicker`)
-- The month picker (`ui5CalendarGetMonthPicker`)
-- The year picker (`ui5CalendarGetYearPicker`)
-
-For a menu/navigation component: the trigger, the list items, the sub-menus.
-For a table: rows, cells, column headers, toolbar.
+Name each getter after its subject type and the part it returns (e.g. `ui5<Component>Get<Part>`). Only add a getter when the part is chained off in more than one place; don't pre-emptively create getters for parts no test touches.
 
 ### Commands belong to the subject's component type
 
@@ -103,26 +94,28 @@ cy.get<Calendar>("@calendar")
 	.should("be.visible");
 ```
 
-### Rule: no bare tag selectors in specs
+### Rule: prefer attribute selectors, extract a command when repeated
 
-In specs, **never** use bare tag names in `find()`:
+A `find()` inside a spec is fine for a one-off access — but if the **same** `find()` for a sub-element appears in more than one place, extract it into a getter command. When you do use `find()` inline, use the attribute selector (`[ui5-...]`), never a bare tag name:
 ```typescript
-// Wrong — bare tag selector, bypasses POM
+// Acceptable — single, one-off access with an attribute selector
 cy.get<DatePicker>("@datePicker")
 	.shadow()
-	.find("ui5-calendar")
-cy.get<Calendar>("@calendar")
-	.shadow()
-	.find("ui5-daypicker")
+	.find("[ui5-calendar]");
 
-// Right — use POM commands
+// Avoid — bare tag selector
+cy.get<DatePicker>("@datePicker")
+	.shadow()
+	.find("ui5-calendar");
+
+// Best when repeated — the same lookup used in 2+ places belongs in a POM command
 cy.get<DatePicker>("@datePicker")
 	.ui5DatePickerGetCalendar()
 cy.get<Calendar>("@calendar")
 	.ui5CalendarGetDayPicker()
 ```
 
-The only exception: `find()` inside a getter command's own implementation — the command itself must reference the tag name to locate the element.
+Inside a getter command's own implementation, `find()` with an attribute selector is expected — that is where the actual element lookup lives.
 
 ---
 

@@ -157,7 +157,7 @@ this.fireDecoratorEvent("change", { value: this.value });
 
 All component tests are Cypress component tests written in TSX. The full testing conventions — mounting, selectors, real events, custom commands, assertions, i18n, and flaky-test recipes — live in the **Cypress skill** at [`skills/cypress/SKILL.md`](../../skills/cypress/SKILL.md).
 
-**When to load it:** any time you are writing, modifying, or debugging a Cypress spec.
+**When to load it:** any time you are writing or debugging Cypress tests.
 
 **How to use it:** open `SKILL.md`, read the routing table at the top, then open **only** the one reference file it names for your task. Do not read every file.
 
