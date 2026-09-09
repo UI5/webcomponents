@@ -4,7 +4,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
-import ListItemGroup from "./ListItemGroup.js";
+import ListItemGroupBase from "./ListItemGroupBase.js";
 import type Option from "./Option.js";
 import OptionGroupTemplate from "./OptionGroupTemplate.js";
 import { LIST_ITEM_GROUP_HEADER } from "./generated/i18n/i18n-defaults.js";
@@ -21,7 +21,7 @@ import OptionGroupCss from "./generated/themes/OptionGroup.css.js";
  *
  * `import "@ui5/webcomponents/dist/OptionGroup.js";`
  * @constructor
- * @extends ListItemGroup
+ * @extends ListItemGroupBase
  * @public
  * @since 2.26.0
  */
@@ -31,8 +31,8 @@ import OptionGroupCss from "./generated/themes/OptionGroup.css.js";
 	template: OptionGroupTemplate,
 	styles: [OptionGroupCss],
 })
-class OptionGroup extends ListItemGroup {
-	eventDetails!: ListItemGroup["eventDetails"];
+class OptionGroup extends ListItemGroupBase {
+	eventDetails!: ListItemGroupBase["eventDetails"];
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;

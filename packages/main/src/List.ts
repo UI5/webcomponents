@@ -1430,7 +1430,7 @@ class List extends UI5Element {
 		this._itemNavigation.setCurrentItem(target);
 		this.fireDecoratorEvent("item-focused", { item: target });
 
-		if (this.selectionMode === ListSelectionMode.SingleAuto) {
+		if (this.selectionMode === ListSelectionMode.SingleAuto && !(target as ListItem).isInactiveSelectable) {
 			const detail: SelectionRequestEventDetail = {
 				item: target,
 				selectionComponentPressed: false,

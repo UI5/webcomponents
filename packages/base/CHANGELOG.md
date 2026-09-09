@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **framework:** guard adopted stylesheet wrappers against Safari GC bug ([#14000](https://github.com/UI5/webcomponents/issues/14000)) ([1feb9bd](https://github.com/UI5/webcomponents/commit/1feb9bd65928b83395e20010061b79d4a9200a3b))
+
+
+
+
+
 # [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
 
 **Note:** Version bump only for package @ui5/webcomponents-base

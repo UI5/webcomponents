@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** translate week number aria-label in DayPicker ([#14014](https://github.com/UI5/webcomponents/issues/14014)) ([ba03d30](https://github.com/UI5/webcomponents/commit/ba03d30eef0111d4ce56d095b1687ab917cb51b2))
+* **ui5-icon:** suppress native click propagation for Image mode ([#13997](https://github.com/UI5/webcomponents/issues/13997)) ([9ed07b6](https://github.com/UI5/webcomponents/commit/9ed07b62621e7d639259c87c3cbaca8c49363621)), closes [#13972](https://github.com/UI5/webcomponents/issues/13972)
+* **ui5-list:** suppress hidden text announcement for InactiveSelectable items ([#14011](https://github.com/UI5/webcomponents/issues/14011)) ([2a15c4d](https://github.com/UI5/webcomponents/commit/2a15c4d6999e41e860a96a663127bebf4ae4d64f))
+* **ui5-option-group:** remove unrelated inherited public APIs ([#13998](https://github.com/UI5/webcomponents/issues/13998)) ([f2ab028](https://github.com/UI5/webcomponents/commit/f2ab028a281a4205b0074ecee019eacf35f1852e)), closes [#13992](https://github.com/UI5/webcomponents/issues/13992) [#13991](https://github.com/UI5/webcomponents/issues/13991)
+* **ui5-popover:** prevent horizontal position drift on reposition ([#13987](https://github.com/UI5/webcomponents/issues/13987)) ([e85de78](https://github.com/UI5/webcomponents/commit/e85de78e22646435c562fb161ba4ca304a4b0d81)), closes [#13863](https://github.com/UI5/webcomponents/issues/13863)
+* **ui5-split-button:** announce accessible name before instructions ([#13901](https://github.com/UI5/webcomponents/issues/13901)) ([36f505f](https://github.com/UI5/webcomponents/commit/36f505f0e159b2fc39ab10020c749495fb3f6d6b))
+
+
+### Features
+
+* **ui5-toolbar-button:** add accessibleDescription property ([#13978](https://github.com/UI5/webcomponents/issues/13978)) ([3d2e281](https://github.com/UI5/webcomponents/commit/3d2e281a93ba66652e317015f48dfd3e523ed6ac)), closes [#13591](https://github.com/UI5/webcomponents/issues/13591)
+* **ui5-toolbar-button:** add accessibleRole property ([#13979](https://github.com/UI5/webcomponents/issues/13979)) ([e9c91e9](https://github.com/UI5/webcomponents/commit/e9c91e9618477d75de059227158722aa3feb6ff8)), closes [#13070](https://github.com/UI5/webcomponents/issues/13070)
+
+
+
+
+
 # [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
 
 

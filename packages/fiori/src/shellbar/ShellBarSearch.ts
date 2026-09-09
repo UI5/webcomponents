@@ -1,4 +1,4 @@
-import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
+import { isPhone, isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type { IShellBarSearchField } from "../ShellBar.js";
 import type { IShellBarSearchController } from "./IShellBarSearchController.js";
 
@@ -68,6 +68,7 @@ class ShellBarSearch implements IShellBarSearchController {
 	/**
 	 * Auto-collapse/restore search field based on available space.
 	 * Delegates decision logic to SearchController.
+	 * Note: on non-desktop devices (phone/tablet), auto-expand is suppressed — expansion must come from an explicit user tap.
 	 */
 	autoManageSearchState(hiddenItems: number, availableSpace: number) {
 		if (!this.hasSearchField) {
@@ -88,7 +89,7 @@ class ShellBarSearch implements IShellBarSearchController {
 
 		if (hiddenItems > 0 && !preventCollapse) {
 			this.setSearchState(false);
-		} else if (availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
+		} else if (isDesktop() && availableSpace + this.getSearchButtonSize() > searchFieldWidth) {
 			this.setSearchState(true);
 		}
 
