@@ -14,26 +14,26 @@ const TableCell = createReactComponent(TableCellClass);
 function App() {
   return (
     <InputTableSuggest placeholder="Search for products..." showSuggestions>
-      <TableHeaderRow slot="suggestionColumns">
+      <TableHeaderRow slot="headerRow">
         <TableHeaderCell width="120px">Product ID</TableHeaderCell>
         <TableHeaderCell width="200px">Name</TableHeaderCell>
         <TableHeaderCell minWidth="100px">Category</TableHeaderCell>
         <TableHeaderCell width="80px">Price</TableHeaderCell>
       </TableHeaderRow>
 
-      <TableRow slot="suggestionRows">
+      <TableRow>
         <TableCell>PRD-001</TableCell>
         <TableCell>Laptop Pro 15</TableCell>
         <TableCell>Electronics</TableCell>
         <TableCell>$1,299</TableCell>
       </TableRow>
-      <TableRow slot="suggestionRows">
+      <TableRow>
         <TableCell>PRD-002</TableCell>
         <TableCell>Smartphone X</TableCell>
         <TableCell>Electronics</TableCell>
         <TableCell>$899</TableCell>
       </TableRow>
-      <TableRow slot="suggestionRows">
+      <TableRow>
         <TableCell>PRD-003</TableCell>
         <TableCell>Wireless Mouse</TableCell>
         <TableCell>Accessories</TableCell>

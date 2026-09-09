@@ -19,7 +19,7 @@ const employees = [
 const input = document.getElementById("employee-input");
 
 function updateSuggestions(filterValue) {
-    input.querySelectorAll("[slot='suggestionRows']").forEach(row => row.remove());
+    input.querySelectorAll("[ui5-table-row]").forEach(row => row.remove());
 
     const filtered = filterValue
         ? employees.filter(emp =>
@@ -31,7 +31,6 @@ function updateSuggestions(filterValue) {
 
     filtered.forEach(emp => {
         const row = document.createElement("ui5-table-row");
-        row.slot = "suggestionRows";
 
         [emp.name, emp.department, emp.location, emp.email, emp.phone, emp.office].forEach(value => {
             const cell = document.createElement("ui5-table-cell");

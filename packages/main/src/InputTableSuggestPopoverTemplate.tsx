@@ -136,8 +136,8 @@ function tabularSuggestionsList(this: InputTableSuggest): JsxTemplateResult {
 				overflowMode={this._overflowMode}
 				accessibleName={this.suggestionsText}
 			>
-				<slot name="suggestionColumns" slot="headerRow"></slot>
-				<slot name="suggestionRows"></slot>
+				<slot name="headerRow" slot="headerRow"></slot>
+				<slot></slot>
 			</Table>
 		</div>
 	);

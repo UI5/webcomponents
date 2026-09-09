@@ -20,7 +20,6 @@ const cellRefs = [];
 
 products.forEach(product => {
     const row = document.createElement("ui5-table-row");
-    row.slot = "suggestionRows";
 
     [product.name, product.id, product.category].forEach(text => {
         const cell = document.createElement("ui5-table-cell");

@@ -53,7 +53,7 @@ function App() {
       style={{ width: "420px" }}
       onInput={handleInput}
     >
-      <TableHeaderRow slot="suggestionColumns">
+      <TableHeaderRow slot="headerRow">
         <TableHeaderCell width="150px" importance={10}>
           Name
         </TableHeaderCell>
@@ -75,7 +75,7 @@ function App() {
       </TableHeaderRow>
 
       {filteredEmployees.map((emp) => (
-        <TableRow key={emp.name} slot="suggestionRows">
+        <TableRow key={emp.name}>
           <TableCell>
             <span dangerouslySetInnerHTML={{ __html: markup(emp.name) }} />
           </TableCell>

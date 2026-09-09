@@ -48,7 +48,7 @@ function App() {
       style={{ width: "520px" }}
       onInput={handleInput}
     >
-      <TableHeaderRow slot="suggestionColumns">
+      <TableHeaderRow slot="headerRow">
         <TableHeaderCell width="150px">Name</TableHeaderCell>
         <TableHeaderCell width="80px">Avatar</TableHeaderCell>
         <TableHeaderCell minWidth="160px">Role</TableHeaderCell>
@@ -59,7 +59,6 @@ function App() {
       {members.map((member) => (
         <TableRow
           key={member.name}
-          slot="suggestionRows"
           hidden={query.length > 0 && !member.name.toLowerCase().includes(query)}
         >
           <TableCell>

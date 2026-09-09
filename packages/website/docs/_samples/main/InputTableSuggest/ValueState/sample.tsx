@@ -16,11 +16,11 @@ function App() {
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <InputTableSuggest placeholder="Error state..." valueState="Negative" showSuggestions>
         <div slot="valueStateMessage">Product ID is invalid. Please enter a valid ID.</div>
-        <TableHeaderRow slot="suggestionColumns">
+        <TableHeaderRow slot="headerRow">
           <TableHeaderCell width="150px">Product</TableHeaderCell>
           <TableHeaderCell minWidth="100px">Price</TableHeaderCell>
         </TableHeaderRow>
-        <TableRow slot="suggestionRows">
+        <TableRow>
           <TableCell>PRD-001</TableCell>
           <TableCell>$99</TableCell>
         </TableRow>
@@ -28,11 +28,11 @@ function App() {
 
       <InputTableSuggest placeholder="Warning state..." valueState="Critical" showSuggestions>
         <div slot="valueStateMessage">Stock is running low. Consider reordering soon.</div>
-        <TableHeaderRow slot="suggestionColumns">
+        <TableHeaderRow slot="headerRow">
           <TableHeaderCell width="150px">Product</TableHeaderCell>
           <TableHeaderCell minWidth="100px">Stock</TableHeaderCell>
         </TableHeaderRow>
-        <TableRow slot="suggestionRows">
+        <TableRow>
           <TableCell>Widget X</TableCell>
           <TableCell>5 left</TableCell>
         </TableRow>
@@ -40,11 +40,11 @@ function App() {
 
       <InputTableSuggest placeholder="Information state..." valueState="Information" showSuggestions>
         <div slot="valueStateMessage">This is just an information value state message</div>
-        <TableHeaderRow slot="suggestionColumns">
+        <TableHeaderRow slot="headerRow">
           <TableHeaderCell width="150px">Search</TableHeaderCell>
           <TableHeaderCell minWidth="100px">Results</TableHeaderCell>
         </TableHeaderRow>
-        <TableRow slot="suggestionRows">
+        <TableRow>
           <TableCell>Widget*</TableCell>
           <TableCell>25 matches</TableCell>
         </TableRow>

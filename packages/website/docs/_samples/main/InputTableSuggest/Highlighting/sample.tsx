@@ -40,7 +40,7 @@ function App() {
       style={{ width: "420px" }}
       onInput={handleInput}
     >
-      <TableHeaderRow slot="suggestionColumns">
+      <TableHeaderRow slot="headerRow">
         <TableHeaderCell width="200px">
           Name
         </TableHeaderCell>
@@ -53,7 +53,7 @@ function App() {
       </TableHeaderRow>
 
       {products.map((product) => (
-        <TableRow key={product.id} slot="suggestionRows">
+        <TableRow key={product.id}>
           <TableCell>
             <span dangerouslySetInnerHTML={{ __html: markup(product.name) }} />
           </TableCell>

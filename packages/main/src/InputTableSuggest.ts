@@ -1,5 +1,5 @@
 import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-import type { Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
@@ -59,8 +59,8 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * see more information about each suggestion before selecting it.
  *
  * This component supports:
- * - Multiple columns via the `suggestionColumns` slot
- * - Tabular rows via the `suggestionRows` slot
+ * - Multiple columns via the `headerRow` slot
+ * - Tabular rows via the default (`rows`) slot
  * - Automatic popin mode for responsive behavior
  *
  * ### Usage
@@ -75,8 +75,8 @@ type InputTableSuggestSelectionChangeEventDetail = {
  * This component uses its own tabular suggestion mechanism instead of the standard
  * `showSuggestions` / `suggestionItems` from ui5-input. The tabular suggestions
  * are defined via:
- * - `suggestionColumns`: Table header cells defining the columns
- * - `suggestionRows`: Table rows with cells containing the suggestion data
+ * - `headerRow`: Table header cells defining the columns
+ * - `rows` (default slot): Table rows with cells containing the suggestion data
  *
  * **Note:** Autocomplete (typeahead) is base on the first column of suggestion rows only.
  *
@@ -174,18 +174,18 @@ class InputTableSuggest extends InputField {
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	suggestionColumns!: Slot<TableHeaderRow>;
+	headerRow!: Slot<TableHeaderRow>;
 
 	/**
 	 * Defines the rows for the tabular suggestions.
 	 * Use the `ui5-table-row` component with `ui5-table-cell` children to define each suggestion row.
 	 *
-	 * **Note:** The cells in each row should correspond to the columns defined in the `suggestionColumns`.
+	 * **Note:** The cells in each row should correspond to the columns defined in the `headerRow`.
 	 *
 	 * @public
 	 */
-	@slot({ type: HTMLElement })
-	suggestionRows!: Slot<ITableSuggestionRow>;
+	@slot({ type: HTMLElement, "default": true })
+	rows!: DefaultSlot<ITableSuggestionRow>;
 
 	/**
 	 * Defines the overflow behavior of the suggestion table.
@@ -228,7 +228,7 @@ class InputTableSuggest extends InputField {
 	 * @private
 	 */
 	get _columns(): TableHeaderCell[] {
-		const headerRow = this.suggestionColumns[0];
+		const headerRow = this.headerRow[0];
 
 		if (!headerRow) {
 			return [];
@@ -238,7 +238,7 @@ class InputTableSuggest extends InputField {
 	}
 
 	get _allRows(): ITableSuggestionRow[] {
-		return this.suggestionRows as unknown as ITableSuggestionRow[];
+		return this.rows as unknown as ITableSuggestionRow[];
 	}
 
 	get _visibleRows(): ITableSuggestionRow[] {
@@ -246,12 +246,12 @@ class InputTableSuggest extends InputField {
 	}
 
 	_applyTableProperties() {
-		const headerRow = this.suggestionColumns[0];
+		const headerRow = this.headerRow[0];
 		if (headerRow) {
 			headerRow.sticky = true;
 		}
 
-		this.suggestionRows.forEach(row => {
+		this.rows.forEach(row => {
 			row.interactive = true;
 		});
 	}
@@ -275,12 +275,16 @@ class InputTableSuggest extends InputField {
 
 		this._isKeyNavigation = false;
 
-		// Clear any previous row selection/focus on every input (typing or deleting).
-		// When typeahead applies, onBeforeRendering re-selects the matching row; on
-		// backspace/delete autocomplete is off, so the selection is correctly reset.
-		this._deselectAllRows();
-		this._matchedTabularRow = undefined;
-		this._rowFocused = false;
+		// On backspace/delete/escape (_shouldAutocomplete is false) clear any row
+		// selection/focus. For forward typing we keep the current selection: the
+		// typeahead re-selects the matching row on re-render, and when the typed value
+		// exactly matches the already-autocompleted row the value does not change, so
+		// no re-render happens - deselecting here would drop a still-correct selection.
+		if (!this._shouldAutocomplete) {
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
+			this._rowFocused = false;
+		}
 	}
 
 	/**
@@ -323,23 +327,32 @@ class InputTableSuggest extends InputField {
 		}
 
 		const innerInput = this.getInputDOMRefSync();
-		if (!innerInput || !this.value) {
+		if (!innerInput || !this.value || this._isKeyNavigation) {
+			return;
+		}
+
+		// _shouldAutocomplete is false for backspace/delete/escape. For those we keep
+		// the row deselected (done in _input) and bail out here.
+		if (!this._shouldAutocomplete) {
+			return;
+		}
+
+		const matchingRow = this._getFirstMatchingRow(this.value);
+		if (!matchingRow) {
+			// Forward typing no longer matches any row: clear the previous selection.
+			this._deselectAllRows();
+			this._matchedTabularRow = undefined;
 			return;
 		}
 
 		const autoCompletedChars = innerInput.selectionEnd! - innerInput.selectionStart!;
 
-		if (this._shouldAutocomplete && !isAndroid() && !autoCompletedChars && !this._isKeyNavigation) {
-			const matchingRow = this._getFirstMatchingRow(this.value);
-			if (matchingRow) {
-				if (!this._isComposing) {
-					this._performRowTypeAhead(matchingRow);
-				}
-				this._selectMatchingRow(matchingRow);
-			} else {
-				this._matchedTabularRow = undefined;
-			}
+		// Suffix autocomplete only when there is nothing already autocompleted.
+		if (!isAndroid() && !autoCompletedChars && !this._isComposing) {
+			this._performRowTypeAhead(matchingRow);
 		}
+
+		this._selectMatchingRow(matchingRow);
 	}
 
 	/**

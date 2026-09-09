@@ -11,7 +11,7 @@ import "@ui5/webcomponents/dist/Tag.js";
 import generateHighlightedMarkupFirstMatch from "@ui5/webcomponents-base/dist/util/generateHighlightedMarkupFirstMatch.js";
 
 const input = document.getElementById("team-input");
-const rows = Array.from(input.querySelectorAll("[slot='suggestionRows']"));
+const rows = Array.from(input.querySelectorAll("[ui5-table-row]"));
 
 // The first column is plain text: snapshot it so we can filter against it and
 // re-highlight/clear it on every keystroke. The other columns hold rich components.
