@@ -74,6 +74,29 @@ describe("General Interaction", () => {
 		cy.get("[ui5-cb-item]").eq(2).should("not.have.prop", "_isVisible", true);
 	});
 
+	it("should not crash when an item has no text", () => {
+		cy.mount(
+			<ComboBox>
+				<ComboBoxItem text="One"></ComboBoxItem>
+				<ComboBoxItem></ComboBoxItem>
+				<ComboBoxItem text="Three"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.as("combobox")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		cy.get("[ui5-cb-item]").should("have.length", 3);
+
+		cy.get("@combobox").realPress("O");
+		cy.get("[ui5-cb-item]").eq(0).should("have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(1).should("not.have.prop", "_isVisible", true);
+		cy.get("[ui5-cb-item]").eq(2).should("not.have.prop", "_isVisible", true);
+	});
+
 	it("should open the popover when typing a value", () => {
 		cy.mount(
 			<ComboBox>
