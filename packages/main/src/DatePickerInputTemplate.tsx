@@ -6,9 +6,8 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 	return (
 		<div
 			class="ui5-date-picker-root"
-			style={{
-				width: "100%",
-			}}
+			style={{ width: "100%" }}
+			onClick={this._highZoom ? this._click : undefined}
 		>
 			<DateTimeInput
 				data-sap-focus-ref
@@ -29,13 +28,13 @@ export default function DatePickerInputTemplate(this: DatePicker) {
 				onui5-_request-submit={this._onInputRequestSubmit}
 				onKeyDown={this._onkeydown}
 				showClearIcon={this.showClearIcon}
+				onFocusIn={this._highZoom ? this._onHzFocusIn : undefined}
 			>
-
 				{!this.open && this.valueStateMessage.length > 0 &&
 					<slot name="valueStateMessage" slot="valueStateMessage"></slot>
 				}
 
-				{!this.readonly &&
+				{!this.readonly && !this._highZoom &&
 					<Icon
 						id={`${this._id}-value-help`}
 						slot="icon"

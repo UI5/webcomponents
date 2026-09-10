@@ -35,13 +35,23 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 
 				{ this.shouldDisplayValueStateMessageInResponsivePopover && valueStateTextHeader.call(this) }
 
-				<TimeSelectionClocks
-					id={`${this._id}-time-sel`}
-					value={this._timeSelectionValue}
-					formatPattern={this._formatPattern}
-					onChange={this.onTimeSelectionChange}
-					onClosePicker={this.submitPickers}
-				/>
+				{ this._highZoom
+					? <TimeSelectionInputs
+						id={`${this._id}-time-sel`}
+						class="ui5-tp-hz-inputs"
+						value={this._timeSelectionValue}
+						formatPattern={this._formatPattern}
+						_showLabels={true}
+						onChange={this.onTimeSelectionChange}
+					/>
+					: <TimeSelectionClocks
+						id={`${this._id}-time-sel`}
+						value={this._timeSelectionValue}
+						formatPattern={this._formatPattern}
+						onChange={this.onTimeSelectionChange}
+						onClosePicker={this.submitPickers}
+					/>
+				}
 
 				<div slot="footer" class="ui5-time-picker-footer">
 					<Button id="submit" design="Emphasized" onClick={this.submitPickers}>{this.submitButtonLabel}</Button>

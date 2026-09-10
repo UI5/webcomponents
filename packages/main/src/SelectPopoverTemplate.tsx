@@ -31,7 +31,7 @@ export default function SelectPopoverTemplate(this: Select) {
 					{this._isPhone &&
 						<div slot="header" class="ui5-responsive-popover-header">
 							<div class="row">
-								<Title>{this._headerTitleText}</Title>
+								<Title>{this._effectiveListAccessibleName}</Title>
 							</div>
 
 							{this.hasValueStateText &&

@@ -324,6 +324,32 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		this._togglePicker();
 	}
 
+	// range mode: validate both dates
+	override _onHzInputsChange() {
+		if (this._hzInputs) {
+			this._hzOkEnabled = this._hzInputs.validate() && this._hzInputs.validateEndDate();
+		}
+	}
+
+	// range mode: build "startDate - endDate" value string
+	override _onHzOk() {
+		if (!this._hzInputs) { return; }
+		if (!this._hzInputs.validate() || !this._hzInputs.validateEndDate()) { return; }
+		const startD = this._hzInputs.getDateObject();
+		const endSel = this._hzInputs.getSelectedSecondDate();
+		if (!startD || !endSel) { return; }
+		const endD = UI5Date.getInstance(endSel.year, endSel.month, endSel.day);
+		endD.setFullYear(endSel.year);
+		// Format the local Date objects directly (like the base single-date _onHzOk),
+		// ordering start/end chronologically. Do NOT route through _buildValue, which
+		// interprets its timestamps as UTC and would shift local dates by a day.
+		const [firstD, lastD] = startD.getTime() <= endD.getTime() ? [startD, endD] : [endD, startD];
+		const format = this.getValueFormat();
+		const newValue = `${format.format(firstD)} ${this._effectiveDelimiter} ${format.format(lastD)}`;
+		this._updateValueAndFireEvents(newValue, true, ["change", "value-changed"]);
+		this._togglePicker();
+	}
+
 	/**
 	 * @override
 	 */
