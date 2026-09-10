@@ -269,7 +269,7 @@ describe("Timeline with growing mode", () => {
 	it("scrolls horizontally focused items into view", () => {
 		cy.mount(
 			<div style={{ width: "200px" }}>
-				<Timeline layout="Horizontal" id="horizontalTimeline">
+				<Timeline layout="Horizontal">
 					<TimelineItem titleText="First" subtitleText="01.01" icon={calendar} />
 					<TimelineItem titleText="Second" subtitleText="02.01" icon={calendar} />
 					<TimelineItem titleText="Third" subtitleText="03.01" icon={calendar} />
@@ -277,23 +277,30 @@ describe("Timeline with growing mode", () => {
 			</div>
 		);
 
-		cy.get("#horizontalTimeline")
+		cy.get("[ui5-timeline]")
+			.as("timeline");
+
+		cy.get("@timeline")
 			.shadow()
 			.find(".ui5-timeline-scroll-container")
 			.as("scrollContainer");
 
-		cy.get("#horizontalTimeline")
+		cy.get("@timeline")
 			.find("ui5-timeline-item")
 			.first()
+			.as("firstItem")
 			.realClick();
 
 		cy.realPress("ArrowRight");
 		cy.realPress("ArrowRight");
 
-		cy.get("#horizontalTimeline")
+		cy.get("@timeline")
 			.find("ui5-timeline-item")
 			.last()
-			.should("be.focused")
+			.as("lastItem")
+			.should("be.focused");
+
+		cy.get("@lastItem")
 			.then($item => {
 				const itemRect = $item[0].getBoundingClientRect();
 
