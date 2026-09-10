@@ -144,6 +144,10 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 		return !!this._tableSelection?.isMultiSelectable();
 	}
 
+	get _selectionComponent() {
+		return this._tableSelection?.getSelectionComponent();
+	}
+
 	get _hasSelector() {
 		return this._table?._isRowSelectorRequired;
 	}

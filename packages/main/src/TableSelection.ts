@@ -7,6 +7,8 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import TableSelectionMode from "./types/TableSelectionMode.js";
+import CheckBox from "./CheckBox.js";
+import RadioButton from "./RadioButton.js";
 import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import type Table from "./Table.js";
 import type { ITableFeature } from "./Table.js";
@@ -133,6 +135,18 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 	isRowSelectorRequired(): boolean {
 		return this.mode !== TableSelectionMode.None;
+	}
+
+	getSelectionComponent(): typeof CheckBox | typeof RadioButton {
+		return this.isMultiSelectable() ? CheckBox : RadioButton;
+	}
+
+	getClearAllComponent(): undefined {
+		return undefined;
+	}
+
+	getClearAllIcon(): undefined {
+		return undefined;
 	}
 
 	getAriaDescriptionForTable(): string | undefined {

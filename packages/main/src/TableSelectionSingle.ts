@@ -1,5 +1,6 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
+import RadioButton from "./RadioButton.js";
 import type TableRow from "./TableRow.js";
 
 /**
@@ -46,6 +47,10 @@ class TableSelectionSingle extends TableSelectionBase {
 	isSelected(row: TableRow): boolean {
 		const rowKey = this.getRowKey(row);
 		return rowKey ? this.selected === rowKey : false;
+	}
+
+	getSelectionComponent(): typeof RadioButton {
+		return RadioButton;
 	}
 
 	setSelected(row: TableRow, selected: boolean, fireEvent: boolean = false) {

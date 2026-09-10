@@ -1,26 +1,14 @@
-import Icon from "./Icon.js";
-import SortOrder from "@ui5/webcomponents-base/dist/types/SortOrder.js";
-import SortAscending from "@ui5/webcomponents-icons/dist/sort-ascending.js";
-import SortDescending from "@ui5/webcomponents-icons/dist/sort-descending.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 
 export default function TableHeaderCellTemplate(this: TableHeaderCell) {
+	const SortIconComponent = this._sortIconComponent;
 	return (
 		<>
 			<slot name="action"></slot>
 			<slot></slot>
-			{ sortIcon.call(this) }
+			{ SortIconComponent &&
+				<SortIconComponent name={this._sortIcon}></SortIconComponent>
+			}
 		</>
 	);
-}
-
-function sortIcon(this: TableHeaderCell) {
-	switch (this.sortIndicator) {
-	case SortOrder.Ascending:
-		return <Icon name={SortAscending}></Icon>;
-	case SortOrder.Descending:
-		return <Icon name={SortDescending}></Icon>;
-	default:
-		return <></>;
-	}
 }
