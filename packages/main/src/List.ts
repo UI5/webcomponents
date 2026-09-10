@@ -1445,7 +1445,9 @@ class List extends UI5Element {
 	onItemPress(e: CustomEvent<ListItemBasePressEventDetail>) {
 		const pressedItem = e.detail.item;
 
-		if (!this.fireDecoratorEvent("item-click", { item: pressedItem })) {
+		// InactiveSelectable items never fire the public "item-click" event,
+		// but pressing them (click / Space / Enter) still toggles selection.
+		if (!(pressedItem as ListItem).isInactiveSelectable && !this.fireDecoratorEvent("item-click", { item: pressedItem })) {
 			return;
 		}
 
