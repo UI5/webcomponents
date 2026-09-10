@@ -377,11 +377,14 @@ class Timeline extends UI5Element {
 	}
 
 	_scrollFocusedListItemIntoView(e: FocusEvent) {
-		const listItem = e.composedPath().find(el => el instanceof HTMLElement && el.classList.contains("ui5-timeline-list-item"));
+		const listItem = e.composedPath().find(
+			(el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains("ui5-timeline-list-item"),
+		);
 
-		if (listItem instanceof HTMLElement) {
-			listItem.scrollIntoView({ block: "nearest", inline: "nearest" });
-		}
+		listItem?.scrollIntoView({
+			block: "nearest",
+			inline: "nearest",
+		});
 	}
 
 	_onwheel(e: WheelEvent) {

@@ -266,6 +266,46 @@ describe("Timeline with growing mode", () => {
 			.should("be.focused");
 	});
 
+	it("scrolls horizontally focused items into view", () => {
+		cy.mount(
+			<div style={{ width: "200px" }}>
+				<Timeline layout="Horizontal" id="horizontalTimeline">
+					<TimelineItem titleText="First" subtitleText="01.01" icon={calendar} />
+					<TimelineItem titleText="Second" subtitleText="02.01" icon={calendar} />
+					<TimelineItem titleText="Third" subtitleText="03.01" icon={calendar} />
+				</Timeline>
+			</div>
+		);
+
+		cy.get("#horizontalTimeline")
+			.shadow()
+			.find(".ui5-timeline-scroll-container")
+			.as("scrollContainer");
+
+		cy.get("#horizontalTimeline")
+			.find("ui5-timeline-item")
+			.first()
+			.realClick();
+
+		cy.realPress("ArrowRight");
+		cy.realPress("ArrowRight");
+
+		cy.get("#horizontalTimeline")
+			.find("ui5-timeline-item")
+			.last()
+			.should("be.focused")
+			.then($item => {
+				const itemRect = $item[0].getBoundingClientRect();
+
+				cy.get("@scrollContainer").then($container => {
+					const containerRect = $container[0].getBoundingClientRect();
+
+					expect(itemRect.left).to.be.at.least(containerRect.left);
+					expect(itemRect.right).to.be.at.most(containerRect.right);
+				});
+			});
+	});
+
 	it("Arrows navigation should work only on focused item", () => {
 		cy.mount(
 			<Timeline>
