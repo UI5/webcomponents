@@ -4351,3 +4351,49 @@ describe("Newline normalization in item text", () => {
 		cy.get("@changeSpy").should("have.been.calledTwice");
 	});
 });
+
+describe("ComboBox - label slot", () => {
+	it("should show label slot content when slot has content", () => {
+		cy.mount(
+			<ComboBox value="Germany">
+				<span slot="label" id="label-content">🇩🇪 Germany</span>
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+				<ComboBoxItem text="France"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("@combobox").shadow().find(".ui5-combobox-label").should("exist");
+		cy.get("@combobox").shadow().find("[inner-input]").should("have.class", "ui5-combobox-inner-input--hidden");
+		cy.get("#label-content").should("be.visible");
+	});
+
+	it("should show label slot content even when picker is open", () => {
+		cy.mount(
+			<ComboBox value="Germany">
+				<span slot="label">🇩🇪 Germany</span>
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+				<ComboBoxItem text="France"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("@combobox").shadow().find("[ui5-icon]").realClick();
+
+		cy.get("@combobox").shadow().find(".ui5-combobox-label").should("exist");
+		cy.get("@combobox").shadow().find("[inner-input]").should("have.class", "ui5-combobox-inner-input--hidden");
+	});
+
+	it("should show input when label slot is empty", () => {
+		cy.mount(
+			<ComboBox value="Germany">
+				<ComboBoxItem text="Germany"></ComboBoxItem>
+				<ComboBoxItem text="France"></ComboBoxItem>
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").as("combobox");
+		cy.get("@combobox").shadow().find(".ui5-combobox-label").should("not.exist");
+		cy.get("@combobox").shadow().find("[inner-input]").should("not.have.class", "ui5-combobox-inner-input--hidden");
+	});
+});

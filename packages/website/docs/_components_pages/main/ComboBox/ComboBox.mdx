@@ -11,6 +11,7 @@ import SuggestionsWrapping from "../../../_samples/main/ComboBox/SuggestionsWrap
 import SelectedValue from "../../../_samples/main/ComboBox/SelectedValue/SelectedValue.md";
 import SameTextDifferentValues from "../../../_samples/main/ComboBox/SameTextDifferentValues/SameTextDifferentValues.md";
 import CustomItems from "../../../_samples/main/ComboBox/CustomItems/CustomItems.md";
+import CustomLabel from "../../../_samples/main/ComboBox/CustomLabel/CustomLabel.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -64,3 +65,9 @@ Use `ui5-cb-item-custom` to create custom item templates with complex layouts, m
 This allows you to build rich, visually appealing dropdown items beyond the standard text and `additional-text` format.
 
 <CustomItems />
+
+### Custom Label for Selected Item
+Use the `label` slot to display custom content in the input area when an item is selected — for example, to show a flag alongside the country name.
+Listen to the `selection-change` event and update the slot content accordingly.
+
+<CustomLabel />

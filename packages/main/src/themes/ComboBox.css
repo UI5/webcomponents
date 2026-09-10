@@ -10,6 +10,22 @@
 	border-radius: var(--_ui5_input_border_radius);
 }
 
-:host(:not([readonly])) [inner-input] {
+:host(:not([readonly])) [inner-input],
+:host(:not([readonly])) .ui5-combobox-label {
 	padding: var(--_ui5_input_inner_padding_with_icon);
+}
+
+.ui5-combobox-inner-input--hidden {
+	opacity: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.ui5-combobox-label {
+	flex: 1;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	cursor: text;
 }
