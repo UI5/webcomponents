@@ -728,14 +728,19 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 			.should("have.attr", "open");
 	});
 
-	it("does not perform typeahead when showSuggestions is false", () => {
+	it("performs typeahead and row selection with the popover closed when showSuggestions is false", () => {
+		const onSelectionChange = cy.spy().as("onSelectionChange");
+
 		cy.mount(
-			<InputTableSuggest showSuggestions={false}>
+			<InputTableSuggest showSuggestions={false} onSelectionChange={onSelectionChange}>
 				<TableHeaderRow slot="headerRow">
 					<TableHeaderCell>Name</TableHeaderCell>
 				</TableHeaderRow>
 				<TableRow>
 					<TableCell>John</TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell>Jane</TableCell>
 				</TableRow>
 			</InputTableSuggest>
 		);
@@ -746,7 +751,18 @@ describe("InputTableSuggest - showSuggestions Property", () => {
 
 		cy.get("@input").realType("jo");
 
-		cy.get("@input").should("have.value", "jo");
+		cy.get("@input").should("have.value", "john");
+
+		cy.get("@input")
+			.find("[ui5-table-row]")
+			.first()
+			.should("have.prop", "selected", true);
+		cy.get("@onSelectionChange").should("have.been.called");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
 	});
 
 	it("shows value state popover when showSuggestions is false and has value state", () => {
@@ -1069,5 +1085,101 @@ describe("InputTableSuggest - Accessibility", () => {
 			.should("contain.text", "Row 2 of 2")
 			.and("contain.text", "Name: Jane")
 			.and("contain.text", "Country: UK");
+	});
+});
+
+describe("InputTableSuggest - change event", () => {
+	it("fires change once on typeahead + blur when showSuggestions is false", () => {
+		const onChange = cy.spy().as("onChange");
+		cy.mount(
+			<InputTableSuggest showSuggestions={false} onChange={onChange}>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow><TableCell>John</TableCell></TableRow>
+				<TableRow><TableCell>Jane</TableCell></TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("jo");
+		cy.get("@input").should("have.value", "john");
+
+		cy.realPress("Tab");
+		cy.get("@onChange").should("have.been.calledOnce");
+
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("not.have.attr", "open");
+	});
+
+	it("fires change once on row click (no duplicate on the following blur)", () => {
+		const onChange = cy.spy().as("onChange");
+		cy.mount(
+			<InputTableSuggest showSuggestions onChange={onChange} noTypeahead>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow><TableCell>John</TableCell></TableRow>
+				<TableRow><TableCell>Jane</TableCell></TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("j");
+		cy.get("@input").find("[ui5-table-row]").eq(1).realClick();
+		cy.get("@input").should("have.value", "Jane");
+
+		cy.realPress("Tab");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
+	it("fires change once on Enter selection (no duplicate on the following blur)", () => {
+		const onChange = cy.spy().as("onChange");
+		cy.mount(
+			<InputTableSuggest showSuggestions onChange={onChange}>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell>Name</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow><TableCell>John</TableCell></TableRow>
+				<TableRow><TableCell>Jane</TableCell></TableRow>
+			</InputTableSuggest>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("j");
+		cy.realPress("ArrowDown");
+		cy.realPress("Enter");
+		cy.get("@input").should("have.value", "Jane");
+
+		cy.realPress("Tab");
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
+	it("fires change once when blurring outside with the popover open", () => {
+		const onChange = cy.spy().as("onChange");
+		cy.mount(
+			<>
+				<InputTableSuggest showSuggestions onChange={onChange}>
+					<TableHeaderRow slot="headerRow">
+						<TableHeaderCell>Name</TableHeaderCell>
+					</TableHeaderRow>
+					<TableRow><TableCell>John</TableCell></TableRow>
+					<TableRow><TableCell>Jane</TableCell></TableRow>
+				</InputTableSuggest>
+				<button id="outside">outside</button>
+			</>
+		);
+
+		cy.get("[ui5-input-table-suggest]").as("input").realClick();
+		cy.get("@input").realType("jo");
+		cy.get("@input")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.should("have.attr", "open");
+
+		cy.get("#outside").realClick();
+		cy.get("@onChange").should("have.been.calledOnce");
 	});
 });

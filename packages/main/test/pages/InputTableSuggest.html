@@ -98,6 +98,36 @@
 	</div>
 
 	<div class="section">
+		<ui5-title class="section-title" level="H2">No show-suggestions. Suggestions never open</ui5-title>
+		<p class="description">
+			The header row and rows are provided in markup, but the
+			<code>show-suggestions</code> property is not set. Typing must behave like a
+			plain input &mdash; the suggestions popover never opens and no typeahead runs.
+		</p>
+
+		<ui5-input-table-suggest
+			id="noSuggestSearch"
+			placeholder="Type here - no suggestions should open..."
+		>
+			<ui5-table-header-row slot="headerRow">
+				<ui5-table-header-cell width="100px">Product ID</ui5-table-header-cell>
+				<ui5-table-header-cell min-width="200px">Name</ui5-table-header-cell>
+			</ui5-table-header-row>
+
+			<ui5-table-row>
+				<ui5-table-cell>PRD-001</ui5-table-cell>
+				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
+			</ui5-table-row>
+			<ui5-table-row>
+				<ui5-table-cell>PRD-002</ui5-table-cell>
+				<ui5-table-cell>Smartphone X</ui5-table-cell>
+			</ui5-table-row>
+		</ui5-input-table-suggest>
+
+		<div class="output" id="noSuggestOutput">Selected: (none)</div>
+	</div>
+
+	<div class="section">
 		<ui5-title class="section-title" level="H2">Rich Cell Content</ui5-title>
 		<p class="description">
 			Cells can host other UI5 components. This example combines

@@ -114,7 +114,7 @@ class InputTableSuggest extends InputField {
 	/**
 	 * Defines whether the suggestions picker is open.
 	 * @default false
-	 * @public
+	 * @private
 	 */
 	@property({ type: Boolean })
 	open = false;
@@ -322,7 +322,10 @@ class InputTableSuggest extends InputField {
 	 * @private
 	 */
 	_handleTabularTypeAhead() {
-		if (!this._effectiveShowSuggestions || this.noTypeahead) {
+		// Typeahead is independent of the popover: showSuggestions only controls whether
+		// the suggestions popover opens (handled in _handleTabularPopoverOpen). Autocomplete
+		// and matching-row selection run whenever tabular suggestions are provided.
+		if (!this._useTableSuggestions || this.noTypeahead) {
 			return;
 		}
 
@@ -463,6 +466,9 @@ class InputTableSuggest extends InputField {
 
 		this.value = rowValue;
 		this.typedInValue = rowValue;
+		// Sync previousValue so the native change event on the following blur does not fire a
+		// second `change` on top of the explicit one below (mirrors base ui5-input on accept).
+		this.previousValue = rowValue;
 		this.open = false;
 
 		if (!isAlreadySelected) {
@@ -730,13 +736,30 @@ class InputTableSuggest extends InputField {
 			return;
 		}
 
-		this.focused = false;
 		this.open = false;
+		// The native change fired on blur was deferred while the popover was open (see
+		// _handleChange). Now that it is closed, fire the pending `change` for a plain
+		// blur-outside; if a row was selected, previousValue is already synced so this no-ops.
+		this._handleChange();
+		this.focused = false;
 		this.isTyping = false;
 		this.lastConfirmedValue = "";
 		this._rowFocused = false;
 		this._clearPopoverFocusAndSelection();
 	}
+
+	_handleChange() {
+		// While the popover is open, defer the native change-on-blur: an explicit row
+		// selection (click/Enter) fires the single authoritative `change` via _selectRow, and
+		// a blur outside the popover re-runs this from _onfocusout once the popover is closed.
+		// This mirrors base ui5-input, which defers `change` while its suggestions picker is open.
+		if (this._useTableSuggestions && this.open) {
+			return;
+		}
+
+		super._handleChange();
+	}
+
 
 	// ======================= Suggestion-specific getters =======================
 
