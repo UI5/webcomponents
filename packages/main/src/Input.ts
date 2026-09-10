@@ -753,6 +753,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onBeforeRendering() {
+		if (this.focused && !this.isTyping && this.value !== this.previousValue) {
+			this.previousValue = this.value;
+		}
+
 		if (this.showSuggestions) {
 			this.enableSuggestions();
 
