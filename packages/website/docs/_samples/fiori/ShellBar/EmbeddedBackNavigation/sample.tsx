@@ -1,3 +1,4 @@
+import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import ShellBarBrandingClass from "@ui5/webcomponents-fiori/dist/ShellBarBranding.js";
@@ -12,6 +13,7 @@ import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/bell.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
 
 const ShellBar = createReactComponent(ShellBarClass);
 const ShellBarBranding = createReactComponent(ShellBarBrandingClass);
@@ -22,6 +24,8 @@ const Button = createReactComponent(ButtonClass);
 const ToggleButton = createReactComponent(ToggleButtonClass);
 
 function App() {
+  const [jouleIcon, setJouleIcon] = useState("da");
+
   return (
     <>
       <ShellBar notificationsCount="72" showNotifications={true}>
@@ -38,7 +42,12 @@ function App() {
         />
 
         <ShellBarItem icon="sys-help" text="Help" />
-        <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+        <ToggleButton
+          icon={jouleIcon}
+          tooltip="Joule"
+          slot="assistant"
+          onClick={(e) => setJouleIcon((e.target as EventTarget & { pressed: boolean }).pressed ? "da-2" : "da")}
+        />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
         </Avatar>
