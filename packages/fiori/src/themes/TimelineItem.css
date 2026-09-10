@@ -164,6 +164,7 @@
 	flex: 1;
 	position: relative;
 	margin-left: .5rem;
+	margin-inline-end: calc(-1 * var(--_ui5_TimelineItem_bubble_border_right));
 	padding: var(--_ui5_TimelineItem_bubble_content_padding);
 	word-break: break-word;
 }
@@ -171,6 +172,14 @@
 :host([layout="Horizontal"]) .ui5-tli-bubble {
 	margin-top: .5rem;
 	margin-left: 0;
+}
+
+:host([layout="Vertical"][first-item-in-timeline]) .ui5-tli-bubble {
+	margin-block-start: calc(-1 * var(--_ui5_TimelineItem_bubble_border_top));
+}
+
+:host([layout="Vertical"][last-item]) .ui5-tli-bubble {
+	margin-block-end: calc(-1 * var(--_ui5_TimelineItem_bubble_border_bottom));
 }
 
 .ui5-tli-bubble:focus {
