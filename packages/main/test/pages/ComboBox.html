@@ -760,6 +760,11 @@
 		const fnLoadItems = async (e) => {
 			const control = e.target;
 			const { reason, value } = e.detail;
+			const childItems = [...control.children].filter(c => c.matches("ui5-cb-item, ui5-cb-item-group"));
+
+			if(childItems.length > 0 ){
+				return;
+			}
 
 			// Cancel any in-flight request for this control and create a fresh signal.
 			abortControllers.get(control)?.abort();

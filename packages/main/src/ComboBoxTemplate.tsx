@@ -3,10 +3,10 @@ import Icon from "./Icon.js";
 import decline from "@ui5/webcomponents-icons/dist/decline.js";
 import slimArrowDown from "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 import ComboBoxPopoverTemplate from "./ComboBoxPopoverTemplate.js";
-import BusyIndicator from "@ui5/webcomponents/dist/BusyIndicator.js";
+import BusyIndicator from "./BusyIndicator.js";
 
 export default function ComboBoxTemplate(this: ComboBox) {
-	const inlineLoading = this.loading && !this.open && !this._isPhone; // TODO: fix condition when the loading should be inline
+	const inlineLoading = this.loading && !this.open && !this._isPhone;
 	return (
 		<BusyIndicator class="ui5-combobox-busy-indicator" active={inlineLoading}>
 			<div class="ui5-combobox-root ui5-input-focusable-element">

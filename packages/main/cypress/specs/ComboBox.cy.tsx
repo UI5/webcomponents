@@ -4571,3 +4571,110 @@ describe("Loading announcements", () => {
 			.and("contain.text", "1 result is available");
 	});
 });
+
+describe("Lazy loading item selection", () => {
+	const appendItems = (cb: ComboBox, texts: Array<string>) => {
+		texts.forEach(text => {
+			const item = document.createElement("ui5-cb-item") as ComboBoxItem;
+			item.text = text;
+			cb.appendChild(item);
+		});
+	};
+
+	it("selects the first matching item when loading is triggered by typing", () => {
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			cb.open = true;
+			setTimeout(() => {
+				appendItems(cb, ["Albania", "Algeria", "Bulgaria"]);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(<ComboBox onLoadItems={loadItems}></ComboBox>);
+
+		cy.get("[ui5-combobox]").realClick();
+		cy.realType("a");
+
+		// "Albania" is the first non-group item matching the typed text - it gets autocompleted and selected.
+		cy.get("[ui5-combobox]").should("have.prop", "value", "Albania");
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item][text='Albania']")
+			.should("have.prop", "selected", true);
+	});
+
+	it("does not select any item when loading is triggered by the arrow icon", () => {
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			setTimeout(() => {
+				appendItems(cb, ["Albania", "Algeria", "Bulgaria"]);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(<ComboBox onLoadItems={loadItems}></ComboBox>);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("[ui5-combobox]").find("[ui5-cb-item]").should("have.length", 3);
+
+		// No item is selected or focused and the value stays empty.
+		cy.get("[ui5-combobox]").should("have.prop", "value", "");
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.each($item => {
+				cy.wrap($item)
+					.should("have.prop", "selected", false)
+					.and("have.prop", "focused", false);
+			});
+	});
+
+	it("selects the first item when loading is triggered by Arrow Down", () => {
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			cb.open = true;
+			setTimeout(() => {
+				appendItems(cb, ["Albania", "Algeria", "Bulgaria"]);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(<ComboBox onLoadItems={loadItems}></ComboBox>);
+
+		cy.get("[ui5-combobox]").shadow().find("input").realClick();
+		cy.get("[ui5-combobox]").shadow().find("input").realPress("ArrowDown");
+
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.first()
+			.should("have.prop", "focused", true);
+	});
+
+	it("selects the last item when loading is triggered by Arrow Up", () => {
+		const loadItems = (e: CustomEvent) => {
+			const cb = e.target as ComboBox;
+			cb.loading = true;
+			cb.open = true;
+			setTimeout(() => {
+				appendItems(cb, ["Albania", "Algeria", "Bulgaria"]);
+				cb.loading = false;
+			}, 100);
+		};
+
+		cy.mount(<ComboBox onLoadItems={loadItems}></ComboBox>);
+
+		cy.get("[ui5-combobox]").shadow().find("input").realClick();
+		cy.get("[ui5-combobox]").shadow().find("input").realPress("ArrowUp");
+
+		cy.get("[ui5-combobox]")
+			.find("[ui5-cb-item]")
+			.last()
+			.should("have.prop", "focused", true);
+	});
+});

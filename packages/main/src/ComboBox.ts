@@ -536,7 +536,9 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	_initialRendering = true;
 	_loadingDelegate: ComboBoxLazyLoading;
-	_isArrowClicked = false;
+	// Remembers what triggered the last "load-items" request, so the matching item can be
+	// selected once lazy loading finishes (see _selectItemOnLoadingEnd).
+	_loadItemsTrigger?: "input" | "iconClick" | "arrowDown" | "arrowUp";
 	_itemFocused = false;
 	// used only for Safari fix (check onAfterRendering)
 	_autocomplete = false;
@@ -588,20 +590,20 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			getItemCount: () => this._getItems().filter(item => !item.isGroupItem && item._isVisible).length,
 			isLoading: () => this.loading,
 			isOpen: () => this.open,
-			fireLoadItems: reason => this.fireDecoratorEvent("load-items", { reason, value: this.value }),
+			fireLoadItems: reason => {
+				// Track what triggered the load so the correct item can be selected once loading ends.
+				if (reason === "input") {
+					this._loadItemsTrigger = "input";
+				} else if (reason === "open") {
+					this._loadItemsTrigger = "iconClick";
+				}
+				this.fireDecoratorEvent("load-items", { reason, value: this.value });
+			},
 			loadingMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADING),
 			loadedMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED),
 			loadedItemMessage: () => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEM),
 			loadedItemsMessage: count => ComboBox.i18nBundle.getText(COMBOBOX_LOADED_ITEMS, count),
-			onLoadingEnd: () => {
-				const visibleItems = this._isArrowClicked
-					? this._getItems().filter(item => !item.isGroupItem && item._isVisible)
-					: this._filterItems(this.value);
-				this._isArrowClicked = false;
-				if (visibleItems.length === 0 && this.value) {
-					this._closeRespPopover();
-				}
-			},
+			onLoadingEnd: () => this._selectItemOnLoadingEnd(),
 		});
 		this._loadingDelegate.init(this.loading);
 	}
@@ -838,7 +840,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (!this.open && !this.loading && this._getItems().length === 0) {
 			this._loadingDelegate.fireOnDropdownOpen();
-			this._isArrowClicked = true;
 		}
 
 		this._toggleRespPopover();
@@ -882,7 +883,6 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 
 		this.fireDecoratorEvent("input");
-		this._isArrowClicked = false;
 		this._loadingDelegate.fireOnInput();
 
 		if (isPhone()) {
@@ -983,7 +983,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		}
 	}
 
-	_handleItemNavigation(e: KeyboardEvent, indexOfItem: number, isForward: boolean) {
+	_handleItemNavigation(e: KeyboardEvent | undefined, indexOfItem: number, isForward: boolean) {
 		const allItems = this._getItems();
 
 		const currentItem: IComboBoxItem = allItems[indexOfItem];
@@ -1046,15 +1046,26 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		const allItems = this._getItems();
 		const currentItem = allItems[indexOfItem];
-		const isLastItem = indexOfItem === allItems.length - 1;
+		const isLastItem = allItems.length > 0 && indexOfItem === allItems.length - 1;
 
 		// We don't want to navigate further if the current item is the last one and either is already focused or the popover is closed
 		if (isLastItem && ((isOpen && currentItem.focused) || !isOpen)) {
 			return;
 		}
 
-		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
+		if (this.items.length === 0 && !isOpen) {
+			this._loadItemsTrigger = "arrowDown";
+			this.fireDecoratorEvent("load-items", { reason: "arrowNav", value: this.value });
+			return;
+		}
 
+		// When the popover is closed and no item is selected yet, Arrow Down selects the first item
+		if (!isOpen && indexOfItem === -1) {
+			this._navigateToEdgeItem(false);
+			return;
+		}
+
+		const itemIndexToBeFocused = isLastItem ? indexOfItem : indexOfItem + 1;
 		this._handleItemNavigation(e, itemIndexToBeFocused, true /* isForward */);
 	}
 
@@ -1063,8 +1074,21 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this._selectionTrigger = "Keyboard";
 		const isOpen = this.open;
+
+		if (this.items.length === 0 && !isOpen) {
+			this._loadItemsTrigger = "arrowUp";
+			this.fireDecoratorEvent("load-items", { reason: "arrowNav", value: this.value });
+			return;
+		}
+
+		this._selectionTrigger = "Keyboard";
+
+		// When the popover is closed and no item is selected yet, Arrow Up selects the last item
+		if (!isOpen && indexOfItem === -1) {
+			this._navigateToEdgeItem(true);
+			return;
+		}
 
 		if (indexOfItem === 0) {
 			this._clearFocus();
@@ -1377,6 +1401,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	_selectMatchingItem() {
+		if (!this.items || !this.items.length) {
+			return;
+		}
+
 		const currentlyFocusedItem = this.items.find(item => item.focused);
 		const shouldSelectionBeCleared = currentlyFocusedItem && currentlyFocusedItem.isGroupItem;
 		const valueToMatch = currentlyFocusedItem?.value ?? this.selectedValue;
@@ -1468,6 +1496,64 @@ class ComboBox extends UI5Element implements IFormInputElement {
 				});
 			}
 		}
+	}
+
+	/**
+	 * Selects the appropriate item once lazy loading finishes, based on what triggered the load:
+	 * - typing (`"input"`): autocompletes and selects the first non-group item matching the typed text
+	 * - arrow icon click / [F4] (`"iconClick"`): shows the loaded items without selecting any
+	 * - [Arrow Down] (`"arrowDown"`): focuses the first item
+	 * - [Arrow Up] (`"arrowUp"`): focuses the last item
+	 * @private
+	 */
+	_selectItemOnLoadingEnd() {
+		const trigger = this._loadItemsTrigger;
+		this._loadItemsTrigger = undefined;
+
+		// Arrow click / F4 and arrow navigation show all loaded items; typing filters by the value.
+		// Refresh _filteredItems from the freshly loaded items - onBeforeRendering skips this while
+		// key navigating (_isKeyNavigation is still true), so _getItems() would otherwise be stale.
+		const showsAllItems = trigger === "iconClick" || trigger === "arrowDown" || trigger === "arrowUp";
+		this._filteredItems = showsAllItems ? this._filterItems("") : this._filterItems(this.value);
+
+		const visibleItems = this._getItems().filter(item => !item.isGroupItem && item._isVisible);
+
+		// Nothing matches the typed value - close the picker.
+		if (visibleItems.length === 0 && this.value) {
+			this._closeRespPopover();
+			return;
+		}
+
+		if (trigger === "arrowDown" || trigger === "arrowUp") {
+			this._navigateToEdgeItem(trigger === "arrowUp" /* selectLast */);
+		} else if (trigger === "input" && this.inner) {
+			// Same behavior as typing without lazy loading - autocomplete and select the match.
+			if (!this.noTypeahead && this.value) {
+				this._handleTypeAhead(this.value, this.value);
+			}
+			this._selectMatchingItem();
+		}
+		// trigger === "iconClick" (arrow icon / F4) or programmatic loading - no selection is performed.
+	}
+
+	/**
+	 * Focuses (and, when the picker is closed, selects) the first or last non-group item.
+	 * Shared by the immediate Arrow Up/Down navigation (when the ComboBox already has items)
+	 * and by the post-lazy-loading selection, so both behave identically once items are available.
+	 * @private
+	 */
+	_navigateToEdgeItem(selectLast: boolean) {
+		const allItems = this._getItems();
+		const navigableItems = allItems.filter(item => !item.isGroupItem);
+
+		if (!navigableItems.length) {
+			return;
+		}
+
+		const targetItem = selectLast ? navigableItems[navigableItems.length - 1] : navigableItems[0];
+		this._isKeyNavigation = true;
+		this._selectionTrigger = "Keyboard";
+		this._handleItemNavigation(undefined, allItems.indexOf(targetItem), !selectLast /* isForward */);
 	}
 
 	_fireChangeEvent() {

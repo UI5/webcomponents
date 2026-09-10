@@ -4,7 +4,7 @@ import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 export const LOADING_DELAY = 100;
 
 type AnnounceState = "Loading" | "Loaded" | "None";
-type LoadItemsReason = "input" | "open";
+type LoadItemsReason = "input" | "open" | "arrowNav";
 
 export interface LoadingDelegateConfig {
 	getItemCount: () => number;
