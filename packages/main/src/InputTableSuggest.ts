@@ -760,7 +760,6 @@ class InputTableSuggest extends InputField {
 		super._handleChange();
 	}
 
-
 	// ======================= Suggestion-specific getters =======================
 
 	get _headerTitleText() {
