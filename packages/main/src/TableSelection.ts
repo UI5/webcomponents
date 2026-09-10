@@ -111,9 +111,9 @@ class TableSelection extends UI5Element implements ITableFeature {
 	}
 
 	onTableBeforeRendering() {
-		if (this.isMultiSelectable() && this._table && this._table.headerRow[0] && this._rowsLength !== this._table.rows.length) {
-			this._rowsLength = this._table.rows.length;
-			this._table.headerRow[0]._invalidate++;
+		if (this.isMultiSelectable() && this._table && this._table._headerRow[0] && this._rowsLength !== this._table._rows.length) {
+			this._rowsLength = this._table._rows.length;
+			this._table._headerRow[0]._invalidate++;
 		}
 
 		this._table?.removeEventListener("click", this.onClickCaptureBound);
@@ -166,19 +166,19 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 
 		const selectedArray = this.selectedAsArray;
-		return this._table.rows.some(row => {
+		return this._table._rows.some(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedArray.includes(rowKey);
 		});
 	}
 
 	areAllRowsSelected(): boolean {
-		if (!this._table || !this._table.rows.length || this.mode !== TableSelectionMode.Multiple) {
+		if (!this._table || !this._table._rows.length || this.mode !== TableSelectionMode.Multiple) {
 			return false;
 		}
 
 		const selectedArray = this.selectedAsArray;
-		return this._table.rows.filter(row => row._isSelectable).every(row => {
+		return this._table._rows.filter(row => row._isSelectable).every(row => {
 			const rowKey = this.getRowKey(row);
 			return selectedArray.includes(rowKey);
 		});
@@ -229,7 +229,7 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 	_selectHeaderRow(selected: boolean) {
 		const selectedSet = this.selectedAsSet;
-		this._table!.rows.filter(row => row._isSelectable).forEach(row => {
+		this._table!._rows.filter(row => row._isSelectable).forEach(row => {
 			const rowKey = this.getRowKey(row);
 			selectedSet[selected ? "add" : "delete"](rowKey);
 		});
@@ -248,8 +248,8 @@ class TableSelection extends UI5Element implements ITableFeature {
 		}
 
 		this._table._invalidate++;
-		this._table.headerRow[0]._invalidate++;
-		this._table.rows.forEach(row => row._invalidate++);
+		this._table._headerRow[0]._invalidate++;
+		this._table._rows.forEach(row => row._invalidate++);
 	}
 
 	_onkeydown(e: KeyboardEvent) {
@@ -312,8 +312,8 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 		if (e.shiftKey && this._rangeSelection?.isMouse) {
 			const startRow = this._rangeSelection.rows[0];
-			const startIndex = this._table.rows.indexOf(startRow);
-			const endIndex = this._table.rows.indexOf(row);
+			const startIndex = this._table._rows.indexOf(startRow);
+			const endIndex = this._table._rows.indexOf(row);
 
 			const selectionState = this.isSelected(startRow);
 
@@ -369,10 +369,10 @@ class TableSelection extends UI5Element implements ITableFeature {
 		if (shouldReverseSelection) {
 			this._reverseRangeSelection();
 		} else {
-			const rowIndex = this._table!.rows.indexOf(targetRow);
+			const rowIndex = this._table!._rows.indexOf(targetRow);
 			const [startIndex, endIndex] = [rowIndex, rowIndex - change].sort((a, b) => a - b);
 
-			selectionChanged = this._table?.rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
+			selectionChanged = this._table?._rows.slice(startIndex, endIndex + 1).reduce((changed, row) => {
 				const isRowNotInSelection = !this._rangeSelection?.rows.includes(row);
 				const isRowSelectionDifferent = this.isSelected(row) !== this._rangeSelection!.selected;
 
