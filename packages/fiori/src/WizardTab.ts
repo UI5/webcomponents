@@ -184,7 +184,7 @@ class WizardTab extends UI5Element implements ITabbable {
 			"ariaSetsize": this._wizardTabAccInfo && this._wizardTabAccInfo.ariaSetsize,
 			"ariaPosinset": this._wizardTabAccInfo && this._wizardTabAccInfo.ariaPosinset,
 			"ariaLabel": this._wizardTabAccInfo && this._wizardTabAccInfo.ariaLabel,
-			"ariaCurrent": this.selected ? "true" : undefined,
+			"ariaCurrent": this.selected ? "step" : undefined,
 		};
 	}
 }
