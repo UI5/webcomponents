@@ -47,8 +47,14 @@ export default function TextAreaTemplate(this: TextArea) {
 
 				{ afterTextarea.call(this) }
 
-				{this.showExceededText &&
+				{/* Original behavior: always visible when showExceededText is set */}
+				{this.showExceededText && !this.showExceededTextFocus &&
 				<span class="ui5-textarea-exceeded-text">{this._exceededTextProps.exceededText}</span>
+				}
+
+				{/* New behavior: visibility controlled, space always reserved */}
+				{this.showExceededTextFocus &&
+				<span class={this.classes.exceededText}>{this._exceededTextProps.exceededText}</span>
 				}
 
 				{this.ariaDescriptionText &&
