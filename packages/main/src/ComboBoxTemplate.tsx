@@ -15,6 +15,12 @@ export default function ComboBoxTemplate(this: ComboBox) {
 						<span id="hiddenText-value-state-link-shortcut" class="ui5-hidden-text">{this.valueStateLinksShortcutsTextAcc}</span>
 				}
 
+				{this.hasCustomLabel && this._labelActive &&
+				<div class="ui5-combobox-label" onClick={this._labelClick}>
+					<slot name="label"></slot>
+				</div>
+				}
+
 				<input id="ui5-combobox-input"
 					value={this.value}
 					inner-input
@@ -40,6 +46,7 @@ export default function ComboBoxTemplate(this: ComboBox) {
 					aria-controls={this.responsivePopoverId}
 					autocomplete="off"
 					data-sap-focus-ref
+					class={{ "ui5-combobox-inner-input--hidden": this.hasCustomLabel && this._labelActive }}
 				/>
 
 				{this._effectiveShowClearIcon &&
