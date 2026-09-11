@@ -644,6 +644,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_selectedText?: string;
 	_clearIconClicked?: boolean;
 	_focusedAfterClear: boolean;
+	_preventPreviousValueUpdate = false; // set before internal value mutations so onBeforeRendering skips the external-change sync
 	_changeToBeFired?: boolean; // used to wait change event firing after suggestion item selection
 	_matchedSuggestionItem?: IInputSuggestionItemSelectable; // stores the original matched suggestion for preserving case
 	_performTextSelection?: boolean;
@@ -753,9 +754,10 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onBeforeRendering() {
-		if (this.focused && !this.isTyping && this.value !== this.previousValue) {
+		if (this.focused && !this.isTyping && !this._preventPreviousValueUpdate && this.value !== this.previousValue) {
 			this.previousValue = this.value;
 		}
+		this._preventPreviousValueUpdate = false;
 
 		if (this.showSuggestions) {
 			this.enableSuggestions();
@@ -1101,6 +1103,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const hasSuggestions = this.showSuggestions && !!this.Suggestions;
 		const isOpen = hasSuggestions && this.open;
 		const innerInput = this.getInputDOMRefSync()!;
+		this._preventPreviousValueUpdate = true;
 		const isAutoCompleted = innerInput.selectionEnd! - innerInput.selectionStart! > 0;
 
 		this.isTyping = false;
@@ -1231,6 +1234,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_clear() {
 		const valueBeforeClear = this.value;
+		this._preventPreviousValueUpdate = true;
 		this.value = "";
 		const prevented = !this.fireDecoratorEvent(INPUT_EVENTS.INPUT, { inputType: "" });
 
