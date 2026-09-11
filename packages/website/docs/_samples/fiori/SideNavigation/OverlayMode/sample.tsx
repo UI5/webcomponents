@@ -56,6 +56,10 @@ function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [jouleIcon, setJouleIcon] = useState("da");
 
+  const handleToggleClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
+    setJouleIcon(e.currentTarget.pressed ? "da-2" : "da");
+  };
+
   const handleSideNavigationSelectionChange = (
     e: UI5CustomEvent<SideNavigationClass, "selection-change">,
   ) => {
@@ -117,9 +121,10 @@ function App() {
           <ShellBarItem icon="sys-help" text="Help" />
           <ToggleButton
             icon={jouleIcon}
+            design="Transparent"
             tooltip="Joule"
             slot="assistant"
-            onClick={(e) => setJouleIcon((e.target as EventTarget & { pressed: boolean }).pressed ? "da-2" : "da")}
+            onClick={handleToggleClick}
           />
           <Avatar slot="profile">
             <img src="/images/avatars/man_avatar_3.png" alt="Profile" />

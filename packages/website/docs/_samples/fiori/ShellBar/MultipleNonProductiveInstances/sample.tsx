@@ -1,3 +1,4 @@
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -29,6 +30,17 @@ function App() {
   const [jouleIconEmea, setJouleIconEmea] = useState("da");
   const [jouleIconApj, setJouleIconApj] = useState("da");
 
+  const handleEmeaToggleClick = (
+    e: UI5CustomEvent<ToggleButtonClass, "click">,
+  ) => {
+    setJouleIconEmea(e.currentTarget.pressed ? "da-2" : "da");
+  };
+  const handleApjToggleClick = (
+    e: UI5CustomEvent<ToggleButtonClass, "click">,
+  ) => {
+    setJouleIconApj(e.currentTarget.pressed ? "da-2" : "da");
+  };
+
   return (
     <>
       <ShellBar
@@ -57,9 +69,10 @@ function App() {
         <ShellBarItem icon="sys-help" text="Help" />
         <ToggleButton
           icon={jouleIconEmea}
+          design="Transparent"
           tooltip="Joule"
           slot="assistant"
-          onClick={(e) => setJouleIconEmea((e.target as EventTarget & { pressed: boolean }).pressed ? "da-2" : "da")}
+          onClick={handleEmeaToggleClick}
         />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
@@ -90,9 +103,10 @@ function App() {
         <ShellBarItem icon="sys-help" text="Help" />
         <ToggleButton
           icon={jouleIconApj}
+          design="Transparent"
           tooltip="Joule"
           slot="assistant"
-          onClick={(e) => setJouleIconApj((e.target as EventTarget & { pressed: boolean }).pressed ? "da-2" : "da")}
+          onClick={handleApjToggleClick}
         />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />

@@ -1,3 +1,4 @@
+import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useState } from "react";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import ShellBarClass from "@ui5/webcomponents-fiori/dist/ShellBar.js";
@@ -24,6 +25,10 @@ const ToggleButton = createReactComponent(ToggleButtonClass);
 function App() {
   const [jouleIcon, setJouleIcon] = useState("da");
 
+  const handleToggleClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
+    setJouleIcon(e.currentTarget.pressed ? "da-2" : "da");
+  };
+
   return (
     <>
       <ShellBar notificationsCount="72" showNotifications={true}>
@@ -41,9 +46,10 @@ function App() {
         <ShellBarItem icon="sys-help" text="Help" />
         <ToggleButton
           icon={jouleIcon}
+          design="Transparent"
           tooltip="Joule"
           slot="assistant"
-          onClick={(e) => setJouleIcon((e.target as EventTarget & { pressed: boolean }).pressed ? "da-2" : "da")}
+          onClick={handleToggleClick}
         />
         <Avatar slot="profile">
           <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
