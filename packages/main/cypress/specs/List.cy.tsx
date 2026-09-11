@@ -834,6 +834,19 @@ describe("List - Wrapping Behavior", () => {
 });
 
 describe("List - getFocusDomRef Method", () => {
+	let restoreFocusDomRef: (() => void) | undefined;
+	let uncaughtExceptionHandler: ((error: Error) => boolean) | undefined;
+
+	afterEach(() => {
+		restoreFocusDomRef?.();
+		restoreFocusDomRef = undefined;
+
+		if (uncaughtExceptionHandler) {
+			Cypress.off("uncaught:exception", uncaughtExceptionHandler);
+			uncaughtExceptionHandler = undefined;
+		}
+	});
+
 	it("should return undefined when the list is empty", () => {
 		cy.mount(<List></List>);
 
@@ -880,6 +893,39 @@ describe("List - getFocusDomRef Method", () => {
 
 				expect(list.getFocusDomRef()).to.equal(item.getFocusDomRef());
 			});
+	});
+
+	it("renders when a custom list item has no focus DOM ref yet", () => {
+		const originalGetFocusDomRef = ListItemCustom.prototype.getFocusDomRef;
+		let renderError: Error | undefined;
+
+		uncaughtExceptionHandler = (error: Error) => {
+			if (error.message.includes("reading 'tagName'")) {
+				renderError = error;
+				return false;
+			}
+
+			return true;
+		};
+		Cypress.on("uncaught:exception", uncaughtExceptionHandler);
+
+		ListItemCustom.prototype.getFocusDomRef = () => undefined;
+		restoreFocusDomRef = () => {
+			ListItemCustom.prototype.getFocusDomRef = originalGetFocusDomRef;
+		};
+
+		cy.mount(
+			<List>
+				<ListItemCustom>Content</ListItemCustom>
+			</List>,
+		).then(() => {
+			expect(renderError, "list rendering should not throw").to.be.undefined;
+		});
+
+		cy.get("[ui5-list]")
+			.shadow()
+			.find(".ui5-list-ul")
+			.should("exist");
 	});
 });
 
