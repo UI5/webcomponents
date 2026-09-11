@@ -5,7 +5,6 @@ import TableCellTemplate from "./TableCellTemplate.js";
 import TableCellStyles from "./generated/themes/TableCell.css.js";
 import TableCellBase from "./TableCellBase.js";
 import type TableRow from "./TableRow.js";
-import type Table from "./Table.js";
 import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -70,10 +69,10 @@ class TableCell extends TableCellBase {
 
 	get _headerCell() {
 		const row = this.parentElement as TableRow | null;
-		const table = row?.parentElement as Table | null;
+		const table = row?._table;
 		const index = row?.cells?.indexOf(this) ?? -1;
 
-		return (index !== -1) ? table?.headerRow?.[0]?.cells?.[index] : null;
+		return (index !== -1) ? table?._headerRow?.[0]?.cells?.[index] : null;
 	}
 
 	get _popinHeaderNodes() {

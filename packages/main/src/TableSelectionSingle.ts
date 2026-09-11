@@ -67,7 +67,7 @@ class TableSelectionSingle extends TableSelectionBase {
 	 * @public
 	 */
 	getSelectedRow(): TableRow | undefined {
-		return this._table?.rows.find(row => this.isSelected(row));
+		return this._table?._rows.find(row => this.isSelected(row));
 	}
 }
 
