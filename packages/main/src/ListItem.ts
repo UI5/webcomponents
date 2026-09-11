@@ -606,8 +606,8 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_getFocusableElements(): HTMLElement[] {
-		const focusDomRef = this.getFocusDomRef()!;
-		return getTabbableElements(focusDomRef);
+		const focusDomRef = this.getFocusDomRef();
+		return focusDomRef ? getTabbableElements(focusDomRef) : [];
 	}
 
 	_indexOfActiveElement(focusables: HTMLElement[]): number {
