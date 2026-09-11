@@ -63,7 +63,8 @@
 	padding: var(--_ui5_token_readonly_padding);
 }
 
-:host([selected]) .ui5-token--wrapper:focus {
+:host([desktop][selected]) .ui5-token--wrapper:focus,
+:host([selected]) .ui5-token--wrapper:focus-visible {
 	outline: var(--_ui5_token_selected_focus_outline);
 }
 
@@ -94,12 +95,14 @@
 	font-family: var(--_ui5_token_selected_text_font_family);
 }
 
-.ui5-token--wrapper:focus {
+:host([desktop]) .ui5-token--wrapper:focus,
+.ui5-token--wrapper:focus-visible {
 	outline-offset: var(--_ui5_token_outline_offset);
 	outline: var(--_ui5_token_focus_outline);
 }
 
-.ui5-token--wrapper:focus::after {
+:host([desktop]) .ui5-token--wrapper:focus::after,
+.ui5-token--wrapper:focus-visible::after {
 	content: var(--ui5_token_focus_pseudo_element_content);
 	position: absolute;
 	pointer-events: none;
