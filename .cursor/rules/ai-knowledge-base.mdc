@@ -1,0 +1,29 @@
+---
+description: UI5 Web Components conventions and guardrails. Consult before editing component code.
+globs:
+  - packages/**/*.ts
+  - packages/**/*.tsx
+  - packages/**/*.css
+  - packages/**/cypress/specs/**/*.cy.tsx
+alwaysApply: false
+---
+
+# UI5 Web Components — AI Knowledge Base
+
+Detailed conventions, guardrails, and good/bad examples live in the AI Knowledge Base at
+`ai-knowledge-base/`. It is the authority on how to write code here.
+
+Before editing this file, read `ai-knowledge-base/INDEX.md`, find your task in its routing table,
+and open the **one** reference file it names — do not read every file. Only the rules that apply to
+your task cost context.
+
+Non-negotiables (full rationale in `ai-knowledge-base/INDEX.md`):
+
+- Never run the full test suite. Run one spec: `yarn test:cypress:single cypress/specs/<Component>.cy.tsx`.
+- Enums are type-only: `import type`, declare as `` `${X}` ``, compare against string literals.
+- Select by attribute, never tag name: `[ui5-button]` in CSS, `querySelector`, and specs.
+- No `instanceof` against a UI5 class. Use `createInstanceChecker` with a duck-typing marker.
+- `@query` refs are for method calls like `.focus()`; set child state through the template.
+- Make the smallest change that solves the problem. No opportunistic cleanup.
+
+When done, check your work: `yarn ts`, `yarn lint`, and `yarn lint:scope`.
