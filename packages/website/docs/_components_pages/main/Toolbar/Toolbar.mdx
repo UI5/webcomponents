@@ -8,6 +8,7 @@ import NeverOverflowingItems from "../../../_samples/main/Toolbar/NeverOverflowi
 import SpacerAndSeparator from "../../../_samples/main/Toolbar/SpacerAndSeparator/SpacerAndSeparator.md";
 import ItemsAlignment from "../../../_samples/main/Toolbar/ItemsAlignment/ItemsAlignment.md";
 import ToolbarItem from "../../../_samples/main/Toolbar/ToolbarItem/ToolbarItem.md";
+import GroupedOverflow from "../../../_samples/main/Toolbar/GroupedOverflow/GroupedOverflow.md";
 
 
 <%COMPONENT_OVERVIEW%>
@@ -39,3 +40,7 @@ You can align items to the Start, or to the End via the "align-content" property
 ### ToolbarItem
 ToolbarItem wrapper used to add any component to Toolbar
 <ToolbarItem />
+
+### Grouped Overflow
+Items that share the same non-empty `overflow-group` string overflow together as one atomic unit — either all visible in the bar or all in the overflow popover, never split. The value is a free-form string label.
+<GroupedOverflow />
