@@ -1329,37 +1329,35 @@ describe("ARIA attributes", () => {
 
 		cy.get("[ui5-dynamic-page]").as("dynamicPage");
 
-		// Initially the header should not be pinned, so tooltip should be "Pin Header"
 		cy.get("@dynamicPage")
 			.shadow()
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find(".ui5-dynamic-page-header-action-pin")
-			.should("have.attr", "tooltip", "Pin Header");
+			.should("have.prop", "accessibleName", "Pin Header")
+			.should("have.prop", "tooltip", "Pin Header");
 
-		// Pin the header
 		cy.get("@dynamicPage")
 			.invoke("prop", "headerPinned", true);
 
-		// After pinning, tooltip should change to "Unpin Header"
 		cy.get("@dynamicPage")
 			.shadow()
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find(".ui5-dynamic-page-header-action-pin")
-			.should("have.attr", "tooltip", "Unpin Header");
+			.should("have.prop", "accessibleName", "Unpin Header")
+			.should("have.prop", "tooltip", "Unpin Header");
 
-		// Unpin the header
 		cy.get("@dynamicPage")
 			.invoke("prop", "headerPinned", false);
 
-		// After unpinning, tooltip should change back to "Pin Header"
 		cy.get("@dynamicPage")
 			.shadow()
 			.find("[ui5-dynamic-page-header-actions]")
 			.shadow()
 			.find(".ui5-dynamic-page-header-action-pin")
-			.should("have.attr", "tooltip", "Pin Header");
+			.should("have.prop", "accessibleName", "Pin Header")
+			.should("have.prop", "tooltip", "Pin Header");
 	});
 
 	it("should use default aria-label based on header state", () => {
@@ -1477,5 +1475,106 @@ describe("ARIA attributes", () => {
 			.find(".ui5-dynamic-page-footer")
 			.should("have.attr", "role", "contentinfo")
 			.should("have.attr", "aria-label", "Page Footer");
+	});
+});
+
+describe("Header actions DOM order and screen reader reading", () => {
+	it("renders header actions wrapper outside the banner landmark", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-title-header-wrapper .ui5-dynamic-page-header-actions-wrapper")
+			.should("not.exist");
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container > .ui5-dynamic-page-header-actions-wrapper")
+			.should("exist");
+	});
+
+	it("renders header actions after the header slot in DOM order when header is expanded", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-scroll-container")
+			.then($container => {
+				const children = [...$container[0].children];
+				const headerSlotIdx = children.findIndex(el => el.nodeName === "SLOT" && el.getAttribute("name") === "headerArea");
+				const actionsIdx = children.findIndex(el => el.classList.contains("ui5-dynamic-page-header-actions-wrapper"));
+				expect(actionsIdx).to.be.greaterThan(headerSlotIdx);
+			});
+	});
+
+	it("applies sticky positioning to the actions wrapper when the header is snapped", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-actions-wrapper")
+			.should("not.have.attr", "style");
+
+		cy.get("[ui5-dynamic-page]")
+			.invoke("prop", "headerSnapped", true);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-actions-wrapper")
+			.should("have.attr", "style")
+			.and("include", "--_ui5_dp_header_actions_top");
+	});
+
+	it("applies sticky positioning to the actions wrapper when the header is pinned", () => {
+		cy.mount(
+			<DynamicPage style={{ height: "600px" }}>
+				<DynamicPageTitle slot="titleArea">
+					<div slot="heading">Page Title</div>
+				</DynamicPageTitle>
+				<DynamicPageHeader slot="headerArea">
+					<div>Header Content</div>
+				</DynamicPageHeader>
+				<div style={{ height: "1000px" }}>Content</div>
+			</DynamicPage>
+		);
+
+		cy.get("[ui5-dynamic-page]")
+			.invoke("prop", "headerPinned", true);
+
+		cy.get("[ui5-dynamic-page]")
+			.shadow()
+			.find(".ui5-dynamic-page-header-actions-wrapper")
+			.should("have.attr", "style")
+			.and("include", "--_ui5_dp_header_actions_top");
 	});
 });
