@@ -520,6 +520,23 @@ describe("Input general interaction", () => {
 		cy.get("@onSelectionChange").should("have.been.calledOnce");
 	});
 
+	it("Should fire 'change' event when value is set programmatically while focused and user types the same value", () => {
+		cy.mount(<Input id="prog-change-input" value="f" onChange={cy.stub().as("onChange")} />);
+
+		cy.get("[ui5-input]").realClick();
+		cy.get("[ui5-input]").should("be.focused");
+
+		// simulate programmatic value reset while focused
+		cy.document().then(doc => {
+			(doc.querySelector<Input>("#prog-change-input") as Input).value = "";
+		});
+
+		cy.realType("f");
+		cy.realPress("Tab");
+
+		cy.get("@onChange").should("have.been.calledOnce");
+	});
+
 	it("Should control suggestions dynamically based on threshold", () => {
 		const THRESHOLD = 3;
 		const countries = [
