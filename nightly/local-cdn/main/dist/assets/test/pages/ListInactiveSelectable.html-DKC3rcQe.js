@@ -1,0 +1,2 @@
+import"../../bundle.esm-D-HSD1hR.js";const i=document.getElementById("log"),l=t=>{i.textContent=t+`
+`+i.textContent};["list-multi","list-single-start","list-single-end","list-single","list-single-auto"].forEach(t=>{const n=document.getElementById(t);n.addEventListener("ui5-item-click",e=>l(`[${t}] item-click fired on: "${e.detail.item.textContent.trim()}"`)),n.addEventListener("ui5-selection-change",e=>l(`[${t}] selection-change: ${e.detail.selectedItems.map(s=>s.textContent.trim()).join(", ")||"(none)"}`))});

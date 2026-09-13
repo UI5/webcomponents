@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List - InactiveSelectable</title>
+	<style>
+		body { font-family: sans-serif; padding: 2rem; background: var(--sapBackgroundColor, #f5f6f7); }
+		h2 { margin-top: 2rem; }
+		.hint { color: #555; font-size: 0.85rem; margin: 0.25rem 0 0.5rem; }
+		.log { margin-top: 1rem; padding: 0.5rem; background: #fff; border: 1px solid #ccc; min-height: 4rem; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; }
+	</style>
+  <script type="module" crossorigin src="/webcomponents/nightly/assets/test/pages/ListInactiveSelectable.html-DKC3rcQe.js"></script>
+  <link rel="modulepreload" crossorigin href="/webcomponents/nightly/assets/bundle.esm-D-HSD1hR.js">
+</head>
+<body>
+
+<h1>InactiveSelectable — manual test</h1>
+<p class="hint">
+	Expected: <b>no active press/hover feedback</b> and the <b>item-click event never fires</b> for InactiveSelectable items.
+	But the item <b>can still be selected</b> — via the item body (click / Space / Enter) or the checkbox/radio.
+	Screen reader should not announce the raw "InactiveSelectable" text.
+</p>
+
+<h2>Multiple selection (checkboxes)</h2>
+<p class="hint">Click the row body, press Space, or press Enter → selection toggles (selection-change fires). Clicking the checkbox also toggles. item-click never fires.</p>
+<ui5-list id="list-multi" selection-mode="Multiple">
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 1</ui5-li>
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 2</ui5-li>
+	<ui5-li type="Active">Active item</ui5-li>
+	<ui5-li type="Inactive">Inactive item (never selectable)</ui5-li>
+</ui5-list>
+
+<h2>SingleStart selection (radio at start)</h2>
+<p class="hint">Click the row body / Space / Enter → selects. Clicking the radio also selects. item-click never fires.</p>
+<ui5-list id="list-single-start" selection-mode="SingleStart">
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 1</ui5-li>
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 2</ui5-li>
+	<ui5-li type="Active">Active item</ui5-li>
+</ui5-list>
+
+<h2>SingleEnd selection (radio at end)</h2>
+<p class="hint">Click the row body / Space / Enter → selects. Clicking the radio also selects. item-click never fires.</p>
+<ui5-list id="list-single-end" selection-mode="SingleEnd">
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 1</ui5-li>
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 2</ui5-li>
+	<ui5-li type="Active">Active item</ui5-li>
+</ui5-list>
+
+<h2>Single selection (NO selection component rendered)</h2>
+<p class="hint">
+	⚠️ Single mode renders <b>no</b> checkbox/radio, but selection is still driven by the press path:
+	clicking the row body (or Space / Enter) <b>now selects</b> the item — watch the highlighted row / aria-selected,
+	even though there is no visible control. This is the edge case to review.
+</p>
+<ui5-list id="list-single" selection-mode="Single">
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 1</ui5-li>
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 2</ui5-li>
+	<ui5-li type="Active">Active item</ui5-li>
+</ui5-list>
+
+<h2>SingleAuto selection (select-on-focus)</h2>
+<p class="hint">
+	Arrow-key focus onto an InactiveSelectable item does <b>not</b> auto-select it (it opts out of focus-select),
+	but an explicit click / Space / Enter <b>does</b> select it. The Active item still selects on focus.
+</p>
+<ui5-list id="list-single-auto" selection-mode="SingleAuto">
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 1</ui5-li>
+	<ui5-li type="Active">Active item</ui5-li>
+	<ui5-li type="InactiveSelectable">InactiveSelectable item 2</ui5-li>
+</ui5-list>
+
+<h2>Events</h2>
+<div class="log" id="log">— events will appear here —</div>
+
+
+</body>
+</html>

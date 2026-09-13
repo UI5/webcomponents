@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "da-2";
+const pathData = "M12.092.006a.75.75 0 0 1 .527.32l3.25 4.752a.75.75 0 0 1-.017.871l-7.25 9.753a.756.756 0 0 1-1.203 0L.149 5.95a.75.75 0 0 1-.018-.871L3.438.254A.75.75 0 0 1 4 0l8.092.006ZM9.83 3.234a.35.35 0 0 0-.66 0C8.81 4.318 8.32 4.8 7.24 5.171c-.32.1-.32.552 0 .662 1.08.361 1.56.853 1.93 1.936a.35.35 0 0 0 .66 0c.36-1.083.85-1.565 1.93-1.936.32-.1.32-.552 0-.662-1.08-.362-1.56-.853-1.93-1.937Z";
+const ltr = true;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/da-2";
+export { pathData, ltr, viewBox, accData };

@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "meal";
+const pathData = "M7.75 1.006a.75.75 0 0 1 .75.75v2.498A2.747 2.747 0 0 1 6 6.99v7.26a.75.75 0 0 1-1.5 0V6.99A2.747 2.747 0 0 1 2 4.254V1.755a.75.75 0 0 1 1.5 0v2.5c0 .604.43 1.108 1 1.223V1.755a.75.75 0 0 1 1.5 0v3.723c.57-.115 1-.62 1-1.224V1.755a.75.75 0 0 1 .75-.75Zm5.703.028a.75.75 0 0 1 .547.721V14.25a.75.75 0 0 1-1.5 0v-4.248h-.75a.75.75 0 0 1-.75-.75c0-2.594.387-4.541.782-5.854.196-.65.476-1.37.826-2.03.177-.3.478-.437.845-.334Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/meal";
+export { pathData, ltr, viewBox, accData };

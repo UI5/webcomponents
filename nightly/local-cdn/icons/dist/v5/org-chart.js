@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "org-chart";
+const pathData = "M11.75 0a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-3v2.25h4a.75.75 0 0 1 .75.75v3h1.75a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1-.75-.75v-3.5a.75.75 0 0 1 .75-.75H12V8.75H4V11h2.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1-.75-.75v-3.5A.75.75 0 0 1 .75 11H2.5V8a.75.75 0 0 1 .75-.75h4V5h-3a.75.75 0 0 1-.75-.75V.75A.75.75 0 0 1 4.25 0h7.5ZM1.5 14.5h4v-2h-4v2Zm9 0h4v-2h-4v2ZM5 3.5h6v-2H5v2Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/org-chart";
+export { pathData, ltr, viewBox, accData };
