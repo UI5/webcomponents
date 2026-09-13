@@ -1,0 +1,66 @@
+:host([focused]:not([_row-focused])) .ui5-input-focusable-element::after {
+	content: var(--ui5_input_focus_pseudo_element_content);
+}
+
+:host([focused][_row-focused]) .ui5-input-focusable-element::after {
+	content: none;
+}
+
+:host([focused][_row-focused]) {
+	border-color: var(--sapField_BorderColor);
+	background-color: var(--sapField_Background);
+}
+
+:host(:not([value-state]):not([readonly])[focused][_row-focused]:hover),
+:host([value-state="None"]:not([readonly])[focused][_row-focused]:hover) {
+	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+.ui5-input-table-suggest-wrapper {
+	width: 100%;
+	max-height: var(--_ui5_input_table_suggest_max_height, 20rem);
+	overflow: auto;
+}
+
+.ui5-input-table-suggest-table {
+	width: 100%;
+}
+
+/* Rows are projected via <slot>, so they stay in the host's light DOM and must
+   be targeted with ::slotted rather than a descendant selector. */
+::slotted([ui5-table-row][hidden]) {
+	display: none;
+}
+
+.ui5-input-table-suggest-table [ui5-table-header-row] {
+	border-top: none;
+}
+
+::slotted([ui5-table-row]:last-of-type) {
+	border-bottom: none;
+}
+
+.ui5-input-table-suggest-table::part(before),
+.ui5-input-table-suggest-table::part(after) {
+	display: none;
+}
+
+::slotted([ui5-table-row].ui5-input-table-suggest-row--focused),
+::slotted([ui5-table-row].ui5-input-table-suggest-row--selected) {
+	background-color: var(--sapList_SelectionBackgroundColor);
+	box-shadow: inset 0 calc(-1 * var(--sapList_BorderWidth)) 0 0 var(--sapList_SelectionBorderColor);
+}
+
+::slotted([ui5-table-row].ui5-input-table-suggest-row--focused) {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: -0.25rem;
+}
+
+::slotted([ui5-table-row].ui5-input-table-suggest-row--focused:hover),
+::slotted([ui5-table-row].ui5-input-table-suggest-row--selected:hover) {
+	background-color: var(--sapList_Hover_SelectionBackground);
+}
+
+:host([_isPhone]) .ui5-input-table-suggest-wrapper {
+	max-height: none;
+}

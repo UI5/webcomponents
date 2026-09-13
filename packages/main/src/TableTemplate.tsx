@@ -25,7 +25,7 @@ export default function TableTemplate(this: Table) {
 					</div>
 				</div>
 
-				{ this.rows.length === 0 &&
+				{ this._rows.length === 0 &&
 					<TableRow id="no-data-row">
 						<TableCell id="no-data-cell" data-excluded-from-navigation horizontal-align="Center">
 							{ this.noData.length > 0 ?
@@ -55,7 +55,7 @@ export default function TableTemplate(this: Table) {
 
 			<div id="after" role="none" tabindex={0} ui5-table-dummy-focus-area></div>
 
-			{ this.rows.length > 0 && this._getGrowing()?.hasGrowingComponent() &&
+			{ this._rows.length > 0 && this._getGrowing()?.hasGrowingComponent() &&
 				<slot name={this._getGrowing()?._individualSlot}></slot>
 			}
 		</>

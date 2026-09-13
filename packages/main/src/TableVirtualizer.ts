@@ -142,7 +142,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 		}
 
 		if (this._tabBlockingState & TabBlocking.Released) {
-			const tabBlockingRow = this._table.rows.at(this._tabBlockingState & TabBlocking.Next ? -1 : 0) as HTMLElement;
+			const tabBlockingRow = this._table._rows.at(this._tabBlockingState & TabBlocking.Next ? -1 : 0) as HTMLElement;
 			const tabForwardingElement = getTabbableElements(tabBlockingRow).at(this._tabBlockingState & TabBlocking.Next ? 0 : -1);
 			this._tabBlockingState = TabBlocking.None;
 			(tabForwardingElement || tabBlockingRow).focus();
@@ -181,7 +181,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 	}
 
 	_onScroll(): void {
-		const headerRow = this._table!.headerRow[0];
+		const headerRow = this._table!._headerRow[0];
 		const headerHeight = headerRow.offsetHeight;
 		let scrollTop = this._scrollContainer.scrollTop;
 		let scrollableHeight = this._scrollContainer.clientHeight;
@@ -219,7 +219,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 			return;
 		}
 
-		const firstRow = this._table.rows[0];
+		const firstRow = this._table._rows[0];
 		if (firstRow && firstRow.position !== undefined && firstRow.position > 0) {
 			const transform = firstRow.position * this.rowHeight;
 			return `translateY(${transform}px)`;
@@ -239,7 +239,7 @@ class TableVirtualizer extends UI5Element implements ITableFeature {
 		}
 
 		let scrollTopChange = 0;
-		const rows = this._table.rows;
+		const rows = this._table._rows;
 		const firstRow = rows[0];
 		const lastRow = rows[rows.length - 1];
 		const hasDataBeforeFirstRow = firstRow.position !== 0;
