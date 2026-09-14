@@ -11,6 +11,7 @@ import SuggestionsWrapping from "../../../_samples/main/ComboBox/SuggestionsWrap
 import SelectedValue from "../../../_samples/main/ComboBox/SelectedValue/SelectedValue.md";
 import SameTextDifferentValues from "../../../_samples/main/ComboBox/SameTextDifferentValues/SameTextDifferentValues.md";
 import CustomItems from "../../../_samples/main/ComboBox/CustomItems/CustomItems.md";
+import LazyLoading from "../../../_samples/main/ComboBox/LazyLoading/LazyLoading.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -64,3 +65,13 @@ Use `ui5-cb-item-custom` to create custom item templates with complex layouts, m
 This allows you to build rich, visually appealing dropdown items beyond the standard text and `additional-text` format.
 
 <CustomItems />
+
+
+### Lazy loaded items
+Use the `load-items` event to load items on demand. Its detail carries the `reason`
+(`"open"` when the picker is opened with no items, `"input"` when the user types) and the current
+`value`. The application can create its own `AbortController` and abort the previous request whenever a
+newer `load-items` event is fired - so an outdated request can be cancelled. Set `filter="None"` to
+disable client-side filtering and let the server decide which items are returned.
+
+<LazyLoading />

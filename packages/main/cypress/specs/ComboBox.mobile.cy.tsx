@@ -670,3 +670,77 @@ describe("Dialog header title", () => {
 			.should("have.text", INPUT_SUGGESTIONS_TITLE.defaultText);
 	});
 });
+
+describe("Lazy loading", () => {
+	beforeEach(() => {
+		cy.ui5SimulateDevice("phone");
+	});
+
+	it("Should open the dialog and fire load-items when start typing with no items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-input]")
+			.shadow()
+			.find("input")
+			.realType("A");
+
+		cy.get("@loadItems").should("have.been.called");
+	});
+
+	it("Should open the dialog and fire load-items when pressing the arrow with no items", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}></ComboBox>
+		);
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-icon][name='slim-arrow-down']")
+			.realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("@loadItems")
+			.should("have.been.calledOnce")
+			.and("have.been.calledWithMatch", Cypress.sinon.match(event => {
+				return event.detail.reason === "open";
+			}));
+	});
+
+	it("Should not fire load-items when typing and items are already present", () => {
+		cy.mount(
+			<ComboBox onLoadItems={cy.stub().as("loadItems")}>
+				<ComboBoxItem text="Algeria" />
+				<ComboBoxItem text="Argentina" />
+			</ComboBox>
+		);
+
+		cy.get("[ui5-combobox]").realClick();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find<ResponsivePopover>("[ui5-responsive-popover]")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("[ui5-combobox]")
+			.shadow()
+			.find("[ui5-responsive-popover] [ui5-input]")
+			.realClick()
+			.realType("A");
+
+		cy.get("@loadItems").should("not.have.been.called");
+	});
+});
