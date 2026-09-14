@@ -3,15 +3,22 @@ import Button from "./Button.js";
 import Calendar from "./Calendar.js";
 import Icon from "./Icon.js";
 import CalendarDate from "./CalendarDate.js";
+import type CalendarDateLocale from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
 import ResponsivePopover from "./ResponsivePopover.js";
+import DateHighZoomInputs from "./DateHighZoomInputs.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import error from "@ui5/webcomponents-icons/dist/error.js";
 import alert from "@ui5/webcomponents-icons/dist/alert.js";
 import sysEnter2 from "@ui5/webcomponents-icons/dist/sys-enter-2.js";
 import information from "@ui5/webcomponents-icons/dist/information.js";
+import appointmentIcon from "@ui5/webcomponents-icons/dist/appointment-2.js";
 
 type TemplateHook = () => void;
+
+function calendarDateToISO(cd: CalendarDateLocale): string {
+	return cd.toUTCJSDate().toISOString().slice(0, 10);
+}
 
 export default function DatePickerPopoverTemplate(this: DatePicker, hooks?: { header?: TemplateHook, content?: TemplateHook, footer?: TemplateHook, initialFocus?: string }) {
 	const header = hooks?.header || defaultHeader;
@@ -54,11 +61,35 @@ function defaultHeader(this: DatePicker) {
 			<div class="row">
 				<span>{this._headerTitleText}</span>
 			</div>
+			{ this._hzShowCalToggle &&
+				<Icon
+					name={appointmentIcon}
+					class="ui5-dhzi-cal-toggle-btn"
+					mode="Interactive"
+					onClick={this._onHzCalToggle}
+					title={this._hzCalToggleLabel}
+				/>
+			}
 		</div>
 	);
 }
 
 function defaultContent(this: DatePicker) {
+	if (this._highZoom) {
+		const minISO = this.minDate ? calendarDateToISO(this._minDate) : "";
+		const maxISO = this.maxDate ? calendarDateToISO(this._maxDate) : "";
+		return (
+			<DateHighZoomInputs
+				id={`${this._id}-hz-inputs`}
+				primaryCalendarType={this._hzEffectiveCalType}
+				dateValue={this._hzInputsDateValue}
+				minDate={minISO}
+				maxDate={maxISO}
+				onChange={this._onHzInputsChange}
+			/>
+		);
+	}
+
 	return (
 		<Calendar
 			id={`${this._id}-calendar`}
@@ -128,14 +159,26 @@ function defaultFooter(this: DatePicker) {
 			slot="footer"
 			class={{
 				"ui5-dt-picker-footer": true,
-				"ui5-dt-picker-footer-time-hidden": isPhone()
+				"ui5-dt-picker-footer-time-hidden": isPhone() && !this._highZoom,
 			}}>
+
+			{ this._highZoom &&
+				<Button
+					id="ok"
+					class="ui5-dt-picker-action"
+					design="Emphasized"
+					disabled={!this._hzOkEnabled}
+					onClick={this._onHzOk}
+				>
+					{this.btnOKLabel}
+				</Button>
+			}
 
 			<Button
 				id="cancel"
 				class="ui5-dt-picker-action"
 				design="Transparent"
-				onClick={this._togglePicker}
+				onClick={this._highZoom ? this._onHzCancel : this._togglePicker}
 			>
 				{this.btnCancelLabel}
 			</Button>

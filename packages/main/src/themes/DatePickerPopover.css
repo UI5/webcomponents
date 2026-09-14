@@ -23,11 +23,19 @@
 	padding: 0;
 }
 
+/* High-zoom mode: DateHighZoomInputs fills the full popover content area */
+[ui5-date-high-zoom-inputs] {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}
+
 .ui5-dt-picker-footer {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-end;
 	align-items: center;
-	height: 2.75rem;
+	min-height: 2.75rem;
 	width: 100%;
 }
 
@@ -42,4 +50,13 @@
 [ui5-responsive-popover]::part(header) {
 	font-family: var(--_ui5_button_fontFamily);
 	text-align: left;
+}
+
+/* Calendar type toggle icon in high-zoom header */
+.ui5-dhzi-cal-toggle-btn {
+	color: var(--sapButton_Lite_TextColor);
+	cursor: pointer;
+	flex-shrink: 0;
+	margin-inline-start: auto;
+	padding: 0.25rem;
 }

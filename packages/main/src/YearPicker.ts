@@ -22,13 +22,24 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import CalendarPart from "./CalendarPart.js";
 import type { CalendarYearRangeT, ICalendarPicker } from "./Calendar.js";
-import { YEAR_PICKER_DESCRIPTION } from "./generated/i18n/i18n-defaults.js";
+import {
+	YEAR_PICKER_DESCRIPTION,
+	CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE,
+	CALENDAR_HEADER_YEAR_RANGE_BUTTON,
+	CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT,
+	CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT,
+} from "./generated/i18n/i18n-defaults.js";
+import type { CalendarHeaderHost } from "./CalendarHeaderTypes.js";
 
 // Template
 import YearPickerTemplate from "./YearPickerTemplate.js";
 
 // Styles
 import yearPickerStyles from "./generated/themes/YearPicker.css.js";
+import calendarHeaderStyles from "./generated/themes/CalendarHeader.css.js";
+import calendarStyles from "./generated/themes/Calendar.css.js";
 import CalendarSelectionMode from "./types/CalendarSelectionMode.js";
 
 const isBetween = (x: number, num1: number, num2: number) => x > Math.min(num1, num2) && x < Math.max(num1, num2);
@@ -68,7 +79,7 @@ type YearPickerNavigateEventDetail = {
  */
 @customElement({
 	tag: "ui5-yearpicker",
-	styles: yearPickerStyles,
+	styles: [yearPickerStyles, calendarHeaderStyles, calendarStyles],
 	template: YearPickerTemplate,
 })
 /**
@@ -84,7 +95,7 @@ type YearPickerNavigateEventDetail = {
 @event("navigate", {
 	bubbles: true,
 })
-class YearPicker extends CalendarPart implements ICalendarPicker {
+class YearPicker extends CalendarPart implements ICalendarPicker, CalendarHeaderHost {
 	eventDetails!: CalendarPart["eventDetails"] & {
 		"change": YearPickerChangeEventDetail,
 		"navigate": YearPickerNavigateEventDetail,
@@ -129,10 +140,120 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	@property({ noAttribute: true })
 	_currentYearRange?: CalendarYearRangeT;
 
+	/**
+	 * When true, YearPicker renders its own navigation header (for standalone use outside Calendar).
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_showHeader = false;
+
 	_firstYear?: number;
+
+	/**
+	 * Override the number of years per row. 0 means auto (default: 4, or 2 with secondary calendar).
+	 * @private
+	 */
+	@property({ type: Number, noAttribute: true })
+	_rowSize = 0;
+
+	/**
+	 * Override the total number of years shown per page. 0 means auto (default: 20, or 8 with secondary calendar).
+	 * @private
+	 */
+	@property({ type: Number, noAttribute: true })
+	_pageSize = 0;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
+
+	// CalendarHeaderHost implementation
+
+	get _previousButtonDisabled() {
+		return !this._hasPreviousPage();
+	}
+
+	get _nextButtonDisabled() {
+		return !this._hasNextPage();
+	}
+
+	get _portraitView() {
+		return false;
+	}
+
+	get _isHeaderMonthButtonHidden() {
+		return true;
+	}
+
+	get _isHeaderYearButtonHidden() {
+		return true;
+	}
+
+	get _isHeaderYearRangeButtonHidden() {
+		return false;
+	}
+
+	get _isHeaderYearRangeButtonReadonly() {
+		// In standalone (high-zoom) mode there is no Calendar parent to handle year-range
+		// button presses, so show the text as non-interactive to avoid a dead focusable control.
+		return this._showHeader;
+	}
+
+	get _headerYearRangeButtonText() {
+		if (!this._yearsInterval.length) {
+			return "";
+		}
+		const firstRow = this._yearsInterval[0];
+		const lastRow = this._yearsInterval[this._yearsInterval.length - 1];
+		const firstYear = firstRow[0].year;
+		const lastYear = lastRow[lastRow.length - 1].year;
+		return `${firstYear} – ${lastYear}`;
+	}
+
+	get accInfo() {
+		const rangeText = this._headerYearRangeButtonText;
+		const [rangeStartText, rangeEndText] = rangeText.split(" – ");
+		const yearRangeLabel = YearPicker.i18nBundle.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON, rangeStartText, rangeEndText);
+		const yearRangeShortcut = YearPicker.i18nBundle.getText(CALENDAR_HEADER_YEAR_RANGE_BUTTON_SHORTCUT);
+		const nextBtnLabel = YearPicker.i18nBundle.getText(CALENDAR_HEADER_YEAR_RANGE_NEXT_BUTTON_TITLE);
+		const prevBtnLabel = YearPicker.i18nBundle.getText(CALENDAR_HEADER_YEAR_RANGE_PREVIOUS_BUTTON_TITLE);
+		const nextBtnShortcut = YearPicker.i18nBundle.getText(CALENDAR_HEADER_MONTH_NEXT_BUTTON_SHORTCUT);
+		const prevBtnShortcut = YearPicker.i18nBundle.getText(CALENDAR_HEADER_MONTH_PREVIOUS_BUTTON_SHORTCUT);
+
+		return {
+			ariaLabelYearRangeButton: yearRangeLabel,
+			ariaLabelNextButton: nextBtnLabel,
+			ariaLabelPrevButton: prevBtnLabel,
+			keyShortcutYearRangeButton: yearRangeShortcut,
+			keyShortcutNextButton: nextBtnShortcut,
+			keyShortcutPrevButton: prevBtnShortcut,
+			tooltipYearRangeButton: `${yearRangeLabel} (${yearRangeShortcut})`,
+			tooltipNextButton: `${nextBtnLabel} (${nextBtnShortcut})`,
+			tooltipPrevButton: `${prevBtnLabel} (${prevBtnShortcut})`,
+		};
+	}
+
+	onPrevButtonClick() {
+		this._showPreviousPage();
+	}
+
+	onPrevButtonKeyDown(e: KeyboardEvent) {
+		if (isEnter(e) || isSpace(e)) {
+			this._showPreviousPage();
+		}
+	}
+
+	onPrevButtonKeyUp() { /* noop */ }
+
+	onNextButtonClick() {
+		this._showNextPage();
+	}
+
+	onNextButtonKeyDown(e: KeyboardEvent) {
+		if (isEnter(e) || isSpace(e)) {
+			this._showNextPage();
+		}
+	}
+
+	onNextButtonKeyUp() { /* noop */ }
 
 	get roleDescription() {
 		return YearPicker.i18nBundle.getText(YEAR_PICKER_DESCRIPTION);
@@ -148,12 +269,12 @@ class YearPicker extends CalendarPart implements ICalendarPicker {
 	}
 
 	_getPageSize() {
-		// Total years on a single page depending on using on one or two calendar type
+		if (this._pageSize > 0) { return this._pageSize; }
 		return this.hasSecondaryCalendarType ? 8 : 20;
 	}
 
 	_getRowSize() {
-		// Years per row (5 rows of 4 years each) for one claendar type and (4 row of 2 years each) for two calendar type
+		if (this._rowSize > 0) { return this._rowSize; }
 		return this.hasSecondaryCalendarType ? 2 : 4;
 	}
 

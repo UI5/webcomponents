@@ -69,6 +69,7 @@ import TimePickerCss from "./generated/themes/TimePicker.css.js";
 import TimePickerPopoverCss from "./generated/themes/TimePickerPopover.css.js";
 import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverCommon.css.js";
 import ValueStateMessageCss from "./generated/themes/ValueStateMessage.css.js";
+import { isHighZoom, subscribeHighZoom, unsubscribeHighZoom } from "./util/HighZoomWatch.js";
 
 type ValueStateAnnouncement = Record<Exclude<ValueState, ValueState.None>, string>;
 
@@ -374,6 +375,13 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	tempValue?: string;
 
 	/**
+	 * True when the effective viewport width is ≤ 320 px (~200% browser zoom on a phone).
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_highZoom = false;
+
+	/**
 	 * Cached instance of DateFormat with a format pattern of "HH:mm:ss".
 	 * Used by the getISOFormat method to avoid creating a new DateFormat instance on each call.
 	 * @private
@@ -411,6 +419,22 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	get formFormattedValue(): FormData | string | null {
 		return this.value || "";
+	}
+
+	onEnterDOM() {
+		this._highZoom = isHighZoom();
+		subscribeHighZoom(this);
+	}
+
+	onExitDOM() {
+		unsubscribeHighZoom(this);
+	}
+
+	_onHzFocusIn(e: FocusEvent) {
+		(e.target as HTMLElement).blur();
+		if (!this.open) {
+			this._togglePicker();
+		}
 	}
 
 	onBeforeRendering() {
@@ -544,6 +568,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_togglePicker() {
+		this._highZoom = isHighZoom();
 		this.open = !this.open;
 		if (this._isMobileDevice) {
 			this._inputsPopover.open = false;
@@ -628,6 +653,11 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	_handleInputClick(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		if (this.open) {
+			return;
+		}
+
+		if (this._highZoom) {
+			this._togglePicker();
 			return;
 		}
 
@@ -1027,7 +1057,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get showHeader() {
-		return isPhone();
+		return isPhone() || this._highZoom;
 	}
 
 	/**

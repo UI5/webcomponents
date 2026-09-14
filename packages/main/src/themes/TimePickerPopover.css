@@ -29,3 +29,10 @@
 	padding: 0;
 	width: 100%;
 }
+
+/* High-zoom time inputs — match the top padding of the DatePicker high-zoom inputs. */
+.ui5-tp-hz-inputs {
+	display: block;
+	box-sizing: border-box;
+	padding-top: 0.5rem;
+}
