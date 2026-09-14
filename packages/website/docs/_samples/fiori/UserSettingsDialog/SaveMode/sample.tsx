@@ -1,3 +1,4 @@
+import "@ui5/webcomponents-base/dist/features/F6Navigation.js";
 import createReactComponent from "@ui5/webcomponents-base/dist/createReactComponent.js";
 import { type UI5CustomEvent } from "@ui5/webcomponents-base";
 import { useRef, useCallback } from "react";
@@ -235,7 +236,7 @@ function App() {
           description="Delivery Manager, SAP SE"
           selected={true}
         />
-        <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
+        <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
       </UserMenu>
 
       <UserSettingsDialog

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob");
+const { globSync } = require("glob");
 const getAllTags = require("./get-all-tags.js");
 
 const tags = getAllTags(process.cwd());
@@ -9,7 +9,7 @@ const errors = [];
 
 const removeComments = str => str.replaceAll(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, "");
 
-glob.sync(path.join(process.cwd(), "src/**/*.css")).forEach(file => {
+globSync(path.join(process.cwd(), "src/**/*.css")).forEach(file => {
 	let content = removeComments(String(fs.readFileSync(file)));
 	tags.forEach(tag => {
 		if (content.match(new RegExp(`(^|[^\.\-_A-Za-z0-9"\[])(${tag})([^\-_A-Za-z0-9]|$)`, "g"))) {
@@ -18,7 +18,7 @@ glob.sync(path.join(process.cwd(), "src/**/*.css")).forEach(file => {
 	});
 });
 
-glob.sync(path.join(process.cwd(), "src/**/*.ts")).forEach(file => {
+globSync(path.join(process.cwd(), "src/**/*.ts")).forEach(file => {
 	let content = removeComments(String(fs.readFileSync(file)));
 	tags.forEach(tag => {
 		if (content.match(new RegExp(`querySelector[A-Za-z]*..${tag}`, "g"))) {

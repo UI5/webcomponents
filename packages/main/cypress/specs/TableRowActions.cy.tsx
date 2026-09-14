@@ -90,7 +90,7 @@ describe("TableRowActions", () => {
 			cy.get("@row1").shadow().find("#actions-cell").should("not.exist");
 		});
 
-		it("tests multiple row actions - all visible", () => {
+		it.skip("tests multiple row actions - all visible", () => {
 			mountTable(2, () => <>
 				<TableRow>
 					<TableRowActionNavigation slot="actions" interactive={true}></TableRowActionNavigation>

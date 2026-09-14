@@ -7,6 +7,7 @@
 	--_ui5_link_focus_text_decoration: none;
 	--_ui5_link_focused_hover_text_decoration: none;
 	--_ui5_link_outline: 0.125rem dotted var(--sapContent_FocusColor);
+	--_ui5_link_outline_offset: 0;
 	--_ui5_link_subtle_text_decoration: underline;
 	--_ui5_link_subtle_text_decoration_hover: none;
 }

@@ -47,6 +47,7 @@ import type {
 
 import {
 	DAY_PICKER_WEEK_NUMBER_TEXT,
+	DAY_PICKER_CALENDAR_WEEK,
 	DAY_PICKER_NON_WORKING_DAY,
 	DAY_PICKER_TODAY,
 	LIST_ITEM_SELECTED,
@@ -1001,6 +1002,10 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		return this.hasSecondaryCalendarType
 			? `${this._primaryCalendarType} calendar with secondary ${this.secondaryCalendarType as string} calendar`
 			: `${this._primaryCalendarType} calendar`;
+	}
+
+	_getCalendarWeekLabel(weekNum: number): string {
+		return DayPicker.i18nBundle.getText(DAY_PICKER_CALENDAR_WEEK, weekNum);
 	}
 
 	get _formatLong() {

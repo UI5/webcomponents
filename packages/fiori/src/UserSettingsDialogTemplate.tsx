@@ -55,11 +55,11 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 			<Toolbar slot="footer" design="Transparent" data-sap-ui-fastnavgroup="true">
 				{this.saveMode ? (
 					<>
-						<ToolbarButton design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
-						<ToolbarButton design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
+						<ToolbarButton id={`${this._id}-save-btn`} design="Emphasized" text={this.saveButtonText} onClick={this._handleSaveButtonClick} />
+						<ToolbarButton id={`${this._id}-cancel-btn`} design="Transparent" text={this.cancelButtonText} onClick={this._handleCancelButtonClick} />
 					</>
 				) : (
-					<ToolbarButton design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
+					<ToolbarButton id={`${this._id}-close-btn`} design="Transparent" text={this.closeButtonText} onClick={this._handleCloseButtonClick} />
 				)}
 			</Toolbar>
 		</Dialog>
@@ -67,7 +67,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 }
 
 function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [], classes: string) {
-	return <List accessibleRole="Menu" onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
+	return <List onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
 		{items.map(item => (
 			<ListItemStandard
 				class={!item._icon && item._siblingsWithIcon ? "ui5-user-settings-item-no-icon" : ""}

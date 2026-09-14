@@ -12,6 +12,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
 import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
 import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
@@ -28,6 +29,9 @@ import {
 	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
 	USER_SETTINGS_LIST_ITEM_SELECTED,
+	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
+	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
+	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -227,6 +231,13 @@ class UserSettingsDialog extends UI5Element {
 	_showNoSearchResult = false;
 
 	/**
+	 * Indicates that the user changed the search value and the search
+	 * results should be announced on the next rendering.
+	 * @private
+	 */
+	_announceSearchResults = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @private
 	 */
@@ -272,6 +283,11 @@ class UserSettingsDialog extends UI5Element {
 			this._showNoSearchResult = false;
 		}
 
+		if (this._announceSearchResults) {
+			this._announceSearchResults = false;
+			announce(this._searchResultsText, InvisibleMessageMode.Polite);
+		}
+
 		if (!this._selectedSetting) {
 			this._selectedSetting = this.items[0] || this.fixedItems[0];
 		}
@@ -286,13 +302,14 @@ class UserSettingsDialog extends UI5Element {
 		});
 	}
 
-	_handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
+	async _handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
 		const alreadySelected = settingItem.selected;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
+		const shouldNavigate = this._showSettingWithNavigation;
 		this._collapsed = true;
 
 		if (!eventPrevented) {
@@ -307,6 +324,13 @@ class UserSettingsDialog extends UI5Element {
 			if (!alreadySelected) {
 				announce(UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_LIST_ITEM_SELECTED), InvisibleMessageMode.Polite);
 			}
+		}
+
+		// In navigation (single-column) mode the content replaces the list, so move the
+		// focus to the first interactive element of the content instead of losing it.
+		if (shouldNavigate) {
+			await renderFinished();
+			this._selectedSetting?.focusFirstContentElement();
 		}
 	}
 
@@ -352,6 +376,19 @@ class UserSettingsDialog extends UI5Element {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
 	}
 
+	get _searchResultsText() {
+		const resultsCount = this._filteredItems.length + this._filteredFixedItems.length;
+
+		switch (resultsCount) {
+		case 0:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS);
+		case 1:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT);
+		default:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS, resultsCount);
+		}
+	}
+
 	get _selectedItemSlotName() {
 		return this._selectedSetting ? this._selectedSetting._individualSlot : "";
 	}
@@ -376,12 +413,21 @@ class UserSettingsDialog extends UI5Element {
 		this.fireDecoratorEvent("cancel");
 	}
 
-	_handleCollapseClick() {
+	async _handleCollapseClick() {
 		this._collapsed = false;
+
+		// The side list replaces the content, so return the focus to the
+		// user settings item that was selected instead of losing it.
+		await renderFinished();
+		const selectedListItem = this._selectedSetting
+			? this.shadowRoot!.querySelector<HTMLElement>(`#setting-${this._selectedSetting._id}`)
+			: null;
+		selectedListItem?.focus();
 	}
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {
 		this._searchValue = (e.target as Input).value;
+		this._announceSearchResults = true;
 	}
 
 	captureRef(ref: HTMLElement & { associatedSettingItem?: UI5Element} | null) {

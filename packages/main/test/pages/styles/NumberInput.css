@@ -1,0 +1,15 @@
+h3 {
+	user-select: none;
+}
+
+.numberinput-page {
+	background-color: var(--sapBackgroundColor);
+}
+
+.numberinput-field {
+	width: 250px;
+}
+
+form ui5-number-input:invalid {
+	outline: 2px solid var(--sapNegativeColor);
+}

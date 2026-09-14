@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>NumberInput test page</title>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+
+	<script data-id="sap-ui-config" type="application/json">
+		{
+			"rtl": false,
+			"formatSettings": {
+				"firstDayOfWeek": 0
+			}
+		}
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="./styles/NumberInput.css">
+</head>
+<body class="numberinput-page">
+	<h3>NumberInput</h3>
+	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
+
+	<div>
+		<h3>NumberInput in Cozy</h3>
+		<ui5-number-input id="numberInputCozy"
+			placeholder="Enter number"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div class="sapUiSizeCompact">
+		<h3>NumberInput in Compact</h3>
+		<ui5-number-input id="numberInputCompact"
+			placeholder="Enter number"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with min=0, max=10 and step=1</h3>
+		<ui5-number-input id="numberInputMinMax"
+			placeholder="Enter number"
+			min="0"
+			max="10"
+			step="1"
+			class="numberinput-field"
+		>
+			<div slot="valueStateMessage">Wrong Value</div>
+		</ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with min=0, max=10, step=0.05 and valuePrecision=2</h3>
+		<ui5-number-input id="numberInputPrecision"
+			placeholder="Enter number"
+			min="0"
+			max="10"
+			step="0.05"
+			value-precision="2"
+			class="numberinput-field"
+		>
+			<div slot="valueStateMessage">Wrong Value</div>
+		</ui5-number-input>
+	</div>
+
+	<div>
+		<h3>Disabled NumberInput</h3>
+		<ui5-number-input id="numberInputDisabled"
+			placeholder="Enter number"
+			class="numberinput-field"
+			disabled
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>Readonly NumberInput</h3>
+		<ui5-number-input id="numberInputReadOnly"
+			placeholder="Enter number"
+			class="numberinput-field"
+			readonly
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueStateChange Prevented</h3>
+		<ui5-number-input id="numberInputValueStateChange"
+			placeholder="Enter number"
+			value-state="Negative"
+			class="numberinput-field"
+		>
+			<div slot="valueStateMessage">Value state change is prevented on this input</div>
+		</ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueState=None</h3>
+		<ui5-number-input id="numberInputNone"
+			placeholder="Enter number"
+			value-state="None"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueState=Positive</h3>
+		<ui5-number-input id="numberInputSuccess"
+			placeholder="Enter number"
+			value-state="Positive"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueState=Information</h3>
+		<ui5-number-input id="numberInputInformation"
+			placeholder="Enter number"
+			value-state="Information"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueState=Warning</h3>
+		<ui5-number-input id="numberInputWarning"
+			placeholder="Enter number"
+			value-state="Critical"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput with valueState=Negative</h3>
+		<ui5-number-input id="numberInputError"
+			placeholder="Enter number"
+			value-state="Negative"
+			class="numberinput-field"
+		></ui5-number-input>
+	</div>
+
+	<div>
+		<h3>NumberInput change event test (linked inputs)</h3>
+		<ui5-number-input id="numberInputChange1"
+			class="numberinput-field"
+			value="1"
+			min="1"
+			step="1000"
+		></ui5-number-input>
+		<ui5-number-input id="numberInputChange2"
+			class="numberinput-field"
+			value="1000"
+			min="1"
+			step="1000"
+		></ui5-number-input>
+	</div>
+
+	<h3>'input' event prevented</h3>
+	<ui5-number-input id="numberInputPreventedInput"
+		class="numberinput-field"
+	></ui5-number-input>
+
+	<h3>'change' event count</h3>
+	<ui5-input id="changeResult"></ui5-input>
+
+	<div>
+		<h3>NumberInput with large value and precision (thousands separator)</h3>
+		<ui5-number-input
+			class="numberinput-field"
+			value="10000"
+			value-precision="2">
+		</ui5-number-input>
+	</div>
+
+	<section>
+		<h3>Form validation</h3>
+		<form id="formValidation">
+			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
+			<ui5-number-input
+				min="5"
+				max="10"
+				step="0.05"
+				value-precision="2"
+				required
+				id="formNumberInput">
+			</ui5-number-input>
+			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
+		</form>
+	</section>
+
+	<h3>Accessibility</h3>
+	<section>
+		<ui5-label for="numberInputLabel">Quantity:</ui5-label>
+		<ui5-number-input id="numberInputLabel"
+			value="3"
+			min="0"
+			max="10"
+			step="1"
+		></ui5-number-input>
+	</section>
+
+	<script>
+		const labelChange = document.getElementById('myLabelChange');
+		const niCozy = document.getElementById('numberInputCozy');
+		const niCompact = document.getElementById('numberInputCompact');
+		const niMinMax = document.getElementById('numberInputMinMax');
+		const niPrecision = document.getElementById('numberInputPrecision');
+		const changeResult = document.getElementById('changeResult');
+		const preventedInput = document.getElementById('numberInputPreventedInput');
+		let changeCount = 0;
+
+		const displayChange = function (event) {
+			labelChange.innerHTML = "Event [change] :: [" + event.target.id + "] :: " + event.target.value;
+			changeCount++;
+			changeResult.value = `${changeCount}`;
+		};
+
+		niCozy.addEventListener('change', displayChange);
+		niCompact.addEventListener('change', displayChange);
+		niMinMax.addEventListener('change', displayChange);
+		niPrecision.addEventListener('change', displayChange);
+
+		numberInputChange1.addEventListener('change', function(e) {
+			const val = Number.parseInt(e.target.value, 10);
+			numberInputChange2.value = val + 999;
+			displayChange(e);
+		});
+
+		numberInputChange2.addEventListener('change', displayChange);
+
+		numberInputValueStateChange.addEventListener('value-state-change', function(e) {
+			e.preventDefault();
+		});
+
+		preventedInput.addEventListener('input', function(e) {
+			e.preventDefault();
+		});
+
+		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
+		const formValidationMessage = document.getElementById('formValidationMessage');
+		const formNumberInput = document.getElementById('formNumberInput');
+
+		btnCheckFormValidity.addEventListener('click', function() {
+			checkFormValidity('formNumberInput');
+		});
+
+		formNumberInput.addEventListener('change', function() {
+			setTimeout(() => {
+				checkFormValidity('formNumberInput', true);
+			}, 0);
+		});
+
+		function checkFormValidity(elementId, delayed = false) {
+			const element = document.getElementById(elementId);
+			const isValid = element.checkValidity();
+
+			element.reportValidity();
+
+			formValidationMessage.hidden = false;
+			formValidationMessage.innerText = `checkValidity(): ${isValid} ${delayed ? '(Delayed check)' : ''}`;
+			formValidationMessage.design = isValid ? 'Positive' : 'Negative';
+		}
+	</script>
+
+</body>
+</html>
