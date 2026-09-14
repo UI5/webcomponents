@@ -105,6 +105,11 @@ describe("Configuration script", () => {
 		cy.wrap({ getAnimationMode })
 			.invoke("getAnimationMode")
 			.should("equal", configurationObject.animationMode);
+
+		cy.window().should(win => {
+			const value = win.getComputedStyle(win.document.documentElement).getPropertyValue("--_ui5-animation-mode").trim();
+			expect(value).to.equal(configurationObject.animationMode);
+		});
 	});
 
 	it("getEnableDefaultTooltips", () => {

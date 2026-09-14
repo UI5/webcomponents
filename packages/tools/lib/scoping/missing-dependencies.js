@@ -1,5 +1,5 @@
 const fs = require("fs");
-const glob = require("glob");
+const { globSync } = require("glob");
 const path = require("path");
 const process = require("process");
 
@@ -10,8 +10,8 @@ const tagsToFiles = new Map();
 const filesToTags = new Map();
 
 let files = [
-	...glob.sync(path.join("packages/main/src/**/*.js")),
-	...glob.sync(path.join("packages/fiori/src/**/*.js")),
+	...globSync(path.join("packages/main/src/**/*.js")),
+	...globSync(path.join("packages/fiori/src/**/*.js")),
 ];
 files.forEach(file => {
 	let matches = file.match(/([a-zA-Z0-9_]+)\.js$/);
@@ -27,7 +27,7 @@ files.forEach(file => {
 });
 
 // Process the package
-files = glob.sync(path.join(projectPath, "src/**/*.js"));
+files = globSync(path.join(projectPath, "src/**/*.js"));
 tagsToFiles.forEach((file, tag) => {
 	const sourcePath = path.join(projectPath, "src/", `${file}.js`);
 	if (!fs.existsSync(sourcePath)) {

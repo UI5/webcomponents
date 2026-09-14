@@ -40,7 +40,7 @@ export default function UserMenuTemplate(this: UserMenu) {
 				<Bar class={{
 					"ui5-user-menu-fixed-header": true,
 					"ui5-user-menu-rp-scrolled": this._isScrolled || this._titleMovedToHeader
-				}} slot="header">
+				}} slot="header" accessible-name={this._ariaLabelledByAccountInformationText}>
 					{this._titleMovedToHeader &&
 						<Title
 							level="H1"
@@ -104,7 +104,7 @@ export default function UserMenuTemplate(this: UserMenu) {
 function headerContent(this: UserMenu) {
 	return (<>
 		{this._selectedAccount &&
-			<div class="ui5-user-menu-selected-account" aria-label={this._ariaLabelledByAccountInformationText}>
+			<div class="ui5-user-menu-selected-account">
 				<span title={this.showEditButton ? this._editAvatarTooltip : undefined}>
 					<Avatar size="L" onClick={this._isAvatarInteractive ? this._handleAvatarClick : undefined} initials={this._selectedAccount._initials} colorScheme={this._selectedAccount.avatarColorScheme} fallbackIcon={personPlaceholder} class="ui5-user-menu-selected-account-avatar" mode={this._isAvatarInteractive ? "Interactive" : "Image"}>
 						{this._selectedAccount.avatarSrc &&

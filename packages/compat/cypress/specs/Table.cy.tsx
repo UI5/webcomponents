@@ -509,7 +509,6 @@ describe("Table general interaction", () => {
 		cy.get("@popinChange")
 			.should(stub => {
 				expect(stub).to.have.been.calledTwice;
-				debugger
 				// @ts-ignore
 				expect(stub.args.slice(-1)[0][0].detail.poppedColumns.length).to.equal(2);
 			})
