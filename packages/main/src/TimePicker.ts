@@ -550,6 +550,39 @@ class TimePicker extends UI5Element implements IFormInputElement {
 		}
 	}
 
+	/**
+	 * Prevents the inner input from taking focus when the value-help icon is pressed,
+	 * so the subsequent click opens the picker on the first tap (same as MultiInput value-help).
+	 * @private
+	 */
+	_onValueHelpIconMouseDown(e: MouseEvent) {
+		if (!this._canOpenPicker()) {
+			return;
+		}
+
+		e.preventDefault();
+	}
+
+	_isIconClick(e: Event) {
+		const target = e.target as HTMLElement;
+
+		if (target?.hasAttribute("ui5-icon")) {
+			return true;
+		}
+
+		return e.composedPath().some(el => el instanceof HTMLElement && el.hasAttribute("ui5-icon"));
+	}
+
+	_isInputFieldClick(e: Event) {
+		const inputField = this._getInputField();
+
+		if (!inputField) {
+			return false;
+		}
+
+		return e.composedPath().includes(inputField);
+	}
+
 	submitPickers() {
 		this._updateValueAndFireEvents(this.tempValue!, true, ["change", "value-changed"]);
 		this._togglePicker();
@@ -626,20 +659,25 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_handleInputClick(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		if (this.open) {
+		if (this._isMobileDevice) {
 			return;
 		}
 
-		if (this._isMobileDevice && target && !target.hasAttribute("ui5-icon")) {
-			this.toggleInputsPopover();
+		if (this._isIconClick(e) || this.open) {
+			return;
 		}
 
 		const inputField = this._getInputField();
 
-		if (inputField) {
+		if (inputField && this._isInputFieldClick(e)) {
 			(inputField as HTMLInputElement).select();
 		}
+	}
+
+	_isInputFieldFocus(e: FocusEvent) {
+		const inputField = this._getInputField();
+
+		return !!inputField && e.target === inputField;
 	}
 
 	_updateValueAndFireEvents(value: string, normalizeValue: boolean, eventsNames: Array<"input" | "change" | "value-changed">) {
@@ -972,12 +1010,24 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_onfocusin(e: FocusEvent) {
-		if (this._isMobileDevice) {
-			this._hideMobileKeyboard();
-			if (this._isInputsPopoverOpen) {
-				const popover = this._inputsPopover;
-				popover.applyFocus();
-			}
+		if (!this._isMobileDevice) {
+			return;
+		}
+
+		if (this._isIconClick(e)) {
+			return;
+		}
+
+		this._hideMobileKeyboard();
+
+		if (this._isInputsPopoverOpen) {
+			this._inputsPopover.applyFocus();
+			e.preventDefault();
+			return;
+		}
+
+		if (this._isInputFieldFocus(e)) {
+			this.toggleInputsPopover();
 			e.preventDefault();
 		}
 	}
@@ -1027,6 +1077,10 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	get showHeader() {
+		return isPhone();
+	}
+
+	get _preventPickerInitialFocus() {
 		return isPhone();
 	}
 
