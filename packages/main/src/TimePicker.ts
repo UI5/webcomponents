@@ -564,12 +564,6 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_isIconClick(e: Event) {
-		const target = e.target as HTMLElement;
-
-		if (target?.hasAttribute("ui5-icon")) {
-			return true;
-		}
-
 		return e.composedPath().some(el => el instanceof HTMLElement && el.hasAttribute("ui5-icon"));
 	}
 
@@ -590,6 +584,12 @@ class TimePicker extends UI5Element implements IFormInputElement {
 
 	onResponsivePopoverAfterClose() {
 		this.open = false;
+		if (isPhone()) {
+			this.blur(); // close device's keyboard and prevent further typing
+		} else {
+			this._dateTimeInput?.focus();
+		}
+
 		this.fireDecoratorEvent("close");
 	}
 
@@ -675,9 +675,7 @@ class TimePicker extends UI5Element implements IFormInputElement {
 	}
 
 	_isInputFieldFocus(e: FocusEvent) {
-		const inputField = this._getInputField();
-
-		return !!inputField && e.target === inputField;
+		return this._isInputFieldClick(e);
 	}
 
 	_updateValueAndFireEvents(value: string, normalizeValue: boolean, eventsNames: Array<"input" | "change" | "value-changed">) {
