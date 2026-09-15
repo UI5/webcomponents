@@ -11,8 +11,13 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import {
 	customElement, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
+import { USER_SETTINGS_LIST_ITEM_SELECTED } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsAppearanceViewItemSelectEventDetail = {
 	item: UserSettingsAppearanceViewItem;
@@ -49,6 +54,9 @@ type UserSettingsAppearanceViewItemSelectEventDetail = {
  * @since 2.17.0
  */
 class UserSettingsAppearanceView extends UserSettingsView {
+	@i18n("@ui5/webcomponents-fiori")
+	static i18nBundle: I18nBundle;
+
 	eventDetails!: {
 		"selection-change": UserSettingsAppearanceViewItemSelectEventDetail;
 	}
@@ -93,6 +101,7 @@ class UserSettingsAppearanceView extends UserSettingsView {
 	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
 		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
 		if (isInstanceOfUserSettingsAppearanceViewItem(listItem)) {
+			const alreadySelected = listItem.selected;
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 				item: listItem,
 			});
@@ -102,6 +111,10 @@ class UserSettingsAppearanceView extends UserSettingsView {
 					viewItem.selected = false;
 				});
 				listItem.selected = true;
+
+				if (!alreadySelected) {
+					announce(UserSettingsAppearanceView.i18nBundle.getText(USER_SETTINGS_LIST_ITEM_SELECTED), InvisibleMessageMode.Polite);
+				}
 			}
 		}
 	};
