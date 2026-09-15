@@ -44,7 +44,7 @@ class DateTimeInput extends Input {
 	 */
 	get _placeholder() {
 		if (this.value) {
-			return "";
+			return;
 		}
 
 		return super._placeholder;
