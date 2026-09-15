@@ -193,7 +193,7 @@ class TableRow extends TableRowBase<TableCell> {
 			return this.position;
 		}
 		if (this._table) {
-			return this._table.rows.indexOf(this);
+			return this._table._rows.indexOf(this);
 		}
 		return -1;
 	}
