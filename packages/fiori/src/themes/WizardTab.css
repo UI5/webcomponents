@@ -70,7 +70,8 @@
 	cursor: pointer;
 }
 
-.ui5-wiz-step-root:focus .ui5-wiz-step-main {
+:host([desktop]) .ui5-wiz-step-root:focus .ui5-wiz-step-main,
+.ui5-wiz-step-root:focus-visible .ui5-wiz-step-main {
 	outline: var(--_ui5_wiz_tab_focus_outline);
 	outline-offset: 1px;
 	border-radius: var(--_ui5_wiz_tab_focus_border_radius);
