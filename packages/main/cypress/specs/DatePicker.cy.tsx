@@ -993,7 +993,7 @@ describe("Date Picker Tests", () => {
 
 		cy.get("[ui5-date-picker]")
 			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "");
+			.should("not.have.attr", "placeholder");
 	});
 
 	it("Going under the minimum date changes value state", () => {
