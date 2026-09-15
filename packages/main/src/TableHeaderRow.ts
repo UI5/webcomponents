@@ -105,6 +105,14 @@ class TableHeaderRow extends TableRowBase<TableHeaderCell> {
 		return (this._tableSelection as TableSelectionMulti).headerSelector === "ClearAll";
 	}
 
+	get _clearAllComponent() {
+		return this._tableSelection?.getClearAllComponent();
+	}
+
+	get _clearAllIcon() {
+		return this._tableSelection?.getClearAllIcon();
+	}
+
 	get _selectionCellAriaDescription() {
 		return this._tableSelection?.getAriaDescriptionForColumnHeader();
 	}

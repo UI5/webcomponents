@@ -1,12 +1,9 @@
-import CheckBox from "./CheckBox.js";
 import TableHeaderCell from "./TableHeaderCell.js";
-import Icon from "./Icon.js";
-import IconMode from "./types/IconMode.js";
-import ClearAll from "@ui5/webcomponents-icons/dist/clear-all.js";
-import IconDesign from "./types/IconDesign.js";
 import type TableHeaderRow from "./TableHeaderRow.js";
 
 export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColIndex: number = 1) {
+	const SelectionComponent = this._selectionComponent;
+	const ClearAllComponent = this._clearAllComponent;
 	return (
 		<>
 			{ this._hasSelector &&
@@ -22,22 +19,25 @@ export default function TableHeaderRowTemplate(this: TableHeaderRow, ariaColInde
 						<></>
 						:
 						this._shouldRenderClearAll ?
-							<Icon
-								name={ClearAll}
-								mode={IconMode.Decorative}
-								showTooltip={true}
-								accessibleName={this._i18nDeselectAllRows}
-								design={this._hasSelectedRows ? IconDesign.Default : IconDesign.NonInteractive}
-								onClick={this._onSelectionChange}
-							></Icon>
+							(ClearAllComponent &&
+								<ClearAllComponent
+									name={this._clearAllIcon}
+									mode="Decorative"
+									showTooltip={true}
+									accessibleName={this._i18nDeselectAllRows}
+									design={this._hasSelectedRows ? "Default" : "NonInteractive"}
+									onClick={this._onSelectionChange}
+								></ClearAllComponent>
+							)
 							:
-							<CheckBox id="selection-component"
+							SelectionComponent &&
+							<SelectionComponent id="selection-component"
 								tabindex={-1}
 								checked={this._isSelected}
 								onChange={this._onSelectionChange}
 								accessibleName={this._i18nRowSelector}
 								title={this._isSelected ? this._i18nDeselectAllRows : this._i18nSelectAllRows}
-							></CheckBox>
+							></SelectionComponent>
 					}
 				</TableHeaderCell>
 			}

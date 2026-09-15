@@ -68,6 +68,7 @@ function App() {
         </ShellBarBranding>
         <ToggleButton
           icon={assistantIcon}
+          design="Transparent"
           slot="assistant"
           onClick={handleToggleButtonClick}
         />
