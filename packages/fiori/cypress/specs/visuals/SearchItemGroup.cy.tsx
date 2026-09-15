@@ -15,7 +15,7 @@ describe("SearchItemGroup visual", () => {
 				</SearchItemGroup>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -33,7 +33,7 @@ describe("SearchItemGroup visual", () => {
 				</SearchItemGroup>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -47,7 +47,7 @@ describe("SearchItemGroup visual", () => {
 				</SearchItemGroup>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -60,7 +60,7 @@ describe("SearchItemGroup visual", () => {
 				</SearchItemGroup>
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -78,7 +78,7 @@ describe("SearchItemGroup visual", () => {
 				</Search>
 			</div>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });
