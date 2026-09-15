@@ -1,0 +1,8 @@
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/sap_horizon/parameters-bundle.css.js";
+import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s", "sap_horizon", async () => defaultTheme, "host");
+export default `:host{display:flex;align-items:center;justify-content:center;box-sizing:border-box;outline:none;border:.0625rem solid;background:var(--sapButton_Emphasized_Background);border-color:var(--sapButton_Emphasized_BorderColor);color:var(--sapButton_Emphasized_TextColor)}:host([invalid]){display:none}:host([state="Positive"]){background:var(--sapSuccessBackground);border-color:var(--sapSuccessBorderColor);color:var(--sapPositiveTextColor)}:host([state="Critical"]){background:var(--sapWarningBackground);border-color:var(--sapWarningBorderColor);color:var(--sapCriticalTextColor)}:host([state="Negative"]){background:var(--sapErrorBackground);border-color:var(--sapErrorBorderColor);color:var(--sapNegativeTextColor)}:host([state="Information"]){background:var(--sapInformationBackground);border-color:var(--sapInformationBorderColor);color:var(--sapInformativeTextColor)}.ui5-avatar-badge-icon{width:var(--_ui5-avatar-badge-icon-size);height:var(--_ui5-avatar-badge-icon-size);color:inherit}
+`;
+//# sourceMappingURL=AvatarBadge.css.js.map

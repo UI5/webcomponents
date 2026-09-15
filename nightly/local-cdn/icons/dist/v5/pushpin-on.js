@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "pushpin-on";
+const pathData = "M9.963 1.057a.75.75 0 0 1 .817.163l4 4a.75.75 0 0 1-.53 1.28h-.965l-1.857 1.65-1.197 5.266c-.128.565-.852.774-1.261.364l-2.845-2.845L2.28 14.78a.75.75 0 1 1-1.06-1.06l3.844-3.845L2.22 7.03c-.41-.41-.201-1.133.364-1.262l5.265-1.197L9.5 2.715V1.75a.75.75 0 0 1 .463-.693Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/pushpin-on";
+export { pathData, ltr, viewBox, accData };

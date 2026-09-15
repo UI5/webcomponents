@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "journey-depart";
+const pathData = "M12.262 1A2.738 2.738 0 0 1 15 3.738a.75.75 0 0 1-1.5 0c0-.684-.554-1.238-1.238-1.238H3.75c-.69 0-1.25.56-1.25 1.25v8.5c0 .69.56 1.25 1.25 1.25h8.5c.726 0 1.25-.606 1.25-1.308a.75.75 0 0 1 1.5 0C15 13.712 13.794 15 12.25 15h-8.5A2.75 2.75 0 0 1 1 12.25v-8.5A2.75 2.75 0 0 1 3.75 1h8.512Zm.454 4.47a.75.75 0 0 1 1.06 0l2 1.997a.75.75 0 0 1 0 1.06l-2 2.003a.75.75 0 0 1-1.06-1.06l.719-.72H5.749a.75.75 0 0 1 0-1.5h7.688l-.721-.72a.75.75 0 0 1 0-1.06Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/journey-depart";
+export { pathData, ltr, viewBox, accData };
