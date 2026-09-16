@@ -231,6 +231,17 @@ class SideNavigation extends UI5Element {
 	filterSection!: Slot<HTMLElement>;
 
 	/**
+	 * Specifies a term to be highlighted in the navigation items' text.
+	 * When set, matching portions of item and group texts are visually emphasized during rendering.
+	 *
+	 * @public
+	 * @since 2.28.0
+	 * @default undefined
+	 */
+	@property()
+	highlightedText?: string;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Object })
@@ -291,6 +302,7 @@ class SideNavigation extends UI5Element {
 				item.inPopover = this.inPopover;
 				item.sideNavigation = this;
 				item.sideNavAnimating = this._bAnimating;
+				item._highlightedText = this.highlightedText;
 			});
 
 		this.initGroupsSettings(this.items);

@@ -4,7 +4,13 @@ const searchField = document.getElementById("searchField");
 const sideNav = document.getElementById("sn1");
 
 document.getElementById("startButton").addEventListener("click", function () {
-	nl1.mode = nl1.isSideCollapsed() ? "Expanded" : "Collapsed";
+	if (nl1.isSideCollapsed()) {
+		nl1.mode = "Expanded";
+	} else {
+		searchField.value = "";
+		executeSearch();
+		nl1.mode = "Collapsed";
+	}
 });
 
 rtlCb.addEventListener("ui5-change", function () {
@@ -439,6 +445,9 @@ function countItems(items, value) {
 }
 
 function executeSearch(value) {
+	// Highlight the matching portions of the rendered item texts.
+	sideNav.highlightedText = value || "";
+
 	if (!value) {
 		renderNavigation(data);
 		return 0;
