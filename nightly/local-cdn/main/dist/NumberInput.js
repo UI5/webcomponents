@@ -63,7 +63,7 @@ const INITIAL_SPEED = 120; // milliseconds
  * `import "@ui5/webcomponents/dist/NumberInput.js";`
  * @constructor
  * @extends UI5Element
- * @since 2.26.0
+ * @since 2.27.0
  * @experimental
  * @public
  */

@@ -12,12 +12,31 @@ type ToolbarMinWidthChangeEventDetail = {
     minWidth: number;
 };
 /**
+ * One step of the overflow distribution algorithm — either a single ungrouped item or
+ * all members of one non-empty `overflowGroup`, treated atomically. A unit's order key
+ * for the right-to-left distribution walk is the rightmost member's slot index; its
+ * width is the sum of member widths.
+ */
+type DistributionUnit = {
+    members: Array<ToolbarItemBase>;
+    width: number;
+    rightmostIndex: number;
+};
+/**
  * @class
  *
  * ### Overview
  *
  * The `ui5-toolbar` component is used to create a horizontal layout with items.
  * The items can be overflowing in a popover, when the space is not enough to show all of them.
+ *
+ * ### Grouped Overflow
+ *
+ * Items that share the same non-empty `overflowGroup` string are treated as one atomic
+ * unit during overflow distribution: when any member must move into the overflow
+ * popover, all members move together. The visible bar always preserves slot order;
+ * the group becomes adjacent only inside the popover. See the `overflowGroup` property
+ * on `ToolbarItemBase` for the full contract.
  *
  * ### Keyboard Handling
  * The `ui5-toolbar` provides advanced keyboard handling.
@@ -112,6 +131,7 @@ declare class Toolbar extends UI5Element {
     itemsToOverflow: Array<ToolbarItemBase>;
     itemsWidth: number;
     minContentWidth: number;
+    _groupingKey: string;
     _lastFocusedItem?: ToolbarItemBase | HTMLElement;
     ITEMS_WIDTH_MAP: Map<string, number>;
     static get styles(): string[];
@@ -185,6 +205,13 @@ declare class Toolbar extends UI5Element {
     processOverflowLayout(): void;
     storeItemsWidth(): void;
     distributeItems(overflowSpace?: number): void;
+    /**
+     * Buckets `movableItems` (in slot order) into atomic distribution units.
+     * Each unit either holds a single ungrouped item or all members of one
+     * non-empty `overflowGroup`. A unit's order key is its rightmost member's
+     * slot index. Returned units are sorted ascending by that key.
+     */
+    buildDistributionUnits(slotIndex: Map<ToolbarItemBase, number>): Array<DistributionUnit>;
     distributeItemsThatAlwaysOverflow(): void;
     setSeperatorsVisibilityInOverflow(): void;
     shouldShowSeparatorInOverflow(separatorIdx: number, overflowItems: Array<ToolbarItemBase>): boolean;
