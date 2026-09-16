@@ -238,18 +238,16 @@ class DateComponentBase extends UI5Element {
 		return this.getValueFormat().format(localDate, true);
 	}
 
-	getFormat() {
+	getFormat(formatOptions?: object) {
+		const base = {
+			strictParsing: true,
+			calendarType: this._primaryCalendarType,
+			...formatOptions,
+		};
+
 		return this._isPattern
-			? DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				strictParsing: true,
-				style: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			});
+			? DateFormat.getDateInstance({ ...base, pattern: this._formatPattern })
+			: DateFormat.getDateInstance({ ...base, style: this._formatPattern });
 	}
 
 	get _displayFormat() {

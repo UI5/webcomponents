@@ -871,7 +871,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		}
 
 		// translatable placeholder – for example "e.g. 2025-12-31"
-		return `${DatePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDayOfTheYear}`;
+		// @ts-ignore getPlaceholderText is a runtime API not exposed in type definitions
+		return this.getFormat()?.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate());
 	}
 
 	get _headerTitleText() {
