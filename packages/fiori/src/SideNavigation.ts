@@ -220,6 +220,17 @@ class SideNavigation extends UI5Element {
 	header!: Slot<HTMLElement>;
 
 	/**
+	 * Defines the filter section of the `ui5-side-navigation`.
+	 *
+	 * **Note:** The filter section is displayed when the component is expanded - the property `collapsed` is false;
+	 *
+	 * @public
+	 * @since 2.28.0
+	 */
+	@slot()
+	filterSection!: Slot<HTMLElement>;
+
+	/**
 	 * @private
 	 */
 	@property({ type: Object })
