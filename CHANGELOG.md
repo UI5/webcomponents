@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.3](https://github.com/UI5/webcomponents/compare/v2.25.2...v2.25.3) (2026-09-16)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** translate week number aria-label in DayPicker [2.25.x] ([#14064](https://github.com/UI5/webcomponents/issues/14064)) ([d2c52ba](https://github.com/UI5/webcomponents/commit/d2c52ba5840d2e2a42fb479c1e651439800f6cd8)), closes [#14014](https://github.com/UI5/webcomponents/issues/14014)
+
+
+
+
+
 ## [2.25.2](https://github.com/UI5/webcomponents/compare/v2.25.1...v2.25.2) (2026-09-03)
 
 
