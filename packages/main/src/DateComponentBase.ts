@@ -14,6 +14,25 @@ import { getMaxCalendarDate, getMinCalendarDate } from "@ui5/webcomponents-local
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import type CalendarWeekNumbering from "./types/CalendarWeekNumbering.js";
 
+type DateFormatOptions = {
+	calendarWeekNumbering?: `${CalendarWeekNumbering}`;
+	firstDayOfWeek?: number;
+	minimalDaysInFirstWeek?: number;
+	format?: string;
+	pattern?: string;
+	style?: string;
+	strictParsing?: boolean;
+	relative?: boolean;
+	relativeRange?: number[];
+	relativeScale?: string;
+	relativeStyle?: string;
+	interval?: boolean;
+	intervalDelimiter?: string;
+	singleIntervalValue?: boolean;
+	UTC?: boolean;
+	calendarType?: `${CalendarType}`;
+};
+
 /**
  * @class
  *
@@ -238,7 +257,7 @@ class DateComponentBase extends UI5Element {
 		return this.getValueFormat().format(localDate, true);
 	}
 
-	getFormat(formatOptions?: object) {
+	getFormat(formatOptions?: DateFormatOptions) {
 		const base = {
 			strictParsing: true,
 			calendarType: this._primaryCalendarType,
