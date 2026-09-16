@@ -13,7 +13,7 @@ describe("SearchItemShowMore visual", () => {
 				<SearchItemShowMore itemsToShowCount={12} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -25,7 +25,7 @@ describe("SearchItemShowMore visual", () => {
 				<SearchItemShowMore />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -38,7 +38,7 @@ describe("SearchItemShowMore visual", () => {
 				<SearchItemShowMore itemsToShowCount={24} />
 			</Search>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 
@@ -52,7 +52,7 @@ describe("SearchItemShowMore visual", () => {
 				</Search>
 			</div>
 		);
-		cy.get("[ui5-search]").shadow().find("[ui5-responsive-popover]").ui5ResponsivePopoverOpened();
+		cy.get("[ui5-search]").shadow().find("#ui5-search-list").ui5ResponsivePopoverOpened();
 		cy.screenshot();
 	});
 });

@@ -243,6 +243,18 @@ class UserSettingsItem extends UI5Element {
 
 			if (!eventPrevented) {
 				selectedPageView.selected = false;
+				const primaryView = this.pages?.find(view => !view.secondary && view !== selectedPageView);
+				renderFinished().then(() => {
+					if (!this.isConnected) {
+						return;
+					}
+					const lastItem = (primaryView as any)?._lastNavigatedItem;
+					if (lastItem?.getFocusDomRef) {
+						lastItem.getFocusDomRef()?.focus();
+					} else {
+						this._focusFirstContentElement();
+					}
+				});
 			}
 		} else {
 			this.fireDecoratorEvent("_collapse");
@@ -310,6 +322,15 @@ class UserSettingsItem extends UI5Element {
 
 		const focusable = await getFirstFocusableElement(contentElement, true);
 		focusable?.focus();
+	}
+
+	/**
+	 * @private
+	 * @since 2.27.0
+	 */
+	_focusBackButton() {
+		const backButton = this.shadowRoot?.querySelector<HTMLElement>(".ui5-user-settings-item-collapse-btn");
+		backButton?.focus();
 	}
 
 	captureRef(this: UserSettingsView, ref: HTMLElement & { associatedSettingView?: UserSettingsView} | null) {

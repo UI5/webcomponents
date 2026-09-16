@@ -988,6 +988,14 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "Delivery date");
 	});
 
+	it("placeholder is not set on inner input when value is present", () => {
+		cy.mount(<DatePicker value="Sep 9, 2026" formatPattern="MMM d, y"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("not.have.attr", "placeholder");
+	});
+
 	it("Going under the minimum date changes value state", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y" minDate="Jan 1, 2000"></DatePicker>);
 

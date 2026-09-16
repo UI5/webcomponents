@@ -14,6 +14,7 @@ import "@ui5/webcomponents-icons/dist/official-service.js";
 import "@ui5/webcomponents-icons/dist/private.js";
 import "@ui5/webcomponents-icons/dist/accelerated.js";
 import "@ui5/webcomponents-icons/dist/message-information.js";
+import "@ui5/webcomponents-icons/dist/home.js";
 
 const shellbar = document.getElementById("shellbar");
 const menu = document.getElementById("userMenu");

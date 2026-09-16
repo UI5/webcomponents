@@ -40,7 +40,10 @@
 	font-size: var(--sapFontSize);
 	font-weight: normal;
 	color: var(--sapContent_LabelColor);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	white-space: normal;
+	text-overflow: initial;
+}
+
+.ui5-menu-close-button {
+	margin-left: auto;
 }

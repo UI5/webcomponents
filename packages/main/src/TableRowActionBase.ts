@@ -5,12 +5,13 @@ import type { UI5CustomEvent } from "@ui5/webcomponents-base";
 
 import TableRowActionBaseTemplate from "./TableRowActionBaseTemplate.js";
 import TableRowActionBaseStyles from "./generated/themes/TableRowActionBase.css.js";
+import Button from "./Button.js";
+import iconOverflow from "@ui5/webcomponents-icons/dist/overflow.js";
 import type Menu from "./Menu.js";
 import type MenuItem from "./MenuItem.js";
 import type Table from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowAction from "./TableRowAction.js";
-import type Button from "./Button.js";
 
 let MenuConstructor: new () => Menu;
 let MenuItemConstructor: new () => MenuItem;
@@ -55,6 +56,14 @@ abstract class TableRowActionBase extends UI5Element {
 	 */
 	@property({ type: Boolean })
 	invisible = false;
+
+	get overflowButtonComponent(): typeof Button {
+		return Button;
+	}
+
+	get overflowButtonIcon(): string {
+		return iconOverflow;
+	}
 
 	private static _menu: Menu;
 	private static _menuItems = new WeakMap();

@@ -236,7 +236,7 @@ function App() {
           description="Delivery Manager, SAP SE"
           selected={true}
         />
-        <UserMenuItem icon="action-settings" text="Setting" data-id="setting" />
+        <UserMenuItem icon="action-settings" text="Settings" data-id="setting" />
       </UserMenu>
 
       <UserSettingsDialog

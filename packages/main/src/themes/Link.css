@@ -78,7 +78,7 @@
 }
 
 :host .ui5-link-root {
-	outline-offset: -0.0625rem;
+	outline-offset: var(--_ui5_link_outline_offset);
 	border-radius: var(--_ui5_link_focus_border-radius);
 }
 

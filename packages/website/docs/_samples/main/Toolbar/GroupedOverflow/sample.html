@@ -1,0 +1,39 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+</head>
+<body style="background-color: var(--sapBackgroundColor);height: 250px;">
+    <!-- playground-fold-end -->
+
+<!--
+    Items that share the same non-empty "overflow-group" string overflow together
+    as one atomic unit — either all visible in the bar or all in the overflow
+    popover, never split. The value is a free-form string label; equality is
+    exact and case-sensitive.
+
+    Here the "Filter:" label-button and its select share overflow-group="filters".
+    The toolbar's width is constrained so that the group cannot fit alongside the
+    ungrouped Add/Reject buttons — the bar shows Add, Reject, and the overflow
+    button. Click the overflow button to see both group members appear adjacent
+    to each other inside the popover.
+-->
+<ui5-toolbar style="width: 320px;">
+    <ui5-toolbar-button icon="add" text="Add"></ui5-toolbar-button>
+    <ui5-toolbar-button icon="decline" text="Reject"></ui5-toolbar-button>
+    <ui5-toolbar-separator></ui5-toolbar-separator>
+    <ui5-toolbar-button text="Filter:" overflow-group="filters"></ui5-toolbar-button>
+    <ui5-toolbar-select overflow-group="filters">
+        <ui5-toolbar-select-option>All</ui5-toolbar-select-option>
+        <ui5-toolbar-select-option selected>Open</ui5-toolbar-select-option>
+        <ui5-toolbar-select-option>Closed</ui5-toolbar-select-option>
+    </ui5-toolbar-select>
+</ui5-toolbar>
+<!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- playground-fold-end -->

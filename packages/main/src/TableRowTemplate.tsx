@@ -1,12 +1,9 @@
 import TableCell from "./TableCell.js";
-import CheckBox from "./CheckBox.js";
-import RadioButton from "./RadioButton.js";
-import Button from "./Button.js";
-import ButtonDesign from "./types/ButtonDesign.js";
-import iconOverflow from "@ui5/webcomponents-icons/dist/overflow.js";
 import type TableRow from "./TableRow.js";
 
 export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 1) {
+	const SelectionComponent = this._selectionComponent;
+	const OverflowButton = this._overflowButtonComponent;
 	return (
 		<>
 			{ this._hasSelector &&
@@ -17,20 +14,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					data-ui5-table-selection-cell
 					data-ui5-acc-text=""
 				>
-					{ this._isMultiSelect ?
-						<CheckBox id="selection-component"
+					{ SelectionComponent &&
+						<SelectionComponent id="selection-component"
 							tabindex={-1}
 							checked={this._isSelected}
 							onChange={this._onSelectionChange}
 							accessibleName={this._i18nRowSelector}
-						></CheckBox>
-						:
-						<RadioButton id="selection-component"
-							tabindex={-1}
-							checked={this._isSelected}
-							onChange={this._onSelectionChange}
-							accessibleName={this._i18nRowSelector}
-						></RadioButton>
+						></SelectionComponent>
 					}
 				</TableCell>
 			}
@@ -62,13 +52,13 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 						<slot name={action._individualSlot}></slot>
 					))}
 
-					{ this._hasOverflowActions &&
-						<Button id="overflow"
-							icon={iconOverflow}
-							design={ButtonDesign.Transparent}
+					{ this._hasOverflowActions && OverflowButton &&
+						<OverflowButton id="overflow"
+							icon={this._overflowButtonIcon}
+							design="Transparent"
 							tooltip={this._overflowButtonTooltip}
 							onClick={this._onOverflowButtonClick}
-						></Button>
+						></OverflowButton>
 					}
 
 					{ this._fixedActions.map(action => (
