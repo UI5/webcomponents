@@ -28,6 +28,7 @@ import {
 	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
+	USER_SETTINGS_LIST_ITEM_SELECTED,
 	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
 	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
 	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
@@ -304,6 +305,7 @@ class UserSettingsDialog extends UI5Element {
 	async _handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
 		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
+		const alreadySelected = settingItem.selected;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
@@ -318,6 +320,10 @@ class UserSettingsDialog extends UI5Element {
 				item.selected = false;
 			});
 			settingItem.selected = true;
+
+			if (!alreadySelected) {
+				announce(UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_LIST_ITEM_SELECTED), InvisibleMessageMode.Polite);
+			}
 		}
 
 		// In navigation (single-column) mode the content replaces the list, so move the

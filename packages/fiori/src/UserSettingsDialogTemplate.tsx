@@ -76,6 +76,7 @@ function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [
 				tooltip={item._tooltip}
 				ref={this.captureRef.bind(item)}
 				selected={item.selected}
+				_forceAriaSelected
 				disabled={item.disabled}
 				accessibleName={item.ariaLabelledByText}
 				type={this._showSettingWithNavigation ? "Navigation" : "Active"}

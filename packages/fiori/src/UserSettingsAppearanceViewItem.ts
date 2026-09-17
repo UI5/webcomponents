@@ -69,6 +69,14 @@ class UserSettingsAppearanceViewItem extends ListItemCustom {
 	@property()
 	colorScheme = "Accent7";
 
+	/**
+	 * Exposes the item's `selected` state to assistive technology, since these
+	 * items are always single-select theme options managed by the parent view.
+	 * @private
+	 */
+	@property({ type: Boolean })
+	_forceAriaSelected = true;
+
 	get isUserSettingsAppearanceViewItem(): boolean {
 		return true;
 	}
