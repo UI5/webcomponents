@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-card:** Header counter is properly aligned ([#13947](https://github.com/UI5/webcomponents/issues/13947)) ([9856f4f](https://github.com/UI5/webcomponents/commit/9856f4f8aa119b83be85616c59fda3018c5031ca))
+* **ui5-combobox:** prevent exception when item text is undefined ([#14035](https://github.com/UI5/webcomponents/issues/14035)) ([729e400](https://github.com/UI5/webcomponents/commit/729e4004ff8c01fbce9d135b4c8731a5cee7ef28))
+* **ui5-date-picker:** prevent placeholder announcement when value is set ([#14049](https://github.com/UI5/webcomponents/issues/14049)) ([172aaee](https://github.com/UI5/webcomponents/commit/172aaee4ba8fd1f5c8a1ab441d36f30f76d1b7f3))
+* **ui5-list:** guard missing focus DOM ref ([#14044](https://github.com/UI5/webcomponents/issues/14044)) ([967b282](https://github.com/UI5/webcomponents/commit/967b2821813d3a7c1c49aadbfffd0dae0a934563)), closes [#14008](https://github.com/UI5/webcomponents/issues/14008)
+* **ui5-list:** restore keyboard and body selection for InactiveSelectable items ([#14037](https://github.com/UI5/webcomponents/issues/14037)) ([b02452d](https://github.com/UI5/webcomponents/commit/b02452d3abea620a7e7884640cb472e8c4fffa29)), closes [#14011](https://github.com/UI5/webcomponents/issues/14011)
+* **ui5-time-picker:** separate mobile and desktop value-help tap handling ([#14048](https://github.com/UI5/webcomponents/issues/14048)) ([fa3e854](https://github.com/UI5/webcomponents/commit/fa3e8543d49345dd25ea903015bd4575e924b30e))
+
+
+### Features
+
+* **ui5-avatar-badge:** add colorScheme property for extended color palette ([#14009](https://github.com/UI5/webcomponents/issues/14009)) ([849466d](https://github.com/UI5/webcomponents/commit/849466d29075aac4265190b62b3c8dcaafe08f4e)), closes [#13925](https://github.com/UI5/webcomponents/issues/13925)
+* **ui5-tokenizer:** announce token deletion ([#14010](https://github.com/UI5/webcomponents/issues/14010)) ([b5551f8](https://github.com/UI5/webcomponents/commit/b5551f8933e878de9421334bd483e53095e12014))
+* **ui5-toolbar:** add overflow-group property for atomic group overflow ([#13949](https://github.com/UI5/webcomponents/issues/13949)) ([bf491e7](https://github.com/UI5/webcomponents/commit/bf491e75b16f6e51c95f69db63a8a15951e0fdcb))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 

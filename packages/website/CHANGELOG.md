@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** update Joule assistant button icon in website samples ([#14038](https://github.com/UI5/webcomponents/issues/14038)) ([a042bc8](https://github.com/UI5/webcomponents/commit/a042bc832401fab01d7959cbacdf842616a01241)), closes [#14021](https://github.com/UI5/webcomponents/issues/14021)
+
+
+### Features
+
+* **ui5-avatar-badge:** add colorScheme property for extended color palette ([#14009](https://github.com/UI5/webcomponents/issues/14009)) ([849466d](https://github.com/UI5/webcomponents/commit/849466d29075aac4265190b62b3c8dcaafe08f4e)), closes [#13925](https://github.com/UI5/webcomponents/issues/13925)
+* **ui5-toolbar:** add overflow-group property for atomic group overflow ([#13949](https://github.com/UI5/webcomponents/issues/13949)) ([bf491e7](https://github.com/UI5/webcomponents/commit/bf491e75b16f6e51c95f69db63a8a15951e0fdcb))
+* **ui5-user-settings-notifications-view:** introduce NotificationsView in UserSettingsDialog ([#13885](https://github.com/UI5/webcomponents/issues/13885)) ([5ef9250](https://github.com/UI5/webcomponents/commit/5ef92502c6d2d9d5e0fae011cd168f28d292f8c1))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 
