@@ -3,6 +3,7 @@ import type { Slot, DefaultSlot } from "@ui5/webcomponents-base/dist/UI5Element.
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -439,6 +440,31 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_effectiveShowClearIcon = false
 
 	/**
+	 * Controls whether the `label` slot content is shown (true) or the native input is shown (false).
+	 *
+	 * Unlike `ui5-select`, which is display-only and can unconditionally show the label slot,
+	 * ComboBox has an editable input — so we need to toggle between two modes:
+	 *
+	 * - **Display mode** (`_labelActive = true`): the label slot is visible, the input is hidden.
+	 *   This is the state after an item is selected, or when focus arrives via Tab.
+	 *
+	 * - **Edit mode** (`_labelActive = false`): the native input is visible and ready to receive input.
+	 *   Entered by clicking the label, pressing any non-Tab key, or typing.
+	 *   Exited (back to display mode) by selecting an item, blurring, or clearing the value.
+	 *
+	 * Extra complexity vs. Select:
+	 * - We must switch to edit mode eagerly in `_keydown`, not just on `input`, because the
+	 *   developer's `selection-change` listener may populate the slot *after* the key is handled —
+	 *   if we only checked `hasCustomLabel` at keydown time the slot would be empty and the guard
+	 *   would not fire, leaving the label visible after the first keystroke.
+	 * - `_labelClick` must `await renderFinished()` before focusing the inner input, because the
+	 *   input is opacity-0 until the re-render completes and focus on an invisible element is lost.
+	 * @private
+	 */
+	@property({ type: Boolean, noAttribute: true })
+	_labelActive = true;
+
+	/**
 	 * Indicates whether the value state message popover is open.
 	 * @private
 	 * @since 2.0.0
@@ -510,6 +536,20 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@slot()
 	icon!: Slot<IIcon>;
+
+	/**
+	 * Defines the HTML element that will be displayed in the component input part,
+	 * representing the selected item.
+	 *
+	 * **Note:** If not specified, the selected item's text will be displayed.
+	 *
+	 * **Note:** The slot content is user-managed. Listen to the `selection-change` event
+	 * and update the slot content accordingly.
+	 * @public
+	 * @since 2.10.0
+	 */
+	@slot()
+	label!: Slot<HTMLElement>;
 
 	_initialRendering = true;
 	_itemFocused = false;
@@ -678,6 +718,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (!(this.getDomRef()!.contains(toBeFocused)) && (this._getPicker() !== e.relatedTarget)) {
 			this.focused = false;
+			this._labelActive = true;
 		}
 	}
 
@@ -791,6 +832,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		this._toggleRespPopover();
 	}
 
+	async _labelClick() {
+		this._labelActive = false;
+		await renderFinished();
+		this.inner.focus();
+	}
+
 	_handleMobileKeydown(e: KeyboardEvent) {
 		if (isEscape(e)) {
 			this.value = this._lastValue || "";
@@ -814,6 +861,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			// stop the native event, as the semantic "input" would be fired.
 			e.stopImmediatePropagation();
 			this.focused = true;
+			this._labelActive = false;
 		}
 
 		this._filteredItems = this._filterItems(value);
@@ -1060,6 +1108,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	_keydown(e: KeyboardEvent) {
 		const isNavKey = isDown(e) || isUp(e) || isPageUp(e) || isPageDown(e) || isHome(e) || isEnd(e);
 		const allItems: Array<IComboBoxItem> = this._getItems();
+
+		if (this._labelActive && !isTabNext(e) && !isTabPrevious(e)) {
+			this._labelActive = false;
+		}
 
 		this._autocomplete = !(isBackSpace(e) || isDelete(e));
 		this._isKeyNavigation = false;
@@ -1433,6 +1485,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		if (sameItemSelected && sameSelectionPerformed) {
 			this._fireChangeEvent(); // Click on an already typed, but not memoized value shouold also trigger the change event
+			this._labelActive = true;
 			return this._closeRespPopover();
 		}
 
@@ -1460,6 +1513,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._fireChangeEvent();
 		this._closeRespPopover();
+		this._labelActive = true;
 
 		// reset selection
 		this.inner.setSelectionRange(this.value.length, this.value.length);
@@ -1497,6 +1551,7 @@ class ComboBox extends UI5Element implements IFormInputElement {
 			this.selectedValue = undefined;
 		}
 		this.fireDecoratorEvent("input");
+		this._labelActive = true;
 
 		if (this._isPhone) {
 			this._lastValue = "";
@@ -1611,6 +1666,10 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 	get openOnMobile() {
 		return this._isPhone && this.open;
+	}
+
+	get hasCustomLabel() {
+		return !!this.label.length;
 	}
 
 	get hasValueState(): boolean {
