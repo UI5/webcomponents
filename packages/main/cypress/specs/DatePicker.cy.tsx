@@ -25,19 +25,23 @@ describe("Date Picker Tests", () => {
 
 		cy.get<DatePicker>("@datePicker")
 			.ui5DatePickerGetInnerInput()
-			.as("input");
-
-		cy.get("@input")
 			.should("be.visible");
 
-		cy.get("@input")
-			.should("have.attr", "aria-describedby", "descr")
-			.and("not.have.attr", "aria-roledescription")
-			.and("have.attr", "aria-haspopup", "grid")
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input#inner")
+			.should("have.attr", "aria-haspopup", "grid")
 			.and("not.have.attr", "aria-controls");
 
-		cy.get("@input")
-			.should("not.have.attr", "aria-expanded");
+		cy.get<DatePicker>("@datePicker")
+			.shadow()
+			.find("[ui5-datetime-input]")
+			.shadow()
+			.find("input#inner")
+			.should("have.attr", "aria-describedby", "descr")
+			.and("not.have.attr", "aria-roledescription");
 	});
 
 	it("input receives value in format pattern depending on the set language", () => {
