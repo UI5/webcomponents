@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.4](https://github.com/UI5/webcomponents/compare/v2.25.3...v2.25.4) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-list:** restore keyboard and body selection for InactiveSelectable items ([#14045](https://github.com/UI5/webcomponents/issues/14045)) ([962ca12](https://github.com/UI5/webcomponents/commit/962ca12521f24a1be3bcb2bdaf4ea49921727409)), closes [#14037](https://github.com/UI5/webcomponents/issues/14037)
+
+
+
+
+
 ## [2.25.3](https://github.com/UI5/webcomponents/compare/v2.25.2...v2.25.3) (2026-09-16)
 
 
