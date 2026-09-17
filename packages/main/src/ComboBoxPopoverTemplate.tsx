@@ -16,6 +16,7 @@ export default function ComboBoxPopoverTemplate(this: ComboBox) {
 		<>
 			<ResponsivePopover
 				id={this.responsivePopoverId}
+				part="popover"
 				class={this.classes.popover}
 				style={this.styles.suggestionsPopover}
 				tabindex={-1}
