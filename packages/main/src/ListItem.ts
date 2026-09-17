@@ -112,10 +112,10 @@ abstract class ListItem extends ListItemBase {
 	 * **Note:** When set to `Active` or `Navigation`, the item will provide visual response upon press and hover,
 	 * while with type `Inactive`, `InactiveSelectable` and `Detail` - will not.
 	 *
-	 * **Note:** `InactiveSelectable` behaves like `Inactive` but allows selection to be toggled
-	 * via the checkbox (Multi mode) or radio button (Single modes) when the list has a selection mode.
-	 * Clicking the item body or pressing Space/Enter does not trigger selection — only interacting
-	 * with the selection component directly does. The `item-click` event is not fired for this type.
+	 * **Note:** `InactiveSelectable` behaves like `Inactive` (no active press/hover feedback and the
+	 * `item-click` event is not fired), but the item can still be selected. Clicking the item body,
+	 * pressing Space/Enter, or interacting with the selection component (checkbox in Multi mode, radio
+	 * button in Single modes) toggles the selection when the list has a selection mode.
 	 * @default "Active"
 	 * @public
 	*/
@@ -403,7 +403,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	fireItemPress(e: Event) {
-		if (this.isInactive || this.isInactiveSelectable) {
+		if (this.isInactive) {
 			return;
 		}
 		super.fireItemPress(e);

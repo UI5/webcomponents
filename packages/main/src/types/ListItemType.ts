@@ -11,7 +11,8 @@ enum ListItemType {
 
 	/**
 	 * Indicates the list item does not have any active feedback when item is pressed,
-	 * but selection (checkbox/radio) is still possible when a selection mode is active.
+	 * but the item can still be selected when a selection mode is active
+	 * (via the item body, Space/Enter, or the checkbox/radio).
 	 * The `item-click` event is not fired for items of this type.
 	 * @public
 	 * @since 2.25.1
