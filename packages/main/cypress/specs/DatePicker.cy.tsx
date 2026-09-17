@@ -31,7 +31,8 @@ describe("Date Picker Tests", () => {
 			.should("be.visible");
 
 		cy.get("@input")
-			.should("have.attr", "aria-roledescription", "Date Input")
+			.should("have.attr", "aria-describedby", "descr")
+			.and("not.have.attr", "aria-roledescription")
 			.and("have.attr", "aria-haspopup", "grid")
 			.and("not.have.attr", "aria-controls");
 
@@ -2042,7 +2043,7 @@ describe("Accessibility", () => {
 			.find("[ui5-datetime-input]")
 			.shadow()
 			.find("span#descr")
-			.should("have.text", DESCRIPTION);
+			.should("have.text", `Date Input ${DESCRIPTION}`);
 	});
 
 	it("accessibleDescriptionRef property", () => {
@@ -2066,7 +2067,7 @@ describe("Accessibility", () => {
 			.find("[ui5-datetime-input]")
 			.shadow()
 			.find("span#descr")
-			.should("have.text", DESCRIPTION);
+			.should("have.text", `Date Input ${DESCRIPTION}`);
 	});
 });
 
