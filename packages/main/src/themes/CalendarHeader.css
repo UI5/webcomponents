@@ -44,14 +44,16 @@
 }
 
 .ui5-calheader-arrowbtn:hover {
-	background-color: var(--sapButton_Hover_Background);
-	color: var(--sapButton_Lite_TextColor);
+	background-color: var(--sapButton_Lite_Hover_Background);
+	color: var(--sapButton_Lite_Hover_TextColor);
 	box-shadow: var(--_ui5_calendar_header_arrow_button_box_shadow);
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_Lite_Hover_BorderColor);
 }
 
 .ui5-calheader-arrowbtn:active {
 	background-color: var(--sapButton_Active_Background);
 	color: var(--sapButton_Active_TextColor);
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_Lite_Active_BorderColor);
 }
 
 .ui5-calheader-arrowbtn,
