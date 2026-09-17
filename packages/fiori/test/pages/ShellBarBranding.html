@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ShellBar — Spec Scenarios</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script data-ui5-config type="application/json">{ "rtl": false }</script>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body { font-family: sans-serif; background: #f5f6f7; padding: 1rem 1rem 4rem; }
+		.scenario { margin-bottom: 2.5rem; }
+		.scenario-label {
+			font-size: 0.75rem;
+			font-weight: 600;
+			color: #444;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			margin-bottom: 0.4rem;
+			padding: 0.25rem 0.5rem;
+			background: #e0e0e0;
+			border-radius: 3px;
+			display: inline-block;
+		}
+		.scenario-desc {
+			font-size: 0.8rem;
+			color: #555;
+			margin: 0.25rem 0 0.5rem;
+			line-height: 1.5;
+		}
+	</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     WHAT CHANGED — Custom Branding Responsiveness POC
+     ═══════════════════════════════════════════════════════════════ -->
+<div style="margin-bottom:2rem; padding:1rem 1.25rem; background:#fff; border:1px solid #d0d0d0; border-radius:6px; font-size:0.82rem; line-height:1.7; color:#333;">
+	<strong style="font-size:0.9rem;">Custom Branding — What changed</strong>
+	<table style="margin-top:0.75rem; border-collapse:collapse; width:100%;">
+		<thead>
+			<tr style="background:#f0f0f0; text-align:left;">
+				<th style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Area</th>
+				<th style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Before</th>
+				<th style="padding:0.35rem 0.75rem; border:1px solid #ccc;">After</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>S breakpoint hiding</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Product identifier hidden at S (&lt;600px)</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Identifier stays visible as long as possible — only hides after all actions have overflowed</td>
+			</tr>
+			<tr style="background:#fafafa;">
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Stacked mode</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Did not exist</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — when title needs more than 2 lines, it moves below the logo automatically. Triggered by the overflow loop, not a breakpoint.</td>
+			</tr>
+			<tr>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Overflow order</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Branding hidden at S breakpoint (fixed)</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Stack → identifier overflow → logo overflow (logo is always last)</td>
+			</tr>
+			<tr style="background:#fafafa;">
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Branding in overflow popover</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Did not appear in overflow menu</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — appears at top of overflow popover with separator, shows only the hidden parts (identifier and/or logo)</td>
+			</tr>
+			<tr>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Title wrapping</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>white-space: nowrap</code> + ellipsis — title always on one line</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;"><code>-webkit-line-clamp: 2</code> — title can wrap up to 2 lines before going stacked</td>
+			</tr>
+			<tr style="background:#fafafa;">
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Content area priority</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">No control over hide order</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — <code>data-hide-order</code> attribute sets explicit priority; <code>data-never-hide</code> keeps an item always visible</td>
+			</tr>
+			<tr style="background:#fafafa;">
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Branding DOM position</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Outside the overflow container — not measured by overflow loop</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Moved inside the overflow container so the overflow loop can measure and hide it progressively</td>
+			</tr>
+			<tr>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Actions alignment</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>justify-content: end</code> on inner container</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;"><code>margin-inline-end: auto</code> on branding — pushes actions right while keeping branding naturally left-aligned</td>
+			</tr>
+			<tr style="background:#fafafa;">
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Removed</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>_isSBreakPoint</code> property — parent ShellBar set this on the branding element to hide the title at S</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:#c00;">Removed — replaced by the overflow loop driving stacked/hidden state via non-reactive attributes</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     1. BASIC BRANDING — no actions, no content
+     Expected: Logo + product identifier visible. No overflow.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">1 · Basic branding — no actions</span>
+	<p class="scenario-desc">Logo and product identifier visible. No overflow button.</p>
+	<ui5-shellbar>
+		<ui5-shellbar-branding slot="branding">
+			Product Title
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     2. BRANDING + SHELL ACTIONS — resize to trigger overflow
+     Expected: Shell actions overflow first (rightmost first).
+     Overflow button appears. Branding stays visible longer.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">2 · Branding + shell actions — resize to overflow</span>
+	<p class="scenario-desc">
+		Resize narrow: shell actions go to overflow first (rightmost first: Help → Settings → Notifications).
+		Branding stays visible until all actions are overflowed. Overflow button appears.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     3. BRANDING WRAPPING — long product identifier
+     Expected: If identifier needs >2 lines → stacks below logo.
+     If still too narrow → identifier moves to overflow.
+     Logo is last to be hidden.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">3 · Long product identifier — stacking + overflow</span>
+	<p class="scenario-desc">
+		Resize narrow: identifier wraps to 2 lines (stacks below logo). Further → identifier moves to overflow.
+		Logo is last to be hidden.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			A very Long Brand Name that needs wrapping
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     4. CONTENT AREA — default priority (last added, first hidden)
+     Expected: items hide in reverse insertion order (last added first).
+     Separators shown automatically. No separator on size S (<600px).
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">4 · Content area — default priority (last added, first hidden)</span>
+	<p class="scenario-desc">
+		Resize narrow: "Item C" (last added) hides first, then "Item B", then "Item A".
+		Separators visible on M/L/XL, hidden on S (&lt;600px).
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-button slot="content" design="Transparent">Item A</ui5-button>
+		<ui5-button slot="content" design="Transparent">Item B</ui5-button>
+		<ui5-button slot="content" design="Transparent">Item C</ui5-button>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     5. CONTENT AREA — explicit priority (data-hide-order)
+     Expected: Priority 1 hides first, priority 4 hides last.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">5 · Content area — explicit priority (data-hide-order)</span>
+	<p class="scenario-desc">
+		Resize narrow: "Priority 1" hides first, then "Priority 2", "Priority 3", "Priority 4" last.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-button slot="content" design="Transparent" data-hide-order="4">Priority 4 (last hidden)</ui5-button>
+		<ui5-button slot="content" design="Transparent" data-hide-order="3">Priority 3</ui5-button>
+		<ui5-button slot="content" design="Transparent" data-hide-order="2">Priority 2</ui5-button>
+		<ui5-button slot="content" design="Transparent" data-hide-order="1">Priority 1 (first hidden)</ui5-button>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     6. NEVER HIDE content item
+     Expected: "Always Visible" item never hides. Other items, branding,
+     and shell actions overflow before it. Hide events still fire for it.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">6 · Never hide content item</span>
+	<p class="scenario-desc">
+		Resize narrow: "Can Hide" hides first, then shell actions, then branding.
+		"Always Visible" (data-never-hide) stays in the bar at all times.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-tag slot="content" design="Set2" color-scheme="2" data-never-hide>Always Visible ★</ui5-tag>
+		<ui5-button slot="content" design="Transparent" data-hide-order="1">Can Hide</ui5-button>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     7. CONTENT + ACTIONS — full overflow cascade with additional context
+     Expected order: search collapses → actions overflow (rightmost first)
+     → content hides by priority → identifier wraps → identifier overflows → logo overflows.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">7 · Full cascade — content + actions + branding</span>
+	<p class="scenario-desc">
+		Resize narrow. Expected order: search collapses → Help overflows → Settings overflows →
+		Notifications overflows → "Item 1" hides → "Item 2*" (never-hide, stays) →
+		identifier wraps → identifier overflows → logo overflows.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-tag slot="content" design="Set2" color-scheme="2" data-never-hide data-hide-order="2">Item 2* (never hide)</ui5-tag>
+		<ui5-button slot="content" design="Transparent" data-hide-order="1">Item 1</ui5-button>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     8. BADGE — single badge-capable action overflows
+     Expected: overflow button shows the badge count (72).
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">8 · Badge — single badge action in overflow</span>
+	<p class="scenario-desc">
+		Resize narrow until notifications overflows. Overflow button should show "72" badge counter.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     9. BADGE — multiple badge-capable actions overflow → attention dot
+     Expected: overflow button shows attention dot (not count) when
+     multiple badge-capable actions are overflowed.
+     Even if notifications count is 0, attention dot still shows
+     because notifications CAN display a badge.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">9 · Badge — multiple badge actions → attention dot</span>
+	<p class="scenario-desc">
+		Resize narrow until both notifications (72) and custom item (count="1") overflow.
+		Overflow button shows attention dot, not a specific count.
+		Also: notifications with count="0" still causes attention dot since it CAN show a badge.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="activities" text="Tasks" count="1"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     10. OVERFLOW MENU — branding in overflow popover
+     Expected: when branding overflows, it appears at the top of the
+     overflow popover with logo and/or identifier. Clicking it fires
+     the branding click. Separator below branding entry.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">10 · Overflow popover — branding entry at top</span>
+	<p class="scenario-desc">
+		Resize very narrow until logo overflows. Open overflow menu: branding entry (logo + identifier)
+		appears at top with separator below it, followed by shell actions.
+		Clicking branding entry fires its click event.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding" href="https://ui5.sap.com" target="_blank">
+			A very Long Brand Name that needs wrapping to overflow
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     11. BRANDING ONLY (no logo) — identifier only
+     Expected: only text identifier shown, no logo slot.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">11 · Branding — identifier only (no logo)</span>
+	<p class="scenario-desc">Only product identifier text, no logo. Overflow still works.</p>
+	<ui5-shellbar show-notifications notifications-count="72">
+		<ui5-shellbar-branding slot="branding">
+			Product Title Without Logo
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     12. PROFILE + PRODUCT SWITCH — never go to overflow
+     Expected: profile and product switch always visible regardless of size.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">12 · Profile + product switch — always visible</span>
+	<p class="scenario-desc">
+		Resize to any size. Profile avatar and product switch never go into overflow.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Product Identifier
+			<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="Logo" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile">
+			<img src="https://sdk.openui5.org/test-resources/sap/f/images/Woman_avatar_01.png" alt="Avatar" />
+		</ui5-avatar>
+	</ui5-shellbar>
+</div>
+
+</body>
+</html>

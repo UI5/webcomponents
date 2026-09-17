@@ -3,16 +3,17 @@
 }
 
 :host(:not([hidden])) {
-    display: inline;
+    display: block;
+    min-width: 0;
 }
 
 .ui5-shellbar-branding-root {
-	overflow: hidden;
 	display: flex;
 	align-items: center;
-	height: 2.25rem;
-	padding-block: 0.125rem;
-	padding-inline: 0.25rem 0.5rem;
+	min-height: 2.5rem;
+	min-width: 0;
+	padding-block: 0.25rem;
+	padding-inline: 0.25rem 2rem;
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--sapButton_Lite_Background);
@@ -21,6 +22,12 @@
 	/* fix cutting of the focus outline */
 	margin-inline-start: 0.125rem;
 	margin-inline-end: 0.5rem;
+}
+
+.ui5-shellbar-branding-root--stacked,
+:host([_stacked]) .ui5-shellbar-branding-root {
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 .ui5-shellbar-branding-root:focus {
@@ -41,15 +48,24 @@
 }
 
 .ui5-shellbar-title {
-	display: inline-block;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
 	font-family: var(--sapFontSemiboldDuplexFamily);
 	margin: 0;
-	font-size: var(--_ui5_shellbar_menu_button_title_font_size);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	font-size: var(--sapFontHeader6Size);
 	color: var(--sapShell_SubBrand_TextColor);
 	margin-inline-start: 0.25rem;
+	text-align: start;
+}
+
+.ui5-shellbar-branding-root--stacked .ui5-shellbar-title,
+:host([_stacked]) .ui5-shellbar-title {
+	display: block;
+	overflow: visible;
+	-webkit-line-clamp: unset;
+	margin-inline-start: 0;
 }
 
 .ui5-shellbar-logo-area {
@@ -67,7 +83,7 @@
 }
 
 ::slotted([slot="logo"]) {
-	max-height: 1.875rem;
+	max-height: 1.5625rem;
 	width: auto;
 	padding-block: 0.0625rem;
 	padding-inline: 0.25rem;
@@ -76,4 +92,22 @@
 
 ::slotted([slot="logo"]):active {
 	pointer-events: none;
+}
+
+/* Measurement-only visibility — set via setAttribute, no reactive property, no re-render */
+:host([_measure-title-hidden]) .ui5-shellbar-title {
+	display: none !important;
+}
+
+:host([_measure-logo-hidden]) .ui5-shellbar-logo {
+	display: none !important;
+}
+
+/* Final hidden state — also non-reactive, driven by toggleAttribute from ShellBar */
+:host([_title-hidden]) .ui5-shellbar-title {
+	display: none !important;
+}
+
+:host([_logo-hidden]) .ui5-shellbar-logo {
+	display: none !important;
 }
