@@ -291,6 +291,10 @@ class Dialog extends Popup {
 		return true;
 	}
 
+	get _useNativeDialog() {
+		return true;
+	}
+
 	get _ariaLabelledBy() {
 		let ariaLabelledById;
 

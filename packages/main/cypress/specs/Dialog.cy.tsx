@@ -17,6 +17,17 @@ import {
 	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
+describe("Native dialog root", () => {
+	it("renders the popup root as a <dialog> element", () => {
+		cy.mount(<Dialog id="nd">content</Dialog>);
+
+		cy.get<Dialog>("#nd").then($d => {
+			const root = $d[0].shadowRoot!.querySelector("[root-element]")!;
+			expect(root.tagName.toLowerCase()).to.equal("dialog");
+		});
+	});
+});
+
 describe("Keyboard", () => {
 	it("TAB navigation", () => {
 		cy.mount(
