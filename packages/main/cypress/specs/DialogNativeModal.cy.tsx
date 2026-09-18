@@ -54,3 +54,28 @@ describe("Dialog native modal", () => {
 		cy.get("#opener").should("be.focused");
 	});
 });
+
+describe("Dialog native cancel/ESC", () => {
+	it("closes on Escape via native cancel", () => {
+		cy.mount(<Dialog id="e1"><span>x</span></Dialog>);
+		cy.get("#e1").invoke("prop", "open", true);
+		cy.get<Dialog>("#e1").ui5DialogOpened();
+
+		cy.realPress("Escape");
+		cy.get<Dialog>("#e1").ui5DialogClosed();
+		cy.get("#e1").should("have.prop", "open", false);
+	});
+
+	it("stays open when before-close is prevented on Escape", () => {
+		cy.mount(<Dialog id="e2"><span>x</span></Dialog>);
+		cy.get<Dialog>("#e2").then($d => {
+			$d[0].addEventListener("ui5-before-close", (e: Event) => e.preventDefault());
+		});
+		cy.get("#e2").invoke("prop", "open", true);
+		cy.get<Dialog>("#e2").ui5DialogOpened();
+
+		cy.realPress("Escape");
+		cy.wait(100);
+		cy.get("#e2").should("have.prop", "open", true);
+	});
+});

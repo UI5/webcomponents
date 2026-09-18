@@ -231,6 +231,7 @@ class Dialog extends Popup {
 	_resizeMouseUpHandler: (e: MouseEvent) => void;
 	_dragStartHandler: (e: DragEvent) => void;
 	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
+	_cancelHandler: (e: Event) => void;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -281,6 +282,7 @@ class Dialog extends Popup {
 
 		this._dragStartHandler = this._handleDragStart.bind(this);
 		this._fullscreenKeydownHandler = this._onFullscreenKeydown.bind(this);
+		this._cancelHandler = this._onCancel.bind(this);
 	}
 
 	static _isHeader(element: HTMLElement) {
@@ -516,12 +518,14 @@ class Dialog extends Popup {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
 		this._registerFullscreenKeydownHandler();
+		this._root.addEventListener("cancel", this._cancelHandler);
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
 		this._deregisterFullscreenKeydownHandler();
+		this._root.removeEventListener("cancel", this._cancelHandler);
 	}
 
 	_attachScreenResizeHandler() {
@@ -616,6 +620,13 @@ class Dialog extends Popup {
 		}
 
 		this._toggleFullscreen();
+	}
+
+	_onCancel(e: Event) {
+		// Take over native ESC handling so before-close stays cancelable
+		// and closing is routed through our lifecycle.
+		e.preventDefault();
+		this.closePopup(true);
 	}
 
 	_onFullscreenKeydown(e: KeyboardEvent) {

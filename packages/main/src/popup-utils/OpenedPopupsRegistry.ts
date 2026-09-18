@@ -72,6 +72,11 @@ const _keydownListener = (event: KeyboardEvent) => {
 			return;
 		}
 
+		// Native <dialog> popups handle Escape via their own "cancel" event.
+		if (topmostPopup._useNativeDialog) {
+			return;
+		}
+
 		event.stopImmediatePropagation();
 		topmostPopup.closePopup(true);
 	}
