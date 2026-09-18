@@ -1,3 +1,102 @@
-:host(:not([collapsed])) {
-	min-width: 3rem;
+/* container - maps to .sapMSF */
+:host(:not([hidden])) {
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 7rem;
+	height: 3rem;
+	background: transparent;
+	padding: 0.25rem 0;
+	position: relative;
+	font-family: var(--sapFontFamily);
+}
+
+/* field wrapper  */
+.ui5-side-navigation-search-field-root {
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
+	height: var(--sapElement_Height);
+	box-shadow: var(--sapField_Shadow);
+	border: var(--sapField_BorderWidth) var(--sapField_BorderStyle) var(--sapField_BorderColor);
+	border-radius: var(--sapField_BorderCornerRadius);
+	background: var(--sapField_BackgroundStyle);
+	background-color: var(--sapField_Background);
+	padding-left: 0.625rem;
+	overflow: hidden;
+	position: relative;
+	align-items: center;
+}
+
+:host(:hover) .ui5-side-navigation-search-field-root {
+	border-color: var(--sapField_Hover_BorderColor);
+	box-shadow: var(--sapField_Hover_Shadow);
+}
+
+:host(:focus-within) .ui5-side-navigation-search-field-root {
+	border-color: var(--sapField_Focus_BorderColor);
+}
+
+/* focus outline */
+:host(:focus-within) .ui5-side-navigation-search-field-root::before {
+	content: "";
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	left: 1px;
+	bottom: 1px;
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapField_Active_BorderColor);
+	z-index: 2;
+	pointer-events: none;
+}
+
+/* input */
+.ui5-side-navigation-search-field-inner-input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+	background: transparent;
+	color: var(--sapField_TextColor);
+	font-family: var(--sapFontFamily);
+	font-size: 0.875rem;
+	text-indent: 0.125rem;
+	text-overflow: ellipsis;
+	-webkit-appearance: none;
+	box-sizing: border-box;
+}
+
+.ui5-side-navigation-search-field-inner-input:focus {
+	outline: none;
+}
+
+/* remove native webkit search decorations/cancel button */
+.ui5-side-navigation-search-field-inner-input::-webkit-search-decoration,
+.ui5-side-navigation-search-field-inner-input::-webkit-search-results-decoration,
+.ui5-side-navigation-search-field-inner-input::-webkit-search-results-button,
+.ui5-side-navigation-search-field-inner-input::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+	display: none;
+}
+
+.ui5-side-navigation-search-field-inner-input::placeholder {
+	color: var(--sapField_PlaceholderTextColor);
+	font-size: var(--sapFontSize);
+	font-style: italic;
+	opacity: 1;
+}
+
+/* icon buttons */
+.ui5-side-navigation-search-field-clear-icon,
+.ui5-side-navigation-search-field-search-icon {
+	flex: none;
+	width: 1.125rem;
+	height: 1.125rem;
+	box-sizing: content-box;
+	padding: 0 calc((2.375rem - 1.125rem) / 2);
+	color: var(--sapContent_IconColor);
+	cursor: pointer;
 }
