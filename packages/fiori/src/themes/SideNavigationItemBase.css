@@ -408,3 +408,9 @@ and there is an additional border that appears on hover. */
 .ui5-sn-item-separator {
 	min-height: 0.625rem;
 }
+
+.ui5-sn-item-highlight {
+	background-color: var(--sapContent_SearchHighlightColor);
+	font-family: var(--sapFontBoldFamily);
+	font-size: var(--sapFontSize);
+}
