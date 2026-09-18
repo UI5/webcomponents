@@ -18,7 +18,6 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			aria-description={this._ariaDescription}
 			tabindex={this.effectiveTabIndex}
 			onFocusIn={this._onfocusin}
-			onFocusOut={this._onfocusout}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
 			title={this.ratingTooltip}
