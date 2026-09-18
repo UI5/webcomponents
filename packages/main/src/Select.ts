@@ -92,6 +92,7 @@ interface IOption extends ListItemBase {
 /**
  * Interface for group containers slotted inside `ui5-select`
  * @public
+ * @since 2.27.0
  */
 interface IOptionGroup {
 	isOptionGroup: boolean,
