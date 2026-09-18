@@ -6,9 +6,12 @@ export default function PopupTemplate(this: Popup, hooks?: {
 	beforeContent?: JsxTemplate
 	afterContent?: JsxTemplate
 }) {
+	const native = this._useNativeDialog;
+	const RootTag = native ? "dialog" : "section";
+
 	return (<>
-		{PopubBlockLayerTemplate.call(this)}
-		<section
+		{!native && PopubBlockLayerTemplate.call(this)}
+		<RootTag
 			root-element
 			style={this.styles.root}
 			class={this.classes.root}
@@ -23,7 +26,7 @@ export default function PopupTemplate(this: Popup, hooks?: {
 			onMouseDown={this._onmousedown}
 		>
 
-			<span class="first-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToLast}></span>
+			{!native && <span class="first-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToLast}></span>}
 
 			{(hooks?.beforeContent || beforeContent).call(this)}
 
@@ -44,9 +47,9 @@ export default function PopupTemplate(this: Popup, hooks?: {
 
 			{(hooks?.afterContent || afterContent).call(this)}
 
-			<span class="last-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToFirst}></span>
+			{!native && <span class="last-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToFirst}></span>}
 
-		</section>
+		</RootTag>
 
 	</>);
 }

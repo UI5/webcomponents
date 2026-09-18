@@ -737,6 +737,15 @@ abstract class Popup extends UI5Element {
 		return this.shadowRoot!.querySelector(".ui5-popup-root")!;
 	}
 
+	/**
+	 * When true, the popup renders its root as a native <dialog> and opens via showModal().
+	 * Overridden by Dialog. Popover/ResponsivePopover keep the default (false).
+	 * @protected
+	 */
+	get _useNativeDialog(): boolean {
+		return false;
+	}
+
 	get _role() {
 		return (this.accessibleRole === PopupAccessibleRole.None) ? undefined : toLowercaseEnumValue(this.accessibleRole);
 	}
