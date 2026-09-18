@@ -476,6 +476,10 @@ class Dialog extends Popup {
 		return Dialog.i18nBundle.getText(DIALOG_FOOTER_ARIA_LABEL);
 	}
 
+	get _dialogElement(): HTMLDialogElement {
+		return this._root as HTMLDialogElement;
+	}
+
 	_show() {
 		const dialog = this._root as HTMLDialogElement;
 		if (this.isConnected && !dialog.open) {
@@ -571,17 +575,17 @@ class Dialog extends Popup {
 	}
 
 	_center() {
-		const height = window.innerHeight - this.offsetHeight,
-			width = window.innerWidth - this.offsetWidth;
+		const height = window.innerHeight - this._dialogElement.offsetHeight,
+			width = window.innerWidth - this._dialogElement.offsetWidth;
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: `${Math.round(height / 2)}px`,
 			left: `${Math.round(width / 2)}px`,
 		});
 	}
 
 	_revertSize = () => {
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: "",
 			left: "",
 			width: "",
@@ -651,13 +655,13 @@ class Dialog extends Popup {
 		const {
 			top,
 			left,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 		const {
 			width,
 			height,
-		} = window.getComputedStyle(this);
+		} = window.getComputedStyle(this._dialogElement);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: `${top}px`,
 			left: `${left}px`,
 			width: `${Math.round(Number.parseFloat(width) * 100) / 100}px`,
@@ -680,9 +684,9 @@ class Dialog extends Popup {
 		const {
 			left,
 			top,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			left: `${Math.floor(left - calcX)}px`,
 			top: `${Math.floor(top - calcY)}px`,
 		});
@@ -724,7 +728,7 @@ class Dialog extends Popup {
 			left,
 			width,
 			height,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 
 		let newPos = 0;
 		let posDirection: "top" | "left" = "top";
@@ -754,15 +758,15 @@ class Dialog extends Popup {
 			posDirection === "left" ? window.innerWidth - width : window.innerHeight - height,
 		);
 
-		this.style[posDirection] = `${newPos}px`;
+		this._dialogElement.style[posDirection] = `${newPos}px`;
 	}
 
 	_resizeWithEvent(e: KeyboardEvent) {
 		this._draggedOrResized = true;
 		this.addEventListener("ui5-before-close", this._revertSize, { once: true });
 
-		const { top, left } = this.getBoundingClientRect(),
-			style = window.getComputedStyle(this),
+		const { top, left } = this._dialogElement.getBoundingClientRect(),
+			style = window.getComputedStyle(this._dialogElement),
 			minWidth = Number.parseFloat(style.minWidth),
 			maxWidth = window.innerWidth - left,
 			maxHeight = window.innerHeight - top;
@@ -788,7 +792,7 @@ class Dialog extends Popup {
 		width = clamp(width, minWidth, maxWidth);
 		height = clamp(height, this._minHeight, maxHeight);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			width: `${width}px`,
 			height: `${height}px`,
 		});
@@ -814,12 +818,12 @@ class Dialog extends Popup {
 		const {
 			top,
 			left,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 		const {
 			width,
 			height,
 			minWidth,
-		} = window.getComputedStyle(this);
+		} = window.getComputedStyle(this._dialogElement);
 
 		this._initialX = e.clientX;
 		this._initialY = e.clientY;
@@ -830,7 +834,7 @@ class Dialog extends Popup {
 		this._minWidth = Number.parseFloat(minWidth);
 		this._cachedMinHeight = this._minHeight;
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: `${top}px`,
 			left: `${left}px`,
 		});
@@ -853,11 +857,11 @@ class Dialog extends Popup {
 			);
 
 			// check if width is changed to avoid "left" jumping when max width is reached
-			Object.assign(this.style, {
+			Object.assign(this._dialogElement.style, {
 				width: `${newWidth}px`,
 			});
 
-			const deltaWidth = newWidth - this.getBoundingClientRect().width;
+			const deltaWidth = newWidth - this._dialogElement.getBoundingClientRect().width;
 			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
 
 			newLeft = clamp(
@@ -879,7 +883,7 @@ class Dialog extends Popup {
 			window.innerHeight - this._initialTop!,
 		);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
 			left: this._isRTL ? `${newLeft}px` : undefined,

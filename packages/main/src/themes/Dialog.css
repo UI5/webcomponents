@@ -1,27 +1,11 @@
 @import "./InvisibleTextStyles.css";
 
 :host {
-	min-width: min(20rem, 90vw);
-	min-height: min(6rem, 90vh);
-	max-height: 94%;
-	max-width: 90%;
-	flex-direction: column;
-	box-shadow: var(--sapContent_Shadow3);
-	border-radius: var(--sapElement_BorderCornerRadius);
+	display: contents;
 }
 
-:host([stretch]) {
-	width: 90%;
-	height: 94%;
-}
-
-:host([stretch][on-phone]) {
-	width: 100%;
-	height: 100%;
-	max-height: 100%;
-	max-width: 100%;
-	border-radius: 0;
-	min-width: 0; /*this is for preventing the dialog to hold its width on small screens*/
+:host([open]) {
+	display: contents;
 }
 
 :host([draggable]) .ui5-popup-header-root,
@@ -42,9 +26,35 @@
 }
 
 .ui5-popup-root {
+	position: fixed;
+	inset: unset;
+	width: auto; /* content-sized; overrides shared PopupsCommon .ui5-popup-root { width: 100% } */
+	min-width: min(20rem, 90vw);
+	min-height: min(6rem, 90vh);
+	max-height: 94%;
+	max-width: 90%;
+	box-shadow: var(--sapContent_Shadow3);
+	border-radius: var(--sapElement_BorderCornerRadius);
+	border: none;
+	padding: 0;
+	margin: 0;
+	background: var(--sapGroup_ContentBackground);
 	display: flex;
 	flex-direction: column;
-	max-width: 100vw;
+}
+
+:host([stretch]) .ui5-popup-root {
+	width: 90%;
+	height: 94%;
+}
+
+:host([stretch][on-phone]) .ui5-popup-root {
+	width: 100%;
+	height: 100%;
+	max-height: 100%;
+	max-width: 100%;
+	border-radius: 0;
+	min-width: 0; /*this is for preventing the dialog to hold its width on small screens*/
 }
 
 .ui5-popup-header-root {
@@ -165,11 +175,7 @@
 	display: none;
 }
 
-:host::backdrop {
+.ui5-popup-root::backdrop {
 	background-color: var(--_ui5_popup_block_layer_background);
 	opacity: var(--_ui5_popup_block_layer_opacity);
-}
-
-.ui5-block-layer {
-	display: block;
 }
