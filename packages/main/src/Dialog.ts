@@ -475,8 +475,18 @@ class Dialog extends Popup {
 	}
 
 	_show() {
-		super._show();
+		const dialog = this._root as HTMLDialogElement;
+		if (this.isConnected && !dialog.open) {
+			dialog.showModal();
+		}
 		this._center();
+	}
+
+	hide() {
+		const dialog = this._root as HTMLDialogElement;
+		if (this.isConnected && dialog.open) {
+			dialog.close();
+		}
 	}
 
 	onBeforeRendering() {

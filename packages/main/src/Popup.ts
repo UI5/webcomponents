@@ -282,7 +282,9 @@ abstract class Popup extends UI5Element {
 	}
 
 	onEnterDOM() {
-		this.setAttribute("popover", "manual");
+		if (!this._useNativeDialog) {
+			this.setAttribute("popover", "manual");
+		}
 
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
@@ -298,7 +300,9 @@ abstract class Popup extends UI5Element {
 
 	handleOpenOnEnterDOM() {
 		if (this.open) {
-			this.showPopover();
+			if (!this._useNativeDialog) {
+				this.showPopover();
+			}
 			this.openPopup();
 		}
 	}
