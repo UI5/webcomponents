@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "energy-saving-lightbulb";
+const pathData = "M4.08 6.915a.75.75 0 0 1 1.005-.336l6.5 3.25a.75.75 0 0 1 0 1.342l-1.085.542v2.537A1.75 1.75 0 0 1 8.75 16h-1.5a1.75 1.75 0 0 1-1.75-1.75v-2.537l-1.085-.542a.75.75 0 0 1 .67-1.342l1.5.75A.75.75 0 0 1 7 11.25V12h2v-.75a.75.75 0 0 1 .415-.67l.158-.08-5.158-2.58a.75.75 0 0 1-.336-1.005ZM7 14.25c0 .138.112.25.25.25h1.5a.25.25 0 0 0 .25-.25v-.75H7v.75ZM4.08 3.665a.75.75 0 0 1 1.005-.336l6.5 3.25a.75.75 0 0 1-.67 1.342l-6.5-3.25a.75.75 0 0 1-.336-1.006Zm0-3.25A.75.75 0 0 1 5.084.079l6.5 3.25a.75.75 0 0 1-.67 1.342l-6.5-3.25A.75.75 0 0 1 4.079.415Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/energy-saving-lightbulb";
+export { pathData, ltr, viewBox, accData };

@@ -1,0 +1,12 @@
+export default `<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" id="sapIllus-Dialog-NoData">
+<rect y="51.5" width="160" height="69" rx="12" fill="var(--sapContent_Illustrative_Color20)"/>
+<path d="M119.164 93.8629L115.057 92.7208L99.2307 89.0574L86.7225 75.8224L76.9139 65.6143L27 81.3713L40.3375 85.022L37.8491 89.6282L68.7241 108L70.5212 100.733L89.5729 107.582L119.164 93.8629Z" fill="var(--sapContent_Illustrative_Color21)"/>
+<path d="M85.1572 54.2786L120.643 64.9334L119.539 93.2143L85.1572 78.2211V54.2786Z" fill="var(--sapContent_Illustrative_Color16)"/>
+<path d="M56.593 89.7643L85.1571 78.4404V54.2786L55.0928 62.1761L56.593 89.7643Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M89.5928 75.6014L120.643 65.1213L119.536 93.7084L89.5928 107.507V75.6014Z" fill="var(--sapContent_Illustrative_Color28)"/>
+<path d="M96.126 40.4785L132.471 48.334L120.36 65.1214L85.1572 54.351L96.126 40.4785Z" fill="var(--sapContent_Illustrative_Color15)"/>
+<path d="M120.561 65.1213L132.964 79.5928L102.789 92.7213L89.5928 75.5371L120.561 65.1213Z" fill="var(--sapContent_Illustrative_Color3)"/>
+<path d="M85.1572 54.6551L78.8755 39L48.6857 45.1895L55.4997 62.6571L85.1572 54.6551Z" fill="var(--sapContent_Illustrative_Color3)"/>
+<path d="M56.5498 90.0973L89.5928 107.507V75.9262L55.0928 62.6572L56.5498 90.0973Z" fill="var(--sapContent_Illustrative_Color29)"/>
+<path d="M78.1568 96.6644L89.5929 75.731L55.2449 62.6572L44.7429 79.9981L78.1568 96.6644Z" fill="var(--sapContent_Illustrative_Color15)"/>
+</svg>`;
