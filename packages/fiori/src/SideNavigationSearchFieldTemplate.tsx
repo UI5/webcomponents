@@ -21,7 +21,7 @@ export default function SideNavigationSearchFieldTemplate(this: SideNavigationSe
 
 			{this._effectiveShowClearIcon &&
 				<Icon
-					class="ui5-side-navigation-search-field-clear-icon"
+					class="ui5-side-navigation-search-field-icon ui5-side-navigation-search-field-clear-icon"
 					name={decline}
 					showTooltip={true}
 					accessibleName={this._translations.clearIcon}
@@ -30,7 +30,7 @@ export default function SideNavigationSearchFieldTemplate(this: SideNavigationSe
 			}
 
 			<Icon
-				class="ui5-side-navigation-search-field-search-icon"
+				class="ui5-side-navigation-search-field-icon ui5-side-navigation-search-field-search-icon"
 				name={search}
 				showTooltip={true}
 				accessibleName={this._translations.searchIcon}
