@@ -17,6 +17,8 @@ import {
 	DIALOG_ARIA_DESCRIBEDBY_RESIZABLE,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
+const getDialogRoot = (selector: string) => cy.get(selector).shadow().find(".ui5-popup-root");
+
 describe("Native dialog root", () => {
 	it("renders the popup root as a <dialog> element", () => {
 		cy.mount(<Dialog id="nd">content</Dialog>);
@@ -440,10 +442,10 @@ describe("Dialog general interaction", () => {
 		cy.get<Dialog>("#dialog").ui5DialogOpened();
 
 		// Capture position before resize
-		cy.get("#dialog")
-			.then(dialog => {
-				const topBeforeScreenResize = parseInt(dialog.css("top"));
-				const leftBeforeScreenResize = parseInt(dialog.css("left"));
+		getDialogRoot("#dialog")
+			.then(root => {
+				const topBeforeScreenResize = parseInt(root.css("top"));
+				const leftBeforeScreenResize = parseInt(root.css("left"));
 
 				cy.get("#dialog").invoke("attr", "open", false);
 				// Resize viewport
@@ -452,10 +454,10 @@ describe("Dialog general interaction", () => {
 				cy.get("#dialog").invoke("attr", "open", true);
 
 				// Capture position after resize
-				cy.get("#dialog")
-					.should(dialogAfterResize => {
-						const topAfterScreenResize = parseInt(dialogAfterResize.css("top"));
-						const leftAfterScreenResize = parseInt(dialogAfterResize.css("left"));
+				getDialogRoot("#dialog")
+					.should(rootAfterResize => {
+						const topAfterScreenResize = parseInt(rootAfterResize.css("top"));
+						const leftAfterScreenResize = parseInt(rootAfterResize.css("left"));
 
 						// Assert position changes
 						expect(topBeforeScreenResize).not.to.equal(topAfterScreenResize);
@@ -493,10 +495,10 @@ describe("Dialog general interaction", () => {
 		dragDialog("#draggable-and-resizable-dialog", 150, 150);
 
 		// Capture position before resize
-		cy.get("#draggable-and-resizable-dialog")
-			.then(dialog => {
-				const topBeforeScreenResize = parseInt(dialog.css("top"));
-				const leftBeforeScreenResize = parseInt(dialog.css("left"));
+		getDialogRoot("#draggable-and-resizable-dialog")
+			.then(root => {
+				const topBeforeScreenResize = parseInt(root.css("top"));
+				const leftBeforeScreenResize = parseInt(root.css("left"));
 
 				cy.get("#draggable-and-resizable-dialog").invoke("attr", "open", false);
 				// Resize viewport
@@ -505,10 +507,10 @@ describe("Dialog general interaction", () => {
 				cy.get("#draggable-and-resizable-dialog").invoke("attr", "open", true);
 
 				// Capture position after resize
-				cy.get("#draggable-and-resizable-dialog")
-					.should(dialogAfterResize => {
-						const topAfterScreenResize = parseInt(dialogAfterResize.css("top"));
-						const leftAfterScreenResize = parseInt(dialogAfterResize.css("left"));
+				getDialogRoot("#draggable-and-resizable-dialog")
+					.should(rootAfterResize => {
+						const topAfterScreenResize = parseInt(rootAfterResize.css("top"));
+						const leftAfterScreenResize = parseInt(rootAfterResize.css("left"));
 
 						// Assert position changes
 						expect(topBeforeScreenResize).not.to.equal(topAfterScreenResize);
@@ -532,10 +534,10 @@ describe("Dialog general interaction", () => {
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
 		// Capture position before dragging
-		cy.get("#draggable-dialog")
-			.then(dialog => {
-				const topBeforeDragging = parseInt(dialog.css("top"));
-				const leftBeforeDragging = parseInt(dialog.css("left"));
+		getDialogRoot("#draggable-dialog")
+			.then(root => {
+				const topBeforeDragging = parseInt(root.css("top"));
+				const leftBeforeDragging = parseInt(root.css("left"));
 
 				// Drag dialog
 				cy.get("#draggable-dialog")
@@ -545,10 +547,10 @@ describe("Dialog general interaction", () => {
 					.trigger("mouseup");
 
 				// Capture position after dragging
-				cy.get("#draggable-dialog")
-					.should(dialogAfterDragging => {
-						const topAfterDragging = parseInt(dialogAfterDragging.css("top"));
-						const leftAfterDragging = parseInt(dialogAfterDragging.css("left"));
+				getDialogRoot("#draggable-dialog")
+					.should(rootAfterDragging => {
+						const topAfterDragging = parseInt(rootAfterDragging.css("top"));
+						const leftAfterDragging = parseInt(rootAfterDragging.css("left"));
 
 						// Assert position changes
 						expect(topBeforeDragging).not.to.equal(topAfterDragging);
@@ -562,10 +564,10 @@ describe("Dialog general interaction", () => {
 				cy.get("#draggable-dialog").invoke("attr", "open", true);
 
 				// Capture position after reopening
-				cy.get("#draggable-dialog")
-					.should(dialogAfterReopening => {
-						const topAfterReopening = parseInt(dialogAfterReopening.css("top"));
-						const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
+				getDialogRoot("#draggable-dialog")
+					.should(rootAfterReopening => {
+						const topAfterReopening = parseInt(rootAfterReopening.css("top"));
+						const leftAfterReopening = parseInt(rootAfterReopening.css("left"));
 
 						// Assert position resets
 						expect(topBeforeDragging).to.equal(topAfterReopening);
@@ -590,10 +592,10 @@ describe("Dialog general interaction", () => {
 		cy.get<Dialog>("#draggable-dialog").ui5DialogOpened();
 
 		// Capture initial position
-		cy.get("#draggable-dialog")
-			.then(dialog => {
-				const initialTop = parseInt(dialog.css("top"));
-				const initialLeft = parseInt(dialog.css("left"));
+		getDialogRoot("#draggable-dialog")
+			.then(root => {
+				const initialTop = parseInt(root.css("top"));
+				const initialLeft = parseInt(root.css("left"));
 
 				// Act - Focus the drag/resize handle and move dialog up
 				cy.realPress("Tab");
@@ -603,9 +605,9 @@ describe("Dialog general interaction", () => {
 
 				// Assert - Top position changes, left remains the same
 
-				cy.get("#draggable-dialog").then(dialog => {
-					const leftAfterUp = parseInt(dialog.css("left"));
-					const topAfterUp = parseInt(dialog.css("top"));
+				getDialogRoot("#draggable-dialog").then(root => {
+					const leftAfterUp = parseInt(root.css("left"));
+					const topAfterUp = parseInt(root.css("top"));
 					cy.get("#draggable-dialog").should(() => {
 						expect(topAfterUp).not.to.equal(initialTop);
 					})
@@ -618,10 +620,10 @@ describe("Dialog general interaction", () => {
 					cy.realPress("{leftarrow}");
 
 					// Assert - Left position changes, top remains the same
-					cy.get("#draggable-dialog")
-						.should(dialogAfterLeft => {
-							const topAfterLeft = parseInt(dialogAfterLeft.css("top"));
-							const leftAfterLeft = parseInt(dialogAfterLeft.css("left"));
+					getDialogRoot("#draggable-dialog")
+						.should(rootAfterLeft => {
+							const topAfterLeft = parseInt(rootAfterLeft.css("top"));
+							const leftAfterLeft = parseInt(rootAfterLeft.css("left"));
 							expect(topAfterLeft).to.equal(topAfterUp);
 							expect(leftAfterLeft).not.to.equal(leftAfterUp);
 						});
@@ -634,9 +636,9 @@ describe("Dialog general interaction", () => {
 				cy.get("#draggable-dialog").invoke("attr", "open", true);
 
 				// Assert - Position resets to initial
-				cy.get("#draggable-dialog")
-					.should(dialogAfterReopen => {
-						const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
+				getDialogRoot("#draggable-dialog")
+					.should(rootAfterReopen => {
+						const leftAfterReopen = parseInt(rootAfterReopen.css("left"));
 
 						expect(leftAfterReopen).to.equal(initialLeft);
 					});
@@ -659,11 +661,11 @@ describe("Dialog general interaction", () => {
 		cy.get("#resizable-dialog").invoke("attr", "open", true);
 
 		// Capture dimensions before resizing
-		cy.get("#resizable-dialog").then(dialog => {
-			const widthBeforeResizing = parseInt(dialog.css("width"));
-			const heightBeforeResizing = parseInt(dialog.css("height"));
-			const topBeforeResizing = parseInt(dialog.css("top"));
-			const leftBeforeResizing = parseInt(dialog.css("left"));
+		getDialogRoot("#resizable-dialog").then(root => {
+			const widthBeforeResizing = parseInt(root.css("width"));
+			const heightBeforeResizing = parseInt(root.css("height"));
+			const topBeforeResizing = parseInt(root.css("top"));
+			const leftBeforeResizing = parseInt(root.css("left"));
 
 			// Resize dialog
 			cy.get("#resizable-dialog")
@@ -674,10 +676,10 @@ describe("Dialog general interaction", () => {
 				.realMouseUp();
 
 			// Capture dimensions after resizing
-			cy.get("#resizable-dialog").should(dialogAfterResizing => {
-				const widthAfterResizing = parseInt(dialogAfterResizing.css("width"));
-				const heightAfterResizing = parseInt(dialogAfterResizing.css("height"));
-				const leftAfterResizing = parseInt(dialogAfterResizing.css("left"));
+			getDialogRoot("#resizable-dialog").should(rootAfterResizing => {
+				const widthAfterResizing = parseInt(rootAfterResizing.css("width"));
+				const heightAfterResizing = parseInt(rootAfterResizing.css("height"));
+				const leftAfterResizing = parseInt(rootAfterResizing.css("left"));
 
 				// Assert dimensions change
 				expect(widthBeforeResizing).not.to.equal(widthAfterResizing);
@@ -693,10 +695,10 @@ describe("Dialog general interaction", () => {
 
 
 			// Capture dimensions after reopening
-			cy.get("#resizable-dialog").should(dialogAfterReopening => {
-				const widthAfterReopening = parseInt(dialogAfterReopening.css("width"));
-				const heightAfterReopening = parseInt(dialogAfterReopening.css("height"));
-				const leftAfterReopening = parseInt(dialogAfterReopening.css("left"));
+			getDialogRoot("#resizable-dialog").should(rootAfterReopening => {
+				const widthAfterReopening = parseInt(rootAfterReopening.css("width"));
+				const heightAfterReopening = parseInt(rootAfterReopening.css("height"));
+				const leftAfterReopening = parseInt(rootAfterReopening.css("left"));
 
 				// Assert dimensions reset to initial
 				expect(widthBeforeResizing).to.equal(widthAfterReopening);
@@ -742,20 +744,20 @@ describe("Dialog general interaction", () => {
 				});
 		};
 
-		cy.get("#rtl-min-width-dialog").then(($dialog) => {
-			const initialLeft = parseInt($dialog.css("left"));
-			const initialWidth = parseInt($dialog.css("width"));
+		getDialogRoot("#rtl-min-width-dialog").then(($root) => {
+			const initialLeft = parseInt($root.css("left"));
+			const initialWidth = parseInt($root.css("width"));
 			const initialRightEdge = initialLeft + initialWidth;
 
 			// First resize: drag the bottom-left handle far to the right to reach min width.
 			dragResizeHandle(800);
 
-			cy.get("#rtl-min-width-dialog").should(($atMin) => {
+			getDialogRoot("#rtl-min-width-dialog").should(($atMin) => {
 				expect(parseInt($atMin.css("width"))).to.be.closeTo(320, 1);
 				expect(parseInt($atMin.css("left")) + parseInt($atMin.css("width"))).to.be.closeTo(initialRightEdge, 1);
 			});
 
-			cy.get("#rtl-min-width-dialog").then(($atMin) => {
+			getDialogRoot("#rtl-min-width-dialog").then(($atMin) => {
 				const leftAtMinWidth = parseInt($atMin.css("left"));
 				const widthAtMinWidth = parseInt($atMin.css("width"));
 				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
@@ -763,7 +765,7 @@ describe("Dialog general interaction", () => {
 				// Second resize: attempt to shrink further while already at min width.
 				dragResizeHandle(400);
 
-				cy.get("#rtl-min-width-dialog").should(($final) => {
+				getDialogRoot("#rtl-min-width-dialog").should(($final) => {
 					const finalLeft = parseInt($final.css("left"));
 					const finalWidth = parseInt($final.css("width"));
 					const finalRightEdge = finalLeft + finalWidth;
@@ -793,21 +795,21 @@ describe("Dialog general interaction", () => {
 		cy.get<Dialog>("#resizable-dialog").ui5DialogOpened();
 
 		// Capture initial dimensions
-		cy.get("#resizable-dialog").then(dialog => {
-			const initialWidth = parseInt(dialog.css("width"));
-			const initialHeight = parseInt(dialog.css("height"));
-			const initialTop = parseInt(dialog.css("top"));
-			const initialLeft = parseInt(dialog.css("left"));
+		getDialogRoot("#resizable-dialog").then(root => {
+			const initialWidth = parseInt(root.css("width"));
+			const initialHeight = parseInt(root.css("height"));
+			const initialTop = parseInt(root.css("top"));
+			const initialLeft = parseInt(root.css("left"));
 
 
 			cy.realPress("Tab"); // Focus the drag/resize handle
 			cy.realPress(["Shift", "ArrowDown"]);
 
 			// Assert - Height changes, width and position remain the same
-			cy.get("#resizable-dialog").then(dialogAfterResizeHeight => {
-				const widthAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("width"));
-				const heightAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("height"));
-				const leftAfterResizeHeight = parseInt(dialogAfterResizeHeight.css("left"));
+			getDialogRoot("#resizable-dialog").then(rootAfterResizeHeight => {
+				const widthAfterResizeHeight = parseInt(rootAfterResizeHeight.css("width"));
+				const heightAfterResizeHeight = parseInt(rootAfterResizeHeight.css("height"));
+				const leftAfterResizeHeight = parseInt(rootAfterResizeHeight.css("left"));
 
 				expect(widthAfterResizeHeight).to.equal(initialWidth);
 				expect(heightAfterResizeHeight).not.to.equal(initialHeight);
@@ -817,10 +819,10 @@ describe("Dialog general interaction", () => {
 				cy.realPress(["Shift", "ArrowRight"]);
 
 				// Assert - Width changes, height and position remain the same
-				cy.get("#resizable-dialog").then(dialogAfterResizeWidth => {
-					const widthAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("width"));
-					const heightAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("height"));
-					const leftAfterResizeWidth = parseInt(dialogAfterResizeWidth.css("left"));
+				getDialogRoot("#resizable-dialog").then(rootAfterResizeWidth => {
+					const widthAfterResizeWidth = parseInt(rootAfterResizeWidth.css("width"));
+					const heightAfterResizeWidth = parseInt(rootAfterResizeWidth.css("height"));
+					const leftAfterResizeWidth = parseInt(rootAfterResizeWidth.css("left"));
 
 					expect(widthAfterResizeWidth).not.to.equal(widthAfterResizeHeight);
 					expect(heightAfterResizeWidth).to.equal(heightAfterResizeHeight);
@@ -833,10 +835,10 @@ describe("Dialog general interaction", () => {
 					cy.get("#resizable-dialog").invoke("attr", "open", true);
 
 					// Assert - Dimensions reset to initial
-					cy.get("#resizable-dialog").then(dialogAfterReopen => {
-						const widthAfterReopen = parseInt(dialogAfterReopen.css("width"));
-						const heightAfterReopen = parseInt(dialogAfterReopen.css("height"));
-						const leftAfterReopen = parseInt(dialogAfterReopen.css("left"));
+					getDialogRoot("#resizable-dialog").then(rootAfterReopen => {
+						const widthAfterReopen = parseInt(rootAfterReopen.css("width"));
+						const heightAfterReopen = parseInt(rootAfterReopen.css("height"));
+						const leftAfterReopen = parseInt(rootAfterReopen.css("left"));
 
 						expect(widthAfterReopen).to.equal(initialWidth);
 						expect(heightAfterReopen).to.equal(initialHeight);
@@ -860,11 +862,11 @@ describe("Dialog general interaction", () => {
 
 		cy.get("#resizable-dialog").invoke("attr", "open", true);
 
-		cy.get("#resizable-dialog").then(dialog => {
-			const widthBeforeResizing = parseInt(dialog.css("width"));
-			const heightBeforeResizing = parseInt(dialog.css("height"));
-			const topBeforeResizing = parseInt(dialog.css("top"));
-			const leftBeforeResizing = parseInt(dialog.css("left"));
+		getDialogRoot("#resizable-dialog").then(root => {
+			const widthBeforeResizing = parseInt(root.css("width"));
+			const heightBeforeResizing = parseInt(root.css("height"));
+			const topBeforeResizing = parseInt(root.css("top"));
+			const leftBeforeResizing = parseInt(root.css("left"));
 
 			cy.get("#resizable-dialog")
 				.shadow()
@@ -873,11 +875,11 @@ describe("Dialog general interaction", () => {
 				.realMouseMove(-100, 100)
 				.realMouseUp();
 
-			cy.get("#resizable-dialog").should(dialogAfterResizing => {
-				const widthAfterResizing = parseInt(dialogAfterResizing.css("width"));
-				const heightAfterResizing = parseInt(dialogAfterResizing.css("height"));
-				const topAfterResizing = parseInt(dialogAfterResizing.css("top"));
-				const leftAfterResizing = parseInt(dialogAfterResizing.css("left"));
+			getDialogRoot("#resizable-dialog").should(rootAfterResizing => {
+				const widthAfterResizing = parseInt(rootAfterResizing.css("width"));
+				const heightAfterResizing = parseInt(rootAfterResizing.css("height"));
+				const topAfterResizing = parseInt(rootAfterResizing.css("top"));
+				const leftAfterResizing = parseInt(rootAfterResizing.css("left"));
 
 				expect(widthBeforeResizing).to.equal(widthAfterResizing);
 				expect(heightBeforeResizing).not.to.equal(heightAfterResizing);
@@ -1613,7 +1615,7 @@ describe("Dialog States", () => {
 	});
 });
 
-describe("Block layers", () => {
+describe("Modality", () => {
 	it("test dialog overlay when dialog isn't open", () => {
 		cy.mount(
 			<>
@@ -1623,11 +1625,11 @@ describe("Block layers", () => {
 			</>
 		);
 
-		// Assert block layer is hidden when dialog isn't open
+		// Assert dialog root is not modal when dialog isn't open
 		cy.get("#dialog")
 			.shadow()
-			.find(".ui5-block-layer")
-			.should("not.have.class", "ui5-block-layer--visible");
+			.find(".ui5-popup-root")
+			.should("not.match", ":modal");
 	});
 
 	it("test dialog overlay when dialog is open", () => {
@@ -1642,16 +1644,16 @@ describe("Block layers", () => {
 		// Open dialog
 		cy.get("#dialogOverDialog1").invoke("attr", "open", true);
 
-		// Assert block layer is visible when dialog is open
+		// Assert dialog root is modal when dialog is open
 		cy.get("#dialogOverDialog1")
 			.shadow()
-			.find(".ui5-block-layer")
-			.should("have.css", "display", "block");
+			.find(".ui5-popup-root")
+			.should("match", ":modal");
 	});
 });
 
 describe("Dialog initially open", () => {
-	it("test :popover-open selector", () => {
+	it("test :modal selector", () => {
 		cy.mount(
 			<>
 				<Dialog id="dialogOpen" open>
@@ -1660,8 +1662,8 @@ describe("Dialog initially open", () => {
 			</>
 		);
 
-		// Assert dialog matches :popover-open selector
-		cy.get("#dialogOpen").should("match", ":popover-open");
+		// Assert dialog root matches :modal selector
+		cy.get("#dialogOpen").shadow().find(".ui5-popup-root").should("match", ":modal");
 	});
 });
 
