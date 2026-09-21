@@ -13,6 +13,7 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import Popup from "./Popup.js";
+import { wasEscapeHandledByRegistry, resetEscapeHandledByRegistry } from "./popup-utils/OpenedPopupsRegistry.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -630,6 +631,18 @@ class Dialog extends Popup {
 		// Take over native ESC handling so before-close stays cancelable
 		// and closing is routed through our lifecycle.
 		e.preventDefault();
+
+		// If the OpenedPopupsRegistry already consumed this Escape by closing a
+		// popup layered above this dialog (e.g. a Select/ComboBox dropdown or a
+		// Popover), do not also close the dialog. The registry's document keydown
+		// listener runs before this "cancel" default action, so the flag is set
+		// by now. Reset it so an unrelated later close request still closes us.
+		const handledAbove = wasEscapeHandledByRegistry();
+		resetEscapeHandledByRegistry();
+		if (handledAbove) {
+			return;
+		}
+
 		this.closePopup(true);
 	}
 

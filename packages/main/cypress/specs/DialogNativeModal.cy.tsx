@@ -1,5 +1,6 @@
 import Dialog from "../../src/Dialog.js";
 import Button from "../../src/Button.js";
+import Popover from "../../src/Popover.js";
 
 describe("Dialog native modal", () => {
 	it("opens as a modal dialog (top layer + :modal)", () => {
@@ -77,5 +78,38 @@ describe("Dialog native cancel/ESC", () => {
 		cy.realPress("Escape");
 		cy.wait(100);
 		cy.get("#e2").should("have.prop", "open", true);
+	});
+
+	it("Escape closes only the popup layered above the dialog, not the dialog", () => {
+		// Regression: a native modal <dialog> owns the topmost CloseWatcher, so
+		// its "cancel" fires on Escape even when a non-native popup (dropdown /
+		// Popover) is open above it. The dialog must not close while that popup
+		// is dismissed by the OpenedPopupsRegistry.
+		cy.mount(
+			<>
+				<Dialog id="ld">
+					<Button id="lo">opener</Button>
+				</Dialog>
+				<Popover id="lp" opener="lo"><span>popover content</span></Popover>
+			</>
+		);
+
+		cy.get("#ld").invoke("prop", "open", true);
+		cy.get<Dialog>("#ld").ui5DialogOpened();
+
+		// Open a non-native popup on top of the dialog.
+		cy.get("#lp").invoke("prop", "open", true);
+		cy.get("#lp").should("have.prop", "open", true);
+
+		// Escape dismisses only the layered popup; the dialog stays open.
+		cy.realPress("Escape");
+
+		cy.get("#lp").should("have.prop", "open", false);
+		cy.get("#ld").should("have.prop", "open", true);
+
+		// A second Escape now closes the dialog itself.
+		cy.realPress("Escape");
+		cy.get<Dialog>("#ld").ui5DialogClosed();
+		cy.get("#ld").should("have.prop", "open", false);
 	});
 });
