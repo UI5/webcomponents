@@ -129,4 +129,10 @@ const _updateTopModalPopup = () => {
 	}
 };
 
-export { addOpenedPopup, removeOpenedPopup, getOpenedPopups, wasEscapeHandledByRegistry, resetEscapeHandledByRegistry };
+export {
+	addOpenedPopup,
+	removeOpenedPopup,
+	getOpenedPopups,
+	wasEscapeHandledByRegistry,
+	resetEscapeHandledByRegistry,
+};
