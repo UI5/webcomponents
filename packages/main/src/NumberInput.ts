@@ -185,7 +185,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	/**
 	 * Defines whether the component is required.
 	 * @default false
-	 * @public
+	 * @private
 	 */
 	@property({ type: Boolean })
 	required = false;
@@ -213,7 +213,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	 * **Note:** When no placeholder is set, the format pattern is displayed as a placeholder.
 	 * Passing an empty string as the value of this property will make the component appear empty - without placeholder or format pattern.
 	 * @default undefined
-	 * @public
+	 * @private
 	 */
 	@property()
 	placeholder?: string;
