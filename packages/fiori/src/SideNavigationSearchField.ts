@@ -6,6 +6,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isEnter, isEscape } from "@ui5/webcomponents-base/dist/Keys.js";
+import type { InputAccInfo } from "@ui5/webcomponents/dist/Input.js";
 import {
 	registerUI5Element,
 	deregisterUI5Element,
@@ -17,7 +18,6 @@ import {
 import SideNavigationSearchFieldTemplate from "./SideNavigationSearchFieldTemplate.js";
 import SideNavigationSearchFieldCss from "./generated/themes/SideNavigationSearchField.css.js";
 import {
-	SEARCH_FIELD_CLEAR_ICON,
 	SEARCH_FIELD_SEARCH_ICON,
 	SIDE_NAVIGATION_SEARCH_FIELD_LABEL,
 	SIDE_NAVIGATION_SEARCH_FIELD_PLACEHOLDER,
@@ -134,12 +134,6 @@ class SideNavigationSearchField extends UI5Element {
 	ariaControls?: string;
 
 	/**
-	 * @private
-	 */
-	@property({ type: Boolean })
-	_effectiveShowClearIcon = false;
-
-	/**
 	 * Constantly updated value of the texts collected from the accessibleNameRef elements.
 	 * @private
 	 */
@@ -162,10 +156,6 @@ class SideNavigationSearchField extends UI5Element {
 
 	onExitDOM() {
 		deregisterUI5Element(this);
-	}
-
-	onBeforeRendering() {
-		this._effectiveShowClearIcon = (!this.hideClearIcon && !!this.value);
 	}
 
 	_updateAssociatedTexts() {
@@ -199,7 +189,7 @@ class SideNavigationSearchField extends UI5Element {
 		this.fireDecoratorEvent("search");
 	}
 
-	_handleInput(e: InputEvent) {
+	_handleInput(e: CustomEvent) {
 		this.value = (e.target as HTMLInputElement).value;
 
 		this.fireDecoratorEvent("input");
@@ -215,8 +205,15 @@ class SideNavigationSearchField extends UI5Element {
 	get _translations() {
 		return {
 			searchIcon: SideNavigationSearchField.i18nBundle.getText(SEARCH_FIELD_SEARCH_ICON),
-			clearIcon: SideNavigationSearchField.i18nBundle.getText(SEARCH_FIELD_CLEAR_ICON),
 			searchFieldAriaLabel: SideNavigationSearchField.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_FIELD_LABEL),
+		};
+	}
+
+	get _inputAccInfo(): InputAccInfo {
+		return {
+			ariaLabel: this._ariaLabelText,
+			ariaDescription: this._ariaDescriptionText,
+			ariaControls: this.ariaControls,
 		};
 	}
 

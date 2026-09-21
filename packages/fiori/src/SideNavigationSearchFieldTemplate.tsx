@@ -1,41 +1,31 @@
-import Icon from "@ui5/webcomponents/dist/Icon.js";
-import decline from "@ui5/webcomponents-icons/dist/decline.js";
+import Input from "@ui5/webcomponents/dist/Input.js";
+import InputIcon from "@ui5/webcomponents/dist/InputIcon.js";
 import search from "@ui5/webcomponents-icons/dist/search.js";
 import type SideNavigationSearchField from "./SideNavigationSearchField.js";
 
 export default function SideNavigationSearchFieldTemplate(this: SideNavigationSearchField) {
 	return (
-		<div class="ui5-side-navigation-search-field-root" role="search">
-			<input
+		<div class="ui5-side-navigation-search-field-root">
+			<Input
 				id={`${this._id}-inner`}
-				class="ui5-side-navigation-search-field-inner-input"
-				type="search"
-				aria-label={this._ariaLabelText}
-				aria-description={this._ariaDescriptionText}
-				aria-controls={this.ariaControls}
+				class="ui5-side-navigation-search-field-input"
 				value={this.value}
+				type="Search"
 				placeholder={this._effectivePlaceholder}
+				showClearIcon={!this.hideClearIcon}
+				noTypeahead={true}
+				_inputAccInfo={this._inputAccInfo}
 				data-sap-focus-ref
 				onInput={this._handleInput}
-				onKeyDown={this._onkeydown} />
-
-			{this._effectiveShowClearIcon &&
-				<Icon
-					class="ui5-side-navigation-search-field-icon ui5-side-navigation-search-field-clear-icon"
-					name={decline}
-					showTooltip={true}
-					accessibleName={this._translations.clearIcon}
-					onClick={this._handleClear}
-				></Icon>
-			}
-
-			<Icon
-				class="ui5-side-navigation-search-field-icon ui5-side-navigation-search-field-search-icon"
-				name={search}
-				showTooltip={true}
-				accessibleName={this._translations.searchIcon}
-				onClick={this._handleSearchIconPress}
-			></Icon>
+				onKeyDown={this._onkeydown}>
+				<InputIcon
+					slot="icon"
+					class="ui5-side-navigation-search-field-search-icon"
+					name={search}
+					accessibleName={this._translations.searchIcon}
+					onClick={this._handleSearchIconPress}
+				/>
+			</Input>
 		</div>
 	);
 }
