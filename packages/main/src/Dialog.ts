@@ -482,16 +482,19 @@ class Dialog extends Popup {
 	}
 
 	_show() {
-		const dialog = this._root as HTMLDialogElement;
-		if (this.isConnected && !dialog.open) {
+		const dialog = this._dialogElement;
+		// The native <dialog> lives in the shadow root and may not be rendered yet
+		// (e.g. an initial "open" attribute), or may lack showModal in non-browser
+		// test environments. Guard both so opening degrades gracefully.
+		if (this.isConnected && dialog && typeof dialog.showModal === "function" && !dialog.open) {
 			dialog.showModal();
 		}
 		this._center();
 	}
 
 	hide() {
-		const dialog = this._root as HTMLDialogElement;
-		if (this.isConnected && dialog.open) {
+		const dialog = this._dialogElement;
+		if (this.isConnected && dialog && typeof dialog.close === "function" && dialog.open) {
 			dialog.close();
 		}
 	}
@@ -523,14 +526,14 @@ class Dialog extends Popup {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
 		this._registerFullscreenKeydownHandler();
-		this._root.addEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.addEventListener("cancel", this._cancelHandler);
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
 		this._deregisterFullscreenKeydownHandler();
-		this._root.removeEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.removeEventListener("cancel", this._cancelHandler);
 	}
 
 	_attachScreenResizeHandler() {
@@ -576,10 +579,15 @@ class Dialog extends Popup {
 	}
 
 	_center() {
-		const height = window.innerHeight - this._dialogElement.offsetHeight,
-			width = window.innerWidth - this._dialogElement.offsetWidth;
+		const dialog = this._dialogElement;
+		if (!dialog) {
+			return;
+		}
 
-		Object.assign(this._dialogElement.style, {
+		const height = window.innerHeight - dialog.offsetHeight,
+			width = window.innerWidth - dialog.offsetWidth;
+
+		Object.assign(dialog.style, {
 			top: `${Math.round(height / 2)}px`,
 			left: `${Math.round(width / 2)}px`,
 		});
