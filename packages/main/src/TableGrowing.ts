@@ -141,15 +141,7 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	}
 
 	onTableAfterRendering(): void {
-		// Rows can be appended asynchronously, so keep checking on every re-render
-		// until the new row shows up, instead of focusing the button too early.
-		if (this._shouldFocusRow) {
-			const newlyAddedRow = (this._currentLastRow ? this._currentLastRow.nextElementSibling : this._table?.rows[0]) as HTMLElement | null;
-			if (newlyAddedRow) {
-				this._shouldFocusRow = false;
-				newlyAddedRow.focus();
-			}
-		}
+		this._focusNewlyAddedRow();
 
 		if (this._renderContent !== this.hasGrowingComponent()) {
 			this._invalidate++;
@@ -162,6 +154,8 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 	}
 
 	onExitDOM(): void {
+		this._focusNewlyAddedRow();
+
 		this._table = undefined;
 		this._observer?.disconnect();
 		this._observer = undefined;
@@ -181,6 +175,18 @@ class TableGrowing extends UI5Element implements ITableGrowing {
 		}
 
 		return this.mode === `${TableGrowingMode.Button}`;
+	}
+
+	_focusNewlyAddedRow(): void {
+		if (!this._shouldFocusRow) {
+			return;
+		}
+
+		const newlyAddedRow = (this._currentLastRow ? this._currentLastRow.nextElementSibling : this._table?.rows[0]) as HTMLElement | null;
+		if (newlyAddedRow) {
+			this._shouldFocusRow = false;
+			newlyAddedRow.focus();
+		}
 	}
 
 	/**

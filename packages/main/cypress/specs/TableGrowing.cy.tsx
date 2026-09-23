@@ -239,6 +239,36 @@ describe("TableGrowing - Button", () => {
 				.should("exist")
 				.should("have.focus");
 		});
+
+		it("tests focus is set to first newly added row when the growing feature removes itself right after appending rows", () => {
+			cy.mount(<TableSample></TableSample>);
+
+			cy.get<TableGrowing>("[ui5-table-growing]")
+				.then(tableGrowing => {
+					const growing = tableGrowing.get(0);
+					growing.addEventListener("load-more", () => {
+						const table = document.getElementById("table");
+						const row = document.createElement("ui5-table-row");
+						row.id = "new-row";
+						row.innerHTML = "<ui5-table-cell><ui5-label>Cell B</ui5-label></ui5-table-cell>";
+						table!.appendChild(row);
+						// simulate an app removing the growing feature once there is no more data to load
+						table!.removeChild(growing);
+					});
+				})
+				.realClick();
+
+			cy.get("[ui5-table]")
+				.children("ui5-table-row")
+				.should("have.length", 2);
+
+			cy.get("[ui5-table-growing]")
+				.should("not.exist");
+
+			cy.get("#new-row")
+				.should("exist")
+				.should("have.focus");
+		});
 	});
 });
 
