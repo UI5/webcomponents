@@ -5,7 +5,7 @@ import type UserSettingsAppearanceViewItem from "./UserSettingsAppearanceViewIte
 import { isInstanceOfUserSettingsAppearanceViewItem } from "./UserSettingsAppearanceViewItem.js";
 import type UserSettingsAppearanceViewGroup from "./UserSettingsAppearanceViewGroup.js";
 import { isInstanceOfUserSettingsAppearanceViewGroup } from "./UserSettingsAppearanceViewGroup.js";
-import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
 import {
@@ -13,11 +13,8 @@ import {
 } from "@ui5/webcomponents-base/dist/decorators.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
-import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
-import { USER_SETTINGS_LIST_ITEM_SELECTED } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsAppearanceViewItemSelectEventDetail = {
 	item: UserSettingsAppearanceViewItem;
@@ -98,23 +95,18 @@ class UserSettingsAppearanceView extends UserSettingsView {
 		return allItems;
 	}
 
-	_handleItemClick = (e: CustomEvent<ListItemClickEventDetail>) => {
-		const listItem = e.detail.item as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
+	_handleSelectionChange = (e: CustomEvent<ListSelectionChangeEventDetail>) => {
+		const listItem = e.detail.targetItem as ListItemBase & { associatedSettingItem?: UserSettingsAppearanceViewItem };
 		if (isInstanceOfUserSettingsAppearanceViewItem(listItem)) {
-			const alreadySelected = listItem.selected;
+			// The inner list runs in selectionMode="Single", so it already owns the
+			// item's selected state and provides the accessibility announcement.
 			const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 				item: listItem,
 			});
 
-			if (!eventPrevented) {
-				this._getAllItems().forEach(viewItem => {
-					viewItem.selected = false;
-				});
-				listItem.selected = true;
-
-				if (!alreadySelected) {
-					announce(UserSettingsAppearanceView.i18nBundle.getText(USER_SETTINGS_LIST_ITEM_SELECTED), InvisibleMessageMode.Polite);
-				}
+			if (eventPrevented) {
+				// Revert the list selection so it stays in sync with the model.
+				e.preventDefault();
 			}
 		}
 	};

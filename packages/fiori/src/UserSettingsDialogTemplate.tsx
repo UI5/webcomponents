@@ -67,7 +67,7 @@ export default function UserSettingsDialogTemplate(this: UserSettingsDialog) {
 }
 
 function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [], classes: string) {
-	return <List onItemClick={this._handleItemClick} class={classes} separators="None" data-sap-ui-fastnavgroup="false">
+	return <List onSelectionChange={this._handleSelectionChange} onItemClick={this._handleItemClick} selectionMode="Single" class={classes} separators="None" data-sap-ui-fastnavgroup="false">
 		{items.map(item => (
 			<ListItemStandard
 				class={!item._icon && item._siblingsWithIcon ? "ui5-user-settings-item-no-icon" : ""}
@@ -76,7 +76,6 @@ function renderList(this: UserSettingsDialog, items: Array<UserSettingsItem> = [
 				tooltip={item._tooltip}
 				ref={this.captureRef.bind(item)}
 				selected={item.selected}
-				_forceAriaSelected
 				disabled={item.disabled}
 				accessibleName={item.ariaLabelledByText}
 				type={this._showSettingWithNavigation ? "Navigation" : "Active"}

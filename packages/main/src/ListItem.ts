@@ -199,16 +199,6 @@ abstract class ListItem extends ListItemBase {
 	@property()
 	_forcedAccessibleRole?: string;
 
-	/**
-	 * Forces the item to expose its `selected` state to assistive technology
-	 * (hidden "Selected"/"Not Selected" describedby text) even when the parent
-	 * list is not in a selection mode. Used by components that manage selection
-	 * manually, e.g. `ui5-user-settings-dialog`.
-	 * @private
-	 */
-	@property({ type: Boolean })
-	_forceAriaSelected = false;
-
 	@property({ noAttribute: true })
 	_inheritedAccessibleRole?: string;
 
@@ -469,7 +459,7 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	get _ariaSelected() {
-		if (this.modeMultiple || this.modeSingleSelect || this._forceAriaSelected) {
+		if (this.modeMultiple || this.modeSingleSelect) {
 			return this.selected;
 		}
 
