@@ -468,3 +468,13 @@ function executeSearch(value) {
 searchField.addEventListener("input", function () {
 	executeSearch(searchField.value);
 });
+
+searchField.addEventListener("search", function () {
+	const value = searchField.value;
+	if (!value) {
+		return;
+	}
+
+	const matchCount = executeSearch(value);
+	sideNav.announceSearchMatchCount(matchCount);
+});

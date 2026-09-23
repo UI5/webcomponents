@@ -2,6 +2,7 @@ import SideNavigation from "../../src/SideNavigation.js";
 import SideNavigationItem from "../../src/SideNavigationItem.js";
 import SideNavigationGroup from "../../src/SideNavigationGroup.js";
 import SideNavigationSubItem from "../../src/SideNavigationSubItem.js";
+import SideNavigationSearchField from "../../src/SideNavigationSearchField.js";
 import group from "@ui5/webcomponents-icons/dist/group.js";
 import home from "@ui5/webcomponents-icons/dist/home.js";
 import employeeApprovals from "@ui5/webcomponents-icons/dist/employee-approvals.js";
@@ -2049,5 +2050,111 @@ describe("Focusable items", () => {
 			.find("[ui5-tag]")
 			.should("exist")
 			.should("have.text", "New");
+	});
+});
+
+describe("Side Navigation no match", () => {
+	it("shows a '0 matches found' item in the tab chain when there are no items and a highlightedText is set", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("exist")
+			.should("have.attr", "text", "0 matches found")
+			.should("have.attr", "unselectable");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("does not show the no match item when there are items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem text="Item" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there are fixed items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem slot="fixedItems" text="Fixed" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there is no highlightedText", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+});
+
+describe("Side Navigation search match announcement", () => {
+	it("announces the number of matches on the search field's search event", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
+				<SideNavigationItem text="Item 1" />
+				<SideNavigationItem text="Item 2" />
+			</SideNavigation>
+		);
+
+		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "2 matches found");
+	});
+
+	it("announces a single match in singular form", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
+				<SideNavigationItem text="Item 1" />
+			</SideNavigation>
+		);
+
+		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "1 match found");
+	});
+
+	it("announces no matches when there are no items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationSearchField slot="filter-section" id="search" value="abc" />
+			</SideNavigation>
+		);
+
+		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "0 matches found");
 	});
 });

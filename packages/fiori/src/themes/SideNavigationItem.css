@@ -28,3 +28,12 @@
 .ui5-sn-item-level1 .ui5-sn-item-text {
 	font-family: var(--_ui5_side_navigation_parent_item_font_family);
 }
+
+:host(.ui5-sn-item-no-match) .ui5-sn-item {
+	cursor: default;
+}
+
+:host(.ui5-sn-item-no-match) .ui5-sn-item-text {
+	text-align: center;
+	flex: auto;
+}

@@ -41,6 +41,14 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					aria-label={this.navigationMenuPrimaryHiddenText}
 				>
 					<slot></slot>
+					{this.showNoMatchText &&
+						<SideNavigationItem
+							text={this.noMatchText}
+							unselectable={true}
+							forcedTabIndex="0"
+							class="ui5-sn-item-no-match"
+						/>
+					}
 				</ul>
 			}
 

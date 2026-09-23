@@ -15,6 +15,8 @@ import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInstanceChecker.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import type SideNavigationItemBase from "./SideNavigationItemBase.js";
@@ -35,6 +37,8 @@ import {
 	SIDE_NAVIGATION_OVERFLOW_ACCESSIBLE_NAME,
 	SIDE_NAVIGATION_FLEXIBLE_LIST_LABEL,
 	SIDE_NAVIGATION_FIXED_LIST_LABEL,
+	SIDE_NAVIGATION_SEARCH_MATCH_COUNT_SINGULAR,
+	SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL,
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -495,6 +499,14 @@ class SideNavigation extends UI5Element {
 		return !!this.fixedItems.length;
 	}
 
+	get noMatchText() {
+		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, 0);
+	}
+
+	get showNoMatchText() {
+		return !!this.highlightedText && !this.items.length && !this.fixedItems.length;
+	}
+
 	get _rootRole() {
 		return this.inPopover ? "none" : undefined;
 	}
@@ -951,6 +963,24 @@ class SideNavigation extends UI5Element {
 				ref.appendChild(clonedTag);
 			});
 		}
+	}
+
+	/**
+	 * Announces the number of search matches found in the side navigation to assistive technologies.
+	 *
+	 * This method uses an invisible live region message so screen readers can inform users
+	 * about the current number of search matches.
+	 *
+	 * @param {number} count The number of matching navigation items.
+	 * @since 2.28.0
+	 * @public
+	 */
+	announceSearchMatchCount(count: number) {
+		const message = count === 1
+			? SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_SINGULAR, count)
+			: SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, count);
+
+		announce(message, InvisibleMessageMode.Polite);
 	}
 }
 
