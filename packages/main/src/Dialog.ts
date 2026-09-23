@@ -4,7 +4,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import {
-	isUp, isDown, isLeft, isRight,
+	isUp, isDown, isLeft, isRight, isTabNext, isTabPrevious,
 	isUpShift, isDownShift, isLeftShift, isRightShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -13,7 +13,6 @@ import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
 import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
-import { isTabNext, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import Popup from "./Popup.js";
 import { wasEscapeHandledByRegistry, resetEscapeHandledByRegistry } from "./popup-utils/OpenedPopupsRegistry.js";
 import "@ui5/webcomponents-icons/dist/error.js";
