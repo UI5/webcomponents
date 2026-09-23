@@ -971,11 +971,11 @@ class SideNavigation extends UI5Element {
 	 * This method uses an invisible live region message so screen readers can inform users
 	 * about the current number of search matches.
 	 *
-	 * @param {number} count The number of matching navigation items.
+	 * @param count The number of matching navigation items.
 	 * @since 2.28.0
 	 * @public
 	 */
-	announceSearchMatchCount(count: number) {
+	announceSearchMatchCount(count: number): void {
 		const message = count === 1
 			? SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_SINGULAR, count)
 			: SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_MATCH_COUNT_PLURAL, count);
