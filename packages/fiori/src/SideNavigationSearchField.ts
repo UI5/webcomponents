@@ -28,7 +28,8 @@ import {
  *
  * ### Overview
  *
- * A `ui5-side-navigation-search-field` is a search field, used to filter the items of a `ui5-side-navigation`.
+ * A `ui5-side-navigation-search-field` is a search field,
+ * used to filter the items of a `ui5-side-navigation`.
  *
  * ### ES6 Module Import
  *
@@ -36,7 +37,8 @@ import {
  *
  * @constructor
  * @extends UI5Element
- * @private
+ * @since 2.28.0
+ * @public
  */
 @customElement({
 	tag: "ui5-side-navigation-search-field",
@@ -126,7 +128,8 @@ class SideNavigationSearchField extends UI5Element {
 	accessibleDescriptionRef?: string;
 
 	/**
-	 * Receives id (or many ids) of the elements that the component controls.
+	 * Receives id (or many ids) of the elements that are controlled by this control,
+	 * as described by the WAI-ARIA attribute `aria-controls`.
 	 * @public
 	 * @default undefined
 	 */

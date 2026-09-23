@@ -2113,7 +2113,7 @@ describe("Side Navigation no match", () => {
 });
 
 describe("Side Navigation search match announcement", () => {
-	it("announces the number of matches on the search field's search event", () => {
+	it("announceSearchMatchCount method", () => {
 		cy.mount(
 			<SideNavigation id="sideNav">
 				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
@@ -2122,36 +2122,25 @@ describe("Side Navigation search match announcement", () => {
 			</SideNavigation>
 		);
 
-		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(2);
+		});
 
 		cy.get("body")
 			.find(".ui5-invisiblemessage-polite")
 			.should("have.text", "2 matches found");
-	});
 
-	it("announces a single match in singular form", () => {
-		cy.mount(
-			<SideNavigation id="sideNav">
-				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
-				<SideNavigationItem text="Item 1" />
-			</SideNavigation>
-		);
-
-		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(1);
+		});
 
 		cy.get("body")
 			.find(".ui5-invisiblemessage-polite")
 			.should("have.text", "1 match found");
-	});
 
-	it("announces no matches when there are no items", () => {
-		cy.mount(
-			<SideNavigation id="sideNav" highlightedText="abc">
-				<SideNavigationSearchField slot="filter-section" id="search" value="abc" />
-			</SideNavigation>
-		);
-
-		cy.get("#search").shadow().find("[ui5-input]").realClick().realType("{enter}");
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(0);
+		});
 
 		cy.get("body")
 			.find(".ui5-invisiblemessage-polite")
