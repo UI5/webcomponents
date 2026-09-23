@@ -202,50 +202,27 @@ describe("StepInput button interaction tests", () => {
 			.should("not.have.class", "ui5-number-input-icon--clickable");
 	});
 
-<<<<<<< HEAD
-	it("should increase value on mouse wheel up", () => {
-		cy.mount(
-			<StepInput value={5} step={2}></StepInput>
-=======
 	it("should not round value when 'valuePrecision' is set", () => {
 		cy.mount(
 			<StepInput value={29.999} valuePrecision={3}></StepInput>
->>>>>>> origin/main
 		);
 
 		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
 		cy.get<StepInput>("@stepInput")
-<<<<<<< HEAD
-			.ui5StepInputScrollToChangeValue(7, false);
-	});
-
-	it("should decrease value on mouse wheel down", () => {
-		cy.mount(
-			<StepInput value={5} step={2}></StepInput>
-=======
 			.ui5StepInputChangeValueWithButtons(30.999);
 	});
 
 	it("should round value when 'valuePrecision' is set to default", () => {
 		cy.mount(
 			<StepInput value={29.999}></StepInput>
->>>>>>> origin/main
 		);
 
 		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
 		cy.get<StepInput>("@stepInput")
-<<<<<<< HEAD
-			.ui5StepInputScrollToChangeValue(3, true);
-	});
-
-	it("should not change value when readonly", () => {
-		cy.mount(
-			<StepInput value={5} step={2} readonly={true}></StepInput>
-=======
 			.ui5StepInputChangeValueWithButtons(31);
 	});
 });
@@ -254,16 +231,11 @@ describe("StepInput spin interaction tests", () => {
 	it("should continuously decrease value while decrement button is held", () => {
 		cy.mount(
 			<StepInput value={10} step={1}></StepInput>
->>>>>>> origin/main
 		);
 
 		cy.get("[ui5-step-input]")
 			.as("stepInput");
 
-<<<<<<< HEAD
-		cy.get<StepInput>("@stepInput")
-			.ui5StepInputScrollToChangeValue(5, true);
-=======
 		cy.get("@stepInput")
 			.shadow()
 			.find("[ui5-number-input]")
@@ -555,7 +527,6 @@ describe("StepInput events", () => {
 
 		cy.get("@submit")
 			.should("have.been.calledOnce");
->>>>>>> origin/main
 	});
 });
 
