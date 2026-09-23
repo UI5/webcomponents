@@ -128,7 +128,10 @@ describe("i18n decorator", () => {
 	});
 
 	it("@i18n decorator marks component as languageAware and re-renders on language change", () => {
-		expect(I18nParent.getMetadata().isLanguageAware(), "metadata.languageAware").to.be.true;
+		cy.wrap(null)
+			.should(() => {
+				expect(I18nParent.getMetadata().isLanguageAware(), "metadata.languageAware").to.be.true;
+			});
 
 		// eslint-disable-next-line @typescript-eslint/require-await
 		cy.wrap({ registerI18nLoader })
