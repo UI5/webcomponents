@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.1](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* **framework:** guard languageAware renders against in-flight language changes ([#13840](https://github.com/UI5/webcomponents/issues/13840)) ([4487894](https://github.com/UI5/webcomponents/commit/448789464aa30682c3bd212895df19c2ac3f9094))
+* **i18n:** auto-mark components as languageAware via [@i18n](https://github.com/i18n) decorator ([#14080](https://github.com/UI5/webcomponents/issues/14080)) ([07aaba1](https://github.com/UI5/webcomponents/commit/07aaba1b69dcc743735288ef6fbb3b66296e2e29))
+
+
+
+
+
 # [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
 
 **Note:** Version bump only for package @ui5/webcomponents-base
