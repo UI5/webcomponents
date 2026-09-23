@@ -25,30 +25,48 @@
 
 [ui5-li]::part(icon) {
 	color: var(--sapList_TextColor);
+	align-self: center;
 }
 
-[ui5-li]:after {
-	position: relative;
-	width: fit-content;
+/* Keep the text wrapper hugging its content so the badge sits right after
+   the item text (Figma spec) instead of being pushed to the far end. */
+[ui5-li] {
+	--_ui5_li_text_wrapper_flex: 0 1 auto;
+}
+
+[ui5-li]::part(additional-text) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	height: 1rem;
 	min-width: 1rem;
-	background: var(--sapContent_BadgeBackground);
-	border: var(--_ui5_shellbar_button_badge_border);
-	color: var(--sapContent_BadgeTextColor);
-	bottom: calc(100% + 0.0625rem);
-	left: 1.25rem;
 	padding: 0 0.3125rem;
 	border-radius: 0.5rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	border: var(--_ui5_shellbar_button_badge_border);
+	background: var(--sapContent_BadgeBackground);
+	color: var(--sapContent_BadgeTextColor);
 	font-size: var(--sapFontSmallSize);
-	font-family: var(--sapFontFamily);
-	z-index: 2;
+	font-family: var(--sapFontBoldFamily);
+	font-weight: bold;
+	white-space: nowrap;
+	flex-shrink: 0;
 	box-sizing: border-box;
 	pointer-events: none;
+	/* The hover rule in ListItemBase has specificity (0,6,0); !important is
+	   the only practical way to ensure no text-shadow on the badge pill. */
+	text-shadow: none !important;
+	align-self: center;
+	/* ~4px gap after the item text, per Figma spec. */
+	margin-inline-start: 0.25rem;
 }
 
-[ui5-li][data-count]:after {
-	content: attr(data-count);
+/* Override active-state color from ListItem.css (specificity 0,3,0). */
+[ui5-li][active][actionable]::part(additional-text) {
+	color: var(--sapContent_BadgeTextColor);
+	background: var(--sapContent_BadgeBackground);
+}
+
+/* Override wrapping-type=Normal left-padding from ListItem.css (0,3,0). */
+[ui5-li][wrapping-type="Normal"][additional-text]::part(additional-text) {
+	padding-inline-start: 0.3125rem;
 }

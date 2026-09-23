@@ -513,6 +513,40 @@
 				newEl.setAttribute('placeholder', 'Search...');
 				newEl.setAttribute('collapsed', '');
 
+				// Add scope options
+				const scope1 = document.createElement('ui5-search-scope');
+				scope1.setAttribute('text', 'All');
+				scope1.setAttribute('value', 'all');
+				scope1.setAttribute('slot', 'scopes');
+
+				const scope2 = document.createElement('ui5-search-scope');
+				scope2.setAttribute('text', 'Enterprise Resource Planning');
+				scope2.setAttribute('value', 'erp');
+				scope2.setAttribute('slot', 'scopes');
+
+				const scope3 = document.createElement('ui5-search-scope');
+				scope3.setAttribute('text', 'Customer Relationship Management and Marketing Automation');
+				scope3.setAttribute('value', 'crm');
+				scope3.setAttribute('slot', 'scopes');
+
+				const scope4 = document.createElement('ui5-search-scope');
+				scope4.setAttribute('text', 'Supply Chain Management, Logistics, and Warehouse Operations');
+				scope4.setAttribute('value', 'scm');
+				scope4.setAttribute('slot', 'scopes');
+
+				const scope5 = document.createElement('ui5-search-scope');
+				scope5.setAttribute('text', 'HR');
+				scope5.setAttribute('value', 'hr');
+				scope5.setAttribute('slot', 'scopes');
+
+				newEl.appendChild(scope1);
+				newEl.appendChild(scope2);
+				newEl.appendChild(scope3);
+				newEl.appendChild(scope4);
+				newEl.appendChild(scope5);
+
+				newEl.setAttribute('scope-value', 'all');
+
 				replaceSearchField('searchField', newEl);
 			} else {
 				// Create ui5-input element

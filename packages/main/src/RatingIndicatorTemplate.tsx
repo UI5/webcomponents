@@ -18,7 +18,6 @@ export default function RatingIndicatorTemplate(this: RatingIndicator) {
 			aria-description={this._ariaDescription}
 			tabindex={this.effectiveTabIndex}
 			onFocusIn={this._onfocusin}
-			onFocusOut={this._onfocusout}
 			onClick={this._onclick}
 			onKeyDown={this._onkeydown}
 			title={this.ratingTooltip}
@@ -49,7 +48,7 @@ function starLi(this: RatingIndicator, star: Star) {
 				</div>
 			</li>
 		);
-	} if (this.readonly) {
+	} if (this.readonly || this.displayOnly) {
 		return (
 			<li class="ui5-rating-indicator-item ui5-rating-indicator-item-unsel">
 				<Icon data-ui5-value={star.index} name={this.ratedIcon} />

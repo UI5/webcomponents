@@ -15,6 +15,7 @@ import {
 	isEnd,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/favorite.js";
@@ -144,6 +145,18 @@ class RatingIndicator extends UI5Element {
 	readonly = false;
 
 	/**
+	 * Defines whether the component is in display-only mode.
+	 *
+	 * **Note:** A display-only component is visually identical to read-only
+	 * but cannot receive focus and is not announced by screen readers.
+	 * @default false
+	 * @public
+	 * @since 2.26.0
+	 */
+	@property({ type: Boolean })
+	displayOnly = false;
+
+	/**
 	 * Defines the accessible ARIA name of the component.
 	 * @default undefined
 	 * @public
@@ -204,12 +217,6 @@ class RatingIndicator extends UI5Element {
 	@property({ type: Array, noAttribute: true })
 	_stars: Array<Star> = [];
 
-	/**
-	 * @private
-	 */
-	@property({ type: Boolean })
-	_focused = false;
-
 	_liveValue?: number;
 
 	@i18n("@ui5/webcomponents")
@@ -217,6 +224,12 @@ class RatingIndicator extends UI5Element {
 
 	constructor() {
 		super();
+	}
+
+	onEnterDOM() {
+		if (isDesktop()) {
+			this.setAttribute("desktop", "");
+		}
 	}
 
 	onBeforeRendering() {
@@ -250,7 +263,7 @@ class RatingIndicator extends UI5Element {
 	_onclick(e: MouseEvent) {
 		const target = e.target as UI5Element;
 
-		if (!(target instanceof HTMLElement) || this.disabled || this.readonly) {
+		if (!(target instanceof HTMLElement) || this.disabled || this.readonly || this.displayOnly) {
 			return;
 		}
 
@@ -270,7 +283,7 @@ class RatingIndicator extends UI5Element {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.disabled || this.readonly) {
+		if (this.disabled || this.readonly || this.displayOnly) {
 			// prevent page scrolling
 			if (isSpace(e)) {
 				e.preventDefault();
@@ -310,22 +323,17 @@ class RatingIndicator extends UI5Element {
 	}
 
 	_onfocusin() {
-		if (this.disabled) {
+		if (this.disabled || this.displayOnly) {
 			return;
 		}
 
-		this._focused = true;
 		this._liveValue = this.value;
-	}
-
-	_onfocusout() {
-		this._focused = false;
 	}
 
 	get effectiveTabIndex() {
 		const tabindex = this.getAttribute("tabindex");
 
-		if (this.disabled) {
+		if (this.disabled || this.displayOnly) {
 			return -1;
 		}
 
@@ -348,7 +356,7 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get _ariaDisabled() {
-		return this.disabled || undefined;
+		return this.disabled || this.displayOnly || undefined;
 	}
 
 	get _ariaLabel() {
@@ -360,6 +368,9 @@ class RatingIndicator extends UI5Element {
 	}
 
 	get ariaReadonly() {
+		if (this.displayOnly) {
+			return undefined;
+		}
 		return this.readonly ? "true" : undefined;
 	}
 }

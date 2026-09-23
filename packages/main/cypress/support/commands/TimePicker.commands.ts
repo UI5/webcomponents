@@ -1,5 +1,6 @@
-import Button from "../../../src/Button.js";
-import TimePicker from "../../../src/TimePicker.js";
+import type Button from "../../../src/Button.js";
+import ResponsivePopover from "../../../src/ResponsivePopover.js";
+import type TimePicker from "../../../src/TimePicker.js";
 
 Cypress.Commands.add("ui5TimePickerGetInnerInput", { prevSubject: true }, subject => {
 	cy.wrap(subject)
@@ -24,6 +25,11 @@ Cypress.Commands.add("ui5TimePickerValueHelpIconPress", { prevSubject: true }, s
 		.find("[ui5-datetime-input]")
 		.find(".ui5-time-picker-input-icon-button")
 		.realClick();
+
+	cy.get("@timePicker")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
 });
 
 Cypress.Commands.add("ui5TimePickerGetClock", { prevSubject: true }, (subject, clockType) => {
@@ -32,6 +38,11 @@ Cypress.Commands.add("ui5TimePickerGetClock", { prevSubject: true }, (subject, c
 
 	cy.get("@timePicker")
 		.should("have.attr", "open");
+
+	cy.get("@timePicker")
+		.shadow()
+		.find<ResponsivePopover>("[ui5-responsive-popover]")
+		.ui5ResponsivePopoverOpened();
 
 	return cy.get("@timePicker")
 		.shadow()

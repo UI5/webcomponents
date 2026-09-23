@@ -1,4 +1,4 @@
-import Switch from "../../../src/Switch.js";
+import type Switch from "../../../src/Switch.js";
 
 Cypress.Commands.add("ui5SwitchCheckAttributeInShadowDomRoot", { prevSubject: true }, (subject: JQuery<Switch>,  attrName: string, attrValue: string) => {
     cy.wrap(subject)

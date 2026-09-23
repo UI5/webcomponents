@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-shellbar:** update Joule assistant button icon in website samples ([#14038](https://github.com/UI5/webcomponents/issues/14038)) ([a042bc8](https://github.com/UI5/webcomponents/commit/a042bc832401fab01d7959cbacdf842616a01241)), closes [#14021](https://github.com/UI5/webcomponents/issues/14021)
+
+
+### Features
+
+* **ui5-avatar-badge:** add colorScheme property for extended color palette ([#14009](https://github.com/UI5/webcomponents/issues/14009)) ([849466d](https://github.com/UI5/webcomponents/commit/849466d29075aac4265190b62b3c8dcaafe08f4e)), closes [#13925](https://github.com/UI5/webcomponents/issues/13925)
+* **ui5-toolbar:** add overflow-group property for atomic group overflow ([#13949](https://github.com/UI5/webcomponents/issues/13949)) ([bf491e7](https://github.com/UI5/webcomponents/commit/bf491e75b16f6e51c95f69db63a8a15951e0fdcb))
+* **ui5-user-settings-notifications-view:** introduce NotificationsView in UserSettingsDialog ([#13885](https://github.com/UI5/webcomponents/issues/13885)) ([5ef9250](https://github.com/UI5/webcomponents/commit/5ef92502c6d2d9d5e0fae011cd168f28d292f8c1))
+
+
+
+
+
+# [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ui5-option-group:** remove unrelated inherited public APIs ([#13998](https://github.com/UI5/webcomponents/issues/13998)) ([f2ab028](https://github.com/UI5/webcomponents/commit/f2ab028a281a4205b0074ecee019eacf35f1852e)), closes [#13992](https://github.com/UI5/webcomponents/issues/13992) [#13991](https://github.com/UI5/webcomponents/issues/13991)
+
+
+
+
+
+# [2.27.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.27.0-rc.0) (2026-08-28)
+
+
+### Features
+
+* **ui5-number-input:** introduce NumberInput component ([#13799](https://github.com/UI5/webcomponents/issues/13799)) ([4c73dd5](https://github.com/UI5/webcomponents/commit/4c73dd576f4bd1093178a1f77949225e4b51f763))
+* **ui5-select:** add ui5-option-group component for grouped options ([#13913](https://github.com/UI5/webcomponents/issues/13913)) ([2fb0efd](https://github.com/UI5/webcomponents/commit/2fb0efd0052679400af0785d2ca09dcfa5b47756))
+
+
+
+
+
+# [2.26.0](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.1...v2.26.0) (2026-08-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.26.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.26.0-rc.0...v2.26.0-rc.1) (2026-08-24)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
+# [2.26.0-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.1-rc.0...v2.26.0-rc.0) (2026-08-14)
+
+**Note:** Version bump only for package @ui5/webcomponents-website
+
+
+
+
+
 ## [2.25.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.25.0...v2.25.1-rc.0) (2026-07-30)
 
 **Note:** Version bump only for package @ui5/webcomponents-website

@@ -15,6 +15,7 @@ import MultipleDrag from "../../../_samples/main/List/MultipleDrag/MultipleDrag.
 import WrappingBehavior from "../../../_samples/main/List/WrappingBehavior/WrappingBehavior.md";
 import StickyHeader from "../../../_samples/main/List/StickyHeader/StickyHeader.md";
 import AccessibleRole from "../../../_samples/main/List/AccessibleRole/AccessibleRole.md";
+import KeyboardHandling from "../../../_samples/main/List/KeyboardHandling/KeyboardHandling.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -96,3 +97,24 @@ Child `ui5-li` items automatically inherit the matching ARIA role - `menuitem` f
 Setting an explicit `accessible-role` attribute on an individual `ui5-li` takes precedence over the role inherited from the parent list.
 
 <AccessibleRole />
+
+### Keyboard Handling
+The `ui5-list` implements the SAP Fiori <b>Intentional Edit Pattern</b>. Interactive elements
+inside a list item (such as buttons, links or inputs in a `ui5-li-custom`) are <b>not</b> reached
+by <kbd>Tab</kbd> from outside the list — that keeps navigation between items fast.
+
+To activate them, <kbd>Tab</kbd> into the list, use <kbd>↓</kbd> to focus a row, then enter edit mode:
+
+- <kbd>F2</kbd> or <kbd>F7</kbd> — moves focus to the first interactive element inside the item.
+  Press again to return focus to the item level.
+- <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> — while in edit mode, walks through the
+  interactive elements within an item, then continues into the next/previous item, and exits
+  the list after the last/first element.
+- <kbd>↑</kbd> / <kbd>↓</kbd> — while focus is on an interactive element, jumps to the element
+  at the same index in the previous/next item. Items with no interactive elements are skipped
+  and `ui5-li-group` boundaries are crossed.
+
+Try it in the sample below — <kbd>Tab</kbd> into the list, use <kbd>↓</kbd> to focus a row,
+then press <kbd>F2</kbd> or <kbd>F7</kbd> to step into the row's buttons.
+
+<KeyboardHandling />

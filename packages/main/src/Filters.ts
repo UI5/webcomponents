@@ -12,7 +12,7 @@ const StartsWithPerTerm = <T>(value: string, items: Array<T>, propName: string) 
 
 		reg.lastIndex = 0;
 
-		return reg.test(text.toLowerCase());
+		return reg.test((text ?? "").toLowerCase());
 	});
 };
 
