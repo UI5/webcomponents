@@ -11,8 +11,6 @@ import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import {
 	customElement, slotStrict as slot, eventStrict as event,
 } from "@ui5/webcomponents-base/dist/decorators.js";
-import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
-import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
@@ -51,9 +49,6 @@ type UserSettingsAppearanceViewItemSelectEventDetail = {
  * @since 2.17.0
  */
 class UserSettingsAppearanceView extends UserSettingsView {
-	@i18n("@ui5/webcomponents-fiori")
-	static i18nBundle: I18nBundle;
-
 	eventDetails!: {
 		"selection-change": UserSettingsAppearanceViewItemSelectEventDetail;
 	}
