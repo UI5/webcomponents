@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>UI5 Web Components - Demo App (v2)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_horizon"
+		}
+	</script>
+	<script type="importmap">
+		{
+			"imports": {
+				"@lit-labs/ssr-dom-shim": "https://cdn.jsdelivr.net/npm/@lit-labs/ssr-dom-shim@1/index.js",
+				"@ui5/webcomponents-base/jsx-runtime": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2/dist/jsx-runtime.js",
+				"@ui5/webcomponents-base/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-base@2/",
+				"@ui5/webcomponents-fiori/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-fiori@2/",
+				"@ui5/webcomponents-icons-business-suite/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons-business-suite@2/",
+				"@ui5/webcomponents-icons-tnt/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons-tnt@2/",
+				"@ui5/webcomponents-icons/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-icons@2/",
+				"@ui5/webcomponents-localization/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-localization@2/",
+				"@ui5/webcomponents-theming/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents-theming@2/",
+				"@ui5/webcomponents/dist/CardHeader": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/CardHeader.js",
+				"@ui5/webcomponents/dist/Dialog": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/Dialog.js",
+				"@ui5/webcomponents/dist/ExpandableText": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/ExpandableText.js",
+				"@ui5/webcomponents/dist/Label": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/Label.js",
+				"@ui5/webcomponents/dist/Link": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/Link.js",
+				"@ui5/webcomponents/dist/RadioButton": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/RadioButton.js",
+				"@ui5/webcomponents/dist/Text": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/dist/Text.js",
+				"@ui5/webcomponents/": "https://cdn.jsdelivr.net/npm/@ui5/webcomponents@2/",
+				"@zxing/library/": "https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/",
+				"lit-html": "https://cdn.jsdelivr.net/npm/lit-html@2/lit-html.js",
+				"lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@2/"
+			}
+		}
+	</script>
+	<script type="module">
+		import "@ui5/webcomponents/dist/Avatar.js";
+		import "@ui5/webcomponents/dist/AvatarBadge.js";
+		import "@ui5/webcomponents/dist/Button.js";
+		import "@ui5/webcomponents/dist/Card.js";
+		import "@ui5/webcomponents/dist/CardHeader.js";
+		import "@ui5/webcomponents/dist/Dialog.js";
+		import "@ui5/webcomponents/dist/Icon.js";
+		import "@ui5/webcomponents/dist/Input.js";
+		import "@ui5/webcomponents/dist/List.js";
+		import "@ui5/webcomponents/dist/ListItemStandard.js";
+		import "@ui5/webcomponents/dist/Panel.js";
+		import "@ui5/webcomponents/dist/ProgressIndicator.js";
+		import "@ui5/webcomponents/dist/Tag.js";
+		import "@ui5/webcomponents/dist/ToggleButton.js";
+		import "@ui5/webcomponents-fiori/dist/ShellBar.js";
+		import "@ui5/webcomponents-fiori/dist/ShellBarItem.js";
+		import "@ui5/webcomponents-icons/dist/accept.js";
+		import "@ui5/webcomponents-icons/dist/add.js";
+		import "@ui5/webcomponents-icons/dist/alert.js";
+		import "@ui5/webcomponents-icons/dist/away.js";
+		import "@ui5/webcomponents-icons/dist/bell.js";
+		import "@ui5/webcomponents-icons/dist/customize.js";
+		import "@ui5/webcomponents-icons/dist/da.js";
+		import "@ui5/webcomponents-icons/dist/decline.js";
+		import "@ui5/webcomponents-icons/dist/detail-view.js";
+		import "@ui5/webcomponents-icons/dist/edit.js";
+		import "@ui5/webcomponents-icons/dist/email.js";
+		import "@ui5/webcomponents-icons/dist/employee.js";
+		import "@ui5/webcomponents-icons/dist/group.js";
+		import "@ui5/webcomponents-icons/dist/locked.js";
+		import "@ui5/webcomponents-icons/dist/menu2.js";
+		import "@ui5/webcomponents-icons/dist/message-error.js";
+		import "@ui5/webcomponents-icons/dist/message-information.js";
+		import "@ui5/webcomponents-icons/dist/message-success.js";
+		import "@ui5/webcomponents-icons/dist/message-warning.js";
+		import "@ui5/webcomponents-icons/dist/project-definition-triangle.js";
+		import "@ui5/webcomponents-icons/dist/share-2.js";
+		import "@ui5/webcomponents-icons/dist/source-code.js";
+		import "@ui5/webcomponents-icons/dist/synchronize.js";
+		import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
+		import "@ui5/webcomponents-icons/dist/sys-help.js";
+		import "@ui5/webcomponents-icons/dist/time-overtime.js";
+		import "@ui5/webcomponents-icons/dist/trend-down.js";
+		import "@ui5/webcomponents-icons/dist/trend-up.js";
+		import "@ui5/webcomponents-icons/dist/user-settings.js";
+	</script>
+	<link rel="stylesheet" type="text/css" href="./styles/DemoApp.css">
+</head>
+
+<body>
+
+	<!-- ═══════════════════════════════════════════════
+	     SHELL BAR
+	     - primary-title / secondary-title and the logo slot remain supported
+	     - the removed show-co-pilot property is replaced by the assistant slot
+	     - a slotted search field also requires show-search-field
+	     - profile badges use ui5-avatar-badge
+	═══════════════════════════════════════════════ -->
+	<ui5-shellbar
+		primary-title="SAP Team Hub"
+		secondary-title="Enterprise Portal"
+		notifications-count="12"
+		show-notifications
+		show-search-field
+		id="shellbar">
+		<img slot="logo" src="./img/sap-logo-svg.svg" alt="SAP Logo" />
+		<ui5-toggle-button icon="da" slot="assistant"></ui5-toggle-button>
+		<ui5-button icon="menu2" slot="startButton" id="menuBtn"></ui5-button>
+		<ui5-input slot="searchField" placeholder="Search people, projects…" show-clear-icon></ui5-input>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="customize" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" initials="JM" color-scheme="Accent5">
+			<ui5-avatar-badge slot="badge" icon="sys-enter-2"></ui5-avatar-badge>
+		</ui5-avatar>
+	</ui5-shellbar>
+
+	<!-- ═══════════════════════════════════════════════
+	     MAIN CONTENT
+	═══════════════════════════════════════════════ -->
+	<div class="main-content">
+
+		<!-- Page Header -->
+		<div class="page-header">
+			<h1>Team Dashboard</h1>
+			<p>Manage your team, track projects and monitor activity across your organization.</p>
+		</div>
+
+		<!-- ── Stats Row ── -->
+		<div class="stats-row">
+			<div class="stat-card">
+				<div class="stat-value">24</div>
+				<div class="stat-label">Team Members</div>
+				<div class="stat-trend trend-positive">
+					<ui5-icon name="trend-up" style="font-size: 0.875rem"></ui5-icon>
+					+3 this quarter
+				</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value">8</div>
+				<div class="stat-label">Active Projects</div>
+				<div class="stat-trend trend-positive">
+					<ui5-icon name="trend-up" style="font-size: 0.875rem"></ui5-icon>
+					2 launching soon
+				</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value">78%</div>
+				<div class="stat-label">Test Coverage</div>
+				<div class="stat-trend trend-negative">
+					<ui5-icon name="trend-down" style="font-size: 0.875rem"></ui5-icon>
+					-4% this sprint
+				</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value">12</div>
+				<div class="stat-label">Open Pull Requests</div>
+				<div class="stat-trend trend-positive">
+					<ui5-icon name="trend-up" style="font-size: 0.875rem"></ui5-icon>
+					5 ready to merge
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Avatar Gallery Panel ── -->
+		<ui5-panel header-text="Team Members" accessible-role="Complementary" collapsed>
+			<div class="avatar-gallery">
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="JM" color-scheme="Accent1">
+						<ui5-avatar-badge slot="badge" icon="sys-enter-2"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">John Miller</span>
+					<span class="avatar-role">Software Architect</span>
+					<ui5-tag design="Set1" color-scheme="1">Admin</ui5-tag>
+				</div>
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="EP" color-scheme="Accent2">
+						<ui5-avatar-badge slot="badge" icon="edit"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">Elena Petrova</span>
+					<span class="avatar-role">Visual Designer</span>
+					<ui5-tag design="Set2" color-scheme="3">Designer</ui5-tag>
+				</div>
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="RW" color-scheme="Accent3">
+						<ui5-avatar-badge slot="badge" icon="time-overtime"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">Richard Wilson</span>
+					<span class="avatar-role">Frontend Engineer</span>
+					<ui5-tag design="Neutral" color-scheme="5">Engineer</ui5-tag>
+				</div>
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="AS" color-scheme="Accent4">
+						<ui5-avatar-badge slot="badge" icon="away"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">Anna Schmidt</span>
+					<span class="avatar-role">Project Manager</span>
+					<ui5-tag design="Set1" color-scheme="7">Manager</ui5-tag>
+				</div>
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="KT" color-scheme="Accent6">
+						<ui5-avatar-badge slot="badge" icon="locked"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">Kim Tanaka</span>
+					<span class="avatar-role">Quality Specialist</span>
+					<ui5-tag design="Set2" color-scheme="8">QA</ui5-tag>
+				</div>
+
+				<div class="avatar-item">
+					<ui5-avatar mode="Interactive" size="L" initials="LP" color-scheme="Accent7">
+						<ui5-avatar-badge slot="badge" icon="user-settings"></ui5-avatar-badge>
+					</ui5-avatar>
+					<span class="avatar-name">Leo Patel</span>
+					<span class="avatar-role">DevOps Engineer</span>
+					<ui5-tag design="Neutral" color-scheme="10">Ops</ui5-tag>
+				</div>
+
+			</div>
+		</ui5-panel>
+
+		<!-- ── Cards Grid ── -->
+		<div class="cards-grid">
+
+			<!-- Card 1: Team list -->
+			<ui5-card>
+				<ui5-card-header
+					slot="header"
+					title-text="Development Team"
+					subtitle-text="5 members · 3 active projects"
+					additional-text="Q3 2024"
+					interactive>
+					<ui5-icon name="group" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+				<ui5-list separators="None">
+					<ui5-li
+						description="Software Architect"
+						additional-text="Available"
+						additional-text-state="Positive"
+						icon="employee"
+						id="memberJM">
+						John Miller
+						<ui5-avatar slot="image" size="XS" initials="JM" color-scheme="Accent1">
+							<ui5-avatar-badge slot="badge" icon="sys-enter-2"></ui5-avatar-badge>
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li
+						description="Visual Designer"
+						additional-text="In Meeting"
+						additional-text-state="Critical"
+						icon="employee">
+						Elena Petrova
+						<ui5-avatar slot="image" size="XS" initials="EP" color-scheme="Accent2">
+							<ui5-avatar-badge slot="badge" icon="time-overtime"></ui5-avatar-badge>
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li
+						description="Frontend Engineer"
+						additional-text="Available"
+						additional-text-state="Positive"
+						icon="employee">
+						Richard Wilson
+						<ui5-avatar slot="image" size="XS" initials="RW" color-scheme="Accent3"></ui5-avatar>
+					</ui5-li>
+					<ui5-li
+						description="Project Manager"
+						additional-text="On Leave"
+						additional-text-state="Negative"
+						icon="employee">
+						Anna Schmidt
+						<ui5-avatar slot="image" size="XS" initials="AS" color-scheme="Accent4">
+							<ui5-avatar-badge slot="badge" icon="away"></ui5-avatar-badge>
+						</ui5-avatar>
+					</ui5-li>
+					<ui5-li
+						description="Quality Specialist"
+						additional-text="Available"
+						additional-text-state="Positive"
+						icon="employee">
+						Kim Tanaka
+						<ui5-avatar slot="image" size="XS" initials="KT" color-scheme="Accent6"></ui5-avatar>
+					</ui5-li>
+				</ui5-list>
+			</ui5-card>
+
+			<!-- Card 2: Project progress -->
+			<ui5-card>
+				<ui5-card-header
+					slot="header"
+					title-text="Active Projects"
+					subtitle-text="Sprint 12 · August 2024"
+					additional-text="8 of 12"
+					interactive>
+					<ui5-icon name="project-definition-triangle" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+				<div style="padding: 0.75rem 0;">
+					<div class="project-item">
+						<div class="project-label">
+							<span class="project-name">UI5 Web Components v3</span>
+							<span class="project-pct">75%</span>
+						</div>
+						<ui5-progress-indicator value="75" value-state="Positive" display-value="75%"></ui5-progress-indicator>
+					</div>
+					<div class="project-item">
+						<div class="project-label">
+							<span class="project-name">Fiori Design System</span>
+							<span class="project-pct">45%</span>
+						</div>
+						<ui5-progress-indicator value="45" value-state="Information" display-value="45%"></ui5-progress-indicator>
+					</div>
+					<div class="project-item">
+						<div class="project-label">
+							<span class="project-name">Accessibility Audit</span>
+							<span class="project-pct">90%</span>
+						</div>
+						<ui5-progress-indicator value="90" value-state="Positive" display-value="90%"></ui5-progress-indicator>
+					</div>
+					<div class="project-item">
+						<div class="project-label">
+							<span class="project-name">Performance Optimization</span>
+							<span class="project-pct">20%</span>
+						</div>
+						<ui5-progress-indicator value="20" value-state="Critical" display-value="20%"></ui5-progress-indicator>
+					</div>
+					<div class="project-item">
+						<div class="project-label">
+							<span class="project-name">Documentation Rewrite</span>
+							<span class="project-pct">60%</span>
+						</div>
+						<ui5-progress-indicator value="60" value-state="Information" display-value="60%"></ui5-progress-indicator>
+					</div>
+				</div>
+			</ui5-card>
+
+			<!-- Card 3: Activity feed -->
+			<ui5-card>
+				<ui5-card-header
+					slot="header"
+					title-text="Recent Activity"
+					subtitle-text="Last 24 hours"
+					additional-text="12 new">
+					<ui5-icon name="bell" slot="avatar"></ui5-icon>
+				</ui5-card-header>
+				<ui5-list separators="Inner">
+					<ui5-li
+						icon="message-success"
+						additional-text="2h ago"
+						additional-text-state="Positive"
+						description="main · 142 tests passed">
+						Build pipeline completed
+					</ui5-li>
+					<ui5-li
+						icon="message-warning"
+						additional-text="4h ago"
+						additional-text-state="Critical"
+						description="Coverage: 78% (threshold: 80%)">
+						Test coverage dropped
+					</ui5-li>
+					<ui5-li
+						icon="message-error"
+						additional-text="6h ago"
+						additional-text-state="Negative"
+						description="prod-eu · rollback initiated">
+						Production deployment failed
+					</ui5-li>
+					<ui5-li
+						icon="source-code"
+						additional-text="8h ago"
+						additional-text-state="Information"
+						description="feature/new-auth by rw">
+						New PR opened
+					</ui5-li>
+					<ui5-li
+						icon="message-information"
+						additional-text="1d ago"
+						additional-text-state="Information"
+						description="3 new CVEs patched">
+						Security scan completed
+					</ui5-li>
+				</ui5-list>
+			</ui5-card>
+
+		</div>
+
+		<!-- ── Tags Showcase Panel ── -->
+		<ui5-panel header-text="Labels &amp; Badges">
+			<div class="actions-bar">
+				<ui5-tag design="Set1" color-scheme="1">Blocker</ui5-tag>
+				<ui5-tag design="Set1" color-scheme="2">Feature</ui5-tag>
+				<ui5-tag design="Set1" color-scheme="3">Bug</ui5-tag>
+				<ui5-tag design="Set1" color-scheme="4">Enhancement</ui5-tag>
+				<ui5-tag design="Set1" color-scheme="5">Critical</ui5-tag>
+				<ui5-tag design="Set2" color-scheme="6">Review</ui5-tag>
+				<ui5-tag design="Set2" color-scheme="7">In Progress</ui5-tag>
+				<ui5-tag design="Set2" color-scheme="8">Done</ui5-tag>
+				<ui5-tag design="Neutral" color-scheme="9">TypeScript</ui5-tag>
+				<ui5-tag design="Neutral" color-scheme="10">React</ui5-tag>
+				<ui5-tag design="Neutral" color-scheme="1">UI5</ui5-tag>
+			</div>
+		</ui5-panel>
+
+		<!-- ── Quick Actions Panel ── -->
+		<ui5-panel header-text="Quick Actions">
+			<div class="actions-bar">
+				<ui5-button design="Emphasized" icon="add" id="newProjectBtn">New Project</ui5-button>
+				<ui5-button design="Default" icon="synchronize">Sync</ui5-button>
+				<ui5-button design="Positive" icon="accept">Approve All</ui5-button>
+				<ui5-button design="Negative" icon="decline">Reject Selected</ui5-button>
+				<ui5-button design="Attention" icon="alert">Flag Issue</ui5-button>
+				<ui5-button design="Transparent" icon="share-2">Share</ui5-button>
+				<ui5-button design="Default" icon="detail-view" id="openMemberBtn">View Member</ui5-button>
+			</div>
+		</ui5-panel>
+
+	</div><!-- /main-content -->
+
+	<!-- ═══════════════════════════════════════════════
+	     MEMBER DETAIL DIALOG
+	═══════════════════════════════════════════════ -->
+	<ui5-dialog id="memberDialog" header-text="Team Member Details" style="min-width: 28rem;">
+		<div class="dialog-content">
+			<ui5-avatar size="XL" initials="JM" color-scheme="Accent1" mode="Interactive">
+				<ui5-avatar-badge slot="badge" icon="sys-enter-2"></ui5-avatar-badge>
+			</ui5-avatar>
+			<div class="dialog-info">
+				<h3>John Miller</h3>
+				<p>Software Architect · Senior Level · SAP SE</p>
+				<div class="dialog-tags">
+					<ui5-tag design="Set1" color-scheme="1">Admin</ui5-tag>
+					<ui5-tag design="Neutral" color-scheme="9">TypeScript</ui5-tag>
+					<ui5-tag design="Neutral" color-scheme="2">Architecture</ui5-tag>
+					<ui5-tag design="Set2" color-scheme="5">Mentor</ui5-tag>
+				</div>
+				<p class="capacity-label">Current Capacity</p>
+				<ui5-progress-indicator value="85" value-state="Positive" display-value="85%"></ui5-progress-indicator>
+				<p class="capacity-label" style="margin-top: 0.75rem;">Sprint Load</p>
+				<ui5-progress-indicator value="60" value-state="Information" display-value="60%"></ui5-progress-indicator>
+			</div>
+		</div>
+		<div slot="footer" class="dialog-footer">
+			<ui5-button design="Emphasized" icon="edit">Edit Profile</ui5-button>
+			<ui5-button design="Default" icon="email">Send Message</ui5-button>
+			<ui5-button design="Transparent" id="closeDialogBtn">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<script>
+		document.getElementById("openMemberBtn").addEventListener("click", () => {
+			document.getElementById("memberDialog").open = true;
+		});
+		document.getElementById("closeDialogBtn").addEventListener("click", () => {
+			document.getElementById("memberDialog").open = false;
+		});
+		document.getElementById("memberJM").addEventListener("click", () => {
+			document.getElementById("memberDialog").open = true;
+		});
+	</script>
+
+</body>
+</html>
