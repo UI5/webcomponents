@@ -12,6 +12,8 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
+import { isTabNext, isTabPrevious } from "@ui5/webcomponents-base/dist/Keys.js";
 import Popup from "./Popup.js";
 import { wasEscapeHandledByRegistry, resetEscapeHandledByRegistry } from "./popup-utils/OpenedPopupsRegistry.js";
 import "@ui5/webcomponents-icons/dist/error.js";
@@ -233,6 +235,7 @@ class Dialog extends Popup {
 	_dragStartHandler: (e: DragEvent) => void;
 	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
 	_cancelHandler: (e: Event) => void;
+	_nativeCloseHandler: (e: Event) => void;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -284,6 +287,7 @@ class Dialog extends Popup {
 		this._dragStartHandler = this._handleDragStart.bind(this);
 		this._fullscreenKeydownHandler = this._onFullscreenKeydown.bind(this);
 		this._cancelHandler = this._onCancel.bind(this);
+		this._nativeCloseHandler = this._onNativeClose.bind(this);
 	}
 
 	static _isHeader(element: HTMLElement) {
@@ -487,9 +491,22 @@ class Dialog extends Popup {
 		// (e.g. an initial "open" attribute), or may lack showModal in non-browser
 		// test environments. Guard both so opening degrades gracefully.
 		if (this.isConnected && dialog && typeof dialog.showModal === "function" && !dialog.open) {
+			// showModal() moves focus to the first tabbable element in the shadow
+			// root, which is the "first-fe" focus-trap sentinel. That would trigger
+			// forwardToLast() and fight the real initial focus. Suppress focus
+			// forwarding until applyInitialFocus() has run.
+			this._skipFocusForward = true;
 			dialog.showModal();
 		}
 		this._center();
+	}
+
+	async applyInitialFocus() {
+		try {
+			await super.applyInitialFocus();
+		} finally {
+			this._skipFocusForward = false;
+		}
 	}
 
 	hide() {
@@ -505,6 +522,65 @@ class Dialog extends Popup {
 		this._showFullscreenButton = this.showFullscreenButton && !this.onPhone && !this.header.length;
 
 		this._isRTL = this.effectiveDir === "rtl";
+	}
+
+	onAfterRendering() {
+		super.onAfterRendering();
+
+		// The native <dialog> lives in the shadow root, which is not yet
+		// rendered when an initially-open dialog runs openPopup() from
+		// onEnterDOM. In that case _show()/_attachBrowserEvents() no-op because
+		// _dialogElement does not exist. Once the element is rendered, reconcile
+		// the "should be open but the native dialog is not" state: attach the
+		// element-level listeners (idempotent — stable bound handlers dedupe)
+		// and show it modally. During normal open/close this is a no-op because
+		// the dialog is already open (open path) or _opened is false (close path).
+		if (this._opened && this._dialogElement && !this._dialogElement.open) {
+			this._attachBrowserEvents();
+			this._show();
+		}
+	}
+
+	/**
+	 * Keeps Tab focus inside the native modal <dialog>.
+	 *
+	 * The browser's modal focus containment does not reliably wrap focus for a
+	 * <dialog> whose focusable content is slotted across the shadow boundary:
+	 * tabbing off the last focusable element escapes to the document body
+	 * instead of returning to the first. Because a native modal <dialog> already
+	 * provides initial focus (via showModal) and Escape handling, we only need
+	 * to close the wrap at the two boundaries here, which — unlike the focus-trap
+	 * sentinels used for non-native popups — never interferes with showModal's
+	 * initial focus.
+	 */
+	_onkeydown(e: KeyboardEvent) {
+		super._onkeydown(e);
+
+		if (!this._opened || !this._useNativeDialog) {
+			return;
+		}
+
+		const isNext = isTabNext(e);
+		const isPrevious = isTabPrevious(e);
+		if (!isNext && !isPrevious) {
+			return;
+		}
+
+		const tabbables = getTabbableElements(this._dialogElement);
+		if (!tabbables.length) {
+			return;
+		}
+
+		const first = tabbables[0];
+		const last = tabbables[tabbables.length - 1];
+
+		if (isNext && last.matches(":focus-within")) {
+			e.preventDefault();
+			first.focus();
+		} else if (isPrevious && first.matches(":focus-within")) {
+			e.preventDefault();
+			last.focus();
+		}
 	}
 
 	/**
@@ -527,6 +603,7 @@ class Dialog extends Popup {
 		this._registerDragHandler();
 		this._registerFullscreenKeydownHandler();
 		this._dialogElement?.addEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.addEventListener("close", this._nativeCloseHandler);
 	}
 
 	_detachBrowserEvents() {
@@ -534,6 +611,7 @@ class Dialog extends Popup {
 		this._deregisterDragHandler();
 		this._deregisterFullscreenKeydownHandler();
 		this._dialogElement?.removeEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.removeEventListener("close", this._nativeCloseHandler);
 	}
 
 	_attachScreenResizeHandler() {
@@ -652,6 +730,21 @@ class Dialog extends Popup {
 		}
 
 		this.closePopup(true);
+	}
+
+	_onNativeClose() {
+		// The native <dialog> can close without firing a cancelable "cancel"
+		// event first. The clearest case is the CloseWatcher abuse-prevention
+		// path: once we preventDefault() one Escape (e.g. while a popup layered
+		// above the dialog is dismissed), the next Escape force-closes the
+		// dialog without a "cancel" our _onCancel could intercept. Reconcile the
+		// component state through the normal close lifecycle whenever the native
+		// element closes while we still consider ourselves open. When we close
+		// it ourselves via hide(), _opened is already false by the time this
+		// fires, so this is a no-op then.
+		if (this._opened) {
+			this.closePopup(true);
+		}
 	}
 
 	_onFullscreenKeydown(e: KeyboardEvent) {
@@ -958,6 +1051,10 @@ class Dialog extends Popup {
 	 * @private
 	 */
 	async forwardToLast() {
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		if (this._movable) {
 			const dragResizeHandler = this.shadowRoot!.querySelector(`#${this._id}-dragResizeHandler`) as HTMLElement;
 			if (dragResizeHandler) {

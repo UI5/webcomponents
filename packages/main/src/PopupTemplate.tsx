@@ -26,7 +26,7 @@ export default function PopupTemplate(this: Popup, hooks?: {
 			onMouseDown={this._onmousedown}
 		>
 
-			{!native && <span class="first-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToLast}></span>}
+			<span class="first-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToLast}></span>
 
 			{(hooks?.beforeContent || beforeContent).call(this)}
 
@@ -47,7 +47,7 @@ export default function PopupTemplate(this: Popup, hooks?: {
 
 			{(hooks?.afterContent || afterContent).call(this)}
 
-			{!native && <span class="last-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToFirst}></span>}
+			<span class="last-fe" data-ui5-focus-trap role="none" tabIndex={0} onFocusIn={this.forwardToFirst}></span>
 
 		</RootTag>
 

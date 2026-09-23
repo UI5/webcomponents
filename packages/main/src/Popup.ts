@@ -249,6 +249,7 @@ abstract class Popup extends UI5Element {
 
 	_resizeHandler: ResizeObserverCallback;
 	_shouldFocusRoot?: boolean;
+	_skipFocusForward?: boolean;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_opened = false;
 	_open = false;
@@ -486,6 +487,13 @@ abstract class Popup extends UI5Element {
 	 * @private
 	 */
 	async forwardToFirst() {
+		// While the native <dialog> is opening, showModal() moves focus to the
+		// first tabbable in the shadow root (a focus-trap sentinel). Ignore that
+		// transient focus so applyInitialFocus() decides the real initial focus.
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		const firstFocusable = await getFirstFocusableElement(this);
 
 		if (firstFocusable) {
@@ -500,6 +508,10 @@ abstract class Popup extends UI5Element {
 	 * @private
 	 */
 	async forwardToLast() {
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		const lastFocusable = await getLastFocusableElement(this);
 
 		if (lastFocusable) {

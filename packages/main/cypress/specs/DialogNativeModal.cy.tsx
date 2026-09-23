@@ -97,6 +97,16 @@ describe("Dialog native cancel/ESC", () => {
 		cy.get("#ld").invoke("prop", "open", true);
 		cy.get<Dialog>("#ld").ui5DialogOpened();
 
+		// A genuine user interaction is required before the Escape presses.
+		// The native <dialog>'s CloseWatcher only fires a *cancelable* "cancel"
+		// when there has been fresh user activation; without it (e.g. after
+		// programmatic-only interaction, or once a previous cancel consumed the
+		// activation) the "cancel" is non-cancelable, preventDefault() is a
+		// no-op and the browser force-closes the dialog. Clicking models the
+		// real usage this regression protects and keeps the first cancel
+		// cancelable so the dialog can stay open on the first Escape.
+		cy.get("#lo").realClick();
+
 		// Open a non-native popup on top of the dialog.
 		cy.get("#lp").invoke("prop", "open", true);
 		cy.get("#lp").should("have.prop", "open", true);

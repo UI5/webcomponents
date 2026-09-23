@@ -861,6 +861,7 @@ describe("Dialog general interaction", () => {
 		);
 
 		cy.get("#resizable-dialog").invoke("attr", "open", true);
+		cy.get<Dialog>("#resizable-dialog").ui5DialogOpened();
 
 		getDialogRoot("#resizable-dialog").then(root => {
 			const widthBeforeResizing = parseInt(root.css("width"));
@@ -868,12 +869,22 @@ describe("Dialog general interaction", () => {
 			const topBeforeResizing = parseInt(root.css("top"));
 			const leftBeforeResizing = parseInt(root.css("left"));
 
+			// Use explicit clientX/clientY via .trigger() instead of realMouse: mousedown
+			// on the handle, mousemove/mouseup on the body bubble to the window listeners.
+			// This avoids the CDP hit-test occasionally missing the still-settling handle.
 			cy.get("#resizable-dialog")
 				.shadow()
 				.find(".ui5-popup-resize-handle")
-				.realMouseDown({ position: "left" })
-				.realMouseMove(-100, 100)
-				.realMouseUp();
+				.should("be.visible")
+				.then($handle => {
+					const rect = $handle[0].getBoundingClientRect();
+					const startX = rect.left + rect.width / 2;
+					const startY = rect.top + rect.height / 2;
+
+					cy.wrap($handle).trigger("mousedown", { clientX: startX, clientY: startY, which: 1, force: true });
+					cy.get("body").trigger("mousemove", { clientX: startX - 100, clientY: startY + 100, force: true });
+					cy.get("body").trigger("mouseup", { force: true });
+				});
 
 			getDialogRoot("#resizable-dialog").should(rootAfterResizing => {
 				const widthAfterResizing = parseInt(rootAfterResizing.css("width"));
@@ -2076,7 +2087,7 @@ describe("Fullscreen Button", () => {
 		cy.get<Dialog>("#dialog").then($dialog => {
 			const dialog = $dialog.get(0);
 			dialog._draggedOrResized = true;
-			Object.assign(dialog.style, { top: "100px", left: "100px", width: "400px", height: "300px" });
+			Object.assign(dialog._dialogElement.style, { top: "100px", left: "100px", width: "400px", height: "300px" });
 		});
 
 		cy.get("#dialog")
@@ -2087,8 +2098,8 @@ describe("Fullscreen Button", () => {
 		cy.get<Dialog>("#dialog").then($dialog => {
 			const dialog = $dialog.get(0);
 			expect(dialog._draggedOrResized).to.be.false;
-			expect(dialog.style.width).to.equal("");
-			expect(dialog.style.height).to.equal("");
+			expect(dialog._dialogElement.style.width).to.equal("");
+			expect(dialog._dialogElement.style.height).to.equal("");
 		});
 	});
 

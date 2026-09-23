@@ -2,6 +2,13 @@
 
 :host {
 	display: contents;
+	/* Default size constraints live on the host so consumer styles set on the
+	   <ui5-dialog> element (e.g. style="max-width: 300px") still take effect.
+	   The native <dialog> root inherits them below. */
+	min-width: min(20rem, 90vw);
+	min-height: min(6rem, 90vh);
+	max-height: 94%;
+	max-width: 90%;
 }
 
 :host([open]) {
@@ -29,10 +36,10 @@
 	position: fixed;
 	inset: unset;
 	width: auto; /* content-sized; overrides shared PopupsCommon .ui5-popup-root { width: 100% } */
-	min-width: min(20rem, 90vw);
-	min-height: min(6rem, 90vh);
-	max-height: 94%;
-	max-width: 90%;
+	min-width: inherit;
+	min-height: inherit;
+	max-height: inherit;
+	max-width: inherit;
 	box-shadow: var(--sapContent_Shadow3);
 	border-radius: var(--sapElement_BorderCornerRadius);
 	border: none;
@@ -41,6 +48,37 @@
 	background: var(--sapGroup_ContentBackground);
 	display: flex;
 	flex-direction: column;
+	/*
+	 * The resize handle is an absolutely-positioned child that intentionally
+	 * overhangs the corner (see .ui5-popup-resize-handle). Because the native
+	 * <dialog> root is "position: fixed" it is the handle's containing block, so
+	 * the shared "overflow: hidden" (PopupsCommon) would clip the overhang and
+	 * make it unclickable. Keep the root unclipped and re-apply corner rounding
+	 * on the inner regions instead (the root's own rounded background still
+	 * masks its own box).
+	 */
+	overflow: visible;
+}
+
+/*
+ * Restore the corner clipping that "overflow: hidden" on the root used to
+ * provide, without re-clipping the overhanging resize handle. The header rounds
+ * the top corners, the footer rounds the bottom ones, and the content (which
+ * already scrolls via "overflow: auto") rounds whichever corners it reaches when
+ * there is no header/footer.
+ */
+.ui5-popup-root .ui5-popup-content {
+	border-radius: inherit;
+}
+
+.ui5-popup-root .ui5-popup-header-root {
+	border-start-start-radius: inherit;
+	border-start-end-radius: inherit;
+}
+
+.ui5-popup-root .ui5-popup-footer-root {
+	border-end-start-radius: inherit;
+	border-end-end-radius: inherit;
 }
 
 :host([stretch]) .ui5-popup-root {
