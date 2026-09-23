@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** add calendar header hover border in HCB ([#14069](https://github.com/UI5/webcomponents/issues/14069)) ([38096ec](https://github.com/UI5/webcomponents/commit/38096ec457ec078a270b301bd1821fcc50e8aea1))
+* **ui5-dynamic-date-range:** correct off-by-one-day date shift in negative UTC offsets ([#14017](https://github.com/UI5/webcomponents/issues/14017)) ([8fd845f](https://github.com/UI5/webcomponents/commit/8fd845f1504116064acc528eb956d297bfa481e3))
+* **ui5-multi-combobox:** mobile focus support ([#14056](https://github.com/UI5/webcomponents/issues/14056)) ([35ac49a](https://github.com/UI5/webcomponents/commit/35ac49a1daad440f96a6b9685ff91b0c330573d7))
+* **ui5-rating-indicator:** mobile focus support ([#14050](https://github.com/UI5/webcomponents/issues/14050)) ([73ee19a](https://github.com/UI5/webcomponents/commit/73ee19a9ec0cad47fcf0dcfdcc8a76671824a84b))
+* **ui5-shellbar-item:** show count badge after item text in overflow popover ([#13849](https://github.com/UI5/webcomponents/issues/13849)) ([be8fee0](https://github.com/UI5/webcomponents/commit/be8fee0056f9c4432c356476e30b5923b330e031)), closes [#12490](https://github.com/UI5/webcomponents/issues/12490)
+* **ui5-token:** mobile focus support ([#14047](https://github.com/UI5/webcomponents/issues/14047)) ([f058464](https://github.com/UI5/webcomponents/commit/f058464afa0ee3885f6c86b0edab53fd830011f3))
+* **ui5-wizard:** mobile focus support ([#14052](https://github.com/UI5/webcomponents/issues/14052)) ([5482099](https://github.com/UI5/webcomponents/commit/548209915fc335aacd7e234317019f98b9f48a92))
+
+
+
+
+
 # [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
 
 
