@@ -10,10 +10,11 @@ import SliderScaleTemplate from "./SliderScaleTemplate.js";
 
 import SliderScaleCss from "./generated/themes/SliderScale.css.js";
 import type SliderHandle from "./SliderHandle.js";
+import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
 
 type Tickmark = {
-	value: number;
-	label?: string;
+		value: number;
+		label?: string;
 };
 
 enum SliderScaleOrientation {
@@ -122,7 +123,7 @@ class SliderScale extends UI5Element {
 	 * @private
 	 */
 	@property()
-	progressRole?: string;
+	progressRole?: AriaRole;
 
 	/**
 	 * ARIA aria-valuenow for the progress bar.

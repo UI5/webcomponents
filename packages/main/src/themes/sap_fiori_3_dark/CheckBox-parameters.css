@@ -2,7 +2,6 @@
 
 :host {
 	--_ui5_checkbox_wrapper_padding: .6875rem;
-	--_ui5_checkbox_width_height: 2.75rem;
 	--_ui5_checkbox_inner_border: .0625rem solid var(--sapField_BorderColor);
 	--_ui5_checkbox_inner_border_radius: .125rem;
 	--_ui5_checkbox_wrapped_focus_padding: .5rem;

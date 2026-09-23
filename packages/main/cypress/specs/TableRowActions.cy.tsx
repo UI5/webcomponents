@@ -112,6 +112,8 @@ describe("TableRowActions", () => {
 			cy.get("@actions").eq(0).as("overflowButton");
 			cy.get("@overflowButton").should("have.attr", "ui5-button");
 			cy.get("@overflowButton").and("have.attr", "icon", "overflow");
+			cy.get("@overflowButton").and("have.attr", "tooltip", "More actions");
+			cy.get("@overflowButton").shadow().find("button").should("have.attr", "title", "More actions");
 			cy.get("@actions").eq(1).should("have.attr", "name", "actions-1");
 
 			cy.get("@overflowButton").realClick();

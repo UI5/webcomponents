@@ -798,7 +798,7 @@ describe("Accessibility", () => {
 				const resourceBundle = (tokenizer.constructor as any).i18nBundle;
 
 				cy.get("@nMoreLabel")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 3));
 			});
 	});
 });

@@ -22,7 +22,7 @@
 }
 
 ui5-tokenizer {
-	width: 240px;
+	width: 100%;
 }
 
 ui5-tokenizer#expanded-tokenizer {
@@ -34,7 +34,7 @@ ui5-tokenizer#nmore-tokenizer {
 }
 
 .tokenizer-container {
-	width: 240px;
+	width: 300px;
 }
 
 .wrapper {
