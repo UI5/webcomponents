@@ -1,3 +1,4 @@
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -774,16 +775,16 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const affectedValue = this._valueAffected;
 
 		if (this._isPressInCurrentRange || !affectedValue) {
-			this._progressBar?.focus();
+			this._progressBar?.focus({ focusVisible: isDesktop() } as FocusOptions);
 		}
 
 		if ((affectedValue === "startValue" && !isReversed) || (affectedValue === "endValue" && isReversed)) {
-			this._startHandle?.focus();
+			this._startHandle?.focus({ focusVisible: isDesktop() } as FocusOptions);
 			this.bringToFrontTooltip("start");
 		}
 
 		if ((affectedValue === "endValue" && !isReversed) || (affectedValue === "startValue" && isReversed)) {
-			this._endHandle?.focus();
+			this._endHandle?.focus({ focusVisible: isDesktop() } as FocusOptions);
 			this.bringToFrontTooltip("end");
 		}
 	}

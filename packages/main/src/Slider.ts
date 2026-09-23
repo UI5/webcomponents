@@ -1,4 +1,5 @@
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -350,6 +351,10 @@ class Slider extends SliderBase implements IFormInputElement {
 
 	get tooltip() {
 		return this.getDomRef()?.querySelector<SliderTooltip>("[ui5-slider-tooltip]");
+	}
+
+	focusInnerElement() {
+		this._sliderHandle.focus({ focusVisible: isDesktop() } as FocusOptions);
 	}
 
 	get _sliderHandle() : HTMLElement {
