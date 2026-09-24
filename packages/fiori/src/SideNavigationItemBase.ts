@@ -122,7 +122,7 @@ class SideNavigationItemBase extends UI5Element implements ITabbable {
 	 * @private
 	 */
 	get _markupText() {
-		return highlightText(this.text || "", this._highlightedText || "", "ui5-sn-item-highlight");
+		return highlightText(this.text, this._highlightedText, "ui5-sn-item-highlight");
 	}
 
 	get hasSubItems() {

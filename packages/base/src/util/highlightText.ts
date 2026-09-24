@@ -1,3 +1,6 @@
+// @ts-expect-error
+import encodeXML from "../sap/base/security/encodeXML.js";
+
 function createLowerCaseIndexMap(text: string) {
 	const originalStart: number[] = [];
 	const originalEnd: number[] = [];
@@ -29,7 +32,7 @@ function createLowerCaseIndexMap(text: string) {
  * @returns The text with the highlighted occurrences wrapped in a span with the specified class.
  * @since 2.28.0
  */
-const highlightText = (text: string | null, highlightedText: string | null, sClass: string) => {
+const highlightText = (text: string | null | undefined, highlightedText: string | null | undefined, sClass: string) => {
 	text = text || "";
 	highlightedText = highlightedText || "";
 
@@ -39,7 +42,7 @@ const highlightText = (text: string | null, highlightedText: string | null, sCla
 	let index = lowerText.indexOf(lowerHighlight);
 
 	if (!highlightLength || index === -1) {
-		return text;
+		return encodeXML(text) as string;
 	}
 
 	// Lowercasing can expand a single character (for example Turkish dotted İ).
@@ -53,12 +56,12 @@ const highlightText = (text: string | null, highlightedText: string | null, sCla
 		const start = indexMap.originalStart[index];
 		const end = indexMap.originalEnd[index + highlightLength - 1];
 
-		result += `${text.slice(lastEnd, start)}<span class="${sClass}">${text.slice(start, end)}</span>`;
+		result += `${encodeXML(text.slice(lastEnd, start))}<span class="${sClass}">${encodeXML(text.slice(start, end))}</span>`;
 		lastEnd = end;
 		index = lowerText.indexOf(lowerHighlight, index + highlightLength);
 	}
 
-	result += text.slice(lastEnd);
+	result += encodeXML(text.slice(lastEnd));
 
 	return result;
 };
