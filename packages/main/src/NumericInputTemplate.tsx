@@ -1,15 +1,15 @@
-import type NumberInput from "./NumberInput.js";
+import type NumericInput from "./NumericInput.js";
 import Icon from "./Icon.js";
 import Input from "./Input.js";
 
 import less from "@ui5/webcomponents-icons/dist/less.js";
 import add from "@ui5/webcomponents-icons/dist/add.js";
 
-export default function NumberInputTemplate(this: NumberInput) {
+export default function NumericInputTemplate(this: NumericInput) {
 	return (
 		<div
 			id={`${this._id}`}
-			class={{ "ui5-number-input-root": true, "ui5-number-input-root--with-buttons": this._showStepButtons && !this.readonly }}
+			class={{ "ui5-numeric-input-root": true, "ui5-numeric-input-root--with-buttons": this._showStepButtons && !this.readonly }}
 			onKeyDown={this._onkeydown}
 			onFocusIn={this._onfocusin}
 			onFocusOut={this._onfocusout}
@@ -33,7 +33,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 					onFocusOut={this._onButtonFocusOut}
 					class={{
 						"inputIcon": true,
-						"ui5-number-input-icon--clickable": this._decIconClickable,
+						"ui5-numeric-input-icon--clickable": this._decIconClickable,
 					}}
 					showTooltip={true}
 				/>
@@ -44,7 +44,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 			<Input
 				id={`${this._id}-inner`}
 				data-sap-focus-ref
-				class="ui5-number-input-input"
+				class="ui5-numeric-input-input"
 				placeholder={this.placeholder}
 				type={this.type}
 				value={this._inputValue ?? this._displayValue}
@@ -79,7 +79,7 @@ export default function NumberInputTemplate(this: NumberInput) {
 						id={`${this._id}-inc`}
 						class={{
 							"inputIcon": true,
-							"ui5-number-input-icon--clickable": this._incIconClickable,
+							"ui5-numeric-input-icon--clickable": this._incIconClickable,
 						}}
 						name={add}
 						tabindex={-1}

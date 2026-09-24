@@ -18,13 +18,13 @@ import {
 } from "./generated/i18n/i18n-defaults.js";
 import StepInputTemplate from "./StepInputTemplate.js";
 import type { InputEventDetail } from "./Input.js";
-import type NumberInput from "./NumberInput.js";
-import type { NumberInputValueStateChangeEventDetail } from "./NumberInput.js";
+import type NumericInput from "./NumericInput.js";
+import type { NumericInputValueStateChangeEventDetail } from "./NumericInput.js";
 
 // Styles
 import StepInputCss from "./generated/themes/StepInput.css.js";
 
-type StepInputValueStateChangeEventDetail = NumberInputValueStateChangeEventDetail;
+type StepInputValueStateChangeEventDetail = NumericInputValueStateChangeEventDetail;
 
 /**
  * @class
@@ -229,8 +229,8 @@ class StepInput extends UI5Element implements IFormInputElement {
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 
-	get _innerNumberInput(): NumberInput {
-		return this.shadowRoot!.querySelector<NumberInput>("[ui5-number-input]")!;
+	get _innerNumberInput(): NumericInput {
+		return this.shadowRoot!.querySelector<NumericInput>("[ui5-numeric-input]")!;
 	}
 
 	async formElementAnchor() {

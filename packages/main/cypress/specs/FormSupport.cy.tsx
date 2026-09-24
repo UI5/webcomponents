@@ -21,7 +21,7 @@ import Switch from "../../src/Switch.js";
 import TextArea from "../../src/TextArea.js";
 import TimePicker from "../../src/TimePicker.js";
 import Tokenizer from "../../src/Tokenizer.js";
-import NumberInput from "../../src/NumberInput.js";
+import NumericInput from "../../src/NumericInput.js";
 
 const getFormData = ($form: HTMLFormElement) => {
 	const formData = new FormData($form);
@@ -426,12 +426,12 @@ describe("Form support", () => {
 			.should("be.equal", "multi_input5=&multi_input6=ok&multi_input7=&multi_input7=ok&multi_input8=ok&multi_input8=ok&multi_input9=ok&multi_input10=ok&multi_input11=&multi_input11=ok&multi_input12=ok&multi_input12=ok");
 	});
 
-	it("ui5-number-input in form", () => {
+	it("ui5-numeric-input in form", () => {
 		cy.mount(<form method="get">
-			<NumberInput id="number_input1"></NumberInput>
-			<NumberInput id="number_input2" value={4}></NumberInput>
-			<NumberInput id="number_input3" name="number_input3"></NumberInput>
-			<NumberInput id="number_input4" name="number_input4" value={4}></NumberInput>
+			<NumericInput id="number_input1"></NumericInput>
+			<NumericInput id="number_input2" value={4}></NumericInput>
+			<NumericInput id="number_input3" name="number_input3"></NumericInput>
+			<NumericInput id="number_input4" name="number_input4" value={4}></NumericInput>
 			<button type="submit">Submits forms</button>
 		</form>);
 
