@@ -76,6 +76,9 @@ describe("Dialog native cancel/ESC", () => {
 		cy.get<Dialog>("#e2").ui5DialogOpened();
 
 		cy.realPress("Escape");
+		// Settle window: confirm the prevented cancel does not close the dialog
+		// on a later tick (asserting a non-event, so a fixed wait is required).
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(100);
 		cy.get("#e2").should("have.prop", "open", true);
 	});
@@ -97,14 +100,9 @@ describe("Dialog native cancel/ESC", () => {
 		cy.get("#ld").invoke("prop", "open", true);
 		cy.get<Dialog>("#ld").ui5DialogOpened();
 
-		// A genuine user interaction is required before the Escape presses.
-		// The native <dialog>'s CloseWatcher only fires a *cancelable* "cancel"
-		// when there has been fresh user activation; without it (e.g. after
-		// programmatic-only interaction, or once a previous cancel consumed the
-		// activation) the "cancel" is non-cancelable, preventDefault() is a
-		// no-op and the browser force-closes the dialog. Clicking models the
-		// real usage this regression protects and keeps the first cancel
-		// cancelable so the dialog can stay open on the first Escape.
+		// Fresh user activation is needed for the native <dialog>'s "cancel"
+		// to be cancelable; without it Escape force-closes the dialog. Clicking
+		// keeps the first Escape's cancel cancelable so the dialog stays open.
 		cy.get("#lo").realClick();
 
 		// Open a non-native popup on top of the dialog.
