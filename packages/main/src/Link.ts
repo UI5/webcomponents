@@ -56,6 +56,21 @@ type LinkAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "h
  * anchor tag (`<a></a>`) and opens the specified URL in the given target frame (`target` property).
  * To specify where the linked content is opened, you can use the `target` property.
  *
+ * ### Navigation vs. Action
+ *
+ * The `ui5-link` supports two distinct use cases, and choosing the right one is important for accessibility:
+ *
+ * - **Navigation** - set the `href` property (and optionally `target`). The component behaves as a
+ * standard anchor tag and the navigation is performed by the browser, which also enables native
+ * affordances such as open-in-new-tab, copy link, and hover preview.
+ * - **Action** - when the link triggers an in-page action (for example, opening a dialog) instead of
+ * navigating, leave `href` unset and set `accessibleRole` to `"Button"`. This exposes the component
+ * with a `button` role, which assistive technologies activate reliably.
+ *
+ * **Note:** A link that triggers an action but keeps the default `"Link"` role (with no `href`) cannot be
+ * activated by some screen readers, such as JAWS in browse mode, because a link with no destination has
+ * nothing to navigate to. Always set `accessibleRole="Button"` for action-only links.
+ *
  * ### Responsive behavior
  *
  * If there is not enough space, the text of the `ui5-link` becomes truncated.
@@ -202,7 +217,7 @@ class Link extends UI5Element implements ITabbable {
 	/**
 	 * Defines the ARIA role of the component.
 	 *
-	 * **Note:** Use the <code>LinkAccessibleRole.Button</code> role in cases when navigation is not expected to occur and the href property is not defined.
+	 * **Note:** Set the role to <code>LinkAccessibleRole.Button</code> when the link triggers an action instead of navigating, that is, when the <code>href</code> property is not defined. Otherwise the component keeps the default <code>"Link"</code> role, and some screen readers (for example, JAWS in browse mode) will not activate it, as a link with no <code>href</code> has no destination to navigate to.
 	 * @default "Link"
 	 * @public
 	 * @since 1.9.0
