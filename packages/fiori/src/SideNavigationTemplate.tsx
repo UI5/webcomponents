@@ -85,9 +85,9 @@ function header(this: SideNavigation) {
 }
 
 function filterSection(this: SideNavigation) {
-	return !this.collapsed ? (
+	return !this.collapsed && this.filterSection.length ? (
 		<div class="ui5-sn-filter-section">
-			<slot name="filter-section"></slot>
+			<slot name="filterSection"></slot>
 		</div>
 	) : undefined;
 }

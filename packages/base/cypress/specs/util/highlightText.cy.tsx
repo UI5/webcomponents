@@ -3,14 +3,18 @@ import highlightText from "../../../src/util/highlightText.js";
 const CLASS = "hl";
 const wrap = (text: string) => `<span class="${CLASS}">${text}</span>`;
 
+// highlightText encodes its output via encodeXML, so spaces and other special
+// characters are returned as XML numeric entities (e.g. " " -> "&#x20;").
+const SP = "&#x20;";
+
 describe("highlightText", () => {
 	describe("no highlighting", () => {
-		it("returns the original text when there is no match", () => {
-			expect(highlightText("Hello World", "xyz", CLASS)).to.equal("Hello World");
+		it("returns the encoded original text when there is no match", () => {
+			expect(highlightText("Hello World", "xyz", CLASS)).to.equal(`Hello${SP}World`);
 		});
 
-		it("returns the original text when the highlight is empty", () => {
-			expect(highlightText("Hello World", "", CLASS)).to.equal("Hello World");
+		it("returns the encoded original text when the highlight is empty", () => {
+			expect(highlightText("Hello World", "", CLASS)).to.equal(`Hello${SP}World`);
 		});
 
 		it("returns an empty string when the text is null", () => {
@@ -21,8 +25,8 @@ describe("highlightText", () => {
 			expect(highlightText("", "abc", CLASS)).to.equal("");
 		});
 
-		it("returns the original text when the highlight is null", () => {
-			expect(highlightText("Hello World", null, CLASS)).to.equal("Hello World");
+		it("returns the encoded original text when the highlight is null", () => {
+			expect(highlightText("Hello World", null, CLASS)).to.equal(`Hello${SP}World`);
 		});
 
 		it("returns an empty string when both arguments are null", () => {
@@ -32,15 +36,15 @@ describe("highlightText", () => {
 
 	describe("single match", () => {
 		it("highlights a match in the middle of the text", () => {
-			expect(highlightText("Hello World", "lo W", CLASS)).to.equal(`Hel${wrap("lo W")}orld`);
+			expect(highlightText("Hello World", "lo W", CLASS)).to.equal(`Hel${wrap(`lo${SP}W`)}orld`);
 		});
 
 		it("highlights a match at the start of the text", () => {
-			expect(highlightText("Hello World", "Hello", CLASS)).to.equal(`${wrap("Hello")} World`);
+			expect(highlightText("Hello World", "Hello", CLASS)).to.equal(`${wrap("Hello")}${SP}World`);
 		});
 
 		it("highlights a match at the end of the text", () => {
-			expect(highlightText("Hello World", "World", CLASS)).to.equal(`Hello ${wrap("World")}`);
+			expect(highlightText("Hello World", "World", CLASS)).to.equal(`Hello${SP}${wrap("World")}`);
 		});
 
 		it("highlights the whole text when it fully matches", () => {
@@ -50,11 +54,11 @@ describe("highlightText", () => {
 
 	describe("case insensitivity", () => {
 		it("matches regardless of case and preserves the original casing", () => {
-			expect(highlightText("Hello World", "hello", CLASS)).to.equal(`${wrap("Hello")} World`);
+			expect(highlightText("Hello World", "hello", CLASS)).to.equal(`${wrap("Hello")}${SP}World`);
 		});
 
 		it("matches an upper-case query against lower-case text", () => {
-			expect(highlightText("hello world", "WORLD", CLASS)).to.equal(`hello ${wrap("world")}`);
+			expect(highlightText("hello world", "WORLD", CLASS)).to.equal(`hello${SP}${wrap("world")}`);
 		});
 	});
 
@@ -73,7 +77,7 @@ describe("highlightText", () => {
 		});
 
 		it("highlights multiple occurrences of a word", () => {
-			expect(highlightText("cat dog cat", "cat", CLASS)).to.equal(`${wrap("cat")} dog ${wrap("cat")}`);
+			expect(highlightText("cat dog cat", "cat", CLASS)).to.equal(`${wrap("cat")}${SP}dog${SP}${wrap("cat")}`);
 		});
 	});
 
@@ -82,8 +86,8 @@ describe("highlightText", () => {
 			expect(highlightText("a.b.c", ".", CLASS)).to.equal(`a${wrap(".")}b${wrap(".")}c`);
 		});
 
-		it("highlights regex special characters literally", () => {
-			expect(highlightText("price is $5 (approx)", "$5", CLASS)).to.equal(`price is ${wrap("$5")} (approx)`);
+		it("highlights regex special characters literally and encodes the output", () => {
+			expect(highlightText("price is $5 (approx)", "$5", CLASS)).to.equal(`price${SP}is${SP}${wrap("&#x24;5")}${SP}&#x28;approx&#x29;`);
 		});
 
 		it("does not treat the highlight as a wildcard", () => {
@@ -99,6 +103,22 @@ describe("highlightText", () => {
 
 		it("highlights an emoji made of surrogate pairs", () => {
 			expect(highlightText("a😀b", "😀", CLASS)).to.equal(`a${wrap("😀")}b`);
+		});
+	});
+
+	describe("XML encoding (XSS safety)", () => {
+		it("encodes HTML in the non-matching parts", () => {
+			expect(highlightText("<b>hi</b>", "zzz", CLASS)).to.equal("&lt;b&gt;hi&lt;&#x2f;b&gt;");
+		});
+
+		it("encodes HTML around and inside a match", () => {
+			expect(highlightText("<script>alert(1)</script>", "alert", CLASS))
+				.to.equal(`&lt;script&gt;${wrap("alert")}&#x28;1&#x29;&lt;&#x2f;script&gt;`);
+		});
+
+		it("encodes quotes and ampersands", () => {
+			expect(highlightText(`a"b`, "z", CLASS)).to.equal("a&quot;b");
+			expect(highlightText("a&b", "z", CLASS)).to.equal("a&amp;b");
 		});
 	});
 });
