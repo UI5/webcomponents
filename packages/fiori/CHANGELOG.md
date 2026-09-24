@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ui5-shellbar-item:** show count badge after item text in overflow popover ([#13849](https://github.com/UI5/webcomponents/issues/13849)) ([be8fee0](https://github.com/UI5/webcomponents/commit/be8fee0056f9c4432c356476e30b5923b330e031)), closes [#12490](https://github.com/UI5/webcomponents/issues/12490)
+* **ui5-wizard:** mobile focus support ([#14052](https://github.com/UI5/webcomponents/issues/14052)) ([5482099](https://github.com/UI5/webcomponents/commit/548209915fc335aacd7e234317019f98b9f48a92))
+
+
+
+
+
 # [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
 
 
