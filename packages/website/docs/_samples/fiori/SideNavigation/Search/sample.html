@@ -1,0 +1,43 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 50rem;">
+    <!-- playground-fold-end -->
+
+    <ui5-navigation-layout id="nl1">
+        <ui5-shellbar slot="header" secondary-title="The Best Run SAP">
+            <ui5-shellbar-branding slot="branding">UI5 Web Components</ui5-shellbar-branding>
+            <ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
+        </ui5-shellbar>
+
+        <!-- Items are rendered from the `data` object in main.js so the same list
+             can be re-rendered filtered as the user types. -->
+        <ui5-side-navigation id="sn1" slot="sideContent" accessible-name="Main Navigation">
+            <ui5-side-navigation-search-field id="searchField" aria-controls="sn1" slot="filterSection"></ui5-side-navigation-search-field>
+        </ui5-side-navigation>
+
+        <div class="content">
+            <div class="contentItem contentItemVisible">
+                <ui5-checkbox id="rtlCb" text="rtl"></ui5-checkbox>
+                <h2>Home</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+            </div>
+        </div>
+    </ui5-navigation-layout>
+
+    <!-- playground-fold -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
