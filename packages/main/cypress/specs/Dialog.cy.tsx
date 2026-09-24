@@ -28,6 +28,29 @@ describe("Native dialog root", () => {
 			expect(root.tagName.toLowerCase()).to.equal("dialog");
 		});
 	});
+
+	it("hides the native <dialog> root when closed", () => {
+		cy.mount(
+			<Dialog id="nd-close">
+				<Button id="nd-close-btn">Content</Button>
+			</Dialog>
+		);
+
+		// Open
+		cy.get("#nd-close").invoke("attr", "open", true);
+		cy.get("#nd-close").shadow().find(".ui5-popup-root").should("have.attr", "open");
+		cy.get("#nd-close").shadow().find(".ui5-popup-root").should("be.visible");
+
+		// Close via the "open" property
+		cy.get("#nd-close").invoke("prop", "open", false);
+
+		// The closed native <dialog> must actually hide: the UA rule
+		// "dialog:not([open]) { display: none }" is overridden by the author
+		// "display: flex", so a Dialog-scoped ":not([open]) { display: none }"
+		// keeps the closed dialog hidden (backdrop + element both gone).
+		cy.get("#nd-close").shadow().find(".ui5-popup-root").should("not.have.attr", "open");
+		cy.get("#nd-close").shadow().find(".ui5-popup-root").should("not.be.visible");
+	});
 });
 
 describe("Keyboard", () => {

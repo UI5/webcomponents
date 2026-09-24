@@ -81,6 +81,10 @@
 	border-end-end-radius: inherit;
 }
 
+.ui5-popup-root:not([open]) {
+	display: none;
+}
+
 :host([stretch]) .ui5-popup-root {
 	width: 90%;
 	height: 94%;
