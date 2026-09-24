@@ -58,18 +58,18 @@ type LinkAccessibilityAttributes = Pick<AccessibilityAttributes, "expanded" | "h
  *
  * ### Navigation vs. Action
  *
- * The `ui5-link` supports two distinct use cases, and choosing the right one is important for accessibility:
+ * The `ui5-link` supports two distinct use cases. Choosing the right one is important for accessibility:
  *
- * - **Navigation** - set the `href` property (and optionally `target`). The component behaves as a
- * standard anchor tag and the navigation is performed by the browser, which also enables native
+ * - **Navigation**: set the `href` property (and optionally `target`). The component behaves as a
+ * standard anchor tag, and the browser handles navigation, which also enables native
  * affordances such as open-in-new-tab, copy link, and hover preview.
- * - **Action** - when the link triggers an in-page action (for example, opening a dialog) instead of
+ * - **Action**: when the link triggers an in-page action (for example, opening a dialog) instead of
  * navigating, leave `href` unset and set `accessibleRole` to `"Button"`. This exposes the component
  * with a `button` role, which assistive technologies activate reliably.
  *
  * **Note:** A link that triggers an action but keeps the default `"Link"` role (with no `href`) cannot be
- * activated by some screen readers, such as JAWS in browse mode, because a link with no destination has
- * nothing to navigate to. Always set `accessibleRole="Button"` for action-only links.
+ * activated by some screen readers, such as JAWS in browse mode, because a link without `href` has
+ * no destination to navigate to. Always set `accessibleRole="Button"` for action-only links.
  *
  * ### Responsive behavior
  *
@@ -217,7 +217,7 @@ class Link extends UI5Element implements ITabbable {
 	/**
 	 * Defines the ARIA role of the component.
 	 *
-	 * **Note:** Set the role to <code>LinkAccessibleRole.Button</code> when the link triggers an action instead of navigating, that is, when the <code>href</code> property is not defined. Otherwise the component keeps the default <code>"Link"</code> role, and some screen readers (for example, JAWS in browse mode) will not activate it, as a link with no <code>href</code> has no destination to navigate to.
+	 * **Note:** Set the role to <code>LinkAccessibleRole.Button</code> when the link triggers an action instead of navigating (when the <code>href</code> property is not defined). Otherwise, the component keeps the default <code>"Link"</code> role, and some screen readers (for example, JAWS in browse mode) cannot activate it, as a link with no <code>href</code> has no destination to navigate to.
 	 * @default "Link"
 	 * @public
 	 * @since 1.9.0
