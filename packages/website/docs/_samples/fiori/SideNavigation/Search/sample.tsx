@@ -26,7 +26,6 @@ import "@ui5/webcomponents-icons/dist/customer-and-supplier.js";
 import "@ui5/webcomponents-icons/dist/message-information.js";
 import "@ui5/webcomponents-icons/dist/course-book.js";
 import "@ui5/webcomponents-icons/dist/connected.js";
-import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 
 const NavigationLayout = createReactComponent(NavigationLayoutClass);
@@ -45,7 +44,7 @@ interface NavNode {
   icon?: string;
   href?: string;
   target?: string;
-  design?: string;
+  design?: "Default" | "Action";
   type?: "group";
   expanded?: boolean;
   selectable?: boolean;
@@ -228,13 +227,6 @@ const data: { navigation: NavNode[]; fixedNavigation: NavNode[] } = {
     },
   ],
   fixedNavigation: [
-    {
-      title: "Quick Create",
-      icon: "add",
-      ariaHasPopup: "Dialog",
-      design: "Action",
-      selectable: false,
-    },
     { title: "Product Settings", icon: "settings", href: "#/productSettings" },
     {
       title: "SAP Support Portal",
@@ -364,7 +356,7 @@ function renderNode(node: NavNode, index: number) {
   if (node.type === "group") {
     return (
       <SideNavigationGroup key={index} text={node.title} expanded={node.expanded}>
-        {(node.items || []).map(renderItem)}
+        {(node.items || []).map((child, childIndex) => renderItem(child, childIndex))}
       </SideNavigationGroup>
     );
   }

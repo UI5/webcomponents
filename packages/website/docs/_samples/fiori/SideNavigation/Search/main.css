@@ -1,11 +1,3 @@
 .content {
     padding: 1rem;
 }
-
-.contentItem {
-    display: none;
-}
-
-.contentItemVisible {
-    display: block;
-}

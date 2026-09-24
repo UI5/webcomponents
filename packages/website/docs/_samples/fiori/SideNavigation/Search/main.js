@@ -7,7 +7,6 @@ import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationSubItem.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationSearchField.js";
 import "@ui5/webcomponents/dist/Button.js";
-import "@ui5/webcomponents/dist/CheckBox.js";
 import "@ui5/webcomponents/dist/Tag.js";
 
 import "@ui5/webcomponents-icons/dist/menu.js";
@@ -26,11 +25,9 @@ import "@ui5/webcomponents-icons/dist/customer-and-supplier.js";
 import "@ui5/webcomponents-icons/dist/message-information.js";
 import "@ui5/webcomponents-icons/dist/course-book.js";
 import "@ui5/webcomponents-icons/dist/connected.js";
-import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 
 const nl1 = document.getElementById("nl1");
-const rtlCb = document.getElementById("rtlCb");
 const searchField = document.getElementById("searchField");
 const sideNav = document.getElementById("sn1");
 
@@ -42,10 +39,6 @@ document.getElementById("startButton").addEventListener("click", function () {
 		executeSearch();
 		nl1.mode = "Collapsed";
 	}
-});
-
-rtlCb.addEventListener("ui5-change", function () {
-	nl1.setAttribute("dir", rtlCb.checked ? "rtl" : "");
 });
 
 const data = {
@@ -296,13 +289,6 @@ const data = {
 		}]
 	}],
 	fixedNavigation: [{
-		title: "Quick Create",
-		icon: "add",
-		ariaHasPopup: "Dialog",
-		design: "Action",
-		selectable: false,
-		key: "quickCreate"
-	}, {
 		title: "Product Settings",
 		icon: "settings",
 		key: "productSettings",
