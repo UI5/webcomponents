@@ -48,7 +48,6 @@ interface NavNode {
   type?: "group";
   expanded?: boolean;
   selectable?: boolean;
-  ariaHasPopup?: string;
   tagText?: string;
   tagState?: string;
   items?: NavNode[];
@@ -340,11 +339,6 @@ function renderItem(node: NavNode, index: number, slot?: string) {
       design={node.design}
       expanded={node.expanded}
       unselectable={unselectable}
-      accessibilityAttributes={
-        node.ariaHasPopup
-          ? { hasPopup: node.ariaHasPopup.toLowerCase() }
-          : undefined
-      }
     >
       {renderTag(node)}
       {(node.items || []).map(renderSubItem)}
