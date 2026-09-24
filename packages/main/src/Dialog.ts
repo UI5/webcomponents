@@ -486,14 +486,12 @@ class Dialog extends Popup {
 
 	_show() {
 		const dialog = this._dialogElement;
-		// The native <dialog> lives in the shadow root and may not be rendered yet
-		// (e.g. an initial "open" attribute), or may lack showModal in non-browser
-		// test environments. Guard both so opening degrades gracefully.
+		// Guard: the shadow <dialog> may not be rendered yet, or may lack
+		// showModal in non-browser test environments.
 		if (this.isConnected && dialog && typeof dialog.showModal === "function" && !dialog.open) {
-			// showModal() moves focus to the first tabbable element in the shadow
-			// root, which is the "first-fe" focus-trap sentinel. That would trigger
-			// forwardToLast() and fight the real initial focus. Suppress focus
-			// forwarding until applyInitialFocus() has run.
+			// showModal() focuses the first shadow tabbable (the "first-fe"
+			// sentinel), triggering forwardToLast() and fighting the real initial
+			// focus. Suppress forwarding until applyInitialFocus() has run.
 			this._skipFocusForward = true;
 			dialog.showModal();
 		}
@@ -526,14 +524,10 @@ class Dialog extends Popup {
 	onAfterRendering() {
 		super.onAfterRendering();
 
-		// The native <dialog> lives in the shadow root, which is not yet
-		// rendered when an initially-open dialog runs openPopup() from
-		// onEnterDOM. In that case _show()/_attachBrowserEvents() no-op because
-		// _dialogElement does not exist. Once the element is rendered, reconcile
-		// the "should be open but the native dialog is not" state: attach the
-		// element-level listeners (idempotent — stable bound handlers dedupe)
-		// and show it modally. During normal open/close this is a no-op because
-		// the dialog is already open (open path) or _opened is false (close path).
+		// An initially-open dialog runs openPopup() from onEnterDOM before the
+		// shadow <dialog> exists, so _show()/_attachBrowserEvents() no-op. Once
+		// rendered, reconcile: attach listeners (idempotent) and show it modally.
+		// A no-op during normal open/close (already open, or _opened is false).
 		if (this._opened && this._dialogElement && !this._dialogElement.open) {
 			this._attachBrowserEvents();
 			this._show();
@@ -543,14 +537,11 @@ class Dialog extends Popup {
 	/**
 	 * Keeps Tab focus inside the native modal <dialog>.
 	 *
-	 * The browser's modal focus containment does not reliably wrap focus for a
-	 * <dialog> whose focusable content is slotted across the shadow boundary:
-	 * tabbing off the last focusable element escapes to the document body
-	 * instead of returning to the first. Because a native modal <dialog> already
-	 * provides initial focus (via showModal) and Escape handling, we only need
-	 * to close the wrap at the two boundaries here, which — unlike the focus-trap
-	 * sentinels used for non-native popups — never interferes with showModal's
-	 * initial focus.
+	 * The browser's modal focus containment does not reliably wrap focus when the
+	 * focusable content is slotted across the shadow boundary — tabbing off the
+	 * last element escapes to the body instead of returning to the first. We only
+	 * close the wrap at the two boundaries here; unlike the focus-trap sentinels
+	 * used for non-native popups, this never interferes with showModal's focus.
 	 */
 	_onkeydown(e: KeyboardEvent) {
 		super._onkeydown(e);
@@ -718,10 +709,8 @@ class Dialog extends Popup {
 		e.preventDefault();
 
 		// If the OpenedPopupsRegistry already consumed this Escape by closing a
-		// popup layered above this dialog (e.g. a Select/ComboBox dropdown or a
-		// Popover), do not also close the dialog. The registry's document keydown
-		// listener runs before this "cancel" default action, so the flag is set
-		// by now. Reset it so an unrelated later close request still closes us.
+		// popup layered above this dialog (a dropdown or Popover), don't also
+		// close the dialog. Reset the flag so a later Escape still closes us.
 		const handledAbove = wasEscapeHandledByRegistry();
 		resetEscapeHandledByRegistry();
 		if (handledAbove) {
@@ -732,15 +721,10 @@ class Dialog extends Popup {
 	}
 
 	_onNativeClose() {
-		// The native <dialog> can close without firing a cancelable "cancel"
-		// event first. The clearest case is the CloseWatcher abuse-prevention
-		// path: once we preventDefault() one Escape (e.g. while a popup layered
-		// above the dialog is dismissed), the next Escape force-closes the
-		// dialog without a "cancel" our _onCancel could intercept. Reconcile the
-		// component state through the normal close lifecycle whenever the native
-		// element closes while we still consider ourselves open. When we close
-		// it ourselves via hide(), _opened is already false by the time this
-		// fires, so this is a no-op then.
+		// The native <dialog> can close without a cancelable "cancel" (e.g. the
+		// CloseWatcher force-closes on a second Escape). Reconcile through the
+		// close lifecycle if it closes while we still think we're open; a no-op
+		// when we closed it ourselves (_opened is already false by then).
 		if (this._opened) {
 			this.closePopup(true);
 		}

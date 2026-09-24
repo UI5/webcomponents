@@ -60,11 +60,9 @@ const getOpenedPopups = () => {
 	return [...OpenedPopupsRegistry.openedRegistry];
 };
 
-// True while the registry has just consumed an Escape key press by closing a
-// non-native popup. A native <dialog> layered beneath that popup will still
-// receive its own "cancel" event as the key press's default action (the
-// document keydown listener below runs first, before that default action), so
-// its Dialog._onCancel consults this flag to avoid also closing the dialog.
+// True while the registry has just closed a non-native popup on Escape. A
+// native <dialog> beneath it still gets its own "cancel" as the key's default
+// action, so Dialog._onCancel checks this flag to avoid closing too.
 let escapeHandledByRegistry = false;
 
 const wasEscapeHandledByRegistry = () => escapeHandledByRegistry;

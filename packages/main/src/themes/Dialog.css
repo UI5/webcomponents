@@ -49,23 +49,17 @@
 	display: flex;
 	flex-direction: column;
 	/*
-	 * The resize handle is an absolutely-positioned child that intentionally
-	 * overhangs the corner (see .ui5-popup-resize-handle). Because the native
-	 * <dialog> root is "position: fixed" it is the handle's containing block, so
-	 * the shared "overflow: hidden" (PopupsCommon) would clip the overhang and
-	 * make it unclickable. Keep the root unclipped and re-apply corner rounding
-	 * on the inner regions instead (the root's own rounded background still
-	 * masks its own box).
+	 * The resize handle overhangs the corner (see .ui5-popup-resize-handle) and
+	 * the fixed <dialog> root is its containing block, so the shared
+	 * "overflow: hidden" would clip it. Keep the root unclipped and round the
+	 * inner regions instead.
 	 */
 	overflow: visible;
 }
 
 /*
- * Restore the corner clipping that "overflow: hidden" on the root used to
- * provide, without re-clipping the overhanging resize handle. The header rounds
- * the top corners, the footer rounds the bottom ones, and the content (which
- * already scrolls via "overflow: auto") rounds whichever corners it reaches when
- * there is no header/footer.
+ * Round the corners on the inner regions (header top, footer bottom, content
+ * whatever it reaches) so the root can stay unclipped for the resize handle.
  */
 .ui5-popup-root .ui5-popup-content {
 	border-radius: inherit;
