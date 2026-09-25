@@ -89,6 +89,7 @@ import "./ComboBoxItemGroup.js";
 // eslint-disable-next-line
 import { isInstanceOfComboBoxItemGroup } from "./ComboBoxItemGroup.js";
 import type ComboBoxFilter from "./types/ComboBoxFilter.js";
+import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type Input from "./Input.js";
 import type { InputEventDetail } from "./Input.js";
 import type { ListItemBaseClickEventDetail } from "./ListItemBase.js";
@@ -400,6 +401,15 @@ class ComboBox extends UI5Element implements IFormInputElement {
 	 */
 	@property({ type: Boolean })
 	showClearIcon = false;
+
+	/**
+	 * Determines the horizontal alignment of the component's dropdown menu relative to the component.
+	 * @default "Start"
+	 * @public
+	 * @since 2.26.0
+	 */
+	@property()
+	horizontalAlign: `${PopoverHorizontalAlign}` = "Start";
 
 	/**
 	 * Indicates whether the input is focused
