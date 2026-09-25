@@ -6,7 +6,7 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 import getTodayUTCTimestamp from "@ui5/webcomponents-localization/dist/dates/getTodayUTCTimestamp.js";
-import type DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
@@ -285,9 +285,27 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 		if (this.placeholder) {
 			return this.placeholder;
 		}
-
+		const delimiter = ` ${this._effectiveDelimiter} `;
+		const placeHolderFormatter = this._isPattern
+			? DateFormat.getDateInstance({
+				interval: true, 
+				singleIntervalValue: true,
+				intervalDelimiter: delimiter,
+				strictParsing: true,
+				pattern: this._formatPattern,
+				calendarType: this._primaryCalendarType,
+			})
+			: DateFormat.getDateInstance({
+				interval: true, 
+				singleIntervalValue: true,
+				intervalDelimiter: delimiter,
+				strictParsing: true,
+				style: this._formatPattern,
+				calendarType: this._primaryCalendarType,
+			}); 
 		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
-		return `${DateRangePicker.i18nBundle.getText(DATETIME_COMPONENTS_PLACEHOLDER_PREFIX)} ${this._lastDateRangeForTheCurrentYear}`;
+		// @ts-ignore getPlaceholderText is a runtime API not exposed in type definitions 
+		return placeHolderFormatter.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate());
 	}
 
 	get _submitDisabled() {
