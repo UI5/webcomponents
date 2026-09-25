@@ -27,7 +27,7 @@ import { getEffectiveAriaLabelText, getAssociatedLabelForTexts } from "@ui5/webc
 import type { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type { IFormInputElement } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import { submitForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
-import NumberInputTemplate from "./NumberInputTemplate.js";
+import NumericInputTemplate from "./NumericInputTemplate.js";
 import {
 	NUMBERINPUT_DEC_ICON_TITLE,
 	NUMBERINPUT_INC_ICON_TITLE,
@@ -44,7 +44,7 @@ import InputType from "./types/InputType.js";
 import NumberFormat from "@ui5/webcomponents-localization/dist/NumberFormat.js";
 
 // Styles
-import NumberInputCss from "./generated/themes/NumberInput.css.js";
+import NumericInputCss from "./generated/themes/NumericInput.css.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import { attachLanguageChange, detachLanguageChange } from "@ui5/webcomponents-base/dist/locale/languageChange.js";
@@ -55,7 +55,7 @@ const ACCELERATION = 0.8;
 const MIN_WAIT_TIMEOUT = 50; // milliseconds
 const INITIAL_SPEED = 120; // milliseconds
 
-type NumberInputValueStateChangeEventDetail = {
+type NumericInputValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
 	valid: boolean,
 }
@@ -65,13 +65,13 @@ type NumberInputValueStateChangeEventDetail = {
  *
  * ### Overview
  *
-  * The `ui5-number-input` component is a numeric input field. It allows users to enter, edit and select numeric values.
+  * The `ui5-numeric-input` component is a numeric input field. It allows users to enter, edit and select numeric values.
  *
  * ### Usage
  *
  * The default step is 1 but the app developer can set a different one.
  *
- * App developers can set a maximum and minimum value for `ui5-number-input`.
+ * App developers can set a maximum and minimum value for `ui5-numeric-input`.
  * The increase/decrease button and the up/down keyboard navigation become disabled when
  * the value reaches the max/min or a new value is entered from the input which is greater/less than the max/min.
  *
@@ -88,7 +88,7 @@ type NumberInputValueStateChangeEventDetail = {
  *
  * ### ES6 Module Import
  *
- * `import "@ui5/webcomponents/dist/NumberInput.js";`
+ * `import "@ui5/webcomponents/dist/NumericInput.js";`
  * @constructor
  * @extends UI5Element
  * @since 2.27.0
@@ -96,12 +96,12 @@ type NumberInputValueStateChangeEventDetail = {
  * @public
  */
 @customElement({
-	tag: "ui5-number-input",
+	tag: "ui5-numeric-input",
 	cldr: true,
 	formAssociated: true,
 	renderer: jsxRenderer,
-	styles: NumberInputCss,
-	template: NumberInputTemplate,
+	styles: NumericInputCss,
+	template: NumericInputTemplate,
 	languageAware: true,
 })
 /**
@@ -134,11 +134,11 @@ type NumberInputValueStateChangeEventDetail = {
 @event("_request-submit", {
 	bubbles: true,
 })
-class NumberInput extends UI5Element implements IFormInputElement {
+class NumericInput extends UI5Element implements IFormInputElement {
 	eventDetails!: {
 		change: void
 		input: InputEventDetail
-		"value-state-change": NumberInputValueStateChangeEventDetail
+		"value-state-change": NumericInputValueStateChangeEventDetail
 		"_request-submit": void
 	}
 
@@ -331,13 +331,13 @@ class NumberInput extends UI5Element implements IFormInputElement {
 		const validity = this.formValidity;
 
 		if (validity.patternMismatch) {
-			return NumberInput.i18nBundle.getText(NUMBERINPUT_PATTERN_MISSMATCH, this.valuePrecision);
+			return NumericInput.i18nBundle.getText(NUMBERINPUT_PATTERN_MISSMATCH, this.valuePrecision);
 		}
 		if (validity.rangeUnderflow) {
-			return NumberInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);
+			return NumericInput.i18nBundle.getText(NUMBERINPUT_RANGEUNDERFLOW, this.min as number);
 		}
 		if (validity.rangeOverflow) {
-			return NumberInput.i18nBundle.getText(NUMBERINPUT_RANGEOVERFLOW, this.max as number);
+			return NumericInput.i18nBundle.getText(NUMBERINPUT_RANGEOVERFLOW, this.max as number);
 		}
 
 		return "";
@@ -362,11 +362,11 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	// icons-related
 
 	get decIconTitle() {
-		return NumberInput.i18nBundle.getText(NUMBERINPUT_DEC_ICON_TITLE);
+		return NumericInput.i18nBundle.getText(NUMBERINPUT_DEC_ICON_TITLE);
 	}
 
 	get incIconTitle() {
-		return NumberInput.i18nBundle.getText(NUMBERINPUT_INC_ICON_TITLE);
+		return NumericInput.i18nBundle.getText(NUMBERINPUT_INC_ICON_TITLE);
 	}
 
 	get _decIconClickable() {
@@ -577,7 +577,7 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	 */
 	_modifyValue(modifier: number, fireChangeEvent = false) {
 		if (this.min !== undefined && this.max !== undefined && this.min > this.max) {
-			console.warn(`[ui5-number-input] Invalid configuration: 'min' (${this.min}) is greater than 'max' (${this.max}). Value modification skipped.`); // eslint-disable-line
+			console.warn(`[ui5-numeric-input] Invalid configuration: 'min' (${this.min}) is greater than 'max' (${this.max}). Value modification skipped.`); // eslint-disable-line
 			return;
 		}
 		let value;
@@ -854,9 +854,9 @@ class NumberInput extends UI5Element implements IFormInputElement {
 	}
 }
 
-NumberInput.define();
+NumericInput.define();
 
-export default NumberInput;
+export default NumericInput;
 export type {
-	NumberInputValueStateChangeEventDetail,
+	NumericInputValueStateChangeEventDetail,
 };

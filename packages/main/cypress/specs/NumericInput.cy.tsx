@@ -1,220 +1,220 @@
-import NumberInput from "../../src/NumberInput.js";
+import NumericInput from "../../src/NumericInput.js";
 import Label from "../../src/Label.js";
 import { setLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import "../../src/Assets.js";
 
 const decreaseValue = true;
 
-describe("NumberInput keyboard interaction tests", () => {
+describe("NumericInput keyboard interaction tests", () => {
 	it("should increase the value with 'ArrowUp' only if it is less than 'max'", () => {
 		cy.mount(
-			<NumberInput max={5} value={4}></NumberInput>
+			<NumericInput max={5} value={4}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(5);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(5);
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(5);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(5);
 	});
 
 	it("should decrease the value with 'ArrowDown' only if it is more than 'min'", () => {
 		cy.mount(
-			<NumberInput min={5} value={6}></NumberInput>
+			<NumericInput min={5} value={6}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(5, decreaseValue);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(5, decreaseValue);
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(5, decreaseValue);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(5, decreaseValue);
 	});
 
 	it("should set the value to the 'max' with 'Shift+PageUp'", () => {
 		cy.mount(
-			<NumberInput max={5}></NumberInput>
+			<NumericInput max={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
 		cy.realPress(['Shift', 'PageUp']);
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 5);
 	});
 
 	it("should set the value to the 'min' with 'Shift+PageDown'", () => {
 		cy.mount(
-			<NumberInput min={0} value={5}></NumberInput>
+			<NumericInput min={0} value={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
 		cy.realPress(['Shift', 'PageDown']);
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 0);
 	});
 
 	it("should set the value to the 'max' with 'Ctrl+Shift+ArrowUp'", () => {
 		cy.mount(
-			<NumberInput max={5}></NumberInput>
+			<NumericInput max={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
 		cy.realPress(['Control', 'Shift', 'ArrowUp']);
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 5);
 	});
 
 	it("should set the value to the 'min' with 'Ctrl+Shift+ArrowDown'", () => {
 		cy.mount(
-			<NumberInput min={0} value={5}></NumberInput>
+			<NumericInput min={0} value={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
 		cy.realPress(['Control', 'Shift', 'ArrowDown']);
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 0);
 	});
 
 	it("should restore the previous value with 'Escape'", () => {
 		cy.mount(
-			<NumberInput value={5}></NumberInput>
+			<NumericInput value={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(6);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(6);
 
 		cy.realPress("Escape");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 5);
 	});
 
 	it("should update the value when typed in input", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
 		cy.realType("23");
 		cy.realPress("Enter");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 23);
 	});
 
 	it("should reset the value to 0 if input is deleted", () => {
 		cy.mount(
-			<NumberInput value={10}></NumberInput>
+			<NumericInput value={10}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
 		cy.realPress("Backspace");
 		cy.realPress("Enter");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 0);
 	});
 });
 
-describe("NumberInput misc interaction tests", () => {
+describe("NumericInput misc interaction tests", () => {
 	it("should not round value when 'valuePrecision' is set", () => {
 		cy.mount(
-			<NumberInput value={29.999} valuePrecision={3}></NumberInput>
+			<NumericInput value={29.999} valuePrecision={3}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(30.999);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(30.999);
 	});
 
 	it("should round value when 'valuePrecision' is set to default", () => {
 		cy.mount(
-			<NumberInput value={29.999}></NumberInput>
+			<NumericInput value={29.999}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(31);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(31);
 	});
 
 	it("should set 'valueState' to 'Negative' when the value is not compliant", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
@@ -222,93 +222,93 @@ describe("NumberInput misc interaction tests", () => {
 
 		cy.realPress("Enter");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "valueState", "Negative");
 	});
 });
 
-describe("NumberInput events", () => {
+describe("NumericInput events", () => {
 	it("should not change value state when 'value-state-change' event is prevented", () => {
 		const valueState = "Positive";
 
 		cy.mount(
-			<NumberInput valueState={valueState}></NumberInput>
+			<NumericInput valueState={valueState}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.then($input => {
 				$input.get(0).addEventListener("value-state-change", e => {
 					e.preventDefault();
 				});
 			});
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("value-state-change", "stateChange");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("value-state-change", "stateChange");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(1);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(1);
 
 		cy.get("@stateChange")
 			.should("have.been.calledOnce");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "valueState", valueState);
 	});
 
 	it("should prevent input event", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.then($input => {
 				$input.get(0).addEventListener("input", e => {
 					e.preventDefault();
-					(e.target as NumberInput).value = 30;
+					(e.target as NumericInput).value = 30;
 				});
 			});
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
 		cy.realPress("1");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputCheckInnerInputProperty("value", "30");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputCheckInnerInputProperty("value", "30");
 	});
 
 	it("should not fire 'change' when navigating with 'ArrowUp'/'ArrowDown' keys", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(1);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(1);
 
 		cy.get("@change")
 			.should("have.not.been.called");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(0, decreaseValue);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(0, decreaseValue);
 
 		cy.get("@change")
 			.should("have.not.been.called");
@@ -316,20 +316,20 @@ describe("NumberInput events", () => {
 
 	it("should fire 'change' after 'Enter' is pressed", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(1);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(1);
 
 		cy.realPress("Enter");
 
@@ -339,24 +339,24 @@ describe("NumberInput events", () => {
 
 	it("should not fire 'change' when previous value is restored with 'Escape'", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(1);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(1);
 
 		cy.realPress("Escape");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 0);
 
 		cy.get("@change")
@@ -365,42 +365,42 @@ describe("NumberInput events", () => {
 
 	it("should fire 'change' after focus out", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick();
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(1);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(1);
 
 		cy.realPress("Tab");
 
 		cy.get("@change")
 			.should("have.been.calledOnce");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 1);
 	});
 
 	it("should fire 'change' when 'Enter' is pressed after manual input", () => {
 		cy.mount(
-			<NumberInput></NumberInput>
+			<NumericInput></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
@@ -411,7 +411,7 @@ describe("NumberInput events", () => {
 
 		cy.realPress("Enter");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 23);
 
 		cy.get("@change")
@@ -420,16 +420,16 @@ describe("NumberInput events", () => {
 
 	it("should fire 'change' after focusing out of input", () => {
 		cy.mount(
-			<NumberInput value={10}></NumberInput>
+			<NumericInput value={10}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
@@ -440,7 +440,7 @@ describe("NumberInput events", () => {
 
 		cy.realPress("Tab");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 23);
 
 		cy.get("@change")
@@ -449,16 +449,16 @@ describe("NumberInput events", () => {
 
 	it("should fire 'change' after input is deleted and focused out", () => {
 		cy.mount(
-			<NumberInput value={10}></NumberInput>
+			<NumericInput value={10}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
@@ -469,7 +469,7 @@ describe("NumberInput events", () => {
 
 		cy.realPress("Tab");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 0);
 
 		cy.get("@change")
@@ -478,27 +478,27 @@ describe("NumberInput events", () => {
 
 	it("should fire 'change' after value property is programmatically set and then changed with arrow keys", () => {
 		cy.mount(
-			<NumberInput value={5}></NumberInput>
+			<NumericInput value={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputAttachHandler("ui5-change", "change");
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputAttachHandler("ui5-change", "change");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.invoke("prop", "value", 4);
 
 		cy.get("@change")
 			.should("not.have.been.called");
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick()
 			.should("be.focused");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputChangeValueWithArrowKeys(5);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputChangeValueWithArrowKeys(5);
 
 		cy.realPress("Enter");
 
@@ -507,14 +507,14 @@ describe("NumberInput events", () => {
 	});
 });
 
-describe("NumberInput thousand separator formatting", () => {
+describe("NumericInput thousand separator formatting", () => {
 	it("should display value with thousand separator", () => {
 		cy.mount(
-			<NumberInput value={12345}></NumberInput>
+			<NumericInput value={12345}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputGetInnerInput()
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputGetInnerInput()
 			.should($input => {
 				const val = $input.val();
 				// Accepts both comma and dot as separator depending on locale
@@ -524,35 +524,35 @@ describe("NumberInput thousand separator formatting", () => {
 
 	it("should parse formatted value correctly", () => {
 		cy.mount(
-			<NumberInput value={12345}></NumberInput>
+			<NumericInput value={12345}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputGetInnerInput()
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputGetInnerInput()
 			.should($input => {
 				const val = $input.val() as string;
 				const num = Number(val.replace(/[^\d]/g, ""));
 				expect(num).to.equal(12345);
 			});
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.realClick({ "clickCount": 2 })
 			.should("be.focused");
 
 		cy.realType("1,0000");
 		cy.realPress("Enter");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputGetInnerInput()
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputGetInnerInput()
 			.should($input => {
 				const val = $input.val() as string;
 				expect(val).to.equal("10,000");
 			});
 
-		cy.get<NumberInput>("@numberInput")
+		cy.get<NumericInput>("@numberInput")
 			.should("have.prop", "value", 10000);
 	});
 
@@ -563,14 +563,14 @@ describe("NumberInput thousand separator formatting", () => {
 			});
 
 		cy.mount(
-			<NumberInput value={10000.56} valuePrecision={2}></NumberInput>
+			<NumericInput value={10000.56} valuePrecision={2}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputGetInnerInput()
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputGetInnerInput()
 			.should($input => {
 				const val = $input.val() as string;
 				expect(val).to.equal("10,000.56");
@@ -581,8 +581,8 @@ describe("NumberInput thousand separator formatting", () => {
 				await setLanguage("de");
 			})
 			.then(() => {
-				cy.get<NumberInput>("@numberInput")
-					.ui5NumberInputGetInnerInput()
+				cy.get<NumericInput>("@numberInput")
+					.ui5NumericInputGetInnerInput()
 					.should($input => {
 						const val = $input.val() as string;
 						expect(val).to.equal("10.000,56");
@@ -596,104 +596,104 @@ describe("NumberInput thousand separator formatting", () => {
 	});
 });
 
-describe("NumberInput property propagation", () => {
+describe("NumericInput property propagation", () => {
 	it("should propagate 'placeholder' property to inner input", () => {
 		cy.mount(
-			<NumberInput placeholder="Enter number"></NumberInput>
+			<NumericInput placeholder="Enter number"></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("placeholder", "Enter number");
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("placeholder", "Enter number");
 	});
 
 	it("should not propagate 'min' property to inner input", () => {
 		cy.mount(
-			<NumberInput min={0}></NumberInput>
+			<NumericInput min={0}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("min", "0", false);
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("min", "0", false);
 	});
 
 	it("should not propagate 'max' property to inner input", () => {
 		cy.mount(
-			<NumberInput max={10}></NumberInput>
+			<NumericInput max={10}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("max", "10", false);
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("max", "10", false);
 	});
 
 	it("should not propagate 'step' property to inner input", () => {
 		cy.mount(
-			<NumberInput step={2}></NumberInput>
+			<NumericInput step={2}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("step", "2", false);
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("step", "2", false);
 	});
 
 	it("should propagate 'disabled' property to inner input", () => {
 		cy.mount(
-			<NumberInput disabled></NumberInput>
+			<NumericInput disabled></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("disabled", true);
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("disabled", true);
 	});
 
 	it("should propagate 'readonly' property to inner input", () => {
 		cy.mount(
-			<NumberInput readonly></NumberInput>
+			<NumericInput readonly></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("readonly", true);
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("readonly", true);
 	});
 
 	it("should propagate 'value' property to inner input", () => {
 		cy.mount(
-			<NumberInput value={5}></NumberInput>
+			<NumericInput value={5}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
-			.ui5NumberInputCheckInnerInputProperty("value", "5");
+		cy.get("[ui5-numeric-input]")
+			.ui5NumericInputCheckInnerInputProperty("value", "5");
 	});
 
 	it("should increase value on mouse wheel up", () => {
 		cy.mount(
-			<NumberInput value={5} step={2}></NumberInput>
+			<NumericInput value={5} step={2}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputScrollToChangeValue(7, false);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputScrollToChangeValue(7, false);
 	});
 
 	it("should decrease value on mouse wheel down", () => {
 		cy.mount(
-			<NumberInput value={5} step={2}></NumberInput>
+			<NumericInput value={5} step={2}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputScrollToChangeValue(3, true);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputScrollToChangeValue(3, true);
 	});
 
 	it("should not change value when readonly", () => {
 		cy.mount(
-			<NumberInput value={5} step={2} readonly={true}></NumberInput>
+			<NumericInput value={5} step={2} readonly={true}></NumericInput>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputScrollToChangeValue(5, true);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputScrollToChangeValue(5, true);
 	});
 });
 
@@ -701,7 +701,7 @@ describe("Validation inside form", () => {
 	it("has correct validity for patternMissmatch", () => {
 		cy.mount(
 			<form>
-				<NumberInput id="numberInput" valuePrecision={3}></NumberInput>
+				<NumericInput id="numberInput" valuePrecision={3}></NumericInput>
 				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
@@ -712,11 +712,11 @@ describe("Validation inside form", () => {
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(2.34);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(2.34);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -733,10 +733,10 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("exist", "NumberInput without formatted value should have :invalid CSS class");
+			.should("exist", "NumericInput without formatted value should have :invalid CSS class");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(2.345);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(2.345);
 
 		cy.get("@numberInput")
 			.ui5AssertValidityState({
@@ -747,13 +747,13 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("not.exist", "NumberInput with formatted value should not have :invalid CSS class");
+			.should("not.exist", "NumericInput with formatted value should not have :invalid CSS class");
 	});
 
 	it("has correct validity for rangeUnderflow", () => {
 		cy.mount(
 			<form>
-				<NumberInput id="numberInput" min={3}></NumberInput>
+				<NumericInput id="numberInput" min={3}></NumericInput>
 				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
@@ -764,11 +764,11 @@ describe("Validation inside form", () => {
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(2);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -785,10 +785,10 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("exist", "NumberInput with value lower than min should have :invalid CSS class");
+			.should("exist", "NumericInput with value lower than min should have :invalid CSS class");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(4);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("@numberInput")
 			.ui5AssertValidityState({
@@ -799,13 +799,13 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("not.exist", "NumberInput with value higher than min should not have :invalid CSS class");
+			.should("not.exist", "NumericInput with value higher than min should not have :invalid CSS class");
 	});
 
 	it("has correct validity for rangeOverflow", () => {
 		cy.mount(
 			<form>
-				<NumberInput id="numberInput" max={3}></NumberInput>
+				<NumericInput id="numberInput" max={3}></NumericInput>
 				<button type="submit" id="submitBtn">Submits forms</button>
 			</form>
 		);
@@ -816,11 +816,11 @@ describe("Validation inside form", () => {
 				$item.get(0).addEventListener("submit", cy.stub().as("submit"));
 			});
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.as("numberInput");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(4);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -837,10 +837,10 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("exist", "NumberInput with value above max should have :invalid CSS class");
+			.should("exist", "NumericInput with value above max should have :invalid CSS class");
 
-		cy.get<NumberInput>("@numberInput")
-			.ui5NumberInputTypeNumber(2);
+		cy.get<NumericInput>("@numberInput")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("@numberInput")
 			.ui5AssertValidityState({
@@ -851,7 +851,7 @@ describe("Validation inside form", () => {
 			});
 
 		cy.get("#numberInput:invalid")
-			.should("not.exist", "NumberInput with value lower than max should not have :invalid CSS class");
+			.should("not.exist", "NumericInput with value lower than max should not have :invalid CSS class");
 	});
 });
 
@@ -862,11 +862,11 @@ describe("Accessibility", () => {
 		cy.mount(
 			<>
 				<Label for="numberInput">{labelText}</Label>
-				<NumberInput id="numberInput"></NumberInput>
+				<NumericInput id="numberInput"></NumericInput>
 			</>
 		);
 
-		cy.get("[ui5-number-input]")
+		cy.get("[ui5-numeric-input]")
 			.shadow()
 			.find("[ui5-input]")
 			.shadow()

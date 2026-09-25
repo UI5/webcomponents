@@ -22,7 +22,7 @@ import Slider from "../../src/Slider.js";
 import RangeSlider from "../../src/RangeSlider.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
-import NumberInput from "../../src/NumberInput.js";
+import NumericInput from "../../src/NumericInput.js";
 
 describe("Form submission with Enter key", () => {
 
@@ -736,8 +736,8 @@ describe("Form submission with Enter key", () => {
 		});
 	});
 
-	describe("NumberInput", () => {
-		const mountNumberInputForm = () => {
+	describe("NumericInput", () => {
+		const mountNumericInputForm = () => {
 			const submit = cy.spy().as("submit");
 			const change = cy.spy().as("change");
 
@@ -746,10 +746,10 @@ describe("Form submission with Enter key", () => {
 					e.preventDefault();
 					submit();
 				}}>
-					<NumberInput name="date" onChange={() => change()} />
+					<NumericInput name="date" onChange={() => change()} />
 				</form>
 			);
-			cy.get("[ui5-number-input]").as("numberInput");
+			cy.get("[ui5-numeric-input]").as("numberInput");
 
 			cy.get("@numberInput")
 				.realClick()
@@ -766,7 +766,7 @@ describe("Form submission with Enter key", () => {
 		};
 
 		it("submits form without firing change event when Enter is pressed on empty input", () => {
-			mountNumberInputForm();
+			mountNumericInputForm();
 
 			cy.realPress("Enter");
 
@@ -775,7 +775,7 @@ describe("Form submission with Enter key", () => {
 		});
 
 		it("fires change event then submits form when Enter is pressed after typing", () => {
-			mountNumberInputForm();
+			mountNumericInputForm();
 
 			cy.realType("25");
 			cy.realPress("Enter");
