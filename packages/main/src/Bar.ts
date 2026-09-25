@@ -30,6 +30,9 @@ import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
  *
  * **Note:** Do not place a Bar inside another Bar or inside any bar-like component. Doing so may cause unpredictable behavior.
  *
+ * **Note:** The Bar is a structural layout component for organizing page areas (header, footer, subheader).
+ * It is not an action-oriented toolbar. For grouping action controls with full keyboard navigation support, use the Toolbar component instead.
+ *
  * ### Responsive Behavior
  * The default slot will be centered in the available space between the startContent and the endContent areas,
  * therefore it might not always be centered in the entire bar.
@@ -72,21 +75,22 @@ class Bar extends UI5Element {
 	/**
 	 * Specifies the ARIA role applied to the component for accessibility purposes.
 	 *
-	 * **Note:**
-	 *
-	 * - By default, accessibleRole is set to "Toolbar", which renders the ARIA role "toolbar".
-	 *
-	 * - Use the default accessibleRole value "Toolbar" only when the component contains two or more active, interactive elements (such as buttons, links, or input fields) within the bar.
-	 *
-	 * - If there is only one or no active element, set accessibleRole to "None" to avoid rendering the ARIA role "toolbar", as that role implies a grouping of multiple interactive controls.
+	 * **Note:** This property is deprecated and will be removed in a future major version.
+	 * The `toolbar` ARIA role requires arrow-key navigation between interactive elements,
+	 * which the Bar component does not implement. The Bar is a structural layout component
+	 * (header/footer), not an action-oriented toolbar, and receives its semantic context
+	 * from its parent landmark (e.g. `banner`, `contentinfo`, `dialog`).
+	 * Setting this property to `"Toolbar"` is therefore discouraged and the default has
+	 * been changed to `"None"`.
 	 *
 	 * @public
-	 * @default "Toolbar"
+	 * @default "None"
 	 * @since 2.10.0
+	 * @deprecated
 	 *
 	 */
 	@property()
-	accessibleRole: `${BarAccessibleRole}` = "Toolbar";
+	accessibleRole: `${BarAccessibleRole}` = "None";
 
 	/**
 	 * Defines the accessible ARIA name of the component.
