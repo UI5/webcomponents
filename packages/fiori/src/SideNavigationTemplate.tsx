@@ -14,6 +14,8 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 		>
 			{header.call(this)}
 
+			{filterSection.call(this)}
+
 			{this.collapsed ?
 				<div role="menubar"
 					class="ui5-sn-list ui5-sn-flexible"
@@ -39,6 +41,14 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 					aria-label={this.navigationMenuPrimaryHiddenText}
 				>
 					<slot></slot>
+					{this.showNoMatchText &&
+						<SideNavigationItem
+							text={this.noMatchText}
+							unselectable={true}
+							forcedTabIndex="0"
+							class="ui5-sn-item-no-match"
+						/>
+					}
 				</ul>
 			}
 
@@ -71,5 +81,13 @@ export default function SideNavigationTemplate(this: SideNavigation) {
 function header(this: SideNavigation) {
 	return this.showHeader ? (
 		<slot name="header"></slot>
+	) : undefined;
+}
+
+function filterSection(this: SideNavigation) {
+	return !this.collapsed && this.filterSection.length ? (
+		<div class="ui5-sn-filter-section">
+			<slot name="filterSection"></slot>
+		</div>
 	) : undefined;
 }

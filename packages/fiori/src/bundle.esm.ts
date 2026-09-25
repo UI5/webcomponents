@@ -47,6 +47,7 @@ import SideNavigationItem from "./SideNavigationItem.js";
 import SideNavigationSubItem from "./SideNavigationSubItem.js";
 import SideNavigationGroup from "./SideNavigationGroup.js";
 import SideNavigation from "./SideNavigation.js";
+import SideNavigationSearchField from "./SideNavigationSearchField.js";
 import SortItem from "./SortItem.js";
 import UserSettingsItem from "./UserSettingsItem.js";
 import SettingsDialog from "./UserSettingsDialog.js";

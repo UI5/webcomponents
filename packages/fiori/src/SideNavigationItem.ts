@@ -291,7 +291,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.effectiveDisabled) {
+		if (this.effectiveDisabled || !this.sideNavigation) {
 			return;
 		}
 
