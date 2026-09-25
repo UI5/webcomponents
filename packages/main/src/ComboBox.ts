@@ -198,6 +198,7 @@ type ComboBoxSelectionChangeEventDetail = {
  * @constructor
  * @extends UI5Element
  * @public
+ * @csspart popover - Used to style the suggestions popover.
  * @since 1.0.0-rc.6
  */
 @customElement({
@@ -1748,13 +1749,12 @@ class ComboBox extends UI5Element implements IFormInputElement {
 		const remSizeInPx = parseInt(getComputedStyle(document.documentElement).fontSize);
 		return {
 			suggestionPopoverHeader: {
-				"display": this._listWidth === 0 ? "none" : "inline-block",
-				"width": `${this._listWidth || ""}px`,
-				"max-width": "inherit",
+				"--_ui5-combobox-popover-header-display": this._listWidth === 0 ? "none" : "inline-block",
+				"--_ui5-combobox-popover-header-width": `${this._listWidth || ""}px`,
 			},
 			suggestionsPopover: {
-				"min-width": `${this.offsetWidth || 0}px`,
-				"max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
+				"--_ui5-combobox-popover-min-width": `${this.offsetWidth || 0}px`,
+				"--_ui5-combobox-popover-max-width": (this.offsetWidth / remSizeInPx) > 40 ? `${this.offsetWidth}px` : "40rem",
 			},
 			popoverValueStateMessage: {},
 		};
