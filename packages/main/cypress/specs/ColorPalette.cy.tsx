@@ -65,6 +65,35 @@ describe("Color Palette tests", () => {
 			});
 	});
 
+	it("focuses the hue slider handle when the More Colors dialog opens", () => {
+		cy.mount(
+			<ColorPalette showMoreColors={true}>
+				<ColorPaletteItem value="red"></ColorPaletteItem>
+				<ColorPaletteItem value="green"></ColorPaletteItem>
+				<ColorPaletteItem value="blue"></ColorPaletteItem>
+			</ColorPalette>
+		);
+
+		cy.get("[ui5-color-palette]")
+			.shadow()
+			.find(".ui5-cp-more-colors")
+			.realClick();
+
+		cy.get("[ui5-color-palette]")
+			.shadow()
+			.find("[ui5-color-picker]")
+			.should("be.visible");
+
+		cy.get("[ui5-color-palette]")
+			.shadow()
+			.find("[ui5-color-picker]")
+			.shadow()
+			.find(".ui5-color-picker-hue-slider")
+			.shadow()
+			.find("[ui5-slider-handle]")
+			.should("be.focused");
+	});
+
 	it("Test if selecting element works", () => {
 		cy.mount(<ColorPaletteSample/>);
 
