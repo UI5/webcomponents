@@ -537,13 +537,13 @@ describe("TextArea general interaction", () => {
 					.shadow()
 					.find(".ui5-textarea-exceeded-text")
 					.as("exceededText")
-					.should("contain.text", "10 characters remaining");
+					.should("contain.text", "10 characters left");
 
 				cy.get("@textarea")
 					.realType("1234567890");
 
 				cy.get("@exceededText")
-					.should("contain.text", "0 characters remaining");
+					.should("contain.text", "0 characters left");
 
 				cy.get("@textarea")
 					.realType("12345");
@@ -568,13 +568,112 @@ describe("TextArea general interaction", () => {
 					.shadow()
 					.find(".ui5-textarea-exceeded-text")
 					.as("exceededText")
-					.should("contain.text", "0 characters remaining");
+					.should("contain.text", "0 characters left");
 
 				cy.get("@textarea")
 					.realType("12345");
 
 				cy.get("@exceededText")
 					.should("contain.text", "5 characters over limit");
+			});
+		});
+
+		describe("counterMode", () => {
+			it("None (default): counter span not rendered", () => {
+				cy.mount(<TextArea maxlength={10}></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("not.exist");
+			});
+
+			it("Always: counter visible without focus", () => {
+				cy.mount(<TextArea maxlength={10} counterMode="Always"></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("be.visible")
+					.and("contain.text", "10 characters left");
+			});
+
+			it("Auto: hidden when blurred and under limit, visible on focus", () => {
+				cy.mount(
+					<>
+						<TextArea id="ta" maxlength={10} counterMode="Auto"></TextArea>
+						<input id="other" />
+					</>,
+				);
+
+				cy.get("#ta")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.as("exceededText")
+					.should("have.class", "ui5-textarea-exceeded-text--hidden");
+
+				cy.get("#ta")
+					.realClick();
+
+				cy.get("@exceededText")
+					.should("not.have.class", "ui5-textarea-exceeded-text--hidden");
+
+				// blur away
+				cy.get("#other")
+					.realClick();
+
+				cy.get("@exceededText")
+					.should("have.class", "ui5-textarea-exceeded-text--hidden");
+			});
+
+			it("Auto: visible when limit exceeded even while blurred", () => {
+				cy.mount(<TextArea maxlength={5} value="1234567890" counterMode="Auto"></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("not.have.class", "ui5-textarea-exceeded-text--hidden")
+					.and("contain.text", "5 characters over limit");
+			});
+
+			it("Auto: visible when valueState is Negative while blurred", () => {
+				cy.mount(<TextArea maxlength={10} valueState="Negative" counterMode="Auto"></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("not.have.class", "ui5-textarea-exceeded-text--hidden");
+			});
+
+			it("Legacy bridge: showExceededText maps to Always; counterMode overrides", () => {
+				cy.mount(<TextArea maxlength={10} showExceededText={true}></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("be.visible");
+
+				// enum wins over deprecated Boolean
+				cy.mount(
+					<>
+						<TextArea id="ta2" maxlength={10} showExceededText={true} counterMode="Auto"></TextArea>
+						<input id="other2" />
+					</>,
+				);
+
+				cy.get("#ta2")
+					.shadow()
+					.find(".ui5-textarea-exceeded-text")
+					.should("have.class", "ui5-textarea-exceeded-text--hidden");
+			});
+
+			it("Layout: root is flex-direction column in Always/Auto", () => {
+				cy.mount(<TextArea maxlength={10} counterMode="Auto"></TextArea>);
+
+				cy.get("[ui5-textarea]")
+					.shadow()
+					.find(".ui5-textarea-root")
+					.should("have.css", "flex-direction", "column");
 			});
 		});
 	});
