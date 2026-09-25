@@ -3,6 +3,7 @@ import {
 	SEARCH_FIELD_SEARCH_ICON,
 	SIDE_NAVIGATION_SEARCH_FIELD_LABEL,
 	SIDE_NAVIGATION_SEARCH_FIELD_PLACEHOLDER,
+	SIDE_NAVIGATION_SEARCH_DESCRIPTION,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("SideNavigationSearchField general interaction", () => {
@@ -60,6 +61,33 @@ describe("SideNavigationSearchField general interaction", () => {
 				.shadow()
 				.find("input")
 				.should("have.attr", "aria-label", SIDE_NAVIGATION_SEARCH_FIELD_LABEL.defaultText);
+		});
+
+		it("uses the default aria-description when accessibleDescriptionRef is not set", () => {
+			cy.mount(<SideNavigationSearchField />);
+
+			cy.get("[ui5-side-navigation-search-field]")
+				.shadow()
+				.find("[ui5-input]")
+				.shadow()
+				.find("#descr")
+				.should("have.text", SIDE_NAVIGATION_SEARCH_DESCRIPTION.defaultText);
+		});
+
+		it("propagates accessibleDescriptionRef over the default aria-description", () => {
+			cy.mount(
+				<>
+					<span id="my-descr">My description</span>
+					<SideNavigationSearchField accessibleDescriptionRef="my-descr" />
+				</>
+			);
+
+			cy.get("[ui5-side-navigation-search-field]")
+				.shadow()
+				.find("[ui5-input]")
+				.shadow()
+				.find("#descr")
+				.should("have.text", "My description");
 		});
 
 		it("propagates ariaControls to the inner input aria-controls", () => {

@@ -366,19 +366,12 @@ function itemMarkup(node, slot) {
 	if (node.target) {
 		attrs.push(`target="${escapeHtml(node.target)}"`);
 	}
-	if (node.design) {
-		attrs.push(`design="${escapeHtml(node.design)}"`);
-	}
 	if (node.expanded) {
 		attrs.push("expanded");
 	}
-	// Unselectable when explicitly marked, external (_blank), or an action item.
-	if (node.selectable === false || node.target === "_blank" || node.design === "Action") {
+	// Unselectable when explicitly marked or external (_blank).
+	if (node.selectable === false || node.target === "_blank") {
 		attrs.push("unselectable");
-	}
-	if (node.ariaHasPopup) {
-		const accAttrs = escapeHtml(JSON.stringify({ hasPopup: node.ariaHasPopup.toLowerCase() }));
-		attrs.push(`accessibility-attributes="${accAttrs}"`);
 	}
 	const children = tagMarkup(node) + (node.items || []).map(subItemMarkup).join("");
 	return `<ui5-side-navigation-item ${attrs.join(" ")}>${children}</ui5-side-navigation-item>`;

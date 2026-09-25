@@ -44,7 +44,6 @@ interface NavNode {
   icon?: string;
   href?: string;
   target?: string;
-  design?: "Default" | "Action";
   type?: "group";
   expanded?: boolean;
   selectable?: boolean;
@@ -325,8 +324,7 @@ function renderItem(node: NavNode, index: number, slot?: string) {
   // Unselectable when explicitly marked, external (_blank), or an action item.
   const unselectable =
     node.selectable === false ||
-    node.target === "_blank" ||
-    node.design === "Action";
+    node.target === "_blank";
 
   return (
     <SideNavigationItem
@@ -336,7 +334,6 @@ function renderItem(node: NavNode, index: number, slot?: string) {
       icon={node.icon}
       href={node.href}
       target={node.target}
-      design={node.design}
       expanded={node.expanded}
       unselectable={unselectable}
     >

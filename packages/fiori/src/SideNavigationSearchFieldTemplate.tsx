@@ -23,6 +23,7 @@ export default function SideNavigationSearchFieldTemplate(this: SideNavigationSe
 					class="ui5-side-navigation-search-field-search-icon"
 					name={search}
 					accessibleName={this._translations.searchIcon}
+					hideTooltip={true}
 					onClick={this._handleSearchIconPress}
 				/>
 			</Input>

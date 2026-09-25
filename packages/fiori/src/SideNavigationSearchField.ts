@@ -21,6 +21,7 @@ import {
 	SEARCH_FIELD_SEARCH_ICON,
 	SIDE_NAVIGATION_SEARCH_FIELD_LABEL,
 	SIDE_NAVIGATION_SEARCH_FIELD_PLACEHOLDER,
+	SIDE_NAVIGATION_SEARCH_DESCRIPTION,
 } from "./generated/i18n/i18n-defaults.js";
 
 /**
@@ -209,6 +210,7 @@ class SideNavigationSearchField extends UI5Element {
 		return {
 			searchIcon: SideNavigationSearchField.i18nBundle.getText(SEARCH_FIELD_SEARCH_ICON),
 			searchFieldAriaLabel: SideNavigationSearchField.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_FIELD_LABEL),
+			searchFieldAriaDescription: SideNavigationSearchField.i18nBundle.getText(SIDE_NAVIGATION_SEARCH_DESCRIPTION),
 		};
 	}
 
@@ -229,7 +231,7 @@ class SideNavigationSearchField extends UI5Element {
 	}
 
 	get _ariaDescriptionText(): string | undefined {
-		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this);
+		return this._associatedDescriptionRefTexts || getEffectiveAriaDescriptionText(this) || this._translations.searchFieldAriaDescription;
 	}
 }
 
