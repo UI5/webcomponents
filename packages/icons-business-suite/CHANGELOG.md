@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.2](https://github.com/UI5/webcomponents/compare/v2.27.1...v2.27.2) (2026-09-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-icons-business-suite
+
+
+
+
+
 ## [2.27.1](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1) (2026-09-23)
 
 **Note:** Version bump only for package @ui5/webcomponents-icons-business-suite

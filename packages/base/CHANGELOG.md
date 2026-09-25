@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.2](https://github.com/UI5/webcomponents/compare/v2.27.1...v2.27.2) (2026-09-25)
+
+
+### Bug Fixes
+
+* **framework:** use hasOwnProperty for asyncFinished guard to prevent inherited value from skipping define() await  ([#14093](https://github.com/UI5/webcomponents/issues/14093)) ([15d5c9d](https://github.com/UI5/webcomponents/commit/15d5c9d9e857236e3a9f0810a5ab8b410f81cf5e)), closes [#14087](https://github.com/UI5/webcomponents/issues/14087)
+
+
+
+
+
 ## [2.27.1](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1) (2026-09-23)
 
 
