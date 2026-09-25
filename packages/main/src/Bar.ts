@@ -1,4 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { instanceOfUI5Element } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { DefaultSlot, Slot } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
@@ -6,6 +6,16 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AccessibilityTextsHelper.js";
+import isElementHidden from "@ui5/webcomponents-base/dist/util/isElementHidden.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
+import {
+	isLeft,
+	isRight,
+	isHome,
+	isEnd,
+} from "@ui5/webcomponents-base/dist/Keys.js";
+import type { ToolbarArrowNavState } from "./IToolbarArrowNavProvider.js";
+import { isToolbarArrowNavProvider } from "./IToolbarArrowNavProvider.js";
 import type BarDesign from "./types/BarDesign.js";
 import type BarAccessibleRole from "./types/BarAccessibleRole.js";
 
@@ -35,6 +45,13 @@ import type { AriaRole } from "@ui5/webcomponents-base/dist/types.js";
  * therefore it might not always be centered in the entire bar.
  *
  * ### Keyboard Handling
+ *
+ * The `ui5-bar` provides advanced keyboard handling among interactive components inside it, no matter in which slot they are placed.
+ *
+ * #### Regular Navigation
+ * - [Left] / [Right] - navigate backward/forward among interactive components
+ * - [Home] / [End] - move to first/last interactive components
+ * - [Tab] / [Shift]+[Tab] - navigate forward/backward among interactive components
  *
  * #### Fast Navigation
  * This component provides a build in fast navigation group which can be used via [F6] / [Shift] + [F6] / [Ctrl] + [Alt/Option] / [Down] or [Ctrl] + [Alt/Option] + [Up].
@@ -76,9 +93,9 @@ class Bar extends UI5Element {
 	 *
 	 * - By default, accessibleRole is set to "Toolbar", which renders the ARIA role "toolbar".
 	 *
-	 * - Use the default accessibleRole value "Toolbar" only when the component contains two or more active, interactive elements (such as buttons, links, or input fields) within the bar.
+	 * - Use the default accessibleRole value "Toolbar" only when the component contains three or more active, interactive elements (such as buttons, links, or input fields) within the bar.
 	 *
-	 * - If there is only one or no active element, set accessibleRole to "None" to avoid rendering the ARIA role "toolbar", as that role implies a grouping of multiple interactive controls.
+	 * - If there is only one, two or no active element, set accessibleRole to "None" to avoid rendering the ARIA role "toolbar", as that role implies a grouping of multiple interactive controls.
 	 *
 	 * @public
 	 * @default "Toolbar"
@@ -128,6 +145,11 @@ class Bar extends UI5Element {
 	endContent!: Slot<HTMLElement>;
 
 	_handleResizeBound: () => void;
+	_onKeyDownBound: (e: KeyboardEvent) => void;
+	_captureActiveElementBound: (e: KeyboardEvent) => void;
+	_activeAtKeyDown: HTMLElement | null = null;
+	_hasArrowNavProvider = false;
+	_arrowNavStateAtKeyDown: ToolbarArrowNavState | undefined = undefined;
 
 	get accInfo() {
 		return {
@@ -148,6 +170,8 @@ class Bar extends UI5Element {
 		super();
 
 		this._handleResizeBound = this.handleResize.bind(this);
+		this._onKeyDownBound = this._onKeyDown.bind(this);
+		this._captureActiveElementBound = this._captureActiveElement.bind(this);
 	}
 
 	handleResize() {
@@ -166,6 +190,9 @@ class Bar extends UI5Element {
 		this.getDomRef()!.querySelectorAll(".ui5-bar-content-container").forEach(child => {
 			ResizeHandler.register(child as HTMLElement, this._handleResizeBound);
 		}, this);
+
+		this.addEventListener("keydown", this._captureActiveElementBound, true);
+		this.addEventListener("keydown", this._onKeyDownBound);
 	}
 
 	onExitDOM() {
@@ -174,11 +201,203 @@ class Bar extends UI5Element {
 		this.getDomRef()!.querySelectorAll(".ui5-bar-content-container").forEach(child => {
 			ResizeHandler.deregister(child as HTMLElement, this._handleResizeBound);
 		}, this);
+
+		this.removeEventListener("keydown", this._captureActiveElementBound, true);
+		this.removeEventListener("keydown", this._onKeyDownBound);
 	 }
 
 	 get effectiveRole() {
 		return this.accessibleRole.toLowerCase() === "toolbar" ? "toolbar" as AriaRole : undefined;
 	 }
+
+	_collectFocusableElements(): Array<HTMLElement> {
+		const contentSlotSelectors = [
+			"slot[name=\"startContent\"]",
+			"slot:not([name])",
+			"slot[name=\"endContent\"]",
+		];
+		const focusableElements: Array<HTMLElement> = [];
+
+		contentSlotSelectors.forEach(slotSelector => {
+			const contentSlot = this.shadowRoot!.querySelector<HTMLSlotElement>(slotSelector);
+			if (!contentSlot) {
+				return;
+			}
+			(contentSlot.assignedElements({ flatten: true }) as HTMLElement[]).forEach(assignedElement => {
+				focusableElements.push(...this._getFocusableFromElement(assignedElement));
+			});
+		});
+		return focusableElements;
+	}
+
+	_getFocusableFromElement(element: HTMLElement): Array<HTMLElement> {
+		if (isElementHidden(element)) {
+			return [];
+		}
+
+		if (instanceOfUI5Element(element)) {
+			const focusDomRef = element.getFocusDomRef();
+			if (focusDomRef && focusDomRef.tabIndex >= 0 && !isElementHidden(focusDomRef) && !(focusDomRef as HTMLInputElement).disabled) {
+				return [focusDomRef];
+			}
+			return [];
+		}
+
+		if (element.tabIndex >= 0 && !(element as HTMLInputElement).disabled) {
+			return [element];
+		}
+
+		// Non-focusable container: recurse into children
+		const childFocusables: Array<HTMLElement> = [];
+		Array.from(element.children).forEach(child => {
+			childFocusables.push(...this._getFocusableFromElement(child as HTMLElement));
+		});
+		return childFocusables;
+	}
+
+	_hasCaretNavigation(element: EventTarget | null): element is HTMLInputElement | HTMLTextAreaElement {
+		if (!(element instanceof HTMLElement)) {
+			return false;
+		}
+		const tagName = element.tagName.toLowerCase();
+		if (tagName === "textarea") {
+			return true;
+		}
+		if (tagName !== "input") {
+			return false;
+		}
+		const inputType = (element as HTMLInputElement).type.toLowerCase();
+		return ["text", "search", "url", "tel", "password", ""].includes(inputType);
+	}
+
+	_findOwnerArrowNavProvider(activeElement: HTMLElement) {
+		const slotSelectors = [
+			"slot[name=\"startContent\"]",
+			"slot:not([name])",
+			"slot[name=\"endContent\"]",
+		];
+		for (const slotSelector of slotSelectors) {
+			const slotElement = this.shadowRoot!.querySelector<HTMLSlotElement>(slotSelector);
+			if (!slotElement) {
+				continue;
+			}
+			for (const slottedElement of slotElement.assignedElements({ flatten: true }) as HTMLElement[]) {
+				if (isToolbarArrowNavProvider(slottedElement) && this._isNodeInsideElement(activeElement, slottedElement)) {
+					return slottedElement;
+				}
+			}
+		}
+		return null;
+	}
+
+	_captureActiveElement() {
+		this._activeAtKeyDown = getActiveElement() as HTMLElement | null;
+		const provider = this._activeAtKeyDown ? this._findOwnerArrowNavProvider(this._activeAtKeyDown) : null;
+		this._hasArrowNavProvider = provider !== null;
+		this._arrowNavStateAtKeyDown = provider ? provider.getArrowNavState() : undefined;
+	}
+
+	_onKeyDown(e: KeyboardEvent) {
+		if (this.effectiveRole !== "toolbar") {
+			return;
+		}
+
+		const isForward = this.effectiveDir === "rtl" ? isLeft(e) : isRight(e);
+		const isBackward = this.effectiveDir === "rtl" ? isRight(e) : isLeft(e);
+		const isHomeKey = isHome(e);
+		const isEndKey = isEnd(e);
+
+		if (!isForward && !isBackward && !isHomeKey && !isEndKey) {
+			return;
+		}
+
+		if (isForward || isBackward) {
+			if (this._hasArrowNavProvider) {
+				const navState = this._arrowNavStateAtKeyDown;
+				if (!navState) {
+					return;
+				}
+				if (isForward && !navState.atRightEnd) {
+					return;
+				}
+				if (isBackward && !navState.atLeftEnd) {
+					return;
+				}
+			} else if (e.defaultPrevented) {
+				// Fallback for composite widgets not implementing IToolbarArrowNavProvider.
+				// Focus stayed on the same element → component was at its boundary.
+				if (getActiveElement() !== this._activeAtKeyDown) {
+					return;
+				}
+			}
+		}
+
+		const items = this._collectFocusableElements();
+		if (items.length === 0) {
+			return;
+		}
+
+		const active = getActiveElement() as HTMLElement | null;
+		if (!active) {
+			return;
+		}
+
+		const currentIndex = items.findIndex(item => this._isNodeInsideElement(active, item));
+		if (currentIndex === -1) {
+			return;
+		}
+
+		if (this._hasCaretNavigation(active)) {
+			const input = active as HTMLInputElement;
+			if (isHomeKey || isEndKey) {
+				return;
+			}
+			const selectionStart = input.selectionStart ?? 0;
+			if (isForward && selectionStart !== input.value.length) {
+				return;
+			}
+			if (isBackward && selectionStart !== 0) {
+				return;
+			}
+		}
+
+		let nextIndex: number;
+		if (isHomeKey) {
+			nextIndex = 0;
+		} else if (isEndKey) {
+			nextIndex = items.length - 1;
+		} else if (isForward) {
+			nextIndex = Math.min(currentIndex + 1, items.length - 1);
+		} else {
+			nextIndex = Math.max(currentIndex - 1, 0);
+		}
+
+		if (nextIndex === currentIndex) {
+			return;
+		}
+
+		items[nextIndex].focus();
+		e.preventDefault();
+		e.stopPropagation();
+	}
+
+	_isNodeInsideElement(node: Node, element: HTMLElement): boolean {
+		let current: Node | null = node;
+
+		while (current) {
+			if (current === element) {
+				return true;
+			}
+			const root = current.getRootNode?.();
+			if (root instanceof ShadowRoot) {
+				current = root.host;
+			} else {
+				current = current.parentNode;
+			}
+		}
+
+		return false;
+	}
 }
 
 Bar.define();

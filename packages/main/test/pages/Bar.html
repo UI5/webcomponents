@@ -71,6 +71,26 @@
 			<ui5-button design="Negative" slot="endContent">Decline</ui5-button>
 			<ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
 		</ui5-bar>
+		<br>
+		<ui5-title level="3">Mixed content (texts, buttons, links, inputs)</ui5-title>
+		<ui5-bar design="Header">
+			<ui5-button icon="nav-back" slot="startContent">Back</ui5-button>
+			<ui5-link slot="startContent" href="#">Home</ui5-link>
+
+			<ui5-label>Search:</ui5-label>
+			<ui5-input placeholder="Type here..."></ui5-input>
+			<ui5-button icon="search">Search</ui5-button>
+
+			<ui5-segmented-button>
+				<ui5-segmented-button-item icon="list"></ui5-segmented-button-item>
+				<ui5-segmented-button-item icon="grid"></ui5-segmented-button-item>
+				<ui5-segmented-button-item icon="table-view"></ui5-segmented-button-item>
+			</ui5-segmented-button>
+
+			<ui5-link slot="endContent" href="#">Help</ui5-link>
+			<ui5-button icon="action-settings" design="Transparent" slot="endContent">Settings</ui5-button>
+			<ui5-button design="Positive" slot="endContent">Save</ui5-button>
+		</ui5-bar>
 	</section>
 
 	<section>
