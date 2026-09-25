@@ -3,6 +3,7 @@ import Label from "../../src/Label.js";
 import SingleDate from '../../src/dynamic-date-range-options/SingleDate.js';
 import DateRange from '../../src/dynamic-date-range-options/DateRange.js';
 import Today from '../../src/dynamic-date-range-options/Today.js';
+import { calendarTimestampToLocalDate } from '../../src/dynamic-date-range-options/toDates.js';
 import LastOptions from '../../src/dynamic-date-range-options/LastOptions.js';
 import NextOptions from '../../src/dynamic-date-range-options/NextOptions.js';
 import DateTimeRange from '../../src/dynamic-date-range-options/DateTimeRange.js';
@@ -887,5 +888,18 @@ describe("DynamicDateRange DateTimeRange Option", () => {
 			.find("[ui5-input]")
 			.should("contain.value", "Mar 5, 2025")
 			.and("contain.value", "Mar 6, 2025");
+	});
+});
+
+describe("calendarTimestampToLocalDate", () => {
+	it("local date components match the UTC date of the calendar timestamp", () => {
+		// 1747267200 = 2025-05-15 00:00:00 UTC — same timestamp the calendar fires for May 15
+		const ts = 1747267200;
+		const result = calendarTimestampToLocalDate(ts);
+		const ref = new Date(ts * 1000);
+
+		expect(result.getFullYear()).to.equal(ref.getUTCFullYear());
+		expect(result.getMonth()).to.equal(ref.getUTCMonth());
+		expect(result.getDate()).to.equal(ref.getUTCDate());
 	});
 });

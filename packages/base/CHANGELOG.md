@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+**Note:** Version bump only for package @ui5/webcomponents-base
+
+
+
+
+
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **base:** remove stale [@ts-expect-error](https://github.com/ts-expect-error) from HTMLSanitizer ([#14062](https://github.com/UI5/webcomponents/issues/14062)) ([42d242a](https://github.com/UI5/webcomponents/commit/42d242a8148028f23ccef0031539bf80b5748541)), closes [#14060](https://github.com/UI5/webcomponents/issues/14060)
+* **framework:** cache base theme to avoid repeated getComputedStyle calls ([#14051](https://github.com/UI5/webcomponents/issues/14051)) ([f350e53](https://github.com/UI5/webcomponents/commit/f350e53f1871a24aee242ff88e5f60c94cb075c9))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 

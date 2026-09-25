@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ui5-shellbar-item:** show count badge after item text in overflow popover ([#13849](https://github.com/UI5/webcomponents/issues/13849)) ([be8fee0](https://github.com/UI5/webcomponents/commit/be8fee0056f9c4432c356476e30b5923b330e031)), closes [#12490](https://github.com/UI5/webcomponents/issues/12490)
+* **ui5-wizard:** mobile focus support ([#14052](https://github.com/UI5/webcomponents/issues/14052)) ([5482099](https://github.com/UI5/webcomponents/commit/548209915fc335aacd7e234317019f98b9f48a92))
+
+
+
+
+
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** toggle button reading fixed ([#13990](https://github.com/UI5/webcomponents/issues/13990)) ([1aba7b4](https://github.com/UI5/webcomponents/commit/1aba7b4ecbb86ca0d60a959354039ca8dfe711df))
+* **ui5-search,ui5-shellbar-search:** close the search popover on user request ([#14001](https://github.com/UI5/webcomponents/issues/14001)) ([770baa0](https://github.com/UI5/webcomponents/commit/770baa0d738bee6d74d318517d77a5c995bfc60f))
+* **ui5-shellbar:** prevent search auto-expand on non-desktop resize ([#14025](https://github.com/UI5/webcomponents/issues/14025)) ([16df88a](https://github.com/UI5/webcomponents/commit/16df88af24a85f285a6f429702567c9dcca287c3))
+* **ui5-timeline:** prevent clipped focus outlines ([#14029](https://github.com/UI5/webcomponents/issues/14029)) ([f199ba4](https://github.com/UI5/webcomponents/commit/f199ba4e3986de4b2c10a58f5bdb6a50e205e196))
+* **ui5-timeline:** scroll horizontally focused items into view ([#14030](https://github.com/UI5/webcomponents/issues/14030)) ([6d394ba](https://github.com/UI5/webcomponents/commit/6d394baf8f23d5fe78ae08d828873dc206f5a107))
+* **ui5-wizard:** announce active step with aria-current="step" ([#14032](https://github.com/UI5/webcomponents/issues/14032)) ([823c2f8](https://github.com/UI5/webcomponents/commit/823c2f815f49716738fe6f97499526a418471da5))
+
+
+### Features
+
+* **ui5-user-settings-notifications-view:** introduce NotificationsView in UserSettingsDialog ([#13885](https://github.com/UI5/webcomponents/issues/13885)) ([5ef9250](https://github.com/UI5/webcomponents/commit/5ef92502c6d2d9d5e0fae011cd168f28d292f8c1))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 

@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** add calendar header hover border in HCB ([#14069](https://github.com/UI5/webcomponents/issues/14069)) ([38096ec](https://github.com/UI5/webcomponents/commit/38096ec457ec078a270b301bd1821fcc50e8aea1))
+* **ui5-dynamic-date-range:** correct off-by-one-day date shift in negative UTC offsets ([#14017](https://github.com/UI5/webcomponents/issues/14017)) ([8fd845f](https://github.com/UI5/webcomponents/commit/8fd845f1504116064acc528eb956d297bfa481e3))
+* **ui5-multi-combobox:** mobile focus support ([#14056](https://github.com/UI5/webcomponents/issues/14056)) ([35ac49a](https://github.com/UI5/webcomponents/commit/35ac49a1daad440f96a6b9685ff91b0c330573d7))
+* **ui5-rating-indicator:** mobile focus support ([#14050](https://github.com/UI5/webcomponents/issues/14050)) ([73ee19a](https://github.com/UI5/webcomponents/commit/73ee19a9ec0cad47fcf0dcfdcc8a76671824a84b))
+* **ui5-shellbar-item:** show count badge after item text in overflow popover ([#13849](https://github.com/UI5/webcomponents/issues/13849)) ([be8fee0](https://github.com/UI5/webcomponents/commit/be8fee0056f9c4432c356476e30b5923b330e031)), closes [#12490](https://github.com/UI5/webcomponents/issues/12490)
+* **ui5-token:** mobile focus support ([#14047](https://github.com/UI5/webcomponents/issues/14047)) ([f058464](https://github.com/UI5/webcomponents/commit/f058464afa0ee3885f6c86b0edab53fd830011f3))
+* **ui5-wizard:** mobile focus support ([#14052](https://github.com/UI5/webcomponents/issues/14052)) ([5482099](https://github.com/UI5/webcomponents/commit/548209915fc335aacd7e234317019f98b9f48a92))
+
+
+
+
+
+# [2.27.0-rc.2](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.1...v2.27.0-rc.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **base:** remove stale [@ts-expect-error](https://github.com/ts-expect-error) from HTMLSanitizer ([#14062](https://github.com/UI5/webcomponents/issues/14062)) ([42d242a](https://github.com/UI5/webcomponents/commit/42d242a8148028f23ccef0031539bf80b5748541)), closes [#14060](https://github.com/UI5/webcomponents/issues/14060)
+* **framework:** cache base theme to avoid repeated getComputedStyle calls ([#14051](https://github.com/UI5/webcomponents/issues/14051)) ([f350e53](https://github.com/UI5/webcomponents/commit/f350e53f1871a24aee242ff88e5f60c94cb075c9))
+* **ui5-card:** Header counter is properly aligned ([#13947](https://github.com/UI5/webcomponents/issues/13947)) ([9856f4f](https://github.com/UI5/webcomponents/commit/9856f4f8aa119b83be85616c59fda3018c5031ca))
+* **ui5-combobox:** prevent exception when item text is undefined ([#14035](https://github.com/UI5/webcomponents/issues/14035)) ([729e400](https://github.com/UI5/webcomponents/commit/729e4004ff8c01fbce9d135b4c8731a5cee7ef28))
+* **ui5-date-picker:** prevent placeholder announcement when value is set ([#14049](https://github.com/UI5/webcomponents/issues/14049)) ([172aaee](https://github.com/UI5/webcomponents/commit/172aaee4ba8fd1f5c8a1ab441d36f30f76d1b7f3))
+* **ui5-dynamic-page:** toggle button reading fixed ([#13990](https://github.com/UI5/webcomponents/issues/13990)) ([1aba7b4](https://github.com/UI5/webcomponents/commit/1aba7b4ecbb86ca0d60a959354039ca8dfe711df))
+* **ui5-list:** guard missing focus DOM ref ([#14044](https://github.com/UI5/webcomponents/issues/14044)) ([967b282](https://github.com/UI5/webcomponents/commit/967b2821813d3a7c1c49aadbfffd0dae0a934563)), closes [#14008](https://github.com/UI5/webcomponents/issues/14008)
+* **ui5-list:** restore keyboard and body selection for InactiveSelectable items ([#14037](https://github.com/UI5/webcomponents/issues/14037)) ([b02452d](https://github.com/UI5/webcomponents/commit/b02452d3abea620a7e7884640cb472e8c4fffa29)), closes [#14011](https://github.com/UI5/webcomponents/issues/14011)
+* **ui5-search,ui5-shellbar-search:** close the search popover on user request ([#14001](https://github.com/UI5/webcomponents/issues/14001)) ([770baa0](https://github.com/UI5/webcomponents/commit/770baa0d738bee6d74d318517d77a5c995bfc60f))
+* **ui5-shellbar:** prevent search auto-expand on non-desktop resize ([#14025](https://github.com/UI5/webcomponents/issues/14025)) ([16df88a](https://github.com/UI5/webcomponents/commit/16df88af24a85f285a6f429702567c9dcca287c3))
+* **ui5-shellbar:** update Joule assistant button icon in website samples ([#14038](https://github.com/UI5/webcomponents/issues/14038)) ([a042bc8](https://github.com/UI5/webcomponents/commit/a042bc832401fab01d7959cbacdf842616a01241)), closes [#14021](https://github.com/UI5/webcomponents/issues/14021)
+* **ui5-time-picker:** separate mobile and desktop value-help tap handling ([#14048](https://github.com/UI5/webcomponents/issues/14048)) ([fa3e854](https://github.com/UI5/webcomponents/commit/fa3e8543d49345dd25ea903015bd4575e924b30e))
+* **ui5-timeline:** prevent clipped focus outlines ([#14029](https://github.com/UI5/webcomponents/issues/14029)) ([f199ba4](https://github.com/UI5/webcomponents/commit/f199ba4e3986de4b2c10a58f5bdb6a50e205e196))
+* **ui5-timeline:** scroll horizontally focused items into view ([#14030](https://github.com/UI5/webcomponents/issues/14030)) ([6d394ba](https://github.com/UI5/webcomponents/commit/6d394baf8f23d5fe78ae08d828873dc206f5a107))
+* **ui5-wizard:** announce active step with aria-current="step" ([#14032](https://github.com/UI5/webcomponents/issues/14032)) ([823c2f8](https://github.com/UI5/webcomponents/commit/823c2f815f49716738fe6f97499526a418471da5))
+
+
+### Features
+
+* **ui5-avatar-badge:** add colorScheme property for extended color palette ([#14009](https://github.com/UI5/webcomponents/issues/14009)) ([849466d](https://github.com/UI5/webcomponents/commit/849466d29075aac4265190b62b3c8dcaafe08f4e)), closes [#13925](https://github.com/UI5/webcomponents/issues/13925)
+* **ui5-tokenizer:** announce token deletion ([#14010](https://github.com/UI5/webcomponents/issues/14010)) ([b5551f8](https://github.com/UI5/webcomponents/commit/b5551f8933e878de9421334bd483e53095e12014))
+* **ui5-toolbar:** add overflow-group property for atomic group overflow ([#13949](https://github.com/UI5/webcomponents/issues/13949)) ([bf491e7](https://github.com/UI5/webcomponents/commit/bf491e75b16f6e51c95f69db63a8a15951e0fdcb))
+* **ui5-user-settings-notifications-view:** introduce NotificationsView in UserSettingsDialog ([#13885](https://github.com/UI5/webcomponents/issues/13885)) ([5ef9250](https://github.com/UI5/webcomponents/commit/5ef92502c6d2d9d5e0fae011cd168f28d292f8c1))
+
+
+
+
+
 # [2.27.0-rc.1](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.0...v2.27.0-rc.1) (2026-09-03)
 
 
