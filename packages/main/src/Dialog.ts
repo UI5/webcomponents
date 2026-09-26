@@ -4,7 +4,7 @@ import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
 import {
-	isUp, isDown, isLeft, isRight,
+	isUp, isDown, isLeft, isRight, isTabNext, isTabPrevious,
 	isUpShift, isDownShift, isLeftShift, isRightShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
@@ -12,7 +12,9 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import toLowercaseEnumValue from "@ui5/webcomponents-base/dist/util/toLowercaseEnumValue.js";
 import { getFirstFocusableElement } from "@ui5/webcomponents-base/dist/util/FocusableElements.js";
+import { getTabbableElements } from "@ui5/webcomponents-base/dist/util/TabbableElements.js";
 import Popup from "./Popup.js";
+import { wasEscapeHandledByRegistry, resetEscapeHandledByRegistry } from "./popup-utils/OpenedPopupsRegistry.js";
 import "@ui5/webcomponents-icons/dist/error.js";
 import "@ui5/webcomponents-icons/dist/alert.js";
 import "@ui5/webcomponents-icons/dist/sys-enter-2.js";
@@ -231,6 +233,8 @@ class Dialog extends Popup {
 	_resizeMouseUpHandler: (e: MouseEvent) => void;
 	_dragStartHandler: (e: DragEvent) => void;
 	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
+	_cancelHandler: (e: Event) => void;
+	_nativeCloseHandler: (e: Event) => void;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -281,6 +285,8 @@ class Dialog extends Popup {
 
 		this._dragStartHandler = this._handleDragStart.bind(this);
 		this._fullscreenKeydownHandler = this._onFullscreenKeydown.bind(this);
+		this._cancelHandler = this._onCancel.bind(this);
+		this._nativeCloseHandler = this._onNativeClose.bind(this);
 	}
 
 	static _isHeader(element: HTMLElement) {
@@ -288,6 +294,10 @@ class Dialog extends Popup {
 	}
 
 	get isModal() {
+		return true;
+	}
+
+	get _useNativeDialog() {
 		return true;
 	}
 
@@ -470,9 +480,37 @@ class Dialog extends Popup {
 		return Dialog.i18nBundle.getText(DIALOG_FOOTER_ARIA_LABEL);
 	}
 
+	get _dialogElement(): HTMLDialogElement {
+		return this._root as HTMLDialogElement;
+	}
+
 	_show() {
-		super._show();
+		const dialog = this._dialogElement;
+		// Guard: the shadow <dialog> may not be rendered yet, or may lack
+		// showModal in non-browser test environments.
+		if (this.isConnected && dialog && typeof dialog.showModal === "function" && !dialog.open) {
+			// showModal() focuses the first shadow tabbable (the "first-fe"
+			// sentinel), triggering forwardToLast() and fighting the real initial
+			// focus. Suppress forwarding until applyInitialFocus() has run.
+			this._skipFocusForward = true;
+			dialog.showModal();
+		}
 		this._center();
+	}
+
+	async applyInitialFocus() {
+		try {
+			await super.applyInitialFocus();
+		} finally {
+			this._skipFocusForward = false;
+		}
+	}
+
+	hide() {
+		const dialog = this._dialogElement;
+		if (this.isConnected && dialog && typeof dialog.close === "function" && dialog.open) {
+			dialog.close();
+		}
 	}
 
 	onBeforeRendering() {
@@ -481,6 +519,58 @@ class Dialog extends Popup {
 		this._showFullscreenButton = this.showFullscreenButton && !this.onPhone && !this.header.length;
 
 		this._isRTL = this.effectiveDir === "rtl";
+	}
+
+	onAfterRendering() {
+		super.onAfterRendering();
+
+		// An initially-open dialog runs openPopup() from onEnterDOM before the
+		// shadow <dialog> exists, so _show()/_attachBrowserEvents() no-op. Once
+		// rendered, reconcile: attach listeners (idempotent) and show it modally.
+		// A no-op during normal open/close (already open, or _opened is false).
+		if (this._opened && this._dialogElement && !this._dialogElement.open) {
+			this._attachBrowserEvents();
+			this._show();
+		}
+	}
+
+	/**
+	 * Keeps Tab focus inside the native modal <dialog>.
+	 *
+	 * The browser's modal focus containment does not reliably wrap focus when the
+	 * focusable content is slotted across the shadow boundary — tabbing off the
+	 * last element escapes to the body instead of returning to the first. We only
+	 * close the wrap at the two boundaries here; unlike the focus-trap sentinels
+	 * used for non-native popups, this never interferes with showModal's focus.
+	 */
+	_onkeydown(e: KeyboardEvent) {
+		super._onkeydown(e);
+
+		if (!this._opened || !this._useNativeDialog) {
+			return;
+		}
+
+		const isNext = isTabNext(e);
+		const isPrevious = isTabPrevious(e);
+		if (!isNext && !isPrevious) {
+			return;
+		}
+
+		const tabbables = getTabbableElements(this._dialogElement);
+		if (!tabbables.length) {
+			return;
+		}
+
+		const first = tabbables[0];
+		const last = tabbables[tabbables.length - 1];
+
+		if (isNext && last.matches(":focus-within")) {
+			e.preventDefault();
+			first.focus();
+		} else if (isPrevious && first.matches(":focus-within")) {
+			e.preventDefault();
+			last.focus();
+		}
 	}
 
 	/**
@@ -502,12 +592,16 @@ class Dialog extends Popup {
 		this._attachScreenResizeHandler();
 		this._registerDragHandler();
 		this._registerFullscreenKeydownHandler();
+		this._dialogElement?.addEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.addEventListener("close", this._nativeCloseHandler);
 	}
 
 	_detachBrowserEvents() {
 		this._detachScreenResizeHandler();
 		this._deregisterDragHandler();
 		this._deregisterFullscreenKeydownHandler();
+		this._dialogElement?.removeEventListener("cancel", this._cancelHandler);
+		this._dialogElement?.removeEventListener("close", this._nativeCloseHandler);
 	}
 
 	_attachScreenResizeHandler() {
@@ -553,17 +647,22 @@ class Dialog extends Popup {
 	}
 
 	_center() {
-		const height = window.innerHeight - this.offsetHeight,
-			width = window.innerWidth - this.offsetWidth;
+		const dialog = this._dialogElement;
+		if (!dialog) {
+			return;
+		}
 
-		Object.assign(this.style, {
+		const height = window.innerHeight - dialog.offsetHeight,
+			width = window.innerWidth - dialog.offsetWidth;
+
+		Object.assign(dialog.style, {
 			top: `${Math.round(height / 2)}px`,
 			left: `${Math.round(width / 2)}px`,
 		});
 	}
 
 	_revertSize = () => {
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: "",
 			left: "",
 			width: "",
@@ -604,6 +703,33 @@ class Dialog extends Popup {
 		this._toggleFullscreen();
 	}
 
+	_onCancel(e: Event) {
+		// Take over native ESC handling so before-close stays cancelable
+		// and closing is routed through our lifecycle.
+		e.preventDefault();
+
+		// If the OpenedPopupsRegistry already consumed this Escape by closing a
+		// popup layered above this dialog (a dropdown or Popover), don't also
+		// close the dialog. Reset the flag so a later Escape still closes us.
+		const handledAbove = wasEscapeHandledByRegistry();
+		resetEscapeHandledByRegistry();
+		if (handledAbove) {
+			return;
+		}
+
+		this.closePopup(true);
+	}
+
+	_onNativeClose() {
+		// The native <dialog> can close without a cancelable "cancel" (e.g. the
+		// CloseWatcher force-closes on a second Escape). Reconcile through the
+		// close lifecycle if it closes while we still think we're open; a no-op
+		// when we closed it ourselves (_opened is already false by then).
+		if (this._opened) {
+			this.closePopup(true);
+		}
+	}
+
 	_onFullscreenKeydown(e: KeyboardEvent) {
 		if (this.isTopModalPopup && this._showFullscreenButton && this._isFullscreenShortcut(e)) {
 			e.preventDefault();
@@ -626,13 +752,13 @@ class Dialog extends Popup {
 		const {
 			top,
 			left,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 		const {
 			width,
 			height,
-		} = window.getComputedStyle(this);
+		} = window.getComputedStyle(this._dialogElement);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: `${top}px`,
 			left: `${left}px`,
 			width: `${Math.round(Number.parseFloat(width) * 100) / 100}px`,
@@ -655,9 +781,9 @@ class Dialog extends Popup {
 		const {
 			left,
 			top,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			left: `${Math.floor(left - calcX)}px`,
 			top: `${Math.floor(top - calcY)}px`,
 		});
@@ -699,7 +825,7 @@ class Dialog extends Popup {
 			left,
 			width,
 			height,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 
 		let newPos = 0;
 		let posDirection: "top" | "left" = "top";
@@ -729,15 +855,15 @@ class Dialog extends Popup {
 			posDirection === "left" ? window.innerWidth - width : window.innerHeight - height,
 		);
 
-		this.style[posDirection] = `${newPos}px`;
+		this._dialogElement.style[posDirection] = `${newPos}px`;
 	}
 
 	_resizeWithEvent(e: KeyboardEvent) {
 		this._draggedOrResized = true;
 		this.addEventListener("ui5-before-close", this._revertSize, { once: true });
 
-		const { top, left } = this.getBoundingClientRect(),
-			style = window.getComputedStyle(this),
+		const { top, left } = this._dialogElement.getBoundingClientRect(),
+			style = window.getComputedStyle(this._dialogElement),
 			minWidth = Number.parseFloat(style.minWidth),
 			maxWidth = window.innerWidth - left,
 			maxHeight = window.innerHeight - top;
@@ -763,7 +889,7 @@ class Dialog extends Popup {
 		width = clamp(width, minWidth, maxWidth);
 		height = clamp(height, this._minHeight, maxHeight);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			width: `${width}px`,
 			height: `${height}px`,
 		});
@@ -789,12 +915,12 @@ class Dialog extends Popup {
 		const {
 			top,
 			left,
-		} = this.getBoundingClientRect();
+		} = this._dialogElement.getBoundingClientRect();
 		const {
 			width,
 			height,
 			minWidth,
-		} = window.getComputedStyle(this);
+		} = window.getComputedStyle(this._dialogElement);
 
 		this._initialX = e.clientX;
 		this._initialY = e.clientY;
@@ -805,7 +931,7 @@ class Dialog extends Popup {
 		this._minWidth = Number.parseFloat(minWidth);
 		this._cachedMinHeight = this._minHeight;
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			top: `${top}px`,
 			left: `${left}px`,
 		});
@@ -828,11 +954,11 @@ class Dialog extends Popup {
 			);
 
 			// check if width is changed to avoid "left" jumping when max width is reached
-			Object.assign(this.style, {
+			Object.assign(this._dialogElement.style, {
 				width: `${newWidth}px`,
 			});
 
-			const deltaWidth = newWidth - this.getBoundingClientRect().width;
+			const deltaWidth = newWidth - this._dialogElement.getBoundingClientRect().width;
 			const rightEdge = this._initialLeft! + this._initialWidth! + deltaWidth;
 
 			newLeft = clamp(
@@ -854,7 +980,7 @@ class Dialog extends Popup {
 			window.innerHeight - this._initialTop!,
 		);
 
-		Object.assign(this.style, {
+		Object.assign(this._dialogElement.style, {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
 			left: this._isRTL ? `${newLeft}px` : undefined,
@@ -908,6 +1034,10 @@ class Dialog extends Popup {
 	 * @private
 	 */
 	async forwardToLast() {
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		if (this._movable) {
 			const dragResizeHandler = this.shadowRoot!.querySelector(`#${this._id}-dragResizeHandler`) as HTMLElement;
 			if (dragResizeHandler) {

@@ -1,4 +1,4 @@
-const isPopupOpen = (getPopup: () => Cypress.Chainable<JQuery<HTMLElement>>) => {
+const isPopupOpen = <T extends HTMLElement>(getPopup: () => Cypress.Chainable<JQuery<T>>) => {
 	return getPopup()
 		.should($popup => {
 			expect($popup).to.have.attr("open");
@@ -8,7 +8,7 @@ const isPopupOpen = (getPopup: () => Cypress.Chainable<JQuery<HTMLElement>>) => 
 		});
 };
 
-const isPopupClosed = (getPopup: () => Cypress.Chainable<JQuery<HTMLElement>>) => {
+const isPopupClosed = <T extends HTMLElement>(getPopup: () => Cypress.Chainable<JQuery<T>>) => {
 	return getPopup()
 		.should($popup => {
 			expect($popup).to.not.have.attr("open");
