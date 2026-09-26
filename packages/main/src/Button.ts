@@ -28,6 +28,7 @@ import {
 	isDesktop,
 	isSafari,
 } from "@ui5/webcomponents-base/dist/Device.js";
+import { getLocationHostname, getLocationPort, getLocationProtocol } from "@ui5/webcomponents-base/dist/Location.js";
 import willShowContent from "@ui5/webcomponents-base/dist/util/willShowContent.js";
 import { submitForm, resetForm } from "@ui5/webcomponents-base/dist/features/InputElementsFormSupport.js";
 import { getEnableDefaultTooltips } from "@ui5/webcomponents-base/dist/config/Tooltips.js";
@@ -296,12 +297,48 @@ class Button extends UI5Element implements IButton {
 	 *
 	 * **Note:** Use <code>ButtonAccessibleRole.Link</code> role only with a press handler, which performs a navigation. In all other scenarios the default button semantics are recommended.
 	 *
+	 * **Note:** When the `href` property is set, the button renders as a native anchor element
+	 * with implicit link semantics. In that case, this property is ignored.
+	 * Consider using `href` instead of `accessibleRole="Link"` for navigation scenarios.
+	 *
 	 * @default "Button"
 	 * @public
 	 * @since 1.23
 	 */
 	@property()
 	accessibleRole: `${ButtonAccessibleRole}` = "Button";
+
+	/**
+	 * Defines the URL the button navigates to when activated.
+	 * When set, the component renders as an HTML `<a>` element internally,
+	 * providing proper navigation semantics (link role, URL preview on hover,
+	 * right-click context menu, middle-click to open in new tab).
+	 *
+	 * **Note:** When `href` is set, the `type` property (Submit/Reset) is ignored
+	 * and the button does not participate in form submission.
+	 * @default undefined
+	 * @public
+	 * @since 2.x.0
+	 */
+	@property()
+	href?: string;
+
+	/**
+	 * Defines where to display the linked URL.
+	 *
+	 * Available options:
+	 * - `_self` (default browser behavior)
+	 * - `_top`
+	 * - `_blank`
+	 * - `_parent`
+	 *
+	 * **Note:** This property is only used when `href` is set.
+	 * @default undefined
+	 * @public
+	 * @since 2.x.0
+	 */
+	@property()
+	target?: string;
 
 	/**
 	 * Used to switch the active state (pressed or not) of the component.
@@ -392,6 +429,9 @@ class Button extends UI5Element implements IButton {
 	@property({ type: Boolean, noAttribute: true })
 	_isSpacePressed = false;
 
+	@property({ noAttribute: true })
+	_rel: string | undefined;
+
 	/**
 	 * Constantly updated value of texts collected from the accessibleNameRef elements
 	 * @private
@@ -419,11 +459,22 @@ class Button extends UI5Element implements IButton {
 	_deactivate: () => void;
 	_onclickBound: (e: MouseEvent) => void;
 	_clickHandlerAttached = false;
+	/**
+	 * A hidden link element (never rendered) used purely for URL parsing.
+	 * When the button links to another website, we need to protect the user by adding
+	 * rel="noreferrer noopener" — this prevents the destination page from being able to
+	 * tamper with or spy on the page the user came from.
+	 * The browser's built-in URL parser (via anchor.hostname etc.) tells us whether the
+	 * link goes to another website or stays on the same one.
+	 * @private
+	 */
+	_dummyAnchor: HTMLAnchorElement;
 
 	@i18n("@ui5/webcomponents")
 	static i18nBundle: I18nBundle;
 	constructor() {
 		super();
+		this._dummyAnchor = document.createElement("a");
 		this._deactivate = () => {
 			if (activeButton) {
 				activeButton._setActiveState(false);
@@ -497,6 +548,13 @@ class Button extends UI5Element implements IButton {
 
 		const defaultTooltip = await this.getDefaultTooltip();
 		this.buttonTitle = this.iconOnly ? this.tooltip ?? defaultTooltip : this.tooltip;
+
+		if (this._isLink) {
+			const needsNoReferrer = this.target === "_blank" && this._isCrossOrigin(this.href!);
+			this._rel = needsNoReferrer ? "noreferrer noopener" : undefined;
+		} else {
+			this._rel = undefined;
+		}
 	}
 
 	_setBadgeOverlayStyle() {
@@ -513,6 +571,11 @@ class Button extends UI5Element implements IButton {
 		e.stopImmediatePropagation();
 
 		if (this.nonInteractive) {
+			return;
+		}
+
+		if (this._isLink && this.disabled) {
+			e.preventDefault();
 			return;
 		}
 
@@ -541,12 +604,14 @@ class Button extends UI5Element implements IButton {
 			return;
 		}
 
-		if (this._isSubmit) {
-			submitForm(this);
-		}
+		if (!this._isLink) {
+			if (this._isSubmit) {
+				submitForm(this);
+			}
 
-		if (this._isReset) {
-			resetForm(this);
+			if (this._isReset) {
+				resetForm(this);
+			}
 		}
 
 		if (isSafari()) {
@@ -582,10 +647,15 @@ class Button extends UI5Element implements IButton {
 		if (isShift(e) || isEscape(e)) {
 			this._cancelAction = true;
 		} else if (isSpace(e)) {
+			if (this._isLink) {
+				return;
+			}
 			this._isSpacePressed = true;
 		}
 
-		if ((isSpace(e) || isEnter(e))) {
+		if (isEnter(e)) {
+			this._setActiveState(true);
+		} else if (isSpace(e) && !this._isLink) {
 			this._setActiveState(true);
 		} else if (this._cancelAction) {
 			this._setActiveState(false);
@@ -593,6 +663,10 @@ class Button extends UI5Element implements IButton {
 	}
 
 	_onkeyup(e: KeyboardEvent) {
+		if (this._isLink && isSpace(e)) {
+			return;
+		}
+
 		const isSpaceKey = isSpace(e);
 		const isCancelKey = isShift(e) || isEscape(e);
 
@@ -639,6 +713,22 @@ class Button extends UI5Element implements IButton {
 		this.active = active;
 	}
 
+	get parsedRef(): string | undefined {
+		return (this.href && this.href.length > 0) ? this.href : undefined;
+	}
+
+	get _isLink(): boolean {
+		return !!this.parsedRef;
+	}
+
+	_isCrossOrigin(href: string): boolean {
+		this._dummyAnchor.href = href;
+
+		return !(this._dummyAnchor.hostname === getLocationHostname()
+			&& this._dummyAnchor.port === getLocationPort()
+			&& this._dummyAnchor.protocol === getLocationProtocol());
+	}
+
 	get hasButtonType() {
 		return this.design !== ButtonDesign.Default && this.design !== ButtonDesign.Transparent;
 	}
@@ -668,13 +758,17 @@ class Button extends UI5Element implements IButton {
 		return Button.i18nBundle.getText(Button.typeTextMappings()[this.design]);
 	}
 
-	get effectiveAccRole(): AriaRole {
+	get effectiveAccRole(): AriaRole | undefined {
+		if (this._isLink) {
+			return undefined;
+		}
+
 		return toLowercaseEnumValue(this.accessibleRole);
 	}
 
 	get tabIndexValue() {
 		if (this.disabled) {
-			return;
+			return this._isLink ? -1 : undefined;
 		}
 
 		const tabindex = this.getAttribute("tabindex");

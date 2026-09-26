@@ -52,6 +52,15 @@
 	user-select: none;
 }
 
+a.ui5-button-root {
+	text-decoration: none;
+}
+
+:host([disabled]) a.ui5-button-root {
+	pointer-events: none;
+	cursor: default;
+}
+
 :host(:not([active]):not([non-interactive]):not([_is-touch]):not([disabled]):hover),
 :host(:not([hidden]):not([disabled]).ui5_hovered) {
 	background: var(--sapButton_Hover_Background);
