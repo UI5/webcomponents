@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "suitcase";
+const pathData = "M10.249 1c.966 0 1.75.784 1.75 1.75V4h1.251A2.75 2.75 0 0 1 16 6.75v5.5A2.75 2.75 0 0 1 13.25 15H2.75A2.75 2.75 0 0 1 0 12.25v-5.5A2.75 2.75 0 0 1 2.75 4h1.249V2.75c0-.966.784-1.75 1.75-1.75h4.5ZM2.75 5.5c-.69 0-1.25.56-1.25 1.25v5.5c0 .69.56 1.25 1.25 1.25H4v-8H2.75Zm9.249 8h1.251c.69 0 1.25-.56 1.25-1.25v-5.5c0-.69-.56-1.25-1.25-1.25h-1.251v8Zm-6.499 0h4.999v-8H5.5v8Zm.249-11a.25.25 0 0 0-.25.25V4h5V2.75a.25.25 0 0 0-.25-.25h-4.5Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v5/suitcase";
+export { pathData, ltr, viewBox, accData };
