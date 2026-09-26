@@ -24,7 +24,7 @@ export default function FormTemplate(this: Form) {
 					{this.hasCustomHeader ?
 						<slot name="header"></slot>
 						:
-						<Title id={`${this._id}-header-text`} level={this.headerLevel}>{this.headerText}</Title>
+						<Title id={`${this._id}-header-text`} level={this.headerLevel} wrappingType="None">{this.headerText}</Title>
 					}
 				</div>
 			}
@@ -55,7 +55,7 @@ function groupedItemsLayout(this: Form) {
 				>
 					{groupItem.headerText &&
 						<div class="ui5-form-group-heading">
-							<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} size="H6">{groupItem.headerText}</Title>
+							<Title id={`${groupItem._id}-group-header-text`} level={groupItem.headerLevel} wrappingType="None" size="H6">{groupItem.headerText}</Title>
 						</div>
 					}
 					{this.accessibleMode === "Edit" ?

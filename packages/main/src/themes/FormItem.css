@@ -7,6 +7,10 @@
 	break-inside: avoid;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 .ui5-form-item-root {
 	background-color: inherit;
 	color: inherit;
