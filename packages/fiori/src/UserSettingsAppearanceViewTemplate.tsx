@@ -7,7 +7,7 @@ export default function UserSettingsAppearanceViewTemplate(this: UserSettingsApp
 		<div class="ui5-user-settings-view-container">
 			<div class="ui5-user-settings-view">
 				<slot name="additionalContent"></slot>
-				<List class="user-settings-appearance-view-list" onItemClick={this._handleItemClick} data-sap-ui-fastnavgroup="false">
+				<List class="user-settings-appearance-view-list" onSelectionChange={this._handleSelectionChange} selectionMode="Single" data-sap-ui-fastnavgroup="false">
 					{this.text && <ListItemGroupHeader class="user-settings-appearance-view-top-header">{this.text}</ListItemGroupHeader>}
 					<slot></slot>
 				</List>
