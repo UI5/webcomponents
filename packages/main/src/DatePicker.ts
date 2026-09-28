@@ -45,7 +45,6 @@ import {
 	DATEPICKER_OPEN_ICON_TITLE,
 	DATEPICKER_OPEN_ICON_TITLE_OPENED,
 	DATEPICKER_DATE_DESCRIPTION,
-	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	DATEPICKER_MOBILE_HEADER_TITLE,
 	DATEPICKER_POPOVER_ACCESSIBLE_NAME,
 	VALUE_STATE_ERROR,
@@ -871,8 +870,8 @@ class DatePicker extends DateComponentBase implements IFormInputElement {
 		}
 
 		// translatable placeholder – for example "e.g. 2025-12-31"
-		// @ts-ignore getPlaceholderText is a runtime API not exposed in type definitions
-		return this.getFormat()?.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate());
+		// @ts-expect-error getPlaceholderText is a runtime API not exposed in type definitions
+		return (this.getFormat()?.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate())) as string;
 	}
 
 	get _headerTitleText() {

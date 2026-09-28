@@ -10,7 +10,6 @@ import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
-	DATETIME_COMPONENTS_PLACEHOLDER_PREFIX,
 	DATERANGE_VALUE_MISSING,
 	DATERANGE_PATTERN_MISMATCH,
 	DATERANGE_UNDERFLOW,
@@ -286,26 +285,13 @@ class DateRangePicker extends DatePicker implements IFormInputElement {
 			return this.placeholder;
 		}
 		const delimiter = ` ${this._effectiveDelimiter} `;
-		const placeHolderFormatter = this._isPattern
-			? DateFormat.getDateInstance({
-				interval: true, 
-				singleIntervalValue: true,
-				intervalDelimiter: delimiter,
-				strictParsing: true,
-				pattern: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				interval: true, 
-				singleIntervalValue: true,
-				intervalDelimiter: delimiter,
-				strictParsing: true,
-				style: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			}); 
-		// translatable placeholder – for example "e.g. 2025-12-27 - 2025-12-31"
-		// @ts-ignore getPlaceholderText is a runtime API not exposed in type definitions 
-		return placeHolderFormatter.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate());
+		const placeHolderFormatter = this.getFormat({
+			interval: true,
+			singleIntervalValue: true,
+			intervalDelimiter: delimiter,
+		});
+		// @ts-expect-error getPlaceholderText is a runtime API not exposed in type definitions
+		return placeHolderFormatter.getPlaceholderText(this._minDate.toLocalJSDate(), this._maxDate.toLocalJSDate()) as string;
 	}
 
 	get _submitDisabled() {
