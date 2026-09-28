@@ -1,20 +1,19 @@
-:host(:focus-within) {
-	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
-	outline-offset: calc(-1 * var(--sapContent_FocusWidth) - 0.125rem);
-}
-
 :host {
 	border: none;
-	padding-top: var(--_ui5_search_item_vertical_padding);
-	padding-bottom: var(--_ui5_search_item_vertical_padding);
 	height: auto;
 	min-height: var(--_ui5_list_item_base_height);
+}
+
+.ui5-li-root {
+	padding-top: var(--_ui5_search_item_vertical_padding);
+	padding-bottom: var(--_ui5_search_item_vertical_padding);
 	padding-left: 1rem;
 	padding-right: 1rem;
 }
 
-.ui5-li-root {
-	padding: 0;
+.ui5-li-root:focus-within {
+	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	outline-offset: calc(-1 * var(--sapContent_FocusWidth) - 0.125rem);
 }
 
 .ui5-li-root:focus:after {
@@ -87,7 +86,7 @@
 	box-sizing: content-box;
 }
 
-:host([description]) {
+:host([description]) .ui5-li-root {
 	padding-top: var(--_ui5_search_byline_vertical_padding);
 	padding-bottom: var(--_ui5_search_byline_vertical_padding);
 }

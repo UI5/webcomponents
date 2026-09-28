@@ -9,7 +9,8 @@
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
 	<!-- Material Symbols -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 	<!-- Font Awesome Free -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
@@ -44,7 +45,8 @@
 			margin-top: 1rem;
 		}
 
-		th, td {
+		th,
+		td {
 			border: 1px solid var(--sapList_BorderColor, #ccc);
 			padding: 0.5rem 1rem;
 			text-align: center;
@@ -65,6 +67,7 @@
 		ui5-icon {
 			width: 1.5rem;
 			height: 1.5rem;
+			font-size: 1.5rem;
 		}
 	</style>
 	<!-- SAP Icons font (application-hosted) -->
@@ -84,7 +87,8 @@
 
 <body>
 	<h2>Icon - symbol slot</h2>
-	<p>Font-based icons via the <code>symbol</code> slot. The application loads the font; <code>ui5-icon</code> wraps it for sizing, design tokens, and accessibility.</p>
+	<p>Font-based icons via the <code>symbol</code> slot. The application loads the font; <code>ui5-icon</code> wraps it
+		for sizing, design tokens, and accessibility.</p>
 
 	<table>
 		<thead>
@@ -275,59 +279,60 @@
 			</tr>
 			<tr>
 				<td>3rem size</td>
-				<td><ui5-icon name="settings" style="width:3rem;height:3rem"></ui5-icon></td>
+				<td><ui5-icon name="settings" style="width:3rem;height:3rem; font-size: 3rem;"></ui5-icon></td>
 				<td>
-					<ui5-icon style="width:3rem;height:3rem">
+					<ui5-icon style="width:3rem;height:3rem; font-size: 3rem;">
 						<span slot="fontIcon" class="sap-icon-font">&#xe00c;</span>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:3rem;height:3rem">
+					<ui5-icon style="width:3rem;height:3rem; font-size: 3rem;">
 						<span slot="fontIcon" class="material-symbols-outlined">settings</span>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:3rem;height:3rem">
+					<ui5-icon style="width:3rem;height:3rem; font-size: 3rem;">
 						<i slot="fontIcon" class="fa-solid fa-gear"></i>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:3rem;height:3rem">
+					<ui5-icon style="width:3rem;height:3rem; font-size: 3rem;">
 						<i slot="fontIcon" class="bi bi-gear"></i>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:3rem;height:3rem">
+					<ui5-icon style="width:3rem;height:3rem; font-size: 3rem;">
 						<i slot="fontIcon" class="ph ph-gear"></i>
 					</ui5-icon>
 				</td>
 			</tr>
 			<tr>
-				<td>5rem×5rem, different font-size per icon<br><small>(tests font-size vs width/height independence)</small></td>
+				<td>5rem×5rem, different font-size per icon<br><small>(tests font-size vs width/height
+						independence)</small></td>
 				<td><ui5-icon name="settings" style="width:5rem;height:5rem; font-size: 2rem;"></ui5-icon></td>
 				<td>
-					<ui5-icon style="width:5rem;height:5rem">
-						<span slot="fontIcon" class="sap-icon-font" style="font-size:2rem">&#xe00c;</span>
+					<ui5-icon style="width:5rem;height:5rem;font-size:2rem">
+						<span slot="fontIcon" class="sap-icon-font">&#xe00c;</span>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:5rem;height:5rem">
-						<span slot="fontIcon" class="material-symbols-outlined" style="font-size:2rem">settings</span>
+					<ui5-icon style="width:5rem;height:5rem;font-size:2rem">
+						<span slot="fontIcon" class="material-symbols-outlined">settings</span>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:5rem;height:5rem">
-						<i slot="fontIcon" class="fa-solid fa-gear" style="font-size:2rem"></i>
+					<ui5-icon style="width:5rem;height:5rem;font-size:2rem">
+						<i slot="fontIcon" class="fa-solid fa-gear"></i>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:5rem;height:5rem">
-						<i slot="fontIcon" class="bi bi-gear" style="font-size:2rem"></i>
+					<ui5-icon style="width:5rem;height:5rem;font-size:2rem">
+						<i slot="fontIcon" class="bi bi-gear"></i>
 					</ui5-icon>
 				</td>
 				<td>
-					<ui5-icon style="width:5rem;height:5rem">
-						<i slot="fontIcon" class="ph ph-gear" style="font-size:2rem"></i>
+					<ui5-icon style="width:5rem;height:5rem;font-size:2rem">
+						<i slot="fontIcon" class="ph ph-gear"></i>
 					</ui5-icon>
 				</td>
 			</tr>

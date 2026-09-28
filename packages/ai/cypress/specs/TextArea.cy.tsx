@@ -1,11 +1,11 @@
 import TextArea from "../../src/TextArea.js";
 import Menu from "@ui5/webcomponents/dist/Menu.js";
 import MenuItem from "@ui5/webcomponents/dist/MenuItem.js";
-import { 
+import {
 	WRITING_ASSISTANT_BUTTON_TOOLTIP,
 	WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME,
 	WRITING_ASSISTANT_TOOLBAR_ACCESSIBLE_NAME,
- } from "../../src/generated/i18n/i18n-defaults.js";
+} from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Basic", () => {
 	describe("Initialization", () => {
@@ -561,7 +561,7 @@ describe("Basic", () => {
 				.shadow()
 				.find("#ai-menu-btn")
 				.should("have.attr", "accessible-name", TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_ACCESSIBLE_NAME))
-				.should("have.attr", "tooltip",  TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
+				.should("have.attr", "tooltip", TextArea.i18nBundle.getText(WRITING_ASSISTANT_BUTTON_TOOLTIP));
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -630,8 +630,10 @@ describe("Basic", () => {
 				.realClick();
 
 			cy.get("[ui5-ai-textarea]")
-				.find("ui5-menu")
-				.should("have.prop", "open", true);
+				.find("[ui5-menu]")
+				.ui5MenuOpened();
+
+			cy.wait(500); // Wait for the menu to open and focus to be set
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()
@@ -641,7 +643,7 @@ describe("Basic", () => {
 				.should("exist")
 				.should("be.visible");
 
-			cy.get("body").click();
+			cy.focused().blur();
 
 			cy.get("[ui5-ai-textarea]")
 				.shadow()

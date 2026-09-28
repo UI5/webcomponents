@@ -2,6 +2,7 @@ import "../../test/test-elements/Accessor.js";
 import { setTheme, getTheme } from "../../src/config/Theme.js";
 import { setThemeRoot, getThemeRoot } from "../../src/config/ThemeRoot.js";
 import { setNoConflict, getNoConflict } from "../../src/config/NoConflict.js";
+import { setAnimationMode, getAnimationMode } from "../../src/config/AnimationMode.js";
 
 describe("Some configuration options can be changed at runtime", () => {
 	it("Tests that theme can be changed", () => {
@@ -236,5 +237,26 @@ describe("ThemeRoot validation at runtime", () => {
 						.and("include", "https://any-wildcard-domain.com/themes/UI5/Base/baseLib/");
 				});
 		});
+	});
+});
+
+describe("AnimationMode CSS variable", () => {
+	const getCSSVar = () => {
+		return cy.window().then(win => {
+			return win.getComputedStyle(win.document.documentElement).getPropertyValue("--_ui5-animation-mode").trim();
+		});
+	};
+
+	it("sets the CSS variable on getAnimationMode", () => {
+		cy.wrap({ getAnimationMode }).invoke("getAnimationMode");
+		getCSSVar().should("not.be.empty");
+	});
+
+	it("updates the CSS variable when setAnimationMode is called", () => {
+		cy.wrap({ setAnimationMode }).invoke("setAnimationMode", "none");
+		getCSSVar().should("equal", "none");
+
+		cy.wrap({ setAnimationMode }).invoke("setAnimationMode", "full");
+		getCSSVar().should("equal", "full");
 	});
 });

@@ -126,4 +126,34 @@ describe("i18n decorator", () => {
 			.invoke("prop", "i18nText")
 			.should("be.equal", "Някакъв ключ");
 	});
+
+	it("@i18n decorator marks component as languageAware and re-renders on language change", () => {
+		cy.wrap(null)
+			.should(() => {
+				expect(I18nParent.getMetadata().isLanguageAware(), "metadata.languageAware").to.be.true;
+			});
+
+		// eslint-disable-next-line @typescript-eslint/require-await
+		cy.wrap({ registerI18nLoader })
+			.then(api => {
+				api.registerI18nLoader("custom-language", "de", async () => {
+					return parseProperties(`PLEASE_WAIT=Bitte warten`);
+				});
+			});
+
+		cy.mount(<I18nParent />);
+
+		cy.get("[i18n-parent]")
+			.invoke("prop", "i18nText")
+			.should("be.equal", "Моля изчакайте");
+
+		cy.wrap({ setLanguage })
+			.then(async api => {
+				await api.setLanguage("de");
+			});
+
+		cy.get("[i18n-parent]")
+			.invoke("prop", "i18nText")
+			.should("be.equal", "Bitte warten");
+	});
 });

@@ -22,6 +22,7 @@ import Slider from "../../src/Slider.js";
 import RangeSlider from "../../src/RangeSlider.js";
 import Select from "../../src/Select.js";
 import Option from "../../src/Option.js";
+import NumericInput from "../../src/NumericInput.js";
 
 describe("Form submission with Enter key", () => {
 
@@ -726,6 +727,57 @@ describe("Form submission with Enter key", () => {
 			cy.get("@submit").should("not.have.been.called");
 			cy.get("@change").should("have.been.calledOnce");
 
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("have.been.calledOnce");
+
+			assertChangeCalledBeforeSubmit();
+		});
+	});
+
+	describe("NumericInput", () => {
+		const mountNumericInputForm = () => {
+			const submit = cy.spy().as("submit");
+			const change = cy.spy().as("change");
+
+			cy.mount(
+				<form novalidate onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
+					<NumericInput name="date" onChange={() => change()} />
+				</form>
+			);
+			cy.get("[ui5-numeric-input]").as("numberInput");
+
+			cy.get("@numberInput")
+				.realClick()
+				.should("be.focused");
+		};
+
+		const assertChangeCalledBeforeSubmit = () => {
+			cy.get("@change").then((changeSpy: any) =>
+				cy.get("@submit").then((submitSpy: any) =>
+					expect(changeSpy.getCall(0))
+						.to.have.been.calledBefore(submitSpy.getCall(0))
+				)
+			);
+		};
+
+		it("submits form without firing change event when Enter is pressed on empty input", () => {
+			mountNumericInputForm();
+
+			cy.realPress("Enter");
+
+			cy.get("@submit").should("have.been.calledOnce");
+			cy.get("@change").should("not.have.been.called");
+		});
+
+		it("fires change event then submits form when Enter is pressed after typing", () => {
+			mountNumericInputForm();
+
+			cy.realType("25");
 			cy.realPress("Enter");
 
 			cy.get("@submit").should("have.been.calledOnce");

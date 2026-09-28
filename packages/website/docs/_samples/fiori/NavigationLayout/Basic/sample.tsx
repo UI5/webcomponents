@@ -32,6 +32,7 @@ import "@ui5/webcomponents-icons/dist/menu2.js";
 import "@ui5/webcomponents-icons/dist/sys-help.js";
 import "@ui5/webcomponents-icons/dist/customer.js";
 import "@ui5/webcomponents-icons/dist/da.js";
+import "@ui5/webcomponents-icons/dist/da-2.js";
 
 const NavigationLayout = createReactComponent(NavigationLayoutClass);
 const ShellBar = createReactComponent(ShellBarClass);
@@ -70,6 +71,11 @@ const contentPages = [
 function App() {
   const navLayoutRef = useRef(null);
   const [activePage, setActivePage] = useState("home");
+  const [jouleIcon, setJouleIcon] = useState("da");
+
+  const handleToggleClick = (e: UI5CustomEvent<ToggleButtonClass, "click">) => {
+    setJouleIcon(e.currentTarget.pressed ? "da-2" : "da");
+  };
 
   const handleStartButtonClick = () => {
     const nl = navLayoutRef.current;
@@ -128,7 +134,13 @@ function App() {
             />
 
             <ShellBarItem icon="sys-help" text="Help" />
-            <ToggleButton icon="da" tooltip="Joule" slot="assistant" />
+            <ToggleButton
+              icon={jouleIcon}
+              design="Transparent"
+              tooltip="Joule"
+              slot="assistant"
+              onClick={handleToggleClick}
+            />
             <Avatar slot="profile">
               <img src="/images/avatars/man_avatar_3.png" alt="Profile" />
             </Avatar>

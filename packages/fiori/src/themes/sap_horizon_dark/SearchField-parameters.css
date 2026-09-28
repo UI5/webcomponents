@@ -1,0 +1,6 @@
+@import "../base/SearchField-parameters.css";
+
+:host {
+	--_ui5-search-wrapper-hover-background-color: var(--sapShell_Hover_Background);
+	--_ui5-search-wrapper-active-background-color: var(--sapShell_Active_Background);
+}

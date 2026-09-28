@@ -42,7 +42,9 @@
 }
 
 ::slotted([slot="logo"]) {
-	max-height: 2rem;
+	max-height: 1.875rem;
+	padding-block: 0.0625rem;
+	padding-inline: 0.25rem;
 }
 
 ::slotted([slot="logo"]):active {

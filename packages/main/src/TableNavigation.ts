@@ -17,6 +17,7 @@ import type Table from "./Table.js";
  */
 class TableNavigation extends TableExtension {
 	_table: Table;
+	_rowsCount: number = 0;
 	_gridWalker: GridWalker;
 	_colPosition: number = 0;
 	_tabPosition: number = 0;
@@ -52,7 +53,8 @@ class TableNavigation extends TableExtension {
 			this._gridWalker.setFirstRowPos(0);
 		}
 
-		if (this._table.rows.length) {
+		this._rowsCount = this._table.rows.length;
+		if (this._rowsCount) {
 			this._table.rows.forEach(row => items.push(this._getNavigationItemsOfRow(row)));
 		} else if (this._table._noDataRow) {
 			items.push(this._getNavigationItemsOfRow(this._table._noDataRow));
@@ -201,7 +203,11 @@ class TableNavigation extends TableExtension {
 			return;
 		}
 
-		if (!this._isEventFromCurrentItem(e) && this._getNavigationItemsOfGrid().flat().includes(eventOrigin)) {
+		if (this._rowsCount !== this._table.rows.length) {
+			this._getNavigationItemsOfGrid();
+		}
+
+		if (!this._isEventFromCurrentItem(e) && this._gridWalker.includes(eventOrigin)) {
 			this._gridWalker.setCurrent(eventOrigin);
 		}
 

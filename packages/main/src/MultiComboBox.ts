@@ -411,6 +411,9 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 
 	/**
 	 * Defines whether the clear icon of the multi-combobox will be shown.
+	 *
+	 * **Note:** The clear icon is only visible when there is text typed by the user
+     * and only clears the typed value, not the selected tokens.
 	 * @default false
 	 * @public
 	 * @since 1.20.1
@@ -2029,7 +2032,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	inputFocusIn(e: FocusEvent) {
-		if (!isPhone()) {
+		if (!isPhone() || this.readonly) {
 			this.focused = true;
 			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;

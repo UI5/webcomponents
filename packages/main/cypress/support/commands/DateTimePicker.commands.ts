@@ -1,4 +1,4 @@
-import Button from "../../../src/Button.js";
+import type Button from "../../../src/Button.js";
 import type DateTimePicker from "../../../src/DateTimePicker.js";
 import type ResponsivePopover from "../../../src/ResponsivePopover.js";
 
@@ -79,7 +79,7 @@ Cypress.Commands.add("ui5DateTimePickerTypeAndExpectValueState", { prevSubject: 
 		.ui5DatePickerGetInnerInput()
 		.clear()
 		.realType(displayValue);
-	
+
 	cy.realPress("Enter");
 
 	cy.wrap(subject)

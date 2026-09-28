@@ -8,5 +8,6 @@
 	--_ui5_link_subtle_text_decoration: underline;
 	--_ui5_link_subtle_text_decoration_hover: none;
 	--_ui5_link_outline: 0.125rem dotted var(--sapContent_FocusColor);
+	--_ui5_link_outline_offset: 0;
 	--_ui5_link_large_interactive_area_height: 1.5rem;
 }

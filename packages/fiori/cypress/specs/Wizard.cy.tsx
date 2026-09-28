@@ -98,8 +98,14 @@ describe("Wizard general interaction", () => {
         cy.get("@step1InHeaderRoot")
             .should("have.attr", "aria-label", "Step 1 Product type Active");
 
+        cy.get("@step1InHeaderRoot")
+            .should("have.attr", "aria-current", "step");
+
         cy.get("@step2InHeaderRoot")
             .should("have.attr", "aria-label", "Step 2 Product Information Inactive");
+
+        cy.get("@step2InHeaderRoot")
+            .should("not.have.attr", "aria-current");
 
         cy.get("@wizContentItem")
             .should("have.attr", "role", "region");

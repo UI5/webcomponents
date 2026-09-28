@@ -6,13 +6,16 @@ import {
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
-import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 import type { PopupBeforeCloseEventDetail } from "@ui5/webcomponents/dist/Popup.js";
 import { isPhone, isTablet, isCombi } from "@ui5/webcomponents-base/dist/Device.js";
+import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import MediaRange from "@ui5/webcomponents-base/dist/MediaRange.js";
+import announce from "@ui5/webcomponents-base/dist/util/InvisibleMessage.js";
+import InvisibleMessageMode from "@ui5/webcomponents-base/dist/types/InvisibleMessageMode.js";
 import UserSettingsDialogTemplate from "./UserSettingsDialogTemplate.js";
 import type UserSettingsItem from "./UserSettingsItem.js";
 import UserSettingsDialogCss from "./generated/themes/UserSettingsDialog.css.js";
@@ -25,6 +28,9 @@ import {
 	USER_SETTINGS_DIALOG_SAVE_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_CANCEL_BUTTON_TEXT,
 	USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT,
+	USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS,
+	USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT,
+	USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS,
 } from "./generated/i18n/i18n-defaults.js";
 
 type UserSettingsItemSelectEventDetail = {
@@ -224,6 +230,13 @@ class UserSettingsDialog extends UI5Element {
 	_showNoSearchResult = false;
 
 	/**
+	 * Indicates that the user changed the search value and the search
+	 * results should be announced on the next rendering.
+	 * @private
+	 */
+	_announceSearchResults = false;
+
+	/**
 	 * Defines the current media query size.
 	 * @private
 	 */
@@ -269,6 +282,11 @@ class UserSettingsDialog extends UI5Element {
 			this._showNoSearchResult = false;
 		}
 
+		if (this._announceSearchResults) {
+			this._announceSearchResults = false;
+			announce(this._searchResultsText, InvisibleMessageMode.Polite);
+		}
+
 		if (!this._selectedSetting) {
 			this._selectedSetting = this.items[0] || this.fixedItems[0];
 		}
@@ -283,23 +301,55 @@ class UserSettingsDialog extends UI5Element {
 		});
 	}
 
-	_handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
-		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
+	/**
+	 * Handles selection of a side-navigation item. The inner `ui5-list` runs in
+	 * `selectionMode="Single"`, so it already owns the `selected` state on the
+	 * `ui5-li` items and provides the accessibility layers (aria-selected, the
+	 * hidden "Selected"/"Not Selected" text and the polite announcement) for free.
+	 *
+	 * Here we only mirror the selection back onto the `UserSettingsItem` model
+	 * (which drives `_selectedSetting` and the content slot) and re-fire the public
+	 * `selection-change`. If the application cancels it, we revert the list selection.
+	 */
+	_handleSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		const setting = e.detail.targetItem as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
+
+		if (eventPrevented) {
+			// Revert the list's single-selection so the model and the list stay in sync.
+			e.preventDefault();
+			return;
+		}
+
+		this.items.forEach(item => {
+			item.selected = false;
+		});
+		this.fixedItems.forEach(item => {
+			item.selected = false;
+		});
+		settingItem.selected = true;
+	}
+
+	/**
+	 * Handles activation of a side-navigation item. In navigation (single-column)
+	 * mode the content replaces the list, so this drives the drill-in behavior and
+	 * moves the focus to the content. It runs on every activation - including
+	 * re-activating the already-selected item, which fires no `selection-change`.
+	 */
+	async _handleItemClick() {
+		if (!this._showSettingWithNavigation) {
+			return;
+		}
+
 		this._collapsed = true;
 
-		if (!eventPrevented) {
-			this.items.forEach(item => {
-				item.selected = false;
-			});
-			this.fixedItems.forEach(item => {
-				item.selected = false;
-			});
-			settingItem.selected = true;
-		}
+		// In navigation mode the content replaces the list, so move the focus to the
+		// first interactive element of the content instead of losing it.
+		await renderFinished();
+		this._selectedSetting?.focusFirstContentElement();
 	}
 
 	_handleDialogAfterOpen() {
@@ -344,6 +394,19 @@ class UserSettingsDialog extends UI5Element {
 		return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_NO_SEARCH_RESULTS_TEXT);
 	}
 
+	get _searchResultsText() {
+		const resultsCount = this._filteredItems.length + this._filteredFixedItems.length;
+
+		switch (resultsCount) {
+		case 0:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_NO_RESULTS);
+		case 1:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_ONE_RESULT);
+		default:
+			return UserSettingsDialog.i18nBundle.getText(USER_SETTINGS_DIALOG_SEARCH_MORE_RESULTS, resultsCount);
+		}
+	}
+
 	get _selectedItemSlotName() {
 		return this._selectedSetting ? this._selectedSetting._individualSlot : "";
 	}
@@ -368,12 +431,21 @@ class UserSettingsDialog extends UI5Element {
 		this.fireDecoratorEvent("cancel");
 	}
 
-	_handleCollapseClick() {
+	async _handleCollapseClick() {
 		this._collapsed = false;
+
+		// The side list replaces the content, so return the focus to the
+		// user settings item that was selected instead of losing it.
+		await renderFinished();
+		const selectedListItem = this._selectedSetting
+			? this.shadowRoot!.querySelector<HTMLElement>(`#setting-${this._selectedSetting._id}`)
+			: null;
+		selectedListItem?.focus();
 	}
 
 	_handleInput(e: CustomEvent<InputEventDetail>) {
 		this._searchValue = (e.target as Input).value;
+		this._announceSearchResults = true;
 	}
 
 	captureRef(ref: HTMLElement & { associatedSettingItem?: UI5Element} | null) {

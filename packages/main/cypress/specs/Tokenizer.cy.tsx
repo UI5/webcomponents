@@ -2102,3 +2102,74 @@ describe("Tokenizer - getFocusDomRef Method", () => {
 			.should("be.focused");
 	});
 });
+
+describe("Token deletion announcements", () => {
+	it("announces singular deletion on Backspace with a single token", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+			</Tokenizer>
+		);
+
+		cy.get(".ui5-invisiblemessage-assertive")
+			.as("liveRegion")
+			.should("have.text", "");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.realPress("Backspace");
+
+		cy.get("@liveRegion")
+			.should("have.text", "1 token deleted");
+	});
+
+	it("announces plural deletion on Backspace with multiple selected tokens", () => {
+		cy.mount(
+			<Tokenizer onTokenDelete={onTokenDelete}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		cy.get(".ui5-invisiblemessage-assertive")
+			.as("liveRegion")
+			.should("have.text", "");
+
+		cy.get("[ui5-token]")
+			.eq(0)
+			.realClick();
+
+		cy.realPress(["Shift", "ArrowRight"]);
+		cy.realPress("Backspace");
+
+		cy.get("@liveRegion")
+			.should("have.text", "2 tokens deleted");
+	});
+
+	it("announces plural deletion equal to token count on 'Clear All'", () => {
+		cy.mount(
+			<Tokenizer multiLine={true} showClearAll={true} onTokenDelete={onTokenDelete}>
+				<Token text="Andora"></Token>
+				<Token text="Bulgaria"></Token>
+				<Token text="Canada"></Token>
+			</Tokenizer>
+		);
+
+		cy.get(".ui5-invisiblemessage-assertive")
+			.as("liveRegion")
+			.should("have.text", "");
+
+		cy.get("[ui5-tokenizer]")
+			.shadow()
+			.find(".ui5-tokenizer--clear-all")
+			.eq(0)
+			.realClick();
+
+		cy.get("@liveRegion")
+			.should("have.text", "3 tokens deleted");
+	});
+});
