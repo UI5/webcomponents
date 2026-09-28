@@ -6,7 +6,7 @@ import {
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import type Input from "@ui5/webcomponents/dist/Input.js";
 import type { InputEventDetail } from "@ui5/webcomponents/dist/Input.js";
-import type { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
+import type { ListSelectionChangeEventDetail } from "@ui5/webcomponents/dist/List.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
@@ -301,31 +301,55 @@ class UserSettingsDialog extends UI5Element {
 		});
 	}
 
-	async _handleItemClick(e: CustomEvent<ListItemClickEventDetail>) {
-		const setting = e.detail.item as ListItemBase & { associatedSettingItem: UserSettingsItem };
+	/**
+	 * Handles selection of a side-navigation item. The inner `ui5-list` runs in
+	 * `selectionMode="Single"`, so it already owns the `selected` state on the
+	 * `ui5-li` items and provides the accessibility layers (aria-selected, the
+	 * hidden "Selected"/"Not Selected" text and the polite announcement) for free.
+	 *
+	 * Here we only mirror the selection back onto the `UserSettingsItem` model
+	 * (which drives `_selectedSetting` and the content slot) and re-fire the public
+	 * `selection-change`. If the application cancels it, we revert the list selection.
+	 */
+	_handleSelectionChange(e: CustomEvent<ListSelectionChangeEventDetail>) {
+		const setting = e.detail.targetItem as ListItemBase & { associatedSettingItem: UserSettingsItem };
 		const settingItem = setting.associatedSettingItem;
 		const eventPrevented = !this.fireDecoratorEvent("selection-change", {
 			item: settingItem,
 		});
-		const shouldNavigate = this._showSettingWithNavigation;
+
+		if (eventPrevented) {
+			// Revert the list's single-selection so the model and the list stay in sync.
+			e.preventDefault();
+			return;
+		}
+
+		this.items.forEach(item => {
+			item.selected = false;
+		});
+		this.fixedItems.forEach(item => {
+			item.selected = false;
+		});
+		settingItem.selected = true;
+	}
+
+	/**
+	 * Handles activation of a side-navigation item. In navigation (single-column)
+	 * mode the content replaces the list, so this drives the drill-in behavior and
+	 * moves the focus to the content. It runs on every activation - including
+	 * re-activating the already-selected item, which fires no `selection-change`.
+	 */
+	async _handleItemClick() {
+		if (!this._showSettingWithNavigation) {
+			return;
+		}
+
 		this._collapsed = true;
 
-		if (!eventPrevented) {
-			this.items.forEach(item => {
-				item.selected = false;
-			});
-			this.fixedItems.forEach(item => {
-				item.selected = false;
-			});
-			settingItem.selected = true;
-		}
-
-		// In navigation (single-column) mode the content replaces the list, so move the
-		// focus to the first interactive element of the content instead of losing it.
-		if (shouldNavigate) {
-			await renderFinished();
-			this._selectedSetting?.focusFirstContentElement();
-		}
+		// In navigation mode the content replaces the list, so move the focus to the
+		// first interactive element of the content instead of losing it.
+		await renderFinished();
+		this._selectedSetting?.focusFirstContentElement();
 	}
 
 	_handleDialogAfterOpen() {

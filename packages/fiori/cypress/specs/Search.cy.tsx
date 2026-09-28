@@ -1431,7 +1431,9 @@ describe("Events", () => {
 			.should("have.been.calledOnce");
 
 		cy.get("[ui5-search]")
-			.should("have.attr", "open");
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
 	});
 
 	it("open event - typing, pressing Escape, then typing again should reopen suggestions", () => {
@@ -1941,6 +1943,65 @@ describe("Events", () => {
 			.ui5ResponsivePopoverOpened();
 	});
 
+	it("should open picker when 'open' property is set to true by the application", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" />
+			</Search>
+		);
+
+		// The picker is initially closed
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+
+		// The application sets the public "open" property to true
+		cy.get("[ui5-search]")
+			.then($search => {
+				($search.get(0) as Search).open = true;
+			});
+
+		// The picker opens
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+	});
+
+	it("should open picker when the user starts typing in the search", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</Search>
+		);
+
+		// The picker is initially closed
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+
+		// The user focuses the input and starts typing
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		cy.get("[ui5-search]")
+			.realPress("I");
+
+		// The picker opens as content becomes available
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+	});
+
 	it("should not open picker if text is deleted and there are no items", () => {
 		const handleInput = (e: any) => {
 			if (e.target.value) {
@@ -2147,12 +2208,13 @@ describe("Lazy loaded items and autocomplete", () => {
 		let searchComponent: any;
 
 		const handleInput = () => {
-			setTimeout(() =>
+			setTimeout(() => {
 				searchItems.forEach(data => {
 					const item = document.createElement("ui5-search-item");
 					item.setAttribute("text", data.text);
 					searchComponent.appendChild(item);
-				}),
+				}); 
+			},
 			1000)
 		};
 
@@ -2194,5 +2256,186 @@ describe("Lazy loaded items and autocomplete", () => {
 		// Verify that the input text is autocompleted to "Apple" (first match starting with "a")
 		cy.get("[ui5-search]")
 			.should("have.value", "Apple");
+	});
+
+	it("keeps effective open state in sync across dynamic loading, focus out and item selection", () => {
+		const searchItems = [
+			{ text: "Manage Users" },
+			{ text: "Manage Roles" },
+			{ text: "Manage Settings" },
+		];
+
+		let searchComponent: any;
+		let timer: ReturnType<typeof setTimeout>;
+
+		// Dynamically loads 3 items (all containing "Manage") with a short delay,
+		// toggling the loading state so the popover shows a busy indicator meanwhile.
+		const loadItems = () => {
+			clearTimeout(timer);
+			searchComponent.innerHTML = "";
+
+			if (!searchComponent.value) {
+				searchComponent.loading = false;
+				return;
+			}
+
+			searchComponent.loading = true;
+
+			timer = setTimeout(() => {
+				searchComponent.innerHTML = "";
+				searchItems.forEach(data => {
+					const item = document.createElement("ui5-search-item");
+					item.setAttribute("text", data.text);
+					searchComponent.appendChild(item);
+				});
+				searchComponent.loading = false;
+			}, 300);
+		};
+
+		cy.mount(
+			<>
+				<Search noTypeahead ref={(el: any) => { searchComponent = el; }} onInput={loadItems}></Search>
+				<Button>Outside</Button>
+			</>
+		);
+
+		cy.get("[ui5-search]").as("search");
+
+		// Focus the input and type "Manage"
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("@search")
+			.should("be.focused");
+
+		cy.get("@search")
+			.realType("Manage");
+
+		// 3 items containing "Manage" are loaded dynamically
+		cy.get("[ui5-search-item]")
+			.should("have.length", 3);
+
+		// The popover is open once the items are loaded
+		cy.get("@search")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		// Focus out from the search (move focus to the sibling button)
+		cy.get("@search")
+			.realPress("Tab");
+
+		// The popover is closed
+		cy.get("@search")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+
+		// Click again in the search and delete the last letter -> "Manag"
+		cy.get("@search")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("@search")
+			.realPress("Backspace");
+
+		cy.get("@search")
+			.should("have.value", "Manag");
+
+		cy.get("@search")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		cy.get("ui5-search-item")
+			.should("have.length", 3);
+
+		// Click on the first item that starts with "Manag"
+		cy.get("ui5-search-item")
+			.eq(0)
+			.realClick();
+
+		// The popover is not open after the click
+		cy.get("@search")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+	});
+});
+
+describe("Open property", () => {
+	it("should close the picker when the application sets 'open' to false while the search is focused", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</Search>
+		);
+
+		// The focus is placed in the search
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realClick();
+
+		cy.get("[ui5-search]")
+			.should("be.focused");
+
+		cy.get("[ui5-search]")
+			.shadow()
+			.find("input")
+			.realType("It");
+
+		// The picker is open
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
+
+		// The application closes the picker from outside
+		cy.get("[ui5-search]")
+			.then($search => {
+				($search.get(0) as Search).open = false;
+			});
+
+		// The picker is closed
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+	});
+
+	it("should open the picker when the application sets 'open' to true while the search is not focused", () => {
+		cy.mount(
+			<Search>
+				<SearchItem text="Item 1" />
+				<SearchItem text="Item 2" />
+			</Search>
+		);
+
+		// The search is not focused
+		cy.get("[ui5-search]")
+			.should("not.be.focused");
+
+		// The picker is initially closed
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverClosed();
+
+		// The application opens the picker from outside
+		cy.get("[ui5-search]")
+			.then($search => {
+				($search.get(0) as Search).open = true;
+			});
+
+		// The picker is open
+		cy.get("[ui5-search]")
+			.shadow()
+			.find<ResponsivePopover>("#ui5-search-list")
+			.ui5ResponsivePopoverOpened();
 	});
 });

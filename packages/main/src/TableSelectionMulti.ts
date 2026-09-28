@@ -1,5 +1,8 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
+import CheckBox from "./CheckBox.js";
+import Icon from "./Icon.js";
+import ClearAll from "@ui5/webcomponents-icons/dist/clear-all.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
 import { isUpShift } from "@ui5/webcomponents-base/dist/Keys.js";
@@ -92,6 +95,18 @@ class TableSelectionMulti extends TableSelectionBase {
 
 	isMultiSelectable(): boolean {
 		return true;
+	}
+
+	getSelectionComponent(): typeof CheckBox {
+		return CheckBox;
+	}
+
+	getClearAllComponent(): typeof Icon {
+		return Icon;
+	}
+
+	getClearAllIcon(): string {
+		return ClearAll;
 	}
 
 	isSelected(row: TableRowBase): boolean {

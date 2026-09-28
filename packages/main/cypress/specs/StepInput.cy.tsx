@@ -1,5 +1,5 @@
 import StepInput from "../../src/StepInput.js";
-import type NumberInput from "../../src/NumberInput.js";
+import type NumericInput from "../../src/NumericInput.js";
 
 const decreaseValue = true;
 
@@ -47,7 +47,7 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc")
 			.as("increaseButton");
@@ -75,7 +75,7 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec")
 			.as("decreaseButton");
@@ -169,14 +169,14 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec")
 			.should("not.exist");
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc")
 			.should("not.exist");
@@ -189,17 +189,17 @@ describe("StepInput button interaction tests", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
-			.should("not.have.class", "ui5-number-input-icon--clickable");
+			.should("not.have.class", "ui5-numeric-input-icon--clickable");
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc [ui5-icon]")
-			.should("not.have.class", "ui5-number-input-icon--clickable");
+			.should("not.have.class", "ui5-numeric-input-icon--clickable");
 	});
 
 	it("should not round value when 'valuePrecision' is set", () => {
@@ -238,7 +238,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -251,9 +251,9 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.should(ni => {
-				expect((ni[0] as NumberInput).value).to.be.lessThan(10);
+				expect((ni[0] as NumericInput).value).to.be.lessThan(10);
 			});
 	});
 
@@ -267,7 +267,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-inc [ui5-icon]")
 			.as("incBtn")
@@ -280,9 +280,9 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.should(ni => {
-				expect((ni[0] as NumberInput).value).to.be.greaterThan(0);
+				expect((ni[0] as NumericInput).value).to.be.greaterThan(0);
 			});
 	});
 
@@ -299,7 +299,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -331,7 +331,7 @@ describe("StepInput spin interaction tests", () => {
 
 		cy.get("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.shadow()
 			.find(".ui5-step-dec [ui5-icon]")
 			.as("decBtn")
@@ -365,7 +365,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -393,7 +393,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -416,7 +416,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -453,7 +453,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -478,7 +478,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -491,7 +491,7 @@ describe("StepInput events", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick({ clickCount: 2 })
 			.should("be.focused");
 
@@ -519,7 +519,7 @@ describe("StepInput events", () => {
 
 		cy.get("[ui5-step-input]")
 			.shadow()
-			.find("[ui5-number-input]")
+			.find("[ui5-numeric-input]")
 			.realClick()
 			.should("be.focused");
 
@@ -550,8 +550,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2.34);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2.34);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -572,8 +572,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2.345);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2.345);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -606,8 +606,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -628,8 +628,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(4);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({
@@ -662,8 +662,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(4);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(4);
 
 		cy.get("#submitBtn")
 			.realClick();
@@ -684,8 +684,8 @@ describe("Validation inside form", () => {
 
 		cy.get<StepInput>("@stepInput")
 			.shadow()
-			.find("[ui5-number-input]")
-			.ui5NumberInputTypeNumber(2);
+			.find("[ui5-numeric-input]")
+			.ui5NumericInputTypeNumber(2);
 
 		cy.get("@stepInput")
 			.ui5AssertValidityState({

@@ -10,6 +10,7 @@ import MessageStrip from "@ui5/webcomponents/dist/MessageStrip.js";
 import {
 	USER_MENU_MANAGE_ACCOUNT_BUTTON_TXT,
 	USER_MENU_OTHER_ACCOUNT_BUTTON_TXT,
+	USER_MENU_CURRENT_INFORMATION_TXT,
 } from "../../src/generated/i18n/i18n-defaults.js";
 
 describe("Initial rendering", () => {
@@ -257,6 +258,9 @@ describe("Initial rendering", () => {
 			.scrollTo("bottom");
 		cy.get("[ui5-user-menu]").shadow().find("[ui5-bar]").as("headerBar");
 		cy.get("@headerBar").find("[ui5-title]").contains("Alain Chevalier 1");
+		cy.get("@headerBar").should("have.attr", "accessible-name", USER_MENU_CURRENT_INFORMATION_TXT.defaultText);
+		cy.get("[ui5-user-menu]").shadow().find(".ui5-user-menu-selected-account").should("not.have.attr", "aria-label");
+
 	});
 });
 

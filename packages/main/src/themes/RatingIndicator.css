@@ -29,7 +29,8 @@
 	opacity: .9;
 }
 
-:host([_focused]) {
+:host([desktop]:not([disabled]):not([display-only])) .ui5-rating-indicator-root:focus,
+:host(:not([disabled]):not([display-only])) .ui5-rating-indicator-root:focus-visible {
 	outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
 	outline-offset: var(--_ui5_rating_indicator_outline_offset);
 	border-radius: var(--_ui5_rating_indicator_border_radius);

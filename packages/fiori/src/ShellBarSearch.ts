@@ -111,7 +111,7 @@ class ShellBarSearch extends Search {
 		super._onfocusin();
 
 		if (this.autoOpen) {
-			this.open = true;
+			this._setInternalOpen(true);
 			this.fireDecoratorEvent("open");
 		}
 	}

@@ -43,6 +43,7 @@ export default function TimePickerTemplate(this: TimePicker) {
 							showTooltip={true}
 							accessibleName={this.openIconTitle}
 							mode={this._iconMode}
+							onMouseDown={this._onValueHelpIconMouseDown}
 							onClick={this._togglePicker}
 							class={{
 								"ui5-time-picker-input-icon-button": true,

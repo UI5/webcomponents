@@ -112,8 +112,10 @@ abstract class ListItem extends ListItemBase {
 	 * **Note:** When set to `Active` or `Navigation`, the item will provide visual response upon press and hover,
 	 * while with type `Inactive`, `InactiveSelectable` and `Detail` - will not.
 	 *
-	 * **Note:** `InactiveSelectable` behaves like `Inactive` but allows selection (checkbox/radio) to be toggled
-	 * when the list has a selection mode. The `item-click` event is not fired for this type.
+	 * **Note:** `InactiveSelectable` behaves like `Inactive` (no active press/hover feedback and the
+	 * `item-click` event is not fired), but the item can still be selected. Clicking the item body,
+	 * pressing Space/Enter, or interacting with the selection component (checkbox in Multi mode, radio
+	 * button in Single modes) toggles the selection when the list has a selection mode.
 	 * @default "Active"
 	 * @public
 	*/
@@ -404,12 +406,6 @@ abstract class ListItem extends ListItemBase {
 		if (this.isInactive) {
 			return;
 		}
-		if (this.isInactiveSelectable) {
-			if (this.modeSingleSelect || this.modeMultiple) {
-				this.fireDecoratorEvent("selection-requested", { item: this, selected: !this.selected, selectionComponentPressed: false });
-			}
-			return;
-		}
 		super.fireItemPress(e);
 		if (document.activeElement !== this) {
 			this.focus();
@@ -610,8 +606,8 @@ abstract class ListItem extends ListItemBase {
 	}
 
 	_getFocusableElements(): HTMLElement[] {
-		const focusDomRef = this.getFocusDomRef()!;
-		return getTabbableElements(focusDomRef);
+		const focusDomRef = this.getFocusDomRef();
+		return focusDomRef ? getTabbableElements(focusDomRef) : [];
 	}
 
 	_indexOfActiveElement(focusables: HTMLElement[]): number {
