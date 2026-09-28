@@ -380,14 +380,23 @@ describe("Fallback Logic", () => {
 			.should("have.class", "ui5-avatar-initials-hidden");
 	});
 
-	it("shows fallback icon for non-Latin initials", () => {
-		cy.mount(<Avatar id="avatar-non-latin" initials="АБ"></Avatar>);
+	it("shows initials for non-Latin scripts", () => {
+		// Cyrillic "GK" and Polish "LP"; escaped to keep this source ASCII
+		["\u0413\u041a", "\u0141P"].forEach((initials, index) => {
+			const id = `avatar-non-latin-${index}`;
+			cy.mount(<Avatar id={id} initials={initials}></Avatar>);
 
-		cy.get("#avatar-non-latin")
-			.shadow()
-			.find(".ui5-avatar-icon-fallback")
-			.should("exist")
-			.and("be.visible");
+			cy.get(`#${id}`)
+				.shadow()
+				.find(".ui5-avatar-initials")
+				.should("exist")
+				.and("contain.text", initials);
+
+			cy.get(`#${id}`)
+				.shadow()
+				.find(".ui5-avatar-fallback-icon-hidden")
+				.should("exist");
+		});
 	});
 
 	it("shows custom fallback icon when specified", () => {

@@ -149,7 +149,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the name of the fallback icon, which should be displayed in the following cases:
 	 *
-	 * 	- If the initials are not valid (more than 3 letters, unsupported languages or empty initials).
+	 * 	- If the initials are not valid (more than 3 letters or empty initials).
 	 * 	- If there are three initials and they do not fit in the shape (e.g. WWW for some of the sizes).
 	 * 	- If the image src is wrong.
 	 *
@@ -171,7 +171,8 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the displayed initials.
 	 *
-	 * Up to three Latin letters can be displayed as initials.
+	 * Up to three letters can be displayed as initials. Letters from any script
+	 * (for example Latin, Cyrillic, Greek or Arabic) are supported.
 	 * @default undefined
 	 * @public
 	 */
@@ -357,8 +358,8 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get validInitials() {
-		// initials should consist of only 1,2 or 3 latin letters
-		const validInitials = /^[a-zA-Zà-üÀ-Ü]{1,3}$/,
+		// initials should consist of only 1, 2 or 3 letters from any script
+		const validInitials = /^\p{L}{1,3}$/u,
 			areInitialsValid = this.initials && validInitials.test(this.initials);
 
 		if (areInitialsValid) {
