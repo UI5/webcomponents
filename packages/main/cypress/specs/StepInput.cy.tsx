@@ -530,6 +530,18 @@ describe("StepInput events", () => {
 	});
 });
 
+describe("StepInput getFocusDomRefAsync", () => {
+	it("getFocusDomRefAsync resolves to the native input immediately after first render", () => {
+		cy.mount(<StepInput />);
+
+		cy.get("[ui5-step-input]").then(async ($el) => {
+			const focusRef = await ($el[0] as StepInput).getFocusDomRefAsync();
+			expect(focusRef).to.exist;
+			expect(focusRef!.tagName.toLowerCase()).to.equal("ui5-input");
+		});
+	});
+});
+
 describe("Validation inside form", () => {
 	it("has correct validity for patternMissmatch", () => {
 		cy.mount(
