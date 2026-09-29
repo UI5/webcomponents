@@ -399,6 +399,26 @@ describe("Fallback Logic", () => {
 		});
 	});
 
+	it("shows fallback icon for Asian scripts", () => {
+		// CJK, Hiragana, Katakana, Hangul do not use initials per VD guidelines;
+		// escaped to keep this source ASCII
+		["\u4e2d\u6587\u5b57", "\u3042\u3044\u3046", "\u30a2\u30a4\u30a6", "\uac00\ub098\ub2e4"].forEach((initials, index) => {
+			const id = `avatar-asian-${index}`;
+			cy.mount(<Avatar id={id} initials={initials}></Avatar>);
+
+			cy.get(`#${id}`)
+				.shadow()
+				.find(".ui5-avatar-icon-fallback")
+				.should("exist")
+				.and("be.visible");
+
+			cy.get(`#${id}`)
+				.shadow()
+				.find(".ui5-avatar-initials")
+				.should("have.class", "ui5-avatar-initials-hidden");
+		});
+	});
+
 	it("shows custom fallback icon when specified", () => {
 		cy.mount(<Avatar id="avatar-custom-fallback" fallbackIcon="alert"></Avatar>);
 

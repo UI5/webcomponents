@@ -171,9 +171,12 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the displayed initials.
 	 *
-	 * Up to three letters from any script (Latin, Cyrillic, Arabic, Greek, etc.) can be displayed.
-	 * If the letters do not fit inside the avatar shape at the current size, the fallback icon is
-	 * shown instead.
+	 * Up to three letters from an alphabetic script can be displayed as initials.
+	 * Supported scripts: Latin, Cyrillic, Greek, Arabic, Hebrew, Armenian, Georgian,
+	 * Devanagari, and Thai. Logographic and syllabic scripts (e.g. Chinese, Japanese,
+	 * Korean) are not supported - the fallback icon is shown instead.
+	 * If the letters do not fit inside the avatar shape at the current size, the fallback
+	 * icon is shown instead.
 	 * @default undefined
 	 * @public
 	 */
@@ -359,8 +362,10 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get validInitials() {
-		// initials should consist of only 1, 2 or 3 letters from any script
-		const validInitials = /^\p{L}{1,3}$/u,
+		// initials should consist of only 1, 2 or 3 letters from an alphabetic script.
+		// Logographic and syllabic Asian scripts (Han, Hiragana, Katakana, Hangul) are excluded
+		// because those languages do not use initials - the fallback icon is shown instead.
+		const validInitials = /^[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Armenian}\p{Script=Georgian}\p{Script=Devanagari}\p{Script=Thai}]{1,3}$/u,
 			areInitialsValid = this.initials && validInitials.test(this.initials);
 
 		if (areInitialsValid) {
