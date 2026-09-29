@@ -150,7 +150,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * Defines the name of the fallback icon, which should be displayed in the following cases:
 	 *
 	 * 	- If the initials are not valid (more than 3 letters or empty initials).
-	 * 	- If there are three initials and they do not fit in the shape (e.g. WWW for some of the sizes).
+	 * 	- If the initials do not fit in the shape at the current size (e.g. WWW at size XS).
 	 * 	- If the image src is wrong.
 	 *
 	 * **Note:** If not set, a default fallback icon "employee" is displayed.
@@ -171,8 +171,9 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the displayed initials.
 	 *
-	 * Up to three letters can be displayed as initials. Letters from any script
-	 * (for example Latin, Cyrillic, Greek or Arabic) are supported.
+	 * Up to three letters from any script (Latin, Cyrillic, Arabic, Greek, etc.) can be displayed.
+	 * If the letters do not fit inside the avatar shape at the current size, the fallback icon is
+	 * shown instead.
 	 * @default undefined
 	 * @public
 	 */
