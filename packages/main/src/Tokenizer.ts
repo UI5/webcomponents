@@ -1300,8 +1300,16 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 			token.overflows = false;
 		});
 
+		// Measure the available space against the tokenizer root, not the inner
+		// content box. The content box (".ui5-tokenizer--content") is a flex
+		// sibling of the "n more" indicator, so it is already shrunk by the
+		// indicator's width. Measuring token overflow against the content box and
+		// then also reserving the indicator width reserves that space twice, which
+		// wrongly collapses leading tokens that actually fit in the tokenizer.
+		const boundaryDom = this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer-root") || this.contentDom;
+		const boundaryRect = boundaryDom.getBoundingClientRect();
 		const parentRect = this.contentDom.getBoundingClientRect();
-		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentEnd = Number(boundaryRect.right.toFixed(2));
 		const parentStart = Number(parentRect.left.toFixed(2));
 
 		// Measure "n more" width
@@ -1323,7 +1331,7 @@ class Tokenizer extends UI5Element implements IFormInputElement {
 
 			// For the last token, check if it fits without "n more"
 			// For other tokens, check if token + "n more" fits together
-			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((boundaryRect.right - nMoreWidth).toFixed(2));
 
 			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
 
