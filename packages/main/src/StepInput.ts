@@ -269,6 +269,11 @@ class StepInput extends UI5Element implements IFormInputElement {
 		return this._innerNumberInput?.getFocusDomRef();
 	}
 
+	async getFocusDomRefAsync(): Promise<HTMLElement | undefined> {
+		await this._waitForDomRef();
+		return this._innerNumberInput?.getFocusDomRefAsync();
+	}
+
 	get _associatedLabelText(): string | undefined {
 		return getAssociatedLabelForTexts(this) || undefined;
 	}
