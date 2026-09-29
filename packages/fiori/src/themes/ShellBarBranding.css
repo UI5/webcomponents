@@ -24,12 +24,6 @@
 	margin-inline-end: 0.5rem;
 }
 
-.ui5-shellbar-branding-root--stacked,
-:host([_stacked]) .ui5-shellbar-branding-root {
-	flex-direction: column;
-	align-items: flex-start;
-}
-
 .ui5-shellbar-branding-root:focus {
 	outline: var(--_ui5_shellbar_logo_outline);
 	outline-offset: calc(-1 * var(--sapContent_FocusWidth));
@@ -58,14 +52,23 @@
 	color: var(--sapShell_SubBrand_TextColor);
 	margin-inline-start: 0.25rem;
 	text-align: start;
+	/* Default: single line, no shrinking — the title keeps its intrinsic width until the
+	   overflow loop decides it must wrap (see :host([_title-wrap])). */
+	white-space: nowrap;
 }
 
-.ui5-shellbar-branding-root--stacked .ui5-shellbar-title,
-:host([_stacked]) .ui5-shellbar-title {
-	display: block;
-	overflow: visible;
-	-webkit-line-clamp: unset;
-	margin-inline-start: 0;
+/* Overflow loop asked the title to wrap in place: allow it to shrink below its longest word
+   and wrap to (up to) 2 lines within the width budget the loop computed, narrowing the branding
+   area to relieve the row overflow. */
+:host([_title-wrap]) .ui5-shellbar-title {
+	white-space: normal;
+	min-width: 0;
+	max-width: var(--_ui5_shellbar_branding_title_max_width, none);
+}
+
+.ui5-shellbar-logo {
+	/* Only the title shrinks/wraps; the logo keeps its intrinsic width */
+	flex-shrink: 0;
 }
 
 .ui5-shellbar-logo-area {

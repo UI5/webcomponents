@@ -2,13 +2,19 @@ import type ShellBarItem from "../ShellBarItem.js";
 import { ShellBarActions, ShellBarActionsSelectors } from "../ShellBar.js";
 import type { ShellBarActionId, ShellBarActionItem } from "../ShellBar.js";
 
+// Visibility handling for a hidable item:
+// - "normal":     hidden in the DOM when overflowing, shown otherwise
+// - "keepHidden":  kept hidden to prevent flickering when the search field expands/collapses (sorted first)
+// - "neverHide":   never actually removed from the DOM, but still reported in hiddenItemsIds so events fire
+type ShellBarVisibilityPolicy = "normal" | "keepHidden" | "neverHide";
+
 interface ShellBarHidableItem {
 	id: string;
 	selector: string; 			// CSS selector to find the element
 	hideOrder: number;			// Priority for hiding - later adjusted based on search field state
-	keepHidden: boolean; 		// Keep item hidden to prevent flickering when searchfield expands/collapses
+	visibilityPolicy: ShellBarVisibilityPolicy;
 	showInOverflow?: boolean; 	// If true, hiding this item triggers overflow button
-	neverHide?: boolean;		// Never actually hide in DOM, but still report in hiddenItemsIds for events
+	canShrink?: boolean;		// If true, the loop tries to shrink (wrap) the item before hiding it
 }
 
 interface ShellBarOverflowParams {
@@ -21,6 +27,9 @@ interface ShellBarOverflowParams {
 	showSearchField: boolean;
 	hasBranding: boolean;
 	setVisible: (selector: string, visible: boolean) => void;
+	// Attempt to shrink (wrap) an item in place instead of hiding it. Returns true if shrinking
+	// cleared the overflow so the item can stay; false if it must still be hidden.
+	tryShrink?: (selector: string) => boolean;
 }
 
 interface ShellBarOverflowResult {
@@ -47,13 +56,11 @@ type ShellBarOverflowItem = {
 }
 
 const BrandingIds = {
-	Stacked: "branding-stacked",
 	Identifier: "branding-identifier",
 	Logo: "branding-logo",
 } as const;
 
 const BrandingSelectors = {
-	Stacked: "[data-ui5-stable='branding-stacked']",
 	Identifier: "[data-ui5-stable='branding-identifier']",
 	Logo: "[data-ui5-stable='branding-logo']",
 } as const;
@@ -64,7 +71,6 @@ class ShellBarOverflow {
 		CONTENT: 1000,		// Then content (except last)
 		SEARCH: 2000,		// Then search button
 		LAST_CONTENT: 3000,	// Last content item hides last
-		BRANDING_STACKED: 3500, // Branding stacks (title below logo) before identifier hides
 		BRANDING_IDENTIFIER: 4000, // Branding identifier hides after all actions
 		BRANDING_LOGO: 5000, // Logo hides last
 	};
@@ -74,14 +80,13 @@ class ShellBarOverflow {
 		CONTENT: 1000,		// Then content
 		SEARCH: 2000,		// Then search button
 		LAST_CONTENT: 1000,	// Last content same as other content
-		BRANDING_STACKED: 3500,
 		BRANDING_IDENTIFIER: 4000,
 		BRANDING_LOGO: 5000,
 	};
 
 	updateOverflow(params: ShellBarOverflowParams): ShellBarOverflowResult {
 		const {
-			overflowOuter, overflowInner, setVisible,
+			overflowOuter, overflowInner, setVisible, tryShrink,
 		} = params;
 
 		if (!overflowOuter || !overflowInner) {
@@ -109,7 +114,15 @@ class ShellBarOverflow {
 				break; // No more overflow, stop hiding
 			}
 
-			if (!nextItemToHide.neverHide) {
+			// Before hiding a shrinkable item (the branding title), try wrapping it in place.
+			// If wrapping clears the overflow, the item stays visible and the loop stops.
+			if (nextItemToHide.canShrink && tryShrink && tryShrink(nextItemToHide.selector)) {
+				if (!this.isOverflowing(overflowOuter, overflowInner)) {
+					break;
+				}
+			}
+
+			if (nextItemToHide.visibilityPolicy !== "neverHide") {
 				setVisible(nextItemToHide.selector, false);
 			}
 			hiddenItemsIds.push(nextItemToHide.id);
@@ -145,12 +158,14 @@ class ShellBarOverflow {
 			...this.buildBranding(params),
 		];
 
-		// sort by hideOrder first then by keepHidden keepHidden items are at the start
+		// sort by hideOrder first; keepHidden items are moved to the start
 		return items.sort((a, b) => {
-			if (a.keepHidden && !b.keepHidden) {
+			const aKeepHidden = a.visibilityPolicy === "keepHidden";
+			const bKeepHidden = b.visibilityPolicy === "keepHidden";
+			if (aKeepHidden && !bKeepHidden) {
 				return -1;
 			}
-			if (!a.keepHidden && b.keepHidden) {
+			if (!aKeepHidden && bKeepHidden) {
 				return 1;
 			}
 			return a.hideOrder - b.hideOrder;
@@ -167,24 +182,18 @@ class ShellBarOverflow {
 
 		return [
 			{
-				id: BrandingIds.Stacked,
-				selector: BrandingSelectors.Stacked,
-				hideOrder: strategy.BRANDING_STACKED,
-				keepHidden: hiddenItemsIds.includes(BrandingIds.Stacked),
-				showInOverflow: false,
-			},
-			{
 				id: BrandingIds.Identifier,
 				selector: BrandingSelectors.Identifier,
 				hideOrder: strategy.BRANDING_IDENTIFIER,
-				keepHidden: hiddenItemsIds.includes(BrandingIds.Identifier),
+				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Identifier) ? "keepHidden" : "normal",
 				showInOverflow: true,
+				canShrink: true,
 			},
 			{
 				id: BrandingIds.Logo,
 				selector: BrandingSelectors.Logo,
 				hideOrder: strategy.BRANDING_LOGO,
-				keepHidden: hiddenItemsIds.includes(BrandingIds.Logo),
+				visibilityPolicy: hiddenItemsIds.includes(BrandingIds.Logo) ? "keepHidden" : "normal",
 				showInOverflow: true,
 			},
 		];
@@ -214,9 +223,8 @@ class ShellBarOverflow {
 				id: slotName,
 				selector: `#${slotName}`,
 				hideOrder: priority + dataHideOrder,
-				keepHidden: false,
+				visibilityPolicy: isNeverHide ? "neverHide" : "normal",
 				showInOverflow: false,
-				neverHide: isNeverHide || undefined,
 			});
 		});
 
@@ -237,7 +245,7 @@ class ShellBarOverflow {
 				id: item._id,
 				selector: `[data-ui5-stable="${item.stableDomRef}"]`,
 				hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-				keepHidden: hiddenItemsIds.includes(item._id),
+				visibilityPolicy: hiddenItemsIds.includes(item._id) ? "keepHidden" : "normal",
 				showInOverflow: true,
 			});
 		});
@@ -250,7 +258,7 @@ class ShellBarOverflow {
 					id: config.id,
 					selector: config.selector,
 					hideOrder: overflowStrategy.ACTIONS + actionIndex++,
-					keepHidden: hiddenItemsIds.includes(config.id),
+					visibilityPolicy: hiddenItemsIds.includes(config.id) ? "keepHidden" : "normal",
 					showInOverflow: true,
 				});
 			});
@@ -261,7 +269,7 @@ class ShellBarOverflow {
 				id: ShellBarActions.Search,
 				selector: ShellBarActionsSelectors.Search,
 				hideOrder: overflowStrategy.SEARCH + actionIndex++,
-				keepHidden: false, // Search button can be shown/hidden freely
+				visibilityPolicy: "normal", // Search button can be shown/hidden freely
 				showInOverflow: true,
 			});
 		}

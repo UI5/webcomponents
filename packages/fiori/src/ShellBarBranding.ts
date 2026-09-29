@@ -113,15 +113,23 @@ class ShellBarBranding extends UI5Element {
 		return this.href && this.href.length > 0 ? "link" : "button";
 	}
 
+	/**
+	 * Returns the trimmed text of the default (title) slot only — ignores the logo slot.
+	 * @private
+	 */
+	get titleText() {
+		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])") as HTMLSlotElement;
+		return defaultSlot?.assignedNodes({ flatten: true })
+			.find(n => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
+			?.textContent!.trim();
+	}
+
 	get accessibleNameText() {
 		if (this.accessibleName) {
 			return this.accessibleName;
 		}
 
-		const defaultSlot = this.shadowRoot?.querySelector("slot:not([name])") as HTMLSlotElement;
-		return defaultSlot?.assignedNodes({ flatten: true })
-			.find(n => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
-			?.textContent!.trim();
+		return this.titleText;
 	}
 
 	_fireClick() {

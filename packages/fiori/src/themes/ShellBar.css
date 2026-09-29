@@ -132,7 +132,8 @@
 }
 
 .ui5-shellbar-branding-area {
-	flex-shrink: 0;
+	flex-shrink: 1;
+	min-width: 0;
 	display: flex;
 	align-items: center;
 	/* Push all subsequent items (actions) to the right */
@@ -368,10 +369,10 @@ slot[name="profile"] {
 	align-items: center;
 	gap: 0.25rem;
 	min-height: 2.5rem;
-	padding: 0.25rem 2rem;
+	/* Align the branding row inset with the List items below it */
+	padding: 0.25rem 1rem;
 	box-sizing: border-box;
 	cursor: pointer;
-	overflow-x: auto;
 }
 
 .ui5-shellbar-overflow-branding:hover {
@@ -383,9 +384,13 @@ slot[name="profile"] {
 }
 
 .ui5-shellbar-overflow-branding-logo {
+	display: block;
+	flex-shrink: 0;
+}
+
+.ui5-shellbar-overflow-branding-logo > * {
 	max-height: 1.5625rem;
 	width: auto;
-	flex-shrink: 0;
 }
 
 .ui5-shellbar-overflow-branding-title {
@@ -394,6 +399,7 @@ slot[name="profile"] {
 	color: var(--sapList_TextColor);
 	white-space: normal;
 	word-break: break-word;
+	min-width: 0;
 }
 
 .ui5-shellbar-overflow-branding-separator {

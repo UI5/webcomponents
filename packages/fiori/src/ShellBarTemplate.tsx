@@ -249,12 +249,11 @@ export default function ShellBarTemplate(this: ShellBar) {
 										aria-label={this.brandingOverflowLabel}
 										onClick={this.handleBrandingOverflowClick}
 									>
-										{item.logoHidden && this.brandingOverflowLogoSrc && (
-											<img
+										{item.logoHidden && (
+											<span
 												class="ui5-shellbar-overflow-branding-logo"
-												src={this.brandingOverflowLogoSrc}
-												alt={this.brandingOverflowLogoAlt}
-											/>
+												ref={this.captureBrandingOverflowLogoRef.bind(this)}
+											></span>
 										)}
 										{item.identifierHidden && this.brandingOverflowTitle && (
 											<span class="ui5-shellbar-overflow-branding-title">{this.brandingOverflowTitle}</span>

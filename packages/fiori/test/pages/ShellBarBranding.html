@@ -353,5 +353,29 @@
 	</ui5-shellbar>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     13. OVERSIZED LOGO — horizontal scroll in overflow popover
+     Expected: a logo wider than the overflow popover shows a horizontal
+     scrollbar inside the branding entry instead of overflowing the popover.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="scenario">
+	<span class="scenario-label">13 · Oversized logo — scroll in overflow popover</span>
+	<p class="scenario-desc">
+		Resize very narrow until the logo overflows, then open the overflow menu. The 400px-wide
+		custom logo is bounded to the popover width and gets a horizontal scrollbar; the title
+		wraps below it.
+	</p>
+	<ui5-shellbar show-notifications notifications-count="72" show-product-switch>
+		<ui5-shellbar-branding slot="branding">
+			Long Product Identifier which is very Long
+			<img slot="logo" alt="Custom Logo 400x30" width="400" height="30"
+				src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='400'%20height='30'%3E%3Crect%20width='400'%20height='30'%20fill='%23a06cd5'/%3E%3Ctext%20x='12'%20y='20'%20fill='white'%20font-size='14'%3ECustom%20Logo%20400x30%3C/text%3E%3C/svg%3E" />
+		</ui5-shellbar-branding>
+		<ui5-shellbar-item icon="sys-help" text="Help"></ui5-shellbar-item>
+		<ui5-shellbar-item icon="action-settings" text="Settings"></ui5-shellbar-item>
+		<ui5-avatar slot="profile" icon="customer"></ui5-avatar>
+	</ui5-shellbar>
+</div>
+
 </body>
 </html>
