@@ -239,7 +239,8 @@
 	border-style: var(--_ui5_textarea_readonly_border_style);
 }
 
-:host([show-exceeded-text]) .ui5-textarea-root {
+:host([show-exceeded-text]) .ui5-textarea-root,
+:host([show-exceeded-text-focus]) .ui5-textarea-root {
 	flex-direction: column;
 }
 
@@ -411,6 +412,20 @@
 	color: var(--sapContent_LabelColor);
 	font-family: var(--sapFontFamily);
 	font-size: var(--sapFontSmallSize);
+}
+
+/* Hidden state - space is reserved but text is not visible */
+.ui5-textarea-exceeded-text--hidden {
+	visibility: hidden;
+}
+
+/* ValueState-based counter coloring */
+:host([value-state="Critical"]:not([readonly]):not([disabled])) .ui5-textarea-exceeded-text {
+	color: var(--sapField_WarningColor);
+}
+
+:host([value-state="Negative"]:not([readonly]):not([disabled])) .ui5-textarea-exceeded-text {
+	color: var(--sapField_InvalidColor);
 }
 
 :host([readonly]) .ui5-textarea-exceeded-text, :host([disabled]) .ui5-textarea-exceeded-text {
