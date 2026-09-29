@@ -26,6 +26,7 @@ interface ShellBarAreaAccessibilityInfo {
 		name?: string;
 		hasPopup?: AccessibilityAttributes["hasPopup"];
 		expanded?: AccessibilityAttributes["expanded"];
+		controls?: AccessibilityAttributes["controls"];
 	};
 }
 
@@ -83,6 +84,7 @@ class ShellBarAccessibility {
 				accessibilityAttributes: {
 					hasPopup: accessibilityAttributes.overflow?.hasPopup || "menu" as const,
 					expanded: overflowExpanded === undefined ? overflowPopoverOpen : overflowExpanded,
+					controls: "ui5-shellbar-overflow-popover",
 				},
 			},
 		};

@@ -68,9 +68,9 @@ const BrandingSelectors = {
 class ShellBarOverflow {
 	private readonly CLOSED_SEARCH_STRATEGY = {
 		ACTIONS: 0,			// All actions hide first
-		CONTENT: 1000,		// Then content (except last)
+		CONTENT: 1000,		// Then content (all but the last-surviving item)
 		SEARCH: 2000,		// Then search button
-		LAST_CONTENT: 3000,	// Last content item hides last
+		LAST_CONTENT: 3000,	// The last-surviving content item outlives the search button
 		BRANDING_IDENTIFIER: 4000, // Branding identifier hides after all actions
 		BRANDING_LOGO: 5000, // Logo hides last
 	};
@@ -79,7 +79,7 @@ class ShellBarOverflow {
 		ACTIONS: 0, 		// Actions hide first (same as closed — spec says actions before content)
 		CONTENT: 1000,		// Then content
 		SEARCH: 2000,		// Then search button
-		LAST_CONTENT: 1000,	// Last content same as other content
+		LAST_CONTENT: 1000,	// When search is expanded it collapses first, so no last-item protection
 		BRANDING_IDENTIFIER: 4000,
 		BRANDING_LOGO: 5000,
 	};
@@ -129,12 +129,12 @@ class ShellBarOverflow {
 
 			if (nextItemToHide.showInOverflow) {
 				overflowItemCount++;
-				// Always show the overflow button in DOM during measurement to account for its width.
-				// It will only be rendered visibly if overflowItemCount > 1 (enforced via showOverflowButton).
+				// Show the overflow button in the DOM so its width is accounted for during measurement.
 				setVisible(ShellBarActionsSelectors.Overflow, true);
 			}
 		}
 
+		// The overflow button is shown whenever at least one item was moved to the overflow.
 		const showOverflowButton = overflowItemCount > 0;
 
 		return {
@@ -207,22 +207,23 @@ class ShellBarOverflow {
 		const items: ShellBarHidableItem[] = [];
 		const overflowStrategy = this.getOverflowStrategy(showSearchField);
 
-		// Build content items
+		// Build content items.
+		// `content` is already ordered hide-first -> hide-last by ShellBar.sortContent
+		// (reversed DOM order, then stable-sorted by data-hide-order). Preserve that order via
+		// the array index so position 0 hides first: default (no data-hide-order) items thus hide
+		// "last added, first hidden", and explicit data-hide-order is honored (lowest hides first).
+		// The last-surviving item (last in the sorted array) gets LAST_CONTENT so it outlives the
+		// search button, per the established content-vs-search priority.
 		content.forEach((item, index) => {
 			const slotName = (item as any)._individualSlot as string;
 			const isNeverHide = item.hasAttribute("data-never-hide");
-			const hasExplicitOrder = item.hasAttribute("data-hide-order");
-			// Default: last added hides first (higher index = lower hide order number = hides earlier)
-			const defaultOrder = content.length - index;
-			const dataHideOrder = hasExplicitOrder ? parseInt(item.getAttribute("data-hide-order")!) : defaultOrder;
 			const isLast = index === content.length - 1;
-
 			const priority = isLast ? overflowStrategy.LAST_CONTENT : overflowStrategy.CONTENT;
 
 			items.push({
 				id: slotName,
 				selector: `#${slotName}`,
-				hideOrder: priority + dataHideOrder,
+				hideOrder: priority + (index + 1),
 				visibilityPolicy: isNeverHide ? "neverHide" : "normal",
 				showInOverflow: false,
 			});

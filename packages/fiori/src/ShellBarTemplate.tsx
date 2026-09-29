@@ -228,6 +228,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 
 			{/* Overflow Popover */}
 			<Popover
+				id="ui5-shellbar-overflow-popover"
 				class="ui5-shellbar-overflow-popover"
 				open={this.overflowPopoverOpen}
 				onClose={this.onPopoverClose}

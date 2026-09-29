@@ -51,14 +51,14 @@
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Identifier stays visible as long as possible — only hides after all actions have overflowed</td>
 			</tr>
 			<tr style="background:#fafafa;">
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Stacked mode</strong></td>
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Did not exist</td>
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — when title needs more than 2 lines, it moves below the logo automatically. Triggered by the overflow loop, not a breakpoint.</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Title wrapping (in-bar)</strong></td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Title always on one line</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">NEW — the identifier wraps to 2 lines in place (logo stays beside it) before overflowing. Driven by the overflow loop, not a breakpoint. Per spec, "title below the logo" is an overflow-popover-only layout — there is no in-bar stacked mode.</td>
 			</tr>
 			<tr>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Overflow order</strong></td>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;">Branding hidden at S breakpoint (fixed)</td>
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Stack → identifier overflow → logo overflow (logo is always last)</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;">Wrap identifier to 2 lines → identifier overflow → logo overflow (logo is always last)</td>
 			</tr>
 			<tr style="background:#fafafa;">
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Branding in overflow popover</strong></td>
@@ -68,7 +68,7 @@
 			<tr>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Title wrapping</strong></td>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>white-space: nowrap</code> + ellipsis — title always on one line</td>
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;"><code>-webkit-line-clamp: 2</code> — title can wrap up to 2 lines before going stacked</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:green;"><code>-webkit-line-clamp: 2</code> — title can wrap up to 2 lines before it overflows</td>
 			</tr>
 			<tr style="background:#fafafa;">
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Content area priority</strong></td>
@@ -88,7 +88,7 @@
 			<tr style="background:#fafafa;">
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><strong>Removed</strong></td>
 				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc;"><code>_isSBreakPoint</code> property — parent ShellBar set this on the branding element to hide the title at S</td>
-				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:#c00;">Removed — replaced by the overflow loop driving stacked/hidden state via non-reactive attributes</td>
+				<td style="padding:0.35rem 0.75rem; border:1px solid #ccc; color:#c00;">Removed — replaced by the overflow loop driving wrapped/hidden state via non-reactive attributes</td>
 			</tr>
 		</tbody>
 	</table>
@@ -133,14 +133,14 @@
 
 <!-- ═══════════════════════════════════════════════════════════════
      3. BRANDING WRAPPING — long product identifier
-     Expected: If identifier needs >2 lines → stacks below logo.
+     Expected: If identifier needs >2 lines → moves to overflow.
      If still too narrow → identifier moves to overflow.
      Logo is last to be hidden.
      ═══════════════════════════════════════════════════════════════ -->
 <div class="scenario">
-	<span class="scenario-label">3 · Long product identifier — stacking + overflow</span>
+	<span class="scenario-label">3 · Long product identifier — wrap + overflow</span>
 	<p class="scenario-desc">
-		Resize narrow: identifier wraps to 2 lines (stacks below logo). Further → identifier moves to overflow.
+		Resize narrow: identifier wraps to 2 lines (logo stays beside it). Further → identifier moves to overflow.
 		Logo is last to be hidden.
 	</p>
 	<ui5-shellbar show-notifications notifications-count="72">
