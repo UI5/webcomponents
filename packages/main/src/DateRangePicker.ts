@@ -6,7 +6,7 @@ import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDat
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
 import modifyDateBy from "@ui5/webcomponents-localization/dist/dates/modifyDateBy.js";
 import getTodayUTCTimestamp from "@ui5/webcomponents-localization/dist/dates/getTodayUTCTimestamp.js";
-import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import type DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import {
 	DATERANGE_DESCRIPTION,
 	DATERANGEPICKER_POPOVER_ACCESSIBLE_NAME,
