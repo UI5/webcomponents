@@ -20,6 +20,7 @@ const handle = (slider: Slider) => {
 				min={slider.min}
 				max={slider.max}
 				tabIndex={slider.disabled ? -1 : 0}
+				desktop={slider._isDesktop}
 				aria-orientation="horizontal"
 				part="handle"
 				exportparts="icon: handle-icon"

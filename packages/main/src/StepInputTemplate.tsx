@@ -1,9 +1,9 @@
 import type StepInput from "./StepInput.js";
-import NumberInput from "./NumberInput.js";
+import NumericInput from "./NumericInput.js";
 
 export default function StepInputTemplate(this: StepInput) {
 	return (
-		<NumberInput
+		<NumericInput
 			_showStepButtons={true}
 			_externalAriaLabel={this._associatedLabelText}
 			value={this.value}
@@ -26,6 +26,6 @@ export default function StepInputTemplate(this: StepInput) {
 			{this.valueStateMessage.length > 0 &&
 				<slot name="valueStateMessage" slot="valueStateMessage"></slot>
 			}
-		</NumberInput>
+		</NumericInput>
 	);
 }

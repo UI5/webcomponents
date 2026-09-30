@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>NumberInput test page</title>
+	<title>NumericInput test page</title>
 
 	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
 
@@ -16,31 +16,31 @@
 		}
 	</script>
 
-	<link rel="stylesheet" type="text/css" href="./styles/NumberInput.css">
+	<link rel="stylesheet" type="text/css" href="./styles/NumericInput.css">
 </head>
 <body class="numberinput-page">
-	<h3>NumberInput</h3>
+	<h3>NumericInput</h3>
 	<ui5-label id="myLabelChange">Event [change] :: N/A</ui5-label><br/>
 
 	<div>
-		<h3>NumberInput in Cozy</h3>
-		<ui5-number-input id="numberInputCozy"
+		<h3>NumericInput in Cozy</h3>
+		<ui5-numeric-input id="numberInputCozy"
 			placeholder="Enter number"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div class="sapUiSizeCompact">
-		<h3>NumberInput in Compact</h3>
-		<ui5-number-input id="numberInputCompact"
+		<h3>NumericInput in Compact</h3>
+		<ui5-numeric-input id="numberInputCompact"
 			placeholder="Enter number"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with min=0, max=10 and step=1</h3>
-		<ui5-number-input id="numberInputMinMax"
+		<h3>NumericInput with min=0, max=10 and step=1</h3>
+		<ui5-numeric-input id="numberInputMinMax"
 			placeholder="Enter number"
 			min="0"
 			max="10"
@@ -48,12 +48,12 @@
 			class="numberinput-field"
 		>
 			<div slot="valueStateMessage">Wrong Value</div>
-		</ui5-number-input>
+		</ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with min=0, max=10, step=0.05 and valuePrecision=2</h3>
-		<ui5-number-input id="numberInputPrecision"
+		<h3>NumericInput with min=0, max=10, step=0.05 and valuePrecision=2</h3>
+		<ui5-numeric-input id="numberInputPrecision"
 			placeholder="Enter number"
 			min="0"
 			max="10"
@@ -62,128 +62,128 @@
 			class="numberinput-field"
 		>
 			<div slot="valueStateMessage">Wrong Value</div>
-		</ui5-number-input>
+		</ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>Disabled NumberInput</h3>
-		<ui5-number-input id="numberInputDisabled"
+		<h3>Disabled NumericInput</h3>
+		<ui5-numeric-input id="numberInputDisabled"
 			placeholder="Enter number"
 			class="numberinput-field"
 			disabled
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>Readonly NumberInput</h3>
-		<ui5-number-input id="numberInputReadOnly"
+		<h3>Readonly NumericInput</h3>
+		<ui5-numeric-input id="numberInputReadOnly"
 			placeholder="Enter number"
 			class="numberinput-field"
 			readonly
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueStateChange Prevented</h3>
-		<ui5-number-input id="numberInputValueStateChange"
+		<h3>NumericInput with valueStateChange Prevented</h3>
+		<ui5-numeric-input id="numberInputValueStateChange"
 			placeholder="Enter number"
 			value-state="Negative"
 			class="numberinput-field"
 		>
 			<div slot="valueStateMessage">Value state change is prevented on this input</div>
-		</ui5-number-input>
+		</ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueState=None</h3>
-		<ui5-number-input id="numberInputNone"
+		<h3>NumericInput with valueState=None</h3>
+		<ui5-numeric-input id="numberInputNone"
 			placeholder="Enter number"
 			value-state="None"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueState=Positive</h3>
-		<ui5-number-input id="numberInputSuccess"
+		<h3>NumericInput with valueState=Positive</h3>
+		<ui5-numeric-input id="numberInputSuccess"
 			placeholder="Enter number"
 			value-state="Positive"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueState=Information</h3>
-		<ui5-number-input id="numberInputInformation"
+		<h3>NumericInput with valueState=Information</h3>
+		<ui5-numeric-input id="numberInputInformation"
 			placeholder="Enter number"
 			value-state="Information"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueState=Warning</h3>
-		<ui5-number-input id="numberInputWarning"
+		<h3>NumericInput with valueState=Warning</h3>
+		<ui5-numeric-input id="numberInputWarning"
 			placeholder="Enter number"
 			value-state="Critical"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput with valueState=Negative</h3>
-		<ui5-number-input id="numberInputError"
+		<h3>NumericInput with valueState=Negative</h3>
+		<ui5-numeric-input id="numberInputError"
 			placeholder="Enter number"
 			value-state="Negative"
 			class="numberinput-field"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<div>
-		<h3>NumberInput change event test (linked inputs)</h3>
-		<ui5-number-input id="numberInputChange1"
+		<h3>NumericInput change event test (linked inputs)</h3>
+		<ui5-numeric-input id="numberInputChange1"
 			class="numberinput-field"
 			value="1"
 			min="1"
 			step="1000"
-		></ui5-number-input>
-		<ui5-number-input id="numberInputChange2"
+		></ui5-numeric-input>
+		<ui5-numeric-input id="numberInputChange2"
 			class="numberinput-field"
 			value="1000"
 			min="1"
 			step="1000"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</div>
 
 	<h3>'input' event prevented</h3>
-	<ui5-number-input id="numberInputPreventedInput"
+	<ui5-numeric-input id="numberInputPreventedInput"
 		class="numberinput-field"
-	></ui5-number-input>
+	></ui5-numeric-input>
 
 	<h3>'change' event count</h3>
 	<ui5-input id="changeResult"></ui5-input>
 
 	<div>
-		<h3>NumberInput with large value and precision (thousands separator)</h3>
-		<ui5-number-input
+		<h3>NumericInput with large value and precision (thousands separator)</h3>
+		<ui5-numeric-input
 			class="numberinput-field"
 			value="10000"
 			value-precision="2">
-		</ui5-number-input>
+		</ui5-numeric-input>
 	</div>
 
 	<section>
 		<h3>Form validation</h3>
 		<form id="formValidation">
 			<ui5-message-strip id="formValidationMessage" hidden></ui5-message-strip>
-			<ui5-number-input
+			<ui5-numeric-input
 				min="5"
 				max="10"
 				step="0.05"
 				value-precision="2"
 				required
-				id="formNumberInput">
-			</ui5-number-input>
+				id="formNumericInput">
+			</ui5-numeric-input>
 			<ui5-button id="btnCheckFormValidity">Check Validity</ui5-button>
 		</form>
 	</section>
@@ -191,12 +191,12 @@
 	<h3>Accessibility</h3>
 	<section>
 		<ui5-label for="numberInputLabel">Quantity:</ui5-label>
-		<ui5-number-input id="numberInputLabel"
+		<ui5-numeric-input id="numberInputLabel"
 			value="3"
 			min="0"
 			max="10"
 			step="1"
-		></ui5-number-input>
+		></ui5-numeric-input>
 	</section>
 
 	<script>
@@ -238,15 +238,15 @@
 
 		const btnCheckFormValidity = document.getElementById('btnCheckFormValidity');
 		const formValidationMessage = document.getElementById('formValidationMessage');
-		const formNumberInput = document.getElementById('formNumberInput');
+		const formNumericInput = document.getElementById('formNumericInput');
 
 		btnCheckFormValidity.addEventListener('click', function() {
-			checkFormValidity('formNumberInput');
+			checkFormValidity('formNumericInput');
 		});
 
-		formNumberInput.addEventListener('change', function() {
+		formNumericInput.addEventListener('change', function() {
 			setTimeout(() => {
-				checkFormValidity('formNumberInput', true);
+				checkFormValidity('formNumericInput', true);
 			}, 0);
 		});
 

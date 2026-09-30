@@ -3,7 +3,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRender from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
-import { isPhone, supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
+import { isDesktop, isPhone, supportsTouch } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import {
 	isEscape, isHome, isEnd, isUp, isDown, isRight, isLeft, isUpCtrl, isDownCtrl, isRightCtrl, isLeftCtrl, isPlus, isMinus, isPageUp, isPageDown, isF2,
@@ -296,6 +296,9 @@ abstract class SliderBase extends UI5Element {
 	}
 
 	onEnterDOM() {
+		if (isDesktop()) {
+			this.setAttribute("desktop", "");
+		}
 		ResizeHandler.register(this, this._resizeHandler);
 	}
 
@@ -798,6 +801,10 @@ abstract class SliderBase extends UI5Element {
 
 	get _tabIndex() {
 		return this.disabled ? -1 : 0;
+	}
+
+	get _isDesktop() {
+		return isDesktop();
 	}
 
 	get _ariaDescribedByHandleText() {
