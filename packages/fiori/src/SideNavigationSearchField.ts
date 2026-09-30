@@ -129,15 +129,6 @@ class SideNavigationSearchField extends UI5Element {
 	accessibleDescriptionRef?: string;
 
 	/**
-	 * Receives id (or many ids) of the elements that are controlled by this control,
-	 * as described by the WAI-ARIA attribute `aria-controls`.
-	 * @public
-	 * @default undefined
-	 */
-	@property()
-	ariaControls?: string;
-
-	/**
 	 * Constantly updated value of the texts collected from the accessibleNameRef elements.
 	 * @private
 	 */
@@ -218,7 +209,6 @@ class SideNavigationSearchField extends UI5Element {
 		return {
 			ariaLabel: this._ariaLabelText,
 			ariaDescription: this._ariaDescriptionText,
-			ariaControls: this.ariaControls,
 		};
 	}
 
