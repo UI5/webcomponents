@@ -717,10 +717,22 @@ class Popover extends Popup {
 
 		// correct popover positions
 		if (isVertical) {
-			if (popoverSize.width > clientWidth || left < Popover.VIEWPORT_MARGIN) {
+			if (popoverSize.width > clientWidth) {
 				left = Popover.VIEWPORT_MARGIN;
+			} else if (left < Popover.VIEWPORT_MARGIN) {
+				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
+					// Overflow left with right-edge alignment (RTL + Start): flip to left-edge alignment with opener
+					left = Math.min(targetRect.left, clientWidth - Popover.VIEWPORT_MARGIN - popoverSize.width);
+				} else {
+					left = Popover.VIEWPORT_MARGIN;
+				}
 			} else if (left + popoverSize.width > clientWidth - Popover.VIEWPORT_MARGIN) {
-				left = clientWidth - Popover.VIEWPORT_MARGIN - popoverSize.width;
+				if (this._actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
+					// Overflow right with left-edge alignment (LTR + Start): flip to right-edge alignment with opener
+					left = Math.max(targetRect.right - popoverSize.width, Popover.VIEWPORT_MARGIN);
+				} else {
+					left = clientWidth - Popover.VIEWPORT_MARGIN - popoverSize.width;
+				}
 			}
 		} else {
 			if (popoverSize.height > clientHeight || top < Popover.VIEWPORT_MARGIN) { // eslint-disable-line
