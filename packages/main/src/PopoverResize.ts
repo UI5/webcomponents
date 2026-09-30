@@ -1,8 +1,10 @@
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
-import { isUpShift, isDownShift, isLeftShift, isRightShift } from "@ui5/webcomponents-base/dist/Keys.js";
+import {
+	isUpShift, isDownShift, isLeftShift, isRightShift,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import type Popover from "./Popover.js";
-import { PopoverActualPlacement } from "./Popover.js";
+import { PopoverActualPlacement, PopoverActualHorizontalAlign } from "./Popover.js";
 
 const STEP_SIZE = 16;
 
@@ -138,43 +140,56 @@ class PopoverResize {
 
 		const offset = 2;
 		const isRtl = popover.isRtl;
+		const actualHorizontalAlign = popover._actualHorizontalAlign;
 
 		const openerRect = opener.getBoundingClientRect();
 		const popoverWrapperRect = popover.getBoundingClientRect();
 
-		let openerCX = Math.floor(openerRect.x + openerRect.width / 2);
+		const openerCX = Math.floor(openerRect.x + openerRect.width / 2);
 		const openerCY = Math.floor(openerRect.y + openerRect.height / 2);
-
-		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
+		const popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
 		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
 
-		if (isRtl) {
-			openerCX = -openerCX;
-			popoverCX = -popoverCX;
-		}
+		const actualPlacement = popover.getActualPlacement(openerRect);
 
-		switch (popover.getActualPlacement(openerRect)) {
+		switch (actualPlacement) {
 		case PopoverActualPlacement.Left:
-			if (popoverCY > openerCY + offset) {
-				return ResizeHandlePlacement.BottomLeft;
+		case PopoverActualPlacement.Right: {
+			const isRight = actualPlacement === PopoverActualPlacement.Right;
+			let isBottom: boolean;
+			if (popover.verticalAlign === "Top") {
+				isBottom = true;
+			} else if (popover.verticalAlign === "Bottom") {
+				isBottom = false;
+			} else {
+				// Right placement defaults to BottomRight, Left placement defaults to TopLeft.
+				// Achieved by flipping the bias based on direction.
+				isBottom = popoverCY + (isRight ? offset : -offset) >= openerCY;
 			}
-			return ResizeHandlePlacement.TopLeft;
-		case PopoverActualPlacement.Right:
-			if (popoverCY + offset < openerCY) {
-				return ResizeHandlePlacement.TopRight;
+			if (isBottom) {
+				return isRight ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
 			}
-			return ResizeHandlePlacement.BottomRight;
+			return isRight ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
+		}
 		case PopoverActualPlacement.Bottom:
-			if (popoverCX + offset < openerCX) {
-				return ResizeHandlePlacement.BottomLeft;
-			}
-			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
-		default:
-			if (popoverCX + offset < openerCX) {
-				return ResizeHandlePlacement.TopLeft;
+		default: {
+			const isTop = actualPlacement === PopoverActualPlacement.Top;
+			let isRight: boolean;
+			if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
+				isRight = true;
+			} else if (actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
+				isRight = false;
+			} else {
+				// Center/Stretch: flip result in RTL so the handle is at the visual Start corner
+				const centeredIsRight = !(popoverCX + offset < openerCX);
+				isRight = isRtl ? !centeredIsRight : centeredIsRight;
 			}
-			return ResizeHandlePlacement.TopRight;
+			if (isTop) {
+				return isRight ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
+			}
+			return isRight ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
+		}
 		}
 	}
 
