@@ -64,6 +64,9 @@
 	white-space: normal;
 	min-width: 0;
 	max-width: var(--_ui5_shellbar_branding_title_max_width, none);
+	/* Remove overflow:hidden when wrapping — line-clamp clipping cuts descenders on the last
+	   line; with at most 2 lines the clamp ellipsis is never needed anyway. */
+	overflow: visible;
 }
 
 .ui5-shellbar-logo {

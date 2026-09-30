@@ -365,9 +365,15 @@ slot[name="profile"] {
 
 .ui5-shellbar-overflow-branding {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 0.125rem;
 	min-height: 2.5rem;
+	/* Grow to the content width so the hover/active background spans the full horizontal
+	   scroll width when the logo is wider than the popover. */
+	width: max-content;
+	min-width: 100%;
 	/* Align the branding row inset with the List items below it */
 	padding: 0.25rem 1rem;
 	box-sizing: border-box;
@@ -401,6 +407,9 @@ slot[name="profile"] {
 	white-space: normal;
 	word-break: break-word;
 	min-width: 0;
+	/* 16rem matches the overflow popover width (20rem) minus its horizontal padding,
+	   so the title wraps naturally without stretching the popover. */
+	max-width: 16rem;
 }
 
 .ui5-shellbar-overflow-branding-separator {
