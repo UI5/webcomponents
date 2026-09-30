@@ -38,9 +38,28 @@ function afterContent(this: Popover) {
 		{this._showResizeHandle &&
 			<div class="ui5-popover-resize-handle"
 				 onMouseDown={this._onResizeMouseDown}
+				 title={this._resizeHandleTooltip}
 			>
 				<Icon name={resizeCorner} />
 			</div>
+		}
+
+		{this._showResizeHandle &&
+			<>
+				<span
+					id={`${this._id}-resizeHandler`}
+					class="ui5-popup-drag-resize-handler ui5-hidden-text"
+					tabIndex={0}
+					role="img"
+					aria-label={this._resizeHandleAriaLabel}
+					aria-roledescription={this._resizeHandleAriaRoleDescription}
+					aria-describedby={this._resizeHandleAriaDescribedBy}
+					onKeyDown={this._onResizeKeyDown}
+				></span>
+				{this._resizeHandleAriaDescribedByText &&
+					<span id={`${this._id}-resizeDescr`} aria-hidden="true" class="ui5-hidden-text">{this._resizeHandleAriaDescribedByText}</span>
+				}
+			</>
 		}
 	</>);
 }

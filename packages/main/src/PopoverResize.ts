@@ -1,8 +1,10 @@
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
+import { isUpShift, isDownShift, isLeftShift, isRightShift } from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import type Popover from "./Popover.js";
-import { PopoverActualPlacement, PopoverActualHorizontalAlign } from "./Popover.js";
-import PopoverVerticalAlign from "./types/PopoverVerticalAlign.js";
+import { PopoverActualPlacement } from "./Popover.js";
+
+const STEP_SIZE = 16;
 
 enum ResizeHandlePlacement {
 	TopLeft = "TopLeft",
@@ -39,6 +41,14 @@ class PopoverResize {
 	_totalDeltaX?: number;
 	_totalDeltaY?: number;
 
+	// Anchor edges captured on the first keyboard resize keypress.
+	// Using a stored constant prevents the dynamic minimum from oscillating
+	// due to sub-pixel rendering changes across key presses.
+	_keyboardAnchorBottom?: number;
+	_keyboardAnchorTop?: number;
+	_keyboardAnchorLeft?: number;
+	_keyboardAnchorRight?: number;
+
 	constructor(popover: Popover) {
 		this._popover = popover;
 		this._resizeMouseMoveHandler = this._onResizeMouseMove.bind(this);
@@ -60,6 +70,11 @@ class PopoverResize {
 
 		delete this._totalDeltaX;
 		delete this._totalDeltaY;
+
+		delete this._keyboardAnchorBottom;
+		delete this._keyboardAnchorTop;
+		delete this._keyboardAnchorLeft;
+		delete this._keyboardAnchorRight;
 	}
 
 	/**
@@ -74,7 +89,7 @@ class PopoverResize {
 	 */
 	getCorrectedLeft(left: number): number {
 		if (this.isResized) {
-			left -= this._currentDeltaX || 0;
+			left -= this._currentDeltaX ?? 0;
 		}
 
 		return left;
@@ -85,7 +100,7 @@ class PopoverResize {
 	 */
 	getCorrectedTop(top: number): number {
 		if (this.isResized) {
-			top -= this._currentDeltaY || 0;
+			top -= this._currentDeltaY ?? 0;
 		}
 
 		return top;
@@ -133,12 +148,6 @@ class PopoverResize {
 		let popoverCX = Math.floor(popoverWrapperRect.x + popoverWrapperRect.width / 2);
 		const popoverCY = Math.floor(popoverWrapperRect.y + popoverWrapperRect.height / 2);
 
-		const verticalAlign = popover.verticalAlign;
-		const actualHorizontalAlign = popover._actualHorizontalAlign;
-
-		const isPopoverWidthBiggerThanOpener = popoverWrapperRect.width > openerRect.width;
-		const isPopoverHeightBiggerThanOpener = popoverWrapperRect.height > openerRect.height;
-
 		if (isRtl) {
 			openerCX = -openerCX;
 			popoverCX = -popoverCX;
@@ -146,77 +155,25 @@ class PopoverResize {
 
 		switch (popover.getActualPlacement(openerRect)) {
 		case PopoverActualPlacement.Left:
-			if (isPopoverHeightBiggerThanOpener) {
-				if (popoverCY > openerCY + offset) {
-					return ResizeHandlePlacement.BottomLeft;
-				}
-
-				return ResizeHandlePlacement.TopLeft;
-			}
-
-			if (verticalAlign === PopoverVerticalAlign.Top) {
+			if (popoverCY > openerCY + offset) {
 				return ResizeHandlePlacement.BottomLeft;
 			}
-
 			return ResizeHandlePlacement.TopLeft;
 		case PopoverActualPlacement.Right:
-			if (isPopoverHeightBiggerThanOpener) {
-				if (popoverCY + offset < openerCY) {
-					return ResizeHandlePlacement.TopRight;
-				}
-
-				return ResizeHandlePlacement.BottomRight;
-			}
-
-			if (verticalAlign === PopoverVerticalAlign.Bottom) {
+			if (popoverCY + offset < openerCY) {
 				return ResizeHandlePlacement.TopRight;
 			}
-
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Bottom:
-			if (isPopoverWidthBiggerThanOpener) {
-				if (popoverCX + offset < openerCX) {
-					return isRtl ? ResizeHandlePlacement.BottomRight : ResizeHandlePlacement.BottomLeft;
-				}
-
-				return isRtl ? ResizeHandlePlacement.BottomLeft : ResizeHandlePlacement.BottomRight;
-			}
-
-			if (isRtl) {
-				if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
-					return ResizeHandlePlacement.BottomRight;
-				}
-
+			if (popoverCX + offset < openerCX) {
 				return ResizeHandlePlacement.BottomLeft;
 			}
-
-			if (actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
-				return ResizeHandlePlacement.BottomLeft;
-			}
-
 			return ResizeHandlePlacement.BottomRight;
 		case PopoverActualPlacement.Top:
 		default:
-			if (isPopoverWidthBiggerThanOpener) {
-				if (popoverCX + offset < openerCX) {
-					return isRtl ? ResizeHandlePlacement.TopRight : ResizeHandlePlacement.TopLeft;
-				}
-
-				return isRtl ? ResizeHandlePlacement.TopLeft : ResizeHandlePlacement.TopRight;
-			}
-
-			if (isRtl) {
-				if (actualHorizontalAlign === PopoverActualHorizontalAlign.Left) {
-					return ResizeHandlePlacement.TopRight;
-				}
-
+			if (popoverCX + offset < openerCX) {
 				return ResizeHandlePlacement.TopLeft;
 			}
-
-			if (actualHorizontalAlign === PopoverActualHorizontalAlign.Right) {
-				return ResizeHandlePlacement.TopLeft;
-			}
-
 			return ResizeHandlePlacement.TopRight;
 		}
 	}
@@ -244,12 +201,10 @@ class PopoverResize {
 			maxHeight,
 		} = window.getComputedStyle(this._popover);
 
-		const domRefComputedStyle = window.getComputedStyle(this._popover);
-
 		this._initialClientX = e.clientX;
 		this._initialClientY = e.clientY;
 
-		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
+		this._minWidth = Number.parseFloat(minWidth);
 		this._minHeight = Number.parseFloat(minHeight);
 
 		const viewportMargin = this._popover._viewportMargin;
@@ -403,6 +358,118 @@ class PopoverResize {
 		delete this._maxHeight;
 
 		this._detachMouseResizeHandlers();
+	}
+
+	/**
+	 * Handles keyboard resize via Shift+Arrow keys.
+	 * Direction is handle-corner-aware: the arrow moves the free edge (the edge where the handle is).
+	 * Right handle: Shift+Right grows, Shift+Left shrinks.
+	 * Left handle: Shift+Left grows, Shift+Right shrinks.
+	 * Bottom handle: Shift+Down grows, Shift+Up shrinks.
+	 * Top handle: Shift+Up grows, Shift+Down shrinks.
+	 */
+	onResizeKeyDown(e: KeyboardEvent) {
+		if (!isUpShift(e) && !isDownShift(e) && !isLeftShift(e) && !isRightShift(e)) {
+			return;
+		}
+
+		e.preventDefault();
+
+		const popover = this._popover;
+		const openerRect = popover._openerRect;
+		if (!openerRect) {
+			return;
+		}
+
+		this._resized = true;
+
+		const handlePlacement = this.getResizeHandlePlacement();
+		const isRightHandle = handlePlacement === ResizeHandlePlacement.TopRight
+			|| handlePlacement === ResizeHandlePlacement.BottomRight;
+		const isTopHandle = handlePlacement === ResizeHandlePlacement.TopLeft
+			|| handlePlacement === ResizeHandlePlacement.TopRight;
+
+		const rect = popover.getBoundingClientRect();
+		const style = window.getComputedStyle(popover);
+		const minWidth = Number.parseFloat(style.minWidth);
+		const minHeight = Number.parseFloat(style.minHeight);
+		const margin = popover._viewportMargin;
+
+		let widthStep = 0;
+		let heightStep = 0;
+
+		if (isLeftShift(e) || isRightShift(e)) {
+			widthStep = (isRightShift(e) === isRightHandle) ? STEP_SIZE : -STEP_SIZE;
+		} else {
+			heightStep = (isUpShift(e) === isTopHandle) ? STEP_SIZE : -STEP_SIZE;
+		}
+
+		// Freeze all 4 edges on the first keypress — used for viewport max and opener min constraints.
+		this._keyboardAnchorLeft ??= rect.left;
+		this._keyboardAnchorRight ??= rect.right;
+		this._keyboardAnchorTop ??= rect.top;
+		this._keyboardAnchorBottom ??= rect.bottom;
+
+		const maxWidth = isRightHandle
+			? window.innerWidth - this._keyboardAnchorLeft - margin
+			: this._keyboardAnchorRight - margin;
+		const maxHeight = isTopHandle
+			? this._keyboardAnchorBottom - margin
+			: window.innerHeight - this._keyboardAnchorTop - margin;
+
+		// Dynamic minimum: the free edge must not cross the opener's far edge.
+		// Skipped when the opener is already larger than the popover so shrinking still works.
+		const constrainedMinWidth = widthStep !== 0
+			? Math.max(0, isRightHandle
+				? Math.ceil(openerRect.right - this._keyboardAnchorLeft)
+				: Math.ceil(this._keyboardAnchorRight - openerRect.left))
+			: 0;
+		const effectiveMinWidth = widthStep !== 0
+			? Math.max(minWidth, constrainedMinWidth <= rect.width ? constrainedMinWidth : 0)
+			: minWidth;
+
+		const constrainedMinHeight = heightStep !== 0
+			? Math.max(0, isTopHandle
+				? Math.ceil(this._keyboardAnchorBottom - openerRect.top)
+				: Math.ceil(openerRect.bottom - this._keyboardAnchorTop))
+			: 0;
+		const effectiveMinHeight = heightStep !== 0
+			? Math.max(minHeight, constrainedMinHeight <= rect.height ? constrainedMinHeight : 0)
+			: minHeight;
+
+		const newWidth = widthStep !== 0
+			? clamp(rect.width + widthStep, effectiveMinWidth, maxWidth)
+			: rect.width;
+		const newHeight = heightStep !== 0
+			? clamp(rect.height + heightStep, effectiveMinHeight, maxHeight)
+			: rect.height;
+
+		if (Math.abs(newWidth - rect.width) < 1 && Math.abs(newHeight - rect.height) < 1) {
+			return;
+		}
+
+		const actualWidthChange = newWidth - rect.width;
+		const actualHeightChange = newHeight - rect.height;
+
+		// Update deltas BEFORE calcPlacement so getCorrectedLeft/Top feeds the anchor-based
+		// position into calcPlacement's viewport-clamping and placement-flip decisions.
+		if (widthStep !== 0) {
+			this._currentDeltaX = (this._currentDeltaX ?? 0) + (isRightHandle ? -actualWidthChange / 2 : actualWidthChange / 2);
+		}
+		if (heightStep !== 0) {
+			this._currentDeltaY = (this._currentDeltaY ?? 0) + (isTopHandle ? actualHeightChange / 2 : -actualHeightChange / 2);
+		}
+
+		const placement = popover.calcPlacement(openerRect, { width: newWidth, height: newHeight });
+		popover.arrowTranslateX = placement.arrow.x;
+		popover.arrowTranslateY = placement.arrow.y;
+
+		Object.assign(popover.style, {
+			left: `${placement.left}px`,
+			top: `${placement.top}px`,
+			width: `${newWidth}px`,
+			height: `${newHeight}px`,
+		});
 	}
 
 	/**
