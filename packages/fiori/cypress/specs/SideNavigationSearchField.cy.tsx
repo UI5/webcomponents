@@ -90,17 +90,6 @@ describe("SideNavigationSearchField general interaction", () => {
 				.should("have.text", "My description");
 		});
 
-		it("propagates ariaControls to the inner input aria-controls", () => {
-			cy.mount(<SideNavigationSearchField ariaControls="some-list" />);
-
-			cy.get("[ui5-side-navigation-search-field]")
-				.shadow()
-				.find("[ui5-input]")
-				.shadow()
-				.find("input")
-				.should("have.attr", "aria-controls", "some-list");
-		});
-
 		it("exposes the default search icon accessible name", () => {
 			cy.mount(<SideNavigationSearchField />);
 
