@@ -877,13 +877,14 @@ class ComboBox extends UI5Element implements IFormInputElement {
 
 		this._clearFocus();
 
+		this._loadingDelegate.fireOnInput();
+
 		// autocomplete
-		if (shouldAutocomplete && !this._isComposing && !isAndroid()) {
+		if (shouldAutocomplete && !this._isComposing && !isAndroid() && !this.loading) {
 			this._handleTypeAhead(value, value);
 		}
 
 		this.fireDecoratorEvent("input");
-		this._loadingDelegate.fireOnInput();
 
 		if (isPhone()) {
 			return;

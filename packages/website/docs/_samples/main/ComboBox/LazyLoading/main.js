@@ -40,14 +40,14 @@ cb.addEventListener("load-items", async (e) => {
     const { signal } = abortController;
 
     cb.loading = true;
-
+    cb.innerHTML = "";
     if(reason !== "open"){
         cb.open = true;
     }
 
     try {
         const matches = await fetchCountries(value, signal);
-        cb.innerHTML = "";
+        
         matches.forEach(country => {
             const item = document.createElement("ui5-cb-item");
             item.setAttribute("text", country);
