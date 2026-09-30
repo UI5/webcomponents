@@ -1982,6 +1982,27 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		return stylesObject;
 	}
 
+	get _suggestionsPopoverHorizontalAlign(): "Start" | "End" {
+		const rect = this.getBoundingClientRect();
+		if (rect.width === 0) {
+			return "Start";
+		}
+		const clientWidth = document.documentElement.clientWidth;
+		// Flip when there is more space to the left of the input than to the right,
+		// i.e. the input's centre is past the viewport midpoint.
+		const moreSpaceOnLeft = rect.right > clientWidth - rect.left;
+
+		if (this.effectiveDir === "rtl") {
+			// RTL: Start = right-edge anchored (good when near the right / more space on left).
+			// Flip to End (left-edge) when the input is near the left / more space on the right.
+			return moreSpaceOnLeft ? "Start" : "End";
+		}
+
+		// LTR: Start = left-edge anchored (good when near the left / more space on right).
+		// Flip to End (right-edge) when the input is near the right / more space on left.
+		return moreSpaceOnLeft ? "End" : "Start";
+	}
+
 	get suggestionSeparators() {
 		return "None" as const;
 	}

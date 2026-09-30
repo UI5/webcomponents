@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Input Suggestions Popover Horizontal Align POC</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 1rem;
+			background-color: var(--sapBackgroundColor);
+			font-family: var(--sapFontFamily);
+		}
+
+		h2 {
+			color: var(--sapTextColor);
+			margin: 1.5rem 0 0.25rem;
+		}
+
+		p {
+			color: var(--sapContent_LabelColor);
+			margin: 0 0 0.75rem;
+			font-size: 0.875rem;
+		}
+
+		.full-width-row {
+			display: flex;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.push-right { margin-left: auto; }
+		.push-left  { margin-right: auto; }
+
+		.hint {
+			display: block;
+			margin-top: 0.25rem;
+			font-size: 0.75rem;
+			color: var(--sapContent_LabelColor);
+		}
+
+		ui5-input { width: 16rem; }
+	</style>
+</head>
+
+<body>
+
+	<!-- ── 1. LTR baseline ──────────────────────────────────────── -->
+	<h2>1 — Input at the left (LTR baseline, no flip)</h2>
+	<p>Dropdown opens left-aligned with the input. No overflow expected.</p>
+	<ui5-input id="input-left" show-suggestions placeholder="Type 'a' for suggestions…"></ui5-input>
+	<span class="hint">↳ Dropdown left edge = input left edge</span>
+
+	<!-- ── 2. LTR right edge ────────────────────────────────────── -->
+	<h2>2 — Input at the right edge (LTR, flip expected)</h2>
+	<p>
+		Input is at the viewport's right edge. <code>_suggestionsPopoverHorizontalAlign</code>
+		should return <code>"End"</code> so the dropdown's right edge aligns with the input's right edge.
+	</p>
+	<div class="full-width-row">
+		<ui5-input id="input-right" class="push-right" show-suggestions placeholder="Type 'a' for suggestions…"></ui5-input>
+	</div>
+	<div class="full-width-row">
+		<span class="hint push-right">↳ Dropdown right edge = input right edge</span>
+	</div>
+
+	<!-- ── 3. RTL left edge ─────────────────────────────────────── -->
+	<h2>5 — Input at the left edge (RTL, flip expected)</h2>
+	<p>
+		In RTL, <code>Start</code> anchors the dropdown's right edge to the opener's right edge,
+		which overflows left when the input is near the left edge of the viewport.
+		The getter should return <code>"End"</code> (left-edge alignment).
+	</p>
+	<div dir="rtl">
+		<div class="full-width-row">
+			<ui5-input id="input-rtl-left" class="push-left" show-suggestions placeholder="הקלד 'א' להצעות…"></ui5-input>
+		</div>
+		<span class="hint push-left">↳ Dropdown left edge = input left edge</span>
+
+		<h2 style="margin-top: 1rem;">6 — Input at the right edge (RTL baseline, no flip)</h2>
+		<p>Right edge in RTL = natural start position. No overflow, no flip.</p>
+		<div class="full-width-row">
+			<ui5-input id="input-rtl-right" show-suggestions placeholder="הקלד 'א' להצעות…"></ui5-input>
+		</div>
+	</div>
+
+	<!-- ── 4. Dialog ────────────────────────────────────────────── -->
+	<h2>7 — Input inside a Dialog, at the right edge</h2>
+	<p>
+		The dialog is wide enough that the right-side input's left edge is past the flip threshold.
+		<code>getBoundingClientRect()</code> is viewport-relative so the same getter logic applies.
+	</p>
+	<ui5-button id="open-dialog-btn">Open Dialog</ui5-button>
+
+	<ui5-dialog id="dialog" header-text="Input suggestions in Dialog" style="min-width: 28rem;">
+		<div style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; box-sizing: border-box; width: 100%;">
+			<ui5-label>Left-side input (no flip):</ui5-label>
+			<ui5-input id="dialog-input-left" show-suggestions placeholder="Type 'a' for suggestions…">
+				<ui5-suggestion-item text="Alabama — Heart of Dixie, Gulf Coast State"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Alaska — The Last Frontier, Land of the Midnight Sun"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Arizona — The Grand Canyon State, Copper State"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Arkansas — The Natural State, Land of Opportunity"></ui5-suggestion-item>
+				<ui5-suggestion-item text="California — The Golden State, Land of Milk and Honey"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Colorado — The Centennial State, Colorful Colorado"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Connecticut — The Constitution State, Nutmeg State"></ui5-suggestion-item>
+			</ui5-input>
+
+			<ui5-label>Right-side input (flip expected):</ui5-label>
+			<div style="display: flex; width: 100%;">
+				<ui5-input id="dialog-input-right" style="margin-left: auto;" show-suggestions placeholder="Type 'a' for suggestions…">
+					<ui5-suggestion-item text="Alabama — Heart of Dixie, Gulf Coast State"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Alaska — The Last Frontier, Land of the Midnight Sun"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Arizona — The Grand Canyon State, Copper State"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Arkansas — The Natural State, Land of Opportunity"></ui5-suggestion-item>
+					<ui5-suggestion-item text="California — The Golden State, Land of Milk and Honey"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Colorado — The Centennial State, Colorful Colorado"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Connecticut — The Constitution State, Nutmeg State"></ui5-suggestion-item>
+				</ui5-input>
+			</div>
+		</div>
+		<div slot="footer" style="display: flex; justify-content: flex-end; padding: 0.25rem;">
+			<ui5-button id="close-dialog-btn">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<script>
+		const suggestions = [
+			"Alabama — Heart of Dixie, Gulf Coast State",
+			"Alaska — The Last Frontier, Land of the Midnight Sun",
+			"Arizona — The Grand Canyon State, Copper State",
+			"Arkansas — The Natural State, Land of Opportunity",
+			"California — The Golden State, Land of Milk and Honey",
+			"Colorado — The Centennial State, Colorful Colorado",
+			"Connecticut — The Constitution State, Nutmeg State",
+		];
+
+		["input-left", "input-right", "input-rtl-left", "input-rtl-right"].forEach(id => {
+			const input = document.getElementById(id);
+			input.addEventListener("ui5-input", () => {
+				input.innerHTML = "";
+				const val = input.value.toLowerCase();
+				suggestions
+					.filter(s => s.toLowerCase().startsWith(val))
+					.forEach(text => {
+						const item = document.createElement("ui5-suggestion-item");
+						item.setAttribute("text", text);
+						input.appendChild(item);
+					});
+			});
+		});
+
+		document.getElementById("open-dialog-btn").addEventListener("ui5-click", () => {
+			document.getElementById("dialog").open = true;
+		});
+		document.getElementById("close-dialog-btn").addEventListener("ui5-click", () => {
+			document.getElementById("dialog").open = false;
+		});
+	</script>
+
+</body>
+</html>
