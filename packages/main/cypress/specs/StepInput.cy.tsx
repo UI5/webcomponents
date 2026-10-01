@@ -1,5 +1,6 @@
 import StepInput from "../../src/StepInput.js";
 import type NumericInput from "../../src/NumericInput.js";
+import Input from "../../src/Input.js";
 
 const decreaseValue = true;
 
@@ -200,6 +201,37 @@ describe("StepInput button interaction tests", () => {
 			.shadow()
 			.find(".ui5-step-inc [ui5-icon]")
 			.should("not.have.class", "ui5-numeric-input-icon--clickable");
+	});
+
+	it("applies disabled opacity only once, matching Input", () => {
+		cy.mount(
+			<>
+				<Input id="referenceInput" disabled value="5"></Input>
+				<StepInput disabled value={5}></StepInput>
+			</>
+		);
+
+		cy.get("#referenceInput").invoke("css", "opacity").then(referenceOpacity => {
+			cy.get("[ui5-step-input]")
+				.shadow()
+				.find("[ui5-numeric-input]")
+				.should($numericInput => {
+					const numericInput = $numericInput[0];
+					const input = numericInput.shadowRoot!.querySelector("[ui5-input]")!;
+					const opacity = Number(getComputedStyle(numericInput).opacity) * Number(getComputedStyle(input).opacity);
+
+					expect(opacity).to.equal(Number(referenceOpacity));
+				});
+		});
+
+		cy.get("[ui5-step-input]")
+			.shadow()
+			.find("[ui5-numeric-input]")
+			.shadow()
+			.find("[ui5-input]")
+			.shadow()
+			.find("input")
+			.should("be.disabled");
 	});
 
 	it("should not round value when 'valuePrecision' is set", () => {
