@@ -1,7 +1,12 @@
 import { customElement, property } from "@ui5/webcomponents-base/dist/decorators.js";
 import TableSelectionBase from "./TableSelectionBase.js";
 import RadioButton from "./RadioButton.js";
+import type { VNode } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
 import type TableRow from "./TableRow.js";
+import type TableRowBase from "./TableRowBase.js";
+import {
+	TABLE_ROW_SELECTOR,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -49,8 +54,18 @@ class TableSelectionSingle extends TableSelectionBase {
 		return rowKey ? this.selected === rowKey : false;
 	}
 
-	getSelectionComponent(): typeof RadioButton {
-		return RadioButton;
+	renderRowSelectionCell(row: TableRow): VNode {
+		const i18nBundle = (row.constructor as typeof TableRowBase).i18nBundle;
+		return <RadioButton id="selection-component"
+			tabindex={-1}
+			checked={this.isSelected(row)}
+			onChange={() => this._onRowSelectionChange(row)}
+			accessibleName={i18nBundle.getText(TABLE_ROW_SELECTOR)}
+		></RadioButton>;
+	}
+
+	renderHeaderSelectionCell(): undefined {
+		return undefined;
 	}
 
 	setSelected(row: TableRow, selected: boolean, fireEvent: boolean = false) {

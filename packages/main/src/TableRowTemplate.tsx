@@ -2,7 +2,6 @@ import TableCell from "./TableCell.js";
 import type TableRow from "./TableRow.js";
 
 export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 1) {
-	const SelectionComponent = this._selectionComponent;
 	const OverflowButton = this._overflowButtonComponent;
 	return (
 		<>
@@ -14,14 +13,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 					data-ui5-table-selection-cell
 					data-ui5-acc-text=""
 				>
-					{ SelectionComponent &&
-						<SelectionComponent id="selection-component"
-							tabindex={-1}
-							checked={this._isSelected}
-							onChange={this._onSelectionChange}
-							accessibleName={this._i18nRowSelector}
-						></SelectionComponent>
-					}
+					{ this._tableSelection!.renderRowSelectionCell(this) }
 				</TableCell>
 			}
 
