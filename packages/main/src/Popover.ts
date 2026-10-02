@@ -4,6 +4,8 @@ import type UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot-strict.js";
+import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isIOS } from "@ui5/webcomponents-base/dist/Device.js";
 import { isClickInRect, getClosedPopupParent } from "@ui5/webcomponents-base/dist/util/PopupUtils.js";
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
@@ -16,6 +18,12 @@ import PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import { addOpenedPopover, removeOpenedPopover } from "./popup-utils/PopoverRegistry.js";
 import PopoverResize from "./PopoverResize.js";
 import type { ResizeHandlePlacement } from "./PopoverResize.js";
+import {
+	POPOVER_RESIZE_HANDLE_ARIA_LABEL,
+	POPOVER_HANDLE_ARIA_ROLEDESCRIPTION,
+	POPOVER_ARIA_DESCRIBEDBY_RESIZABLE,
+	POPOVER_RESIZE_HANDLE_TOOLTIP,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Template
 import PopoverTemplate from "./PopoverTemplate.js";
@@ -103,6 +111,10 @@ type CalculatedPlacement = {
 })
 class Popover extends Popup {
 	eventDetails!: Popup["eventDetails"];
+
+	@i18n("@ui5/webcomponents")
+	static i18nBundle: I18nBundle;
+
 	/**
 	 * Defines the header text.
 	 *
@@ -1017,9 +1029,51 @@ class Popover extends Popup {
 		return this._resizeHandlePlacement;
 	}
 
+	get _resizeHandleAriaLabel() {
+		return Popover.i18nBundle.getText(POPOVER_RESIZE_HANDLE_ARIA_LABEL);
+	}
+
+	get _resizeHandleAriaRoleDescription() {
+		return Popover.i18nBundle.getText(POPOVER_HANDLE_ARIA_ROLEDESCRIPTION);
+	}
+
+	get _resizeHandleAriaDescribedBy() {
+		return this._showResizeHandle ? `${this._id}-resizeDescr` : undefined;
+	}
+
+	get _resizeHandleAriaDescribedByText() {
+		return this._showResizeHandle ? Popover.i18nBundle.getText(POPOVER_ARIA_DESCRIBEDBY_RESIZABLE) : undefined;
+	}
+
+	get _resizeHandleTooltip() {
+		return this._showResizeHandle ? Popover.i18nBundle.getText(POPOVER_RESIZE_HANDLE_TOOLTIP) : undefined;
+	}
+
+	async forwardToLast() {
+		if (this._showResizeHandle) {
+			const resizeHandler = this.shadowRoot!.querySelector<HTMLElement>(`#${this._id}-resizeHandler`);
+			if (resizeHandler) {
+				resizeHandler.focus();
+				return;
+			}
+		}
+		await super.forwardToLast();
+	}
+
+	_onResizeKeyDown(e: KeyboardEvent) {
+		// Freeze handle placement on the first keyboard resize keypress so the
+		// handle corner stays stable across presses. Without this, recalculating
+		// from live DOM can flip placement when the popover center drifts past the
+		// opener center, reversing the resize direction mid-session.
+		if (!this._resizeHandlePlacement) {
+			this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
+		}
+		this._popoverResize.onResizeKeyDown(e);
+	}
+
 	_onResizeMouseDown(e: MouseEvent) {
-		this._popoverResize.onResizeMouseDown(e);
 		this._resizeHandlePlacement = this._popoverResize.getResizeHandlePlacement();
+		this._popoverResize.onResizeMouseDown(e);
 	}
 
 	// for instance checks
