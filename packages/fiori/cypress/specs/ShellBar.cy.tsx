@@ -421,6 +421,40 @@ describe("Slots", () => {
 				.should("not.exist");
 		});
 
+		it("Should hide default-priority content items last-added-first (C, then B, then A)", () => {
+			// Spec: with no data-hide-order, content items hide in "last added, first hidden" order.
+			// So Item C (last added) hides first, then Item B, then Item A.
+			cy.viewport(1920, 1080);
+
+			cy.mount(
+				<ShellBar id="shellbar" primaryTitle="Product Title" showNotifications={true} showProductSwitch={true}>
+					<img slot="logo" src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" />
+					<Button slot="content">Item A</Button>
+					<Button slot="content">Item B</Button>
+					<Button slot="content">Item C</Button>
+				</ShellBar>
+			);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			cy.get("#shellbar").as("shellbar");
+
+			// Wide: nothing hidden
+			cy.get("@shellbar").invoke("prop", "hiddenItemsIds").should("deep.equal", []);
+
+			// The three content items map to generated slots content-1 (A), content-2 (B), content-3 (C).
+			// The hiddenItemsIds array order encodes the hide sequence; as width shrinks the content
+			// items must enter it strictly as content-3, content-2, content-1 (last added, first hidden).
+			const hiddenContent = () =>
+				cy.get("@shellbar")
+					.invoke("prop", "hiddenItemsIds")
+					.then((ids: string[]) => ids.filter(id => id.startsWith("content-")));
+
+			// Narrow enough that all three overflow: order must be C, B, A.
+			cy.viewport(280, 1080);
+			cy.wait(RESIZE_THROTTLE_RATE);
+			hiddenContent().should("deep.equal", ["content-3", "content-2", "content-1"]);
+		});
+
+
 		it("Should hide separators at S breakpoint regardless of content visibility", () => {
 			cy.viewport(1920, 1080);
 

@@ -67,6 +67,7 @@ import {
 	SHELLBAR_ASSISTANT,
 	SHELLBAR_OVERFLOW,
 	SHELLBAR_ADDITIONAL_CONTEXT,
+	SHELLBAR_BRANDING_HOME,
 } from "./generated/i18n/i18n-defaults.js";
 import type ListItemBase from "@ui5/webcomponents/dist/ListItemBase.js";
 
@@ -534,6 +535,12 @@ class ShellBar extends UI5Element {
 	private readonly RESIZE_THROTTLE_RATE = 100; // ms
 	private handleResizeBound: ResizeObserverCallback = throttle(this.handleResize.bind(this), this.RESIZE_THROTTLE_RATE);
 
+	// Signature of the last overflow measurement's inputs. When onAfterRendering re-runs
+	// updateOverflow after the measurement's own reactive writes, an unchanged signature means the
+	// layout is identical, so we skip re-measuring — this prevents a borderline branding-wrap
+	// decision from oscillating between renders and spinning the render queue.
+	private lastOverflowSignature = "";
+
 	private readonly breakpoints = [599, 1023, 1439, 1919, 10000];
 	private readonly breakpointMap: Record<number, ShellBarBreakpoint> = {
 		599: "S",
@@ -651,11 +658,6 @@ class ShellBar extends UI5Element {
 		if (!this.legacyAdaptor) {
 			this.initLegacyController();
 		}
-		// Sync branding breakpoint state
-		this.branding.forEach(brandingEl => {
-			brandingEl._isSBreakPoint = this.isSBreakPoint;
-		});
-
 		this.buildActions();
 
 		this.searchAdaptor?.syncShowSearchFieldState();
@@ -757,10 +759,52 @@ class ShellBar extends UI5Element {
 
 	/* =================== Overflow Management =================== */
 
+	/**
+	 * A string capturing every input that affects the overflow result: the available width, the
+	 * enabled features and search state, and the set of content items with their hide-order hints.
+	 * Two identical signatures mean the layout is unchanged, so the measurement can be skipped.
+	 */
+	private getOverflowSignature(): string {
+		const outerWidth = Math.round(this.overflowOuter?.offsetWidth || 0);
+		const contentSig = this.content
+			.map(item => `${(item as any)._individualSlot as string}:${item.getAttribute("data-hide-order") ?? ""}:${item.hasAttribute("data-never-hide") ? "n" : ""}`)
+			.join(",");
+		const features = `${this.enabledFeatures.branding ? "b" : ""}${this.enabledFeatures.content ? "c" : ""}${this.enabledFeatures.search ? "s" : ""}`;
+		const showSearch = this.showSearchField ? "1" : "0";
+		const brandingTitle = this.branding[0]?.titleText ?? "";
+		return `${outerWidth}|${features}|${showSearch}|${brandingTitle}|${this._validItems.length}|${contentSig}`;
+	}
+
 	private updateOverflow() {
 		if (!this.overflow) {
 			return;
 		}
+		// While the overflow popover is open the layout is frozen and re-measuring serves no
+		// purpose. Re-running the measurement here can flip a borderline branding-wrap decision
+		// back and forth between renders, which spins the render queue until it aborts and leaves
+		// the popover half-open. Skip it; the next real resize will recompute.
+		if (this.overflowPopoverOpen) {
+			return this.hiddenItemsIds;
+		}
+
+		// Skip re-measuring when nothing that affects overflow has changed since the last pass.
+		// updateOverflow runs on every render, and it writes reactive state (hiddenItemsIds,
+		// showOverflowButton) that itself schedules a render; without this guard a borderline
+		// branding-wrap decision can flip between those renders and spin the render queue until it
+		// aborts (leaving the overflow popover unopenable). A real resize clears the signature.
+		const signature = this.getOverflowSignature();
+		if (signature === this.lastOverflowSignature) {
+			return this.hiddenItemsIds;
+		}
+		this.lastOverflowSignature = signature;
+
+		const brandingEl = this.branding[0];
+
+		// Start every pass with the title unwrapped (single line). The overflow loop will try to
+		// wrap it to 2 lines via tryShrink only if the row overflows, and hide it only if wrapping
+		// still isn't enough.
+		brandingEl?.removeAttribute("_title-wrap");
+		brandingEl?.style.removeProperty("--_ui5_shellbar_branding_title_max_width");
 
 		const result = this.overflow.updateOverflow({
 			actions: this.actions,
@@ -768,9 +812,47 @@ class ShellBar extends UI5Element {
 			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
 			showSearchField: this.enabledFeatures.search && this.showSearchField,
+			hasBranding: this.enabledFeatures.branding && !!brandingEl,
 			overflowOuter: this.overflowOuter!,
 			overflowInner: this.overflowInner!,
+			tryShrink: (selector: string) => {
+				if (selector === "[data-ui5-stable='branding-identifier']" && brandingEl) {
+					const titleEl = brandingEl.shadowRoot?.querySelector<HTMLElement>(".ui5-shellbar-title");
+					if (!titleEl) {
+						return false;
+					}
+					// Wrap the title to 2 lines in place: cap its width to ~half the single-line
+					// width so the text breaks across two rows, then clamp to 2 lines. This narrows
+					// the branding area, which may relieve the row overflow so the identifier stays.
+					const singleLineWidth = titleEl.scrollWidth;
+					const twoLineWidth = Math.ceil(singleLineWidth / 2);
+					brandingEl.style.setProperty("--_ui5_shellbar_branding_title_max_width", `${twoLineWidth}px`);
+					brandingEl.toggleAttribute("_title-wrap", true);
+					// eslint-disable-next-line no-unused-expressions
+					brandingEl.offsetWidth; // force synchronous layout so the loop re-measures fresh
+					return true;
+				}
+				return false;
+			},
 			setVisible: (selector: string, visible: boolean) => {
+				if (selector === "[data-ui5-stable='branding-identifier']") {
+					if (brandingEl) {
+						brandingEl.toggleAttribute("_measure-title-hidden", !visible);
+						if (visible) {
+							brandingEl.removeAttribute("_title-hidden");
+						}
+					}
+					return;
+				}
+				if (selector === "[data-ui5-stable='branding-logo']") {
+					if (brandingEl) {
+						brandingEl.toggleAttribute("_measure-logo-hidden", !visible);
+						if (visible) {
+							brandingEl.removeAttribute("_logo-hidden");
+						}
+					}
+					return;
+				}
 				const element = this.shadowRoot!.querySelector(selector);
 				if (element) {
 					element.classList[visible ? "remove" : "add"]("ui5-shellbar-hidden");
@@ -779,6 +861,13 @@ class ShellBar extends UI5Element {
 		});
 
 		this.handleUpdateOverflowResult(result);
+
+		// Sync overflow button CSS class immediately after measurement — the measurement loop
+		// manipulates it directly via setVisible, and the template won't fix it until next render.
+		const overflowBtn = this.shadowRoot!.querySelector<HTMLElement>(ShellBarActionsSelectors.Overflow);
+		if (overflowBtn) {
+			overflowBtn.classList.toggle("ui5-shellbar-hidden", !result.showOverflowButton);
+		}
 
 		return result.hiddenItemsIds;
 	}
@@ -795,11 +884,27 @@ class ShellBar extends UI5Element {
 			}
 		});
 
+		// Sync branding hidden state
+		const brandingEl = this.branding[0];
+		if (brandingEl) {
+			brandingEl.removeAttribute("_measure-title-hidden");
+			brandingEl.removeAttribute("_measure-logo-hidden");
+			const identifierHidden = hiddenItemsIds.includes("branding-identifier");
+			brandingEl.toggleAttribute("_title-hidden", identifierHidden);
+			brandingEl.toggleAttribute("_logo-hidden", hiddenItemsIds.includes("branding-logo"));
+			// If the identifier ended up hidden, drop the wrap/cap so it renders cleanly when it
+			// later returns to the bar; keep them when the title stayed (wrapped to 2 lines).
+			if (identifierHidden) {
+				brandingEl.removeAttribute("_title-wrap");
+				brandingEl.style.removeProperty("--_ui5_shellbar_branding_title_max_width");
+			}
+		}
+
 		if (!arraysAreEqual(this.hiddenItemsIds, hiddenItemsIds)) {
 			this.handleContentVisibilityChanged(this.hiddenItemsIds, hiddenItemsIds);
 			this.hiddenItemsIds = hiddenItemsIds;
-			this.showOverflowButton = showOverflowButton;
 		}
+		this.showOverflowButton = showOverflowButton;
 		this.showFullWidthSearch = this.searchAdaptor?.shouldShowFullScreen() || false;
 	}
 
@@ -817,6 +922,8 @@ class ShellBar extends UI5Element {
 
 	private handleResize() {
 		this.overflowPopoverOpen = false;
+		// A real resize must always recompute, even if the rounded width signature is unchanged.
+		this.lastOverflowSignature = "";
 		this.updateBreakpoint();
 		const hiddenItemsIds = this.updateOverflow() ?? [];
 		const spacerWidth = this.spacer?.getBoundingClientRect().width || 0;
@@ -843,6 +950,14 @@ class ShellBar extends UI5Element {
 		this.overflowPopoverOpen = false;
 	}
 
+	handleBrandingOverflowClick() {
+		const brandingEl = this.branding[0];
+		if (brandingEl) {
+			brandingEl._fireClick();
+		}
+		this.overflowPopoverOpen = false;
+	}
+
 	handleOverflowItemClick(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		const actionId = target.getAttribute("data-action-id");
@@ -865,7 +980,39 @@ class ShellBar extends UI5Element {
 			actions: this.actions,
 			customItems: this._validItems,
 			hiddenItemsIds: this.hiddenItemsIds,
+			hasBranding: this.enabledFeatures.branding && !!this.branding[0],
 		});
+	}
+
+	get brandingOverflowTitle(): string | undefined {
+		// Only the default (title) slot text — never the logo slot's alt text.
+		return this.branding[0]?.titleText || undefined;
+	}
+
+	get brandingOverflowLabel(): string | undefined {
+		// Spec: aria-label = "[ProductIdentifier] Home". Prefer the product identifier (title);
+		// for logo-only branding (no title) fall back to the accessible name.
+		const branding = this.branding[0];
+		const name = branding?.titleText?.trim() || branding?.accessibleNameText?.trim();
+		return name ? ShellBar.i18nBundle.getText(SHELLBAR_BRANDING_HOME, name) : undefined;
+	}
+
+	/**
+	 * Populates the overflow-popover branding logo container with a clone of the actual
+	 * slotted logo. Cloning (rather than reading `.src`) supports every logo type the slot
+	 * accepts — `<img>`, `<svg>`, `ui5-avatar` — not only elements that expose a `src`.
+	 */
+	captureBrandingOverflowLogoRef(ref: HTMLElement | null) {
+		if (!ref) {
+			return;
+		}
+		ref.replaceChildren();
+		const logo = this.branding[0]?.querySelector<HTMLElement>("[slot='logo']");
+		if (logo) {
+			const clone = logo.cloneNode(true) as HTMLElement;
+			clone.removeAttribute("slot");
+			ref.appendChild(clone);
+		}
 	}
 
 	/**
@@ -885,7 +1032,8 @@ class ShellBar extends UI5Element {
 	 * Shows count if only one item with count is overflowed, otherwise shows attention dot.
 	 */
 	get overflowBadge(): string | undefined {
-		const itemsWithCount = this.overflowItems.filter(item => item.data.count);
+		const countableItems = this.overflowItems.filter(item => item.type !== "branding");
+		const itemsWithCount = countableItems.filter(item => item.data.count !== undefined);
 		if (itemsWithCount.length === 1) {
 			return itemsWithCount[0].data.count;
 		}
