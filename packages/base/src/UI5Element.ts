@@ -353,7 +353,7 @@ abstract class UI5Element extends HTMLElement {
 			await this._processChildren();
 		}
 
-		if (!ctor.asyncFinished) {
+		if (!Object.prototype.hasOwnProperty.call(ctor, "asyncFinished")) {
 			await ctor._definePromise;
 		}
 
@@ -392,7 +392,7 @@ abstract class UI5Element extends HTMLElement {
 
 	get definePromise(): Promise<void> {
 		const ctor = this.constructor as typeof UI5Element;
-		if (!ctor.asyncFinished && ctor._definePromise) {
+		if (!Object.prototype.hasOwnProperty.call(ctor, "asyncFinished") && ctor._definePromise) {
 			return ctor._definePromise;
 		}
 		return Promise.resolve();

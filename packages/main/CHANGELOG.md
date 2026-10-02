@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.1-rc.0](https://github.com/UI5/webcomponents/compare/v2.27.0...v2.27.1-rc.0) (2026-09-25)
+
+
+### Bug Fixes
+
+* **framework:** guard languageAware renders against in-flight language changes ([#13840](https://github.com/UI5/webcomponents/issues/13840)) ([4487894](https://github.com/UI5/webcomponents/commit/448789464aa30682c3bd212895df19c2ac3f9094))
+
+
+
+
+
 # [2.27.0](https://github.com/UI5/webcomponents/compare/v2.27.0-rc.2...v2.27.0) (2026-09-23)
 
 

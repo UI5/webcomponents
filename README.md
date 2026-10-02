@@ -25,11 +25,11 @@
 - [UI5 Web Components Home Page](https://ui5.github.io/webcomponents)
 - [Configuring UI5 Web Components](./docs/2-advanced/01-configuration.md)
 - [Customizing with `UI Theme Designer`](./docs/2-advanced/12-theming.md)
-- [Creating a Custom UI5 Web Components Package](docs/4-development/01-package.md)
-- [Developing Custom UI5 Web Components](docs/4-development/02-component.md)
+- [Creating a Custom UI5 Web Components Package](docs/07-development/01-package.md)
+- [Developing Custom UI5 Web Components](docs/07-development/02-component.md)
 - [Micro-Frontends and Custom Elements Scoping](./docs/2-advanced/06-scoping.md)
-- [Release Management](./docs/08-Releases.md)
-- [F.A.Q.](./docs/09-FAQ.md)
+- [Release Management](./docs/10-Releases.md)
+- [F.A.Q.](./docs/12-FAQ.md)
 
 ## Related Projects
 
@@ -164,7 +164,7 @@ yarn start:website
 # open http://localhost:3000/webcomponents/nightly/
 ```
 
-**Note:** If you wish to manually install dependencies & run the Playground you can check out our [in depth tutorial](docs/5-contributing/03-website.md)
+**Note:** If you wish to manually install dependencies & run the Playground you can check out our [in depth tutorial](docs/08-contributing/04-website.md)
 
 ### Production Build
 To build the UI5 Web Components project, run the following commands:
@@ -187,4 +187,4 @@ No major bugs known. To report an issue or view the currently open issues, click
 We welcome all comments, suggestions, questions, and bug reports. Please follow our [Support Guidelines](/SUPPORT.md#-content) on how to report an issue, or chat with us in the `#webcomponents` channel of the [OpenUI5 Community Slack](https://ui5-slack-invite.cfapps.eu10.hana.ondemand.com/).
 
 ## Contribute
-Please check our [Contribution Guidelines](docs/5-contributing/02-conventions-and-guidelines.md).
+Please check our [Contribution Guidelines](docs/08-contributing/02-conventions-and-guidelines.md).
