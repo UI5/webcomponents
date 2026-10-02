@@ -62,13 +62,26 @@ class InputIcon extends UI5Element {
 	 * Defines the accessible name of the icon.
 	 *
 	 * **Note:** This property is used for accessibility purposes and will be announced by screen readers.
-	 * When set, it is also rendered as a native `title` tooltip.
+	 * When set, it is also rendered as a native `title` tooltip, unless `hideTooltip` is set.
 	 *
 	 * @default undefined
 	 * @public
 	 */
 	@property()
 	accessibleName?: string;
+
+	/**
+	 * Defines whether the native `title` tooltip, derived from `accessibleName`, is displayed.
+	 *
+	 * **Note:** When set, the `accessibleName` is still announced by screen readers, but no
+	 * `title` tooltip is rendered.
+	 *
+	 * @since 2.28.0
+	 * @default false
+	 * @public
+	 */
+	@property({ type: Boolean })
+	hideTooltip = false;
 
 	/**
 	 * @private
@@ -127,7 +140,7 @@ class InputIcon extends UI5Element {
 	}
 
 	get effectiveTitle() {
-		return this.accessibleName || undefined;
+		return this.hideTooltip ? undefined : (this.accessibleName || undefined);
 	}
 }
 

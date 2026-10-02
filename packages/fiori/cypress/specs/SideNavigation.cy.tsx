@@ -2,6 +2,7 @@ import SideNavigation from "../../src/SideNavigation.js";
 import SideNavigationItem from "../../src/SideNavigationItem.js";
 import SideNavigationGroup from "../../src/SideNavigationGroup.js";
 import SideNavigationSubItem from "../../src/SideNavigationSubItem.js";
+import SideNavigationSearchField from "../../src/SideNavigationSearchField.js";
 import group from "@ui5/webcomponents-icons/dist/group.js";
 import home from "@ui5/webcomponents-icons/dist/home.js";
 import employeeApprovals from "@ui5/webcomponents-icons/dist/employee-approvals.js";
@@ -2049,5 +2050,283 @@ describe("Focusable items", () => {
 			.find("[ui5-tag]")
 			.should("exist")
 			.should("have.text", "New");
+	});
+});
+
+describe("Side Navigation no match", () => {
+	it("shows a '0 matches found' item in the tab chain when there are no items and a highlightedText is set", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("exist")
+			.should("have.attr", "text", "0 matches found")
+			.should("have.attr", "unselectable");
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.shadow()
+			.find(".ui5-sn-item")
+			.should("have.attr", "tabindex", "0");
+	});
+
+	it("does not show the no match item when there are items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem text="Item" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there are fixed items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="abc">
+				<SideNavigationItem slot="fixedItems" text="Fixed" />
+			</SideNavigation>
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+
+	it("does not show the no match item when there is no highlightedText", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" />
+		);
+
+		cy.get("#sideNav")
+			.shadow()
+			.find(".ui5-sn-item-no-match")
+			.should("not.exist");
+	});
+});
+
+describe("Side Navigation highlightedText", () => {
+	it("wraps the matching part of an item's text in a highlight span", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Doc");
+
+		// the whole visible text is preserved
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("highlights all non-overlapping matches in an item's text", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="a">
+				<SideNavigationItem id="item1" text="Banana" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 3)
+			.each($el => {
+				cy.wrap($el).should("have.text", "a");
+			});
+	});
+
+	it("matches case-insensitively and preserves the original casing", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="HOME">
+				<SideNavigationItem id="item1" text="Home page" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Home");
+	});
+
+	it("does not add any highlight span when the term does not match", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="xyz">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("does not add any highlight span when there is no highlightedText", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+	});
+
+	it("propagates highlightedText to sub items", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="report">
+				<SideNavigationItem id="item1" text="Analytics" expanded>
+					<SideNavigationSubItem id="sub1" text="Reports" />
+				</SideNavigationItem>
+			</SideNavigation>
+		);
+
+		cy.get("#sub1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Report");
+	});
+
+	it("propagates highlightedText to groups", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="group">
+				<SideNavigationGroup id="group1" text="Group One">
+					<SideNavigationItem text="Item" />
+				</SideNavigationGroup>
+			</SideNavigation>
+		);
+
+		cy.get("#group1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "Group");
+	});
+
+	it("re-renders the highlight when highlightedText changes", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.text", "Doc");
+
+		cy.get("#sideNav").invoke("attr", "highlighted-text", "ments");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "ments");
+	});
+
+	it("removes the highlight when highlightedText is cleared", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="doc">
+				<SideNavigationItem id="item1" text="Documents" />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("exist");
+
+		cy.get("#sideNav").invoke("removeAttr", "highlighted-text");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("not.exist");
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text")
+			.should("have.text", "Documents");
+	});
+
+	it("renders potentially unsafe text as inert markup (XSS safety)", () => {
+		cy.mount(
+			<SideNavigation id="sideNav" highlightedText="click">
+				<SideNavigationItem id="item1" text={`<img src=x onerror="window.__xss=true">click me`} />
+			</SideNavigation>
+		);
+
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text .ui5-sn-item-highlight")
+			.should("have.length", 1)
+			.and("have.text", "click");
+
+		// the injected markup must not have produced a real <img> element
+		cy.get("#item1")
+			.shadow()
+			.find(".ui5-sn-item-text img")
+			.should("not.exist");
+
+		cy.window().its("__xss").should("not.exist");
+	});
+});
+
+describe("Side Navigation search match announcement", () => {
+	it("announceSearchMatchCount method", () => {
+		cy.mount(
+			<SideNavigation id="sideNav">
+				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
+				<SideNavigationItem text="Item 1" />
+				<SideNavigationItem text="Item 2" />
+			</SideNavigation>
+		);
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(2);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "2 matches found");
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(1);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "1 match found");
+
+		cy.get<SideNavigation>("#sideNav").then($el => {
+			$el[0].announceSearchMatchCount(0);
+		});
+
+		cy.get("body")
+			.find(".ui5-invisiblemessage-polite")
+			.should("have.text", "0 matches found");
 	});
 });
