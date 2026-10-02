@@ -692,7 +692,7 @@ describe("Accessibility", () => {
 			.find("[ui5-datetime-input]")
 			.shadow()
 			.find("span#descr")
-			.should("have.text", DESCRIPTION);
+			.should("have.text", `Date Time Input ${DESCRIPTION}`);
 	});
 
 	it("accessibleDescriptionRef property", () => {
