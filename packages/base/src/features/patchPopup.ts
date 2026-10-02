@@ -186,7 +186,7 @@ const fixTopmostOpenUI5Popup = () => {
 };
 
 const isNativePopoverOpen = (root: Document | ShadowRoot = document): boolean => {
-	if (root.querySelector(":popover-open")) {
+	if (root.querySelector(":popover-open, dialog:modal")) {
 		return true;
 	}
 
