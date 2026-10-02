@@ -1,0 +1,31 @@
+@import "../base/TabContainer-parameters.css";
+
+:host {
+	--_ui5_tc_header_border_bottom: 0.125rem solid var(--sapPageHeader_BorderColor);
+
+	/* Header Item */
+	--_ui5_tc_headerItem_color: var(--sapTab_TextColor);
+	--_ui5_tc_overflowItem_default_color: var(--sapTab_TextColor);
+	--_ui5_tc_headerItem_focus_border: 0.125rem dotted var(--sapContent_FocusColor);
+	--_ui5_tc_headerItem_text_selected_hover_color: var(--sapPageHeader_BorderColor);
+	--_ui5_tc_headerItemSemanticIcon_display: inline-block;
+	--_ui5_tc_headerItem_expand_button_margin_inline_start: 0rem;
+	--_ui5_tc_headerItem_single_click_expand_button_margin_inline_start: 0.25rem;
+	--_ui5_tc_headerItem_expand_button_border_radius: 0.25rem;
+	--_ui5_tc_headerItem_text_hover_color: var(--sapTab_Selected_TextColor);
+
+	/* Header Item icons */
+	--_ui5_tc_headerItemIcon_border: 0.125rem solid var(--sapTab_ForegroundColor);
+
+	/* Overflow Item */
+	--_ui5_tc_overflowItem_positive_color: var(--sapTextColor);
+	--_ui5_tc_overflowItem_negative_color: var(--sapTextColor);
+	--_ui5_tc_overflowItem_critical_color: var(--sapTextColor);
+	--_ui5_tc_overflowItem_default_color: var(--sapTextColor);
+	--_ui5_tc_overflowItem_current_color: var(--_ui5_tc_overflowItem_default_color);
+	--_ui5_tc_overflowItem_extra_indent: 1rem;
+	--_ui5_tc_overflowItem_additional: 1;
+
+	/* Overflow Buttons*/
+	--_ui5_tc_overflow_text_color: var(--sapTextColor);
+}

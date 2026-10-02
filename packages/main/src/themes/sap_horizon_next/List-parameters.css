@@ -1,0 +1,5 @@
+@import "../base/List-parameters.css";
+
+:host {
+	--ui5_list_footer_text_color: var(--sapList_FooterTextColor);
+}

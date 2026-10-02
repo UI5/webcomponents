@@ -1,0 +1,18 @@
+@import "../base/ValueStateMessage-parameters.css";
+
+:host {
+	--_ui5_value_state_message_border: var(--sapField_BorderWidth) solid var(--sapField_BorderColor);
+	--_ui5_input_value_state_icon_display: inline-block;
+	--_ui5_value_state_message_icon_width: 1rem;
+	--_ui5_value_state_message_icon_height: 1rem;
+	--_ui5_value_state_header_padding: .5rem .5rem .5rem 1.875rem;
+	--_ui5_value_state_message_padding: .5rem .5rem .5rem 1.875rem;
+	--_ui5_input_value_state_icon_offset: .625rem;
+	--_ui5_value_state_header_offset: -0.1875rem;
+	--_ui5_value_state_header_box_shadow_error: inset 0 -0.125rem var(--sapField_InvalidColor);
+	--_ui5_value_state_header_box_shadow_information: inset 0 -0.125rem var(--sapField_InformationColor);
+	--_ui5_value_state_header_box_shadow_success: inset 0 -0.125rem var(--sapField_SuccessColor);
+	--_ui5_value_state_header_box_shadow_warning: inset 0 -0.125rem var(--sapField_WarningColor);
+	--_ui5_value_state_message_padding_phone: 0.5rem 0.5rem 0.5rem 2.375rem;
+	--_ui5_value_state_message_line_height: 1.125rem;
+}

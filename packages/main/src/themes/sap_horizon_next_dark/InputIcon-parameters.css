@@ -1,0 +1,24 @@
+@import "../base/InputIcon-parameters.css";
+
+:host {
+	--_ui5_input_icon_padding: .625rem .625rem .5625rem .625rem;
+	--_ui5_input_icon_hover_bg: var(--sapField_Focus_Background);
+	--_ui5_input_icon_pressed_color: var(--sapButton_Active_TextColor);
+	--_ui5_input_icon_border_radius: var(--sapField_BorderCornerRadius);
+	--_ui5_input_icon_box_shadow: var(--sapField_Hover_Shadow);
+	--_ui5_input_icon_border: none;
+	--_ui5_input_error_icon_box_shadow: var(--sapContent_Negative_Shadow);
+	--_ui5_input_warning_icon_box_shadow: var(--sapContent_Critical_Shadow);
+	--_ui5_input_information_icon_box_shadow: var(--sapContent_Informative_Shadow);
+	--_ui5_input_success_icon_box_shadow: var(--sapContent_Positive_Shadow);
+	--_ui5_input_icon_error_pressed_color: var(--sapButton_Reject_Selected_TextColor);
+	--_ui5_input_icon_warning_pressed_color: var(--sapButton_Attention_Selected_TextColor);
+	--_ui5_input_icon_information_pressed_color: var(--sapButton_Selected_TextColor);
+	--_ui5_input_icon_success_pressed_color: var(--sapButton_Accept_Selected_TextColor);
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_input_icon_padding: .3125rem .5rem .25rem .5rem;
+	}
+}

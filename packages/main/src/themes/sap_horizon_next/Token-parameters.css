@@ -1,0 +1,23 @@
+@import "../base/Token-parameters.css";
+
+:host {
+	--_ui5_token_focus_outline_width: 0.0625rem;
+	--_ui5_token_selected_focus_outline: none;
+	--_ui5_token_focus_outline: none;
+	--_ui5_token_outline_offset: 0.125rem;
+	--ui5_token_focus_pseudo_element_content: '';
+	--_ui5_token_icon_padding: 0.25rem 0.5rem;
+	--_ui5_token_border_radius: 0.375rem;
+	--_ui5_token_focus_outline_border_radius: .5rem;
+	--_ui5_token_text_color: var(--sapTextColor);
+	--_ui5_token_selected_text_font_family: var(--sapFontSemiboldDuplexFamily);
+	--_ui5_token_selected_internal_border_bottom: 0.125rem solid var(--sapButton_Selected_BorderColor);
+	--_ui5_token_selected_internal_border_bottom_radius: .1875rem;
+	--_ui5_token_readonly_padding: 0.25rem 0.3125rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_token_outline_offset: 0;
+	}
+}

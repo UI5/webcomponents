@@ -1,0 +1,5 @@
+@import "../base/TableRow-parameters.css";
+
+:host {
+	--ui5_table_row_outline_width: 0.125rem;
+}

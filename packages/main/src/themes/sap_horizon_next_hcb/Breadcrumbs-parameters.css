@@ -1,0 +1,6 @@
+@import "../base/Breadcrumbs-parameters.css";
+
+:host {
+	--_ui5_breadcrumbs_current_location_color: var(--sapTextColor);
+	--_ui5_breadcrumbs_separator_color: var(--sapTextColor);
+}

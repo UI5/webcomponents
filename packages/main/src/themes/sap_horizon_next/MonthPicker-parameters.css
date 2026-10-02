@@ -1,0 +1,5 @@
+@import "../base/MonthPicker-parameters.css";
+
+:host {
+	--_ui5_monthpicker_item_border_radius: 0.5rem;
+}

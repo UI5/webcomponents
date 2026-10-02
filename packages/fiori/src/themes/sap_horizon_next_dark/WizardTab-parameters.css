@@ -1,0 +1,10 @@
+@import "../base/WizardTab-parameters.css";
+
+:host {
+	--_ui5_wiz_tab_title_color: var(--sapTextColor);
+	--_ui5_wiz_tab_title_font_family: var(--sapFontBoldFamily);
+	--_ui5_wiz_tab_focus_outline: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	--_ui5_wiz_tab_focus_border_radius: 8px;
+	--_ui5_wiz_tab_active_separator_color: var(--sapContent_Selected_ForegroundColor);
+	--_ui5_wiz_tab_selected_bg: var(--sapContent_Selected_ForegroundColor);
+}

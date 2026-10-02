@@ -1,0 +1,5 @@
+@import "../base/Bar-parameters.css";
+
+:host {
+	--_ui5_bar_subheader_margin-top: -0.125rem;
+}

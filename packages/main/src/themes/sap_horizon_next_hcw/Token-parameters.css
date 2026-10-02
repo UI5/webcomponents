@@ -1,0 +1,17 @@
+@import "../base/Token-parameters.css";
+
+:host {
+	--_ui5_token_border_radius: 0.25rem;
+	--_ui5_token_focus_outline_width: 0.125rem;
+	--_ui5_token_readonly_background: var(--sapField_ReadOnly_Background);
+	--_ui5_token_focus_offset: 0;
+	--_ui5_token_focus_outline_border_radius: 0.25rem;
+	--_ui5_token_text_color: var(--sapTextColor);
+	--_ui5_token_readonly_padding: 0.25rem 0.3125rem;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_token_focus_offset: 0;
+	}
+}

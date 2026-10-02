@@ -1,0 +1,22 @@
+@import "../base/NotificationListItem-parameters.css";
+
+:host {
+	--_ui5-notification_item-border-radius: var(--sapTile_BorderCornerRadius);
+	--_ui5-notification_group_header-border-bottom-width: 0;
+	--_ui5-notification_group_header-padding: 0.5rem;
+	--_ui5-notification_item-state-icon-padding: 0.25rem;
+	--_ui5-notification_item-border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+	--_ui5-notification_item-border-top-left-right: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+	--_ui5-notification_item-margin: 0 0.5rem 0.5rem 0.5rem;
+	--_ui5-notification_item-background-color-hover: var(--sapList_Hover_Background);
+	--_ui5-notification_item-background-color-active: var(--sapList_SelectionBackgroundColor);
+	--_ui5-notification_item-border-active: 1px solid var(--sapList_SelectionBorderColor);
+	--_ui5-notification_item-root-padding-inline: 1rem;
+	--_ui5-notification_item-content-padding: 0.75rem 0;
+	--_ui5-notification_item-title-margin-bottom: 0;
+	--_ui5-notification_item-title-padding-end-two-buttons: 4.875rem;
+	--_ui5-notification_item-title-padding-end-one-button: 2.375rem;
+	--_ui5-notification_item-focus-offset: 0.1875rem;
+	--_ui5-notification_item-outline-offset: -0.375rem; /*2 x --_ui5-notification_item-focus-offset*/
+	--_ui5-notification_item-growing-btn-background-color-active: var(--_ui5-notification_item-background-color-active);
+}

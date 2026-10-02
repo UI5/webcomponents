@@ -1,0 +1,14 @@
+@import "../base/ValueStateMessage-parameters.css";
+
+:host {
+	--_ui5_input_value_state_icon_display: inline-block;
+	--_ui5_value_state_message_padding: 0.5rem 0.5rem 0.5rem 1.875rem;
+	--_ui5_value_state_header_padding: .5rem .5rem .5rem 1.875rem;
+	--_ui5_value_state_message_popover_box_shadow: var(--sapContent_Shadow1);
+	--_ui5_value_state_message_icon_width: 1rem;
+	--_ui5_value_state_message_icon_height: 1rem;
+	--_ui5_value_state_header_offset: -0.25rem;
+	--_ui5_value_state_message_popover_border_radius: var(--sapPopover_BorderCornerRadius);
+	--_ui5_value_state_message_padding_phone: 0.5rem 0.5rem 0.5rem 2.375rem;
+	--_ui5_value_state_message_line_height: 1.125rem;
+}

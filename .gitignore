@@ -6,6 +6,7 @@ dist
 **/src/generated
 **/test/test-elements/generated
 .dev-server-port
+**/graphify-out
 
 # Code coverage
 coverage

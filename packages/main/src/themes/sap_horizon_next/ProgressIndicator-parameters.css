@@ -1,0 +1,32 @@
+@import "../base/ProgressIndicator-parameters.css";
+@import "./ProgressIndicatorLayout-parameters.css";
+
+:host {
+    --_ui5_progress_indicator_background_none: var(--sapProgress_Background);
+    --_ui5_progress_indicator_background_error: var(--sapProgress_NegativeBackground);
+    --_ui5_progress_indicator_background_warning: var(--sapProgress_CriticalBackground);
+    --_ui5_progress_indicator_background_success: var(--sapProgress_PositiveBackground);
+    --_ui5_progress_indicator_background_information: var(--sapProgress_InformationBackground);
+
+    --_ui5_progress_indicator_value_state_none: var(--sapProgress_Value_Background);
+    --_ui5_progress_indicator_value_state_error: var(--sapProgress_Value_NegativeBackground);
+    --_ui5_progress_indicator_value_state_warning: var(--sapProgress_Value_CriticalBackground);
+    --_ui5_progress_indicator_value_state_success: var(--sapProgress_Value_PositiveBackground);
+    --_ui5_progress_indicator_value_state_information: var(--sapProgress_Value_InformationBackground);
+
+    --_ui5_progress_indicator_value_state_error_icon_color: var(--sapProgress_Value_NegativeTextColor);
+    --_ui5_progress_indicator_value_state_warning_icon_color: var(--sapProgress_Value_CriticalTextColor);
+    --_ui5_progress_indicator_value_state_success_icon_color: var(--sapProgress_Value_PositiveTextColor);
+    --_ui5_progress_indicator_value_state_information_icon_color: var(--sapProgress_Value_InformationTextColor);
+
+    --_ui5_progress_indicator_border: none;
+    --_ui5_progress_indicator_border_color_error: var(--sapErrorBorderColor);
+    --_ui5_progress_indicator_border_color_warning: var(--sapWarningBorderColor);
+    --_ui5_progress_indicator_border_color_success: var(--sapSuccessBorderColor);
+    --_ui5_progress_indicator_border_color_information: var(--sapInformationBorderColor);
+
+    --_ui5_progress_indicator_color: var(--sapField_TextColor);
+    --_ui5_progress_indicator_bar_color: var(--sapProgress_TextColor);
+    --_ui5_progress_indicator_icon_size: var(--sapFontLargeSize);
+
+}

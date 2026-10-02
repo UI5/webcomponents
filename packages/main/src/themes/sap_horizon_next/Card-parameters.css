@@ -1,0 +1,14 @@
+@import "../base/Card-parameters.css";
+
+:host {
+	--_ui5_card_hover_box_shadow: var(--sapContent_Shadow2);
+	--_ui5_card_header_focus_offset: 1px;
+	--_ui5_card_header_focus_radius: var(--_ui5_card_border-radius);
+	--_ui5_card_header_title_font_family: var(--sapFontHeaderFamily);
+	--_ui5_card_header_title_font_size: var(--sapFontHeader6Size);
+	--_ui5_card_header_hover_bg: var(--sapTile_Hover_Background);
+	--_ui5_card_header_active_bg: var(--sapTile_Active_Background);
+	--_ui5_card_header_border: none;
+	--_ui5_card_header_padding: 1rem 1rem 0.75rem 1rem;
+	--_ui5_card_border: none;
+}

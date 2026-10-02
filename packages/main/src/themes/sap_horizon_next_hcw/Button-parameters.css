@@ -1,0 +1,9 @@
+@import "../base/Button-parameters.css";
+
+:host {
+	--_ui5_button_emphasized_border_width: 0.125rem;
+	--_ui5_button_focused_border: 0.125rem dotted var(--sapContent_FocusColor);
+	--_ui5_button_focused_border_radius: 0.375rem;
+	--_ui5_button_text_shadow: none;
+	--_ui5_button_emphasized_focused_border_color: var(--sapContent_ContrastFocusColor);
+}

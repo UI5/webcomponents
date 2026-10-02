@@ -1,0 +1,7 @@
+@import "../base/Table-parameters.css";
+
+:host {
+	--ui5_table_header_row_outline_width: var(--sapContent_FocusWidth);
+	--ui5_table_header_row_font_family:  var(--sapFontSemiboldDuplexFamily);
+	--ui5_table_focus_outline_offset: 0.1875rem;
+}

@@ -1,0 +1,6 @@
+@import "../base/GrowingButton-parameters.css";
+
+:host {
+	--_ui5_load_more_outline_width: var(--sapContent_FocusWidth);
+	--_ui5_load_more_border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+}

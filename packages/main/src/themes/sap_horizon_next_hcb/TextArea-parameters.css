@@ -1,0 +1,43 @@
+@import "../base/TextArea-parameters.css";
+
+:host {
+	--_ui5_textarea_line_height: 1.5;
+	--_ui5_textarea_error_warning_border_style: dashed;
+	--_ui5_textarea_error_warning_font_weight: bold;
+	--_ui5_textarea_error_warning_font_style: italic;
+	--_ui5_textarea_placeholder_font_style: normal;
+	--_ui5_textarea_value_state_error_warning_placeholder_font_weight: bold;
+	--_ui5_textarea_error_placeholder_font_style: normal;
+	--_ui5_textarea_error_placeholder_color: var(--sapField_TextColor);
+	--_ui5_textarea_error_hover_background_color: var(--sapField_InvalidBackground);
+	--_ui5_textarea_information_border_width: var(--sapField_InformationBorderWidth);
+	--_ui5_textarea_error_warning_border_style: dashed;
+	--_ui5_textarea_padding_top_information: 0.4375rem;
+	--_ui5_textarea_padding_bottom_information: 0.375rem;
+	--_ui5_textarea_padding_top: 0.375rem;
+	--_ui5_textarea_padding_bottom: 0.3125rem;
+	--_ui5_textarea_padding_top_readonly: 0.375rem;
+	--_ui5_textarea_padding_bottom_readonly: 0.3125rem;
+	--_ui5_textarea_padding_top_error_warning: 0.375rem;
+	--_ui5_textarea_padding_bottom_error_warning: 0.3125rem;
+	--_ui5_textarea_padding_right_and_left: 0.5rem;
+	--_ui5_textarea_padding_right_and_left_information: 0.5625rem;
+	--_ui5_textarea_padding_right_and_left_readonly: 0.5rem;
+	--_ui5_textarea_inner_width: 100%;
+}
+
+@container style(--ui5_content_density: compact) {
+	:host {
+		--_ui5_textarea_padding_top: 0.0625rem;
+		--_ui5_textarea_padding_bottom: 0rem;
+		--_ui5_textarea_padding_top_readonly: 0.0625rem;
+		--_ui5_textarea_padding_bottom_readonly: 0rem;
+		--_ui5_textarea_padding_top_error_warning: 0.0625rem;
+		--_ui5_textarea_padding_bottom_error_warning: 0rem;
+		--_ui5_textarea_padding_top_information: 0.125rem;
+		--_ui5_textarea_padding_bottom_information: 0.0625rem;
+		--_ui5_textarea_padding_right_and_left: 0.375rem;
+		--_ui5_textarea_padding_right_and_left_information: 0.4375rem;
+		--_ui5_textarea_padding_right_and_left_readonly: 0.375rem;
+	}
+}

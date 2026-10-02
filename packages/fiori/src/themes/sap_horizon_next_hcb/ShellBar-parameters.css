@@ -1,0 +1,14 @@
+@import "../base/ShellBar-parameters.css";
+
+:host {
+	--_ui5_shellbar_root_height: 3.25rem;
+	--_ui5_shellbar_button_border: var(--sapButton_BorderWidth) solid var(--sapButton_BorderColor);
+	--_ui5_shellbar_button_border_radius: var(--sapButton_BorderCornerRadius);
+	--_ui5_shellbar_button_focused_border: 0.125rem dotted var(--sapContent_FocusColor);
+	--_ui5_shellbar_button_badge_border: 1px solid var(--sapGroup_ContentBorderColor);
+	--_ui5_shellbar_outline_offset: -0.1875rem;
+	--_ui5_shellbar_search_field_outline_focused: none;
+	--_ui5_shellbar_search_field_background_hover: var(--sapShellColor);
+	--_ui5_shellbar_search_field_box_shadow_hover: none;
+	--_ui5_shellbar_menu_button_title_font_size: var(--sapFontHeader5Size);
+}

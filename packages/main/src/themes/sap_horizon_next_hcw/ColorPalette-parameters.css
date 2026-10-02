@@ -1,0 +1,8 @@
+@import "../base/ColorPalette-parameters.css";
+
+:host {
+	--_ui5_color-palette-item-after-focus-color: 0.125rem dotted black;
+	--_ui5_color-palette-item-before-focus-color: 0.125rem solid white;
+	--_ui5_color-palette-item-after-focus-not-selected-border: 0.125rem dotted black;
+
+}

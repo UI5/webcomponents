@@ -12,6 +12,11 @@ const assetsMeta = {
       "sap_horizon_hc_auto", // os-based auto theme, merging hcb + hcw
       "sap_horizon_hcb",
       "sap_horizon_hcw",
+	  // next generation themes
+	  "sap_horizon_next",
+	  "sap_horizon_next_dark",
+      "sap_horizon_next_hcb",
+      "sap_horizon_next_hcw",
     ],
   },
   "languages": {

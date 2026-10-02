@@ -1,0 +1,21 @@
+@import "../base/TimelineItem-parameters.css";
+
+:host {
+	--_ui5_TimelineItem_bubble_border_width: 0.125rem;
+	--_ui5_TimelineItem_bubble_border_style: solid;
+	--_ui5_TimelineItem_bubble_border_radius: var(--sapElement_BorderCornerRadius);
+	--_ui5_TimelineItem_bubble_border_color: var(--sapGroup_ContentBorderColor);
+	--_ui5_TimelineItem_bubble_border_top: -0.25rem;
+	--_ui5_TimelineItem_bubble_border_right: -0.25rem;
+	--_ui5_TimelineItem_bubble_border_bottom: -0.25rem;
+	--_ui5_TimelineItem_bubble_border_left: -0.75rem;
+	--_ui5_TimelineItem_bubble_rtl_left_offset: -0.25rem;
+	--_ui5_TimelineItem_bubble_rtl_right_offset: -0.75rem;
+	--_ui5_TimelineItem_bubble_focus_border_radius: 0.875rem;
+	--_ui5_TimelineItem_horizontal_bubble_focus_top_offset: -0.75rem;
+	--_ui5_TimelineItem_horizontal_bubble_focus_left_offset: -0.25rem;
+
+	--_ui5_TimelineItem_bubble_content_padding: 0.5rem;
+	--_ui5_TimelineItem_bubble_content_subtitle_padding_top: 0.125rem;
+	--_ui5_TimelineItem_bubble_content_description_padding_top: 0.5rem;
+}

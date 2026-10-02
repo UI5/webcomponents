@@ -1,0 +1,5 @@
+@import "../base/DynamicPageTitle-parameters.css";
+
+:host {
+    --_ui5_dynamic_page_title_focus_outline_offset: -0.125rem;
+}

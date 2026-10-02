@@ -1,0 +1,16 @@
+@import "../base/Link-parameters.css";
+
+:host {
+	--_ui5_link_text_decoration: var(--sapLink_TextDecoration);
+	--_ui5_link_hover_text_decoration: var(--sapLink_Hover_TextDecoration);
+	--_ui5_link_focused_hover_text_decoration: none;
+	--_ui5_link_focused_hover_text_color: var(--sapContent_ContrastTextColor);
+	--_ui5_link_active_text_decoration: var(--sapLink_Active_TextDecoration);
+	--_ui5_link_outline: none;
+	--_ui5_link_focus_border-radius: 0.125rem;
+	--_ui5_link_focus_background_color: var(--sapContent_FocusColor);
+	--_ui5_link_focus_color: var(--sapContent_ContrastTextColor);
+	--_ui5_link_subtle_text_decoration: underline;
+	--_ui5_link_subtle_text_decoration_hover: none;
+	--_ui5_link_large_interactive_area_height: 1.5rem;
+}
