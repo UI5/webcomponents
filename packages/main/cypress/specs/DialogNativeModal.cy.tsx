@@ -54,6 +54,26 @@ describe("Dialog native modal", () => {
 
 		cy.get("#opener").should("be.focused");
 	});
+
+	it("keeps focus inside the dialog when the backdrop is clicked", () => {
+		cy.mount(
+			<Dialog id="bf"><Button id="bf-btn">inside</Button></Dialog>
+		);
+
+		cy.get("#bf").invoke("prop", "open", true);
+		cy.get<Dialog>("#bf").ui5DialogOpened();
+
+		// focus an element inside the dialog
+		cy.get("#bf-btn").realClick();
+		cy.get("#bf-btn").should("be.focused");
+
+		// click the backdrop (top-left corner of the viewport, outside the dialog box)
+		cy.get("body").realClick({ x: 5, y: 5 });
+
+		// focus must stay on the inner element and the dialog must remain open
+		cy.get("#bf-btn").should("be.focused");
+		cy.get<Dialog>("#bf").ui5DialogOpened();
+	});
 });
 
 describe("Dialog native cancel/ESC", () => {

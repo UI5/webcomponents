@@ -13,6 +13,7 @@ export default function PopupTemplate(this: Popup, hooks?: {
 		{!native && PopubBlockLayerTemplate.call(this)}
 		<RootTag
 			root-element
+			part={native ? "root" : undefined}
 			style={this.styles.root}
 			class={this.classes.root}
 			role={this._role}

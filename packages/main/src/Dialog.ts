@@ -128,6 +128,7 @@ const ICON_PER_STATE: Record<ValueStateWithIcon, string> = {
  * @csspart header - Used to style the header of the component
  * @csspart content - Used to style the content of the component
  * @csspart footer - Used to style the footer of the component
+ * @csspart root - Used to style the root `<dialog>` of the component, including its `::backdrop`
  */
 @customElement({
 	tag: "ui5-dialog",

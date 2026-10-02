@@ -3,7 +3,6 @@ import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import { isPopupOpen, isPopupClosed } from "./utils/popup-open.js";
 
 Cypress.Commands.add("ui5ResponsivePopoverOpened", { prevSubject: true }, (subject: JQuery<ResponsivePopover>) => {
-	console.log("ui5ResponsivePopoverOpened called");
 	if (isPhone()) {
 		isPopupOpen(() =>
 			cy.wrap(subject)
@@ -16,7 +15,6 @@ Cypress.Commands.add("ui5ResponsivePopoverOpened", { prevSubject: true }, (subje
 });
 
 Cypress.Commands.add("ui5ResponsivePopoverClosed", { prevSubject: true }, (subject: JQuery<ResponsivePopover>) => {
-	console.log("ui5ResponsivePopoverClosed called");
 	if (isPhone()) {
 		isPopupClosed(() =>
 			cy.wrap(subject)

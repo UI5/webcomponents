@@ -466,6 +466,14 @@ abstract class Popup extends UI5Element {
 	}
 
 	_onmousedown(e: MouseEvent) {
+		// For a native modal <dialog>, a mousedown on the backdrop targets the
+		// root element itself. Prevent the default so the browser does not blur
+		// (and move focus away from) the element focused inside the dialog.
+		if (this._useNativeDialog && e.target === this._root) {
+			e.preventDefault();
+			this._shouldFocusRoot = false;
+			return;
+		}
 		if (this.shadowRoot!.contains(e.target as HTMLElement)) {
 			this._shouldFocusRoot = true;
 		} else {
