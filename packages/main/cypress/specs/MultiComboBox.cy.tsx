@@ -4827,24 +4827,21 @@ describe("Keyboard Handling", () => {
 			cy.get("@input").should("have.value", "2222222222");
 		});
 
-		it("not be able to paste token with CTRL+V in read only", async () => {
+		it("not be able to paste token with CTRL+V in read only", () => {
 			cy.mount(<>
 				<MultiComboBox style={{ width: "500px" }} noValidation={true} readonly={true} />
 			</>)
 
 			cy.get("[ui5-multi-combobox]").as("mcb2");
 			cy.get("@mcb2").shadow().find("input").as("input");
-			cy.get("@mcb2").shadow().find(".ui5-multi-combobox-token").as("tokens");
 
 			cy.get("@input").realClick();
-			cy.get("@input").should("be.focused");
 
-			dispatchPasteEvent();
+			dispatchPasteEvent("22222");
 
-			cy.get("@clipboardRead").should("have.been.calledOnce");
-
+			// In read only mode pasting must not change the value or create tokens.
 			cy.get("@input").should("have.value", "");
-			cy.get("@tokenes").should("not.exist");
+			cy.get("@mcb2").shadow().find(".ui5-multi-combobox-token").should("not.exist");
 		});
 
 		it("should cut a token with CTRL+X", () => {

@@ -1239,8 +1239,11 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 		if (!this._isPhone) {
 			this.fireResetSelectionChange();
-			this.focus();
+			// Set the flag before focusing: focus() is synchronous when the shadow
+			// DOM is ready, so the focusin handler runs during this.focus() and must
+			// already see _focusedAfterClear === true to preserve previousValue.
 			this._focusedAfterClear = true;
+			this.focus();
 		}
 	}
 
