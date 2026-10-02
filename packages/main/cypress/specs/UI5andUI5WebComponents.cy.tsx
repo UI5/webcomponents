@@ -71,11 +71,6 @@ describe("ui5 and web components integration", () => {
             .should('be.visible')
             .realClick();
 
-        cy.get<Dialog>("#webc-dialog").should(($dialog) => {
-            expect($dialog).to.have.attr("open");
-            expect($dialog.is(":popover-open")).to.be.true;
-            expect($dialog.width()).to.not.equal(0);
-            expect($dialog.height()).to.not.equal(0);
-        });
+        cy.get<Dialog>("#webc-dialog").ui5DialogOpened();
     });
 });
