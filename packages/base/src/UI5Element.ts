@@ -1043,8 +1043,22 @@ abstract class UI5Element extends HTMLElement {
 	 * @public
 	 */
 	async focus(focusOptions?: FocusOptions): Promise<void> {
-		await this._waitForDomRef();
+		// Focus synchronously when the shadow DOM is already rendered so that focus
+		// ordering matches native elements (await always defers to a microtask, even
+		// for an already-resolved promise, which lets a later sync focus() be stolen back).
+		if (this._rendered) {
+			this._focusDomRef(focusOptions);
+			return;
+		}
 
+		await this._waitForDomRef();
+		this._focusDomRef(focusOptions);
+	}
+
+	/**
+	 * @private
+	 */
+	_focusDomRef(focusOptions?: FocusOptions): void {
 		const focusDomRef = this.getFocusDomRef();
 		if (focusDomRef === this || !this.isConnected) {
 			HTMLElement.prototype.focus.call(this, focusOptions);
