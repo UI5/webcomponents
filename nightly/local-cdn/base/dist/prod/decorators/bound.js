@@ -1,0 +1,2 @@
+"use strict";export default function u(r,n,o){if(typeof r[n]!="function")throw new Error(`@bound decorator can only be applied to methods, received ${String(n)}: ${typeof r[n]}`);let e=o.value;return{configurable:!0,get(){if(!(this instanceof r.constructor)||Object.hasOwnProperty.call(this,n))return e;let t=e.bind(this);return Object.defineProperty(this,n,{configurable:!0,get(){return t},set(i){t=i}}),t},set(t){e=t}}}
+//# sourceMappingURL=bound.js.map

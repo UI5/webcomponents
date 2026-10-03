@@ -1,0 +1,2 @@
+declare const _default: ".ui5-time-picker-popover{width:20rem}.ui5-time-picker-popover .ui5-responsive-popover-header .row{justify-content:flex-start;font-family:var(--sapFontHeaderFamily);font-size:var(--sapFontHeader5Size);color:var(--sapPageHeader_TextColor)}.ui5-time-picker-footer{height:fit-content;display:flex;justify-content:flex-end;width:100%}.ui5-time-picker-footer>[ui5-button]{margin:1%;min-width:20%}.ui5-time-picker-popover::part(content){padding:0}.ui5-time-picker-inputs-popover::part(header){padding:0;width:100%}\n";
+export default _default;

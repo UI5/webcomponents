@@ -1,0 +1,2 @@
+declare const _default: ":root{--_ui5-cozy-size:var(--_ui5-f2d95f8);--_ui5-compact-size: ;--_ui5_content_density:cozy}.sapUiSizeCompact,.ui5-content-density-compact,[data-ui5-compact-size]{--_ui5-cozy-size: ;--_ui5-compact-size:var(--_ui5-f2d95f8);--_ui5_content_density:compact}";
+export default _default;

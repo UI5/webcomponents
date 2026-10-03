@@ -1,0 +1,20 @@
+import type Table from "./Table.js";
+import type TableRow from "./TableRow.js";
+declare const isInstanceOfTable: (object: any) => object is Table;
+declare const isSelectionCell: (e: Event) => boolean;
+declare const isHeaderSelectionCell: (e: Event) => boolean;
+declare const findRowInPath: (composedPath: Array<EventTarget>) => TableRow;
+declare const findVerticalScrollContainer: (element: HTMLElement, requireOverflow?: boolean) => HTMLElement;
+type Axis = "x" | "y";
+declare const computeAxisScrollDelta: (element: HTMLElement, scrollContainer: HTMLElement, stickyElements: HTMLElement[], axis: Axis) => number;
+declare const isFeature: <T>(element: any, identifier: string) => element is T;
+declare const throttle: (callback: () => void) => () => void;
+declare const toggleAttribute: (element: HTMLElement, attribute: string, condition: boolean | undefined, value?: string) => void;
+/**
+ * Checks if a given width is valid for a column.
+ *
+ * @param width Width string to check
+ * @returns {boolean} true if the width is valid, false otherwise
+ */
+declare const isValidColumnWidth: (width: string | undefined) => width is string;
+export { isInstanceOfTable, isSelectionCell, isHeaderSelectionCell, findRowInPath, findVerticalScrollContainer, computeAxisScrollDelta, isFeature, throttle, toggleAttribute, isValidColumnWidth, };

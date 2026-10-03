@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_ui5_webcomponents_website=globalThis.webpackChunk_ui5_webcomponents_website||[]).push([[51178],{47571(e){e.exports=":host {}"}}]);

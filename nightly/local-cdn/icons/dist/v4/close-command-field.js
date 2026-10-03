@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "close-command-field";
+const pathData = "M8.8 1.97c.213-.214.32-.48.32-.799 0-.32-.107-.585-.32-.798a1.125 1.125 0 0 0-.818-.355c-.308 0-.58.118-.818.355L.338 7.183c-.213.213-.32.48-.32.798 0 .32.107.586.32.799l6.79 6.845c.238.237.51.355.818.355.308 0 .57-.118.782-.355a1.01 1.01 0 0 0 .356-.78c0-.307-.119-.58-.356-.816L3.147 8.39c-.26-.26-.26-.532 0-.815L8.8 1.968Zm6.861 0c.213-.214.32-.48.32-.799 0-.32-.107-.585-.32-.798a1.125 1.125 0 0 0-.818-.355c-.308 0-.58.118-.817.355L7.2 7.183a1.08 1.08 0 0 0-.32.798c0 .32.106.586.32.799l6.79 6.845c.237.237.51.355.818.355.308 0 .569-.118.782-.355a1.01 1.01 0 0 0 .355-.78c0-.307-.118-.58-.355-.816l-5.582-5.64c-.26-.26-.26-.532 0-.815l5.653-5.605Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/close-command-field";
+export { pathData, ltr, viewBox, accData };

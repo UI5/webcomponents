@@ -1,0 +1,2 @@
+"use strict";const a=new Map,t=new Map;t.set("S",[0,599]),t.set("M",[600,1023]),t.set("L",[1024,1439]),t.set("XL",[1440,1/0]);var S=(e=>(e.RANGE_4STEPS="4Step",e))(S||{});const o=(r,e)=>{a.set(r,e)},c=(r,e=window.innerWidth)=>{let n=a.get(r);n||(n=a.get("4Step"));let g;const s=Math.floor(e);return n.forEach((R,E)=>{s>=R[0]&&s<=R[1]&&(g=E)}),g||[...n.keys()][0]},i={RANGESETS:S,initRangeSet:o,getCurrentRange:c};i.initRangeSet(i.RANGESETS.RANGE_4STEPS,t);export default i;
+//# sourceMappingURL=MediaRange.js.map
