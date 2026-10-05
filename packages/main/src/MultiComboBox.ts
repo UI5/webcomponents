@@ -1643,11 +1643,6 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		// Capture the pre-autocomplete value up front: a selection coming from a
-		// checkbox click moves focus, and inputFocusIn clears valueBeforeAutoComplete.
-		// Since focus() is now synchronous, that reset can run before we read it below.
-		const valueBeforeAutoComplete = this.valueBeforeAutoComplete;
-
 		if (!isPhone()) {
 			this._previouslySelectedItems = e.detail.previouslySelectedItems;
 		}
@@ -1697,7 +1692,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 			return;
 		}
 
-		this.value = valueBeforeAutoComplete || "";
+		this.value = this.valueBeforeAutoComplete || "";
 	}
 
 	fireSelectionChange() {

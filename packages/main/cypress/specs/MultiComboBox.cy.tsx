@@ -882,6 +882,7 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -896,7 +897,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 3));
 			})
 	});
 
