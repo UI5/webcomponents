@@ -2299,7 +2299,7 @@ describe("Side Navigation search match announcement", () => {
 	it("announceSearchMatchCount method", () => {
 		cy.mount(
 			<SideNavigation id="sideNav">
-				<SideNavigationSearchField slot="filter-section" id="search" value="Item" />
+				<SideNavigationSearchField slot="filterSection" id="search" value="Item" />
 				<SideNavigationItem text="Item 1" />
 				<SideNavigationItem text="Item 2" />
 			</SideNavigation>
