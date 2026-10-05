@@ -17,7 +17,8 @@ import {
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 
 import InputField from "./InputField.js";
-import type TableHeaderRow from "./TableHeaderRow.js";
+import type InputTableSuggestRow from "./InputTableSuggestRow.js";
+import type InputTableSuggestHeaderRow from "./InputTableSuggestHeaderRow.js";
 import type TableHeaderCell from "./TableHeaderCell.js";
 import type TableCell from "./TableCell.js";
 import type ResponsivePopover from "./ResponsivePopover.js";
@@ -167,25 +168,27 @@ class InputTableSuggest extends InputField {
 
 	/**
 	 * Defines the columns for the tabular suggestions.
-	 * Use a single `ui5-table-header-row` component with `ui5-table-header-cell` children to define the columns.
+	 * Use a single `ui5-input-table-suggest-header-row` component with
+	 * `ui5-input-table-suggest-header-cell` children to define the columns.
 	 *
-	 * **Note:** This is a single-element slot. Provide exactly one `ui5-table-header-row`.
+	 * **Note:** This is a single-element slot. Provide exactly one `ui5-input-table-suggest-header-row`.
 	 *
 	 * @public
 	 */
 	@slot({ type: HTMLElement })
-	headerRow!: Slot<TableHeaderRow>;
+	headerRow!: Slot<InputTableSuggestHeaderRow>;
 
 	/**
 	 * Defines the rows for the tabular suggestions.
-	 * Use the `ui5-table-row` component with `ui5-table-cell` children to define each suggestion row.
+	 * Use the `ui5-input-table-suggest-row` component with `ui5-input-table-suggest-cell`
+	 * children to define each suggestion row.
 	 *
 	 * **Note:** The cells in each row should correspond to the columns defined in the `headerRow`.
 	 *
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	rows!: DefaultSlot<ITableSuggestionRow>;
+	rows!: DefaultSlot<InputTableSuggestRow>;
 
 	/**
 	 * Defines the overflow behavior of the suggestion table.

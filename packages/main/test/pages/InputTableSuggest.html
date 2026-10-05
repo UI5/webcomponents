@@ -55,43 +55,43 @@
 			placeholder="Search for products..."
 			show-suggestions
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="100px">Product ID</ui5-table-header-cell>
-				<ui5-table-header-cell width="200px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="100px">Category</ui5-table-header-cell>
-				<ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="100px">Product ID</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="200px">Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="100px">Category</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="80px">Price</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>PRD-001</ui5-table-cell>
-				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
-				<ui5-table-cell>Electronics</ui5-table-cell>
-				<ui5-table-cell>$1,299</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>PRD-002</ui5-table-cell>
-				<ui5-table-cell>Smartphone X</ui5-table-cell>
-				<ui5-table-cell>Electronics</ui5-table-cell>
-				<ui5-table-cell>$899</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>PRD-003</ui5-table-cell>
-				<ui5-table-cell>Wireless Mouse</ui5-table-cell>
-				<ui5-table-cell>Accessories</ui5-table-cell>
-				<ui5-table-cell>$49</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>PRD-004</ui5-table-cell>
-				<ui5-table-cell>USB-C Hub</ui5-table-cell>
-				<ui5-table-cell>Accessories</ui5-table-cell>
-				<ui5-table-cell>$79</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>PRD-005</ui5-table-cell>
-				<ui5-table-cell>Phone Case</ui5-table-cell>
-				<ui5-table-cell>Accessories</ui5-table-cell>
-				<ui5-table-cell>$29</ui5-table-cell>
-			</ui5-table-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-001</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Laptop Pro 15</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Electronics</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>$1,299</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-002</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Smartphone X</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Electronics</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>$899</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-003</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Wireless Mouse</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Accessories</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>$49</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-004</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>USB-C Hub</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Accessories</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>$79</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-005</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Phone Case</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Accessories</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>$29</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="productOutput">Selected: (none)</div>
@@ -109,19 +109,19 @@
 			id="noSuggestSearch"
 			placeholder="Type here - no suggestions should open..."
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="100px">Product ID</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="200px">Name</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="100px">Product ID</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="200px">Name</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>PRD-001</ui5-table-cell>
-				<ui5-table-cell>Laptop Pro 15</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>PRD-002</ui5-table-cell>
-				<ui5-table-cell>Smartphone X</ui5-table-cell>
-			</ui5-table-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-001</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Laptop Pro 15</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>PRD-002</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Smartphone X</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="noSuggestOutput">Selected: (none)</div>
@@ -141,54 +141,54 @@
 			show-suggestions
 			no-typeahead
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="80px">Avatar</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="180px">Member</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="160px">Role</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="80px">Avatar</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="180px">Member</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="160px">Role</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AB" color-scheme="Accent1"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-title level="H6" size="H6">Alice Brown</ui5-title>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-label>Engineering</ui5-label>
 						<ui5-text>Senior Developer</ui5-text>
 					</div>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AC" color-scheme="Accent6"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-title level="H6" size="H6">Anna Clark</ui5-title>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-label>Design</ui5-label>
 						<ui5-text>UX Lead</ui5-text>
 					</div>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AD" color-scheme="Accent8"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-title level="H6" size="H6">Adam Davis</ui5-title>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-label>Sales</ui5-label>
 						<ui5-text>Account Manager</ui5-text>
 					</div>
-				</ui5-table-cell>
-			</ui5-table-row>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="richOutput">Selected: (none)</div>
@@ -207,32 +207,32 @@
 			placeholder="Filter employees by any column..."
 			show-suggestions
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell width="120px">Department</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="100px">Location</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="120px">Department</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="100px">Location</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>John Smith</ui5-table-cell>
-				<ui5-table-cell>Engineering</ui5-table-cell>
-				<ui5-table-cell>Berlin</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Jane Doe</ui5-table-cell>
-				<ui5-table-cell>Marketing</ui5-table-cell>
-				<ui5-table-cell>Munich</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Peter Jones</ui5-table-cell>
-				<ui5-table-cell>Engineering</ui5-table-cell>
-				<ui5-table-cell>Walldorf</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Mary Brown</ui5-table-cell>
-				<ui5-table-cell>Sales</ui5-table-cell>
-				<ui5-table-cell>Berlin</ui5-table-cell>
-			</ui5-table-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>John Smith</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Engineering</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Berlin</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Jane Doe</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Marketing</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Munich</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Peter Jones</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Engineering</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Walldorf</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Mary Brown</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Sales</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Berlin</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="filterOutput">Selected: (none)</div>
@@ -254,11 +254,11 @@
 			placeholder="Filter by any column (rebuild)..."
 			show-suggestions
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell width="120px">Department</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="100px">Location</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="120px">Department</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="100px">Location</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="rebuildOutput">Selected: (none)</div>
@@ -280,23 +280,23 @@
 			show-suggestions
 			no-typeahead
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="120px">Role</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="120px">Role</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>Alice</ui5-table-cell>
-				<ui5-table-cell>Architect</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Alina</ui5-table-cell>
-				<ui5-table-cell>Analyst</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Bob</ui5-table-cell>
-				<ui5-table-cell>Backend Developer</ui5-table-cell>
-			</ui5-table-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Alice</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Architect</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Alina</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Analyst</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Bob</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Backend Developer</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="highlightOutput">Selected: (none)</div>
@@ -316,104 +316,104 @@
 			placeholder="Search team members by name..."
 			show-suggestions
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-				<ui5-table-header-cell width="80px">Avatar</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="160px">Role</ui5-table-header-cell>
-				<ui5-table-header-cell width="120px">Location</ui5-table-header-cell>
-				<ui5-table-header-cell width="100px">Status</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="80px">Avatar</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="160px">Role</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="120px">Location</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="100px">Status</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>Alice Brown</ui5-table-cell>
-				<ui5-table-cell>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Alice Brown</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AB" color-scheme="Accent1"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-title level="H6" size="H6">Senior Developer</ui5-title>
 						<ui5-text>Engineering</ui5-text>
 					</div>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-label>Building A</ui5-label>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-tag color-scheme="8" design="Positive">Active</ui5-tag>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Anna Clark</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Anna Clark</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AC" color-scheme="Accent6"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-title level="H6" size="H6">UX Lead</ui5-title>
 						<ui5-text>Design</ui5-text>
 					</div>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-label>Building B</ui5-label>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-tag color-scheme="8" design="Positive">Active</ui5-tag>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Adam Davis</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Adam Davis</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="AD" color-scheme="Accent8"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-title level="H6" size="H6">Account Manager</ui5-title>
 						<ui5-text>Sales</ui5-text>
 					</div>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-label>Building C</ui5-label>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-tag color-scheme="2" design="Critical">Away</ui5-tag>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Brian Evans</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Brian Evans</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="BE" color-scheme="Accent3"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-title level="H6" size="H6">QA Engineer</ui5-title>
 						<ui5-text>Engineering</ui5-text>
 					</div>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-label>Building A</ui5-label>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-tag color-scheme="8" design="Positive">Active</ui5-tag>
-				</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>Bella Fox</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>Bella Fox</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-avatar size="XS" initials="BF" color-scheme="Accent4"></ui5-avatar>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<div style="display: flex; flex-direction: column;">
 						<ui5-title level="H6" size="H6">Recruiter</ui5-title>
 						<ui5-text>HR</ui5-text>
 					</div>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-label>Building B</ui5-label>
-				</ui5-table-cell>
-				<ui5-table-cell>
+				</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>
 					<ui5-tag color-scheme="2" design="Critical">Away</ui5-tag>
-				</ui5-table-cell>
-			</ui5-table-row>
+				</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="teamOutput">Selected: (none)</div>
@@ -431,27 +431,27 @@
 			show-suggestions
 			show-clear-icon
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="80px">ID</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="150px">Task</ui5-table-header-cell>
-				<ui5-table-header-cell width="100px">Priority</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="80px">ID</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="150px">Task</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="100px">Priority</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 
-			<ui5-table-row>
-				<ui5-table-cell>T-101</ui5-table-cell>
-				<ui5-table-cell>Review PR #123</ui5-table-cell>
-				<ui5-table-cell>High</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>T-102</ui5-table-cell>
-				<ui5-table-cell>Update documentation</ui5-table-cell>
-				<ui5-table-cell>Medium</ui5-table-cell>
-			</ui5-table-row>
-			<ui5-table-row>
-				<ui5-table-cell>T-103</ui5-table-cell>
-				<ui5-table-cell>Fix login bug</ui5-table-cell>
-				<ui5-table-cell>Critical</ui5-table-cell>
-			</ui5-table-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>T-101</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Review PR #123</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>High</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>T-102</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Update documentation</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Medium</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
+			<ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-cell>T-103</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Fix login bug</ui5-input-table-suggest-cell>
+				<ui5-input-table-suggest-cell>Critical</ui5-input-table-suggest-cell>
+			</ui5-input-table-suggest-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="clearIconOutput">Selected: (none)</div>
@@ -471,14 +471,14 @@
 				value-state="Negative"
 				show-suggestions
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Item A</ui5-table-cell>
-					<ui5-table-cell>Invalid</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Status</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Item A</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Invalid</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -487,14 +487,14 @@
 				value-state="Critical"
 				show-suggestions
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Item B</ui5-table-cell>
-					<ui5-table-cell>Pending</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Status</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Item B</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Pending</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -503,14 +503,14 @@
 				value-state="Positive"
 				show-suggestions
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Item C</ui5-table-cell>
-					<ui5-table-cell>Approved</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Status</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Item C</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Approved</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -519,14 +519,14 @@
 				value-state="Information"
 				show-suggestions
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Name</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Item D</ui5-table-cell>
-					<ui5-table-cell>Info</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Name</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Status</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Item D</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Info</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 		</div>
 	</div>
@@ -548,14 +548,14 @@
 				<div slot="valueStateMessage">
 					This product ID is invalid. Please enter a valid ID starting with "PRD-".
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Price</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>PRD-001</ui5-table-cell>
-					<ui5-table-cell>$99</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Product</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Price</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>PRD-001</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>$99</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -567,14 +567,14 @@
 				<div slot="valueStateMessage">
 					Stock is running low. Consider reordering soon.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Stock</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Widget X</ui5-table-cell>
-					<ui5-table-cell>5 left</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Product</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Stock</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Widget X</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>5 left</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -586,14 +586,14 @@
 				<div slot="valueStateMessage">
 					Tip: You can use wildcards (*) for broader search results.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Search</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Results</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Widget*</ui5-table-cell>
-					<ui5-table-cell>25 matches</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Search</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Results</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Widget*</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>25 matches</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 		</div>
 	</div>
@@ -615,14 +615,14 @@
 					<strong>Invalid Entry:</strong> The value <em>"XYZ-999"</em> does not match any record.
 					Please check your input and try again.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Code</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Description</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>ABC-001</ui5-table-cell>
-					<ui5-table-cell>Valid Code</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Code</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Description</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>ABC-001</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Valid Code</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -635,18 +635,18 @@
 					<strong>Attention:</strong> This item will be <em>discontinued</em> on <strong>December 31, 2026</strong>.
 					Consider selecting an alternative.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Item</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">End Date</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Legacy Widget</ui5-table-cell>
-					<ui5-table-cell>Dec 31, 2026</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row>
-					<ui5-table-cell>New Widget</ui5-table-cell>
-					<ui5-table-cell>Active</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Item</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">End Date</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Legacy Widget</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Dec 31, 2026</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>New Widget</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Active</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 		</div>
 	</div>
@@ -670,14 +670,14 @@
 					or
 					<ui5-link href="https://example.com/contact" target="_blank">contact support</ui5-link>.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Category</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>PRD-001</ui5-table-cell>
-					<ui5-table-cell>Electronics</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Product</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Category</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>PRD-001</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Electronics</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -691,18 +691,18 @@
 					or
 					<ui5-link id="alternativeLink">choose alternative vendor</ui5-link>.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Vendor</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Status</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Acme Corp</ui5-table-cell>
-					<ui5-table-cell>Pending</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row>
-					<ui5-table-cell>Beta Inc</ui5-table-cell>
-					<ui5-table-cell>Approved</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Vendor</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Status</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Acme Corp</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Pending</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Beta Inc</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Approved</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -714,14 +714,14 @@
 					New search syntax available!
 					<ui5-link href="https://example.com/docs/search" target="_blank">Learn about advanced search operators</ui5-link>.
 				</div>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Query</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Results</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>name:Widget</ui5-table-cell>
-					<ui5-table-cell>15 matches</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Query</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Results</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>name:Widget</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>15 matches</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 		</div>
 	</div>
@@ -739,18 +739,18 @@
 				value="PRD-001"
 				disabled
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Price</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>PRD-001</ui5-table-cell>
-					<ui5-table-cell>$99</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row>
-					<ui5-table-cell>PRD-002</ui5-table-cell>
-					<ui5-table-cell>$149</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Product</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Price</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>PRD-001</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>$99</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>PRD-002</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>$149</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-input-table-suggest
@@ -759,18 +759,18 @@
 				value="Widget X"
 				readonly
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="150px">Product</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="100px">Stock</ui5-table-header-cell>
-				</ui5-table-header-row>
-				<ui5-table-row>
-					<ui5-table-cell>Widget X</ui5-table-cell>
-					<ui5-table-cell>50 units</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row>
-					<ui5-table-cell>Widget Y</ui5-table-cell>
-					<ui5-table-cell>25 units</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="150px">Product</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="100px">Stock</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Widget X</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>50 units</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>Widget Y</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>25 units</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 		</div>
 	</div>
@@ -790,22 +790,22 @@
 				placeholder="Type 'w' to open, then click the button..."
 				show-suggestions
 			>
-				<ui5-table-header-row slot="headerRow">
-					<ui5-table-header-cell width="100px">SKU</ui5-table-header-cell>
-					<ui5-table-header-cell min-width="200px">Product Name</ui5-table-header-cell>
-					<ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
-				</ui5-table-header-row>
+				<ui5-input-table-suggest-header-row slot="headerRow">
+					<ui5-input-table-suggest-header-cell width="100px">SKU</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell min-width="200px">Product Name</ui5-input-table-suggest-header-cell>
+					<ui5-input-table-suggest-header-cell width="80px">Price</ui5-input-table-suggest-header-cell>
+				</ui5-input-table-suggest-header-row>
 
-				<ui5-table-row>
-					<ui5-table-cell>SKU-001</ui5-table-cell>
-					<ui5-table-cell id="liveCell">Widget Alpha</ui5-table-cell>
-					<ui5-table-cell>$19</ui5-table-cell>
-				</ui5-table-row>
-				<ui5-table-row>
-					<ui5-table-cell>SKU-002</ui5-table-cell>
-					<ui5-table-cell>Widget Beta</ui5-table-cell>
-					<ui5-table-cell>$29</ui5-table-cell>
-				</ui5-table-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>SKU-001</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell id="liveCell">Widget Alpha</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>$19</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
+				<ui5-input-table-suggest-row>
+					<ui5-input-table-suggest-cell>SKU-002</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>Widget Beta</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>$29</ui5-input-table-suggest-cell>
+				</ui5-input-table-suggest-row>
 			</ui5-input-table-suggest>
 
 			<ui5-button id="liveMutateBtn">Rename first product</ui5-button>
@@ -826,12 +826,12 @@
 			placeholder="Search 112 products..."
 			show-suggestions
 		>
-			<ui5-table-header-row slot="headerRow">
-				<ui5-table-header-cell width="100px">SKU</ui5-table-header-cell>
-				<ui5-table-header-cell width="200px">Product Name</ui5-table-header-cell>
-				<ui5-table-header-cell min-width="100px">Category</ui5-table-header-cell>
-				<ui5-table-header-cell width="80px">Price</ui5-table-header-cell>
-			</ui5-table-header-row>
+			<ui5-input-table-suggest-header-row slot="headerRow">
+				<ui5-input-table-suggest-header-cell width="100px">SKU</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="200px">Product Name</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell min-width="100px">Category</ui5-input-table-suggest-header-cell>
+				<ui5-input-table-suggest-header-cell width="80px">Price</ui5-input-table-suggest-header-cell>
+			</ui5-input-table-suggest-header-row>
 		</ui5-input-table-suggest>
 
 		<div class="output" id="manyOutput">Selected: (none)</div>
@@ -849,7 +849,7 @@
 			}
 
 			for (let i = 1; i <= 112; i++) {
-				const row = document.createElement('ui5-table-row');
+				const row = document.createElement('ui5-input-table-suggest-row');
 
 				const sku = `SKU-${String(i).padStart(3, '0')}`;
 				const adj = adjectives[i % adjectives.length];
@@ -859,10 +859,10 @@
 				const price = `$${(Math.floor(Math.random() * 500) + 10).toFixed(2)}`;
 
 				row.innerHTML = `
-					<ui5-table-cell>${sku}</ui5-table-cell>
-					<ui5-table-cell>${productName}</ui5-table-cell>
-					<ui5-table-cell>${category}</ui5-table-cell>
-					<ui5-table-cell>${price}</ui5-table-cell>
+					<ui5-input-table-suggest-cell>${sku}</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>${productName}</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>${category}</ui5-input-table-suggest-cell>
+					<ui5-input-table-suggest-cell>${price}</ui5-input-table-suggest-cell>
 				`;
 
 				manyInput.appendChild(row);
@@ -883,7 +883,7 @@
 				input.addEventListener('selection-change', (e) => {
 					const row = e.detail.row;
 					if (row && output) {
-						const cells = row.querySelectorAll('[ui5-table-cell]');
+						const cells = row.querySelectorAll('[ui5-input-table-suggest-cell]');
 						const cellValues = Array.from(cells).map(cell => cell.textContent.trim());
 						output.textContent = `Selected Row: ${cellValues.join(' | ')}`;
 					}
@@ -920,7 +920,7 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-table-row]"));
+			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
 
 			// startsWithPerTerm: the typed value must match the start of any word
 			// in the row's text (same semantics as ui5-input's StartsWithPerTerm filter).
@@ -969,9 +969,9 @@
 					: data;
 
 				matches.forEach(item => {
-					const row = document.createElement('ui5-table-row');
+					const row = document.createElement('ui5-input-table-suggest-row');
 					item.cells.forEach(text => {
-						const cell = document.createElement('ui5-table-cell');
+						const cell = document.createElement('ui5-input-table-suggest-cell');
 						cell.textContent = text;
 						row.appendChild(cell);
 					});
@@ -992,7 +992,7 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-table-row]"));
+			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
 			// Snapshot the plain text of every cell so highlighting can be reapplied/cleared.
 			const originalText = rows.map(row => Array.from(row.children).map(cell => cell.textContent));
 
@@ -1016,7 +1016,7 @@
 				return;
 			}
 
-			const rows = Array.from(input.querySelectorAll("[ui5-table-row]"));
+			const rows = Array.from(input.querySelectorAll("[ui5-input-table-suggest-row]"));
 			// The first cell is plain text; snapshot it to re-highlight/clear on every keystroke.
 			const nameCells = rows.map(row => {
 				const cell = row.children[0];
