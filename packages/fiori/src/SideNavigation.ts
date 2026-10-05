@@ -334,7 +334,7 @@ class SideNavigation extends UI5Element {
 		(popover?.opener as HTMLElement)?.classList.remove("ui5-sn-item-active");
 	}
 
-	async _onMenuClose() {
+	_onMenuClose() {
 		const menu = this.getOverflowPopover();
 		if (!menu._popover.preventFocusRestore) {
 			return;
@@ -344,8 +344,6 @@ class SideNavigation extends UI5Element {
 
 		if (selectedItem) {
 			this.focusItem(selectedItem);
-			await selectedItem._waitForDomRef();
-
 			selectedItem.focus();
 		}
 	}

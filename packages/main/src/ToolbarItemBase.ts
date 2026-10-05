@@ -86,8 +86,7 @@ class ToolbarItemBase extends UI5Element {
 	 * @private
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async focusForToolbarNavigation(isForward: boolean) {
-		await this._waitForDomRef();
+	focusForToolbarNavigation(isForward: boolean) {
 		this.getFocusDomRef()?.focus();
 	}
 

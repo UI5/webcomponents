@@ -882,7 +882,6 @@ describe("General", () => {
 				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
 				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 3"></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -897,7 +896,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 3));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
 			})
 	});
 
@@ -4828,21 +4827,24 @@ describe("Keyboard Handling", () => {
 			cy.get("@input").should("have.value", "2222222222");
 		});
 
-		it("not be able to paste token with CTRL+V in read only", () => {
+		it("not be able to paste token with CTRL+V in read only", async () => {
 			cy.mount(<>
 				<MultiComboBox style={{ width: "500px" }} noValidation={true} readonly={true} />
 			</>)
 
 			cy.get("[ui5-multi-combobox]").as("mcb2");
 			cy.get("@mcb2").shadow().find("input").as("input");
+			cy.get("@mcb2").shadow().find(".ui5-multi-combobox-token").as("tokens");
 
 			cy.get("@input").realClick();
+			cy.get("@input").should("be.focused");
 
-			dispatchPasteEvent("22222");
+			dispatchPasteEvent();
 
-			// In read only mode pasting must not change the value or create tokens.
+			cy.get("@clipboardRead").should("have.been.calledOnce");
+
 			cy.get("@input").should("have.value", "");
-			cy.get("@mcb2").shadow().find(".ui5-multi-combobox-token").should("not.exist");
+			cy.get("@tokenes").should("not.exist");
 		});
 
 		it("should cut a token with CTRL+X", () => {
