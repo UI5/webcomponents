@@ -1,7 +1,6 @@
 import { getTheme as getConfiguredTheme } from "../InitialConfiguration.js";
 import { reRenderAllUI5Elements } from "../Render.js";
 import applyTheme from "../theming/applyTheme.js";
-import getThemeDesignerTheme from "../theming/getThemeDesignerTheme.js";
 import { DEFAULT_THEME, SUPPORTED_THEMES } from "../generated/AssetParameters.js";
 import { boot, isBooted } from "../Boot.js";
 import { attachConfigurationReset } from "./ConfigurationReset.js";
@@ -89,7 +88,7 @@ const isLegacyThemeFamily = () => {
 	const currentTheme = getTheme();
 
 	if (!isKnownTheme(currentTheme)) {
-		return !getThemeDesignerTheme()?.baseThemeName?.startsWith("sap_horizon");
+		return !getBaseTheme()?.startsWith("sap_horizon");
 	}
 
 	return !currentTheme.startsWith("sap_horizon");

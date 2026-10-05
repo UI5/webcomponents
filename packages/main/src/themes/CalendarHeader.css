@@ -44,23 +44,24 @@
 }
 
 .ui5-calheader-arrowbtn:hover {
-	background-color: var(--sapButton_Hover_Background);
-	color: var(--sapButton_Lite_TextColor);
+	background-color: var(--sapButton_Lite_Hover_Background);
+	color: var(--sapButton_Lite_Hover_TextColor);
 	box-shadow: var(--_ui5_calendar_header_arrow_button_box_shadow);
+	border-color: var(--sapButton_Lite_Hover_BorderColor);
 }
 
 .ui5-calheader-arrowbtn:active {
 	background-color: var(--sapButton_Active_Background);
 	color: var(--sapButton_Active_TextColor);
+	border-color: var(--sapButton_Lite_Active_BorderColor);
 }
 
 .ui5-calheader-arrowbtn,
 .ui5-calheader-middlebtn {
-	border: var(--_ui5_calendar_header_arrow_button_border);
-	border-radius: var(--_ui5_calendar_header_arrow_button_border_radius);
+	border: var(--sapButton_BorderWidth) solid var(--sapButton_Lite_BorderColor);
+	border-radius: var(--_ui5_calendar_header_arrow_button_border_radius, var(--sapButton_BorderCornerRadius));
 	display:flex;
 	background-color: var(--sapButton_Lite_Background);
-	border-color: var(--sapButton_Lite_BorderColor);
 }
 
 .ui5-calheader-middlebtn {
@@ -103,7 +104,7 @@
 
 .ui5-calheader-middlebtn:focus, .ui5-calheader-arrowbtn:focus {
 	border: var(--_ui5_calendar_header_middle_button_focus_border);
-	border-radius: var(--_ui5_calendar_header_middle_button_focus_border_radius);
+	border-radius: var(--_ui5_calendar_header_middle_button_focus_border_radius, var(--sapButton_BorderCornerRadius));
 	outline: var(--_ui5_calendar_header_middle_button_focus_outline);
 	outline-offset: -0.125rem;
 	background: var(--_ui5_calendar_header_middle_button_focus_background);

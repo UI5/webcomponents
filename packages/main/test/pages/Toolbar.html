@@ -436,6 +436,38 @@
 			menu2.opener = btnOpenMenu2;
 		});
 	</script>
+
+	<!-- ═══════════════════════════════════════════════════════════════
+	     Grouped overflow — feature test section
+	     ═══════════════════════════════════════════════════════════════ -->
+	<h3 style="margin:24px 16px 4px">Grouped overflow — basic (group "filters" should move atomically)</h3>
+	<p style="margin:0 16px 8px;font-size:12px">Toolbar is 320px. "Filter:" button + select share overflow-group="filters". Resize or check overflow: both should appear together in popover.</p>
+	<ui5-toolbar id="tb-grouped" style="width:320px;">
+		<ui5-toolbar-button icon="add" text="Add"></ui5-toolbar-button>
+		<ui5-toolbar-button icon="decline" text="Reject"></ui5-toolbar-button>
+		<ui5-toolbar-separator></ui5-toolbar-separator>
+		<ui5-toolbar-button text="Filter:" overflow-group="filters"></ui5-toolbar-button>
+		<ui5-toolbar-select overflow-group="filters">
+			<ui5-toolbar-select-option>All</ui5-toolbar-select-option>
+			<ui5-toolbar-select-option selected>Open</ui5-toolbar-select-option>
+			<ui5-toolbar-select-option>Closed</ui5-toolbar-select-option>
+		</ui5-toolbar-select>
+	</ui5-toolbar>
+
+	<h3 style="margin:24px 16px 4px">Grouped overflow — invalid priority (should warn once, priority downgraded)</h3>
+	<p style="margin:0 16px 8px;font-size:12px">Button has overflow-group="g" AND overflow-priority="AlwaysOverflow". Should produce one console.warn and treat priority as Default.</p>
+	<ui5-toolbar id="tb-invalid-priority" style="width:600px;">
+		<ui5-toolbar-button text="Normal"></ui5-toolbar-button>
+		<ui5-toolbar-button text="Grouped+Always" overflow-group="g" overflow-priority="AlwaysOverflow"></ui5-toolbar-button>
+	</ui5-toolbar>
+
+	<h3 style="margin:24px 16px 4px">Grouped overflow — spacer with group (should warn once, spacer ignored)</h3>
+	<p style="margin:0 16px 8px;font-size:12px">Spacer has overflow-group="sg". Should produce one console.warn and the spacer should overflow independently.</p>
+	<ui5-toolbar id="tb-spacer-group" style="width:600px;">
+		<ui5-toolbar-button text="A"></ui5-toolbar-button>
+		<ui5-toolbar-spacer overflow-group="sg"></ui5-toolbar-spacer>
+		<ui5-toolbar-button text="B"></ui5-toolbar-button>
+	</ui5-toolbar>
 </body>
 
 </html>

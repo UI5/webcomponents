@@ -696,7 +696,7 @@ describe("Dialog general interaction", () => {
 		});
 	});
 
-	it.skip("dialog remains anchored after resizing in RTL mode", () => {
+	it("dialog remains anchored after resizing in RTL mode", () => {
 		cy.mount(
 			<>
 				<div dir="rtl">
@@ -712,19 +712,32 @@ describe("Dialog general interaction", () => {
 		cy.get("#rtl-min-width-dialog").invoke("attr", "open", true);
 		cy.get<Dialog>("#rtl-min-width-dialog").ui5DialogOpened();
 
+		// Use explicit clientX/clientY via .trigger() instead of realMouse: mousedown
+		// on the handle, mousemove/mouseup on the body bubble to the window listeners.
+		// This avoids the CDP hit-test occasionally missing the still-settling handle.
+		const dragResizeHandle = (deltaX: number) => {
+			cy.get("#rtl-min-width-dialog")
+				.shadow()
+				.find(".ui5-popup-resize-handle")
+				.should("be.visible")
+				.then(($handle) => {
+					const rect = $handle[0].getBoundingClientRect();
+					const startX = rect.left + rect.width / 2;
+					const startY = rect.top + rect.height / 2;
+
+					cy.wrap($handle).trigger("mousedown", { clientX: startX, clientY: startY, which: 1, force: true });
+					cy.get("body").trigger("mousemove", { clientX: startX + deltaX, clientY: startY, force: true });
+					cy.get("body").trigger("mouseup", { force: true });
+				});
+		};
+
 		cy.get("#rtl-min-width-dialog").then(($dialog) => {
 			const initialLeft = parseInt($dialog.css("left"));
 			const initialWidth = parseInt($dialog.css("width"));
 			const initialRightEdge = initialLeft + initialWidth;
 
-			cy.get("#rtl-min-width-dialog")
-				.shadow()
-				.find(".ui5-popup-resize-handle")
-				.should("be.visible")
-				.realMouseDown({ position: "center" })
-				.realMouseMove(210, 0)
-				.realMouseMove(420, 0)
-				.realMouseUp();
+			// First resize: drag the bottom-left handle far to the right to reach min width.
+			dragResizeHandle(800);
 
 			cy.get("#rtl-min-width-dialog").should(($atMin) => {
 				expect(parseInt($atMin.css("width"))).to.be.closeTo(320, 1);
@@ -736,14 +749,8 @@ describe("Dialog general interaction", () => {
 				const widthAtMinWidth = parseInt($atMin.css("width"));
 				const rightEdgeAtMinWidth = leftAtMinWidth + widthAtMinWidth;
 
-				cy.get("#rtl-min-width-dialog")
-					.shadow()
-					.find(".ui5-popup-resize-handle")
-					.should("be.visible")
-					.realMouseDown({ position: "center" })
-					.realMouseMove(175, 0)
-					.realMouseMove(350, 0)
-					.realMouseUp();
+				// Second resize: attempt to shrink further while already at min width.
+				dragResizeHandle(400);
 
 				cy.get("#rtl-min-width-dialog").should(($final) => {
 					const finalLeft = parseInt($final.css("left"));

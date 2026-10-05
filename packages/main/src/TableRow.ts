@@ -212,6 +212,14 @@ class TableRow extends TableRowBase<TableCell> {
 		return TableRowBase.i18nBundle.getText(TABLE_ROW_OVERFLOW_BUTTON);
 	}
 
+	get _overflowButtonComponent(): typeof Button | undefined {
+		return this.actions.at(0)?.overflowButtonComponent;
+	}
+
+	get _overflowButtonIcon(): string | undefined {
+		return this.actions.at(0)?.overflowButtonIcon;
+	}
+
 	get _flexibleActions() {
 		const flexibleActions = this.actions.filter(action => !action.isFixedAction());
 		const fixedActionsCount = this.actions.length - flexibleActions.length;

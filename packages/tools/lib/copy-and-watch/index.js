@@ -61,9 +61,15 @@ const copyAndWatchFn = async (argv) => {
 	const sources = args;
 	const parents = [...new Set(sources.map(globParent))];
 
+	// glob-parent yields POSIX-style paths (forward slashes) while globSync/chokidar
+	// return native paths (backslashes on Windows). Compare on normalized paths so the
+	// parent lookup works cross-platform, otherwise `parent` becomes undefined and
+	// path.relative() throws ERR_INVALID_ARG_TYPE on Windows.
+	const toPosix = p => p.split(path.sep).join("/");
 	const findTarget = from => {
+		const fromPosix = toPosix(from);
 		const parent = parents
-			.filter(p => from.indexOf(p) >= 0)
+			.filter(p => fromPosix.indexOf(toPosix(p)) >= 0)
 			.sort()
 			.reverse()[0];
 		return path.join(target, path.relative(parent, from));

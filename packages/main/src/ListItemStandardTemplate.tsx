@@ -23,7 +23,7 @@ function listItemContent(this: ListItemStandard) {
 			{renderTitle.call(this)}
 			{renderDescription.call(this)}
 
-			{!this.typeActive && <span class="ui5-hidden-text">{this.type}</span>}
+			{!this.typeActive && !this.isInactiveSelectable && <span class="ui5-hidden-text">{this.type}</span>}
 		</div>
 
 		{!this.description && renderAdditionalText.call(this)}

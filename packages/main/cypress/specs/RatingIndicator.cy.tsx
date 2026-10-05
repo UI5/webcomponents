@@ -178,6 +178,20 @@ describe("RatingIndicator", () => {
 					expect(height).to.be.lessThan(24.1);
 				  });
 		});
+
+		it("should render half-star icon at full item size", () => {
+			cy.mount(<RatingIndicator value={2.5}></RatingIndicator>);
+
+			cy.get("ui5-rating-indicator")
+				.shadow()
+				.find(".ui5-rating-indicator-item-half [ui5-icon]")
+				.first()
+				.should($el => {
+					const height = parseFloat($el.css("height"));
+					expect(height).to.be.greaterThan(23.9);
+					expect(height).to.be.lessThan(24.1);
+				});
+		});
 	});
 
 	describe("RatingIndicator Accessibility", () => {

@@ -472,7 +472,7 @@ let typeChecker;
 let typeProgram;
 
 export default {
-	globs: ["src/!(*generated)/*.ts", "src/!(*bundle)*.ts"],
+	globs: ["src/!(*generated)/*.{ts,tsx}", "src/!(*bundle)*.{ts,tsx}"],
 	outdir: 'dist',
 	overrideModuleCreation: ({ ts, globs }) => {
 		typeProgram = ts.createProgram(globs, {
@@ -518,7 +518,7 @@ export default {
 				}
 			},
 			moduleLinkPhase({ moduleDoc }) {
-				moduleDoc.path = moduleDoc.path?.replace(/^src/, "dist").replace(/\.ts$/, ".js");
+				moduleDoc.path = moduleDoc.path?.replace(/^src/, "dist").replace(/\.tsx?$/, ".js");
 
 				moduleDoc.exports = moduleDoc.exports.
 					filter(e => !(e.kind === "custom-element-definition" && !moduleDoc.declarations?.find(d => d.name === e.name)?.tagName))
@@ -527,7 +527,7 @@ export default {
 					const classNode = moduleDoc.declarations.find(c => c.name === e.declaration.name);
 
 					if (e.declaration && e.declaration.module) {
-						e.declaration.module = e.declaration.module.replace(/^src/, "dist").replace(/\.ts$/, ".js");
+						e.declaration.module = e.declaration.module.replace(/^src/, "dist").replace(/\.tsx?$/, ".js");
 					}
 
 					if (classNode?.customElement && classNode.tagName && e.kind !== "custom-element-definition") {

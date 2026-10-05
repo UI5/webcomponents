@@ -2,6 +2,12 @@ import { getCurrentRuntimeIndex, compareRuntimes } from "./Runtimes.js";
 
 const isSSR = typeof document === "undefined";
 
+// Workaround for https://bugs.webkit.org/show_bug.cgi?id=278778 — Safari's GC can prematurely
+// collect the JS wrapper of an adopted stylesheet even while it's still in document.adoptedStyleSheets,
+// wiping out any expando properties (_ui5StyleId, _ui5Theme, _ui5RuntimeIndex) attached to it.
+// Holding a strong reference here keeps the exact wrapper object alive through a path the GC traces correctly.
+const stylesheetMap = new Map<string, CSSStyleSheet>();
+
 const getStyleId = (name: string, value: string) => {
 	return value ? `${name}|${value}` : name;
 };
@@ -19,6 +25,7 @@ const createStyle = (content: string, name: string, value = "", theme?: string) 
 	const stylesheet = new CSSStyleSheet();
 	stylesheet.replaceSync(content);
 	(stylesheet as Record<string, any>)._ui5StyleId = getStyleId(name, value); // set an id so that we can find the style later
+	stylesheetMap.set(getStyleId(name, value), stylesheet);
 	if (theme) {
 		(stylesheet as Record<string, any>)._ui5RuntimeIndex = currentRuntimeIndex;
 		(stylesheet as Record<string, any>)._ui5Theme = theme;

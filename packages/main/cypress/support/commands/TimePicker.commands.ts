@@ -39,10 +39,14 @@ Cypress.Commands.add("ui5TimePickerGetClock", { prevSubject: true }, (subject, c
 	cy.get("@timePicker")
 		.should("have.attr", "open");
 
-	return cy.get("@timePicker")
+	cy.get("@timePicker")
 		.shadow()
 		.find<ResponsivePopover>("[ui5-responsive-popover]")
-		.ui5ResponsivePopoverOpened()
+		.ui5ResponsivePopoverOpened();
+
+	return cy.get("@timePicker")
+		.shadow()
+		.find("[ui5-responsive-popover]")
 		.find("[ui5-time-selection-clocks]")
 		.shadow()
 		.find(`ui5-toggle-spin-button[data-ui5-clock="${clockType}"]`);
