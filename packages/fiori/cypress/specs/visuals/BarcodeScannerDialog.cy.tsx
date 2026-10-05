@@ -1,5 +1,6 @@
 import BarcodeScannerDialog from "../../../src/BarcodeScannerDialog.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
 
 // Opens the dialog by bypassing the camera: stubs getUserMedia and sets isReadyToScan
@@ -15,7 +16,7 @@ const openDialog = (id: string) => {
 	});
 	cy.get(`[ui5-barcode-scanner-dialog]#${id}`)
 		.shadow()
-		.find("[ui5-dialog]")
+		.find<Dialog>("[ui5-dialog]")
 		.ui5DialogOpened();
 };
 
