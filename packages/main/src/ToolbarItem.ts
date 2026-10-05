@@ -400,7 +400,7 @@ class ToolbarItem extends ToolbarItemBase {
 		};
 	}
 
-	focusForToolbarNavigation(isForward: boolean) {
+	async focusForToolbarNavigation(isForward: boolean) {
 		const target = this.getFocusDomRefForNavigation(isForward);
 		target?.focus();
 	}
