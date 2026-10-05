@@ -172,9 +172,9 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * Defines the displayed initials.
 	 *
 	 * Up to three letters from an alphabetic script can be displayed as initials.
-	 * Supported scripts: Latin, Cyrillic, Greek, Arabic, Hebrew, Armenian, Georgian,
-	 * Devanagari, and Thai. Logographic and syllabic scripts (e.g. Chinese, Japanese,
-	 * Korean) are not supported - the fallback icon is shown instead.
+	 * All scripts used in SAP-supported languages are accepted, except logographic and
+	 * pure syllabic scripts where the concept of initials does not apply: Han (Chinese,
+	 * Japanese kanji), Hiragana, and Katakana. Korean (Hangul) is supported.
 	 * If the letters do not fit inside the avatar shape at the current size, the fallback
 	 * icon is shown instead.
 	 * @default undefined
@@ -362,11 +362,13 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get validInitials() {
-		// initials should consist of only 1, 2 or 3 letters from an alphabetic script.
-		// Logographic and syllabic Asian scripts (Han, Hiragana, Katakana, Hangul) are excluded
-		// because those languages do not use initials - the fallback icon is shown instead.
-		const validInitials = /^[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Armenian}\p{Script=Georgian}\p{Script=Devanagari}\p{Script=Thai}]{1,3}$/u,
-			areInitialsValid = this.initials && validInitials.test(this.initials);
+		// initials should consist of only 1, 2 or 3 letters from any script where
+		// initials are meaningful. Han (Chinese/Japanese kanji), Hiragana, and Katakana
+		// are excluded because those scripts do not use initials. Korean (Hangul) is
+		// allowed since Korean names can be abbreviated to their syllabic characters.
+		const validInitials = /^\p{L}{1,3}$/u,
+			excludedScripts = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u,
+			areInitialsValid = this.initials && validInitials.test(this.initials) && !excludedScripts.test(this.initials);
 
 		if (areInitialsValid) {
 			return this.initials;
