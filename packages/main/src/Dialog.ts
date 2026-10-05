@@ -236,6 +236,9 @@ class Dialog extends Popup {
 	_fullscreenKeydownHandler: (e: KeyboardEvent) => void;
 	_cancelHandler: (e: Event) => void;
 	_nativeCloseHandler: (e: Event) => void;
+	_modalitySuspended = false;
+	_suspendingModality = false;
+	_focusBeforeSuspend?: HTMLElement | null;
 	_y?: number;
 	_x?: number;
 	_isRTL?: boolean;
@@ -528,8 +531,9 @@ class Dialog extends Popup {
 		// An initially-open dialog runs openPopup() from onEnterDOM before the
 		// shadow <dialog> exists, so _show()/_attachBrowserEvents() no-op. Once
 		// rendered, reconcile: attach listeners (idempotent) and show it modally.
-		// A no-op during normal open/close (already open, or _opened is false).
-		if (this._opened && this._dialogElement && !this._dialogElement.open) {
+		// A no-op during normal open/close (already open, or _opened is false), and
+		// while modality is suspended (the dialog is intentionally a popover then).
+		if (this._opened && this._dialogElement && !this._dialogElement.open && !this._modalitySuspended) {
 			this._attachBrowserEvents();
 			this._show();
 		}
@@ -726,9 +730,80 @@ class Dialog extends Popup {
 		// CloseWatcher force-closes on a second Escape). Reconcile through the
 		// close lifecycle if it closes while we still think we're open; a no-op
 		// when we closed it ourselves (_opened is already false by then).
+		// Ignore the close() we trigger ourselves while switching modality.
+		if (this._suspendingModality) {
+			return;
+		}
 		if (this._opened) {
 			this.closePopup(true);
 		}
+	}
+
+	/**
+	 * Temporarily turns the modal <dialog> into a non-modal top-layer popover.
+	 *
+	 * A modal <dialog> (showModal) blocks focus from reaching any element outside
+	 * its own subtree - including a top-layer popup opened above it (e.g. an
+	 * OpenUI5 dialog). While such a popup is above us we drop modality so it can
+	 * be focused and operated; the OpenUI5 interop (patchPopup) drives this.
+	 * @private
+	 */
+	_suspendModality() {
+		const dialog = this._dialogElement;
+		if (this._modalitySuspended
+			|| !this.isConnected
+			|| !dialog
+			|| !dialog.open
+			|| typeof dialog.showPopover !== "function"
+			|| !dialog.matches(":modal")) {
+			return;
+		}
+
+		this._modalitySuspended = true;
+		// Remember the control that currently has focus (typically the control
+		// opening the popup above us) so we can restore it when modality resumes.
+		// Use document.activeElement (the light-DOM host of the focused control),
+		// which stays within this dialog - getFocusedElement() would return an
+		// element inside the control's shadow root, outside this.contains().
+		const activeElement = document.activeElement as HTMLElement | null;
+		this._focusBeforeSuspend = activeElement && this.contains(activeElement) ? activeElement : null;
+		// close() exits the top layer and fires "close" - suppress our teardown.
+		this._suspendingModality = true;
+		dialog.close();
+		this._suspendingModality = false;
+		// Re-enter the top layer as a non-modal popover (below any popup promoted
+		// above us, since the caller promotes that popup afterwards).
+		dialog.setAttribute("popover", "manual");
+		dialog.showPopover();
+	}
+
+	/**
+	 * Restores the modal state removed by `_suspendModality`.
+	 * @private
+	 */
+	_resumeModality() {
+		const dialog = this._dialogElement;
+		if (!this._modalitySuspended || !dialog) {
+			return;
+		}
+
+		this._modalitySuspended = false;
+		if (dialog.matches(":popover-open")) {
+			dialog.hidePopover();
+		}
+		dialog.removeAttribute("popover");
+		if (this._opened && this.isConnected && !dialog.open) {
+			// showModal() moves focus to the first tabbable; restore focus to the
+			// control that had it before suspension (the opener of the popup above).
+			const toRestore = this._focusBeforeSuspend;
+			this._skipFocusForward = true;
+			dialog.showModal();
+			this._skipFocusForward = false;
+			if (toRestore && toRestore.isConnected && this.contains(toRestore) && typeof toRestore.focus === "function") {
+				toRestore.focus();
+			}
+		}
+		this._focusBeforeSuspend = null;
 	}
 
 	_onFullscreenKeydown(e: KeyboardEvent) {

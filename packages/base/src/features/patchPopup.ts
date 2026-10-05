@@ -84,6 +84,22 @@ const getTopmostPopup = () => {
 	return AllOpenedPopupsRegistry.openedRegistry[AllOpenedPopupsRegistry.openedRegistry.length - 1].instance;
 };
 
+// A modal <dialog> (showModal) blocks focus from reaching any element outside
+// its subtree, including a top-layer popup opened above it. When an OpenUI5
+// popup opens above a Web Component dialog we ask that dialog to drop modality
+// (become a non-modal top-layer popover) so the OpenUI5 popup can be operated,
+// and restore it once the OpenUI5 popup closes. These are no-ops for popups
+// that are not modal Web Component dialogs.
+const suspendModalityOnTopmost = () => {
+	const topmost = getTopmostPopup() as { _suspendModality?: () => void } | null;
+	topmost?._suspendModality?.();
+};
+
+const resumeModalityOnTopmost = () => {
+	const topmost = getTopmostPopup() as { _resumeModality?: () => void } | null;
+	topmost?._resumeModality?.();
+};
+
 /**
  * Determines whether there is a Web Component popup opened above (a specified popup).
  *
@@ -218,7 +234,8 @@ const patchOpen = (Popup: OpenUI5PopupClass) => {
 	}
 	const origOpen = PatchedFunctions[key].originalFn;
 	Popup.prototype.open = function open(...args: any[]) {
-		origOpen.apply(this, args); // call open first to initiate opening
+		suspendModalityOnTopmost(); // drop modality on the WebC dialog below FIRST, so OpenUI5 can focus its content
+		origOpen.apply(this, args); // then initiate opening
 		openNativePopoverForOpenUI5(this);
 
 		addOpenedPopup({
@@ -238,6 +255,7 @@ const patchClosed = (Popup: OpenUI5PopupClass) => {
 		closeNativePopoverForOpenUI5(this);
 		_origClosed.apply(this, args); // only then call _close
 		removeOpenedPopup(this);
+		resumeModalityOnTopmost(); // restore modality if a WebC dialog is topmost again
 	};
 };
 

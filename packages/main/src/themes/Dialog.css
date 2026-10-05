@@ -75,7 +75,13 @@
 	border-end-end-radius: inherit;
 }
 
-.ui5-popup-root:not([open]) {
+/*
+ * Hide the native <dialog> only when it is truly closed. showModal() sets the
+ * [open] attribute; while modality is suspended (an OpenUI5 popup is above us)
+ * the dialog is shown as a non-modal popover instead, which uses :popover-open
+ * and has no [open] attribute - it must stay visible, so exclude it here.
+ */
+.ui5-popup-root:not([open]):not(:popover-open) {
 	display: none;
 }
 
