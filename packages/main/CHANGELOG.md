@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.5](https://github.com/UI5/webcomponents/compare/v2.25.4...v2.25.5) (2026-10-05)
+
+
+### Bug Fixes
+
+* **ui5-calendar:** add calendar header hover border in HCB [2.25.x] ([#14070](https://github.com/UI5/webcomponents/issues/14070)) ([11aa506](https://github.com/UI5/webcomponents/commit/11aa5061f2b9f2133cc0ef1ef16bd9be352635c4))
+
+
+
+
+
 ## [2.25.4](https://github.com/UI5/webcomponents/compare/v2.25.3...v2.25.4) (2026-09-17)
 
 

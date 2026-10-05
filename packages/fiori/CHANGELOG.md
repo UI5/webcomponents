@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.5](https://github.com/UI5/webcomponents/compare/v2.25.4...v2.25.5) (2026-10-05)
+
+
+### Bug Fixes
+
+* **ui5-dynamic-page:** toggle button reading fixed [2.25.x] ([#13990](https://github.com/UI5/webcomponents/issues/13990)) ([#14090](https://github.com/UI5/webcomponents/issues/14090)) ([31c8627](https://github.com/UI5/webcomponents/commit/31c862785d2451dc8e7b3e09c62092c66e44617a))
+
+
+
+
+
 ## [2.25.4](https://github.com/UI5/webcomponents/compare/v2.25.3...v2.25.4) (2026-09-17)
 
 **Note:** Version bump only for package @ui5/webcomponents-fiori

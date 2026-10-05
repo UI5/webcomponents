@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.5](https://github.com/UI5/webcomponents/compare/v2.25.4...v2.25.5) (2026-10-05)
+
+**Note:** Version bump only for package @ui5/create-webcomponents-package
+
+
+
+
+
 ## [2.25.4](https://github.com/UI5/webcomponents/compare/v2.25.3...v2.25.4) (2026-09-17)
 
 **Note:** Version bump only for package @ui5/create-webcomponents-package
