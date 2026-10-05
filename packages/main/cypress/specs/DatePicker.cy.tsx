@@ -1591,6 +1591,30 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "value-state", "None");
 	});
 
+	it("selects an in-range day from the max month when clicked from the previous month view", () => {
+		cy.mount(<DatePicker maxDate="2026-12-10" value="2026-11-15"></DatePicker>);
+
+		cy.get("[ui5-date-picker]")
+			.as("datePicker")
+			.ui5DatePickerValueHelpIconPress();
+
+		const dec4Timestamp = new Date(Date.UTC(2026, 11, 4, 0, 0, 0)).valueOf() / 1000;
+
+		cy.get("@datePicker")
+			.ui5DatePickerGetPopoverDate(dec4Timestamp)
+			.realMouseDown();
+
+		cy.get("@datePicker")
+			.ui5DatePickerGetPopoverDate(dec4Timestamp)
+			.realMouseUp();
+
+		cy.get("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get("@datePicker")
+			.should("have.attr", "value", "2026-12-04");
+	});
+
 	it("Min and max dates are set, with no format pattern provided, using valid ISO format", () => {
 		cy.mount(<DatePicker minDate="2019-09-01" maxDate="2019-11-01"></DatePicker>);
 
