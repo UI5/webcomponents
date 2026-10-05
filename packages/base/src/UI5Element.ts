@@ -1046,7 +1046,7 @@ abstract class UI5Element extends HTMLElement {
 		// Focus synchronously when the shadow DOM is already rendered so that focus
 		// ordering matches native elements (await always defers to a microtask, even
 		// for an already-resolved promise, which lets a later sync focus() be stolen back).
-		if (this._rendered) {
+		if (this._rendered && !this._suppressInvalidation) {
 			this._focusDomRef(focusOptions);
 			return;
 		}
