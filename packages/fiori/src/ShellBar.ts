@@ -541,6 +541,13 @@ class ShellBar extends UI5Element {
 	// decision from oscillating between renders and spinning the render queue.
 	private lastOverflowSignature = "";
 
+	// Pending animation frame for the "still overflowing" re-measure (see onAfterRendering).
+	private overflowSettleRaf?: number;
+
+	// Hidden-set size at the last "still overflowing" re-measure, used to stop retrying once a
+	// pass stops making progress (e.g. only protected items remain and the row can't fit them).
+	private lastSettleHiddenCount = -1;
+
 	private readonly breakpoints = [599, 1023, 1439, 1919, 10000];
 	private readonly breakpointMap: Record<number, ShellBarBreakpoint> = {
 		599: "S",
@@ -651,6 +658,10 @@ class ShellBar extends UI5Element {
 
 	onExitDOM() {
 		ResizeHandler.deregister(this, this.handleResizeBound);
+		if (this.overflowSettleRaf !== undefined) {
+			cancelAnimationFrame(this.overflowSettleRaf);
+			this.overflowSettleRaf = undefined;
+		}
 		this.searchAdaptor?.unsubscribe();
 	}
 
@@ -669,6 +680,29 @@ class ShellBar extends UI5Element {
 	onAfterRendering() {
 		this.updateBreakpoint();
 		this.updateOverflow();
+
+		// On first mount the action/overflow buttons are in the DOM but their own component render
+		// hasn't produced a width yet, so this pass can under-hide (e.g. notifications left in the
+		// bar when they should overflow). Nothing re-triggers the measurement once child widths
+		// settle, and the signature guard would block it anyway. So when the row is still
+		// overflowing after a pass, clear the signature and re-measure on the next frame — by then
+		// the children have laid out.
+		//
+		// This terminates: each re-measure either hides more (progress) or hides nothing new. We
+		// only reschedule while progress is being made (the hidden set grew), so once the row can't
+		// shrink further — e.g. only protected items remain and still don't fit — it stops instead
+		// of spinning a frame loop.
+		if (this.overflowSettleRaf === undefined
+			&& this.overflowInner && this.overflowOuter
+			&& this.overflow?.isOverflowing(this.overflowOuter, this.overflowInner)
+			&& this.hiddenItemsIds.length !== this.lastSettleHiddenCount) {
+			this.lastSettleHiddenCount = this.hiddenItemsIds.length;
+			this.overflowSettleRaf = requestAnimationFrame(() => {
+				this.overflowSettleRaf = undefined;
+				this.lastOverflowSignature = "";
+				this.updateOverflow();
+			});
+		}
 	}
 
 	/* =================== Actions Management =================== */
@@ -821,15 +855,40 @@ class ShellBar extends UI5Element {
 					if (!titleEl) {
 						return false;
 					}
-					// Wrap the title to 2 lines in place: cap its width to ~half the single-line
-					// width so the text breaks across two rows, then clamp to 2 lines. This narrows
-					// the branding area, which may relieve the row overflow so the identifier stays.
+					// Measure the real single-line height before wrapping (the title is unwrapped at
+					// the start of each pass). Using the actual rendered height avoids guessing the
+					// line-height, which computes to "normal" here and so can't be read numerically.
 					const singleLineWidth = titleEl.scrollWidth;
-					const twoLineWidth = Math.ceil(singleLineWidth / 2);
+					const singleLineHeight = titleEl.scrollHeight;
+
+					// Wrap the title to 2 lines in place by capping its width, which narrows the
+					// branding area and may relieve the row overflow so the identifier stays.
+					//
+					// The cap is ~60% (not 50%) of the single-line width: a balanced 2-line wrap puts
+					// about half the text on each line, but line breaks only land on word boundaries,
+					// so the longer line runs over 50% — a flat singleLineWidth/2 cap frequently
+					// spills onto a 3rd line. 60% leaves enough room for the break to land on 2 lines.
+					const twoLineWidth = Math.ceil(singleLineWidth * 0.6);
 					brandingEl.style.setProperty("--_ui5_shellbar_branding_title_max_width", `${twoLineWidth}px`);
 					brandingEl.toggleAttribute("_title-wrap", true);
 					// eslint-disable-next-line no-unused-expressions
-					brandingEl.offsetWidth; // force synchronous layout so the loop re-measures fresh
+					brandingEl.offsetWidth; // force synchronous layout so the measurements are fresh
+
+					// Two ways wrapping fails to keep the title readable in the bar, both of which
+					// require moving the identifier to the overflow (where it is always fully shown):
+					//   1. It still needs more than 2 lines (scrollHeight — the true content height —
+					//      exceeds ~2 line boxes; clientHeight/offsetHeight report the clamped 2-line
+					//      box even while a 3rd line is clipped, so they can't detect this).
+					//   2. A single unbreakable word is wider than the cap, so it can't wrap and
+					//      overflows the box horizontally (scrollWidth > clientWidth) — overflow:hidden
+					//      would clip it mid-word rather than wrap it.
+					const spilledVertically = titleEl.scrollHeight > singleLineHeight * 2.5;
+					const spilledHorizontally = titleEl.scrollWidth > titleEl.clientWidth + 1;
+					if (spilledVertically || spilledHorizontally) {
+						brandingEl.removeAttribute("_title-wrap");
+						brandingEl.style.removeProperty("--_ui5_shellbar_branding_title_max_width");
+						return false;
+					}
 					return true;
 				}
 				return false;

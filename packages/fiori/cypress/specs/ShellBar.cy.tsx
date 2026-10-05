@@ -1094,7 +1094,10 @@ describe("Events", () => {
 				.find(".ui5-shellbar-overflow-button")
 				.should("exist")
 				.then(overflowBtn => {
-					cy.get("@shellbar").then($shellbar => {
+					// Overflow resolution settles over a few animation frames after mount (the action
+					// buttons have no measurable width until their own render completes), so retry the
+					// assertion until notificationsDomRef points at the overflow button.
+					cy.get("@shellbar").should($shellbar => {
 						const shellbar = $shellbar[0] as ShellBar;
 						expect(shellbar.notificationsDomRef).to.equal(overflowBtn[0]);
 					});
