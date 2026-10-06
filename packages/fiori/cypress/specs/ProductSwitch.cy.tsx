@@ -151,8 +151,58 @@ describe("ProductSwitch ARIA attributes", () => {
 		cy.get("[ui5-product-switch]")
 			.shadow()
 			.find(".ui5-product-switch-root")
-			.should("have.attr", "role", "list")
+			.should("have.attr", "role", "menu")
 			.should("have.attr", "aria-label", "Products");
+	});
+
+	it("items have role menuitem", () => {
+		cy.mount(
+			<ProductSwitch>
+				<ProductSwitchItem titleText="Home" icon="home" targetSrc="https://example.com"></ProductSwitchItem>
+				<ProductSwitchItem titleText="Analytics Cloud" icon="business-objects-experience"></ProductSwitchItem>
+			</ProductSwitch>
+		);
+
+		// link variant (targetSrc set) -> <a role="menuitem">
+		cy.get("[ui5-product-switch-item]").first()
+			.shadow()
+			.find(".ui5-product-switch-item-root")
+			.should("have.attr", "role", "menuitem");
+
+		// div variant (no targetSrc) -> <div role="menuitem">
+		cy.get("[ui5-product-switch-item]").last()
+			.shadow()
+			.find(".ui5-product-switch-item-root")
+			.should("have.attr", "role", "menuitem");
+	});
+});
+
+describe("ProductSwitch busy state", () => {
+	it("shows busy indicator when loading is true", () => {
+		cy.mount(
+			<ProductSwitch loading={true}>
+				<ProductSwitchItem titleText="Home" icon="home"></ProductSwitchItem>
+			</ProductSwitch>
+		);
+
+		cy.get("[ui5-product-switch]")
+			.shadow()
+			.find("[ui5-busy-indicator]")
+			.should("exist")
+			.and("have.attr", "active");
+	});
+
+	it("does not show busy indicator when loading is false", () => {
+		cy.mount(
+			<ProductSwitch loading={false}>
+				<ProductSwitchItem titleText="Home" icon="home"></ProductSwitchItem>
+			</ProductSwitch>
+		);
+
+		cy.get("[ui5-product-switch]")
+			.shadow()
+			.find("[ui5-busy-indicator]")
+			.should("not.exist");
 	});
 });
 

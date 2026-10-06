@@ -9,15 +9,17 @@
 
 :host([selected]) .ui5-product-switch-item-root {
 	background: var(--sapList_SelectionBackgroundColor);
-	border: 0.125rem solid var(--sapList_SelectionBorderColor);
+	box-shadow: inset 0 0 0 0.125rem var(--sapList_SelectionBorderColor);
 }
 
-:host(:hover) .ui5-product-switch-item-root {
-	background :var(--sapList_Hover_Background);
-}
+@media (hover: hover) {
+	:host(:hover) .ui5-product-switch-item-root {
+		background: var(--sapList_Hover_Background);
+	}
 
-:host([selected]:hover) .ui5-product-switch-item-root {
-	background: var(--sapList_Hover_SelectionBackground);
+	:host([selected]:hover) .ui5-product-switch-item-root {
+		background: var(--sapList_Hover_SelectionBackground);
+	}
 }
 
 :host([active]) .ui5-product-switch-item-root,
@@ -25,10 +27,9 @@
 	background: var(--sapList_Active_Background);
 }
 
-:host([active]) .ui5-product-switch-item-root .ui5-product-switch-item-icon,
 :host([active]) .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-title,
 :host([active]) .ui5-product-switch-item-root .ui5-product-switch-item-text-content .ui5-product-switch-item-subtitle {
-	color:var(--sapList_Active_TextColor);
+	color: var(--sapList_Active_TextColor);
 }
 
 :host([desktop]) .ui5-product-switch-item-root:focus,
@@ -56,10 +57,6 @@
 	padding-top: .5rem;
 	cursor: pointer;
 	border: var(--_ui5_product_switch_item_border);
-}
-
-:host([selected]) .ui5-product-switch-item-root {
-	padding: .375rem;
 }
 
 .ui5-product-switch-item-root .ui5-product-switch-item-icon {
