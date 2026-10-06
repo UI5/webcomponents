@@ -1,5 +1,7 @@
 import {
 	isUpShift,
+	isSpace,
+	isEnter,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -9,11 +11,22 @@ import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import TableSelectionMode from "./types/TableSelectionMode.js";
 import CheckBox from "./CheckBox.js";
 import RadioButton from "./RadioButton.js";
-import { isSelectionCell, isHeaderSelectionCell, findRowInPath } from "./TableUtils.js";
+import {
+	isSelectionCell,
+	isHeaderSelectionCell,
+	findRowInPath,
+	findRowBaseInPath,
+} from "./TableUtils.js";
+import type { VNode } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
 import type Table from "./Table.js";
 import type { ITableFeature } from "./Table.js";
 import type TableRow from "./TableRow.js";
 import type TableRowBase from "./TableRowBase.js";
+import {
+	TABLE_ROW_SELECTOR,
+	TABLE_SELECT_ALL_ROWS,
+	TABLE_DESELECT_ALL_ROWS,
+} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -137,16 +150,30 @@ class TableSelection extends UI5Element implements ITableFeature {
 		return this.mode !== TableSelectionMode.None;
 	}
 
-	getSelectionComponent(): typeof CheckBox | typeof RadioButton {
-		return this.isMultiSelectable() ? CheckBox : RadioButton;
+	renderRowSelectionCell(row: TableRow): VNode {
+		const i18nBundle = (this._table!.constructor as typeof Table).i18nBundle;
+		const SelectionComponent = this.isMultiSelectable() ? CheckBox : RadioButton;
+		return <SelectionComponent id="selection-component"
+			tabindex={-1}
+			checked={this.isSelected(row)}
+			onChange={() => this._onRowSelectionChange(row)}
+			accessibleName={i18nBundle.getText(TABLE_ROW_SELECTOR)}
+		></SelectionComponent>;
 	}
 
-	getClearAllComponent(): undefined {
-		return undefined;
-	}
+	renderHeaderSelectionCell(row: TableRowBase): VNode | undefined {
+		if (!this.isMultiSelectable()) {
+			return undefined;
+		}
 
-	getClearAllIcon(): undefined {
-		return undefined;
+		const i18nBundle = (this._table!.constructor as typeof Table).i18nBundle;
+		return <CheckBox id="selection-component"
+			tabindex={-1}
+			checked={this.isSelected(row)}
+			onChange={() => this._onRowSelectionChange(row)}
+			accessibleName={i18nBundle.getText(TABLE_ROW_SELECTOR)}
+			title={this.isSelected(row) ? i18nBundle.getText(TABLE_DESELECT_ALL_ROWS) : i18nBundle.getText(TABLE_SELECT_ALL_ROWS)}
+		></CheckBox>;
 	}
 
 	getAriaDescriptionForTable(): string | undefined {
@@ -266,7 +293,20 @@ class TableSelection extends UI5Element implements ITableFeature {
 		this._table.rows.forEach(row => row._invalidate++);
 	}
 
-	_onkeydown(e: KeyboardEvent) {
+	_onRowSelectionChange(row: TableRowBase) {
+		const selected = this.isMultiSelectable() ? !this.isSelected(row) : true;
+		this.setSelected(row, selected, true);
+	}
+
+	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
+		const row = findRowBaseInPath(e.composedPath());
+		if (row && !row.isGroupRow() && this.isSelectable()) {
+			if ((eventOrigin === row && !row.isHeaderRow() && isSpace(e)) || (eventOrigin === row._selectionCell && (isSpace(e) || isEnter(e)))) {
+				this._onRowSelectionChange(row);
+				e.preventDefault();
+			}
+		}
+
 		if (!this.isMultiSelectable() || !this._table || !e.shiftKey) {
 			return;
 		}
@@ -280,8 +320,8 @@ class TableSelection extends UI5Element implements ITableFeature {
 
 		if (!this._rangeSelection) {
 			// If no range selection is active, start one
-			const row = focusedElement as TableRow;
-			this._startRangeSelection(row, this.isSelected(row));
+			const rangeRow = focusedElement as TableRow;
+			this._startRangeSelection(rangeRow, this.isSelected(rangeRow));
 		} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 			const change = isUpShift(e) ? -1 : 1;
 			this._handleRangeSelection(focusedElement as TableRow, change);
