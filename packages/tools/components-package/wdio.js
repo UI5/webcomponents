@@ -67,6 +67,7 @@ exports.config = {
 				'--disable-infobars',
 				'--disable-extensions',
 				'--disable-dev-shm-usage',
+				'--remote-debugging-port=9222',
 			],
 			// args: ['--disable-gpu'],
 		}
