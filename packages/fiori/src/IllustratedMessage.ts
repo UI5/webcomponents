@@ -35,6 +35,16 @@ const getEffectiveIllustrationName = (name: string): string => {
 	return `fiori/${name}`;
 };
 
+const MEDIA = {
+	BASE: "base",
+	DOT: "dot",
+	SPOT: "spot",
+	DIALOG: "dialog",
+	SCENE: "scene",
+} as const;
+
+type Media = typeof MEDIA[keyof typeof MEDIA];
+
 /**
  * @class
  *
@@ -277,6 +287,11 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
+	// tracks a SINGLE ongoing media change:
+	// - filled when `this.media` is assigned a new value;
+	// - cleared when the assigned `this.media` value is applied to DOM, if the rendered state brings no further changes to media.
+	// Required to prevent endless loops between two values of `this.media` caused by externally conditioned resizes.
+	_ongoingMediaChange: Array<{ media: Media; width: number; height: number }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
 
@@ -291,6 +306,7 @@ class IllustratedMessage extends UI5Element {
 		};
 		// this will store the height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
 		this._contentHeightForMedia = {};
+		this._ongoingMediaChange = [];
 	}
 
 	static get BREAKPOINTS() {
@@ -303,13 +319,7 @@ class IllustratedMessage extends UI5Element {
 	}
 
 	static get MEDIA() {
-		return {
-			BASE: "base",
-			DOT: "dot",
-			SPOT: "spot",
-			DIALOG: "dialog",
-			SCENE: "scene",
-		};
+		return MEDIA;
 	}
 
 	async onBeforeRendering() {
@@ -385,7 +395,13 @@ class IllustratedMessage extends UI5Element {
 	handleResize() {
 		if (this.design === IllustrationMessageDesign.Auto) {
 			this._checkHeightConstraints();
+
+			// apply new media if needed
+			const oldMedia = this.media;
 			this._applyMedia();
+			if (oldMedia === this.media) {
+				this._ongoingMediaChange = []; // no pending changes, so clear
+			}
 		}
 	}
 
@@ -409,7 +425,8 @@ class IllustratedMessage extends UI5Element {
 
 	_applyMedia() {
 		const width = this.offsetWidth;
-		let media = "",
+		const height = this.offsetHeight;
+		let media: Media = MEDIA.SCENE,
 			mediaIndex = -1;
 
 		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
@@ -431,7 +448,27 @@ class IllustratedMessage extends UI5Element {
 			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
 
+		if (this.media && this._isMediaChangeLoop(media, width, height)) {
+			return; // settle on the currently applied media to escape oscillation
+		}
+
+		if (media === this.media) {
+			return; // no media change
+		}
+
+		this._ongoingMediaChange.push({ media, width, height }); // register media change step
 		this.media = media;
+	}
+
+	_isMediaChangeLoop(newMedia: Media, newWidth: number, newHeight: number): boolean {
+		const steps = this._ongoingMediaChange;
+		if (steps.length >= 2) {
+			const beforeLast = steps[steps.length - 2];
+			if (beforeLast.media === newMedia && beforeLast.width === newWidth && beforeLast.height === newHeight) {
+				return true; // full circle detected
+			}
+		}
+		return false;
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -467,6 +504,18 @@ class IllustratedMessage extends UI5Element {
 		if (this.design !== IllustrationMessageDesign.Auto) {
 			return;
 		}
+
+		if (this._ongoingMediaChange.length) {
+			const mediaBeforeRendering = this._ongoingMediaChange[this._ongoingMediaChange.length - 1];
+			const mediaAfterRendering = { media: this.media, width: this.offsetWidth, height: this.offsetHeight };
+			if (mediaBeforeRendering.media === mediaAfterRendering.media &&
+				mediaBeforeRendering.width === mediaAfterRendering.width &&
+				mediaBeforeRendering.height === mediaAfterRendering.height) {
+				// the rendered state did not bring further media change => media change settled
+				this._ongoingMediaChange = []; // clear
+			}
+		}
+
 		const heightMeasurementNeeded = this.media && !(this.media in this._contentHeightForMedia);
 		const mightOverflow = this.scrollHeight > this.clientHeight;
 		if (heightMeasurementNeeded || mightOverflow) {
