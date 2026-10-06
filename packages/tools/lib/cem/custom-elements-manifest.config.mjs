@@ -248,6 +248,7 @@ function processClass(ts, classNode, moduleDoc) {
 				delete member.type;
 				delete member.privacy;
 				delete slot.kind;
+				delete slot.readonly;
 
 				currClass.slots.push(slot);
 				i--;
