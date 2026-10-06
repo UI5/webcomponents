@@ -76,6 +76,7 @@ export default function TabInStripTemplate(this: Tab) {
 					<div class="ui5-tab-expand-button-separator"></div>
 					<div
 						class="ui5-tab-expand-button"
+						aria-hidden="true"
 					>
 						<Button
 							ref={this.captureButtonRef.bind(this)}
@@ -83,6 +84,7 @@ export default function TabInStripTemplate(this: Tab) {
 							design="Transparent"
 							tabindex={ -1 }
 							disabled={this.disabled}
+							aria-hidden="true"
 							tooltip={this.expandButtonTitle}
 							accessibilityAttributes={this.expandBtnAccessibilityAttributes}
 						/>
