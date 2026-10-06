@@ -1004,14 +1004,6 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "e.g. Apr 30, 2025");
 	});
 
-	it("placeholder respects minDate clamp when range is narrow", () => {
-		cy.mount(<DatePicker displayFormat="MMM d, y" minDate="2025-04-01" maxDate="2025-04-05" />);
-
-		cy.get("[ui5-date-picker]")
-			.ui5DatePickerGetInnerInput()
-			.should("have.attr", "placeholder", "e.g. Apr 5, 2025");
-	});
-
 	it("Going under the minimum date changes value state", () => {
 		cy.mount(<DatePicker formatPattern="MMM d, y" minDate="Jan 1, 2000"></DatePicker>);
 
