@@ -5,6 +5,7 @@ slug: ../TextArea
 import Basic from "../../_samples/main/TextArea/Basic/Basic.md";
 import Growing from "../../_samples/main/TextArea/Growing/Growing.md";
 import MaxLength from "../../_samples/main/TextArea/MaxLength/MaxLength.md";
+import ExceededText from "../../_samples/main/TextArea/ExceededText/ExceededText.md";
 import States from "../../_samples/main/TextArea/States/States.md";
 
 <%COMPONENT_OVERVIEW%>
@@ -22,10 +23,22 @@ The TextArea can grow when entering new lines.
 <Growing />
 
 ### Max Length
-You can use the <b>maxlength</b> and <b>showExceededText</b> properties to define characters limit
+You can use the <b>maxlength</b> and <b>counterMode</b> properties to define characters limit
 and to indicates how many characters are remaining before the limit or exceeding after the limit.
+Set <b>counterMode</b> to "Always" to keep the counter permanently visible.
 
 <MaxLength />
+
+### Exceeded Text
+Set <b>counterMode</b> to "Auto" to show the character counter only when the TextArea is focused
+or when the character limit is exceeded. The counter is also always visible when
+<b>valueState</b> is "Critical" or "Negative". Space for the counter is always reserved to avoid layout shifts.
+
+The deprecated <b>showExceededText</b> Boolean still works and maps to <b>counterMode</b> "Always".
+
+The application can control threshold-based coloring by setting <b>valueState</b> based on character count.
+
+<ExceededText />
 
 ### States
 TextArea supports several semantic value states, readonly, disabled, etc.

@@ -1,5 +1,10 @@
 import type { DynamicDateRangeValue, IDynamicDateRangeOption } from "../DynamicDateRange.js";
 import UI5Date from "@ui5/webcomponents-localization/dist/dates/UI5Date.js";
+import CalendarDate from "@ui5/webcomponents-localization/dist/dates/CalendarDate.js";
+
+const calendarTimestampToLocalDate = (timestampSeconds: number): Date => {
+	return CalendarDate.fromTimestamp(timestampSeconds * 1000).toLocalJSDate();
+};
 
 const dateOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 	if (!value || !value.values || value.values.length !== 1) {
@@ -211,6 +216,7 @@ const dateTimeOptionToDates = (value: DynamicDateRangeValue): Array<Date> => {
 };
 
 export {
+	calendarTimestampToLocalDate,
 	dateOptionToDates,
 	dateRangeOptionToDates,
 	dateTimeRangeOptionToDates,

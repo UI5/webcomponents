@@ -24,6 +24,7 @@ export default function TimePickerPopoverTemplate(this: TimePicker) {
 				allowTargetOverlap={true}
 				_hideHeader={this._shouldHideHeader}
 				hideArrow={true}
+				preventInitialFocus={this._preventPickerInitialFocus}
 				accessibleName={this.pickerAccessibleName}
 				onClose={this.onResponsivePopoverAfterClose}
 				onBeforeOpen={this.onResponsivePopoverBeforeOpen}

@@ -1,6 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import { customElement, property, i18n } from "@ui5/webcomponents-base/dist/decorators.js";
-import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
 import { isInstanceOfTable, toggleAttribute } from "./TableUtils.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import TableRowBaseCss from "./generated/themes/TableRowBase.css.js";
@@ -8,9 +7,6 @@ import query from "@ui5/webcomponents-base/dist/decorators/query.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type TableCellBase from "./TableCellBase.js";
 import type Table from "./Table.js";
-import {
-	TABLE_ROW_SELECTOR,
-} from "./generated/i18n/i18n-defaults.js";
 
 /**
  * @class
@@ -106,19 +102,6 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 		}
 	}
 
-	_onSelectionChange() {
-		const tableSelection = this._tableSelection!;
-		const selected = tableSelection.isMultiSelectable() ? !this._isSelected : true;
-		tableSelection.setSelected(this, selected, true);
-	}
-
-	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
-		if ((eventOrigin === this && this._isSelectable && isSpace(e)) || (eventOrigin === this._selectionCell && (isSpace(e) || isEnter(e)))) {
-			this._onSelectionChange();
-			e.preventDefault();
-		}
-	}
-
 	get _table(): Table | undefined {
 		const element = this.parentElement;
 		return isInstanceOfTable(element) ? element : undefined;
@@ -133,11 +116,11 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _isSelected() {
-		return this._tableSelection?.isSelected(this);
+		return !!this._tableSelection?.isSelected(this);
 	}
 
 	get _isSelectable() {
-		return this._tableSelection?.isSelectable();
+		return !!this._tableSelection?.isSelectable();
 	}
 
 	get _isMultiSelect() {
@@ -145,7 +128,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _hasSelector() {
-		return this._table?._isRowSelectorRequired;
+		return !!this._table?._isRowSelectorRequired;
 	}
 
 	get _visibleCells() {
@@ -166,10 +149,6 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	get _stickyCells() {
 		return [this._selectionCell, this._actionsCell, this._navigatedCell].filter(Boolean) as HTMLElement[];
-	}
-
-	get _i18nRowSelector(): string {
-		return TableRowBase.i18nBundle.getText(TABLE_ROW_SELECTOR);
 	}
 }
 

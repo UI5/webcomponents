@@ -2032,7 +2032,7 @@ class MultiComboBox extends UI5Element implements IFormInputElement {
 	}
 
 	inputFocusIn(e: FocusEvent) {
-		if (!isPhone()) {
+		if (!isPhone() || this.readonly) {
 			this.focused = true;
 			this._tokenizer._scrollToEndOnExpand = true;
 			this._tokenizer.expanded = true;

@@ -91,4 +91,31 @@ describe("AvatarBadge visual", () => {
 		);
 		cy.screenshot();
 	});
+
+	it("extended color palette - all accents", () => {
+		cy.mount(
+			<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+				{["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].map((scheme) => (
+					<Avatar key={scheme}>
+						<AvatarBadge slot="badge" icon="employee" colorScheme={scheme} />
+					</Avatar>
+				))}
+			</div>
+		);
+		cy.screenshot();
+	});
+
+	it("extended color palette - semantic state overrides colorScheme", () => {
+		cy.mount(
+			<Avatar>
+				<AvatarBadge slot="badge" icon="alert" state="Negative" colorScheme="3" />
+			</Avatar>
+		);
+		// semantic state wins - Negative red styling should apply
+		cy.get("[ui5-avatar]")
+			.find("[ui5-avatar-badge]")
+			.should("have.attr", "state", "Negative")
+			.should("have.attr", "color-scheme", "3");
+		cy.screenshot();
+	});
 });

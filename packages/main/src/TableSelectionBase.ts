@@ -1,6 +1,9 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import getActiveElement from "@ui5/webcomponents-base/dist/util/getActiveElement.js";
 import { property, eventStrict } from "@ui5/webcomponents-base/dist/decorators.js";
-import { isInstanceOfTable } from "./TableUtils.js";
+import { isEnter, isSpace } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isInstanceOfTable, findRowBaseInPath } from "./TableUtils.js";
+import type { VNode } from "@ui5/webcomponents-base/dist/jsx-runtime.js";
 import type Table from "./Table.js";
 import type TableRowBase from "./TableRowBase.js";
 import type TableRow from "./TableRow.js";
@@ -107,6 +110,17 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 	}
 
 	/**
+	 * Renders the selector control (for example, `CheckBox` or `RadioButton`) inside the row selection cell.
+	 */
+	abstract renderRowSelectionCell(row: TableRow): VNode;
+
+	/**
+	 * Renders the selector control (for example, `CheckBox` or `Clear All` icon) inside the header selection cell.
+	 * Returns `undefined` when the feature has no header selector (for example, single-selection).
+	 */
+	abstract renderHeaderSelectionCell(row: TableRowBase): VNode | undefined;
+
+	/**
 	 * Returns the ARIA description of the Table as an alternative to aria-multiselectable.
 	 */
 	getAriaDescriptionForTable(): string | undefined {
@@ -171,6 +185,40 @@ abstract class TableSelectionBase extends UI5Element implements ITableFeature {
 			this._table.rows.forEach(row => row._invalidate++);
 			this._table.headerRow.forEach(row => row._invalidate++);
 		}
+	}
+
+	_onRowSelectionChange(row: TableRowBase) {
+		const selected = this.isMultiSelectable() ? !this.isSelected(row) : true;
+		this.setSelected(row, selected, true);
+	}
+
+	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
+		const row = findRowBaseInPath(e.composedPath());
+		if (!row || !row._isSelectable) {
+			return;
+		}
+
+		const shouldSelectFromRowBody = eventOrigin === row && !row.isHeaderRow() && (isSpace(e) || (isEnter(e) && !this.isRowSelectorRequired()));
+		const shouldSelectFromSelectionCell = eventOrigin === row._selectionCell && (isSpace(e) || isEnter(e));
+		if (shouldSelectFromRowBody || shouldSelectFromSelectionCell) {
+			this._onRowSelectionChange(row);
+			e.preventDefault();
+		}
+	}
+
+	_onclick(e: MouseEvent) {
+		const row = findRowBaseInPath(e.composedPath());
+		if (row && this._isRowBodySelectable(row) && row === getActiveElement()) {
+			this._onRowSelectionChange(row);
+		}
+	}
+
+	/**
+	 * Determines whether the row can be selected by activating the row body itself
+	 * (click or enter), i.e. when it is selectable but has no dedicated selector control.
+	 */
+	_isRowBodySelectable(row: TableRowBase): boolean {
+		return row._isSelectable && !row.isHeaderRow() && !this.isRowSelectorRequired();
 	}
 }
 

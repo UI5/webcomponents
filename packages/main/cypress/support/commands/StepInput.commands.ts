@@ -7,7 +7,7 @@ Cypress.Commands.add("ui5StepInputChangeValueWithButtons", { prevSubject: true }
 
 	cy.get("@stepInput")
 		.shadow()
-		.find("[ui5-number-input]")
+		.find("[ui5-numeric-input]")
 		.shadow()
 		.find(buttonClass)
 		.as("button");

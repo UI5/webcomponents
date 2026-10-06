@@ -529,6 +529,7 @@ function App() {
 
           <ToggleButton
             icon={daIcon}
+            design="Transparent"
             slot="assistant"
             onClick={handleToggleButtonClick}
           />
