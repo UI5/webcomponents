@@ -4,6 +4,7 @@ import UnselectableParentItems from "../../../_samples/fiori/SideNavigation/Unse
 import OverlayMode from "../../../_samples/fiori/SideNavigation/OverlayMode/OverlayMode.md";
 import CustomWidth from "../../../_samples/fiori/SideNavigation/CustomWidth/CustomWidth.md";
 import Tags from "../../../_samples/fiori/SideNavigation/Tags/Tags.md";
+import Search from "../../../_samples/fiori/SideNavigation/Search/Search.md";
 
 <%COMPONENT_OVERVIEW%>
 
@@ -42,3 +43,8 @@ Navigation items can display indication tags to highlight status or phases such 
 - Only one tag is allowed per navigation item
 
 <Tags />
+
+### Search
+The `ui5-side-navigation` supports filtering its items via a `ui5-side-navigation-search-field` placed in the `filterSection` slot. As the user types, the matching items are kept and the `highlightedText` property is set to highlight the matching portions of the item texts. When there are no matches, a "0 matches found" entry is shown. This example shows the recommended setup inside a `ui5-navigation-layout` with a `ui5-shellbar`, where the start button toggles the collapsed state.
+
+<Search />

@@ -103,6 +103,7 @@ interface UI5BaseProps {
   id?: string;
   class?: string;
   className?: string;
+  dir?: string;
   style?: React.CSSProperties | string;
   slot?: string;
   key?: string | number;
@@ -2005,8 +2006,10 @@ interface ShellBarSpacerProps extends UI5BaseProps {
 interface SideNavigationProps extends UI5BaseProps {
   collapsed?: boolean;
   accessibleName?: string;
+  highlightedText?: string;
   items?: React.ReactNode;
   fixedItems?: React.ReactNode;
+  filterSection?: React.ReactNode;
   header?: React.ReactNode;
   eventDetails?: any;
   onSelectionChange?: (event: UI5CustomEvent<SideNavigationProps>) => void;
@@ -2066,6 +2069,20 @@ interface SideNavigationGroupProps extends UI5BaseProps {
   items?: React.ReactNode;
   belowGroup?: boolean;
   onClick?: (event: UI5CustomEvent<SideNavigationGroupProps>) => void;
+}
+
+/** SideNavigationSearchField component props */
+interface SideNavigationSearchFieldProps extends UI5BaseProps {
+  value?: string;
+  placeholder?: string;
+  showClearIcon?: boolean;
+  accessibleName?: string;
+  accessibleNameRef?: string;
+  accessibleDescriptionRef?: string;
+  ariaControls?: string;
+  eventDetails?: any;
+  onInput?: (event: UI5CustomEvent<SideNavigationSearchFieldProps>) => void;
+  onSearch?: (event: UI5CustomEvent<SideNavigationSearchFieldProps>) => void;
 }
 
 /** NavigationLayout component props */
@@ -4398,6 +4415,14 @@ declare module "@ui5/webcomponents-fiori/dist/SideNavigationGroup.js" {
   export default SideNavigationGroup;
 }
 
+declare module "@ui5/webcomponents-fiori/dist/SideNavigationSearchField.js" {
+  class SideNavigationSearchField {
+    static _jsxProps: SideNavigationSearchFieldProps;
+    _jsxProps: SideNavigationSearchFieldProps;
+  }
+  export default SideNavigationSearchField;
+}
+
 declare module "@ui5/webcomponents-fiori/dist/NavigationLayout.js" {
   class NavigationLayout {
     static _jsxProps: NavigationLayoutProps;
@@ -5212,6 +5237,7 @@ declare function SideNavigation(props: SideNavigationProps): JSX.Element;
 declare function SideNavigationItem(props: SideNavigationItemProps): JSX.Element;
 declare function SideNavigationSubItem(props: SideNavigationSubItemProps): JSX.Element;
 declare function SideNavigationGroup(props: SideNavigationGroupProps): JSX.Element;
+declare function SideNavigationSearchField(props: SideNavigationSearchFieldProps): JSX.Element;
 declare function NavigationLayout(props: NavigationLayoutProps): JSX.Element;
 declare function NotificationList(props: NotificationListProps): JSX.Element;
 declare function NotificationListItem(props: NotificationListItemProps): JSX.Element;
