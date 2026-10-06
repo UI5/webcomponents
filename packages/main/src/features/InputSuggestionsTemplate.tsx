@@ -22,7 +22,7 @@ export default function InputSuggestionsTemplate(this: Input, hooks?: { suggesti
 			preventFocusRestore={true}
 			preventInitialFocus={true}
 			placement="Bottom"
-			horizontalAlign="Start"
+			horizontalAlign={this._suggestionsPopoverHorizontalAlign}
 			tabindex={-1}
 			style={this.styles.suggestionsPopover}
 			onOpen={this._afterOpenPicker}
