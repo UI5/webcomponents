@@ -59,6 +59,7 @@ import type SuggestionItem from "./SuggestionItem.js";
 import type { SuggestionComponent } from "./features/InputSuggestions.js";
 import type InputSuggestions from "./features/InputSuggestions.js";
 import InputType from "./types/InputType.js";
+import type PopoverHorizontalAlign from "./types/PopoverHorizontalAlign.js";
 import type Popover from "./Popover.js";
 import type Icon from "./Icon.js";
 import type { IIcon } from "./Icon.js";
@@ -426,6 +427,19 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	 */
 	@property({ type: Boolean })
 	showSuggestions = false;
+
+	/**
+	 * Defines the horizontal alignment of the suggestions popover relative to the input.
+	 *
+	 * `"Start"` (default) anchors the dropdown's leading edge to the input's leading edge.
+	 * Use `"End"` when the input is near the trailing edge of its container so the dropdown
+	 * opens towards the available space instead of overflowing.
+	 * @default "Start"
+	 * @since 2.28.0
+	 * @public
+	 */
+	@property()
+	suggestionsHorizontalAlign: `${PopoverHorizontalAlign}` = "Start";
 
 	/**
 	 * Sets the maximum number of characters available in the input field.

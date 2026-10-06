@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Input suggestionsHorizontalAlign POC</title>
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+	<style>
+		body {
+			margin: 1rem;
+			background-color: var(--sapBackgroundColor);
+			font-family: var(--sapFontFamily);
+		}
+		h2 { color: var(--sapTextColor); margin: 1.5rem 0 0.25rem; }
+		p  { color: var(--sapContent_LabelColor); margin: 0 0 0.75rem; font-size: 0.875rem; }
+
+		.full-width-row {
+			display: flex;
+			width: 100%;
+			box-sizing: border-box;
+		}
+		.push-right { margin-left: auto; }
+		.push-left  { margin-right: auto; }
+		.hint { display: block; margin-top: 0.25rem; font-size: 0.75rem; color: var(--sapContent_LabelColor); }
+
+		ui5-input { width: 16rem; }
+	</style>
+</head>
+
+<body>
+
+	<h2>1 — Input at the left (no flip)</h2>
+	<p>Application leaves <code>suggestionsHorizontalAlign="Start"</code> (default).</p>
+	<ui5-input id="input-left" show-suggestions placeholder="Type 'a' for suggestions…"></ui5-input>
+	<span class="hint">↳ Dropdown left edge = input left edge</span>
+
+	<h2>2 — Input at the right edge (flip to End)</h2>
+	<p>Application sets <code>suggestionsHorizontalAlign="End"</code> after detecting the input is in the right half of the viewport.</p>
+	<div class="full-width-row">
+		<ui5-input id="input-right" class="push-right" show-suggestions placeholder="Type 'a' for suggestions…"></ui5-input>
+	</div>
+	<div class="full-width-row">
+		<span class="hint push-right">↳ Dropdown right edge = input right edge</span>
+	</div>
+
+	<h2>3 — RTL: Input at the left edge (flip to End)</h2>
+	<div dir="rtl">
+		<div class="full-width-row">
+			<ui5-input id="input-rtl-left" class="push-left" show-suggestions placeholder="הקלד 'א' להצעות…"></ui5-input>
+		</div>
+		<span class="hint push-left">↳ Dropdown left edge = input left edge</span>
+
+		<h2 style="margin-top: 1rem;">4 — RTL: Input at the right edge (no flip)</h2>
+		<div class="full-width-row">
+			<ui5-input id="input-rtl-right" show-suggestions placeholder="הקלד 'א' להצעות…"></ui5-input>
+		</div>
+	</div>
+
+	<h2>5 — Input inside a Dialog</h2>
+	<p>The dialog's right-side input sets <code>suggestionsHorizontalAlign="End"</code> via the same application logic.</p>
+	<ui5-button id="open-dialog-btn">Open Dialog</ui5-button>
+
+	<ui5-dialog id="dialog" header-text="Input suggestionsHorizontalAlign in Dialog" style="min-width: 28rem;">
+		<div style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; width: 100%; box-sizing: border-box;">
+			<ui5-label>Left-side input (Start):</ui5-label>
+			<ui5-input id="dialog-input-left" show-suggestions placeholder="Type 'a' for suggestions…">
+				<ui5-suggestion-item text="Alabama — Heart of Dixie, Gulf Coast State"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Alaska — The Last Frontier, Land of the Midnight Sun"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Arizona — The Grand Canyon State, Copper State"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Arkansas — The Natural State, Land of Opportunity"></ui5-suggestion-item>
+				<ui5-suggestion-item text="California — The Golden State, Land of Milk and Honey"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Colorado — The Centennial State, Colorful Colorado"></ui5-suggestion-item>
+				<ui5-suggestion-item text="Connecticut — The Constitution State, Nutmeg State"></ui5-suggestion-item>
+			</ui5-input>
+
+			<ui5-label>Right-side input (End — set by app logic):</ui5-label>
+			<div style="display: flex; width: 100%;">
+				<ui5-input id="dialog-input-right" style="margin-left: auto;" show-suggestions placeholder="Type 'a' for suggestions…">
+					<ui5-suggestion-item text="Alabama — Heart of Dixie, Gulf Coast State"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Alaska — The Last Frontier, Land of the Midnight Sun"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Arizona — The Grand Canyon State, Copper State"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Arkansas — The Natural State, Land of Opportunity"></ui5-suggestion-item>
+					<ui5-suggestion-item text="California — The Golden State, Land of Milk and Honey"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Colorado — The Centennial State, Colorful Colorado"></ui5-suggestion-item>
+					<ui5-suggestion-item text="Connecticut — The Constitution State, Nutmeg State"></ui5-suggestion-item>
+				</ui5-input>
+			</div>
+		</div>
+		<div slot="footer" style="display: flex; justify-content: flex-end; padding: 0.25rem;">
+			<ui5-button id="close-dialog-btn">Close</ui5-button>
+		</div>
+	</ui5-dialog>
+
+	<script>
+		// ── Suggestion items (dynamic, for non-dialog inputs) ─────────────────────
+		const suggestions = [
+			"Alabama — Heart of Dixie, Gulf Coast State",
+			"Alaska — The Last Frontier, Land of the Midnight Sun",
+			"Arizona — The Grand Canyon State, Copper State",
+			"Arkansas — The Natural State, Land of Opportunity",
+			"California — The Golden State, Land of Milk and Honey",
+			"Colorado — The Centennial State, Colorful Colorado",
+			"Connecticut — The Constitution State, Nutmeg State",
+		];
+
+		["input-left", "input-right", "input-rtl-left", "input-rtl-right"].forEach(id => {
+			const input = document.getElementById(id);
+			input.addEventListener("ui5-input", () => {
+				input.innerHTML = "";
+				const val = input.value.toLowerCase();
+				suggestions
+					.filter(s => s.toLowerCase().startsWith(val))
+					.forEach(text => {
+						const item = document.createElement("ui5-suggestion-item");
+						item.setAttribute("text", text);
+						input.appendChild(item);
+					});
+			});
+		});
+
+		// ── Application-side alignment detection ─────────────────────────────────
+		// Flip when the input's centre is past the viewport midpoint
+		// (more space on the left → anchor dropdown to the right edge).
+		function updateAlignment(input) {
+			const rect = input.getBoundingClientRect();
+			if (rect.width === 0) return;
+			const isRtl = getComputedStyle(input).direction === "rtl";
+			const moreSpaceOnLeft = rect.right > document.documentElement.clientWidth - rect.left;
+			if (isRtl) {
+				input.suggestionsHorizontalAlign = moreSpaceOnLeft ? "Start" : "End";
+			} else {
+				input.suggestionsHorizontalAlign = moreSpaceOnLeft ? "End" : "Start";
+			}
+		}
+
+		function updateAllInputs() {
+			document.querySelectorAll("ui5-input[show-suggestions]").forEach(updateAlignment);
+		}
+
+		// Run once after initial layout and on every resize.
+		updateAllInputs();
+		window.addEventListener("resize", updateAllInputs);
+
+		// ── Dialog open / close ───────────────────────────────────────────────────
+		document.getElementById("open-dialog-btn").addEventListener("ui5-click", () => {
+			document.getElementById("dialog").open = true;
+			// Re-evaluate after the dialog is in the DOM and painted.
+			requestAnimationFrame(updateAllInputs);
+		});
+		document.getElementById("close-dialog-btn").addEventListener("ui5-click", () => {
+			document.getElementById("dialog").open = false;
+		});
+	</script>
+
+</body>
+</html>
