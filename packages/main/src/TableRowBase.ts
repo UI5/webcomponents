@@ -104,7 +104,12 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 
 	get _table(): Table | undefined {
 		const element = this.parentElement;
-		return isInstanceOfTable(element) ? element : undefined;
+		if (isInstanceOfTable(element)) {
+			return element;
+		}
+
+		const slotParent = this.assignedSlot?.parentElement;
+		return isInstanceOfTable(slotParent) ? slotParent : undefined;
 	}
 
 	get _tableId() {

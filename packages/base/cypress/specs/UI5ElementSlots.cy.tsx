@@ -47,6 +47,12 @@ describe("Slots work properly", () => {
 		cy.get("@testGeneric")
 			.invoke("prop", "named")
 			.should("be.undefined");
+
+		cy.get<Generic>("[ui5-test-generic]").should($el => {
+			expect($el[0].getSlottedNodes("other")).to.have.length(2);
+			expect($el[0].getSlottedNodes("items"), "reads the slot by its property name").to.have.length(2);
+			expect($el[0].getSlottedNodes("named"), "unknown property name resolves to an empty array").to.deep.equal([]);
+		});
 	});
 
 	it("Tests that properties exist on the element for each slot", () => {
