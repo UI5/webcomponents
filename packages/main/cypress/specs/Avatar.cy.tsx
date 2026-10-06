@@ -399,10 +399,9 @@ describe("Fallback Logic", () => {
 		});
 	});
 
-	it("shows fallback icon for Asian scripts", () => {
-		// CJK, Hiragana, Katakana, Hangul do not use initials per VD guidelines;
-		// escaped to keep this source ASCII
-		["\u4e2d\u6587\u5b57", "\u3042\u3044\u3046", "\u30a2\u30a4\u30a6", "\uac00\ub098\ub2e4"].forEach((initials, index) => {
+	it("shows fallback icon for Asian scripts without initials", () => {
+		// Han (CJK), Hiragana, Katakana do not use initials; escaped to keep this source ASCII
+		["\u4e2d\u6587\u5b57", "\u3042\u3044\u3046", "\u30a2\u30a4\u30a6"].forEach((initials, index) => {
 			const id = `avatar-asian-${index}`;
 			cy.mount(<Avatar id={id} initials={initials}></Avatar>);
 
@@ -417,6 +416,23 @@ describe("Fallback Logic", () => {
 				.find(".ui5-avatar-initials")
 				.should("have.class", "ui5-avatar-initials-hidden");
 		});
+	});
+
+	it("shows initials for Korean (Hangul)", () => {
+		// Korean names can be abbreviated to Hangul syllables; escaped to keep this source ASCII
+		const id = "avatar-korean";
+		cy.mount(<Avatar id={id} initials={"\uac00\ub098"}></Avatar>);
+
+		cy.get(`#${id}`)
+			.shadow()
+			.find(".ui5-avatar-initials")
+			.should("exist")
+			.and("contain.text", "\uac00\ub098");
+
+		cy.get(`#${id}`)
+			.shadow()
+			.find(".ui5-avatar-fallback-icon-hidden")
+			.should("exist");
 	});
 
 	it("shows custom fallback icon when specified", () => {
