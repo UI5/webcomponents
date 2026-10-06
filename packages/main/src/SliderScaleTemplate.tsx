@@ -29,7 +29,7 @@ export default function SliderScaleTemplate(this: SliderScale) {
 				class={{
 					"ui5-slider-scale-progress": true,
 					"ui5-slider-progress": true,
-					"ui5-slider-progress--focused": this.progressFocused || this.progressPressed,
+					"ui5-slider-progress--focused": this.desktop && (this.progressFocused || this.progressPressed),
 				}}
 				part="progress"
 				style={this._progressStyle}

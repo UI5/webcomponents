@@ -60,11 +60,11 @@ class ToolbarItemBase extends UI5Element {
 	 * group members appear adjacent in slot order.
 	 *
 	 * @public
-	 * @default ""
+	 * @default undefined
 	 * @since 2.27.0
 	 */
 	@property()
-	overflowGroup = "";
+	overflowGroup?: string;
 
 	/**
 	 * Defines if the toolbar overflow popup should close upon interaction with the item.
@@ -138,7 +138,7 @@ class ToolbarItemBase extends UI5Element {
 	validateOverflowGroupConstraints(): void {
 		if (
 			!this.isSpacer
-			&& this.overflowGroup !== ""
+			&& this.overflowGroup
 			&& (this.overflowPriority === "AlwaysOverflow" || this.overflowPriority === "NeverOverflow")
 		) {
 			if (!this._overflowGroupPriorityWarned) {
@@ -151,7 +151,7 @@ class ToolbarItemBase extends UI5Element {
 				);
 			}
 		}
-		if (this.isSpacer && this.overflowGroup !== "") {
+		if (this.isSpacer && this.overflowGroup) {
 			if (!this._overflowGroupSpacerWarned) {
 				this._overflowGroupSpacerWarned = true;
 				// eslint-disable-next-line no-console
@@ -231,7 +231,7 @@ class ToolbarItemBase extends UI5Element {
 		const declared = this.overflowPriority;
 		if (
 			!this.isSpacer
-			&& this.overflowGroup !== ""
+			&& this.overflowGroup
 			&& (declared === "AlwaysOverflow" || declared === "NeverOverflow")
 		) {
 			return "Default";
@@ -247,9 +247,9 @@ class ToolbarItemBase extends UI5Element {
 	 *
 	 * @protected
 	 */
-	get effectiveOverflowGroup(): string {
-		if (this.isSpacer && this.overflowGroup !== "") {
-			return "";
+	get effectiveOverflowGroup(): string | undefined {
+		if (this.isSpacer && this.overflowGroup) {
+			return undefined;
 		}
 		return this.overflowGroup;
 	}

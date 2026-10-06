@@ -4,6 +4,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event-strict.js";
 import jsxRenderer from "@ui5/webcomponents-base/dist/renderer/JsxRenderer.js";
 import { isSpace, isEnter, isSpaceShift } from "@ui5/webcomponents-base/dist/Keys.js";
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { AccessibilityAttributes } from "@ui5/webcomponents-base/dist/types.js";
 import WizardTabTemplate from "./WizardTabTemplate.js";
@@ -141,6 +142,12 @@ class WizardTab extends UI5Element implements ITabbable {
 	 */
 	@property({ type: Object })
 	_wizardTabAccInfo? : WizardTabAccessibilityAttributes
+
+	onEnterDOM() {
+		if (isDesktop()) {
+			this.setAttribute("desktop", "");
+		}
+	}
 
 	_onclick() {
 		if (!this.disabled) {

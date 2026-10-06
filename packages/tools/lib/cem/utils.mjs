@@ -148,7 +148,7 @@ const findImportPath = (ts, sourceFile, typeName, modulePath) => {
 
     if (isLocalDeclared) {
         return (
-            modulePath?.replace("src", "dist")?.replace(".ts", ".js") || undefined
+            modulePath?.replace("src", "dist")?.replace(/\.tsx?$/, ".js") || undefined
         );
     } else {
         const importStatements = sourceFile.statements?.filter(
@@ -167,7 +167,7 @@ const findImportPath = (ts, sourceFile, typeName, modulePath) => {
         if (currentModuleSpecifier?.text?.startsWith(".")) {
             return (
                 path.join(path.dirname(modulePath), currentModuleSpecifier.text)
-                    ?.replace("src", "dist")?.replace(".ts", ".js") || undefined
+                    ?.replace("src", "dist")?.replace(/\.tsx?$/, ".js") || undefined
             );
         } else {
             let packageName = currentModuleSpecifier?.text?.replace(packageRegex, "") || undefined;
