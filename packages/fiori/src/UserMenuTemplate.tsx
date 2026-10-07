@@ -37,13 +37,14 @@ export default function UserMenuTemplate(this: UserMenu) {
 			onScroll={this._handleScroll}
 		>
 			<>
+				<Title level="H1" class="ui5-hidden-text">{this._userMenuHeadingText}</Title>
 				<Bar class={{
 					"ui5-user-menu-fixed-header": true,
 					"ui5-user-menu-rp-scrolled": this._isScrolled || this._titleMovedToHeader
 				}} slot="header" accessible-name={this._ariaLabelledByAccountInformationText}>
 					{this._titleMovedToHeader &&
 						<Title
-							level="H1"
+							level="H2"
 							wrappingType="None"
 						>
 							{this._selectedAccount.titleText}
@@ -116,7 +117,7 @@ function headerContent(this: UserMenu) {
 					</Avatar>
 				</span>
 				{this._selectedAccount.titleText &&
-					<Text id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Text>
+					<Title level="H2" id="selected-account-title" class="ui5-user-menu-selected-account-title">{this._selectedAccount.titleText}</Title>
 				}
 
 				{this._selectedAccount.subtitleText &&
@@ -147,7 +148,7 @@ function otherAccountsContent(this: UserMenu) {
 	return (<>
 		<Panel collapsed={true} class="ui5-user-menu-other-accounts" accessibleName={`${this._otherAccountsButtonText} (${this._otherAccounts.length})`}>
 			<div slot="header" class="ui5-user-menu-account-header">
-				<Title slot="header" level="H4" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
+				<Title slot="header" level="H3" wrapping-type="None">{this._otherAccountsButtonText} ({this._otherAccounts.length})</Title>
 				{this.showEditAccounts &&
 					<Button slot="header" class="ui5-user-menu-add-account-btn" design="Transparent" icon={userEdit} onClick={this._handleEditAccountsClick} tooltip={this._editAccountsTooltip}/>
 				}
