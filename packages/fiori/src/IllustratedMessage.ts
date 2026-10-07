@@ -290,7 +290,7 @@ class IllustratedMessage extends UI5Element {
 	// tracks the steps of a SINGLE ongoing change of `media` property:
 	// -- filled when `this.media` is assigned a new (different) value;
 	// -- cleared when the assigned `this.media` value is applied to DOM, if the rendered state brings no further media change.
-	// Required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that that reverts it to a previous media of same chained sequence.
+	// Required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
 	_ongoingMediaChange: Array<{ media: Media; width: number; height: number }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
