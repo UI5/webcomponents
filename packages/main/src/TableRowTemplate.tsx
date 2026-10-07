@@ -19,6 +19,7 @@ export default function TableRowTemplate(this: TableRow, ariaColIndex: number = 
 
 			{ this.cells.flatMap(cell => {
 				if (cell._popin) {
+					cell._roleBeforePopin = cell.role;
 					cell.role = null;
 					cell.ariaColIndex = null;
 					return [];

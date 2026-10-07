@@ -381,6 +381,12 @@ describe("Row Custom Announcement - Less details", () => {
 		checkAnnouncement("");
 	});
 
+	it("should announce only the row header cell when defined", () => {
+		cy.get("@row1Cells").first().invoke("attr", "role", "rowheader");
+		cy.get("@row1").realClick();
+		checkAnnouncement(`Row . 2 of 2 . ${SELECTED} . ${ACTIVE} . R1C1 . ${Table.i18nBundle.getText(MULTIPLE_ACTIONS, 2)} . ${NAVIGATED}`, false, "equal");
+	});
+
 	it("should announce table header row", () => {
 		cy.get("@row1").realClick();
 		cy.realPress("ArrowUp");

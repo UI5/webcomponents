@@ -1384,3 +1384,35 @@ describe("Table - Dummy Cell", () => {
 		cy.get("#row1").find("[data-ui5-custom-outline='end']").should("exist");
 	});
 });
+
+describe("Table - Row Header", () => {
+	function mountRowHeaderTable(overflowMode: "Scroll" | "Popin" = "Scroll") {
+		cy.mount(
+			<Table id="table" overflowMode={overflowMode}>
+				<TableHeaderRow slot="headerRow">
+					<TableHeaderCell id="colA" minWidth="200px">Column A</TableHeaderCell>
+					<TableHeaderCell id="colB" minWidth="200px">Column B</TableHeaderCell>
+				</TableHeaderRow>
+				<TableRow id="row1">
+					<TableCell id="r1cA" role="rowheader"><Label>SAP</Label></TableCell>
+					<TableCell id="r1cB"><Label>100</Label></TableCell>
+				</TableRow>
+			</Table>
+		);
+	}
+
+	it("keeps the consumer role=rowheader and its aria-colindex", () => {
+		mountRowHeaderTable();
+		cy.get("#r1cA").should("have.attr", "role", "rowheader").and("have.attr", "aria-colindex", "1");
+		cy.get("#r1cB").should("have.attr", "role", "gridcell").and("have.attr", "aria-colindex", "2");
+	});
+
+	it("restores role=rowheader after a popin round-trip", () => {
+		mountRowHeaderTable("Popin");
+		cy.get("ui5-table").invoke("css", "width", "250px");
+		cy.get("#row1").should("have.attr", "_has-popin");
+		cy.get("ui5-table").invoke("css", "width", "800px");
+		cy.get("#row1").should("not.have.attr", "_has-popin");
+		cy.get("#r1cA").should("have.attr", "role", "rowheader");
+	});
+});

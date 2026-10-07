@@ -50,6 +50,12 @@
 				<ui5-option selected>Scroll</ui5-option>
 				<ui5-option>Button</ui5-option>
 			</ui5-select>
+
+			<ui5-label id="rowHeaderLabel">Row Header:</ui5-label>
+			<ui5-select id="rowHeaderSelect" accessible-name-ref="rowHeaderLabel">
+				<ui5-option selected>Off</ui5-option>
+				<ui5-option>On</ui5-option>
+			</ui5-select>
 		</div>
 	</ui5-bar>
 	<ui5-bar design="Header">
@@ -237,6 +243,22 @@
 		const overflowSelect = document.getElementById("overflowModeSelect");
 		overflowSelect.addEventListener("change", (e) => {
 			table.overflowMode = e.target.value;
+		});
+
+		// Row header demo: toggle role="rowheader" on the product-name cell. When a row header
+		// is defined, raise the column's importance so it stays visible / pops in last under Popin.
+		const rowHeaderSelect = document.getElementById("rowHeaderSelect");
+		rowHeaderSelect.addEventListener("change", (e) => {
+			const enabled = e.target.selectedOption.textContent === "On";
+			document.getElementById("productCol").importance = enabled ? 1000 : 0;
+			table.querySelectorAll("ui5-table-row").forEach(row => {
+				const cell = row.querySelector("ui5-table-cell");
+				if (enabled) {
+					cell.setAttribute("role", "rowheader");
+				} else {
+					cell.removeAttribute("role");
+				}
+			});
 		});
 
 		const showDataSelect = document.getElementById("showDataSelect");

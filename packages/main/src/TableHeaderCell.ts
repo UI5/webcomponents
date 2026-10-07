@@ -132,8 +132,11 @@ class TableHeaderCell extends TableCellBase {
 	@query("slot[name=action]")
 	_actionSlot!: HTMLSlotElement;
 
-	ariaRole: string = "columnheader";
 	_popinWidth: number = 0;
+
+	get ariaRole(): string {
+		return "columnheader";
+	}
 
 	get _sortIconComponent(): typeof Icon | undefined {
 		return this.sortIndicator === SortOrder.None ? undefined : Icon;

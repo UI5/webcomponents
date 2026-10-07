@@ -16,6 +16,15 @@ import { LABEL_COLON } from "./generated/i18n/i18n-defaults.js";
  * The `ui5-table-cell` represents a cell inside of a `ui5-table`.
  * It is tightly coupled to the `ui5-table` and thus should only be used in the table component.
  *
+ * ### Accessibility
+ *
+ * A cell can be marked as the row header by setting `role="rowheader"` on it.
+ * Assistive technologies then use the cell as the row's identifier, and the row's focus
+ * announcement is shortened to this cell. At most one cell per row should be a row header.
+ *
+ * **Note:** When `overflow-mode="Popin"` is used, set a high `importance` on the corresponding
+ * `ui5-table-header-cell` so the row-header column stays visible and pops in last.
+ *
  * ### ES6 Module Import
  *
  * `import @ui5/webcomponents/dist/TableCell.js;`
@@ -50,6 +59,10 @@ class TableCell extends TableCellBase {
 
 	@query("#popin-content")
 	_popinContent?: HTMLElement;
+
+	get ariaRole(): string {
+		return this.role ?? this._roleBeforePopin ?? "gridcell";
+	}
 
 	onBeforeRendering() {
 		super.onBeforeRendering();
