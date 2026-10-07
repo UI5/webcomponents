@@ -5,3 +5,18 @@
 .illustratedmessage1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+/* Scrollable area for the media-oscillation case: height between the "dialog" and "scene"
+   content heights of the message, width a few px above the scene breakpoint (681px), so a
+   classic (non-overlay) scrollbar moves the available width across the breakpoint. */
+.osc-box {
+    width: 696px;
+    height: 360px;
+    overflow: auto;
+}
+
+.osc-log {
+    font: 12px monospace;
+    white-space: pre;
+}
+
