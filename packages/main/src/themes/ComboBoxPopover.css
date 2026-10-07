@@ -18,3 +18,14 @@
 [ui5-responsive-popover] [ui5-input] {
 	width: 100%;
 }
+
+.ui5-suggestions-popover {
+	min-width: var(--_ui5-combobox-popover-min-width);
+	max-width: var(--_ui5-combobox-popover-max-width);
+}
+
+.ui5-responsive-popover-header {
+	display: var(--_ui5-combobox-popover-header-display);
+	width: var(--_ui5-combobox-popover-header-width);
+	max-width: inherit;
+}

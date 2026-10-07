@@ -921,6 +921,47 @@
 		</script>
 	</div>
 
+	<style>
+		#combo-part-demo {
+			width: 10rem;
+		}
+
+		#combo-part-demo::part(popover) {
+			max-width: 10rem;
+		}
+	</style>
+	<div class="demo-section">
+		<ui5-label>ComboBox Part Demo</ui5-label>
+		<br/><br/>
+		<ui5-combobox id="combo-part-demo" placeholder="Select option">
+			<ui5-cb-item text="Short one"></ui5-cb-item>
+			<ui5-cb-item text="This is a very long suggestion item text that clearly exceeds the input field width"></ui5-cb-item>
+			<ui5-cb-item text="Another long entry demonstrating how a narrow popover mangles readable content"></ui5-cb-item>
+			<ui5-cb-item text="pneumonoultramicroscopicsilicovolcanoconiosis"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
+	<style>
+		#combo-part-vs-demo {
+			width: 10rem;
+		}
+
+		#combo-part-vs-demo::part(popover) {
+			max-width: 10rem;
+		}
+	</style>
+	<div class="demo-section">
+		<ui5-label>ComboBox Part Demo — value state header + narrow popover</ui5-label>
+		<br/><br/>
+		<ui5-combobox id="combo-part-vs-demo" value-state="Negative" placeholder="Select option">
+			<div slot="valueStateMessage">This is an error value state message</div>
+			<ui5-cb-item text="Short one"></ui5-cb-item>
+			<ui5-cb-item text="This is a very long suggestion item text that clearly exceeds the input field width"></ui5-cb-item>
+			<ui5-cb-item text="Another long entry demonstrating how a narrow popover mangles readable content"></ui5-cb-item>
+			<ui5-cb-item text="pneumonoultramicroscopicsilicovolcanoconiosis"></ui5-cb-item>
+		</ui5-combobox>
+	</div>
+
 </body>
 
 </html>
