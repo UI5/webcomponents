@@ -1,0 +1,46 @@
+<!-- playground-fold -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample</title>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor); height: 350px">
+	<!-- playground-fold-end -->
+
+	<ui5-combobox id="country-combo" placeholder="Select a country" style="width: 300px;">
+		<ui5-cb-item text="Austria" value="AT"></ui5-cb-item>
+		<ui5-cb-item text="France" value="FR"></ui5-cb-item>
+		<ui5-cb-item text="Germany" value="DE"></ui5-cb-item>
+		<ui5-cb-item text="Italy" value="IT"></ui5-cb-item>
+		<ui5-cb-item text="Spain" value="ES"></ui5-cb-item>
+	</ui5-combobox>
+
+	<script>
+		const flags = { AT: "🇦🇹", FR: "🇫🇷", DE: "🇩🇪", IT: "🇮🇹", ES: "🇪🇸" };
+		const combo = document.getElementById("country-combo");
+
+		combo.addEventListener("ui5-selection-change", (e) => {
+			const item = e.detail.item;
+			const existingLabel = combo.querySelector("[slot='label']");
+			if (existingLabel) {
+				existingLabel.remove();
+			}
+			if (item) {
+				const label = document.createElement("span");
+				label.setAttribute("slot", "label");
+				label.textContent = `${flags[item.value] || ""} ${item.text}`;
+				combo.appendChild(label);
+			}
+		});
+	</script>
+
+	<!-- playground-fold -->
+	<script type="module" src="main.js"></script>
+</body>
+
+</html>
+<!-- playground-fold-end -->
