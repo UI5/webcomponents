@@ -287,10 +287,10 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
-	// tracks a SINGLE ongoing media change:
-	// - filled when `this.media` is assigned a new value;
-	// - cleared when the assigned `this.media` value is applied to DOM, if the rendered state brings no further changes to media.
-	// Required to prevent endless loops between two values of `this.media` caused by externally conditioned resizes.
+	// tracks the steps of a SINGLE ongoing change of `media` property:
+	// -- filled when `this.media` is assigned a new (different) value;
+	// -- cleared when the assigned `this.media` value is applied to DOM, if the rendered state brings no further media change.
+	// Required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that that reverts it to a previous media.
 	_ongoingMediaChange: Array<{ media: Media; width: number; height: number }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
@@ -400,7 +400,7 @@ class IllustratedMessage extends UI5Element {
 			const oldMedia = this.media;
 			this._applyMedia();
 			if (oldMedia === this.media) {
-				this._ongoingMediaChange = []; // no pending changes, so clear
+				this._ongoingMediaChange = []; // no pending media change to be applied in DOM, so clear
 			}
 		}
 	}
@@ -448,8 +448,9 @@ class IllustratedMessage extends UI5Element {
 			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
 
-		if (this.media && this._isMediaChangeLoop(media, width, height)) {
-			return; // settle on the currently applied media to escape oscillation
+		if (this.media && this._wouldRevertLastMediaChange(media, width, height)) {
+			// circular chain of media changes detected, so settle on the currently applied media to escape oscillation
+			return;
 		}
 
 		if (media === this.media) {
@@ -460,15 +461,14 @@ class IllustratedMessage extends UI5Element {
 		this.media = media;
 	}
 
-	_isMediaChangeLoop(newMedia: Media, newWidth: number, newHeight: number): boolean {
+	_wouldRevertLastMediaChange(newMedia: Media, newWidth: number, newHeight: number): boolean {
 		const steps = this._ongoingMediaChange;
-		if (steps.length >= 2) {
-			const beforeLast = steps[steps.length - 2];
-			if (beforeLast.media === newMedia && beforeLast.width === newWidth && beforeLast.height === newHeight) {
-				return true; // full circle detected
-			}
-		}
-		return false;
+		const beforeLast = steps.length >= 2 ? steps[steps.length - 2] : null;
+
+		return !!beforeLast &&
+			beforeLast.media === newMedia &&
+			beforeLast.width === newWidth &&
+			beforeLast.height === newHeight;
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -506,12 +506,12 @@ class IllustratedMessage extends UI5Element {
 		}
 
 		if (this._ongoingMediaChange.length) {
-			const mediaBeforeRendering = this._ongoingMediaChange[this._ongoingMediaChange.length - 1];
-			const mediaAfterRendering = { media: this.media, width: this.offsetWidth, height: this.offsetHeight };
-			if (mediaBeforeRendering.media === mediaAfterRendering.media &&
-				mediaBeforeRendering.width === mediaAfterRendering.width &&
-				mediaBeforeRendering.height === mediaAfterRendering.height) {
-				// the rendered state did not bring further media change => media change settled
+			const stateBeforeRendering = this._ongoingMediaChange[this._ongoingMediaChange.length - 1];
+			const stateAfterRendering = { media: this.media, width: this.offsetWidth, height: this.offsetHeight };
+			if (stateBeforeRendering.media === stateAfterRendering.media &&
+				stateBeforeRendering.width === stateAfterRendering.width &&
+				stateBeforeRendering.height === stateAfterRendering.height) {
+				// the rendering of media did not bring further change in size => media change settled
 				this._ongoingMediaChange = []; // clear
 			}
 		}
