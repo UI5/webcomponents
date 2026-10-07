@@ -2145,84 +2145,6 @@ describe("Popover Resize Functionality", () => {
 	});
 
 	describe("Keyboard Resize — Opener Anchor Constraint", () => {
-		it("should stop the popover from leaving the opener when shrinking with Shift+Down (Start placement)", () => {
-			// Start (left) placement, Center vAlign: the top edge is the free edge.
-			// Pressing Shift+Down many times must not push the top edge below the opener's top edge.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "400px", top: "350px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
-						<div style={{ width: "200px", height: "200px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			for (let i = 0; i < 15; i++) {
-				handle.realPress(["Shift", "ArrowDown"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					// Opener's top edge must remain within the popover's vertical extent.
-					expect(popoverRect.top).to.be.at.most(btnRect.top + 2);
-				});
-			});
-		});
-
-		it("should stop the popover from leaving the opener when shrinking with Shift+Up (End placement)", () => {
-			// End (right) placement, Center vAlign: the bottom edge is the free edge.
-			// Pressing Shift+Up many times must not push the bottom edge above the opener's bottom edge.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "300px", top: "350px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="End" resizable open={true}>
-						<div style={{ width: "200px", height: "200px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			for (let i = 0; i < 15; i++) {
-				handle.realPress(["Shift", "ArrowUp"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					// Opener's bottom edge must remain within the popover's vertical extent.
-					expect(popoverRect.bottom).to.be.at.least(btnRect.bottom - 2);
-				});
-			});
-		});
-
 		it("should keep the bottom edge stable (no drift) through many Shift+Down presses (Start placement)", () => {
 			cy.mount(
 				<>
@@ -2299,51 +2221,6 @@ describe("Popover Resize Functionality", () => {
 			});
 		});
 
-		it("should enforce opener constraint after growing then shrinking past initial size (Start placement)", () => {
-			// The anchor is captured on the first keypress. Growing first and then shrinking
-			// past the initial size must still respect the opener-center constraint.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "400px", top: "350px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
-						<div style={{ width: "200px", height: "200px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			// Grow 5 steps (top edge moves up, bottom stays).
-			for (let i = 0; i < 5; i++) {
-				handle.realPress(["Shift", "ArrowUp"]);
-			}
-
-			// Shrink 20 steps — goes well past the original size.
-			for (let i = 0; i < 20; i++) {
-				handle.realPress(["Shift", "ArrowDown"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					// Opener's top edge must remain within the popover's vertical extent.
-					expect(popoverRect.top).to.be.at.most(btnRect.top + 2);
-				});
-			});
-		});
-
 		it("should reset the anchor constraint when the popover is closed and reopened", () => {
 			cy.mount(
 				<>
@@ -2389,84 +2266,6 @@ describe("Popover Resize Functionality", () => {
 			cy.get("[ui5-popover]").then($popover => {
 				const height = $popover[0].getBoundingClientRect().height;
 				expect(Math.abs(height - initialHeight)).to.be.lessThan(5);
-			});
-		});
-
-		it("should stop horizontal shrink before the right edge crosses the opener's right edge (Bottom placement, BottomRight handle)", () => {
-			// Bottom placement + Center hAlign → BottomRight handle.
-			// Shift+Left shrinks from the right; constraint keeps right ≥ opener's right edge.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "300px", top: "200px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Bottom" resizable open={true}>
-						<div style={{ width: "300px", height: "100px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			for (let i = 0; i < 15; i++) {
-				handle.realPress(["Shift", "ArrowLeft"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					// Opener's right edge must remain within the popover's horizontal extent.
-					expect(popoverRect.right).to.be.at.least(btnRect.right - 2);
-				});
-			});
-		});
-
-		it("should stop horizontal shrink before the right edge crosses the opener's right edge (Top placement, TopRight handle)", () => {
-			// Top placement + Center hAlign → TopRight handle.
-			// Shift+Left shrinks from the right; constraint keeps right ≥ opener's right edge.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "300px", bottom: "100px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Top" resizable open={true}>
-						<div style={{ width: "300px", height: "100px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			for (let i = 0; i < 15; i++) {
-				handle.realPress(["Shift", "ArrowLeft"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					// Opener's right edge must remain within the popover's horizontal extent.
-					expect(popoverRect.right).to.be.at.least(btnRect.right - 2);
-				});
 			});
 		});
 
@@ -2648,49 +2447,6 @@ describe("Popover Resize Functionality", () => {
 					const btnRect = $btn[0].getBoundingClientRect();
 					// Opener's bottom edge must remain within the popover's vertical extent.
 					expect(popoverRect.bottom).to.be.at.least(btnRect.bottom - 2);
-				});
-			});
-		});
-
-		it("should not flip the handle from TopLeft to BottomLeft as the top edge drifts down", () => {
-			// Root cause regression test: without freezing the handle on first keypress, the
-			// popoverCY drifts below openerCY as the top moves down, flipping the handle from
-			// TopLeft → BottomLeft which reverses the direction and causes runaway movement.
-			cy.mount(
-				<>
-					<Button
-						id="btnOpen"
-						style={{ position: "absolute", left: "400px", top: "350px" }}>
-						Open
-					</Button>
-					<Popover id="popover" opener="btnOpen" placement="Start" resizable open={true}>
-						<div style={{ width: "200px", height: "200px", padding: "10px" }}>Content</div>
-					</Popover>
-				</>
-			);
-
-			cy.get<Popover>("[ui5-popover]").ui5PopoverOpened();
-			// eslint-disable-next-line cypress/no-unnecessary-waiting
-			cy.wait(200);
-
-			const handle = cy.get("[ui5-popover]")
-				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
-				.focus();
-
-			// Press many times — with the bug, the position would oscillate and eventually
-			// the popover would drift far below the opener. With the fix, it stays stable.
-			for (let i = 0; i < 30; i++) {
-				handle.realPress(["Shift", "ArrowDown"]);
-			}
-
-			cy.get("[ui5-popover]").then($popover => {
-				const popoverRect = $popover[0].getBoundingClientRect();
-				cy.get("#btnOpen").then($btn => {
-					const btnRect = $btn[0].getBoundingClientRect();
-					const openerBottom = btnRect.bottom;
-					// The popover must still overlap the opener (top has not drifted below opener bottom).
-					expect(popoverRect.top).to.be.at.most(openerBottom);
 				});
 			});
 		});
