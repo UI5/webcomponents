@@ -507,14 +507,12 @@ describe("Utility SVG accessibility", () => {
 	});
 });
 
-describe("Media oscillation (scrollbar straddling the scene/dialog breakpoint)", () => {
-	// Regression for the endless scene<->dialog resize loop: when the message sits in an
-	// auto-height wrapper inside a scrollable container whose width is a few px above the
-	// scene breakpoint (681px) and whose height falls between the dialog and scene content
-	// heights, choosing "scene" grows the content, a classic scrollbar appears and steals
-	// ~10px of width, which pushes the width below the breakpoint and selects "dialog";
-	// "dialog" removes the overflow, the scrollbar disappears, the width grows back and
-	// "scene" is chosen again -> forever. The component must settle instead of flipping.
+describe("Media oscillation prevention", () => {
+	// Regression for the endless A -> B -> A -> ... -> sequence of media changes:
+	// when the illustrated message sits in an auto-height wrapper inside a scrollable
+	// container whose width is a few px above the breakpoint between A and B
+	// and change in media brings change in height which toggles the scrollbar
+	// which brings the width back and forth across the breakpoint, potentially causing media oscillation.
 	it("settles on a stable media instead of oscillating", () => {
 		cy.mount(
 			// #box: width a few px above the scene breakpoint; height between the dialog and
