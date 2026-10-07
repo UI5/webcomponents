@@ -6,6 +6,7 @@ import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getCalendarType, getSecondaryCalendarType } from "@ui5/webcomponents-base/dist/config/CalendarType.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
+import type { DateFormatOptions } from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
 import type CalendarType from "@ui5/webcomponents-base/dist/types/CalendarType.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
@@ -238,18 +239,16 @@ class DateComponentBase extends UI5Element {
 		return this.getValueFormat().format(localDate, true);
 	}
 
-	getFormat() {
+	getFormat(formatOptions?: DateFormatOptions) {
+		const base = {
+			strictParsing: true,
+			calendarType: this._primaryCalendarType,
+			...formatOptions,
+		};
+
 		return this._isPattern
-			? DateFormat.getDateInstance({
-				strictParsing: true,
-				pattern: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			})
-			: DateFormat.getDateInstance({
-				strictParsing: true,
-				style: this._formatPattern,
-				calendarType: this._primaryCalendarType,
-			});
+			? DateFormat.getDateInstance({ ...base, pattern: this._formatPattern })
+			: DateFormat.getDateInstance({ ...base, style: this._formatPattern });
 	}
 
 	get _displayFormat() {

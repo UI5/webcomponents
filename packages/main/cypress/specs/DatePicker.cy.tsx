@@ -998,6 +998,20 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "placeholder", "Delivery date");
 	});
 
+	it("placeholder is based on maxDate when max is in a past year", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" maxDate="2023-08-31" />);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "placeholder", "e.g. Dec 31, 2022");
+	});
+
+	it("placeholder is based on minDate and maxDate in same year and month", () => {
+		cy.mount(<DatePicker displayFormat="MMM d, y" minDate="2025-04-01" maxDate="2025-04-30" />);
+
+		cy.get("[ui5-date-picker]")
+			.ui5DatePickerGetInnerInput()
+			.should("have.attr", "placeholder", "e.g. Apr 30, 2025");
 	it("placeholder is not set on inner input when value is present", () => {
 		cy.mount(<DatePicker value="Sep 9, 2026" formatPattern="MMM d, y"></DatePicker>);
 
