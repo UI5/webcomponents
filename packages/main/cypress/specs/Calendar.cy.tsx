@@ -1875,14 +1875,21 @@ describe("Day Picker Tests", () => {
 			<Calendar id="calendar1" timestamp={novTimestamp} maxDate="2026-12-10"></Calendar>,
 		);
 
-		cy.ui5CalendarGetDay("#calendar1", dec4Timestamp.toString()).realMouseDown();
-
 		cy.get<Calendar>("#calendar1")
+			.as("calendar");
+
+		cy.ui5CalendarGetDay("#calendar1", dec4Timestamp.toString())
+			.realMouseDown();
+
+		cy.get("@calendar")
 			.shadow()
 			.find("[ui5-daypicker]")
+			.as("daypicker");
+
+		cy.get("@daypicker")
 			.shadow()
 			.find(".ui5-dp-root")
-			.click(0, 0);
+			.realClick({ x: 0, y: 0 });
 
 		cy.ui5CalendarGetDay("#calendar1", dec4Timestamp.toString())
 			.should("have.class", "ui5-dp-item--selected");
