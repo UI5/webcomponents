@@ -465,10 +465,10 @@ class IllustratedMessage extends UI5Element {
 		const steps = this._ongoingMediaChange;
 		const beforeLast = steps.length >= 2 ? steps[steps.length - 2] : null;
 
-		return !!beforeLast &&
-			beforeLast.media === newMedia &&
-			beforeLast.width === newWidth &&
-			beforeLast.height === newHeight;
+		return !!beforeLast
+			&& beforeLast.media === newMedia
+			&& beforeLast.width === newWidth
+			&& beforeLast.height === newHeight;
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -508,9 +508,9 @@ class IllustratedMessage extends UI5Element {
 		if (this._ongoingMediaChange.length) {
 			const stateBeforeRendering = this._ongoingMediaChange[this._ongoingMediaChange.length - 1];
 			const stateAfterRendering = { media: this.media, width: this.offsetWidth, height: this.offsetHeight };
-			if (stateBeforeRendering.media === stateAfterRendering.media &&
-				stateBeforeRendering.width === stateAfterRendering.width &&
-				stateBeforeRendering.height === stateAfterRendering.height) {
+			if (stateBeforeRendering.media === stateAfterRendering.media
+				&& stateBeforeRendering.width === stateAfterRendering.width
+				&& stateBeforeRendering.height === stateAfterRendering.height) {
 				// the rendering of media did not bring further change in size => media change settled
 				this._ongoingMediaChange = []; // clear
 			}
