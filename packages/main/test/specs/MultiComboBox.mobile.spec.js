@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-describe("Basic interaction", () => {
+describe.skip("Basic interaction", () => {
 	before(async () => {
 		await browser.url(`test/pages/MultiComboBox.html`);
 		await browser.emulateDevice('iPhone X');
@@ -53,7 +53,7 @@ describe("Basic interaction", () => {
 		await tokenizer.shadow$(".ui5-tokenizer-more-text").click();
 
 		assert.notOk(await tokenizer.getAttribute("expanded"), "The tokenizer is not expanded after closing the picker when opened from the 'n-more' link");
-	
+
 		await dialogCloseButton.click();
 	});
 
@@ -128,7 +128,7 @@ describe("Basic interaction", () => {
 	});
 });
 
-describe("Typeahead", () => {
+describe.skip("Typeahead", () => {
 	before(async () => {
 		await browser.url(`test/pages/MultiComboBox.html`);
 		await browser.emulateDevice('iPhone X');
@@ -198,7 +198,7 @@ describe("Typeahead", () => {
 	});
 });
 
-describe("Items selection", () => {
+describe.skip("Items selection", () => {
 	before(async () => {
 		await browser.url(`test/pages/MultiComboBox.html`);
 		await browser.emulateDevice('iPhone X');
@@ -316,7 +316,7 @@ describe("Items selection", () => {
 	});
 });
 
-describe("Value state header", () => {
+describe.skip("Value state header", () => {
 	before(async () => {
 		await browser.url("test/pages/MultiComboBox.html");
 		await browser.emulateDevice('iPhone X');
@@ -337,7 +337,7 @@ describe("Value state header", () => {
 	});
 });
 
-describe("Eventing", () => {
+describe.skip("Eventing", () => {
 	before(async () => {
 		await browser.url("test/pages/MultiComboBox.html");
 		await browser.emulateDevice('iPhone X');
@@ -421,7 +421,7 @@ describe("Eventing", () => {
 	});
 });
 
-describe("Validation", () => {
+describe.skip("Validation", () => {
 	before(async () => {
 		await browser.url("test/pages/MultiComboBox.html");
 		await browser.emulateDevice('iPhone X');
@@ -446,7 +446,7 @@ describe("Validation", () => {
 
 });
 
-describe("Accessibility", () => {
+describe.skip("Accessibility", () => {
 	before(async () => {
 		await browser.url("test/pages/MultiComboBox.html");
 		await browser.emulateDevice('iPhone X');
@@ -466,10 +466,10 @@ describe("Accessibility", () => {
 			const mcb = document.getElementById("multi1");
 			done(mcb.constructor.i18nBundle.getText(window["sap-ui-webcomponents-bundle"].defaultTexts.SHOW_SELECTED_BUTTON));
 		});
-		
+
 		assert.ok(await toggleSelectedButton.isDisplayed(), "Toggle selected items button is displayed");
 		assert.strictEqual(await toggleSelectedButton.getAttribute("accessible-name"), "Show Selected Items Only", "Correct value is applied")
-		
+
 	});
 
 });

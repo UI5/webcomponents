@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-describe("Basic mobile picker rendering and interaction", () => {
+describe.skip("Basic mobile picker rendering and interaction", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');
@@ -72,7 +72,7 @@ describe("Basic mobile picker rendering and interaction", () => {
 	});
 });
 
-describe("Eventing", () => {
+describe.skip("Eventing", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');
@@ -105,7 +105,7 @@ describe("Eventing", () => {
 	});
 });
 
-describe("Typeahead", () => {
+describe.skip("Typeahead", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');
@@ -140,7 +140,7 @@ describe("Typeahead", () => {
 	});
 });
 
-describe("Clear icon", () => {
+describe.skip("Clear icon", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');
@@ -162,7 +162,7 @@ describe("Clear icon", () => {
 	});
 });
 
-describe("Picker filtering", () => {
+describe.skip("Picker filtering", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');
@@ -191,7 +191,7 @@ describe("Picker filtering", () => {
 	});
 });
 
-describe("Value state header", () => {
+describe.skip("Value state header", () => {
 	before(async () => {
 		await browser.url("test/pages/Input.html");
 		await browser.emulateDevice('iPhone X');

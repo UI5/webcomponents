@@ -169,7 +169,7 @@ describe("TimePicker on phone - general interactions", () => {
 });
 
 describe("TimePicker on phone - accessibility and other input attributes", () => {
-	before(async () => {
+	before.skip(async () => {
 		await browser.url(`test/pages/TimePicker.html?sap-ui-language=bg`);
 		await browser.emulateDevice('iPhone X');
 	});

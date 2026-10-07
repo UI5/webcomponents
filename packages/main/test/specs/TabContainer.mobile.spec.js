@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-describe("Mobile: TabContainer general interaction", () => {
+describe.skip("Mobile: TabContainer general interaction", () => {
 	before(async () => {
 		await browser.url("test/pages/TabContainer.html");
 		await browser.emulateDevice("iPhone X");

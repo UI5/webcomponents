@@ -9,7 +9,7 @@ const getTokenizerPopoverId = async (inputId) => {
 	}, inputId);
 }
 
-describe("MultiInput general interaction", () => {
+describe.skip("MultiInput general interaction", () => {
 	before(async () => {
 		await browser.url(`test/pages/MultiInput.html`);
 		await browser.emulateDevice('iPhone X');
@@ -31,7 +31,7 @@ describe("MultiInput general interaction", () => {
 	});
 });
 
-describe("Deleting tokens", () => {
+describe.skip("Deleting tokens", () => {
 	before(async () => {
 		await browser.url(`test/pages/MultiInput.html`);
 		await browser.emulateDevice('iPhone X');

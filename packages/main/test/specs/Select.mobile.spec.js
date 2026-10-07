@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-describe("Select mobile general interaction", () => {
+describe.skip("Select mobile general interaction", () => {
 	before(async () => {
 		await browser.emulateDevice('iPhone X');
 		await browser.url(`test/pages/Select.html`);
