@@ -644,6 +644,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	_selectedText?: string;
 	_clearIconClicked?: boolean;
 	_focusedAfterClear: boolean;
+	_preventPreviousValueUpdate = false; // set before internal value mutations so onBeforeRendering skips the external-change sync
 	_changeToBeFired?: boolean; // used to wait change event firing after suggestion item selection
 	_matchedSuggestionItem?: IInputSuggestionItemSelectable; // stores the original matched suggestion for preserving case
 	_performTextSelection?: boolean;
@@ -753,6 +754,15 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 	}
 
 	onBeforeRendering() {
+		// Sync previousValue when the value was changed externally (programmatically) while focused.
+		// Skip if the user typed the current value themselves (typedInValue tracks user input) — that
+		// value is a pending change and previousValue must stay at the pre-typing baseline.
+		const hasPendingUserChange = this.typedInValue !== "" && this.typedInValue === this.value;
+		if (this.focused && !this.isTyping && !this._preventPreviousValueUpdate && this.value !== this.previousValue && !hasPendingUserChange) {
+			this.previousValue = this.value;
+		}
+		this._preventPreviousValueUpdate = false;
+
 		if (this.showSuggestions) {
 			this.enableSuggestions();
 
@@ -1097,6 +1107,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 		const hasSuggestions = this.showSuggestions && !!this.Suggestions;
 		const isOpen = hasSuggestions && this.open;
 		const innerInput = this.getInputDOMRefSync()!;
+		this._preventPreviousValueUpdate = true;
 		const isAutoCompleted = innerInput.selectionEnd! - innerInput.selectionStart! > 0;
 
 		this.isTyping = false;
@@ -1227,6 +1238,7 @@ class Input extends UI5Element implements SuggestionComponent, IFormInputElement
 
 	_clear() {
 		const valueBeforeClear = this.value;
+		this._preventPreviousValueUpdate = true;
 		this.value = "";
 		const prevented = !this.fireDecoratorEvent(INPUT_EVENTS.INPUT, { inputType: "" });
 
