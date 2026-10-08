@@ -292,8 +292,7 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
-	// tracks changes to the `media` property;
-	// cleared when the rendered media brings no further resizing;
+	// tracks changes to the `media` property; cleared when the rendered media brings no further resizing;
 	// required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
 	_ongoingMediaChange: Array<{ media: Media; dimensions: DimensionsForMedia }>;
 	_handleResize: ResizeObserverCallback;
@@ -399,7 +398,6 @@ class IllustratedMessage extends UI5Element {
 	handleResize() {
 		if (this.design === IllustrationMessageDesign.Auto) {
 			this._checkHeightConstraints();
-			this._trackSizeForCurrentMedia();
 			this._applyMedia();
 		}
 	}
@@ -483,19 +481,16 @@ class IllustratedMessage extends UI5Element {
 			&& dimensions1.height === dimensions2.height;
 	}
 
-	_trackSizeForCurrentMedia() {
+	_trackMediaAfterRendering() {
 		const steps = this._ongoingMediaChange;
 		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
 		if (lastStep && this.media as Media === lastStep.media) {
 			lastStep.dimensions.afterRendering = { width: this.offsetWidth, height: this.offsetHeight };
-		}
-	}
 
-	_isMediaChangeFinalized() {
-		const steps = this._ongoingMediaChange;
-		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
-		return lastStep?.dimensions.afterRendering
-			&& this._dimensionsMatch(lastStep.dimensions.beforeRendering, lastStep.dimensions.afterRendering);
+			if (this._dimensionsMatch(lastStep.dimensions.beforeRendering, lastStep.dimensions.afterRendering)) {
+				this._ongoingMediaChange = [];
+			}
+		}
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -532,10 +527,7 @@ class IllustratedMessage extends UI5Element {
 			return;
 		}
 
-		this._trackSizeForCurrentMedia();
-		if (this._isMediaChangeFinalized()) {
-			this._ongoingMediaChange = [];
-		}
+		this._trackMediaAfterRendering();
 
 		const heightMeasurementNeeded = this.media && !(this.media in this._contentHeightForMedia);
 		const mightOverflow = this.scrollHeight > this.clientHeight;
