@@ -43,6 +43,13 @@ enum PopoverActualHorizontalAlign {
 	Stretch = "Stretch",
 }
 
+enum PopoverActualVerticalAlign {
+	Center = "Center",
+	Top = "Top",
+	Bottom = "Bottom",
+	Stretch = "Stretch",
+}
+
 enum PopoverActualPlacement {
 	Left = "Left",
 	Right = "Right",
@@ -227,6 +234,8 @@ class Popover extends Popup {
 	_oldPlacement?: CalculatedPlacement;
 	_width?: string;
 	_height?: string;
+	_actualHorizontalAlignValue?: PopoverActualHorizontalAlign;
+	_actualVerticalAlignValue?: PopoverActualVerticalAlign;
 	_openerIntersectionObserver?: IntersectionObserver | null;
 
 	_popoverResize: PopoverResize;
@@ -673,6 +682,11 @@ class Popover extends Popup {
 			}
 		}
 
+		// Resolve the actual alignments, flipping edge values when there is no space
+		// on the preferred side (mirrors the placement flip logic in getActualPlacement).
+		this._actualHorizontalAlignValue = this.getActualHorizontalAlign(targetRect, popoverSize);
+		this._actualVerticalAlignValue = this.getActualVerticalAlign(targetRect, popoverSize);
+
 		const arrowOffset = this.hideArrow ? 0 : ARROW_SIZE;
 
 		// calc popover positions
@@ -921,18 +935,19 @@ class Popover extends Popup {
 	}
 
 	getHorizontalTop(targetRect: DOMRect, popoverSize: PopoverSize): number {
+		const actualVerticalAlign = this._actualVerticalAlign;
 		let top = 0;
 
-		switch (this.verticalAlign) {
-		case PopoverVerticalAlign.Center:
-		case PopoverVerticalAlign.Stretch:
+		switch (actualVerticalAlign) {
+		case PopoverActualVerticalAlign.Center:
+		case PopoverActualVerticalAlign.Stretch:
 			top = targetRect.top - (popoverSize.height - targetRect.height) / 2;
 			top = this._popoverResize.getCorrectedTop(top);
 			break;
-		case PopoverVerticalAlign.Top:
+		case PopoverActualVerticalAlign.Top:
 			top = targetRect.top;
 			break;
-		case PopoverVerticalAlign.Bottom:
+		case PopoverActualVerticalAlign.Bottom:
 			top = targetRect.bottom - popoverSize.height;
 			break;
 		}
@@ -995,7 +1010,11 @@ class Popover extends Popup {
 		return this.effectiveDir === "rtl";
 	}
 
-	get _actualHorizontalAlign() : PopoverActualHorizontalAlign {
+	/**
+	 * Resolves `horizontalAlign` to an actual align, applying RTL mirroring,
+	 * without taking available space into account.
+	 */
+	get _resolvedHorizontalAlign() : PopoverActualHorizontalAlign {
 		switch (this.horizontalAlign) {
 		case PopoverHorizontalAlign.Start:
 			return this.isRtl ? PopoverActualHorizontalAlign.Right : PopoverActualHorizontalAlign.Left;
@@ -1007,6 +1026,100 @@ class Popover extends Popup {
 		default:
 			return PopoverActualHorizontalAlign.Center;
 		}
+	}
+
+	/**
+	 * Resolves `verticalAlign` to an actual align, without taking available
+	 * space into account.
+	 */
+	get _resolvedVerticalAlign() : PopoverActualVerticalAlign {
+		switch (this.verticalAlign) {
+		case PopoverVerticalAlign.Top:
+			return PopoverActualVerticalAlign.Top;
+		case PopoverVerticalAlign.Bottom:
+			return PopoverActualVerticalAlign.Bottom;
+		case PopoverVerticalAlign.Stretch:
+			return PopoverActualVerticalAlign.Stretch;
+		case PopoverVerticalAlign.Center:
+		default:
+			return PopoverActualVerticalAlign.Center;
+		}
+	}
+
+	get _actualHorizontalAlign() : PopoverActualHorizontalAlign {
+		return this._actualHorizontalAlignValue ?? this._resolvedHorizontalAlign;
+	}
+
+	get _actualVerticalAlign() : PopoverActualVerticalAlign {
+		return this._actualVerticalAlignValue ?? this._resolvedVerticalAlign;
+	}
+
+	/**
+	 * Returns the horizontal align to use, flipping an edge value (Left/Right)
+	 * to the opposite edge when there is not enough space on the preferred side
+	 * and the opposite side has more room. Center/Stretch pass through unchanged.
+	 * @private
+	 */
+	getActualHorizontalAlign(targetRect: DOMRect, popoverSize: PopoverSize): PopoverActualHorizontalAlign {
+		const horizontalAlign = this._resolvedHorizontalAlign;
+		const clientWidth = document.documentElement.clientWidth - Popover.VIEWPORT_MARGIN;
+
+		switch (horizontalAlign) {
+		case PopoverActualHorizontalAlign.Left: {
+			// Popover extends rightward from the target's left edge.
+			const spaceOnRight = clientWidth - targetRect.left;
+			const spaceOnLeft = targetRect.right;
+			if (spaceOnRight < popoverSize.width && spaceOnLeft > spaceOnRight) {
+				return PopoverActualHorizontalAlign.Right;
+			}
+			break;
+		}
+		case PopoverActualHorizontalAlign.Right: {
+			// Popover extends leftward from the target's right edge.
+			const spaceOnLeft = targetRect.right;
+			const spaceOnRight = clientWidth - targetRect.left;
+			if (spaceOnLeft < popoverSize.width && spaceOnRight > spaceOnLeft) {
+				return PopoverActualHorizontalAlign.Left;
+			}
+			break;
+		}
+		}
+
+		return horizontalAlign;
+	}
+
+	/**
+	 * Returns the vertical align to use, flipping an edge value (Top/Bottom)
+	 * to the opposite edge when there is not enough space on the preferred side
+	 * and the opposite side has more room. Center/Stretch pass through unchanged.
+	 * @private
+	 */
+	getActualVerticalAlign(targetRect: DOMRect, popoverSize: PopoverSize): PopoverActualVerticalAlign {
+		const verticalAlign = this._resolvedVerticalAlign;
+		const clientHeight = document.documentElement.clientHeight - Popover.VIEWPORT_MARGIN;
+
+		switch (verticalAlign) {
+		case PopoverActualVerticalAlign.Top: {
+			// Popover extends downward from the target's top edge.
+			const spaceBelow = clientHeight - targetRect.top;
+			const spaceAbove = targetRect.bottom;
+			if (spaceBelow < popoverSize.height && spaceAbove > spaceBelow) {
+				return PopoverActualVerticalAlign.Bottom;
+			}
+			break;
+		}
+		case PopoverActualVerticalAlign.Bottom: {
+			// Popover extends upward from the target's bottom edge.
+			const spaceAbove = targetRect.bottom;
+			const spaceBelow = clientHeight - targetRect.top;
+			if (spaceAbove < popoverSize.height && spaceBelow > spaceAbove) {
+				return PopoverActualVerticalAlign.Top;
+			}
+			break;
+		}
+		}
+
+		return verticalAlign;
 	}
 
 	get _showResizeHandle() {
