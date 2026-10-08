@@ -249,6 +249,7 @@ abstract class Popup extends UI5Element {
 
 	_resizeHandler: ResizeObserverCallback;
 	_shouldFocusRoot?: boolean;
+	_skipFocusForward?: boolean;
 	_focusedElementBeforeOpen?: HTMLElement | null;
 	_opened = false;
 	_open = false;
@@ -282,7 +283,9 @@ abstract class Popup extends UI5Element {
 	}
 
 	onEnterDOM() {
-		this.setAttribute("popover", "manual");
+		if (!this._useNativeDialog) {
+			this.setAttribute("popover", "manual");
+		}
 
 		if (isDesktop()) {
 			this.setAttribute("desktop", "");
@@ -298,7 +301,9 @@ abstract class Popup extends UI5Element {
 
 	handleOpenOnEnterDOM() {
 		if (this.open) {
-			this.showPopover();
+			if (!this._useNativeDialog) {
+				this.showPopover();
+			}
 			this.openPopup();
 		}
 	}
@@ -461,6 +466,14 @@ abstract class Popup extends UI5Element {
 	}
 
 	_onmousedown(e: MouseEvent) {
+		// For a native modal <dialog>, a mousedown on the backdrop targets the
+		// root element itself. Prevent the default so the browser does not blur
+		// (and move focus away from) the element focused inside the dialog.
+		if (this._useNativeDialog && e.target === this._root) {
+			e.preventDefault();
+			this._shouldFocusRoot = false;
+			return;
+		}
 		if (this.shadowRoot!.contains(e.target as HTMLElement)) {
 			this._shouldFocusRoot = true;
 		} else {
@@ -482,6 +495,13 @@ abstract class Popup extends UI5Element {
 	 * @private
 	 */
 	async forwardToFirst() {
+		// While the native <dialog> is opening, showModal() moves focus to the
+		// first tabbable in the shadow root (a focus-trap sentinel). Ignore that
+		// transient focus so applyInitialFocus() decides the real initial focus.
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		const firstFocusable = await getFirstFocusableElement(this);
 
 		if (firstFocusable) {
@@ -496,6 +516,10 @@ abstract class Popup extends UI5Element {
 	 * @private
 	 */
 	async forwardToLast() {
+		if (this._skipFocusForward) {
+			return;
+		}
+
 		const lastFocusable = await getLastFocusableElement(this);
 
 		if (lastFocusable) {
@@ -735,6 +759,15 @@ abstract class Popup extends UI5Element {
 
 	get _root(): HTMLElement {
 		return this.shadowRoot!.querySelector(".ui5-popup-root")!;
+	}
+
+	/**
+	 * When true, the popup renders its root as a native <dialog> and opens via showModal().
+	 * Overridden by Dialog. Popover/ResponsivePopover keep the default (false).
+	 * @protected
+	 */
+	get _useNativeDialog(): boolean {
+		return false;
 	}
 
 	get _role() {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<title>Dialog opened from Dynamic Page test page</title>
+
+	<script data-ui5-config type="application/json">
+		{
+			"theme": "sap_horizon"
+		}
+	</script>
+
+	<script src="%VITE_BUNDLE_PATH%" type="module"></script>
+</head>
+
+<body style="background-color: var(--sapBackgroundColor)">
+	<ui5-dynamic-page id="page" show-footer style="height: 600px;">
+		<ui5-dynamic-page-title slot="titleArea">
+			<ui5-breadcrumbs slot="breadcrumbs">
+				<ui5-breadcrumbs-item>Home</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 1</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 2</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 3</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 4</ui5-breadcrumbs-item>
+				<ui5-breadcrumbs-item>Page 5</ui5-breadcrumbs-item>
+			</ui5-breadcrumbs>
+
+			<ui5-title slot="heading" level="H1" style="font-size: var(--sapObjectHeader_Title_FontSize);">
+				Dynamic Page Header Title
+			</ui5-title>
+
+			<ui5-title slot="snappedHeading" style="font-size: var(--sapObjectHeader_Title_SnappedFontSize);">
+				Snapped Header Title
+			</ui5-title>
+
+			<div slot="subheading">
+				<ui5-label>Subheader</ui5-label>
+				<ui5-message-strip>Information (only visible if header content is expanded)</ui5-message-strip>
+			</div>
+
+			<div slot="snappedSubheading">
+				<ui5-label>Snapped Subheader</ui5-label>
+				<ui5-message-strip>Information (only visible if header content is collapsed (snapped))</ui5-message-strip>
+			</div>
+
+			<ui5-tag>Status: OK</ui5-tag>
+
+			<ui5-toolbar slot="actionsBar" design="Transparent">
+				<ui5-toolbar-button id="open-dialog" design="Emphasized" text="Open Dialog"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" text="Delete"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" text="Copy"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" icon="action"></ui5-toolbar-button>
+			</ui5-toolbar>
+
+			<ui5-toolbar slot="navigationBar" design="Transparent">
+				<ui5-toolbar-button design="Transparent" icon="full-screen"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" icon="exit-full-screen"></ui5-toolbar-button>
+				<ui5-toolbar-button design="Transparent" icon="decline"></ui5-toolbar-button>
+			</ui5-toolbar>
+		</ui5-dynamic-page-title>
+
+		<ui5-dynamic-page-header slot="headerArea">
+			<div style="display: flex; flex-wrap: wrap;">
+				<div style="display: flex; flex-direction: column;">
+					<ui5-label>Location: Warehouse A</ui5-label>
+					<ui5-label>Halway: 23L</ui5-label>
+					<ui5-label>Rack: 34</ui5-label>
+				</div>
+				<span style="width: 1rem;"></span>
+				<div style="display: flex; flex-direction: column;">
+					<ui5-label>Availability:</ui5-label>
+					<ui5-tag color-scheme="8">In Stock</ui5-tag>
+				</div>
+			</div>
+		</ui5-dynamic-page-header>
+
+		<div role="region" aria-label="page content">
+			<ui5-title level="H2" style="font-size: var(--sapObjectHeader_Title_FontSize);">Page Content title</ui5-title>
+			<div>page content</div>
+		</div>
+
+		<ui5-bar slot="footerArea" design="FloatingFooter">
+			<ui5-button slot="endContent" design="Positive">Accept</ui5-button>
+			<ui5-button slot="endContent" design="Negative">Reject</ui5-button>
+		</ui5-bar>
+	</ui5-dynamic-page>
+
+	<ui5-dialog id="dialog" header-text="Dialog Header" data-sap-ui-fastnavgroup="true">
+		<div role="region" aria-label="dialog content">
+			<ui5-date-picker primary-calendar-type="Gregorian" value-state="None"></ui5-date-picker>
+			<ui5-daterange-picker primary-calendar-type="Gregorian" value-state="None"></ui5-daterange-picker>
+		</div>
+		<ui5-bar slot="footer" design="Footer">
+			<ui5-button id="close-dialog" slot="endContent" data-sap-ui-fastnavgroup="true">Close</ui5-button>
+		</ui5-bar>
+	</ui5-dialog>
+
+	<script>
+		const dialog = document.getElementById("dialog");
+
+		document.getElementById("open-dialog").addEventListener("click", () => {
+			dialog.open = true;
+		});
+
+		document.getElementById("close-dialog").addEventListener("click", () => {
+			dialog.open = false;
+		});
+
+		dialog.addEventListener("ui5-before-open", () => console.log("before-open"));
+		dialog.addEventListener("ui5-open", () => console.log("open"));
+		dialog.addEventListener("ui5-before-close", () => console.log("before-close"));
+		dialog.addEventListener("ui5-close", () => console.log("close"));
+	</script>
+</body>
+
+</html>
