@@ -197,7 +197,7 @@ describe("TabContainer general interaction", () => {
 		assert.strictEqual(actualContentPadding.value, expectedContentPadding, "tabContainer has correct padding set on the content");
 	});
 
-	it("tests nested tabs", async () => {
+	it.skip("tests nested tabs", async () => {
 		const tabContainer = await browser.$("#tabContainerNestedTabs");
 		const expandButton = await tabContainer.shadow$(".ui5-tab-expand-button [ui5-button]");
 

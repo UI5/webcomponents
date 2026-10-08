@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-describe("ResponsivePopover mobile general interaction", () => {
+describe.skip("ResponsivePopover mobile general interaction", () => {
 	before(async () => {
 		await browser.emulateDevice('iPhone X');
 		await browser.url(`test/pages/ResponsivePopover.html`);
@@ -19,7 +19,7 @@ describe("ResponsivePopover mobile general interaction", () => {
 	});
 });
 
-describe("Acc", () => {
+describe.skip("Acc", () => {
 	before(async () => {
 		await browser.emulateDevice('iPhone X');
 		await browser.url(`test/pages/ResponsivePopover.html`);

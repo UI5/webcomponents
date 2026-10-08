@@ -2118,3 +2118,18 @@ describe("MultiComboBox general interaction", () => {
 		});
 	});
 });
+
+describe("MultiComboBox Korean n-more render loop fix", () => {
+	before(async () => {
+		await browser.url(`test/pages/MultiComboBox.html?sap-ui-language=ko`);
+	});
+
+	it("should open n-more popover without crash when n-more link is clicked", async () => {
+		const tokenizer = await browser.$("#mcb-korean-nmore").shadow$("ui5-tokenizer");
+		const nMoreText = await tokenizer.shadow$(".ui5-tokenizer-more-text");
+
+		await nMoreText.click();
+
+		assert.ok(await tokenizer.getProperty("expanded"), "Tokenizer expanded after n-more click");
+	});
+});

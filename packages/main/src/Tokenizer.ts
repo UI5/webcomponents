@@ -145,7 +145,7 @@ class Tokenizer extends UI5Element {
 	expanded!: boolean;
 
 	@property({ type: Object })
-	morePopoverOpener!: Tokenizer;
+	morePopoverOpener!: HTMLElement;
 
 	@property({ validator: Integer })
 	popoverMinWidth?: number;
@@ -158,7 +158,7 @@ class Tokenizer extends UI5Element {
 	@property({ type: ValueState, defaultValue: ValueState.None })
 	valueState!: `${ValueState}`;
 
-	@property({ validator: Integer })
+	@property({ validator: Integer, defaultValue: 0 })
 	_nMoreCount!: number;
 
 	@property({ validator: Integer })
@@ -176,6 +176,7 @@ class Tokenizer extends UI5Element {
 	_scrollEnablement: ScrollEnablement;
 	_expandedScrollWidth?: number;
 	_isOpen: boolean;
+	_lastNMoreWidth = 0;
 
 	_handleResize() {
 		this._nMoreCount = this.overflownTokens.length;
@@ -224,7 +225,7 @@ class Tokenizer extends UI5Element {
 	}
 
 	async openMorePopover() {
-		(await this.getPopover()).showAt(this.morePopoverOpener || this);
+		(await this.getPopover()).showAt(this.morePopoverOpener instanceof HTMLElement ? this.morePopoverOpener : this);
 		this._isOpen = true;
 	}
 
@@ -645,6 +646,10 @@ class Tokenizer extends UI5Element {
 		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer--content")!;
 	}
 
+	get moreLink() {
+		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer-more-text");
+	}
+
 	get expandedContentDom() {
 		return this.shadowRoot!.querySelector<HTMLElement>(".ui5-tokenizer-expanded--content");
 	}
@@ -666,25 +671,45 @@ class Tokenizer extends UI5Element {
 			return [];
 		}
 
-		// Reset the overflow prop of the tokens first in order
-		// to use their dimensions for calculation because already
-		// hidden tokens are set to 'display: none'
-		this._getTokens().forEach(token => {
+		const tokensArray = this._getTokens();
+
+		tokensArray.forEach(token => {
 			token.overflows = false;
 		});
 
-		return this._getTokens().filter(token => {
-			const parentRect = this.contentDom.getBoundingClientRect();
+		const parentRect = this.getBoundingClientRect();
+		const parentEnd = Number(parentRect.right.toFixed(2));
+		const parentStart = Number(parentRect.left.toFixed(2));
+
+		let nMoreWidth = 0;
+		const nMoreElement = this.moreLink;
+		if (nMoreElement) {
+			const nMoreMargin = parseFloat(getComputedStyle(nMoreElement).marginInlineStart) || 0;
+			nMoreWidth = nMoreElement.getBoundingClientRect().width + nMoreMargin;
+			this._lastNMoreWidth = Math.max(nMoreWidth, this._lastNMoreWidth);
+			nMoreWidth = this._lastNMoreWidth;
+		}
+
+		let firstOverflowIndex = -1;
+
+		tokensArray.forEach((token, index) => {
 			const tokenRect = token.getBoundingClientRect();
 			const tokenEnd = Number(tokenRect.right.toFixed(2));
-			const parentEnd = Number(parentRect.right.toFixed(2));
 			const tokenStart = Number(tokenRect.left.toFixed(2));
-			const parentStart = Number(parentRect.left.toFixed(2));
 
-			token.overflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > parentEnd));
+			const isLastToken = index === tokensArray.length - 1;
+			const effectiveParentEnd = isLastToken ? parentEnd : Number((parentRect.right - nMoreWidth).toFixed(2));
 
-			return token.overflows;
+			const tokenOverflows = !this.expanded && ((tokenStart < parentStart) || (tokenEnd > effectiveParentEnd));
+
+			if (tokenOverflows && firstOverflowIndex === -1) {
+				firstOverflowIndex = index;
+			}
+
+			token.overflows = firstOverflowIndex !== -1 && index >= firstOverflowIndex;
 		});
+
+		return tokensArray.filter(token => token.overflows);
 	}
 
 	get noValueStatePopover() {
