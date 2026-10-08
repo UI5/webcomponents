@@ -292,9 +292,9 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
-	// tracks changes to the `media` property
-	// cleared when the rendered media brings no further resizing
-	// Required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
+	// tracks changes to the `media` property;
+	// cleared when the rendered media brings no further resizing;
+	// required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
 	_ongoingMediaChange: Array<{ media: Media; dimensions: DimensionsForMedia }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
@@ -399,7 +399,7 @@ class IllustratedMessage extends UI5Element {
 	handleResize() {
 		if (this.design === IllustrationMessageDesign.Auto) {
 			this._checkHeightConstraints();
-			this._trackSizeForCurrentMedia()
+			this._trackSizeForCurrentMedia();
 			this._applyMedia();
 		}
 	}
@@ -487,7 +487,7 @@ class IllustratedMessage extends UI5Element {
 		const steps = this._ongoingMediaChange;
 		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
 		if (lastStep && this.media as Media === lastStep.media) {
-			lastStep.dimensions.afterRendering = {width: this.offsetWidth, height: this.offsetHeight}
+			lastStep.dimensions.afterRendering = { width: this.offsetWidth, height: this.offsetHeight };
 		}
 	}
 
