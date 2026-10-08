@@ -166,12 +166,12 @@
 }
 
 /* Suppress default focus outline on the keyboard handle — the popover shows its own ring below */
-.ui5-popup-drag-resize-handler:focus {
+.ui5-popover-keyboard-resize-handle:focus {
 	outline: none;
 }
 
 /* Focus ring on the whole popover while the keyboard resize handle is focused */
-.ui5-popover-root:has(.ui5-popup-drag-resize-handler:focus)::before {
+.ui5-popover-root:has(.ui5-popover-keyboard-resize-handle:focus)::before {
 	content: '';
 	position: absolute;
 	inset: var(--_ui5_popover_focus_outline_offset);
@@ -182,18 +182,18 @@
 }
 
 /* Enlarged corner radius at the active resize corner to echo the resize affordance */
-:host(.ui5-popover-resize-handle-bottom-right) .ui5-popover-root:has(.ui5-popup-drag-resize-handler:focus)::before {
-	border-end-end-radius: var(--_ui5_popover_resize_corner_radius_focused);
+.ui5-popover-resize-handle-bottom-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-bottom-right-radius: var(--_ui5_popover_resize_corner_radius_focused);
 }
 
-:host(.ui5-popover-resize-handle-bottom-left) .ui5-popover-root:has(.ui5-popup-drag-resize-handler:focus)::before {
-	border-end-start-radius: var(--_ui5_popover_resize_corner_radius_focused);
+.ui5-popover-resize-handle-bottom-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-bottom-left-radius: var(--_ui5_popover_resize_corner_radius_focused);
 }
 
-:host(.ui5-popover-resize-handle-top-right) .ui5-popover-root:has(.ui5-popup-drag-resize-handler:focus)::before {
-	border-start-end-radius: var(--_ui5_popover_resize_corner_radius_focused);
+.ui5-popover-resize-handle-top-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-top-right-radius: var(--_ui5_popover_resize_corner_radius_focused);
 }
 
-:host(.ui5-popover-resize-handle-top-left) .ui5-popover-root:has(.ui5-popup-drag-resize-handler:focus)::before {
-	border-start-start-radius: var(--_ui5_popover_resize_corner_radius_focused);
+.ui5-popover-resize-handle-top-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-top-left-radius: var(--_ui5_popover_resize_corner_radius_focused);
 }

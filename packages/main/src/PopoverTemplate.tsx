@@ -47,8 +47,8 @@ function afterContent(this: Popover) {
 		{this._showResizeHandle &&
 			<>
 				<span
-					id={`${this._id}-resizeHandler`}
-					class="ui5-popup-drag-resize-handler ui5-hidden-text"
+					id={`${this._id}-keyboardResizeHandle`}
+					class="ui5-popover-keyboard-resize-handle ui5-hidden-text"
 					tabIndex={0}
 					role="img"
 					aria-label={this._resizeHandleAriaLabel}

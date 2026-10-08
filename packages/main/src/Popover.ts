@@ -1051,7 +1051,7 @@ class Popover extends Popup {
 
 	async forwardToLast() {
 		if (this._showResizeHandle) {
-			const resizeHandler = this.shadowRoot!.querySelector<HTMLElement>(`#${this._id}-resizeHandler`);
+			const resizeHandler = this.shadowRoot!.querySelector<HTMLElement>(`#${this._id}-keyboardResizeHandle`);
 			if (resizeHandler) {
 				resizeHandler.focus();
 				return;

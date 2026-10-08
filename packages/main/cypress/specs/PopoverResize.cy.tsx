@@ -1702,7 +1702,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.should("exist")
 				.and("have.attr", "tabindex", "0")
 				.and("have.attr", "role", "img");
@@ -1731,7 +1731,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress(["Shift", "ArrowRight"]);
 
@@ -1763,7 +1763,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress(["Shift", "ArrowLeft"]);
 
@@ -1795,7 +1795,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress(["Shift", "ArrowDown"]);
 
@@ -1827,7 +1827,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress(["Shift", "ArrowUp"]);
 
@@ -1860,7 +1860,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			// Press Shift+Left many times to try to go below min width
@@ -1891,7 +1891,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress(["Shift", "ArrowRight"])
 				.realPress(["Shift", "ArrowDown"]);
@@ -1937,7 +1937,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			handle.realPress(["Shift", "ArrowLeft"]);
@@ -1987,7 +1987,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			handle.realPress(["Shift", "ArrowUp"]);
@@ -2019,12 +2019,12 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler:focus")
+				.find(".ui5-popover-keyboard-resize-handle:focus")
 				.should("exist");
 		});
 
@@ -2052,7 +2052,7 @@ describe("Popover Resize Functionality", () => {
 
 				const handle = cy.get("[ui5-popover]")
 					.shadow()
-					.find(".ui5-popup-drag-resize-handler")
+					.find(".ui5-popover-keyboard-resize-handle")
 					.focus();
 
 				// In RTL with End placement the right (logical start) edge is free.
@@ -2085,7 +2085,7 @@ describe("Popover Resize Functionality", () => {
 
 				const handle = cy.get("[ui5-popover]")
 					.shadow()
-					.find(".ui5-popup-drag-resize-handler")
+					.find(".ui5-popover-keyboard-resize-handle")
 					.focus();
 
 				// Shift+Right shrinks the popover in RTL End placement.
@@ -2129,7 +2129,7 @@ describe("Popover Resize Functionality", () => {
 
 			cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus()
 				.realPress("ArrowDown")
 				.realPress("ArrowUp")
@@ -2170,7 +2170,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 20; i++) {
@@ -2208,7 +2208,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 20; i++) {
@@ -2247,7 +2247,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			// Shrink until the anchor constraint stops further reduction.
@@ -2305,7 +2305,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 15; i++) {
@@ -2344,7 +2344,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 15; i++) {
@@ -2383,7 +2383,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 15; i++) {
@@ -2434,7 +2434,7 @@ describe("Popover Resize Functionality", () => {
 
 			const handle = cy.get("[ui5-popover]")
 				.shadow()
-				.find(".ui5-popup-drag-resize-handler")
+				.find(".ui5-popover-keyboard-resize-handle")
 				.focus();
 
 			for (let i = 0; i < 15; i++) {
