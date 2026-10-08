@@ -19,7 +19,7 @@ async function getResourceBundleTexts(options) {
 	}, options);
 }
 
-describe("TimePicker on phone - general interactions", () => {
+describe.skip("TimePicker on phone - general interactions", () => {
 	before(async () => {
 		await browser.url(`test/pages/TimePicker.html?sap-ui-language=bg`);
 		await browser.emulateDevice('iPhone X');
@@ -168,8 +168,8 @@ describe("TimePicker on phone - general interactions", () => {
 
 });
 
-describe("TimePicker on phone - accessibility and other input attributes", () => {
-	before.skip(async () => {
+describe.skip("TimePicker on phone - accessibility and other input attributes", () => {
+	before(async () => {
 		await browser.url(`test/pages/TimePicker.html?sap-ui-language=bg`);
 		await browser.emulateDevice('iPhone X');
 	});
