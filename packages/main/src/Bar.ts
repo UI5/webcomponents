@@ -75,18 +75,17 @@ class Bar extends UI5Element {
 	/**
 	 * Specifies the ARIA role applied to the component for accessibility purposes.
 	 *
-	 * **Note:** This property is deprecated and will be removed in a future major version.
-	 * The `toolbar` ARIA role requires arrow-key navigation between interactive elements,
-	 * which the Bar component does not implement. The Bar is a structural layout component
-	 * (header/footer), not an action-oriented toolbar, and receives its semantic context
-	 * from its parent landmark (e.g. `banner`, `contentinfo`, `dialog`).
-	 * Setting this property to `"Toolbar"` is therefore discouraged and the default has
-	 * been changed to `"None"`.
+	 * **Note:** By default no ARIA role is applied ("None"), as the Bar derives its semantics
+	 * from the container it is placed in, such as a page header or footer.
+	 *
+	 * **Note:** The "Toolbar" value is deprecated. The Bar is a structural layout container and does not
+	 * provide toolbar keyboard interactions (such as arrow-key navigation between controls). If you need to
+	 * group more than two interactive elements, use the Toolbar component instead, as it offers the proper
+	 * accessibility semantics and user interactions.
 	 *
 	 * @public
 	 * @default "None"
 	 * @since 2.10.0
-	 * @deprecated
 	 *
 	 */
 	@property()
@@ -180,8 +179,8 @@ class Bar extends UI5Element {
 		}, this);
 	 }
 
-	 get effectiveRole() {
-		return this.accessibleRole.toLowerCase() === "toolbar" ? "toolbar" as AriaRole : undefined;
+	 get effectiveRole(): AriaRole | undefined {
+		return this.accessibleRole === "Toolbar" ? "toolbar" : undefined;
 	 }
 }
 

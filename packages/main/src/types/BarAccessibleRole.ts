@@ -1,5 +1,5 @@
 /**
- * ListItem accessible roles.
+ * Bar accessible roles.
  * @public
  * @since 2.9.0
  */
@@ -8,8 +8,7 @@ enum BarAccessibleRole {
 	/**
 	 * Represents the ARIA role "toolbar".
 	 * @public
-	 * @deprecated The Bar component does not implement toolbar keyboard navigation (arrow keys).
-	 * Using this value is discouraged. The `accessibleRole` property itself is deprecated and will be removed in a future major version.
+	 * @deprecated The Bar does not implement toolbar keyboard navigation (arrow keys) and should not expose the "toolbar" role. Use "None" instead.
 	 */
 	Toolbar = "Toolbar",
 
