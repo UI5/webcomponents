@@ -183,17 +183,17 @@
 
 /* Enlarged corner radius at the active resize corner to echo the resize affordance */
 .ui5-popover-resize-handle-bottom-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
-	border-bottom-right-radius: var(--_ui5_popover_resize_corner_radius_focused);
+	border-bottom-right-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
 }
 
 .ui5-popover-resize-handle-bottom-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
-	border-bottom-left-radius: var(--_ui5_popover_resize_corner_radius_focused);
+	border-bottom-left-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
 }
 
 .ui5-popover-resize-handle-top-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
-	border-top-right-radius: var(--_ui5_popover_resize_corner_radius_focused);
+	border-top-right-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
 }
 
 .ui5-popover-resize-handle-top-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
-	border-top-left-radius: var(--_ui5_popover_resize_corner_radius_focused);
+	border-top-left-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
 }
