@@ -20,3 +20,75 @@
     white-space: pre;
 }
 
+/* Oscillation width controls */
+.osc-controls {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 700px;
+}
+
+.osc-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.osc-slider-min,
+.osc-slider-max {
+    font: 11px monospace;
+    color: #666;
+    white-space: nowrap;
+}
+
+.osc-slider-track {
+    position: relative;
+    flex: 1;
+}
+
+.osc-slider-track input[type="range"] {
+    width: 100%;
+    display: block;
+}
+
+.osc-ticks {
+    position: relative;
+    height: 14px;
+    pointer-events: none;
+}
+
+.osc-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 10px;
+    background: #888;
+    top: 0;
+}
+
+.osc-tick--warn {
+    background: #c00;
+}
+
+.osc-tick::after {
+    content: attr(title);
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 10px monospace;
+    white-space: nowrap;
+    color: #555;
+}
+
+.osc-tick--warn::after {
+    color: #c00;
+}
+
+.osc-preset-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+

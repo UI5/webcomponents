@@ -45,6 +45,11 @@ const MEDIA = {
 
 type Media = typeof MEDIA[keyof typeof MEDIA];
 
+type DimensionsForMedia = {
+	beforeRendering: { width: number; height: number; },
+	afterRendering?: { width: number; height: number; },
+};
+
 /**
  * @class
  *
@@ -287,11 +292,10 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
-	// tracks the steps of a SINGLE ongoing change of `media` property:
-	// -- filled when `this.media` is assigned a new (different) value;
-	// -- cleared when the assigned `this.media` value is applied to DOM, if the rendered state brings no further media change.
+	// tracks changes to the `media` property
+	// cleared when the rendered media brings no further resizing
 	// Required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
-	_ongoingMediaChange: Array<{ media: Media; width: number; height: number }>;
+	_ongoingMediaChange: Array<{ media: Media; dimensions: DimensionsForMedia }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
 
@@ -395,13 +399,8 @@ class IllustratedMessage extends UI5Element {
 	handleResize() {
 		if (this.design === IllustrationMessageDesign.Auto) {
 			this._checkHeightConstraints();
-
-			// apply new media if needed
-			const oldMedia = this.media;
+			this._trackSizeForCurrentMedia()
 			this._applyMedia();
-			if (oldMedia === this.media) {
-				this._ongoingMediaChange = []; // no pending media change to be applied in DOM, so clear
-			}
 		}
 	}
 
@@ -457,18 +456,46 @@ class IllustratedMessage extends UI5Element {
 			return; // no media change
 		}
 
-		this._ongoingMediaChange.push({ media, width, height }); // register media change step
+		this._ongoingMediaChange.push({ media, dimensions: { beforeRendering: { width, height } } }); // register media change step
 		this.media = media;
 	}
 
-	_wouldRevertLastMediaChange(newMedia: Media, newWidth: number, newHeight: number): boolean {
+	_wouldRevertLastMediaChange(media: Media, newWidth: number, newHeight: number): boolean {
 		const steps = this._ongoingMediaChange;
-		const beforeLast = steps.length >= 2 ? steps[steps.length - 2] : null;
+		const currentAppliedMedia = steps.length >= 1 ? steps[steps.length - 1] : null;
+		const previousAppliedMedia = steps.length >= 2 ? steps[steps.length - 2] : null;
+		const newDimensions = { width: newWidth, height: newHeight };
 
-		return !!beforeLast
-			&& beforeLast.media === newMedia
-			&& beforeLast.width === newWidth
-			&& beforeLast.height === newHeight;
+		if (previousAppliedMedia?.media !== media
+			|| !currentAppliedMedia?.dimensions.afterRendering
+			|| !previousAppliedMedia?.dimensions.afterRendering) {
+			return false;
+		}
+
+		// circular chain: previousApplied -> currentApplied -> previousApplied
+		return this._dimensionsMatch(previousAppliedMedia.dimensions.beforeRendering, newDimensions)
+			&& this._dimensionsMatch(previousAppliedMedia.dimensions.afterRendering, currentAppliedMedia.dimensions.beforeRendering)
+			&& this._dimensionsMatch(currentAppliedMedia.dimensions.afterRendering, newDimensions);
+	}
+
+	_dimensionsMatch(dimensions1: { width: number; height: number }, dimensions2: { width: number; height: number }): boolean {
+		return dimensions1.width === dimensions2.width
+			&& dimensions1.height === dimensions2.height;
+	}
+
+	_trackSizeForCurrentMedia() {
+		const steps = this._ongoingMediaChange;
+		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+		if (lastStep && this.media as Media === lastStep.media) {
+			lastStep.dimensions.afterRendering = {width: this.offsetWidth, height: this.offsetHeight}
+		}
+	}
+
+	_isMediaChangeFinalized() {
+		const steps = this._ongoingMediaChange;
+		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+		return lastStep?.dimensions.afterRendering
+			&& this._dimensionsMatch(lastStep.dimensions.beforeRendering, lastStep.dimensions.afterRendering);
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -505,15 +532,9 @@ class IllustratedMessage extends UI5Element {
 			return;
 		}
 
-		if (this._ongoingMediaChange.length) {
-			const stateBeforeRendering = this._ongoingMediaChange[this._ongoingMediaChange.length - 1];
-			const stateAfterRendering = { media: this.media, width: this.offsetWidth, height: this.offsetHeight };
-			if (stateBeforeRendering.media === stateAfterRendering.media
-				&& stateBeforeRendering.width === stateAfterRendering.width
-				&& stateBeforeRendering.height === stateAfterRendering.height) {
-				// the rendering of media did not bring further change in size => media change settled
-				this._ongoingMediaChange = []; // clear
-			}
+		this._trackSizeForCurrentMedia();
+		if (this._isMediaChangeFinalized()) {
+			this._ongoingMediaChange = [];
 		}
 
 		const heightMeasurementNeeded = this.media && !(this.media in this._contentHeightForMedia);
