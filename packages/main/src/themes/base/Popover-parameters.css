@@ -2,4 +2,9 @@
 	--_ui5_popover_background: var(--sapGroup_ContentBackground);
 	--_ui5_popover_box_shadow: var(--sapContent_Shadow2);
 	--_ui5_popover_no_arrow_box_shadow: var(--sapContent_Shadow1);
+	--_ui5_popover_resize_handle_size: 1.5rem;
+	--_ui5_popover_resize_handle_icon_size: 1rem;
+	--_ui5_popover_resize_handle_offset: -0.5rem;
+	--_ui5_popover_keyboard_resize_handle_corner_radius_focused: 1.75rem;
+	--_ui5_popover_focus_outline_offset: 0.0625rem;
 }

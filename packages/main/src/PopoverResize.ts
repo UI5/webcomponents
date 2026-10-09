@@ -1,4 +1,7 @@
 import clamp from "@ui5/webcomponents-base/dist/util/clamp.js";
+import {
+	isUpShift, isDownShift, isLeftShift, isRightShift,
+} from "@ui5/webcomponents-base/dist/Keys.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import type Popover from "./Popover.js";
 import { PopoverActualPlacement, PopoverActualHorizontalAlign } from "./Popover.js";
@@ -10,6 +13,8 @@ enum ResizeHandlePlacement {
 	BottomLeft = "BottomLeft",
 	BottomRight = "BottomRight",
 }
+
+const STEP_SIZE = 16;
 
 /**
  * Manages resize functionality for Popover components
@@ -231,6 +236,41 @@ class PopoverResize {
 
 		e.preventDefault();
 
+		this._initialClientX = e.clientX;
+		this._initialClientY = e.clientY;
+
+		this._startResize();
+
+		this._attachMouseResizeHandlers();
+	}
+
+	/**
+	 * Handles mouse move event during resize
+	 */
+	private _onResizeMouseMove(e: MouseEvent) {
+		const { clientX, clientY } = e;
+		const deltaX = clientX - this._initialClientX!;
+		const deltaY = clientY - this._initialClientY!;
+
+		this._resize(deltaX, deltaY);
+	}
+
+	/**
+	 * Handles mouse up event after resize
+	 */
+	private _onResizeMouseUp() {
+		delete this._initialClientX;
+		delete this._initialClientY;
+		delete this._initialBoundingRect;
+		delete this._minWidth;
+		delete this._minHeight;
+		delete this._maxWidth;
+		delete this._maxHeight;
+
+		this._detachMouseResizeHandlers();
+	}
+
+	private _startResize() {
 		this._resized = true;
 		this._initialBoundingRect = this._popover.getBoundingClientRect();
 
@@ -246,9 +286,6 @@ class PopoverResize {
 
 		const domRefComputedStyle = window.getComputedStyle(this._popover);
 
-		this._initialClientX = e.clientX;
-		this._initialClientY = e.clientY;
-
 		this._minWidth = Math.max(Number.parseFloat(minWidth), Number.parseFloat(domRefComputedStyle.minWidth));
 		this._minHeight = Number.parseFloat(minHeight);
 
@@ -261,21 +298,40 @@ class PopoverResize {
 
 		this._maxWidth = computedMaxWidth < defaultMaxWidth ? computedMaxWidth : Infinity;
 		this._maxHeight = computedMaxHeight < defaultMaxHeight ? computedMaxHeight : Infinity;
-
-		this._attachMouseResizeHandlers();
 	}
 
-	/**
-	 * Handles mouse move event during resize
-	 */
-	private _onResizeMouseMove(e: MouseEvent) {
+	onResizeKeyDown(e: KeyboardEvent) {
+		if (!isUpShift(e) && !isDownShift(e) && !isLeftShift(e) && !isRightShift(e)) {
+			return;
+		}
+
+		e.preventDefault();
+
+		this._startResize();
+
+		let deltaX = 0;
+		if (isRightShift(e)) {
+			deltaX = STEP_SIZE;
+		} else if (isLeftShift(e)) {
+			deltaX = -STEP_SIZE;
+		}
+
+		let deltaY = 0;
+		if (isUpShift(e)) {
+			deltaY = -STEP_SIZE;
+		} else if (isDownShift(e)) {
+			deltaY = STEP_SIZE;
+		}
+
+		this._resize(deltaX, deltaY);
+	}
+
+	private _resize(deltaX: number, deltaY: number) {
 		const popover = this._popover;
 		const margin = popover._viewportMargin;
-		const { clientX, clientY } = e;
+
 		const resizeHandlePlacement = this.getResizeHandlePlacement();
 		const initialBoundingRect = this._initialBoundingRect!;
-		const deltaX = clientX - this._initialClientX!;
-		const deltaY = clientY - this._initialClientY!;
 
 		let newWidth,
 			newHeight;
@@ -388,21 +444,6 @@ class PopoverResize {
 			height: `${newHeight}px`,
 			width: `${newWidth}px`,
 		});
-	}
-
-	/**
-	 * Handles mouse up event after resize
-	 */
-	private _onResizeMouseUp() {
-		delete this._initialClientX;
-		delete this._initialClientY;
-		delete this._initialBoundingRect;
-		delete this._minWidth;
-		delete this._minHeight;
-		delete this._maxWidth;
-		delete this._maxHeight;
-
-		this._detachMouseResizeHandlers();
 	}
 
 	/**
