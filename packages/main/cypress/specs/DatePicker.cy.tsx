@@ -1591,6 +1591,50 @@ describe("Date Picker Tests", () => {
 			.should("have.attr", "value-state", "None");
 	});
 
+	it("selects an in-range day from the max month when clicked from the previous month view", () => {
+		cy.mount(<DatePicker id="datePicker1" maxDate="2026-12-10" value="2026-11-15"></DatePicker>);
+
+		cy.get<DatePicker>("#datePicker1")
+			.as("datePicker");
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-icon]")
+			.realClick();
+
+		const dec4Timestamp = new Date(Date.UTC(2026, 11, 4, 0, 0, 0)).valueOf() / 1000;
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.as("calendar");
+
+		cy.get("@calendar")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.as("daypicker");
+
+		cy.get("@daypicker")
+			.shadow()
+			.find(`div[data-sap-timestamp=${dec4Timestamp}]`)
+			.realMouseDown();
+
+		cy.get("@datePicker")
+			.shadow()
+			.find("[ui5-calendar]")
+			.shadow()
+			.find("[ui5-daypicker]")
+			.shadow()
+			.find(".ui5-dp-root")
+			.realClick({ x: 0, y: 0 });
+
+		cy.get<DatePicker>("@datePicker")
+			.should("not.have.attr", "open");
+
+		cy.get<DatePicker>("@datePicker")
+			.should("have.attr", "value", "2026-12-04");
+	});
+
 	it("Min and max dates are set, with no format pattern provided, using valid ISO format", () => {
 		cy.mount(<DatePicker minDate="2019-09-01" maxDate="2019-11-01"></DatePicker>);
 

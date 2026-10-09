@@ -514,11 +514,13 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 			target = target.parentNode as HTMLElement;
 		}
 
-		if (!this._isDayPressed(target)) {
+		const pendingMouseTimestamp = !setTimestamp ? this._mousedownTimestamp : undefined;
+
+		if (!this._isDayPressed(target) && pendingMouseTimestamp === undefined) {
 			return;
 		}
 
-		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (this._mousedownTimestamp ?? this.timestamp!);
+		const timestamp = setTimestamp ? this._getTimestampFromDom(target) : (pendingMouseTimestamp ?? this.timestamp!);
 		this._mousedownTimestamp = undefined;
 
 		if (setTimestamp) {
