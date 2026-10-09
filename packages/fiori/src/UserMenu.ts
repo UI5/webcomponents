@@ -198,6 +198,22 @@ class UserMenu extends UI5Element {
 	showEditButton = false;
 
 	/**
+	 * Defines whether the avatar of the selected account is interactive (focusable and pressable).
+	 *
+	 * When `false` (default), the avatar is rendered as a non-interactive image
+	 * and is not announced as a button by screen readers.
+	 *
+	 * **Note:** When `showEditButton` is set to `true`, the avatar is treated as interactive
+	 * regardless of this property's value, to preserve the edit affordance.
+	 *
+	 * @default false
+	 * @public
+	 * @since 2.16.4
+	 */
+	@property({ type: Boolean })
+	avatarInteractive = false;
+
+	/**
 	 * Defines the menu items.
 	 * @public
 	 */
@@ -443,6 +459,10 @@ class UserMenu extends UI5Element {
 
 	get _ariaLabelledByActions() {
 		return UserMenu.i18nBundle.getText(USER_MENU_ACTIONS_TXT);
+	}
+
+	get _isAvatarInteractive(): boolean {
+		return this.avatarInteractive || this.showEditButton;
 	}
 
 	getAccountDescriptionText(account: UserMenuAccount) {
