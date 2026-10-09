@@ -24,6 +24,7 @@ interface ShellBarAreaAccessibilityInfo {
 	title: string | undefined;
 	accessibilityAttributes: {
 		name?: string;
+		ariaLabel?: AccessibilityAttributes["ariaLabel"];
 		hasPopup?: AccessibilityAttributes["hasPopup"];
 		expanded?: AccessibilityAttributes["expanded"];
 	};
@@ -53,6 +54,10 @@ class ShellBarAccessibility {
 			notifications: {
 				title: defaultTexts.notifications,
 				accessibilityAttributes: {
+					// Provide an explicit accessible name so the Button does not derive its
+					// aria-label from the count badge ("X items"), which otherwise collides
+					// with the "X Notifications" tooltip and causes a double announcement.
+					ariaLabel: defaultTexts.notifications,
 					expanded: accessibilityAttributes.notifications?.expanded,
 					hasPopup: accessibilityAttributes.notifications?.hasPopup,
 				},
