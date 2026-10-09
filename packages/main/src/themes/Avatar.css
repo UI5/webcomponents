@@ -304,6 +304,7 @@
 
 .ui5-avatar-initials {
 	color: inherit;
+	white-space: nowrap;
 }
 
 .ui5-avatar-icon ~ .ui5-avatar-initials,

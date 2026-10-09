@@ -122,6 +122,18 @@
 	</section>
 
 	<section>
+		<h3>Avatar - Initials (non-Latin scripts)</h3>
+		<ui5-avatar initials="ГК" color-scheme="Accent1" size="M"></ui5-avatar>       <!-- Cyrillic (Ukrainian) -->
+		<ui5-avatar initials="ŁP" color-scheme="Accent2" size="M"></ui5-avatar>       <!-- Polish -->
+		<ui5-avatar initials="مح" color-scheme="Accent3" size="M"></ui5-avatar>       <!-- Arabic (RTL) -->
+		<ui5-avatar initials="ΑΒ" color-scheme="Accent4" size="M"></ui5-avatar>       <!-- Greek -->
+		<ui5-avatar initials="日本" color-scheme="Accent5" size="M"></ui5-avatar>      <!-- CJK -->
+		<ui5-avatar initials="Ω" color-scheme="Accent6" size="M"></ui5-avatar>        <!-- single letter -->
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent7" size="M"></ui5-avatar>      <!-- three letters -->
+		<ui5-avatar initials="АБВГ" color-scheme="Accent8" size="M"></ui5-avatar>     <!-- too many: expect fallback icon -->
+	</section>
+
+	<section>
 		<h3>Avatar - Custom</h3>
 		<h4>Avatar with custom size</h4>
 		<ui5-avatar id="myCustomAvatar" shape="Square" size="XL" class="avatar3auto">
@@ -485,6 +497,143 @@
 
 		<h3>Avatar with three overflowing initials - custom fallback icon should be shown</h3>
 		<ui5-avatar initials="WWW" fallback-icon="alert" color-scheme="Accent2" size="XL"></ui5-avatar>
+	</section>
+
+	<section>
+		<h3>Avatar - Initials stress test: 3 characters across scripts / sizes</h3>
+		<p>All initials are exactly 3 letters. Each row shows one script at all five sizes (XS, S, M, L, XL)
+		   so you can spot overflow at small sizes. Last row per family intentionally uses wide/tall chars.</p>
+
+		<!-- Latin baseline -->
+		<h4>Latin</h4>
+		<ui5-avatar initials="ABC" color-scheme="Accent1" size="XS"></ui5-avatar>
+		<ui5-avatar initials="ABC" color-scheme="Accent1" size="S"></ui5-avatar>
+		<ui5-avatar initials="ABC" color-scheme="Accent1" size="M"></ui5-avatar>
+		<ui5-avatar initials="ABC" color-scheme="Accent1" size="L"></ui5-avatar>
+		<ui5-avatar initials="ABC" color-scheme="Accent1" size="XL"></ui5-avatar>
+		<ui5-avatar initials="WWW" color-scheme="Accent2" size="XS"></ui5-avatar>  <!-- wide: known overflow candidate -->
+		<ui5-avatar initials="WWW" color-scheme="Accent2" size="S"></ui5-avatar>
+		<ui5-avatar initials="WWW" color-scheme="Accent2" size="M"></ui5-avatar>
+		<ui5-avatar initials="WWW" color-scheme="Accent2" size="L"></ui5-avatar>
+		<ui5-avatar initials="WWW" color-scheme="Accent2" size="XL"></ui5-avatar>
+
+		<!-- Cyrillic -->
+		<h4>Cyrillic</h4>
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent3" size="XS"></ui5-avatar>
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent3" size="S"></ui5-avatar>
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent3" size="M"></ui5-avatar>
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent3" size="L"></ui5-avatar>
+		<ui5-avatar initials="ЖЯЗ" color-scheme="Accent3" size="XL"></ui5-avatar>
+		<ui5-avatar initials="ЩЪЫ" color-scheme="Accent4" size="XS"></ui5-avatar>  <!-- wide Cyrillic -->
+		<ui5-avatar initials="ЩЪЫ" color-scheme="Accent4" size="S"></ui5-avatar>
+		<ui5-avatar initials="ЩЪЫ" color-scheme="Accent4" size="M"></ui5-avatar>
+		<ui5-avatar initials="ЩЪЫ" color-scheme="Accent4" size="L"></ui5-avatar>
+		<ui5-avatar initials="ЩЪЫ" color-scheme="Accent4" size="XL"></ui5-avatar>
+
+		<!-- Greek -->
+		<h4>Greek</h4>
+		<ui5-avatar initials="ΑΒΓ" color-scheme="Accent5" size="XS"></ui5-avatar>
+		<ui5-avatar initials="ΑΒΓ" color-scheme="Accent5" size="S"></ui5-avatar>
+		<ui5-avatar initials="ΑΒΓ" color-scheme="Accent5" size="M"></ui5-avatar>
+		<ui5-avatar initials="ΑΒΓ" color-scheme="Accent5" size="L"></ui5-avatar>
+		<ui5-avatar initials="ΑΒΓ" color-scheme="Accent5" size="XL"></ui5-avatar>
+		<ui5-avatar initials="ΨΩΞ" color-scheme="Accent6" size="M"></ui5-avatar>  <!-- wide Greek -->
+
+		<!-- Arabic (RTL) -->
+		<h4>Arabic (RTL)</h4>
+		<ui5-avatar initials="محم" color-scheme="Accent7" size="XS"></ui5-avatar>
+		<ui5-avatar initials="محم" color-scheme="Accent7" size="S"></ui5-avatar>
+		<ui5-avatar initials="محم" color-scheme="Accent7" size="M"></ui5-avatar>
+		<ui5-avatar initials="محم" color-scheme="Accent7" size="L"></ui5-avatar>
+		<ui5-avatar initials="محم" color-scheme="Accent7" size="XL"></ui5-avatar>
+		<ui5-avatar initials="ضصث" color-scheme="Accent8" size="M"></ui5-avatar>  <!-- wide Arabic -->
+
+		<!-- Hebrew (RTL) -->
+		<h4>Hebrew (RTL)</h4>
+		<ui5-avatar initials="אבג" color-scheme="Accent9" size="XS"></ui5-avatar>
+		<ui5-avatar initials="אבג" color-scheme="Accent9" size="S"></ui5-avatar>
+		<ui5-avatar initials="אבג" color-scheme="Accent9" size="M"></ui5-avatar>
+		<ui5-avatar initials="אבג" color-scheme="Accent9" size="L"></ui5-avatar>
+		<ui5-avatar initials="אבג" color-scheme="Accent9" size="XL"></ui5-avatar>
+
+		<!-- Latin Extended / Polish -->
+		<h4>Latin Extended (Polish)</h4>
+		<ui5-avatar initials="ŁÓŻ" color-scheme="Accent10" size="XS"></ui5-avatar>
+		<ui5-avatar initials="ŁÓŻ" color-scheme="Accent10" size="S"></ui5-avatar>
+		<ui5-avatar initials="ŁÓŻ" color-scheme="Accent10" size="M"></ui5-avatar>
+		<ui5-avatar initials="ŁÓŻ" color-scheme="Accent10" size="L"></ui5-avatar>
+		<ui5-avatar initials="ŁÓŻ" color-scheme="Accent10" size="XL"></ui5-avatar>
+
+		<!-- CJK - high overflow risk with 3 wide glyphs -->
+		<h4>CJK (high overflow risk at small sizes)</h4>
+		<ui5-avatar initials="中文字" color-scheme="Accent1" size="XS"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent1" size="S"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent1" size="M"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent1" size="L"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent1" size="XL"></ui5-avatar>
+		<ui5-avatar initials="漢字文" color-scheme="Accent2" size="M"></ui5-avatar>  <!-- Kanji -->
+		<ui5-avatar initials="あいう" color-scheme="Accent3" size="M"></ui5-avatar>  <!-- Hiragana -->
+		<ui5-avatar initials="アイウ" color-scheme="Accent4" size="M"></ui5-avatar>  <!-- Katakana -->
+
+		<!-- Korean Hangul -->
+		<h4>Korean (Hangul)</h4>
+		<ui5-avatar initials="가나다" color-scheme="Accent5" size="XS"></ui5-avatar>
+		<ui5-avatar initials="가나다" color-scheme="Accent5" size="S"></ui5-avatar>
+		<ui5-avatar initials="가나다" color-scheme="Accent5" size="M"></ui5-avatar>
+		<ui5-avatar initials="가나다" color-scheme="Accent5" size="L"></ui5-avatar>
+		<ui5-avatar initials="가나다" color-scheme="Accent5" size="XL"></ui5-avatar>
+
+		<!-- Devanagari (Hindi) - tall script with vowel marks -->
+		<h4>Devanagari / Hindi (tall: vowel marks above baseline)</h4>
+		<ui5-avatar initials="अआइ" color-scheme="Accent6" size="XS"></ui5-avatar>
+		<ui5-avatar initials="अआइ" color-scheme="Accent6" size="S"></ui5-avatar>
+		<ui5-avatar initials="अआइ" color-scheme="Accent6" size="M"></ui5-avatar>
+		<ui5-avatar initials="अआइ" color-scheme="Accent6" size="L"></ui5-avatar>
+		<ui5-avatar initials="अआइ" color-scheme="Accent6" size="XL"></ui5-avatar>
+
+		<!-- Thai - tall script with tone marks -->
+		<h4>Thai (tall: tone marks above baseline)</h4>
+		<ui5-avatar initials="กขค" color-scheme="Accent7" size="XS"></ui5-avatar>
+		<ui5-avatar initials="กขค" color-scheme="Accent7" size="S"></ui5-avatar>
+		<ui5-avatar initials="กขค" color-scheme="Accent7" size="M"></ui5-avatar>
+		<ui5-avatar initials="กขค" color-scheme="Accent7" size="L"></ui5-avatar>
+		<ui5-avatar initials="กขค" color-scheme="Accent7" size="XL"></ui5-avatar>
+
+		<!-- Armenian -->
+		<h4>Armenian</h4>
+		<ui5-avatar initials="ԱԲԳ" color-scheme="Accent8" size="M"></ui5-avatar>
+		<ui5-avatar initials="ՔՊՈ" color-scheme="Accent9" size="M"></ui5-avatar>  <!-- wide Armenian -->
+
+		<!-- Georgian -->
+		<h4>Georgian</h4>
+		<ui5-avatar initials="ᲐᲑᲒ" color-scheme="Accent10" size="M"></ui5-avatar>
+		<ui5-avatar initials="ᲥᲦᲧ" color-scheme="Accent1" size="M"></ui5-avatar>
+
+		<!-- Ethiopic / Amharic -->
+		<h4>Ethiopic (Amharic)</h4>
+		<ui5-avatar initials="ሀሁሂ" color-scheme="Accent2" size="M"></ui5-avatar>
+		<ui5-avatar initials="ሠሡሢ" color-scheme="Accent3" size="M"></ui5-avatar>
+
+		<!-- Bengali -->
+		<h4>Bengali</h4>
+		<ui5-avatar initials="অআই" color-scheme="Accent4" size="M"></ui5-avatar>
+		<ui5-avatar initials="অআই" color-scheme="Accent4" size="XL"></ui5-avatar>
+
+		<!-- Tamil -->
+		<h4>Tamil</h4>
+		<ui5-avatar initials="அஆஇ" color-scheme="Accent5" size="M"></ui5-avatar>
+		<ui5-avatar initials="அஆஇ" color-scheme="Accent5" size="XL"></ui5-avatar>
+
+		<!-- Square shape variants for the highest-risk scripts -->
+		<h4>Square shape - highest overflow risk</h4>
+		<ui5-avatar initials="中文字" color-scheme="Accent6" size="XS" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent6" size="S" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent6" size="M" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent6" size="L" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="中文字" color-scheme="Accent6" size="XL" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="अआइ" color-scheme="Accent7" size="M" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="กขค" color-scheme="Accent8" size="M" shape="Square"></ui5-avatar>
+		<ui5-avatar initials="WWW" color-scheme="Accent9" size="M" shape="Square"></ui5-avatar>
 	</section>
 
 	<script>
