@@ -1793,6 +1793,29 @@ describe("Component Behavior", () => {
 		});
 	});
 
+		it("notifications button announces a single accessible name (no duplicate badge count)", () => {
+			cy.mount(
+				<ShellBar
+					showNotifications
+					notificationsCount="5"
+				/>
+			);
+
+			// The accessible name must be the "X Notifications" text, not the generic
+			// "X items" badge description that the Button derives from a count badge.
+			// Otherwise JAWS announces both aria-label ("5 items") and title ("5 Notifications").
+			cy.get<ShellBar>("[ui5-shellbar]").then(($shellbar) => {
+				const expectedName = $shellbar[0].actionsAccessibilityInfo.notifications.title;
+
+				cy.get("[ui5-shellbar]")
+					.shadow()
+					.find(".ui5-shellbar-bell-button")
+					.shadow()
+					.find("button")
+					.should("have.attr", "aria-label", expectedName);
+			});
+		});
+
 		it("tests accessibilityAttributes property", () => {
 			const NOTIFICATIONS_BTN_ARIA_HASPOPUP = "dialog";
 
