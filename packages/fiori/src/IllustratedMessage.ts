@@ -455,7 +455,7 @@ class IllustratedMessage extends UI5Element {
 		}
 
 		this._ongoingMediaChange.push({ media, dimensions: { beforeRendering: { width, height } } }); // register media change step
-		this._ongoingMediaChange = this._ongoingMediaChange.slice(-2);
+		this._ongoingMediaChange = this._ongoingMediaChange.slice(-2); // we need to keep only the last two steps to detect oscillation
 		this.media = media;
 	}
 
