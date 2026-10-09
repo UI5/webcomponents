@@ -36,6 +36,6 @@ describe("ProductSwitchItem ARIA attributes", () => {
 		cy.get("[ui5-product-switch-item]")
 			.shadow()
 			.find(".ui5-product-switch-item-root")
-			.should("have.attr", "role", "listitem");
+			.should("have.attr", "role", "menuitem");
 	});
 });

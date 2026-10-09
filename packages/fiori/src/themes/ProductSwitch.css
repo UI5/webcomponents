@@ -10,6 +10,8 @@
 	align-items: inherit;
 	width: 752px; /* 4 * item size */
 	padding: 1.25rem .75rem;
+	max-height: 30rem; /* content box = 4 rows * (7rem item + 0.5rem margin); the 2 * 1.25rem padding adds up to 32.5rem total */
+	overflow-y: auto;
 }
 
 :host([desktop-columns="3"]) .ui5-product-switch-root {
@@ -33,5 +35,7 @@
 		flex-direction: column;
 		padding: 0;
 		width: 100%;
+		max-height: none;
+		overflow-y: visible;
 	}
 }
