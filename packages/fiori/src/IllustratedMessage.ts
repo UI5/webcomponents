@@ -455,6 +455,7 @@ class IllustratedMessage extends UI5Element {
 		}
 
 		this._ongoingMediaChange.push({ media, dimensions: { beforeRendering: { width, height } } }); // register media change step
+		this._ongoingMediaChange = this._ongoingMediaChange.slice(-2);
 		this.media = media;
 	}
 
@@ -488,7 +489,7 @@ class IllustratedMessage extends UI5Element {
 			lastStep.dimensions.afterRendering = { width: this.offsetWidth, height: this.offsetHeight };
 
 			if (this._dimensionsMatch(lastStep.dimensions.beforeRendering, lastStep.dimensions.afterRendering)) {
-				this._ongoingMediaChange = [];
+				this._ongoingMediaChange = []; // media settled (no further resize triggered)
 			}
 		}
 	}
