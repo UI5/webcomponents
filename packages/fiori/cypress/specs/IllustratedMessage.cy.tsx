@@ -506,3 +506,117 @@ describe("Utility SVG accessibility", () => {
 			});
 	});
 });
+
+describe("Media oscillation prevention", () => {
+	// Regression for the endless A -> B -> A -> ... -> sequence of media changes:
+	// when the illustrated message sits in an auto-height wrapper inside a scrollable
+	// container whose width is a few px above the breakpoint between A and B
+	// and change in media brings change in height which toggles the scrollbar
+	// which brings the width back and forth across the breakpoint, potentially causing media oscillation.
+	it("settles on a stable media after resizing from above to just above the scene/dialog breakpoint", () => {
+		cy.mount(
+			<div
+				id="osc-box"
+				style={{ width: "740px", height: "360px", overflow: "auto" }}
+			>
+				<div>
+					<IllustratedMessage name="NoData" design="Auto" titleText="No data" subtitleText="Nothing to show" />
+				</div>
+			</div>
+		);
+
+		cy.get("[ui5-illustrated-message]").should("have.attr", "media", IllustratedMessage.MEDIA.SCENE);
+
+		// Shrink to the oscillation-trigger width.
+		cy.get("#osc-box").invoke("css", "width", "696px");
+
+		cy.get("[ui5-illustrated-message]").then(($im) => {
+			const im = $im[0];
+			const transitions: string[] = [];
+			const observer = new MutationObserver(() => {
+				transitions.push(im.getAttribute("media") || "");
+			});
+			observer.observe(im, { attributes: true, attributeFilter: ["media"] });
+			cy.wrap(transitions).as("transitions");
+			cy.wrap(observer).as("observer");
+		});
+
+		cy.wait(2000);
+
+		cy.get("[ui5-illustrated-message]")
+			.invoke("attr", "media")
+			.then((settledMedia) => {
+				cy.get<string[]>("@transitions").then((transitions) => {
+					const countAfterSettle = transitions.length;
+
+					cy.wait(1000);
+
+					cy.get("[ui5-illustrated-message]")
+						.should("have.attr", "media", settledMedia as string);
+
+					cy.get<string[]>("@transitions").then((t) => {
+						expect(t.length, "no further media transitions after settling").to.equal(countAfterSettle);
+					});
+				});
+			});
+
+		cy.get<MutationObserver>("@observer").then((observer) => {
+			observer.disconnect();
+		});
+	});
+
+	it("settles on a stable media instead of oscillating", () => {
+		cy.mount(
+			// #box: width a few px above the scene breakpoint; height between the dialog and
+			// scene content heights, so a non-overlay scrollbar moves the available width across
+			// the breakpoint. Inner wrapper is auto-height so overflow surfaces on #box.
+			<div
+				id="osc-box"
+				style={{ width: "696px", height: "360px", overflow: "auto" }}
+			>
+				<div>
+					<IllustratedMessage name="NoData" design="Auto" titleText="No data" subtitleText="Nothing to show" />
+				</div>
+			</div>
+		);
+
+		// Record every media attribute change via a MutationObserver on the host.
+		cy.get("[ui5-illustrated-message]").then(($im) => {
+			const im = $im[0];
+			const transitions: string[] = [];
+			const observer = new MutationObserver(() => {
+				transitions.push(im.getAttribute("media") || "");
+			});
+			observer.observe(im, { attributes: true, attributeFilter: ["media"] });
+			cy.wrap(transitions).as("transitions");
+			cy.wrap(observer).as("observer");
+		});
+
+		// Give the resize/render feedback loop ample time to run. If the bug is present the
+		// transition count keeps growing without bound during this window.
+		cy.wait(2000);
+
+		// Snapshot the current media and the transition count, wait again, and assert nothing
+		// moved: media is identical and no further transitions were recorded.
+		cy.get("[ui5-illustrated-message]")
+			.invoke("attr", "media")
+			.then((settledMedia) => {
+				cy.get<string[]>("@transitions").then((transitions) => {
+					const countAfterSettle = transitions.length;
+
+					cy.wait(1000);
+
+					cy.get("[ui5-illustrated-message]")
+						.should("have.attr", "media", settledMedia as string);
+
+					cy.get<string[]>("@transitions").then((t) => {
+						expect(t.length, "no further media transitions after settling").to.equal(countAfterSettle);
+					});
+				});
+			});
+
+		cy.get<MutationObserver>("@observer").then((observer) => {
+			observer.disconnect();
+		});
+	});
+});

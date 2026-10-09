@@ -5,3 +5,344 @@
 .illustratedmessage1auto {
     background-color: var(--sapBackgroundColor);
 }
+
+/* Scrollable area for the media-oscillation case: height between the "dialog" and "scene"
+   content heights of the message, width a few px above the scene breakpoint (681px), so a
+   classic (non-overlay) scrollbar moves the available width across the breakpoint. */
+.osc-box {
+    width: 696px;
+    height: 360px;
+    overflow: auto;
+}
+
+.osc-log {
+    font: 12px monospace;
+    white-space: pre;
+}
+
+/* Oscillation width controls */
+.osc-controls {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 700px;
+}
+
+.osc-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.osc-slider-min,
+.osc-slider-max {
+    font: 11px monospace;
+    color: #666;
+    white-space: nowrap;
+}
+
+.osc-slider-track {
+    position: relative;
+    flex: 1;
+}
+
+.osc-slider-track input[type="range"] {
+    width: 100%;
+    display: block;
+}
+
+.osc-ticks {
+    position: relative;
+    height: 14px;
+    pointer-events: none;
+}
+
+.osc-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 10px;
+    background: #888;
+    top: 0;
+}
+
+.osc-tick--warn {
+    background: #c00;
+}
+
+.osc-tick::after {
+    content: attr(title);
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 10px monospace;
+    white-space: nowrap;
+    color: #555;
+}
+
+.osc-tick--warn::after {
+    color: #c00;
+}
+
+.osc-preset-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ── IllustratedMessageSizing layout ─────────────────────────── */
+
+/* Base reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+    margin: 0;
+    font: var(--sapFontSize)/1.4 var(--sapFontFamily);
+    color: var(--sapTextColor);
+}
+
+/* Controls bar */
+#im-sizing-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--sapBaseColor);
+    border-bottom: 2px solid var(--sapGroup_ContentBorderColor);
+    padding: 0.625rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 900px;
+}
+#im-sizing-controls fieldset {
+    border: 1px solid var(--sapGroup_ContentBorderColor);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.625rem 0.5rem;
+    margin: 0;
+}
+#im-sizing-controls legend {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--sapTextColor);
+    padding: 0 0.25rem;
+}
+#im-sizing-controls label {
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+}
+#im-sizing-controls input[type="number"] {
+    width: 4rem;
+    padding: 0.125rem 0.25rem;
+    font: inherit;
+    border: 1px solid var(--sapGroup_ContentBorderColor);
+    border-radius: 0.1875rem;
+}
+
+/* Buttons */
+.im-sizing-btn {
+    padding: 0.1875rem 0.5625rem;
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid var(--sapButton_BorderColor);
+    border-radius: 0.25rem;
+    background: var(--sapButton_Background);
+    white-space: nowrap;
+}
+.im-sizing-btn:hover { background: var(--sapButton_Hover_Background); }
+.im-sizing-btn--osc  { border-color: var(--sapHighlightColor); color: var(--sapHighlightColor); }
+
+/* Sliders */
+.im-sizing-slider-row { display: flex; align-items: center; gap: 0.375rem; }
+.im-sizing-slider-track { position: relative; flex: 1; min-width: 200px; }
+.im-sizing-slider-track input[type="range"] { width: 100%; display: block; }
+.im-sizing-ticks { position: relative; height: 1rem; pointer-events: none; }
+.im-sizing-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    width: 2px; height: 10px;
+    background: var(--sapNeutralColor); top: 0;
+}
+.im-sizing-tick::after {
+    content: attr(title);
+    position: absolute;
+    top: 0.75rem; left: 50%;
+    transform: translateX(-50%);
+    font: 0.5625rem monospace;
+    white-space: nowrap;
+    color: var(--sapNeutralColor);
+}
+.im-sizing-tick--bp { background: var(--sapHighlightColor); }
+.im-sizing-tick--bp::after { color: var(--sapHighlightColor); }
+
+/* Results bar */
+#im-sizing-results-bar {
+    position: sticky;
+    top: 0; /* pushed down by #im-sizing-controls via JS */
+    z-index: 99;
+    background: var(--sapShell_Background);
+    border-bottom: 2px solid var(--sapGroup_ContentBorderColor);
+    padding: 0.4375rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: nowrap;
+    max-width: 900px;
+}
+#im-sizing-results-bar .rb-label {
+    font: 600 0.75rem/1 monospace;
+    color: var(--sapContent_LabelColor);
+    white-space: normal;
+    width: 3.5em;
+    flex-shrink: 0;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+#im-sizing-clear-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.1875rem 0.5rem;
+    font: 0.6875rem/1.4 inherit;
+    cursor: pointer;
+    border: 1px solid var(--sapButton_BorderColor);
+    border-radius: 0.25rem;
+    background: var(--sapButton_Background);
+    color: var(--sapTextColor);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+#im-sizing-clear-btn:hover { background: var(--sapButton_Hover_Background); color: var(--sapButton_Hover_TextColor); }
+#im-sizing-clear-btn svg { width: 0.75rem; height: 0.75rem; fill: currentColor; flex-shrink: 0; }
+.rb-scenarios {
+    display: flex;
+    gap: 0.375rem;
+    flex: 1;
+    flex-wrap: nowrap;
+}
+.rb-box {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--sapGroup_ContentBorderColor);
+    border-radius: 0.3125rem;
+    background: var(--sapBaseColor);
+    padding: 0.25rem 0.375rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+    transition: background .15s, border-color .15s;
+}
+.rb-box .rb-num  { font: 600 0.625rem monospace; color: var(--sapNeutralColor); }
+.rb-box .rb-name { font: bold 0.75rem monospace; color: var(--sapTextColor); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
+.rb-box .rb-count { font: bold 1.25rem/1 monospace; color: var(--sapTextColor); }
+.rb-box--ok    { background: var(--sapSuccessBackground); border-color: var(--sapPositiveColor); }
+.rb-box--ok    .rb-count { color: var(--sapPositiveColor); }
+.rb-box--warn  { background: var(--sapWarningBackground); border-color: var(--sapCriticalColor); }
+.rb-box--warn  .rb-count { color: var(--sapCriticalColor); }
+.rb-box--err   { background: var(--sapErrorBackground);   border-color: var(--sapNegativeColor); }
+.rb-box--err   .rb-count { color: var(--sapNegativeColor); }
+
+/* Scenario grid */
+#im-sizing-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 900px;
+}
+.im-sizing-tile {
+    background: var(--sapBaseColor);
+    border: 1px solid var(--sapGroup_ContentBorderColor);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.im-sizing-tile-header {
+    background: var(--sapBackgroundColor);
+    border-bottom: 1px solid var(--sapGroup_ContentBorderColor);
+    padding: 0.625rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+.im-sizing-tile-header-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+.im-sizing-tile-title { font-weight: 700; font-size: 1rem; flex: 1; }
+.im-sizing-tile-desc  { font-size: 0.75rem; color: var(--sapContent_LabelColor); }
+.im-sizing-tile-badge {
+    font: bold 0.6875rem monospace;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.625rem;
+    background: var(--sapInformationBackground);
+    color: var(--sapInformativeColor);
+    min-width: 60px;
+    text-align: center;
+    white-space: nowrap;
+}
+.im-sizing-tile-badge--ok   { background: var(--sapSuccessBackground); color: var(--sapPositiveColor); }
+.im-sizing-tile-badge--warn { background: var(--sapWarningBackground); color: var(--sapCriticalColor); }
+.im-sizing-tile-badge--err  { background: var(--sapErrorBackground);   color: var(--sapNegativeColor); }
+
+/* Frame inside each tile */
+.im-sizing-tile-stage {
+    padding: 1rem;
+    overflow: auto;
+}
+.im-sizing-frame {
+    border: 2px dashed var(--sapGroup_ContentBorderColor);
+    background: var(--sapBaseColor);
+    position: relative;
+}
+.im-sizing-frame::after {
+    content: attr(data-size);
+    position: absolute;
+    top: 0.1875rem; right: 0.375rem;
+    font: 0.625rem monospace;
+    color: var(--sapNeutralColor);
+    pointer-events: none;
+}
+
+/* Scenario-specific parent CSS */
+.sc-scroll .im-sizing-frame { overflow: auto; }
+.sc-hidden .im-sizing-frame { overflow: hidden; }
+.sc-flex-col .im-sizing-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+.sc-flex-row .im-sizing-frame {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+.sc-flex-row .im-sizing-frame .flex-filler { flex: 0 0 60px; background: var(--sapInformationBackground); }
+.sc-flex-row .im-sizing-frame .flex-im    { flex: 1; min-width: 0; overflow: hidden; }
+.sc-grid .im-sizing-frame {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+}
+.sc-grid .im-sizing-frame .grid-sidebar { background: var(--sapInformationBackground); }
+.sc-padded .im-sizing-frame {
+    padding: 1.5rem;
+    overflow: hidden;
+}
+.sc-height .im-sizing-frame { overflow: auto; }
+.sc-height .im-sizing-frame > .fill { width: 100%; height: 100%; }
+
+/* Switch log */
+.im-sizing-tile-log {
+    font: 0.6875rem monospace;
+    color: var(--sapContent_LabelColor);
+    padding: 0.25rem 0.75rem 0.5rem;
+    max-height: 4.5rem;
+    overflow-y: auto;
+    border-top: 1px solid var(--sapGroup_ContentBorderColor);
+    white-space: pre;
+}
+.im-sizing-log-err { color: var(--sapNegativeColor); font-weight: bold; }

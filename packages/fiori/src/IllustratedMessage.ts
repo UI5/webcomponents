@@ -35,6 +35,21 @@ const getEffectiveIllustrationName = (name: string): string => {
 	return `fiori/${name}`;
 };
 
+const MEDIA = {
+	BASE: "base",
+	DOT: "dot",
+	SPOT: "spot",
+	DIALOG: "dialog",
+	SCENE: "scene",
+} as const;
+
+type Media = typeof MEDIA[keyof typeof MEDIA];
+
+type DimensionsForMedia = {
+	beforeRendering: { width: number; height: number; },
+	afterRendering?: { width: number; height: number; },
+};
+
 /**
  * @class
  *
@@ -277,6 +292,9 @@ class IllustratedMessage extends UI5Element {
 	@i18n("@ui5/webcomponents-fiori")
 	static i18nBundle: I18nBundle;
 	_contentHeightForMedia: Record<string, number>;
+	// tracks changes to the `media` property; cleared when the rendered media brings no further resizing;
+	// required to prevent a circular chain of `media` changes (A -> B -> A -> ...) where a media change triggers a resize that reverts it to a previous media of same chained sequence.
+	_ongoingMediaChange: Array<{ media: Media; dimensions: DimensionsForMedia }>;
 	_handleResize: ResizeObserverCallback;
 	_handleThemeLoaded: () => void;
 
@@ -291,6 +309,7 @@ class IllustratedMessage extends UI5Element {
 		};
 		// this will store the height of the inner content of the IllustratedMessage (illustration + title + subtitle + actions) for a given media (e.g. "Spot")
 		this._contentHeightForMedia = {};
+		this._ongoingMediaChange = [];
 	}
 
 	static get BREAKPOINTS() {
@@ -303,13 +322,7 @@ class IllustratedMessage extends UI5Element {
 	}
 
 	static get MEDIA() {
-		return {
-			BASE: "base",
-			DOT: "dot",
-			SPOT: "spot",
-			DIALOG: "dialog",
-			SCENE: "scene",
-		};
+		return MEDIA;
 	}
 
 	async onBeforeRendering() {
@@ -409,7 +422,8 @@ class IllustratedMessage extends UI5Element {
 
 	_applyMedia() {
 		const width = this.offsetWidth;
-		let media = "",
+		const height = this.offsetHeight;
+		let media: Media = MEDIA.SCENE,
 			mediaIndex = -1;
 
 		if (width <= IllustratedMessage.BREAKPOINTS.BASE) {
@@ -431,7 +445,53 @@ class IllustratedMessage extends UI5Element {
 			media = Object.values(IllustratedMessage.MEDIA)[mediaIndex];
 		}
 
+		if (this.media && this._wouldRevertLastMediaChange(media, width, height)) {
+			// circular chain of media changes detected, so settle on the currently applied media to escape oscillation
+			return;
+		}
+
+		if (media === this.media) {
+			return; // no media change
+		}
+
+		this._ongoingMediaChange.push({ media, dimensions: { beforeRendering: { width, height } } }); // register media change step
+		this._ongoingMediaChange = this._ongoingMediaChange.slice(-2); // we need to keep only the last two steps to detect oscillation
 		this.media = media;
+	}
+
+	_wouldRevertLastMediaChange(media: Media, newWidth: number, newHeight: number): boolean {
+		const steps = this._ongoingMediaChange;
+		const currentAppliedMedia = steps.length >= 1 ? steps[steps.length - 1] : null;
+		const previousAppliedMedia = steps.length >= 2 ? steps[steps.length - 2] : null;
+		const newDimensions = { width: newWidth, height: newHeight };
+
+		if (previousAppliedMedia?.media !== media
+			|| !currentAppliedMedia?.dimensions.afterRendering
+			|| !previousAppliedMedia?.dimensions.afterRendering) {
+			return false;
+		}
+
+		// circular chain: previousApplied -> currentApplied -> previousApplied
+		return this._dimensionsMatch(previousAppliedMedia.dimensions.beforeRendering, newDimensions)
+			&& this._dimensionsMatch(previousAppliedMedia.dimensions.afterRendering, currentAppliedMedia.dimensions.beforeRendering)
+			&& this._dimensionsMatch(currentAppliedMedia.dimensions.afterRendering, newDimensions);
+	}
+
+	_dimensionsMatch(dimensions1: { width: number; height: number }, dimensions2: { width: number; height: number }): boolean {
+		return dimensions1.width === dimensions2.width
+			&& dimensions1.height === dimensions2.height;
+	}
+
+	_trackMediaAfterRendering() {
+		const steps = this._ongoingMediaChange;
+		const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+		if (lastStep && this.media as Media === lastStep.media) {
+			lastStep.dimensions.afterRendering = { width: this.offsetWidth, height: this.offsetHeight };
+
+			if (this._dimensionsMatch(lastStep.dimensions.beforeRendering, lastStep.dimensions.afterRendering)) {
+				this._ongoingMediaChange = []; // media settled (no further resize triggered)
+			}
+		}
 	}
 
 	_mediaExceedsContainerHeight(media: string): boolean {
@@ -467,6 +527,9 @@ class IllustratedMessage extends UI5Element {
 		if (this.design !== IllustrationMessageDesign.Auto) {
 			return;
 		}
+
+		this._trackMediaAfterRendering();
+
 		const heightMeasurementNeeded = this.media && !(this.media in this._contentHeightForMedia);
 		const mightOverflow = this.scrollHeight > this.clientHeight;
 		if (heightMeasurementNeeded || mightOverflow) {
