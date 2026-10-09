@@ -18,7 +18,7 @@ function App() {
     <>
       <Table id="table" overflowMode="Popin">
         <TableHeaderRow slot="headerRow">
-          <TableHeaderCell id="produtCol" width="300px">
+          <TableHeaderCell id="produtCol" importance={10} width="300px">
             <span>Product</span>
           </TableHeaderCell>
           <TableHeaderCell
@@ -43,7 +43,7 @@ function App() {
           </TableHeaderCell>
         </TableHeaderRow>
         <TableRow>
-          <TableCell>
+          <TableCell role="rowheader">
             <Text>
               <b>Notebook Basic 15</b>
               <br />
@@ -68,7 +68,7 @@ function App() {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>
+          <TableCell role="rowheader">
             <Text>
               <b>Notebook Basic 17</b>
               <br />
@@ -93,7 +93,7 @@ function App() {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>
+          <TableCell role="rowheader">
             <Text>
               <b>Notebook Basic 18</b>
               <br />

@@ -108,13 +108,18 @@ class TableCustomAnnouncement extends TableExtension {
 			descriptions.push(this.i18nBundle.getText(TABLE_ROW_ACTIVE));
 		}
 
-		const cells = [...row._visibleCells, ...row._popinCells];
-		cells.flatMap(cell => {
-			return cell._popin ? [cell._popinHeader!, cell._popinContent!] : [cell._headerCell!, cell];
-		}).forEach(node => {
-			const nodeDescription = getCustomAnnouncement(node, { lessDetails: true });
-			descriptions.push(nodeDescription);
-		});
+		const rowHeaderCell = row._visibleCells.find(cell => cell.ariaRole === "rowheader");
+		if (rowHeaderCell) {
+			descriptions.push(getCustomAnnouncement(rowHeaderCell, { lessDetails: true }));
+		} else {
+			const cells = [...row._visibleCells, ...row._popinCells];
+			cells.flatMap(cell => {
+				return cell._popin ? [cell._popinHeader!, cell._popinContent!] : [cell._headerCell!, cell];
+			}).forEach(node => {
+				const nodeDescription = getCustomAnnouncement(node, { lessDetails: true });
+				descriptions.push(nodeDescription);
+			});
+		}
 
 		if (row._availableActionsCount > 0) {
 			descriptions.push(row._actionCellAccText!);
