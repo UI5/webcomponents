@@ -1,0 +1,14 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+
+const name = "doc-attachment";
+const pathData = "M11.043 15v-1.5h1.004V15a.972.972 0 0 1-.282.719.98.98 0 0 1-.722.281H1.003a.98.98 0 0 1-.72-.281A.972.972 0 0 1 0 15V4l4.016-4h7.027c.272 0 .507.094.706.281a.945.945 0 0 1 .298.719v2h-1.004V1H5.02v3c0 .292-.1.531-.298.719A1.033 1.033 0 0 1 3.984 5h-2.98v10h10.04ZM7.97 5.5c0-.333.167-.5.502-.5h7.027c.335 0 .502.167.502.5 0 .333-.167.5-.502.5H8.471c-.335 0-.502-.167-.502-.5ZM15.498 8c.335 0 .502.167.502.5 0 .333-.167.5-.502.5H8.471c-.335 0-.502-.167-.502-.5 0-.333.167-.5.502-.5h7.027Zm-2.008 3c.335 0 .502.167.502.5 0 .333-.167.5-.502.5H8.47c-.334 0-.501-.167-.501-.5 0-.333.167-.5.502-.5h5.02Z";
+const ltr = false;
+const accData = null;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v4";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, collection, packageName });
+
+export default "SAP-icons-v4/doc-attachment";
+export { pathData, ltr, viewBox, accData };

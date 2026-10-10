@@ -1,0 +1,2 @@
+"use strict";export default":host{justify-content:center;align-items:center;display:flex;color:var(--sapList_TextColor);background-color:var(--sapList_Background);font-family:var(--sapFontFamily);height:var(--sapElement_LineHeight);border-bottom:var(--sapList_BorderWidth) solid var(--sapList_BorderColor);opacity:.8;position:absolute;padding:0 1rem;top:-1000px;left:-1000px}";
+//# sourceMappingURL=MultipleDragGhost.css.js.map

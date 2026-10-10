@@ -1,0 +1,2 @@
+"use strict";import o from"./decorators/customElement.js";import r from"./decorators/event.js";import t from"./decorators/event-strict.js";import m from"./decorators/property.js";import i from"./decorators/slot.js";import p from"./decorators/slot-strict.js";import e from"./decorators/bound.js";import f from"./decorators/i18n.js";export{o as customElement,r as event,t as eventStrict,m as property,i as slot,p as slotStrict,e as bound,f as i18n};
+//# sourceMappingURL=decorators.js.map

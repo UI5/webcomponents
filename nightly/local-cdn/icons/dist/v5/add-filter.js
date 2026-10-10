@@ -1,0 +1,15 @@
+import { registerIcon } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
+import { ICON_ADD_FILTER } from "../generated/i18n/i18n-defaults.js";
+
+const name = "add-filter";
+const pathData = "M12.75 9.75a.75.75 0 0 1 .75.75V12H15a.75.75 0 1 1 0 1.5h-1.5V15a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5H12v-1.5a.75.75 0 0 1 .75-.75Zm.608-9.742c.573.083.84.79.461 1.23L9.5 6.278v3.972a.75.75 0 0 1-.281.586l-2.5 2c-.482.385-1.219.03-1.219-.586V6.277L1.18 1.238C.773.761 1.123 0 1.75 0l11.608.008ZM6.82 5.512A.75.75 0 0 1 7 6v4.688l1-.8V6a.75.75 0 0 1 .18-.488L11.62 1.5H3.38l3.44 4.012Z";
+const ltr = false;
+const accData = ICON_ADD_FILTER;
+const viewBox = "0 0 16 16";
+const collection = "SAP-icons-v5";
+const packageName = "@ui5/webcomponents-icons";
+
+registerIcon(name, { pathData, ltr, viewBox, accData, collection, packageName });
+
+export default "SAP-icons-v5/add-filter";
+export { pathData, ltr, viewBox, accData };

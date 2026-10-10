@@ -1,0 +1,1 @@
+.progressindicator1auto{background-color:var(--sapBackgroundColor)}.progressindicator2auto{height:50px;width:200px}.progressindicator3auto::part(bar),.progressindicator3auto::part(remaining-bar):after{background-color:red}.progressindicator3auto::part(remaining-bar){background-color:#ffe1e1}

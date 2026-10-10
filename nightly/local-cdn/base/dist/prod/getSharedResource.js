@@ -1,0 +1,2 @@
+"use strict";import a from"./util/getSingletonElementInstance.js";const u=()=>{const t=document.createElement("meta");return t.setAttribute("name","ui5-shared-resources"),t.setAttribute("content",""),t},l=()=>typeof document>"u"?null:a('meta[name="ui5-shared-resources"]',document.head,u),m=(t,o)=>{const r=t.split(".");let e=l();if(!e)return o;for(let n=0;n<r.length;n++){const s=r[n],c=n===r.length-1;Object.prototype.hasOwnProperty.call(e,s)||(e[s]=c?o:{}),e=e[s]}return e};export default m;
+//# sourceMappingURL=getSharedResource.js.map
