@@ -2,6 +2,10 @@
 
 When reviewing pull requests to UI5 Web Components project, follow these guidelines:
 
+## AI Knowledge Base
+
+  Detailed conventions, guardrails, and good/bad examples live in the **AI Knowledge Base** at [`ai-knowledge-base/`](../ai-knowledge-base/). When a change touches a `.ts`, `.tsx`, or `.css` file under `packages/`, a Cypress spec, or a `ui5-*` component/property/slot/event/design token/ARIA attribute, consult [`ai-knowledge-base/INDEX.md`](../ai-knowledge-base/INDEX.md) and open the one reference file its routing table names for the area under review. Review the diff against those rules.
+
 ## Commit Message and PR Title Validation
 
 Check that commit messages and PR titles follow the [Conventional Commits](https://conventionalcommits.org) specification as outlined in [Conventions and guidelines](../docs/5-contributing/02-conventions-and-guidelines.md):
