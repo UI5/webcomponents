@@ -1,6 +1,8 @@
 import ShellBar from "../../src/ShellBar.js";
 import ShellBarBranding from "../../src/ShellBarBranding.js"
 
+const RESIZE_THROTTLE_RATE = 300; // ms
+
 describe("ShellBarBranding", () => {
 	const basicTemplate = (brandingProps = {}, shellBarProps = {}) => {
 		const defaultShellBarProps = {
@@ -126,4 +128,56 @@ describe("ShellBarBranding", () => {
 			cy.get("@brandingClick")
 				.should("have.been.calledTwice");
 		});
+
+	describe("S breakpoint title visibility (#14148)", () => {
+		afterEach(() => {
+			cy.viewport(1920, 1080);
+		});
+
+		it("keeps the title visible on S breakpoint when there is no logo", () => {
+			cy.viewport(500, 600);
+
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding">
+						Product Identifier
+					</ShellBarBranding>
+				</ShellBar>
+			);
+
+			// breakpoints are set on resize event
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			cy.get("#shellbar").should("have.prop", "breakpointSize", "S");
+
+			cy.get("#shellbar").find("#shellbarBranding").shadow()
+				.find(".ui5-shellbar-title")
+				.should("exist")
+				.and("be.visible");
+		});
+
+		it("hides the title on S breakpoint when a logo is present", () => {
+			cy.viewport(500, 600);
+
+			cy.mount(
+				<ShellBar id="shellbar">
+					<ShellBarBranding id="shellbarBranding" slot="branding">
+						Product Identifier
+						<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" slot="logo"/>
+					</ShellBarBranding>
+				</ShellBar>
+			);
+
+			// breakpoints are set on resize event
+			// eslint-disable-next-line cypress/no-unnecessary-waiting
+			cy.wait(RESIZE_THROTTLE_RATE);
+
+			cy.get("#shellbar").should("have.prop", "breakpointSize", "S");
+
+			cy.get("#shellbar").find("#shellbarBranding").shadow()
+				.find(".ui5-shellbar-title")
+				.should("not.exist");
+		});
+	});
 });

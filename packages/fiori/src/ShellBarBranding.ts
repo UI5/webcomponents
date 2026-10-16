@@ -117,6 +117,10 @@ class ShellBarBranding extends UI5Element {
 		return (this.href && this.href.length > 0) ? this.href : undefined;
 	}
 
+	get _hasLogo() {
+		return this.logo.length > 0;
+	}
+
 	get _role() {
 		return this.href && this.href.length > 0 ? "link" : "button";
 	}
