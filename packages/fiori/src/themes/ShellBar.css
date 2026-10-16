@@ -132,9 +132,12 @@
 }
 
 .ui5-shellbar-branding-area {
-	flex-shrink: 0;
+	flex-shrink: 1;
+	min-width: 0;
 	display: flex;
 	align-items: center;
+	/* Push all subsequent items (actions) to the right */
+	margin-inline-end: auto;
 }
 
 /* ============================================================================
@@ -156,7 +159,6 @@
 .ui5-shellbar-overflow-container-inner {
 	display: flex;
 	align-items: center;
-	justify-content: end;
 	flex-shrink: 0;
 	min-width: 100%;
 }
@@ -355,6 +357,65 @@ slot[name="profile"] {
 
 :host([breakpoint-size="M"]) .ui5-shellbar-search-full-width-wrapper {
 	padding: 0 2rem;
+}
+
+/* ============================================================================
+   OVERFLOW BRANDING (branding shown at top of overflow popover)
+   ============================================================================ */
+
+.ui5-shellbar-overflow-branding {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 0.125rem;
+	min-height: 2.5rem;
+	/* Grow to the content width so the hover/active background spans the full horizontal
+	   scroll width when the logo is wider than the popover. */
+	width: max-content;
+	min-width: 100%;
+	/* Align the branding row inset with the List items below it */
+	padding: 0.25rem 1rem;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.ui5-shellbar-overflow-branding:hover {
+	background: var(--sapList_Hover_Background);
+}
+
+.ui5-shellbar-overflow-branding:active {
+	background: var(--sapList_Active_Background);
+}
+
+.ui5-shellbar-overflow-branding-logo {
+	display: block;
+	flex-shrink: 0;
+	/* Spec B2: logo spacing modelled as padding-right on the logo itself */
+	padding-inline-end: 0.25rem;
+}
+
+.ui5-shellbar-overflow-branding-logo > * {
+	max-height: 1.5625rem;
+	width: auto;
+}
+
+.ui5-shellbar-overflow-branding-title {
+	font-family: var(--sapFontSemiboldDuplexFamily);
+	font-size: var(--sapFontHeader6Size);
+	color: var(--sapList_TextColor);
+	white-space: normal;
+	word-break: break-word;
+	min-width: 0;
+	/* 16rem matches the overflow popover width (20rem) minus its horizontal padding,
+	   so the title wraps naturally without stretching the popover. */
+	max-width: 16rem;
+}
+
+.ui5-shellbar-overflow-branding-separator {
+	height: 1px;
+	background-color: var(--_ui5-shellbar_separator-color);
+	margin: 0 1rem;
 }
 
 /* ============================================================================

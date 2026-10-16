@@ -46,17 +46,18 @@ export default function ShellBarTemplate(this: ShellBar) {
 					</div>
 				)}
 
-				{this.enabledFeatures.branding && (
-					<div class="ui5-shellbar-branding-area">
-						<slot name="branding"></slot>
-					</div>
-				)}
-
 				{/* Legacy branding (logo + primaryTitle) when no menu items */}
 				{!this.enabledFeatures.branding && ShellBarLegacyBrandingArea.call(this)}
 
 				<div class="ui5-shellbar-overflow-container">
 					<div class="ui5-shellbar-overflow-container-inner">
+
+						{/* Branding — first in DOM = visually leftmost */}
+						{this.enabledFeatures.branding && (
+							<div class="ui5-shellbar-branding-area" data-ui5-stable="branding">
+								<slot name="branding"></slot>
+							</div>
+						)}
 
 						{this.enabledFeatures.content && (
 							<div
@@ -227,6 +228,7 @@ export default function ShellBarTemplate(this: ShellBar) {
 
 			{/* Overflow Popover */}
 			<Popover
+				id="ui5-shellbar-overflow-popover"
 				class="ui5-shellbar-overflow-popover"
 				open={this.overflowPopoverOpen}
 				onClose={this.onPopoverClose}
@@ -236,8 +238,32 @@ export default function ShellBarTemplate(this: ShellBar) {
 				horizontalAlign={this.popoverHorizontalAlign}
 				accessibleName={actionsAccInfo.overflow.title}
 			>
-				<List separators="None" onClick={this.handleOverflowItemClick}>
+				<List separators="None" onClick={this.handleOverflowItemClick} accessibleRole="Menu">
 					{this.overflowItems.map(item => {
+						if (item.type === "branding") {
+							return (
+								<>
+									<div
+										key="branding-overflow"
+										class="ui5-shellbar-overflow-branding"
+										role="menuitem"
+										aria-label={this.brandingOverflowLabel}
+										onClick={this.handleBrandingOverflowClick}
+									>
+										{item.logoHidden && (
+											<span
+												class="ui5-shellbar-overflow-branding-logo"
+												ref={this.captureBrandingOverflowLogoRef.bind(this)}
+											></span>
+										)}
+										{item.identifierHidden && this.brandingOverflowTitle && (
+											<span class="ui5-shellbar-overflow-branding-title">{this.brandingOverflowTitle}</span>
+										)}
+									</div>
+									<div key="branding-separator" role="separator" class="ui5-shellbar-overflow-branding-separator"></div>
+								</>
+							);
+						}
 						if (item.type === "action") {
 							const actionData = item.data;
 							return (

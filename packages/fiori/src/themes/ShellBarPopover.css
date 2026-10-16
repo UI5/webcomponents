@@ -3,6 +3,12 @@
 	padding: 0;
 }
 
+/* Bound the overflow popover so a long branding title wraps within it
+   instead of stretching the popover to the title's full width. */
+.ui5-shellbar-overflow-popover::part(content) {
+	max-width: 20rem;
+}
+
 .ui5-shellbar-overflow-popover [ui5-li]::part(icon) {
 	color: var(--sapList_TextColor);
 }
