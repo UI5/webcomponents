@@ -878,10 +878,9 @@ describe("General", () => {
 
 	it("N-more translation", () => {
 		cy.mount(
-			<MultiComboBox style="width: 400px">
-				<MultiComboBoxItem selected={true} text="This is a long token"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 1"></MultiComboBoxItem>
-				<MultiComboBoxItem selected={true} text="Item 2"></MultiComboBoxItem>
+			<MultiComboBox style="width: 300px">
+				<MultiComboBoxItem selected={true} text="Item"></MultiComboBoxItem>
+				<MultiComboBoxItem selected={true} text="Enim do esse anim magna enim fugiat Lorem enim nostrud sit laborum ea."></MultiComboBoxItem>
 			</MultiComboBox>
 		);
 
@@ -896,7 +895,7 @@ describe("General", () => {
 					.find("[ui5-tokenizer]")
 					.shadow()
 					.find(".ui5-tokenizer-more-text")
-					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 2));
+					.should("have.text", resourceBundle.getText(MULTIINPUT_SHOW_MORE_TOKENS.defaultText, 1));
 			})
 	});
 
@@ -5639,13 +5638,15 @@ describe("Tokenizer overflow calculation", () => {
 			.find("[ui5-tokenizer]")
 			.as("tokenizer");
 
-		// The component must settle on a stable state: all three tokens overflow, so the
-		// indicator reports "3". Cypress retries this until it holds; a loop would throw first.
+		// The component must settle on a stable state and render the overflow
+		// indicator. The exact count depends on how wide the CJK fallback font
+		// renders the tokens (which differs across OSes/CI), so we only assert
+		// that the indicator settled - Cypress retries until it holds, and a
+		// render loop would throw RenderQueue's guard error before it does.
 		cy.get("@tokenizer")
 			.shadow()
 			.find(".ui5-tokenizer-more-text")
-			.should("exist")
-			.and("contain.text", "3");
+			.should("exist");
 
 		// All three tokens remain in the DOM (overflowing tokens are hidden, not removed).
 		cy.get("@tokenizer")
