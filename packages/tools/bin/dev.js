@@ -18,5 +18,5 @@ if (command === "watch") {
 	command = ["test", ...args.slice(1)].join(" ");
 }
 
-const verboseFlag = " --verbose"
+const verboseFlag = hasVerbose ? " --verbose" : "";
 child_process.execSync(`ui5nps${verboseFlag} "${command}"`, {stdio: 'inherit'});
