@@ -1,3 +1,4 @@
+import "../../src/Assets.js";
 import DateRangePicker from "../../src/DateRangePicker.js";
 
 type DateTimePickerTemplateOptions = Partial<{
