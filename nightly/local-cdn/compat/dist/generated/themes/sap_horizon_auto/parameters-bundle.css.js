@@ -1,0 +1,36 @@
+export default `:host {
+    --ui5_table_focus_outline_offset: .1875rem;
+    --ui5_table_bottom_border: 1px solid var(--sapList_BorderColor);
+    --ui5_table_multiselect_column_width: 2.75rem;
+    --ui5_table_header_row_font_weight: normal;
+    --ui5_table_header_row_border_bottom_color: var(--sapList_BorderColor);
+    --ui5_table_header_row_border_width: 1px;
+    --_ui5_table_load_more_border-bottom: none;
+    --ui5_table_header_row_outline_width: var(--sapContent_FocusWidth);
+    --ui5_table_header_row_font_family: var(--sapFontSemiboldDuplexFamily);
+    --ui5_table_multiselect_popin_row_padding: 3.25rem;
+    --ui5_table_row_outline_width: var(--sapContent_FocusWidth);
+    --ui5_table_group_row_font-weight: bold;
+    --ui5_table_border_width: 1px 0 1px 0;
+    --_ui5_load_more_padding: 0;
+    --_ui5_load_more_border: 1px top solid transparent;
+    --_ui5_load_more_border_radius: none;
+    --_ui5_load_more_outline_width: var(--sapContent_FocusWidth);
+    --_ui5_load_more_border-bottom: var(--sapList_BorderWidth) solid var(--sapList_BorderColor);
+    --_ui5_load_more_text_height: 2.75rem;
+    --_ui5_load_more_text_font_size: var(--sapFontMediumSize);
+    --_ui5_load_more_desc_padding: .375rem 2rem .875rem 2rem;
+    --ui5_table_header_row_height: 2.75rem;
+    --ui5_table_row_height: 2.75rem;
+    --ui5_table_group_row_height: 2rem
+}
+@container style(--ui5_content_density: compact) {
+    :host {
+        --_ui5_load_more_text_height: 2.625rem;
+        --_ui5_load_more_text_font_size: var(--sapFontSize);
+        --_ui5_load_more_desc_padding: 0 2rem .875rem 2rem;
+        --ui5_table_header_row_height: 2rem;
+        --ui5_table_row_height: 2rem
+    }
+}`;
+//# sourceMappingURL=parameters-bundle.css.js.map

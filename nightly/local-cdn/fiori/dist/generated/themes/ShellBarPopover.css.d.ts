@@ -1,0 +1,2 @@
+declare const _default: ".ui5-shellbar-menu-popover::part(content),.ui5-shellbar-overflow-popover::part(content){padding:0}.ui5-shellbar-overflow-popover [ui5-li]::part(icon){color:var(--sapList_TextColor)}.ui5-shellbar-overflow-popover ::slotted([ui5-toggle-button]),.ui5-shellbar-overflow-popover ::slotted([ui5-button]){color:var(--sapList_TextColor)}.ui5-shellbar-overflow-popover [ui5-li]::part(title){font-size:var(--sapFontSize)}\n";
+export default _default;

@@ -1,0 +1,2 @@
+"use strict";import{getAnimationMode as t}from"../InitialConfiguration.js";import e from"../types/AnimationMode.js";import{attachConfigurationReset as a}from"./ConfigurationReset.js";import{createOrUpdateStyle as d}from"../ManagedStyles.js";let o;const n=i=>{d(`:root { --_ui5-animation-mode: ${i}; }`,"data-ui5-animation-mode")};a(()=>{o=void 0});const m=()=>(o===void 0&&(o=t(),n(o)),o),r=i=>{Object.values(e).includes(i)&&(o=i,n(o))};export{m as getAnimationMode,r as setAnimationMode};
+//# sourceMappingURL=AnimationMode.js.map

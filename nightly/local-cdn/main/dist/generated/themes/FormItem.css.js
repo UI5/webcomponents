@@ -1,0 +1,8 @@
+import { registerThemePropertiesLoader } from "@ui5/webcomponents-base/dist/asset-registries/Themes.js";
+import defaultThemeBase from "@ui5/webcomponents-theming/dist/generated/themes/sap_horizon/parameters-bundle.css.js";
+import defaultTheme from "./sap_horizon/parameters-bundle.css.js";
+registerThemePropertiesLoader("@" + "ui5" + "/" + "webcomponents-theming", "sap_horizon", async () => defaultThemeBase);
+registerThemePropertiesLoader("@" + "u" + "i" + "5" + "/" + "w" + "e" + "b" + "c" + "o" + "m" + "p" + "o" + "n" + "e" + "n" + "t" + "s", "sap_horizon", async () => defaultTheme, "host");
+export default `:host(:not([hidden])){display:block;width:100%}:host{break-inside:avoid}.ui5-form-item-root{background-color:inherit;color:inherit}.ui5-form-item-layout{display:grid;grid-template-columns:var(--ui5-form-item-layout, 4fr 8fr 0fr);align-items:center}.ui5-form-item-label{padding:var(--ui5-form-item-label-padding, .125rem 0);padding-inline-end:.85rem;justify-self:var(--ui5-form-item-label-justify, end)}.ui5-form-item-content{overflow:hidden;width:100%;display:flex;padding:0 .25rem}.ui5-form-item-content-child{padding-inline-end:.5rem;box-sizing:border-box;width:100%}:host([item-spacing="Large"]) .ui5-form-item-layout{min-height:var(--_ui5_form_item_min_height);padding-top:var(--_ui5_form_item_padding);padding-bottom:var(--_ui5_form_item_padding);box-sizing:border-box}::slotted(*){width:100%}dd{padding:0;margin:0;border:0 transparent}
+`;
+//# sourceMappingURL=FormItem.css.js.map
