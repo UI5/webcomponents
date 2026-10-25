@@ -56,8 +56,6 @@ const ACCELERATION = 0.8;
 const MIN_WAIT_TIMEOUT = 50; // milliseconds
 const INITIAL_SPEED = 120; // milliseconds
 
-const DEFAULT_DELIMITER = ".";
-
 type NumericInputValueStateChangeEventDetail = {
 	valueState: `${ValueState}`,
 	valid: boolean,
@@ -427,15 +425,11 @@ class NumericInput extends UI5Element implements IFormInputElement {
 	}
 
 	onEnterDOM() {
-		if (this._isDesktop) {
-			this._setupLanguageChangeHandler();
-		}
+		this._setupLanguageChangeHandler();
 	}
 
 	onExitDOM() {
-		if (this._isDesktop) {
-			this._cleanupLanguageChangeHandler();
-		}
+		this._cleanupLanguageChangeHandler();
 		this._resetSpin();
 	}
 
@@ -467,8 +461,10 @@ class NumericInput extends UI5Element implements IFormInputElement {
 			this._formatter = NumberFormat.getFloatInstance({
 				decimals: this.valuePrecision,
 				...(!this._isDesktop && {
-					decimalSeparator: DEFAULT_DELIMITER,
+					decimalSeparator: ".",
 					groupingEnabled: false,
+					minusSign: "-",
+					plusSign: "+",
 				}),
 			});
 		}
@@ -478,7 +474,7 @@ class NumericInput extends UI5Element implements IFormInputElement {
 
 	get delimiter() {
 		if (!this._isDesktop) {
-			this._delimiter = DEFAULT_DELIMITER;
+			return ".";
 		}
 
 		if (!this._delimiter) {
@@ -643,7 +639,7 @@ class NumericInput extends UI5Element implements IFormInputElement {
 	}
 
 	_syncValueFromInput() {
-		const raw = this._isDesktop ? this._removeGroupSeparators(this.input.value) : this.input.value;
+		const raw = this._removeGroupSeparators(this.input.value);
 		const parsed = this._parseNumber(raw);
 		if (!Number.isNaN(parsed)) {
 			this.value = parsed;
@@ -775,10 +771,6 @@ class NumericInput extends UI5Element implements IFormInputElement {
 		}
 
 		if (!this._isDesktop) {
-			if (preventDefault) {
-				e.preventDefault();
-			}
-
 			return;
 		}
 
