@@ -224,6 +224,10 @@ export interface CustomElementDeclaration
    * Marks when the field was introduced
    */
   _ui5since?: string
+  /**
+   * Names of sub-components that belong to this component's documentation group
+   */
+  _ui5subcomponents?: string[]
 }
 
 /**

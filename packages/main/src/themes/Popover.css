@@ -92,16 +92,16 @@
 
 .ui5-popover-resize-handle {
 	position: absolute;
-	width: 1.5rem;
-	height: 1.5rem;
+	width: var(--_ui5_popover_resize_handle_size);
+	height: var(--_ui5_popover_resize_handle_size);
 	border-radius: 50%;
 	z-index: 1;
 }
 
 .ui5-popover-resize-handle [ui5-icon] {
 	position: absolute;
-	width: 1rem;
-	height: 1rem;
+	width: var(--_ui5_popover_resize_handle_icon_size);
+	height: var(--_ui5_popover_resize_handle_icon_size);
 	cursor: inherit;
 	color: var(--sapButton_Lite_TextColor);
 	--rotAngle: 0;
@@ -114,8 +114,8 @@
 }
 
 .ui5-popover-resize-handle-top-right .ui5-popover-resize-handle {
-	top: -0.5rem;
-	right: -0.5rem;
+	top: var(--_ui5_popover_resize_handle_offset);
+	right: var(--_ui5_popover_resize_handle_offset);
 	cursor: ne-resize;
 }
 
@@ -126,8 +126,8 @@
 }
 
 .ui5-popover-resize-handle-top-left .ui5-popover-resize-handle {
-	top: -0.5rem;
-	left: -0.5rem;
+	top: var(--_ui5_popover_resize_handle_offset);
+	left: var(--_ui5_popover_resize_handle_offset);
 	cursor: nw-resize;
 }
 
@@ -138,9 +138,9 @@
 }
 
 .ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle {
-	bottom: -0.5rem;
-	left: -0.5rem;
-	cursor: ne-resize;
+	bottom: var(--_ui5_popover_resize_handle_offset);
+	left: var(--_ui5_popover_resize_handle_offset);
+	cursor: sw-resize;
 }
 
 .ui5-popover-resize-handle-bottom-left .ui5-popover-resize-handle [ui5-icon] {
@@ -150,9 +150,9 @@
 }
 
 .ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle {
-	bottom: -0.5rem;
-	right: -0.5rem;
-	cursor: nw-resize;
+	bottom: var(--_ui5_popover_resize_handle_offset);
+	right: var(--_ui5_popover_resize_handle_offset);
+	cursor: se-resize;
 }
 
 .ui5-popover-resize-handle-bottom-right .ui5-popover-resize-handle [ui5-icon] {
@@ -163,4 +163,37 @@
 .ui5-popover-resizing,
 .ui5-popover-resizing * {
 	user-select: none !important;
+}
+
+/* Suppress default focus outline on the keyboard handle — the popover shows its own ring below */
+.ui5-popover-keyboard-resize-handle:focus {
+	outline: none;
+}
+
+/* Focus ring on the whole popover while the keyboard resize handle is focused */
+.ui5-popover-root:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	content: '';
+	position: absolute;
+	inset: var(--_ui5_popover_focus_outline_offset);
+	border: var(--sapContent_FocusWidth) var(--sapContent_FocusStyle) var(--sapContent_FocusColor);
+	border-radius: var(--sapElement_BorderCornerRadius);
+	pointer-events: none;
+	z-index: 5;
+}
+
+/* Enlarged corner radius at the active resize corner to echo the resize affordance */
+.ui5-popover-resize-handle-bottom-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-bottom-right-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
+}
+
+.ui5-popover-resize-handle-bottom-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-bottom-left-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
+}
+
+.ui5-popover-resize-handle-top-right:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-top-right-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
+}
+
+.ui5-popover-resize-handle-top-left:has(.ui5-popover-keyboard-resize-handle:focus)::before {
+	border-top-left-radius: var(--_ui5_popover_keyboard_resize_handle_corner_radius_focused);
 }

@@ -144,11 +144,6 @@ class TableRow extends TableRowBase<TableCell> {
 	}
 
 	_onkeydown(e: KeyboardEvent, eventOrigin: HTMLElement) {
-		super._onkeydown(e, eventOrigin);
-		if (e.defaultPrevented) {
-			return;
-		}
-
 		if (eventOrigin === this && this._isInteractive && isEnter(e)) {
 			this._setActive("keyup");
 			this._onclick();
@@ -156,12 +151,8 @@ class TableRow extends TableRowBase<TableCell> {
 	}
 
 	_onclick() {
-		if (this === getActiveElement()) {
-			if (this._isSelectable && !this._hasSelector) {
-				this._onSelectionChange();
-			} else 	if (this.interactive || this._isNavigable) {
-				this._table?._onRowClick(this);
-			}
+		if (this === getActiveElement() && !(this._isSelectable && !this._hasSelector) && (this.interactive || this._isNavigable)) {
+			this._table?._onRowClick(this);
 		}
 	}
 

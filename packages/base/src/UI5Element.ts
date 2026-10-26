@@ -353,7 +353,7 @@ abstract class UI5Element extends HTMLElement {
 			await this._processChildren();
 		}
 
-		if (!ctor.asyncFinished) {
+		if (!Object.prototype.hasOwnProperty.call(ctor, "asyncFinished")) {
 			await ctor._definePromise;
 		}
 
@@ -392,7 +392,7 @@ abstract class UI5Element extends HTMLElement {
 
 	get definePromise(): Promise<void> {
 		const ctor = this.constructor as typeof UI5Element;
-		if (!ctor.asyncFinished && ctor._definePromise) {
+		if (!Object.prototype.hasOwnProperty.call(ctor, "asyncFinished") && ctor._definePromise) {
 			return ctor._definePromise;
 		}
 		return Promise.resolve();
@@ -1145,7 +1145,8 @@ abstract class UI5Element extends HTMLElement {
 	 * @public
 	 */
 	getSlottedNodes<T = Node>(slotName: string): Array<T> {
-		return getSlottedNodesList((this as unknown as Record<string, Array<SlotValue>>)[slotName]) as Array<T>;
+		// read the raw slot content, so that a component can call this from its own accessor for that slot
+		return getSlottedNodesList((this._state[slotName] || []) as Array<SlotValue>) as Array<T>;
 	}
 
 	/**
@@ -1331,6 +1332,12 @@ abstract class UI5Element extends HTMLElement {
 				}
 
 				const propertyName = slotData.propertyName || slotName;
+
+				// the component provides its own accessor for this slot
+				if (Object.getOwnPropertyDescriptor(proto, propertyName)) {
+					continue; // eslint-disable-line
+				}
+
 				const propertyDescriptor: PropertyDescriptor = {
 					get(this: UI5Element) {
 						if (this._state[propertyName] !== undefined) {

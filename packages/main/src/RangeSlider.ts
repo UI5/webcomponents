@@ -1,3 +1,4 @@
+import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import i18n from "@ui5/webcomponents-base/dist/decorators/i18n.js";
@@ -83,7 +84,7 @@ type AffectedValue = "startValue" | "endValue";
  * `import "@ui5/webcomponents/dist/RangeSlider.js";`
  * @constructor
  * @extends SliderBase
- * @since 1.0.0-rc.11
+ * @since 1.0.0
  * @public
  * @csspart progress-container - Used to style the progress container, the horizontal bar that visually represents the range between the minimum and maximum values, of the `ui5-range-slider`.
  * @csspart progress-bar - Used to style the progress bar, which shows the progress of the `ui5-range-slider`.
@@ -774,16 +775,16 @@ class RangeSlider extends SliderBase implements IFormInputElement {
 		const affectedValue = this._valueAffected;
 
 		if (this._isPressInCurrentRange || !affectedValue) {
-			this._progressBar?.focus();
+			this._progressBar?.focus({ focusVisible: isDesktop() } as FocusOptions);
 		}
 
 		if ((affectedValue === "startValue" && !isReversed) || (affectedValue === "endValue" && isReversed)) {
-			this._startHandle?.focus();
+			this._startHandle?.focus({ focusVisible: isDesktop() } as FocusOptions);
 			this.bringToFrontTooltip("start");
 		}
 
 		if ((affectedValue === "endValue" && !isReversed) || (affectedValue === "startValue" && isReversed)) {
-			this._endHandle?.focus();
+			this._endHandle?.focus({ focusVisible: isDesktop() } as FocusOptions);
 			this.bringToFrontTooltip("end");
 		}
 	}

@@ -29,7 +29,7 @@ import type { PopupBeforeCloseEventDetail } from "./Popup.js";
  * `import "@ui5/webcomponents/dist/ResponsivePopover.js";`
  * @constructor
  * @extends Popover
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @public
  * @csspart header - Used to style the header of the component
  * @csspart content - Used to style the content of the component
@@ -63,7 +63,7 @@ class ResponsivePopover extends Popover {
 	 * **Note:** If you are using the `header` slot, this property will have no effect
 	 * @private
 	 * @default false
-	 * @since 1.0.0-rc.16
+	 * @since 1.0.0
 	 */
 	@property({ type: Boolean })
 	_hideCloseButton = false;

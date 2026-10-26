@@ -46,7 +46,7 @@ import createInstanceChecker from "@ui5/webcomponents-base/dist/util/createInsta
  * @extends SideNavigationSelectableItemBase
  * @abstract
  * @public
- * @since 1.0.0-rc.8
+ * @since 1.0.0
  */
 @customElement({
 	tag: "ui5-side-navigation-item",
@@ -291,7 +291,7 @@ class SideNavigationItem extends SideNavigationSelectableItemBase {
 	}
 
 	_onkeydown(e: KeyboardEvent) {
-		if (this.effectiveDisabled) {
+		if (this.effectiveDisabled || !this.sideNavigation) {
 			return;
 		}
 

@@ -16,7 +16,7 @@ describe("Table - Keyboard Navigation", () => {
 			<>
 				<input id="before-table1" type="Number" value="0" />
 				<Table id="table0">
-					<TableGrowing id="growing" type="Button" slot="features"></TableGrowing>
+					<TableGrowing id="growing" mode="Button" slot="features"></TableGrowing>
 					<TableHeaderRow slot="headerRow">
 						<TableHeaderCell><a id="row0-link" href="test.html">Link</a></TableHeaderCell>
 						<TableHeaderCell>Header2</TableHeaderCell>
@@ -131,6 +131,32 @@ describe("Table - Keyboard Navigation", () => {
 			{ element: cy.get("@rows").eq(24), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@rows").eq(0), type: "{home}", condition: "be.focused" },
 			{ element: cy.get("@headerRow"), condition: "be.focused" }
+		]);
+	});
+
+	it("should navigate into a row added dynamically", () => {
+		cy.get("@rows").eq(24).scrollIntoView();
+
+		performActions([
+			{ element: cy.get("@rows").eq(24), click: "left" },
+			{ element: cy.get("@rows").eq(24), condition: "be.focused" }
+		]);
+
+		// simulate a row being appended (e.g. by growing) while the last row stays focused
+		cy.get("#table0").then($table => {
+			const newRow = document.createElement("ui5-table-row");
+			newRow.id = "new-row";
+			newRow.innerHTML = "<ui5-table-cell>New Row</ui5-table-cell>";
+			$table.append(newRow);
+		});
+
+		cy.get<Table>("#table0").should($table => {
+			expect($table[0].rows.length).to.equal(26);
+		});
+
+		performActions([
+			{ element: cy.get("@rows").eq(24), type: "{downarrow}" },
+			{ element: cy.get("#new-row"), condition: "be.focused" }
 		]);
 	});
 

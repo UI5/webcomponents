@@ -1,0 +1,44 @@
+{
+	"Button": {
+		"samples": [
+			{
+				"name": "ButtonMenu",
+				"title": "AI Button With Menu"
+			},
+			{
+				"name": "ButtonSplitMenu",
+				"title": "AI Button With Split Mode State"
+			},
+			{
+				"name": "IconOnlyButton",
+				"title": "Icon-only AI Button With Menu"
+			}
+		]
+	},
+	"Input": {
+		"samples": [
+			{
+				"name": "Basic"
+			}
+		]
+	},
+	"PromptInput": {
+		"samples": [
+			{
+				"name": "Basic"
+			}
+		]
+	},
+	"TextArea": {
+		"samples": [
+			{
+				"name": "Basic"
+			},
+			{
+				"name": "Extended",
+				"title": "Extended Sample",
+				"description": "This extended sample showcases advanced AI TextArea features including multiple AI actions and version management."
+			}
+		]
+	}
+}

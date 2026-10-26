@@ -58,9 +58,10 @@ type AvatarAccessibilityAttributes = Pick<AccessibilityAttributes, "hasPopup">;
  * `import "@ui5/webcomponents/dist/Avatar.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.6
+ * @since 1.0.0
  * @implements {IAvatarGroupItem}
  * @public
+ * @ui5subcomponent AvatarBadge
  */
 @customElement({
 	tag: "ui5-avatar",
@@ -121,7 +122,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * In that case, the avatar will always be rendered as interactive.
 	 * @default "Image"
 	 * @public
-	 * @since 2.20
+	 * @since 2.20.0
 	 */
 	@property()
 	mode: `${AvatarMode}` = "Image";
@@ -149,8 +150,8 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the name of the fallback icon, which should be displayed in the following cases:
 	 *
-	 * 	- If the initials are not valid (more than 3 letters, unsupported languages or empty initials).
-	 * 	- If there are three initials and they do not fit in the shape (e.g. WWW for some of the sizes).
+	 * 	- If the initials are not valid (more than 3 letters or empty initials).
+	 * 	- If the initials do not fit in the shape at the current size (e.g. WWW at size XS).
 	 * 	- If the image src is wrong.
 	 *
 	 * **Note:** If not set, a default fallback icon "employee" is displayed.
@@ -171,7 +172,12 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	/**
 	 * Defines the displayed initials.
 	 *
-	 * Up to three Latin letters can be displayed as initials.
+	 * Up to three letters from an alphabetic script can be displayed as initials.
+	 * All scripts used in SAP-supported languages are accepted, except logographic and
+	 * pure syllabic scripts where the concept of initials does not apply: Han (Chinese,
+	 * Japanese kanji), Hiragana, and Katakana. Korean (Hangul) is supported.
+	 * If the letters do not fit inside the avatar shape at the current size, the fallback
+	 * icon is shown instead.
 	 * @default undefined
 	 * @public
 	 */
@@ -215,7 +221,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * If not provided a default text alternative will be set, if present.
 	 * @default undefined
 	 * @public
-	 * @since 1.0.0-rc.7
+	 * @since 1.0.0
 	 */
 	@property()
 	accessibleName?: string;
@@ -257,7 +263,7 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	 * &nbsp;&nbsp;&nbsp;&nbsp;`visibility: hidden;`<br/>
 	 * `}`
 	 * @public
-	 * @since 1.0.0-rc.15
+	 * @since 1.0.0
 	 */
 	@slot({ type: HTMLElement, "default": true })
 	image!: DefaultSlot<HTMLElement>;
@@ -357,9 +363,13 @@ class Avatar extends UI5Element implements ITabbable, IAvatarGroupItem {
 	}
 
 	get validInitials() {
-		// initials should consist of only 1,2 or 3 latin letters
-		const validInitials = /^[a-zA-Zà-üÀ-Ü]{1,3}$/,
-			areInitialsValid = this.initials && validInitials.test(this.initials);
+		// initials should consist of only 1, 2 or 3 letters from any script where
+		// initials are meaningful. Han (Chinese/Japanese kanji), Hiragana, and Katakana
+		// are excluded because those scripts do not use initials. Korean (Hangul) is
+		// allowed since Korean names can be abbreviated to their syllabic characters.
+		const validInitials = /^\p{L}{1,3}$/u,
+			excludedScripts = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u,
+			areInitialsValid = this.initials && validInitials.test(this.initials) && !excludedScripts.test(this.initials);
 
 		if (areInitialsValid) {
 			return this.initials;

@@ -213,6 +213,29 @@ describe("Initial rendering", () => {
 		cy.get("@title").should("have.attr", "size", "H5");
 	});
 
+	it("tests setting header is not exposed as a banner landmark (a11y)", () => {
+		cy.mount(<UserSettingsDialog open>
+			<UserSettingsItem headerText="User Account">
+				<UserSettingsView text="Setting1">
+				</UserSettingsView>
+			</UserSettingsItem>
+		</UserSettingsDialog>);
+		cy.get("[ui5-user-settings-dialog]").as("settings");
+		cy.get("@settings").find("[ui5-user-settings-item]").as("settingItem");
+		cy.get("@settingItem").should("exist");
+
+		// The item header must not be a <header> element, which would map to the
+		// implicit "banner" landmark inside the shadow root and add an unwanted,
+		// non-top-level banner inside the dialog (WAI-ARIA landmark violation).
+		cy.get("@settingItem").shadow().find("header").should("not.exist");
+		cy.get("@settingItem").shadow().find("[role='banner']").should("not.exist");
+
+		// The header container is a plain <div> and still renders the title.
+		cy.get("@settingItem").shadow().find("div.ui5-user-settings-item-header-container").as("header");
+		cy.get("@header").should("exist");
+		cy.get("@header").find("[ui5-title]").contains("User Account");
+	});
+
 	it("tests setting tabs", () => {
 		cy.mount(<UserSettingsDialog open>
 			<UserSettingsItem>
@@ -1535,6 +1558,176 @@ describe("Appearance view", () => {
         cy.get("@appearanceView").shadow().find("[ui5-list]").as("list");
         cy.get("@list").should("exist");
         cy.get("@list").should("have.class", "user-settings-appearance-view-list");
+    });
+});
+
+describe("Selection accessibility", () => {
+    it("exposes selected state via aria-selected and hidden describedby text on dialog items", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Language">
+                <UserSettingsView text="Setting2"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").as("items");
+
+        cy.get("@items").first().shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@items").first().shadow().find(".ui5-hidden-text").should("contain.text", "Selected");
+        cy.get("@items").last().shadow().find("li").should("have.attr", "aria-selected", "false");
+        cy.get("@items").last().shadow().find(".ui5-hidden-text").should("contain.text", "Not Selected");
+    });
+
+    it("does not render a radio button in dialog items (selection-mode Single)", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-li]").first()
+            .shadow().find("[ui5-radio-button]").should("not.exist");
+    });
+
+    it("announces 'Selected' when a different dialog item is selected", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Language">
+                <UserSettingsView text="Setting2"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").last().click();
+
+        cy.get("@liveRegion").should("contain.text", "Selected");
+    });
+
+    it("does not announce when the already-selected dialog item is clicked", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").first().click();
+
+        cy.get("@liveRegion").should("have.text", "");
+    });
+
+    it("selects and announces on Space/Enter", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Language">
+                <UserSettingsView text="Setting2"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").last().as("secondItem");
+
+        // Move focus to the non-selected item and select it with the keyboard.
+        cy.get("@secondItem").focus();
+        cy.realPress("Enter");
+        cy.get("@secondItem").shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@liveRegion").should("contain.text", "Selected");
+    });
+
+    it("arrow keys move focus without changing selection", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Language">
+                <UserSettingsView text="Setting2"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").first().as("firstItem");
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").last().as("secondItem");
+
+        cy.get("@firstItem").focus();
+        cy.realPress("ArrowDown");
+
+        // Focus moved to the second item, but selection stays on the first (Single, not SingleAuto).
+        cy.get("@secondItem").should("be.focused");
+        cy.get("@firstItem").shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@secondItem").shadow().find("li").should("have.attr", "aria-selected", "false");
+    });
+
+    it("does not announce when selection-change on the dialog is prevented", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance" selected>
+                <UserSettingsView text="Setting1"></UserSettingsView>
+            </UserSettingsItem>
+            <UserSettingsItem text="Language">
+                <UserSettingsView text="Setting2"></UserSettingsView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").then($settings => {
+            $settings.get(0).addEventListener("selection-change", (e: Event) => e.preventDefault());
+        });
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+        cy.get("@settings").shadow().find("[ui5-dialog]").find("[ui5-li]").last().click();
+
+        cy.get("@liveRegion").should("have.text", "");
+    });
+
+    it("exposes selected state on appearance view items and announces on change", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette" selected></UserSettingsAppearanceViewItem>
+                    <UserSettingsAppearanceViewGroup header-text="SAP Quartz">
+                        <UserSettingsAppearanceViewItem item-key="sap_fiori_3" text="SAP Quartz Light" icon="palette"></UserSettingsAppearanceViewItem>
+                    </UserSettingsAppearanceViewGroup>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").as("items");
+
+        // Selected theme exposes "Selected"; the grouped one exposes "Not Selected".
+        cy.get("@items").first().shadow().find("li").should("have.attr", "aria-selected", "true");
+        cy.get("@items").first().shadow().find(".ui5-hidden-text").should("contain.text", "Selected");
+        cy.get("@items").eq(1).shadow().find(".ui5-hidden-text").should("contain.text", "Not Selected");
+
+        // No radio button is rendered - selection mode Single places no selection control.
+        cy.get("@items").first().shadow().find("[ui5-radio-button]").should("not.exist");
+
+        // Selecting a different theme announces "Selected".
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+        cy.get("@items").eq(1).click();
+        cy.get("@liveRegion").should("contain.text", "Selected");
+    });
+
+    it("does not announce when the already-selected appearance item is clicked", () => {
+        cy.mount(<UserSettingsDialog open>
+            <UserSettingsItem text="Appearance">
+                <UserSettingsAppearanceView text="Themes">
+                    <UserSettingsAppearanceViewItem item-key="sap_horizon" text="SAP Morning Horizon" icon="palette" selected></UserSettingsAppearanceViewItem>
+                </UserSettingsAppearanceView>
+            </UserSettingsItem>
+        </UserSettingsDialog>);
+        cy.get("[ui5-user-settings-dialog]").as("settings");
+        cy.get("@settings").find("[ui5-user-settings-appearance-view]").as("appearanceView");
+        cy.get(".ui5-invisiblemessage-polite").as("liveRegion").should("have.text", "");
+
+        cy.get("@appearanceView").find("[ui5-user-settings-appearance-view-item]").first().click();
+
+        cy.get("@liveRegion").should("have.text", "");
     });
 });
 

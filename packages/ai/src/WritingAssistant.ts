@@ -40,18 +40,18 @@ import "@ui5/webcomponents-icons/dist/stop.js";
  *
  * ### Overview
  *
- * The `ui5-ai-textarea-toolbar` component provides a specialized toolbar for AI TextArea functionality.
+ * The `ui5-ai-writing-assistant` component provides a specialized toolbar for AI TextArea functionality.
  * It manages different states of the AI assistant and provides version navigation capabilities.
  *
  * ### Structure
- * The `ui5-ai-textarea-toolbar` consists of the following elements:
+ * The `ui5-ai-writing-assistant` consists of the following elements:
  * - AI Generate Button: Triggers AI text generation or stops ongoing generation
  * - Version Navigation: Allows navigation between multiple AI-generated results
  * - Action Label: Displays the current AI action being performed
  *
  * ### ES6 Module Import
  *
- * `import "@sap-webcomponents/ai/dist/WritingAssistant.js";`
+ * `import "@ui5/webcomponents-ai/dist/WritingAssistant.js";`
  *
  * @constructor
  * @extends UI5Element

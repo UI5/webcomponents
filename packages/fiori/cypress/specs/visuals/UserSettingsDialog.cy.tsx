@@ -7,6 +7,7 @@ import UserSettingsAppearanceViewGroup from "../../../src/UserSettingsAppearance
 import UserSettingsAppearanceViewItem from "../../../src/UserSettingsAppearanceViewItem.js";
 import UserMenuAccount from "../../../src/UserMenuAccount.js";
 import Button from "@ui5/webcomponents/dist/Button.js";
+import type Dialog from "@ui5/webcomponents/dist/Dialog.js";
 
 describe("UserSettingsDialog visual", () => {
 	it("basic state — open with header and items", () => {
@@ -29,7 +30,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -53,7 +54,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -77,7 +78,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -96,7 +97,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -120,7 +121,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -135,7 +136,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -155,7 +156,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -169,7 +170,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -188,7 +189,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -206,7 +207,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -222,7 +223,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -243,7 +244,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -261,7 +262,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -291,7 +292,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsItem>
 			</UserSettingsDialog>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 
@@ -312,7 +313,7 @@ describe("UserSettingsDialog visual", () => {
 				</UserSettingsDialog>
 			</div>
 		);
-		cy.get("[ui5-user-settings-dialog]").shadow().find("[ui5-dialog]").ui5DialogOpened();
+		cy.get("[ui5-user-settings-dialog]").shadow().find<Dialog>("[ui5-dialog]").ui5DialogOpened();
 		cy.screenshot();
 	});
 });

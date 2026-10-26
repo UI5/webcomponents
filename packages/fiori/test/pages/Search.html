@@ -188,6 +188,82 @@
 	</div>
 
 	<div class="container">
+		<ui5-label>Search with Suggestions - Programmatic control</ui5-label>
+		<div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+			<ui5-search id="search-programmatic" show-clear-icon placeholder="Use the buttons to control the suggestions">
+				<ui5-search-item text="Apple" icon="history"></ui5-search-item>
+				<ui5-search-item text="Banana" icon="history"></ui5-search-item>
+				<ui5-search-item text="Cherry" icon="history"></ui5-search-item>
+			</ui5-search>
+			<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+				<ui5-button id="prog-delete-all">Delete all suggestions</ui5-button>
+				<ui5-button id="prog-close">Close popover</ui5-button>
+				<ui5-button id="prog-open">Open popover</ui5-button>
+				<ui5-button id="prog-add">Add suggestion items</ui5-button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		(function () {
+			const search = document.getElementById('search-programmatic');
+			const deleteAllBtn = document.getElementById('prog-delete-all');
+			const closeBtn = document.getElementById('prog-close');
+			const openBtn = document.getElementById('prog-open');
+			const addBtn = document.getElementById('prog-add');
+			let counter = 0;
+
+			function createItem(text) {
+				const item = document.createElement('ui5-search-item');
+				item.text = text;
+				item.icon = 'history';
+				item.deletable = true;
+				item.addEventListener('ui5-delete', () => item.remove());
+				return item;
+			}
+
+			// A pressed control button must not close the popover by itself - the
+			// programmatic `open` change below should be what controls it. Two things
+			// would otherwise close the popover before the button's click handler runs:
+			//   1. The global PopoverRegistry handler (document, mousedown, capture phase)
+			//      closes any non-modal popover on an outside press.
+			//   2. Moving focus to the button fires the search's focusout, which also closes.
+			// We register our own document capture mousedown listener now, at load time, so
+			// it runs before the registry handler (which attaches lazily on first open). For
+			// presses on a control button we stop that handler (1) and preventDefault to keep
+			// focus inside the search (2). The click event still fires normally afterwards.
+			const controlButtons = [deleteAllBtn, closeBtn, openBtn, addBtn];
+			document.addEventListener('mousedown', e => {
+				if (controlButtons.some(btn => e.composedPath().includes(btn))) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			}, { capture: true });
+
+			// 1. Delete all suggestions programmatically.
+			deleteAllBtn.addEventListener('click', () => {
+				search.getSlottedNodes('items').forEach(item => item.remove());
+			});
+
+			// 2. Close the popover programmatically.
+			closeBtn.addEventListener('click', () => {
+				search.open = false;
+			});
+
+			// 3. Open the popover programmatically.
+			openBtn.addEventListener('click', () => {
+				search.open = true;
+			});
+
+			// 4. Add suggestion items programmatically.
+			addBtn.addEventListener('click', () => {
+				counter += 1;
+				search.appendChild(createItem(`Added item ${counter}`));
+			});
+		}());
+	</script>
+
+	<div class="container">
 		<ui5-label>Search with Actions - Example of flexible action slot</ui5-label>
 		<ui5-search id="secondary-actions-search" show-clear-icon>
 			<ui5-search-item text="List Item with Favorite Action" icon="history" deletable>

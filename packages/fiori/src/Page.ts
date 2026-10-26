@@ -39,7 +39,7 @@ import PageCss from "./generated/themes/Page.css.js";
  * `import "@ui5/webcomponents-fiori/dist/Page.js";`
  * @constructor
  * @extends UI5Element
- * @since 1.0.0-rc.12
+ * @since 1.0.0
  * @public
  * @csspart content - Used to style the content section of the component
  */

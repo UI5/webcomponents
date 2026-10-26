@@ -57,7 +57,7 @@
 @import "./SliderBase-parameters.css";
 @import "./SliderHandle-parameters.css";
 @import "./SliderScale-parameters.css";
-@import "../base/NumberInput-parameters.css";
-@import "./NumberInput-parameters.css";
+@import "../base/NumericInput-parameters.css";
+@import "./NumericInput-parameters.css";
 @import "./sizes-parameters.css";
 @import "./rtl-parameters.css";
