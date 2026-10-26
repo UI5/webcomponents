@@ -28,10 +28,6 @@ import {
 abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends UI5Element {
 	cells!: Array<TCell>;
 
-	// Cached owning table. Only a successful resolution is stored; cleared on
-	// connect/disconnect so a re-slotted or moved row re-resolves its table.
-	_tableRef?: Table;
-
 	@property({ type: Number, noAttribute: true })
 	_invalidate = 0;
 
@@ -68,13 +64,8 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	onEnterDOM() {
-		this._tableRef = undefined;
 		!this.role && this.setAttribute("role", "row");
 		this.toggleAttribute("ui5-table-row-base", true);
-	}
-
-	onExitDOM() {
-		this._tableRef = undefined;
 	}
 
 	onBeforeRendering() {
@@ -129,31 +120,8 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _table(): Table | undefined {
-		if (this._tableRef) {
-			return this._tableRef;
-		}
-
 		const element = this.parentElement;
-		if (isInstanceOfTable(element)) {
-			this._tableRef = element;
-			return element;
-		}
-
-		// When the row is projected through chained slots (e.g. ui5-input-table-suggest),
-		// its parentElement is the outer component, not the table. Follow the slot
-		// assignment chain across shadow boundaries to reach the owning table.
-		let assignedSlot = this.assignedSlot;
-		while (assignedSlot) {
-			const root = assignedSlot.getRootNode();
-			const host = root instanceof ShadowRoot ? root.host : undefined;
-			if (isInstanceOfTable(host)) {
-				this._tableRef = host;
-				return host;
-			}
-			assignedSlot = assignedSlot.assignedSlot;
-		}
-
-		return undefined;
+		return isInstanceOfTable(element) ? element : undefined;
 	}
 
 	get _tableId() {
@@ -193,7 +161,7 @@ abstract class TableRowBase<TCell extends TableCellBase = TableCellBase> extends
 	}
 
 	get _hasPopin() {
-		return (this._table?._rows.length ?? 0) > 0 && this.cells.some(c => c._popin && !c._popinHidden);
+		return (this._table?.rows.length ?? 0) > 0 && this.cells.some(c => c._popin && !c._popinHidden);
 	}
 
 	get _stickyCells() {
